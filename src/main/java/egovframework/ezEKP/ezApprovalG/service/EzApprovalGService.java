@@ -14,6 +14,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzApprovalGService {
@@ -529,5 +530,7 @@ public interface EzApprovalGService {
 	public String updateSusinState(String docID, String recDate, String mode, String deptID, String companyID, int tenantID) throws Exception;
 
 	public String getDocManageDeptInfo(String deptID, int tenantID) throws Exception;
+
+	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String id, int tenantId) throws Exception;
 
 }

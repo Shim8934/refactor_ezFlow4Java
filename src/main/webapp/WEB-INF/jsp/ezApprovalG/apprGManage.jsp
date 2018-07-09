@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -1741,6 +1742,18 @@
 		        	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">    
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>  
+		        	<c:if test="${fn:length(companyList) gt 1 and listType ne '4'}">
+						<select id="selectCompany" onchange="getDocList();">
+							<option value="">
+								<spring:message code='ezPoll.t237'/>
+							</option>
+							<c:forEach items="${companyList }" var="company">
+								<option value="${company.companyID }">
+									${company.companyName }
+								</option>
+							</c:forEach>
+						</select>
+					</c:if>
 		        </li>
 			</ul>
 		</div>

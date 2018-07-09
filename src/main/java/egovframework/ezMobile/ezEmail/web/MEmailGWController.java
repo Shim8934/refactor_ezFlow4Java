@@ -15,15 +15,15 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Decoder;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -105,8 +105,6 @@ import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
-import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import net.htmlparser.jericho.Renderer;
@@ -352,18 +350,18 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			LOGGER.debug("userEmail : " + userEmail);
 			
-			String useAdvancedMailSearch = ezCommonService.getTenantConfig("useAdvancedMailSearch", info.getTenantId());
-			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
 			Folder folder = ia.getFolder(folderId);		
 			folder.open(Folder.READ_ONLY);
-//	        UIDFolder uidFolder = (UIDFolder)folder;
 	        
 	        boolean isUnreadOnly = false;
 	        boolean isImportantOnly = false;
 	        boolean searchSubFolder = false;
+	        int totalCount = 0;
+	        int startNo = 0;
+			int endNo = 0;
 			
 	        if (filter.equals("isUnreadOnly")) {
 	        	isUnreadOnly = true;
@@ -375,100 +373,40 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	        	searchSubFolder = true;
 	        }
 	        
-			if (!search.equals("")) {
-				LOGGER.debug("search field not empty");
-
-				if (searchField.isEmpty()) {
-					searchField = "SUBJECT&FROM";
-					
-					if (senderReceiverFlag) {
-						searchField = "SUBJECT&TO";
-					}
-				}
+        	String searchValue = search;
+        	
+        	if (searchField.isEmpty()) {
+				searchField = "SUBJECT&FROM";
 				
-				final String searchValue = search;
-				
-				LOGGER.debug("searchField=" + searchField + ",searchValue=" + searchValue + ",endDate=" + endDate);
-								
-				if (!endDate.equals("")) {
-					LOGGER.debug("search field paging");
-				} else {
-					LOGGER.debug("search field not paging");
-				}
-				
-				if (useAdvancedMailSearch.equals("YES")) {
-					messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, searchField, searchValue, sd, ed, searchSubFolder, isUnreadOnly, isImportantOnly, true);
-				} else {
-					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, sd, ed, searchSubFolder, null, isUnreadOnly, isImportantOnly, true);
-				}
-			
-			} else if (isUnreadOnly) {
-				if (useAdvancedMailSearch.equals("YES")) {
-					messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, "", "", sd, ed, searchSubFolder, isUnreadOnly, false, true);
-				} else {
-					messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, searchSubFolder, null, isUnreadOnly, false, true);
-				}
-			} else if (isImportantOnly) {
-				if (useAdvancedMailSearch.equals("YES")) {
-					messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, "", "", sd, ed, searchSubFolder, false, isImportantOnly, true);
-				} else {
-					messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, searchSubFolder, null, false, isImportantOnly, true);
-				}
-			}
-						
-			if (messages == null && !endDate.equals("")) {
-				LOGGER.debug("search field paging");
-				if (useAdvancedMailSearch.equals("YES")) {
-					messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, "", "", sd, ed, searchSubFolder, isUnreadOnly, isImportantOnly, true);
-				} else {
-					messages = ezEmailUtil.searchFolder(folder, "", "", sd, ed, searchSubFolder, null, isUnreadOnly, isImportantOnly, true);
+				if (senderReceiverFlag) {
+					searchField = "SUBJECT&TO";
 				}
 			}
 			
-			if (messages == null) {
-				messages = folder.getMessages(); 
+        	startNo = Integer.parseInt(start);
+			endNo = Integer.parseInt(end);
+			int listCount = endNo - startNo + 1;
+			
+			if (listCount < 0) {
+				listCount = 0;
 			}
 			
-			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
+			Map<String, Object> extraMap = new HashMap<String, Object>();
 			
-			int startNo = Integer.parseInt(start);
-			int endNo = Math.min(Integer.parseInt(end), messages.length - 1);
+			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, sd, ed, searchSubFolder, 
+					isUnreadOnly, isImportantOnly, "receivedDate", false, startNo, listCount, true, extraMap, info.getTenantId());
 			
-			LOGGER.debug("isUnreadOnly=" + isUnreadOnly + ",isImportantOnly=" + isImportantOnly);
-							
-			LOGGER.debug("Message Length=" + messages.length);
-			
-			LOGGER.debug("startNo=" + startNo + ",endNo=" + endNo);
-			
-			if (startNo <= endNo) {
-				Message[] fetchMessages = Arrays.copyOfRange(messages, startNo, endNo + 1);
-				FetchProfile fp = new FetchProfile();
-								
-				fp.add(UIDFolder.FetchProfileItem.UID);
-				fp.add("X-Priority");
-				fp.add(FetchProfile.Item.CONTENT_INFO);
-				fp.add(FetchProfile.Item.ENVELOPE);
-				fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
-				fp.add(FetchProfile.Item.SIZE);
-				fp.add(FetchProfile.Item.FLAGS);
-				
-				fp.add("Subject");
-				fp.add("From");
-				fp.add("To");
-				
-				folder.fetch(fetchMessages, fp);					
-			}
-			
-			for (int i = startNo; i <= endNo; i++) {
-				Message message = messages[i];
-				
+			totalCount = (int)extraMap.get("totalCount");
+			LOGGER.debug("totalCount=" + totalCount);
+        	
+			for (Message message : messages) {
 				JSONObject messageJson = new JSONObject();
 				
 				Folder f = message.getFolder();
 				UIDFolder uidFolder = (UIDFolder) f;
 				String fName = f.getFullName();
 			        
-				messageJson.put("href", fName +"/" + uidFolder.getUID(message));
+				messageJson.put("href", fName + "/" + uidFolder.getUID(message));
 				messageJson.put("folderId", fName);
 				messageJson.put("messageId", uidFolder.getUID(message));
 				messageJson.put("fromemail", "");
@@ -487,7 +425,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					importance = 0;
 				}
 				
-				messageJson.put("importance",importance);
+				messageJson.put("importance", importance);
 				
 				// Flagged is used for bookmark
 				int flagged = 0;
@@ -496,7 +434,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					flagged = 1;
 				}
 				
-				messageJson.put("flag",flagged);
+				messageJson.put("flag", flagged);
 				
 				if (filter.equals("isImportantOnly") && flagged != 1) {
 					continue;
@@ -505,7 +443,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				// attachment
 				boolean isAttached = IMAPAccess.hasAttachment(message);
 				int attached = isAttached ? 1 : 0;
-				messageJson.put("attach",attached);
+				messageJson.put("attach", attached);
 				
 				String addressStr = "";
 				Address[] addresses = null;
@@ -546,7 +484,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					}								
 				}
 				
-				messageJson.put("sender",addressStr);
+				messageJson.put("sender", addressStr);
 							
 				// subject
 				String subject = ezEmailUtil.getSubject(message);								
@@ -556,7 +494,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					subject = egovMessageSource.getMessage("ezEmail.kms03", locale);
 				}
 								
-				messageJson.put("subject",subject);
+				messageJson.put("subject", subject);
 				
 				// received date
 				Date receivedDate = message.getReceivedDate();
@@ -569,15 +507,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				String receivedDateStr2 = receivedDateStr.substring(0,receivedDateStr.length()-3);
 				
-				messageJson.put("receivedt",receivedDateStr);
-				messageJson.put("receivedt2",receivedDateStr2);
+				messageJson.put("receivedt", receivedDateStr);
+				messageJson.put("receivedt2", receivedDateStr2);
 				
 				// size
-				messageJson.put("size",message.getSize());
+				messageJson.put("size", message.getSize());
 				
 				// read/unread
 				int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
-				messageJson.put("read",readFlag);
+				messageJson.put("read", readFlag);
 				
 				if (filter.equals("isUnreadOnly") && readFlag == 1) {
 					continue;
@@ -589,9 +527,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					boolean isForwarded = ezEmailUtil.hasForwardedFlag(message);
 					
 					if (isForwarded) {
-						messageJson.put("contentclass","FORWARD");
+						messageJson.put("contentclass", "FORWARD");
 					} else {
-						messageJson.put("contentclass","IPM.Note");
+						messageJson.put("contentclass", "IPM.Note");
 					}
 				}
 				
@@ -620,7 +558,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			data.put("importanceColor", importanceColor);
 			data.put("unreadCount", folder.getUnreadMessageCount());
 			data.put("fullCount", folder.getMessageCount());
-			data.put("optionCount", messages.length);
+			data.put("optionCount", totalCount);
 			data.put("folderName", folderName);
 			data.put("includeSubFolders", includeSubFolders);
 			

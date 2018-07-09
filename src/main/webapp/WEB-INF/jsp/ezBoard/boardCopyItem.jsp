@@ -269,7 +269,7 @@
 			vertical-align:top;
 			font-size: 9pt;
 			height : 15px;
-			background-color : #efeff0;
+			background-color : #edf4fd;
 			cursor : hand;
 		}
 		.node_hover{

@@ -157,7 +157,7 @@
 			tr.hover:hover{background:#eee; color:#fff;}
 			
 			.selectTR{
-				background-color: #efeff0;
+				background-color: #edf4fd;
 			}
 		</style>
 	</head>

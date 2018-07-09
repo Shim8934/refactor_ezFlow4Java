@@ -21,7 +21,7 @@
 	        var pMaxPage = "";
 	        var BlockSize = 10;
 	        var pFolderName = "";
-	        var m_strColorSelect = "#efeff0";
+	        var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var CardHeader1 = "<spring:message code='ezAddress.t263' />";

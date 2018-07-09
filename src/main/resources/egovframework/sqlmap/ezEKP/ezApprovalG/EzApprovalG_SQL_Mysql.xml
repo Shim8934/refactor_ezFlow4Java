@@ -38,6 +38,12 @@
 	<typeAlias  alias="ApprGContInfoVO" 			    type="egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO"/>
 	<typeAlias  alias="ApprGDeleteCabinetInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGDeleteCabinetInfoVO"/>
 	<typeAlias  alias="ApprGRelayVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGRelayVO"/>
+	<typeAlias  alias="PortalTopOtherCompanyAddJobVO" 	type="egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO"/>
+	
+	<resultMap class="PortalTopOtherCompanyAddJobVO" 	id="PortalTopOtherCompanyAddJobMap">
+		<result property="companyID"					column="companyID"						/>
+		<result property="companyName"					column="companyName"						/>
+	</resultMap>
 	
 <!-- 	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO"> -->
 <!-- 		{CALL EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -388,7 +394,9 @@
 			            						 FORMNAME, 
 			            						 FORMNAME2, 
 			            						 URGENTAPPROVAL,
-			            						 COMPANYID
+			            						 COMPANYID,
+			            						 COMPANYNAME,
+			            						 COMPANYNAME2
 			            			FROM 
 			            				VAPRWILLDOCLIST  
 			            			WHERE 
@@ -640,7 +648,9 @@
 		                  		TBL_EXPAPRDOCINFO.FormName, 
 		                  		TBL_EXPAPRDOCINFO.FormName2, 
 		                  		TBL_EXPAPRDOCINFO.UrgentApproval,
-		                  		TBL_APRDOCINFO.COMPANYID
+		                  		TBL_APRDOCINFO.COMPANYID,
+		                  		TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 AS COMPANYNAME,
+        						TBL_DEPTMASTER.COMPNM2 AS COMPANYNAME2
 		                  	FROM 
 		                  		TBL_APRDOCINFO 
 		                  	INNER JOIN 
@@ -659,6 +669,12 @@
 		                  		TBL_APRDOCINFO.TENANT_ID = TBL_EXPAPRDOCINFO.TENANT_ID 
 		                  	AND
 		                  		TBL_APRDOCINFO.COMPANYID = TBL_EXPAPRDOCINFO.COMPANYID 
+		                  	INNER JOIN
+		                  		TBL_DEPTMASTER
+		                  	ON 
+		                  		TBL_APRDOCINFO.COMPANYID = TBL_DEPTMASTER.CN
+            				AND 
+								TBL_APRDOCINFO.TENANT_ID = TBL_DEPTMASTER.TENANT_ID		                  		
 		                  	WHERE 
 		                  		TBL_APRLINEINFO.APRMEMBERID IN ($v_USERIDS$) 
 		                  	AND 
@@ -7793,6 +7809,9 @@
 							                   WHEN processYN = 'Y' THEN #v_Y#
 						                  ELSE #v_Y# END AS SENDFLAG
 								   		  </isEqual>
+								   		  ,TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 companyName,
+										  TBL_DEPTMASTER.COMPNM2 companyName2
+
 							   	FROM 
 							   			 TBL_ENDAPRDOCINFO 
 							   	LEFT OUTER JOIN 
@@ -7811,6 +7830,12 @@
 							   			 TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
 					   			AND
 							   			 TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+							   	INNER JOIN
+							   			TBL_DEPTMASTER
+							   	ON
+							   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_DEPTMASTER.CN
+							   	AND
+							   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
 							   	<isNotEmpty property="v_CONTID">
 									AND
 							   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
@@ -26243,5 +26268,40 @@
 		<isEqual property="v_COUNTTYPE" compareValue="OTHER">
 			DATE_ADD(#v_NOWTIME#, INTERVAL -1 MONTH) > A.STARTDATE
 		</isEqual>
+	</select>
+	
+	<select id="EzApprovalG.getAllCompanyList" parameterClass="map" resultMap="PortalTopOtherCompanyAddJobMap">
+		select 
+			EXTENSIONATTRIBUTE2 companyID,
+			EXTENSIONATTRIBUTE3 companyName
+		from
+			tbl_deptmaster d
+		where 
+			cn = (select department from tbl_usermaster where cn = #userId# and tenant_id = #tenantId#)
+		and 
+			tenant_id = #tenantId#
+		union
+		select
+			EXTENSIONATTRIBUTE2 companyID,
+			EXTENSIONATTRIBUTE3 companyName
+		from
+			tbl_deptmaster d
+		where 
+		    cn in (SELECT 
+						EXTENSIONATTRIBUTE2 
+					FROM 
+						TBL_DEPTMASTER 
+					INNER JOIN 
+						TBL_ADDJOBMASTER 
+					ON
+						(TBL_ADDJOBMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID 
+						AND 
+						TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID) 
+					WHERE 
+						TBL_ADDJOBMASTER.TENANT_ID = #tenantId#
+					AND 
+						TBL_ADDJOBMASTER.CN = #userId#)
+		and 
+			tenant_id = #tenantId#
 	</select>
 </sqlMap>

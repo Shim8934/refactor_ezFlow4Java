@@ -27,6 +27,8 @@ function getDocList() {
         SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";
     }
     
+    var searchCompanyID = $("#selectCompany option:selected").val();
+    
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -43,7 +45,8 @@ function getDocList() {
 				orderCell    : OrderCell,
 				orderOption  : OrderOption,
 				searchQuery  : SQLPARADATA,
-				subQuery     : SubQuery
+				subQuery     : SubQuery,
+				searchCompanyID : searchCompanyID
 				},
 		success: function(xml){
 			getDocList_after(loadXMLString(xml));
@@ -1624,28 +1627,28 @@ function makePageSelPage() {
     	if (ViewLeftCount == "YES") {
     		switch (pListTypeValue) {
     		case "1":
-    			parent.frames["left"].document.getElementById("count1").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count1").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "2":
-    			parent.frames["left"].document.getElementById("count3").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count3").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "3":
-    			parent.frames["left"].document.getElementById("count2").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count2").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "4":
-    			parent.frames["left"].document.getElementById("count4").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count4").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "6":
-    			parent.frames["left"].document.getElementById("count6").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count6").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "7":
-    			parent.frames["left"].document.getElementById("count7").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count7").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "21":
-    			parent.frames["left"].document.getElementById("count21").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count21").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "99":
-    			parent.frames["left"].document.getElementById("count99").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count99").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		}
     	}

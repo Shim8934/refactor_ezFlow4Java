@@ -1,7 +1,6 @@
 package egovframework.ezMobile.ezEmail.service.impl;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -9,14 +8,10 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
-import javax.mail.Address;
-import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.UIDFolder;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeUtility;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -24,8 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -82,111 +75,74 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 			String userEmail = info.getUserId() + "@" + domainName;
 			String password = jspw;
 			
-			String useAdvancedMailSearch = ezCommonService.getTenantConfig("useAdvancedMailSearch", info.getTenantId());
-			
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 					
 			Folder folder = ia.getFolder(folderId);		
 			folder.open(Folder.READ_ONLY);
-	        UIDFolder uidFolder = (UIDFolder)folder;
 	        
 	        boolean isUnreadOnly = false;
 	        boolean isImportantOnly = false;
+	        int startNo = 0;
+			int endNo = 0;
 	        
-	        if (filter.equals("isUnreadOnly")) {
-	        	LOGGER.debug("isUnreadOnly");
-	        	isUnreadOnly = true;
-	        	
-	        	if (useAdvancedMailSearch.equals("YES")) {
-	        		messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, "", "", null, null, false, isUnreadOnly, false, true);
-	        	} else {
-	        		messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, false, true);
-	        	}
-	        	
-	        	LOGGER.debug("isUnreadOnly unreadMessage : " + messages.length);
-	        } 
-	        
-	        else if (filter.equals("isImportantOnly")) {
-	        	isImportantOnly = true;
-	        }
+        	if (filter.equals("isUnreadOnly")) {
+        		isUnreadOnly = true;
+        	} else if (filter.equals("isImportantOnly")) {
+        		isImportantOnly = true;
+        	}
+        	
+        	startNo = Integer.parseInt(start);
+			endNo = Integer.parseInt(end);
+			int listCount = endNo - startNo + 1;
 			
-			if (messages == null) {
-				messages = folder.getMessages();
+			if (listCount < 0) {
+				listCount = 0;
 			}
-			
-			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
-			//가장 최근에 받은 편지 순으로 정렬
-			
-			int startNo = Integer.parseInt(start);
-			int endNo = Math.min(Integer.parseInt(end), messages.length - 1);
-			
-	
-			LOGGER.debug("isUnreadOnly=" + isUnreadOnly + "isImportantOnly" + isImportantOnly);
-							
-			LOGGER.debug("unreadMessage Count=" + folder.getUnreadMessageCount());
-			
-			LOGGER.debug("startNo=" + startNo + ",endNo=" + endNo);
-			
-			if (startNo <= endNo) {
-				Message[] fetchMessages = Arrays.copyOfRange(messages, startNo, endNo + 1);
-				FetchProfile fp = new FetchProfile();
-								
-				fp.add(UIDFolder.FetchProfileItem.UID);
-				fp.add("X-Priority");
-				fp.add(FetchProfile.Item.CONTENT_INFO);
-				fp.add(FetchProfile.Item.ENVELOPE);
-				fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
-				fp.add(FetchProfile.Item.SIZE);
-				fp.add(FetchProfile.Item.FLAGS);
-				
-				fp.add("Subject");
-				fp.add("From");
-				fp.add("To");
-				
-				folder.fetch(fetchMessages, fp);					
-			}
-			
-			for (int i = startNo; i <= endNo; i++) {
-				Message message = messages[i];
-				
+        	
+    		messages = ezEmailUtil.searchFolder(ia, userEmail, folder, "", "", null, null, false, 
+    				isUnreadOnly, isImportantOnly, "receivedDate", false, startNo, listCount, true, null, info.getTenantId());
+        	
+			for (Message message : messages) {
+				UIDFolder uidFolder = (UIDFolder)message.getFolder();
 				JSONObject messageJson = new JSONObject();
 				
-				messageJson.put("href",folderId+"/"+uidFolder.getUID(message));
-				messageJson.put("folderId",folderId);
-				messageJson.put("messageId",uidFolder.getUID(message));
-				messageJson.put("fromemail","");
+				messageJson.put("href", folderId + "/" + uidFolder.getUID(message));
+				messageJson.put("folderId", folderId);
+				messageJson.put("messageId", uidFolder.getUID(message));
+				messageJson.put("fromemail", "");
 								
 				// importance
 				String[] headers = message.getHeader("X-Priority");
 				String header = headers != null ? headers[0] : "normal";
 				int importance = 1;
+				
 				// startsWith is used since
 				// there are cases like X-Priority: 1 (Highest) generated by Thunderbird.
 				if (header.startsWith("1")) {
 					importance = 2;
-				}
-				else if (header.startsWith("5")) {
+				} else if (header.startsWith("5")) {
 					importance = 0;
 				}
-				messageJson.put("importance",importance);
+				
+				messageJson.put("importance", importance);
 				
 				// Flagged is used for bookmark
 				int flagged = 0;
 				if (message.isSet(Flags.Flag.FLAGGED)) {
 					flagged = 1;
 				}
-				messageJson.put("flag",flagged);
+				messageJson.put("flag", flagged);
 				
 				// attachment
 				boolean isAttached = IMAPAccess.hasAttachment(message);
 				int attached = isAttached ? 1 : 0;
-				messageJson.put("attach",attached);
+				messageJson.put("attach", attached);
 				
 				String addressStr = "";
 							
 				addressStr = ezEmailUtil.getFromNameOrAddressOfMessage(message);
-				messageJson.put("sender",addressStr);
+				messageJson.put("sender", addressStr);
 							
 				// subject
 				String subject = ezEmailUtil.getSubject(message);								
@@ -196,7 +152,7 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 					subject = egovMessageSource.getMessage("ezEmail.kms03", locale);					
 				}
 				
-				messageJson.put("subject",subject);
+				messageJson.put("subject", subject);
 				
 				// received date
 				Date receivedDate = message.getReceivedDate();
@@ -206,41 +162,39 @@ public class MEmailServiceImpl extends EgovAbstractServiceImpl implements MEmail
 				String receivedDateStr = sdf.format(receivedDate);
 	        	receivedDateStr = commonUtil.getDateStringInUTC(receivedDateStr, info.getOffSet(), false);
 				
-				messageJson.put("receivedt",receivedDateStr);
+				messageJson.put("receivedt", receivedDateStr);
 				
 				// size
-				messageJson.put("size",message.getSize());
+				messageJson.put("size", message.getSize());
 				
 				// read/unread
 				int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
-				messageJson.put("read",readFlag);
+				messageJson.put("read", readFlag);
 							
 				if (message.isSet(Flags.Flag.ANSWERED)) {
-					messageJson.put("contentclass","REPLY");				}
-				else {
+					messageJson.put("contentclass", "REPLY");				
+				} else {
 					boolean isForwarded = ezEmailUtil.hasForwardedFlag(message);
 					
 					if (isForwarded) {
-						messageJson.put("contentclass","FORWARD");
-					}
-					else {
-						messageJson.put("contentclass","IPM.Note");
+						messageJson.put("contentclass", "FORWARD");
+					} else {
+						messageJson.put("contentclass", "IPM.Note");
 					}
 				}
+				
 				messageJsonArray.add(messageJson);
 			}
 					
 			folder.close(false);
-		
 		} catch (Exception e) {
-			
 			e.printStackTrace();
-			
 		} finally {
 			if (ia != null) {
 				ia.close();
 			}
 		}
+		
 		return messageJsonArray;
 	}
 
