@@ -829,35 +829,32 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				
 					downFileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message) + ".zip";
 					Part part = null;
+					Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
 					
 					if (idx.length == 0) {
 						part = message;
 					} else {
 						
 						for (int i = 0; i < idx.length; i++) {
-							
 							part = ezEmailUtil.getAttachPart(message, idx[i]);
 
 							if (part == null) {
 								logger.debug("attachpart not found. AttachPartIndex=" + idx[i]);
 							} else {
-							
 								InputStream input = null;
-								response.setContentType(part.getContentType());
-							
-								filename[i] = MimeUtility.decodeText(filename[i]);
-								filename[i] = filename[i].replaceAll("[\\\\/:*?\"<>|]", "_")
-											 .replaceAll("[\\t\\r\\n\\v\\f]", "")
-											 .replaceAll("[+]", " ");
-								logger.debug("fname=" + filename[i]);
 								
 								try {
+									filename[i] = MimeUtility.decodeText(filename[i]);
+									filename[i] = filename[i].replaceAll("[\\\\/:*?\"<>|]", "_")
+												 .replaceAll("[\\t\\r\\n\\v\\f]", "")
+												 .replaceAll("[+]", " ");
+									filename[i] = commonUtil.normalizeFileName(filename[i]);
+									filename[i] = commonUtil.getUniqueFileName(filename[i], fileNameMap);
+									logger.debug("filename=" + filename[i]);
+									
 									input = part.getInputStream();
 									
-									String nfcFilename = commonUtil.normalizeFileName(filename[i]);
-									
-									ZipEntry zipEntry = new ZipEntry(nfcFilename);
-									
+									ZipEntry zipEntry = new ZipEntry(filename[i]);
 									zos.putNextEntry(zipEntry);
 									
 									byte[] buffer = new byte[4096];
@@ -868,11 +865,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 									}
 									
 									zos.closeEntry();
-									input.close();
-									
 								} catch (IOException e) {
 									e.printStackTrace();
-								} 
+								} finally {
+									if (input != null) {
+										try {
+											input.close();
+										} catch (Exception e) {
+										}
+									}
+								}
 							}
 						}
 					}
@@ -880,7 +882,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 			zos.flush();
-			zos.close();
 			f.close(true);
 
 			File file = new File(pDirTempPath + ".zip");
@@ -891,7 +892,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 
 		} catch (Exception e) {
-			
 			File file = new File(pDirTempPath + ".zip");
 			
 			if (file.exists()) {
@@ -899,13 +899,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 		} finally {
-			
 			if (ia != null) {
 				ia.close();
 			}
 			
 			if (zos != null) {
-				zos.close();
+				try {
+					zos.close();
+				} catch (Exception e) {
+				}
 			}
 		}
 		
