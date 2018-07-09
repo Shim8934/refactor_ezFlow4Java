@@ -796,6 +796,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("use_oneLineCount", use_oneLineCount);
 		
 		logger.debug("boardItemList ended");
+		logger.debug("requestURL : " + requestURL);
         return requestURL;
 	}
 
