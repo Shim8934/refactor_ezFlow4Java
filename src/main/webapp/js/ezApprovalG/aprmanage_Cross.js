@@ -1627,28 +1627,28 @@ function makePageSelPage() {
     	if (ViewLeftCount == "YES") {
     		switch (pListTypeValue) {
     		case "1":
-    			parent.frames["left"].document.getElementById("count1").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count1").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "2":
-    			parent.frames["left"].document.getElementById("count3").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count3").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "3":
-    			parent.frames["left"].document.getElementById("count2").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count2").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "4":
-    			parent.frames["left"].document.getElementById("count4").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count4").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "6":
-    			parent.frames["left"].document.getElementById("count6").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count6").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "7":
-    			parent.frames["left"].document.getElementById("count7").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count7").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "21":
-    			parent.frames["left"].document.getElementById("count21").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count21").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "99":
-    			parent.frames["left"].document.getElementById("count99").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count99").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		}
     	}

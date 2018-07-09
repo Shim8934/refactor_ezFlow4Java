@@ -24,7 +24,7 @@
 	    		cursor : pointer;
 	    	}
 	    	tr.hover:hover {background:#eee; color:#fff;}
-			.selectTR {background-color: #efeff0;}
+			.selectTR {background-color: #edf4fd;}
 			#searchTable {
 				border-top: 1px solid #e8e8e8;
 				border-left: 1px solid #e8e8e8;

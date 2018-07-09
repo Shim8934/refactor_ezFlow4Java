@@ -267,7 +267,7 @@
 		<%-- 2018-05-24 홍승비 - 비밀번호 오류 시 레이어팝업 출력 --%>
 		<div id="exDiv2" style="display:none;max-width:620px;height:190px;padding-top:27px;margin-bottom:100px">
 			<div class="warning_wrap">
-		    	<p><img src="/images/warning2.png"></p>
+		    	<p style="border:0px"><img src="/images/warning2.png"></p>
 		        <dl>
 		        	<dt>${message1}</dt>
 		            <dd class="count">${message2}<span class="pointRed">${message3}</span>${message4}</dd>

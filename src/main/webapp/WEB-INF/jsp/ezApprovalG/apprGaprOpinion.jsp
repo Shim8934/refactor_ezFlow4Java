@@ -148,7 +148,11 @@
 		    function btn_OpinionDel_onclick() {
 		        SetOpinionAction("DEL");
 		        deleteOpinionInfo();
-		        ChkFlag = true;
+		        if (pDisplay == "BanSong" || pDisplay == "BoRyu") {
+			        ChkFlag = false;
+		        } else {
+			        ChkFlag = true;
+		        }
 		    }
 		    function btn_OpinionSave_onclick() {
 		        try {
