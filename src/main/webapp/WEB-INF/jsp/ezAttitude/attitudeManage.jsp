@@ -840,13 +840,16 @@
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		
-	    <div id="searchPopup" class="popupwrapAtt" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
-			<div class="popupwrap3">
+	    <div id="searchPopup" class="popupwrap1" style="display:none;margin-bottom:50px;">
+	  		<div class="popupJQLayer">
+				<div class="title"><spring:message code='ezAttitude.t79'/></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="layerHidden()"></span></a></li>
+		            </ul>
+		        </div>
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopup_list" style="width:490px; margin:10px 0px 0px 1px;">
-			    	<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezAttitude.t79'/></th>
-					</tr>
+			    <table class="popuplist" id="addpopup_list" style="width:478px; margin:10px 0px 0px 1px;">
 					<tr>
 			  			<th style="width:90px;height:26px"><spring:message code='ezAttitude.t10'/></th>
 						<td><input type="text" id="searchUserName" name="searchUserName" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24" onkeypress="searchPress()"></td>
@@ -869,10 +872,8 @@
 					</tr>
 				</table>
 				<!-- /내용 -->
-				<br />
-				<div style="text-align:center;">
+				<div class="btnpositionLayer" style="text-align:center;">
 					<a class="imgbtn"><span onclick="search();" ><spring:message code='ezAttitude.t121'/></span></a>
-					<a class="imgbtn" rel="modal:close"><span onclick="layerHidden();"><spring:message code='ezAttitude.t34'/></span></a>
 			    </div>
 			</div>
 		</div>

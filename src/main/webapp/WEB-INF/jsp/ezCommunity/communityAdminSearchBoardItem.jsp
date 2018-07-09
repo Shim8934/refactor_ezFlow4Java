@@ -47,6 +47,8 @@
 			var code = "${code}";
 	        var iMenuNum = 7;
 	        var gubun = "${gubun}";
+	        //2018-07-09 김보미
+	        var ListInfo = "";
 	        
 			window.onload = function() {
 			    var boardname = "${boardName}";
@@ -299,7 +301,9 @@
 			            document.getElementById("chk" + i).checked = true;
 			            
 			            if (CrossYN()) {
-			                strListInfo = ListInfo.textContent;
+			            	//2018-07-09 김보미
+ 			                //strListInfo = ListInfo.textContent;
+							strListInfo = ListInfo;
 			            } else {
 			                strListInfo = ListInfo.innerText;
 			            }
