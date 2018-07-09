@@ -236,7 +236,7 @@
 							<td class="content col3" style="text-align: left;">
 								<span class="originalContent"><c:out value="${commentVO.commentContent}"/></span>
 								<div class="modifiedContent" style="display: none; width: 100%;">
-									<textarea class="commentContent" style="resize: none; height: 45px;"><c:out value="${commentVO.commentContent}"/></textarea>
+									<textarea class="commentContent" style="resize: none; height: 45px;" maxlength="500"><c:out value="${commentVO.commentContent}"/></textarea>
 									<div style="display: inline; float: right;">
 										<a class="imgbtn" onclick="saveComment(this)" style="margin-left:2px; margin-top:9px;">
 											<span><spring:message code='ezPMS.t265' /></span>
