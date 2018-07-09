@@ -33,22 +33,7 @@
 				margin:0px; 
 				padding:0px;
 			}
-			#layer_Viewpopup .popupwrap1 {
-				border:1px solid #555a64;
-				padding:0px;
-				margin:0px;
-				
-			}
-			#layer_Viewpopup .shadow {
-				height:2px;
-				background:#d7d7d7;
-				
-			}
-			#layer_Viewpopup .popupwrap2 {
-				border:2px solid #e5e5e5;
-				padding:10px;
-				
-			}
+			
 			#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
 			
 			#layer_Viewpopup .popupwrap3 {
@@ -1190,7 +1175,7 @@
 	                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display: none;">
 	                        <p class="mail_title">
 	                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
-	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject"></span></span>
+	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
 	                        </p>
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
 	                        <dl class="mail_item">
@@ -1209,41 +1194,44 @@
 	
 	<!-- 2018-06-12 김민성 - 게시판 검색 레이어팝업 변경 -->
 	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
-		<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
-			<table class="content">
-				<tr>
-					<th class="layerHeader" colspan="2">
-						<img src="/images/kr/left/left_mail.png" style="vertical-align: middle; padding-bottom: 1px"> 
-						<spring:message code='ezBoard.t0006' /> <spring:message code='ezJournal.t43' />
-					</th>
-				</tr>
-		        <tr>
-		            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
-		            <td><input type="text" id="txtTitle" style="width:98%" value=""></td>
-		        </tr>  
-		         <tr>
-		            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
-		            <td><input type="text" id="txtAbstract" style="width:98%" value=""></td>
-		        </tr>    
-		       <tr>
-		            <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
-		           <td>
-		               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-		                ~
-		               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"> 
-		           </td>
-		  		</tr>
-			</table>
-			<br />
-			<table style="width: 100%">
-		        <tr>
-		            <td style="text-align:center;">
-		                <a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
-		                <a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a>
-		                <a class="imgbtn"><span onClick="BoardSearchOptionHidden()"><spring:message code='ezBoard.t15' /></span></a>
-		            </td>
-		        </tr>
-			</table>
+		<div id="srarchpopup" class="popupwrap1 modal" style="margin-bottom: 70px; left: 297.5px; display: inline-block;">
+			<div class="popupJQLayer">
+				<div class="title"><spring:message code='ezBoard.t0006' /><spring:message code='ezJournal.t43' /></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="BoardSearchOptionHidden()"></span></a></li>
+		            </ul>
+		        </div>
+				<table class="content">					
+			        <tr>
+			            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
+			            <td><input type="text" id="txtTitle" style="width:98%" value=""></td>
+			        </tr>  
+			         <tr>
+			            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
+			            <td><input type="text" id="txtAbstract" style="width:98%" value=""></td>
+			        </tr>    
+			       <tr>
+			            <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
+			           <td>
+			               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+			                ~
+			               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"> 
+			           </td>
+			  		</tr>
+				</table>
+				<br />
+				<table style="width: 100%">
+			        <tr>
+			            <td style="text-align:center;">
+			            	<div class="btnpositionLayer">
+			                	<a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
+			                	<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a>
+			                </div>				                
+			            </td>
+			        </tr>
+				</table>
+			</div>	
 		</div>
 	</div>
 	    <%-- <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">

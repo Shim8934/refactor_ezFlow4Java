@@ -249,6 +249,7 @@ function CalendarView(pTagetID,chk_str) {
                 dTd.className = "calendar_t_time";
                 var dDiv = document.createElement("DIV")
                 dDiv.setAttribute("id", dayText.substring(0,10) + "ALL");
+                dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
                 dDiv.style.width = "100%"
                 dDiv.style.height = "100px";
                 dDiv.style.overflowY = "auto";
@@ -717,7 +718,7 @@ function MultiSelectItems(obj, event) {
 
         for (var i = 0; i <= 41; i++) {
             if (StartIdex <= i && Endidex >= i)
-                document.getElementById("index_" + i).style.backgroundColor = "#efeff0";
+                document.getElementById("index_" + i).style.backgroundColor = "#edf4fd";
             else
                 document.getElementById("index_" + i).style.backgroundColor = "";
         }
@@ -732,7 +733,7 @@ function MultiSelectEnd(obj, event) {
         DragEndItemID = "";
         return;
     }
-    obj.style.backgroundColor = "#efeff0";
+    obj.style.backgroundColor = "#edf4fd";
     Write();
 }
 function Write() {
@@ -1049,6 +1050,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         dTd.className = "calendar_t_time";
         var dDiv = document.createElement("DIV")
         dDiv.setAttribute("id", divID + "ALL");
+        dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
         dDiv.style.height = "100px";
         dDiv.style.overflowY = "auto";
         dDiv.style.overflowN = "hidden";

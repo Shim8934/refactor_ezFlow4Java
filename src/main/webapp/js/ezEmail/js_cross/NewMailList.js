@@ -10,7 +10,7 @@ var GetList_HTTP;
 var GetList_HTTP_SUB;
 var GetListInfo_HeaderObject;
 var GetListInfo_ContentObject;
-var m_strColorSelect = "#efeff0";
+var m_strColorSelect = "#edf4fd";
 var m_strColorOver = "#f4f5f5";
 var m_strColorDefault = "#ffffff";
 var GroupplusImg ="/images/ImgIcon/groupplus.gif";
@@ -74,11 +74,20 @@ function MakeHeaderHTML(HeaderObject) {
             }
             
             var HeaderType = SelectSingleNodeValue(XmlRows[Cnt], "heading");
-            if (HeaderType == "IMG")
-                _HeaderRow.innerHTML = "<IMG style=\"cursor:pointer\" src=\"" + SelectSingleNodeValue(XmlRows[Cnt], "imgpath") + "\"/>";
-            else
+            if (HeaderType == "IMG") {
+            	if (SelectSingleNodeValue(XmlRows[Cnt], "imgpath") == "") {
+            		_HeaderRow.innerHTML = "&nbsp;";
+            	} else {
+            		_HeaderRow.innerHTML = "<IMG style=\"cursor:pointer\" src=\"" + SelectSingleNodeValue(XmlRows[Cnt], "imgpath") + "\"/>";
+            	}
+            } else {
                 _HeaderRow.innerHTML = SelectSingleNodeValue(XmlRows[Cnt], "heading");
-
+            }
+            if (SelectSingleNodeValue(XmlRows[Cnt], "propname") == "readdt") {
+            	_HeaderTR.appendChild(_HeaderRow);
+            	continue;
+            }
+            
             var _HeaderSpanimg = null;
             if (SelectSingleNodeValue(XmlRows[Cnt], "prop") == p_ListOrderby) {
                 _HeaderRow.setAttribute("orderoption", p_ListOrderOption);

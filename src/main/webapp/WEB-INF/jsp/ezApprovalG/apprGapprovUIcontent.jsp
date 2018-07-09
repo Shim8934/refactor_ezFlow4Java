@@ -345,7 +345,7 @@
 	                    }
 	                }
 	                else {
-	                    DocTitleObj.innerHTML = GetDocTitle();
+	                    DocTitleObj.innerHTML = ConvertCharToEntityReference(GetDocTitle());
 	                    if (document.getElementById("body") != null) {
 // 	                        var HtmlContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body").innerHTML;
 // 	                        BODYTag.innerHTML = HtmlContent;

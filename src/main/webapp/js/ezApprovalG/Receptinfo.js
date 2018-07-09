@@ -627,18 +627,20 @@ function AprLineAddDept_User(pSelectedRow) {
             listview.SetRowOnDblClick("AprDeptDel_onclick");
             listview.DataSource(Resultxml);
             listview.DataBind("RECEPTLIST");
-
         } else {
-
             var objTr = listview.AddRow(0);
-            SetAttribute(objTr, "id", "lvtAPRDEPT" + "_TR_" + eval(MaxID + 1));
+//            2018-07-09 이효진 지정된 수신처 삭제시 id값 매칭
+//            SetAttribute(objTr, "id", "lvtAPRDEPT" + "_TR_" + eval(MaxID + 1));
+            SetAttribute(objTr, "id", "lvRECEPTLIST" + "_TR_" + eval(MaxID + 1));
             listview.AddDataRow(objTr, Resultxml);
 
         }
     }
     else {
         var objTr = listview.AddRow(0);
-        SetAttribute(objTr, "id", "lvtAPRDEPT" + "_TR_" + eval(MaxID + 1));
+//        2018-07-09 이효진 지정된 수신처 삭제시 id값 매칭
+//        SetAttribute(objTr, "id", "lvtAPRDEPT" + "_TR_" + eval(MaxID + 1));
+        SetAttribute(objTr, "id", "lvRECEPTLIST" + "_TR_" + eval(MaxID + 1));
         listview.AddDataRow(objTr, Resultxml);
     }
     DeptAddIndex = DeptAddIndex + 1;

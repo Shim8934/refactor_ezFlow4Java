@@ -520,10 +520,12 @@
 				</c:if>
 				<c:if test='${!empty scheCum}'>
 					<c:forEach var="cum" items="${scheCum}">
-						<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t373'/>${cum.titleName }
-						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${cum.deptId }" class="checkSelect">
-						  <span class="checkmark" style="background-color:#01b43f;"></span>
-						</label>
+						<c:if test="${cum.deptId ne loginVO.deptID}">
+							<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t373'/>${cum.titleName }
+							  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${cum.deptId }" class="checkSelect">
+							  <span class="checkmark" style="background-color:#01b43f;"></span>
+							</label>
+						</c:if>
 					</c:forEach>
 				</c:if>
 				<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t223'/>
@@ -540,8 +542,8 @@
 				</c:if>
 		    	</div>
 		    	<!-- 2018-06-08 구해안 일정관리 탭 삭제 -->
-			    <%-- <li style="border-top:1px solid #dedede" evt="0"><span id='Schedule_Main' onClick="Function_Flag(2)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1010'/></span></li> --%>
-	            <li style="border-top:1px solid #f0f0f0" evt="0"><span id='Schedule_Group' onClick="Function_Flag(5)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t252'/></span></li>
+			    <%-- <li style="border-top:1px solid #dedede" evt="0"><span id='Schedule_Main' onClick="Function_Flag(2)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1010'/></span></li> --%>	            
+				<li style="border-top:1px solid #eaeaea" evt="0"><span id='Schedule_Group' onClick="Function_Flag(5)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t252'/></span></li>
 			    <li evt="0"><span id='Schedule_Search' onClick="Function_Flag(6)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1018'/></span></li>
 			    <li evt="0"><span id='Schedule_Public_Search' onClick="Function_Flag(10)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1021'/></span></li>
 		    </ul>
