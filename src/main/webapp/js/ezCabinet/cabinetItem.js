@@ -406,7 +406,7 @@ var CabinetItem = function() {
 	}
 	
 	function getFileDetail() {
-		window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 670));
+		window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 690));
 	}
 	
 	function addRelatedCabinet() {

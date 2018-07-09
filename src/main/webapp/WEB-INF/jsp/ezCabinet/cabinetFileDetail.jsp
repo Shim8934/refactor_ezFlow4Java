@@ -12,7 +12,7 @@
 		function fileModify() {
 			var cabId    = "";
 			window.location.href = "/ezCabinet/addCabinetFile.do?cabId=" + cabId;
-			window.resizeTo(600, 530);
+			window.resizeTo(600, 540);
 		}
 		</script>
 	</head>
