@@ -36,6 +36,7 @@
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1746'/>";
 		            alert(pAlertContent);
 		            document.getElementById("inpPassword").focus();
+		            flag = true;
 		            return;
 		        }
 		        else {

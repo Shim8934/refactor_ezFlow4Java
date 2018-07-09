@@ -157,13 +157,22 @@
 				var filelist = GetChildNodes(listtable);
 				var fileList = "";
 
-				for (var i = 0; i < filelist.length - 1; i++) {	    
-					if (i == 0) {
-						fileList = GetAttribute(filelist[i + 1], "data2");
-					} else {
-						fileList += "," + GetAttribute(filelist[i + 1], "data2");
-            		}
-				}
+				//2018-07-06 김보미 - 파일부분 수정
+// 				for (var i = 0; i < filelist.length - 1; i++) {	    
+// 					if (i == 0) {
+// 						fileList = GetAttribute(filelist[i + 1], "data2");
+// 					} else {
+// 						fileList += "," + GetAttribute(filelist[i + 1], "data2");
+//             		}
+// 				}
+			    var fileArr = new Array(); //Object를 배열로 저장할 Array
+		        for (var i = 0; i < filelist.length - 1; i++) {
+			        var fileObj = new Object(); //key, value형태로 저장할 Object
+			        fileObj.newFileName = GetAttribute(filelist[i + 1], "data");
+			        fileObj.pFileName = GetAttribute(filelist[i + 1], "data2");
+			        fileObj.fileSize = GetAttribute(filelist[i + 1], "data3");
+			        fileArr.push(fileObj);
+		        }
 				
 				var receiverList = document.getElementById("receiverlist").innerHTML;
 				var receiverList2 = document.getElementById("receiverlist2").innerHTML;
@@ -187,7 +196,9 @@
 	                			receiverList2 : receiverList2,
 	                			receiverID : receiverID,
 	                			content : content,
-	                			fileList : fileList,
+	                			//2018-07-06 김보미 - 파일부분 수정
+ 	                			//fileList : fileList,
+	                			fileList : JSON.stringify(fileArr),
 	                			oldCircularID : oldCircularID,
 	                			mode : mode
 	                },  
@@ -244,13 +255,22 @@
 					var filelist = GetChildNodes(listtable);
 					var fileList = "";
 
-					for (var i = 0; i < filelist.length - 1; i++) {	    
-						if (i == 0) {
-							fileList = GetAttribute(filelist[i + 1], "data2");
-						} else {
-							fileList += "," + GetAttribute(filelist[i + 1], "data2");
-	            		}
-					}
+					//2018-07-06 김보미 - 파일부분 수정
+// 					for (var i = 0; i < filelist.length - 1; i++) {	    
+// 						if (i == 0) {
+// 							fileList = GetAttribute(filelist[i + 1], "data2");
+// 						} else {
+// 							fileList += "," + GetAttribute(filelist[i + 1], "data2");
+// 	            		}
+// 					}
+					var fileArr = new Array(); //Object를 배열로 저장할 Array
+			        for (var i = 0; i < filelist.length - 1; i++) {
+				        var fileObj = new Object(); //key, value형태로 저장할 Object
+				        fileObj.newFileName = GetAttribute(filelist[i + 1], "data");
+				        fileObj.pFileName = GetAttribute(filelist[i + 1], "data2");
+				        fileObj.fileSize = GetAttribute(filelist[i + 1], "data3");
+				        fileArr.push(fileObj);
+			        }
 					
 					var receiverList = document.getElementById("receiverlist").innerHTML;
 					var receiverList2 = document.getElementById("receiverlist2").innerHTML;
@@ -278,7 +298,9 @@
 		                			receiverID : receiverID,
 		                			circularID : circularID,
 		                			content : content,
-		                			fileList : fileList
+		                			//2018-07-06 김보미 - 파일부분 수정
+	 	                			//fileList : fileList
+		                			fileList : JSON.stringify(fileArr)
 		                },  
 		                cache: false,
 		                success: function(data) {	   
@@ -303,13 +325,22 @@
 				var filelist = GetChildNodes(listtable);
 				var fileList = "";
 
-				for (var i = 0; i < filelist.length - 1; i++) {	    
-					if (i == 0) {
-						fileList = GetAttribute(filelist[i + 1], "data2");
-					} else {
-						fileList += "," + GetAttribute(filelist[i + 1], "data2");
-            		}
-				}
+				//2018-07-06 김보미 - 파일부분 수정
+// 				for (var i = 0; i < filelist.length - 1; i++) {
+// 					if (i == 0) {
+// 						fileList = GetAttribute(filelist[i + 1], "data2");
+// 					} else {
+// 						fileList += "," + GetAttribute(filelist[i + 1], "data2");
+//             		}
+// 				}
+			    var fileArr = new Array(); //Object를 배열로 저장할 Array
+		        for (var i = 0; i < filelist.length - 1; i++) {
+			        var fileObj = new Object(); //key, value형태로 저장할 Object
+			        fileObj.newFileName = GetAttribute(filelist[i + 1], "data");
+			        fileObj.pFileName = GetAttribute(filelist[i + 1], "data2");
+			        fileObj.fileSize = GetAttribute(filelist[i + 1], "data3");
+			        fileArr.push(fileObj);
+		        }
 
 				$.ajax({
 					async : false,
@@ -317,13 +348,15 @@
 	                type : 'POST',
 	                dataType : 'json',
 	                data : {
-	                	fileList : fileList
+						//2018-07-06 김보미 - 파일부분 수정
+ 	                	//fileList : fileList
+	                	fileList : JSON.stringify(fileArr)
 	                },
 	                success: function() {
 						window.close();
 	                },
 	                error: function() {
-	                	alert("<spring:message code='ezCircular.t102'/>");	
+	                	alert("<spring:message code='ezCircular.t102'/>");
 	                }
 				});
 			}
