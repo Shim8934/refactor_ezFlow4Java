@@ -397,8 +397,7 @@
 	</select>
 	<!-- checked -->
 	<select id="EzScheduleDAO.getMyGroupMemberListCnt" parameterClass="map" resultClass="int">
-		<![CDATA[
-			 select 
+<!-- 			 select 
 			 	count(*)
              from (
 	                  select
@@ -412,8 +411,51 @@
                       	tenant_id = #v_TENANTID#
              )a join tbl_usermaster b on a.memberid = b.cn and a.tenant_id = b.tenant_id
              where
-             	b.tenant_id = #v_TENANTID#
-             
+             	b.tenant_id = #v_TENANTID# -->
+		<![CDATA[
+             select 
+			 	count(distinct memberid)
+             from ( select              		
+                  	groupid,
+                  	memberid,
+                  	membername,
+                  	membername2,
+                  	tenant_id
+                     from 
+                     	tbl_schedulegroupmember 
+                     where  
+                     	tenant_id = #v_TENANTID#	
+             )A join ( SELECT  
+							D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION , D.DESCRIPTION2, D.department
+							FROM  
+							TBL_USERMASTER D 
+							WHERE  
+							D.TENANT_ID = #v_TENANTID# AND D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+							UNION ALL 
+							SELECT  
+							B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, A.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2, A.deptid 
+							FROM  
+							TBL_USERMASTER B  
+							INNER JOIN  
+							TBL_ADDJOBMASTER A  
+							ON  
+							A.CN = B.CN  
+							AND  
+							A.TENANT_ID = B.TENANT_ID        
+							RIGHT JOIN  
+							TBL_DEPTMASTER C 
+							ON  
+							A.DEPTID = C.CN 
+							AND  
+							B.TENANT_ID = C.TENANT_ID    
+							WHERE  
+							A.TENANT_ID = #v_TENANTID# AND C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#) BB 
+            	ON 
+				A.memberid = BB.cn 
+				WHERE 
+				A.groupid = #v_GROUPID#
+				AND 
+				A.tenant_id = #v_TENANTID#
 		]]>
 	</select>
 	<!-- checked -->
@@ -473,7 +515,7 @@
                      	tbl_schedulegroupmember 
                      where  
                      	tenant_id = #v_TENANTID#	
-             )A left join ( SELECT  
+             )A join ( SELECT  
 							D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION , D.DESCRIPTION2, D.department
 							FROM  
 							TBL_USERMASTER D 
