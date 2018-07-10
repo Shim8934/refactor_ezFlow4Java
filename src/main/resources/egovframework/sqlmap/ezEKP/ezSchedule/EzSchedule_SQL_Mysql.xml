@@ -560,9 +560,8 @@
 		]]>
 	</select>
 	<!-- checked -->
-	<select id="EzScheduleDAO.getGroupMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO">
-		<![CDATA[
-			 select 
+	<select id="EzScheduleDAO.getGroupMemberList" parameterClass="map" resultClass="ScheduleGroupListVO">
+<!-- 			 select 
 			 	memberid,
 			 	membername,
 			 	membername2,
@@ -575,7 +574,63 @@
              where
              	groupid = #v_GROUPID#
              and
-             	tenant_id = #v_TENANTID#
+             	tenant_id = #v_TENANTID# -->
+		<![CDATA[
+			 select 
+			 	A.memberid,
+             	case #v_LANG#
+                    when '1' then A.memberName                 
+        			when '2' then A.memberName2
+                end membername, 
+                '' as membername2,
+			 	'' as status,
+			 	date_add(a.responsedate, interval +#v_OFFSETMIN# minute) as responsedate,
+             	'' as mail,
+             	'' as department,
+             	'' as info  
+             from ( select              		
+                  	groupid,
+                  	memberid,
+                  	membername,
+                  	membername2,
+                  	responsedate,
+                  	tenant_id
+                     from 
+                     	tbl_schedulegroupmember 
+                     where  
+                     	tenant_id = #v_TENANTID#	
+             )A join ( SELECT  
+							D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION , D.DESCRIPTION2, D.department
+							FROM  
+							TBL_USERMASTER D 
+							WHERE  
+							D.TENANT_ID = #v_TENANTID# AND D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+							UNION ALL 
+							SELECT  
+							B.cn, B.DISPLAYNAME, C.COMPNM2 as COMPANY, A.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, C.DISPLAYNAME2 AS DESCRIPTION2, A.deptid 
+							FROM  
+							TBL_USERMASTER B  
+							INNER JOIN  
+							TBL_ADDJOBMASTER A  
+							ON  
+							A.CN = B.CN  
+							AND  
+							A.TENANT_ID = B.TENANT_ID        
+							RIGHT JOIN  
+							TBL_DEPTMASTER C 
+							ON  
+							A.DEPTID = C.CN 
+							AND  
+							B.TENANT_ID = C.TENANT_ID    
+							WHERE  
+							A.TENANT_ID = #v_TENANTID# AND C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#) BB 
+            	ON 
+				A.memberid = BB.cn 
+				WHERE 
+				A.groupid = #v_GROUPID#
+				AND 
+				A.tenant_id = #v_TENANTID# 
+				GROUP BY memberid
 		]]>
 	</select>
 	<!-- checked -->
