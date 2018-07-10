@@ -624,7 +624,15 @@
 	   				groupId = projectGroupId;
 	   			  }
 	   			  
+	   			  var orgStart = task.start;
+	   			  var orgEnd   = task.end;
+	   			  
 	   			  if(task.setPeriod(start, end)) {
+	   				
+	   				// 이전과 변화가 없을 때는 바로 true return
+	   				if(orgStart == task.start && orgEnd == task.end) {
+	   					return true;
+	   				}
 	   				
 	   				if(saveAllSchedules(groupId, taskId)) {
 	   					toastPopupShow("[" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");				
@@ -665,8 +673,16 @@
 	   				groupId = projectGroupId;
 	   			  }
 	   			  
+	   			  var orgStart = task.start;
+	   			  var orgEnd   = task.end;
+	   			  
 	   			  if(task.moveTo(newStart, true,true)) {
-	   				  
+	   				
+	   				// 이전과 변화가 없을 때는 바로 true return
+	   				if(orgStart == task.start && orgEnd == task.end) {
+	   					return true;
+	   				}
+	   				
 	   				if(saveAllSchedules(groupId, taskId) == true) {
 	   					toastPopupShow("[" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");				
 			   			addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");
