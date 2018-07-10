@@ -53,7 +53,7 @@
 	        }
 	    </script>
 	</head>
-	<body>
+	<body class="tabbody">
 		<table class="content" style="width:790px;height:600px;margin-top:10px;border:0;">
 			<tr>
 				<td style="height:600px;border:0;">                   
