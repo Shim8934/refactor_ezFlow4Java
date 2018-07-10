@@ -57,7 +57,7 @@
 			});			
 			
 			function company_change() {
-				searchValue();
+				clearSearchVal();
 				Permissions_List();
 		    }
 		    
@@ -283,7 +283,7 @@
 		        type = pSelectTab + "=1";
 
 		        CurPage = 1;
-		        searchValue();
+		        clearSearchVal();
 		        Permissions_List();
 		    }
 			
@@ -319,13 +319,13 @@
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value, Params, "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(970, 580));
-		            searchValue();
+		            clearSearchVal();
 		            Permissions_List();
 		        }
 		    }
 		    
 		    function Permissions_Add_Complete() {
-		    	searchValue();
+		    	clearSearchVal();
 		        Permissions_List();
 		    }
 
