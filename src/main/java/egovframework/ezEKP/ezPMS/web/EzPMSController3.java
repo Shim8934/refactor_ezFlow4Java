@@ -1059,9 +1059,9 @@ public class EzPMSController3 {
 		return "json";
 	}
 	
-	@RequestMapping(value = "/ezPMS/getGanttAllItems.do")
-	public String getGanttAllItems(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS getGanttAllItems started");
+	@RequestMapping(value = "/ezPMS/getAllGanttItems.do")
+	public String getAllGanttItems(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS getAllGanttItems started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1095,11 +1095,7 @@ public class EzPMSController3 {
 			model.addAttribute("groupList", resultBodyGroup.get("data"));
 		}
 		
-		if(taskStatus != null){
-			model.addAttribute("taskStatus", taskStatus);
-		}
-		
-		LOGGER.debug("ezPMS getGanttAllItems ended");
+		LOGGER.debug("ezPMS getAllGanttItems ended");
 		return "json";
 	}
 }

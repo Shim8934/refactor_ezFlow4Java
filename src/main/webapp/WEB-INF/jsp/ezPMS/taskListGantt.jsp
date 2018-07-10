@@ -61,7 +61,7 @@
 	   		var userRoleId = "${userRoleId}";
 	   		var msgStr01 = "<spring:message code='ezEmail.t269' />";
 	   		
-			function setGanttAllItems(status) {
+			function setAllGanttItems(status) {
 	   			
 	   			var data = {
 	   				projectId : projectId,
@@ -72,15 +72,17 @@
 	   				type : "POST",
 	   				contentType: "application/json; charset=UTF-8",
 	   				dataType : "json",
-	   				async: false,
 	   				data : JSON.stringify(data),
-	   				url : "/ezPMS/getGanttAllItems.do",
+	   				url : "/ezPMS/getAllGanttItems.do",
 	   				success : function(result) {
-	   					console.log(JSON.stringify(result));
-	   					/* groupList = result.groupList;
+	   					// console.log(JSON.stringify(result));
+	   					groupList = result.groupList;
 	   					taskList  = result.taskList;
 	   					projectDetails = result.projectDetails;
-	   					userRoleId = result.userRoleId; */
+	   					userRoleId = result.userRoleId;
+	   					initValues();
+		   				var project = getGanttProject();
+		  			  	ge.loadProject(project);
 	   				}	
 	   			});
 	   		}
@@ -118,7 +120,10 @@
 	   			
 	   			//프로젝트 데이터를 간트 데이터에 입력.
 	   			function matchProjectData(ganttData, pd){
-	   				if (!ganttData.tasks) {
+	   				ganttData.tasks = [];
+	   				ganttData.resources = [];
+	   				ganttData.roles = [];
+	   				/* if (!ganttData.tasks) {
 		   				ganttData.tasks = [];
 		   			}
 	   				
@@ -128,7 +133,7 @@
 	   				
 	   				if (!ganttData.roles) {
 		   				ganttData.roles = [];
-		   			}
+		   			} */
 	   				
 	   				var tempTask = {};
 	   				tempTask.id = "p" + pd.projectId;
@@ -608,7 +613,12 @@
 	   			  ge.taskIsChanged();
 	   			  /* changeDate(task, fullId, taskId, projectId, startDate, endDate, progress, newEndTime, rowIndex, groupId, taskName); */
 	   			  
-	   			  return task.setPeriod(start, end);
+	   			  if(task.setPeriod(start, end)) {
+	   				setAllGanttItems();
+	   				return true;
+	   			  } else {
+	   				return false;
+	   			  }
 	   			};
 	   			
 	   			//기간은 그대로, 날짜만 이동
@@ -654,8 +664,12 @@
 	   			  console.log(startDate);
 	   			  console.log(endDate); */
 	   			 /*  changeDate(task, task.id, taskId, projectId, startDate, endDate, task.progress, newEndTime, rowIndex, groupId, taskName); */
-	   			 
-	   			  return task.moveTo(newStart, true,true);	 
+	   			  if(task.moveTo(newStart, true,true)) {
+	   				setAllGanttItems();
+	   				return true;
+	   			  } else {
+	   				return false;
+	   			  } 
 	   			};
 	   			
 	   			//선행작업 지정
@@ -690,13 +704,12 @@
 	   				  	}
 	   			  	} */
 	   			  	
-	   			  	// 후행작업의 기간이 정상적으로 조정된 후, 화면의 정보를 바탕으로 DB업데이트
-	   			  	if(task.moveTo(task.start,false,true)) {
 	   			  	
-	   			  		if(addPreTaskRel(projectId, taskId, preTaskId, progress, task.name, preTaskRowName, groupId, preGroupId) == true) {
+	   			  	if(addPreTaskRel(projectId, taskId, preTaskId, progress, task.name, preTaskRowName, groupId, preGroupId) == true) {
+	   			  		// 후행작업의 기간이 정상적으로 조정된 후, 화면의 정보를 바탕으로 DB업데이트
+	   			  		if(task.moveTo(task.start,false,true)) {
 	   			  			saveAllSchedules();
-	   			  			// 목표진행률 업데이트를 위함. ajax로 구현 후 삭제 예정
-	   			  			location.reload();
+	   			  			setAllGanttItems();
 	   			  		} else {  			
 	   			  			location.reload();
 	   			  			return false;
@@ -1603,11 +1616,7 @@
 	   		//업무 상태 필터 기능.
 	   		function setMyTaskList(status) {
 	   			var status = status;
-	   			var position = "";
-	   			
-	   			var	url = "/ezPMS/getProjectForGantt.do?projectId=" + projectId + "&status=" + status;
-	   			
-	   			location.href = url;
+	   			setAllGanttItems(status);
 	   		}
 	   		
 	   		//간트차트 생성 후 CSS를 바꿈.
