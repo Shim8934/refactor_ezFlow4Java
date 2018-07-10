@@ -488,13 +488,18 @@
 	   		}
 	   		
 	   		$(document).ready(function() {
+	   			var openerSelReceiver = "";
 	   			treeContent = ${deptList};
 	   			$("#1tab1").click();
 	            ChangeTab(document.getElementById("1tab1"));
 		   		setDeptList();
 	   			getFavoriteList();
 	   			if ($(opener.selReceiver).length > 0) {
-	   				receiverList = opener.selReceiver;
+	   				//2018-07-10 배현상, opener.selReceiver를 receiverList에 바로 담아서 수정,삭제한 후 취소를 해도 바로 적용되는 오류 문제로 인한 로직 수정 
+	   				openerSelReceiver = opener.selReceiver;
+	   				for (i = 0; i < openerSelReceiver.length; i++) {
+	   					receiverList.push({"userName" : openerSelReceiver[i].userName, "userId" : openerSelReceiver[i].userId});
+	   				}
 	   				drawReceiverList();
 	   			}
 		   		

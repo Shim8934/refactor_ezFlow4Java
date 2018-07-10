@@ -63,9 +63,9 @@
 					
 					return;
 				}
-				//2018-07-03 김보미 - b태그에 클래스 삭제
+				//2018-07-03 김보미 - b태그 삭제
 // 				var pInformationContent = "<spring:message code = 'ezCommunity.t5' /><b class='point'><spring:message code = 'ezCommunity.t6' /></b> <spring:message code = 'ezCommunity.t7' />";
-				var pInformationContent = "<spring:message code = 'ezCommunity.t5' /><b><spring:message code = 'ezCommunity.t6' /></b> <spring:message code = 'ezCommunity.t7' />";
+				var pInformationContent = "<spring:message code = 'ezCommunity.t5' /><spring:message code = 'ezCommunity.t6' /> <spring:message code = 'ezCommunity.t7' />";
 				Ans = OpenInformationUI(pInformationContent, btn_CommSave_Complate);
 			}
 			
