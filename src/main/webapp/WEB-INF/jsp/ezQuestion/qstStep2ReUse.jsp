@@ -564,7 +564,7 @@
     			<input type="hidden" name="DataXML" id="DataXML" />
     			<input type="hidden" name="DataIndex" id="DataIndex" />
 			</form>
-			<form method="post" id="form_TempLoad_Safari" name="form_TempLoad_Safari" enctype="multipart/form-data" action="formTempLoadSafari.do" target="ifrm_TempLoad_Safari" style="width:1px; height:1px;">
+			<form method="post" id="form_TempLoad_Safari" name="form_TempLoad_Safari" enctype="multipart/form-data" action="formTempLoadSafari.do" target="ifrm_TempLoad_Safari" style="display:none;">
     			<div id="AttachFile" style="width:1px; height:1px;">
         			<input type="file" name="cmuds" onchange="javascript:TempFileOpen_onClick(this)" style="width:1px; height:1px;" />
     			</div>
