@@ -3696,22 +3696,22 @@
 		
 		<isNotEmpty property="searchValue" prepend="AND">
 			<isEqual property="searchType" compareValue="cn">
-				cn LIKE CONCAT('%', #searchValue#,'%')
+				cn LIKE CONCAT(CONCAT('%', #searchValue#),'%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="displayname">
 				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="title">
-				title LIKE CONCAT('%', #searchValue#,'%')
+				title LIKE CONCAT(CONCAT('%', #searchValue#),'%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="description">
 				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="mail">
-				mail LIKE CONCAT('%', #searchValue#,'%')
+				mail LIKE CONCAT(CONCAT('%', #searchValue#),'%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="telephonenumber">
-				telephonenumber LIKE CONCAT('%', #searchValue#,'%')
+				telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="company">
 				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
@@ -3795,22 +3795,22 @@
     	
     	<isNotEmpty property="searchValue" prepend="AND">
 			<isEqual property="searchType" compareValue="cn">
-				cn LIKE CONCAT('%', #searchValue#,'%')
+				cn LIKE CONCAT(CONCAT('%', #searchValue#),'%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="displayname">
 				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="title">
-				title LIKE CONCAT('%', #searchValue#,'%')
+				title LIKE CONCAT(CONCAT('%', #searchValue#),'%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="description">
 				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="mail">
-				mail LIKE CONCAT('%', #searchValue#,'%')
+				mail LIKE CONCAT(CONCAT('%', #searchValue#),'%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="telephonenumber">
-				telephonenumber LIKE CONCAT('%', #searchValue#,'%')
+				telephonenumber LIKE CONCAT(CONCAT('%', #searchValue#),'%')
 			</isEqual>
 			<isEqual property="searchType" compareValue="company">
 				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT(CONCAT('%', #searchValue#), '%')
