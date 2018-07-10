@@ -262,7 +262,7 @@
                 <li><span onclick="return window.close();"></span></li>
             </ul>
         </div>
-	    <h2><spring:message code = 'ezPersonal.t20002' /></h2>
+	    <h2 style="font-weight: normal">▒ <spring:message code = 'ezPersonal.t20002' /></h2>
 	    <table style="width:500px" id="toggle_tbl1" class="content">
 			<tr>
 				<th>
@@ -305,7 +305,7 @@
 				</td>
 			</tr>
 		</table>
-	    <div class="btnposition">
+	    <div class="btnpositionNew">
 	        <a href="#" class="imgbtn"><span onclick="btnSave_click();"><spring:message code = 'ezPersonal.t34' /></span></a>
 	    </div>
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>

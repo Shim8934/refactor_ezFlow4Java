@@ -297,7 +297,7 @@
 		<table class="content"> 
   			<tr> 
     			<th><spring:message code = 'ezPersonal.t259' /></th> 
-    			<td>
+    			<td style="height:35px">
     				<spring:message code = 'ezPersonal.t260' /><br> 
       				<spring:message code = 'ezPersonal.t261' />
       			</td> 
@@ -325,7 +325,7 @@
   			</tr> 
   			<tr> 
     			<th><spring:message code = 'ezPersonal.t154' /></th> 
-    			<td style="padding:0">
+    			<td style="padding:0px">
     				<table width="100%">
 			        	<tr class="primary">
 			          		<th><c:out value = '${langPrimary}' /></th>
@@ -353,14 +353,14 @@
   					</tr> 
   					<tr> 
     					<th><spring:message code = 'ezPersonal.t155' /></th> 
-   						<td style="padding:0px; height:325px">
+   						<td style="padding:3px; height:325px">
     						<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" style="padding:0px; height:100%; width:100%; overflow:auto;border:none; margin-bottom:-3px;"></iframe>
     					</td> 
   					</tr>
   				</td>
   			</tr>
 		</table> 
-		<div class="btnposition"> 
+		<div class="btnpositionNew"> 
 		    <%-- <a class="imgbtn"><span onclick="html_edit()">HTML<spring:message code = 'ezPersonal.t156' /></span></a> --%>
 		    <a class="imgbtn"><span onclick="OK_Click()"><spring:message code = 'ezPersonal.t12' /></span></a>
 		</div>
