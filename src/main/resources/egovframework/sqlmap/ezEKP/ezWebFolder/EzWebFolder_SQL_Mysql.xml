@@ -1213,7 +1213,7 @@
 					DISTINCT
 					f1.*
 				FROM
-					TBL_WEBFOLDER_FOLDER f JOIN
+					TBL_WEBFOLDER_FOLDER f1 JOIN
 					(
 						SELECT
 							u.*
