@@ -1034,7 +1034,7 @@ public class EzPMSController3 {
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
-			model.addAttribute("data", "success");
+			model.addAttribute("roleCheck", resultBody.get("data"));
 		}
 		
 		LOGGER.debug("ezPMS deletePretaskRel ended");
@@ -1052,7 +1052,8 @@ public class EzPMSController3 {
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
-			model.addAttribute("data", "success");
+			String roleCheck = (String) resultBody.get("data");
+			model.addAttribute("roleCheck", roleCheck);
 		}
 		
 		LOGGER.debug("ezPMS updateAllTasksDate ended");

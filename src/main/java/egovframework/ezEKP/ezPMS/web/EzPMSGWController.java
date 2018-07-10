@@ -1470,18 +1470,8 @@ public class EzPMSGWController {
 				int userProjectRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
 				if (userProjectRole == 1) {
 					roleCheck = "permitted";
-				} else if (userProjectRole == 3) {
-					//프로젝트 조회자는 열람권한밖에 없음
-					roleCheck = "rejected";
 				} else {
-					//2. task의 담당자인지 확인
-					String userTaskRole = ezPMSService.getUserTaskRole(userId, tenantId, taskId);
-							
-					if (userTaskRole == null) {
-						roleCheck = "rejected";
-					} else {
-						roleCheck = "permitted";
-					}
+					roleCheck = "rejected";
 				}
 			
 				if (roleCheck.equals("permitted")) {

@@ -1097,14 +1097,31 @@ public class EzPMSGWController3 {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.remove("userId"));
-			jsonParam.put("tenantId", info.getTenantId());
+			String userId = (String) jsonParam.remove("userId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			Long projectId = Long.parseLong((String)jsonParam.remove("projectId"));
 			
-			ezPMSService.deletePreTaskRelInTask(jsonParam);
+			String roleCheck = "";
+			
+			jsonParam.put("tenantId", tenantId);
+			
+			//권한 체크
+			//1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
+			int userProjectRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
+			if (userProjectRole == 1) {
+				roleCheck = "permitted";
+			} else {
+				roleCheck = "rejected";
+			}
+			
+			if (roleCheck.equals("permitted")) {
+				ezPMSService.deletePreTaskRelInTask(jsonParam);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "");		
+			result.put("data", roleCheck);		
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1126,25 +1143,67 @@ public class EzPMSGWController3 {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-
-			List<LinkedHashMap> taskSchedules = (List<LinkedHashMap>) jsonParam.get("allTasks");
-			List<LinkedHashMap> groupSchedules = (List<LinkedHashMap>) jsonParam.get("allGroups");
+			int tenantId = info.getTenantId();
+			
+			String roleCheck = null;
+			
 			Long projectId = Long.parseLong((String)jsonParam.get("projectId"));
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("tenantId", info.getTenantId());
-			map.put("projectId", projectId);
-			map.put("taskSchedules", taskSchedules);
 			
-			ezPMSService.updateAllTaskDatesInPrj(map);
+			if(jsonParam.get("groupId") != null && jsonParam.get("taskId") != null) {
+				Long groupId = Long.parseLong((String)jsonParam.get("groupId"));
+				Long taskId  = Long.parseLong((String)jsonParam.get("taskId"));
+				
+				//권한 체크
+				//1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
+				int userProjectRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
+				LOGGER.debug("userProjectRole : " + userProjectRole);
+				
+				if (userProjectRole == 1) {
+					roleCheck = "permitted";
+				} else if (userProjectRole == 3) {
+					//프로젝트 조회자는 열람권한밖에 없음
+					roleCheck = "rejected";
+				} else {
+					//2. group의 담당자인지 확인
+					int userGroupRole = ezPMSService.getUserGroupRole(userId, tenantId, projectId, groupId);
+					LOGGER.debug("userGroupRole : " + userGroupRole);
+					
+					if (userGroupRole == 1) {
+						roleCheck = "permitted";
+					} else {
+						String userTaskRole = ezPMSService.getUserTaskRole(userId, tenantId, taskId);
+						LOGGER.debug("userTaskRole : " + userTaskRole);
+						
+						if (userTaskRole != null) {
+							roleCheck = "permitted";
+						} else {
+							roleCheck = "rejected";
+						}
+					}
+				}	
+			} else {
+				roleCheck = "permitted";
+			}
 			
-			map.remove("taskSchedules");
-			map.put("groupSchedules", groupSchedules);
-			
-			ezPMSService.updateAllGroupDatesInPrj(map);
+			if (roleCheck.equals("permitted")) {
+				List<LinkedHashMap> taskSchedules = (List<LinkedHashMap>) jsonParam.get("allTasks");
+				List<LinkedHashMap> groupSchedules = (List<LinkedHashMap>) jsonParam.get("allGroups");
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("tenantId", tenantId);
+				map.put("projectId", projectId);
+				map.put("taskSchedules", taskSchedules);
+				
+				ezPMSService.updateAllTaskDatesInPrj(map);
+				
+				map.remove("taskSchedules");
+				map.put("groupSchedules", groupSchedules);
+				
+				ezPMSService.updateAllGroupDatesInPrj(map);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", "");		
+			result.put("data", roleCheck);		
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

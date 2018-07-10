@@ -961,9 +961,11 @@
 	   			  }
 	   			  
 	   			  if(taskId != null && todoOk) {
-	   				 saveAllSchedules();
-		   			 toastPopupShow("[" + dateToYYYYMMDD(new Date(start)) + " ~ " + dateToYYYYMMDD(new Date(end)) + "<spring:message code='ezPMS.t240' />");				
-		   			 addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(start)) + " ~ " + dateToYYYYMMDD(new Date(end)) + "<spring:message code='ezPMS.t240' />");
+	   				 
+	   				 if(saveAllSchedules(groupId, taskId)) {
+	   					 toastPopupShow("[" + dateToYYYYMMDD(new Date(start)) + " ~ " + dateToYYYYMMDD(new Date(end)) + "<spring:message code='ezPMS.t240' />");				
+			   			 addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(start)) + " ~ " + dateToYYYYMMDD(new Date(end)) + "<spring:message code='ezPMS.t240' />");
+	   				 }
 	   			  }
 	   			 
 	   			  return todoOk;
@@ -1055,9 +1057,11 @@
    			  	  }	   			
    			  	  
 	   			  if(originalPeriod.start != start && taskId != null) {
-		   			  saveAllSchedules();
-		   			  toastPopupShow("[" + dateToYYYYMMDD(new Date(start)) + " ~ " + dateToYYYYMMDD(new Date(end)) + "<spring:message code='ezPMS.t240' />");				
-		   			  addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(start)) + " ~ " + dateToYYYYMMDD(new Date(end)) + "<spring:message code='ezPMS.t240' />");
+	   				  
+	   				  if(saveAllSchedules(groupId, taskId) == true) {
+	   					 toastPopupShow("[" + dateToYYYYMMDD(new Date(start)) + " ~ " + dateToYYYYMMDD(new Date(end)) + "<spring:message code='ezPMS.t240' />");				
+			   			  addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(start)) + " ~ " + dateToYYYYMMDD(new Date(end)) + "<spring:message code='ezPMS.t240' />");
+	   				  } 
 	   			  }
 
 	   			  return true;
@@ -1077,6 +1081,7 @@
 	   			
 	   			if(confirm("<spring:message code='ezPMS.t107' />") == true) {
 	   				var data = {
+	   						projectId : projectId,
 		   					pretaskId : pretaskId,
 		   					taskId : taskId
 		   			}
@@ -1084,27 +1089,36 @@
 		   			$.ajax({
 		   				type : "DELETE",
 		   				data : JSON.stringify(data),
-		   				dataType: "text",
+		   				dataType: "json",
 		   				contentType: "application/json; charset=UTF-8",
 		   				url : "/ezPMS/deletePretaskRel.do",
 		   				success : function(result) {
-		   					$('#workSpace').trigger('deleteFocused.gantt');
-		   					var pretaskName = $(".taskEditRow[taskid=" + pretaskFullId + "]").find("input[name='name']").val();
-		   					var taskName 	= $(".taskEditRow[taskid=" + taskFullId + "]").find("input[name='name']").val();
-		   					var str = "[" + pretaskName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t308' />";
-		   					addTaskLog(projectId, 3, groupId, taskId, str);
-		   					toastPopupShow(str);
+		   					if(result.roleCheck == 'permitted') {
+		   						$('#workSpace').trigger('deleteFocused.gantt');
+			   					var pretaskName = $(".taskEditRow[taskid=" + pretaskFullId + "]").find("input[name='name']").val();
+			   					var taskName 	= $(".taskEditRow[taskid=" + taskFullId + "]").find("input[name='name']").val();
+			   					var str = "[" + pretaskName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t308' />";
+			   					addTaskLog(projectId, 3, groupId, taskId, str);
+			   					toastPopupShow(str);
+		   					} else {
+		   						$("g").removeClass("focused");
+		   						alert("<spring:message code='ezPMS.t321' />");
+		   					}
+		   					
 		   				}
 		   			});
 	   			}
 	   		}
 	   		
 	   		// 화면상 데이터를 기준으로 모든 Gantt item들의 일정이 DB에 적용
-	   		function saveAllSchedules() {
+	   		// 특정 task에 대한 일정 변경 시에만 groupId, taskId변수 사용
+	   		function saveAllSchedules(selectedGroupId, selectedTaskId) {
+	   			var ret = false;
+	   			
 	   			var allGanttItems = ge.saveProject().tasks;
 		  		var allTasks = [];
 		  		var allGroups = [];
-		  		
+		  		  		
 		  		function TaskSchedule(taskId, start, end, duration) {
 		  			this.taskId = taskId;
 		  			this.start = start;
@@ -1141,7 +1155,9 @@
 		  		data = {
 		  			allTasks : allTasks,
 		  			allGroups : allGroups,
-		  			projectId : projectId
+		  			projectId : projectId,
+		  			groupId : selectedGroupId,
+		  			taskId : selectedTaskId
 		  		}
 		  		
 		  		$.ajax({
@@ -1151,8 +1167,17 @@
   					async : false,
   					contentType : "application/json; charset=UTF-8",
   					data : JSON.stringify(data),
-  					success : function(result) {}
+  					success : function(result) {
+  						if(result.roleCheck == 'rejected') {
+  							alert("<spring:message code='ezPMS.t184' />");
+  						} else {
+  							ret =  true;
+  						}
+  					}
 		  		});
+		  		
+		  		console.log(ret);
+		  		return ret;
 	   		}
 	   		
 	   		function addPreTaskRel (projectId, taskId, preTaskId, progress, taskName, preTaskRowName, groupId, preGroupId) {
@@ -1199,7 +1224,7 @@
 	   						addTaskLog(projectId, 1, groupId, taskIdParam, "[" + preTaskRowName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t241' />");
 	   						returnVal = true;
 	   					} else {
-	   						alert("<spring:message code='ezPMS.t184' />");
+	   						alert("<spring:message code='ezPMS.t321' />");
 	   					}
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
