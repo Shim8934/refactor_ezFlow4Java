@@ -806,7 +806,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition" style="float: center">
+	    <div class="btnpositionNew" style="float: center">
 	        <a class="imgbtn"><span onclick="confirm_onClick()"><spring:message code = 'ezPersonal.t12' /></span></a>
 	    </div>
 	</body>
