@@ -3593,7 +3593,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		/* 2018-07-09 홍승비 - 임시저장 게시물 더블클릭 시 조회한 것으로 확인되지 않는 현상 수정 */
-		ezBoardService.setAsRead(userInfo, boardID, itemID);
+		if (mode.equals("temp")) {
+			ezBoardService.setAsRead(userInfo, boardID, itemID);
+		}
 
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardListVO", boardListVO);
