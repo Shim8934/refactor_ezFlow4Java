@@ -18,10 +18,8 @@
 			var compFolderId      = null;
 			
 			window.onload = function () {
-				document.onselectstart = function(){
-					return false;
-				}
-				
+				closeAllPopup();
+				document.onselectstart = function() {return false;}
 				getData();
 			}
 			

@@ -974,7 +974,7 @@
         </tr>
     </table>
     <br />
-    <div class="btnposition">
+    <div class="btnpositionNew">
         <a class="imgbtn"><span onclick="dept_select()"><spring:message code='ezPortal.t43'/></span></a>
         <a class="imgbtn" onclick="Save_onclick()"><span><spring:message code='ezPortal.t45'/></span></a>
     </div>

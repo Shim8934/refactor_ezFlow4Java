@@ -73,6 +73,7 @@
 	    	var msgRtn = "";
 	    	var SdateNow = ""; 
 	    	var EdateNow = ""; 
+	    	var title = "${title}";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -97,7 +98,9 @@
 	        	}
 	            
 	        	if (cmd == "mod") {
+	        		/* 2018-07-10 김민성 - 자원 수정시 특수문자 처리 */
 	            	document.getElementById("importance1").value = "${importance}";
+	            	document.getElementById("title").value = title;
 	        	}
 	        	if (document.getElementById("AllDay").checked) {
 		            document.getElementById("Stimepicker").style.display = "none";
@@ -111,7 +114,7 @@
 	    	    } else {
 	        	document.title = "<spring:message code="ezResource.t179"/>";
 		        }
-	            
+	        	
 		        var resultXML;
 	    	    var xmlHttp = createXMLHttpRequest();
 	        	var xmlpara = createXmlDom();
@@ -591,7 +594,7 @@
 						</tr>
 						<tr>
 	         				<th> <spring:message code="ezResource.t224"/></th>
-	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="25" value="${title}" style="width: 98%" />          </td>
+	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="25"  style="width: 98%" />          </td>
 	       				</tr>
       				</table>
       			</td>

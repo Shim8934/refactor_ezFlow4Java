@@ -631,7 +631,7 @@
 		            <th><spring:message code="ezBoard.t159"/></th>
 		            <td>
 		            	<spring:message code="ezBoard.t160"/>
-	                	<input type="inputbox" id="deleteafter" style="width: 50px"/>
+	                	<input type="inputbox" id="deleteafter" style="width: 50px;height:20px;margin-top:3px"/>
 	                	<spring:message code="ezBoard.t161"/><br/>
 	                	<input type="checkbox" id="usedeleteafter"/>
 	                	<spring:message code="ezBoard.t162"/>
@@ -641,7 +641,7 @@
 	            	<th><spring:message code="ezBoard.t159"/></th>
 	            	<td>
 	            		<spring:message code="ezBoard.t160"/>
-	                	<input type="inputbox" id="deleteafter" style="width: 50px" value="<c:out value='${model.deleteAfter}' />"/>
+	                	<input type="inputbox" id="deleteafter" style="width: 50px;height:20px;margin-top:3px" value="<c:out value='${model.deleteAfter}' />"/>
 	                	<spring:message code="ezBoard.t161"/><br/>
 	                	<input type="checkbox" id="usedeleteafter" checked />
 	                	<spring:message code="ezBoard.t162"/>
@@ -785,7 +785,7 @@
 	        <tr id="trAttribute" style="${style}">
 	            <th><spring:message code="ezBoard.t999028" /></th>
 	            <td>
-	            	<a class="imgbtn"><span onClick="ExtensionAttribute_onClick()"><spring:message code="ezBoard.t999029" /></span></a>
+	            	<a class="imgbtn imgbck"><span onClick="ExtensionAttribute_onClick()"><spring:message code="ezBoard.t999029" /></span></a>
 	            </td>
 	        </tr>	
 	        <tr style="${style}">
@@ -800,15 +800,14 @@
 	                            <span id="colorID" style="width: 80px;"><c:out value='${model.boardColor}' /></span>
 	                        </td>
 	                        <td style="text-align: right; width: 100px">
-	                            <a class="imgbtn"><span onclick="change_brdColor()"><spring:message code="ezBoard.t170" /></span></a>
+	                            <a class="imgbtn imgbck"><span onclick="change_brdColor()"><spring:message code="ezBoard.t170" /></span></a>
 	                        </td>
 	                    </tr>
 	                </table>
 	            </td>
 	        </tr>
 		</table>
-    	<br/>
-	    <div class="btnposition">
+	    <div class="btnpositionJsp">
 	        <a class="imgbtn" href="javascript:Save()"><span><spring:message code="ezBoard.t98" /></span></a>
 	    </div>
 	    </div>

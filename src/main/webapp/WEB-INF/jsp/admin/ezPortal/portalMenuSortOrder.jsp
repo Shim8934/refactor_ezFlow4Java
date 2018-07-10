@@ -86,7 +86,7 @@
 		<table width="500" class="box">
 			<tr>
 				<td>
-					<select size="10" ID="MENULIST"  style="width:100%; height:200px">
+					<select size="10" ID="MENULIST"  style="width:100%; height:200px; border:0px;border-right:1px solid #ddd">
 						${menuList}
 					</select>
 				</td>
