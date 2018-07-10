@@ -277,8 +277,6 @@ public class MBoardGWController {
 			//상세보기일때 type boardItem으로 지정
 			boardInfo.setType("boardItem");
 			
-			LOGGER.debug("해당 게시물이 속한 boardId = "+boardId);
-			
 			// 해당 게시물 읽기권한 없다면 리턴
 			if (!accessCheck(contentId, deptPathCode, info)) {
 				result.put("status", "no");
