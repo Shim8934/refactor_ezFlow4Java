@@ -208,7 +208,7 @@
 	            if (type === "one" ) {
 	            	alertContent = "<spring:message code='ezBoard.t197'/>";
 	            } else if (type === "type" ) {
-	            	alertContent = "모두삭제하시겠습니까?";
+	            	alertContent = "<spring:message code='ezBoard.pjg03'/>";
 	            }
 				
 	            if(confirm(alertContent)) {
