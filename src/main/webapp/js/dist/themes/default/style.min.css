@@ -457,35 +457,35 @@
 }
 
 .jstree-default .jstree-node {
-	min-height: 24px;
-	line-height: 24px;
-	margin-left: 24px;
+	min-height: 17px;
+	line-height: 17px;
+	margin-left: 17px;
 	min-width: 24px
 }
 
 .jstree-default .jstree-anchor {
-	line-height: 24px;
-	height: 24px
+	line-height: 17px;
+	height: 17px
 }
 
 .jstree-default .jstree-icon {
 	width: 24px;
-	height: 24px;
-	line-height: 24px
+	height: 17px;
+	line-height: 17px
 }
 
 .jstree-default .jstree-icon:empty {
 	width: 24px;
-	height: 24px;
-	line-height: 24px;
+	height: 17px;
+	line-height: 17px;
 }
 
 .jstree-default.jstree-rtl .jstree-node {
-	margin-right: 24px
+	margin-right: 17px
 }
 
 .jstree-default .jstree-wholerow {
-	height: 24px
+	height: 17px
 }
 
 .jstree-default .jstree-node, .jstree-default .jstree-icon {
@@ -650,7 +650,7 @@
 }
 
 #jstree-dnd.jstree-default {
-	line-height: 24px;
+	line-height: 17px;
 	padding: 0 4px
 }
 
@@ -663,9 +663,9 @@
 
 #jstree-dnd.jstree-default i {
 	background: 0 0;
-	width: 24px;
-	height: 24px;
-	line-height: 24px
+	width: 17px;
+	height: 17px;
+	line-height: 17px
 }
 
 #jstree-dnd.jstree-default .jstree-ok {

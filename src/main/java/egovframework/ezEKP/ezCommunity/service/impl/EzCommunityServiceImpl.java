@@ -5216,40 +5216,25 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		
 		int iCount = 1, curPage = 0;
 		StringBuilder sb = new StringBuilder();
-		String userInfoLang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
-		map.put("v_USERINFO_LANG", userInfoLang);
+		map.put("primary", userInfo.getPrimary());
 		map.put("tenantID", userInfo.getTenantId());
 		
 		List<CommunityCClubUserVO> userList = ezCommunityDAO.adminMemPermitGet2(map);
 
 		for (CommunityCClubUserVO user : userList) {
 			sb.append("<tr>");
-            sb.append("<td height=\"23\" align=\"center\" class=\"white\">" + iCount + "</td>");
-            sb.append("<td class=\"white\">");
-            
-            logger.debug("lang = " + userInfoLang + " || userID = " + user.getC_ID() + " || companyID = " + user.getCompanyID() + " || userName = " + user.getUserName() + " || userName2 = " + user.getUserName2());
-            
-            if (userInfoLang.equals("2")) {
-            	sb.append("<a href=\"javascript:openinfo( '" + code + "', '" + user.getC_ID().trim() + "', '" + user.getCompanyID().trim() + "' )\">" + user.getUserName2().trim() + "</a>");
-            }else {
-            	sb.append("<a href=\"javascript:openinfo( '" + code + "', '" + user.getC_ID().trim() + "', '" + user.getCompanyID().trim() + "' )\">" + user.getUserName().trim() + "</a>");
-            }
-            
+            sb.append("<td height=\"23\" align=\"center\">" + iCount + "</td>");
+            sb.append("<td>");
+        	sb.append("<a href=\"javascript:openinfo( '" + code + "', '" + commonUtil.cleanValue(user.getC_ID().trim()) + "', '" + commonUtil.cleanValue(user.getCompanyID().trim()) + "' )\">" + commonUtil.cleanValue(user.getUserName().trim()) + "</a>");
             sb.append("</td>");
-            sb.append("<td class=\"white\" align=\"left\">" + user.getC_inDate().trim().substring(0, 10) + "</td>");
-            sb.append("<td class=\"white\" align=\"left\">");
-            
-            if (userInfoLang.equals("2")) {
-            	sb.append("<a href=\"javascript:okno('ok','" + user.getC_ID().trim() + "','" + code + "','" + curPage + "','" + user.getUserName2().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</a>/");
-                sb.append("<a href=\"javascript:okno('no','" + user.getC_ID().trim() + "','" + code + "','" + curPage + "','" + user.getUserName2().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</a>");
-            } else {
-            	sb.append("<a href=\"javascript:okno('ok','" + user.getC_ID().trim() + "','" + code + "','" + curPage + "','" + user.getUserName().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</a>/");
-                sb.append("<a href=\"javascript:okno('no','" + user.getC_ID().trim() + "','" + code + "','" + curPage + "','" + user.getUserName().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</a>");
-            }
-            
+            sb.append("<td>" + commonUtil.cleanValue(user.getC_ID()) + "</td>");
+            sb.append("<td align=\"center\">" + user.getC_inDate().trim().substring(0, 10) + "</td>");
+            sb.append("<td align=\"center\">");
+        	sb.append("<a href=\"javascript:okno('ok','" + commonUtil.cleanValue(user.getC_ID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(user.getUserName().trim()) + "');\" class=\"imgbtn\"><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</span></a>&nbsp;");
+            sb.append("<a href=\"javascript:okno('no','" + commonUtil.cleanValue(user.getC_ID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(user.getUserName().trim()) + "');\" class=\"imgbtn\"><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</span></a>");
             sb.append("</td>");
             sb.append("</tr>");
             

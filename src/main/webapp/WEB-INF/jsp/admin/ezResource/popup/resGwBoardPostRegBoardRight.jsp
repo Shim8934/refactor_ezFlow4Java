@@ -1239,9 +1239,8 @@
             		</td>
         		</tr>
     		</table>
-    		<input type="checkbox" value="x" id="Check_Everyone" name="Check_Everyone"><span class="txt" style="margin-bottom: 3px;"><spring:message code="ezResource.t372" /></span>
-    		<br />
-    		<div class="btnposition">
+    		<input type="checkbox" value="x" id="Check_Everyone" name="Check_Everyone" style="display:none"><span class="txt" style="margin-bottom: 3px;display:none "><spring:message code="ezResource.t372" /></span>    		
+    		<div class="btnpositionNew">
         		<a class="imgbtn" onclick="close_onclick()"><span><spring:message code="ezResource.t15" /></span></a>
     		</div>
 	</body>

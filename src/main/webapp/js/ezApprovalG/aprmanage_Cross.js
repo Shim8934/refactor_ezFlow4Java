@@ -1743,7 +1743,7 @@ function selbeforeBlock_one() {
         return;
 }
 function selafterBlock() {
-    var pageNum = currentpage;
+	var pageNum = currentpage;
     pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
     goToPageByNum(pageNum);
 }

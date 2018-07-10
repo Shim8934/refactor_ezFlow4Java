@@ -510,6 +510,13 @@
 		            }else {
 	                    window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		            }
+		            
+		            /* 2018-07-09 홍승비 - 승인게시판 게시물 읽기 시 즉각적으로 폰트 변화하도록 수정 */
+		            for (var i = 0; i < obj.childNodes.length; i++) {
+				        if (obj.childNodes[i].style.fontWeight == "bold") {
+				            obj.childNodes[i].style.fontWeight = "normal";
+						}
+			        }
 		        }
 		
 		        function CheckIfHasReplies() {
@@ -879,33 +886,38 @@
 		        }
 		        
 		        if (pFlag == "C") {
-		            var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + strItemList + "&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
-		            try { OpenWin.focus(); } catch (e) { }
+		        	if(confirm("<spring:message code='ezBoard.pjg02'/>")){
+			            var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + strItemList + "&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
+			            try { OpenWin.focus(); } catch (e) { }
+		        	}
 		        }
 		        else {
-		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + strItemList + "&mode=" + pFlag, false);
-		            xmlhttp.send();
-		
-		            if (xmlhttp.responseText == "OK") {
-		                if (pFlag == "Y")
-		                    alert("<spring:message code='ezBoard.t999002'/>");
-		                else
-		                    alert("<spring:message code='ezBoard.t999009'/>");
-		
-		                if (CurPage == totalPage) {
-		                    var SelList = new ListView();
-		                    SelList.LoadFromID("BoardList");
-		                    var DeleteCount = strItemList.split(';').length - 1;
-		                    if (SelList.GetRowCount() == DeleteCount) {
-		                        CurPage = CurPage - 1;
-		                    }
-		                }
-		                if (CurPage == 0) CurPage = 1;
-		                
-// 		                getBoardList();
-		                refresh_onclick();
-					}
+		        	
+		        	if(confirm("<spring:message code='ezBoard.pjg01'/>")){
+			            var xmlhttp = createXMLHttpRequest();
+			            xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + strItemList + "&mode=" + pFlag, false);
+			            xmlhttp.send();
+			
+			            if (xmlhttp.responseText == "OK") {
+			                if (pFlag == "Y")
+			                    alert("<spring:message code='ezBoard.t999002'/>");
+			                else
+			                    alert("<spring:message code='ezBoard.t999009'/>");
+			
+			                if (CurPage == totalPage) {
+			                    var SelList = new ListView();
+			                    SelList.LoadFromID("BoardList");
+			                    var DeleteCount = strItemList.split(';').length - 1;
+			                    if (SelList.GetRowCount() == DeleteCount) {
+			                        CurPage = CurPage - 1;
+			                    }
+			                }
+			                if (CurPage == 0) CurPage = 1;
+			                
+	// 		                getBoardList();
+			                refresh_onclick();
+						}
+		        	}
 		        }
 		        
 		        var applyCount = "0";

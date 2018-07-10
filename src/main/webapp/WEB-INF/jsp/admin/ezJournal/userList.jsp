@@ -67,7 +67,7 @@
 			<tbody>
 				<tr>
 			    	<th style="white-space:normal;background-color: white;border-top:0px solid #ddd;border-bottom:1px solid #eaeaea">
-			    		<span id="selectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;padding-right: 3px;"><c:out value='${keyword }'/>-[<span style="color:#017BEC;"><c:out value='${userCount }'/><spring:message code='main.t20000'/></span>]</span>
+			    		<span id="selectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;padding-right: 3px;"><c:out value='${keyword }'/>-[<span style="color:#017BEC;"><c:out value='${totalCount }'/><spring:message code='main.t20000'/></span>]</span>
 			    		<c:choose>
 			    			<c:when test="${listType eq 'TXT' }">
 					    		<span style="float:right;">
@@ -88,7 +88,7 @@
 		</table>
 		<c:choose>
 			<c:when test="${listType eq 'TXT' }">
-				<div style="vertical-align: top; height: 440px; overflow: auto; width: 100%;" id="txtlist_Layer">
+				<div style="vertical-align: top; height: 400px; overflow: auto; width: 100%;" id="txtlist_Layer">
 					<table style="width:100%; border: 1px solid #B6B6B6;" class="mainlist">
 					<c:choose>
 						<c:when test="${key eq 'DEPARTMENT' }">
@@ -124,7 +124,7 @@
 					</c:choose>
 				    </table>
 				</div>
-				<div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; width: 100%; display: none;" id="DeptUserImgList">
+				<div style="vertical-align: top; text-align: center; height: 400px; overflow: auto; width: 100%; display: none;" id="DeptUserImgList">
 					<c:forEach items="${userList}" var="user">
 						<table class="organwrap" cellspacing="0" cellpadding="0" style="margin-top: 5px; margin-left: auto; margin-right: auto;">
 					        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
@@ -152,7 +152,7 @@
 				</div>
 			</c:when>
 			<c:otherwise>
-				<div style="vertical-align: top; height: 440px; overflow: auto; width: 100%; display: none;" id="txtlist_Layer">
+				<div style="vertical-align: top; height: 400px; overflow: auto; width: 100%; display: none;" id="txtlist_Layer">
 					<table style="width:100%; border: 1px solid #B6B6B6;" class="mainlist">
 					<c:choose>
 						<c:when test="${key eq 'DEPARTMENT' }">
@@ -188,7 +188,7 @@
 					</c:choose>
 				    </table>
 				</div>
-				<div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; width: 100%;" id="DeptUserImgList">
+				<div style="vertical-align: top; text-align: center; height: 400px; overflow: auto; width: 100%;" id="DeptUserImgList">
 					<c:forEach items="${userList}" var="user">
 						<table class="organwrap" cellspacing="0" cellpadding="0" style="margin-top: 5px; margin-left: auto; margin-right: auto;">
 					        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
@@ -216,5 +216,6 @@
 				</div>
 			</c:otherwise>
 		</c:choose>
+		<input type="hidden" id="totalCount" name="totalCount" value="${totalCount }" />
 </html>
 

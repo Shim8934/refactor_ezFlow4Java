@@ -35,9 +35,150 @@
 	   			lpDeptName = $("#treeview").jstree().get_node(lpDeptId).text;
 	   		}
 	   	
+	   		var CurPage = "1";
+	   		var totalPage = "";	   		
+	   		
 	   		function close_Click(){
 	   			window.close();
 	   		}
+	   		
+	   		/**
+	   			2018-07-10 페이징 기능 추가
+	   		*/
+	   		var BlockSize = 10;
+	    	function td_Create1(strtext) {
+		        document.getElementById("tblPageRayer").innerHTML = strtext;
+	    	}
+	    	function makePageSelPage() {
+		        var strtext;
+	        	var PagingHTML = "";
+	        	document.getElementById("tblPageRayer").innerHTML = "";
+	        	strtext = "<div class='pagenavi'>";
+		        PagingHTML += strtext;
+	        	var pageNum = CurPage;
+	        	if (totalPage > 1 && pageNum != 1) {
+	            	strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+	            	PagingHTML += strtext;
+	        	} else {
+	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+	            	PagingHTML += strtext;
+	        	}
+	        	if (totalPage > BlockSize) {	
+		            if (pageNum > BlockSize) {
+	                	strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+		                PagingHTML += strtext;
+		            } else {
+	                	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+	                	PagingHTML += strtext;
+	            	}
+	        	} else {
+	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+	            	PagingHTML += strtext;
+	        	}
+	        	var MaxNum;
+	        	var i;
+	        	var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+	        	if (totalPage >= (startNum + parseInt(BlockSize))) {
+	            	MaxNum = (startNum + parseInt(BlockSize)) - 1;
+	        	} else {
+	            	MaxNum = totalPage;
+	        	}
+	        	for (i = startNum; i <= MaxNum; i++) {
+		            if (i == pageNum) {
+		                strtext = "<span class='on'>" + i + "</span>";
+	    	            PagingHTML += strtext;
+	            	} else {
+	                	strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+	                	PagingHTML += strtext;
+	            	}
+	        	}
+	        	if (totalPage > BlockSize) {
+		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+	                	strtext = "";
+	                	strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+	                	PagingHTML += strtext;
+	            	} else {
+	                	strtext = "";
+	                	strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+	                	PagingHTML += strtext;
+	            	}
+	        	} else {
+	            	strtext = "";
+	            	strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+	            	PagingHTML += strtext;
+	        	}
+	        	if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+	            	strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+	            	PagingHTML += strtext;
+	        	} else {
+	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+	            	PagingHTML += strtext;
+	        	}
+	        	PagingHTML += "</div>";
+	        	td_Create1(PagingHTML);
+	    	}
+	    	function goToPageByNum(Value) {
+	        	CurPage = Value;
+	        	makePageSelPage();
+	        	movePage(CurPage);
+	    	}
+	    	function selbeforeBlock() {
+		        var pageNum = parseInt(CurPage);
+	        	pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+	        	goToPageByNum(pageNum);
+	    	}
+	    	function selbeforeBlock_one() {
+		        var pageNum = parseInt(CurPage);
+	        	if (parseInt(pageNum - 1) > 0)
+		            goToPageByNum(parseInt(pageNum - 1));
+	        	else
+		            return;
+	    	}
+	    	function selafterBlock() {
+		        var pageNum = parseInt(CurPage);
+	        	pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+	        	goToPageByNum(pageNum);
+	    	}
+	    	function selafterBlock_one() {
+		        var pageNum = parseInt(CurPage);
+	        	if (parseInt(pageNum + 1) <= totalPage)
+		            goToPageByNum(parseInt(pageNum + 1));
+		        else
+	    	        return;
+	    	}
+	    	function movePage(newPage) {
+		        if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
+	            	CurPage = newPage;
+	            	if(issearch) {
+		                search_click();
+	            	} else {
+		                setUserList();
+	            	}
+	        	}
+	    	}
+	    	function prevPage_onclick() {
+		        newPage = parseInt(CurPage) - 1;
+	        	if (newPage > 0) {
+		            CurPage = newPage;
+	            	if (issearch) {
+		                search_click();
+	            	} else {
+		                setUserList();
+	            	}
+	        	}
+	    	}
+	    	function nextPage_onclick() {
+		        newPage = parseInt(CurPage) + 1;
+	        	if (newPage <= parseInt(totalPage)) {
+		            CurPage = newPage;
+	            	if (issearch) {
+		                search_click();
+	            	} else {
+		                setUserList();
+	            	}
+	        	}
+	    	}		   		
+	   		
 	   		//조직도 뿌리는 펑션
 	   		function setDeptList(){
 				$('#treeview').on('changed.jstree', function (e, data) {
@@ -104,9 +245,16 @@
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/admin/ezJournal/userList.do",
-	   				data:{"key":key, "value":value},
+	   				data:{"key":key, "value":value, "curPage" : curPage},
 	   				success: function(result){
-	   					$("#orglistView").html(result);
+	   					$("#orglistView").empty();
+		   				$("#orglistView").html(result);
+						/**
+							2018-07-10 페이징 기능 추가.
+						*/
+		   				$("#orglistView").append("<div id='tblPageRayer' style='text-align:center;'></div>");
+						totalPage = Math.ceil($("#totalCount").val() / 50 );
+		   				makePageSelPage();
 	   				}
 	   			});
 	   		}
@@ -195,7 +343,7 @@
             </tr>
         </table>
         <div class="btnposition">
-	        <a class="imgbtn"><span onclick="insertAuthDept();" ><spring:message code='ezSchedule.t157' /></span></a>
+	        <a class="imgbtn"><span onclick="setAuthorViewDept();" ><spring:message code='ezSchedule.t157' /></span></a>
 	    </div>
 	</body>
 </html>

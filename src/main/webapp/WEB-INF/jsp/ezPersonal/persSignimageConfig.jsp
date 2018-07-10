@@ -261,7 +261,7 @@
 	            </td>
 	        </tr>
 	    </table>		
-		<div class="btnposition" style="width:400px;margin-top:15px;">
+		<div class="btnpositionJsp" style="width:395px;">
 		    <a class="imgbtn" onClick="add_sign()"><span><spring:message code='ezPersonal.t3013'/></span></a>
 		    <a class="imgbtn" onClick="del_sign()"><span><spring:message code='ezPersonal.t3014'/></span></a>
 		</div>

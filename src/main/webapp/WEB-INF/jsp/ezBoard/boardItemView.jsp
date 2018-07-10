@@ -689,6 +689,10 @@
 		    function ReaderList_Complete() {
 		        DivPopUpHidden();
 		    }
+		    
+		    function printOption_close() {
+		    	DivPopUpHidden();	
+		    }
 		    var boarditemview_cross_print_option_dialogArguments = new Array();
 		    var url = window.location.href;
 		    function btn_Print_Onclick() {
@@ -696,8 +700,9 @@
 		            url = window.location.href;
 		            url = url.replace(".do", "PrintOption.do");
 		            boarditemview_cross_print_option_dialogArguments[1] = btn_Print_Onclick_Complete;
-		            var OpenWin = window.open(url, "boarditemview_print_option", GetOpenWindowfeature(380, 200));
-		            try { OpenWin.focus(); } catch (e) { }
+		            DivPopUpShow(380, 200, url);
+		            //var OpenWin = window.open(url, "boarditemview_print_option", GetOpenWindowfeature(380, 200));
+		            //try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
 		            var parameter = "";
@@ -1476,8 +1481,8 @@
 					            <div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;background-color:white; text-align:left"></div>
 					          </td>
 					          <td class="pos2">
-					             <a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-					             <a class="imgbtn"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
+					             <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+					             <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
 					          </td>
 					          <td id="Td2" style="display:none"></td>
 					        </tr>
@@ -1494,8 +1499,8 @@
 		                      <td class="pos2">
 					            <div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left"></div></td>
 	  				          <td class="pos2">'
-					          <a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-					          <a class="imgbtn"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
+					          <a class="imgbtn imgbck"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+					          <a class="imgbtn imgbck"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
 					          </td>
 					          <td id="Td3"></td>
 					        </tr>

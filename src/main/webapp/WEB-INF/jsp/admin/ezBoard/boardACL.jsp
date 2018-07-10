@@ -202,14 +202,26 @@
 	                objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "BOARDID", pBoardID);
 	                objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "TARGETID", GetAttribute(selnode[i], "data1"));
 	            }
-	
-	            xmlhttp.open("POST", "/admin/ezBoard/deleteACL.do", false);
-	            xmlhttp.send(xmlpara);
-	
-	            if (xmlhttp.status == 200 && xmlhttp.responseText == "OK") {
-	                alert("<spring:message code='ezBoard.t54'/>");
+	            
+	            var alertContent = "";
+	            
+	            if (type === "one" ) {
+	            	alertContent = "<spring:message code='ezBoard.t197'/>";
+	            } else if (type === "type" ) {
+	            	alertContent = "<spring:message code='ezBoard.pjg03'/>";
 	            }
-	              window.location.reload();
+				
+	            if(confirm(alertContent)) {
+		            
+		            xmlhttp.open("POST", "/admin/ezBoard/deleteACL.do", false);
+		            xmlhttp.send(xmlpara);
+		
+		            if (xmlhttp.status == 200 && xmlhttp.responseText == "OK") {
+		                alert("<spring:message code='ezBoard.t54'/>");
+		            }
+		              window.location.reload();
+		              
+	            }
 	         }
 	
 	        var selecttarget_dialogArguments = new Array();

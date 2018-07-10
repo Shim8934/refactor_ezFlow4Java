@@ -475,10 +475,10 @@
         	    </tr>
             	<tr>    <!----------- 설문취지 ------------------> 
 	                <th><spring:message code='ezQuestion.t257' /></th> 
-    	            <td><textarea name="txtContent" id="txtContent" style="WIDTH: 99%; FONT-FAMILY: '<spring:message code='ezQuestion.t105' />'" rows="10" cols=""><c:out value = '${qstUserPollItemVO.content}' /></textarea></td> 
+    	            <td><textarea name="txtContent" id="txtContent" style="WIDTH: 100%; FONT-FAMILY: '<spring:message code='ezQuestion.t105' />';margin:2px 0px" rows="10" cols=""><c:out value = '${qstUserPollItemVO.content}' /></textarea></td> 
         	    </tr> 
         	</table> 
-        	<div class="btnposition">
+        	<div class="btnpositionJsp">
             	<a class="imgbtn"><span onclick="fun_OK();"><spring:message code='ezQuestion.t37' /></span></a>
             	<a class="imgbtn"><span onclick="fun_cancel();"><spring:message code='ezQuestion.t38' /></span></a>
         	</div>

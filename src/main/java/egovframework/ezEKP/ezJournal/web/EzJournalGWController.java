@@ -1792,6 +1792,7 @@ public class EzJournalGWController {
 			String key = request.getParameter("key");
 			String value = request.getParameter("value");
 			String companyId = request.getParameter("companyId");
+			String curPage = request.getParameter("curPage");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			if (companyId.equals("") || companyId == null) {
@@ -1799,11 +1800,13 @@ public class EzJournalGWController {
 			}
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-			List<JournalAuthorVO> userList = ezJournalService.getDeptUserList(info.getTenantId(), key, value, companyId, lang);
+			List<JournalAuthorVO> userList = ezJournalService.getDeptUserList(info.getTenantId(), key, value, companyId, lang, curPage);
+			int userCount = ezJournalService.getDeptUserListCount(info.getTenantId(), key, value, companyId, lang);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", userList);
+			result.put("totalCount", userCount);
 		} catch (Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");

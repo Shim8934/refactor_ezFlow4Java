@@ -757,10 +757,10 @@
 			function SelectBoard() {		    
 			    if (CrossYN()) {
 			        boardselect_cross_dialogArguments[1] = SelectBoard_Complete;
-			        var OpenWin = window.open("/ezBoard/boardSelect.do", "BoardSelect_Cross", GetOpenWindowfeature(275, 435));
+			        var OpenWin = window.open("/ezBoard/boardSelect.do", "BoardSelect_Cross", GetOpenWindowfeature(360, 656));
 			        try { OpenWin.focus(); } catch (e) { }
 			    } else {
-			        var ret = window.showModalDialog("/ezBoard/boardSelect.do", "", "DialogHeight:435px;DialogWidth:275px;status:no;help:no;edge:sunken" + GetShowModalPosition(275, 435));
+			        var ret = window.showModalDialog("/ezBoard/boardSelect.do", "", "DialogHeight:700px;DialogWidth:360px;status:no;help:no;edge:sunken" + GetShowModalPosition(360, 656));
 			        if (typeof(ret) != "undefined") {
 			            document.getElementById("txtBoardID").value = ret[0];
 			            document.getElementById("txtBoardName").value = ret[2];
@@ -899,7 +899,7 @@
 
 // 		        boardmoveselect_cross_dialogArguments[0] = parameter;
 		        boardmoveselect_cross_dialogArguments[0] = MoveSelect_Complete;
-		        var BoardMoveSelect_Cross = window.open("/admin/ezPortal/portalBoardSelect.do", "portalBoardSelect", GetOpenWindowfeature(340, 656));
+		        var BoardMoveSelect_Cross = window.open("/admin/ezPortal/portalBoardSelect.do", "portalBoardSelect", GetOpenWindowfeature(360, 656));
 		        try { 
 		        	BoardMoveSelect_Cross.focus(); 
 		        }catch (e) {}	   
@@ -1071,8 +1071,8 @@
               					</form>
           					</td>
           					<td width="65" align="center">             
-	              				<a class="imgbtn"><span onClick="changeNormalImage()"><spring:message code='ezPortal.t66'/></span></a>
-		      					<a class="imgbtn"><span  onClick="UserImage_Preview()"><spring:message code='ezPortal.t63'/></span></a>
+	              				<a class="imgbtn imgbck"><span onClick="changeNormalImage()"><spring:message code='ezPortal.t66'/></span></a>
+		      					<a class="imgbtn imgbck"><span  onClick="UserImage_Preview()"><spring:message code='ezPortal.t63'/></span></a>
 		      				</td>
         				</tr>
       				</table>
@@ -1134,7 +1134,7 @@
             						<input type="text" name="txtBoardName" id="txtBoardName" style="width:100%" value="${pBoardName}" readonly>          
             					</td>
           						<td width="99" align="center">
-		  							<a class="imgbtn"><span onClick="SelectBoard()"><spring:message code='ezPortal.t138'/></span></a>
+		  							<a class="imgbtn imgbck"><span onClick="SelectBoard()"><spring:message code='ezPortal.t138'/></span></a>
 		  						</td>
         					</tr>
       					</table>
@@ -1224,7 +1224,7 @@
 	          						<td>
 	          							<input type="text" id="newBoardName" onClick="MoveSelect()" readonly style="width:75%">
 	          							<input type="text" id="newParamValue" style="width:75%; display:none">
-	          							<a class="imgbtn"><span onClick="MoveSelect()"><spring:message code='ezCommunity.t352'/></span></a>
+	          							<a class="imgbtn imgbck"><span onClick="MoveSelect()"><spring:message code='ezCommunity.t352'/></span></a>
 	          						</td>
 	        					</tr>
 	      					</table>
@@ -1232,7 +1232,7 @@
 	  				</tr>
   				</c:if>
 			</table>
-			<div class="btnposition" id="toggle_tbl2_3"  style="display:none">
+			<div class="btnpositionJsp" id="toggle_tbl2_3"  style="display:none">
 				<a class="imgbtn"><span onClick="AddParameter()"><spring:message code='ezPortal.t62'/></span></a>
 			</div>
 			<!-- 권한설정 -->
@@ -1275,7 +1275,7 @@
     								</c:otherwise>
     							</c:choose>
     						</td>
-    						<td width="39" align="center"><a class="imgbtn"><span onClick="DeleteRight('${item.accessID}')" ><spring:message code='ezPortal.t67'/></span></a></td>
+    						<td width="39" align="center"><a class="imgbtn imgbck"><span onClick="DeleteRight('${item.accessID}')" ><spring:message code='ezPortal.t67'/></span></a></td>
   						</tr>
   					</c:forEach>
 				</table>
@@ -1288,7 +1288,7 @@
           							<td>
           								<input type="text" id="newAccessID" style="width:100%" readonly>
           							</td>
-          							<td width="39" align="center"><a class="imgbtn"><span onClick="SelectID()" ><spring:message code='ezPortal.t45'/></span></a></td>
+          							<td width="39" align="center"><a class="imgbtn imgbck"><span onClick="SelectID()" ><spring:message code='ezPortal.t45'/></span></a></td>
         						</tr>
       						</table>
       					</td>
@@ -1314,7 +1314,7 @@
       							<spring:message code='ezPortal.t174'/></td>
   					</tr>
 				</table>
-				<div id="toggle_tbl3_3" class="btnposition" style="display:none">
+				<div id="toggle_tbl3_3" class="btnpositionJsp" style="display:none">
     				<a class="imgbtn"><span onClick="AddRight()"><spring:message code='ezPortal.t62'/></span></a>
 				</div>
 				<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
