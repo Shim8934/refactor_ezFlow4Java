@@ -1958,9 +1958,11 @@
 	                                </td>
 	                            </tr>
 	                        </table>
-	                        <br>
-	
-	                        <div style="text-align: center"><a href="#" class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a></div>
+	                        <div style="text-align: center">
+	                        	<div class="btnpositionJsp">
+	                        		<a href="#" class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a>
+	                        	</div>	
+	                        </div>
 	                    </div>
 	                    <div id="TreeViewPane" style="DISPLAY: none;">
 				            <div class="portlet_tabpart03_top" id="tab1" style="background-color: #f8f8fa; border: 1px solid #eaeaea; ">

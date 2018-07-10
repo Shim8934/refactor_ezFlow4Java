@@ -909,7 +909,7 @@
 									</ul>
 								</div>
 								<div id="lineDiv" style="position: relative; height: 400px; z-index: 1;">
-									<div id="blackBox" style="height: 398px;background: #f9f9fc; position: absolute;left: -50px;right: 0;border-top:1px solid #dde;border-bottom:1px solid #dde">
+									<div id="blackBox" style="height: 398px;background: #f8f8f8; position: absolute;left: -50px;right: 0;border-top:1px solid #ddd;border-bottom:1px solid #ddd">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
 									<span></span>

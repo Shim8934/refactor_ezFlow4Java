@@ -264,9 +264,8 @@
                      			 </c:choose>
                 		</td>
             	</tr>
-        	</table>       
-    		<br />
-    		<div style="width:623px;text-align:center;">      
+        	</table>
+    		<div class="btnpositionJsp" style="width:623px;">      
         		<a class="imgbtn" onclick="Change_Click()"><span><spring:message code="ezBoard.t98" /></span></a>
         		<a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code="ezBoard.t15" /></span></a>
     		</div>

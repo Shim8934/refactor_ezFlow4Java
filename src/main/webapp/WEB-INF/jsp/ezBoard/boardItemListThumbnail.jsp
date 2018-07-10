@@ -502,11 +502,17 @@
 	    	    	var height = 785;
 	    	    }
 		
-		        if (document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight == "bold") {
+	    	    /* 2018-07-09 홍승비 - 게시물 클릭 시 spn_content의 아이디를 사용해 폰트를 변경하도록 수정함 */
+	    	    if (document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight == "bold") {
 		            document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
-		       // document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
+					document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
 		        }
-		
+	    	    for (var i = 0; i < obj.childNodes.length; i++) {
+			        if (obj.childNodes[i].style.fontWeight == "bold") {
+			            obj.childNodes[i].style.fontWeight = "normal";
+					}
+		        }
+	    	    
 		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		
