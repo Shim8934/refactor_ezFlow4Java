@@ -23,10 +23,12 @@
 		    var usernm2 = "${userNM2}";
 		    var useAddressOpenAPI = "${useAddressOpenAPI}";
 		    var xmlHttpAddressTree;
+		    var closeAlertMsg = "<spring:message code='ezAddress.t337' />";
 		    window.onload = function () {
 				if(addressid == "")
 				{
 					document.title = "<spring:message code='ezAddress.t324' />";
+					closeAlertMsg = "<spring:message code='ezEmail.t667' />";
 				}
 				else
 				{
@@ -330,7 +332,7 @@
 		            window.close();
 		        }
 		        else {
-		            if (!confirm("<spring:message code='ezAddress.t337' />"))
+		            if (!confirm(closeAlertMsg))
 		                window.close();
 		            else
 		                insert_address();

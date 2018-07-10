@@ -572,11 +572,12 @@
 		      <input type="checkbox" name="popDelete3" value="checkbox" id="popDelete3"> 
 		      <spring:message code='ezEmail.t268' /></td> 
 		  </tr> 
-		</table> 
-		<br />
+		</table>
 		<div style="width:720px;text-align:center;">
-		    <a class="imgbtn" onClick="SavePop3()"><span><spring:message code='main.sp09' /></span></a>
-		    <a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
+			<div class="btnpositionJsp">
+		    	<a class="imgbtn" onClick="SavePop3()"><span><spring:message code='main.sp09' /></span></a>
+		    	<a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
+		    </div>	
 		</div>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 		<input id="publicExponent" value="${publicExponent}" type="hidden"/>

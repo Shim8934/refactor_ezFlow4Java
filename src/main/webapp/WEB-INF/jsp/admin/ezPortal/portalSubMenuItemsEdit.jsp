@@ -205,13 +205,14 @@
 	    		</td>
 	  		</tr>
 		</table>
-		<br>
-		<table class="mainlist" style="width:100%">
-	  		<tr>
-	    		<th width="60" height="23"><spring:message code='ezPortal.t101'/></th>
-	    		<th><spring:message code='ezPortal.t109'/></th>
-	  		</tr>
-	  		${mainHTML}
-		</table>
+		<div style="width: 100%; height: 180px; overflow: auto; margin-top: 10px;">
+			<table class="mainlist" style="width:100%">
+		  		<tr>
+		    		<th width="60" height="23"><spring:message code='ezPortal.t101'/></th>
+		    		<th><spring:message code='ezPortal.t109'/></th>
+		  		</tr>
+		  		${mainHTML}
+			</table>
+		</div>
 	</body>
 </html>
