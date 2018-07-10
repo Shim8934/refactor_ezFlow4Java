@@ -315,7 +315,7 @@
 				}
 	        }
 	    
-	    var m_strColorSelect = "#f0f6ff";
+	    var m_strColorSelect = "#edf4fd";
 	    var m_strColorOver = "#f4f5f5";
 	    var m_strColorDefault = "#ffffff";
 	    var p_ListOrderObject = null;

@@ -382,7 +382,7 @@
 		        } 
 		    }	    
 	        
-	        var m_strColorSelect = "#f0f6ff";
+	        var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -572,7 +572,9 @@
 	            var strSIP = "";
 	            var pAddFlag = false;
 	           
-	            if (_RowObjectID != null) {
+	            if (_RowObjectID == null && Tab1_SelectID == "1tab2") {
+	            	alert("<spring:message code='ezCircular.t53'/>");
+	            } else if (_RowObjectID != null && Tab1_SelectID == "1tab2") {
 	            	if (_RowObjectName.trim() == "deptList") {
 		            	for (var i = 0; i < $("#List_TBODY2 tr").length; i++) {
 		            		strId = $("#List_TBODY2 tr").eq(i).find("#data7").text();
@@ -1004,7 +1006,8 @@
 				}
 
 				var listid = "MsgToList";
-				_RowObjectID = null;
+				//2018-07-06 즐겨찾기 추가 로직 개선 배현상
+				//_RowObjectID = null;
 			}
 
 			function CheckMailReceiver(selRow, option) {
@@ -1792,7 +1795,7 @@
 				_RowObjectID = obj.id;
 				_RowObjectName = $(obj).attr("name");
 
-				obj.style.backgroundColor = "#f0f6ff";
+				obj.style.backgroundColor = "#edf4fd";
 
 				$
 						.ajax({
@@ -1843,7 +1846,7 @@
 				_RowObject = obj;
 				_RowObjectID = obj.id;
 				_RowObjectName = $(obj).attr("name");
-				obj.style.backgroundColor = "#f0f6ff";
+				obj.style.backgroundColor = "#edf4fd";
 			}
 
 			var Tab1_SelectID = "1tab1";
@@ -1855,8 +1858,9 @@
 					if (document.getElementById("circularOrgan_content").style.display == "none") {
 						document.getElementById("circularOrgan_content").style.display = "";
 						document.getElementById("circularDept_content").style.display = "none";
-						$("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
-						_RowObjectID = null; // 탭 바꾸면 기존에 가지고 있던 값 초기화
+// 						$("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제, 즐겨찾기
+// 						$("#List_TBODY2 tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제, 즐겨찾기 구성원
+//						_RowObjectID = null; // 탭 바꾸면 기존에 가지고 있던 값 초기화
 					}
 					break;
 				case "circularDept":

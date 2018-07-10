@@ -84,6 +84,7 @@
         arrDelFiles[0] = "c:\\" + pDocID + ".xml";
         arrDelFiles[1] = "c:\\" + pOrgDocID + ".xml";
         var pUse_Editor = "${useEditor}";
+        var approvalRoot = "${approvalRoot}";
         var ext = "hwp";
         
         function btnPrint_onclick() {
@@ -1152,7 +1153,7 @@ function PercentToMillimeter(strFontSize, strPercent) {
                 </div>
                 <div id="close">
                     <ul>
-                        <li id="btnClose"><span onclick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
+                        <li id="btnClose"><span onclick="return btnClose_onclick()"></span></li>
                     </ul>
                 </div>
                 <script type="text/javascript">

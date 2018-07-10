@@ -201,7 +201,7 @@
 		
 	    function onmouseOver(elem) {
 	        elem.style.color = "blue";
-	        elem.style.backgroundColor = "#f0f6ff";
+	        elem.style.backgroundColor = "#edf4fd";
 	    }
 
 	    function onmouseOut(elem) {
@@ -217,7 +217,7 @@
 				<tr>
 			    	<th style="white-space:nowrap"><spring:message code='ezSchedule.t290' /></th>
 			    	<td style="width:20px;border-right:none">
-			    		<a href="#" class="imgbtn">
+			    		<a href="#" class="imgbtn imgbck">
 			    			<span onClick="select_entity();"><spring:message code='ezSchedule.t291' /></span>
 			    		</a>
 			    	</td>
@@ -230,7 +230,7 @@
 			    	<td colspan="2">
 			       		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~ 
 			       		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
-						<a href="#" class="imgbtn">
+						<a href="#" class="imgbtn imgbck">
 							<span onClick="search()"><spring:message code='ezSchedule.t24' /></span>
 						</a>
 					</td>

@@ -1253,6 +1253,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		logger.debug("============ scheduleWrite started ============");
 		
+		loginVO = commonUtil.userInfo(loginCookie);
+		
 		String _datetype = "";
 		String _startdate = "";
 		String _enddate = "";
@@ -1272,10 +1274,18 @@ public class EzScheduleController extends EgovFileMngUtil {
         String _hasattach = "N";                
         String pCompanyAdmin = "";
         String pDeptAdmin = "";        
+        String userID = loginVO.getId();
+		String lang = loginVO.getPrimary();
+		int tenantID = loginVO.getTenantId();
+		String companyID = loginVO.getCompanyID();
                 
         StringBuilder strAttach = new StringBuilder();        
         StringBuilder strOwnerID = new StringBuilder();
         ScheduleInfoVO scheduleInfo = new ScheduleInfoVO();
+        
+		List<ScheduleSecretaryVO> sList = ezScheduleService.getPublicScheduleSec(userID, lang, tenantID);
+		List<ScheduleDeptVO> pdList = ezScheduleService.getPublicScheduleDept(userID, lang, tenantID);
+		List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(userID, lang, tenantID);
                
 		loginVO = commonUtil.userInfo(loginCookie);
 
@@ -1388,7 +1398,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         	model.addAttribute("strLabelOwner", strLabelOwner);        	
         	model.addAttribute("strAttach", strAttach.toString());        	
         } else {
-        	if (!_otherid.equals("")) {        		
+        	if (!_otherid.equals("")) {    
         		//개인일정
         		String type = _scheduletype;
         		strOwnerID.append("<option value='" + type + ";;" + _otherid + "'>" + request.getParameter("othername") + "</option>");
@@ -1400,19 +1410,59 @@ public class EzScheduleController extends EgovFileMngUtil {
 					//개인일정
 					strOwnerID.append("<option value='1;;" + userId + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t372", locale) + " " + commonUtil.cleanValue(loginVO.getDisplayName1()) + "</option>");
 					count++;
+					//비서일정
+					for (ScheduleSecretaryVO vo : sList) {
+	            		//비서일정
+	            		strOwnerID.append("<option value='1;;" + vo.getSecId()+ "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t372", locale) + " " + commonUtil.cleanValue(vo.getSecName()) + "</option>");
+	            		count++;
+	            	}
 					//부서일정
 					strOwnerID.append("<option value='2;;" + loginVO.getDeptID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(loginVO.getDeptName1()) + "</option>");
 					count++;
+					//공유일정
+					for (ScheduleDeptVO vo : pdList) {
+	            		//공유일정
+	            		strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getDeptName()) + "</option>");
+	            		count++;
+	            	}
+					//겸직일정
+					for (ScheduleCumulerVO vo : cList) {
+						logger.debug("겸직리스트 : " + vo.getDeptId() + "겸직부서이름 : " + vo.getTitleName());
+	            		//겸직일정
+	            		strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
+	            		count++;
+	            	}
 					//회사일정
 					strOwnerID.append("<option value='3;;" + loginVO.getCompanyID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t374", locale) + " " + commonUtil.cleanValue(loginVO.getCompanyName1()) + "</option>");
-					count++;
+					count++;					
+					
 				} else {
 					//개인일정
 					strOwnerID.append("<option value='1;;" + userId + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t372", locale) + " " + commonUtil.cleanValue(loginVO.getDisplayName2()) + "</option>");
 					count++;
+					//비서일정
+					for (ScheduleSecretaryVO vo : sList) {
+	            		//비서일정
+	            		strOwnerID.append("<option value='1;;" + vo.getSecId()+ "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t372", locale) + " " + commonUtil.cleanValue(vo.getSecName()) + "</option>");
+	            		count++;
+	            	}
 					//부서일정
 					strOwnerID.append("<option value='2;;" + loginVO.getDeptID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(loginVO.getDeptName2()) + "</option>");
 					count++;
+					//공유일정
+					for (ScheduleDeptVO vo : pdList) {
+	            		//공유일정
+	            		strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getDeptName()) + "</option>");
+	            		count++;
+	            	}
+					//겸직일정
+					for (ScheduleCumulerVO vo : cList) {
+						logger.debug("겸직리스트 : " + vo.getDeptId() + "겸직부서이름 : " + vo.getTitleName());
+	            		//겸직일정
+	            		strOwnerID.append("<option value='2;;" + vo.getDeptId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + commonUtil.cleanValue(vo.getTitleName()) + "</option>");
+	            		count++;
+	            	}
+					
 					//회사일정
 					strOwnerID.append("<option value='3;;" + loginVO.getCompanyID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t374", locale) + " " + commonUtil.cleanValue(loginVO.getCompanyName2()) + "</option>");
 					count++;
@@ -1670,11 +1720,45 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		String lang = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
 		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());		
 		String startDate = request.getParameter("STARTDATE");
 		String endDate = request.getParameter("ENDDATE");
 		String idList = request.getParameter("IDLIST");		
 		String pidList = "'" + idList + "'";
+		
+		List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(idList, lang, tenantID);
+		List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(idList, lang, tenantID);
+		String CompanyID = userInfo.getCompanyID();
+		String dcidList = "";
+		
+		if(dList != null && dList.size()>0){
+			for (int i = 0; i < dList.size(); i++) {
+				if (i == 0) {
+					dcidList += ",";
+				}
+				ScheduleDeptVO data = dList.get(i);			
+				dcidList += "\'" + data.getDeptId()+ "\',";				
+			}				
+		}
+		
+		if(cList != null && cList.size()>0 ){
+			for (int i = 0; i < cList.size(); i++) {							
+				if(dList == null || dList.size()<=0){
+					if (i == 0) {
+						dcidList += ",";
+					}
+					ScheduleCumulerVO data = cList.get(i);			
+					dcidList += "\'" + data.getDeptId()+ "\',";		
+				}
+			}				
+		}
+		
+		/*dcidList = dcidList.substring(0, dcidList.length()-1);*/
+		
+		dcidList += "\'" + CompanyID + "\'";
+		pidList += dcidList;
 		
 		startDate = startDate + " 00:00:00";
 		endDate = endDate + " 23:59:59";

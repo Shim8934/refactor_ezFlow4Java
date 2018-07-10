@@ -20,7 +20,7 @@
 		}
 			
 		.selectTR{
-			background-color: #f0f6ff;
+			background-color: #edf4fd;
 		}
 	</style>
 	

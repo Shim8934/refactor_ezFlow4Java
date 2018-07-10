@@ -587,18 +587,17 @@ function makeXML(newDocID) {
 
 	var Nodes = eNodes.selectNodes("foot/sendinfo");
     if (HwpCtrl.CheckFieldExist("symbol")) {
-		symbolPath = GetDocumentElement(HwpCtrl, "symbolurl");
-        if (symbolPath != "") {
+		symbolName = GetDocumentElement(HwpCtrl, "symbolurl");
+		
+        if (symbolName != "") {
 			var tempNode3 = sihangXML.createNode(1,"symbol","");
 			Nodes(0).appendChild(tempNode3);
 			var tempNode2 = sihangXML.createNode(1,"img","")
 			tempNode3.appendChild(tempNode2);
 			
-			var len = symbolPath.lastIndexOf("/");
-			var filelength = symbolPath.length - (len + 1);  
-			symbolName = symbolPath.substr(len + 1,filelength);
-			tempNode2.setAttribute("src",symbolName);
-			tempNode2.setAttribute("alt",strLang180);
+			symbolPath = approvalRoot + symbolName;
+			tempNode2.setAttribute("src", symbolName);
+			tempNode2.setAttribute("alt", strLang180);
 				
             var tempSize = GetHTMLBody(HwpCtrl.GetCloneData("symbol", "HTML"));
             var tmpDiv = document.createElement("div");
@@ -622,18 +621,16 @@ function makeXML(newDocID) {
 
 	var Nodes = eNodes.selectNodes("foot/sendinfo");
     if (HwpCtrl.CheckFieldExist("logo")) {
-		logoPath = GetDocumentElement(HwpCtrl, "logourl");
+		logoName = GetDocumentElement(HwpCtrl, "logourl");
 		
-        if (logoPath != "") {
+        if (logoName != "") {
 			var tempNode3 = sihangXML.createNode(1,"logo","");
 			Nodes(0).appendChild(tempNode3);
 			var tempNode2 = sihangXML.createNode(1,"img","")
 			tempNode3.appendChild(tempNode2)
 			
-			var len = logoPath.lastIndexOf("/");
-			var filelength = logoPath.length - (len + 1);  
-			logoName = logoPath.substr(len + 1,filelength);
-			tempNode2.setAttribute("src",logoName)
+			logoPath = approvalRoot + logoName;
+			tempNode2.setAttribute("src", logoName)
 			tempNode2.setAttribute("alt", strLang181)
 					
             var tempSize = GetHTMLBody(HwpCtrl.GetCloneData("logo", "HTML"));
@@ -654,7 +651,6 @@ function makeXML(newDocID) {
 				tempNode2.setAttribute("height", "8.68mm");
 			else
                 tempNode2.setAttribute("height", tmpH + "mm");
-
 		}
 	}
 	
@@ -792,7 +788,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 	
         
 	var Nodes = eNodes.selectNodes("header/send-name");
-	setNodeText(Nodes(0) , objSave.EncodeBase64(companyName));
+	setNodeText(Nodes(0) , companyName);
 	
 	isfirst = true;
     if (mode == "GPKI") {
@@ -829,7 +825,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 
         
 	var Nodes = eNodes.selectNodes("header/title");
-	setNodeText(Nodes(0) , objSave.EncodeBase64(getNodeText(pDocInfoXML.documentElement.childNodes(7))));
+	setNodeText(Nodes(0) , getNodeText(pDocInfoXML.documentElement.childNodes(7)));
 
         
 	var Nodes = eNodes.selectNodes("header/doc-id");
@@ -843,13 +839,13 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 		Nodes(0).setAttribute("type", "send");
 
         
-	Nodes(0).setAttribute("dept", objSave.EncodeBase64(getNodeText(pDocInfoXML.documentElement.childNodes(17))));
+	Nodes(0).setAttribute("dept", getNodeText(pDocInfoXML.documentElement.childNodes(17)));
         
-	Nodes(0).setAttribute("name", objSave.EncodeBase64(getNodeText(pDocInfoXML.documentElement.childNodes(14))));
+	Nodes(0).setAttribute("name", getNodeText(pDocInfoXML.documentElement.childNodes(14)));
 
         
 	var Nodes = eNodes.selectNodes("header/send-gw");
-	setNodeText(Nodes(0) , objSave.EncodeBase64("ezFlow2000/G"));
+	setNodeText(Nodes(0) , "ezFlow2000/G");
 
         
 	var Nodes = eNodes.selectNodes("header/dtd-version");
@@ -863,7 +859,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 	var tempNode = sihangXML.createNode(1,"content","");
 	Nodes(0).appendChild(tempNode);
 	tempNode.setAttribute("content-role", "pubdoc");
-	tempNode.setAttribute("filename", objSave.EncodeBase64("pubdoc.xml"));
+	tempNode.setAttribute("filename", "pubdoc.xml");
 	tempNode.setAttribute("content-transfer-encoding", "base64");
 	tempNode.setAttribute("content-type", "text/xml");
         tempNode.setAttribute("charset", "euc-kr");
@@ -874,7 +870,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 	var re = /strong>/g; 
 	var strtempxml = strtempxml.replace(re,"b>")
 
-	setNodeText(tempNode , objSave.EncodeBase64("<?xml version=\"1.0\" encoding=\"euc-kr\"?><?xml-stylesheet type=\"text/xsl\" href=\"siheng.xsl\"?><!DOCTYPE pubdoc SYSTEM \"pubdoc.dtd\">" + strtempxml));
+	setNodeText(tempNode , "<?xml version=\"1.0\" encoding=\"euc-kr\"?><?xml-stylesheet type=\"text/xsl\" href=\"siheng.xsl\"?><!DOCTYPE pubdoc SYSTEM \"pubdoc.dtd\">" + strtempxml);
 	
         
     if (sealName != "") {
@@ -882,7 +878,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 		var tempNode = sihangXML.createNode(1,"content","");
 		Nodes(0).appendChild(tempNode);
 		tempNode.setAttribute("content-role", "seal");
-		tempNode.setAttribute("filename", objSave.EncodeBase64(sealName));
+		tempNode.setAttribute("filename", sealName);
 		tempNode.setAttribute("content-transfer-encoding", "base64");
 		tempNode.setAttribute("content-type", "");
 		tempNode.setAttribute("charset", "euc-kr");
@@ -898,7 +894,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 			tempNode.setAttribute("content-role", "attach_body");
 		else
 			tempNode.setAttribute("content-role", "attach");
-		tempNode.setAttribute("filename", objSave.EncodeBase64(attachName[i]));
+		tempNode.setAttribute("filename", attachName[i]);
 		tempNode.setAttribute("content-transfer-encoding", "base64");
 		tempNode.setAttribute("content-type", "");
 		tempNode.setAttribute("charset", "euc-kr");
@@ -910,7 +906,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 		var tempNode = sihangXML.createNode(1,"content","");
 		Nodes(0).appendChild(tempNode);
 		tempNode.setAttribute("content-role", "attach_xml");
-		tempNode.setAttribute("filename", objSave.EncodeBase64(attachxmlName));
+		tempNode.setAttribute("filename", attachxmlName);
 		tempNode.setAttribute("content-transfer-encoding", "base64");
 		tempNode.setAttribute("content-type", "html/xml");
 		tempNode.setAttribute("charset", "euc-kr");
@@ -922,7 +918,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 		var tempNode = sihangXML.createNode(1,"content","");
 		Nodes(0).appendChild(tempNode);
 		tempNode.setAttribute("content-role", "attach_xsl");
-		tempNode.setAttribute("filename", objSave.EncodeBase64(attachxslName));
+		tempNode.setAttribute("filename", attachxslName);
 		tempNode.setAttribute("content-transfer-encoding", "base64");
 		tempNode.setAttribute("content-type", "html/xsl");
 		tempNode.setAttribute("charset", "euc-kr");
@@ -935,7 +931,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 		var tempNode = sihangXML.createNode(1,"content","");
 		Nodes(0).appendChild(tempNode);
 		tempNode.setAttribute("content-role", "sign");
-		tempNode.setAttribute("filename", objSave.EncodeBase64(psignName[i]));
+		tempNode.setAttribute("filename", psignName[i]);
 		tempNode.setAttribute("content-transfer-encoding", "base64");
 		tempNode.setAttribute("content-type", "");
 		tempNode.setAttribute("charset", "euc-kr");
@@ -948,7 +944,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 		var tempNode = sihangXML.createNode(1,"content","");
 		Nodes(0).appendChild(tempNode);
 		tempNode.setAttribute("content-role", "symbol");
-		tempNode.setAttribute("filename", objSave.EncodeBase64(symbolName));
+		tempNode.setAttribute("filename", symbolName);
 		tempNode.setAttribute("content-transfer-encoding", "base64");
 		tempNode.setAttribute("content-type", "");
 		tempNode.setAttribute("charset", "euc-kr");
@@ -960,7 +956,7 @@ function makeExtinfo(psihangXML, newDocID, mode) {
 		var tempNode = sihangXML.createNode(1,"content","");
 		Nodes(0).appendChild(tempNode);
 		tempNode.setAttribute("content-role", "logo");
-		tempNode.setAttribute("filename", objSave.EncodeBase64(logoName));
+		tempNode.setAttribute("filename", logoName);
 		tempNode.setAttribute("content-transfer-encoding", "base64");
 		tempNode.setAttribute("content-type", "");
 		tempNode.setAttribute("charset", "euc-kr");

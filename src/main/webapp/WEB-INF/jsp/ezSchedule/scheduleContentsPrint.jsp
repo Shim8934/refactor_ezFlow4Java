@@ -125,13 +125,15 @@
 				    </td>
 				    <th><spring:message code='ezSchedule.t313' /></th>
 				    <td>
-				       <div id="printLocation">${printLocation}</div>
+				    	<!-- 2018-07-09 김보미 - 태그적용 막기 -->
+						<%-- <div id="printLocation">${printLocation}</div> --%>
+						<div id="printTitle"><c:out value="${printLocation}" /></div>
 				   </td>
 				</tr>
 				<tr>
 				    <th><spring:message code='ezSchedule.t314' /></th>
 				    <td colspan="3">
-				        <div id="printTitle">${printTitle}</div>
+				        <div id="printTitle"><c:out value="${printTitle} " escapeXml="true" /></div>
 				    </td>
 				</tr>
 			</table>

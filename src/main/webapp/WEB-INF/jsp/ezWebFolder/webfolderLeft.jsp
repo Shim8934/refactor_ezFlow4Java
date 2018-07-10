@@ -269,7 +269,7 @@
   			</h2>
     		<ul>
 			</ul>			
-			<!-- <div style="border:1px solid #e8e8ef;margin:10px 10px 2px;background-color:#f8f8fa">
+			<!-- <div style="border:1px solid #e8e8e8;margin:10px 10px 2px;background-color:#f8f8fa">
 			    <div id='myProgress' style='margin-left:20px;margin-top:10px'></div>
 			    <div style="width:80%">
 			    	<div id='myBar'></div>

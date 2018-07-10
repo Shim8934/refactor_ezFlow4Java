@@ -296,7 +296,7 @@
 		    		return;
 		    	} */
 		        
-		        save_schedule();
+		        save_schedule(pageFrom);
 		    }
 		   
 		    function Print_onClick() {
@@ -324,7 +324,7 @@
 		        }
 
 		        printIsPublic = document.getElementById("publicSelect").options[document.getElementById("publicSelect").selectedIndex].textContent;
-		        printImportance = document.getElementById("importantSelect").options[document.getElementById("importantSelect").selectedIndex].textContent;
+		        printImportance = document.getElementById("importantSelect").options[document.getElementById("importantSelect").selectedIndex].textContent.substring(4,6);
 		        printRepetition = document.getElementById("repeatinfo").textContent;
 
 		        if ($.trim(repetition) == "") {
@@ -477,7 +477,7 @@
                                         <tr id="HolderWrite">
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="2">
-                                            	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:20px;">${strOwnerID}</select>
+                                            	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:24px;">${strOwnerID}</select>
                                             </td>
                                         </tr>
 	                                    <tr>

@@ -64,6 +64,8 @@ function MailPreviewEnd(e) {
             document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
             document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
+            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+            
             pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
             pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
             if($("#PreH_CCMain").css("display") != "none") {
@@ -1042,6 +1044,8 @@ function PreviewRayerChange(pGubun) {
                 document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
             document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
             document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
+            document.getElementById("PreW_subject").style.width = (CurrenWidth - 185) + "px";
+            
             pPreviewShow_HOW = "W";
             pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
             pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
@@ -1095,6 +1099,8 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
             document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
+            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+            
             pPreviewShow_HOW = "H";
             g_bPrevShow = true;
             if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT" && p_ListorderValue != "RECEIV") {
@@ -1165,6 +1171,8 @@ function Window_resize() {
                     document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
                 document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
+                document.getElementById("PreW_subject").style.width = (CurrenWidth - 185) + "px";
+                
                 pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
                 pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
                 
@@ -1206,6 +1214,7 @@ function Window_resize() {
                 document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
                 document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
                 document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
+                document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
                 
                 /* 좌우 리사이징 시 round로 인해 비율의 합이 100%가 되지 않아
                    오른쪽 끝에 여백이 발생하여 제거함

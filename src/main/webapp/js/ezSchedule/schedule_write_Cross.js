@@ -64,7 +64,7 @@ function check_time() {
 
 var SaveScheduleId = "";
 var saveCheck = false;
-function save_schedule()
+function save_schedule(pageFrom)
 {
 	if(saveCheck) {
 		return;
@@ -394,8 +394,12 @@ function save_schedule()
 	        }
 	    }
 	    alert(strLang18);
-	    try { window.opener.RefreshView() } catch (e) { }
-
+	    if(pageFrom == 'Portal'){
+	    	try { window.opener.location.reload(); } catch (e) { }
+	    }else{
+	    	try { window.opener.RefreshView() } catch (e) { }
+	    }
+	    
 	    window.close();
 	}
 }
@@ -741,46 +745,141 @@ function show_repetition_info()
 	switch (info[2])
 	{
 		case "0":
-			repeatinfo += strLang34;
+			{
+				if(info[3] == '0'){				
+					repeatinfo += strLang34;
+				}else{
+					repeatinfo += info[3] + strLang81 + " ";
+				}			
+			}
 			break;
 		case "1":
-			repeatinfo += strLang35;
+			{
+				if(info[3] == '1'){				
+					repeatinfo += strLang35;
+				}else{
+					repeatinfo += info[3] + strLang82 + " ";
+				}
+			}
 			break;
 	    case "2":
 	        {
-	            repeatinfo += strLang36;
+		    	if(info[3] == '1'){
+		    		
+					repeatinfo += info[4] + strLang83 + " ";
+					repeatinfo += info[5] + strLang80 + " ";
+		    		
+				}else{					
+					repeatinfo += info[4] + strLang83 + " ";
+					for (var i = 0; i< info[5].length; i++){
+						switch (info[5]){
+						case "1":
+							repeatinfo += strLang55;
+							break;
+						case "2":
+							repeatinfo += strLang56;
+							break;
+						case "3":
+							repeatinfo += strLang57;
+							break;
+						case "4":
+							repeatinfo += strLang58;
+							break;
+						case "5":
+							repeatinfo += strLang59;
+							break;
+						}
+					}
+					repeatinfo += " ";
+					for (var i = 0; i < info[6].length; i++) {
+						var idx = info[6].substr(i, 1);
+						switch (idx) {
+						case "0":
+							repeatinfo += strLang48;
+							break;
+						case "1":
+							repeatinfo += strLang49;
+							break;
+						case "2":
+							repeatinfo += strLang50;
+							break;
+						case "3":
+							repeatinfo += strLang51;
+							break;
+						case "4":
+							repeatinfo += strLang52;
+							break;
+						case "5":
+							repeatinfo += strLang53;
+							break;
+						case "6":
+							repeatinfo += strLang54;
+							break;
+						}
+					}
+				}
 
-	            repeatinfo += " ";
-	            for (var i = 0; i < info[4].length; i++) {
-	                var idx = info[4].substr(i, 1);
-	                switch (idx) {
-	                    case "0":
-	                        repeatinfo += strLang48;
-	                        break;
-	                    case "1":
-	                        repeatinfo += strLang49;
-	                        break;
-	                    case "2":
-	                        repeatinfo += strLang50;
-	                        break;
-	                    case "3":
-	                        repeatinfo += strLang51;
-	                        break;
-	                    case "4":
-	                        repeatinfo += strLang52;
-	                        break;
-	                    case "5":
-	                        repeatinfo += strLang53;
-	                        break;
-	                    case "6":
-	                        repeatinfo += strLang54;
-	                        break;
-	                }
-	            }
 	        }
 			break;
 		case "3":
-			repeatinfo += strLang37;
+			{
+				if(info[3] == '1'){
+		    		
+					repeatinfo += strLang37 + " ";
+					repeatinfo += info[4] + strLang122 + " ";
+					repeatinfo += info[5] + strLang81;
+		    		
+				} else {	
+					repeatinfo += strLang37 + " ";
+					repeatinfo += info[4] + strLang122 + " ";
+					for (var i = 0; i< info[5].length; i++){
+						switch (info[5]){
+						case "1":
+							repeatinfo += strLang55;
+							break;
+						case "2":
+							repeatinfo += strLang56;
+							break;
+						case "3":
+							repeatinfo += strLang57;
+							break;
+						case "4":
+							repeatinfo += strLang58;
+							break;
+						case "5":
+							repeatinfo += strLang59;
+							break;
+						}
+					}
+					repeatinfo += " ";
+					for (var i = 0; i < info[6].length; i++) {
+						var idx = info[6].substr(i, 1);
+						switch (idx) {
+						case "0":
+							repeatinfo += strLang48;
+							break;
+						case "1":
+							repeatinfo += strLang49;
+							break;
+						case "2":
+							repeatinfo += strLang50;
+							break;
+						case "3":
+							repeatinfo += strLang51;
+							break;
+						case "4":
+							repeatinfo += strLang52;
+							break;
+						case "5":
+							repeatinfo += strLang53;
+							break;
+						case "6":
+							repeatinfo += strLang54;
+							break;
+						}
+					}
+				}
+			}
 			break;
 	}	
 

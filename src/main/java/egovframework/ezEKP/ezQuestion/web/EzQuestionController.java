@@ -4345,7 +4345,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		strData += "<table class=\"question\">";
 		strData += "<tr>";
-		strData += "<th title=\"" + commonUtil.cleanValue(strContent) + "\">" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + commonUtil.cleanValue(strContent) + "";
+		strData += "<th style=\"white-space:normal; word-break:break-all;\"title=\"" + commonUtil.cleanValue(strContent) + "\">" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + commonUtil.cleanValue(strContent) + "";
 		
 		if (multiSelect.equals("1")){
 			strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55", locale) + "</span>";

@@ -117,6 +117,7 @@
 		    var ext = "hwp";
 		    var nonElecRec = "${isNonElecRec}";
 		    var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
+		    var dirPath = "${approvalRoot}";
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -327,6 +328,7 @@
 			                        }
 			                        else {
 			                            var emlName = getNodeText(pRelayDocInfo.getElementsByTagName("emlURL").item(0));
+			                            //이부분이 타는지 체크해야함 탄다면 어떤 의미인지도 체크
 			                            if (!decodeUp(emlName)) {
 			                                hideProgress();
 			                                chkBtnConfirm("1");
@@ -334,6 +336,7 @@
 			                            }
 			                        }
 			                    }
+			                    
 			                    var tempFlag = getExtInfo();
 			                    if (tempFlag) {
 			                        setAutoProperty();
@@ -882,7 +885,8 @@
 			      }
 			      catch (e) { }
 			
-			      DeleteLocalFiles();
+			      //사용하지 않는게 좋을듯 엑티브엑스를 이용하여 템프파일 생성 후 지우는거 
+// 			      DeleteLocalFiles();
 			  }
 		
 			  function DeleteLocalFiles() {
@@ -1485,7 +1489,7 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li id="btnClose"><span onclick="return btnClose_onclick()"><%-- <spring:message code='ezApprovalG.t64'/> --%></span></li>
+	                        <li id="btnClose"><span onclick="return btnClose_onclick()"></span></li>
 	                    </ul>
 	                </div>
 	                <script type="text/javascript">

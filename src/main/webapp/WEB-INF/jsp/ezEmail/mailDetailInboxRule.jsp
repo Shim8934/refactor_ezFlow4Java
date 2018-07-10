@@ -552,7 +552,7 @@
 		            _popObj.style.backgroundColor = "#ffffff";
 		        }
 		        _popObj = obj;
-		        obj.style.backgroundColor = "#f0f6ff";
+		        obj.style.backgroundColor = "#edf4fd";
 		    }
 		    function random() {
 		        return Math.floor(Math.random() * 100);

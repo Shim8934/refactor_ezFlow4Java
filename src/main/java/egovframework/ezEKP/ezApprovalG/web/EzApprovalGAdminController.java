@@ -33,7 +33,6 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
-import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGAdminServiceImpl;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormConnInfoVO;
@@ -3070,7 +3069,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String containerID = ezApprovalGAdminService.setContainerIDForDoc1(deptID, containerType, companyID, userInfo.getTenantId());
 		
 		if (containerID == null) {
-			containerID = ezApprovalGService.makeContainer(deptID, containerID, companyID, userInfo.getTenantId());
+			containerID = ezApprovalGService.makeContainer(deptID, containerType, companyID, userInfo.getTenantId());
 		}
 		
 		String result;

@@ -49,10 +49,10 @@
 	    	//부서 이름 세팅
 	    	function setDeptName(pdeptIds,pdeptNames){
 	    		if (pdeptIds && pdeptNames) {
-					deptIds = eval(pdeptIds);
-					deptNames = eval(pdeptNames);
+					deptIds = JSON.parse(pdeptIds);
+					deptNames = JSON.parse(pdeptNames);
 				}
-				var deptString;
+				var deptString = "";
 	    		for (var i = 0; i < deptNames.length; i++) {
 	    			deptNames[i] = deptNames[i];
 	    			if(i != 0){

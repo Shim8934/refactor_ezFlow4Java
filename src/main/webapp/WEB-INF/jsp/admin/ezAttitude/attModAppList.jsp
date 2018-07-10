@@ -30,7 +30,7 @@
 	    		cursor : pointer;
 	    }
     	tr.hover:hover {background:#eee; color:#fff;}
-		.selectTR {background-color: rgb(233, 241, 255);}
+		.selectTR {background-color: #edf4fd;}
 		#searchTable {
 			border-top: 1px solid #e8e8e8;
 			border-left: 1px solid #e8e8e8;
@@ -1274,19 +1274,17 @@
 			</tr>
 		</table>
 <!-- 		팝업 -->
-		<div id="popup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;max-width:550px;">
-			<div class="popupwrap3">
+		<div id="popup" class="popupwrap1" style="display:none;margin-bottom:50px;max-width:550px;">
+			<div class="popupJQLayer">
+				<div class="title"><spring:message code='ezAttitude.t141'/></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="popup_close()"></span></a></li>
+		            </ul>
+		        </div>
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopup_list" style="display:block; width:490px; margin:10px 0px 0px 1px;">
-				    <thead>
-				    	<tr>
-							<th class="layerHeader" colspan="4" style="width:490px;">
-								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
-								&nbsp;<spring:message code='ezAttitude.t141'/>
-							</th>
-						</tr>
-				    </thead>
-				    <tbody style="max-height:500px; width:490px; display:block; overflow-y:auto;">
+			    <table class="popuplist" id="addpopup_list" style="display:block;margin:10px 0px 0px 1px;">
+				    <tbody style="max-height:500px; display:block; overflow-y:auto;">
 				    	<tr>
 							<th style="width:120px;height:30px"><spring:message code='ezAttitude.t107'/></th>
 				    		<th style="width:30px; height:30px"><spring:message code='ezAttitude.t206'/></th>
@@ -1300,7 +1298,6 @@
 				<!-- /내용 -->
 				<br />
 			</div>
-			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
 		</div>
 		
 		<form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezAttitude/saticGetXlsAtt.do">

@@ -21,6 +21,7 @@
 			.imgbtn {
 			    vertical-align: middle;
 			    margin-top: 3px;
+			    height:22px
 			}
 			
 			#mainmenu {
@@ -41,7 +42,7 @@
 			.lmtitle {
 			    height: 32px;
 			    background: #f8f8f8;
-			    color: #777;
+			    color: #333;
 			    font-size: 12px;
 			    line-height: 32px;
 			    box-sizing: border-box;
@@ -52,7 +53,7 @@
 			
 			 .lmLetterBoxTitle>input {
 			    width: 68%;
-			    height: 21px;
+			    height: 24px;
 			    color: #393939;
 			    border: 1px solid #cbcbcb;
 			} 
@@ -105,11 +106,11 @@
         </div>
 		<table border="1" id="letterTable" >
 			<tr style="height:8%; border-bottom:none;">
-				<th colspan="2" align="center" style="border:1px solid #ddd">
+				<th colspan="2" align="center" style="border:1px solid #ddd;padding:0px">
 					<div class="lmtitle lmLetterBoxTitle" style="border-bottom:0px;">
 						<input type="text" name="" id="lmSearchInput" class="searchInput" onkeydown="letterSearchEnter();" placeholder="<spring:message code="ezEmail.t10"/>" style="border-color:#ddd">
-						<a id="lmSearch" class="imgbtn" onclick="letterSearch()"><span><spring:message code='ezEmail.letter1'/></span></a>
-						<a id="lmSearchReset" class="imgbtn" onclick="inputReset()"><span><spring:message code='ezBoard.t999035'/></span></a>
+						<a id="lmSearch" class="imgbtn" onclick="letterSearch()"><span style="line-height:23px"><spring:message code='ezEmail.letter1'/></span></a>
+						<a id="lmSearchReset" class="imgbtn" onclick="inputReset()"><span style="line-height:23px"><spring:message code='ezBoard.t999035'/></span></a>
 					</div>	
 				</th>
 			</tr>
