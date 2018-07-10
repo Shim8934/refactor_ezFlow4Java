@@ -31,7 +31,7 @@
 		        ezchkpasswd_all_cross_dialogArguments[0] = parameter;
 		        ezchkpasswd_all_cross_dialogArguments[1] = chk_Passwd_Complete;
 		
-		        DivPopUpShow(330, 200, "/ezApprovalG/ezchkPasswdall.do");
+		        DivPopUpShow(330, 215, "/ezApprovalG/ezchkPasswdall.do");
 		    }
 		    function chk_Passwd_Complete(chkpass) {
 		        if (chkpass == "FALSE") {

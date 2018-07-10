@@ -249,6 +249,7 @@ function CalendarView(pTagetID,chk_str) {
                 dTd.className = "calendar_t_time";
                 var dDiv = document.createElement("DIV")
                 dDiv.setAttribute("id", dayText.substring(0,10) + "ALL");
+                dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
                 dDiv.style.width = "100%"
                 dDiv.style.height = "100px";
                 dDiv.style.overflowY = "auto";
@@ -1051,6 +1052,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         dTd.className = "calendar_t_time";
         var dDiv = document.createElement("DIV")
         dDiv.setAttribute("id", divID + "ALL");
+        dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
         dDiv.style.height = "100px";
         dDiv.style.overflowY = "auto";
         dDiv.style.overflowN = "hidden";

@@ -1781,6 +1781,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		String lang = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
 		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());		
 		String startDate = request.getParameter("STARTDATE");
 		String endDate = request.getParameter("ENDDATE");

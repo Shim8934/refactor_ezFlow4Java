@@ -960,7 +960,7 @@ function CalWeekAllDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        oDiv.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
+        oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
 
         objDivS.appendChild(oDiv);
 
@@ -1211,7 +1211,7 @@ function CalDayAllDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        oDiv.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
+        oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
 
         objDivS.appendChild(oDiv);
 

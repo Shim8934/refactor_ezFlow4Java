@@ -14,6 +14,9 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -201,24 +204,55 @@ public class EzCircularServiceImpl implements EzCircularService {
 			if (!file.exists()) {
 	        	file.mkdir();
 	        }
-
-			int fileLength = fileList.split(",").length;
-			String[] fileLists = fileList.split(",");
+			//2018-07-06 김보미 - 파일부분 수정
+//			int fileLength = fileList.split(",").length;
+//			String[] fileLists = fileList.split(",");
+//			
+//			attachMap.put("circularID", circularID);
+//			attachMap.put("tenantID", userInfo.getTenantId());
+//			
+//			for (int j=0; j<fileLength; j++) {
+//				String[] files = fileLists[j].split(";");
+//				String filePath = files[0];
+//				String fileName = files[1];
+//				String fileSize = files[2];
+//				
+//				logger.debug("filePath : " + filePath + " | fileName : " + fileName);
+//				
+//				String uploadFilePath = commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+//				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
+//				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+//
+//				attachMap.put("fileName", fileName);
+//				attachMap.put("fileSize", fileSize);
+//				attachMap.put("filePath", uploadFilePath);
+//				
+//				logger.debug("uploadFilePath : " + uploadFilePath);
+//
+//				ezCircularDAO.insertCircularAttach(attachMap);
+//
+//				fileMove(beforeFilePath, afterFilePath); // Temp 폴더에서 첨부파일 이동
+//			}
+			JSONParser jp = new JSONParser();
+			JSONArray jsonArr = (JSONArray)jp.parse(fileList);
+			
+			int fileLength = jsonArr.size();
 			
 			attachMap.put("circularID", circularID);
 			attachMap.put("tenantID", userInfo.getTenantId());
 			
-			for (int j=0; j<fileLength; j++) {
-				String[] files = fileLists[j].split(";");
-				String filePath = files[0];
-				String fileName = files[1];
-				String fileSize = files[2];
+			for (int j = 0; j < fileLength; j++) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj = (JSONObject) jsonArr.get(j);
+				String filePath = (String) jsonObj.get("newFileName");
+				String fileName = (String) jsonObj.get("pFileName");
+				String fileSize = (String) jsonObj.get("fileSize");
 				
 				logger.debug("filePath : " + filePath + " | fileName : " + fileName);
 				
-				String uploadFilePath = commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
-				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
-				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String uploadFilePath = commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + fileName;
+				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + fileName;
+				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + fileName;
 
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
@@ -417,23 +451,60 @@ public class EzCircularServiceImpl implements EzCircularService {
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 
 		if (fileList != null && !fileList.equals("")) {
-			int fileLength = fileList.split(",").length;
-			String[] fileLists = fileList.split(",");
-
-			logger.debug("updateCircular fileList : " + fileList);
+			//2018-07-06 김보미 - 파일부분 수정
+//			int fileLength = fileList.split(",").length;
+//			String[] fileLists = fileList.split(",");
+//
+//			logger.debug("updateCircular fileList : " + fileList);
+//
+//			attachMap.put("circularID", circularID);
+//			attachMap.put("tenantID", tenantID);
+//			
+//			for (int j=0; j<fileLength; j++) {
+//				String[] files = fileLists[j].split(";");
+//				String filePath = files[0];
+//				String fileName = files[1];
+//				String fileSize = files[2];
+//				
+//				logger.debug("filePath : " + filePath + " | fileName : " + fileName);
+//				
+//				String uploadFilePath = commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+//				
+//				attachMap.put("fileName", fileName);
+//				attachMap.put("fileSize", fileSize);
+//				attachMap.put("filePath", uploadFilePath);
+//
+//				logger.debug("uploadFilePath : " + uploadFilePath);
+//
+////				ezCircularDAO.updateCircularAttach(attachMap);
+//				ezCircularDAO.insertCircularAttach(attachMap);
+//
+//				// mode = modify -> 회람수정 일 때이므로 수정 시 Temp 폴더에서 첨부파일 이동
+//				if (mode.equals("modify")) {
+//					String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
+//					String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+//					
+//					fileMove(beforeFilePath, afterFilePath); // Temp 폴더에서 첨부파일 이동					
+//				}
+//			}
+			JSONParser jp = new JSONParser();
+			JSONArray jsonArr = (JSONArray)jp.parse(fileList);
+			
+			int fileLength = jsonArr.size();
 
 			attachMap.put("circularID", circularID);
 			attachMap.put("tenantID", tenantID);
 			
-			for (int j=0; j<fileLength; j++) {
-				String[] files = fileLists[j].split(";");
-				String filePath = files[0];
-				String fileName = files[1];
-				String fileSize = files[2];
+			for (int j = 0; j < fileLength; j++) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj = (JSONObject) jsonArr.get(j);
+				String filePath = (String) jsonObj.get("newFileName");
+				String fileName = (String) jsonObj.get("pFileName");
+				String fileSize = (String) jsonObj.get("fileSize");
 				
 				logger.debug("filePath : " + filePath + " | fileName : " + fileName);
 				
-				String uploadFilePath = commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String uploadFilePath = commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + fileName;
 				
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);
@@ -441,13 +512,12 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 				logger.debug("uploadFilePath : " + uploadFilePath);
 
-//				ezCircularDAO.updateCircularAttach(attachMap);
 				ezCircularDAO.insertCircularAttach(attachMap);
 
 				// mode = modify -> 회람수정 일 때이므로 수정 시 Temp 폴더에서 첨부파일 이동
 				if (mode.equals("modify")) {
-					String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
-					String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+					String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + fileName;
+					String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + fileName;
 					
 					fileMove(beforeFilePath, afterFilePath); // Temp 폴더에서 첨부파일 이동					
 				}
@@ -540,23 +610,54 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 			logger.debug("modify fileList : " + fileList);
 			
-			int fileLength = fileList.split(",").length;
-			String[] fileLists = fileList.split(",");
+//			int fileLength = fileList.split(",").length;
+//			String[] fileLists = fileList.split(",");
+//			
+//			attachMap.put("circularID", circularID);
+//			attachMap.put("tenantID", tenantID);
+//			
+//			for (int j=0; j<fileLength; j++) {
+//				String[] files = fileLists[j].split(";");
+//				String filePath = files[0];
+//				String fileName = files[1];
+//				String fileSize = files[2];
+//				
+//				logger.debug("filePath : " + filePath + " | fileName : " + fileName);
+//				
+//				String uploadFilePath = commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+//				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
+//				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+//
+//				attachMap.put("fileName", fileName);
+//				attachMap.put("fileSize", fileSize);
+//				attachMap.put("filePath", uploadFilePath);
+//				
+//				logger.debug("uploadFilePath : " + uploadFilePath);
+//				
+//				ezCircularDAO.insertCircularAttach(attachMap);
+//
+//				fileMove(beforeFilePath, afterFilePath); // Temp 폴더에서 첨부파일 이동
+//			}
+			JSONParser jp = new JSONParser();
+			JSONArray jsonArr = (JSONArray)jp.parse(fileList);
+			
+			int fileLength = jsonArr.size();
 			
 			attachMap.put("circularID", circularID);
 			attachMap.put("tenantID", tenantID);
 			
-			for (int j=0; j<fileLength; j++) {
-				String[] files = fileLists[j].split(";");
-				String filePath = files[0];
-				String fileName = files[1];
-				String fileSize = files[2];
+			for (int j = 0; j < fileLength; j++) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj = (JSONObject) jsonArr.get(j);
+				String filePath = (String) jsonObj.get("newFileName");
+				String fileName = (String) jsonObj.get("pFileName");
+				String fileSize = (String) jsonObj.get("fileSize");
 				
 				logger.debug("filePath : " + filePath + " | fileName : " + fileName);
 				
-				String uploadFilePath = commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
-				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + ";" + fileName;
-				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + ";" + fileName;
+				String uploadFilePath = commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + fileName;
+				String beforeFilePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath + fileName;
+				String afterFilePath = pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile" + commonUtil.separator + filePath + fileName;
 
 				attachMap.put("fileName", fileName);
 				attachMap.put("fileSize", fileSize);

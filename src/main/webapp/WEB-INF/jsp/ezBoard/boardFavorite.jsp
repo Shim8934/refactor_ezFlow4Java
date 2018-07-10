@@ -337,8 +337,7 @@
                 	</tr>
             	</table>
         	</div>
-        	<br />
-        	<div style="width:435px; text-align:center;">
+        	<div class="btnpositionJsp" style="width:422px; text-align:center;">
             	<a class="imgbtn" onclick="Save();">
                 	<span><spring:message code="ezBoard.t98" /></span>
             	</a>

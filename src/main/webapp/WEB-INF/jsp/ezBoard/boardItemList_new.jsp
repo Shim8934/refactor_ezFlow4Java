@@ -624,22 +624,7 @@
 			margin:0px; 
 			padding:0px;
 			}
-			#layer_Viewpopup .popupwrap1 {
-				border:1px solid #555a64;
-				padding:0px;
-				margin:0px;
-				
-			}
-			#layer_Viewpopup .shadow {
-				height:2px;
-				background:#d7d7d7;
-				
-			}
-			#layer_Viewpopup .popupwrap2 {
-				border:2px solid #e5e5e5;
-				padding:10px;
-				
-			}
+			
 			#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
 			
 			#layer_Viewpopup .popupwrap3 {

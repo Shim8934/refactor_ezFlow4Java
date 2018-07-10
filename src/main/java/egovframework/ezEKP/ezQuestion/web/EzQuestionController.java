@@ -2184,7 +2184,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		rNodes.appendChild(rNode);
 		
 		Node node = resultXML.createElement("STYLE");
-		CDATASection CDATASection = resultXML.createCDATASection("background-color:#C4D4EB;");
+		CDATASection CDATASection = resultXML.createCDATASection("background-color:#f2f2f2;");
 		rNode.appendChild(CDATASection);
 		
 		node = resultXML.createElement("CELL");
@@ -2323,7 +2323,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2339,7 +2339,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2355,7 +2355,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2507,7 +2507,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		Node node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2523,7 +2523,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2539,7 +2539,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2689,7 +2689,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		Node node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2705,7 +2705,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2721,7 +2721,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2871,7 +2871,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		Node node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2887,7 +2887,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2903,7 +2903,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");

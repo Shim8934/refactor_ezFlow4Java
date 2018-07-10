@@ -190,7 +190,7 @@
 			    for (var i = 0; i < document.getElementById("ExtSenderNM").childNodes.length; i++) {
 			        if (document.getElementById("ExtSenderNM").childNodes.item(i).nodeName == "OPTION") {
 			            var pOptionValue = document.getElementById("ExtSenderNM").childNodes.item(i).value;
-			            Conitems.innerHTML += "<div style='font-family:" + "<spring:message code='main.t246' />" + ";font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + pOptionValue + "'><nobr>" + pOptionValue + "</nobr><div>";
+			            Conitems.innerHTML += "<div style='font-family:" + "<spring:message code='main.t246' />" + ";font-size:small;height:22px;line-height:22px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + pOptionValue + "'><nobr>" + pOptionValue + "</nobr><div>";
 			        }
 			    }  
 			    inboxRuleConbtn1.style.display = "";
@@ -254,14 +254,14 @@
 			        }
 			        if (ischeck) {
 			            if (ConCellRow != null) {
-			                ConCellRow.outerHTML = "<div style='font-family:" + "<spring:message code='main.t246' />" + ";font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
+			                ConCellRow.outerHTML = "<div style='font-family:" + "<spring:message code='main.t246' />" + ";font-size:small;height:22px;line-height:22px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
 			                inboxRuleCon1.value = "";
 			                inboxRuleCon1.focus();
 			                inputBtn.innerText = strLang239;
 			                ConCellRow = null;
 			            }
 			            else {
-			                Conitems.innerHTML += "<div style='font-family:" + "<spring:message code='main.t246' />" + ";font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
+			                Conitems.innerHTML += "<div style='font-family:" + "<spring:message code='main.t246' />" + ";font-size:small;height:22px;line-height:22px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
 			                inboxRuleCon1.value = "";
 			                inboxRuleCon1.focus();
 			            }
@@ -428,22 +428,23 @@
 			  	</td>
 			  </tr>
 		  </c:if>
-		</table>  
-		<br />
-		<div align="center" style="width:623px;">
-		    <a class="imgbtn" onClick="Change_Click('1')"><span><spring:message code='main.sp09' /></span></a>
-		    <a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
+		</table>
+		<div align="center" style="width:680px;">
+			<div class="btnpositionJsp">
+		    	<a class="imgbtn" onClick="Change_Click('1')"><span><spring:message code='main.sp09' /></span></a>
+		    	<a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
+		    </div>
 		</div> 
-		<div  id="inboxRuleConbtn1" style="position:absolute; left:100px; top:65px;border:3px solid gray;width:415px;background-color:#F9F9F9; display:none;">
+		<div  id="inboxRuleConbtn1" style="position:absolute; left:100px; top:65px;border:1px solid gray;width:415px;background-color:white; display:none;">
 		<table style="width:100%;border:0;border-collapse:collapse; border-spacing:0;padding:0px;margin-top:10px;" >
 		  <tr>
 		    <td style="width:60%;padding:10px 0 0 10px" id="ReceiverSelecttd" name="ReceiverSelecttd">
 		        <INPUT type="text" id="inboxRuleCon1" name="inboxRuleCon1" style="width:100%" onKeyDown="event_keyDown();"></td>
 		    <td style="width:60%;padding:12px 10px 0 8px;">
-		    <div ><a class="imgbtn"><span onClick="pop_addcon();" id="inputBtn"><spring:message code='ezEmail.t308' /></span></a>&nbsp;<a class="imgbtn"><span onClick="pop_delete();"><spring:message code='ezEmail.t95' /></span></a></div></td>
+		    <div ><a class="imgbtn imgbck"><span onClick="pop_addcon();" id="inputBtn"><spring:message code='ezEmail.t308' /></span></a>&nbsp;<a class="imgbtn imgbck"><span onClick="pop_delete();"><spring:message code='ezEmail.t95' /></span></a></div></td>
 		  </tr>
 		</table>
-		<div style="border:1px solid #dddddd; margin:10px 10px 10px 10px; padding:10px 10px 10px 10px; background-color:#f2f2f2;">
+		<div style="border:1px solid #dddddd; margin:10px 10px 10px 10px; padding:10px 10px 10px 10px; background-color:#f8f8fa;">
 		       <div id="Conitems" name="Conitems" style="border:1px solid #dbdbda;width:370px;height:200px;overflow-y:auto;overflow-x:hidden;text-overflow:ellipsis;background-color:#ffffff;">
 		       </div>
 		</div>

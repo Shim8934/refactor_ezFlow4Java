@@ -67,7 +67,7 @@
 							
 							for(j=0; itemNodes.length>j; j++){
 								tableXml += "<tr>";
-								tableXml += "<td style='padding:3px 10px; word-wrap:break-word;'>";
+								tableXml += "<td style='padding:4px 10px; word-wrap:break-word;'>";
 								tableXml += SelectSingleNodeValue(itemNode, 'TAG'+(j+1));
 								tableXml += "</td>";
 								tableXml += "</tr>";
@@ -291,6 +291,9 @@
 			    window.open("/ezCommon/showPersonInfo.do?id=" + parameter, "", "height=460px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		    }
 		</script>
+		<style>
+			input {vertical-align:middle }
+		</style>
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code="ezQuestion.t300" /></h1>
@@ -349,7 +352,7 @@
 			<input type="hidden" name="tableAnswer" />
 		</form>
 		
-		<div class="btnposition">
+		<div class="btnpositionJsp">
 			<a class="imgbtn"> <span onClick="javascript:fun_Save();return false;"> <spring:message code="ezQuestion.t37" /> </span> </a>
 			<a class="imgbtn"> <span onClick="javascript:menuQst_List();return false;"> <spring:message code="ezQuestion.t38" /> </span> </a>
 		</div>

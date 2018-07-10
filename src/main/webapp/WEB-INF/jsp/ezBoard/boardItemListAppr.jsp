@@ -23,22 +23,7 @@
 			margin:0px; 
 			padding:0px;
 		}
-		#layer_Viewpopup .popupwrap1 {
-			border:1px solid #555a64;
-			padding:0px;
-			margin:0px;
-			
-		}
-		#layer_Viewpopup .shadow {
-			height:2px;
-			background:#d7d7d7;
-			
-		}
-		#layer_Viewpopup .popupwrap2 {
-			border:2px solid #e5e5e5;
-			padding:10px;
-			
-		}
+		
 		#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
 		
 		#layer_Viewpopup .popupwrap3 {
@@ -525,6 +510,13 @@
 		            }else {
 	                    window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		            }
+		            
+		            /* 2018-07-09 홍승비 - 승인게시판 게시물 읽기 시 즉각적으로 폰트 변화하도록 수정 */
+		            for (var i = 0; i < obj.childNodes.length; i++) {
+				        if (obj.childNodes[i].style.fontWeight == "bold") {
+				            obj.childNodes[i].style.fontWeight = "normal";
+						}
+			        }
 		        }
 		
 		        function CheckIfHasReplies() {
