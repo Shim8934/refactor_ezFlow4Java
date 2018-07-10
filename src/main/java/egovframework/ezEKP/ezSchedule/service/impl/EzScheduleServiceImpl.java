@@ -553,9 +553,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public List<ScheduleGroupListVO> getGroupMemberList(String groupID,	int tenantId, String offSetMin, String companyID) throws Exception {
+	public List<ScheduleGroupListVO> getGroupMemberList(String groupID,	String lang, int tenantId, String offSetMin, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_GROUPID", groupID);		
+		map.put("v_LANG", lang);
 		map.put("v_TENANTID", tenantId);
 		map.put("v_OFFSETMIN", offSetMin);
 		map.put("v_COMPANYID", companyID);

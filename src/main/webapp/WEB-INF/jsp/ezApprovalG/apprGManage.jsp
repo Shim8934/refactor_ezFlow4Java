@@ -1692,6 +1692,11 @@
 		    	return condStr.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
 		    }
 		    
+		    function getDocListByCompany(){
+		    	pageNum = 1;
+		    	getDocList();
+		    }
+		    
 		</script>
 	</head>
 	<body class="mainbody" style="margin-top:0px;">	
@@ -1743,7 +1748,7 @@
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>  
 		        	<c:if test="${fn:length(companyList) gt 1 and listType ne '4'}">
-						<select id="selectCompany" onchange="getDocList();">
+						<select id="selectCompany" onchange="getDocListByCompany();">
 							<option value="">
 								<spring:message code='ezPoll.t237'/>
 							</option>

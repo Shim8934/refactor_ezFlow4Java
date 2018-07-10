@@ -274,11 +274,11 @@
 		    };
 		    window.onload = function (){
 		    	
-		    	if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
-                    self.resizeTo(760, 800);
-                } else {
-                    self.resizeTo(785, 830);
-                }
+// 		    	if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+//                     self.resizeTo(760, 800);
+//                 } else {
+//                     self.resizeTo(785, 830);
+//                 }
 		    	
 		    	sizeOn();
 		    	

@@ -1138,6 +1138,38 @@ public class CommonUtil {
 		return nfcFilename;
 	}
 	
+	public String getUniqueFileName(String fileName, Map<String, Integer> fileNameMap) {
+		String fileNameLowerCase = fileName.toLowerCase();
+		String fileNameWithoutExt = null;
+		String ext = null;
+		int extIndex = fileName.lastIndexOf(".");
+		
+		if (extIndex > 0) {
+			fileNameWithoutExt = fileName.substring(0, extIndex);
+			ext = fileName.substring(extIndex);
+		} else {
+			fileNameWithoutExt = fileName;
+			ext = "";
+		}
+		
+		if (fileNameMap.containsKey(fileNameLowerCase)) {
+			int count = fileNameMap.get(fileNameLowerCase);
+			
+			while (true) {
+				if (!fileNameMap.containsKey((fileNameWithoutExt + " (" + ++count + ")" + ext).toLowerCase())) {
+					break;
+				}
+			}
+			
+			fileNameMap.put(fileNameLowerCase, count);
+			fileName = fileNameWithoutExt + " (" + count + ")" + ext;
+			fileNameMap.put(fileName.toLowerCase(), 0);
+		} else {
+			fileNameMap.put(fileNameLowerCase, 0);
+		}
+		
+		return fileName;
+	}
 	
 	//Baonk: Get user's infor from parameters
 	public LoginVO getUserForGw(String userId, String serverName) {

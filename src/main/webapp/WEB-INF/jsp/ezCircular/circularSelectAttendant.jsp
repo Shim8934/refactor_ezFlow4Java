@@ -1948,7 +1948,7 @@
 	                                        <tr>
 	                                            <td>
 	                                                <div style="margin-left: 5px;">
-	                                                    <select id="search_type">
+	                                                    <select id="search_type" style="height:21px">
 	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezCircular.t80' /></option>
 	                                                        <option value="description" usedefault="1"><spring:message code='ezCircular.t78' /></option>
 	                                                        <option value="title" usedefault="1"><spring:message code='ezCircular.t154' /></option>
@@ -1959,7 +1959,7 @@
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezCircular.t159' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezCircular.t160' /></option>
 	                                                    </select>
-	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
+	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;height:21px">
 	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezCircular.t85' /></span></a>
 	                                                </div>
 	                                            </td>

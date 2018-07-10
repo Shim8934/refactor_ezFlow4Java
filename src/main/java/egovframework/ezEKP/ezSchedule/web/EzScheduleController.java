@@ -693,7 +693,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String groupID = request.getParameter("groupID");
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 
-		List<ScheduleGroupListVO> mList = ezScheduleService.getGroupMemberList(groupID, loginVO.getTenantId(), offSetMin ,loginVO.getCompanyID());
+		List<ScheduleGroupListVO> mList = ezScheduleService.getGroupMemberList(groupID, loginVO.getPrimary(),loginVO.getTenantId(), offSetMin ,loginVO.getCompanyID());
+		
+		for (ScheduleGroupListVO sg : mList) {
+			logger.debug("결과가 어떻게 나오나~~ : " + sg.getMemberId());
+		}
 		
 		model.addAttribute("userInfo", loginVO);
 		model.addAttribute("groupID", groupID);
@@ -1777,6 +1781,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		String lang = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
 		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());		
 		String startDate = request.getParameter("STARTDATE");
 		String endDate = request.getParameter("ENDDATE");

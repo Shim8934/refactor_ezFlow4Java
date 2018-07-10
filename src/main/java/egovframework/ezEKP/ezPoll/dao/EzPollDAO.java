@@ -251,5 +251,9 @@ public class EzPollDAO extends EgovAbstractDAO {
 	public List<LoginVO> getUserInfoMRD(Map<String, Object> map) {
 		return (List<LoginVO>) list("EzPollDAO.getUserInfoMRD", map);
 	}
+
+	public String getAddJobDept(Map<String, Object> map) {
+		return (String) select("EzPollDAO.getAddJobDept", map);
+	}
 	
 }

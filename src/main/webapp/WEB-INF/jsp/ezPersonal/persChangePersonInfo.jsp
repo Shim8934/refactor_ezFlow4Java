@@ -409,7 +409,7 @@
             		<td colspan="3"><textarea id="txtInfo" style="WIDTH:99.3%;HEIGHT:80px;margin-top:3px;margin-bottom:3px" maxlength="450">${txtInfo}</textarea></td> 
         		</tr> 
     		</table> 
-    		<div class="btnposition">
+    		<div class="btnpositionJsp">
     			<%--2016-10-25 모바일 설정 주석처리  --%>
        			<%-- <a class="imgbtn" onClick="SettingMobile()"><span><spring:message code='ezPersonal.t998'/></span></a> --%>
        			<a class="imgbtn" name="Submit" onClick="return btnPhoto_onclick()"><span><spring:message code='ezPersonal.t183'/></span></a>
@@ -435,7 +435,7 @@
             		<td> <input type="password" id="txtNewPasswordConfirm" size="25" value="" onkeypress="change_press()"> </td> 
         		</tr>
     		</table> 
-    		<div class="btnposition" style="margin-top:5px">
+    		<div class="btnpositionJsp">
         		<a class="imgbtn" onclick="return PassWordChange()"><span><spring:message code='ezPersonal.t34'/></span></a>
         		<a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPersonal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
     		</div>
