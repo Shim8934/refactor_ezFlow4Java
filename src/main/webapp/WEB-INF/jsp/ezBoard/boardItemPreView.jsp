@@ -34,28 +34,24 @@
 		        	if (CrossYN()) {
 			            var _tempList = document.createElement("table");
 			            var _tempList2 = document.createElement("div");
-			            
 			            _tempList.innerHTML = window.opener.dadiframe.document.getElementById("lstAttachLink").innerHTML;
+			            _tempList2.style.height = "58px";
 			            
 			            var tmeptr = _tempList.getElementsByTagName("TR");
 	
+			            /* 2018-07-10 홍승비 - 게시물 미리보기 시 첨부파일 체크박스 제거, 스크롤 높이 조절 */
 			            for (var i = 1; i < tmeptr.length; i++) {
 			                var span = document.createElement("SPAN");
-			                var input = document.createElement("INPUT");
-			                input.type = "checkbox";
-			
 			                var img = document.createElement("IMG");
 			                img.src = "/images/email/mail_006.gif";
 			
 			                var a = document.createElement("A");
 		                    var filename = GetChildNodes(tmeptr[i])[1].textContent;
 		                    var filesize = GetChildNodes(tmeptr[i])[2].textContent;
-		                    
-			                a.innerHTML = filename + " (" + filesize + ")";
+		                    a.innerHTML = filename + " (" + filesize + ")";
 			
 			                var br = document.createElement("BR");
 			
-			                span.appendChild(input);
 			                span.appendChild(img);
 			                span.appendChild(a);
 			                span.appendChild(br);
@@ -274,7 +270,7 @@
 				    <table class="file">
 				        <tr>
 				          <th><spring:message code='ezBoard.t292'/></th>
-				          <td><div id="lstAttachLink" style="margin-top:0px;padding-top:0px;OVERFLOW: auto; HEIGHT: 58px; background-color:white; text-align:left"></div></td>
+				          <td style="padding-right:0px"><div id="lstAttachLink" style="margin-top:0px;padding-top:0px;OVERFLOW: auto; HEIGHT: 58px; background-color:white; text-align:left"></div></td>
 				          <td id="ItemLevel" style="display:none"></td>
 				        </tr>
 			      	</table>
