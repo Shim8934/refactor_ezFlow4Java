@@ -438,11 +438,11 @@
 	        </div>
 	    </form>
 	    <iframe name="ifrm" src="about:blank" style="display:none"></iframe>
-	    <form method="post" action="/ezQuestion/attachFileNonActX.do" name="Attach_Upload" id="Attach_Upload" target="ifrm" enctype="multipart/form-data" style="width:1px; height:1px;">
+	    <form method="post" action="/ezQuestion/attachFileNonActX.do" name="Attach_Upload" id="Attach_Upload" target="ifrm" enctype="multipart/form-data" style="display:none;">
 	        <input type="file" name="cmuds" id="cmuds" accept="image/*" onchange="javascript:TempFileOpen_onClick(this);" style="width:1px; height:1px;" />
 	        <input type="text" name="QstType" style="display:none" />
 	    </form>
-	    <form method="post" action="/ezQuestion/attachFileDeleteNonActX.do" name="Delete_Upload" id="Delete_Upload" target="ifrm" enctype="multipart/form-data" style="display:none">
+	    <form method="post" action="/ezQuestion/attachFileDeleteNonActX.do" name="Delete_Upload" id="Delete_Upload" target="ifrm" enctype="multipart/form-data" style="display:none;">
 	        <input type="text" name="QstIndex_delFile" />
 	        <input type="text" name="QstType_delFile" />
 	        <input type="text" name="QstPath_delFile" />

@@ -216,8 +216,7 @@
 			    var treeView = new TreeView();
 			    treeView.LoadFromID(pTreeID);
 			    treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
-			}
-			
+			}			
 	    </script>
 	</head>
 	<body class="popup" style ="overflow:hidden">

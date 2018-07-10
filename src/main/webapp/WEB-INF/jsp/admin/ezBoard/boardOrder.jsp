@@ -179,7 +179,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnpositionJsp">
 	        <a class="imgbtn"><span onclick="Save()"><spring:message code="ezBoard.t98"/></span></a>
 	    </div></div>
 	</body>

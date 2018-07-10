@@ -23,6 +23,10 @@
 			getData();
 		};
 		
+		window.onbeforeunload = function() {
+			parent.closeAllPopup();
+		}
+		
 		function getData() {
 			var type = document.querySelector('input[name=treeType]:checked').value;
 			$.ajax({

@@ -739,6 +739,9 @@
 		        }
 		    }
 	    </script>
+	    <style>
+	    	.mainlist_free tr th { border-top:0px }
+	    </style>
 	</head>
 	<body class="popup" style="overflow-x:hidden;">		
 		<xml id="ExtensionList" style="display:none">
@@ -792,7 +795,7 @@
             </ul>
         </div>
 		<span style="font-weight:bold"><spring:message code='ezBoard.t999030'/></span>
-		<table class="content" style="width:100%"> 
+		<table class="content" style="width:100%;margin-top:5px"> 
 			<tr>
 				<th style="width:15%"><spring:message code='ezBoard.t999031'/></th>
 		        <td style="width:25%"><input id="txtNameKor" style="width:97%" maxlength="20"/></td>
@@ -832,11 +835,11 @@
 		<table style="width:100%;margin-top:10px">
 			<tr>
 				<td style="width:100%;text-align:right">
-		            <a class="imgbtn" onClick ="return btn_Init()" id="btn_Init"><span><spring:message code='ezBoard.t999035'/></span></a>
-		            <a class="imgbtn" onClick ="return btn_add()" id="btn_add"><span><spring:message code='ezBoard.t602'/></span></a>
-		            <a class="imgbtn" onClick ="return btn_Update()" id="btn_Update"><span><spring:message code='ezBoard.t316'/></span></a>
-		            <a class="imgbtn" onClick ="return btn_Delete()" id="btn_Delete"><span><spring:message code='ezBoard.t89'/></span></a>
-		            <a class="imgbtn" onClick ="return btn_AddHeader()" id="btn_AddHeader"><span><spring:message code='ezBoard.t999036'/></span></a>
+		            <a class="imgbtn imgbck" onClick ="return btn_Init()" id="btn_Init"><span><spring:message code='ezBoard.t999035'/></span></a>
+		            <a class="imgbtn imgbck" onClick ="return btn_add()" id="btn_add"><span><spring:message code='ezBoard.t602'/></span></a>
+		            <a class="imgbtn imgbck" onClick ="return btn_Update()" id="btn_Update"><span><spring:message code='ezBoard.t316'/></span></a>
+		            <a class="imgbtn imgbck" onClick ="return btn_Delete()" id="btn_Delete"><span><spring:message code='ezBoard.t89'/></span></a>
+		            <a class="imgbtn imgbck" onClick ="return btn_AddHeader()" id="btn_AddHeader"><span><spring:message code='ezBoard.t999036'/></span></a>
 				</td>
 			</tr>
 		</table>
@@ -858,11 +861,11 @@
 			        </table>
 			        </td>
 					<td style="width:55%;text-align:right">
-			            <a class="imgbtn" onClick ="return btn_EditWidth()" id="btn_EditWidth"><span><spring:message code='ezBoard.t999041'/></span></a>
-			            <a class="imgbtn" onClick ="return btn_InitHeader()" id="btn_InitHeader"><span><spring:message code='ezBoard.t999042'/></span></a>
-			            <a class="imgbtn" onClick ="return btn_Remove()" id="btn_Remove"><span><spring:message code='ezBoard.t999043'/></span></a>
-			            <a class="imgbtn" onClick ="return btn_MoveUp()" id="btn_MoveUp"><span><spring:message code='ezBoard.t493'/></span></a>
-			            <a class="imgbtn" onClick ="return btn_MoveDown()" id="btn_MoveDown"><span><spring:message code='ezBoard.t494'/></span></a>
+			            <a class="imgbtn imgbck" onClick ="return btn_EditWidth()" id="btn_EditWidth"><span><spring:message code='ezBoard.t999041'/></span></a>
+			            <a class="imgbtn imgbck" onClick ="return btn_InitHeader()" id="btn_InitHeader"><span><spring:message code='ezBoard.t999042'/></span></a>
+			            <a class="imgbtn imgbck" onClick ="return btn_Remove()" id="btn_Remove"><span><spring:message code='ezBoard.t999043'/></span></a>
+			            <a class="imgbtn imgbck" onClick ="return btn_MoveUp()" id="btn_MoveUp"><span><spring:message code='ezBoard.t493'/></span></a>
+			            <a class="imgbtn imgbck" onClick ="return btn_MoveDown()" id="btn_MoveDown"><span><spring:message code='ezBoard.t494'/></span></a>
 					</td>
 				</tr>
 			</table>
@@ -870,7 +873,7 @@
 			    <div id="HeaderList" style="border: 0px solid #ddd; Width: 99%; Height: 300px; overflow: hidden; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 			</div>
 		</div>		
-		<div class="btnposition">
+		<div class="btnpositionNew">
 		    <a class="imgbtn" onClick ="return btnOK_onclick()" id="btnOK"><span><spring:message code='ezBoard.t98'/></span></a>
 		</div>
 	</body>

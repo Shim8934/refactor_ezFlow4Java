@@ -268,7 +268,7 @@
 			    							html += "<td><div id='myProgress'><div id='myBar_green' style='width:" + result + "%'></div></div><div id='percentage'>" + result + "%</div></td>";
 			    						}
 			    						
-			    						html += "<td><a class='imgbtn'><span onClick=mod_quota('" + i[0] + "')><spring:message code='ezEmail.t481'></spring:message></span></a></td>";
+			    						html += "<td><a class='imgbtn imgbck'><span onClick=mod_quota('" + i[0] + "')><spring:message code='ezEmail.t481'></spring:message></span></a></td>";
 										html += "</tr>";
 										j++;
 									})

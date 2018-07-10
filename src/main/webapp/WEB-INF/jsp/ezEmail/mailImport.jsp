@@ -193,7 +193,7 @@
 	                var extension = tempname.split(".")[last - 1];
 	
 	                if (extension.toUpperCase() != "EML") {
-	                    alert("<spring:message code='ezEmail.t401' />");
+	                    alert("<spring:message code='ezEmail.lsd05' />");
 	                    return;
 	                }
 	                var _Span = document.createElement("SPAN");
