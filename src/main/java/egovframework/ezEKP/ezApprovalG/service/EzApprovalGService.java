@@ -529,5 +529,22 @@ public interface EzApprovalGService {
 	public String updateSusinState(String docID, String recDate, String mode, String deptID, String companyID, int tenantID) throws Exception;
 
 	public String getDocManageDeptInfo(String deptID, int tenantID) throws Exception;
+	
+	/**
+	 * 결재완료문서에서 첨부파일로 쓰이는지 여부를 반환
+	 * 
+	 * @NOTE 내부결재 시 반송 후 대장등록을 하면 대장등록되는 문서는 새로운 docid가 등록되면서 문서가 복사되지만, 첨부파일은
+	 *       복사되지 않고 기존의 첨부파일 경로를 쓰므로<br>
+	 *       반송된 문서를 재기안하여 첨부 버튼을 클릭하여 첨부되었던 파일을 삭제하면 대장등록되어있던 문서에서는 첨부파일을 다운로드할
+	 *       수 없게 됨.<br>
+	 *       따라서 첨부파일 삭제 시에 결재완료문서 중에서 해당 파일을 쓰고 있는지 판단하는 API를 추가함.<br>
+	 * <br>
+	 *       <i>테넌트 파라미터를 안 받는 이유는 어차피 결재완료문서의 첨부파일이 삭제되면 안 되고, 파일 경로에
+	 *       테넌트가 포함되어있기 때문</i>
+	 * 
+	 * @param attachHref
+	 *            TBL_ENDATTACHINFO 테이블의 ATTACHFILEHREF 컬럼의 값
+	 * */
+	public boolean isLinkedAttachFile(String attachHref) throws Exception;
 
 }
