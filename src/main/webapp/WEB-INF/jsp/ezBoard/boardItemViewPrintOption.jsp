@@ -25,7 +25,7 @@
 		    }
 		    window.onload = function () {
 		        try {
-		            ReturnFunction = opener.boarditemview_cross_print_option_dialogArguments[1];
+		            ReturnFunction = parent.boarditemview_cross_print_option_dialogArguments[1];
 		        } catch (e) { }
 		
 		        GetAttachmentCount();
@@ -80,7 +80,12 @@
 		            rvalue[1] = "Y";
 		        else
 		            rvalue[1] = "N";
-		        window.close();
+		        
+		        if(ReturnFunction != null) {
+					parent.printOption_close();	        	
+		        } else {
+		        	window.close();	
+		        }
 		    }
 		    function select_click() {
 		        if (eOneline == "true") {
@@ -100,12 +105,20 @@
 		        }
 		        else
 		            rvalue[1] = "N";
-		        window.close();
+		        if(ReturnFunction != null) {
+					parent.printOption_close();	        	
+		        } else {
+		        	window.close();	
+		        }
 		    }
 		    function only_click() {
 		        rvalue[0] = "N";
 		        rvalue[1] = "N";
-		        window.close();
+		        if(ReturnFunction != null) {
+					parent.printOption_close();	        	
+		        } else {
+		        	window.close();	
+		        }
 		    }
 		
 		    window.onunload = function () {
@@ -115,6 +128,10 @@
 		        else {
 		            window.returnValue = rvalue;
 		        }
+		    }
+		    
+		    function btn_close() {
+				parent.printOption_close();
 		    }
 		
 		</script>
@@ -128,7 +145,7 @@
 		<h1><spring:message code='ezBoard.t484'/></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="window.close()"></span></li>
+                <li><span onclick="btn_close();"></span></li>
             </ul>
         </div>
 		<h2 style="font-weight: normal">▒&nbsp;<spring:message code='ezBoard.t485'/></h2>

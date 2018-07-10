@@ -172,6 +172,7 @@
 		                    var SubDivLayer = document.createElement("DIV");
 		                    SubDivLayer.className = "back";
 		                    SubDivLayer.style.height = "80px";
+		                    SubDivLayer.style.borderRadius = "0px"
 
 		                    var SubDIVTag = document.createElement("DIV");
 		                    SubDIVTag.className = "topinfo";
@@ -203,11 +204,11 @@
 		                    var UITag3 = document.createElement("li");
 		                    UITag3.innerHTML = "<span class=\"point_txt\">" + getNodeText(SelectNodes(UserAddJobList[0], "DISPLAYNAME")[Cnt]) + " (" + getNodeText(SelectNodes(UserAddJobList[0], "TITLE")[Cnt]) + ")</span>";                    
 
-		                    var EndDiv = document.createElement("DIV");
-		                    EndDiv.className = "shadow";
+		                    /* var EndDiv = document.createElement("DIV");
+		                    EndDiv.className = "shadow"; */
 
 		                    DivLayer.appendChild(SubDivLayer);
-		                    DivLayer.appendChild(EndDiv);
+		                    /* DivLayer.appendChild(EndDiv); */
 		                    SubDivLayer.appendChild(oTable);
 
 		                    SubDivLayer.appendChild(ULTag);

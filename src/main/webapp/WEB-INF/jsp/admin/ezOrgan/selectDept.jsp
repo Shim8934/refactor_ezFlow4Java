@@ -137,8 +137,8 @@
                 <li><span id="btnCancel" onclick="window.close()"></span></li>
             </ul>
         </div>		
-		<div style="border: 1px solid #ddd; height: 256px; width: 265px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
-		<div class="btnposition">
+		<div style="border: 1px solid #ddd; height: 266px; width: 283px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>
+		<div class="btnpositionNew">
 		    <a id="btnSave" class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezOrgan.t124' /></span></a>
 		</div>
 	</body>

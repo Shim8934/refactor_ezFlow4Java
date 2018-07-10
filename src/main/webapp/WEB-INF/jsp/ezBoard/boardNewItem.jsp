@@ -989,7 +989,7 @@
 		        BoardSelect_Cross_dialogArgument[1] = CompleteFunction;
 		        var url = "/ezBoard/boardSelect.do";
 		
-		        OpenWin = window.open(url, "BoardSelect_Cross", GetOpenWindowfeature(352, 700));
+		        OpenWin = window.open(url, "BoardSelect_Cross", GetOpenWindowfeature(360, 656));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
