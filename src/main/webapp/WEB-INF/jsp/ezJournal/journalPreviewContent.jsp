@@ -37,7 +37,7 @@
 			<div id="Preview_HeaderH" style="text-align:left; border-bottom: 1px solid #e8e8e8; width: 100%;">
 	            <p class="mail_title" style="margin-left: 0px;">
 	                <span class="icon_btn"><span onclick="goJournalDetail(this);" id="${journal.journalId}" style="cursor: pointer; padding-right: 5px;">
-	                    <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"><c:out value='${journal.journalTitle }'/></span></span>
+	                    <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt" title="<c:out value='${journal.journalTitle }'/>"><c:out value='${journal.journalTitle }'/></span></span>
 	            </p>
 	            <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><c:out value='${fn:substring(journal.journalDate, 0, 16) }'/></span></span>
 	            <dl class="mail_item">
