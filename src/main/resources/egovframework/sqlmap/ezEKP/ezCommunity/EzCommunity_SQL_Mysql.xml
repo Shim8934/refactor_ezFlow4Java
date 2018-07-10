@@ -1758,7 +1758,7 @@
 				A.c_id,
 				A.companyid,
 				A.c_indate,
-				B.username$v_USERINFO_LANG$
+				CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
 			FROM
 				TBL_C_CLUBUSER A
 			INNER JOIN

@@ -84,13 +84,24 @@
  			<spring:message code = 'ezCommunity.t511' />
  		</div>
  		
-		<table class="mainlist" style="width:100%;margin-top:10px">
+		<%-- <table class="mainlist" style="width:100%;margin-top:10px">
   			<tr>
 			    <th style="width:50px"><spring:message code = 'ezCommunity.t32' /></th>
 			    <th ><spring:message code = 'ezCommunity.t10' /></th>
 			    <th style="width:100px;"><spring:message code = 'ezCommunity.t550' /></th>
 			    <th style="width:100px"><spring:message code = 'ezCommunity.t551' /></th>
   			</tr>
+			<span id="idSpan">${idSpanValue }</span>
+		</table> --%>
+		
+		<table class="popuplist" style ="width:100%;text-align:center;margin-top:10px">
+			<tr>
+			    <th style="width:60px;text-align:center;"><spring:message code = 'ezCommunity.t32' /></th>
+			    <th style="width:150px;text-align:center;"><spring:message code = 'ezCommunity.t10' /></th>
+			    <th style="text-align:center;"><spring:message code = 'ezCommunity.t512' /></th>
+			    <th style="width:90px;text-align:center;"><spring:message code = 'ezCommunity.t550' /></th>
+			    <th colspan="2" style="width:90px;text-align:center;"><spring:message code = 'ezCommunity.t551' /></th>
+			</tr>
 			<span id="idSpan">${idSpanValue }</span>
 		</table>
 		<br>
