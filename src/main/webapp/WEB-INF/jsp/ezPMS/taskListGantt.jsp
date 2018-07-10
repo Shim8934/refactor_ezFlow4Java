@@ -72,6 +72,7 @@
 	   				type : "POST",
 	   				contentType: "application/json; charset=UTF-8",
 	   				dataType : "json",
+	   				async : false,
 	   				data : JSON.stringify(data),
 	   				url : "/ezPMS/getAllGanttItems.do",
 	   				success : function(result) {
@@ -81,8 +82,7 @@
 	   					projectDetails = result.projectDetails;
 	   					userRoleId = result.userRoleId;
 	   					initValues();
-		   				var project = getGanttProject();
-		  			  	ge.loadProject(project);
+	   					ge.loadTasks(ganttData.tasks);
 	   				}	
 	   			});
 	   		}
