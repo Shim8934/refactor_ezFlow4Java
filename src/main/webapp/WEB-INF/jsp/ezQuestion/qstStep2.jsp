@@ -785,16 +785,16 @@
 			<div id="Main_List">
         		<div id="mainmenu">
             		<ul>
-               			<li style="padding-left: 4px"><span onclick="javascript:fun_Cancel()"><spring:message code="ezQuestion.t130" /></span></li>
-                		<li style="padding-left: 4px"><span onclick="javascript:menuQst_FileOpen()"><spring:message code="ezQuestion.t474" /></span></li>
-                		<li style="padding-left: 4px"><span onclick="javascript:menuQst_tempSave()"><spring:message code="ezQuestion.t475" /></span></li>
-                		<li style="padding-left: 4px"><span onclick="Preview()"><spring:message code="ezQuestion.t100001" /></span></li>
+               			<li><span onclick="javascript:fun_Cancel()"><spring:message code="ezQuestion.t130" /></span></li>
+                		<li><span onclick="javascript:menuQst_FileOpen()"><spring:message code="ezQuestion.t474" /></span></li>
+                		<li><span onclick="javascript:menuQst_tempSave()"><spring:message code="ezQuestion.t475" /></span></li>
+                		<li><span onclick="Preview()"><spring:message code="ezQuestion.t100001" /></span></li>
             		</ul>
         		</div>
 			    <script type="text/javascript">
            			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
        			</script>
-       			<h2><spring:message code="ezQuestion.t476" /></span>- <spring:message code="ezQuestion.t477" /></h2>
+       			<h2 style="font-weight: normal">▒ <spring:message code="ezQuestion.t476" />- <spring:message code="ezQuestion.t477" /></h2>
        			<table width="100%" class="popuplist">
            			<!------------------ 설문제목 ------------------------>
            			<tr>
@@ -806,9 +806,9 @@
            			<tr>
                			<th style="text-align: center"><spring:message code="ezQuestion.t479" /></th>
                			<td>
-                   			<a class="imgbtn"><span onclick="javascript:fun_QuesAdd();"><spring:message code="ezQuestion.t176" /></span></a>
-                   			<a class="imgbtn"><span onclick="javascript:fun_QuesEdit();"><spring:message code="ezQuestion.t480" /></span></a>
-                   			<a class="imgbtn"><span onclick="javascript:fun_QuesDelete();"><spring:message code="ezQuestion.t177" /></span></a>
+                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesAdd();"><spring:message code="ezQuestion.t176" /></span></a>
+                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesEdit();"><spring:message code="ezQuestion.t480" /></span></a>
+                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesDelete();"><spring:message code="ezQuestion.t177" /></span></a>
                 		</td>
                 		<th style="text-align: center; width: 100px"><spring:message code="ezQuestion.t481" /></th>
                 		<td style="width: 250px; white-space: nowrap">
@@ -821,12 +821,11 @@
             		<!------------------ 질문리스트 ------------------------>
             		<tr>
                 		<td colspan="4" bgcolor="#f5f5f5">
-                    		<select id="selQues" name="selQues" onclick="javascript:fun_SelClick();" ondblclick="javascript:fun_QuesEdit();" size="20" style="WIDTH: 100%; HEIGHT: 300px; background:none;"></select>
+                    		<select id="selQues" name="selQues" onclick="javascript:fun_SelClick();" ondblclick="javascript:fun_QuesEdit();" size="20" style="WIDTH: 100%; HEIGHT: 300px; background:none; margin:2px 0px"></select>
                 		</td>
             		</tr>
         		</table>
-        		<br>
-        		<div class="btnposition">
+        		<div class="btnpositionJsp">
             		<a class="imgbtn" name="Submit" onclick="javaScript:fun_Prev()"><span><spring:message code="ezQuestion.t483" /></span></a>
             		<a class="imgbtn" name="Submit2" onclick="fun_OK(this)"><span><spring:message code="ezQuestion.t484" /></span></a>
             		<a class="imgbtn" name="Submit3" onclick="fun_Cancel()"><span><spring:message code="ezQuestion.t38" /></span></a>

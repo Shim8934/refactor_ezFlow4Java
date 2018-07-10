@@ -366,17 +366,17 @@
 		    <LISTVIEWDATA>
 		        <HEADERS>
 				    <HEADER>
-					    <STYLE>background-color:#C4D4EB;</STYLE>
+					    <STYLE>background-color:#f2f2f2;</STYLE>
 					    <NAME><spring:message code='ezQuestion.t46' /></NAME>
 					    <WIDTH>60</WIDTH>
 				    </HEADER>
 				    <HEADER>
-					    <STYLE>background-color:#C4D4EB;</STYLE>
+					    <STYLE>background-color:#f2f2f2;</STYLE>
 					    <NAME><spring:message code='ezQuestion.t47' /></NAME>
 					    <WIDTH>20</WIDTH>
 				    </HEADER>
 				    <HEADER>
-					    <STYLE>background-color:#C4D4EB;</STYLE>
+					    <STYLE>background-color:#f2f2f2;</STYLE>
 					    <NAME><spring:message code='ezQuestion.t48' /></NAME>
 					    <WIDTH>20</WIDTH>
 				    </HEADER>
@@ -431,7 +431,7 @@
 			        <input type="radio"  name="Result" value="T" onclick="javascript:return Result_onclick(0)" checked=checked style="margin-top:0px;"/>
 			        <span><spring:message code='ezQuestion.t145' /></span>
 			        <input type="radio" name="Result" value="G" onclick="javascript:return Result_onclick(1)" style="margin-top:0px; margin-left:1px;"/><span><spring:message code='ezQuestion.t146' /></span>
-			        <a class="imgbtn"><span onclick="menu_AnalyStart()"><spring:message code='ezQuestion.t147' /></span></a><span id="message"></span>
+			        <a class="imgbtn imgbck"><span onclick="menu_AnalyStart()"><spring:message code='ezQuestion.t147' /></span></a><span id="message"></span>
 			    </td>
 			</tr>
 		</table>

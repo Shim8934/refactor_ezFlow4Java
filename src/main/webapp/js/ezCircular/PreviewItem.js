@@ -261,6 +261,7 @@ function event_ItemPreviewRead() {
                 document.getElementById("Preview_HeaderW").style.display = "";
                 document.getElementById("Preview_HeaderH").style.display = "none";
                 document.getElementById("ifrmPreViewW").src = "/ezCircular/circularItemPreviewContent.do";
+                document.getElementById("PreW_subject").style.width = (CurrenWidth - 200 - 10) + "px";
             }
             else if (pPreviewShow_HOW.trim() == "H") {
                 document.getElementById("Preview_HeaderW").style.display = "none";

@@ -120,9 +120,8 @@
 						</span>
                		</td>
             	</tr>
-        	</table>       
-    		<br />
-    		<div style="width:623px;text-align:center;">      
+        	</table>
+    		<div style="width:609px;" class="btnpositionJsp">      
         		<a class="imgbtn" onclick="Change_Click()"><span><spring:message code="ezCircular.t25" /></span></a>
         		<a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code="ezCircular.t26" /></span></a>
     		</div>

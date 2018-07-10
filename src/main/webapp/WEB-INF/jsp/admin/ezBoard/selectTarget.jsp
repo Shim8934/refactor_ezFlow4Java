@@ -695,7 +695,7 @@
 		    	</td>
 		  	</tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionNew">
 			<a class="imgbtn"><span onclick="confirm_onClick()" ><spring:message code='ezBoard.t48' /></span></a>
 		</div>
 	</body>
