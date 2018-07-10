@@ -54,7 +54,12 @@
 		            type = 'k=1';
 		            Permissions_List();			        
 			    }
-			});			
+			});
+			
+			function searchList() {
+				CurPage = 1;
+				Permissions_List();
+			}
 			
 			function company_change() {
 				clearSearchVal();
@@ -481,17 +486,17 @@
 	            
 	            <span style="float: right; font-weight: normal; color: black;">
 	            	<select id="searchType" style="width:80px;">
-						<option selected="" value="displayname">이름</option>
-						<option value="cn">아이디</option>
-						<option value="title">직위</option>
-						<option value="description">부서</option>
-						<option value="mail">메일주소</option>
-						<option value="telephonenumber">사내전화</option>
-						<option value="streetAddress">회사이름</option>
+						<option selected="" value="displayname"><spring:message code='ezOrgan.t67' /></option>
+						<option value="cn"><spring:message code='ezOrgan.t218' /></option>
+						<option value="title"><spring:message code='ezOrgan.t69' /></option>
+						<option value="description"><spring:message code='ezOrgan.t68' /></option>
+						<option value="mail"><spring:message code = 'ezOrgan.t91' /></option>
+						<option value="telephonenumber"><spring:message code='ezOrgan.t95' /></option>
+						<option value="company"><spring:message code= 'ezOrgan.t123' /></option>
 					</select>
 					
-					<input id="searchValue" onkeypress="if(event.keyCode==13) {Permissions_List(); return false;}" onfocus="clearSearchVal();" style="height: 29px;border: 1px solid #cbcbcb; border-right:0px;">
-					<a href="#" style="float: right"><img src="/images/bsearch_new.gif" border="0" onclick="Permissions_List()" style="height:29px;"></a>
+					<input id="searchValue" onkeypress="if(event.keyCode==13) {searchList(); return false;}" onfocus="clearSearchVal();" style="height: 29px;border: 1px solid #cbcbcb; border-right:0px;">
+					<a href="#" style="float: right"><img src="/images/bsearch_new.gif" border="0" onclick="searchList()" style="height:29px;"></a>
 	            </span>
 	            
 		        <ul style="margin-top:15px;">

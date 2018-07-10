@@ -998,11 +998,14 @@ function event_SaveonClick() {
     	
         var xmlResult = loadXMLString(g_saveHttp.responseText);
         var pRtnMessage = "";
-        if (!CrossYN()) {
-            pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).text;
-        }
-        else if (CrossYN()) {
-        	pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).textContent;
+        
+        try {
+            if (!CrossYN()) {
+                pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).text;
+            } else if (CrossYN()) {
+                pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).textContent;
+            }
+        } catch (e) {
         }
         
         //메일 발송인 경우
