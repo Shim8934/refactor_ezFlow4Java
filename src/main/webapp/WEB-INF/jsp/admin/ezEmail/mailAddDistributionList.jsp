@@ -244,7 +244,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
 		        	async : true,
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", type : "user"},
 		        	success : function(result){
 		        		var resultXML = loadXMLString(result);
 		        		var headerData = createXmlDom();
@@ -345,7 +345,7 @@
 		        	data : {
 		        		search : document.all("search_type").value + "::" + document.all("keyword").value, 
 		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
-		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", 
+		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", 
 		        		type : "user"
 		        	},
 		        	success : function(result){	
@@ -1382,7 +1382,8 @@
 	                return;
 	            }
 	            var id = p_ListOrderObject.getAttribute("_DATA2");
-	            var dept = p_ListOrderObject.getAttribute("_DATA13");
+	            //var dept = p_ListOrderObject.getAttribute("_DATA13");
+	            var dept = p_ListOrderObject.getAttribute("_DATA10");
 	            var rtn
 	            var width = 420, height = 450;
 	            var leftPosition, topPosition;
