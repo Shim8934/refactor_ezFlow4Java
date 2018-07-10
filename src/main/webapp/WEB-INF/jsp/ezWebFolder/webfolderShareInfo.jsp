@@ -128,16 +128,16 @@
 		
 		<table style="width:100%;" class="popuplist">
 			<tr>
-				<th style="width:20%; text-align:center;"><spring:message code='ezWebFolder.t319' /></th>
-				<td style="text-align:center;">
+				<th style="width:20%; text-align:left;"><spring:message code='ezWebFolder.t319' /></th>
+				<td style="text-align:left;padding-left:5px">
 					<select id="sharingUser" onchange="changeShareInfo(this.value)">
 					</select>
 					<a id="sharerInfo"><img src="/images/i_group_new.gif" style="vertical-align:middle;" /></a>
 				</td>
 			</tr>
 			<tr>
-				<th style="width:20%; text-align:center;"><spring:message code='ezWebFolder.t321' /></th>
-				<td style="text-align:center;"><span id="shareDate"></span></td>
+				<th style="width:20%; text-align:left;"><spring:message code='ezWebFolder.t321' /></th>
+				<td style="text-align:left;padding-left:7px"><span id="shareDate"></span></td>
 			</tr>
 		</table>
 		

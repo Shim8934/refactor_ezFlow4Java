@@ -1132,40 +1132,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 							logger.error("Message not found. uid=" + uid);
 							
 						} else {
-							String fileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message);
-							String fileNameLowerCase = fileName.toLowerCase();
-							
-							// rename fileName if the fileName already exists
-							if (fileNameMap.containsKey(fileNameLowerCase)) {
-								int count = fileNameMap.get(fileNameLowerCase);
-								
-								if (count > -1) {
-									
-									while (true) {
-										
-										if (!fileNameMap.containsKey(fileNameLowerCase + " (" + ++count + ")")) {
-											break;
-										}
-										
-									}
-									
-									fileNameMap.put(fileNameLowerCase, count);
-									
-									fileName += " (" + count + ")";
-									fileNameMap.put(fileName.toLowerCase(), -1);
-								} else {
-									fileNameMap.put(fileNameLowerCase, 1);
-									
-									fileName += " (1)";
-									fileNameMap.put(fileName.toLowerCase(), -1);
-								}
-								
-							} else {
-								fileNameMap.put(fileNameLowerCase, 0);
-							}
-							
-							fileName += ".eml";
-							// logger.debug("fileName=" + fileName);
+							String fileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message) + ".eml";
+							fileName = commonUtil.getUniqueFileName(fileName, fileNameMap);
 							
 							ZipEntry zipEntry = new ZipEntry(fileName);
 							zos.putNextEntry(zipEntry);
@@ -1202,7 +1170,10 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 			
 			if (zos != null) {
-				zos.close();
+				try {
+					zos.close();
+				} catch (Exception e) {
+				}
 			}
 		}
 		
@@ -1297,36 +1268,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				long lastTime = System.currentTimeMillis();
 				
 				for (Message message : messages) {
-					String fileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message);
-					String fileNameLowerCase = fileName.toLowerCase();
-					
-					// rename fileName if the fileName already exists
-					if (fileNameMap.containsKey(fileNameLowerCase)) {
-						int count = fileNameMap.get(fileNameLowerCase);
-						
-						if (count > -1) {
-							while (true) {
-								if (!fileNameMap.containsKey(fileNameLowerCase + " (" + ++count + ")")) {
-									break;
-								}
-							}
-							
-							fileNameMap.put(fileNameLowerCase, count);
-							
-							fileName += " (" + count + ")";
-							fileNameMap.put(fileName.toLowerCase(), -1);
-						} else {
-							fileNameMap.put(fileNameLowerCase, 1);
-							
-							fileName += " (1)";
-							fileNameMap.put(fileName.toLowerCase(), -1);
-						}
-					} else {
-						fileNameMap.put(fileNameLowerCase, 0);
-					}
-					
-					fileName += ".eml";
-					// logger.debug("fileName=" + fileName);
+					String fileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message) + ".eml";
+					fileName = commonUtil.getUniqueFileName(fileName, fileNameMap);
 					
 					ZipEntry zipEntry = new ZipEntry(fileName);
 					zos.putNextEntry(zipEntry);
@@ -1380,6 +1323,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				folder.close(true);
 			}
 			
+			zos.flush();
+			
 			/* 추후 암호화 내보내기 방식 변경
 			AESEncrypterBC encrypter = new AESEncrypterBC();
 			encrypter.init("1", 0);
@@ -1409,8 +1354,10 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 			
 			if (zos != null) {
-				zos.flush();
-				zos.close();
+				try {
+					zos.close();
+				} catch (Exception e) {
+				}
 			}
 		}
 		

@@ -432,9 +432,11 @@
 					</tr>
 				</c:if>
 			</table>            
-			<div style="width:520px;text-align:center;margin-top:15px;">
-		    	<a class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezPersonal.t34'/></span></a>
-		    	<a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezPersonal.t13'/></span></a>
+			<div style="width:520px;text-align:center;">
+				<div class="btnpositionJsp">
+		    		<a class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezPersonal.t34'/></span></a>
+		    		<a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezPersonal.t13'/></span></a>
+		    	</div>	
 		  	</div>
 		</form>
 	</body>

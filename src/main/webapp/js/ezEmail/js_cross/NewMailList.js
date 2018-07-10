@@ -74,11 +74,15 @@ function MakeHeaderHTML(HeaderObject) {
             }
             
             var HeaderType = SelectSingleNodeValue(XmlRows[Cnt], "heading");
-            if (HeaderType == "IMG")
-                _HeaderRow.innerHTML = "<IMG style=\"cursor:pointer\" src=\"" + SelectSingleNodeValue(XmlRows[Cnt], "imgpath") + "\"/>";
-            else
+            if (HeaderType == "IMG") {
+            	if (SelectSingleNodeValue(XmlRows[Cnt], "imgpath") == "") {
+            		_HeaderRow.innerHTML = "&nbsp;";
+            	} else {
+            		_HeaderRow.innerHTML = "<IMG style=\"cursor:pointer\" src=\"" + SelectSingleNodeValue(XmlRows[Cnt], "imgpath") + "\"/>";
+            	}
+            } else {
                 _HeaderRow.innerHTML = SelectSingleNodeValue(XmlRows[Cnt], "heading");
-            
+            }
             if (SelectSingleNodeValue(XmlRows[Cnt], "propname") == "readdt") {
             	_HeaderTR.appendChild(_HeaderRow);
             	continue;
@@ -352,7 +356,7 @@ function MakeListInfoHTML(ConentObject) {
                             	if (g_bdraft == true) {
 	                            	p_Subject = p_Subject
 	                            } else {
-                            		p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img style='vertical-align:middle' src=\"/images/email/popup_icon.gif\" width=\"10px\"  onclick = \"mailOpenPopup(this, event)\" />";
+                            		p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img class='mailpopupicon' src=\"/images/email/popup_icon.gif\" width=\"10px\"  onclick = \"mailOpenPopup(this, event)\" />";
 	                            }
                             }
                             

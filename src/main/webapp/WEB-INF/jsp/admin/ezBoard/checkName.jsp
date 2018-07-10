@@ -135,6 +135,9 @@
 	    		window.close();
 	    	}
 	    </script>
+	    <style>
+	    	.mainlist tr th {border-top:0px}
+	    </style>
 	</head>
 	<body class="popup">		
 		<xml id="listviewheader" style ="display:none">
@@ -175,11 +178,11 @@
                 <li><span onclick="cancel_onClick()"></span></li>
             </ul>
         </div>
-		<h2><spring:message code="ezBoard.t13" /></h2>
+		<h2 style="font-weight: normal">▒ <spring:message code="ezBoard.t13" /></h2>
         <div class="listview" style="width:100%; min-width:570px; height:285px;" >
             <div id="lvtDoclist" style="width:100%;min-width:570px; border:0; height:285px; overflow:AUTO;" ></div>
         </div>		            
-		<div class="btnposition">
+		<div class="btnpositionNew">
 		    <a class="imgbtn"><span onClick="change_onClick()"><spring:message code="ezBoard.t14" /></span></a>
 		</div>
 	</body>

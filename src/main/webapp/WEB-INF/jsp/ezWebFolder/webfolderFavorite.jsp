@@ -928,15 +928,15 @@
 		<div id="tblPageRayer"></div>
 	</div>
 
-	<div id="searchpopup" class="popupwrap3" style="display: none; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px">
-		<!-- <div class="popupwrap4"> -->
+	<div id="searchpopup" class="popupwrap3" style="display: none;margin-bottom: 70px">
+		<div class="popupJQLayer">
+			<div class="title"><spring:message code='ezWebFolder.t10'/><spring:message code='ezWebFolder.t123'/></div>
+			<div id="close">
+	            <ul>
+	                <li><a rel="modal:close"><span onclick="searchOptionHidden()"></span></a></li>
+	            </ul>
+	        </div>
 			<table class="content" style="margin-top: 10px;">
-				<tr>
-					<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" width="16px" style="vertical-align: middle; padding-bottom: 1px"/> &nbsp;<spring:message code='ezWebFolder.t10'/>&nbsp;<spring:message code='ezWebFolder.t123'/></th>
-				</tr>
-				<tr>
-					<td style="border-left-color:white;border-right-color:white;height:10px" colspan="2"></td>
-				</tr>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezBoard.t210'/></th>
 					<td><input type="text" id="Sdatepicker" class="datepicker" style="width: 80px; text-align: center" readonly="readonly"> ~ <input type="text" id="Edatepicker" class="datepicker" style="width: 80px; text-align: center" readonly="readonly"></td>
@@ -958,13 +958,16 @@
 					<td><input type="text" id="searchCreateName" style="width: 99%" value="" name="searchCreateName"></td>
 				</tr>
 			</table>
-			<br/>
 			<table style="width: 100%">
 				<tr>
-					<td style="text-align: center;"><a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142'/></span></a> <a class="imgbtn" rel="modal:close"><span onClick="searchOptionHidden()"><spring:message code='ezAddress.t11'/></span></a></td>
+					<td style="text-align: center;">
+						<div class="btnpositionLayer" style="padding-top:6px">
+							<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142'/></span></a>
+						</div>	
+					</td>
 				</tr>
 			</table>
-		<!-- </div> -->
+		</div>
 	</div>
 	
 	<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">

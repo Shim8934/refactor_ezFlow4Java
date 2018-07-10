@@ -33,22 +33,6 @@
 	padding: 0px;
 }
 
-#layer_Viewpopup .popupwrap1 {
-	border: 1px solid #555a64;
-	padding: 0px;
-	margin: 0px;
-}
-
-#layer_Viewpopup .shadow {
-	height: 2px;
-	background: #d7d7d7;
-}
-
-#layer_Viewpopup .popupwrap2 {
-	border: 2px solid #e5e5e5;
-	padding: 10px;
-}
-
 #layer_Viewpopup .btn_area {
 	border-top: 1px solid #e5e5e5;
 	margin: 10px 0px 0px 0px;
@@ -504,7 +488,7 @@
 		   				url : url,
 		   				success: function(forms){
 // 		   					var trs = "<tr><th style='text-align: center;'><spring:message code='ezJournal.t72' /></th></tr>";
-							var trs = "<tr><th style='margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic; text-align: center; border:1px solid #0470e4; font-size:18px; font-weight: bold;'><spring:message code='ezJournal.t70' /></th></tr>";
+							var trs = "";
 		   					$(forms).each(function(){
 		   						trs += "<tr onclick='sumFormClick(this);' ondblclick='writeSumJournal();' style='cursor:pointer;' sumTypeId=" + this.typeId + " sumFormId=" + this.formId + "><td>" + this.formName + "</td></tr>";
 		   					})
@@ -1194,68 +1178,71 @@
 	<div id="ListInfo" style="display: none"></div>
 
 	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
-		<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
-			<table class="content">
-				<tr>
-					<th class="layerHeader" colspan="2">
-						<img src="/images/kr/left/left_mail.png" style="vertical-align: middle; padding-bottom: 1px"> 
-						<spring:message code='ezJournal.t1' /> <spring:message code='ezJournal.t43' />
-					</th>
-				</tr>
-				<c:if test="${listType ne 'mine' }">
+		<div id="srarchpopup" class="popupwrap1 modal" style="margin-bottom: 70px; left: 297.5px; display: inline-block;">
+			<div class="popupJQLayer">
+				<div class="title"><spring:message code='ezJournal.t1' /><spring:message code='ezJournal.t43' /></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="BoardSearchOptionHidden()"></span></a></li>
+		            </ul>
+		        </div>
+				<table class="content">
+					<c:if test="${listType ne 'mine' }">
+						<tr>
+							<th style="text-align: center">
+								<spring:message code='ezJournal.t34' />
+							</th>
+							<td>
+								<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchWriter" style="width: 98%" value="">
+							</td>
+						</tr>
+					</c:if>
 					<tr>
 						<th style="text-align: center">
-							<spring:message code='ezJournal.t34' />
+							<spring:message code='ezBoard.t208' />
 						</th>
 						<td>
-							<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchWriter" style="width: 98%" value="">
+							<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchTitle" style="width: 98%" value="">
 						</td>
 					</tr>
-				</c:if>
-				<tr>
-					<th style="text-align: center">
-						<spring:message code='ezBoard.t208' />
-					</th>
-					<td>
-						<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchTitle" style="width: 98%" value="">
-					</td>
-				</tr>
-				<tr>
-					<th style="text-align: center">
-						<spring:message code='ezEmail.t649' />
-					</th>
-					<td>
-						<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchContent" style="width: 98%" value="">
-					</td>
-				</tr>
-				<tr>
-					<th style="text-align: center">
-						<spring:message code='ezJournal.t22' />
-					</th>
-					<td>
-						<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchFormName" style="width: 98%" value="">
-					</td>
-				</tr>
-				<tr>
-					<th style="text-align: center">
-						<spring:message code='ezBoard.t210' />
-					</th>
-					<td>
-						<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly">
-						~ 
-						<input type="text" id="Edatepicker" style="width: 80px; text-align: center" readonly="readonly">
-					</td>
-				</tr>
-			</table>
-			<br />
-			<table style="width: 100%">
-				<tr>
-					<td style="text-align: center;">
-						<a class="imgbtn"><span onClick="goToPageBySearch()"><spring:message code='ezBoard.t188' /></span></a> 
-						<a class="imgbtn"><span onClick="BoardSearchOptionHidden()"><spring:message code='ezBoard.t15' /></span></a>
-					</td>
-				</tr>
-			</table>
+					<tr>
+						<th style="text-align: center">
+							<spring:message code='ezEmail.t649' />
+						</th>
+						<td>
+							<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchContent" style="width: 98%" value="">
+						</td>
+					</tr>
+					<tr>
+						<th style="text-align: center">
+							<spring:message code='ezJournal.t22' />
+						</th>
+						<td>
+							<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchFormName" style="width: 98%" value="">
+						</td>
+					</tr>
+					<tr>
+						<th style="text-align: center">
+							<spring:message code='ezBoard.t210' />
+						</th>
+						<td>
+							<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly">
+							~ 
+							<input type="text" id="Edatepicker" style="width: 80px; text-align: center" readonly="readonly">
+						</td>
+					</tr>
+				</table>
+				<br />
+				<table style="width: 100%">
+					<tr>
+						<td style="text-align: center;">
+							<div class="btnpositionLayer">
+								<a class="imgbtn"><span onClick="goToPageBySearch()"><spring:message code='ezBoard.t188' /></span></a>
+							</div>	
+						</td>
+					</tr>
+				</table>
+			</div>	
 		</div>
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.5); display: none;" id="mailPanel_sub">&nbsp;</div>
@@ -1263,22 +1250,30 @@
 		<iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer_sub"></iframe>
 	</div>
 	<div class="jquery-modal blocker current" id="selectSumJournal" style="display: none;">
-		<div id="sumpopup" class="popupwrap1 modal popup" style="text-align: center; width: 300px; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 500px; display: inline-block;">
+		<div id="sumpopup" class="popupwrap1 modal" style="text-align: center; width: 300px; margin-bottom: 70px; left: 500px; display: inline-block;">
 			<%-- 			<h1 style="margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic;"><spring:message code='ezJournal.t70' /></h1> --%>
-			<table class="mainlist" id="basicFormList" style="width: 100%; border: 1px solid #ddd !important; border-top: none;">
-				<!-- 				<tr> -->
-				<%-- 					<th style="margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic; text-align: center; border:1px solid #0470e4; font-size:18px; font-weight: bold;"><spring:message code='ezJournal.t70' /></th> --%>
-				<!-- 				</tr>			 -->
-			</table>
-			<br />
-			<table style="width: 100%">
-				<tr>
-					<td style="text-align: center;">
-						<a class="imgbtn"><span onClick="writeSumJournal();"><spring:message code='ezJournal.t60' /></span></a> 
-						<a class="imgbtn"><span onClick="sumSearchOptionHidden();"><spring:message code='ezBoard.t15' /></span></a>
-					</td>
-				</tr>
-			</table>
+			<div class="popupJQLayer">
+				<div class="title" style="text-align:left"><spring:message code='ezJournal.t70' /></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="sumSearchOptionHidden()"></span></a></li>
+		            </ul>
+		        </div>
+				<table class="mainlist" id="basicFormList" style="width: 100%; border: 1px solid #ddd !important; border-top: none;">
+					<!-- 				<tr> -->
+					<%-- 					<th style="margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic; text-align: center; border:1px solid #0470e4; font-size:18px; font-weight: bold;"><spring:message code='ezJournal.t70' /></th> --%>
+					<!-- 				</tr>			 -->
+				</table>
+				<table style="width: 100%">
+					<tr>
+						<td style="text-align: center;">
+							<div class="btnpositionLayer">
+								<a class="imgbtn"><span onClick="writeSumJournal();"><spring:message code='ezJournal.t60' /></span></a>
+							</div>	
+						</td>
+					</tr>
+				</table>
+			</div>	
 		</div>
 	</div>
 

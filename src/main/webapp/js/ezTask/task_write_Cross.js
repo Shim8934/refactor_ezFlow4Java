@@ -548,13 +548,11 @@ function save_task() {
 		enddate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		
 		/*2018-05-23 구해안 저장버튼 클릭시 반복설정 여부에 따라 저장*/
-		if(info[0] == '0'){			
 			if(startdate > enddate) {
 				doubleSubmitFlag = false;
 				alert(strLang70);
 				return;
 			}
-		}
 		
 	} else {
 		var sdate, edate;
@@ -564,24 +562,33 @@ function save_task() {
             enddate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
             sdate = new Date(startdate.substring(0, 4), parseInt(startdate.substring(5, 7)) - 1, startdate.substring(8, 10));
             edate = new Date(enddate.substring(0, 4), parseInt(enddate.substring(5, 7)) - 1, enddate.substring(8, 10));
+            /*2018-07-09 구해안 시작일 종료일 버그 체크*/
+            if(info[0] == '0'){		
+        		if (sdate > edate) {
+        			doubleSubmitFlag = false;
+        			alert(strLang70);
+        			return;
+        		}    
+        	}    
         }
         else {
             sdate = new Date(g_sdate.substring(0, 4), parseInt(g_sdate.substring(5, 7)) - 1, g_sdate.substring(8, 10));
             edate = new Date(g_edate.substring(0, 4), parseInt(g_edate.substring(5, 7)) - 1, g_edate.substring(8, 10));
+            /*2018-07-09 구해안 시작일 종료일 버그 체크*/
+            if(info[0] == '0'){		
+        		if (sdate > edate) {
+        			doubleSubmitFlag = false;
+        			alert(strLang70);
+        			return;
+        		}    
+        	}    
         }
 
         startdate = sdate.getFullYear() + "-" + (parseInt(sdate.getMonth()) + 1) + "-" + sdate.getDate();
         enddate = edate.getFullYear() + "-" + (parseInt(edate.getMonth()) + 1) + "-" + edate.getDate();
 	}
 	
-	/*2018-05-23 구해안 저장버튼 클릭시 반복설정 여부에 따라 저장*/	
-	if(info[0] == '0'){		
-		if (sdate > edate) {
-			doubleSubmitFlag = false;
-			alert(strLang70);
-			return;
-		}    
-	}    
+	
 
     if (repetition == "") {
     	tasktype = $(":input:radio[name=tasktypesel]:checked").val();	

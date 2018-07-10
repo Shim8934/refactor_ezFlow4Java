@@ -555,6 +555,7 @@ form{display:inline;margin:0}
     right: 10px;
     top: 8px;
     height: 35px; 
+    z-index:1000;
 }
 #close ul {margin: 0; padding: 0;}
 #close ul li span {
@@ -875,8 +876,9 @@ form{display:inline;margin:0}
 	text-align:left;
 	text-overflow:ellipsis;
 	overflow:hidden;
+	height:31px;
 }
-.poll th{background-color:#e4f0f9;}
+.poll th{background-color:#f2f2f2;height:31px}
 .poll td{background-color:#fff;padding: 3px 10px;}
 .question th{background-color:#ececec;}
 .question td{background-color:#fff;padding: 3px 10px;}
@@ -886,7 +888,7 @@ form{display:inline;margin:0}
 .ex td{
 	padding-left:10px;
 	vertical-align:middle;
-	padding:2px 0 4px 10px;
+	padding:4px 0 4px 10px;
 	text-overflow:ellipsis;
 	overflow:hidden;
 }
@@ -1245,7 +1247,34 @@ form{display:inline;margin:0}
 	margin:0px; 
 	padding:0px;
 }
+
 #layer_popup .popupwrap1 {
+    border: 1px solid #999999;
+    padding: 0px;
+    margin: 0px;
+}
+
+#layer_popup .popupwrap2 {
+    padding: 10px;
+}
+
+#layer_popup .shadow {
+}
+
+#layer_Viewpopup .popupwrap1 {
+    border: 1px solid #999999;
+    padding: 0px;
+    margin: 0px;
+}
+
+#layer_Viewpopup .popupwrap2 {
+    padding: 10px;
+}
+
+#layer_Viewpopup .shadow {
+}
+
+/* #layer_popup .popupwrap1 {
 	border:1px solid #666a64;
 	padding:0px;
 	margin:0px;
@@ -1260,7 +1289,7 @@ form{display:inline;margin:0}
 	border:2px solid #e5e5e5;
 	padding:10px;
 	
-}
+} */
 #layer_popup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
 
 #layer_popup .popupwrap3 {
@@ -2184,7 +2213,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 	position : absolute;
 	top : 0px;
 	width:100%;
-	height:94px;
+	height:86px;
 	z-index : 1000;	
 	background: rgba(0,0,0,0.5);
 }
@@ -2209,7 +2238,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .btnbtn { margin-top:10px; text-align: center; }
 
 #Preview_HeaderH, #Preview_HeaderW { background-color: #f8f8fa; }
-#subject { vertical-align: middle }
+#subject {}
 .extraMenu {
 	position: absolute;
 	top: 4px;
@@ -2260,4 +2289,8 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 	padding:7px;
 	border-top: 1px solid #eee;	
 	background-color: #fcfcfc;
+}
+
+.mailpopupicon {
+		
 }

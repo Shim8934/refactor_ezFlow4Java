@@ -19,7 +19,7 @@
 			.modal p {
 				background:none;
 			}			
-			.warning_wrap{ overflow:hidden; width:600px}
+			.warning_wrap{ overflow:hidden; width:600px; margin:auto}
 			.warning_wrap p{ margin:0px; padding:0px; font-family:Malgun Gothic; text-align:center; float:left;}
 			.warning_wrap dl{ margin:7px 0px 0px 20px;; padding:0px; font-family:Malgun Gothic; float:left; overflow:hidden;}
 			.warning_wrap dt{ font-size:18px; color:#000; padding:0px 0px 5px 0px; margin:0px; font-weight:bold; border-bottom:1px solid #d7d7d7;}
@@ -226,7 +226,12 @@
 			</span>
 			<p><span>[<strong class="yellow_txt">Caps Lock</strong>]?pCapsLockMsg?></span></p>
 		</div>
-		<div id="exDiv" style="display:none;margin-bottom:100px">
+		<div id="exDiv" style="display:none;margin-bottom:100px;padding:15px">
+			<div id="close">
+	            <ul>
+	                <li><a rel="modal:close"><span></span></a></li>
+	            </ul>
+	        </div>
 			<div style="float:left">
 				<c:if test="${isFirstLogin == 'Y'}"><img src="/images/hello.png" width="52" height="52"/></c:if>
 				<c:if test="${isFirstLogin != 'Y'}"><img src="/images/warning.png" width="52" height="52"/></c:if>
@@ -258,14 +263,18 @@
 				<label style="color:rgb(0, 72, 149);"><spring:message code='main.jjh06'/> : </label>
 				<input type="password" id="txtNewPasswordConfirm" onKeyPress="if(event.keyCode==13) PassWordChange();"/>
 			</p>
-			<div class="btnposition" style="margin:10px">
+			<div class="btnpositionLayer" style="background-color: white;border:0px">
 			    <a class="imgbtn" onClick="javascript:PassWordChange()" ><span><spring:message code='ezSchedule.t4' /></span></a>
-			    <a class="imgbtn" rel="modal:close"><span><spring:message code='ezSchedule.t5' /></span></a>
 			</div>			
 		</div>
 		
 		<%-- 2018-05-24 홍승비 - 비밀번호 오류 시 레이어팝업 출력 --%>
 		<div id="exDiv2" style="display:none;max-width:620px;height:190px;padding-top:27px;margin-bottom:100px">
+			<div id="close">
+	            <ul>
+	                <li><a rel="modal:close"><span></span></a></li>
+	            </ul>
+	        </div>
 			<div class="warning_wrap">
 		    	<p style="border:0px"><img src="/images/warning2.png"></p>
 		        <dl>
