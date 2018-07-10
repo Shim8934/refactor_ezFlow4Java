@@ -4391,7 +4391,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuffer subQuery = new StringBuffer();
 		
 		if(deptCode.trim() != null) {
-			subQuery.append("(PROCESSDEPTCODE = '" + deptCode.trim() + "' OR TASKCODE LIKE 'ZZ%' OR TASKCODE='99999999')");
+			subQuery.append("(PROCESSDEPTCODE = '" + deptCode.trim() + "' AND TASKCODE LIKE 'ZZ%' OR TASKCODE='99999999')");
 		}
 		
 		if(!title.trim().equals("")) {
