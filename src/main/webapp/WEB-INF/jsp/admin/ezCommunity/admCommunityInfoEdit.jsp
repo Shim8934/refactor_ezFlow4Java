@@ -207,7 +207,7 @@
 				</tr>
 			</table>
 
-			<div class="btnposition">
+			<div class="btnpositionNew">
                 <a class="imgbtn" style="vertical-align:middle"><span name="button3" onClick="btn_CommSave()"><spring:message code = 'ezCommunity.t20' /></span></a>
 			</div>
 		</form>
