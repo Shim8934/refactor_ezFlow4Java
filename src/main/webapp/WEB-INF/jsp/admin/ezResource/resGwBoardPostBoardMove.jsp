@@ -199,7 +199,7 @@
 				</c:otherwise>
 			</c:choose>
 			
-		<div class="btnposition">
+		<div class="btnpositionJsp">
      		<a class="imgbtn"><span onclick="cmdOk_onclick()" ><spring:message code='ezResource.t88' /></span></a>
 		</div>
 		</div>

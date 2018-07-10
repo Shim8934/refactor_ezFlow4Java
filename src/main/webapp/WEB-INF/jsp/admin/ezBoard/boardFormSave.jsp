@@ -66,7 +66,7 @@
             </td>
         </tr>
 		</table>
-	    <div style="width:780px;text-align:center;margin-top:5px;">
+	    <div style="width:774px;" class="btnpositionJsp">
 	        <a class="imgbtn"><span onclick="saveForm()"><spring:message code="ezBoard.t98" /></span></a>
 	        <a class="imgbtn"><span onclick="cancel()"><spring:message code="ezBoard.t15" /></span></a>
 	    </div>

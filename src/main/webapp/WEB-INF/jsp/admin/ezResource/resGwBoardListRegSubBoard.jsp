@@ -218,7 +218,7 @@
 					<textarea id="Brd_Access" style="width: 98%" rows="3"><spring:message code="ezResource.t58" /></textarea></td>
 			</tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionJsp">
         	 <a class="imgbtn"><span onclick="cmdOK_onclick()" ><spring:message code="ezResource.t59" /></span></a>
 		</div>
 		<form name="brds">

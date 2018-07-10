@@ -1148,7 +1148,41 @@
 			            checks[i].style.display = "none";
 			    }
 			    
-			    if ($("#taskCommentList").html().trim() != "") {
+			  //2018-07-10 구해안 #12746
+			    var tableOption = document.createElement("TABLE");
+		    	tableOption.setAttribute("class", "content2");
+			    var userName = "";
+	    		var content  = "";
+	    		var dateTime = "";
+	    		var trElmt  = document.createElement("TR");
+	    		var tdElmt1 = document.createElement("TD");
+	    		var tdElmt2 = document.createElement("TD");
+	    		var tdElmt3 = document.createElement("TD");
+			     
+			    if($('#tablecomment2 > tbody > tr').length == 0 || $('#tablecomment2 > tbody > tr').length < 0 || !$('#tablecomment2 > tbody > tr').length){
+			    	console.log('진입!!! : ' + $('#tablecomment2'));
+			    	
+			    	var printCommentView = document.getElementById("printCommentView");
+			    	
+			    	tdElmt1.innerHTML = userName;
+		    		tdElmt2.innerHTML = content;
+		    		tdElmt3.innerHTML = dateTime;
+		    		
+		    		tdElmt1.setAttribute("style", "min-width: 120px; width: 120px; text-align: center; white-space:nowrap; vertical-align: middle; padding: 0px 10px;");
+		    		tdElmt2.setAttribute("style", "vertical-align: middle; padding: 0px 10px;");
+		    		tdElmt3.setAttribute("style", "min-width: 120px; width: 120px; text-align: center; white-space:nowrap; vertical-align: middle; padding: 0px 10px;");
+		    		
+		    		trElmt.appendChild(tdElmt1);
+		    		trElmt.appendChild(tdElmt2);
+		    		trElmt.appendChild(tdElmt3);
+		    		tableOption.appendChild(trElmt);
+			    	
+			    	printCommentView.appendChild(tableOption);			    	
+			    	printCommentView.style.display = "";
+			    	
+			    }else{			    	
+			    
+			    if ($("#tablecomment2 > tbody  > tr").html().trim() != "") {
 			    	//baonk added
 			    	var printCommentView = document.getElementById("printCommentView");
 					while (printCommentView.firstChild) {
@@ -1156,18 +1190,12 @@
 					}
 			    	
 			    	var tableOption = document.createElement("TABLE");
-			    	tableOption.setAttribute("class", "content2");
-			    	
-			    	$('#opi_ul li').each(function (i) {
-			    		var userName = $(this).children().eq(0).text();
-			    		var content  = $(this).children().eq(1).text();
-			    		var dateTime = $(this).children().eq(2).text();
-						
+			    	tableOption.setAttribute("class", "content2");			    	
+			    	$('#tablecomment2 > tbody  > tr').each(function (i) {
+			    		userName = $(this).children().eq(0).text();
+			    		content  = $(this).children().eq(1).text();
+			    		dateTime = $(this).children().eq(2).text();		
 			    		
-			    		var trElmt  = document.createElement("TR");
-			    		var tdElmt1 = document.createElement("TD");
-			    		var tdElmt2 = document.createElement("TD");
-			    		var tdElmt3 = document.createElement("TD");
 			    		tdElmt1.innerHTML = userName;
 			    		tdElmt2.innerHTML = content;
 			    		tdElmt3.innerHTML = dateTime;
@@ -1192,6 +1220,7 @@
 			        document.getElementById("printCommentView").style.display = "none";
 			        document.getElementById("optiontr").style.display = "none";
 			    }
+			    }
 			
 			    if (document.getElementById("attachedfileDIV").innerHTML.trim() != "")
 			        printattachView.style.display = "";
@@ -1210,7 +1239,7 @@
 			    document.getElementById("close").style.display = "";
 			    document.getElementById("tabpart").style.display = "";
 			    document.getElementById("tablework").style.display = "";
-			    document.getElementById("tablecomment").style.display = "";
+			    document.getElementById("tablecomment2").style.display = "";
 			    $("#updateStatus").show();
 			
 /* 			    if (selecttab == "0") {
@@ -1603,7 +1632,7 @@
 		        
 	    		$("#message").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
 		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
-		    	$("#taskCommentList").height(document.documentElement.clientHeight - 420 + "PX");
+		    	$("#taskComment").height(document.documentElement.clientHeight - 420 + "PX");
 		    	$("#new_div_body").height(document.documentElement.clientHeight - 360 + "PX");
 		    	
 

@@ -69,8 +69,8 @@
 	    <table style="border: 0; border-collapse: collapse; border-spacing: 0; padding:0px;">
 	        <tr>
 	            <td>
-	                <span class="subtxt">&nbsp;* <spring:message code='ezEmail.t730' /></span><br />
-	                <span class="subtxt">&nbsp;* <spring:message code='ezEmail.t99000069' /></span>
+	                <span class="subtxt" style="color:#333;font-weight: normal">▒ <spring:message code='ezEmail.t730' /></span><br />
+	                <span class="subtxt" style="color:#333;font-weight: normal">▒ <spring:message code='ezEmail.t99000069' /></span>
 	            </td>
 	        </tr>
 	    </table>
@@ -86,7 +86,7 @@
 	                ${importanceColor}         
 	            </td>
 	            <td style="width: 100px; text-align:center; padding-top:3px;">
-	                <a class="imgbtn"><span onclick="SelectColor('ImfortanceColor')" style="vertical-align: middle;"><spring:message code='ezEmail.t408' /></span></a>
+	                <a class="imgbtn imgbck"><span onclick="SelectColor('ImfortanceColor')" style="vertical-align: middle;"><spring:message code='ezEmail.t408' /></span></a>
 	            </td>
 	        </tr>
 	        <tr style="height:30px;">
@@ -99,7 +99,7 @@
 	                ${inColor}         
 	            </td>
 	            <td style="width: 100px; text-align:center; padding-top:3px;">
-	                <a class="imgbtn"><span onclick="SelectColor('InColor')" style="vertical-align: middle;"><spring:message code='ezEmail.t408' /></span></a>
+	                <a class="imgbtn imgbck"><span onclick="SelectColor('InColor')" style="vertical-align: middle;"><spring:message code='ezEmail.t408' /></span></a>
 	            </td>
 	        </tr>
 	        <tr style="height:30px;">
@@ -112,15 +112,17 @@
 	                ${outColor}         
 	            </td>
 	            <td style="width: 100px; text-align:center; padding-top:3px;">
-	                <a class="imgbtn"><span onclick="SelectColor('OutColor')" style="vertical-align: middle;"><spring:message code='ezEmail.t408' /></span></a>
+	                <a class="imgbtn imgbck"><span onclick="SelectColor('OutColor')" style="vertical-align: middle;"><spring:message code='ezEmail.t408' /></span></a>
 	            </td>
 	        </tr>
 	    </table>
 	    <table style="border: 0; border-collapse: collapse; border-spacing: 0; padding: 0px; width: 400px;">
 	        <tr>
 	            <td style="height: 50px; text-align: center;">
-	                <a class="imgbtn"><span onclick="return SaveColor()"><spring:message code='main.sp09' /></span></a>
-	                <a class="imgbtn"><span onclick="document.location.reload()"><spring:message code='ezEmail.t39' /></span></a>
+	            	<div class="btnpositionJsp">
+	                	<a class="imgbtn"><span onclick="return SaveColor()"><spring:message code='main.sp09' /></span></a>
+	                	<a class="imgbtn"><span onclick="document.location.reload()"><spring:message code='ezEmail.t39' /></span></a>
+	                </div>	
 	            </td>
 	        </tr>
 	    </table>
