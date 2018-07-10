@@ -70,13 +70,13 @@
             </ul>
         </div>
 		<table class="content" style="width:100%"> 
-			<tr> 
+			<tr style="height:31px"> 
 				<th><spring:message code='ezPortal.t281'/></th> 
 			</tr>
 			${mainHTML}
   		</table>
 	
-		<div class="btnposition">
+		<div class="btnpositionNew">
        		<a class="imgbtn" name="btnSave"><span onClick="Save()"><spring:message code='ezPortal.t282'/></span></a>
        	</div>	
   	</body>

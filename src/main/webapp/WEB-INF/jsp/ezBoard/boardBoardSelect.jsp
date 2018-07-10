@@ -6,36 +6,11 @@
 		<title><spring:message code='ezBoard.t135'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/TreeView.js"></script>
-		<style>
-			.node_normal{
-				padding-top: 3px;
-				vertical-align:top;
-				font-size: 9pt;
-				background-color : #ffffff;
-				height : 22px;
-				cursor : hand;
-			}
-			.node_selected{
-				padding-top: 3px;
-				vertical-align:top;
-				font-size: 9pt;
-				height : 22px;
-				background-color : #edf4fd;
-				cursor : hand;
-			}
-			.node_hover{
-				padding-top: 3px;
-				vertical-align:top;
-				font-size: 9pt;
-				background-color : #f4f5f5;
-				height : 22px;
-				cursor : hand;
-			}
-		</style>
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
 			var selectedBoard = "";
@@ -245,7 +220,7 @@
                 <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
-		<div class="box" style="width:320px;height:550px;overflow:auto;word-break:break-all" id=TopBoardsList></div>
+		<div class="box" style="width:340px;height:540px;overflow:auto;word-break:break-all" id=TopBoardsList></div>
 		<div class="btnposition btnpositionNew">
     		<a class="imgbtn"><span onClick="Select()"><spring:message code='ezBoard.t47'/></span></a>
 		</div>
