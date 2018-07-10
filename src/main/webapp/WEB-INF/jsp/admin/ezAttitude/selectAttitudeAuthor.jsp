@@ -332,11 +332,6 @@
 					<h1 style="padding: 0px; margin-top: -5px;"><spring:message code='ezAttitude.t200' /></h1>
 				</li>
 			</ul>
-			<ul style="float: right; margin-right: 50px">
-				<li id="menuTable" style="background: none; border: none;">
-					<span onclick="setAuthorViewUser()"><spring:message code='ezAttitude.t38' /></span>
-				</li>
-			</ul>
 		</div>
 	    <div id="close">
 	        <ul>
@@ -369,7 +364,7 @@
 					                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
 					                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
 	                                        </select>
-	                                        <input type="text" id="keyword" value="" style="width: 130px; margin: 0px;" />
+	                                        <input type="text" id="keyword" value="" style="width: 130px; margin: 0px; height:22px" />
 	                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 	                                    </div>
 	                                </td>    
@@ -391,6 +386,9 @@
 				</td>
 			</tr>
         </table>
+        <div class="btnpositionNew" id="menuTable">        					
+			<a class="imgbtn"><span onclick="setAuthorViewUser()"><spring:message code='ezAttitude.t38' /></span></a>			
+        </div>
 	</body>
 </html>
 
