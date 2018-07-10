@@ -26147,6 +26147,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return "TRUE";
 	}
+	
+	@Override
+	public boolean isLinkedAttachFile(String attachHref) throws Exception {
+		Map<String, Object> parameterMap = new HashMap<>();
+		parameterMap.put("href", attachHref);
+		
+		return ezApprovalGDAO.getLinkedAttachFileCount(parameterMap) > 0;
+	}
 
 	private String createDocNO(String cabinetSN, String docNumZeroCnt) {
 		if (Integer.parseInt(cabinetSN) <= Math.pow(10.0, Double.parseDouble(docNumZeroCnt))) {

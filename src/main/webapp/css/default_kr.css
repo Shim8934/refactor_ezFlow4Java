@@ -1904,7 +1904,7 @@ form{display:inline;margin:0}
 .address_boxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_boxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
 .address_boxlist .back { border: 1px solid #dedede; height:138px; vertical-align:top; border-radius:5px; }
-.address_boxlist .topinfo {height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#333; line-height:24px; font-size:12px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.address_boxlist .topinfo {height:24px; margin:0px 0px 8px 0px; padding:2px 5px 0px; color:#333; line-height:24px; font-size:12px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .address_boxlist ul { margin:0px 0px 0px 19px; padding:0px; list-style:none;}
 .address_boxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_boxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
@@ -1914,7 +1914,7 @@ form{display:inline;margin:0}
 .address_onboxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_onboxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
 .address_onboxlist .back { border: 1px solid #888; height:138px; vertical-align:top; border-radius:5px;}
-.address_onboxlist .topinfo {background-color:rgb(0,72,149); height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height:24px; font-size:12px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.address_onboxlist .topinfo {background-color:white; height:24px; margin:0px 0px 8px 0px; padding:2px 5px 0px; color:#333; line-height:24px; font-size:12px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .address_onboxlist ul { margin:0px 0px 0px 19px; padding:0px; list-style:none;}
 .address_onboxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_onboxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}

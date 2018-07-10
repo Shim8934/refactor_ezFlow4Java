@@ -17,9 +17,12 @@
 <script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
 </head>
 <style>
-.lmtitle {
-	font-weight: normal;
-}
+	.lmtitle {
+		font-weight: normal;
+	}
+	.lmLetterModifyBtn, .lmLetterDeleteBtn {
+		background-color: #e8e8e8 !important;
+	}
 </style>
 <body>
 	<div id="lmTop">
@@ -92,7 +95,7 @@
 					<div class="lmright" style="width: 578px; height: 578px">
 						<div class="lmPreview">
 							<div class="lmPreViewTxt"
-								style='text-align: center; position: relative; top: 49%; transform: translateY(-50%);'>
+								style='text-align: center; position: relative; top: 48%; transform: translateY(-50%); font-size:13px'>
 								<spring:message code='ezBoard.t431' />
 							</div>
 							<iframe src="" class="lmPreViewIframe lmPre" id="lmPreViewIframe"

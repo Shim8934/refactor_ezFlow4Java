@@ -24627,4 +24627,13 @@
 		AND
 			COMPANYID = #companyID#	
 	</select>
+	
+	<select id="EzApprovalG.getLinkedAttachFileCount" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(ATTACHFILEHREF)
+		FROM
+			TBL_ENDATTACHINFO
+		WHERE
+			ATTACHFILEHREF = #href#
+	</select>
 </sqlMap>

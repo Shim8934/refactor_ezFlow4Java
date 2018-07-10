@@ -3,7 +3,7 @@
 	
 } */
 #mainmenu li:hover span{
-	color: #0B790E;
+	/* color: #0B790E; */
 }
 
 #divInput {
@@ -56,7 +56,7 @@
 .myScrollableBlock {
 	height: 350px;
 	width: 250px;
-	background-color: #f5f6f6;
+	background-color: #f8f8f8;
 	float: left;
 	display: block;
 	overflow: auto;
@@ -92,7 +92,7 @@ body {
 }
 
 #lmTop button:hover {
-	color: #0B790E;
+	/* color: #0B790E; */
 }
 
 .lmtitle {

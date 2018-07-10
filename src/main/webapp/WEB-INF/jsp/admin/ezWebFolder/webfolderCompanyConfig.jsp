@@ -14,8 +14,17 @@
 			var currUploadLimit   = "";
 			
 			window.onload = function () {
+				closePanel();
 				change();
 			};
+			
+			function closePanel() {
+				var leftFrame = window.parent.frames["left"].document;
+				var blockLeft = leftFrame.getElementById("bnkBlockLeft");
+				leftFrame.body.style.overflow = "auto";
+				blockLeft.style.height        = "100%";
+				blockLeft.style.display       = "none";
+			}
 			
 			function change() {
 				$.ajax({

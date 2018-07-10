@@ -193,7 +193,7 @@
 		            </td>
 		        </tr>
 		    </table>
-		    <div class="btnposition">
+		    <div class="btnpositionNew">
 		        <a class="imgbtn" id="add"><span onclick="save_holiday(1)" ><spring:message code='ezSchedule.t157' /></span></a>
 		        <a class="imgbtn" id="mod" style="display:none"><span onclick="save_holiday(2)" ><spring:message code='ezSchedule.t302' /></span></a>
 		    </div>

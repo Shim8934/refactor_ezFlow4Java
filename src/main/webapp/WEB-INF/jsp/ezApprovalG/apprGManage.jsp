@@ -99,6 +99,8 @@
 		    var nowDate = "${nowDateUTC}";
 		    var ext;
 		   
+		    var currentpage = 1;
+		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
