@@ -37,7 +37,8 @@
 				}
 				
 				/* 2018-05-02 서주연 #12558 */
-				var brdNmTag = document.getElementById("Brd_NM");
+				// 2018-07-10 김민성 - 자원관리 글자수 체크 maxlength로 수정
+				/* var brdNmTag = document.getElementById("Brd_NM");
 				var brdNm2Tag = document.getElementById("Brd_NM2");
 				var resLocTag = document.getElementById("ResLocation");
 				
@@ -51,7 +52,7 @@
 				
 				if(CheckLenthForRes(resLocTag , 50)){
 					return;
-				};	
+				};	 */
 
 				var xmlPara = createXmlDom();
 				var xmlHttp = createXMLHttpRequest();
@@ -210,7 +211,7 @@
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t148"/></th>
-          					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="${resLocation}" style="width: 100%"></td>
+          					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="${resLocation}" style="width: 100%" maxlength="100"></td>
         				</tr>
         				<tr>
 							<th> <spring:message code="ezResource.t149"/></th>

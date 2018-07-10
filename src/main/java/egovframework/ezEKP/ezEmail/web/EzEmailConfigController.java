@@ -884,7 +884,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailGetInboxRule.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String mailGetInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
+	public String mailGetInboxRule(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailGetInboxRule started.");
 		
 		String returnValue = "Error";
@@ -892,8 +892,15 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userId = userInfo.getId() + "@" + domainName;
+		String sortType = request.getParameter("sortType");
 		
-		String inputParams = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		if (sortType == null || sortType.equals("") || sortType.equals("undefined") || sortType.equals("PRIORITY")) {
+			sortType = " ORDER BY PRIORITY";
+		} else {
+			sortType = " ORDER BY RULE_NAME " + sortType;
+		}
+		
+		String inputParams = "userId=" + URLEncoder.encode(userId, "UTF-8") + "&sortType=" + URLEncoder.encode(sortType, "UTF-8");
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaAccess/getInboxRule", inputParams);

@@ -198,8 +198,8 @@
     			</td>
   			</tr>
   			<tr>
-    			<th><spring:message code="ezResource.t47" /></th>
-    			<td style="height: 300px;"><textarea id="Brd_Explain" style="font-size:9pt ; width:98%; height:98%; margin-left:1px; margin-top: 1px;" rows="3"><c:out value="${getBrdInfo.brdExplain}" /></textarea></td>
+    			<th style="text-align:center"><spring:message code="ezResource.t47" /></th>
+    			<td style="height: 300px;"><textarea id="Brd_Explain" style="resize:none; font-size:9pt ; width:98%; height:95%; margin: 1px;"><c:out value="${getBrdInfo.brdExplain}" /></textarea></td>
   			</tr>
   			<tr style="display:none">  
     			<th><spring:message code="ezResource.t48" /></th>
