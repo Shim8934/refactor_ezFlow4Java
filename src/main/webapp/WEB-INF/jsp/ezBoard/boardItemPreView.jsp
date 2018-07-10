@@ -39,7 +39,7 @@
 			            
 			            var tmeptr = _tempList.getElementsByTagName("TR");
 	
-			            /* 2018-07-10 홍승비 - 게시물 미리보기 시 첨부파일 체크박스 제거, 스크롤 높이 조절 */
+			            /* 2018-07-10 홍승비 - 게시물 미리보기 시 첨부파일 체크박스 제거, 스크롤 높이 조절, 특문처리 */
 			            for (var i = 1; i < tmeptr.length; i++) {
 			                var span = document.createElement("SPAN");
 			                var img = document.createElement("IMG");
@@ -48,8 +48,8 @@
 			                var a = document.createElement("A");
 		                    var filename = GetChildNodes(tmeptr[i])[1].textContent;
 		                    var filesize = GetChildNodes(tmeptr[i])[2].textContent;
-		                    a.innerHTML = filename + " (" + filesize + ")";
-			
+		                    a.innerHTML = MakeXMLString(filename) + " (" + filesize + ")";
+		                    
 			                var br = document.createElement("BR");
 			
 			                span.appendChild(img);
