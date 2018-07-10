@@ -597,8 +597,8 @@
 		{	
 	        var curevent = (typeof event == 'undefined' ? evt : event)
 
-			if (curevent.keyCode == "13") {
-	        	att_search();
+			if (curevent.keyCode == "13") { //엔터
+	        	att_search('search');
 	        }
 		}
 	    
