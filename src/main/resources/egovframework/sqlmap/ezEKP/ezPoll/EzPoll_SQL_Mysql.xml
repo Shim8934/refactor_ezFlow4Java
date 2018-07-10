@@ -340,30 +340,25 @@
 	            VALUES( 
 	               #id#,   #qst_id#,   #tenant_id#,  #user_id#,	 #user_name1#,	 #user_name2#,	#text_content#,  #image_type#,   #file_type#,    #file_name#,	  #file_path#,   #cmt_time#,
 	               (SELECT 
-					  CASE
-					  WHEN(
-							SELECT 
-								user_id
-							FROM 
-								tbl_vote_user_and_question 
-							WHERE 
-								TENANT_ID = #tenant_id#
-					        AND
-								QST_ID = #qst_id# 
-							AND 
-							(
-								USER_ID = #user_id#
-							OR
-								user_id IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND tenant_id = #tenant_id# )
-							)
-						) IS NULL
-					  THEN
-						(SELECT deptid FROM tbl_addjobmaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id# AND DEPTID IN (SELECT USER_ID FROM tbl_vote_user_and_question WHERE QST_ID = #qst_id# and tenant_id = #tenant_id#) limit 0, 1)
-					  else
-					    (SELECT department FROM tbl_usermaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id#)
+						CASE
+						WHEN 
+						  USER_ID IS NULL
+						THEN
+						  (SELECT deptid FROM tbl_addjobmaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id# AND DEPTID IN (SELECT USER_ID FROM tbl_vote_user_and_question WHERE QST_ID = #qst_id# and tenant_id = #tenant_id#) limit 0, 1)
+						else
+						  (SELECT department FROM tbl_usermaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id#)
 					    END
-					FROM
-						DUAL
+					FROM 
+						TBL_VOTE_USER_AND_QUESTION 
+					WHERE 
+						TENANT_ID = #tenant_id#
+			        AND
+						QST_ID = #qst_id# 
+					AND 
+					(
+						USER_ID = #user_id#
+					OR
+						USER_ID IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND tenant_id = #tenant_id# )
 					)  
 		       )
         	]]>
@@ -1718,6 +1713,7 @@
     </select>
     
     <select id="EzPollDAO.getUserInfoM" resultMap="login">
+    	<isEmpty property="companyUser">
 		<![CDATA[
 			SELECT 
 				a.cn,  
@@ -1756,6 +1752,61 @@
 			AND 
               	a.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
 		]]>	
+    	</isEmpty>
+    	<isNotEmpty property="companyUser">
+		<![CDATA[
+			SELECT 
+				a.cn,  
+				a.password,
+				a.displayname,
+				a.displayname2,
+				(
+				CASE
+				WHEN c.DEPTID IS NULL
+				THEN a.DEPARTMENT
+				ELSE c.DEPTID
+				END
+				) as department,              
+				a.description,
+				a.description2,
+				a.title,
+				a.title2,
+				a.physicaldeliveryofficename as companyid,
+				a.company,
+				a.company2,
+				a.updatedt,
+				a.extensionattribute1 as rollinfo,
+				a.telephonenumber,
+				a.mail,
+				a.extensionattribute10 as jikchek,
+				a.tenant_id,
+				(SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenant_id#) AS deptPathCode,
+				(SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenant_id# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang,
+				a.extensionattribute4 as gyumJik,
+				a.extensionattribute2 as userFileUrl,
+				a.extensionattribute14 as sabun
+			FROM 
+				TBL_USERMASTER a
+			JOIN
+				TBL_DEPTMASTER d
+			ON
+				a.TENANT_ID = d.TENANT_ID
+			AND
+				a.DEPARTMENT = d.CN
+			LEFT JOIN
+				TBL_ADDJOBMASTER c
+			ON
+				c.CN = a.CN
+			AND
+				a.TENANT_ID = c.TENANT_ID
+			AND
+				c.DEPTID IN (SELECT CN from TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyUser#)
+			WHERE 
+				a.tenant_id = #tenant_id#
+			AND 
+              	a.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenant_id#)
+		]]>	
+    	</isNotEmpty>
 		<dynamic prepend="AND">
 		(
 			<isNotEmpty property="userList" prepend="AND">
@@ -1789,14 +1840,12 @@
 				]]>
 				</iterate>
 			</isNotEmpty>
-			<isNotEmpty property="companyUserList">
-				<iterate property="companyUserList" prepend="OR" conjunction="OR">
+			<isNotEmpty property="companyUser">
 				<![CDATA[
 				a.CN IN (
-					SELECT CN FROM TBL_ADDJOBMASTER WHERE DEPTID IN (SELECT CN  FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyUserList[]# AND TENANT_ID = #tenant_id#) AND TENANT_ID = #tenant_id#
+					SELECT CN FROM TBL_ADDJOBMASTER WHERE DEPTID IN (SELECT CN  FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyUser# AND TENANT_ID = #tenant_id#) AND TENANT_ID = #tenant_id#
 				)
 				]]>
-				</iterate>
 			</isNotEmpty>
 		)
 		</dynamic>	

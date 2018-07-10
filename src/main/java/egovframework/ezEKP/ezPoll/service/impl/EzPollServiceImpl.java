@@ -809,7 +809,7 @@ public class EzPollServiceImpl implements EzPollService{
 		List<PollUserVO> pollUser = getAllUsersForQst(tenantId, qstId);
 		List<String> userList = new ArrayList<String>();
 		List<String> deptUserList = new ArrayList<String>();
-		List<String> companyUserList = new ArrayList<String>();
+		String companyUser = new String();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		Iterator<PollUserVO> iter = pollUser.iterator();
@@ -823,7 +823,7 @@ public class EzPollServiceImpl implements EzPollService{
 				deptUserList.add(user.getUserId());
 			}
 			else{
-				companyUserList.add(user.getUserId());
+				companyUser = user.getUserId();
 			}
 		}
 		map.put("tenant_id", tenantId);
@@ -838,8 +838,8 @@ public class EzPollServiceImpl implements EzPollService{
 			map.put("deptUserList", deptUserList);
 		}
 		
-		if(companyUserList.size() > 0){
-			map.put("companyUserList", companyUserList);
+		if(companyUser != null){
+			map.put("companyUser", companyUser);
 		}
 		
 		return ezPollDAO.getUserInfoM(map);
