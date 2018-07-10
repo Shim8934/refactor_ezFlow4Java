@@ -876,8 +876,9 @@ form{display:inline;margin:0}
 	text-align:left;
 	text-overflow:ellipsis;
 	overflow:hidden;
+	height:31px;
 }
-.poll th{background-color:#e4f0f9;}
+.poll th{background-color:#f2f2f2;height:31px}
 .poll td{background-color:#fff;padding: 3px 10px;}
 .question th{background-color:#ececec;}
 .question td{background-color:#fff;padding: 3px 10px;}
@@ -887,7 +888,7 @@ form{display:inline;margin:0}
 .ex td{
 	padding-left:10px;
 	vertical-align:middle;
-	padding:2px 0 4px 10px;
+	padding:4px 0 4px 10px;
 	text-overflow:ellipsis;
 	overflow:hidden;
 }
@@ -2237,7 +2238,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .btnbtn { margin-top:10px; text-align: center; }
 
 #Preview_HeaderH, #Preview_HeaderW { background-color: #f8f8fa; }
-#subject { vertical-align: middle; height:13px }
+#subject {}
 .extraMenu {
 	position: absolute;
 	top: 4px;
@@ -2288,4 +2289,8 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 	padding:7px;
 	border-top: 1px solid #eee;	
 	background-color: #fcfcfc;
+}
+
+.mailpopupicon {
+		
 }

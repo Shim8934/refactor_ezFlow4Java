@@ -1006,7 +1006,7 @@
 							<label for="importOutlookCSV" style="vertical-align:middle;cursor:pointer;">MS Outlook 2013/2016 CSV</label>
 						</td>
 						<td style="width:30%;text-align:right;border-left-width:0px;">
-							<a class="imgbtn" href="/ezAddress/addressFormatDownload.do?format=outlookCSV"><span><spring:message code='ezAddress.lhm2' /></span></a>
+							<a class="imgbtn imgbck" href="/ezAddress/addressFormatDownload.do?format=outlookCSV"><span><spring:message code='ezAddress.lhm2' /></span></a>
 						</td>
 					</tr>
 					<!-- 

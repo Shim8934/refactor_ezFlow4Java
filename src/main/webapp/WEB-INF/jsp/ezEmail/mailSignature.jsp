@@ -279,10 +279,11 @@
 		    </TD> 
 		  </TR> 
 		</table>
-		<div style="width:780px;text-align:center;margin-top:5px;">
-		    <%--<a class="imgbtn" onClick="NoSign()"><span><%=RM.GetString("t99000009")%></span></a>--%>
-		    <a class="imgbtn" onClick="SetSig()"><span><spring:message code='main.sp09' /></span></a>
-		    <a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
+		<div style="width:780px;text-align:center;">
+		    <div class="btnpositionJsp">
+		    	<a class="imgbtn" onClick="SetSig()"><span><spring:message code='main.sp09' /></span></a>
+		    	<a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
+		    </div>	
 		</div>
 		<xml id="_signature1" style="display: none;">${signature1}</xml>
 		<xml id="_signature2" style="display: none;">${signature2}</xml>
