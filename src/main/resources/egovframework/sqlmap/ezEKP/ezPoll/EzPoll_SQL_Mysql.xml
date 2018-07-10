@@ -26,15 +26,16 @@
         <result property="creator"           	column="creator"                   columnIndex="11"	/>
         <result property="creatorName1"         column="creator_name1"             columnIndex="12" />
         <result property="creatorName2"         column="creator_name2"             columnIndex="13" />
-        <result property="filePath"          	column="file_path"                 columnIndex="14" />
-        <result property="resultFirst"          column="result_first"              columnIndex="15" />
-        <result property="isMofifying"          column="is_modifying"              columnIndex="16" />
-        <result property="setDate"          	column="set_date"              	   columnIndex="17" />
-        <result property="isSorting"          	column="is_sorting"                columnIndex="18" />
-        <result property="isSelOnlyOnce"        column="is_selonlyonce"            columnIndex="19" />
-        <result property="sendPostNotice"   	column="sendpostnotice"		   	   columnIndex="20" />
-        <result property="openToAll" 			column="openToAll"		  	 	   columnIndex="21" />
-        <result property="companyId" 			column="companyid"		  	 	   columnIndex="22" />
+        <result property="creatorDept"          column="creator_dept"              columnIndex="14" />
+        <result property="filePath"          	column="file_path"                 columnIndex="15" />
+        <result property="resultFirst"          column="result_first"              columnIndex="16" />
+        <result property="isMofifying"          column="is_modifying"              columnIndex="17" />
+        <result property="setDate"          	column="set_date"              	   columnIndex="18" />
+        <result property="isSorting"          	column="is_sorting"                columnIndex="19" />
+        <result property="isSelOnlyOnce"        column="is_selonlyonce"            columnIndex="20" />
+        <result property="sendPostNotice"   	column="sendpostnotice"		   	   columnIndex="21" />
+        <result property="openToAll" 			column="openToAll"		  	 	   columnIndex="22" />
+        <result property="companyId" 			column="companyid"		  	 	   columnIndex="23" />
         
     </resultMap>    
     
@@ -143,16 +144,16 @@
 	            INSERT INTO TBL_VOTE_QUESTION(
 	                ID,        			TENANT_ID,         CONTENT,        		MULTI_SELECT,       CREATE_DATE,
 	                START_DATE,         END_DATE,          TARGET,              TITLE,          	SECRET_VOTE,        
-	                CREATOR,			CREATOR_NAME1,	   CREATOR_NAME2,	    FILE_PATH,		    RESULT_FIRST,		
-	                SET_DATE,			IS_SORTING,		   IS_SELONLYONCE,		SENDPOSTNOTICE,		OPENTOALL,
-	                COMPANYID
+	                CREATOR,			CREATOR_NAME1,	   CREATOR_NAME2,	    CREATOR_DEPT,		FILE_PATH,
+	                RESULT_FIRST,		SET_DATE,		   IS_SORTING,		    IS_SELONLYONCE,		SENDPOSTNOTICE,
+	                OPENTOALL,			COMPANYID
 	            )
 	            VALUES(
 	                #id#,          	 	#tenant_id#,        #content#,          #multi_select#,     #create_date#,
 	                #start_date#,       #end_date#,         #target#,           #title#,     		#secret_vote#,
-	                #creator#,		    #creator_name1#,	#creator_name2#,	#file_path#,		#result_first#,		
-	                #set_date#,			#is_sorting#,		#is_selonlyonce#,	#sendpostnotice#,	#opentoall#,
-	                #companyid#
+	                #creator#,		    #creator_name1#,	#creator_name2#,	#creator_dept#,		#file_path#,
+	                #result_first#,		#set_date#,			#is_sorting#,		#is_selonlyonce#,	#sendpostnotice#,
+					#opentoall#,		#companyid#
             )  
         	]]>
         </isEqual>
@@ -172,6 +173,7 @@
 	            	 CREATOR			= #creator#,
 	            	 CREATOR_NAME1		= #creator_name1#,
 	            	 CREATOR_NAME2		= #creator_name2#,
+	            	 CREATOR_DEPT		= #creator_dept#,
 	            	 FILE_PATH			= #file_path#,
 	            	 RESULT_FIRST		= #result_first#,
 	            	 SET_DATE			= #set_date#,
@@ -197,29 +199,24 @@
 	                #opt_id#,          	#qst_id#, 		#user_id#,        #tenant_id#,		#user_name1#,	  #user_name2#,	   #vote_date#,
 	                (SELECT 
 					  CASE
-					  WHEN(
-							SELECT 
-								user_id
-							FROM 
-								tbl_vote_user_and_question 
-							WHERE 
-								TENANT_ID = #tenant_id#
-					        AND
-								QST_ID = #qst_id# 
-							AND 
-							(
-								USER_ID = #user_id#
-							OR
-								user_id IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND tenant_id = #tenant_id# )
-							)
-						) IS NULL
+					  WHEN	user_id IS NULL
 					  THEN
 						(SELECT deptid FROM tbl_addjobmaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id# AND DEPTID IN (SELECT USER_ID FROM tbl_vote_user_and_question WHERE QST_ID = #qst_id# and tenant_id = #tenant_id#) limit 0, 1)
 					  else
 					    (SELECT department FROM tbl_usermaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id#)
-					    END
-					FROM
-						DUAL
+					  END
+					FROM 
+						tbl_vote_user_and_question 
+					WHERE 
+						TENANT_ID = #tenant_id#
+			        AND
+						QST_ID = #qst_id# 
+					AND 
+					(
+						USER_ID = #user_id#
+					OR
+						user_id IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND tenant_id = #tenant_id# )
+					)
 					)
 	            )  
 	   ]]> 
@@ -345,6 +342,10 @@
 						  USER_ID IS NULL
 						THEN
 						  (SELECT deptid FROM tbl_addjobmaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id# AND DEPTID IN (SELECT USER_ID FROM tbl_vote_user_and_question WHERE QST_ID = #qst_id# and tenant_id = #tenant_id#) limit 0, 1)
+						WHEN 
+						  USER_ID IS NOT NULL AND USER_TYPE = 'company' 
+						THEN
+						  #dept_id#
 						else
 						  (SELECT department FROM tbl_usermaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id#)
 					    END
@@ -358,7 +359,7 @@
 					(
 						USER_ID = #user_id#
 					OR
-						USER_ID IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND tenant_id = #tenant_id# )
+						USER_ID IN ( SELECT a.CN FROM TBL_DEPTMASTER a JOIN TBL_DEPTMASTER b ON a.EXTENSIONATTRIBUTE2 = b.EXTENSIONATTRIBUTE2 AND b.CN = #dept_id# AND a.TENANT_ID = #tenant_id# )
 					)
 				   )  
 		       )
@@ -451,6 +452,7 @@
 				a.CREATOR AS creator,
 				a.CREATOR_NAME1 AS creatorname1,
 				a.CREATOR_NAME2 AS creatorname2,
+				a.CREATOR_DEPT AS creatordept,
 				a.FILE_PATH AS filepath,
 				a.RESULT_FIRST AS resultfirst,
 				a.IS_MODIFYING AS ismodifying,
@@ -551,6 +553,7 @@
 				a.CREATOR AS creator,
 				a.CREATOR_NAME1 AS creatorname1,
 				a.CREATOR_NAME2 AS creatorname2,
+				a.CREATOR_DEPT AS creatordept,
 				a.FILE_PATH AS filepath,
 				a.RESULT_FIRST AS resultfirst,
 				a.IS_MODIFYING AS ismodifying,
@@ -761,29 +764,24 @@
 	                #qst_id#,       #user_id#,        #tenant_id#,       0,        		 0,    		   1,			   0,
 	                (SELECT 
 					  CASE
-					  WHEN(
-							SELECT 
-								user_id
-							FROM 
-								tbl_vote_user_and_question 
-							WHERE 
-								TENANT_ID = #tenant_id#
-					        AND
-								QST_ID = #qst_id# 
-							AND 
-							(
-								USER_ID = #user_id#
-							OR
-								user_id IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND tenant_id = #tenant_id# )
-							)
-						) IS NULL
+					  WHEN user_id IS NULL
 					  THEN
 						(SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #user_id# AND TENANT_ID = #tenant_id# AND DEPTID IN (SELECT USER_ID FROM tbl_vote_user_and_question WHERE QST_ID = #qst_id# and tenant_id = #tenant_id#) limit 0, 1)
 					  ELSE
 					    (SELECT DEPARTMENT FROM TBL_USERMASTER WHERE CN = #user_id# AND TENANT_ID = #tenant_id#)
 					    END
-					FROM
-						DUAL
+					FROM 
+						tbl_vote_user_and_question 
+					WHERE 
+						TENANT_ID = #tenant_id#
+			        AND
+						QST_ID = #qst_id# 
+					AND 
+					(
+						USER_ID = #user_id#
+					OR
+						user_id IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND tenant_id = #tenant_id# )
+					)
 					)
             )  
         	]]>
@@ -839,29 +837,24 @@
 	                #companyid#,
 	                (SELECT 
 					  CASE
-					  WHEN(
-							SELECT 
-								USER_ID
-							FROM 
-								TBL_VOTE_USER_AND_QUESTION 
-							WHERE 
-								TENANT_ID = #tenant_id#
-					        AND
-								QST_ID = #qst_id# 
-							AND 
-							(
-								USER_ID = #user_id#
-							OR
-								USER_ID IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND TENANT_ID = #tenant_id# )
-							)
-						) IS NULL
+					  WHEN USER_ID IS NULL
 					  THEN
 						(SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #user_id# AND TENANT_ID = #tenant_id# AND DEPTID IN (SELECT USER_ID FROM TBL_VOTE_USER_AND_QUESTION WHERE QST_ID = #qst_id# AND TENANT_ID = #tenant_id#) LIMIT 0, 1)
 					  else
 					    (SELECT DEPARTMENT FROM TBL_USERMASTER WHERE CN = #user_id# AND TENANT_ID = #tenant_id#)
 					    END
-					FROM
-						DUAL
+					FROM 
+						TBL_VOTE_USER_AND_QUESTION 
+					WHERE 
+						TENANT_ID = #tenant_id#
+			        AND
+						QST_ID = #qst_id# 
+					AND 
+					(
+						USER_ID = #user_id#
+					OR
+						USER_ID IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND TENANT_ID = #tenant_id# )
+					)
 					)
             )  
         	]]>
@@ -947,29 +940,24 @@
 	                #companyid#,
 	                (SELECT 
 					  CASE
-					  WHEN(
-							SELECT 
-								user_id
-							FROM 
-								tbl_vote_user_and_question 
-							WHERE 
-								TENANT_ID = #tenant_id#
-					        AND
-								QST_ID = #qst_id# 
-							AND 
-							(
-								USER_ID = #user_id#
-							OR
-								USER_ID IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND tenant_id = #tenant_id# )
-							)
-						) IS NULL
+					  WHEN USER_ID IS NULL
 					  THEN
-						(SELECT deptid FROM tbl_addjobmaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id# AND DEPTID IN (SELECT USER_ID FROM tbl_vote_user_and_question WHERE QST_ID = #qst_id# and tenant_id = #tenant_id#) limit 0, 1)
+						(SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #user_id# AND TENANT_ID = #tenant_id# AND DEPTID IN (SELECT USER_ID FROM TBL_VOTE_USER_AND_QUESTION WHERE QST_ID = #qst_id# AND TENANT_ID = #tenant_id#) LIMIT 0, 1)
 					  else
-					    (SELECT department FROM tbl_usermaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id#)
+					    (SELECT DEPARTMENT FROM TBL_USERMASTER WHERE CN = #user_id# AND TENANT_ID = #tenant_id#)
 					    END
-					FROM
-						DUAL
+					FROM 
+						TBL_VOTE_USER_AND_QUESTION 
+					WHERE 
+						TENANT_ID = #tenant_id#
+			        AND
+						QST_ID = #qst_id# 
+					AND 
+					(
+						USER_ID = #user_id#
+					OR
+						USER_ID IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND TENANT_ID = #tenant_id# )
+					)
 					)
             )  
         	]]>
@@ -1856,29 +1844,28 @@
     <![CDATA[
     	SELECT 
 		  CASE
-		  WHEN(
-				SELECT 
-					user_id
-				FROM 
-					tbl_vote_user_and_question 
-				WHERE 
-					TENANT_ID = #tenant_id#
-		        AND
-					QST_ID = #qst_id# 
-				AND 
-				(
-					USER_ID = #user_id#
-				OR
-					user_id IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND tenant_id = #tenant_id# )
-				)
-			) IS NULL
+		  WHEN user_id IS NULL
 		  THEN
 			(SELECT deptid FROM tbl_addjobmaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id# AND DEPTID IN (SELECT USER_ID FROM tbl_vote_user_and_question WHERE QST_ID = #qst_id# and tenant_id = #tenant_id#) limit 0, 1)
+		  WHEN 
+			  USER_ID IS NOT NULL AND USER_TYPE = 'company' 
+		  THEN
+			  #dept_id#
 		  else
 		    (SELECT department FROM tbl_usermaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id#)
 		    END
 		FROM
-			DUAL
+			tbl_vote_user_and_question 
+		WHERE 
+			TENANT_ID = #tenant_id#
+        AND
+			QST_ID = #qst_id# 
+		AND 
+		(
+			USER_ID = #user_id#
+		OR
+			user_id IN ( SELECT a.CN FROM TBL_DEPTMASTER a JOIN TBL_DEPTMASTER b ON a.EXTENSIONATTRIBUTE2 = b.EXTENSIONATTRIBUTE2 AND b.CN = #dept_id# AND a.TENANT_ID = #tenant_id# )
+		)
     ]]>
     </select>
     

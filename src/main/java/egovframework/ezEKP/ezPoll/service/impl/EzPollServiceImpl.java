@@ -87,6 +87,7 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("creator", pollQuestionVO.getCreator());
 		map.put("creator_name1", pollQuestionVO.getCreatorName1());
 		map.put("creator_name2", pollQuestionVO.getCreatorName2());
+		map.put("creator_dept", pollQuestionVO.getCreatorDept());
 		map.put("file_path", pollQuestionVO.getFilePath());	
 		map.put("result_first", pollQuestionVO.getResultFirst());
 		map.put("set_date", pollQuestionVO.getSetDate());

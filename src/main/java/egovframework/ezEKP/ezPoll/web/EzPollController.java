@@ -624,6 +624,7 @@ public class EzPollController extends EgovFileMngUtil {
 		pollQuestionVO.setCreator(userID);
 		pollQuestionVO.setCreatorName1(loginVO.getDisplayName1());
 		pollQuestionVO.setCreatorName2(loginVO.getDisplayName2());
+		pollQuestionVO.setCreatorDept(loginVO.getDeptID());
 		pollQuestionVO.setCreateDate(createDate); //20180109
 		pollQuestionVO.setEndDate(endDate);
 		pollQuestionVO.setStartDate(startDate);
@@ -970,7 +971,13 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		//Get creator department
-		LoginVO pollCreator = loginService.selectReceiver(pollQuestionVO.getCreator(), tenantId);
+		LoginVO paramVO = new LoginVO();
+		paramVO.setId(pollQuestionVO.getCreator());
+		paramVO.setDeptID(pollQuestionVO.getCreatorDept());
+		paramVO.setDn("NOPASSWORD");
+		paramVO.setTenantId(tenantId);
+		LoginVO pollCreator = loginService.selectUser(paramVO);
+//		LoginVO pollCreator = loginService.selectReceiver(pollQuestionVO.getCreator(), tenantId);
 		
 		if(pollCreator != null){
 			if (loginVO.getPrimary().equals("1")) {
