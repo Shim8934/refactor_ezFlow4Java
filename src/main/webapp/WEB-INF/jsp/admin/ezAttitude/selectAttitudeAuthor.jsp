@@ -211,6 +211,16 @@
 	   		
 	   		//사원 리스트 뿌리기
 	   		function setUserList(key,value,deptName) {
+				/**
+					페이징할 때 사용.
+					뭔가 다른 방법이 있는지 찾아보기.
+				*/	   			
+	   			if(key === undefined && value === undefined && deptName === undefined) {
+	   				key = "DEPARTMENT";
+	   				value = $(".jstree-wholerow-clicked").parent()[0].id;
+	   				deptName = $("#"+value+" a:first").text();
+	   			}	   			
+	   			
 	   			var listType = getOrganListType();
 	   			function getOrganListType() {
 		        	var organListType = "TXT";
@@ -280,9 +290,11 @@
 	   		}
 	   		
 	   		//검색
+	   		var issearch = false;
 	   		function search_click() {
 	   			var key = $("#search_type").val();
 	   			var value = $("#keyword").val().trim();
+	   			issearch = true;
 	   			if(value) {
 		   			setUserList(key, value);
 	   			} else {

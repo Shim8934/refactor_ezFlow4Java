@@ -300,9 +300,11 @@
 	   			});
 	   		}
 	   		//검색
+	   		var issearch = false;
 	   		function search_click(){
 	   			var key = $("#search_type").val();
 	   			var value = $("#keyword").val().trim();
+	   			issearch = true;
 	   			if(value){
 		   			setUserList(key, value);
 	   			} else {
