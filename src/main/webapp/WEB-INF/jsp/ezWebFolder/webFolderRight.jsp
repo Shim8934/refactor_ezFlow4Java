@@ -50,9 +50,7 @@
 			document.getElementById("pageArea").style.height = reheight + "px";
 		};
 		
-		document.onselectstart = function(){
-			return false;
-		};
+		document.onselectstart = function() {return false;};
 		
 		window.onbeforeunload = function() {
 			closeAllPopup();
@@ -60,6 +58,7 @@
 		}
 		
 		window.onload = function() {
+			closeAllPopup();
 			$('#upload').css('display','none');
 			getFileList(folderId);
 			
