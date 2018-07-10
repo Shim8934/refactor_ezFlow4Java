@@ -6059,7 +6059,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 					
 					if (findHwpField("docnumber", hwpFile)) {
-						docNO = createDocNO(cabinetSN , docNumZeroCnt);
+						docNO = userInfo.getDeptName()+ "-" + createDocNO(cabinetSN , docNumZeroCnt);
 						setHwpText("docnumber", docNO, hwpFile);
 					}
 					
