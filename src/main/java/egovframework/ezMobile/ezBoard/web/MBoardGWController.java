@@ -355,7 +355,20 @@ public class MBoardGWController {
 			
 			//썸네일게시판일때 게시물
 			boardInfo.setType("photoBoardItem");
-			List<MBoardAttachVO>	photoList = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
+			
+			// 해당 게시물 읽기권한 없다면 리턴
+			if (!accessCheck(contentId, deptPathCode, info)) {
+				result.put("status", "no");
+				return result;
+			}
+		
+			// getBoardInfo 메서드에서 rollInfo 포함하여 권한 체크+플래그 설정한다.
+			if (!boardInfo.getRead_FG().equals("true")) {
+				result.put("status", "no");
+				return result;
+			}
+			
+			List<MBoardAttachVO> photoList = mBoardService.photoViewDB(contentId, boardId, info.getTenantId());
 			
 			for (MBoardAttachVO photo : photoList) {
 				photo.setFilePath(photo.getFilePath());
@@ -940,12 +953,7 @@ public class MBoardGWController {
 				} else {
 					rtv = true;
 				}
-				
-				LOGGER.debug("accessCheck result      ::     " + result);
-
 			}
-			
-			LOGGER.debug("accessCheck rtv      ::     " + rtv);
 			LOGGER.debug("accessCheck ended2");
 			return rtv;
 		}
