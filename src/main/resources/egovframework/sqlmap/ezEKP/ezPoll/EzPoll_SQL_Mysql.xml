@@ -359,7 +359,8 @@
 						USER_ID = #user_id#
 					OR
 						USER_ID IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND tenant_id = #tenant_id# )
-					)  
+					)
+				   )  
 		       )
         	]]>
          
