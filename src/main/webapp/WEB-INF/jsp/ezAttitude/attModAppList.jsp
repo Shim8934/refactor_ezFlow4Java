@@ -306,7 +306,7 @@
 	    }
 	    
 	    function att_search(r) {
-			if (r == "refresh") {
+			if (r == "refresh") { //새로고침시
 				$("#writer_search").val("");
 				if (adminFlag == true) {
 										
@@ -318,7 +318,7 @@
 //     			$(Radio1).prop("checked", true);
     			type_set();
 			}
-			else if (r == "deptChange") {
+			else if (r == "deptChange") { //부서변경시
 				$("#writer_search").val("");
     			$("#appr_search").val("");
     			if (usepostDate) {
@@ -326,6 +326,12 @@
     			}
     			$("input[name=searchCheck]").val(type);
     			type_set();
+			}
+			else if (r == "search") { //검색시
+				if ($("#appr_search").val() == "" && $("#usepostdate").prop("checked") == false ) {
+					alert("<spring:message code='ezAttitude.t229'/>");
+					return;
+				}
 			}
 			
 			//정렬 초기화
@@ -1229,7 +1235,7 @@
 				</table>
 				<div class="btnpositionLayer">
 			        <a class="imgbtn" id="mailInBtn" onclick="date_reset()"><span><spring:message code='ezAttitude.t106'/></span></a>
-			        <a class="imgbtn" id="cancelBtn" onclick="att_search()"><span><spring:message code='ezAttitude.t121'/></span></a>
+			        <a class="imgbtn" id="cancelBtn" onclick="att_search('search')"><span><spring:message code='ezAttitude.t121'/></span></a>
 			    </div>
             </div>
         </div>
