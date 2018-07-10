@@ -250,18 +250,18 @@
           						<table style="width:100%">
         							<tr class="primary">
 										<th> ${langPrimary}</th>
-										<td><input type="text" name="Brd_NM" id="Brd_NM" idval="" value="" tabindex="0" style="width: 100%;" ></td>
+										<td><input type="text" name="Brd_NM" id="Brd_NM" idval="" value="" tabindex="0" style="width: 100%;" maxlength="500"></td>
         							</tr>
         							<tr class="secondary">
 										<th> ${langSecondary}</th>
-										<td><input type="text" name="Brd_NM2" id="Brd_NM2" idval="" value="" style="width: 100%" ></td>
+										<td><input type="text" name="Brd_NM2" id="Brd_NM2" idval="" value="" style="width: 100%" maxlength="500"></td>
         							</tr>
     							</table>
           					</td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t148"/></th>
-          					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="" style="width: 100%" ></td>
+          					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="" style="width: 100%" maxlength="100"></td>
         					</tr>
         					<tr>
           						<th> <spring:message code="ezResource.t149"/></th>
@@ -277,7 +277,7 @@
 				</td>
   			</tr>
   			<tr>
-    			<td style="padding-bottom:1px; padding-right:12px; height:100%"><textarea name="Brd_Explain"  id="Brd_Explain" style="margin-top:7px;width: 100%; height: 100%;resize:none;"></textarea></td>
+    			<td style="padding-bottom:1px; padding-right:12px; height:100%"><textarea name="Brd_Explain"  id="Brd_Explain" style="margin-top:7px;width: 100%; height: 100%;resize:none;" maxlength="4000"></textarea></td>
   			</tr>
 		</table>
 	</body>
