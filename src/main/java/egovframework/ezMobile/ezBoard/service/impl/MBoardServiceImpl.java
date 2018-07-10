@@ -176,16 +176,13 @@ public class MBoardServiceImpl implements MBoardService {
 		String boardID = mBoardInfoVO.getBoardID();
 		String type = mBoardInfoVO.getType();
 		String apprFlag = mBoardInfoVO.getApprFlag();
-		
-		/* 2018-07-05 홍승비 - deptPath에 자신의 ID 빠져있는 부분 추가 */
-		String deptPath = info.getUserId() + "," + deptPathCode;
 	    String deptPathOrgan="";
 	    
-	    for (int ch=0; ch<deptPath.split(",").length; ch++) {
+	    for (int ch=0; ch<deptPathCode.split(",").length; ch++) {
 	        if (ch == 0) {
-	        	deptPathOrgan+=deptPath.split(",")[ch].trim();
+	        	deptPathOrgan += deptPathCode.split(",")[ch].trim();
 	        } else {
-	        	deptPathOrgan+=","+deptPath.split(",")[deptPath.split(",").length-(ch)].trim();
+	        	deptPathOrgan += "," + deptPathCode.split(",")[deptPathCode.split(",").length-(ch)].trim();
 	        }
 	    }
 	    
@@ -870,7 +867,7 @@ public class MBoardServiceImpl implements MBoardService {
 		return mBoardDAO.checkIfBoardGroupAdmin(map);
 	}
 
-	/* 2018-07-03 홍승비 - 좌측메뉴 새게시물 리스트 표시 시 companyID 조건 추가 */
+	/* 2018-07-03 홍승비 - 새게시물 리스트 표시 시 deptID, companyID 조건 추가, 게시판 그룹 관리자 권한 체크 */
 	@Override
 	public List<MBoardNewListVO> getNewBoardList(String userID, String lastDate, String deptID, String companyID, int tenantID, String offset,String pSearchText) throws Exception {
 		logger.debug("getNewBoardList started");
@@ -892,6 +889,7 @@ public class MBoardServiceImpl implements MBoardService {
 		return mBoardDAO.getNewItemList(map);
 	}
 	
+	/* 2018-07-09 홍승비 - 포탈 메인 새게시물 리스트 표시 시 deptID, companyID 조건 추가, 게시판 그룹 관리자 권한 체크 */
 	@Override
 	public List<MBoardNewListVO> getBoardMainList(String userID, String listCnt, String deptID, String companyID, int tenantID, String offset) throws Exception {
 		logger.debug("getBoardMainList started");
@@ -906,7 +904,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 
-		logger.debug("getBoardMainList ended");
+		logger.debug("getNewBoardList ended");
 		return mBoardDAO.getNewItemList(map);
 	}
 	
