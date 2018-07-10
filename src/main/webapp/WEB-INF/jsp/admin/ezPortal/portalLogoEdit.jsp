@@ -403,7 +403,7 @@
 		                        <input type="hidden" name="mailgubun" id="mailgubun" />
 		                    </form>
 		
-		                    <td width="100%" align="center" nowrap><a class="imgbtn"><span onclick="changeNormalImage()"><spring:message code='ezPortal.t66'/></span></a><a class="imgbtn"><span onclick="removeNormalImage()" style="width:20px"><spring:message code='ezPortal.t67'/></span></a></td>
+		                    <td width="100%" align="center" nowrap><a class="imgbtn imgbck"><span onclick="changeNormalImage()"><spring:message code='ezPortal.t66'/></span></a><a class="imgbtn imgbck"><span onclick="removeNormalImage()" style="width:20px"><spring:message code='ezPortal.t67'/></span></a></td>
 						</tr> 
 					</table>
 				</td> 
@@ -461,7 +461,7 @@
 		    		</c:otherwise>
 		    	</c:choose>
 		    	</td>
-		    	<td width="39" align="center"><a class="imgbtn"><span onClick="DeleteRight('${item.accessID}')" ><spring:message code='ezPortal.t67'/></span></a></td>
+		    	<td width="39" align="center"><a class="imgbtn imgbck"><span onClick="DeleteRight('${item.accessID}')" ><spring:message code='ezPortal.t67'/></span></a></td>
 	  		</tr>
 	 	 </c:forEach>
 		</table>
@@ -470,7 +470,7 @@
 			<tr>
 				<th width="70"><spring:message code='ezPortal.t91'/></th>
 				<td nowrap class="pos1"><input type="text" id="newAccessID" style="width:100%" readonly> </td>
-				<td width="40" nowrap class="pos2"><a class="imgbtn"><span onClick="SelectID()"><spring:message code='ezPortal.t45'/></span></a></td>			
+				<td width="40" nowrap class="pos2"><a class="imgbtn imgbck"><span onClick="SelectID()"><spring:message code='ezPortal.t45'/></span></a></td>			
 			</tr>
 			<tr>
 				<th><spring:message code='ezPortal.t92'/></th>
@@ -491,7 +491,7 @@
 				</td>
 			</tr>
 		</table>
-		<div class="btnposition" id="toggle_tbl3_3" style="display:none">
+		<div class="btnpositionJsp" id="toggle_tbl3_3" style="display:none">
 		    <a class="imgbtn"><span onClick="AddRight()"><spring:message code='ezPortal.t62'/></span></a>
 		    <a class="imgbtn"><span onClick="window.close();"><spring:message code='ezPortal.t12'/></span></a>
 		</div>
