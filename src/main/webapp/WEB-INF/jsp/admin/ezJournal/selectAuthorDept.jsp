@@ -342,7 +342,7 @@
             	</td>
             </tr>
         </table>
-        <div class="btnposition">
+        <div class="btnpositionNew">
 	        <a class="imgbtn"><span onclick="setAuthorViewDept();" ><spring:message code='ezSchedule.t157' /></span></a>
 	    </div>
 	</body>
