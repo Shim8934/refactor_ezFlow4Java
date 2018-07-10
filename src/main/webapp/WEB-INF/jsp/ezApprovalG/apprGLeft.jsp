@@ -272,7 +272,7 @@
 	        function MngUserOnclick_Complete(RtnVal) {
 	            TreeViewRefresh();
 	        }
-	        
+	        // 여기
 	        function TreeViewRefresh() {
 	            var xmlHTTP = createXMLHttpRequest();
 	            var strQuery = "<DATA><USERID>" + pUserID + "</USERID><ParentContID>ROOT</ParentContID><NAME></NAME></DATA>";
@@ -290,6 +290,14 @@
 	            treeView.SetNodeClick("UserContNodeClick");
 	            treeView.DataSource(xmlDomRet);
 	            treeView.DataBind("divUserContTree");
+	            
+	            $(".node_normal").css("width", "135px");
+ 		          
+				var node = $(".node_normal");
+					
+				for(var i=0; i<node.length; i++) {
+					node[i].setAttribute("TITLE", node[i].innerHTML);
+				} 
 	        }
 	        
 		    function Open_Func(pthis) {
