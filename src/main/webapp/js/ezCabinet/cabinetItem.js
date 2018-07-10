@@ -405,13 +405,11 @@ var CabinetItem = function() {
 		var sharePopup = window.open("/ezCabinet/shareCabinet.do?cabId=" + cabId, "shareFile", getOpenWindowfeature(1000, 600));
 	}
 	
-	function getFileDetail() {
-		window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 690));
-	}
-	
 	function addRelatedCabinet() {
 		//* blank 2018.07.09
 	}
+	
+	function getFileDetail() {window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 670));}
 	
 	return {
 		

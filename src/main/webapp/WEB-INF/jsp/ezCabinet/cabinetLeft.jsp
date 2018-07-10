@@ -92,12 +92,12 @@
 					cabinetTree.makeTree();
 					
 					document.getElementById("myCabinet"        ).addEventListener("click", function(e) {getMyCabinet();} , false);
-					document.getElementById("cabinetAdmin"     ).addEventListener("click", function(e) {getAdminPage();} , false);
 					document.getElementById("cabinetConfig"    ).addEventListener("click", function(e) {getConfigPage();}, false);
 					document.getElementById("cabinetManagement").addEventListener("click", function(e) {getManagement();}, false);
 					
+					var cabinetAdminElmt = document.getElementById("cabinetAdmin");
+					if (cabinetAdminElmt) {cabinetAdminElmt.addEventListener("click", function(e) {getAdminPage();} , false);}
 					if (document.getElementById("myBar").className == "") {drawVolume();}
-					
 				}
 				
 				function getAdminPage()  {window.open("/admin/ezCabinet/cabinetAdminMain.do", "", "");}

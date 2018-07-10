@@ -16,8 +16,8 @@
 		
 		<div class="divInfo">
 			<table class="tblFileInf">
-				<tr><th><spring:message code='ezCabinet.t51'/></th><td><input type="text" placeholder="<spring:message code='ezCabinet.t70'/>"></td></tr>
-				<tr><th><spring:message code='ezCabinet.t52'/></th><td><input type="text" placeholder="<spring:message code='ezCabinet.t71'/>"></td></tr>
+				<tr><th><spring:message code='ezCabinet.t51'/></th><td><input maxlength="250" type="text" placeholder="<spring:message code='ezCabinet.t70'/>"></td></tr>
+				<tr><th><spring:message code='ezCabinet.t52'/></th><td><input maxlength="250" type="text" placeholder="<spring:message code='ezCabinet.t71'/>"></td></tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t94'/></th>
 					<td><div class="rlFileDiv"><input type="text"><a><span id="rlBttn"><spring:message code='ezCabinet.t93'/></span></a></div></td>

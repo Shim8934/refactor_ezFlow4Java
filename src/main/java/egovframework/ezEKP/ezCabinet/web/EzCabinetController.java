@@ -344,6 +344,12 @@ public class EzCabinetController {
 		String cabinetName2  = request.getParameter("cabName2")  != null ? request.getParameter("cabName2") : "";
 		JSONObject resultObj = new JSONObject();
 		
+		if (cabinetName1.equals("") || cabinetName2.equals("") || parentId.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
 		resultObj            = cabinetRestService.addCabinet(request, user.getId(), parentId, cabinetName1, cabinetName2);
 		
 		logger.debug("jsonAddCabinet end");
@@ -360,6 +366,12 @@ public class EzCabinetController {
 		String cabinetName2  = request.getParameter("cabName2")  != null ? request.getParameter("cabName2")  : "";
 		JSONObject resultObj = new JSONObject();
 		
+		if (cabinetName1.equals("") || cabinetName2.equals("") || cabinetId.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
 		resultObj            = cabinetRestService.renameCabinet(request, user.getId(), cabinetId, cabinetName1, cabinetName2);
 		
 		logger.debug("jsonRenameCabinet end");
@@ -374,9 +386,37 @@ public class EzCabinetController {
 		String cabinetId     = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
 		JSONObject resultObj = new JSONObject();
 		
+		if (cabinetId.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
 		resultObj            = cabinetRestService.deleteCabinet(request, user.getId(), cabinetId);
 		
 		logger.debug("jsonDeleteCabinet end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/moveCabinet.do")
+	@ResponseBody
+	public String jsonMoveCabinet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonMoveCabinet start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId     = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
+		String parentId      = request.getParameter("parentId")  != null ? request.getParameter("parentId")  : "";
+		String mode          = request.getParameter("mode")      != null ? request.getParameter("mode")      : "";
+		JSONObject resultObj = new JSONObject();
+		
+		if (cabinetId.equals("") || parentId.equals("") || mode.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj            = cabinetRestService.moveCabinet(request, user.getId(), cabinetId, parentId, mode);
+		
+		logger.debug("jsonMoveCabinet end");
 		return resultObj.toString();
 	}
 	
