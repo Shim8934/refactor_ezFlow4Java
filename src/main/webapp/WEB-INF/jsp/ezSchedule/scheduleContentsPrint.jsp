@@ -114,7 +114,7 @@
 	          	<tr>
 	            	<th><spring:message code='ezSchedule.t311' /></th>
 	              	<td colspan="3">
-	                	<div id="printAttendant">${printAttendant}</div>
+	                	<div id="printAttendant" style="padding:2px 0px;">${printAttendant}</div>
 	              	</td>
 	          	</tr>
 	          	</c:if>

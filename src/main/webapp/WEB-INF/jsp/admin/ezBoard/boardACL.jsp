@@ -202,8 +202,16 @@
 	                objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "BOARDID", pBoardID);
 	                objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "TARGETID", GetAttribute(selnode[i], "data1"));
 	            }
+	            
+	            var alertContent = "";
+	            
+	            if (type === "one" ) {
+	            	alertContent = "<spring:message code='ezBoard.t197'/>";
+	            } else if (type === "type" ) {
+	            	alertContent = "<spring:message code='ezBoard.pjg03'/>";
+	            }
 				
-	            if(confirm("<spring:message code='ezBoard.t197'/>")) {
+	            if(confirm(alertContent)) {
 		            
 		            xmlhttp.open("POST", "/admin/ezBoard/deleteACL.do", false);
 		            xmlhttp.send(xmlpara);

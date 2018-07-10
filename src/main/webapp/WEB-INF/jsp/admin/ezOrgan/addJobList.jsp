@@ -242,30 +242,35 @@
 		            if (_RowObject == null || _RowObject == "") {
 		                alert("<spring:message code='ezOrgan.t196' />");
 		                return;
-		            }
-		            _RowObject = document.getElementById(_RowObject.id);
-
-		            if (document.getElementById("AddJobList").childNodes.length == 1) {
-		                var listview = new ListView();
-		                listview.LoadFromID("lvAddJobList");
-		                for (var i = 0; i < document.getElementById("AddJobList").childNodes.length ; i++) {
-		                    createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(listview.GetSelectedRows()[0], "data1"));
-		                    createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
-		                    createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
-		                }
-		                mode = "";
 		            } else {
-		                for (var i = 0; i < document.getElementById("AddJobList").childNodes.length ; i++) {
-		                    if (GetAttribute(_RowObject, "_DEPTID") == GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid")) {
-                                createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
-                                createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
-                                createNodeAndInsertText(xmlDom, objNode, "TITLE", "");                              		                        
-		                    } else {
-                                createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
-                                createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
-                                createNodeAndInsertText(xmlDom, objNode, "TITLE", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_t1") + ":" + GetAttribute(document.getElementById("AddJobList").childNodes[i], "_t2"));		                        
-		                    }
-		                }
+		            	if (confirm("<spring:message code='ezOrgan.pjg01' />")) {
+				            _RowObject = document.getElementById(_RowObject.id);
+		
+				            if (document.getElementById("AddJobList").childNodes.length == 1) {
+				                var listview = new ListView();
+				                listview.LoadFromID("lvAddJobList");
+				                for (var i = 0; i < document.getElementById("AddJobList").childNodes.length ; i++) {
+				                    createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(listview.GetSelectedRows()[0], "data1"));
+				                    createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
+				                    createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
+				                }
+				                mode = "";
+				            } else {
+				                for (var i = 0; i < document.getElementById("AddJobList").childNodes.length ; i++) {
+				                    if (GetAttribute(_RowObject, "_DEPTID") == GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid")) {
+		                                createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
+		                                createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
+		                                createNodeAndInsertText(xmlDom, objNode, "TITLE", "");                              		                        
+				                    } else {
+		                                createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
+		                                createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
+		                                createNodeAndInsertText(xmlDom, objNode, "TITLE", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_t1") + ":" + GetAttribute(document.getElementById("AddJobList").childNodes[i], "_t2"));		                        
+				                    }
+				                }
+				            }		            		
+		            	} else {
+		            	 	return;	
+		            	}
 		            }
 		        } else {
 		            var listview = new ListView();
