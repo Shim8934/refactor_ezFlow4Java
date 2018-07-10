@@ -10,6 +10,7 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
 		    var ReturnFunction;
+		    var type = "${type}";
 		    window.onload = function()
 		    {
 		        try {
@@ -52,7 +53,14 @@
 	    </script>
 	</head>
 	<body class="popup">
-	    <h1><spring:message code="ezBoard.t176" /></h1>
+	<c:choose>
+		<c:when test="${type ne ''}">
+			<h1><spring:message code="ezEmail.t99000071" /></h1><%-- 메일 색상설정 --%>
+		</c:when>
+		<c:otherwise>
+			<h1><spring:message code="ezBoard.t176" /></h1><%-- 게시판명 색상선택 --%>
+		</c:otherwise>
+	</c:choose>
 	    <div id="close">
             <ul>
                 <li><span onclick="window.close()"></span></li>
