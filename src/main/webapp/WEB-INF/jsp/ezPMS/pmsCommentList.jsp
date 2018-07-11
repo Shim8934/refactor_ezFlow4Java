@@ -230,7 +230,7 @@
 							<td class="col1" style="text-align:center;">
 								<c:out value="${commentVO.writerName}"/>
 							</td>
-							<td class="taskName col2">
+							<td class="taskName col2" style="text-align:center;">
 								<c:out value="${commentVO.taskName ne null ? commentVO.taskName : commentVO.groupName}"/>
 							</td>
 							<td class="content col3" style="text-align: left;">

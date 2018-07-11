@@ -108,7 +108,7 @@ $(function() {
 										style="text-align: left;"><c:out
 											value="${log.logContent }" /></td>
 									<td onclick="selectedTR(this);"
-										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 250px; text-align:center;">
+										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 200px; text-align:center;">
 										<c:choose>
 											<c:when test="${empty log.taskName }">
 												<c:out value="${log.groupName }" />

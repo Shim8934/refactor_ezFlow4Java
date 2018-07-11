@@ -156,10 +156,10 @@
 		height: 360px !important;
 	}
 
-	#col1 {width: 10%;}
-	#col2 {width: 15%;}
-	#col3 {width: 50%;}
-	#col4 {width: 15%;}
+	.col1 {width: 10%;}
+	.col2 {width: 15%;}
+	.col3 {width: 50%;}
+	.col4 {width: 15%;}
 	.commentContent {width: 70%;}
 </style>
 
