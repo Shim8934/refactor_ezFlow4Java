@@ -1118,7 +1118,6 @@
 						$("#" + ui.item[0].id).attr("id", "tid_" + groupId + selectedTaskId);
 						
 		   				changeGanttOrder(targetTaskId, changeGroupId);
-		   				ge.taskIsChanged();
 		   			}
 		   		}).disableSelection();
 		   		
@@ -1192,7 +1191,7 @@
 	   				
 	   			}
 
-	   			 /* var data = {
+	   			var data = {
 	   				projectId : projectId,
 	   				groupArr : groupArr,
 	   				taskArr : taskArr,
@@ -1210,12 +1209,14 @@
 	   					if (result == "rejected") {
 	   						alert("<spring:message code='ezPMS.t184' />");
 	   						return;
+	   					} else {
+			   				ge.taskIsChanged();
 	   					}
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
 	   					alert("<spring:message code='ezPMS.t54' />");
 	   				}
-	   			});    */
+	   			});
 	   		}
 	   		
 	   		function updateWeight(obj) {
