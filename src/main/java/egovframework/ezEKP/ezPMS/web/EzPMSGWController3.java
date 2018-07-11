@@ -1134,9 +1134,9 @@ public class EzPMSGWController3 {
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@RequestMapping(value = "/rest/ezPMS/tasks/multiple-tasks/users/{userId}", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject updateAllTasksDate(@PathVariable String userId, @RequestBody JSONObject jsonParam, HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/multiple-tasks/users/" + userId + "] started");
+	@RequestMapping(value = "/rest/ezPMS/allSchedules/users/{userId}", method = RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject updateAllSchedules(@PathVariable String userId, @RequestBody JSONObject jsonParam, HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/allSchedules/users/" + userId + "] started");
 		
 		JSONObject result = new JSONObject();
 		
@@ -1145,65 +1145,25 @@ public class EzPMSGWController3 {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			String roleCheck = null;
-			
 			Long projectId = Long.parseLong((String)jsonParam.get("projectId"));
 			
-			if(jsonParam.get("groupId") != null && jsonParam.get("taskId") != null) {
-				Long groupId = Long.parseLong((String)jsonParam.get("groupId"));
-				Long taskId  = Long.parseLong((String)jsonParam.get("taskId"));
-				
-				//권한 체크
-				//1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
-				int userProjectRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
-				LOGGER.debug("userProjectRole : " + userProjectRole);
-				
-				if (userProjectRole == 1) {
-					roleCheck = "permitted";
-				} else if (userProjectRole == 3) {
-					//프로젝트 조회자는 열람권한밖에 없음
-					roleCheck = "rejected";
-				} else {
-					//2. group의 담당자인지 확인
-					int userGroupRole = ezPMSService.getUserGroupRole(userId, tenantId, projectId, groupId);
-					LOGGER.debug("userGroupRole : " + userGroupRole);
-					
-					if (userGroupRole == 1) {
-						roleCheck = "permitted";
-					} else {
-						String userTaskRole = ezPMSService.getUserTaskRole(userId, tenantId, taskId);
-						LOGGER.debug("userTaskRole : " + userTaskRole);
-						
-						if (userTaskRole != null) {
-							roleCheck = "permitted";
-						} else {
-							roleCheck = "rejected";
-						}
-					}
-				}	
-			} else {
-				roleCheck = "permitted";
-			}
+			List<LinkedHashMap> taskSchedules = (List<LinkedHashMap>) jsonParam.get("allTasks");
+			List<LinkedHashMap> groupSchedules = (List<LinkedHashMap>) jsonParam.get("allGroups");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tenantId", tenantId);
+			map.put("projectId", projectId);
+			map.put("taskSchedules", taskSchedules);
 			
-			if (roleCheck.equals("permitted")) {
-				List<LinkedHashMap> taskSchedules = (List<LinkedHashMap>) jsonParam.get("allTasks");
-				List<LinkedHashMap> groupSchedules = (List<LinkedHashMap>) jsonParam.get("allGroups");
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("tenantId", tenantId);
-				map.put("projectId", projectId);
-				map.put("taskSchedules", taskSchedules);
-				
-				ezPMSService.updateAllTaskDatesInPrj(map);
-				
-				map.remove("taskSchedules");
-				map.put("groupSchedules", groupSchedules);
-				
-				ezPMSService.updateAllGroupDatesInPrj(map);
-			}
+			ezPMSService.updateAllTaskDatesInPrj(map);
 			
+			map.remove("taskSchedules");
+			map.put("groupSchedules", groupSchedules);
+			
+			ezPMSService.updateAllGroupDatesInPrj(map);
+				
 			result.put("status", "ok");
 			result.put("code", 0);			
-			result.put("data", roleCheck);		
+			result.put("data", "");		
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1211,7 +1171,7 @@ public class EzPMSGWController3 {
 			e.printStackTrace();
 		}
 		
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/multiple-tasks/users/" + userId + "] ended");
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/allSchedules/users/" + userId + "] ended");
 		return result;
 	}
 	

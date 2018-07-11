@@ -1041,22 +1041,16 @@ public class EzPMSController3 {
 		return "json";
 	}
 	
-	@RequestMapping(value = "/ezPMS/updateAllTasksDate.do")
-	public String updateAllTasksDate(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS updateAllTasksDate started");
+	@RequestMapping(value = "/ezPMS/updateAllSchedules.do")
+	public String updateAllSchedules(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS updateAllSchedules started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String url = "/rest/ezPMS/tasks/multiple-tasks/users/" + userInfo.getId();
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, request, "put", jsonParam);
-		String status = resultBody.get("status").toString();
+		String url = "/rest/ezPMS/allSchedules/users/" + userInfo.getId();
+		commonUtil.getJsonFromRestApi(url, null, request, "put", jsonParam);
 		
-		if(status.equals("ok")) {
-			String roleCheck = (String) resultBody.get("data");
-			model.addAttribute("roleCheck", roleCheck);
-		}
-		
-		LOGGER.debug("ezPMS updateAllTasksDate ended");
+		LOGGER.debug("ezPMS updateAllSchedules ended");
 		return "json";
 	}
 	

@@ -627,25 +627,27 @@
 	   			  var orgStart = task.start;
 	   			  var orgEnd   = task.end;
 	   			  
-	   			  if(task.setPeriod(start, end)) {
+	   			  if(userRoleId == '1') {
 	   				
-	   				// 이전과 변화가 없을 때는 바로 true return
-	   				if(orgStart == task.start && orgEnd == task.end) {
-	   					return true;
-	   				}
-	   				
-	   				if(saveAllSchedules(groupId, taskId)) {
-	   					toastPopupShow("[" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");				
-			   			addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");
-	   				}
-	   				
-	   				setAllGanttItems();
-	   				return true;
+	   				if(task.setPeriod(start, end)) {
+	   					
+	   				 	// 이전과 변화가 없을 때는 바로 true return
+	     				if(orgStart == task.start && orgEnd == task.end) {
+	     					return true;
+	     				}
+	   				 	
+		   				saveAllSchedules();
+		   				toastPopupShow("[" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");				
+				   		addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");
+		   				setAllGanttItems();
+		   				return true;
+	   			  	} else {
+	   					return false;
+	   			  	}
 	   			  } else {
-	   				return false;
-	   			  }
-	   			  
-	   			  
+	   				  alert("<spring:message code='ezPMS.t9' />");
+	   				  return false;
+	   			  } 
 	   			};
 	   			
 	   			//기간은 그대로, 날짜만 이동
@@ -675,23 +677,26 @@
 	   			  
 	   			  var orgStart = task.start;
 	   			  var orgEnd   = task.end;
-	   			  
-	   			  if(task.moveTo(newStart, true,true)) {
-	   				
-	   				// 이전과 변화가 없을 때는 바로 true return
-	   				if(orgStart == task.start && orgEnd == task.end) {
-	   					return true;
-	   				}
-	   				
-	   				if(saveAllSchedules(groupId, taskId) == true) {
+	   			  if(userRoleId == '1') {
+	   				  
+	   				if(task.moveTo(newStart, true,true)) {
+	   					
+		   				// 이전과 변화가 없을 때는 바로 true return
+		   				if(orgStart == task.start && orgEnd == task.end) {
+		   					return true;
+		   				}
+		   				
+		   				saveAllSchedules();
 	   					toastPopupShow("[" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");				
 			   			addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");
-	   				} 
-	   				
-	   				setAllGanttItems();
-	   				return true;
+		   				setAllGanttItems();
+		   				return true;
+		   			  } else {
+		   				return false;
+		   			  } 
 	   			  } else {
-	   				return false;
+	   				  alert("<spring:message code='ezPMS.t9' />");
+	   				  return false;
 	   			  } 
 	   			};
 	   			
@@ -874,10 +879,7 @@
 	   		}
 	   		
 	   		// 화면상 데이터를 기준으로 모든 Gantt item들의 일정이 DB에 적용
-	   		// 특정 task에 대한 일정 변경 시에만 groupId, taskId변수 사용
-	   		function saveAllSchedules(selectedGroupId, selectedTaskId) {
-	   			var ret = false;
-	   			
+	   		function saveAllSchedules() {	   			
 	   			var allGanttItems = ge.saveProject().tasks;
 		  		var allTasks = [];
 		  		var allGroups = [];
@@ -918,29 +920,17 @@
 		  		data = {
 		  			allTasks : allTasks,
 		  			allGroups : allGroups,
-		  			projectId : projectId,
-		  			groupId : selectedGroupId,
-		  			taskId : selectedTaskId
+		  			projectId : projectId
 		  		}
 		  		
 		  		$.ajax({
   			  		type : "PUT",
-  					url : "/ezPMS/updateAllTasksDate.do",
-  					dataType : "json",
+  					url : "/ezPMS/updateAllSchedules.do",
   					async : false,
   					contentType : "application/json; charset=UTF-8",
   					data : JSON.stringify(data),
-  					success : function(result) {
-  						if(result.roleCheck == 'rejected') {
-  							alert("<spring:message code='ezPMS.t184' />");
-  						} else {
-  							ret =  true;
-  						}
-  					}
+  					success : function() {}
 		  		});
-		  		
-		  		console.log(ret);
-		  		return ret;
 	   		}
 	   		
 	   		function addPreTaskRel (projectId, taskId, preTaskId, progress, taskName, preTaskRowName, groupId, preGroupId) {
