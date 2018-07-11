@@ -118,7 +118,7 @@
 				<tr>
 					<th style="font-weight: normal;"><spring:message code="ezBoard.t606" /></th>
 					<td style="height:300px;">
-						<select id="acllist" name="acllist" style="width: 99%; height: 99%; background:none; margin-left:3px; overflow-y: auto; overflow-x: auto; padding-right:0px;" size="10" onChange="selAclList_Change(this);">
+						<select id="acllist" name="acllist" style="width: 99%; height: 98.5%; background:none; margin-left:3px; overflow-y: auto; overflow-x: auto; padding-right:0px;" size="10" onChange="selAclList_Change(this);">
 							${strOptions}
 						</select>
 					</td>
@@ -160,8 +160,7 @@
       			</td>
   			</tr>
 		</table> --%>
-		<br>
-		<div class="btnposition">
+		<div class="btnpositionJsp">
      		<a class="imgbtn"><span onclick="cmdOk_onclick()" ><spring:message code="ezResource.t114" /></span></a>
 		</div>
 		<form name="brds">

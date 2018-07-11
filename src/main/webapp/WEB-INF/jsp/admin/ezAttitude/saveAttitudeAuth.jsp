@@ -70,7 +70,7 @@
 	    	//사원선택
 	    	function select_person() {
 	    		var url = "/admin/ezAttitude/selectAttitudeAuthor.do?companyId=" + companyId;
-				window.open(url, "author", GetOpenWindowfeature(705, 575));
+				window.open(url, "author", GetOpenWindowfeature(705, 615));
 	    	}
 	    	
 	    	//부서선택
@@ -90,7 +90,7 @@
 	    		ezattitude_dialogArguments[0] = para;
 	    		
 	    		var url = "/admin/ezAttitude/selectAttitudeAuthorDept.do?companyId=" + companyId + "&userId=" + selectedUser;
-				var SelectTarget = window.open(url, "authorDept", GetOpenWindowfeature(500, 545));
+				var SelectTarget = window.open(url, "authorDept", GetOpenWindowfeature(500, 575));
 				try { SelectTarget.focus(); } catch (e) {
 	            }
 	    	}
@@ -222,15 +222,15 @@
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t198' /></th>
 	            <td>
-	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-top:1px; width:80%" onfocus="this.blur();" readonly="readonly" />
-	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top:2px;"><span onclick="select_person()"><spring:message code='ezAttitude.t199' /></span></a>                
+	                <input id="txtuser" value="${selectedUserName }" type="text" style="margin-top:1px; width:350px" onfocus="this.blur();" readonly="readonly" />
+	                <a href="#" class="imgbtn imgbck" style="margin-top:2px;"><span onclick="select_person()"><spring:message code='ezAttitude.t199' /></span></a>                
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t190' /></th>
 	            <td style="height: 60px; width: 400px;">
-	                <textarea rows="3" id="txtdept" type="text" style="height: 43px; margin-top:2px; width:77%; resize:none; overflow: auto;" onfocus="this.blur();" readonly="readonly" ></textarea>
-	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top: 15px;"><span onclick="selectDept()"><spring:message code='ezAttitude.t199' /></span></a>                
+	                <textarea rows="3" id="txtdept" style="height: 43px; width:338px; resize:none; overflow: auto;" onfocus="this.blur();" readonly="readonly" ></textarea>
+	                <a href="#" class="imgbtn imgbck" style="margin-top: 15px;"><span onclick="selectDept()"><spring:message code='ezAttitude.t199' /></span></a>                
 	            </td>
 	        </tr>
 	    </table>

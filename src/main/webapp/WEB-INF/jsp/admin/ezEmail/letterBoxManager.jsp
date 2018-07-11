@@ -28,8 +28,8 @@
 	    <h1 style="padding: 5px"> </h1>
 	    <div id="mainmenu">
 		    <ul class="on">
-		        <li><span onclick="addLetterBox()">&nbsp;&nbsp;+ <spring:message code='ezEmail.letter17'/>&nbsp;&nbsp;</span></li>
-		        <li><span onclick="deleteLetterBox()">&nbsp;&nbsp;- <spring:message code='ezEmail.letter18'/>&nbsp;&nbsp;</span></li>
+		        <li><span onclick="addLetterBox()"><spring:message code='ezEmail.letter17'/></span></li>
+		        <li><span onclick="deleteLetterBox()"><spring:message code='ezEmail.letter18'/></span></li>
 		    </ul>
 		</div>
 		<div id="divTree" class="myScrollableBlock" style="border:1px solid #ddd">
@@ -37,14 +37,14 @@
 		<div id="divInput" style="border:1px solid #ddd; padding:15px; height:319px">
 			<form id="myForm" action="/admin/ezEmail/updateLetterBox.do" method="post">
 				<label for="display">
-					<b><spring:message code='ezEmail.letter35'/></b>
+					<spring:message code='ezEmail.letter35'/>
 				</label>
 				<input type="text" id="display" name="displayname" size="30" maxlength="40">
 				
 				<br><br>
 				
 				<label for="display2">
-					<b><spring:message code='ezEmail.letter36'/></b>
+					<spring:message code='ezEmail.letter36'/>
 				</label>
 				<input type="text" id="display2" name="displayname2" size="30" maxlength="40">
 				

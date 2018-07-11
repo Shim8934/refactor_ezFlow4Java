@@ -7,7 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">		
 	</head>
 	<frameset cols="220,*" frameborder="no" border="0" framespacing="0">
-		<frame src="<c:url value='/admin/ezBoard/boardLeft.do' />" name="board_menu"  frameborder="0" scrolling="auto" marginwidth="0" marginheight="0">
-        <frame src="<c:url value='/admin/ezBoard/boardRight.do' />" name="board_main" frameborder="0" scrolling="auto" marginwidth="0" marginheight="0">
+		<frame src="<c:url value='/admin/ezBoard/boardLeft.do' />" name="board_menu" id="left" frameborder="0" scrolling="auto" marginwidth="0" marginheight="0">
+        <frame src="<c:url value='/admin/ezBoard/boardRight.do' />" name="board_main" id="right" frameborder="0" scrolling="auto" marginwidth="0" marginheight="0">
 	</frameset>    
 </html>

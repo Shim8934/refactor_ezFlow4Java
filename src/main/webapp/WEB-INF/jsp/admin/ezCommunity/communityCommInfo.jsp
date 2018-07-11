@@ -161,7 +161,7 @@
 				</tr>
 			</table>
 		</form>
-		<div class="btnposition" style="margin-top:5px;">
+		<div class="btnpositionNew">
 		    <a class="imgbtn"><span onclick="return comClose_onclick('${code}','${type}')" ><spring:message code = 'ezCommunity.t46' /></span></a>
 		         
             <c:if test="${type == 'New' }">

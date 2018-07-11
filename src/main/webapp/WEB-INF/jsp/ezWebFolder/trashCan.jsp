@@ -63,9 +63,7 @@
 			document.getElementById("dragDropArea").style.height = reheight + "px";
 		};
 		
-		document.onselectstart = function() {
-			return false;
-		};
+		document.onselectstart = function() {return false;};
 		
 		window.onbeforeunload = function() {
 			hiddenPanel();
@@ -73,6 +71,7 @@
 		}
 		
 		window.onload = function() {
+			hiddenPanel();
 			tableView.setTableId("tblFileList");
 			tableView.setTableType("deletedfile");
 			tableView.setSelectedClass("bnkWebFolder2");

@@ -147,10 +147,10 @@
     			</th>
   			</tr>
   			<tr>
-    			<td><div id="div_PortletList" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:280px;border:none"></div></td>
+    			<td><div id="div_PortletList" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:275px;border:none"></div></td>
   			</tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionNew">
        		<a class="imgbtn" name="btnSave"><span onClick="Save()"><spring:message code='ezPortal.t282'/></span></a>
 		</div>
 	</body>

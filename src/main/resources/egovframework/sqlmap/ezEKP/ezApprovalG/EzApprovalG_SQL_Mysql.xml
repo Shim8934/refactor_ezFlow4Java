@@ -3943,9 +3943,6 @@
 				 TEMPFLAG, 
 				 KEEPINGMETHOD, 
 				 KEEPINGPLACE, 
-				 PROCESSDEPTCODE,
-				 PROCESSDEPTNAME, 
-				 IFNULL(PROCESSDEPTNAME2,PROCESSDEPTNAME) AS PROCESSDEPTNAME2, 
 				 CATEGORYCODE, 
 				 CNAME, 
 				 CNAME2, 
@@ -24379,5 +24376,14 @@
 		<isEqual property="v_COUNTTYPE" compareValue="OTHER">
 			DATE_ADD(#v_NOWTIME#, INTERVAL -1 MONTH) > A.STARTDATE
 		</isEqual>
+	</select>
+	
+	<select id="EzApprovalG.getLinkedAttachFileCount" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(ATTACHFILEHREF)
+		FROM
+			TBL_ENDATTACHINFO
+		WHERE
+			ATTACHFILEHREF = #href#
 	</select>
 </sqlMap>

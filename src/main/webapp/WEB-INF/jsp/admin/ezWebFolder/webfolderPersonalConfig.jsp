@@ -30,6 +30,7 @@
 			var tableView   = new TableView();
 			
 			window.onload = function() {
+				closeAllPopup();
 				tableView.setTableId("tblFileStorage");
 				tableView.setTableType("configTable");
 				tableView.setSelectedClass("bnkWebFolder2");
