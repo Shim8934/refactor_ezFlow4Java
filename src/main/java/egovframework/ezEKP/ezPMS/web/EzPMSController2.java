@@ -386,7 +386,8 @@ public class EzPMSController2 {
 		
 		if(status.equals("ok")) {
 			JSONObject taskDetails = (JSONObject) resultBody.get("data");
-			model.addAttribute("taskDetails", taskDetails);
+			model.addAttribute("taskDetails", taskDetails.get("taskDetails"));
+			model.addAttribute("userRoleId", taskDetails.get("userRoleId"));
 		}
 		
 		param.put("userIdType", request.getParameter("userIdType"));
@@ -437,7 +438,7 @@ public class EzPMSController2 {
 			
 			if(status.equals("ok")) {
 				JSONObject taskDetails = (JSONObject) resultBody.get("data");
-				model.addAttribute("taskDetails", taskDetails);
+				model.addAttribute("taskDetails", taskDetails.get("taskDetails"));
 				model.addAttribute("target", "task");
 			}
 		} else {
@@ -446,7 +447,7 @@ public class EzPMSController2 {
 			
 			if(status.equals("ok")) {
 				JSONObject taskDetails = (JSONObject) resultBody.get("data");
-				model.addAttribute("taskDetails", taskDetails);
+				model.addAttribute("taskDetails", taskDetails.get("groupDetails"));
 				model.addAttribute("target", "group");
 			}
 		}
@@ -477,13 +478,15 @@ public class EzPMSController2 {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", userInfo.getTenantId());
+		param.put("projectId", request.getParameter("projectId"));
 		
 		if (target.equals("task")) {
 			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId(), param, request, "get", null);
 			String status = resultBody.get("status").toString();
 			
 			if(status.equals("ok")) {
-				JSONObject taskDetails = (JSONObject) resultBody.get("data");
+				JSONObject result = (JSONObject) resultBody.get("data");
+				JSONObject taskDetails = (JSONObject) result.get("taskDetails");
 				model.addAttribute("taskDetails", taskDetails);
 				projectId = Long.parseLong(taskDetails.get("projectId").toString());
 			}
@@ -504,8 +507,7 @@ public class EzPMSController2 {
 			
 			if(status.equals("ok")) {
 				JSONObject taskDetails = (JSONObject) resultBody.get("data");
-				model.addAttribute("taskDetails", taskDetails);
-				LOGGER.debug("Headmanager name : " + taskDetails.get("headManagerName"));
+				model.addAttribute("taskDetails", taskDetails.get("groupDetails"));
 				
 				JSONObject resultBodyMember = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/member-list/group/" + Long.parseLong(taskId) + "/users/" + userInfo.getId(), param, request, "get", null);
 				status = resultBodyMember.get("status").toString();
@@ -533,6 +535,7 @@ public class EzPMSController2 {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezPMS/updateTaskInfo.do")
+	@ResponseBody
 	public String updateTaskInfo(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) {
 		
 		LOGGER.debug("ezPMS updateTaskInfo started");
@@ -549,14 +552,15 @@ public class EzPMSController2 {
 				
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "put", jsonList);
 		String status = resultBody.get("status").toString();
+		String roleCheck = "";
 		
 		if(status.equals("ok")) {
-			model.addAttribute("result", "success");
+			roleCheck = resultBody.get("data").toString();
 		}
 		
 		LOGGER.debug("ezPMS updateTaskInfo ended");
 		
-		return "json";
+		return roleCheck;
 	}
 	
 	/**

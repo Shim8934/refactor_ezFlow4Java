@@ -1154,14 +1154,45 @@
 	   							
 	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : newPreTask});
 	   						} else {
-	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : -1});
+	   							var taskGroupId = 0;
+	   							
+	   							if (element.id.match(/g(\d+)/) == null) {
+	   								taskGroupId = projectGroupId;
+	   							} else {
+	   								taskGroupId = element.id.match(/g(\d+)/)[1];
+	   							}
+	   							
+	   							taskArr.push({"groupId" : taskGroupId, "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : -1});
 	   						}
 		   				});
 	   				}
 	   				
 	   			});
 	   			
-	   			 var data = {
+	   			console.log(changeGroupId);
+	   			//옮기고자 하는 task의 멤버들이 옮겨진 groupMember가 모두 포함되어있는지 확인
+	   			console.log($("#tid_p" + projectId + "_g" + changeGroupId).find(".taskAssigs").attr("title"));
+	   			var groupMember = $("#tid_p" + projectId + "_g" + changeGroupId).find(".taskAssigs").attr("title");
+	   			
+	   			if (groupMember != undefined) {
+	   				var groupMemberList = groupMember.split(",");
+	   				console.log(targetTaskId);
+	   				console.log($(".taskEditRow[taskid$='t" + targetTaskId + "']"));
+	   				console.log($(".taskEditRow[taskid$='t" + targetTaskId + "']").find(".taskAssigs").attr("title"));
+	   				var targetTaskMember = $(".taskEditRow[taskid$='t" + targetTaskId + "']").find(".taskAssigs").attr("title");
+	   				
+	   				for (var i = 0; i < groupMemberList.length; i++) {
+	   					var member = groupMemberList[i].trim();
+	   					
+	   					if (targetTaskMember.indexOf(member) == -1) {
+	   						alert("<spring:message code='ezPMS.t323'/>");
+	   						return;
+	   					}
+	   				}
+	   				
+	   			}
+
+	   			 /* var data = {
 	   				projectId : projectId,
 	   				groupArr : groupArr,
 	   				taskArr : taskArr,
@@ -1184,7 +1215,7 @@
 	   				error : function(jqXHR, textStatus, errorThrown) {
 	   					alert("<spring:message code='ezPMS.t54' />");
 	   				}
-	   			});   
+	   			});    */
 	   		}
 	   		
 	   		function updateWeight(obj) {

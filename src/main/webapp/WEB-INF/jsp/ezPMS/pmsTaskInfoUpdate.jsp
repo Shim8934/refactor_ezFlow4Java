@@ -104,6 +104,7 @@ var taskId = "${taskDetails.taskId}";
 var initMemberList = [];
 var treeDepth = "<c:out value='${taskDetails.upperTreeDepth}'/>"
 var prevWeight = 0;
+var userRoleId = parent.userRoleId;
 
  $(function() {
 	 taskDetails = ${taskDetails};
@@ -153,7 +154,6 @@ function openMemberList(type) {
 	var win;
 	
 	var feature = GetOpenPosition(760, 700);
-	console.log(treeDepth);
 	
 	// 상위그룹으로 최상위 그룹인 프로젝트 자체를 선택했을 때는 groupId를 넘기지 않는다
 	if(treeDepth == '0') {
@@ -184,7 +184,6 @@ function openPreTaskTree() {
  
  function applyList() {
 	 var managerNameList = "";
-	 console.log(headManagerId);
 	 for (var i = 0; i < managerList.length; i++) {
 		if(headManagerId == managerList[i].userId) {
 			managerNameList += "<b>"
@@ -222,6 +221,11 @@ function setUpperGroup() {
 
 function updateTaskInfo() {
 	 taskName = document.getElementById("taskName").value.trim();
+	 //담당자가 아닌경우 변경 불가능
+	 if (userRoleId != 1) {
+		alert("<spring:message code='ezPMS.t322'/>");
+		return;
+	 }
 	 
 	// 담당자 검사
 	if(managerList.length < 1) {
@@ -310,25 +314,25 @@ function updateTaskInfo() {
 				type : pretaskSetType
 		}
 		
-
-		console.log(pretaskId);
-		console.log(taskId);
-		console.log(pretaskSetType);
-		
 		$.ajax({
 			type : "POST",
 			url : "/ezPMS/updateTaskInfo.do",
-			dataType : "json",
+			dataType : "text",
 			contentType: "application/json; charset=UTF-8",
 			data : JSON.stringify(data),
 			success : function(data) {
-				alert("<spring:message code='ezPMS.t170' />");
+				if (data == "permitted") {
+					alert("<spring:message code='ezPMS.t170' />");
+					
+					var logContent = "[" + taskName + "<spring:message code='ezPMS.t318' />"; 
+					addTaskLog(projectId, 2, groupId, taskId, logContent);
+					
+					parent.location.reload();
+					parent.opener.location.reload();
+				} else {
+					alert("<spring:message code='ezPMS.t322'/>");
+				}
 				
-				var logContent = "[" + taskName + "<spring:message code='ezPMS.t318' />"; 
-				addTaskLog(projectId, 2, groupId, taskId, logContent);
-				
-				parent.location.reload();
-				parent.opener.location.reload();
 				popupClose();
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
@@ -364,7 +368,6 @@ function updateTaskInfo() {
 				pretaskSetType = "group2group";
 			}
 		}
-		console.log(managerList);
 		
 		var data = {
 			groupName : taskName,
@@ -381,23 +384,25 @@ function updateTaskInfo() {
 			type : pretaskSetType
 		}
 		
-		console.log(pretaskId);
-		console.log(groupId);
-		console.log(pretaskSetType);
-		
 		$.ajax({
 			type : "POST",
 			url : "/ezPMS/updateGroupInfo.do",
+			dataType : "text",
 			contentType: "application/json; charset=UTF-8",
 			data : JSON.stringify(data),
-			success : function() {
-				alert("<spring:message code='ezPMS.t170' />");
+			success : function(data) {
+				if (data == "permitted") {
+					alert("<spring:message code='ezPMS.t170' />");
+					
+					var logContent = "[" + taskName + "<spring:message code='ezPMS.t319' />"; 
+					addTaskLog(projectId, 2, parent.groupId, null, logContent);
+					
+					parent.location.reload();
+					parent.opener.location.reload();
+				} else {
+					alert("<spring:message code='ezPMS.t184'/>");
+				}
 				
-				var logContent = "[" + taskName + "<spring:message code='ezPMS.t319' />"; 
-				addTaskLog(projectId, 2, parent.groupId, null, logContent);
-				
-				parent.location.reload();
-				parent.opener.location.reload();
 				popupClose();
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
@@ -418,11 +423,9 @@ function updateTaskInfo() {
 			newList = newList.concat(participants);
 		}
 		
-		console.log(newList);
 		//삭제, 유지, 추가를 분류
 		for(var i = 0; i < groupTaskMember.length; i++){
 			newList.forEach(function(member, idx){
-				console.log(member);
 				if(groupTaskMember[i].userId === member.userId){
 					flags = false;
 				}

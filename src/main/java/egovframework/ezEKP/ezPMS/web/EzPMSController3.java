@@ -149,7 +149,8 @@ public class EzPMSController3 {
 			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/groups/" + groupId + "/users/" + userId, param, request, "get", null);
 			
 			if(status.equals("ok")) {
-				JSONObject groupVO = (JSONObject) resultBody.get("data");
+				JSONObject groupDetails = (JSONObject) resultBody.get("data");
+				JSONObject groupVO = (JSONObject) groupDetails.get("groupDetails");
 				model.addAttribute("taskName", groupVO.get("groupName"));
 				model.addAttribute("projectName", groupVO.get("projectName"));
 			}
