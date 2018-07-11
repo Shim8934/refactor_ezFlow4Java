@@ -235,8 +235,7 @@
 	   					}
 	   				}
 	   				
-	   				ganttData = setDepends(ganttData);
-	   				
+	   				ganttData = setDepends(ganttData);   				
 		   		}
 	   			
 	   			function matchGroupData(ganttData, gl) {
@@ -1367,6 +1366,10 @@
 	   				return;
 	   			}
 				
+	   			if(status == 'C' && newProgress < 100) {
+	   				status = 'P';
+	   			}
+	   			
 				var data = {
 						taskName : curTask.name,
 						taskId : taskId,
