@@ -35,7 +35,7 @@
 	                return true;
 	    	};
         
-			$(document).ready(function(){				
+			$(document).ready(function(){
 				if ("${use_portal}" != "YES")
 	                $("#trPortlet").css("display","none");
 	            if (portlet == "Y")
@@ -58,10 +58,10 @@
 	            }
 	            
 	            /* 2018-06-29 홍승비 - 기존 승인여부가 null인 게시판은 'N'값으로 처리 */
-	            if (orgAPPRFLAG == '') {
+	            if (orgAPPRFLAG == "") {
 	            	orgAPPRFLAG = "N";
 	            }
-	            if (APPRFLAG == '') {
+	            if (APPRFLAG == "") {
 	            	APPRFLAG = "N";
 	            }
 	            
@@ -75,17 +75,24 @@
 	                }
 	            }
 
+	            /* 2018-07-11 홍승비 - 포토+썸네일+익명 게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
 	            //추가항목
 	            if ("${style}" == "") {
 	                if ($("#chkPhotoBoard").is(":checked") || $("#chkThumbBoard").is(":checked")) {
 	                    document.getElementById("trAttribute").style.display = "none";
-	                } else {
+	                    document.getElementById("chkNotifyTr").style.display = "none";
+	                }
+	                else if ($("#chkAnonyBoard").is(":checked")) {
+	                	document.getElementById("chkNotifyTr").style.display = "none";
+	                }
+	                else {
 	                    document.getElementById("trAttribute").style.display = "";
+	                    document.getElementById("chkNotifyTr").style.display = "";
 	                }
 	            }
 			});
 			
-			function Save() {				
+			function Save() {
 	            if ($.trim($("#txtBoardName").val()) == "") {
 	                alert("<spring:message code='ezBoard.t144'/>");
 	                return;
@@ -302,6 +309,14 @@
 	                }
 	            }
 
+	            /* 2018-07-11 홍승비 - 포토+썸네일+익명 게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
+	             if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkAnonyBoard.checked == true) {
+	                document.getElementById("chkNotifyTr").style.display = "none";
+	                document.getElementById("chkNotify").checked = false;
+	            } else {
+	                document.getElementById("chkNotifyTr").style.display = "";
+	            }
+	            
 	            //추가항목
 	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkPortletBoard.checked == true) {
 	                document.getElementById("trAttribute").style.display = "none";
@@ -309,12 +324,15 @@
 	                document.getElementById("trAttribute").style.display = "";
 	            }
 
+	            /*
+	            //chkNotify 여부를 상단에서 체크하도록 수정했으므로 주석처리함
 	            if (chkNotify.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
 	                alert("<spring:message code='ezBoard.t150'/>");
 	                event.srcElement.checked = false;
 	                return;
 	            }
-
+				*/
+				
 	            if (chkbackgroundimage.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
 	                alert("<spring:message code='ezBoard.t6000'/>");
 	                event.srcElement.checked = false;
@@ -755,7 +773,7 @@
 	                <input type="text" id="txtURL" style="width: 100%" value="<c:out value='${model.url}' />" />
 	            </td>
 	        </tr>
-	        <tr style="${style}">
+	        <tr id="chkNotifyTr" style="${style}">
 	            <th><spring:message code="ezBoard.t168" /></th>
 	            <td>
 	            	<c:if test="${model.replyNotify == '1'}">	            	
