@@ -3583,32 +3583,34 @@
 			UPDATE
 				TBL_PMS_GROUP
 			SET
-				REAL_PROGRESS = IFNULL((
-									SELECT 
-										SUM(a.REAL_PROGRESS * a.WEIGHT / 100)
-									FROM
-										TBL_PMS_TASK a
-									JOIN
-										(
-											SELECT 
-												GROUP_ID
-											FROM
-												TBL_PMS_GROUP
-											WHERE
-												GROUP_ID IN ( SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE GROUP_ID = #groupId# OR ancester_group like concat('%,',#groupId#,',%') OR ancester_group like concat(#groupId#,',%') )
-											AND
-												TENANT_ID = #tenantId#
-											AND
-												DEL_STATUS = 0
-										) b
-									on
-										a.GROUP_ID = b.GROUP_ID
-									AND
-										a.TENANT_ID = #tenantId#
-									AND
-										a.DEL_STATUS = 0
+				REAL_PROGRESS 
 				
-								), 0)
+				= IFNULL((
+							SELECT 
+								SUM(a.REAL_PROGRESS * a.WEIGHT) / SUM(a.WEIGHT)
+							FROM
+								TBL_PMS_TASK a
+							JOIN
+								(
+									SELECT 
+										GROUP_ID
+									FROM
+										TBL_PMS_GROUP
+									WHERE
+										GROUP_ID IN ( SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE GROUP_ID = #groupId# OR ancester_group like concat('%,',#groupId#,',%') OR ancester_group like concat(#groupId#,',%') )
+									AND
+										TENANT_ID = #tenantId#
+									AND
+										DEL_STATUS = 0
+								) b
+							on
+								a.GROUP_ID = b.GROUP_ID
+							AND
+								a.TENANT_ID = #tenantId#
+							AND
+								a.DEL_STATUS = 0
+		
+						), 0)
 			WHERE
 				GROUP_ID = #groupId#
 			AND
