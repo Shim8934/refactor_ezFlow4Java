@@ -148,6 +148,7 @@
 		   			tempTask.weight = Number(pd.weight).toFixed(1);
 		   			tempTask.startIsMilestone = true;
 		   			tempTask.endIsMilestone = true;
+		   			tempTask.headManager = pd.headManagerId;
 		   			tempTask.assigs = [];
 		   			
 		   			for (var i = 0; i < pd.projectMember.length; i++) {
@@ -774,7 +775,7 @@
 	   			  var endReadonly = !canWrite || task.isParent() && task.master.shrinkParent || task.type === "g" || task.statusPMS === "C";
 	   			  row.find("[name=end]").val(new Date(task.end).format()).prop("readonly", endReadonly).updateOldValue();
 	   			  row.find("[name=depends]").val(task.depends).css({"text-align":"right"}).attr("readonly", "readonly");
-	   			  row.find(".taskAssigs").html(task.getAssigsString());
+	   			  row.find(".taskAssigs").html(task.getSimpleAssigsStr());
 				  
 	   			  //프로젝트 상태가 대기, 보류, 삭제일 때 실제 진행률 변경 못하게 함
 	   			  if (projectStatus == "W" || projectStatus == "S" || projectStatus == "D" || projectStatus == "C") {
@@ -833,6 +834,23 @@
 	   			    var x = Math.round(((new Date().getTime()) - self.startMillis) * self.fx);
 	   			    self.svg.line(gridGroup, x, 0, x, "100%", {class: "ganttTodaySVG"});
 	   			  }
+	   			};
+	   			
+	   			Task.prototype.getSimpleAssigsStr = function () {
+	   			  var ret = "";
+	   			  
+	   			  var headManagerId = this.headManager;
+	   			  var res = this.master.getResource(headManagerId);
+	   			  
+	   			  if (res) {
+	   			  	ret = res.name;
+	   			  }
+	   			  
+	   			  if(this.assigs.length > 1) {
+	   				ret += ' 외 ' + (this.assigs.length - 1) + '명';
+	   			  }
+	   			 
+	   			  return ret;
 	   			};
 	   		}
 	   		
@@ -2169,7 +2187,7 @@
 			    <td class="gdfCell"><input type="text" name="realProgress" class="validated" entrytype="PERCENTILE" autocomplete="off" value="(#=obj.realProgress?obj.realProgress:''#)" (#=obj.progressByWorklog?"readOnly":""#)></td>
 			    <td class="gdfCell"><input type="text" name="planProgress" class="validated" entrytype="PERCENTILE" autocomplete="off" value="(#=obj.planProgress?obj.planProgress:''#)" (#=obj.progressByWorklog?"readOnly":""#)></td>
 			    <td class="gdfCell requireCanSeeDep"><input type="text" name="depends" autocomplete="off" value="(#=obj.depends#)" (#=obj.hasExternalDep?"readonly":""#) title="(#=obj.pretaskName#)"></td>
-			    <td class="gdfCell taskAssigs" title="(#=obj.getAssigsString()#)">(#=obj.getAssigsString()#)</td>
+			    <td class="gdfCell taskAssigs" title="(#=obj.getAssigsString()#)">(#=obj.getSimpleAssigsStr()#)</td>
 			  </tr>
 			  --></div>
 			
