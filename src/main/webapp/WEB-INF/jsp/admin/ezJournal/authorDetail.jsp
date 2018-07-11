@@ -190,6 +190,14 @@
 				$('#treeview').on('changed.jstree', function (e, data) {
 			     	var id = data.instance.get_node(data.selected).id;
 			     	var deptName = $("#"+id+" a:first").text();
+			     	/**
+			     		조직도를 뿌린다는 것 = 왼쪽 조직도에서 해당 부서를 선택하는 것
+			     		페이지, 겸색여부, 키워드 등 초기화
+			     	*/
+			     	CurPage = 1;                  
+			     	issearch = false; 
+			     	$("#keyword").val("");
+			     	
 					setUserList("DEPARTMENT", id,deptName);
 				  }).jstree({ 
 					'core'   : {'data' : treeContent, 'multiple' : false},
@@ -243,16 +251,16 @@
 	   					var picList = $(result).find(".organwrap");
 	   					if(picList.length == 0 && key != "DEPARTMENT"){
 	   						alert("<spring:message code='ezCommunity.t1379'/>");
-	   					} else {
-	   						$("#orglistView").empty();
-		   					$("#orglistView").html(result);
-							/**
-								2018-07-10 페이징 기능 추가.
-							*/
-		   					$("#orglistView").append("<div id='tblPageRayer' style='text-align:center;'></div>");
-							totalPage = Math.ceil($("#totalCount").val() / 50 );
-		   					makePageSelPage();
+	   						issearch = false;
 	   					}
+	   					$("#orglistView").empty();
+		   				$("#orglistView").html(result);
+						/**
+							2018-07-10 페이징 기능 추가.
+						*/
+		   				$("#orglistView").append("<div id='tblPageRayer' style='text-align:center;'></div>");
+						totalPage = Math.ceil($("#totalCount").val() / 50 );
+		   				makePageSelPage();
 	   				}
 	   			});
 	   		}
@@ -299,14 +307,34 @@
 	   				}
 	   			});
 	   		}
+	   		
 	   		//검색
-	   		var issearch = false;
-	   		function search_click(){
-	   			var key = $("#search_type").val();
+	   		function fn_serach(type) {
 	   			var value = $("#keyword").val().trim();
-	   			issearch = true;
-	   			if(value){
-		   			setUserList(key, value);
+	   			
+	   			if (value == '' || value == undefined) {
+	   				alert("<spring:message code='ezSchedule.t8'/>");	
+	   			} else {
+	   				search_click(type);	
+	   			}
+	   		}
+	   		
+	   		var issearch = false;
+	   		var searchKey = "";
+	   		function search_click(type){
+	   			var key = $("#search_type").val();
+	   			
+	   			if ($("#keyword").val().trim()!= '' && $("#keyword").val().trim() != undefined) {
+	   				searchKey = $("#keyword").val().trim();
+	   			}
+	   				   			
+	   			
+	   			if(searchKey){
+	   				if(type === "search") {
+	   					CurPage = 1;            // 검색을 할 때마다 curPage 초기화
+	   					issearch = true;
+	   				}	   				
+		   			setUserList(key, searchKey);
 	   			} else {
 	   				alert("<spring:message code='ezSchedule.t8'/>")
 	   			}
@@ -377,8 +405,8 @@
 					                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
 					                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
 	                                        </select>
-	                                        <input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){search_click(); return false;}" id="keyword" value="" style="width: 130px; height:22px; margin: 0px;" />
-	                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
+	                                        <input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){fn_serach('search'); return false;}" id="keyword" value="" style="width: 130px; height:22px; margin: 0px;" />
+	                                        <a class="imgbtn"><span onclick="fn_serach('search')"><spring:message code='ezOrgan.t101'/></span></a>
 	                                    </div>
 	                                </td>    
 	                                <td></td>
