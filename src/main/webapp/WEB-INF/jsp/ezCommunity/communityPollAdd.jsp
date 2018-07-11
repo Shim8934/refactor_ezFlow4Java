@@ -64,6 +64,8 @@
 	                var selRes1 = document.getElementById('selRes1');
 	                if (pSelType == 3) {
 	                	selRes1.disabled = true;
+	                	//2018-07-11 김보미
+	                	selRes1.setAttribute("class", "disableSelCH");
 	                	document.getElementById('selRes2').disabled = true;
 	                } else {
 		                for (var i = 0; i < selRes1.options.length; i++) {

@@ -230,28 +230,14 @@
 	                        </div>
 	                        <div id="close">
 	                            <ul>
-	                            	<c:if test="${data.apprStatus == 0 }">
-		                            	<li><span onclick="modApprove()"><spring:message code='ezAttitude.t210'/></span></li>
-		                                <li><span onclick="modReturn()"><spring:message code='ezAttitude.t211'/></span></li>
-<!-- 	                            	본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관-->
-									</c:if>
-	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 }">
-	                            		<li><span onclick="modify()"><spring:message code='ezAttitude.t163'/></span></li>
-	                            	</c:if>
-	                            	<c:if test="${userId == data.writerId && data.apprStatus != 0 && attitudeConfigVO.attitudeModAppl == 1}">
-	                            		<li><span onclick="reMod()"><spring:message code='ezAttitude.t92'/></span></li>
-	                            	</c:if>
-	                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 }">
-	                            		<li><span onclick="del()"><spring:message code='ezAttitude.t164'/></span></li>
-	                            	</c:if>
-	                                <li><span onclick="window.close()"><spring:message code='ezSchedule.t16'/></span></li>
+	                                <li><span onclick="window.close()"></span></li>
 	                            </ul>
 	                        </div>
 	                    </td>
 	                </tr>
 	                <tr>
 	                    <td style="height: 20px">
-	                        <div id="tabShecdule">
+	                        <div id="tabShecdule" style="margin-top:7px">
 	                            <div id="schedule1">
 	                                <table class="content">
                                         <tr id="HolderWrite">
@@ -302,6 +288,22 @@
 		                </td>
 	            	</tr>
 	            </table>
+	            <div class="btnpositionNew">
+		            <c:if test="${data.apprStatus == 0 }">
+						<a class="imgbtn"><span onclick="modApprove()"><spring:message code='ezAttitude.t210'/></span></a>
+	                    <a class="imgbtn"><span onclick="modReturn()"><spring:message code='ezAttitude.t211'/></span></a>
+						<!--본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관-->
+					</c:if>
+	               	<c:if test="${userId == data.writerId && data.apprStatus == 0 }">
+	               		<a class="imgbtn"><span onclick="modify()"><spring:message code='ezAttitude.t163'/></span></a>
+	               	</c:if>
+	               	<c:if test="${userId == data.writerId && data.apprStatus != 0 && attitudeConfigVO.attitudeModAppl == 1}">
+	               		<a class="imgbtn"><span onclick="reMod()"><spring:message code='ezAttitude.t92'/></span></a>
+	               	</c:if>
+	               	<c:if test="${userId == data.writerId && data.apprStatus == 0 }">
+	               		<a class="imgbtn"><span onclick="del()"><spring:message code='ezAttitude.t164'/></span></a>
+	               	</c:if>
+               	</div>
 	        </div>
 	    </form>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>

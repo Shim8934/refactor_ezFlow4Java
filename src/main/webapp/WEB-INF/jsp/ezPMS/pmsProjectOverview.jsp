@@ -746,8 +746,10 @@ function getTaskDetails(elem) {
 		<div class="project_overview_right" style="height:740px;">
 			<div class="overview_graphinfoBox">
 				<ul class="overview_btnBox">
-					<li onclick="editProjectInfo()"><img src="/images/ezPMS/icon_project_modify.png" alt="<c:out value='ezPMS.t110'/>" /></li>
-					<li onclick="kanbanSetting()"><img src="/images/ezPMS/icon_project_setting.png" alt="<c:out value='ezPMS.t144'/>" /></li>
+					<c:if test="${userRole eq 1 }">
+					<li onclick="editProjectInfo()" id="editProject"><img src="/images/ezPMS/icon_project_modify.png" alt="<c:out value='ezPMS.t110'/>" /></li>
+					</c:if>
+					<li onclick="kanbanSetting()" id="kanbanSetting"><img src="/images/ezPMS/icon_project_setting.png" alt="<c:out value='ezPMS.t144'/>" /></li>
 				</ul>
 				<ul class="contentlayout overview_graphinfo">
 					<li class="contentlayout_left overview_graph_canvas" id="circleProgress"><strong></strong></li>

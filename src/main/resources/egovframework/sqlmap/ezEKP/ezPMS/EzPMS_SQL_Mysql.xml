@@ -750,6 +750,9 @@
 		<isEqual property="userIdType" compareValue="user">
 			<![CDATA[
 			SELECT 
+				*
+			FROM 
+            (select
 				A.CN AS userId, 
 				A.DISPLAYNAME AS userName, 
 				A.DISPLAYNAME2 AS userName2,
@@ -757,8 +760,8 @@
 				A.TITLE2 AS userPosition2, 
 				B.DISPLAYNAME AS userDeptname, 
 				B.DISPLAYNAME2 AS userDeptname2 
-			FROM 
-				tbl_usermaster A 
+			FROM
+				tbl_usermaster A
 			LEFT JOIN 
 				tbl_deptmaster B 
 			ON 
@@ -766,9 +769,31 @@
 			AND 
 				A.tenant_id = B.tenant_id 
 			WHERE 
-				A.tenant_id = #tenantId# 
-			AND 
-				A.CN = #userId#
+				A.tenant_id = #tenantId#
+			UNION
+				SELECT R.CN, R.DISPLAYNAME, R.DISPLAYNAME2, R.TITLE, R.TITLE2, B2.DISPLAYNAME, B2.DISPLAYNAME2
+				FROM TBL_usermaster_retire R
+                LEFT JOIN
+					TBL_DEPTMASTER B2
+				ON
+					R.department = B2.cn
+				AND
+					R.tenant_id = B2.tenant_id
+				WHERE
+					R.TENANT_ID = #tenantId#
+			UNION
+				SELECT D.CN, D.DISPLAYNAME, D.DISPLAYNAME2, D.TITLE, D.TITLE2, B3.DISPLAYNAME, B3.DISPLAYNAME2
+				FROM TBL_usermaster_delete D
+                LEFT JOIN
+					TBL_DEPTMASTER B3
+				ON
+					D.department = B3.cn
+				AND
+					D.tenant_id = B3.tenant_id
+				WHERE
+					D.TENANT_ID = #tenantId#) as U
+			WHERE
+				U.userId = #userId#;
 			]]>
 		</isEqual>
 		<isNotEqual property="userIdType" compareValue="user">

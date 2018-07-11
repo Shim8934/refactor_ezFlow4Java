@@ -1152,8 +1152,25 @@
 						$("#" + ui.item[0].id).attr("taskid", "" + groupId + selectedTaskId);
 						$("#" + ui.item[0].id).attr("id", "tid_" + groupId + selectedTaskId);
 						
-		   				changeGanttOrder(targetTaskId, changeGroupId);
-		   				ge.taskIsChanged();
+		   				var isPermitted = changeGanttOrder(targetTaskId, changeGroupId);
+		   				
+		   				if (isPermitted == "false") {
+		   					$(this).sortable("cancel");
+		   					
+			   				var revertUpperTaskId = $("#" + ui.item[0].id).prev("tr").attr("taskId");
+			   				var revertGroupId = -1;
+			   				
+			   				if (revertUpperTaskId.indexOf("_t") != -1) {
+			   					revertGroupId = revertUpperTaskId.substring(0, revertUpperTaskId.indexOf("_t"));
+			   				} else {
+			   					revertGroupId = revertUpperTaskId;
+			   				}
+			   				
+							$("#" + ui.item[0].id).attr("taskid", "" + revertGroupId + selectedTaskId);
+							$("#" + ui.item[0].id).attr("id", "tid_" + revertGroupId + selectedTaskId);
+		   				} else {
+			   				ge.taskIsChanged();
+		   				}
 		   			}
 		   		}).disableSelection();
 		   		
@@ -1189,14 +1206,44 @@
 	   							
 	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : newPreTask});
 	   						} else {
-	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : -1});
+	   							var taskGroupId = 0;
+	   							
+	   							if (element.id.match(/g(\d+)/) == null) {
+	   								taskGroupId = projectGroupId;
+	   							} else {
+	   								taskGroupId = element.id.match(/g(\d+)/)[1];
+	   							}
+	   							
+	   							taskArr.push({"groupId" : taskGroupId, "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : -1});
 	   						}
 		   				});
 	   				}
 	   				
 	   			});
 	   			
-	   			 var data = {
+	   			//옮기고자 하는 task의 멤버들이 옮겨진 groupMember가 모두 포함되어있는지 확인
+	   			if (changeGroupId != -1) {
+		   			var groupMember = $("#tid_p" + projectId + "_g" + changeGroupId).find(".taskAssigs").attr("title");
+		   			var targetGroupId = $(".taskEditRow[taskid$='t" + targetTaskId + "']").attr("taskid");
+		   			
+		   			if (targetGroupId.indexOf(changeGroupId) != -1) {
+			   			if (groupMember != undefined) {
+			   				var targetTaskMember = $(".taskEditRow[taskid$='t" + targetTaskId + "']").find(".taskAssigs").attr("title").split(",");
+			   				
+			   				for (var i = 0; i < targetTaskMember.length; i++) {
+			   					var member = targetTaskMember[i].trim();
+			   					
+			   					if (groupMember.indexOf(member) == -1) {
+			   						alert("<spring:message code='ezPMS.t323'/>");
+			   						return "false";
+			   					}
+			   				}
+			   				
+		   				} 
+		   			}
+	   			}
+
+	   			var data = {
 	   				projectId : projectId,
 	   				groupArr : groupArr,
 	   				taskArr : taskArr,
@@ -1213,13 +1260,15 @@
 	   				success: function(result){
 	   					if (result == "rejected") {
 	   						alert("<spring:message code='ezPMS.t184' />");
-	   						return;
+	   						return "false";
+	   					} else {
+	   						return "true";
 	   					}
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
 	   					alert("<spring:message code='ezPMS.t54' />");
 	   				}
-	   			});   
+	   			});
 	   		}
 	   		
 	   		function updateWeight(obj) {

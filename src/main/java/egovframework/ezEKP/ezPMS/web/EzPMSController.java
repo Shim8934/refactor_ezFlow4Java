@@ -803,7 +803,7 @@ public class EzPMSController {
 		
 		if (countStatus.equals("ok")) {
 			JSONObject countJson = (JSONObject) countResult.get("data");
-			System.out.println(countJson.get("taskLogListCount").toString());
+			
 			if (countJson.get("taskLogListCount").toString() != null) {
 				logListCount = Integer.parseInt(countJson.get("taskLogListCount").toString());
 				model.addAttribute("taskLogListCount", logListCount);
@@ -850,7 +850,7 @@ public class EzPMSController {
 						
 						if (status.equals("ok")) {
 							JSONObject groupDetails = (JSONObject) result.get("data");
-							model.addAttribute("groupDetails", groupDetails);
+							model.addAttribute("groupDetails", groupDetails.get("groupDetails"));
 							model.addAttribute("taskDetails", "{}");
 						}
 					} else {
@@ -1360,7 +1360,7 @@ public class EzPMSController {
 						
 						if (status.equals("ok")) {
 							JSONObject groupDetails = (JSONObject) result.get("data");
-							model.addAttribute("groupDetail", groupDetails);
+							model.addAttribute("groupDetail", groupDetails.get("groupDetails"));
 						}
 					} else {
 						model.addAttribute("groupDetail", "{}");
@@ -1717,7 +1717,10 @@ public class EzPMSController {
 		String status = result.get("status").toString();
 		
 		if (status.equals("ok")) {
-			JSONObject taskDetails = (JSONObject) result.get("data");
+			JSONObject groupInfo = (JSONObject) result.get("data");
+			JSONObject taskDetails = (JSONObject) groupInfo.get("groupDetails");
+			
+			model.addAttribute("userRoleId", groupInfo.get("userRoleId"));
 			model.addAttribute("taskDetails", taskDetails);
 		}
 		
@@ -1755,9 +1758,15 @@ public class EzPMSController {
 		jsonList.put("delMemberList", param.get("delMemberList"));
 		
 		String url = "/rest/ezPMS/groups/" + groupId + "/users/" + userId;
-		commonUtil.getJsonFromRestApi(url, param, request, "put", jsonList);
+		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", jsonList);
+		String status = result.get("status").toString();
+		String roleCheck = "";
 		
-		return null;
+		if (status.equals("ok")) {
+			roleCheck = result.get("data").toString();
+		}
+		
+		return roleCheck;
 	}
 	
 

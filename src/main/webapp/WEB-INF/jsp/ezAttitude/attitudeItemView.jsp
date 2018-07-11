@@ -56,7 +56,7 @@
 				doc.write('${attitudeInfo.content}');
 				doc.close();
 				
-				$("#message").css("height", document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) - 75 + "PX");
+				$("#message").css("height", document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) - 125 + "PX");
 				//region == "" ? $("#message").css("height","405px") : $("#message").css("height", "380px"); 
 				
 				var fontFamily = font.split("|")[0];
@@ -156,15 +156,6 @@
 	                        	<ul id="menuTable">	
 	                                <li class="sel"><h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t159'/></h1></li>
 	                            </ul>
-	                            <ul style="float:right;margin-right:50px">
-	                            	<c:if test="${userId == attitudeInfo.writerId}">
-		                                <li id="menuTable" style="background: none; border: none;">	
-											<span onclick="sendMailAttitude()"><spring:message code='ezAttitude.t162'/></span>
-		                                	<span onclick="modifyAttitude()"><spring:message code='ezAttitude.t163'/></span>
-		                            		<span onclick="deleteAttitude()"><spring:message code='ezAttitude.t164'/></span>
-										</li>
-									</c:if>          
-								</ul>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
@@ -186,10 +177,17 @@
 	                </tr>
 	                <tr>
 		                <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
-		                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 387px; background-color: white"></iframe>	                    
+		                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 337px; background-color: white"></iframe>	                    
 		                </td>
 	            	</tr>
 	            </table>
+	            <div class="btnpositionNew" id="menuTable">
+	            	<c:if test="${userId == attitudeInfo.writerId}">
+						<a class="imgbtn"><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.t162'/></span></a>
+                        <a class="imgbtn"><span onclick="modifyAttitude()"><spring:message code='ezAttitude.t163'/></span></a>
+                        <a class="imgbtn"><span onclick="deleteAttitude()"><spring:message code='ezAttitude.t164'/></span></a>
+					</c:if>
+	            </div>
 	        </div>
 	    </form>
 	</body>

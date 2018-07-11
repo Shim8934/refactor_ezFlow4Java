@@ -41,9 +41,10 @@
 	var groupId = taskDetails.groupId;
 	var taskId = taskDetails.taskId;
 	var realProgress = taskDetails.realProgress;
+	var userRoleId = "${userRoleId}";
 	
 	$(function(){
-		
+		console.log(userRoleId);
 		if (target == null || target != "group") {
 			weightData = JSON.parse('${weightData}');
 		}
@@ -390,8 +391,8 @@ button.PHBtn {
     margin-top: 5px;
 }
 
-.detailsTable{border-collapse:collapse;border-spacing:0;width:652px;height:167px;}
-.detailsTable td{padding:5px 5px;border:1px solid #ccc;overflow:hidden;}
+.detailsTable{border-collapse:collapse;border-spacing:0;width:652px;height:167px;table-layout:fixed;}
+.detailsTable td{padding:5px 5px;border:1px solid #ccc;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .detailsTable th{border:1px solid #ccc;overflow:hidden;}
 .detailsTable .detailsTable-th{background-color:#f8f8fa;}
 .detailsTable .dateTd{width:180px}
@@ -404,9 +405,11 @@ button.PHBtn {
 </head>
 <body class="popup">
 	<div id="menu">
+	<c:if test="${userRoleId eq 1 }">
 	    <ul>
 	    <li><span id="deleteBtn" class="PHBtn"><spring:message code='ezPMS.t11'/></span></li>
    		</ul>
+	</c:if>
 	</div>
 	<div id="close" style="float:right">
 		<ul><li>
@@ -491,13 +494,17 @@ button.PHBtn {
 			</table>
 		</div>
 		<div class="mainBodyMid">
+			<c:if test="${userRoleId eq 1 }">
 			<div id="taskUpdateBtn" class="taskUpdateBtn">
 				<c:choose>
 					<c:when test="${target eq 'group'}"><spring:message code='ezPMS.t279' /></c:when>
 					<c:otherwise><spring:message code='ezPMS.t179' /></c:otherwise>
 				</c:choose>
 			</div>
-			<div id="addBoardBtn" class="taskUpdateBtn" style="display: none;"><spring:message code='ezPMS.t278' /></div>
+			</c:if>
+			<c:if test="${userRoleId ne 3 }">
+				<div id="addBoardBtn" class="taskUpdateBtn" style="display: none;"><spring:message code='ezPMS.t278' /></div>
+			</c:if>
 			<div class="portlet_tabpart01" style="margin-bottom: 10px">
 			   <div class="portlet_tabpart01_top" id="tab1">
 			   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t256' /></span></p>

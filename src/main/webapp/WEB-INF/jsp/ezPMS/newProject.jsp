@@ -212,6 +212,11 @@ var groupId = "${groupId}";
 	 planEndDate = $("#Edatepicker").val();
 	 overview = convertString($("#overview").val().trim());
 	 
+	 if (parent.userRole != 1) {
+		alert("<spring:message code='ezPMS.t9'/>");
+		return;
+	 }
+	 
 	 //프로젝트 이름 길이 제한
 	 if (projectName.length == 0) {
 		 alert("<spring:message code='ezPMS.t45' />");
@@ -288,7 +293,6 @@ var groupId = "${groupId}";
 		data :JSON.stringify(data),
 		success : function(result) {
 		 	try { 
-				
 				if (mode == "edit") {
 					sendNotiMail(projectId, projectName);
 					var logContent = "[" + projectName + "<spring:message code='ezPMS.t50' />"
