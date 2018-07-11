@@ -484,21 +484,6 @@
 	            	</c:forEach>
 	            </select>
 	            
-	            <span style="float: right; font-weight: normal; color: black;">
-	            	<select id="searchType" style="width:80px;">
-						<option selected="" value="displayname"><spring:message code='ezOrgan.t67' /></option>
-						<option value="cn"><spring:message code='ezOrgan.t218' /></option>
-						<option value="title"><spring:message code='ezOrgan.t69' /></option>
-						<option value="description"><spring:message code='ezOrgan.t68' /></option>
-						<option value="mail"><spring:message code = 'ezOrgan.t91' /></option>
-						<option value="telephonenumber"><spring:message code='ezOrgan.t95' /></option>
-						<option value="company"><spring:message code= 'ezOrgan.t123' /></option>
-					</select>
-					
-					<input id="searchValue" onkeypress="if(event.keyCode==13) {searchList(); return false;}" onfocus="clearSearchVal();" style="height: 29px;border: 1px solid #cbcbcb; border-right:0px;">
-					<a href="#" style="float: right"><img src="/images/bsearch_new.gif" border="0" onclick="searchList()" style="height:29px;"></a>
-	            </span>
-	            
 		        <ul style="margin-top:15px;">
 		            <li><span onClick="Permissions_Add()"><spring:message code='ezOrgan.t00007' /></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
@@ -506,6 +491,21 @@
 		            <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="email_onclick()"><spring:message code='ezOrgan.t00010' /></span></li>
+		            
+		            <span style="float: right; font-weight: normal; color: black; clear:inherit;">
+		            	<select id="searchType" style="width:80px;">
+							<option selected="" value="displayname"><spring:message code='ezOrgan.t67' /></option>
+							<option value="cn"><spring:message code='ezOrgan.t218' /></option>
+							<option value="title"><spring:message code='ezOrgan.t69' /></option>
+							<option value="description"><spring:message code='ezOrgan.t68' /></option>
+							<option value="mail"><spring:message code = 'ezOrgan.t91' /></option>
+							<option value="telephonenumber"><spring:message code='ezOrgan.t95' /></option>
+							<option value="company"><spring:message code= 'ezOrgan.t123' /></option>
+						</select>
+						
+						<input id="searchValue" onkeypress="if(event.keyCode==13) {searchList(); return false;}" onfocus="clearSearchVal();" style="height: 29px;border: 1px solid #cbcbcb; border-right:0px;">
+						<a href="#" style="float: right"><img src="/images/bsearch_new.gif" border="0" onclick="searchList()" style="height:29px;"></a>
+		            </span>
 		        </ul>
 		    </div>
 		    <script type="text/javascript">
