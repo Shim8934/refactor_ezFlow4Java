@@ -494,7 +494,6 @@
 		            alert("<spring:message code='ezApprovalG.t1031'/>");
 		            return;
 		        }
-	        
 		        if (nonElecRec == "Y" && g_CabinetID != "nonElecRecTempCabinet") {
 			        if (!CheckSepAttParamXmlNull()) {
 			            alert("<spring:message code='ezApprovalG.t1411'/>");
@@ -535,7 +534,7 @@
 		    	var rows = List.GetDataRows();
 		    	var i;
 	    		for (i = 0; i < rows.length; i++) {
-	    			if (GetAttribute(rows[i], "DATA1") == "") {
+	    			if (GetAttribute(rows[i], "DATA1") == "" || GetAttribute(rows[i], "DATA1") == "nonElecRecTempCabinet") {
 	    				rtnVal = false;
 	    			}
 	    		}
