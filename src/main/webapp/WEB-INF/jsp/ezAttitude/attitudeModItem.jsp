@@ -51,7 +51,7 @@
 		    }
 		    
 		    window.onresize = function () {   	
-                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 150 + "PX";
+                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 200 + "PX";
 		    }
 
 		    $(function () {
@@ -218,11 +218,6 @@
 	                        	<ul id="menuTable">	
 	                                <li class="sel"><h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t28'/></h1></li>
 	                            </ul>
-	                            <ul style="float:right;margin-right:50px">
-	                                <li id="menuTable" style="background: none; border: none;">	
-	                                	<span onclick="save()"><spring:message code='ezAttitude.t213'/></span>
-									</li>
-								</ul>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
@@ -280,9 +275,12 @@
 	                    </td>
 	                </tr>
 	            </table>
+	            <div class="btnpositionNew" id="menuTable">
+					<a class="imgbtn"><span onclick="save()"><spring:message code='ezAttitude.t213'/></span></a>
+	            </div>
 	        </div>
 	        <script type="text/javascript">
-		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 150 + "PX";
+		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 200 + "PX";
 		    </script>
 	    </form>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>

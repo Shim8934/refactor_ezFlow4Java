@@ -2833,6 +2833,9 @@
                         PagingHTML += "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
                     }
                 }
+                if (MaxNum == 0) {
+                	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+                }
                 if (totalPage > BlockSize) {
                     if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
                         PagingHTML += "<span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\"></span>";
@@ -3137,6 +3140,9 @@
                         strtext2 = "<span onclick='goToPageByNum2(" + i + ")'>" + i + "</span>";
                         PagingHTML2 += strtext2;
                     }
+                }
+                if (MaxNum2 == 0) {
+                	PagingHTML2 += "<span class=\"on\">" + 1 + "</span>";
                 }
                 if (totalPage2 > BlockSize2) {
                     if (totalPage2 >= parseInt(((parseInt((pageNum2 - 1) / BlockSize2) + 1) * BlockSize2) + 1)) {
