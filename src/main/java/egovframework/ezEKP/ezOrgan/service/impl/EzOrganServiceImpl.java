@@ -355,7 +355,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
 	@Override
-	public String getDeptMemberList(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, int tenantID) throws Exception {
+	public String getDeptMemberList(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, int tenantID, String noAddJob) throws Exception {
 	    logger.debug("getDeptMemberList started");
 	    logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
 	            + ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",tenantID=" + tenantID);
@@ -368,6 +368,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_CN", pDeptID);
 		map.put("v_LANGDATA", pLangCode);
 		map.put("v_TENANT_ID", tenantID);
+		map.put("noAddJob", noAddJob);
 		
 		// 지정된 부서의 멤버 목록을 구한다.
 		List<OrganDeptVO> list = ezOrganDAO.getDeptMemberList(map);
@@ -1922,7 +1923,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 	
 	@Override
-	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, String companyId, int tenantID) throws Exception {
+	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, String companyId, int tenantID, String noAddJob) throws Exception {
 		logger.debug("getSearchList started");
 		
         String[] searchParemeta = null;
@@ -2033,6 +2034,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         map.put("v_TENANT_ID", tenantID);
         map.put("strSQLCom", strSQLCom);
         map.put("strSQLAddjobCom", strSQLAddjobCom);
+        map.put("noAddJob", noAddJob);
         
         logger.debug("strSQL=" + strSQL);
         logger.debug("strSQLCom=" + strSQLCom);//getSearchList

@@ -228,7 +228,13 @@
 					d.EXTENSIONATTRIBUTE3 company,
 					d.COMPNM2 company2,
 					u.updatedt,
-					u.extensionattribute1 as rollinfo,
+					case u.department
+				    when #deptID#
+				    then u.extensionattribute1
+				    else
+					'c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;'
+				    end
+				    as rollinfo,
 					u.telephonenumber,
 					u.mail,
 					u.extensionattribute10 as jikchek,
@@ -319,7 +325,13 @@
 					d.EXTENSIONATTRIBUTE3 company,
 					d.COMPNM2 company2,
 					u.updatedt,
-					u.extensionattribute1 as rollinfo,
+					case u.department
+				    when #deptID#
+				    then u.extensionattribute1
+				    else
+					'c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;'
+				    end
+				    as rollinfo,
 					u.telephonenumber,
 					u.mail,
 					u.extensionattribute10 as jikchek,

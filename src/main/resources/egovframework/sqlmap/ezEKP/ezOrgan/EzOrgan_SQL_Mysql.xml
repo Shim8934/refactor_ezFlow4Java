@@ -339,34 +339,37 @@
                                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
                        		AND
                        			TENANT_ID = #v_TENANT_ID#	
-                       	UNION ALL 
-                       		SELECT
-                       			A.CN ,
-                       			A.MAIL ,                       			
-                       			CASE
-                       				#v_LANGDATA#
-                       			WHEN
-                       				'1'
-                       			THEN
-                       				DISPLAYNAME
-                       			ELSE
-                       				DISPLAYNAME2
-                       			END
-                       				DISPLAYNAME  , 
-                                CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
-                       			'user' TYPE  
-                  			FROM
-                  				TBL_ADDJOBMASTER B
-                  			JOIN
-                  				TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
-                  			WHERE
-                  				B.DEPTID = #v_CN#
-                  			AND
-                  				B.TENANT_ID = #v_TENANT_ID#	 ) AA
+			]]>
+                       	<isNotEqual property="noAddJob" compareValue="Y">
+	                       	UNION ALL 
+	                       		SELECT
+	                       			A.CN ,
+	                       			A.MAIL ,                       			
+	                       			CASE
+	                       				#v_LANGDATA#
+	                       			WHEN
+	                       				'1'
+	                       			THEN
+	                       				DISPLAYNAME
+	                       			ELSE
+	                       				DISPLAYNAME2
+	                       			END
+	                       				DISPLAYNAME  , 
+	                                CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
+	                       			'user' TYPE  
+	                  			FROM
+	                  				TBL_ADDJOBMASTER B
+	                  			JOIN
+	                  				TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+	                  			WHERE
+	                  				B.DEPTID = #v_CN#
+	                  			AND
+	                  				B.TENANT_ID = #v_TENANT_ID#	 
+                       	</isNotEqual>
+                  				) AA
                   			ORDER BY
                   				EXTENSIONATTRIBUTE15 ASC,
                   			DISPLAYNAME ASC
-			]]>
 		</isEqual>
 		<isEqual property="v_CLASS" compareValue="group">
 			<![CDATA[
@@ -1214,24 +1217,25 @@
 	    		(SELECT  CN     FROM    TBL_DEPTMASTER     WHERE      EXTENSIONATTRIBUTE2 = #companyId#)   
 	    	</isNotEmpty>
             
+   		 	<isNotEqual property="noAddJob" compareValue="Y">
             $strSizeForMySQL$ 
-	    		 
-	      	UNION ALL
-	      		      	
-	      	SELECT 
-	      		A.cn,
-	      		deptid as displayName,
-	      		extensionAttribute15,
-	      		'user' as type
-	      	FROM	
-				TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
-            $strSQLForMySQL$ AND A.TENANT_ID = #v_TENANT_ID# $strSQLAddjobCom$
-            
-            <isNotEmpty property="companyId">
-	    	AND 
-	    		A.DEPTID IN 
-	    		(SELECT  CN     FROM    TBL_DEPTMASTER     WHERE      EXTENSIONATTRIBUTE2 = #companyId#) 
-	    	</isNotEmpty>
+		      	UNION ALL
+		      		      	
+		      	SELECT 
+		      		A.cn,
+		      		deptid as displayName,
+		      		extensionAttribute15,
+		      		'user' as type
+		      	FROM	
+					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
+	            $strSQLForMySQL$ AND A.TENANT_ID = #v_TENANT_ID# $strSQLAddjobCom$
+	            
+	            <isNotEmpty property="companyId">
+		    	AND 
+		    		A.DEPTID IN 
+		    		(SELECT  CN     FROM    TBL_DEPTMASTER     WHERE      EXTENSIONATTRIBUTE2 = #companyId#) 
+		    	</isNotEmpty>
+   		 	</isNotEqual>
 	    	
             <isNotEqual property="class" compareValue="all">
             ORDER BY  displayname asc, CAST(EXTENSIONATTRIBUTE15 as unsigned) ASC

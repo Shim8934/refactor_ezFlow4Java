@@ -144,13 +144,14 @@ public class EzOrganController {
 		String listtype = request.getParameter("type");		
 		String isPrimary = userInfo.getPrimary();
 		String page = request.getParameter("page");
+		String noAddJob = request.getParameter("noAddJob");
 		String companyId = request.getParameter("companyId") == null ? "" : request.getParameter("companyId");
 		String infoXML = "";
 
 		logger.debug("page=" + page);
 		
 		if (page == null) {		
-			infoXML = ezOrganService.getDeptMemberList(deptid, celllist, proplist, listtype, isPrimary, userInfo.getTenantId());
+			infoXML = ezOrganService.getDeptMemberList(deptid, celllist, proplist, listtype, isPrimary, userInfo.getTenantId(), noAddJob);
 		} else {
 			infoXML = ezOrganService.getDeptMemberListPagination(deptid, celllist, proplist, listtype, isPrimary, page, userInfo.getTenantId());
 		}
@@ -228,6 +229,7 @@ public class EzOrganController {
 		String listtype = request.getParameter("type");
 		String lang = userInfo.getPrimary();
 		String page = request.getParameter("page");
+		String noAddJob = request.getParameter("noAddJob");
 		String infoXML = "";
 		String adminOrgan = request.getParameter("adminOrgan") == null ? "n" : request.getParameter("adminOrgan"); // 관리자페이지 > 조직도 메뉴에서 검색
 		
@@ -243,7 +245,7 @@ public class EzOrganController {
 				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, tenantID);
 			}
 			else {
-				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, companyId, tenantID);
+				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, companyId, tenantID, noAddJob);
 			}
 		} else {
 			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID, companyId);

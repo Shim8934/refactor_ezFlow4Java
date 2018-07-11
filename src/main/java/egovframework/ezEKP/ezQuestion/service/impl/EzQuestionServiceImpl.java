@@ -1149,7 +1149,7 @@ public class EzQuestionServiceImpl extends EgovFileMngUtil implements EzQuestion
                     String propList = "department;mail;displayname;title;description;company;title";
                     String pClass = "all";
                        
-                    String sXML = ezOrganService.getDeptMemberList(deptID, cellList, propList, pClass, loginVO.getPrimary(), loginVO.getTenantId());
+                    String sXML = ezOrganService.getDeptMemberList(deptID, cellList, propList, pClass, loginVO.getPrimary(), loginVO.getTenantId(), null);
                     
              		Document xmlDom = commonUtil.convertStringToDocument(sXML);
          			for(int j=0; j<xmlDom.getElementsByTagName("CELL").getLength(); j++) {
