@@ -237,7 +237,7 @@
   			</tr>
   			<tr>
     			<td style="padding-bottom:1px; height:100%; padding-right:12px; padding-top:10px;">
-        			<textarea name="Brd_Explain" id="Brd_Explain" style="width: 100%; height: 100%;resize:none" maxlength="4000"><c:out value='${brdExplain}' /></textarea>
+        			<textarea name="Brd_Explain" id="Brd_Explain" style="width: 100%; height: 100%;resize:none" maxlength="2000"><c:out value='${brdExplain}' /></textarea>
     			</td>
   			</tr>
 		</table>
