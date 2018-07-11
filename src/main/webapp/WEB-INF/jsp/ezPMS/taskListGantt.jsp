@@ -1117,7 +1117,25 @@
 						$("#" + ui.item[0].id).attr("taskid", "" + groupId + selectedTaskId);
 						$("#" + ui.item[0].id).attr("id", "tid_" + groupId + selectedTaskId);
 						
-		   				changeGanttOrder(targetTaskId, changeGroupId);
+		   				var isPermitted = changeGanttOrder(targetTaskId, changeGroupId);
+		   				
+		   				if (isPermitted == "false") {
+		   					$(this).sortable("cancel");
+		   					
+			   				var revertUpperTaskId = $("#" + ui.item[0].id).prev("tr").attr("taskId");
+			   				var revertGroupId = -1;
+			   				
+			   				if (revertUpperTaskId.indexOf("_t") != -1) {
+			   					revertGroupId = revertUpperTaskId.substring(0, revertUpperTaskId.indexOf("_t"));
+			   				} else {
+			   					revertGroupId = revertUpperTaskId;
+			   				}
+			   				
+							$("#" + ui.item[0].id).attr("taskid", "" + revertGroupId + selectedTaskId);
+							$("#" + ui.item[0].id).attr("id", "tid_" + revertGroupId + selectedTaskId);
+		   				} else {
+			   				ge.taskIsChanged();
+		   				}
 		   			}
 		   		}).disableSelection();
 		   		
@@ -1168,27 +1186,26 @@
 	   				
 	   			});
 	   			
-	   			console.log(changeGroupId);
 	   			//옮기고자 하는 task의 멤버들이 옮겨진 groupMember가 모두 포함되어있는지 확인
-	   			console.log($("#tid_p" + projectId + "_g" + changeGroupId).find(".taskAssigs").attr("title"));
-	   			var groupMember = $("#tid_p" + projectId + "_g" + changeGroupId).find(".taskAssigs").attr("title");
-	   			
-	   			if (groupMember != undefined) {
-	   				var groupMemberList = groupMember.split(",");
-	   				console.log(targetTaskId);
-	   				console.log($(".taskEditRow[taskid$='t" + targetTaskId + "']"));
-	   				console.log($(".taskEditRow[taskid$='t" + targetTaskId + "']").find(".taskAssigs").attr("title"));
-	   				var targetTaskMember = $(".taskEditRow[taskid$='t" + targetTaskId + "']").find(".taskAssigs").attr("title");
-	   				
-	   				for (var i = 0; i < groupMemberList.length; i++) {
-	   					var member = groupMemberList[i].trim();
-	   					
-	   					if (targetTaskMember.indexOf(member) == -1) {
-	   						alert("<spring:message code='ezPMS.t323'/>");
-	   						return;
-	   					}
-	   				}
-	   				
+	   			if (changeGroupId != -1) {
+		   			var groupMember = $("#tid_p" + projectId + "_g" + changeGroupId).find(".taskAssigs").attr("title");
+		   			var targetGroupId = $(".taskEditRow[taskid$='t" + targetTaskId + "']").attr("taskid");
+		   			
+		   			if (targetGroupId.indexOf(changeGroupId) != -1) {
+			   			if (groupMember != undefined) {
+			   				var targetTaskMember = $(".taskEditRow[taskid$='t" + targetTaskId + "']").find(".taskAssigs").attr("title").split(",");
+			   				
+			   				for (var i = 0; i < targetTaskMember.length; i++) {
+			   					var member = targetTaskMember[i].trim();
+			   					
+			   					if (groupMember.indexOf(member) == -1) {
+			   						alert("<spring:message code='ezPMS.t323'/>");
+			   						return "false";
+			   					}
+			   				}
+			   				
+		   				} 
+		   			}
 	   			}
 
 	   			var data = {
@@ -1208,9 +1225,9 @@
 	   				success: function(result){
 	   					if (result == "rejected") {
 	   						alert("<spring:message code='ezPMS.t184' />");
-	   						return;
+	   						return "false";
 	   					} else {
-			   				ge.taskIsChanged();
+	   						return "true";
 	   					}
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
