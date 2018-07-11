@@ -21694,8 +21694,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantId);
 		
 		logger.debug("doCancelForce = v_DOCID =" + docID + " v_USERID =" + userID + " campanyID =" + companyID  + " v_TENANTID =" + tenantId );
-
+		
+		//2018-07-10 배현상, 강제회수가 되지 않아야 하는 경우 로직이 그대로 진행되는 오류 수정(팝업이나 row에 강제회수버튼이 살아있는 경우)
 		String rtnVal = "OK";
+		String cancelForceYN = getCallBackYNForceLine(docID, userID, companyID, tenantId);
+		
+		if (!cancelForceYN.equals("<RESULT>TRUE</RESULT>")) {
+			rtnVal = "FALSE";
+		}
+		
+		if (rtnVal.equals("OK")) {
 			int aprMemberSn = ezApprovalGDAO.selectDoCallBack(map);
 			map.put("v_curAprSN", aprMemberSn);
 			logger.debug("doCancelForce = aprMemberSn =" + aprMemberSn);
@@ -21712,6 +21720,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			} else {
 				rtnVal = "FALSE";
 			}
+		}
 		return rtnVal;
 	}
 

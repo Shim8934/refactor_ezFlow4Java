@@ -1041,6 +1041,8 @@ function tableListControl_today() {
 
                             document.getElementById(pObjectId + "_" + TCnt).style.backgroundColor = "rgba(237, 244, 253, 1)";
                             document.getElementById(pObjectId + "_" + TCnt).style.border = "1.1px solid #b5c8e3";//일보기>공유자원 td border
+                            document.getElementById(pObjectId + "_" + TCnt).style.borderTopWidth = "0px";
+                            document.getElementById(pObjectId + "_" + TCnt).style.borderLeftWidth = "0px";
                             document.getElementById(pObjectId + "_" + TCnt).style.cursor = "pointer";
                             document.getElementById(pObjectId + "_" + TCnt).onmouseover = function (event) { onmouse_over_today(this, event); };
                             document.getElementById(pObjectId + "_" + TCnt).onmouseout = new Function("onmouse_out_today(this);");
@@ -1081,6 +1083,8 @@ function tableListControl_today() {
 
                     document.getElementById(pObjectId + "_1").style.backgroundColor = "rgba(237, 244, 253, 1)";
                     document.getElementById(pObjectId + "_1").style.border = "1.1px solid #b5c8e3";
+                    document.getElementById(pObjectId + "_1").style.borderTopWidth = "0px";
+                    document.getElementById(pObjectId + "_1").style.borderLeftWidth = "0px";
                     document.getElementById(pObjectId + "_1").style.cursor = "pointer";
                     document.getElementById(pObjectId + "_1").onmouseover = function (event) { onmouse_over_today(this, event); };
                     document.getElementById(pObjectId + "_1").onmouseout = new Function("onmouse_out_today(this);");
@@ -1102,7 +1106,8 @@ function tableListControl_today() {
         var _table = document.createElement("TABLE");
         _table.setAttribute("class", "table_layout");
         var _tr = document.createElement("TR");
-        _tr.style.borderTop="1px solid #dedede";
+        _tr.style.borderTop="0px solid #dedede";
+        _tr.style.borderLeft="0px solid #dedede";
         var _th = document.createElement("TH");
         _th.style.textAlign = "center";
         _th.style.verticalAlign = "middle";
@@ -1213,6 +1218,8 @@ function tableListControl_today() {
                                     _TD.align = "center";
                                     _TD.style.backgroundColor = "rgba(237, 244, 253, 1)";
                                     _TD.style.border = "1.1px solid #b5c8e3";
+                                    _TD.style.borderTopWidth = "0px";
+                                    _TD.style.borderLeftWidth = "0px";
                                     _TD.style.width = Math.floor((100/48)*width_td) + "%";
                                     _TD.setAttribute("class", "todaytd_02");
                                     _TD.setAttribute("id", "nDay_" + title_name[k].split("/")[0] + "_" + (j + 1));
@@ -1264,7 +1271,9 @@ function tableListControl_today() {
                             _TD.title_name = strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "&#13;" + strLang268 + " : " + getNodeText(xmldom.getElementsByTagName("dept_name")[j]);
                             _TD.align = "center";
                             _TD.style.backgroundColor = "rgba(237, 244, 253, 1)";
-                            _TD.style.border = "1.1px solid #b5c8e3";//일보기>허가요청중인 자원 td border
+                            _TD.style.border = "1px solid #b5c8e3";//일보기>허가요청중인 자원 td border
+                            _TD.style.borderTopWidth = "0px";
+                            _TD.style.borderLeftWidth = "0px";
                             _TD.style.width = 100 + "%";
                             _TD.setAttribute("class", "todaytd_02");
                             _TD.setAttribute("id", "nDay_" + title_name[k].split("/")[0] + "_" + (j + 1));
@@ -1430,6 +1439,7 @@ function showTooltip_MouseOver(obj, e) {
     var tTr = document.createElement("TR");
     var tTd = document.createElement("TD");
     tTd.style.borderTop = "0px";
+    tTd.style.borderLeft = "0px";
     tTd.style.backgroundColor = "white";
     tTd.className = "text";
     
