@@ -871,6 +871,7 @@
 		        xmlhttp = null;
 		    }
 		
+		    /* 2018-07-11 홍승비 - 게시물 복사 시 guBun 파라미터 추가 */
 		    function CopyItem_onclick() {
 		        if (Read_FG != "true") {
 		            alert("<spring:message code='ezBoard.t202' />");
@@ -910,7 +911,7 @@
 		        pwidth = pwidth - 127;
 		        var feature = "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 		        feature = feature += GetOpenPosition(340,656);
-		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&mode=COPY", "", feature, "");
+		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun + "&mode=COPY", "", feature, "");
 		    }
 		
 		    var moveboarditem_cross_dialogArguments = new Array();
