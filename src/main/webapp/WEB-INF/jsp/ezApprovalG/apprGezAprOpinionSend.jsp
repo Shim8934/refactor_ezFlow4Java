@@ -67,7 +67,6 @@
 		</script>
 	</head>
 	<body class="popup">
-		<%-- <h1><spring:message code='ezApprovalG.t10018'/></h1> --%>
 		<h1>메일발송 선택</h1>
 		<div id="close">
             <ul>
@@ -78,13 +77,12 @@
 		<span id=pMessageContent></span>
 		<table class="content" style="margin-top:10px">
 			<tr><th><input id='doc' name ='doc' type='checkbox' checked="checked" disabled="disabled"></th>
-			<%-- <td><span id="ext1"><spring:message code='ezApprovalG.t10020'/></span></td></tr> --%>
-			<td><span id="ext2">결재문서</span></td></tr> 
+			<td><span id="ext2"><spring:message code='main.t00018'/></span></td></tr> 
 			<tr><th><input id='opi' name ='opi' type='checkbox' ></th>
 			<td><span id="ext2"><spring:message code='ezApprovalG.t10020'/></span></td></tr>
 		</table>
 		<div class="btnposition btnpositionNew">
-			<a id="Submit1" class="imgbtn" onClick="return all_click()"><span>확인</span></a> 
+			<a id="Submit1" class="imgbtn" onClick="return all_click()"><span><spring:message code='ezApprovalG.t1760'/></span></a> 
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

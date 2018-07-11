@@ -150,15 +150,21 @@ function OpenMailQuestionUI() {
         return RtnVal;
     }
 }
-
+var bodycontents = "";
 function OpenMailQuestionUI_Complete(ret) {
     DivPopUpHidden();
 
     if (ret[0] == "0")
         return;
     var rtnVal = "";
+    // 의견 첨부시
     if (ret[0] == "T") {
-    	attachOpinion();
+    	 rtnVal = rtnVal + "<table style='font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px; margin:0 auto'>";
+    	 rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='5'><P>" + "▶ " + strLang880 + " ◀" + "</P></TD></TR>";
+    	 rtnVal = rtnVal + temptextOpi;
+    	 rtnVal = rtnVal + "</table>";
+    	 bodycontents = rtnVal;
+    	 attachOpinion();
     }
     attachAppr();
 }
@@ -166,47 +172,15 @@ function OpenMailQuestionUI_Complete(ret) {
 // 메일에 의견을 첨부
 var div;
 function attachOpinion(){
-	includeOpinion = false;
-	var NodeList = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW");
-	var p = document.createElement("p"); p.id="opTitle";
-	var table = document.createElement("table");
-	
-	div = document.createElement("div");
-	div.id ="opinionCont";
-	p.append(document.createTextNode("▶ " + strLang880 + " ◀"));
-	table.append(p);
-	table.id="opinions";
-	
-	for(var i=0; i<NodeList.length; i++) {
-		var tr = document.createElement("tr");
-		var td1 = document.createElement("td");	td1.id="td1";
-		var td2 = document.createElement("td"); td2.id="td2";
-		var td3 = document.createElement("td"); td3.id="td3";
-		var td4 = document.createElement("td"); td4.id="td4";
-		var td5 = document.createElement("td"); td5.id="td5";
-		td1.append(document.createTextNode(NodeList[i].children[0].childNodes[0].innerHTML));							//  의견종류
-		td2.append(document.createTextNode(NodeList[i].children[0].childNodes[7].innerHTML.substring(9).slice(0,-3)));	// 	이름
-		td3.append(document.createTextNode(NodeList[i].children[0].childNodes[3].innerHTML.substring(9).slice(0,-3)));	//	의견
-		td3.id="td3";
-		td4.append(document.createTextNode(NodeList[i].children[0].childNodes[9].innerHTML.substring(9).slice(0,-3)));	//	직위
-		td5.append(document.createTextNode(NodeList[i].children[0].childNodes[11].innerHTML.substring(9).slice(0,-3)));	//	부서
-		tr.append(td1);tr.append(td2);tr.append(td3);tr.append(td4);tr.append(td5);
-		table.append(tr);
-	}
-	div.append(table);
-	
-	var sheet = document.createElement('style')
-	sheet.innerHTML = "#opTitle {margin-top:60px; font-family: 굴림; font-size: 9pt; width:90px;}" +
-					"#opinions {margin: 0 auto; width:628px;  border-collapse: collapse; border-spacing: 0; margin-top:20px; border-color:grey;}" + 
-					"td{text-align:center; font-size:9pt; border:1px solid #000; height:25px; border-collapse: separate;}" +
-					"#td1{background-color:#d2e2fd; width:60px;} #td2{width:60px;} #td3{text-align:left; width:373px;} #td4{width:30px;} #td5{width:100px;}";
-	document.getElementById("message").contentWindow.document.getElementById("BodyContent").append(div);
-	document.getElementById("message").contentWindow.document.body.appendChild(sheet);
+	var divs = document.createElement('div');
+	divs.innerHTML = bodycontents.trim();
+	divs.id="opinionBox";
+	document.getElementById("message").contentWindow.document.getElementById("BodyContent").append(divs);
 } 
 
 //메일에 전자결재 doc을 첨부
-function attachAppr(bodycontent) {
-	console.log(bodycontent);
+function attachAppr() {
+
 	var imgUrl="";
 	html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content"), {
 	background:'#fff',onrendered: function(canvas) {
@@ -230,6 +204,6 @@ function attachAppr(bodycontent) {
       var pLeft = (pwidth - 890) / 2;
       var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + pDocID + "&docHref=" + encodeURIComponent(pDocHref);
       var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-      document.getElementById("message").contentWindow.document.getElementById("opinionCont").remove();
+      document.getElementById("message").contentWindow.document.getElementById("opinionBox").remove();
       newwin.focus();
 }
