@@ -65,7 +65,7 @@
 			}
 			
 			window.onresize = function () {   	
-				$("#EdtorSize").css("height", document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) - 55 + "PX");
+				$("#EdtorSize").css("height", document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) - 105 + "PX");
 		    }
 			
 		    var monthMsg = "<spring:message code='ezAttitude.t139'/>";
@@ -442,7 +442,7 @@
 			}
 			
 			function editorResize() {
-				$("#EdtorSize").css("height", document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) - 55 + "PX");
+				$("#EdtorSize").css("height", document.documentElement.clientHeight - $("#normalScreen tr:eq(1)").css("height").substring(0, $("#normalScreen tr:eq(1)").css("height").length - 2) - 105 + "PX");
 				if ($("#EdtorSize").css("display") == "none") {
 					$("#EdtorSize").css("display", "");
 				}
@@ -534,11 +534,6 @@
 	                        	<ul id="menuTable">	
 	                                <li class="sel"><h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t51'/></h1></li>
 	                            </ul>
-	                            <ul style="float:right;margin-right:50px">
-	                                <li id="menuTable" style="background: none; border: none;">	
-										<span onclick="save_attitude()"><spring:message code='ezAttitude.t156'/></span>
-									</li>	              
-								</ul>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
@@ -586,6 +581,9 @@
 	                    </td>
 	                </tr>
 	            </table>
+	            <div class="btnpositionNew" id="menuTable">
+	            	<a class="imgbtn"><span onclick="save_attitude()"><spring:message code='ezAttitude.t156'/></span></a>
+	            </div>
 	        </div>
 	        <script type="text/javascript">
 		        //document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 180+ "PX";

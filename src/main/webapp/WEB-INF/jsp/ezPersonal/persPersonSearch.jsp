@@ -735,6 +735,9 @@
 	                	PagingHTML += strtext;
 	            	}
 	        	}
+	        	if (MaxNum == 0) {
+                	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+                }
 	        	if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                	strtext = "";

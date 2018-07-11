@@ -881,8 +881,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				}
 			}
 			
-			zos.flush();
 			f.close(true);
+			
+			zos.flush();
+			zos.close();
+			zos = null;
 
 			File file = new File(pDirTempPath + ".zip");
 			

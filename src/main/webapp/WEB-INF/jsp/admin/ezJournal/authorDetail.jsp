@@ -416,7 +416,7 @@
 				</td>
 			</tr>
         </table>
-        <div class="btnposition">
+        <div class="btnpositionNew">
 		    <a class="imgbtn" onClick="setAuthorViewUser()" ><span><spring:message code='main.t4008'/></span></a>
 		</div>
 	</body>

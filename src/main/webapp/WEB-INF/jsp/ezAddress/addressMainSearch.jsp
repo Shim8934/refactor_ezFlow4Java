@@ -373,7 +373,7 @@
 	            <li><span onclick="delete_address()"><spring:message code='ezAddress.t175' /></span></li>
 	            <li><span onclick="window.location.reload(false)"><spring:message code='ezAddress.t240' /></span></li>
 	            <li style="background:none;float:right">
-	                <select style="margin-top: -3px;" id="ListViewType" onchange="View_Change();">
+	                <select id="ListViewType" onchange="View_Change();">
 	                    <option value="card" <c:if test="${pListType == 'card'}"> selected</c:if>><spring:message code='ezAddress.t2000' /></option>
 	                    <option value="list" <c:if test="${pListType == 'list'}"> selected</c:if>><spring:message code='ezAddress.t2001' /></option>
 	                </select>
