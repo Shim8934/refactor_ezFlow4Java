@@ -307,7 +307,7 @@
 	    	function editDeptConfList() {
     			var url = "/admin/ezAttitude/editAttitudeDeptConf.do?companyId=" + pCompanyId;
 	    		
-    			window.open(url, "", GetOpenWindowfeature(500, 652));
+    			window.open(url, "", GetOpenWindowfeature(555, 652));
     			
 // 	    		if (CrossYN()) {
 // 	    			OpenWin = GetOpenWindow2(url, "", "500", "652");

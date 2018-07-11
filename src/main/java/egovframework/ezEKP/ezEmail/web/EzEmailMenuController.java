@@ -1155,6 +1155,10 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				}
 			}
 			
+			zos.flush();
+			zos.close();
+			zos = null;
+			
 			returnValue = guid;
 		} catch (Exception e) {
 			File file = new File(pDirTempPath + ".zip");
@@ -1324,6 +1328,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			}
 			
 			zos.flush();
+			zos.close();
+			zos = null;
 			
 			/* 추후 암호화 내보내기 방식 변경
 			AESEncrypterBC encrypter = new AESEncrypterBC();
