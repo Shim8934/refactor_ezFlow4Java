@@ -615,6 +615,8 @@ function ListView() {
 
             for (var j = 0; j < oCells.length; j++) {
                 var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
+                //2018-07-11 김보미 - 게시판 명 특수문자 처리
+                strValue = ReplaceText(ReplaceText(ReplaceText(strValue, "&lt;", "<"), "&gt;", ">"), "&amp;", "&");	
                 var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
                 var strClass = SelectSingleNodeValue(oCells[j], "CLASSNAME");
 

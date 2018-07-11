@@ -1071,8 +1071,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		StringBuilder sb = new StringBuilder();
 		
 		if (sel == 0 && !selType.equals("3")) {
-			sb.append("<select size=\"5\" style=\"Width:100%; Height:160px\" id=select1 name=select1>");
-			
+			//2018-07-11 김보미 - 화살표 이미지 제거(background: none 추가)
+			//sb.append("<select size=\"5\" style=\"Width:100%; Height:160px\" id=select1 name=select1>");
+			sb.append("<select size=\"5\" style=\"Width:100%; Height:160px; background: none\" id=select1 name=select1>");			
 			switch (selRes) {
 				case "1" :
 					sb.append("<option value = \"1. " + egovMessageSource.getMessage("ezCommunity.t617", userInfo.getLocale()) + "\">1. " + egovMessageSource.getMessage("ezCommunity.t618", userInfo.getLocale()) + "</option>");

@@ -8,6 +8,13 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<style type="text/css">
+		#selDept {
+			background : none;
+			overflow-y : auto;
+			overflow-x : auto;
+		}
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -489,33 +496,35 @@
 	    <table style="margin-top: 10px; width:100%">
 	        <tr>
 	            <td valign="top" style="width:43%; max-width: 336px;">
-	                <div id="TreeView" style="border: #ddd 1px solid;width: 100%; height: 400px; background-color: #ffffff;overflow:auto"></div>
+	                <div id="TreeView" style="border: #ddd 1px solid;width: 100%; height: 430px; background-color: #ffffff;overflow:auto"></div>
 	            </td>
-	            <td class = 'approvalG' align="center" style="width:14%">
-	               <a class="imgbtn" id="btnManage" style="display:none"><span onclick="btnManage_onclick()"><spring:message code = 'ezApprovalG.t1661' /></span></a>
-	               <a class="imgbtn" id="btnUseDept" style="display:none"><span onclick="btnUseDept_onclick()"><spring:message code = 'ezApprovalG.t1662' /></span></a>
-	               <a class="imgbtn" id="btnDelDept" style="display:none"><span onclick="btnDelDept_onclick()"><spring:message code = 'ezApprovalG.t1650' /></span></a>
+	            <td class = 'approvalG' align="center" style="width:5%">
+	            	<img id="btnManage" style="cursor:pointer; display:none" src="../../images/kr/cm/arr_right.gif" width="16" height="16" onclick="btnManage_onclick()"><br><br>
+	            	<img id="btnUseDept" style="cursor:pointer; display:none" src="../../images/kr/cm/arr_right.gif" width="16" height="16" onclick="btnUseDept_onclick()"><br>
+	                <img id="btnDelDept" style="cursor:pointer; display:none" src="../../images/kr/cm/arr_left.gif" width="16" height="16" onclick="btnDelDept_onclick()">
 	            </td>
 	            <td class = 'approvalS' style="width:5%; text-align:center">               
-	               <img name="btnUseDept" style="cursor:pointer; display:none" src="/images/arr_r.gif" width="24" height="24" onclick="btnUseDept_onclick()"><br /><br />
-	               <img name="btnDelDept" style="cursor:pointer; display:none" src="/images/arr_l.gif" width="24" height="24" onclick="btnDelDept_onclick()">              
+	               <img name="btnUseDept" style="cursor:pointer; display:none" src="../../images/kr/cm/arr_right.gif" width="16" height="16" onclick="btnUseDept_onclick()"><br>
+	               <img name="btnDelDept" style="cursor:pointer; display:none" src="../../images/kr/cm/arr_left.gif" width="16" height="16" onclick="btnDelDept_onclick()">
 	            </td>
 	            <td valign="top" style="width:43%">
+	            	<div class = 'approvalG'><h2 class="h2_dot"><span style="min-width: 45px;"><spring:message code = 'ezResource.t151' /></span></h2></div>
 	                <input class = 'approvalG' type="text" id="tbManage" name="tbManage" style="Width: 100%" readonly>
+	            	<h2 class="h2_dot"><span style="min-width: 45px;"><spring:message code = 'ezApprovalG.t798' /></span></h2>
 	                <c:choose>
-	                	<c:when test="approvalS">
-			                <select id="selDept" name="selDept" size="2" style="border: #ddd 1px solid; height: 400px; width: 100%; z-index: 100">
+	                	<c:when test="${approvalFlag eq 'S'}">
+			                <select id="selDept" name="selDept" size="2" style="border: #ddd 1px solid; height: 405px; width: 100%; z-index: 100">
 			                </select>
 	                	</c:when>
 	                	<c:otherwise>
-			                <select id="selDept" name="selDept" size="2" style="border: #ddd 1px solid; height: 388px; width: 100%; z-index: 100">
+			                <select id="selDept" name="selDept" size="2" style="border: #ddd 1px solid; height: 352px; width: 100%; z-index: 100">
 			                </select>
 	                	</c:otherwise>
 	                </c:choose>
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span id="btnInsFcont" onclick="btnOK_onclick()"><spring:message code = 'ezApprovalG.t1760' /></span></a>
 	    </div>
 	</body>
