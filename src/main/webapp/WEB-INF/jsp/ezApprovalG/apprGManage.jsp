@@ -791,32 +791,17 @@
 		        if (oArrRows.length != 0) {
 		            var pCurSelRow = oArrRows[0];
 		            var DocID = pCurSelRow.getAttribute("DATA1");
-		
+					
+		            //2018-07-10 배현상, btnforcecallback_onclick 수정 (강제회수)
+		            tempDocID = DocID;
+		            
 		            if (pListTypeValue == "3") {
 		                var pMsg = "<spring:message code='ezApprovalG.t67'/>";
-		                if (CrossYN()) {
-		                    tempDocID = DocID;
-		                    OpenInformationUI(pMsg, btnforcecallback_onclick_Complete, "open");
-		                }
-		                else {
-		                    var Ans = OpenInformationUI(pMsg);
-		                    if (Ans) {
-		                        doCancelForce(DocID, pListTypeValue);
-		                    }
-		                }
+		                var Ans = OpenInformationUI(pMsg, btnforcecallback_onclick_Complete, "open");
 		            }
 		            else {
 		                var pMsg = "<spring:message code='ezApprovalG.t68'/>";
-		                if (CrossYN()) {
-		                    tempDocID = DocID;
-		                    OpenInformationUI(pMsg, btnforcecallback_onclick_Complete, "open");
-		                }
-		                else {
-		                    var Ans = OpenInformationUI(pMsg);
-		                    if (Ans) {
-		                        doCancelForce(DocID, pListTypeValue);
-		                    }
-		                }
+		                var Ans = OpenInformationUI(pMsg, btnforcecallback_onclick_Complete, "open");
 		            }
 		        }
 		    }
@@ -847,14 +832,17 @@
     	            }
 	        	});
 		        
+	        	//2018-07-10 배현상, OpenAlertUI에서 브라우저alert으로 변경 및 로직 수정
+	        	var RtnVal = getNodeText(loadXMLString(result).documentElement);
+	        	
 		        if (RtnVal == "TRUE") {
 		            if (tempListType == "3") {
-		                var pAlertContent = strLang891 + "<br> " + strLang892;
-		                OpenAlertUI(pAlertContent,"","OPEN");
+		                var pAlertContent = strLang891 + "\n" + strLang892;
+		                alert(pAlertContent);
 		            }
 		            else {
-		                var pAlertContent = strLang893 + "<br> " + strLang894;
-		                OpenAlertUI(pAlertContent, "", "OPEN");
+		                var pAlertContent = strLang893 + "\n" + strLang894;
+		                alert(pAlertContent);
 		            }
 		            getDocList();
 		
@@ -865,18 +853,18 @@
 		        }
 		        else if (RtnVal == "ERR01") {
 		            var pAlertContent = strLang895;
-		            OpenAlertUI(pAlertContent, "", "OPEN");
+		            alert(pAlertContent);
 		        }
 		        else if (RtnVal == "ERR02") {
 		            var pAlertContent = strLang896;
-		            OpenAlertUI(pAlertContent, "", "OPEN");
+		            alert(pAlertContent);
 		        }
 		        else if (RtnVal == "ERR03") {
 		            var pAlertContent = strLang897;
-		            OpenAlertUI(pAlertContent, "", "OPEN");
+		            alert(pAlertContent);
 		        }else {
 	            	var pAlertContent = strLang898;
-	                OpenAlertUI(pAlertContent);
+	                alert(pAlertContent);
 	            }
 		    }
 		    function Recipent_onclick() {
@@ -1718,7 +1706,7 @@
 				<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		
 				<li id="tbtncallback" style="DISPLAY:none"><span id="btncallback" onclick="return btncallback_onclick('CALLBACK')" ><spring:message code='ezApprovalG.t66'/></span></li>
 		        
-		        	<li id="tbtnforcecallback" style="display:none"><span id="btnforcecallback" onclick="return btncallback_onclick('FORCECALLBACK')"><spring:message code='ezApprovalG.t2005'/></span></li>
+		        	<li id="tbtnforcecallback" style="display:none"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
 				
 				<li id="tbtnRemoveDoc" style="DISPLAY:none"><span id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
 				<li id="tbtnViewDoc" style="DISPLAY:none"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
