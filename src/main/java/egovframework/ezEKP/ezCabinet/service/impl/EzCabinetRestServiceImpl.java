@@ -257,4 +257,15 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, param, request, "delete", null);
 		return resultBody;
 	}
+
+	@Override
+	public JSONObject moveCabinet(HttpServletRequest request, String userId, String cabinetId, String parentId, String mode) throws Exception {
+		String url                = "/rest/ezcabinet/cabinet-move/mode/" + mode;
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",    userId);
+		param.put("cabinetId", cabinetId);
+		param.put("parentId",  parentId);
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		return resultBody;
+	}
 }

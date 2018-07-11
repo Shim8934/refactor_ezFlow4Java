@@ -1,12 +1,15 @@
 package egovframework.ezEKP.ezCabinet.service.impl;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import org.json.simple.JSONArray;
@@ -309,6 +312,9 @@ public class EzCabinetServiceImpl implements EzCabinetService {
 		cabinet.setCabinetStep(cabinetStep);
 		cabinet.setCabinetName1(cabinetStr1);
 		cabinet.setCabinetName2(cabinetStr2);
+		cabinet.setDepartmentId(userInfo.getDeptID());
+		cabinet.setDepartmentName1(userInfo.getDeptName1());
+		cabinet.setDepartmentName2(userInfo.getDeptName2());
 		cabinet.setCreatorId(userId);
 		cabinet.setCreatorName1(userInfo.getDisplayName1());
 		cabinet.setCreatorName2(userInfo.getDisplayName2());
@@ -406,5 +412,274 @@ public class EzCabinetServiceImpl implements EzCabinetService {
 		result.put("status", "ok");
 		result.put("code", 0);
 		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject checkPermission(List<Integer> cabinetList, List<Integer> itemList, LoginVO userInfo) throws Exception {
+		JSONObject result      = new JSONObject();
+		String userId          = userInfo.getId();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("cabinetList", cabinetList);
+		map.put("itemList",    itemList);
+		map.put("userId",      userId);
+		map.put("tenantId",    userInfo.getTenantId());
+		
+		List<CabinetVO> listCabinet  = ezCabinetDAO.getCabinetListForPermission(map);
+		List<CabinetVO> otherCabinet = listCabinet.stream().filter(i -> !i.getCreatorId().equals(userId)).collect(Collectors.toList());
+		
+		if (otherCabinet.size() == 0) {
+			result.put("code", 0);
+			return result;
+		}
+		
+		List<Integer> listOtherCabinetId = otherCabinet.stream().map(CabinetVO::getCabinetId).collect(Collectors.toList());
+		List<String> otherUserList       = otherCabinet.stream().map(CabinetVO::getCreatorId).collect(Collectors.toList());
+		
+		map.put("deptId",      userInfo.getDeptID());
+		map.put("companyId",   userInfo.getCompanyID());
+		List<String> userDeptList = ezCabinetDAO.getUserDepartmentIdList(map);
+		map.put("deptList",    userDeptList);
+		map.put("others",      otherUserList);
+		
+		List<CabinetVO> listReceivedCabinet = ezCabinetDAO.getReceivedCabinetListForPermission(map);
+		List<String> cabinetPathList        = listReceivedCabinet.stream().filter(i -> i.getSubPermission() == 1).map(CabinetVO::getCabinetPath).collect(Collectors.toList());
+		List<Integer> totalSharedCabinet    = new ArrayList<>();
+		
+		if (cabinetPathList.size() > 0) {
+			List<String> pathList = new ArrayList<>(new HashSet<>(cabinetPathList));
+			map.put("pathList", pathList);
+			totalSharedCabinet    = ezCabinetDAO.getReceivedCabinetIdListForPermission(map);
+			totalSharedCabinet.addAll(listReceivedCabinet.stream().filter(i -> i.getSubPermission() == 0).map(CabinetVO::getCabinetId).collect(Collectors.toList()));
+		}
+		else {
+			totalSharedCabinet    = listReceivedCabinet.stream().map(CabinetVO::getCabinetId).collect(Collectors.toList());
+		}
+		
+		if (totalSharedCabinet.containsAll(listOtherCabinetId)) {
+			result.put("code", 0);
+		}
+		else {
+			result.put("code", 1);
+		}
+		
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject moveCabinet(int cabinetId, int parentId, String mode, String realPath, LoginVO userInfo) throws Exception {
+		JSONObject result      = new JSONObject();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("cabinetId", cabinetId);
+		map.put("tenantId",  userInfo.getTenantId());
+		CabinetVO cabinet = ezCabinetDAO.getCabinetById(map);
+		
+		//Check cabinet condition
+		if (cabinet.getCabinetLevel() == 0) {
+			result.put("status", "error");
+			result.put("code", 4);
+			return result;
+		}
+		
+		map.put("cabinetId", parentId);
+		CabinetVO parent = ezCabinetDAO.getCabinetById(map);
+		
+		//Check copy/move conditions
+		if (cabinet.getParentId() == (parentId)) {
+			result.put("status", "error");
+			result.put("code", 5);
+			return result;
+		}
+		
+		if (parent.getCabinetPath().indexOf(cabinet.getCabinetPath()) != -1) {
+			result.put("status", "error");
+			result.put("code", 6);
+			return result;
+		}
+		
+		if (mode.equals("move")) {
+			moveCabinet(cabinet, parent, userInfo);
+		}
+		else {
+			copyCabinet(cabinet, parent, realPath, userInfo);
+		}
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
+
+	private void copyCabinet(CabinetVO cabinet, CabinetVO parent, String realPath, LoginVO userInfo) throws Exception {
+		String userId                = userInfo.getId();
+		String offset                = userInfo.getOffset();
+		int tenantId                 = userInfo.getTenantId();
+		Map<String,Object> map       = new HashMap<String, Object>();
+		map.put("tenantId",  tenantId);
+		
+		int cabinetId                = cabinet.getCabinetId();
+		int newId                    = ezCabinetDAO.getMaxCabinetId(map) + 1;
+		String newPath               = parent.getCabinetPath() + newId + "|";
+		SimpleDateFormat formatter   = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                    = new Date();
+		String timeUTC               = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		int levelDistance            = parent.getCabinetLevel() + 1 - cabinet.getCabinetLevel();
+		
+		cabinet.setCreatorId(userId);
+		cabinet.setCabinetName1(userInfo.getDisplayName1());
+		cabinet.setCabinetName2(userInfo.getDisplayName2());
+		cabinet.setCabinetPath(newPath);
+		cabinet.setUpdateId(userId);
+		cabinet.setUpdatedDate(timeUTC);
+		cabinet.setParentId(parent.getCabinetId());
+		cabinet.setCabinetLevel(cabinet.getCabinetLevel() + levelDistance);
+		cabinet.setCabinetStep(ezCabinetDAO.getMaxCabinetStep(map) + 1);
+		cabinet.setCabinetId(newId);
+		
+		insertCabinet(cabinet);
+		
+		//copyItems(cabinet.getCabinetId(), newId, timeUTC, realPath, userInfo); *Note here
+		//copy all sub cabinet
+		copySubCabinets(cabinetId, newPath, timeUTC, levelDistance, realPath, userInfo);
+	}
+	
+	private void copySubCabinets(int cabinetId, String newPath, String timeUTC, int levelDistance, String realPath, LoginVO userInfo) throws Exception {
+		List<CabinetVO> listSubCabinets = getAllSubCabinet(cabinetId, userInfo.getTenantId());
+		Map<String,Object> map          = new HashMap<String, Object>();
+		map.put("tenantId", userInfo.getTenantId());
+		
+		if (listSubCabinets != null && listSubCabinets.size() > 0) {
+			for (int i = 0; i < listSubCabinets.size(); i++) {
+				CabinetVO subCabinet = listSubCabinets.get(i);
+				int oldId            = subCabinet.getCabinetId();
+				int newSubId         = ezCabinetDAO.getMaxCabinetId(map) + 1;
+				String cabinetPath   = newPath + newSubId + "|";
+				
+				subCabinet.setCabinetPath(cabinetPath);
+				subCabinet.setUpdatedDate(timeUTC);
+				subCabinet.setCreatorId(userInfo.getId());
+				subCabinet.setCabinetName1(userInfo.getDisplayName1());
+				subCabinet.setCabinetName2(userInfo.getDisplayName2());
+				subCabinet.setUpdateId(userInfo.getId());
+				subCabinet.setCabinetLevel(subCabinet.getCabinetLevel() + levelDistance);
+				subCabinet.setCabinetId(newSubId);
+				
+				cabinetPath         = cabinetPath.substring(1, cabinetPath.length() - 1);
+				String[] cabinetArr = cabinetPath.split("\\|");
+				int upperCabinetId  = Integer.parseInt(cabinetArr[cabinetArr.length - 2]);
+				
+				subCabinet.setParentId(upperCabinetId);
+				
+				//Create new cabinet
+				insertCabinet(subCabinet);
+				
+				//copyItems(oldId, newSubId, timeUTC, realPath, userInfo); *Note here
+				
+				//copy all sub folders
+				copySubCabinets(oldId, subCabinet.getCabinetPath(), timeUTC, levelDistance, realPath, userInfo);
+			}
+		}
+	}
+	
+	private List<CabinetVO> getAllSubCabinet(int cabinetId, int tenantId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("parentId", cabinetId);
+		map.put("tenantId", tenantId);
+		return ezCabinetDAO.getAllSubCabinet(map);
+	}
+
+	private void moveCabinet(CabinetVO cabinet, CabinetVO parent, LoginVO userInfo) throws Exception {
+		String oldPath             = cabinet.getCabinetPath();
+		String newPath             = parent.getCabinetPath() + cabinet.getCabinetId() + "|";
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+		int levelDistance          = parent.getCabinetLevel() + 1 - cabinet.getCabinetLevel();
+		Map<String,Object> map     = new HashMap<String, Object>();
+		map.put("tenantId",  userInfo.getTenantId());
+		map.put("cabinetId", parent.getCabinetId());
+		
+		cabinet.setCabinetPath(newPath);
+		cabinet.setUpdateId(userInfo.getId());
+		cabinet.setUpdatedDate(timeUTC);
+		cabinet.setParentId(parent.getCabinetId());
+		cabinet.setCabinetLevel(cabinet.getCabinetLevel() + levelDistance);
+		cabinet.setCabinetStep(ezCabinetDAO.getMaxCabinetStep(map) + 1);
+		updateCabinet(cabinet);
+		
+		//Update list sub cabinet
+		moveSubCabinetList(oldPath, newPath, timeUTC, levelDistance, userInfo);
+	}
+	
+	private void moveSubCabinetList(String oldPath, String newPath, String timeUTC, int levelDistance, LoginVO userInfo) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",        userInfo.getId());
+		map.put("oldPath",       oldPath);
+		map.put("newPath",       newPath);
+		map.put("updateTime",    timeUTC);
+		map.put("levelDistance", levelDistance);
+		map.put("tenantId",      userInfo.getTenantId());
+		
+		ezCabinetDAO.moveSubCabinetList(map);
+	}
+	
+	private void copyItems(String cabinetId, String newId, String timeUTC, String realPath, LoginVO userInfo) throws Exception {
+		/*List<CabinetItemVO> itemList = ezCabinetDAO.getAllItemsOfCabinet(cabinetId, );
+		
+		
+		//Get all attach file and related file for cabinet item
+		
+		if (itemList != null && itemList.size() > 0) {
+			for (CabinetItemVO item : itemList) {
+				List<AttachFileVO> listAttachFile = ezCabinetDAO.getAllAttachFileOfItem();
+				
+				if (listAttachFile != null && listAttachFile.size() > 0) {
+					for (AttachFileVO attach : listAttachFile) {
+						String fileName = file.getFileName();
+						int dotPos      = fileName.lastIndexOf(".");
+						String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
+						String newName  = UUID.randomUUID().toString() + "." + extend;
+						String newPath  = ezWebFolderService.getWebFolderDirPath(userInfo.getTenantId()) + newName;
+						File srcFile    = new File(realPath + attach.getFilePath());
+						File destFile   = new File(realPath  + newPath);
+						
+						try {
+							FileUtils.copyFile(srcFile, destFile);
+						}
+						catch (Exception e) {
+							e.printStackTrace();
+						}
+						
+						//AttachFile process here
+						attach.setDownloadCnt(0);
+						attach.setFolderId(newId);
+						attach.setUpdateDate(timeUTC);
+						attach.setCreateId(userInfo.getId());
+						attach.setUpdateId(userInfo.getId());
+						attach.setCreateName1(userInfo.getDisplayName1());
+						attach.setCreateName2(userInfo.getDisplayName2());
+						attach.setFileId(ezWebFolderService.getMaxFileID(userInfo.getTenantId()));
+					}
+				}
+				
+				List<RelatedFileVO> listRelatedFile = ezCabinetDAO.getAllRelatedFileOfItem();
+				
+				if (listRelatedFile != null && listRelatedFile.size() > 0) {
+					for (RelatedFileVO relatedFile : listRelatedFile) {
+						relatedFile.setItemId();
+						//insert new related file
+					}
+				}
+				
+				//Insert new item
+				item.setCabinetId(newId);
+				item.setCreateId(userInfo.getId());
+				item.setUpdateId(userInfo.getId());
+				item.setCreateName1(userInfo.getDisplayName1());
+				item.setCreateName2(userInfo.getDisplayName2());
+				
+				
+			}
+		}*/
 	}
 }

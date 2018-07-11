@@ -88,4 +88,28 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 	public void deleteAllCabinetItems(Map<String, Object> map) {
 		update("EzCabinetDAO.deleteAllCabinetItems", map);
 	}
+
+	public List<CabinetVO> getCabinetListForPermission(Map<String, Object> map) {
+		return (List<CabinetVO>)list("EzCabinetDAO.getCabinetListForPermission", map);
+	}
+
+	public List<String> getUserDepartmentIdList(Map<String, Object> map) {
+		return (List<String>)list("EzCabinetDAO.getUserDepartmentIdList", map);
+	}
+
+	public List<CabinetVO> getReceivedCabinetListForPermission(Map<String, Object> map) {
+		return (List<CabinetVO>)list("EzCabinetDAO.getReceivedCabinetListForPermission", map);
+	}
+
+	public List<Integer> getReceivedCabinetIdListForPermission(Map<String, Object> map) {
+		return (List<Integer>)list("EzCabinetDAO.getReceivedCabinetIdListForPermission", map);
+	}
+
+	public void moveSubCabinetList(Map<String, Object> map) {
+		update("EzCabinetDAO.moveSubCabinetList", map);
+	}
+
+	public List<CabinetVO> getAllSubCabinet(Map<String, Object> map) {
+		return (List<CabinetVO>)list("EzCabinetDAO.getAllSubCabinet", map);
+	}
 }

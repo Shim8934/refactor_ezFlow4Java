@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import javax.annotation.Resource;
@@ -676,6 +677,17 @@ public class EzCabinetGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			//Add checking permission here
+			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(parentId));
+			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
 			cabinetService.addCabinet(parentId, cabName1, cabName2, userInfo);
 			
 			result.put("status", "ok");
@@ -711,7 +723,18 @@ public class EzCabinetGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			result           = cabinetService.renameCabinet(cabinetId, cabName1, cabName2, userInfo);
+			
+			//Add checking permission here
+			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(cabinetId));
+			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
+			result = cabinetService.renameCabinet(cabinetId, cabName1, cabName2, userInfo);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
@@ -741,8 +764,62 @@ public class EzCabinetGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			result           = cabinetService.deleteCabinet(cabinetId, userInfo);
+			
+			//Add checking permission here
+			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(cabinetId));
+			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
+			result = cabinetService.deleteCabinet(cabinetId, userInfo);
 		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/cabinet-move/mode/{mode}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject putFileMove(@PathVariable(value="mode") String mode, Locale locale, HttpServletRequest request) throws Exception {
+		String userId     = request.getParameter("userId")    != null ? request.getParameter("userId")                      : "";
+		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")                      : "";
+		int cabinetId     = request.getParameter("cabinetId") != null ? Integer.parseInt(request.getParameter("cabinetId")) : -1;
+		int parentId      = request.getParameter("parentId")  != null ? Integer.parseInt(request.getParameter("parentId"))  : -1;
+		JSONObject result = new JSONObject();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName + " || Cabinet Id: " + cabinetId + " || Parent Id: " + parentId + " || Mode: " + mode);
+		
+		if (cabinetId == -1 || mode.equals("") || serverName.equals("") || userId.equals("") || parentId == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			//Add checking permission here
+			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(cabinetId, parentId));
+			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
+			String realPath = request.getServletContext().getRealPath("");
+			result          = cabinetService.moveCabinet(cabinetId, parentId, mode, realPath, userInfo);
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");

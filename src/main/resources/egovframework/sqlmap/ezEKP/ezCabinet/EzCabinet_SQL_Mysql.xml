@@ -46,25 +46,55 @@
 	
 	<!-- Cabinet resultMap -->
 	<resultMap id="cabinetVO" class="CabinetVO">
-		<result property="cabinetId"         column="cabinet_id"             columnIndex="1"/>
-		<result property="cabinetName1"      column="cabinet_name1"          columnIndex="2"/>
-		<result property="cabinetName2"      column="cabinet_name2"          columnIndex="3"/>
-		<result property="creatorId"         column="creator_id"             columnIndex="4"/>
-		<result property="creatorName1"      column="creator_name1"          columnIndex="5"/>
-		<result property="creatorName2"      column="creator_name2"          columnIndex="6"/>
-		<result property="cabinetType"       column="cabinet_type"           columnIndex="7"/>
-		<result property="parentId"          column="parent_id"              columnIndex="8"/>
-		<result property="cabinetPath"       column="cabinet_path"           columnIndex="9"/>
-		<result property="cabinetStep"       column="cabinet_step"           columnIndex="10"/>
-		<result property="cabinetLevel"      column="cabinet_level"          columnIndex="11"/>
-		<result property="createdDate"       column="created_date"           columnIndex="12"/>
-		<result property="updatedDate"       column="updated_date"           columnIndex="13"/>
-		<result property="updateId"          column="update_id"              columnIndex="14"/>
-		<result property="deleterId"         column="deleter_id"             columnIndex="15"/>
-		<result property="useStatus"         column="use_status"             columnIndex="16"/>
-		<result property="companyId"         column="company_id"             columnIndex="17"/>
-		<result property="tenantId"          column="tenant_id"              columnIndex="18"/>
+		<result property="cabinetId"         column="cabinet_id"             columnIndex="1" />
+		<result property="cabinetName1"      column="cabinet_name1"          columnIndex="2" />
+		<result property="cabinetName2"      column="cabinet_name2"          columnIndex="3" />
+		<result property="creatorId"         column="creator_id"             columnIndex="4" />
+		<result property="creatorName1"      column="creator_name1"          columnIndex="5" />
+		<result property="creatorName2"      column="creator_name2"          columnIndex="6" />
+		<result property="departmentId"      column="department_id"          columnIndex="7" />
+		<result property="departmentName1"   column="department_name1"       columnIndex="8" />
+		<result property="departmentName2"   column="department_name2"       columnIndex="9" />
+		<result property="cabinetType"       column="cabinet_type"           columnIndex="10"/>
+		<result property="parentId"          column="parent_id"              columnIndex="11"/>
+		<result property="cabinetPath"       column="cabinet_path"           columnIndex="12"/>
+		<result property="cabinetStep"       column="cabinet_step"           columnIndex="13"/>
+		<result property="cabinetLevel"      column="cabinet_level"          columnIndex="14"/>
+		<result property="createdDate"       column="created_date"           columnIndex="15"/>
+		<result property="updatedDate"       column="updated_date"           columnIndex="16"/>
+		<result property="updateId"          column="update_id"              columnIndex="17"/>
+		<result property="deleterId"         column="deleter_id"             columnIndex="18"/>
+		<result property="useStatus"         column="use_status"             columnIndex="19"/>
+		<result property="companyId"         column="company_id"             columnIndex="20"/>
+		<result property="tenantId"          column="tenant_id"              columnIndex="21"/>
 	</resultMap>
+	
+	<!-- Cabinet resultMap -->
+	<resultMap id="cabinetShareVO" class="CabinetVO">
+		<result property="cabinetId"         column="cabinet_id"             columnIndex="1" />
+		<result property="cabinetName1"      column="cabinet_name1"          columnIndex="2" />
+		<result property="cabinetName2"      column="cabinet_name2"          columnIndex="3" />
+		<result property="creatorId"         column="creator_id"             columnIndex="4" />
+		<result property="creatorName1"      column="creator_name1"          columnIndex="5" />
+		<result property="creatorName2"      column="creator_name2"          columnIndex="6" />
+		<result property="departmentId"      column="department_id"          columnIndex="7" />
+		<result property="departmentName1"   column="department_name1"       columnIndex="8" />
+		<result property="departmentName2"   column="department_name2"       columnIndex="9" />
+		<result property="cabinetType"       column="cabinet_type"           columnIndex="10"/>
+		<result property="parentId"          column="parent_id"              columnIndex="11"/>
+		<result property="cabinetPath"       column="cabinet_path"           columnIndex="12"/>
+		<result property="cabinetStep"       column="cabinet_step"           columnIndex="13"/>
+		<result property="cabinetLevel"      column="cabinet_level"          columnIndex="14"/>
+		<result property="createdDate"       column="created_date"           columnIndex="15"/>
+		<result property="updatedDate"       column="updated_date"           columnIndex="16"/>
+		<result property="updateId"          column="update_id"              columnIndex="17"/>
+		<result property="deleterId"         column="deleter_id"             columnIndex="18"/>
+		<result property="useStatus"         column="use_status"             columnIndex="19"/>
+		<result property="companyId"         column="company_id"             columnIndex="20"/>
+		<result property="tenantId"          column="tenant_id"              columnIndex="21"/>
+		<result property="subPermission"     column="sub_permission"         columnIndex="22"/>
+	</resultMap>
+	
 	
 	<!-- CabinetSimpleSubVO resultMap -->
 	<resultMap id="cabinetSimpleSubVO" class="CabinetSimpleVO">
@@ -263,14 +293,14 @@
 	<insert id="EzCabinetDAO.insertCabinet" parameterClass="CabinetVO">
 		<![CDATA[
 			insert into tbl_cabinet_cabinet (
-				cabinet_id,    cabinet_name1,  cabinet_name2,  creator_id,    creator_name1,  creator_name2,
-				cabinet_type,  parent_id,      cabinet_path,   cabinet_step,  cabinet_level,  created_date,
-				updated_date,  update_id,      deleter_id,     use_status,    company_id,     tenant_id
+				cabinet_id,        cabinet_name1,     cabinet_name2,  creator_id,  creator_name1,  creator_name2,  department_id,
+				department_name1,  department_name2,  cabinet_type,   parent_id,   cabinet_path,   cabinet_step,   cabinet_level,
+				created_date,      updated_date,      update_id,      deleter_id,  use_status,     company_id,     tenant_id
 			)
 			values (
-				#cabinetId#,   #cabinetName1#, #cabinetName2#, #creatorId#,   #creatorName1#, #creatorName2#,
-				#cabinetType#, #parentId#,     #cabinetPath#,  #cabinetStep#, #cabinetLevel#, #createdDate#,
-				#updatedDate#, #updateId#,     #deleterId#,    #useStatus#,   #companyId#,    #tenantId#
+				#cabinetId#,       #cabinetName1#,    #cabinetName2#, #creatorId#, #creatorName1#, #creatorName2#, #departmentId#,
+				#departmentName1#, #departmentName2#, #cabinetType#,  #parentId#,  #cabinetPath#,  #cabinetStep#,  #cabinetLevel#,
+				#createdDate#,     #updatedDate#,     #updateId#,     #deleterId#, #useStatus#,    #companyId#,    #tenantId#
 			)
 		]]>
 	</insert>
@@ -280,21 +310,24 @@
 			update
 				tbl_cabinet_cabinet
 			set
-				cabinet_name1 = #cabinetName1#,
-				cabinet_name2 = #cabinetName2#,
-				creator_name1 = #creatorName1#,
-				creator_name2 = #creatorName2#,
-				cabinet_type  = #cabinetType#,
-				parent_id     = #parentId#,
-				cabinet_path  = #cabinetPath#,
-				cabinet_step  = #cabinetStep#,
-				cabinet_level = #cabinetLevel#,
-				created_date  = #createdDate#,
-				updated_date  = #updatedDate#,
-				update_id     = #updateId#,
-				deleter_id    = #deleterId#,
-				use_status    = #useStatus#,
-				company_id    = #companyId#
+				cabinet_name1    = #cabinetName1#,
+				cabinet_name2    = #cabinetName2#,
+				creator_name1    = #creatorName1#,
+				creator_name2    = #creatorName2#,
+				department_id    = #departmentId#,
+				department_name1 = #departmentName1#,
+				department_name2 = #departmentName2#,
+				cabinet_type     = #cabinetType#,
+				parent_id        = #parentId#,
+				cabinet_path     = #cabinetPath#,
+				cabinet_step     = #cabinetStep#,
+				cabinet_level    = #cabinetLevel#,
+				created_date     = #createdDate#,
+				updated_date     = #updatedDate#,
+				update_id        = #updateId#,
+				deleter_id       = #deleterId#,
+				use_status       = #useStatus#,
+				company_id       = #companyId#
 			where
 				cabinet_id = #cabinetId# and tenant_id = #tenantId#
 		]]>
@@ -333,6 +366,18 @@
 		]]>
 	</update>
 	
+	<select id="EzCabinetDAO.getAllSubCabinet" resultMap="cabinetVO">
+		<![CDATA[
+			select
+				*
+			from 
+				tbl_cabinet_cabinet
+			where
+				parent_id = #parentId# and use_status = 1 and tenant_id = #tenantId#
+			order by cabinet_level asc, cabinet_step asc
+		]]>
+	</select>
+	
 	<!--***********************************************************************************
 	**                                Cabinet tree process                               **
 	************************************************************************************-->
@@ -360,11 +405,102 @@
 		from
 			tbl_cabinet_cabinet c1
 		where
-			(c1.parent_id in <iterate property="listNodes" open="(" close=")" conjunction=",">#listNodes[]#</iterate>)
-			or 
-			(c1.cabinet_id in <iterate property="listNodes" open="(" close=")" conjunction=",">#listNodes[]#</iterate> and c1.parent_id = -1)
-			
+			(
+				(c1.parent_id in <iterate property="listNodes" open="(" close=")" conjunction=",">#listNodes[]#</iterate>)
+				or
+				(c1.cabinet_id in <iterate property="listNodes" open="(" close=")" conjunction=",">#listNodes[]#</iterate> and c1.parent_id = -1)
+			)
 			and c1.company_id = #companyId# and c1.tenant_id = #tenantId# and c1.use_status = 1
 		order by c1.cabinet_level asc, c1.cabinet_step asc
+	</select>
+	
+	<update id="EzCabinetDAO.moveSubCabinetList" parameterClass="Map">
+		<![CDATA[
+			update
+				tbl_cabinet_cabinet
+			set
+				updated_date  = #updateTime#,
+				update_id     = #userId#,
+				cabinet_path  = replace(cabinet_path, #oldPath#, #newPath#),
+				cabinet_level = cabinet_level + #levelDistance#
+			where
+				cabinet_path like concat(concat(#oldPath#, '_'), '%') and tenant_id = #tenantId#
+		]]>
+	</update>
+	
+	<!--***********************************************************************************
+	**                             Check permission process                              **
+	************************************************************************************-->
+	
+	<select id="EzCabinetDAO.getCabinetListForPermission" resultMap="cabinetVO">
+		select
+			c3.*
+		from
+			(
+				<isNotEmpty property="cabinetList">
+					select * from tbl_cabinet_cabinet c1
+					where
+						c1.cabinet_id in
+						<iterate property="cabinetList" open="(" close=")" conjunction=",">
+							#cabinetList[]#
+						</iterate>
+						and c1.tenant_id = #tenantId#
+				</isNotEmpty>
+				<isNotEmpty property="itemList">
+				union
+					select c2.* from tbl_cabinet_cabinet c2 join tbl_cabinet_item i on c2.cabinet_id = i.cabinet_id and c2.tenant_id = i.tenant_id
+					where i.item_id in
+					<iterate property="itemList" open="(" close=")" conjunction=",">
+						#itemList[]#
+					</iterate>
+					and c2.tenant_id = #tenantId#
+				</isNotEmpty>
+			) c3
+	</select>
+	
+	<select id="EzCabinetDAO.getUserDepartmentIdList" resultClass="String">
+		select
+			d4.cn
+		from
+			(
+				select * from tbl_deptmaster d1 where d1.cn = #deptId# and d1.tenant_id = #tenantId#
+				union
+				select * from tbl_deptmaster d2 where d2.cn = #companyId# and d2.tenant_id = #tenantId#
+				union
+				select d3.* from tbl_deptmaster d3 join tbl_addjobmaster a on d3.cn = a.deptid and a.cn = #userId# and d3.tenant_id = a.tenant_id
+				where d3.tenant_id = #tenantId#
+			) d4
+	</select>
+	
+	<select id="EzCabinetDAO.getReceivedCabinetListForPermission" resultMap="cabinetShareVO">
+		select
+			c3.*
+		from
+			(
+				select c1.*, s.sub_permission from tbl_cabinet_cabinet c1 join tbl_cabinet_share s on c1.cabinet_id = s.cabinet_id and c1.tenant_id = s.tenant_id
+				where
+					s.sharer_id in
+				<iterate property="others" open="(" close=")" conjunction=",">
+					#others[]#
+				</iterate>
+				and (
+					(s.shared_id = #userId# and s.shared_type = 2) or (s.shared_id in 
+					<iterate property="deptList" open="(" close=")" conjunction=",">
+						#deptList[]#
+					</iterate> and (s.shared_type = 0 or s.shared_type = 1)
+					)
+				)
+				and s.permission = 1 and s.use_status = 1
+			) c3
+	</select>
+	
+	<select id="EzCabinetDAO.getReceivedCabinetIdListForPermission" resultClass="Integer">
+		select
+			c1.cabinet_id
+		from
+			tbl_cabinet_cabinet c1 where 
+			<iterate property="pathList" conjunction=" or ">
+				c1.cabinet_path like concat('%', concat(#pathList[]#, '%'))
+			</iterate>
 	</select>
 </sqlMap>

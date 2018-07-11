@@ -15,11 +15,15 @@ public class CabinetVO {
 	private String updateId;
 	private String deleterId;
 	private String companyId;
+	private String departmentId;
+	private String departmentName1;
+	private String departmentName2;
 	private int    useStatus;
 	private int    cabinetType;
 	private int    parentId;
 	private int    cabinetStep;
 	private int    cabinetLevel;
+	private int    subPermission;
 	private int    tenantId;
 	
 	public int getCabinetId() {
@@ -180,5 +184,37 @@ public class CabinetVO {
 	
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
+	}
+	
+	public int getSubPermission() {
+		return subPermission;
+	}
+	
+	public void setSubPermission(int subPermission) {
+		this.subPermission = subPermission;
+	}
+	
+	public String getDepartmentId() {
+		return departmentId;
+	}
+	
+	public void setDepartmentId(String departmentId) {
+		this.departmentId = departmentId;
+	}
+	
+	public String getDepartmentName1() {
+		return departmentName1;
+	}
+	
+	public void setDepartmentName1(String departmentName1) {
+		this.departmentName1 = departmentName1;
+	}
+	
+	public String getDepartmentName2() {
+		return departmentName2;
+	}
+	
+	public void setDepartmentName2(String departmentName2) {
+		this.departmentName2 = departmentName2;
 	}
 }
