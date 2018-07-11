@@ -188,9 +188,12 @@
 		            MakeTopBoardView(xmlhttp.responseText);
 		        }
 		    }
+		    /* 2018-07-11 홍승비 - 하위게시판 선택한 후 다른 게시판그룹 선택 시, 기존에 선택한 하위게시판 해제 */
 		    function TopBoard_onclick(obj, ID, items) {
 		        var rootBoardID = "{" + ID + "}";
 		        var num = obj.split("TreeCtrl");
+		        selectedBoard = "";
+		        
 		        if (document.getElementById(obj).style.display != "none") {
 		            document.getElementById(obj).style.display = "none";
 		            document.getElementById("TopBoardsList").getElementsByTagName("h2").item(Number(num[1])).className = "off";
