@@ -6,10 +6,15 @@ var CabinetItem = function() {
 	var startDateStr   = "";
 	var endDateStr     = "";
 	var recursiveMode  = "Y";
+	var cabinetId      = null;
+	var minWPercent    = 30;
+	var maxWPercent    = 70;
+	var minHPercent    = 20;
+	var maxHPercent    = 80;
 	
 	/* Preview option */
-	setData(50, 50, 30, 70, 20, 80);
-	function setData(height, width, minWPercent, maxWPercent, minHPercent, maxHPercent) {
+	//setData(50, 50, 30, 70, 20, 80);
+	function setData(height, width, prevMode) {
 		var cabinetGeneral = {
 			height    : height,
 			width     : width,
@@ -29,7 +34,10 @@ var CabinetItem = function() {
 			preContentW : "preContentW"
 		});
 		
-		cabinetPreview.resizeByWidth();
+		switch(prevMode) {
+			case "w"   : cabinetPreview.resizeByWidth() ; break;
+			case "h"   : cabinetPreview.resizeByHeight(); break;
+		}
 	}
 	
 	function changePreview(mode) {
@@ -60,16 +68,16 @@ var CabinetItem = function() {
 	}
 	/* Preview option end */
 	
-	window.addEventListener("resize", function(e) {windowResize();}, false);
-	window.addEventListener("keydown", function(e) {keyPress(e);}, false);
-	
 	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-	initEvents();
 	
 	function windowResize() {closeViewPopUp(); cabinetPreview.resizeByWidth();}
 	function keyPress(e) {if (e.which == 27) {if (document.getElementById("searchPanel").className == "cabSearchPanel") {toggleSearchPanel();}}}
 	
-	function initEvents() {
+	function initEvents(cabId, height, width, prevMode) {
+		setData(50, 50, prevMode);
+		window.addEventListener("resize", function(e) {windowResize();}, false);
+		window.addEventListener("keydown", function(e) {keyPress(e);}, false);
+		cabinetId              = cabId;
 		document.onselectstart = function() {return false;};
 		var sSearchInputElmt   = document.getElementById("ssInput");
 		sSearchInputElmt.addEventListener("keypress", function(e) {onStartSimpleSearch(e);}, false);
@@ -293,7 +301,7 @@ var CabinetItem = function() {
 				cabinetTable.renderTable();
 			},
 			error : function(error) {
-				alert(strError + error);
+				alert(CabinetMessages.strError + error);
 			}
 		});
 	}
@@ -340,12 +348,12 @@ var CabinetItem = function() {
 	/* Option View end */
 	
 	function addFile() {
-		var cabId    = document.getElementById("cabInfo").getAttribute("role");
-		var addPopup = window.open("/ezCabinet/addCabinetFile.do?cabId=" + cabId, "addFile", getOpenWindowfeature(600, 470));
+		if (!cabinetId) {alert(CabinetMessages.strError); return;}
+		var addPopup = window.open("/ezCabinet/addCabinetFile.do?cabId=" + cabinetId, "addFile", getOpenWindowfeature(600, 470));
 	}
 	
 	function deleteFileConfirm() {
-		var cabId  = document.getElementById("cabInfo").getAttribute("role");
+		if (!cabinetId) {alert(CabinetMessages.strError); return;}
 		var fileId = null;
 		
 		//*Note: add checking conditions before open popup
@@ -373,7 +381,7 @@ var CabinetItem = function() {
 	}
 	
 	function moveFileConfirm() {
-		var cabId  = document.getElementById("cabInfo").getAttribute("role");
+		if (!cabinetId) {alert(CabinetMessages.strError); return;}
 		var fileId = null;
 		
 		//Show folder Tree then toggle popup
@@ -401,8 +409,8 @@ var CabinetItem = function() {
 	}
 	
 	function openSharePopup() {
-		var cabId      = document.getElementById("cabInfo").getAttribute("role");
-		var sharePopup = window.open("/ezCabinet/shareCabinet.do?cabId=" + cabId, "shareFile", getOpenWindowfeature(1000, 600));
+		if (!cabinetId) {alert(CabinetMessages.strError); return;}
+		var sharePopup = window.open("/ezCabinet/shareCabinet.do?cabId=" + cabinetId, "shareFile", getOpenWindowfeature(1000, 600));
 	}
 	
 	function addRelatedCabinet() {
@@ -411,7 +419,5 @@ var CabinetItem = function() {
 	
 	function getFileDetail() {window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 670));}
 	
-	return {
-		
-	};
+	return {start : initEvents};
 }();

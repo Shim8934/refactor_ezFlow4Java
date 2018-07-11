@@ -42,54 +42,65 @@
 		
 		<input type="file" id="fileBttn" multiple="multiple" style="display: none;">
 		
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezCabinet/cabinetFile.js"   ></script>
+		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetFile.js"           ></script>
 		<script type="text/javascript">
-			(function() {
-				var rlWindow = null;
-				initEvents();
-				
-				function initEvents() {
-					document.onselectstart  = function () { return false;};
-					var closeBttn           = document.getElementById("cabAddClose").firstElementChild.firstElementChild.firstElementChild;
-					closeBttn.onclick       = function(e) {closeWindow();};
-					var cabdivBttnElmt      = document.getElementById("cabAddBttn");
-					var listBttns           = cabdivBttnElmt.children;
-					listBttns[0].onclick    = function(e) {};
-					listBttns[1].onclick    = function(e) {closeWindow();};
+			var CabinetAddFile = function() {
+				return function(cabId) {
+					var rlWindow    = null;
+					var cabinetId   = cabId;
 					
-					var fileUploadBttn      = document.getElementById("fileBttn");
-					fileUploadBttn.onchange = function(e) {CabinetFile.upload();};
+					function initEvents() {
+						document.onselectstart  = function () { return false;};
+						var closeBttn           = document.getElementById("cabAddClose").firstElementChild.firstElementChild.firstElementChild;
+						closeBttn.onclick       = function(e) {closeWindow();};
+						var cabdivBttnElmt      = document.getElementById("cabAddBttn");
+						var listBttns           = cabdivBttnElmt.children;
+						listBttns[0].onclick    = function(e) {};
+						listBttns[1].onclick    = function(e) {closeWindow();};
+						
+						var fileUploadBttn      = document.getElementById("fileBttn");
+						fileUploadBttn.onchange = function(e) {CabinetFile.upload();};
+						
+						var fileDivElmt         = document.getElementById("fileDiv");
+						fileDivElmt.addEventListener("click"    , function(e) {startUpload();}           , false);
+						fileDivElmt.addEventListener("dragenter", function(e) {CabinetFile.dragEnter(e);}, false);
+						fileDivElmt.addEventListener("dragover" , function(e) {CabinetFile.dragOver(e);} , false);
+						fileDivElmt.addEventListener("drop"     , function(e) {CabinetFile.upload(e);}   , false);
+						
+						var relatedBttn         = document.getElementById("rlBttn");
+						relatedBttn.onclick     = function(e) {getRelatedFile();};
+					}
 					
-					var fileDivElmt         = document.getElementById("fileDiv");
-					fileDivElmt.onclick     = function(e) {startUpload();};
+					function getRelatedFile() {
+						if (rlWindow) {rlWindow.close();}
+						
+						rlWindow = window.open("/ezCabinet/getRelatedFile.do", "relatedWd", getOpenWindowfeature(800, 600));
+					}
 					
-					var relatedBttn         = document.getElementById("rlBttn");
-					relatedBttn.onclick     = function(e) {getRelatedFile();};
+					function startUpload() {document.getElementById("fileBttn").click();}
+					function closeWindow() {window.close();}
+					
+					function getOpenWindowfeature(popUpW, popUpH) {
+						var heigth   = window.screen.availHeight;
+						var width    = window.screen.availWidth;
+						var left     = 0;
+						var top      = 0;
+						var pleftpos = parseInt(width) - popUpW;
+						heigth       = parseInt(heigth) - popUpH;
+						left         = pleftpos / 2;
+						top          = heigth / 2;
+						var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+						return feature;
+					}
+					
+					return {start : initEvents};
 				}
-				
-				function getRelatedFile() {
-					if (rlWindow) {rlWindow.close();}
-					
-					rlWindow = window.open("/ezCabinet/getRelatedFile.do", "relatedWd", getOpenWindowfeature(800, 600));
-				}
-				
-				function startUpload() {document.getElementById("fileBttn").click();}
-				function closeWindow() {window.close();}
-				
-				function getOpenWindowfeature(popUpW, popUpH) {
-					var heigth   = window.screen.availHeight;
-					var width    = window.screen.availWidth;
-					var left     = 0;
-					var top      = 0;
-					var pleftpos = parseInt(width) - popUpW;
-					heigth       = parseInt(heigth) - popUpH;
-					left         = pleftpos / 2;
-					top          = heigth / 2;
-					var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
-					return feature;
-				}
-			})();
+			}();
+		</script>
+		<script type="text/javascript">
+			CabinetAddFile("<c:out value='${cabinetId}'/>").start();
 		</script>
 	</body>
 </html>

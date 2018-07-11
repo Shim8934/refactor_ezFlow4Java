@@ -115,7 +115,7 @@
 		</div>
 		
 		<div id="cabWraperDiv" style="height: 400px;">
-			<div id="cabinetFileList">
+			<div id="cabinetFileList" style="width: 100%;">
 				<table class="mainlist cabTbl" id="tblCabinetList">
 					<tr>
 						<th headers=""   class="inputTh"><input type="checkbox"></th>
@@ -130,7 +130,7 @@
 				</table>
 			</div>
 			
-			<div id="previewCabH" class="cabDivPrevH">
+			<div id="previewCabH" class="cabDivPrevH" style="display: none;">
 				<div id="preContentH" class="cabMainPrevH">
 					<div>
 						<div class="prevHeaderCabH">
@@ -151,7 +151,7 @@
 				</div>
 			</div>
 			
-			<div id="previewCabW" class="cabDivPrevW">
+			<div id="previewCabW" class="cabDivPrevW" style="display: none;">
 				<div id="preContentW" class="cabMainPrevW">
 					<div style="width: 100%;">
 						<div class="prevHeaderCabW">
@@ -185,5 +185,8 @@
 		<script type="text/javascript" src="/js/ezCabinet/cabinetNavi.js"           ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTable.js"          ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetItem.js"           ></script>
+		<script type="text/javascript">
+			CabinetItem.start("<c:out value='${cabinetId}'/>", 50, 50, "none");
+		</script>
 	</body>
 </html>

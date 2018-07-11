@@ -4,6 +4,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 public interface EzCabinetRestService {
 	public JSONObject checkCabinetAdmin(HttpServletRequest request, String userId) throws Exception;
@@ -43,4 +45,8 @@ public interface EzCabinetRestService {
 	public JSONObject renameCabinet(HttpServletRequest request, String userId, String cabinetId, String cabinetName1, String cabinetName2) throws Exception;
 	public JSONObject deleteCabinet(HttpServletRequest request, String userId, String cabinetId) throws Exception;
 	public JSONObject moveCabinet(HttpServletRequest request, String userId, String cabinetId, String parentId, String mode) throws Exception;
+	
+	//User upload attach file
+	public JSONObject uploadAttachFile(MultipartHttpServletRequest request, String userId, List<MultipartFile> multiFiles) throws Exception;
+	public JSONObject deleteAttachFile(HttpServletRequest request, String id, String filePath) throws Exception;
 }
