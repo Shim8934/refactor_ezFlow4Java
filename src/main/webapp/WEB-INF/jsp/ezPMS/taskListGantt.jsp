@@ -199,9 +199,44 @@
 	   					matchTaskData(ganttData ,subTl, "", "");
 	   				}
 	   				
-	   				//프로젝트의 진행률은 계산으로 구해서 넣어준다.
+	   				//프로젝트의 목표진행률은 계산으로 구해서 넣어준다.
 	   				ganttData.tasks[0].planProgress = getPrjPlanProgress(ganttData);
+	   				
+	   				//그룹의 목표진행률은 계산으로 구해서 넣어준다.
+   					for(var i = 1; i < ganttData.tasks.length; i++) {
+	   					// 그룹인 경우
+	   					if(ganttData.tasks[i].id.indexOf('g') != -1 && ganttData.tasks[i].id.indexOf('t') == -1) {
+	   						var tmpLevel = ganttData.tasks[i].level;
+	   						var weightSum = 0;
+	   						var progressSum = 0;
+	   						
+	   						for(var j = i + 1; j < ganttData.tasks.length; j++) {
+	   							
+	   							if(ganttData.tasks[j].level > tmpLevel) {
+	   								
+	   								// 업무일 때만
+	   								if(ganttData.tasks[j].id.indexOf('t') != -1) {
+	   									progressSum += ganttData.tasks[j].planProgress * ganttData.tasks[j].weight;
+	   									weightSum   += Number(ganttData.tasks[j].weight);	
+	   								}
+	   							} else {
+	   								break;
+	   							}	
+	   						}
+	   						
+	   						// console.log(progressSum);
+							// console.log(weightSum);
+							
+	   						if(weightSum != 0) {
+	   							ganttData.tasks[i].planProgress = Number(progressSum / weightSum).toFixed(1);
+	   						} else {
+	   							ganttData.tasks[i].planProgress = Number(0).toFixed(1);
+	   						}
+	   					}
+	   				}
+	   				
 	   				ganttData = setDepends(ganttData);
+	   				
 		   		}
 	   			
 	   			function matchGroupData(ganttData, gl) {
@@ -250,7 +285,7 @@
 			   			tempTask.description = gl[i].overview.replace(/\"/g,"&quot;");
 			   			tempTask.progress = Number(gl[i].realProgress).toFixed(1);
 			   			tempTask.realProgress = Number(gl[i].realProgress).toFixed(1);
-			   			tempTask.planProgress = Number(gl[i].planProgress).toFixed(1);
+			   			// tempTask.planProgress = Number(gl[i].planProgress).toFixed(1);
 			   			tempTask.hasChild = "";
 			   			tempTask.type = "g";
 		   				ganttData.tasks.push(tempTask);
@@ -1343,7 +1378,7 @@
 	   		//프로젝트의 목표진행률을 계산해서 넣어줌.
 	   		function getPrjPlanProgress(ganttData) {
 	   			var prjPlanProg = 0.0;
-	   			var tasks = ge.tasks || ganttData.tasks;
+	   			var tasks = ganttData.tasks;
 	   			for (var i = 0; i < tasks.length; i++) {
 	   			    var task = tasks[i];
 	   			    

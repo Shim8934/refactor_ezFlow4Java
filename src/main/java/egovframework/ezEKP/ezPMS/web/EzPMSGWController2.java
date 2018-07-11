@@ -1220,7 +1220,7 @@ public class EzPMSGWController2 {
 				
 				int restDueday = ezPMSService.getWorkingDays(now, endDate, companyId, tenantId);
 				groupList.get(i).setRestDueday(restDueday);
-				groupList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate, companyId, tenantId));
+//				groupList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate, companyId, tenantId));
 				
 				groupList.get(i).setGroupMember(groupMemberListTemp);
 			}
