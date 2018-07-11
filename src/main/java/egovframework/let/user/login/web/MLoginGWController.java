@@ -495,7 +495,7 @@ public class MLoginGWController {
      * 하이브리드 앱에 로그인 한 뒤 기기 정보를 업데이트 한다.  
      */
     @SuppressWarnings("unchecked")
-	@RequestMapping(value="/mobile/ezUser/login/users/updateLoginDeviceInfo", produces="application/json;charset=utf-8")
+	@RequestMapping(value="/mobile/ezUser/login/users/updateLoginDeviceInfo", method=RequestMethod.POST, produces="application/json;charset=utf-8")
     @ResponseBody
     public JSONObject updateLoginDeviceInfo(@RequestBody String bodyData, HttpServletRequest request, HttpServletResponse response) throws Exception {
     	LOGGER.debug("updateLoginDeviceInfo started.");
