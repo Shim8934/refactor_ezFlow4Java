@@ -3772,7 +3772,7 @@ public class EzEmailUtil {
 			dateStrExceptTime = sentDateStr.substring(0, 10);
 		}
 		
-		subject = subject.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll("[\\t\\r\\n\\v\\f]", "");
+		subject = subject.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll("[\\t\\r\\n\\v\\f\\u00a0]", "");
 		String fileName = senderName + "_[" + senderAddress + "]_" + "[" + dateStrExceptTime + "]_" + subject ;
 		return fileName;
 	}

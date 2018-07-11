@@ -35,6 +35,9 @@
 	   		var userDeptId;
 	   		//회사 id
 	   		var companyId = "${companyId}";
+	   		
+	   		var CurPage = "1";
+	   		var totalPage = "";	   		
 	   	
 	   		function close_Click(){
 	   			window.close();
@@ -44,6 +47,143 @@
 	   			treeContent = ${deptList};
 		   		setDeptList();
    			});
+	   		
+	   		/**
+	   			2018-07-10 페이징 기능 추가
+	   		*/
+	   		var BlockSize = 10;
+	    	function td_Create1(strtext) {
+		        document.getElementById("tblPageRayer").innerHTML = strtext;
+	    	}
+	    	function makePageSelPage() {
+		        var strtext;
+	        	var PagingHTML = "";
+	        	document.getElementById("tblPageRayer").innerHTML = "";
+	        	strtext = "<div class='pagenavi'>";
+		        PagingHTML += strtext;
+	        	var pageNum = CurPage;
+	        	if (totalPage > 1 && pageNum != 1) {
+	            	strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+	            	PagingHTML += strtext;
+	        	} else {
+	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+	            	PagingHTML += strtext;
+	        	}
+	        	if (totalPage > BlockSize) {	
+		            if (pageNum > BlockSize) {
+	                	strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+		                PagingHTML += strtext;
+		            } else {
+	                	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+	                	PagingHTML += strtext;
+	            	}
+	        	} else {
+	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+	            	PagingHTML += strtext;
+	        	}
+	        	var MaxNum;
+	        	var i;
+	        	var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+	        	if (totalPage >= (startNum + parseInt(BlockSize))) {
+	            	MaxNum = (startNum + parseInt(BlockSize)) - 1;
+	        	} else {
+	            	MaxNum = totalPage;
+	        	}
+	        	for (i = startNum; i <= MaxNum; i++) {
+		            if (i == pageNum) {
+		                strtext = "<span class='on'>" + i + "</span>";
+	    	            PagingHTML += strtext;
+	            	} else {
+	                	strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+	                	PagingHTML += strtext;
+	            	}
+	        	}
+	        	if (totalPage > BlockSize) {
+		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+	                	strtext = "";
+	                	strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+	                	PagingHTML += strtext;
+	            	} else {
+	                	strtext = "";
+	                	strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+	                	PagingHTML += strtext;
+	            	}
+	        	} else {
+	            	strtext = "";
+	            	strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+	            	PagingHTML += strtext;
+	        	}
+	        	if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+	            	strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+	            	PagingHTML += strtext;
+	        	} else {
+	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+	            	PagingHTML += strtext;
+	        	}
+	        	PagingHTML += "</div>";
+	        	td_Create1(PagingHTML);
+	    	}
+	    	function goToPageByNum(Value) {
+	        	CurPage = Value;
+	        	makePageSelPage();
+	        	movePage(CurPage);
+	    	}
+	    	function selbeforeBlock() {
+		        var pageNum = parseInt(CurPage);
+	        	pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+	        	goToPageByNum(pageNum);
+	    	}
+	    	function selbeforeBlock_one() {
+		        var pageNum = parseInt(CurPage);
+	        	if (parseInt(pageNum - 1) > 0)
+		            goToPageByNum(parseInt(pageNum - 1));
+	        	else
+		            return;
+	    	}
+	    	function selafterBlock() {
+		        var pageNum = parseInt(CurPage);
+	        	pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+	        	goToPageByNum(pageNum);
+	    	}
+	    	function selafterBlock_one() {
+		        var pageNum = parseInt(CurPage);
+	        	if (parseInt(pageNum + 1) <= totalPage)
+		            goToPageByNum(parseInt(pageNum + 1));
+		        else
+	    	        return;
+	    	}
+	    	function movePage(newPage) {
+		        if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
+	            	CurPage = newPage;
+	            	if(issearch) {
+		                search_click();
+	            	} else {
+		                setUserList();
+	            	}
+	        	}
+	    	}
+	    	function prevPage_onclick() {
+		        newPage = parseInt(CurPage) - 1;
+	        	if (newPage > 0) {
+		            CurPage = newPage;
+	            	if (issearch) {
+		                search_click();
+	            	} else {
+		                setUserList();
+	            	}
+	        	}
+	    	}
+	    	function nextPage_onclick() {
+		        newPage = parseInt(CurPage) + 1;
+	        	if (newPage <= parseInt(totalPage)) {
+		            CurPage = newPage;
+	            	if (issearch) {
+		                search_click();
+	            	} else {
+		                setUserList();
+	            	}
+	        	}
+	    	}	  	   		
 	   		
 	   		//조직도 뿌리는 펑션
 	   		function setDeptList() {
@@ -71,6 +211,16 @@
 	   		
 	   		//사원 리스트 뿌리기
 	   		function setUserList(key,value,deptName) {
+				/**
+					페이징할 때 사용.
+					뭔가 다른 방법이 있는지 찾아보기.
+				*/	   			
+	   			if(key === undefined && value === undefined && deptName === undefined) {
+	   				key = "DEPARTMENT";
+	   				value = $(".jstree-wholerow-clicked").parent()[0].id;
+	   				deptName = $("#"+value+" a:first").text();
+	   			}	   			
+	   			
 	   			var listType = getOrganListType();
 	   			function getOrganListType() {
 		        	var organListType = "TXT";
@@ -90,13 +240,20 @@
 	   				type:"post",
 	   				dataType:"html",
 	   				url:"/admin/ezJournal/userList.do",
-	   				data:{"key":key, "value":value,"deptName":deptName,"companyId":companyId, "listType" : listType},
+	   				data:{"key":key, "value":value,"deptName":deptName,"companyId":companyId, "listType" : listType, "curPage" : CurPage},
 	   				success: function(result){
 	   					var picList = $(result).find(".organwrap");
 	   					if (picList.length==0 && key!="DEPARTMENT") {
 	   						alert("<spring:message code='ezCommunity.t1379'/>");
 	   					} else {
+	   						$("#orglistView").empty();
 		   					$("#orglistView").html(result);
+							/**
+								2018-07-10 페이징 기능 추가.
+							*/
+		   					$("#orglistView").append("<div id='tblPageRayer' style='text-align:center;'></div>");
+							totalPage = Math.ceil($("#totalCount").val() / 50 );
+		   					makePageSelPage();
 	   					}
 	   				}
 	   			});
@@ -133,9 +290,11 @@
 	   		}
 	   		
 	   		//검색
+	   		var issearch = false;
 	   		function search_click() {
 	   			var key = $("#search_type").val();
 	   			var value = $("#keyword").val().trim();
+	   			issearch = true;
 	   			if(value) {
 		   			setUserList(key, value);
 	   			} else {
@@ -173,11 +332,6 @@
 					<h1 style="padding: 0px; margin-top: -5px;"><spring:message code='ezAttitude.t200' /></h1>
 				</li>
 			</ul>
-			<ul style="float: right; margin-right: 50px">
-				<li id="menuTable" style="background: none; border: none;">
-					<span onclick="setAuthorViewUser()"><spring:message code='ezAttitude.t38' /></span>
-				</li>
-			</ul>
 		</div>
 	    <div id="close">
 	        <ul>
@@ -210,7 +364,7 @@
 					                            <option value="mail"><spring:message code='ezOrgan.t99'/></option>
 					                            <option value="streetAddress"><spring:message code='ezOrgan.t100'/></option>
 	                                        </select>
-	                                        <input type="text" id="keyword" value="" style="width: 130px; margin: 0px;" />
+	                                        <input type="text" id="keyword" value="" style="width: 130px; margin: 0px; height:22px" />
 	                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 	                                    </div>
 	                                </td>    
@@ -232,6 +386,9 @@
 				</td>
 			</tr>
         </table>
+        <div class="btnpositionNew" id="menuTable">        					
+			<a class="imgbtn"><span onclick="setAuthorViewUser()"><spring:message code='ezAttitude.t38' /></span></a>			
+        </div>
 	</body>
 </html>
 

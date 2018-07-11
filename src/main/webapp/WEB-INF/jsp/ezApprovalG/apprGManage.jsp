@@ -98,6 +98,7 @@
 		    var SubQuery = "${SubQuery}";
 		    var condition = new Array();
 		    var nowDate = "${nowDateUTC}";
+		    var currentpage = 1;
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")

@@ -5248,12 +5248,11 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		
 		int iCount = 1, curPage = 0;
 		StringBuilder sb = new StringBuilder();
-		String userInfoLang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
-		map.put("v_USERINFO_LANG", userInfoLang);
 		map.put("companyID", userInfo.getCompanyID());
+		map.put("primary", userInfo.getPrimary());
 		map.put("tenantID", userInfo.getTenantId());
 		
 		// TBL_C_MEMBERINFO에서 승인대기자를 받아올 때, 모든 겸직을 같이 받아와서 레코드 중복이 발생한다. 관리자의 현재 companyID로 조건을 걸어 distinct로 받아오자.
@@ -5262,30 +5261,24 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 
 		for (CommunityCClubUserVO user : userList) {
 			sb.append("<tr>");
-            sb.append("<td height=\"23\" align=\"center\" class=\"white\">" + iCount + "</td>");
-            sb.append("<td class=\"white\">");
+			sb.append("<td height=\"23\" align=\"center\">" + iCount + "</td>");
+			sb.append("<td>");
             
-            logger.debug("lang = " + userInfoLang + " || userID = " + user.getC_ID() + " || companyID = " + user.getCompanyID() + " || userName = " + user.getUserName() + " || userName2 = " + user.getUserName2());
+            logger.debug("lang = " + userInfo.getPrimary() + " || userID = " + user.getC_ID() + " || companyID = " + user.getCompanyID() + " || userName = " + user.getUserName() + " || userName2 = " + user.getUserName2());
             
             // 승인대기자의 정보를 표출할 때 해당 겸직부서(또는 원부서) 값을 같이 넘긴다.
-            if (userInfoLang.equals("2")) {
+            if (userInfo.getPrimary().equals("2")) {
             	sb.append("<a href=\"javascript:openinfo( '" + code + "', '" + user.getC_ID().trim() + "', '" + user.getCompanyID().trim() + "','" + user.getDeptID() + "' )\">" + user.getUserName2().trim() + "</a>");
             }else {
             	sb.append("<a href=\"javascript:openinfo( '" + code + "', '" + user.getC_ID().trim() + "', '" + user.getCompanyID().trim() + "','" + user.getDeptID() + "' )\">" + user.getUserName().trim() + "</a>");
             }
             
             sb.append("</td>");
-            sb.append("<td class=\"white\" align=\"left\">" + user.getC_inDate().trim().substring(0, 10) + "</td>");
-            sb.append("<td class=\"white\" align=\"left\">");
-            
-            if (userInfoLang.equals("2")) {
-            	sb.append("<a href=\"javascript:okno('ok','" + user.getC_ID().trim() + "','" + code + "','" + curPage + "','" + user.getUserName2().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</a>/");
-                sb.append("<a href=\"javascript:okno('no','" + user.getC_ID().trim() + "','" + code + "','" + curPage + "','" + user.getUserName2().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</a>");
-            } else {
-            	sb.append("<a href=\"javascript:okno('ok','" + user.getC_ID().trim() + "','" + code + "','" + curPage + "','" + user.getUserName().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</a>/");
-                sb.append("<a href=\"javascript:okno('no','" + user.getC_ID().trim() + "','" + code + "','" + curPage + "','" + user.getUserName().trim() + "');\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</a>");
-            }
-            
+            sb.append("<td>" + commonUtil.cleanValue(user.getC_ID()) + "</td>");
+            sb.append("<td align=\"center\">" + user.getC_inDate().trim().substring(0, 10) + "</td>");
+            sb.append("<td align=\"center\">");
+        	sb.append("<a href=\"javascript:okno('ok','" + commonUtil.cleanValue(user.getC_ID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(user.getUserName().trim()) + "');\" class=\"imgbtn\"><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</span></a>&nbsp;");
+            sb.append("<a href=\"javascript:okno('no','" + commonUtil.cleanValue(user.getC_ID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(user.getUserName().trim()) + "');\" class=\"imgbtn\"><span style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</span></a>");
             sb.append("</td>");
             sb.append("</tr>");
             

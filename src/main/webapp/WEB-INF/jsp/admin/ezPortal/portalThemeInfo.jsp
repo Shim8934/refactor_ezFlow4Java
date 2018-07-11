@@ -452,12 +452,12 @@
 	                    	            <div>(<spring:message code='ezPortal.t990012'/>)</div>
 								    </td>
 							    	<td style="border-left:1px solid #ddd;" align="center">
-								    	<a class="imgbtn" style="margin-left:2px;">
+								    	<a class="imgbtn imgbck" style="margin-left:2px;">
 								    		<span onclick="changeNormalImage()">
 										    	<spring:message code='ezPortal.t66'/><br />
 									    	</span>
 									    </a>
-									    <a class="imgbtn" style="margin-left:2px;">
+									    <a class="imgbtn imgbck" style="margin-left:2px;">
 									    	<span onclick="removeNormalImage()">
 										    	<spring:message code='ezPortal.t990008'/>
 									    	</span>

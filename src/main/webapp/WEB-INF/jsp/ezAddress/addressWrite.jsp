@@ -23,10 +23,12 @@
 		    var usernm2 = "${userNM2}";
 		    var useAddressOpenAPI = "${useAddressOpenAPI}";
 		    var xmlHttpAddressTree;
+		    var closeAlertMsg = "<spring:message code='ezAddress.t337' />";
 		    window.onload = function () {
 				if(addressid == "")
 				{
 					document.title = "<spring:message code='ezAddress.t324' />";
+					closeAlertMsg = "<spring:message code='ezEmail.t667' />";
 				}
 				else
 				{
@@ -330,7 +332,7 @@
 		            window.close();
 		        }
 		        else {
-		            if (!confirm("<spring:message code='ezAddress.t337' />"))
+		            if (!confirm(closeAlertMsg))
 		                window.close();
 		            else
 		                insert_address();
@@ -447,7 +449,7 @@
 		    <ul>
 		      <!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezAddress.t339 => t300 -->
 		      <li><span onClick="insert_address()"><spring:message code='ezAddress.t300' /></span></li>
-		        <select id ="selectfolder" style="display:none;margin-left:4px;margin-top:2px" onchange ="changetype()">
+		        <select id ="selectfolder" style="display:none;margin-left:4px;" onchange ="changetype()">
 		            ${rootAddressSelection}
 		        </select>
 		    </ul>

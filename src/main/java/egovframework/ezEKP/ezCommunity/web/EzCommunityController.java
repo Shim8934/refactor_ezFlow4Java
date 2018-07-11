@@ -3325,16 +3325,20 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (memberInfoVO != null) {
 			logger.debug("adminMemberListOkGet(" + code + ", " + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
 			clubUser = ezCommunityService.adminMemberListOkGet(code, cID, companyID, userInfo.getTenantId());
-			
-			if (clubUser != null) {
-				if (clubUser.getC_birth() != 0 && memberInfoVO.getBirthDay() != null) {
-					if (memberInfoVO.getBirthDay().trim().substring(0, 1).equals("-")) {
-						memberInfoVO.setBirthDay("(" + egovMessageSource.getMessage("ezCommunity.t538", userInfo.getLocale()) + memberInfoVO.getBirthDay().trim().substring(1, memberInfoVO.getBirthDay().trim().length() - 1));
-					} else {
-						memberInfoVO.setBirthDay("(" + egovMessageSource.getMessage("ezCommunity.t539", userInfo.getLocale()) + memberInfoVO.getBirthDay().trim().substring(1, memberInfoVO.getBirthDay().trim().length() - 1));
-					}
-				}
-			} else {
+			//2018-07-10 김보미 - 사용하지 않는 부분 주석
+//			if (clubUser != null) {
+//				if (clubUser.getC_birth() != 0 && memberInfoVO.getBirthDay() != null) {
+//					if (memberInfoVO.getBirthDay().trim().substring(0, 1).equals("-")) {
+//						memberInfoVO.setBirthDay("(" + egovMessageSource.getMessage("ezCommunity.t538", userInfo.getLocale()) + memberInfoVO.getBirthDay().trim().substring(1, memberInfoVO.getBirthDay().trim().length() - 1));
+//					} else {
+//						memberInfoVO.setBirthDay("(" + egovMessageSource.getMessage("ezCommunity.t539", userInfo.getLocale()) + memberInfoVO.getBirthDay().trim().substring(1, memberInfoVO.getBirthDay().trim().length() - 1));
+//					}
+//				}
+//			}
+	        if (clubUser == null) {
+	        	userMode = 1;
+	        }
+			else {
 				userMode = 1;
 			}
 		} else {

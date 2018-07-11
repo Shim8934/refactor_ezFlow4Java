@@ -14,6 +14,8 @@
 	<script type="text/javascript">
 		var folderId = "<c:out value="${folderId}"/>";
 		
+		
+		
 		function wClose() {
 			parent.closeAllPopup();
 			window.close();

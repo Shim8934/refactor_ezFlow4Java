@@ -115,16 +115,16 @@
 		        var DIV_GroupMember = document.createElement("DIV");
 		        var Span = document.createElement("SPAN");
 		        var BR = document.createElement("BR");
-		        var IMG = document.createElement("IMG");
+		        /* var IMG = document.createElement("IMG");
 		        IMG.src = '/images/ImgIcon/dot.gif';
 		        IMG.align = "absmiddle";
-		        IMG.hspace = 5;
-		        Span.setAttribute("style", "color: #3b7cbe; font-weight: bold;");
+		        IMG.hspace = 5; */
+		        Span.setAttribute("style", "color: #000; font-weight: bold;");
 		        if(CrossYN())
-		            Span.textContent = "<spring:message code='ezEmail.t659' />";
+		            Span.textContent = "▒ <spring:message code='ezEmail.t659' />";
 		        else
-		            Span.innerText = "<spring:message code='ezEmail.t659' />";
-		        DIV_GroupMember.appendChild(IMG);
+		            Span.innerText = "▒ <spring:message code='ezEmail.t659' />";
+		        /* DIV_GroupMember.appendChild(IMG); */
 		        DIV_GroupMember.appendChild(Span);
 		        var P = document.createElement("P");
 		        DIV_GroupMember.appendChild(P);
@@ -134,7 +134,7 @@
 		            DIV.style.marginLeft = "5px";
 		            DIV.style.marginTop = "5px";
 		            DIV.style.cursor = "hand";
-		            DIV.style.color = "blue";
+		            DIV.style.color = "black";
 		            DIV.style.display = "inline-block";
 		
 		            if (CrossYN()) {
@@ -285,7 +285,7 @@
 	                </div>
 	            </td>
 	            <td style="vertical-align:top; border-bottom:none">
-	                <div id="DIV_Member" style="padding-top:5px; padding-left:5px; width: 300px; height: 395px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; overflow-y: auto;"></div>      
+	                <div id="DIV_Member" style="padding-top:10px; padding-left:5px; width: 300px; height: 395px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; overflow-y: auto;"></div>      
 	            </td>
 	        </tr>
 	    </table>

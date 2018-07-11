@@ -74,7 +74,16 @@ public class EzCommonController extends EgovFileMngUtil{
 	private static final Logger logger = LoggerFactory.getLogger(EzCommonController.class);
 	
 	@RequestMapping(value = "/ezCommon/manyColor.do")
-	public String manyColor(HttpServletRequest request, ModelMap model) throws Exception{		
+	public String manyColor(HttpServletRequest request, ModelMap model) throws Exception {
+		String type = "";
+		
+		type = request.getParameter("type");
+		
+		if (type == null) {
+			type = "";
+		}
+		
+		model.addAttribute("type", type);
 		return "ezCommon/manyColor";
 	}
 	

@@ -81,12 +81,17 @@
 					$("#divCross p a").attr("target", "_blank")
 				}
 				
+				//2018-07-10 김보미 - 제목이 2줄이상일 경우 공백 추가
+				titleSpace();
 	        });
 			
 			window.onresize = function () {
 				var contentHeight;
 				document.getElementById("divCross").style.height = window.innerHeight - 340 + "px";
 // 				document.getElementById("divCross").style.width = window.innerWidth - 40 + "px";
+
+				//2018-07-10 김보미 - 제목 공백 조절
+				titleSpace();
 			};
 			
 			/* 18-05-25 김민성 - 회람판 > 회람 상세정보 회람확인 시 창 새로고침 되도록 수정 */
@@ -478,6 +483,26 @@
 		        	});	
 				}
 			}
+			
+			//2018-07-10 김보미 - title부분 길이를 비교해 2줄 이상이면 공백을 더 준다.
+			function titleSpace() {
+				var text = $("#titleTd").text();
+				var res;
+				var cont = $('<div>' + text + '</div>').css("display", "table")
+								.css("z-index", "-1").css("position", "absolute")
+								.css("font-family", $("#titleTd").css("font-family"))
+								.css("font-size", $("#titleTd").css("font-size"))
+								.css("font-weight", $("#titleTd").css("font-weight")).appendTo('body');
+				res = (cont.width() > $("#titleTd").width());
+				cont.remove();
+				
+				if (res) {
+					$("#titleTd").css("padding","6px 4px 6px 6px");
+				} else {
+					$("#titleTd").css("padding","");
+					$("#titleTd").css("padding-left","4px");
+				}
+			}
 		</script>
 	</head>
 	<style>
@@ -542,7 +567,8 @@
 					<table class="content" style="width:100%;">
 	                    <tr>
     	                    <th style="width: 10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t32' /></th>
-        	                <td colspan="3" style="padding-left: 4px;"><c:out value = '${result.title}' /></td>
+    	                    <!-- 2018-07-10 김보미 - td에 id값 추가 -->
+        	                <td colspan="3" id="titleTd" style="padding-left: 4px;"><c:out value = '${result.title}' /></td>
                     	</tr>
                     	<tr>
 							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t122' /></th>

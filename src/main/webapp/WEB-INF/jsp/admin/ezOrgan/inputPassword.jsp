@@ -61,7 +61,7 @@
 		    <td><input id=ConfirmPassword type=password style="width:98%" maxlength="50"></td>
 		  </tr>        
 		</table>
-		  <div class="btnposition">
+		  <div class="btnpositionNew">
 		    <a class="imgbtn" onClick="OK_Click()"><span><spring:message code="ezOrgan.t124" /></span></a>
 		</div>
 	</body>

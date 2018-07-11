@@ -2822,6 +2822,30 @@
       		AND
       			EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
 		]]>
+		
+		<isNotEmpty property="searchValue" prepend="AND">
+			<isEqual property="searchType" compareValue="cn">
+				cn LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="displayname">
+				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="title">
+				title LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="description">
+				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="mail">
+				mail LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="telephonenumber">
+				telephonenumber LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="company">
+				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+		</isNotEmpty>
 	</select>
 	
 	<!-- <procedure id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
@@ -2832,65 +2856,56 @@
 	
 	<select id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
 		<![CDATA[
-			            SELECT
-							CN, 
-            				CASE
-            					#v_LANGDATA#  
-                  			WHEN
-                  				'1'
-                  			THEN
-                  				DISPLAYNAME 
-                  			ELSE
-                  				DISPLAYNAME2   
-                  			END
-                  				AS DISPLAYNAME, 
-            				CASE
-            					#v_LANGDATA#  
-                  			WHEN
-                  				'1'
-                  			THEN
-                  				DESCRIPTION 
-                  			ELSE
-                  				DESCRIPTION2   
-                  			END
-                  				AS DESCRIPTION,
-            				CASE
-            					#v_LANGDATA#  
-                  			WHEN
-                  				'1'
-                  			THEN
-                  				TITLE
-                  			ELSE
-                  				TITLE2
-                  			END
-                  				AS TITLE,
-            				MAIL,
-            				TELEPHONENUMBER,
-            				CASE
-            					#v_LANGDATA#  
-                  			WHEN
-                  				'1'
-                  			THEN
-                  				COMPANY
-                  			ELSE
-                  				COMPANY2
-                  			END
-                  				AS COMPANY,
-            				EXTENSIONATTRIBUTE1
-        				FROM
-        					TBL_USERMASTER 
-        				WHERE
-        					NULLIF(EXTENSIONATTRIBUTE1, '') IS NOT NULL
-        				AND
-        					PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
-        				AND
-        					EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
-                        AND 
-                            CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                         
-        				AND
-        					TENANT_ID = #v_TENANT_ID#
-                        ORDER BY DISPLAYNAME
-                        LIMIT #v_STARTNUM#, #v_COUNT#
+			SELECT
+				CN, 
+				CASE #v_LANGDATA# WHEN '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END AS DISPLAYNAME,
+				CASE #v_LANGDATA# WHEN '1' THEN DESCRIPTION ELSE DESCRIPTION2 END AS DESCRIPTION,
+				CASE #v_LANGDATA# WHEN '1' THEN TITLE ELSE TITLE2 END AS TITLE,
+				MAIL,
+				TELEPHONENUMBER,
+				CASE #v_LANGDATA# WHEN '1' THEN COMPANY ELSE COMPANY2 END AS COMPANY,
+				EXTENSIONATTRIBUTE1
+			FROM
+				TBL_USERMASTER 
+			WHERE
+				NULLIF(EXTENSIONATTRIBUTE1, '') IS NOT NULL
+			AND
+				PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+			AND
+				EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
+			AND 
+				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                         
+			AND
+				TENANT_ID = #v_TENANT_ID#
+		]]>
+		
+		<isNotEmpty property="searchValue" prepend="AND">
+			<isEqual property="searchType" compareValue="cn">
+				cn LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="displayname">
+				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="title">
+				title LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="description">
+				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="mail">
+				mail LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="telephonenumber">
+				telephonenumber LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="company">
+				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+		</isNotEmpty>
+		
+		<![CDATA[
+			ORDER BY DISPLAYNAME
+			LIMIT #v_STARTNUM#, #v_COUNT#
 		]]>
 	</select>
 	

@@ -691,6 +691,10 @@
 		    function ReaderList_Complete() {
 		        DivPopUpHidden();
 		    }
+		    
+		    function printOption_close() {
+		    	DivPopUpHidden();	
+		    }
 		    var boarditemview_cross_print_option_dialogArguments = new Array();
 		    var url = window.location.href;
 		    function btn_Print_Onclick() {
@@ -698,8 +702,9 @@
 		            url = window.location.href;
 		            url = url.replace(".do", "PrintOption.do");
 		            boarditemview_cross_print_option_dialogArguments[1] = btn_Print_Onclick_Complete;
-		            var OpenWin = window.open(url, "boarditemview_print_option", GetOpenWindowfeature(380, 200));
-		            try { OpenWin.focus(); } catch (e) { }
+		            DivPopUpShow(380, 200, url);
+		            //var OpenWin = window.open(url, "boarditemview_print_option", GetOpenWindowfeature(380, 200));
+		            //try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
 		            var parameter = "";

@@ -221,7 +221,7 @@
 						</select>
 						
 						<input style="width:200px;vertical-align:middle; height: 22px;" name="keyword" onKeyDown="return keyword_onkeydown()">
-						<a class="imgbtn" style="vertical-align:middle; margin-bottom:0px;"><span onClick="javascript:search();"><spring:message code = 'ezCommunity.t31' /></span></a>
+						<a class="imgbtn imgbck" style="vertical-align:middle; margin-bottom:0px;"><span onClick="javascript:search();"><spring:message code = 'ezCommunity.t31' /></span></a>
 				  	</td>
 				</tr>
 			</form>

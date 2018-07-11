@@ -129,7 +129,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public List<OrganUserVO> getPermissionList(String companyID, String type, String strLang, int startRow, int endRow, int tenantID) throws Exception {
+	public List<OrganUserVO> getPermissionList(String companyID, String type, String searchType, String searchValue, String strLang, int startRow, int endRow, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("v_TENANT_ID", tenantID);
@@ -140,6 +140,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PENDROW", endRow);
         map.put("v_STARTNUM", startRow - 1);
         map.put("v_COUNT", endRow - startRow + 1);
+        map.put("searchType", searchType);
+        map.put("searchValue", searchValue);
 		
 		return ezOrganAdminDao.getPermissionList(map);
 	}
@@ -513,13 +515,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public int getPermissionListCount(String companyID, String type, String strLang, int tenantID) throws Exception {
+	public int getPermissionListCount(String companyID, String type, String searchType, String searchValue, String strLang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TYPE", type);
 		map.put("v_LANGDATA", strLang);
+		map.put("searchType", searchType);
+		map.put("searchValue", searchValue);
 		
 		return ezOrganAdminDao.getPermissionListCount(map);
 	}

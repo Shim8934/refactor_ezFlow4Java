@@ -2980,6 +2980,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (String) select("EzApprovalG.getDocHrefInfoHref", map);
 	}
 
+	public int getLinkedAttachFileCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getLinkedAttachFileCount", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(Map<String, Object> map) {
 		return (List<PortalTopOtherCompanyAddJobVO>) list("EzApprovalG.getAllCompanyList", map);

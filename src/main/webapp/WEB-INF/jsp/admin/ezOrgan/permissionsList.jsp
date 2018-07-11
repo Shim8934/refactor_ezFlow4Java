@@ -46,24 +46,32 @@
 	    	
 			$(document).ready(function() {
 			    if (${isAdmin}) {
-			        Permissions_List('c=1');
+			    	type = 'c=1';
+			        Permissions_List();
 			    } else {
 		            document.getElementById("Permission_sub1").style.display = "none";
 		            document.getElementById("1tab2").click();
-		            Permissions_List('k=1');			        
+		            type = 'k=1';
+		            Permissions_List();			        
 			    }
-			});			
+			});
+			
+			function searchList() {
+				CurPage = 1;
+				Permissions_List();
+			}
 			
 			function company_change() {
-				Permissions_List(type);
+				clearSearchVal();
+				Permissions_List();
 		    }
 		    
-			function Permissions_List(type) {		        
+			function Permissions_List() {
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/admin/ezOrgan/getPermissionsList.do",		        	
-		        	data : {companyID : document.getElementById("ListCompany").value, type : type, pageNum : CurPage, pageSize : pageSize},
+		        	data : {companyID : document.getElementById("ListCompany").value, type : type, pageNum : CurPage, pageSize : pageSize, searchType : document.getElementById("searchType").value, searchValue : document.getElementById("searchValue").value},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		if (result.xml != "") {
@@ -148,7 +156,7 @@
 		    function movePage(newPage) {
 		        if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
 		            CurPage = newPage;
-		            Permissions_List(type)
+		            Permissions_List();
 		        }
 		    }
 			
@@ -280,7 +288,8 @@
 		        type = pSelectTab + "=1";
 
 		        CurPage = 1;
-		        Permissions_List(type);
+		        clearSearchVal();
+		        Permissions_List();
 		    }
 			
 			function Tab1_NewTabIni(pTabNodeID) {
@@ -315,12 +324,14 @@
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value, Params, "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(970, 580));
-		            Permissions_List(type);
+		            clearSearchVal();
+		            Permissions_List();
 		        }
 		    }
 		    
 		    function Permissions_Add_Complete() {
-		        Permissions_List(type);
+		    	clearSearchVal();
+		        Permissions_List();
 		    }
 
 		    function Permissions_Del(mode) {
@@ -375,7 +386,7 @@
 		            });
 		        }
 		        CurPage = 1;
-		        Permissions_List(type);
+		        Permissions_List();
 		    }
 		    
 		    function email_onclick() {
@@ -413,6 +424,10 @@
 		        } */
 		        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(MsgTo), "",
                         "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		    }
+		    
+		    function clearSearchVal () {
+		    	$("#searchValue").val("");
 		    }
 	    </script>
 	</head>
@@ -468,7 +483,23 @@
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 	            </select>
-		        <ul style="margin-top:15px">
+	            
+	            <span style="float: right; font-weight: normal; color: black;">
+	            	<select id="searchType" style="width:80px;">
+						<option selected="" value="displayname"><spring:message code='ezOrgan.t67' /></option>
+						<option value="cn"><spring:message code='ezOrgan.t218' /></option>
+						<option value="title"><spring:message code='ezOrgan.t69' /></option>
+						<option value="description"><spring:message code='ezOrgan.t68' /></option>
+						<option value="mail"><spring:message code = 'ezOrgan.t91' /></option>
+						<option value="telephonenumber"><spring:message code='ezOrgan.t95' /></option>
+						<option value="company"><spring:message code= 'ezOrgan.t123' /></option>
+					</select>
+					
+					<input id="searchValue" onkeypress="if(event.keyCode==13) {searchList(); return false;}" onfocus="clearSearchVal();" style="height: 29px;border: 1px solid #cbcbcb; border-right:0px;">
+					<a href="#" style="float: right"><img src="/images/bsearch_new.gif" border="0" onclick="searchList()" style="height:29px;"></a>
+	            </span>
+	            
+		        <ul style="margin-top:15px;">
 		            <li><span onClick="Permissions_Add()"><spring:message code='ezOrgan.t00007' /></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="Permissions_Del('MOD')"><spring:message code='ezOrgan.t00008' /></span></li>

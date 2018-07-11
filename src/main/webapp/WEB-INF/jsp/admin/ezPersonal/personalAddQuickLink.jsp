@@ -687,7 +687,7 @@
                             </table>
                         </td>
                         <td width="100%" align="center" nowrap>
-                            <a class="imgbtn"><span onclick="CreateType()">Type<spring:message code = 'ezPersonal.t105'/>
+                            <a class="imgbtn imgbck"><span onclick="CreateType()">Type<spring:message code = 'ezPersonal.t105'/>
                             </span></a>
                         </td>
                     </tr>
@@ -718,7 +718,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnpositionNew">
 	        <a class="imgbtn"><span id="btn_OK" onclick="btn_ok()"><spring:message code = 'ezPersonal.t105' /></span></a>	        
 	    </div>
 	    

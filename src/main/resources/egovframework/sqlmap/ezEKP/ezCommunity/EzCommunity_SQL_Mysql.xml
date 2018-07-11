@@ -1880,7 +1880,7 @@
 				A.c_id,
 				A.companyid,
 				A.c_indate,
-				T.username$v_USERINFO_LANG$,
+				CASE WHEN #primary# = '1' THEN T.username ELSE T.username2 END AS username,
 				IFNULL(MAX(C.DEPTID), '') AS DEPTID
 			FROM
 				TBL_C_CLUBUSER A
@@ -1890,7 +1890,7 @@
 				RTRIM(A.c_id) = RTRIM(T.userid)
 			AND
 				A.tenant_id = T.tenant_id
-			AND
+			AND 
 				A.COMPANYID = T.COMPANYID
 			JOIN
 				TBL_DEPTMASTER B
