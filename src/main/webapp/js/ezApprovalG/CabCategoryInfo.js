@@ -480,12 +480,18 @@ function FindTask(pTitle, pCode, pFlag, pDeptCode)
 	    GetXml = GetXml + "<ROWS>";
 
 	    var CateSubcnt = GetChildNodes(GetChildNodes(rtnXml.childNodes[0])[1]).length;
-
+	    
+	    var tempValue = "";
 	    for (var y = 0; y < CateSubcnt; y++) {
 	        var simpleCode = getNodeText(SelectSingleNode(GetChildNodes(SelectNodes(rtnXml, "LISTVIEWDATA/ROWS/ROW")[y])[0], "DATA1"));  //철코드
 	        var simpleXml = GetSimpleList(arr_userinfo[4], "", simpleCode, g_SelCabID, g_InitFlag);
 	        var simpleCnt = SelectNodes(simpleXml, "LISTVIEWDATA/ROWS/ROW").length;
 	        var curSubCategory = SelectNodes(rtnXml, "LISTVIEWDATA/ROWS/ROW")[y];
+	        
+	        //2018-07-12 천성준 - 같은 기록물 단위업무 분류코드일 경우 패스하기 위한 조건문
+	        if (simpleCode == tempValue) {
+	        	continue;
+	        }
 	        if (!simpleCnt) {
 	            GetXml = GetXml + GetmakeXml(rtnXml, curSubCategory, false, true);
 	        }
@@ -493,6 +499,8 @@ function FindTask(pTitle, pCode, pFlag, pDeptCode)
 	            var curSimple = SelectNodes(simpleXml, "LISTVIEWDATA/ROWS/ROW")[z];
 	            GetXml = GetXml + GetmakeXml(rtnXml, curSubCategory, curSimple, true);
 	        }
+	        
+	        tempValue = simpleCode;
 	    }
 	    GetXml = GetXml + "</ROWS></LISTVIEWDATA>";
 		
