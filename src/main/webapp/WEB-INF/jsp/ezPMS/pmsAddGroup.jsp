@@ -138,7 +138,8 @@ function addGroup() {
 	 var project = parent.projectDetails;
 	 var planStartDate = project.planStartDate;
 	 var planEndDate = project.planEndDate;
-	 
+	 //sort Order setting
+	 var sortOrder = parent.$(".group").length + 1;
 	 
 	 //업무 이름 길이 제한
 	 if (newGroupName.length == 0) {
@@ -161,19 +162,20 @@ function addGroup() {
 		alert("<spring:message code='ezPMS.t85' />");
 		return;
 	}
-	
 	var data = {
-			groupName : newGroupName,
-			projectId : projectId,
-			upperGroupId : groupId,
-			overview	 : overview,
-			headManagerId : headManagerId,
-			managerList : managerList,
-			planStartDate : planStartDate,
-			planEndDate : planEndDate,
-			// 상위그룹의 treeDepth에 +1
-			treeDepth : treeDepth + 1,
-			participantList : participantList
+		groupName : newGroupName,
+		projectId : projectId,
+		upperGroupId : groupId,
+		overview	 : overview,
+		headManagerId : headManagerId,
+		managerList : managerList,
+		planStartDate : planStartDate,
+		planEndDate : planEndDate,
+		// 상위그룹의 treeDepth에 +1
+		treeDepth : treeDepth + 1,
+		//sortOrder
+		sortOrder : sortOrder,
+		participantList : participantList
 	}
 	
 	$.ajax({

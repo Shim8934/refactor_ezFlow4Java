@@ -645,8 +645,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanStartDate());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanEndDate());
 			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getWriteDate());
-			System.out.println(startDate);
-			System.out.println(endDate);
+			
 			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
 
 			int createAndEndDateComp = createDate.compareTo(endDate);
@@ -1283,7 +1282,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				list.add(vo);
 			}
 		}
-
+		
 		return list;
 	}
 
@@ -2573,13 +2572,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void updateTaskGroupId(long projectId, long targetTaskId, long changeGroupId, int tenantId) {
+	public void updateTaskGroupId(long projectId, long targetTaskId, long changeGroupId, int tenantId, int treeDepth) {
 		LOGGER.debug("[SERVICE] updateTaskGroupId started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("targetTaskId", targetTaskId);
 		map.put("changeGroupId", changeGroupId);
 		map.put("tenantId", tenantId);
+		map.put("treeDepth", treeDepth);
 
 		ezPMSDAO.updateTaskGroupId(map);
 		LOGGER.debug("[SERVICE] updateTaskGroupId ended.");

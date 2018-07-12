@@ -1182,11 +1182,14 @@
 	   		function changeGanttOrder(targetTaskId, changeGroupId) {
 	   			var groupArr = [];
 	   			var taskArr = [];
+	   			var treeDepth = 0;
+	   			
+	   			$(".group").each(function(index, element){
+   					groupArr.push({"projectId" : element.id.match(/p(\d+)/)[1], "groupId" : element.id.match(/g(\d+)/)[1], "order" : index});
+	   			});
 	   			
 	   			$(".isParent").each(function(index, element){
 	   				if (index != 0) {
-	   					groupArr.push({"projectId" : element.id.match(/p(\d+)/)[1], "groupId" : element.id.match(/g(\d+)/)[1], "order" : index});
-		   				
 	   					$(".taskEditRow[id^='" + element.id + "_t']").each(function(idx, elem) {
 	   						if ($("#" + elem.id).find("input[name='depends']").val() == preTaskIndex) {
 	   							var newPreTask = $("#" + selectedPreTask).index() + 1;
@@ -1197,8 +1200,6 @@
 	   						}
 		   				});
 	   				} else if (index == 0) {
-						groupArr.push({"projectId" : element.id.match(/p(\d+)/)[1], "groupId" : projectGroupId, "order" : index});
-		   				
 	   					$(".taskEditRow[id^='" + element.id + "_t']").each(function(idx, elem) {
 	   						if ($("#" + elem.id).find("input[name='depends']").val() == preTaskIndex) {
 	   							var newPreTask = $("#" + selectedPreTask).index() + 1;
@@ -1224,9 +1225,12 @@
 	   			if (changeGroupId != -1) {
 		   			var groupMember = $("#tid_p" + projectId + "_g" + changeGroupId).find(".taskAssigs").attr("title");
 		   			var targetGroupId = $(".taskEditRow[taskid$='t" + targetTaskId + "']").attr("taskid");
+		   			var groupTreeDepth = $("#tid_p" + projectId + "_g" + changeGroupId).attr("level");
 		   			
 		   			if (targetGroupId.indexOf(changeGroupId) != -1) {
 			   			if (groupMember != undefined) {
+				   			treeDepth = parseInt(groupTreeDepth) + 1;
+				   			
 			   				var targetTaskMember = $(".taskEditRow[taskid$='t" + targetTaskId + "']").find(".taskAssigs").attr("title").split(",");
 			   				
 			   				for (var i = 0; i < targetTaskMember.length; i++) {
@@ -1239,15 +1243,19 @@
 			   				}
 			   				
 		   				} 
-		   			}
+		   			} else {
+	   					groupTreeDepth = $("#tid_p" + projectId).attr("level");
+	   					treeDepth = parseInt(groupTreeDepth) + 1;
+	   				}
 	   			}
-
-	   			var data = {
+	   			
+	   			 var data = {
 	   				projectId : projectId,
 	   				groupArr : groupArr,
 	   				taskArr : taskArr,
 	   				targetTaskId : targetTaskId,
-	   				changeGroupId : changeGroupId
+	   				changeGroupId : changeGroupId,
+	   				treeDepth : treeDepth
 	   			}
 	   			
 	   			$.ajax({

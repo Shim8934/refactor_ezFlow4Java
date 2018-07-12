@@ -194,7 +194,7 @@ public interface EzPMSService {
 
 	void updateTaskWDNW(ProjectTaskVO taskVO, float taskWorkingday);
 
-	public void updateTaskGroupId(long projectId, long targetTaskId, long changeGroupId, int tenantId);
+	public void updateTaskGroupId(long projectId, long targetTaskId, long changeGroupId, int tenantId, int treeDepth);
 
 	public Float getProjectWeight(Long projectId, int tenantId) throws Exception;
 	

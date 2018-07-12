@@ -1526,7 +1526,8 @@ public class EzPMSGWController {
 					
 					if (changeGroupId != -1) {
 						long targetTaskId = Long.parseLong(request.getParameter("targetTaskId"));
-						ezPMSService.updateTaskGroupId(projectId, targetTaskId, changeGroupId, tenantId);
+						int treeDepth = Integer.parseInt(request.getParameter("treeDepth"));
+						ezPMSService.updateTaskGroupId(projectId, targetTaskId, changeGroupId, tenantId, treeDepth);
 					}
 					
 					//그룹 순서 변경
@@ -1547,7 +1548,7 @@ public class EzPMSGWController {
 						int sortOrder = Integer.parseInt(taskList.get(i).get("order").toString());
 						long taskId = Long.parseLong(taskList.get(i).get("taskId").toString());
 						int preTaskIndex = Integer.parseInt(taskList.get(i).get("depends").toString()); 
-								
+						
 						ezPMSService.updateTaskSort(groupId, taskId, sortOrder, tenantId);
 						
 //						if (preTaskIndex != -1) {

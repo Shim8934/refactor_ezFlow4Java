@@ -640,7 +640,7 @@ public class EzPMSGWController2 {
 			
 			project.put("treeDepth", request.getParameter("treeDepth"));
 			project.put("ancesterGroup", "0");
-			project.put("sortOrder", 1);
+			project.put("sortOrder", request.getParameter("sortOrder"));
 			project.put("status", "W");
 			
 			if (request.getParameter("upperGroupId") == null) {
