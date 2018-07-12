@@ -92,9 +92,9 @@
 		    	$(':checkbox:checked').removeAttr('checked');
 			}
 		    
-		    function menuQst_DetailUserInfo(pUserID) {
+		    function menuQst_DetailUserInfo(pUserID, pDeptID) {
 		    	 var feature = GetOpenPosition(420, 438);
-		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		         window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }	
 		    
 		    function menu_Search() {
@@ -556,10 +556,10 @@
 			          	<%-- Creator --%>
 		          		<c:choose>
 							<c:when test="${primary == '1'}">
-								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}')"> ${list.creatorName1} </a> </td>
+								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}','${list.creatorDept}')"> ${list.creatorName1} </a> </td>
 							</c:when>
 							<c:otherwise>
-								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}')"> ${list.creatorName2} </a> </td>
+								<td> <a id="test<c:out value ="${list.qstId}" />" style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.creator}','${list.creatorDept}')"> ${list.creatorName2} </a> </td>
 							</c:otherwise>
 						</c:choose>	
 			          	

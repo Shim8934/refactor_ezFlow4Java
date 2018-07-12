@@ -199,12 +199,17 @@
                     		return;
                 		}
             		}
+                		
+               		var selDept = document.querySelector(".node_selected").parentElement;
+       	            var selDeptId = selDept.getAttribute("cn");
+       	            
             		pparsingXML2 = "";
             		pparsingXML = "";
             		pparsingXML2 = "<LISTVIEWDATA><ROWS>";
             		pparsingXML = pparsingXML + "<ROW><CELL><DATA2>" + selRow.getAttribute("DATA2") + "</DATA2>";
             		pparsingXML = pparsingXML + "<DATA4>" + selRow.getAttribute("DATA4") + "</DATA4>";
             		pparsingXML = pparsingXML + "<DATA5>" + selRow.getAttribute("DATA5") + "</DATA5>";
+            		pparsingXML = pparsingXML + "<DATA6>" + selDeptId + "</DATA6>";
             		pparsingXML = pparsingXML + "<VALUE>" + selRow.cells[0].innerText + "</VALUE></CELL></ROW>";
             		pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
             		Resultxml = loadXMLString(pparsingXML2);
@@ -466,6 +471,7 @@
     	    	
     	    	for (var j = 0; j < arrRows2.length; j++) {
     	    		var userName = "";
+    	    		var deptId = "";
     	    		
     	    		if (primary == "1") {
     	    			userName = arrRows2[j].getAttribute("DATA4");
@@ -473,6 +479,7 @@
     	    		else {
     	    			userName = arrRows2[j].getAttribute("DATA5");
     	    		}
+    	    		deptId = arrRows2[j].getAttribute("DATA6");
     	    		listOfTarget += userName + ", ";
     	    	}
     	    	
@@ -564,10 +571,12 @@
             	var CurrID = arrRows2[j].getAttribute("DATA2");
             	var CurrNM = arrRows2[j].getAttribute("DATA4");
             	var CurrNM2 = arrRows2[j].getAttribute("DATA5");
+            	var CurrDeptID = arrRows2[j].getAttribute("DATA6");
             	var UserNode_sub = createNodeAndAppandNodeText(xmlDoc, UserNode, objNode, "DATA", CurrID);
             	SetAttribute(UserNode_sub, "id", CurrID);
             	SetAttribute(UserNode_sub, "nm", CurrNM);
             	SetAttribute(UserNode_sub, "nm2", CurrNM2);
+            	SetAttribute(UserNode_sub, "deptid", CurrDeptID);
         	}
         	return getXmlString(xmlDoc);
     	}
@@ -637,6 +646,7 @@
     	            var CurrID = MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "id"));
         	        var CurrNM = MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "nm"));
             	    var CurrNM2 = MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "nm2"));
+            	    var CurrDeptID = MakeUNXMLString(GetAttribute(UserRows.childNodes[i], "deptid"));
 	                //lastindex = memberlist.length;
     	            var pVaule = "";
     	             
@@ -654,6 +664,7 @@
             	    pparsingXML = pparsingXML + "<ROW><CELL><DATA2><![CDATA[" + CurrID + "]]></DATA2>";
                 	pparsingXML = pparsingXML + "<DATA4><![CDATA[" + CurrNM + "]]></DATA4>";
                 	pparsingXML = pparsingXML + "<DATA5><![CDATA[" + CurrNM2 + "]]></DATA5>";
+                	pparsingXML = pparsingXML + "<DATA6><![CDATA[" + CurrDeptID + "]]></DATA6>";
                 	pparsingXML = pparsingXML + "<VALUE><![CDATA[" + pVaule + "]]></VALUE></CELL></ROW>";
                 	pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
                 	Resultxml = loadXMLString(pparsingXML2);

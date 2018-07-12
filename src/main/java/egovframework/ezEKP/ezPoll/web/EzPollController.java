@@ -64,6 +64,7 @@ import egovframework.ezEKP.ezPoll.vo.PollEmailSimpleUser;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionStatusVO;
 import egovframework.ezEKP.ezPoll.vo.PollQuestionVO;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
+import egovframework.ezEKP.ezPoll.vo.PollUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -166,7 +167,7 @@ public class EzPollController extends EgovFileMngUtil {
 		        
 		        //Process target
 		        List<String> departIdList = ezPollService.getListOfUserIdForQst(qstId, loginVO.getTenantId(), "dept");
-		        List<String> userIdList = ezPollService.getListOfUserIdForQst(qstId, loginVO.getTenantId(), "user");			        
+		        List<PollUserVO> userList = ezPollService.getListOfUserForQst(qstId, loginVO.getTenantId(), "user");			        
 		        
 		        if (departIdList.size() > 0) {
 		        	strXMLRange.append("<DEPT>"); 
@@ -188,19 +189,20 @@ public class EzPollController extends EgovFileMngUtil {
 			        strXMLRange.append("</DEPT>"); 
 		        }
 		        
-		        if (userIdList.size() > 0) {
+		        if (userList.size() > 0) {
 		        	strXMLRange.append("<MEMBER>"); 
 		        	
-		        	for (String userID : userIdList) {
-		        		LoginVO user = loginService.selectReceiver(userID, loginVO.getTenantId());
-		        		strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(user.getId()) + "\" nm=\"" + commonUtil.cleanValue(user.getDisplayName1()) + 
-			        			"\" nm2=\"" + commonUtil.cleanValue(user.getDeptName1()) + "\">" + commonUtil.cleanValue(user.getId()) + "</DATA>");
+		        	for (PollUserVO user : userList) {
+		        		LoginVO userVo = loginService.selectReceiver(user.getUserId(), loginVO.getTenantId());
+		        		strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(userVo.getId()) + "\" nm=\"" + commonUtil.cleanValue(userVo.getDisplayName1()) + 
+			        			"\" nm2=\"" + commonUtil.cleanValue(userVo.getDeptName1()) + "\" deptid=\"" + commonUtil.cleanValue(user.getDeptId()) + "\">"
+		        				+ commonUtil.cleanValue(userVo.getId()) + "</DATA>");
 		        		
 			        	if (loginVO.getPrimary().equals("1")) {
-			        		listOfTarget += user.getDisplayName1() + ",";
+			        		listOfTarget += userVo.getDisplayName1() + ",";
 			        	}
 			        	else {
-			        		listOfTarget += user.getDisplayName2() + ",";
+			        		listOfTarget += userVo.getDisplayName2() + ",";
 			        	}
 		        		
 		        	}		        	
@@ -971,6 +973,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		//Get creator department
+		//2018-07-10 홍대표 - 작성자 겸직 처리하려고 수정함.
 		LoginVO paramVO = new LoginVO();
 		paramVO.setId(pollQuestionVO.getCreator());
 		paramVO.setDeptID(pollQuestionVO.getCreatorDept());
@@ -1178,6 +1181,7 @@ public class EzPollController extends EgovFileMngUtil {
 		pollCmtVO.setCmtTime(cmtTime);		
 		pollCmtVO.setTextContent(txtContent);	
 		pollCmtVO.setDeptId(loginVO.getDeptID());
+		pollCmtVO.setCompanyId(loginVO.getCompanyID());
 		
 		logger.debug("attachFilePath: " + attachFilePath);
 		
@@ -1232,7 +1236,7 @@ public class EzPollController extends EgovFileMngUtil {
 			//Insert into comment table
 			ezPollService.insertCmt(pollCmtVO);
 			
-			String deptId = ezPollService.getAddJobDept(loginVO.getTenantId(), qstId, loginVO.getId(), loginVO.getDeptID());
+			String deptId = ezPollService.getQuestionRelatedDept(loginVO.getTenantId(), qstId, loginVO.getId(), loginVO.getDeptID());
 			
 			//Inform all waiting users
 			String result = "{\"cmId\":\"" + cmtId  + "\", \"userId\":\"" + loginVO.getId() + "\", \"userName1\":\"" + pollCmtVO.getUserName1() + "\", \"userName2\":\"" + pollCmtVO.getUserName2() + "\", \"attachFilePath\":\"" + attachFilePath+ "\""
@@ -2667,7 +2671,13 @@ public class EzPollController extends EgovFileMngUtil {
 			
 			for (int i = 0; i < pUserCnt; i++) {
 				String userID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
+				String deptID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("deptid").getTextContent();
+				if(deptID == null){
+					LoginVO user = loginService.selectReceiver(userID, loginVO.getTenantId());
+					deptID = user.getDeptID();
+				}
 				pollQuestionVO.setUserId(userID);
+				pollQuestionVO.setUserDeptId(deptID);
 				pollQuestionVO.setReceiverType("user");
 				ezPollService.insertQustReceivers(pollQuestionVO);
 			}

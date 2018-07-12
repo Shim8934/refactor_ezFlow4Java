@@ -34,6 +34,7 @@ public class PollQuestionVO implements Serializable {
 	private int openToAll;
 	private int cmtCnt;
 	private String companyId;
+	private String userDeptId;
 	
 	public int getQstId() {
 		return qstId;
@@ -279,5 +280,13 @@ public class PollQuestionVO implements Serializable {
 	
 	public int hashCode() {
 		return 100 + qstId + tenantId;
+	}
+
+	public String getUserDeptId() {
+		return userDeptId;
+	}
+
+	public void setUserDeptId(String userDeptId) {
+		this.userDeptId = userDeptId;
 	}	
 }

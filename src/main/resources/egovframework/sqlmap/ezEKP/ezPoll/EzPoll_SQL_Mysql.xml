@@ -197,27 +197,7 @@
 	            )
 	            VALUES(
 	                #opt_id#,          	#qst_id#, 		#user_id#,        #tenant_id#,		#user_name1#,	  #user_name2#,	   #vote_date#,
-	                (SELECT 
-					  CASE
-					  WHEN	user_id IS NULL
-					  THEN
-						(SELECT deptid FROM tbl_addjobmaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id# AND DEPTID IN (SELECT USER_ID FROM tbl_vote_user_and_question WHERE QST_ID = #qst_id# and tenant_id = #tenant_id#) limit 0, 1)
-					  else
-					    (SELECT department FROM tbl_usermaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id#)
-					  END
-					FROM 
-						tbl_vote_user_and_question 
-					WHERE 
-						TENANT_ID = #tenant_id#
-			        AND
-						QST_ID = #qst_id# 
-					AND 
-					(
-						USER_ID = #user_id#
-					OR
-						user_id IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND tenant_id = #tenant_id# )
-					)
-					)
+	                (SELECT DEPT_ID FROM TBL_VOTE_QUESTION_RELATED WHERE TENANT_ID = #tenant_id# AND QST_ID = #qst_id# AND USER_ID = #user_id#)
 	            )  
 	   ]]> 
     </insert>  
@@ -249,11 +229,11 @@
         	<![CDATA[
 	            INSERT INTO TBL_VOTE_USER_AND_QUESTION(
 	                QST_ID,        			USER_ID,		    TENANT_ID,          USER_TYPE,
-	                COMPANYID
+	                COMPANYID,				DEPT_ID
 	            )
 	            VALUES(
 	                #qst_id#,          	 	#user_id#, 			#tenant_id#,       #type#,
-	                #companyid#
+	                #companyid#,			#dept_id#
 	            )  
         	]]>
         </isEqual>
@@ -329,42 +309,16 @@
     </insert>
     
     <insert id="EzPollDAO.insertCmt" parameterClass="Map"> 
-        	<![CDATA[
-	            INSERT INTO TBL_VOTE_COMMENT(
-	               ID, 	   QST_ID,     TENANT_ID,    USER_ID, 	 USER_NAME1,	 USER_NAME2,	TEXT_CONTENT, 	  IMAGE_TYPE, 	  FILE_TYPE,      FILE_NAME,  	   FILE_PATH,     CMT_TIME,
-	               DEPT_ID
-	            )
-	            VALUES( 
-	               #id#,   #qst_id#,   #tenant_id#,  #user_id#,	 #user_name1#,	 #user_name2#,	#text_content#,  #image_type#,   #file_type#,    #file_name#,	  #file_path#,   #cmt_time#,
-	               (SELECT 
-						CASE
-						WHEN 
-						  USER_ID IS NULL
-						THEN
-						  (SELECT deptid FROM tbl_addjobmaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id# AND DEPTID IN (SELECT USER_ID FROM tbl_vote_user_and_question WHERE QST_ID = #qst_id# and tenant_id = #tenant_id#) limit 0, 1)
-						WHEN 
-						  USER_ID IS NOT NULL AND USER_TYPE = 'company' 
-						THEN
-						  #dept_id#
-						else
-						  (SELECT department FROM tbl_usermaster WHERE CN = #user_id# AND TENANT_ID = #tenant_id#)
-					    END
-					FROM 
-						TBL_VOTE_USER_AND_QUESTION 
-					WHERE 
-						TENANT_ID = #tenant_id#
-			        AND
-						QST_ID = #qst_id# 
-					AND 
-					(
-						USER_ID = #user_id#
-					OR
-						USER_ID IN ( SELECT a.CN FROM TBL_DEPTMASTER a JOIN TBL_DEPTMASTER b ON a.EXTENSIONATTRIBUTE2 = b.EXTENSIONATTRIBUTE2 AND b.CN = #dept_id# AND a.TENANT_ID = #tenant_id# )
-					)
-				   )  
-		       )
-        	]]>
-         
+       	<![CDATA[
+            INSERT INTO TBL_VOTE_COMMENT(
+               ID, 	   QST_ID,     TENANT_ID,    USER_ID, 	 USER_NAME1,	 USER_NAME2,	TEXT_CONTENT, 	  IMAGE_TYPE, 	  FILE_TYPE,      FILE_NAME,  	   FILE_PATH,     CMT_TIME,
+               DEPT_ID
+            )
+            VALUES( 
+               #id#,   #qst_id#,   #tenant_id#,  #user_id#,	 #user_name1#,	 #user_name2#,	#text_content#,  #image_type#,   #file_type#,    #file_name#,	  #file_path#,   #cmt_time#,
+               (SELECT DEPT_ID FROM TBL_VOTE_QUESTION_RELATED WHERE TENANT_ID = #tenant_id# AND QST_ID = #qst_id# AND USER_ID = #user_id#)  
+	       )
+       	]]>
     </insert>
 
     <select id="EzPollDAO.getQuestionSeq" resultClass="String">             
@@ -397,6 +351,26 @@
 		<![CDATA[
 			SELECT 
 				USER_ID
+			FROM 
+				TBL_VOTE_USER_AND_QUESTION
+			WHERE  
+				TENANT_ID = #tenantID#	
+			AND
+				QST_ID    = #qst_id#
+			AND 
+				USER_TYPE = #type#
+		]]>			
+    </select> 
+    
+   	<select id="EzPollDAO.getListOfUserForQst" resultClass="PollUserVO">             
+		<![CDATA[
+			SELECT 
+				QST_ID as qstid,
+				USER_ID as userid,
+				TENANT_ID as tenantid,
+				USER_TYPE as usertype,
+				COMPANYID as companyid,
+				DEPT_ID as deptid
 			FROM 
 				TBL_VOTE_USER_AND_QUESTION
 			WHERE  
@@ -762,27 +736,7 @@
 	            )
 	            VALUES(
 	                #qst_id#,       #user_id#,        #tenant_id#,       0,        		 0,    		   1,			   0,
-	                (SELECT 
-					  CASE
-					  WHEN user_id IS NULL
-					  THEN
-						(SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #user_id# AND TENANT_ID = #tenant_id# AND DEPTID IN (SELECT USER_ID FROM tbl_vote_user_and_question WHERE QST_ID = #qst_id# and tenant_id = #tenant_id#) limit 0, 1)
-					  ELSE
-					    (SELECT DEPARTMENT FROM TBL_USERMASTER WHERE CN = #user_id# AND TENANT_ID = #tenant_id#)
-					    END
-					FROM 
-						tbl_vote_user_and_question 
-					WHERE 
-						TENANT_ID = #tenant_id#
-			        AND
-						QST_ID = #qst_id# 
-					AND 
-					(
-						USER_ID = #user_id#
-					OR
-						user_id IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND tenant_id = #tenant_id# )
-					)
-					)
+	                #dept_id#
             )  
         	]]>
         </isEqual>
@@ -834,28 +788,7 @@
 	            )
 	            VALUES(
 	                #qst_id#,       #user_id#,        #tenant_id#,       0,        		 0,    		   0,			   1,
-	                #companyid#,
-	                (SELECT 
-					  CASE
-					  WHEN USER_ID IS NULL
-					  THEN
-						(SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #user_id# AND TENANT_ID = #tenant_id# AND DEPTID IN (SELECT USER_ID FROM TBL_VOTE_USER_AND_QUESTION WHERE QST_ID = #qst_id# AND TENANT_ID = #tenant_id#) LIMIT 0, 1)
-					  else
-					    (SELECT DEPARTMENT FROM TBL_USERMASTER WHERE CN = #user_id# AND TENANT_ID = #tenant_id#)
-					    END
-					FROM 
-						TBL_VOTE_USER_AND_QUESTION 
-					WHERE 
-						TENANT_ID = #tenant_id#
-			        AND
-						QST_ID = #qst_id# 
-					AND 
-					(
-						USER_ID = #user_id#
-					OR
-						USER_ID IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND TENANT_ID = #tenant_id# )
-					)
-					)
+	                #companyid#,	#dept_id#
             )  
         	]]>
         </isEqual>
@@ -928,8 +861,27 @@
                                    		TENANT_ID = #tenant_id#
 								)
 			]]>
-		</selectKey>   
-		<isEqual property="v_temp" compareValue="1">     
+		</selectKey>
+		
+		<isEqual property="v_temp" compareValue="1"> 
+			<!-- 개인이나 회사가 대상자로 선택됐을 때 -->
+			<isNotEmpty property="userType">
+        	<![CDATA[
+	            INSERT INTO TBL_VOTE_QUESTION_RELATED(
+	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	COMMENT,      HIDE,			MODIFYING,
+	                COMPANYID,		DEPT_ID
+	            )
+	            VALUES(
+	                #qst_id#,       #user_id#,        #tenant_id#,        1,        	  0,    		 0,			   0,
+	                #companyid#,	
+        	]]>
+        		<isEqual property="userType" compareValue="user"><![CDATA[ #userDept# ]]></isEqual>
+        		<isEqual property="userType" compareValue="company"><![CDATA[ #dept_id# ]]></isEqual>
+            	)  
+			</isNotEmpty>    
+			
+			<!-- 부서가 대상자로 선택됐을 때 -->
+			<isEmpty property="userType">
         	<![CDATA[
 	            INSERT INTO TBL_VOTE_QUESTION_RELATED(
 	                QST_ID,        	USER_ID,          TENANT_ID,        SEEN,       	COMMENT,      HIDE,			MODIFYING,
@@ -940,12 +892,12 @@
 	                #companyid#,
 	                (SELECT 
 					  CASE
-					  WHEN USER_ID IS NULL
+					  WHEN COUNT(USER_ID) = 0
 					  THEN
-						(SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE CN = #user_id# AND TENANT_ID = #tenant_id# AND DEPTID IN (SELECT USER_ID FROM TBL_VOTE_USER_AND_QUESTION WHERE QST_ID = #qst_id# AND TENANT_ID = #tenant_id#) LIMIT 0, 1)
-					  else
-					    (SELECT DEPARTMENT FROM TBL_USERMASTER WHERE CN = #user_id# AND TENANT_ID = #tenant_id#)
-					    END
+						  (SELECT DEPTID FROM TBL_ADDJOBMASTER a JOIN TBL_VOTE_USER_AND_QUESTION b ON a.TENANT_ID = b.TENANT_ID AND b.QST_ID = #qst_id# AND a.CN = #user_id# AND a.TENANT_ID = #tenant_id# LIMIT 0, 1)
+					  ELSE
+					  	USER_ID
+					  END
 					FROM 
 						TBL_VOTE_USER_AND_QUESTION 
 					WHERE 
@@ -953,14 +905,14 @@
 			        AND
 						QST_ID = #qst_id# 
 					AND 
-					(
-						USER_ID = #user_id#
-					OR
-						USER_ID IN ( SELECT CN FROM TBL_DEPTMASTER WHERE CN = #dept_id# OR DEPT_CD_PATH LIKE CONCAT('%\,',#dept_id#,'\,%') OR DEPT_CD_PATH LIKE CONCAT(#dept_id#,'\,%') AND TENANT_ID = #tenant_id# )
-					)
-					)
-            )  
         	]]>
+						USER_ID IN ( 
+							<iterate property="deptPathArr" conjunction=","><![CDATA[ #deptPathArr[]# ]]></iterate> 
+						)
+					)
+					
+            	)  
+        	</isEmpty>
         </isEqual>
         
          <isNotEqual property="v_temp" compareValue="1">
@@ -1348,11 +1300,7 @@
 			AND
 				OPENTOALL = 1
 			AND
-			(
-					COMPANYID = #companyid#
-				OR
-					COMPANYID IN (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN IN (SELECT DEPTID FROM TBL_ADDJOBMASTER WHERE TENANT_ID = #tenant_id# AND CN = #user_id#))
-			)
+				COMPANYID = #companyid#
 		]]>				
     </select>
     
@@ -1363,7 +1311,7 @@
 				b.password,
 				IFNULL(b.displayname, a.user_id) AS DISPLAYNAME,
 				IFNULL(b.displayname2, a.user_id) AS DISPLAYNAME2,
-				IFNULL(a.dept_id, b.department) AS DEPARTMENT,       
+				a.dept_id as department,
 				b.description,
 				b.description2,
 				b.title,
@@ -1709,7 +1657,12 @@
 				a.password,
 				a.displayname,
 				a.displayname2,
-				a.department,              
+				(CASE
+				WHEN a.DEPARTMENT IN (SELECT USER_ID FROM TBL_VOTE_USER_AND_QUESTION WHERE TENANT_ID = #tenant_id# AND QST_ID = #qst_id#)
+				THEN a.DEPARTMENT
+				ELSE c.DEPTID
+				END
+				)AS department,
 				a.description,
 				a.description2,
 				a.title,
@@ -1736,6 +1689,14 @@
 				a.TENANT_ID = d.TENANT_ID
 			AND
 				a.DEPARTMENT = d.CN
+			LEFT JOIN
+				TBL_ADDJOBMASTER c
+			ON
+				c.CN = a.CN
+			AND
+				a.TENANT_ID = c.TENANT_ID
+			AND
+				c.DEPTID IN (SELECT CN from TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyid#)
 			WHERE 
 				a.tenant_id = #tenant_id#
 			AND 
@@ -1751,7 +1712,7 @@
 				a.displayname2,
 				(
 				CASE
-				WHEN c.DEPTID IS NULL
+				WHEN a.PHYSICALDELIVERYOFFICENAME = #companyUser#
 				THEN a.DEPARTMENT
 				ELSE c.DEPTID
 				END
@@ -1832,7 +1793,14 @@
 			<isNotEmpty property="companyUser">
 				<![CDATA[
 				a.CN IN (
-					SELECT CN FROM TBL_ADDJOBMASTER WHERE DEPTID IN (SELECT CN  FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyUser# AND TENANT_ID = #tenant_id#) AND TENANT_ID = #tenant_id#
+					SELECT 
+						ua.CN
+					FROM
+					(
+						SELECT CN FROM TBL_USERMASTER WHERE TENANT_ID = #tenant_id# AND PHYSICALDELIVERYOFFICENAME = #companyUser#
+						UNION ALL
+						SELECT CN FROM TBL_ADDJOBMASTER WHERE DEPTID IN (SELECT CN  FROM TBL_DEPTMASTER WHERE EXTENSIONATTRIBUTE2 = #companyUser# AND TENANT_ID = #tenant_id#) AND TENANT_ID = #tenant_id#
+					) ua
 				)
 				]]>
 			</isNotEmpty>
@@ -1866,6 +1834,57 @@
 		OR
 			user_id IN ( SELECT a.CN FROM TBL_DEPTMASTER a JOIN TBL_DEPTMASTER b ON a.EXTENSIONATTRIBUTE2 = b.EXTENSIONATTRIBUTE2 AND b.CN = #dept_id# AND a.TENANT_ID = #tenant_id# )
 		)
+    ]]>
+    </select>
+    
+    <select id="EzPollDAO.getQuestionRelatedDept" resultClass="String">
+    <![CDATA[
+    	SELECT
+    		DEPT_ID 
+    	FROM 
+    		TBL_VOTE_QUESTION_RELATED
+    	WHERE 
+    		TENANT_ID = #tenant_id#
+    	AND
+    		QST_ID = #qst_id#
+    	AND
+    		USER_ID = #user_id#
+    ]]>
+    </select>
+    
+    <select id="EzPollDAO.getQuestionUserDept" resultClass="String">
+    <![CDATA[
+    	SELECT
+    		DEPT_ID 
+    	FROM 
+    		TBL_VOTE_QUESTION_RELATED
+    	WHERE 
+    		TENANT_ID = #tenant_id#
+    	AND
+    		QST_ID = #qst_id#
+    	AND
+    		USER_ID = #user_id#
+    ]]>
+    </select>
+    
+    <select id="EzPollDAO.getIsQuestionUser" resultClass="PollUserVO">
+    <![CDATA[
+    	SELECT 
+    		USER_ID AS userId,
+		    USER_TYPE AS userType,
+		    DEPT_ID AS deptId
+		FROM
+			TBL_VOTE_USER_AND_QUESTION 
+		WHERE 
+			TENANT_ID = #tenant_id#
+        AND
+			QST_ID = #qst_id# 
+		AND 
+		(
+			USER_ID = #user_id#
+		OR
+			USER_ID = #companyid#
+		) 
     ]]>
     </select>
     

@@ -103,6 +103,11 @@ public class EzPollDAO extends EgovAbstractDAO {
 		return (List<String>) list("EzPollDAO.getListOfUserIdForQst", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PollUserVO> getListOfUserForQst(Map<String, Object> map) {		
+		return (List<PollUserVO>) list("EzPollDAO.getListOfUserForQst", map);
+	}
+	
 	public int checkTargetOfQst(Map<String, Object> map) {		
 		return (int) select("EzPollDAO.checkTargetOfQst", map);
 	}		
@@ -254,6 +259,14 @@ public class EzPollDAO extends EgovAbstractDAO {
 
 	public String getAddJobDept(Map<String, Object> map) {
 		return (String) select("EzPollDAO.getAddJobDept", map);
+	}
+	
+	public PollUserVO getIsQuestionUser(Map<String, Object> map) {
+		return (PollUserVO) select("EzPollDAO.getIsQuestionUser", map);
+	}
+	
+	public String getQuestionRelatedDept(Map<String, Object> map) {
+		return (String) select("EzPollDAO.getQuestionRelatedDept", map);
 	}
 	
 }

@@ -107,6 +107,7 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("tenant_id", pollQuestionVO.getTenantId());
 		map.put("type", pollQuestionVO.getReceiverType());
 		map.put("companyid", pollQuestionVO.getCompanyId());
+		map.put("dept_id", pollQuestionVO.getUserDeptId());
 		ezPollDAO.insertQustReceivers(map);
 	}
 
@@ -129,6 +130,15 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("tenantID", tenantID);
 		map.put("type", type);
 		return (List<String>) ezPollDAO.getListOfUserIdForQst(map);
+	}
+	
+	@Override
+	public List<PollUserVO> getListOfUserForQst(int qstId, int tenantID, String type) throws Exception {		
+		Map<String,Object> map = new HashMap<String, Object>();	
+		map.put("qst_id", qstId);
+		map.put("tenantID", tenantID);
+		map.put("type", type);
+		return (List<PollUserVO>) ezPollDAO.getListOfUserForQst(map);
 	}
 
 	@Override
@@ -184,12 +194,27 @@ public class EzPollServiceImpl implements EzPollService{
 
 	@Override
 	public void insertSeenQuestion(PollQuestionStatusVO pollQstStatusVO, String companyID) throws Exception {		
+		String deptID = pollQstStatusVO.getDeptId();
+		int tenantID = pollQstStatusVO.getTenantId();
+		
 		Map<String,Object> map = new HashMap<String, Object>();	
 		map.put("qst_id", pollQstStatusVO.getQustId());
 		map.put("user_id", pollQstStatusVO.getUserId());
-		map.put("tenant_id", pollQstStatusVO.getTenantId());	
-		map.put("dept_id", pollQstStatusVO.getDeptId());
+		map.put("tenant_id", tenantID);	
+		map.put("dept_id", deptID);
 		map.put("companyid", companyID);
+		
+		PollUserVO userVo = ezPollDAO.getIsQuestionUser(map);
+		if(userVo != null){
+			map.put("userType", userVo.getUserType());
+			map.put("userDept", userVo.getDeptId());
+		}
+		else {
+			String depPath = ezOrganService.getDeptPath(deptID, tenantID);
+			String[] deptPathArr = depPath.split(",");
+			map.put("deptPathArr", deptPathArr);
+		}
+		
 		ezPollDAO.insertSeenQuestion(map);		
 	}
 	
@@ -430,6 +455,13 @@ public class EzPollServiceImpl implements EzPollService{
 		map.put("file_path", pollCmtVO.getFilePath());
 		map.put("cmt_time", pollCmtVO.getCmtTime());
 		map.put("dept_id", pollCmtVO.getDeptId());
+		map.put("companyid", pollCmtVO.getDeptId());
+		PollUserVO userVo = ezPollDAO.getIsQuestionUser(map);
+		if(userVo != null){
+			map.put("userType", userVo.getUserType());
+			map.put("userDept", userVo.getDeptId());
+		}
+		
 		ezPollDAO.insertCmt(map);		
 	}
 
@@ -910,5 +942,16 @@ public class EzPollServiceImpl implements EzPollService{
 		return ezPollDAO.getAddJobDept(map);
 	}
 
+	@Override
+	public String getQuestionRelatedDept(int tenantId, int qstId, String userId, String deptId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		map.put("tenant_id", tenantId);
+		map.put("qst_id", qstId);
+		map.put("dept_id", deptId);
+		map.put("user_id", userId);
+		
+		return ezPollDAO.getQuestionRelatedDept(map);
+	}
 
 }

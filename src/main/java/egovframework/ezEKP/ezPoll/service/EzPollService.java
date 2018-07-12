@@ -24,6 +24,8 @@ public interface EzPollService {
 	
 	public List<String> getListOfUserIdForQst(int qstId, int tenantID, String type) throws Exception;
 	
+	public List<PollUserVO> getListOfUserForQst(int qstId, int tenantID, String type) throws Exception;
+	
 	public int checkTargetOfQst(int qstId, int tenantID) throws Exception;
 
 	public List<PollQuestionVO> getQuestionByDeptId(String dept_id, int tenantID) throws Exception;
@@ -129,4 +131,6 @@ public interface EzPollService {
 	public List<LoginVO> getAllUsersInfoForQstMRD(int tenantId, int qstId) throws Exception;
 	
 	public String getAddJobDept(int tenantId, int qstId, String userId, String deptId) throws Exception;
+	
+	public String getQuestionRelatedDept(int tenantId, int qstId, String userId, String deptId) throws Exception;
 }
