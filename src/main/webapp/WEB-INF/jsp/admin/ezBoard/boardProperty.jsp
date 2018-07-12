@@ -496,7 +496,7 @@
 			        brd_color = color;
 			    }
 			}			
-		    function ExtensionAttribute_onClick() {    	
+		    function ExtensionAttribute_onClick() {
 		        if (chkGroupBoard.checked) {
 		            gubun = "1"
 		        } else if (chkAnonyBoard.checked) {
@@ -516,12 +516,13 @@
 		        para[1] = gubun;
 		        var url = "/admin/ezBoard/boardExtensionAttribute.do";
 
+		        /* 2018-07-12 홍승비 - 확장칼럼 설정 팝업창 width 조절 */
 		        if (CrossYN()) {
 		            BoardExtension_dialogArguments[0] = para;
-		            var ExtensionAttribute = window.open(url, "ExtensionAttribute", GetOpenWindowfeature(750, 750));
+		            var ExtensionAttribute = window.open(url, "ExtensionAttribute", GetOpenWindowfeature(770, 750));
 		            try { ExtensionAttribute.focus(); } catch (e) { }
 		        } else {
-		            var retVal = window.showModalDialog(url, para, "dialogWidth:750px;dialogHeight:750px;status:no;help:no;scroll:yes;edge:sunken");
+		            var retVal = window.showModalDialog(url, para, "dialogWidth:770px;dialogHeight:750px;status:no;help:no;scroll:yes;edge:sunken");
 		        }
 		    }
 		    
@@ -599,19 +600,19 @@
 		                    <tr class="primary">
 		                        <th><c:out value='${lang_primary}' /></th>
 		                        <td style="border-bottom:1px solid #ddd;">
-		                            <input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="25" />
+		                            <input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="20" />
 		                        </td>
 		                    </tr>
 		                    <tr class="secondary">
 		                        <th><c:out value='${lang_secondary}' /></th>
 		                        <td>
-		                            <input type="text" id="txtBoardName2" style="width: 100%" value="<c:out value='${model.boardName2}' />" maxlength="25" />
+		                            <input type="text" id="txtBoardName2" style="width: 100%" value="<c:out value='${model.boardName2}' />" maxlength="20" />
 		                        </td>
 		                    </tr>
 		                </table>
 		            </c:if>    
 	          		<c:if test="${use_multiData != 'YES'}">
-	                	<input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="25" />
+	                	<input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="20" />
 	                </c:if>
 	            </td>
 	        </tr>
