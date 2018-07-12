@@ -141,7 +141,8 @@ public class EzPMSController3 {
 			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userId, param, request, "get", null);
 			
 			if(status.equals("ok")) {
-				JSONObject taskVO = (JSONObject) resultBody.get("data");
+				JSONObject taskDetail = (JSONObject) resultBody.get("data");
+				JSONObject taskVO = (JSONObject) taskDetail.get("taskDetails");
 				model.addAttribute("taskName", taskVO.get("taskName"));
 				model.addAttribute("projectName", taskVO.get("projectName"));
 			}
