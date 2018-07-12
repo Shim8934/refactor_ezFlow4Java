@@ -194,7 +194,7 @@ public interface EzPMSService {
 
 	void updateTaskWDNW(ProjectTaskVO taskVO, float taskWorkingday);
 
-	public void updateTaskGroupId(long projectId, long targetTaskId, long changeGroupId, int tenantId, int treeDepth);
+	public void updateTaskGroupId(long projectId, long targetTaskId, long toGroupId, long fromGroupId, int tenantId, int treeDepth) throws Exception;
 
 	public Float getProjectWeight(Long projectId, int tenantId) throws Exception;
 	
@@ -261,4 +261,6 @@ public interface EzPMSService {
 	public int getDateTaskCount(String date, long projectId, int tenantId, String memberId);
 
 	public void deleteMemberSchedule(String date, long projectId, int tenantId, String memberId);
+	
+	public void updateGroupLatestInfo(long projectId, long groupId, int tenantId) throws Exception;
 }

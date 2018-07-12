@@ -1138,20 +1138,20 @@
 						var selectedGroupId = ui.item[0].id.substring(4, ui.item[0].id.lastIndexOf("_"));
 						
 						var targetTaskId = ui.item[0].id.match(/t(\d+)/)[1];
-						var changeGroupId = -1;
+						var toGroupId = -1;
 
 						if (groupId != selectedGroupId) {
 							if (groupId.indexOf("_g") != -1) {
-								changeGroupId = groupId.match(/g(\d+)/)[1];
+								toGroupId = groupId.match(/g(\d+)/)[1];
 							} else {
-								changeGroupId = projectGroupId;
+								toGroupId = projectGroupId;
 							}
 						}
 		   				
 						$("#" + ui.item[0].id).attr("taskid", "" + groupId + selectedTaskId);
 						$("#" + ui.item[0].id).attr("id", "tid_" + groupId + selectedTaskId);
 						
-		   				var isPermitted = changeGanttOrder(targetTaskId, changeGroupId);
+		   				var isPermitted = changeGanttOrder(targetTaskId, toGroupId, selectedGroupId);
 		   				
 		   				if (isPermitted == "false") {
 		   					$(this).sortable("cancel");
@@ -1179,7 +1179,7 @@
 		   		$(document).on("change", "input[name='realProgress']", function(){ updateProgress(this); });
 		   	}
 	   		
-	   		function changeGanttOrder(targetTaskId, changeGroupId) {
+	   		function changeGanttOrder(targetTaskId, toGroupId, fromGroupId) {
 	   			var groupArr = [];
 	   			var taskArr = [];
 	   			var treeDepth = 0;
@@ -1222,12 +1222,13 @@
 	   			});
 	   			
 	   			//옮기고자 하는 task의 멤버들이 옮겨진 groupMember가 모두 포함되어있는지 확인
-	   			if (changeGroupId != -1) {
-		   			var groupMember = $("#tid_p" + projectId + "_g" + changeGroupId).find(".taskAssigs").attr("title");
-		   			var targetGroupId = $(".taskEditRow[taskid$='t" + targetTaskId + "']").attr("taskid");
-		   			var groupTreeDepth = $("#tid_p" + projectId + "_g" + changeGroupId).attr("level");
+	   			if (toGroupId != -1) {
+		   			var groupMember = $("#tid_p" + projectId + "_g" + toGroupId).find(".taskAssigs").attr("title");
+// 		   			var targetGroupId = $(".taskEditRow[taskid$='t" + targetTaskId + "']").attr("taskid");
+		   			fromGroupId = fromGroupId.match(/g(\d+)/) ? fromGroupId.match(/g(\d+)/)[1] : projectGroupId;
+		   			var groupTreeDepth = $("#tid_p" + projectId + "_g" + toGroupId).attr("level");
 		   			
-		   			if (targetGroupId.indexOf(changeGroupId) != -1) {
+		   			if (fromGroupId.indexOf(toGroupId) != -1) {
 			   			if (groupMember != undefined) {
 				   			treeDepth = parseInt(groupTreeDepth) + 1;
 				   			
@@ -1254,7 +1255,8 @@
 	   				groupArr : groupArr,
 	   				taskArr : taskArr,
 	   				targetTaskId : targetTaskId,
-	   				changeGroupId : changeGroupId,
+	   				toGroupId : toGroupId,
+	   				fromGroupId : fromGroupId,
 	   				treeDepth : treeDepth
 	   			}
 	   			

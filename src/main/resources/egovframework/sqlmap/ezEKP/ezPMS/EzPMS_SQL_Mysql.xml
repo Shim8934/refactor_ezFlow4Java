@@ -3464,7 +3464,7 @@
 			UPDATE
 				TBL_PMS_TASK
 			SET
-				GROUP_ID = #changeGroupId#,
+				GROUP_ID = #toGroupId#,
 				TREE_DEPTH = #treeDepth#
 			WHERE
 				TASK_ID = #targetTaskId#
