@@ -844,7 +844,7 @@
 			</tr>
 		</table>
 		<div class="listview">
-		    <div id="SelectList" style="border: 0px solid #ddd; Width: 99%; Height: 150px; overflow: hidden; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+		    <div id="SelectList" style="border: 0px solid #ddd; Width: 100%; Height: 150px; overflow: hidden; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 		</div>		
 		<div id="divListHeader" style="padding-top:10px">
 			<span style="font-weight:bold"><spring:message code='ezBoard.t999040'/></span>
@@ -870,7 +870,7 @@
 				</tr>
 			</table>
 			<div class="listview">
-			    <div id="HeaderList" style="border: 0px solid #ddd; Width: 99%; Height: 300px; overflow: hidden; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+			    <div id="HeaderList" style="border: 0px solid #ddd; Width: 100%; Height: 300px; overflow: hidden; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 			</div>
 		</div>		
 		<div class="btnpositionNew">

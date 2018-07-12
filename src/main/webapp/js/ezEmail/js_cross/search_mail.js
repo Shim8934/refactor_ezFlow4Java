@@ -241,24 +241,6 @@ function searchRecurMail(sKeyword, sCategory, sMailFolder, startDate, endDate) {
         sKeyword = ReplaceText(sKeyword, "<", "&lt;");
         sKeyword = ReplaceText(sKeyword, ">", "&gt;");
         sKeyword = ReplaceText(sKeyword, "'", "''");
-        
-        switch (String(sCategory)) {
-            case strLang151:
-                sCategory = "SUBJECT";
-                break;
-
-            case strLang152:
-                sCategory = "CONTENT";
-                break;
-
-            case strLang153:
-                sCategory = "FROM";
-                break;
-
-            case strLang154:
-                sCategory = "RECEIVE";
-                break;
-        }
     }
     
     var pageNum = parseInt(document.getElementById("resultTD").getAttribute("curPage"));
