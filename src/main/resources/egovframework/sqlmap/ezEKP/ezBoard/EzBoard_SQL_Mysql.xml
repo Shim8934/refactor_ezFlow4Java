@@ -561,7 +561,7 @@
 	      		AND 
 	      			A.STARTDATE > #nowDate# 
 	      		ORDER BY 
-	      			#v_PSORTBY#
+	      			$v_PSORTBY$
 	      		LIMIT
 	      			#v_PENDROW#
 			]]>
