@@ -2031,7 +2031,7 @@
                  ('S006', 2, '제목', 'Title', '見出し', '标题', 300, 'TBL_ENDAPRDOCINFO', 'DocTitle', NULL, NULL, '문서함문서', '제목', #companyID#, #tenantID#),
                  ('S006', 3, '기안자', 'Drafter', '起案者', '起草人', 120, 'TBL_ENDAPRDOCINFO', 'WriterName', NULL, NULL, '문서함문서', '기안자', #companyID#, #tenantID#),
                  ('S006', 4, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 130, 'TBL_ENDAPRDOCINFO', 'WriterDeptName', NULL, NULL, '문서함문서', '기안부서명', #companyID#, #tenantID#),
-                 ('S006', 3, '회사', 'Company', '会社', '公司', 130, 'VAPRWILLDOCLIST', 'companyName', NULL, NULL, '문서함문서', '회사', #companyID#, #tenantID#),
+                 ('S006', 5, '회사', 'Company', '会社', '公司', 130, 'VAPRWILLDOCLIST', 'companyName', NULL, NULL, '문서함문서', '회사', #companyID#, #tenantID#),
                  ('S006', 6, '완료일시', 'Date completed', '完了日時', '结束日期', 130, 'TBL_ENDAPRDOCINFO', 'EndDate', NULL, NULL, '문서함문서', '완료일시', #companyID#, #tenantID#),
                  ('S006', 7, '문서명', 'Form title', '文書名', '文件名', 150, 'TBL_ENDAPRDOCINFO', 'FormName', NULL, NULL, '문서함문서', '양식명', #companyID#, #tenantID#),
                  ('S006', 8, '이관', 'Transfer', '移管', '移交', 60, 'TBL_EXPENDAPRDOCINFO', 'EDMSYN', NULL, 'NoUse', '문서함문서', 'EDMS이관여부', #companyID#, #tenantID#),
