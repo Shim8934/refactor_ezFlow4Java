@@ -100,7 +100,7 @@
 			    <th style="width:150px;text-align:center;"><spring:message code = 'ezCommunity.t10' /></th>
 			    <th style="text-align:center;"><spring:message code = 'ezCommunity.t512' /></th>
 			    <th style="width:90px;text-align:center;"><spring:message code = 'ezCommunity.t550' /></th>
-			    <th colspan="2" style="width:90px;text-align:center;"><spring:message code = 'ezCommunity.t551' /></th>
+			    <th colspan="2" style="width:150px;text-align:center;"><spring:message code = 'ezCommunity.t551' /></th>
 			</tr>
 			<span id="idSpan">${idSpanValue }</span>
 		</table>

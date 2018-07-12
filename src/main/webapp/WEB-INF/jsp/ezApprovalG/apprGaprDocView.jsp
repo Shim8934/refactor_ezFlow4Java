@@ -289,7 +289,7 @@
 	                document.getElementById("tbtnforcecallback").style.display = "";
 
 	                if (callBackType == "FORCECALLBACK") {
-	                    btncallback_onclick();
+	                	btnforcecallback_onclick();
 	                }
 	            }
 	        }
@@ -446,47 +446,48 @@
 	        function doCancel(ans) {
 	        	DivPopUpHidden();
 	        	if (ans) {
-	            var GetCurrentlinelist = getAprLinefor("APR", DocID);
-	        	var result = "";
-	        	
-	        	$.ajax({
-	        		type : "POST",
-	        		dataType : "text",
-	        		async : false,
-	        		url : "/ezApprovalG/doCancelForce.do",
-	        		data : {
-	        			docID : pDocID,
-	        			userID : pUserID
-	        		},
-	        		success: function(xml){
-	        			result = xml;
-	        		}, error: function () {
+		            var GetCurrentlinelist = getAprLinefor("APR", DocID);
+		        	var result = "";
+		        	
+		        	//2018-07-10 배현상, 회수와 강제회수 분기(doCancelForce.do -> doCancel.do)
+		        	$.ajax({
+		        		type : "POST",
+		        		dataType : "text",
+		        		async : false,
+		        		url : "/ezApprovalG/doCancelForce.do",
+		        		data : {
+		        			docID : pDocID,
+		        			userID : pUserID
+		        		},
+		        		success: function(xml){
+		        			result = xml;
+		        		}, error: function () {
 	    	                var pAlertContent = strLang898;
 	    	                OpenAlertUI(pAlertContent);
-	        		}
-	        	});
-	        	
-	            var RtnVal = getNodeText(GetChildNodes(loadXMLString(result))[0]);
-	            if (RtnVal == "TRUE") {
-	            	SendMailToCancel_Function(GetCurrentlinelist);
-                    var pAlertContent = strLang891 + "<br> " + strLang892;
-                    OpenAlertUI(pAlertContent, OpenAlertUI_Close);
-	            }
-	            else if (RtnVal == "ERR01") {
-	                var pAlertContent = strLang895;
-	                OpenAlertUI(pAlertContent);
-	            }
-	            else if (RtnVal == "ERR02") {
-	                var pAlertContent = strLang896;
-	                OpenAlertUI(pAlertContent);
-	            }
-	            else if (RtnVal == "ERR03") {
-	                var pAlertContent = strLang897;
-	                OpenAlertUI(pAlertContent);
-	            } else {
-	            	var pAlertContent = strLang898;
-	                OpenAlertUI(pAlertContent);
-	            }
+		        		}
+		        	});
+		        	
+		            var RtnVal = getNodeText(GetChildNodes(loadXMLString(result))[0]);
+		            if (RtnVal == "TRUE") {
+		            	SendMailToCancel_Function(GetCurrentlinelist);
+	                    var pAlertContent = strLang891 + "<br> " + strLang892;
+	                    OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+		            }
+		            else if (RtnVal == "ERR01") {
+		                var pAlertContent = strLang895;
+		                OpenAlertUI(pAlertContent);
+		            }
+		            else if (RtnVal == "ERR02") {
+		                var pAlertContent = strLang896;
+		                OpenAlertUI(pAlertContent);
+		            }
+		            else if (RtnVal == "ERR03") {
+		                var pAlertContent = strLang897;
+		                OpenAlertUI(pAlertContent);
+		            } else {
+		            	var pAlertContent = strLang898;
+		                OpenAlertUI(pAlertContent);
+		            }
 	        	}
 	        }
 	        
@@ -554,6 +555,60 @@
 	            try { window.opener.getDocList(); } catch (e) { }
 	            window.close();
 	        }
+	        
+	        //2018-07-10 배현상, 강제회수 분기(btnforcecallback_onclick 생성)
+	        function btnforcecallback_onclick() {
+	        	var pMsg = "<spring:message code='ezApprovalG.t67'/>";
+	        	var Ans = OpenInformationUI(pMsg, doForceCancel);
+	        }
+	        
+	        //2018-07-10 배현상, 강제회수 분기(doForceCancel 생성)
+	        function doForceCancel(ans) {
+	        	DivPopUpHidden();
+	        	if (ans) {
+	        		var GetCurrentlinelist = getAprLinefor("APR", DocID);
+	        		var result = "";
+	        		
+	        		$.ajax({
+	        			type : "POST",
+	        			dataType : "text",
+	        			async : false,
+	        			url : "/ezApprovalG/doCancelForce.do",
+	        			data : {
+	        				docID : pDocID,
+	        				userID : pUserID
+	        			},
+	        			success: function(xml){
+	        				result = xml;
+	        			}, error: function () {
+	        				var pAlertContent = strLang898;
+	        				OpenAlertUI(pAlertContent);
+	        			}
+	        		});
+	        		
+	        		var RtnVal = getNodeText(GetChildNodes(loadXMLString(result))[0]);
+	        		if (RtnVal == "TRUE") {
+	        			SendMailToCancel_Function(GetCurrentlinelist);
+	        			var pAlertContent = strLang891 + "<br> " + strLang892;
+	        			OpenAlertUI(pAlertContent, OpenAlertUI_Close);
+	        		}
+	        		else if (RtnVal == "ERR01") {
+	        			var pAlertContent = strLang895;
+	        			OpenAlertUI(pAlertContent);
+	        		}
+	        		else if (RtnVal == "ERR02") {
+	        			var pAlertContent = strLang896;
+	        			OpenAlertUI(pAlertContent);
+	        		}
+	        		else if (RtnVal == "ERR03") {
+	        			var pAlertContent = strLang897;
+	        			OpenAlertUI(pAlertContent);
+	        		} else {
+	        			var pAlertContent = strLang898;
+	        			OpenAlertUI(pAlertContent);
+	        		}
+	        	}
+	        }
 		</script>
 	</head>
 	<body class="popup" style="height:100%">
@@ -574,7 +629,7 @@
 		          <li id="btnhistory"><span onClick="btnhistory_onclick()" ><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		          <li id="tbtncallback" style="display: none;"><span id="btncallback" onclick="return btncallback_onclick()"><spring:message code='ezApprovalG.t66'/></span></li>
-                  <li id="tbtnforcecallback" style="display: none;"><span id="btnforcecallback" onclick="return btncallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
+                  <li id="tbtnforcecallback" style="display: none;"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
 		        </ul>
 		      </div>
 		      <div id="close">

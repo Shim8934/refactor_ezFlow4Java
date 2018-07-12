@@ -496,6 +496,8 @@
 	            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
 		        window.resizeTo(785, 780);
 		    }
+		    
+		    /* 2018-07-11 홍승비 - 게시물 복사 시 guBun 파라미터 추가 */
 		    function btn_Copy_Onclick() {
 		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
 		            alert("<spring:message code='ezBoard.t202' />");
@@ -515,9 +517,10 @@
 		        pwidth = pwidth - 127;
 		        var feature = "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 		        feature = feature + GetOpenPosition(340,656);
-		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "", feature, "");
+		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&guBun=" + gubun, "", feature, "");
 		    }
 		
+		    /* 2018-07-11 홍승비 - 게시물 이동 시 guBun 파라미터 추가 */
 		    var moveboarditem_cross_dialogArguments = new Array();
 		    function btn_Move_Onclick() {
 		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
@@ -535,21 +538,19 @@
 		            return;
 		        }
 		
-		
 		        if (CrossYN()) {
 		            moveboarditem_cross_dialogArguments[1] = btn_Move_Onclick_Complete;
-		            var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "MoveBoardItem", GetOpenWindowfeature(340, 600));
+		            var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&guBun=" + gubun, "MoveBoardItem", GetOpenWindowfeature(340, 600));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
-		
 		            var pheigth = window.screen.availHeight;
 		            var pwidth = window.screen.availWidth;
 		            pheigth = parseInt(pheigth) / 2;
 		            pwidth = parseInt(pwidth) / 2;
 		            pheigth = pheigth - 200;
 		            pwidth = pwidth - 127;
-		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "", "DialogHeight:656px;DialogWidth:340px;status:no;help:no;edge:sunken;scroll:no");
+		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&guBun=" + gubun, "", "DialogHeight:656px;DialogWidth:340px;status:no;help:no;edge:sunken;scroll:no");
 		            if (typeof (ret) != "undefined") {
 		                if (ret == "OK") {
 		                    window.opener.location.reload();

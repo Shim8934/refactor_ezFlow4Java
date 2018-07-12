@@ -117,7 +117,7 @@
 			
 			function SubMenus()
 			{
-			    window.open("/admin/ezPortal/subMenuItemsEdit.do?uID=" + uid + "&pageID=" + pageid, "", "height = 356px, width = 390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(390, 356));
+			    window.open("/admin/ezPortal/subMenuItemsEdit.do?uID=" + uid + "&pageID=" + pageid, "", "height = 360px, width = 390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(390, 356));
 			}
 			
 			function toggle_menu(pIndex)

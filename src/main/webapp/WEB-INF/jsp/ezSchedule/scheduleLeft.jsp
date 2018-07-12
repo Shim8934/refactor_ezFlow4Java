@@ -467,7 +467,8 @@
 	        function MonthMiniDbClick(obj) {
 	            if (_funCode == 2)
 	                parent.frames["right"].WriteDateSchedule_left(obj)
-	        }
+	        }	        
+	      
 		</script>
 	</head>
 
@@ -475,6 +476,7 @@
         <div class="left_pims" title="<spring:message code='ezSchedule.t1010'/>"><span><spring:message code='ezSchedule.t1010'/></span></div>
         <input type="hidden" id="chk_str" value="">
 	    <div id="left">
+	    	
 	        <div class="left_pims1" title="<spring:message code='ezSchedule.t1010'/>" id='pims1'></div>
 		    <div class="left_pims2" title="<spring:message code='ezSchedule.t1017'/>" id='pims2' style="display:none"></div>
 		    <div class="left_pims3" title="<spring:message code='ezSchedule.t1011'/>" id='pims3' style="display:none"></div>
@@ -483,6 +485,7 @@
 		    	<!-- 2018-06-07 구해안 mini 호출하는 부분 삭제하고 체크박스 생성 -->    	
 		    	<!-- <div id="CalendarMini" style="padding-top:5px;margin:0px 10px 10px 10px;"></div> -->
 		    	<div id="IDClick">
+		    	<!-- 2018-07-11 구해안 left 체크박스 label에 title 삽입 -->
 		    	<label class="IDcontainer" onchange="chk_all()"><spring:message code='ezSchedule.t220'/>
 				  <input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse">
 				  <span class="checkmark"></span>
@@ -493,7 +496,7 @@
 				</label>
 				<c:if test='${!empty scheSec}'>
 					<c:forEach var="sec" items="${scheSec}">
-						<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t372'/>${sec.secName }
+						<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="${sec.secName }"style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t372'/>${sec.secName }</span>
 						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${sec.secId }" class="checkSelect">
 						  <span class="checkmark" style="background-color:#018bfa;"></span>
 						</label>
@@ -506,7 +509,7 @@
 				
 				<c:if test='${!empty scheDept}'>
 					<c:forEach var="dep" items="${scheDept}">
-						<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t373'/>${dep.deptName }
+						<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="${dep.deptName }"style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t373'/>${dep.deptName }</span>
 						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${dep.deptId }" class="checkSelect">
 						  <span class="checkmark" style="background-color:#01b43f;"></span>
 						</label>
@@ -515,7 +518,7 @@
 				<c:if test='${!empty scheCum}'>
 					<c:forEach var="cum" items="${scheCum}">
 						<c:if test="${cum.deptId ne loginVO.deptID}">
-							<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t373'/>${cum.titleName }
+							<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="${cum.titleName }" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t373'/>${cum.titleName }</span>
 							  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${cum.deptId }" class="checkSelect">
 							  <span class="checkmark" style="background-color:#01b43f;"></span>
 							</label>
@@ -528,7 +531,7 @@
 				</label>
 				<c:if test='${!empty groupList}'>
 					<c:forEach var="group" items="${groupList}">
-						<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t375'/>${group.groupName }
+						<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="${group.groupName }" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t375'/>${group.groupName }</span>
 						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="7" value="${group.groupId }" class="checkSelect">
 						  <span class="checkmark" style="background-color:#e9de13;"></span>
 						</label>

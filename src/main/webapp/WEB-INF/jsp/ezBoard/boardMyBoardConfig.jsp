@@ -263,18 +263,19 @@
 	                }
 	            }
 	        }
+	        /* 2018-07-11 홍승비 - 마이게시판 삭제 시 메세지 나타나는 순서 변경 */
 	        function delete_onclick() {
+	            if (SelectedBoardID == "") {
+	                alert("<spring:message code='ezBoard.t10039'/>");
+	                return;
+	            }
+	            
 	            if (selNewBoard) {
 	                return;
 	            }
 	
 	            if (!confirm("<spring:message code='ezBoard.t197'/>"))
 	                return;
-	
-	            if (SelectedBoardID == "") {
-	                alert("<spring:message code='ezBoard.t10039'/>");
-	                return;
-	            }
 	
 	            var xmlhttp = createXMLHttpRequest();
 	            var xmlpara = createXmlDom();
