@@ -600,19 +600,19 @@
 		                    <tr class="primary">
 		                        <th><c:out value='${lang_primary}' /></th>
 		                        <td style="border-bottom:1px solid #ddd;">
-		                            <input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="25" />
+		                            <input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="20" />
 		                        </td>
 		                    </tr>
 		                    <tr class="secondary">
 		                        <th><c:out value='${lang_secondary}' /></th>
 		                        <td>
-		                            <input type="text" id="txtBoardName2" style="width: 100%" value="<c:out value='${model.boardName2}' />" maxlength="25" />
+		                            <input type="text" id="txtBoardName2" style="width: 100%" value="<c:out value='${model.boardName2}' />" maxlength="20" />
 		                        </td>
 		                    </tr>
 		                </table>
 		            </c:if>    
 	          		<c:if test="${use_multiData != 'YES'}">
-	                	<input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="25" />
+	                	<input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="20" />
 	                </c:if>
 	            </td>
 	        </tr>
