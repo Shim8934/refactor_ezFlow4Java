@@ -178,6 +178,8 @@ $(function() {
 		listNumber = 20;
 	}
 	
+	$("#listcount").val(initListNumber).prop("selected", true);
+	
 	setProjectList("new");
 	getDatePicker();
 
