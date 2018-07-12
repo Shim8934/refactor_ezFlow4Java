@@ -12,13 +12,15 @@
 		<h1 id="cabMagHeader" role='<c:out value="${node}"></c:out>'><spring:message code="ezCabinet.t125"/></h1>
 		
 		<div class = "addRelatedConfig" id = "addRelated">
-		     <a class = "cabRadio"><input type="radio" name = "checkCabinet" ><span><spring:message code="ezCabinet.t126"/></span><br></a>
-		     <a class = "cabRadio"><input type="radio" name = "checkCabinet" ><span><spring:message code="ezCabinet.t127"/></span>    </a>
+			<a class = "cabRadio"><input type="radio" name = "checkCabinet" id = "1"/><label for = "1">
+			<span><spring:message code="ezCabinet.t126"/></span></label><br></a>
+			<a class = "cabRadio"><input type="radio" name = "checkCabinet" id = "2" checked = "checked"/><label for = "2">
+			<span><spring:message code="ezCabinet.t127"/></span></label></a>
 		</div>
 		
 		
-		<div class="cabMgTree" style="position: relative;">
-			<div id="cabinetMgTree" style="width: 100%; height: 100%; position: absolute; z-index: 1;"></div>
+		<div class="cabMgTree" id = "cabMgTreeId" style="position: relative;">
+			<div id="cabinetMgTree" style="width: 100%; height: 100%; position: absolute; z-index: 1; "></div>
 			<div id="fogPanel" style="width: 100%; height: 100%; z-index: 2; background-color: transparent; position: absolute; display: none; top: 0px; left: 0px;"></div>
 		</div>
 		
@@ -50,31 +52,40 @@
 					
 					document.onselectstart   = function() {return false;};
 					
+					var fogPanel = document.getElementById("fogPanel");
+					var cabinetMgTree = document.getElementById("cabinetMgTree");
+					
 					var cabMgConfig          = document.getElementById("addRelated");
-				    var listMgConfig         = cabMgConfig.children;
-				    
-				    listMgConfig[0].onclick  = function() {sendMailCabinet();};
-				    listMgConfig[1].onclick  = function() {directCabinect();};
+					var listMgConfig         = cabMgConfig.children;
+					
+					listMgConfig[0].onclick  = function() {sendMailCabinet();};
+					listMgConfig[1].onclick  = function() {directCabinect();};
 					
 					var cabMgBttnElmt        = document.getElementById("cabMgDivBttn");
 					var listMgBttns          = cabMgBttnElmt.children;
 					
 					listMgBttns[0].onclick   = function(e) {addRelatedCabinet();};
 					listMgBttns[1].onclick   = function(e) {closeWindow();};
-					
-					function sendMailCabinet(){
-						document.getElementById("fogPanel").style.display = "";
-					}
-					
-					function directCabinect(){
-						//* Note add function here
-					}
-					
-					function closeWindow() {window.close();}
-					
-					function addRelatedCabinet() {
-						//*Note add function here
-					}
+				}
+				
+				function sendMailCabinet(){
+					var cabinetMainDiv = document.getElementById("cabMgTreeId");
+					var fogPanel = document.getElementById("fogPanel");
+					fogPanel.style.display = "";
+					cabinetMainDiv.style.backgroundColor = "#f1f1f1";
+				}
+				
+				function directCabinect(){
+					var fogPanel = document.getElementById("fogPanel");
+					var cabinetMainDiv = document.getElementById("cabMgTreeId");
+					cabinetMainDiv.style.backgroundColor = "#fff";
+					fogPanel.style.display = "none";
+				}
+				
+				function closeWindow() {window.close();}
+				
+				function addRelatedCabinet() {
+					//*Note add function here
 				}
 				
 			})();
