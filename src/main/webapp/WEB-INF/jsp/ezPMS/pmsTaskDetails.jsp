@@ -400,7 +400,7 @@ button.PHBtn {
 .mainBodyMid{height:510px;}
 .statusDivBrd{width:165px;height:168px;float:left;border: 1px solid #ccc;border-right:0px;}
 .statusChgBtn{float:left;margin:3px 25px;border:1px solid #ddd;border-radius:5px; padding:0px 7px; cursor:pointer;}
-.taskUpdateBtn{display:inline-block;width:100px;height:16px;float:right;top:25px;position:relative;font-size:12px;text-align:center;border:1px solid #ddd;border-radius:6px;cursor:pointer;z-index:101;}
+.taskUpdateBtn{display:inline-block;width:100px;height:16px;float:right;margin-top:6px;position:relative;font-size:12px;text-align:center;border:1px solid #ddd;border-radius:6px;cursor:pointer;z-index:101;}
 </style>
 </head>
 <body class="popup">
@@ -494,6 +494,7 @@ button.PHBtn {
 			</table>
 		</div>
 		<div class="mainBodyMid">
+			<div class="portlet_tabpart01" style="margin-bottom: 10px">
 			<c:if test="${userRoleId eq 1 }">
 			<div id="taskUpdateBtn" class="taskUpdateBtn">
 				<c:choose>
@@ -505,7 +506,6 @@ button.PHBtn {
 			<c:if test="${userRoleId ne 3 }">
 				<div id="addBoardBtn" class="taskUpdateBtn" style="display: none;"><spring:message code='ezPMS.t278' /></div>
 			</c:if>
-			<div class="portlet_tabpart01" style="margin-bottom: 10px">
 			   <div class="portlet_tabpart01_top" id="tab1">
 			   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t256' /></span></p>
 			  	 	<p id="FBoard_sub1"><span id="1tab1" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t180' /></span></p>
