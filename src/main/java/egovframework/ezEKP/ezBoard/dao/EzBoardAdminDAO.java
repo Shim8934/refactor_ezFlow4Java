@@ -298,4 +298,12 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		return (String) select("EzBoardAdminDAO.getMyBoardTreeUpper", boardMyFavoriteVO);
 	}
 
+	/* 2018-07-12 홍승비 - PRI 제약을 가지는 CompanyID 칼럼의 데이터 삽입 판단용 분기 추가(차후 companyID 통합 시 제거) */
+	public int checkCompanyIDCol() {
+		return (int) select("EzBoardAdminDAO.checkCompanyIDCol");
+	}
+	public void addMyBoardsComp(Map<String, Object> map) {
+		insert("EzBoardAdminDAO.addMyBoardsComp", map);
+	}
+
 }
