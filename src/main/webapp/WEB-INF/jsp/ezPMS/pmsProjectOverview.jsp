@@ -523,7 +523,6 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 		
 		var targetStatus = $("#" + targetPosition).attr("name");
 		var startRow = $("#" + targetPosition).find(".overview_list").length;
-		console.log(taskList.length);
 		
 		if (taskList.length >= 10) {
 			if (!isBoard) {

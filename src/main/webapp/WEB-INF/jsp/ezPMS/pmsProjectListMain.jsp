@@ -584,7 +584,7 @@ function changeProjectStatus() {
 	var result = getCheckedVal();
 	
 	if (result == 1) {
-		addProjectPopup(36, 38, 400, 162, "/ezPMS/changeProjectStatus.do");
+		addProjectPopup(36, 38, 400, 200, "/ezPMS/changeProjectStatus.do");
 	} else {
 		alert("<spring:message code='ezPMS.t29' />");
 		return;	

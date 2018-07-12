@@ -628,4 +628,13 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void updateProjectWorkingdaySum2(Map<String, Object> map) {
 		update("EzPMSDAO.updateProjectWorkingdaySum2", map);
 	}
+
+	public int getDateTaskCount(Map<String, Object> map) {
+		return (int) select ("EzPMSDAO.getDateTaskCount", map);
+	}
+
+	public void deleteMemberSchedule(Map<String, Object> map) {
+		delete ("EzPMSDAO.deleteMemberSchedule", map);
+		
+	}
 } 

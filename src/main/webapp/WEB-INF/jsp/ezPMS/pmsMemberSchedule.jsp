@@ -29,7 +29,8 @@ function setMemberSchedule() {
 	for (var i = 0; i < memberScheduleList.length; i++) {
 		var memberId = memberScheduleList[i].userId;
 		var assignedDate = memberScheduleList[i].assignedDate;
-		$("tr[userId='" + memberId + "']").find("td[date='" + assignedDate + "']").html("<div class='circle' onclick='getTaskNameList(this)'></div>");	}
+		$("tr[userId='" + memberId + "']").find("td[date='" + assignedDate + "']").html("<div class='circle' onclick='getTaskNameList(this)'></div>");	
+	}
 }
 
 function getTaskNameList(elem) {

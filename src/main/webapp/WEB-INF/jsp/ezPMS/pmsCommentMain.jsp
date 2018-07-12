@@ -268,9 +268,6 @@
 		var searchCondition = $("#searchArea option:selected").val();
 		var searchKeyword = $("#searchKeyword").val();
 		
-		console.log(searchCondition);
-		console.log(searchKeyword);
-		
 		if(searchCondition == 'searchByUser') {
 			searchByUser = searchKeyword;
 		} else if (searchCondition == 'searchByContent') {
@@ -308,11 +305,8 @@
 			totalCount = contentCount;
 		}
 		
-		console.log(taskName);
 		taskName = convertString(taskName);
-		
 		contentTitle = taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span><spring:message code='ezPMS.t4' /></span>";
-
 		$("#taskNameArea").html(contentTitle);
 	}
 </script>
@@ -370,8 +364,8 @@
 	
 	.col1 {width: 9%;}
 	.col2 {width: 14%;}
-	.col3 {width: 47%;}
 	.col4 {width: 12%;}
+	.col5 {width: 10%}
 	.commentContent {width: 80%;}
 </style>
 

@@ -2,8 +2,6 @@
  * 프로젝트 업무트리 가져오기
  */
 function getProjectTaskTree(containerId, data, location) {
-	console.log(data);
-	
 	$("#"+containerId).jstree({
 		'core' : {
 			'data' : data,
@@ -190,7 +188,6 @@ function getCheckedVal() {
 		}
 		
 	} else {
-		console.log($("input[type='checkbox']:checked").parent().parent().parent().parent().parent().parent());
 		$("input[type='checkbox']:checked").parent().parent().parent().parent().parent().parent().each(function(){
 			checkedVal += "_" + $(this).attr("id");
 		});

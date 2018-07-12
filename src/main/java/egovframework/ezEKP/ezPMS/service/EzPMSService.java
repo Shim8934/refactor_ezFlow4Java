@@ -257,4 +257,8 @@ public interface EzPMSService {
 	public void updateProjectGroupEndDate(long projectId, String changeEndDate, int tenantId, long groupId);
 	
 	public void updateAllTaskWeight(Map<String, Object> map) throws Exception;
+
+	public int getDateTaskCount(String date, long projectId, int tenantId, String memberId);
+
+	public void deleteMemberSchedule(String date, long projectId, int tenantId, String memberId);
 }

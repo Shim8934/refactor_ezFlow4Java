@@ -38,6 +38,7 @@ import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
 import egovframework.ezEKP.ezPMS.vo.SearchVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
+import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
 import egovframework.ezMobile.ezCommon.web.MCommonGWController;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -1331,6 +1332,7 @@ public class EzPMSGWController {
 				long projectId = Long.parseLong(request.getParameter("projectId"));
 				String companyId = request.getParameter("companyId");
 				String roleCheck = "";
+				String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 				
 				//권한 체크
 				//1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
@@ -1360,9 +1362,50 @@ public class EzPMSGWController {
 				
 				if (roleCheck.equals("permitted")) {
 					for (int i = 0; i < taskIdList.length; i++) {
+						//task정보 불러오기 - 시작일과 종료일 가져오기
+						ProjectTaskVO task = ezPMSService.getTaskDetails(Long.parseLong(taskIdList[i]), tenantId, lang);
+						
+						String planStartDate = task.getPlanStartDate();
+						String planEndDate = task.getPlanEndDate();
+						
+						List<TaskMemberVO> memberList = ezPMSService.getTaskMemberList(tenantId, Long.parseLong(taskIdList[i]), lang);
+						
+						//삭제
 						ezPMSService.deleteTask(Long.parseLong(taskIdList[i]), projectId, tenantId, companyId);
+						
+						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+						Date startDate = dateFormat.parse(planStartDate);
+						Date endDate = dateFormat.parse(planEndDate);
+						
+						Calendar startCal = Calendar.getInstance();
+						Calendar endCal = Calendar.getInstance();
+						
+						startCal.setTime(startDate);
+						endCal.setTime(endDate);
+						
+						List<String> dateList = new ArrayList<String>();
+						
+						while (startCal.compareTo(endCal) != 1) {
+							if (startCal.get(Calendar.DAY_OF_WEEK) == 1 || startCal.get(Calendar.DAY_OF_WEEK) == 7) {	
+								startCal.add(Calendar.DATE, 1);
+							} else {
+								dateList.add(dateFormat.format(startCal.getTime()));		
+								startCal.add(Calendar.DATE, 1);
+							}
+						}
+						
+						for (int j = 0; j < memberList.size(); j++) {
+							String memberId = memberList.get(j).getUserId();
+							
+							for (int k = 0; k < dateList.size(); k++) {
+								int taskCount = ezPMSService.getDateTaskCount(dateList.get(k), projectId, tenantId, memberId);
+								
+								if (taskCount == 0) {
+									ezPMSService.deleteMemberSchedule(dateList.get(k), projectId, tenantId, memberId);
+								}
+							}
+						}
 					}
-					
 				}
 				
 				result.put("status", "ok");

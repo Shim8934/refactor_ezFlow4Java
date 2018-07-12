@@ -3037,4 +3037,27 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			ezPMSDAO.updateAllTaskWeight((HashMap<String, Object>)map);
 		}
 	}
+
+	@Override
+	public int getDateTaskCount(String date, long projectId, int tenantId, String memberId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("searchDate", date);
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		map.put("memberId", memberId);
+		
+		return ezPMSDAO.getDateTaskCount(map);
+	}
+
+	@Override
+	public void deleteMemberSchedule(String date, long projectId, int tenantId, String memberId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("searchDate", date);
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		map.put("memberId", memberId);
+		
+		ezPMSDAO.deleteMemberSchedule(map);
+		
+	}
 }

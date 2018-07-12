@@ -4054,4 +4054,46 @@
 			DEL_STATUS = 0
 	]]>
 	</select>
+	
+	<select id="EzPMSDAO.getDateTaskCount" parameterClass="map" resultClass="Integer">
+	<![CDATA[
+		SELECT
+			COUNT(T.TASK_ID)
+		FROM
+			TBL_PMS_TASK T
+		JOIN
+			TBL_PMS_TASKMEMBER M
+		ON
+			M.TASK_ID = T.TASK_ID
+		AND
+			M.TENANT_ID = T.TENANT_ID
+		WHERE
+			T.PLAN_START_DATE <= #searchDate#
+		AND
+			T.PLAN_END_DATE >= #searchDate#
+		AND
+			M.USER_ID = #memberId#
+		AND
+			T.PROJECT_ID = #projectId#
+		AND
+			T.TENANT_ID = #tenantId#
+		AND 
+			T.DEL_STATUS = 0
+	]]>
+	</select>
+	
+	<delete id="EzPMSDAO.deleteMemberSchedule" parameterClass="map">
+	<![CDATA[
+		DELETE FROM 
+			TBL_PMS_MEMBERSCHEDULE
+		WHERE
+			USER_ID = #memberId#
+		AND
+			PROJECT_ID = #projectId#
+		AND
+			ASSIGNED_DATE = #searchDate#
+		AND
+			TENANT_ID = #tenantId#
+	]]>
+	</delete>
 </sqlMap>

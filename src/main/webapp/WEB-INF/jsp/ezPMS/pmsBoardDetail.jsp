@@ -169,7 +169,7 @@
 	        var width = window.screen.availWidth;
 	        var left = (width - 500) / 2;
 	        var top = (heigth - 300) / 2;
-	        DivPopUpShow(600, 415, "/ezPMS/getBoardViewerList.do?itemId=" + itemId + "&currentPage=" + currentPage);
+	        DivPopUpShow(600, 437, "/ezPMS/getBoardViewerList.do?itemId=" + itemId + "&currentPage=" + currentPage);
 		}
 		
 		function fromPMSBoardToMail() {

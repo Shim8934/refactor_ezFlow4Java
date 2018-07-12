@@ -233,7 +233,7 @@
 							<td class="taskName col2" style="text-align:center;">
 								<c:out value="${commentVO.taskName ne null ? commentVO.taskName : commentVO.groupName}"/>
 							</td>
-							<td class="content col3" style="text-align: left;">
+							<td class="content col3" style="text-align: left; line-height:1.5em;">
 								<span class="originalContent"><c:out value="${commentVO.commentContent}"/></span>
 								<div class="modifiedContent" style="display: none; width: 100%;">
 									<textarea class="commentContent" style="resize: none; height: 45px;" maxlength="500"><c:out value="${commentVO.commentContent}"/></textarea>
