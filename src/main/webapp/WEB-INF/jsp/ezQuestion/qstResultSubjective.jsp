@@ -401,7 +401,7 @@
 						<th style="width:80px"><spring:message code='ezQuestion.t4' /></th>
 						<th style="width:130px"><spring:message code='ezQuestion.t8' /></th>
 					</c:if>
-					<th style="text-align:center"><spring:message code='ezQuestion.t410' /></th>
+					<th><spring:message code='ezQuestion.t410' /></th>
 				</tr>
 			</table>
 	    </div>

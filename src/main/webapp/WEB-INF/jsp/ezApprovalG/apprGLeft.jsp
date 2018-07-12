@@ -272,7 +272,7 @@
 	        function MngUserOnclick_Complete(RtnVal) {
 	            TreeViewRefresh();
 	        }
-	        // 여기
+
 	        function TreeViewRefresh() {
 	            var xmlHTTP = createXMLHttpRequest();
 	            var strQuery = "<DATA><USERID>" + pUserID + "</USERID><ParentContID>ROOT</ParentContID><NAME></NAME></DATA>";

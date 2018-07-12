@@ -192,7 +192,7 @@
 	
 	        var xmlhttp = createXMLHttpRequest();
 	        function getBoardList() {
-	        	var searchType = $("[type='radio']:checked").val();
+	        	var searchType = $("#searchType").val();
 	        	var searchValue = document.getElementById("txt_keyword").value;
 	        	
 		        starttime = new Date().getTime();
@@ -650,8 +650,13 @@
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 	    <h1><spring:message code='ezCircular.t4'/><span id="lstCnt"></span><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
-	        	<input name="searchType" id="Radio1" type="radio" value="subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t32'/>
-				<input name="searchType" id="Radio2" type="radio" value="writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t166'/>
+	        	<!-- 2018-07-12 김민성 - 회람판 검색 select box로 수정 -->
+	        	<select id="searchType" style="width: 65px; height: 27px; border: 1px solid #cbcbcb; vertical-align: middle; ">
+	        		<option value="subject"><spring:message code='ezCircular.t32'/></option>
+	        		<option value="writer"><spring:message code='ezCircular.t166'/></option>
+	        	</select>
+	        	<%-- <input name="searchType" id="Radio1" type="radio" value="subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t32'/>
+				<input name="searchType" id="Radio2" type="radio" value="writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t166'/> --%>
 	        	&nbsp;
 				<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 				<a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>

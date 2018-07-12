@@ -2050,7 +2050,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
         for (var i = 0; i < AttachRows.length; i++) {
             var filepath = SelectSingleNodeValue(AttachRows[i], "FilePath");
             var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
-            var filename = MakeXMLString(filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length));
+            var filename = filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length);
             var filesize = SelectSingleNodeValue(AttachRows[i], "FileSize2");
 
             pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
