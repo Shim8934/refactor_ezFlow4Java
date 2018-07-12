@@ -448,7 +448,9 @@ img { border:0px;}
 	width:39px;
 	height:27px;
 	padding:15px 0px 0px 32px;
-	text-align:right;
+	/* 2018-07-11 김보미 - 카운트 수 잘려보이는 현상 버그 수정 */
+	/*text-align:right;*/
+	text-align:center;
 	display:inline-block;
 	overflow:hidden;
 	margin-right:5px;
@@ -675,7 +677,9 @@ img { border:0px;}
 	width:39px;
 	height:27px;
 	padding:15px 0px 0px 32px;
-	text-align:right;
+	/* 2018-07-11 김보미 - 카운트 수 잘려보이는 현상 버그 수정 */
+	/*text-align:right;*/
+	text-align:center;
 	display:inline-block;
 	overflow:hidden;
 	margin-right:5px;
@@ -903,7 +907,9 @@ img { border:0px;}
 	width:39px;
 	height:27px;
 	padding:15px 0px 0px 32px;
-	text-align:right;
+	/* 2018-07-11 김보미 - 카운트 수 잘려보이는 현상 버그 수정 */
+	/*text-align:right;*/
+	text-align:center;
 	display:inline-block;
 	overflow:hidden;
 	margin-right:5px;
