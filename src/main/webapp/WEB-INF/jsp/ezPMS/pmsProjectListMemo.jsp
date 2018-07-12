@@ -109,7 +109,9 @@ $(function(){
 	}
 	
 	if (projectList.length >= 20) {
-		$(".project_mainlist").last().append("<div class='moreBtn' onclick='moreProjectList()'><span><spring:message code='ezPMS.t276' /></span></div>");
+		if ($("#totalCount").text() != projectList.length) {
+			$(".project_mainlist").last().append("<div class='moreBtn' onclick='moreProjectList()'><span><spring:message code='ezPMS.t276' /></span></div>");
+		}
 	}
 
 });
