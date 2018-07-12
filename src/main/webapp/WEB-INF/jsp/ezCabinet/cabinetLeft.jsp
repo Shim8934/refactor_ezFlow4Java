@@ -72,7 +72,6 @@
 		<script type="text/javascript">
 			var CabUserLeft = function() {
 				var cabinetTree = new CabinetTree();
-				getMyCabinet();
 				setButtons();
 				
 				function setButtons() {
@@ -85,7 +84,7 @@
 						type       : "normal",
 						initialUrl : "/ezCabinet/getMyCabinetTree.do",
 						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
-						click      : null,
+						click      : getCabinet,
 						dblClick   : null
 					});
 					
@@ -100,9 +99,19 @@
 					if (document.getElementById("myBar").className == "") {drawVolume();}
 				}
 				
+				function getCabinet(obj) {
+					var cabinetId = obj.getAttribute("role");
+					window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do?cabinetId=" + cabinetId;
+				}
+				
+				function getMyCabinet()  {
+					var cabinetTreeElmt = document.getElementById("cabinetTree");
+					var spanElmt        = cabinetTreeElmt.querySelector("span[level='0']");
+					if (spanElmt) {spanElmt.click();}
+				}
+				
 				function getAdminPage()  {window.open("/admin/ezCabinet/cabinetAdminMain.do", "", "");}
 				function getConfigPage() {window.parent.frames["right"].location.href = "/ezCabinet/cabinetConfig.do";}
-				function getMyCabinet()  {window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do";}
 				function reloadTree(currentNode) {cabinetTree.makeTree({cabinetNode : currentNode});}
 				
 				function getManagement() {

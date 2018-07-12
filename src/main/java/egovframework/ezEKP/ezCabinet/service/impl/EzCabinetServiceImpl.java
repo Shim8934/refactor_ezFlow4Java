@@ -18,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
@@ -30,7 +32,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service
-public class EzCabinetServiceImpl implements EzCabinetService {
+public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetService {
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetServiceImpl.class);
 	
 	@Resource(name = "EzCabinetDAO")
@@ -681,5 +683,44 @@ public class EzCabinetServiceImpl implements EzCabinetService {
 				
 			}
 		}*/
+	}
+
+	@Override
+	public String saveUploadFile(List<MultipartFile> multiFileLists, JSONArray nameArray, String realPath, int tenantId) throws Exception {
+		String pFileName   = (String)((JSONObject)nameArray.get(0)).get("originalFilename");
+		String cabinetPath = getCabinetDirPath(tenantId);
+		String pDirPath    = realPath + cabinetPath;
+		
+		File file = new File(pDirPath);
+		
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		
+		int dotPos     = pFileName.lastIndexOf(".");
+		String extend  = dotPos == -1 ? ".none" : pFileName.substring(dotPos + 1);
+		String newName = UUID.randomUUID().toString() + "." + extend;
+		writeUploadedFile(multiFileLists.get(0), newName, pDirPath);
+		
+		return cabinetPath + newName;
+	}
+	
+	@Override
+	public void deleteAttachFile(String filePath, String realPath, int tenantId) throws Exception {
+		String pDirPath = realPath + filePath;
+		File file       = new File(pDirPath);
+		
+		if (file.exists()) {
+			try {
+				file.delete();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private String getCabinetDirPath(int tenantId) {
+		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "cabinet" + commonUtil.separator;
 	}
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
@@ -29,6 +30,9 @@ import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezWebFolder.vo.FileVO;
+import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
+import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -637,6 +641,7 @@ public class EzCabinetGWController {
 				String cabinetStr1  = egovMessageSource.getMessage("ezCabinet.t02", new Locale("ko"));
 				String cabinetStr2  = egovMessageSource.getMessage("ezCabinet.t02", new Locale("en"));
 				mycabinet           = cabinetService.getMyCabinetTreeNormal(cabinetStr1, cabinetStr2, userInfo);
+				result.put("node", mycabinet.getCabinetId());
 			}
 			else {
 				mycabinet = cabinetService.getMyCabinetTreeDetail(cabinetId, userInfo);
@@ -853,6 +858,128 @@ public class EzCabinetGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/attachfile/file-upload", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject postFileUploadGW(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, Locale locale, HttpServletRequest request) throws Exception {
+		JSONParser jp          = new JSONParser();
+		JSONObject jsonObject  = (JSONObject) jp.parse(dataList);
+		JSONArray nameArray    = jsonObject.get("nameArray")    != null ? (JSONArray) jsonObject.get("nameArray") : null;
+		String serverName      = request.getHeader("host-name") != null ? request.getHeader("host-name")          : "";
+		JSONObject result      = new JSONObject();
+		
+		if (nameArray == null || serverName.equals("") || nameArray.size() != multiFileLists.size() || multiFileLists.size() != 1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			int tenantId     = loginService.getTenantId(serverName);
+			String realPath  = request.getServletContext().getRealPath("");
+			String filePath  = cabinetService.saveUploadFile(multiFileLists, nameArray, realPath, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("path", filePath);
+			
+			//Add checking permission here
+			/*List<Integer> cabinetList = new ArrayList<>(Arrays.asList(cabinetId));
+			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}*/
+			
+			//Check upload conditions
+			/*FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, userInfo.getTenantId());
+			
+			WebfolderConfigVO webfolderConfig   = ezWebFolderAdminService.getWebfolderConfig(userInfo.getCompanyID(), userInfo.getTenantId());
+			double limitUploadValue             = webfolderConfig.getUploadLimit().equals("") ? 0 : Double.parseDouble(webfolderConfig.getUploadLimit());
+			double totalUploadSize              = 0;
+			
+			for (int i = 0; i < multiFileLists.size(); i++) {
+				totalUploadSize += multiFileLists.get(i).getSize();
+			}
+			
+			if (limitUploadValue * 1073741824 < totalUploadSize) {
+				logger.debug("limited upload value!");
+				result.put("status", "error");
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t249", locale));
+				result.put("code", 1);
+				result.put("data", "");
+				return result;
+			}
+			
+			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
+			
+			long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
+			long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
+			
+			if (totalUploadSize > (totalCapa - totalUsed)) {
+				logger.debug("Not enough storage to upload these files!");
+				result.put("status", "error");
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
+				result.put("code", 1);
+				result.put("data", "");
+				return result;
+			}
+			
+			String realPath   = request.getServletContext().getRealPath("");
+			List<FileVO> list = ezWebFolderService.saveUploadedFiles(multiFileLists, nameArray, folder, realPath, userInfo);
+			
+			if (list == null || list.size() == 0) {
+				result.put("status", "error");
+				result.put("code", 1);
+				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
+			}
+			else {
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", list);
+			}*/
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/attachfile/file-delete", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject delFileUploadGW(Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
+		String filePath   = request.getParameter("filePath") != null ? request.getParameter("filePath") : "";
+		JSONObject result = new JSONObject();
+		
+		if (serverName.equals("") || filePath.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			int tenantId      = loginService.getTenantId(serverName);
+			String realPath   = request.getServletContext().getRealPath("");
+			cabinetService.deleteAttachFile(filePath, realPath, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
