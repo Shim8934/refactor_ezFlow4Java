@@ -835,7 +835,7 @@ function addFavorite() {
 			contentType: "application/json; charset=UTF-8",
 			url : "/ezPMS/addFavoriteProject.do",
 			data :JSON.stringify(data),
-			success : function() {
+			success : function(result) {
 				if (result == "0") {
 					checkedVal = "";
 
