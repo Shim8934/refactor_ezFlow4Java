@@ -132,10 +132,10 @@
 		        } else {
 		        	document.getElementById("responseReadid").checked = true;
 		        	
-			        if ("${useOnlyInnerMail}" === "NO") {
-			        	readTypeElement.selectedIndex = replyReadTime === "2" ? "1" : "0";
-			        } else {
+			        if ("${useOnlyInnerMail}" === "YES") {
 			        	readTypeElement.selectedIndex = "0";
+			        } else {
+			        	readTypeElement.selectedIndex = replyReadTime === "2" ? "1" : "0";			            
 			        }
 		        }
 		
