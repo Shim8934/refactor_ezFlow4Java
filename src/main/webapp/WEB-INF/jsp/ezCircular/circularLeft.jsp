@@ -24,6 +24,19 @@
 				font-weight:normal;
 				color:#9b9b9b;
 			}
+			/* ellipisis 추가 */
+			.node_normal{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		width:146px;
+	    	}
+	    	.node_selected{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		width:146px;
+	    	}	    	
 		</style>
 	    <script type="text/javascript">
 	        document.onselectstart = function () { return false; };
@@ -58,6 +71,17 @@
 	            $("#newCircular").click();
 	            
 	            getNewCircularCount();
+	            
+	           	applyEllipsis();
+	        }
+	        
+	        /** ellipsis 추가 */
+	        function applyEllipsis() {
+	        	$("[id^=PostTreeView_node]").each(function (index, element) {
+	        		var title = $(element)[0].innerHTML;
+	        		$(element).attr("title", title);
+	        	} );
+	        	
 	        }
 	        
 	        function LoadEmailTree() {	
