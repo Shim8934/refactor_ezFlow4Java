@@ -448,7 +448,9 @@ img { border:0px;}
 	width:39px;
 	height:27px;
 	padding:15px 0px 0px 32px;
-	text-align:right;
+	/* 2018-07-11 김보미 - 카운트 수 잘려보이는 현상 버그 수정 */
+	/*text-align:right;*/
+	text-align:center;
 	display:inline-block;
 	overflow:hidden;
 	margin-right:5px;
@@ -508,14 +510,14 @@ img { border:0px;}
 
 
 #cmhome_type2 .btn_join {
-	border:1px solid #849ba8;
-	background:url(../images/kr/community/type2/btn_makebg.gif) repeat-x;
+	border:1px solid #ccc;
+	/* background:url(../images/kr/community/type2/btn_makebg.gif) repeat-x; */
 	height:29px;
 	text-align:center;
 	font-weight:bold;
 	font-size:12px;
 	color:#333;
-	margin:5px 4px;
+	margin:10px 10px;
 	cursor:pointer;
 	line-height:28px;
 }
@@ -531,7 +533,7 @@ img { border:0px;}
 #cmhome_type2 .leftmenu h2 {
 	margin:0px;
 	padding:0 0 0 10px;
-	border-top:0px solid #ddd;
+	border-top:1px solid #ddd;
 	border-bottom: 1px solid #fff;
 	cursor: pointer;
 	background: url('../images/kr/left/01_minus.gif') no-repeat right 13px;
@@ -675,7 +677,9 @@ img { border:0px;}
 	width:39px;
 	height:27px;
 	padding:15px 0px 0px 32px;
-	text-align:right;
+	/* 2018-07-11 김보미 - 카운트 수 잘려보이는 현상 버그 수정 */
+	/*text-align:right;*/
+	text-align:center;
 	display:inline-block;
 	overflow:hidden;
 	margin-right:5px;
@@ -903,7 +907,9 @@ img { border:0px;}
 	width:39px;
 	height:27px;
 	padding:15px 0px 0px 32px;
-	text-align:right;
+	/* 2018-07-11 김보미 - 카운트 수 잘려보이는 현상 버그 수정 */
+	/*text-align:right;*/
+	text-align:center;
 	display:inline-block;
 	overflow:hidden;
 	margin-right:5px;
@@ -1142,7 +1148,9 @@ img { border:0px;}
 	width:39px;
 	height:27px;
 	padding:15px 0px 0px 32px;
-	text-align:right;
+	/* 2018-07-03 김보미 - 카운트 수 잘려보이는 현상 버그 수정 */
+	/*text-align:right;*/
+	text-align:center;
 	display:inline-block;
 	overflow:hidden;
 	margin-right:5px;
@@ -1370,30 +1378,34 @@ _list li {
 	padding:0px;
 	list-style:none;
 }
+
+/* 2018-05-10 홍승비 - 커뮤니티 팝업홈 게시판 리스트 li 글머리 수정 */
 .btype_list ul li {
 	clear:both;
 	margin:0px; 
 	padding:0px 0px 0px 10px;
 	line-height:23px;
 	height:23px;
-	background:url(../images/kr/community/type1/board_dotted.gif) no-repeat 2px 10px;	
+	background:url('/images/kr/left/left_dot02.gif') no-repeat 0px 7px #fff;
 	white-space:nowrap; 
 	overflow:hidden; 
 	text-overflow:ellipsis;
 }
+
+/* 2018-05-18 홍승비 -  커뮤니티 팝업홈 게시판 리스트 제목 width 수정 */
 .btype_list ul li .txt {
 	float:left;
-	width:78%;
+	width:72%;
 	white-space:nowrap; 
 	overflow:hidden; 
 	text-overflow:ellipsis;
-
 }
+/* 2018-05-18 홍승비 -  커뮤니티 팝업홈 게시판 리스트 date 표출 수정 */
 .btype_list ul li .date{
-	float:right;
 	width:70px;
 	color:#666;
-	text-align:right;
+	position:absolute;
+	margin-left:30px;
 }
 
 /* btype_photo */
@@ -1437,11 +1449,12 @@ _list li {
 	list-style:none; 
 	color:#333;
 	cursor: pointer;}
+	
+/* 2018-05-11 홍승비 - 커뮤니티 팝업홈 포토게시판 보더 제거 */
 .btype_photo ul .photo { 
 	display:block; 
 	height:68px;
 	margin-bottom:5px;
-	border:2px solid #d8d8d8;
 }
 .btype_photo ul li .ptxt {
 	height:20px;
@@ -1529,10 +1542,10 @@ _list li {
 
 .cmhomelist{table-layout:fixed; border:0 none !important;font-size:12px; border-spacing:0; border-collapse:collapse;}
 
-.cmhomelist tr th{font-weight:normal;background-color:#f8f8fa; text-align:left;border:0px;text-decoration:none; color:#333; font-size:12px; padding:6px 4px 4px; border-top:1px solid #e8e8ea;border-bottom:1px solid #e8e8ea; height:22px}
+.cmhomelist tr th{font-weight:normal;background-color:#f8f8fa; text-align:left;border:0px;text-decoration:none; color:#333; font-size:12px; padding:4px 4px 4px; border-top:1px solid #e8e8ea;border-bottom:1px solid #e8e8ea; height:24px}
 .cmhomelist tr th.title{width:100%; text-align:left;}
 
-.cmhomelist tr td{padding:0px 4px; border:0px; font-weight:normal; font-size:12px; color:#666; border-bottom:1px solid #ebebed; border-spacing:0; height:32px;}
+.cmhomelist tr td{padding:0px 4px; border:0px; font-weight:normal; font-size:12px; color:#666; border-bottom:1px solid #ebebed; border-spacing:0; height:30px;}
 .cmhomelist tr td img{vertical-align:middle;}
 .cmhomelist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .cmhomelist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}

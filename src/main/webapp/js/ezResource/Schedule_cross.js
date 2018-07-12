@@ -299,20 +299,20 @@ function Schedule_Repetition_onclick_Complete(retVal) {
         return;
     }
 
-    
     if (typeof (retVal) == "number" && retVal == 0) {
         repetitionFlag = false;
         if (g_data["recurrence"] != "") {
             g_data["recurrence"] = "";
-
             g_data["recur_del"] = getXmlString(xmlDoc);
 
             document.getElementById("tr_STime").style.display = "";
-               
             document.getElementById("tr_Recur").style.display = "none";
-
             document.getElementById("iReFlag").value = "0";
             document.getElementById("tmpReFlag").value = "3";
+            document.getElementById("AllDay").checked = false;
+            document.getElementById("Stimepicker").style.display = "";
+    	    document.getElementById("Etimepicker").style.display = "";
+    	    onck = "1";
         }
     }
     else {
@@ -1105,60 +1105,60 @@ function delSchedule_onClick( num, ownerID)  {
 			alert("" + strLang94 + "");
 			return;
 		}
-		
-		var ans = confirm("" + strLang90 + "");
-			
-		if (ans) {
-		    if (parseInt(reFlagVal) == 1 || parseInt(reFlagVal) == 3) {
-		        // 20070511 add
-		        isRepetition = true;
 
-		        var rgParams = new Array();
-		        rgParams["CancelOpen"] = false;
-		        rgParams["InstanceType"] = "";
+	    if (parseInt(reFlagVal) == 1 || parseInt(reFlagVal) == 3) {		    	
+	        // 20070511 add
+	        isRepetition = true;
 
-		        // 수정(2007.03.28) : 반복예약 기능
-		        if (CrossYN()) {
-		            m_num = num;
-		            m_ownerID = ownerID;
+	        var rgParams = new Array();
+	        rgParams["CancelOpen"] = false;
+	        rgParams["InstanceType"] = "";
 
-		            schedule_repetition_del_cross_dialogArguments[0] = rgParams;
-		            schedule_repetition_del_cross_dialogArguments[1] = delSchedule_onClick_Complete;
+	        // 수정(2007.03.28) : 반복예약 기능
+	        if (CrossYN()) {
+	            m_num = num;
+	            m_ownerID = ownerID;
 
-		            DivPopUpShow(390, 260, "/ezResource/scheduleRepetitionDel.do");
-		        } else {
-		            var feature = "dialogHeight:260px;dialogWidth:390px;status:no;help:no;center:yes;edge:sunken";
-		            feature = feature + GetShowModalPosition(390, 260);
-		            var hWin = window.showModalDialog("/ezResource/scheduleRepetitionDel.do", rgParams, feature);
+	            schedule_repetition_del_cross_dialogArguments[0] = rgParams;
+	            schedule_repetition_del_cross_dialogArguments[1] = delSchedule_onClick_Complete;
 
-		            if (false != rgParams["CancelOpen"]) return (false);
-		            var szType = rgParams["InstanceType"];
+	            DivPopUpShow(390, 260, "/ezResource/scheduleRepetitionDel.do");
+	        } else {
+	            var feature = "dialogHeight:260px;dialogWidth:390px;status:no;help:no;center:yes;edge:sunken";
+	            feature = feature + GetShowModalPosition(390, 260);
+	            var hWin = window.showModalDialog("/ezResource/scheduleRepetitionDel.do", rgParams, feature);
 
-		            if (parseInt(reFlagVal) == 1) {
-		                if (szType == "Instance") {
-		                    pnumVal = num;
-		                    writerIDVal = ownerID;
-		                    num = "0";
-		                    reFlagVal = "3";
-		                }
-		            } else if (parseInt(reFlagVal) == 3) {
-		                if (szType == "Master") {
-		                    num = pnumVal;
-		                    ownerID = writerIDVal;
-		                    reFlagVal = "1";
-		                }
-		            }
-		        }
-		    }
+	            if (false != rgParams["CancelOpen"]) return (false);
+	            var szType = rgParams["InstanceType"];
 
-		    if ((!isRepetition && CrossYN()) || !CrossYN()) {
+	            if (parseInt(reFlagVal) == 1) {
+	                if (szType == "Instance") {
+	                    pnumVal = num;
+	                    writerIDVal = ownerID;
+	                    num = "0";
+	                    reFlagVal = "3";
+	                }
+	            } else if (parseInt(reFlagVal) == 3) {
+	                if (szType == "Master") {
+	                    num = pnumVal;
+	                    ownerID = writerIDVal;
+	                    reFlagVal = "1";
+	                }
+	            }
+	        }
+	    }
+
+	    if ((!isRepetition && CrossYN()) || !CrossYN()) {
+	    	var ans = confirm("" + strLang90 + "");
+	    	
+	    	if (ans) {
 		        var xmlHttp = createXMLHttpRequest();
 		        var xmlDoc = createXmlDom();
-
+	
 		        var objNode;
-
+	
 		        createNodeInsert(xmlDoc, objNode, "PARAMETER");
-
+	
 		        createNodeAndInsertText(xmlDoc, objNode, "NUM", num);
 		        createNodeAndInsertText(xmlDoc, objNode, "OWNERID", ownerID);
 		        createNodeAndInsertText(xmlDoc, objNode, "PNUM", pnumVal);
@@ -1167,20 +1167,20 @@ function delSchedule_onClick( num, ownerID)  {
 		        createNodeAndInsertText(xmlDoc, objNode, "GFLAG", gFlagVal);
 		        createNodeAndInsertText(xmlDoc, objNode, "STARTDATE", startDateVal);
 		        createNodeAndInsertText(xmlDoc, objNode, "ENDDATE", endDateVal);
-
+	
 		        xmlHttp.open("POST", "/ezResource/scheduleAddOk.do?cmd=del", false);
 		        xmlHttp.send(xmlDoc);
-
+	
 		        var res = xmlHttp.responseText;
-
+	
 		        if (trim(res) == "OK") {
 		            window.close();
-
+	
 		            window_onUnload();
 		        } else {
 		            alert("" + strLang149 + "");
 		        }
-		    }
+	    	}
 		}
 	} else {
 		window.close();
@@ -1300,6 +1300,7 @@ function printpr() {
 
 function onbeforeprint() {
     g_documentTitle = document.title;
+
     /* 2018.03.23 서주연 - #12104 인쇄미리보기시 창제목 변경되는 문제 해결 */
 //  document.title = title.value;
 

@@ -8,6 +8,14 @@
 		<title>portalpage_list</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
+		<style>
+	    	.mainlist tbody tr td:nth-child(2) {
+	    		padding-left:15px;
+	    	}
+	    	.mainlist tr th:nth-child(2) {
+	    		padding-left:10px;
+	    	}
+	    </style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>
@@ -342,37 +350,40 @@
 		<div id="mainmenu">
     		<ul>
         		<li><span onclick="newpage()"><spring:message code='ezPortal.t247'/></span></li>
+        		<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
         		<li><span onclick="DeletePortalPage()"><spring:message code='ezPortal.t67'/></span></li>
         		<li><span onclick="preview()"><spring:message code='ezPortal.t63'/></span></li>
+        		<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
         		<li><span onclick="ACLEdit()"><spring:message code='ezPortal.t87'/></span></li>
+        		<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
         		<li><span onclick="usepage()"><spring:message code='ezPortal.t248'/></span></li>
         		<li><span onclick="Outofusepage()"><spring:message code='ezPortal.t249'/></span></li>
+        		<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
         		<li><span onclick="DefaultPageSet('Y')"><spring:message code='ezPortal.t990017'/></span></li>
         		<li><span onclick="DefaultPageSet('N')"><spring:message code='ezPortal.t990018'/></span></li>
     		</ul>
-		</div>
-		
+    	</div>
 		<div class="page">
 			<c:choose>
 				<c:when test="${intPage != '1'}">
-					<img src="/images/page_previous.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('front')" style="cursor:pointer"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
+					<img src="/images/page_previous.gif" align="absmiddle" hspace="2" onClick="goToPage('front')" style="cursor:pointer"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
 				</c:when>
 				<c:otherwise>
-					<img src="/images/page_previous.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('front')"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
+					<img src="/images/page_previous.gif" align="absmiddle" hspace="2" onClick="goToPage('front')"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
 				</c:otherwise>
 			</c:choose>
 		
   			<input type="text"name="txt_PageInputNum" style="width:30px" value='${intPage}' onKeyPress="if ( window.event.keyCode == 13 ) { goToPage('page'); }">
   			<c:choose>
   				<c:when test="${intPage != totalPage}">
-  					<img src="/images/page_next.gif" width="15" height="15" align="absmiddle" hspace="2" style="cursor:pointer" onClick="goToPage('next')">
+  					<img src="/images/page_next.gif" align="absmiddle" hspace="2" style="cursor:pointer" onClick="goToPage('next')">
   				</c:when>
   				<c:otherwise>
-  					<img src="/images/page_next.gif" width="15" height="15" align="absmiddle" hspace="2">
+  					<img src="/images/page_next.gif" align="absmiddle" hspace="2">
   				</c:otherwise>
   			</c:choose>
 		</div>
-			
+		<div style="width:100%; border: 1px solid #e8e8e8; border-top:0px; border-bottom:0px;">
 			<table class="mainlist" style="width:100%"> 
 				<tr>
 					<th width="120" style="display:none"><spring:message code='ezPortal.t255'/></th>
@@ -384,11 +395,11 @@
 				</tr>
 			</table>		
 			<table class="mainlist" style="width:100%">
-			${mainHtml }
-		</table>
-		<br><br>
-		<script type="text/javascript">
-			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-		</script>
+				${mainHtml }
+			</table>
+			<script type="text/javascript">
+				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+			</script>
+		</div>
 	</body>
 </html>

@@ -2963,7 +2963,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (String) select("EzApprovalG.getChamJoDocID", map);
 	}
 
-	public void updateSusinState(Map<String, Object> map) throws Exception {
+	public void updateSusinState(Map<String, Object> map) {
 		update("EzApprovalG.updateSusinState", map);
 	}
 
@@ -2973,5 +2973,17 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public int getCountDoingDocInfo(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.getCountDoingDocInfo", map);
+	}
+	
+	public String getDocExt(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getDocExt", map);
+	}
+	
+	public String getDocHrefInfoHref(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getDocHrefInfoHref", map);
+	}
+	
+	public int getLinkedAttachFileCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getLinkedAttachFileCount", map);
 	}
 }

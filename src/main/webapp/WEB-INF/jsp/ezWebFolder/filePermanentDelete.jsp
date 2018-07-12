@@ -1,0 +1,77 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>Insert title here</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
+	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
+	<script src="/js/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/mouseeffect.js"></script>
+	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
+	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1' />"></script>	
+	<script type="text/javascript">
+		var fileList = "<c:out value="${fileList}"/>";
+		var folderList = "<c:out value="${folderList}"/>";
+		
+		function wClose() {
+			parent.hiddenPanel();
+			window.close();
+		}
+		
+		function afterDeleteSuccess() {
+			parent.refreshView();
+			wClose();
+		}
+		
+		function ok_Click() {
+			$.ajax({
+				type: "POST",
+				url: "/ezWebFolder/pemanentDeleteFile.do",
+				data: {
+					"fileList" : fileList,
+					"folderList" : folderList
+				},
+				dataType: "JSON",
+				async: false,
+				success : function(data) {
+					var reason = data.reason;
+					
+					if (reason) {
+						alert(reason);
+						afterDeleteSuccess();
+					} else {
+						if (data.code == 1) {
+							alert("<spring:message code='ezWebFolder.t113'/>");
+						} else if (data.code == 2) {
+							alert("<spring:message code='ezWebFolder.t114'/>" + error);
+						} else if (data.code == 3) {
+							alert("<spring:message code='ezWebFolder.t28'/>" + error);
+						}
+					}
+				},
+				error : function(error) {
+            		alert(messages.strLang7 + error);
+				}
+			});
+			
+			afterDeleteSuccess();
+		}
+	</script>
+</head>
+<body class="popup"> 
+	<h1 id ="topMenu" style="margin:0px;margin-top:2px"><spring:message code='ezWebFolder.t19'/></h1>
+	<div id="close">
+        <ul>
+            <li><span id="btnCancel" onclick="wClose();"></span></li>
+        </ul>
+    </div>
+	<div style="margin: 0px 0px 12px;height:110px;border:1px solid #ddd;padding:15px;font-size:12px;"><spring:message code='ezWebFolder.t294'/></div>	
+	<div class="btnpositionNew">
+		<a id="btnSave" class="imgbtn" onclick="ok_Click();"><span><spring:message code='ezWebFolder.t111'/></span></a>
+	</div>
+</body>
+</html>

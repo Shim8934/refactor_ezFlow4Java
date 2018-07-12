@@ -10,7 +10,7 @@
     <typeAlias alias="CircularFolderVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularFolderVO"/>
     <typeAlias alias="CircularCommentVO"     		type="egovframework.ezEKP.ezCircular.vo.CircularCommentVO"/>
     <typeAlias alias="CircularListHeaderVO" 		type="egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO"/>
-	
+	<typeAlias alias="CircularConfirmVO" 		type="egovframework.ezEKP.ezCircular.vo.CircularConfirmVO"/>
 	
     <select id="EzCircularDAO.getCircularList_Config" resultClass="CircularConfigVO">
 	   <![CDATA[
@@ -1523,6 +1523,11 @@
 						circularcomment LIKE '%'||#searchValue#||'%'
 					]]>
 				</isEqual>
+				<isEqual property="searchType" compareValue="userID" prepend="AND">
+					<![CDATA[
+						membername LIKE '%'||#searchValue#||'%'
+					]]>
+				</isEqual>
 			</isNotEqual>
 		</isEqual>
 		
@@ -1827,6 +1832,55 @@
 				tenantid = #tenantID#
 		]]>
 	</select>
+	
+	<select id="EzCircularDAO.getConfirmMember" resultClass="CircularConfirmVO" >
+		<![CDATA[
+			SELECT *
+			FROM (
+				SELECT rownum as rnum, A.memberid, B.displayname, B.description, B.company, B.title, 
+					NVL(A.confirmdate, ' ') AS confirmdate
+				FROM 
+					TBL_CIRCULAR_USER A
+				RIGHT JOIN 
+					TBL_USERMASTER B
+				ON 
+					A.memberid = B.cn
+				WHERE 
+					A.CIRCULARID=#circularID# AND A.TENANTID=#tenantID# AND A.STATUS = '1' and A.TENANTID=B.tenant_id 
+				AND
+					a.memberid <> ( SELECT 
+													memberId 
+											FROM 
+												TBL_CIRCULAR 
+											WHERE 
+												circularId = #circularID# )
+				ORDER BY 
+				 	A.confirmdate desc ) 
+				WHERE rnum between #start#+1 and #perCount#+#start#
+		]]>
+	</select>
+	
+	<select id="EzCircularDAO.getConfirmMemberCount" parameterClass="Map" resultClass="int">
+		<![CDATA[
+			SELECT 
+				count(memberid)
+			FROM 
+				TBL_CIRCULAR_USER A
+			RIGHT JOIN 
+				TBL_USERMASTER B
+			ON 
+				A.memberid = B.cn
+			WHERE 
+				A.CIRCULARID=#circularID# AND A.TENANTID=#tenantID# AND A.STATUS = '1' and A.TENANTID=B.tenant_id 
+			AND
+				 a.memberid <> ( SELECT 
+											memberId 
+										FROM 
+											TBL_CIRCULAR 
+										WHERE 
+											circularId = #circularID# )
+		]]>
+	</select>
 
     <insert id="EzCircularDAO.insertCircular" parameterClass="Map">
         <![CDATA[
@@ -2098,6 +2152,7 @@
 				TBL_CIRCULAR
 			SET
 				status = '1'
+				endDate = SYS_EXTRACT_UTC(SYSTIMESTAMP)
 			WHERE 
 				circularid = #circularID#
 			AND

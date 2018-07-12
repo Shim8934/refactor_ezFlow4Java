@@ -10,6 +10,15 @@
 	    <link rel="stylesheet" href="/css/previewmail.css" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <style>
+	    .mainlist_free tr td:first-child {
+	    		padding-left:10px;
+	    		height:25px;
+	    }
+	    .mainlist_free tr th:first-child {
+	    		padding-left:10px;
+	    }
+	    </style>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
@@ -163,6 +172,7 @@
 		                    var SubDivLayer = document.createElement("DIV");
 		                    SubDivLayer.className = "back";
 		                    SubDivLayer.style.height = "80px";
+		                    SubDivLayer.style.borderRadius = "0px"
 
 		                    var SubDIVTag = document.createElement("DIV");
 		                    SubDIVTag.className = "topinfo";
@@ -194,11 +204,11 @@
 		                    var UITag3 = document.createElement("li");
 		                    UITag3.innerHTML = "<span class=\"point_txt\">" + getNodeText(SelectNodes(UserAddJobList[0], "DISPLAYNAME")[Cnt]) + " (" + getNodeText(SelectNodes(UserAddJobList[0], "TITLE")[Cnt]) + ")</span>";                    
 
-		                    var EndDiv = document.createElement("DIV");
-		                    EndDiv.className = "shadow";
+		                    /* var EndDiv = document.createElement("DIV");
+		                    EndDiv.className = "shadow"; */
 
 		                    DivLayer.appendChild(SubDivLayer);
-		                    DivLayer.appendChild(EndDiv);
+		                    /* DivLayer.appendChild(EndDiv); */
 		                    SubDivLayer.appendChild(oTable);
 
 		                    SubDivLayer.appendChild(ULTag);
@@ -232,30 +242,35 @@
 		            if (_RowObject == null || _RowObject == "") {
 		                alert("<spring:message code='ezOrgan.t196' />");
 		                return;
-		            }
-		            _RowObject = document.getElementById(_RowObject.id);
-
-		            if (document.getElementById("AddJobList").childNodes.length == 1) {
-		                var listview = new ListView();
-		                listview.LoadFromID("lvAddJobList");
-		                for (var i = 0; i < document.getElementById("AddJobList").childNodes.length ; i++) {
-		                    createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(listview.GetSelectedRows()[0], "data1"));
-		                    createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
-		                    createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
-		                }
-		                mode = "";
 		            } else {
-		                for (var i = 0; i < document.getElementById("AddJobList").childNodes.length ; i++) {
-		                    if (GetAttribute(_RowObject, "_DEPTID") == GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid")) {
-                                createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
-                                createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
-                                createNodeAndInsertText(xmlDom, objNode, "TITLE", "");                              		                        
-		                    } else {
-                                createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
-                                createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
-                                createNodeAndInsertText(xmlDom, objNode, "TITLE", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_t1") + ":" + GetAttribute(document.getElementById("AddJobList").childNodes[i], "_t2"));		                        
-		                    }
-		                }
+		            	if (confirm("<spring:message code='ezOrgan.pjg01' />")) {
+				            _RowObject = document.getElementById(_RowObject.id);
+		
+				            if (document.getElementById("AddJobList").childNodes.length == 1) {
+				                var listview = new ListView();
+				                listview.LoadFromID("lvAddJobList");
+				                for (var i = 0; i < document.getElementById("AddJobList").childNodes.length ; i++) {
+				                    createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(listview.GetSelectedRows()[0], "data1"));
+				                    createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
+				                    createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
+				                }
+				                mode = "";
+				            } else {
+				                for (var i = 0; i < document.getElementById("AddJobList").childNodes.length ; i++) {
+				                    if (GetAttribute(_RowObject, "_DEPTID") == GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid")) {
+		                                createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
+		                                createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
+		                                createNodeAndInsertText(xmlDom, objNode, "TITLE", "");                              		                        
+				                    } else {
+		                                createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
+		                                createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
+		                                createNodeAndInsertText(xmlDom, objNode, "TITLE", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_t1") + ":" + GetAttribute(document.getElementById("AddJobList").childNodes[i], "_t2"));		                        
+				                    }
+				                }
+				            }		            		
+		            	} else {
+		            	 	return;	
+		            	}
 		            }
 		        } else {
 		            var listview = new ListView();
@@ -458,22 +473,27 @@
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t218' /></NAME>
 		        		<WIDTH>10%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t67' /></NAME>
 		        		<WIDTH>20%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t69' /></NAME>
 		        		<WIDTH>10%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t68' /></NAME>
 		        		<WIDTH>20%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t123' /></NAME>
 		        		<WIDTH>10%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		    	</HEADERS>
 		  	</LISTVIEWDATA>
@@ -490,8 +510,10 @@
 	            </select>
 		        <ul style="margin-top:15px">		            
 		            <li><span onClick="AddJob_Add()"><spring:message code='ezOrgan.t00014' /></span></li>
+		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="AddJob_Del('DEL', '')"><spring:message code='ezOrgan.t00015' /></span></li>
-		            <li><span onClick="AddJob_Del('ALL', '')"><spring:message code='ezOrgan.t00016' /></span></li>            
+		            <li><span onClick="AddJob_Del('ALL', '')"><spring:message code='ezOrgan.t00016' /></span></li>
+					<!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="email_onclick()"><spring:message code='ezOrgan.t00010' /></span></li>
 		        </ul>
 		    </div>
@@ -499,15 +521,15 @@
 		        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");        
 		    </script>
 		    <div class="portlet_tabpart01" style="padding-bottom:3px">
-		        <div class="portlet_tabpart01_top" id="tab1" style="width:800px;">
+		        <div class="portlet_tabpart01_top" id="tab1" style="width:802px;">
 	                <p id="AddJob_sub1"><span divname="AddJob1" id="1tab1"><spring:message code='ezOrgan.t00017' /></span></p>               
 		        </div>
 		    </div>
 		    <table style="width:800px">
 		        <tr>
 		            <td style="width:800px">
-		                <div class="listview" style="Width:800px; border-top:0px; margin-top:7px">
-		                    <div id="AddJobListView" style="border: 0px solid #ddd; Width: 800px; Height:600PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+		                <div class="listview" style="Width:800px;">
+		                    <div id="AddJobListView" style="border: 0px solid #ddd; Width: 800px; Height:540PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 		                </div>
 		            </td>
 		            <td style="padding-left:3px; vertical-align:top">            

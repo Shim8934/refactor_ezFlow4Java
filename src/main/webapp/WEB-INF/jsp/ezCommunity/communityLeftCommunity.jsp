@@ -21,7 +21,7 @@
 			    background-color: #fff;
 			    font-weight: bold;
 			    background: linear-gradient(#fff, #f8f8f8);
-			}
+			}			
 		</style>
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -45,13 +45,13 @@
 			var isCrossBrowser = "${isCrossBrowser}";
 
 			window.onload = function () {
-			    if (screen.height < 1080) {
+			    /* if (screen.height < 1080) {
 			        if(screen.height <= 800){
 			            document.getElementById("MyCopList").style.height = "135px";
 			        }else{
 			            document.getElementById("MyCopList").style.height = "225px";
 			        }
-			    }
+			    } */
 			    try {
 	                if (code != "") {
 	                    window.open("/ezCommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel);
@@ -109,7 +109,7 @@
 						if (result["list"] != "") {
 							getCommunityList_after(result["list"]);
 						} else {
-							$("#MyCopList").html("<div style='height:200px;text-align:center;'><img style='margin-top:100px;margin-bottom:20px' src='/images/signcommunity.png' /><div style='margin-top:15px'><div style='color:#979797'>"+strLang86+"</div><div style='margin-top:5px;color:#979797'>"+strLang87+"</div></div></div>");
+							$("#MyCopList").html("<div style='height:435px;text-align:center;'><img style='margin-top:100px;margin-bottom:20px' src='/images/signcommunity.png' /><div style='margin-top:15px'><div style='color:#979797'>"+strLang86+"</div><div style='margin-top:5px;color:#979797'>"+strLang87+"</div></div></div>");
 						}
 					}
 				});
@@ -327,7 +327,7 @@
 	                    	window.open("/ezCommunity/commHome/poll/pollMain.do?code=" + code + "&userLevel=" + UserLevel, "right");
 	                        break;
 	                    case "btn_MemberInfo": 
-	                    	alert("<spring:message code='ezCommunity.t1102' />");
+	                    	alert("<spring:message code='ezCommunity.t431' />");
 	                		break;
 			            case "btn_MemberOut": 
 			            	alert("<spring:message code='ezCommunity.t1102' />");
@@ -484,8 +484,10 @@
 				            if (userID == master) {
 				                alert("Community <spring:message code='ezCommunity.t1103' />");
 				            } else {
-				                var wWeight = "425";
-				                var wHeight = "385";
+				            	//2018-07-09  김보미 - 너비값 조정
+ 				                //var wWeight = "425";
+				                var wWeight = "475";
+				                var wHeight = "395";
 				                var heigth = window.screen.availHeight;
 				                var width = window.screen.availWidth;
 				                var left = (width - wWeight) / 2;
@@ -563,8 +565,11 @@
                 window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=tbl_c_Board&type=board&userLevel=" + UserLevel;
             }
             
+            /* 2018-05-15 홍승비 - 커뮤니티 만들기 팝업창으로 수정 */
             function make_Cop() {
-                window.open("/ezCommunity/commMake.do", "right");
+            	 var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=1,width=850,height=560";
+                 feature = feature + GetOpenPosition(850, 560);
+                window.open("/ezCommunity/commMake.do", "", feature);
             }
 		</script>
 	</head>
@@ -572,7 +577,7 @@
 	    <div id="left">
 	        <div class="left_cop" title="<spring:message code='main.t1006' />"><span><spring:message code='main.t1006' /></span></div>
 	        <!-- mylist -->	        
-	        <div style="overflow: auto; overflow-x: hidden; height: 470px; background-color: white; border-bottom:1px solid #ddd" id="MyCopList">
+	        <div style="overflow: auto; overflow-x: hidden; background-color: white; min-height:435px; padding:5px" id="MyCopList">
 	            <!-- list -->
 	            <ul class="list_thumbnail" id="list_thumbnail">
 	            </ul>

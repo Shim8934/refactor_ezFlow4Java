@@ -35,7 +35,7 @@
 				var themeinfo_dialogArguments = new Array();
 				function newpage() {
 				    themeinfo_dialogArguments[1] = newpage_Complete;
-				    var OpenWin = window.open("/admin/ezPortal/themeInfo.do?mode=new", "ThemeInfo", GetOpenWindowfeature(550, 560));
+				    var OpenWin = window.open("/admin/ezPortal/themeInfo.do?mode=new", "ThemeInfo", GetOpenWindowfeature(550, 500));
 				    try { OpenWin.focus(); } catch (e) { }
 				}
 				
@@ -53,7 +53,7 @@
 		        function Theme_onClick(pUID) {
 		            themeinfo_dialogArguments = new Array();
 		            themeinfo_dialogArguments[1] = newpage_Complete;
-		            var OpenWin = window.open("/admin/ezPortal/themeInfo.do?mode=modify&uID=" + pUID, "ThemeInfo", GetOpenWindowfeature(550, 560));
+		            var OpenWin = window.open("/admin/ezPortal/themeInfo.do?mode=modify&uID=" + pUID, "ThemeInfo", GetOpenWindowfeature(550, 500));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        function deleteTopMenu() {
@@ -96,18 +96,20 @@
 	        <ul>
 	            <c:if test="${result == '1'}">
 	            	<li><span onclick="newpage()"><spring:message code='ezPortal.t247'/></span></li>
+	            	<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 	            	<li><span onclick="Modify_Theme()"><spring:message code='ezPortal.t336'/></span></li>
 	            	<li><span onclick="deleteTopMenu()"><spring:message code='ezPortal.t67'/></span></li>
 	            </c:if>
 	        </ul>
 	    </div>
+		<div style="width:100%;">
 	    <table class="themelist_box " >
 	        <colgroup>
 	            <col width="195px">
 	            <col>
 	        </colgroup>
 	        <tr>
-	        <th colspan="2"><spring:message code='ezPortal.t990011'/></th>
+	        <th colspan="2" style="font-weight: normal; background-color: #f8f8fa; color:#333;"><spring:message code='ezPortal.t990011'/></th>
 	        </tr>
 	
 	        <c:forEach items="${list}" var="item">
@@ -152,6 +154,7 @@
 		        </tr>
 	        </c:forEach>
 	    </table>
+	    </div>
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	    </script>

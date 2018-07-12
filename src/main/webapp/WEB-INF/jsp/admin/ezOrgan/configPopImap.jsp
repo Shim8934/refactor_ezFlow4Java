@@ -14,6 +14,7 @@
 	
 	var userConfig = "${propertyValue}";
 	var returnValue = "${result}";
+	var defaultForDisablePopImap = "${defaultForDisablePopImap}";
 	
 	function window_onload() {
 		try {
@@ -22,11 +23,15 @@
 
 		if (returnValue == "NODATA") {
 			// Default '사용'
-			$('#unused').attr('checked', false);
-			$('#used').attr('checked', true);
-		
+			if (defaultForDisablePopImap == "YES") {
+				$('#unused').attr('checked', true);
+				$('#used').attr('checked', false);			    
+			} else {
+				$('#unused').attr('checked', false);
+				$('#used').attr('checked', true);
+			}
 		} else if (returnValue == "SUCCESS") {
-			
+			// userConfig 설정이 없는 사용자의 경우엔 디폴트 설정을 따른다.
 			if (userConfig == "YES") {
 				$('#unused').attr('checked', true);
 				$('#used').attr('checked', false);
@@ -57,7 +62,12 @@
 <body class="popup" onload="javascript:window_onload()">
 	<form name="sendForm" method="post" >
 		<h1 style="height:30px;">POP3/IMAP</h1>
-			<br />
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
+		<br />
 		<table  class="content">
 			<tr>
 			  	<th><spring:message code='ezOrgan.kyj01' /></th>
@@ -69,7 +79,6 @@
 		</table>
 		<div class="btnposition">
 		    <a class="imgbtn"><span onClick="return OK_Click()"><spring:message code='ezOrgan.t124' /></span></a>
-			<a class="imgbtn"><span onClick="window.close()"><spring:message code='ezOrgan.t125' /></span></a>
 		</div>
 	</form>
 </body>

@@ -12,11 +12,12 @@
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 	    <script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/Newemail.js"></script>
+	    <script type="text/javascript" src="/js/ezEmail/js_cross/Newemail.js"></script>
 	    <script language="javascript" type="text/javascript">
 	        var g_paramURL = "${url}";
 	        var editor = "${Use_Editor}";
 	        var pNoneActiveX = "${NoneActiveX}";
+		    var sentDateMsg = "${sentDateMsg}"; // 전달, 회신 시 보낸 시간
 		    
 	        function window_onload() {}
 		    
@@ -36,6 +37,8 @@
 	        			}
 	        		}
 	        	})
+	        	
+			    sentDateView();
 	        });
 		    
 		    function AttachDetail_view(obj) {
@@ -93,9 +96,9 @@
 		    	$frm.attr('method', 'post');
 		    	$frm.appendTo('body');
 
-		    	params = $('<input type="hidden" value="' + decodeURIComponent(params) + '" name="params" />');
+		    	params = $('<input type="hidden" value="' + params + '" name="params" />');
 		    	folderPath = $('<input type="hidden" value="' + decodeURIComponent(folderPath) + '" name="folderPath" />');
-		    	uid = $('<input type="hidden" value="' + decodeURIComponent(uid) + '" name="uid" />');
+		    	uid = $('<input type="hidden" value="' + uid + '" name="uid" />');
 		    	
 		    	$frm.append(params).append(folderPath).append(uid);
 		    	$frm.submit();
@@ -286,10 +289,23 @@
 	        	});
 	        }
 	        
+	     	// 전달, 회신 시 보낸 시간
+	        function sentDateView(msg) {
+			    if (sentDateMsg != "") {
+			    	
+			    	$("body").prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
+			    	$(".sentDateStr").css({
+			    		"padding" : "5px 0",
+				        "margin-bottom" : "10px",
+				        "font-size" : "14px",
+				        "background" : "rgba(255,250,205,0.5)"
+			    	});
+			    }
+	        }
 	    </script> 
 	</head>
 
-	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">
+	<body style="margin:10px 13px" onload="javascript:window_onload()">
 		<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' onclick='Smaller()' style='cursor:pointer;' />
 		<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; margin-left: -4px;' />
 		<span style="float:right;">

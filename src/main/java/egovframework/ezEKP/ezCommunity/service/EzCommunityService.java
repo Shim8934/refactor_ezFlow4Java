@@ -51,7 +51,8 @@ public interface EzCommunityService {
 	
 	public List<CommunityBoardInfoVO> commHomeBoardInfo(String code, int tenantID) throws Exception;
 	
-	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID, int tenantID) throws Exception;
+	/* 2018-05-18 홍승비 - UTC시간에 offset을 적용한 writeDate를 가져오기 위해 offset 추가*/
+	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID, int tenantID, String offset) throws Exception;
 	
 	public List<CommunityClubVO> adminNoticeMailOkGet2(String code, int tenantID) throws Exception;
 	

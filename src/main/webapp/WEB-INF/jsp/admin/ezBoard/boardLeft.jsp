@@ -8,6 +8,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	   	<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">	   	
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+	    <style>
+	    	.tree { min-height : 100px; }
+	    </style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -146,7 +149,21 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID(pTreeID);
 	            treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
-	        }
+	       
+	            /* 18-05-18 김민성 - tootip 추가 및 글자수 관련 style 수정 */
+		        var node = document.getElementById(TreeIdx);
+		        var title2 = node.getElementsByClassName("node_div");
+		        var nodeLevel = title2[0].getAttribute("nodelevel");
+		        if(nodeLevel > 9)
+		        	nodeLevel = 9;
+		        for(var i=0; i<title2.length; i++) {
+		        	title3 = title2[i].getElementsByClassName("node_normal");
+		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
+		        	title3[0].style.width = 152 - 18*nodeLevel +'px';
+		        	title3[0].style.textOverflow = 'ellipsis';
+		        	title3[0].style.overflow = 'hidden';
+		        }
+		    }
 
 	        var AccessLevel = "0";
 	        function TopBoard_onclick(obj, ID) {
@@ -164,6 +181,15 @@
 	            treeView.SetNodeClick("TreeCtrl_onNodeClick");            
 	            treeView.DataSource(GetSubBoard(rootBoardID, "1"));
 	            treeView.DataBind(obj + "obj");
+	            
+	            /* 18-05-18 김민성 - tootip 추가 및 글자수 관련 style 수정 */
+				var node = $(".node_normal");
+				for(var i=0; i<node.length; i++) {
+					node[i].setAttribute("TITLE", node[i].parentElement.getAttribute("DATA2"));
+					node[i].style.width = '152px';
+					node[i].style.textOverflow = 'ellipsis';
+					node[i].style.overflow = 'hidden';
+				} 
 	        }
 
 	        function SetTreeConfig() {
@@ -270,11 +296,11 @@
 	        }	        
 	    </script>
 	</head>
-	<body class="leftbody" style="overflow-y: auto; overflow-x: hidden">
+	<body class="leftbody">
 	    <div id="left">
 	        <div class="left_admin"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code="ezBoard.t58" /></div>
 	        <div id="TopBoard"></div>	
-	        <h3><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(1)"><spring:message code="ezBoard.t122" /></span></h3>
+	        <h3 style="border-top:1px solid #e8e8e8"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(1)"><spring:message code="ezBoard.t122" /></span></h3>
 	        <h3 style="border-top: 0px;"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(6)"><spring:message code="ezBoard.t0004" /></span></h3>
 	        <h3 style="border-top: 0px;"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(7)"><spring:message code="ezBoard.t500" /></span></h3>
 	        <h3 style="border-top: 0px;"><span style="width: 100%; display: inline-block; width: 100%;" onclick="OpenRightMenu(2)"><spring:message code="ezBoard.t62" /></span></h3>
@@ -299,7 +325,7 @@
 							strHTML += "<h2><div AccessLevel='1' id='TreeCtr" + idx + "' value='" + i.boardId;
 	                        strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + idx + "','" + i.boardId + "')\">";
 	                        strHTML += i.boardName + "</div></h2>";
-	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj' style='width: auto; overflow: auto; padding-left: 10px; padding-bottom: 20px; max-height: 200px;'>";
+	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj' style='width: auto; overflow: auto; padding-left: 10px; padding-bottom: 20px;'>";
 	                        strHTML += "</div></ul>";
 						});
 						cnt = item.length;

@@ -21,7 +21,9 @@ function selToggleList(ulEl, selPTab, selTab, flag)
 		selTab2EI.item(j).onmouseout = mouseOut_Sub;
     }
     
-    selTab1EI.item(0).className = "on";
+    if (selTab1EI.length > 0) {
+    	selTab1EI.item(0).className = "on";
+    }
      
     //KMS에서 사용합니다.
     if( parseInt(flag)>0 && selTab2EI.length > 0 )
@@ -59,8 +61,9 @@ function selToggleList2(ulEl, selPTab, selTab, flag)
         selTab2EI.item(j).onmouseover = mouseOver_Sub2;
 		selTab2EI.item(j).onmouseout = mouseOut_Sub2;
     }
-    
-    selTab1EI.item(0).className = "on";
+    if (selTab1EI.length > 0) {
+    	selTab1EI.item(0).className = "on";
+    }
      
     if( flag == "1" && selTab2EI.length > 0 )
     {
@@ -208,10 +211,10 @@ function toggleList_Sub(event)
 }
 
 function mouseOver_Sub()
-{
+{	
 	if( prevSelMenu != this )
 	{
-		this.className = "on";
+		this.className = "on ing";
 	}
 }
 

@@ -352,7 +352,7 @@
 	                    <div id="close">
 	                        <ul>
 	                            <li>
-	                            	<span onclick="window.close()"><spring:message code='ezSchedule.t16' /></span>
+	                            	<span onclick="window.close()"></span>
 	                            </li>
 	                        </ul>
 	                    </div>
@@ -378,9 +378,11 @@
 	                                <spring:message code='ezSchedule.jjh05' />
 	                            </th>
 	                            <td style="white-space:nowrap;">
-	                                <div style="cursor: pointer;width:280px;" onclick="show_personinfo('0')" id="LabelCreator">	                                    
-	                                    <c:if test="${primary == '1'}"><c:out value="${scheduleInfo.creatorName}" /></c:if>
-	                                    <c:if test="${primary != '1'}"><c:out value="${scheduleInfo.creatorName2}" /></c:if>	                                    
+	                                <div>
+	                                	<span  style="cursor: pointer;width:280px;" onclick="show_personinfo('0')" id="LabelCreator">
+		                                    <c:if test="${primary == '1'}"><c:out value="${scheduleInfo.creatorName}" /></c:if>
+		                                    <c:if test="${primary != '1'}"><c:out value="${scheduleInfo.creatorName2}" /></c:if>	                                    
+	                                	</span>	                                    
 	                                </div>
 	                            </td>
 	                            <th style="white-space:nowrap; width:80px">
@@ -516,10 +518,10 @@
 	                                </div>
 	                            </td>
 	                            <td class="pos2">	                                
-	                                <a href="#" class="imgbtn">
+	                                <a href="#" class="imgbtn imgbck">
 	                                	<span style="width:57px;" onclick="attach_SelectAll()"><spring:message code='ezSchedule.t317' /></span>
 	                                </a><br/>	                                
-	                                <a href="#" class="imgbtn">
+	                                <a href="#" class="imgbtn imgbck">
 	                                	<span style="width:57px;" onclick="attach_Download()"><spring:message code='ezSchedule.t157' /></span>
 	                                </a>
 	                            </td>
@@ -608,7 +610,6 @@
 	        </div>	
 	        <script type="text/javascript">
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
-				selToggleList(document.getElementById("close"), "ul", "li", "0");
 	        </script>	
 	    </form>
 	</body>

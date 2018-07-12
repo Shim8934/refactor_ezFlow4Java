@@ -6,10 +6,89 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<title><spring:message code='ezEmail.t546' /></title>
+		<c:if test="${userLang == '1'}">
+		<style>
+			table, th, td {
+				border-collapse: collapse;
+				empty-cells: show;
+				padding:0;margin:0;
+				font-size:12px;
+				font-family: 'Gulim', 'arial', 'verdana';
+			}
+			th{
+				white-space: nowrap;
+				word-break: keep-all;
+				word-wrap: normal;
+				color: #777;
+				background-color:#f8f8fa;
+				border:1px solid #d2d2d2;
+				padding:2px 10px;
+			}
+		</style>
+		</c:if>
+		<c:if test="${userLang == '2'}">
+		<style>
+			table, th, td {
+				border-collapse: collapse;
+				empty-cells: show;
+				padding:0;margin:0;
+				font-size:12px;
+				font-family: 'Gulim', 'arial', 'verdana';
+			}
+			th{
+				white-space: nowrap;
+				word-break: keep-all;
+				word-wrap: normal;
+				color: #666;
+				background-color:#f8f8f8;
+				border:1px solid #ddd;
+				padding:2px 10px;
+			}
+		</style>
+		</c:if>
+		<c:if test="${userLang == '3'}">
+		<style>
+			table, th, td {
+				border-collapse: collapse;
+				empty-cells: show;
+				padding:0;margin:0;
+				font-size:12px;
+				font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
+			}
+			th{
+				white-space: nowrap;
+				word-break: keep-all;
+				word-wrap: normal;
+				color: #777;
+				background-color:#f8f8fa;
+				border:1px solid #d2d2d2;
+				padding:2px 10px;
+			}
+		</style>
+		</c:if>
+		<c:if test="${userLang == '4'}">
+		<style>
+			table, th, td {
+				border-collapse: collapse;
+				empty-cells: show;
+				padding:0;margin:0;
+				font-size:12px;
+				font-family:'Gulim','simsun', 'simhei', 'arial', 'verdana';
+			}
+			th{
+				white-space: nowrap;
+				word-break: keep-all;
+				word-wrap: normal;
+				color: #666;
+				background-color:#f8f8f8;
+				border:1px solid #ddd;
+				padding:2px 10px;
+			}
+		</style>
+		</c:if>
 	    <script type="text/javascript">
 	        var myVar;
 	        window.onload = function ()
@@ -79,6 +158,10 @@
 	            </td>
 	        </tr>
 	        </c:if>
+	        <tr>
+	        	<td colspan="4" style="border : medium none" height="10px">
+	        	</td>
+	        </tr>
 	        </table>
 	        <div style="height:100%; margin:5px; word-wrap:break-word; word-break:normal; display:block">
 	            <div style="height:100%; border:1px solid #ddd;vertical-align:top;">
@@ -87,6 +170,5 @@
 	                </div>
 	            </div>
 	        </div>
-	    
 	</body>
 </html>

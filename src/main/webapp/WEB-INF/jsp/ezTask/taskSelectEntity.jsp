@@ -103,6 +103,8 @@
 	            document.getElementById("ToTitleStr").innerHTML = "<spring:message code='ezTask.t2005' />";
 	        else
 	            document.getElementById("ToTitleStr").innerHTML = "<spring:message code='ezTask.t137' />";
+	            
+	        ChangeListView_onClick(getOrganListType());
 	    }
 	    function TreeViewNodeClick() {
 	        issearch = false;
@@ -443,7 +445,8 @@
 	        }
 	        
 	        var UserListHTML = "";
-	        if (SelectDeptNM.getAttribute("countinfo") != "1") {
+	        /* if (SelectDeptNM.getAttribute("countinfo") != "1") { */
+	        if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) != null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
 	            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang43 + "</span>]";
 	            SelectDeptNM.setAttribute("countinfo", "1")
 	        }
@@ -662,7 +665,7 @@
             }
         }
 	    
-	    var m_strColorSelect = "#DBE1E7";
+	    var m_strColorSelect = "#edf4fd";
 	    var m_strColorOver = "#f4f5f5";
 	    var m_strColorDefault = "#ffffff";
 	    var p_ListOrderObject = null;
@@ -826,6 +829,7 @@
 	        pListType = Div;
 	        ListTypeChangeIcon();
 	        DisplayUserImageList();
+	        setOrganListType(pListType);
 	    }
 
 	    function InsertUser() {
@@ -1036,25 +1040,25 @@
 	        PagingHTML += strtext;
 	        var pageNum = CurPage;
 	        if (totalPage > 1 && pageNum != 1) {
-	            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+	            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>"
 	            PagingHTML += strtext;
 	        }
 	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>"
 	            PagingHTML += strtext;
 	        }
 	        if (totalPage > BlockSize) {
 	            if (pageNum > BlockSize) {
-	                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+	                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	        }
 	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 	            PagingHTML += strtext;
 	        }
 	        var MaxNum;
@@ -1085,27 +1089,27 @@
 
 	        if (totalPage > BlockSize) {
 	            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-	                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+	                strtext = "";
+	                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            else {
-	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                strtext = "";
+	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	        }
 	        else {
-	            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-	            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	            strtext = "";
+	            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 	            PagingHTML += strtext;
 	        }
 	        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+	            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 	            PagingHTML += strtext;
 	        }
 	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 	            PagingHTML += strtext;
 	        }
 	        PagingHTML += "</div>";
@@ -1169,10 +1173,45 @@
 	                displayUserList();
 	        }
 	    }
+	    
+        function setOrganListType(pListType) {
+        	$.ajax({
+        		type : "POST",
+        		dataType : "text",
+        		url : "/ezOrgan/setListType.do",
+        		async : false,
+        		data : {
+        			listType : pListType
+        		},
+        		success : function(result) {
+        			
+        		}
+        		
+        	})
+        }
+        
+        function getOrganListType() {
+        	var organListType = "TXT";
+        	$.ajax({
+        		type : "POST",
+        		dataType : "text",
+        		url : "/ezOrgan/getListType.do",
+        		async : false,
+        		success : function(result) {
+        			organListType = result;
+        		}
+        	})
+        	return organListType;
+        }
 	</script>
 	</head>
-<body class="popup" style="overflow:hidden">
+	<body class="popup" style="overflow:hidden">
 		<h1 id="h1Title"><c:out value="${title}" /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table style="width:100%">
 			<tr>
 				<td>
@@ -1185,7 +1224,7 @@
 	                                        <tr>
 	                                            <td>
 	                                                <div style="margin-left: 5px;">
-	                                                    <select id="search_type">
+	                                                    <select id="search_type" style="height:22px">
 	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezTask.t17' /></option>
 	                                                        <option value="description" usedefault="1"><spring:message code='ezTask.t15' /></option>
 	                                                        <option value="title" usedefault="1"><spring:message code='ezTask.t201' /></option>
@@ -1196,7 +1235,7 @@
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezTask.t1002' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezTask.t1003' /></option>
 	                                                    </select>
-	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
+	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px; height:22px">
 	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezTask.t183' /></span></a>
 	                                                </div>
 	                                            </td>
@@ -1227,7 +1266,7 @@
 	                                                </th>
 	                                            </tr>
 	                                        </table>
-	                                        <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
+	                                        <div style="vertical-align: top; height: 426px; overflow: auto; width: 440px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
 	                                                    <td style="width: 150px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezTask.t17' /></td>
@@ -1244,8 +1283,8 @@
 	                                                </tr>
 	                                            </table>
 	                                        </div>
-	                                        <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
-	                                        <div id="tblPageRayer" style="text-align:center; height:32px"></div>
+	                                        <div style="vertical-align: top; text-align: center; height: 426px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
+	                                        <div id="tblPageRayer" style="text-align:center;"></div>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -1267,9 +1306,8 @@
 	      		</td> 
 	    	</tr> 
 	 	</table>	    
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 	    	<a class="imgbtn" onClick="close_onclick()" ><span><spring:message code='ezTask.t19' /></span></a>
-	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezTask.t20' /></span></a>
 		</div>
 	</body>
 </html>

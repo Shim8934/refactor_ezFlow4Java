@@ -56,7 +56,7 @@
 		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 340 + "PX";
 		    	}
 				if (listSize != 0) {
-		        	document.getElementById("title").value = '${result.title}';
+		        	document.getElementById("title").value = "${result.title}";
 		        	document.getElementById("receiverlist").innerHTML = "${userName}";
 		        	document.getElementById("receiverlist2").innerHTML = "${userName2}";
 		        	document.getElementById("receiverID").innerHTML = "${userID}";
@@ -157,24 +157,33 @@
 				var filelist = GetChildNodes(listtable);
 				var fileList = "";
 
-				for (var i = 0; i < filelist.length - 1; i++) {	    
-					if (i == 0) {
-						fileList = GetAttribute(filelist[i + 1], "data2");
-					} else {
-						fileList += "," + GetAttribute(filelist[i + 1], "data2");
-            		}
-				}
+				//2018-07-06 김보미 - 파일부분 수정
+// 				for (var i = 0; i < filelist.length - 1; i++) {	    
+// 					if (i == 0) {
+// 						fileList = GetAttribute(filelist[i + 1], "data2");
+// 					} else {
+// 						fileList += "," + GetAttribute(filelist[i + 1], "data2");
+//             		}
+// 				}
+			    var fileArr = new Array(); //Object를 배열로 저장할 Array
+		        for (var i = 0; i < filelist.length - 1; i++) {
+			        var fileObj = new Object(); //key, value형태로 저장할 Object
+			        fileObj.newFileName = GetAttribute(filelist[i + 1], "data");
+			        fileObj.pFileName = GetAttribute(filelist[i + 1], "data2");
+			        fileObj.fileSize = GetAttribute(filelist[i + 1], "data3");
+			        fileArr.push(fileObj);
+		        }
 				
 				var receiverList = document.getElementById("receiverlist").innerHTML;
 				var receiverList2 = document.getElementById("receiverlist2").innerHTML;
 				var receiverID = document.getElementById("receiverID").innerHTML;
 				
-
-				if (receiverList.indexOf(userMyName) == -1) {
+				// 18-05-24 김민성 - 작성자 이름이 A, 회람자 이름이 A1 과 같은 유사한 이름의 경우 작성된회람판에서 안보이는 문제
+				//if (receiverList.indexOf(userMyName) == -1) {
 					receiverList += ", " + userMyName;
 					receiverList2 += ", " + userMyName2;
 					receiverID += ", " + userMyID;
-				}
+				//}
 
 	    		$.ajax ({
 	 			   	url : '/ezCircular/saveCircular.do',
@@ -187,7 +196,9 @@
 	                			receiverList2 : receiverList2,
 	                			receiverID : receiverID,
 	                			content : content,
-	                			fileList : fileList,
+	                			//2018-07-06 김보미 - 파일부분 수정
+ 	                			//fileList : fileList,
+	                			fileList : JSON.stringify(fileArr),
 	                			oldCircularID : oldCircularID,
 	                			mode : mode
 	                },  
@@ -244,13 +255,22 @@
 					var filelist = GetChildNodes(listtable);
 					var fileList = "";
 
-					for (var i = 0; i < filelist.length - 1; i++) {	    
-						if (i == 0) {
-							fileList = GetAttribute(filelist[i + 1], "data2");
-						} else {
-							fileList += "," + GetAttribute(filelist[i + 1], "data2");
-	            		}
-					}
+					//2018-07-06 김보미 - 파일부분 수정
+// 					for (var i = 0; i < filelist.length - 1; i++) {	    
+// 						if (i == 0) {
+// 							fileList = GetAttribute(filelist[i + 1], "data2");
+// 						} else {
+// 							fileList += "," + GetAttribute(filelist[i + 1], "data2");
+// 	            		}
+// 					}
+					var fileArr = new Array(); //Object를 배열로 저장할 Array
+			        for (var i = 0; i < filelist.length - 1; i++) {
+				        var fileObj = new Object(); //key, value형태로 저장할 Object
+				        fileObj.newFileName = GetAttribute(filelist[i + 1], "data");
+				        fileObj.pFileName = GetAttribute(filelist[i + 1], "data2");
+				        fileObj.fileSize = GetAttribute(filelist[i + 1], "data3");
+				        fileArr.push(fileObj);
+			        }
 					
 					var receiverList = document.getElementById("receiverlist").innerHTML;
 					var receiverList2 = document.getElementById("receiverlist2").innerHTML;
@@ -278,7 +298,9 @@
 		                			receiverID : receiverID,
 		                			circularID : circularID,
 		                			content : content,
-		                			fileList : fileList
+		                			//2018-07-06 김보미 - 파일부분 수정
+	 	                			//fileList : fileList
+		                			fileList : JSON.stringify(fileArr)
 		                },  
 		                cache: false,
 		                success: function(data) {	   
@@ -303,13 +325,22 @@
 				var filelist = GetChildNodes(listtable);
 				var fileList = "";
 
-				for (var i = 0; i < filelist.length - 1; i++) {	    
-					if (i == 0) {
-						fileList = GetAttribute(filelist[i + 1], "data2");
-					} else {
-						fileList += "," + GetAttribute(filelist[i + 1], "data2");
-            		}
-				}
+				//2018-07-06 김보미 - 파일부분 수정
+// 				for (var i = 0; i < filelist.length - 1; i++) {
+// 					if (i == 0) {
+// 						fileList = GetAttribute(filelist[i + 1], "data2");
+// 					} else {
+// 						fileList += "," + GetAttribute(filelist[i + 1], "data2");
+//             		}
+// 				}
+			    var fileArr = new Array(); //Object를 배열로 저장할 Array
+		        for (var i = 0; i < filelist.length - 1; i++) {
+			        var fileObj = new Object(); //key, value형태로 저장할 Object
+			        fileObj.newFileName = GetAttribute(filelist[i + 1], "data");
+			        fileObj.pFileName = GetAttribute(filelist[i + 1], "data2");
+			        fileObj.fileSize = GetAttribute(filelist[i + 1], "data3");
+			        fileArr.push(fileObj);
+		        }
 
 				$.ajax({
 					async : false,
@@ -317,13 +348,15 @@
 	                type : 'POST',
 	                dataType : 'json',
 	                data : {
-	                	fileList : fileList
+						//2018-07-06 김보미 - 파일부분 수정
+ 	                	//fileList : fileList
+	                	fileList : JSON.stringify(fileArr)
 	                },
 	                success: function() {
 						window.close();
 	                },
 	                error: function() {
-	                	alert("<spring:message code='ezCircular.t102'/>");	
+	                	alert("<spring:message code='ezCircular.t102'/>");
 	                }
 				});
 			}
@@ -350,7 +383,8 @@
         							<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t184"/></span></li>
         						</c:when>
         						<c:otherwise>
-		          					<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t28"/></span></li>	
+        							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezCircular.t28 => t25 -->
+		          					<li><span onClick="btn_Save('${mode}')"><spring:message code="ezCircular.t25"/></span></li>	
 		          					<li><span onClick="btn_TempSave()"><spring:message code="ezCircular.t71"/></span></li>       						
         						</c:otherwise>
         					</c:choose>
@@ -358,7 +392,7 @@
       				</div>
       				<div id="close">
         				<ul>
-          					<li><span onClick="btn_Close()"><spring:message code="ezCircular.t84"/></span></li>
+          					<li><span onClick="btn_Close()"></span></li>
         				</ul>
       				</div>
       				<table class="content" style="width:100%;border-bottom:0px">
@@ -398,28 +432,28 @@
 	       					<td style="width:200px;">
 								<c:choose>
 		                			<c:when test="${result.option eq '1'}">
-		                				<input type="checkbox" id="option1" name="chkList" checked/><spring:message code="ezCircular.t119"/>
-		                				<input type="checkbox" id="option2" name="chkList"/><spring:message code="ezCircular.t120"/>
+		                				<input type="checkbox" id="option1" name="chkList" checked><label for="option1"><spring:message code='ezCircular.t119'/></label>
+		                				<input type="checkbox" id="option2" name="chkList"><label for="option2"><spring:message code="ezCircular.t120"/></label>
 		                			</c:when>
 		                			<c:when test="${result.option eq '2'}">
-		                				<input type="checkbox" id="option1" name="chkList"/><spring:message code="ezCircular.t119"/>
-		                				<input type="checkbox" id="option2" name="chkList" checked/><spring:message code="ezCircular.t120"/>
+		                				<input type="checkbox" id="option1" name="chkList"/><label for="option1"><spring:message code="ezCircular.t119"/></label>
+		                				<input type="checkbox" id="option2" name="chkList" checked/><label for="option2"><spring:message code="ezCircular.t120"/></label>
 		                			</c:when>
 		                			<c:when test="${result.option eq '3'}">
-		                				<input type="checkbox" id="option1" name="chkList" checked/><spring:message code="ezCircular.t119"/>
-										<input type="checkbox" id="option2" name="chkList" checked/><spring:message code="ezCircular.t120"/>
+		                				<input type="checkbox" id="option1" name="chkList" checked/><label for="option1"><spring:message code="ezCircular.t119"/></label>
+										<input type="checkbox" id="option2" name="chkList" checked/><label for="option2"><spring:message code="ezCircular.t120"/></label>
 		                			</c:when>
 		                			<c:otherwise>
-		                				<input type="checkbox" id="option1" name="chkList"/><spring:message code="ezCircular.t119"/>
-										<input type="checkbox" id="option2" name="chkList"/><spring:message code="ezCircular.t120"/>
+		                				<input type="checkbox" id="option1" name="chkList"/><label for="option1"><spring:message code="ezCircular.t119"/></label>
+										<input type="checkbox" id="option2" name="chkList"/><label for="option2"><spring:message code="ezCircular.t120"/></label>
 		                			</c:otherwise>
 		                		</c:choose>					
 	         				</td>
 	        			</tr>
 						<tr>
 	           				<th rowspan="2" style="border-bottom:0px"><spring:message code="ezCircular.t34"/></th>
-	           				<td colspan="7" id ="itemList" style="padding-left:4px;">
-	           					<a class="imgbtn"><span id="clickbtn" onclick="_manage_attendant()"><spring:message code="ezCircular.t39"/></span></a>
+	           				<td colspan="7" id ="itemList" style="padding-left:2px;">
+	           					<a class="imgbtn imgbck"><span id="clickbtn" onclick="_manage_attendant()"><spring:message code="ezCircular.t39"/></span></a>
 	           				</td>
 						</tr>
 						<tr>
@@ -478,7 +512,6 @@
 
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 	</body>
 </html>

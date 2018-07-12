@@ -265,7 +265,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     private List<OrganDeptVO> organSearchListPageForLocal(Map<String, Object> map) throws Exception{
         return (List<OrganDeptVO>) list("EzOrganDAO.organSearchListPage", map);
     }
-	
+    
 	public List<OrganDeptVO> organSearchListPage(Map<String, Object> map) throws Exception{
 		return organSearchListPageForLocal(map);                       
 	}
@@ -367,5 +367,13 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<OrganDeptVO> getChildrenDeptID(Map<String, Object> map) throws Exception {
 		return (List<OrganDeptVO>) list("EzOrganDAO.getChildrenDeptID", map);
+	}
+	
+	public void setListType(Map<String, Object> map) throws Exception {
+		update("EzOrganDAO.setListType", map);
+	}
+
+	public String getListType(Map<String, Object> map) {
+		return (String) select("EzOrganDAO.getListType", map);
 	}
 }

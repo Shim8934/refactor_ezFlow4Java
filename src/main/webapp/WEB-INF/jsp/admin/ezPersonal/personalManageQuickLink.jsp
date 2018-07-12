@@ -40,7 +40,7 @@
 	                var xmldom = result;
 	                var headerData = createXmlDom();
 	                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
-	
+					
 	                if (CrossYN()) {
 	                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
 	                    var Node = headerData.importNode(xmlRtn, true);
@@ -273,12 +273,16 @@
 		<div id="mainmenu">
 			<ul>
 		    	<li><span onclick="btn_Select()"><spring:message code = 'ezPersonal.t105' /></span></li>
+		    	<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		        <li><span onclick="QuickList_onDblclick()"><spring:message code = 'ezPersonal.t169' /></span></li>
 		        <li><span onclick="btn_Del()"><spring:message code = 'ezPersonal.t99' /></span></li>
 			</ul>
 		</div>
+		<script type="text/javascript">
+	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+	    </script>
 	    <table class="mainlist" style="width:100%;">
-	        <div id=AccessList style ="BORDER:0;WIDTH:100%"></div>
+	        <div id=AccessList style ="WIDTH:100%; border-right:1px solid #e8e8e8; border-left:1px solid #e8e8e8;"></div>
 	    </table>
 	</body>
 </html>

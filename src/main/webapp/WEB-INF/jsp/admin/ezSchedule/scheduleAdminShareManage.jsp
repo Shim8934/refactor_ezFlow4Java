@@ -112,7 +112,7 @@
 	        {
 	            if (CrossYN()) {
 	                schedule_admin_popup_sharedept_dialogArguments[1] = share_new_Complete;
-	                var OpenWin = window.open("/admin/ezSchedule/scheduleAdminPopupShareDept.do", "scheduleAdminPopupShareDept", GetOpenWindowfeature(500, 180));
+	                var OpenWin = window.open("/admin/ezSchedule/scheduleAdminPopupShareDept.do", "scheduleAdminPopupShareDept", GetOpenWindowfeature(460, 180));
 	                try { OpenWin.focus(); } catch (e) { }
 	            } else {
 	                var feature = GetShowModalPosition(500, 180);
@@ -162,7 +162,6 @@
 		        <li><span onClick="share_delete()"><spring:message code='ezSchedule.t41' /></span></li>
 		    </ul>
 		</div>
-	    <br />
 	    <table style="width: 750px; height: 385px;" >
             <tr>
                 <td>

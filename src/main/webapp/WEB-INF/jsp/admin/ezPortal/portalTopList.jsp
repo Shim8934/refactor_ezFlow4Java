@@ -8,6 +8,14 @@
 		<title>Top_list</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
+		<style>
+	    	.mainlist tr td:first-child {
+	    		padding-left:15px;
+	    	}
+	    	.mainlist tr th:first-child {
+	    		padding-left:10px;
+	    	}
+	    </style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">
@@ -205,17 +213,21 @@
 		<div id="mainmenu">
 			<ul>
   				<c:if test="${result == '1'}">
-  					<li><span onClick="newpage()"><spring:message code='ezPortal.t247'/></span></li>	
+  					<li><span onClick="newpage()"><spring:message code='ezPortal.t247'/></span></li>
+  					<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   				</c:if>
   				<li><span onClick="deleteTopMenu()"><spring:message code='ezPortal.t67'/></span></li>
   				<li><span onClick="preview()"><spring:message code='ezPortal.t63'/></span></li>
+  				<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   				<li><span onClick="usepage()"><spring:message code='ezPortal.t248'/></span></li>
   				<li><span onClick="Outofusepage()"><spring:message code='ezPortal.t249'/></span></li>
   				<c:choose>
   					<c:when test="${host == 'jgw.cloud.kaoni.com'}">
+  						<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   						<li><span onClick="uselang(3)"><spring:message code='ezPortal.t4073'/></span></li>			
   					</c:when>
   					<c:otherwise>
+  						<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   						<li><span onClick="uselang(1)"><spring:message code='ezPortal.t406'/></span></li>
   						<li><span onClick="uselang(2)"><spring:message code='ezPortal.t407'/></span></li>
   						<li><span onClick="uselang(3)"><spring:message code='ezPortal.t4073'/></span></li>
@@ -223,6 +235,7 @@
   				</c:choose>
 			</ul>
 		</div>
+		<div style="width:100%; border: 1px solid #e8e8e8; border-top:0px; border-bottom:0px;">
 	    <table class="mainlist" style="width:100%">	
   			<tr>
     			<th width="60"><spring:message code='ezPortal.t101'/></th>
@@ -238,7 +251,6 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		<br>
-		<br>
+		</div>
 	</body>
 </html>

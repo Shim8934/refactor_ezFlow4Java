@@ -35,7 +35,7 @@
 	                return true;
 	    	};
         
-			$(document).ready(function(){				
+			$(document).ready(function(){
 				if ("${use_portal}" != "YES")
 	                $("#trPortlet").css("display","none");
 	            if (portlet == "Y")
@@ -57,6 +57,14 @@
 	                $("#chkApprBoardMail").prop("checked",true);
 	            }
 	            
+	            /* 2018-06-29 홍승비 - 기존 승인여부가 null인 게시판은 'N'값으로 처리 */
+	            if (orgAPPRFLAG == "") {
+	            	orgAPPRFLAG = "N";
+	            }
+	            if (APPRFLAG == "") {
+	            	APPRFLAG = "N";
+	            }
+	            
 	            if ($("#chkQnABoard").is(":checked") || $("#chkAnonyBoard").is(":checked")) {
 	                if ($("#chkApprBoard").is(":checked")) {
 	                	$("#chkApprBoard").prop("checked",false);	                    
@@ -67,17 +75,24 @@
 	                }
 	            }
 
+	            /* 2018-07-11 홍승비 - 포토+썸네일+익명 게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
 	            //추가항목
 	            if ("${style}" == "") {
 	                if ($("#chkPhotoBoard").is(":checked") || $("#chkThumbBoard").is(":checked")) {
 	                    document.getElementById("trAttribute").style.display = "none";
-	                } else {
+	                    document.getElementById("chkNotifyTr").style.display = "none";
+	                }
+	                else if ($("#chkAnonyBoard").is(":checked")) {
+	                	document.getElementById("chkNotifyTr").style.display = "none";
+	                }
+	                else {
 	                    document.getElementById("trAttribute").style.display = "";
+	                    document.getElementById("chkNotifyTr").style.display = "";
 	                }
 	            }
 			});
 			
-			function Save() {				
+			function Save() {
 	            if ($.trim($("#txtBoardName").val()) == "") {
 	                alert("<spring:message code='ezBoard.t144'/>");
 	                return;
@@ -294,6 +309,14 @@
 	                }
 	            }
 
+	            /* 2018-07-11 홍승비 - 포토+썸네일+익명 게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
+	             if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkAnonyBoard.checked == true) {
+	                document.getElementById("chkNotifyTr").style.display = "none";
+	                document.getElementById("chkNotify").checked = false;
+	            } else {
+	                document.getElementById("chkNotifyTr").style.display = "";
+	            }
+	            
 	            //추가항목
 	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkPortletBoard.checked == true) {
 	                document.getElementById("trAttribute").style.display = "none";
@@ -301,12 +324,15 @@
 	                document.getElementById("trAttribute").style.display = "";
 	            }
 
+	            /*
+	            //chkNotify 여부를 상단에서 체크하도록 수정했으므로 주석처리함
 	            if (chkNotify.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
 	                alert("<spring:message code='ezBoard.t150'/>");
 	                event.srcElement.checked = false;
 	                return;
 	            }
-
+				*/
+				
 	            if (chkbackgroundimage.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
 	                alert("<spring:message code='ezBoard.t6000'/>");
 	                event.srcElement.checked = false;
@@ -350,7 +376,7 @@
 			    
 			    selecttarget_cross_dialogArguments[0] = receiverData;
 			    selecttarget_cross_dialogArguments[1] = SelectTarget_Complete;
-			    var SelectTarget_Cross = window.open("/admin/ezBoard/selectTarget2.do", "SelectTarget_Cross2", GetOpenWindowfeature(800, 520));
+			    var SelectTarget_Cross = window.open("/admin/ezBoard/selectTarget2.do", "SelectTarget_Cross2", GetOpenWindowfeature(1144, 590));
 			    try { SelectTarget_Cross.focus(); } catch (e) {}
 			}
 			function SelectTarget_Complete(ret) {
@@ -470,7 +496,7 @@
 			        brd_color = color;
 			    }
 			}			
-		    function ExtensionAttribute_onClick() {    	
+		    function ExtensionAttribute_onClick() {
 		        if (chkGroupBoard.checked) {
 		            gubun = "1"
 		        } else if (chkAnonyBoard.checked) {
@@ -490,12 +516,13 @@
 		        para[1] = gubun;
 		        var url = "/admin/ezBoard/boardExtensionAttribute.do";
 
+		        /* 2018-07-12 홍승비 - 확장칼럼 설정 팝업창 width 조절 */
 		        if (CrossYN()) {
 		            BoardExtension_dialogArguments[0] = para;
-		            var ExtensionAttribute = window.open(url, "ExtensionAttribute", GetOpenWindowfeature(750, 750));
+		            var ExtensionAttribute = window.open(url, "ExtensionAttribute", GetOpenWindowfeature(770, 750));
 		            try { ExtensionAttribute.focus(); } catch (e) { }
 		        } else {
-		            var retVal = window.showModalDialog(url, para, "dialogWidth:750px;dialogHeight:750px;status:no;help:no;scroll:yes;edge:sunken");
+		            var retVal = window.showModalDialog(url, para, "dialogWidth:770px;dialogHeight:750px;status:no;help:no;scroll:yes;edge:sunken");
 		        }
 		    }
 		    
@@ -537,9 +564,10 @@
 		<body class="mainbody"><h1><spring:message code="ezBoard.t60"/></h1>
 	</c:if>	
 	<c:if test="${adminType == 'y'}">
-		<body>
+		<body class="tabbody" style="margin-top:10px">
 	</c:if>		
 		<xml id="listviewheader" style ="display:none"></xml>
+		<div style="max-width: 800px;">
 		<table class="content">
 	        <tr>
 	            <th><spring:message code="ezBoard.t114"/></th>
@@ -560,23 +588,25 @@
 	            </td>
 	        </tr>
 	    </table>
+	    </div>
 	    <br/>
+	    <div style="max-width : 800px;">
 	    <table class="content">
 	        <tr>
 	            <th><spring:message code="ezBoard.t111"/></th>
 	            <td style="padding: 0;">
 	                <c:if test="${use_multiData == 'YES'}">
-		                <table style="width: 100%">
+		                <table style="width: 100%;">
 		                    <tr class="primary">
 		                        <th><c:out value='${lang_primary}' /></th>
 		                        <td style="border-bottom:1px solid #ddd;">
-		                            <input type="text" id="txtBoardName" style="width: 99%" value="<c:out value='${model.boardName}' />" maxlength="25" />
+		                            <input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="25" />
 		                        </td>
 		                    </tr>
 		                    <tr class="secondary">
 		                        <th><c:out value='${lang_secondary}' /></th>
 		                        <td>
-		                            <input type="text" id="txtBoardName2" style="width: 99%" value="<c:out value='${model.boardName2}' />" maxlength="25" />
+		                            <input type="text" id="txtBoardName2" style="width: 100%" value="<c:out value='${model.boardName2}' />" maxlength="25" />
 		                        </td>
 		                    </tr>
 		                </table>
@@ -593,7 +623,7 @@
 	        <tr style="${style}">
 	            <th><spring:message code="ezBoard.t155"/></th>
 	            <td>
-	                <input type="text" id="txtBoardDescription" style="width: 99%" value="<c:out value='${model.boardDescription}' />" maxlength="99" />
+	                <input type="text" id="txtBoardDescription" style="width: 100%" value="<c:out value='${model.boardDescription}' />" maxlength="99" />
 	            </td>
 	        </tr>
 	        <tr style="${style}">
@@ -620,7 +650,7 @@
 		            <th><spring:message code="ezBoard.t159"/></th>
 		            <td>
 		            	<spring:message code="ezBoard.t160"/>
-	                	<input type="inputbox" id="deleteafter" style="width: 50px"/>
+	                	<input type="inputbox" id="deleteafter" style="width: 50px;height:20px;margin-top:3px"/>
 	                	<spring:message code="ezBoard.t161"/><br/>
 	                	<input type="checkbox" id="usedeleteafter"/>
 	                	<spring:message code="ezBoard.t162"/>
@@ -630,7 +660,7 @@
 	            	<th><spring:message code="ezBoard.t159"/></th>
 	            	<td>
 	            		<spring:message code="ezBoard.t160"/>
-	                	<input type="inputbox" id="deleteafter" style="width: 50px" value="<c:out value='${model.deleteAfter}' />"/>
+	                	<input type="inputbox" id="deleteafter" style="width: 50px;height:20px;margin-top:3px" value="<c:out value='${model.deleteAfter}' />"/>
 	                	<spring:message code="ezBoard.t161"/><br/>
 	                	<input type="checkbox" id="usedeleteafter" checked />
 	                	<spring:message code="ezBoard.t162"/>
@@ -741,10 +771,10 @@
 	        <tr style="${style}">
 	            <th>URL</th>
 	            <td>
-	                <input type="text" id="txtURL" style="width: 99%" value="<c:out value='${model.url}' />" />
+	                <input type="text" id="txtURL" style="width: 100%" value="<c:out value='${model.url}' />" />
 	            </td>
 	        </tr>
-	        <tr style="${style}">
+	        <tr id="chkNotifyTr" style="${style}">
 	            <th><spring:message code="ezBoard.t168" /></th>
 	            <td>
 	            	<c:if test="${model.replyNotify == '1'}">	            	
@@ -774,7 +804,7 @@
 	        <tr id="trAttribute" style="${style}">
 	            <th><spring:message code="ezBoard.t999028" /></th>
 	            <td>
-	            	<a class="imgbtn"><span onClick="ExtensionAttribute_onClick()"><spring:message code="ezBoard.t999029" /></span></a>
+	            	<a class="imgbtn imgbck"><span onClick="ExtensionAttribute_onClick()"><spring:message code="ezBoard.t999029" /></span></a>
 	            </td>
 	        </tr>	
 	        <tr style="${style}">
@@ -789,16 +819,16 @@
 	                            <span id="colorID" style="width: 80px;"><c:out value='${model.boardColor}' /></span>
 	                        </td>
 	                        <td style="text-align: right; width: 100px">
-	                            <a class="imgbtn"><span onclick="change_brdColor()"><spring:message code="ezBoard.t170" /></span></a>
+	                            <a class="imgbtn imgbck"><span onclick="change_brdColor()"><spring:message code="ezBoard.t170" /></span></a>
 	                        </td>
 	                    </tr>
 	                </table>
 	            </td>
 	        </tr>
 		</table>
-    	<br/>
-	    <div class="btnposition">
+	    <div class="btnpositionJsp">
 	        <a class="imgbtn" href="javascript:Save()"><span><spring:message code="ezBoard.t98" /></span></a>
+	    </div>
 	    </div>
 	</body>
 </html>

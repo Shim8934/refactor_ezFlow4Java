@@ -15,7 +15,16 @@
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
-
+		<style>
+			#left ul li.on{
+				font-weight:bold;
+				color:black;
+			}
+			 #left ul li.ing{
+				font-weight:normal;
+				color:#9b9b9b;
+			}
+		</style>
 	    <script type="text/javascript">
 	        document.onselectstart = function () { return false; };
 	        
@@ -41,8 +50,8 @@
 	            }
 	            else {
 	                document.getElementById("PostTreeView").style.maxHeight = parseInt(document.documentElement.clientHeight * 0.38) + "px";	                
-	            }	            
-
+	            }
+	            
 	            LoadEmailTree();
 	            
 	            /* 2017-05-18 장진혁 신규회람판에 클릭이벤트 생성 */ 
@@ -108,13 +117,13 @@
 	        	if ($("#PostTreeView").height() != "0"){	        	
 		        	$("#PostTreeView").height("0px");	        	
 		        	$("#PostTreeView").css("padding","0px");
-		        	$("#openImg").attr("src", "/images/expnd.gif");
-		        	$("#circularDoc").css("border-bottom", "0px");
+		        	$("#openImg").attr("src", "/images/cllps.gif");
+		        	$("#PostTreeView").css("border-top", "0px");		        	
 	        	} else {
 	        		$("#PostTreeView").height("200px");	        	
-		        	$("#PostTreeView").css("padding","10px 20px");
-		        	$("#openImg").attr("src", "/images/cllps.gif");
-		        	$("#circularDoc").css("border-bottom", "1px solid #dedede");
+		        	$("#PostTreeView").css("padding","10px 15px");
+		        	$("#openImg").attr("src", "/images/expnd.gif");
+		        	$("#PostTreeView").css("border-top", "1px solid #eaeaea");
 	        	}
 	        }
 	        
@@ -245,12 +254,18 @@
 				<li><span style="width:100%;display:inline-block;" id="circularMyCircular" onClick="circularMyCircular()"><img src="/images/ImgIcon/icon_writeapproval.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t4" /><span id="myCircularCount"></span></span></li>				
 				<li><span style="width:100%;display:inline-block;" id="circularTemp" onClick="circularTemp()"><img src="/images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon"><spring:message code="ezCircular.t5" /><span id="circularTempCount"></span></span></li>
 				<li><span style="width:100%;display:inline-block;" id="circularDelete" onClick="circularDelete()"><img src="/images/ImgIcon/deleted.gif" width="16" height="16" class="icon" style="margin-left:-1px"><spring:message code="ezCircular.t6" /><span id="circularDeleteCount"></span></span></li>
-				<li id="circularDoc"><span style="width:100%;display:inline-block;" onClick="openFolder()"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><span><spring:message code="ezCircular.t7" /></span>&nbsp;&nbsp;<img src="/images/cllps.gif" id="openImg" class="icon"></span></li>	        
-	            <div class="tree" style="height: 200px; background-color: #ffffff; border-bottom: 1px solid #dedede; overflow: auto; padding-left: 20px;" id="PostTreeView"></div>
-	            <li style="background: url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;padding: 8px 5px 7px 40px"><span onclick="circular_Search()" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t8" /></span></li>
-	            <li style="background: url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;padding: 8px 5px 7px 40px"><span onclick="folder_Manage()" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t9" /></span></li>	            
-	        </ul>	        
-	        <h3><span onclick="circularConfig()" style="width:100%;display:inline-block;"><spring:message code="ezCircular.t10" /></span></h3>
+				<li id="circularDoc"><span style="width:100%;display:inline-block;" onClick="openFolder()"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><span><spring:message code="ezCircular.t7" /></span>&nbsp;&nbsp;<img src="/images/cllps.gif" id="openImg" class="icon"></span></li>	            
+	        </ul>
+	        <div class="tree" style="height: 0px;background-color: #ffffff; overflow: auto; padding:0px; border-bottom:1px solid #eaeaea;" id="PostTreeView"></div>
+	        <%-- <ul id="extra">    
+	            <li><span onclick="circular_Search()" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t8" /></span></li>
+	            <li><span onclick="folder_Manage()" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t9" /></span></li>	            
+	        </ul>	        --%>
+	        <div class="extra">
+	        	<span onclick="circular_Search()" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t8" /></span>
+	        	<span onclick="folder_Manage()" style="width: 100%; display: inline-block;"><spring:message code="ezCircular.t9" /></span>
+	        </div> 
+	        <h3 style="border-top:1px solid #eaeaea"><span onclick="circularConfig()" style="width:100%;display:inline-block;"><spring:message code="ezCircular.t10" /></span></h3>
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");

@@ -8,6 +8,7 @@
 		<title><spring:message code='ezApprovalG.t816'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -28,7 +29,7 @@
 				<li><span onClick="btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li> 
 			</ul>
 		</div>
-		<div id="close"><ul><li><span onClick="btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li></ul></div>
+		<div id="close"><ul><li><span onClick="btnClose_onclick()"></span></li></ul></div>
 		<table class="content">
 			<tr> 
 				<th><spring:message code='ezApprovalG.t106'/></th>
@@ -53,24 +54,36 @@
 				<td id="tdProduceY" nowrap style="padding-right:15px">&nbsp;</td>
 			</tr>
 			<tr> 
+				<th><spring:message code='ezApprovalG.t831'/></th>
+				<td id="tdRegDate" nowrap style="padding-right:15px">&nbsp;</td>
 				<th><spring:message code='ezApprovalG.t830'/></th>
 				<td id="tdRegSN" nowrap style="padding-right:15px">&nbsp;</td>
+			</tr>
+			<tr style="display:none">
 				<th><spring:message code='ezApprovalG.t573'/></th>
 				<td id="tdVolNo" nowrap style="padding-right:15px">&nbsp;</td>
 			</tr>
-			<tr>
-				<th><spring:message code='ezApprovalG.t831'/></th>
-				<td id="tdRegDate" colspan=3>&nbsp;&nbsp;</td>
-			</tr>
 		</table>
 		<br>
-		<div id="tabnav">
+		<%-- <div id="tabnav">
 			<ul>
 				<li id="tab_ViewCab0"><span onclick ="MM_swapImagesub('0'); tab_onclick('0')" ><spring:message code='ezApprovalG.t832'/></span></li>
 				<li id="tab_ViewCab1"><span onclick ="MM_swapImagesub('1'); tab_onclick('1')" ><spring:message code='ezApprovalG.t840'/></span></li>
 				<li id="tab_ViewCab2"><span onclick ="MM_swapImagesub('2'); tab_onclick('2')" ><spring:message code='ezApprovalG.t850'/></span></li>
 				<li id="tab_ViewCab3"><span onclick ="MM_swapImagesub('3'); tab_onclick('3')" ><spring:message code='ezApprovalG.t94'/></span></li>
 			</ul>
+		</div> --%>
+		<div class="portlet_tabpart01" style="margin:0px;">
+			<div class="portlet_tabpart01_top" style="border-bottom:0px;">
+				<p id="tab_ViewCab0"><span onclick="MM_swapImagesub('0'); tab_onclick('0')"class="tabon"><spring:message code='ezApprovalG.t832'/></span>
+				</p>
+				<p id="tab_ViewCab1"><span onclick="MM_swapImagesub('1'); tab_onclick('1')"><spring:message code='ezApprovalG.t840'/></span>
+				</p>
+				<p id="tab_ViewCab2"><span onclick="MM_swapImagesub('2'); tab_onclick('2')"><spring:message code='ezApprovalG.t850'/></span>
+				</p>
+				<p id="tab_ViewCab3"><span onclick="MM_swapImagesub('3'); tab_onclick('3')"><spring:message code='ezApprovalG.t94'/></span>
+				</p>
+			</div>
 		</div>
 		<span ID="divTabDis1" style="DISPLAY: OVERFLOW: auto;">
 		<table class="content">
@@ -202,8 +215,6 @@
 		</span>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 		</script>
 	</body>
 </html>

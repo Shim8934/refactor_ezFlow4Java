@@ -68,12 +68,9 @@
 					<h1><c:out value='${title}'/></h1>
 					<div id="close">
 					  <ul>
-					    <li><span onclick="window.close()"><spring:message code="ezQuestion.t88" /></span></li>
+					    <li><span onclick="window.close()"></span></li>
 					  </ul>
 					</div>
-					<script type="text/javascript">
-					    selToggleList(document.getElementById("close"), "ul", "li", "0");
-					</script>
 					<div id="Content2" style="font-size:small;">
 					</div>
 					<div class="box" id="Content" style = "display:none">

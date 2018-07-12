@@ -104,8 +104,13 @@
 	</head>
 	<body class = "popup">
 		<h1><spring:message code = 'ezPersonal.t299' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return window.close();"></span></li>
+            </ul>
+        </div>
 	    <div>
-	        <table class="content">
+	        <table class="content" style="width:100%">
 	             <tr>
 	                <th style="width:100px; text-align:center"><spring:message code = 'ezPersonal.t275' /></th>
 	                <td style="width:150px; text-align:center"> ${nowYear}
@@ -125,10 +130,8 @@
 	                        <option value="12">12 </option>
 	                    </select>&nbsp;<spring:message code = 'ezPersonal.t291' />
 	                </td>
-	                  <td rowspan="3" style="width:100px; text-align:center">
-	                     <div class="btnposition">
-	                        <a href="#" class="imgbtn"><span onclick="btnAdd_click();"><spring:message code = 'ezPersonal.t00006' /></span></a>                     
-	                    </div>
+	                <td rowspan="3" style="width:100px; text-align:center">	                     
+						<a href="#" class="imgbtn imgbck"><span onclick="btnAdd_click();"><spring:message code = 'ezPersonal.t00006' /></span></a>
 	                </td>
 	            </tr>        
 	            <tr>
@@ -143,9 +146,8 @@
 	            </tr>                      
 	        </table>
 	    </div>
-	    <div class="btnposition">
+	    <div class="btnpositionNew">
 	        <a href="#" class="imgbtn"><span onclick="btnSave_click();"><spring:message code = 'ezPersonal.t34' /></span></a>
-	        <a href="#" class="imgbtn"><span onclick="return window.close();"><spring:message code = 'ezPersonal.t13' /></span></a>
 	    </div>
 	</body>
 </html>

@@ -293,7 +293,7 @@ public class LoginController {
 		}
 		
 		// 사용자가 입력한 암호가 맞는 경우
-        if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {  
+        if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
         	
         	// masteradmin의 암호로 로그인 가능하여 masteradmin 암호가 맞는 경우
         	// usermaster 테이블의 ip정보/loginCount는 업데이트하지 않고 접속 로그정보만 저장한다.
@@ -417,7 +417,13 @@ public class LoginController {
         // 사용자가 입력한 암호가 맞지 않는 경우
         } else {     	
         	//Check login state of the user 
-        	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);        
+        	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
+        	String errorMsg1 = "";
+        	String errorMsg2 = "";
+        	String errorMsg3 = "";
+        	String errorMsg4 = "";
+        	String errorMsg5 = "";
+        	String errorMsg6 = "";
 
         	switch (check) {
 				case -3: 
@@ -428,7 +434,22 @@ public class LoginController {
 	        		//The first time this user login failed
 	        		ezCommonService.insertUserConfigInfo(tenantId,  _uid, "LoginFailCount", "1");
 	        		//Show warning message
-	            	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.warning", new Object[] {1, numberOfLoginFailPermit}, locale));
+	        		/* 2018-05-24 홍승비 - 로그인 실패 시 레이어팝업을 위해 플래그 추가, 메세지 리소스 분리 */
+	        		errorMsg1 = egovMessageSource.getMessage("fail.common.login.warning1", locale);
+	        		errorMsg2 = egovMessageSource.getMessage("fail.common.login.warning2", locale);
+	        		errorMsg3 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] {1}, locale);
+	        		errorMsg4 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
+	        		errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] {numberOfLoginFailPermit}, locale);
+	        		errorMsg6 = egovMessageSource.getMessage("fail.common.login.warning6", locale);
+	        		
+	        		model.addAttribute("message1", errorMsg1);
+	            	model.addAttribute("message2", errorMsg2);
+	            	model.addAttribute("message3", errorMsg3);
+	            	model.addAttribute("message4", errorMsg4);
+	            	model.addAttribute("message5", errorMsg4);
+	            	model.addAttribute("message6", errorMsg4);
+	            	model.addAttribute("isWrongPass", "Y");
+	            	
 	            	return "forward:/user/login/login.do";
         		case -1:
         			//Show normal login fail message
@@ -444,8 +465,22 @@ public class LoginController {
                     	return "forward:/user/login/login.do";
         			} else {
             			//Show warning message
-                    	model.addAttribute("message", egovMessageSource.getMessageExtend("fail.common.login.warning", new Object[] {check + 1, numberOfLoginFailPermit}, locale));
-                    	return "forward:/user/login/login.do";
+        				errorMsg1 = egovMessageSource.getMessage("fail.common.login.warning1", locale);
+    	        		errorMsg2 = egovMessageSource.getMessage("fail.common.login.warning2", locale);
+    	        		errorMsg3 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] {check + 1}, locale);
+    	        		errorMsg4 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
+    	        		errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] {numberOfLoginFailPermit}, locale);
+    	        		errorMsg6 = egovMessageSource.getMessage("fail.common.login.warning6", locale);
+    	        		
+    	        		model.addAttribute("message1", errorMsg1);
+    	            	model.addAttribute("message2", errorMsg2);
+    	            	model.addAttribute("message3", errorMsg3);
+    	            	model.addAttribute("message4", errorMsg4);
+    	            	model.addAttribute("message5", errorMsg5);
+    	            	model.addAttribute("message6", errorMsg6);
+    	            	model.addAttribute("isWrongPass", "Y");
+    	            	
+    	            	return "forward:/user/login/login.do";
         			}
         	}
         } 

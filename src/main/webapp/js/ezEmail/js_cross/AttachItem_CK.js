@@ -139,7 +139,7 @@ function AddAttachFileInfoXmlParsing(resultXML) {
         }
         pstrXML += "</ROWS></LISTVIEWDATA>";
         objXML = loadXMLString(pstrXML);
-
+        
         pAttachListXml = objXML;
         //if (pAttachListXml == "") {
         //    pAttachListXml = objXML;
@@ -251,4 +251,8 @@ function GetShowModalPosition(popUpW, popUpH) {
     var feature = ";dialogLeft:" + left + "px;dialogTop:" + top + "px;";
 
     return feature
+}
+
+function replaceAll(str, searchStr, replaceStr) {
+	return str.split(searchStr).join(replaceStr);
 }

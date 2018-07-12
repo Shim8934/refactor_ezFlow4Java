@@ -39,6 +39,14 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezTask/EzTask_SQL_Mysql.xml"/>
 	<!--업무일지 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezJournal/EzJournal_SQL_Mysql.xml"/>
+    <!-- 웹폴더 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Mysql.xml"/>
+    <!-- 웹폴더 _y -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Mysql_y.xml"/>
+    <!-- 웹폴더 (이효민, 조영훈, 서재원) -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Mysql_m.xml"/>
+	<!--사다리게임 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezLadder/EzLadder_SQL_Mysql.xml"/>
     
     <!-- 2.관리자 모듈관리 SQL쿼리 XML -->
     
@@ -62,6 +70,8 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezSchedule/EzScheduleAdmin_SQL_Mysql.xml"/>
     <!-- 시스템 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezSystem/EzSystemAdmin_SQL_Mysql.xml"/>
+    <!-- 웹폴더 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolderAdmin_SQL_Mysql.xml"/>
     <!-- 3.모바일 모듈관리 SQL쿼리 XML -->
     
     <!-- 전자결재 -->
@@ -77,4 +87,10 @@
     <!-- 조직도,직원조회 -->
     <sqlMap resource="egovframework/sqlmap/ezMobile/ezOrgan/EzOrganMobile_SQL_Mysql.xml"/>
     
+    <!-- 근태관리 모듈관련 SQL쿼리 XML -->
+    
+    <!-- 근태관리 사용자모듈 xml -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitude_SQL_Mysql.xml"/>
+    <!-- 근태관리 관리자모듈 xml -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezAttitude/EzAttitudeAdmin_SQL_Mysql.xml"/>
 </sqlMapConfig>

@@ -104,7 +104,7 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li ><span onclick="wclose()"><spring:message code='ezBoard.t12'/></span></li>
+	                        <li ><span onclick="wclose()"></span></li>
 	                    </ul>
 	                </div>
 	            </td>
@@ -118,7 +118,7 @@
 	                    </tr>
 	                    <tr>
 	                        <th style="width:80px"><spring:message code='ezBoard.t1008'/></th>
-	                        <td style="width:100%;"><textarea id="content" style="height:100px;"></textarea></td>                        
+	                        <td style="width:100%;"><textarea id="content" style="height:100px;margin:2px;width:99%"></textarea></td>
 	                    </tr>
 	                </table>
 	            </td>

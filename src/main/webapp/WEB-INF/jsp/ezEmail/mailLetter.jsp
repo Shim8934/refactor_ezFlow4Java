@@ -20,6 +20,8 @@
 	    <style>
 			.imgbtn {
 			    vertical-align: middle;
+			    margin-top: 3px;
+			    height:22px
 			}
 			
 			#mainmenu {
@@ -38,30 +40,29 @@
 			}
 			
 			.lmtitle {
-			    height: 30px;
+			    height: 32px;
 			    background: #f8f8f8;
-			    border-bottom: 1px solid #cbcbcb;
-			    font-weight: bold;
-			    color: #777;
+			    color: #333;
 			    font-size: 12px;
-			    line-height: 30px;
+			    line-height: 32px;
 			    box-sizing: border-box;
 			    padding: 0 4px;
 			    text-align: center;
+			    font-weight: normal
 			}
 			
-			.lmLetterBoxTitle>input {
+			 .lmLetterBoxTitle>input {
 			    width: 68%;
-			    height: 22px;
+			    height: 24px;
 			    color: #393939;
 			    border: 1px solid #cbcbcb;
-			}
+			} 
 			
 			#letterTable {
 				height: 370px; 
 				width: 550px; 
 				margin: 7px 7px; 
-				border: 1px solid #cbcbcb;
+				border: 1px solid #ddd;
 			}
 			
 			input::-webkit-input-placeholder{
@@ -89,40 +90,47 @@
 			    text-align: left;
 			}
 			
+			.jstree-node, .jstree-children, .jstree-container-ul { 
+				margin-top: 3px;
+			}
+			
 		</style>
 	
 	</head>
 	<body style="overflow:hidden;" class="popup">
 		<h1><spring:message code='ezEmail.t824'/></h1>
-		
-		<table border="1" id="letterTable">
-			<tr style="height:8%;">
-				<td colspan="2" align="center">
-					<div class="lmtitle lmLetterBoxTitle">
-						<input type="text" name="" id="lmSearchInput" class="searchInput" onkeydown="letterSearchEnter();" placeholder="<spring:message code="ezEmail.t10"/>">
-						<a id="lmSearch" class="imgbtn" onclick="letterSearch()"><span><spring:message code='ezEmail.letter1'/></span></a>
-						<a id="lmSearchReset" class="imgbtn" onclick="inputReset()"><span><spring:message code='ezBoard.t999035'/></span></a>
+		<div id="close">
+            <ul>
+                <li><span onclick="cancel()"></span></li>
+            </ul>
+        </div>
+		<table border="1" id="letterTable" >
+			<tr style="height:8%; border-bottom:none;">
+				<th colspan="2" align="center" style="border:1px solid #ddd;padding:0px">
+					<div class="lmtitle lmLetterBoxTitle" style="border-bottom:0px;">
+						<input type="text" name="" id="lmSearchInput" class="searchInput" onkeydown="letterSearchEnter();" placeholder="<spring:message code="ezEmail.t10"/>" style="border-color:#ddd">
+						<a id="lmSearch" class="imgbtn" onclick="letterSearch()"><span style="line-height:23px"><spring:message code='ezEmail.letter1'/></span></a>
+						<a id="lmSearchReset" class="imgbtn" onclick="inputReset()"><span style="line-height:23px"><spring:message code='ezBoard.t999035'/></span></a>
 					</div>	
-				</td>
+				</th>
 			</tr>
-			<tr>
-				<td style="width:50%; vertical-align:top;">
-					<div id="divTree" style="height: 350px; width: 273px; overflow: auto;"></div>
+			<tr style="border-color:#ddd;">
+				<td style="width:50%; vertical-align:top; border-right:1px solid #ddd">
+					<div id="divTree" style="height: 340px; width: 273px; overflow: auto; "></div>
 				</td>
 				<td style="width:50%; vertical-align:top; ">
 					<div class="lmtitle lmLetterTitle">
 						<spring:message code='ezEmail.letter2'/>
 					</div> 
-					<div class="lmLetterList boxNo" data-boxNo="" style="height:320px; width:273px; overflow: auto;">
+					<div class="lmLetterList boxNo" data-boxNo="" style="height:308px; width:273px; overflow: auto;">
 						<ul class="lmLetterListUl"></ul>
 					</div>
 				</td>
 			</tr>
 		</table>
-		<div class="btnposition btnpositionNew">
+		<div class="btnposition btnpositionNew" >
 			<a class="imgbtn" onclick="letterPreview(this)"><span><spring:message code='ezEmail.t487'/></span></a>
 			<a class="imgbtn" onclick="letterSelect()"><span><spring:message code='ezBoard.t47'/></span></a>
-			<a class="imgbtn" onclick="cancel()"><span><spring:message code='ezEmail.t63'/></span></a>
 		</div>
 		
 		<script type="text/javascript">

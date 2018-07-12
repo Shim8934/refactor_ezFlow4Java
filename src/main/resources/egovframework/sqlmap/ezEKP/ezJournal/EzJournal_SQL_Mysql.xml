@@ -5,22 +5,22 @@
 
 	<typeAlias alias="JournaltypeVO" 		type="egovframework.ezEKP.ezJournal.vo.JournaltypeVO" />
 	<typeAlias alias="JournalFormInfoVO" 	type="egovframework.ezEKP.ezJournal.vo.JournalFormInfoVO" />
-	<typeAlias alias="companyVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalCompanyVO" />
-	<typeAlias alias="authorVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO" />
-	<typeAlias alias="deptViewVO" 			type="egovframework.ezEKP.ezJournal.vo.DeptViewVO" />
-	<typeAlias alias="deptInfoVO" 			type="egovframework.ezEKP.ezJournal.vo.DeptInfoVO" />
-	<typeAlias alias="favoriteVO" 			type="egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO" />
+	<typeAlias alias="journalCompanyVO" 	type="egovframework.ezEKP.ezJournal.vo.JournalCompanyVO" />
+	<typeAlias alias="journalAuthorVO" 		type="egovframework.ezEKP.ezJournal.vo.JournalAuthorVO" />
+	<typeAlias alias="journalDeptViewVO" 	type="egovframework.ezEKP.ezJournal.vo.DeptViewVO" />
+	<typeAlias alias="journalDeptInfoVO" 	type="egovframework.ezEKP.ezJournal.vo.DeptInfoVO" />
+	<typeAlias alias="journalFavoriteVO" 	type="egovframework.ezEKP.ezJournal.vo.ReceiverFavoriteVO" />
 	<typeAlias alias="journalEnvVO" 		type="egovframework.ezEKP.ezJournal.vo.JournalEnvVO" />
 	<typeAlias alias="journalVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalVO" />
-	<typeAlias alias="fileVO" 				type="egovframework.ezEKP.ezJournal.vo.JournalFileVO" />
+	<typeAlias alias="journalFileVO" 		type="egovframework.ezEKP.ezJournal.vo.JournalFileVO" />
 	<typeAlias alias="journalReplyVO" 		type="egovframework.ezEKP.ezJournal.vo.JournalReplyVO" />
-	<typeAlias alias="receiverVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalReceiverVO"/>	
-	<typeAlias alias="journalAuthCheckVO" 			type="egovframework.ezEKP.ezJournal.vo.JournalAuthCheckVO"/>	
+	<typeAlias alias="journalReceiverVO" 	type="egovframework.ezEKP.ezJournal.vo.JournalReceiverVO"/>	
+	<typeAlias alias="journalAuthCheckVO" 	type="egovframework.ezEKP.ezJournal.vo.JournalAuthCheckVO"/>	
 
 	<resultMap class="journalAuthCheckVO" id="journalAuthCheckMap">
 		<result property="isLive" 			column="is_live" />
-		<result property="checkSusin" 	column="check_susin" />
-		<result property="count" 		column="count" />
+		<result property="checkSusin" 		column="check_susin" />
+		<result property="count" 			column="count" />
 	</resultMap>
 	
 	<resultMap class="journalReplyVO" id="journalReplyMap">
@@ -56,7 +56,7 @@
 		<result property="fileList" 		resultMap="ezJournal.fileMap"/>
 	</resultMap>
 
-	<resultMap class="fileVO" id="fileMap">
+	<resultMap class="journalFileVO" id="fileMap">
 		<result property="filePath" 		column="file_path" />
 		<result property="fileSize"			column="file_size" />
 		<result property="fileName" 		column="file_name" />
@@ -82,7 +82,7 @@
 		<result property="mine"	 			column="mine" />
 	</resultMap>
 
-	<resultMap class="journalEnvVO" id="journalEnvMap">
+	<resultMap class="journalEnvVO" 	id="journalEnvMap">
 		<result property="listCnt" 			column="list_cnt" />
 		<result property="viewenv" 			column="viewenv" />
 		<result property="recvAlert" 		column="recv_alert" />
@@ -93,7 +93,7 @@
 		<result property="name" 			column="name" />
 	</resultMap>
 
-	<resultMap class="deptViewVO" id="deptViewMap">
+	<resultMap class="journalDeptViewVO" id="deptViewMap">
 		<result property="id" 				column="id" />
 		<result property="parent" 			column="parent" />
 		<result property="companyId" 		column="companyId" />
@@ -102,7 +102,7 @@
 		<result property="myDept" 			column="myDept" />
 	</resultMap>
 
-	<resultMap class="authorVO" id="authorMap">
+	<resultMap class="journalAuthorVO" id="authorMap">
 		<result property="userName" 		column="user_name" />
 		<result property="userId" 			column="user_id" />
 		<result property="jikwi" 			column="jikwi" />
@@ -110,27 +110,29 @@
 		<result property="authDept" 		column="auth_dept" />
 	</resultMap>
 
-	<resultMap class="authorVO" id="userMap">
-		<result property="userName"			column="user_name" />
-		<result property="userId" 			column="user_id" />
-		<result property="jikwi" 			column="jikwi" />
-		<result property="mail" 			column="mail" />
-		<result property="deptName" 		column="dept_name" />
-		<result property="userImg" 			column="user_img" />
+	<resultMap class="journalAuthorVO" id="userMap">
+		<result property="userName"				column="user_name" />
+		<result property="userId" 				column="user_id" />
+		<result property="jikwi" 				column="jikwi" />
+		<result property="mail" 				column="mail" />
+		<result property="deptId" 			column="dept_id" />
+		<result property="deptName" 			column="dept_name" />
+		<result property="userImg" 				column="user_img" />
+		<result property="extensionAttribute15" column="extensionAttribute15"	/>
 	</resultMap>
 
-	<resultMap class="authorVO" id="deptMap">
+	<resultMap class="journalAuthorVO" 		id="deptMap">
 		<result property="deptName" 		column="dept_name" />
 		<result property="deptId" 			column="dept_id" />
 		<result property="mine" 			column="mine" />
 	</resultMap>
 
-	<resultMap class="JournaltypeVO" id="JournaltypeMap">
+	<resultMap class="JournaltypeVO" 		id="JournaltypeMap">
 		<result property="journaltypeId" 	column="type_id" 	columnIndex="1" />
 		<result property="journalUse" 		column="used" 		columnIndex="2" />
 	</resultMap>
 
-	<resultMap class="JournalFormInfoVO" id="JournalFormInfo" groupBy="formId">
+	<resultMap class="JournalFormInfoVO" 	id="JournalFormInfo" groupBy="formId">
 		<result property="formId" 			column="form_id" />
 		<result property="formName" 		column="form_name" />
 		<result property="formInfo" 		column="form_info" />
@@ -138,7 +140,7 @@
 		<result property="formWriter" 		column="form_writer" />
 		<result property="formStatus" 		column="form_status" />
 		<result property="typeId" 			column="type_id" />
-		<result property="depts" 		resultMap="ezJournal.deptInfoVO"/>
+		<result property="depts" 			resultMap="ezJournal.deptInfoVO"/>
 	</resultMap>
 
 	<resultMap class="JournalFormInfoVO" id="formInfoVO">
@@ -156,18 +158,18 @@
 		<result property="formStatus" 		column="form_status" />
 	</resultMap>
 
-	<resultMap class="deptInfoVO" id="deptInfoVO">
+	<resultMap class="journalDeptInfoVO" id="deptInfoVO">
 		<result property="deptId" 			column="dept_id" />
 		<result property="deptName" 		column="dept_name" />
 	</resultMap>
 
-	<resultMap class="favoriteVO" id="favoriteVO">
+	<resultMap class="journalFavoriteVO" id="favoriteVO">
 		<result property="favoriteId" 		column="favorite_id" />
 		<result property="favoriteName" 	column="favorite_name" />
 		<result property="favoriteDate" 	column="favorite_date" />
 	</resultMap>
 
-	<resultMap class="receiverVO" id="receiverMap">
+	<resultMap class="journalReceiverVO" id="receiverMap">
 		<result property="userId"			column="user_id"/>
 		<result property="userName"			column="user_name"/>			
 		<result property="jikwi" 			column="jikwi"/>
@@ -175,7 +177,7 @@
 		<result property="deptName" 		column="dept_name"/>			
 	</resultMap>
 	
-	<resultMap class="receiverVO" id="receiverVO">
+	<resultMap class="journalReceiverVO" id="receiverVO">
 		<result property="userId"			column="user_id"/>
 		<result property="userName"			column="user_name"/>			
 		<result property="deptName"			column="dept_name"/>
@@ -184,25 +186,24 @@
 	</resultMap>
 
 	<!-- 양식함 리스트 세럭트 -->
-	<select id="selectJournalTypeList" resultMap="JournaltypeMap"
-		parameterClass="Map">
+	<select id="selectJournalTypeList" resultMap="JournaltypeMap" parameterClass="Map">
 		select 
 			type_id, 
 			used 
 		from 
 			tbl_journal_form_type
 		where
-			tenant_id=#tenantId#
+			tenant_id = #tenantId#
 		and 
-			company_id=#companyId#
+			company_id = #companyId#
 		<isNotEmpty property="used">
-			and used=#used#
+			and used = #used#
 		</isNotEmpty>
 	</select>
 
 	<!-- 회사 생성시 초기 양식함 생성 -->
 	<insert id="insertJournalType" parameterClass="map">
-		insert into jmocha.tbl_journal_form_type (
+		insert into tbl_journal_form_type (
 			type_id, 	company_id, 	tenant_id
 		) values (
 			#typeId#,	#companyId#,	#tenantId#
@@ -211,7 +212,7 @@
 	
 	<!-- 회사 생성시 기본양식 생성 -->
 	<insert id="insertJournalBasicForm" parameterClass="map">
-		insert into jmocha.tbl_journal_form (
+		insert into tbl_journal_form (
 			type_id, 	company_id, 	tenant_id	,	
 			form_content	,	
 			form_name	,	
@@ -222,7 +223,7 @@
 			#typeId#,	#companyId#,	#tenantId#	,
 			(
 			select f.form_content from
-            (select * from jmocha.tbl_journal_form
+            (select * from tbl_journal_form
 			where company_id = 'Top'
 			and tenant_id = #tenantId#
 			and type_id = #typeId#	
@@ -230,7 +231,7 @@
 			)	,
 			(
 			select form_name from 
-            (select * from jmocha.tbl_journal_form
+            (select * from tbl_journal_form
 			where company_id = 'Top'
 			and tenant_id = #tenantId#
 			and type_id = #typeId#	
@@ -238,7 +239,7 @@
 			)	,
 			(
 			select form_info from 
-            (select * from jmocha.tbl_journal_form
+            (select * from tbl_journal_form
 			where company_id = 'Top'
 			and tenant_id = #tenantId#
 			and type_id = #typeId#	
@@ -246,7 +247,7 @@
 			)	,
 			(
 			select form_status from 
-            (select * from jmocha.tbl_journal_form
+            (select * from tbl_journal_form
 			where company_id = 'Top'
 			and tenant_id = #tenantId#
 			and type_id = #typeId#	
@@ -258,9 +259,12 @@
 
 	<!-- 양식함 삭제 -->
 	<delete id="deleteJournalTypeList" parameterClass="Map">
-		delete from jmocha.tbl_journal_form_type 
-		where company_id=#companyId# 
-		and tenant_id=#tenantId#
+		delete from 
+			tbl_journal_form_type 
+		where 
+			company_id = #companyId# 
+		and 
+			tenant_id = #tenantId#
 	</delete>
 
 	<!-- 양식함 사용여부 수정 -->
@@ -292,15 +296,17 @@
 				ifnull(d.DISPLAYNAME$lang$,(select DISPLAYNAME$lang$ from tbl_deptmaster dd where dd.CN=#companyId# and dd.tenant_id=#tenantId#)) as dept_name
 			from 
 				tbl_journal_form a 
-			left join tbl_journal_form_use_dept b on (a.form_id = b.form_id and a.tenant_id = b.tenant_id)
-			left join tbl_deptmaster d on (d.CN=b.dept_id and d.tenant_id=b.tenant_id)
+			left join 
+				tbl_journal_form_use_dept b on (a.form_id = b.form_id and a.tenant_id = b.tenant_id and b.dept_id in (select CN from tbl_deptmaster))
+			left join 
+				tbl_deptmaster d on (d.CN = b.dept_id and d.tenant_id = b.tenant_id)
 			where
 				a.type_id = #typeId#
 			and
 				a.company_id = #companyId#
 			and
 				a.tenant_id = #tenantId#
-			order by a.form_id desc
+			order by a.form_id desc, d.DISPLAYNAME$lang$ asc
 		]]>
 	</select>
 
@@ -333,7 +339,11 @@
 					a.form_id,
 					a.form_name,
 					a.form_status,
-					a.type_id
+					a.type_id,
+					case
+						when form_status = 'basic' then 0
+						else 1
+					end as orderNo
 				from 
 					tbl_journal_form a left join tbl_journal_form_use_dept b 
 				on 
@@ -346,6 +356,7 @@
 					a.tenant_id = #tenantId#
 				and
 					a.company_id = #companyId#
+				order by orderNo, form_id
 			]]>
 		</isNotEmpty>
 	</select>
@@ -361,6 +372,9 @@
 			b.form_id = #formId#
 		and
 			b.tenant_id = #tenantId#
+		and 
+			b.dept_id in (select CN from tbl_deptmaster)
+		order by dept_name asc
 	</select>
 
 	<!-- 양식 등록 하기 -->
@@ -371,8 +385,7 @@
 			#tenantId#, #formName#, #formContent#, 	#typeId#, 	#writeDate#, #formWriter#,	#formDescript#, #companyId#
 		)
 		<selectKey keyProperty="id" resultClass="Integer">
-			select
-			last_insert_id()
+			select last_insert_id()
 		</selectKey>
 	</insert>
 
@@ -389,11 +402,11 @@
 	<select id="selectDeptList" parameterClass="map" resultMap="deptViewMap">
 		select 
 			d.CN as id,
-			IF(d.extensionattribute1=null
+			IF(d.extensionattribute1 = null
 			<isNotEmpty property="companyId">
-			or d.CN=#companyId#
+				or d.CN=#companyId#
 			</isNotEmpty>
-			,'##',d.EXTENSIONATTRIBUTE1) as parent,
+			,'##', d.EXTENSIONATTRIBUTE1) as parent,
 			d.extensionattribute2 as companyId,
 			d.DISPLAYNAME$lang$ as text,
 			case d.CN
@@ -432,7 +445,7 @@
 	</select>
 
 	<!-- 회사 리스트를 가져오는 쿼리 -->
-	<select id="selectCompanyList" resultClass="companyVO" parameterClass="map">
+	<select id="selectCompanyList" resultClass="journalCompanyVO" parameterClass="map">
 		select 
 			d.CN as companyId,
 			d.DISPLAYNAME$lang$ as companyName,
@@ -441,9 +454,9 @@
 				else 'no'
 			end as selected
 		from 
-			jmocha.tbl_deptmaster d
+			tbl_deptmaster d
 		left join
-			jmocha.tbl_usermaster u on d.tenant_id = u.TENANT_ID
+			tbl_usermaster u on d.tenant_id = u.TENANT_ID
 		where
 			d.TENANT_ID = #tenantId#
 		and 
@@ -472,13 +485,13 @@
 			du.DISPLAYNAME$lang$ as dept_name,
 			group_concat(d.DISPLAYNAME$lang$ order by 1 separator '%') as auth_dept
 		from 
-			jmocha.tbl_usermaster u 
+			tbl_usermaster u 
 		inner join
-			jmocha.tbl_journal_auth a on (u.CN=a.user_id and u.TENANT_ID=a.tenant_id)
+			tbl_journal_auth a on (u.CN = a.user_id and u.TENANT_ID = a.tenant_id and a.dept_id in (select CN from tbl_deptmaster))
 		inner join 
-			jmocha.tbl_deptmaster d on (a.dept_id=d.CN and a.tenant_id=d.TENANT_ID)
+			tbl_deptmaster d on (a.dept_id = d.CN and a.tenant_id = d.TENANT_ID)
 		inner join
-			jmocha.tbl_deptmaster du on (du.CN = u.DEPARTMENT and u.TENANT_ID=du.TENANT_ID)
+			tbl_deptmaster du on (du.CN = u.DEPARTMENT and u.TENANT_ID = du.TENANT_ID)
 		where 
 			a.tenant_id = #tenantId#
 		and
@@ -493,9 +506,9 @@
 			d.CN dept_id,
 			'no' as mine
 		from 
-			jmocha.tbl_deptmaster d
+			tbl_deptmaster d
 		left join 
-			jmocha.tbl_journal_auth a on (d.CN = a.dept_id and a.tenant_id = d.TENANT_ID)
+			tbl_journal_auth a on (d.CN = a.dept_id and a.tenant_id = d.TENANT_ID)
 		where 
 			a.user_id = #userId#
 		and 
@@ -506,9 +519,9 @@
 			d.CN dept_id,
 			'yes' as mine
 		from 
-			jmocha.tbl_deptmaster d
+			tbl_deptmaster d
 		inner join 
-			jmocha.tbl_usermaster u on (d.CN = u.DEPARTMENT and u.TENANT_ID = d.TENANT_ID)
+			tbl_usermaster u on (d.CN = u.DEPARTMENT and u.TENANT_ID = d.TENANT_ID)
 		where 
 			u.CN = #userId#
 		and 
@@ -519,9 +532,9 @@
 			d.CN dept_id,
 			'add' as mine
 		from 
-			jmocha.tbl_deptmaster d
+			tbl_deptmaster d
 		right join 
-			jmocha.tbl_addjobmaster a on (d.CN = a.deptid and a.TENANT_ID = d.TENANT_ID)
+			tbl_addjobmaster a on (d.CN = a.deptid and a.TENANT_ID = d.TENANT_ID)
 		where 
 			a.CN = #userId#
 		and 
@@ -531,29 +544,104 @@
 
 	<!-- 해당부서의 사원리스트 -->
 	<select id="selectUserList" parameterClass="Map" resultMap="userMap" remapResults="true">
-		select
-			DISPLAYNAME$lang$ as user_name,
-			CN as user_id,
-			TITLE$lang$ as jikwi,
-			MAIL as mail,
-			DESCRIPTION$lang$ as dept_name,
-			EXTENSIONATTRIBUTE2 as user_img
-		from 
-			tbl_usermaster
-		where
-			TENANT_ID = #tenantId#
-		and
-			PHYSICALDELIVERYOFFICENAME = #companyId#
-		<isNotEqual property="key" compareValue="DEPARTMENT">
-			and 
-				$key$ like concat('%',#value#,'%')
-		</isNotEqual>
-		<isEqual property="key" compareValue="DEPARTMENT">
-			and 
-				$key$ = #value#
-		</isEqual>
-		order by 
-			lpad(ifnull(EXTENSIONATTRIBUTE15,0),6,0) ,DISPLAYNAME$lang$
+		select * from 
+		(	select
+				DISPLAYNAME$lang$ as user_name,
+				CN as user_id,
+				TITLE$lang$ as jikwi,
+				MAIL as mail,
+				DEPARTMENT as dept_id,
+				DESCRIPTION$lang$ as dept_name,
+				EXTENSIONATTRIBUTE2 as user_img,
+				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15
+			from 
+				tbl_usermaster
+			where
+				TENANT_ID = #tenantId#
+			and
+				PHYSICALDELIVERYOFFICENAME = #companyId#
+			and
+			    CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#) 
+			<isNotEqual property="key" compareValue="DEPARTMENT">
+				and 
+					$key$ like concat('%', #value#, '%')
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT">
+				and 
+					$key$ = #value#
+			</isEqual>
+		union all 
+			select
+	        	A.DISPLAYNAME$lang$ as user_name,
+				A.CN as user_id,
+				B.TITLE$lang$ as jikwi,
+				A.MAIL as mail,
+				B.DEPTID as dept_id,
+				C.DISPLAYNAME$lang$ as dept_name,
+				A.EXTENSIONATTRIBUTE2 as user_img,
+				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.EXTENSIONATTRIBUTE15, '0'))), IFNULL(A.EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15               	
+			from
+				tbl_addjobmaster B
+			join
+				tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
+			join
+				tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
+			where
+				B.TENANT_ID = #tenantId#
+			<isNotEqual property="key" compareValue="DEPARTMENT">
+				and 
+					A.$key$ like concat('%', #value#, '%')
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT">
+				and 
+					B.DEPTID = #value#
+			</isEqual>
+		) AA
+		ORDER BY 8 ASC, 1 ASC
+		LIMIT #curPage#, #pageSize#
+	</select>
+	
+	<!-- 해당부서의 사원수 -->
+	<select id="getDeptUserListCount" parameterClass="Map" resultClass="Integer">
+			select count(*) AS count from 
+		(	select
+				CN as user_id
+			from 
+				tbl_usermaster
+			where
+				TENANT_ID = #tenantId#
+			and
+				PHYSICALDELIVERYOFFICENAME = #companyId#
+			and
+			    CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#) 
+			<isNotEqual property="key" compareValue="DEPARTMENT">
+				and 
+					$key$ like concat('%', #value#, '%')
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT">
+				and 
+					$key$ = #value#
+			</isEqual>
+		union all 
+			select
+	        	A.CN as user_id
+			from
+				tbl_addjobmaster B
+			join
+				tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
+			join
+				tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
+			where
+				B.TENANT_ID = #tenantId#
+			<isNotEqual property="key" compareValue="DEPARTMENT">
+				and 
+					A.$key$ like concat('%', #value#, '%')
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT">
+				and 
+					B.DEPTID = #value#
+			</isEqual>
+		) AA
 	</select>
 
 	<!-- 양식 상세정보 -->
@@ -615,7 +703,7 @@
 
 	<!-- 사원의 열람권한을 저장하는 쿼리 -->
 	<insert id="insertAuthDept" parameterClass="Map">
-		insert into jmocha.tbl_journal_auth (
+		insert into tbl_journal_auth (
 			user_id, 	dept_id, 	tenant_id
 		) 
 		select
@@ -624,7 +712,7 @@
 			select
 				DISPLAYNAME$lang$
 			from 
-				jmocha.tbl_usermaster 
+				tbl_usermaster 
 			where 
 				CN = #userId# 
 			and 
@@ -637,11 +725,11 @@
 	<!-- 권한 리스트 삭제 -->
 	<delete id="deleteAuthDept" parameterClass="Map">
 		delete from
-			jmocha.tbl_journal_auth 
+			tbl_journal_auth 
 		where 
-			user_id=#userId# 
+			user_id = #userId# 
 		and
-			tenant_id=#tenantId#
+			tenant_id = #tenantId#
 	</delete>
 
 	<!-- 수신일지 수 -->
@@ -649,14 +737,16 @@
 		select 
 			count(j.journal_id)
 		from 
-			jmocha.tbl_journal_recv r
-		inner join jmocha.tbl_journal j on (r.journal_id = j.journal_id and r.tenant_id = j.tenant_id)
+			tbl_journal_recv r
+		inner join tbl_journal j on (r.journal_id = j.journal_id and r.tenant_id = j.tenant_id)
 		where 
-			r.user_id=#userId#
+			r.user_id = #userId#
 		and 
-			r.TENANT_ID=#tenantId#
+			r.TENANT_ID = #tenantId#
 		and 
 			r.recv_status='Y'
+		and 
+			j.journal_writer in (select CN from tbl_usermaster)
 		and
 			isnull(r.recieve_date)
 		and 
@@ -668,21 +758,21 @@
 		select 
 			count(j.journal_id) as totalCount
 		from 
-			jmocha.tbl_journal j 
+			tbl_journal j 
 		inner join 
-			jmocha.tbl_journal_form f on (j.form_id = f.form_id and j.tenant_id = f.tenant_id)
+			tbl_journal_form f on (j.form_id = f.form_id and j.tenant_id = f.tenant_id)
 		inner join 
-			jmocha.tbl_journal_form_type ft on (f.type_id=ft.type_id and f.tenant_id=ft.tenant_id)
+			tbl_journal_form_type ft on (f.type_id = ft.type_id and f.tenant_id = ft.tenant_id)
 		inner join
-			jmocha.tbl_deptmaster d on (j.journal_dept=d.CN and d.TENANT_ID=j.tenant_id)
+			tbl_deptmaster d on (j.journal_dept = d.CN and d.TENANT_ID = j.tenant_id)
 		inner join 
-			jmocha.tbl_usermaster u on (j.journal_writer=u.CN and u.TENANT_ID=j.tenant_id)
+			tbl_usermaster u on (j.journal_writer = u.CN and u.TENANT_ID = j.tenant_id)
 		<isNotEmpty property="recvUser">
 			left join 
-				jmocha.tbl_journal_recv r on (r.journal_id=j.journal_id and j.tenant_id=r.tenant_id)
+				tbl_journal_recv r on (r.journal_id = j.journal_id and j.tenant_id = r.tenant_id)
 		</isNotEmpty>
 		where 
-			j.tenant_id=#tenantId# and ft.company_id=#companyId#
+			j.tenant_id = #tenantId# and ft.company_id = #companyId# and j.journal_writer in (select CN from tbl_usermaster)
 		<isNotEmpty property="typeId">
 			and ft.type_id = #typeId#
 		</isNotEmpty>
@@ -690,32 +780,32 @@
 			and j.journal_writer = #journalWriter#
 		</isNotEmpty>
 		<isNotEmpty property="deptId">
-			and d.CN=#deptId#
+			and d.CN = #deptId#
 		</isNotEmpty>
 		<isNotEmpty property="recvUser">
-			and r.user_id=#recvUser#
+			and r.user_id = #recvUser#
 			and r.recv_status = 'Y'
 		</isNotEmpty>
 		<isNotEmpty property="status">
-			and j.journal_status=#status#
+			and j.journal_status = #status#
 		</isNotEmpty>
 		<isEmpty property="status">
 			and NULLIF(j.journal_status,'') is null
 		</isEmpty>
 		<isNotEmpty property="formId">
-			and f.form_id=#formId#
+			and f.form_id = #formId#
 		</isNotEmpty>
 		<isNotEmpty property="writerName">
-			and u.DISPLAYNAME$lang$ like concat('%',#writerName#,'%')
+			and u.DISPLAYNAME$lang$ like concat('%', #writerName#, '%')
 		</isNotEmpty>
 		<isNotEmpty property="journalTitle">
-			and j.journal_title like concat('%',#journalTitle#,'%')
+			and j.journal_title like concat('%', #journalTitle#, '%')
 		</isNotEmpty>
 		<isNotEmpty property="journalText">
-			and j.journal_text like concat('%',#journalText#,'%')
+			and j.journal_text like concat('%', #journalText#, '%')
 		</isNotEmpty>
 		<isNotEmpty property="formName">
-			and f.form_name like concat('%',#formName#,'%')
+			and f.form_name like concat('%', #formName#, '%')
 		</isNotEmpty>
 		<isNotEmpty property="startDate">
 			<isNotEmpty property="endDate">
@@ -732,80 +822,118 @@
 			</isEmpty>
 		</isNotEmpty>
 		<isEqual property="listType" compareValue="department">
-			and dept_share='Y'
+			and dept_share = 'Y'
 		</isEqual>
 	</select>
 
 	<!-- 일지 리스트 가져오기 -->
 	<select id="selectJournalList" parameterClass="Map" resultMap="journalListMap">
-		select j.journal_id as journal_id,
-		j.journal_title as journal_title,
-		substring(j.journal_date,1,19) as journal_date,
-		j.dept_share as dept_share,
-		u.DISPLAYNAME$lang$ as writer_name,
-		d.DISPLAYNAME$lang$ as dept_name,
-		f.form_name as form_name,
-		ft.type_id as type_id,
-		(select count(jr.reply_id) from jmocha.tbl_journal_reply jr where
-		jr.journal_id=j.journal_id and jr.tenant_id=j.tenant_id) as
-		reply_count,
-		(select count(jf.file_id) from jmocha.tbl_journal_file jf where
-		jf.journal_id=j.journal_id and jf.tenant_id=j.tenant_id) as
-		file_count,
-		(select count(v.user_id) from (select user_id,journal_id,TENANT_ID from jmocha.tbl_journal_view
-		union select user_id,journal_id,TENANT_ID from jmocha.tbl_journal_recv where recieve_date is not null) v
-		where not(v.user_id = j.journal_writer)
-		and v.journal_id=j.journal_id and v.tenant_id=j.tenant_id) as view_count,
-		(select count(r.user_id) from jmocha.tbl_journal_recv r where
-		r.journal_id=j.journal_id and r.tenant_id=j.tenant_id) as total_recv,
-		(select count(r.recieve_date) from jmocha.tbl_journal_recv r where
-		r.journal_id=j.journal_id and r.tenant_id=j.tenant_id) as check_recv,
-		ifnull((select recieve_date as is_view
-		from jmocha.tbl_journal_recv where user_id=#userId# and
-		tenant_id=j.tenant_id and journal_id=j.journal_id
-		union select view_date as is_view
-		from jmocha.tbl_journal_view where user_id=#userId# and
-		tenant_id=j.tenant_id and journal_id=j.journal_id
-		),'noView') as is_view ,
-		f.form_status as form_status,
-		j.journal_sum as journal_sum,
-		if(j.journal_writer=#userId#,'Y','N') as mine
-		from jmocha.tbl_journal j
-		inner join jmocha.tbl_journal_form f on (j.form_id=f.form_id and
-		j.tenant_id = f.tenant_id)
-		inner join jmocha.tbl_journal_form_type ft on (f.type_id=ft.type_id and
-		f.tenant_id=ft.tenant_id)
-		inner join jmocha.tbl_deptmaster d on (j.journal_dept=d.CN and
-		d.TENANT_ID=j.tenant_id)
-		inner join jmocha.tbl_usermaster u on (j.journal_writer=u.CN and
-		u.TENANT_ID=j.tenant_id)
+		select 
+			j.journal_id as journal_id,
+			j.journal_title as journal_title,
+			DATE_ADD(DATE_FORMAT(j.journal_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as journal_date,
+			j.dept_share as dept_share,
+			u.DISPLAYNAME$lang$ as writer_name,
+			d.DISPLAYNAME$lang$ as dept_name,
+			f.form_name as form_name,
+			ft.type_id as type_id,
+			(select 
+				count(jr.reply_id) 
+			from 
+				tbl_journal_reply jr 
+			where jr.journal_id=j.journal_id and jr.tenant_id=j.tenant_id and jr.reply_writer in (select CN from tbl_usermaster)) as reply_count,
+			(select 
+				count(jf.file_id) 
+			from 
+				tbl_journal_file jf 
+			where
+				jf.journal_id=j.journal_id and jf.tenant_id=j.tenant_id) as file_count,
+			(select 
+				count(v.user_id) 
+			from 
+				(select 
+					user_id, journal_id, TENANT_ID 
+				from 
+					tbl_journal_view
+				union 
+				select 
+					user_id, journal_id, TENANT_ID 
+				from 
+					tbl_journal_recv 
+				where 
+					recieve_date is not null) v
+			where
+				v.user_id in (select CN from tbl_usermaster)
+			and	 
+				not(v.user_id = j.journal_writer) and v.journal_id = j.journal_id and v.tenant_id = j.tenant_id) as view_count,
+			(select 
+				count(r.user_id) 
+			from 
+				tbl_journal_recv r 
+			where
+				r.journal_id = j.journal_id and r.tenant_id = j.tenant_id and r.user_id in (select CN from tbl_usermaster)) as total_recv,
+			(select 
+				count(r.recieve_date) 
+			from 
+				tbl_journal_recv r 
+			where
+				r.journal_id = j.journal_id and r.tenant_id = j.tenant_id and r.user_id in (select CN from tbl_usermaster)) as check_recv,
+			ifnull(
+				(select 
+					recieve_date as is_view
+				from 
+					tbl_journal_recv 
+				where 
+					user_id = #userId# and tenant_id = j.tenant_id and journal_id = j.journal_id
+				union 
+				select 
+					view_date as is_view
+				from 
+					tbl_journal_view 
+				where 
+					user_id = #userId# and tenant_id = j.tenant_id and journal_id = j.journal_id
+				),
+			'noView') as is_view ,
+			f.form_status as form_status,
+			j.journal_sum as journal_sum,
+			if(j.journal_writer = #userId#, 'Y', 'N') as mine
+		from 
+			tbl_journal j
+		inner join 
+			tbl_journal_form f on (j.form_id = f.form_id and j.tenant_id = f.tenant_id)
+		inner join 
+			tbl_journal_form_type ft on (f.type_id = ft.type_id and f.tenant_id=ft.tenant_id)
+		inner join 
+			tbl_deptmaster d on (j.journal_dept = d.CN and d.TENANT_ID = j.tenant_id)
+		inner join 
+			tbl_usermaster u on (j.journal_writer = u.CN and u.TENANT_ID=j.tenant_id)
 		<isNotEmpty property="recvUser">
-			left join jmocha.tbl_journal_recv r on (r.journal_id=j.journal_id and
-			r.tenant_id=j.tenant_id)
+			left join 
+				tbl_journal_recv r on (r.journal_id = j.journal_id and r.tenant_id = j.tenant_id)
 		</isNotEmpty>
-		where j.tenant_id=#tenantId#
-		and ft.company_id=#companyId#
+		where 
+			j.tenant_id = #tenantId# and ft.company_id = #companyId#
 		<isNotEmpty property="typeId">
-			and ft.type_id=#typeId#
+			and ft.type_id = #typeId#
 		</isNotEmpty>
 		<isNotEmpty property="journalWriter">
-			and j.journal_writer=#journalWriter#
+			and j.journal_writer = #journalWriter#
 		</isNotEmpty>
 		<isNotEmpty property="deptId">
-			and d.CN=#deptId#
+			and d.CN = #deptId#
 		</isNotEmpty>
 		<isNotEmpty property="recvUser">
-			and r.user_id=#recvUser#
+			and r.user_id = #recvUser#
 			and r.recv_status = 'Y'
 		</isNotEmpty>
 		<isNotEmpty property="status">
-			and j.journal_status=#status#
+			and j.journal_status = #status#
 		</isNotEmpty>
 		<isEmpty property="status">
 			and NULLIF(j.journal_status,'') is null
 		</isEmpty>
 		<isNotEmpty property="formId">
-			and f.form_id=#formId#
+			and f.form_id = #formId#
 		</isNotEmpty>
 		<isNotEmpty property="writerName">
 			and u.DISPLAYNAME$lang$ like concat('%',#writerName#,'%')
@@ -821,8 +949,7 @@
 		</isNotEmpty>
 		<isNotEmpty property="startDate">
 			<isNotEmpty property="endDate">
-				and (date(j.journal_date) between
-				#startDate# and #endDate#)
+				and (date(j.journal_date) between #startDate# and #endDate#)
 			</isNotEmpty>
 			<isEmpty property="endDate">
 				and (date(j.journal_date) like #startDate#)
@@ -834,7 +961,7 @@
 			</isEmpty>
 		</isNotEmpty>
 		<isEqual property="listType" compareValue="department">
-			and dept_share='Y'
+			and dept_share = 'Y'
 		</isEqual>
 		group by 1,2,3,4,5,6,7,8,14,15,16,17
 		<isEmpty property="orderNum">
@@ -859,8 +986,7 @@
 			#tenantId#, #userId#, 	#favoriteName#, #nowDate#
 		)
 		<selectKey keyProperty="id" resultClass="Integer">
-			select
-			last_insert_id()
+			select last_insert_id()
 		</selectKey>
 	</insert>
 
@@ -874,8 +1000,7 @@
 	</insert>
 
 	<!-- 즐겨찾기 리스트 가져오기 -->
-	<select id="getReceiverFavoriteList" parameterClass="map"
-		resultMap="favoriteVO">
+	<select id="getReceiverFavoriteList" parameterClass="map" resultMap="favoriteVO">
 		select
 			favorite_id,
 			favorite_name,
@@ -945,23 +1070,28 @@
 
 	<!-- 환경설정을 가져오기 -->
 	<select id="selectUserEnv" parameterClass="Map" resultMap="journalEnvMap">
-		select  ifnull(e.list_cnt,20) as list_cnt
-		,ifnull(e.viewenv,'NONE') as viewenv
-		,ifnull(e.recv_alert,'Y') as recv_alert
-		,ifnull(e.reply_alert,'Y') as reply_alert
-		,ifnull(e.preview_wcontent,'50') as preview_wcontent
-		,ifnull(e.preview_hcontent,'50') as preview_hcontent
-		,u.mail as mail
-		,u.DISPLAYNAME$lang$ as name
-		from jmocha.tbl_usermaster u
-		left join jmocha.tbl_journal_env e on(u.CN = e.user_id and u.tenant_id = e.tenant_id)
-		where u.CN=#userId#
-		and u.tenant_id=#tenantId#
+		select  
+			ifnull(e.list_cnt,20) as list_cnt,
+			ifnull(e.viewenv,'NONE') as viewenv,
+			ifnull(e.recv_alert,'Y') as recv_alert,
+			ifnull(e.reply_alert,'Y') as reply_alert,
+			ifnull(e.preview_wcontent,'50') as preview_wcontent,
+			ifnull(e.preview_hcontent,'50') as preview_hcontent,
+			u.mail as mail,
+			u.DISPLAYNAME$lang$ as name
+		from 
+			tbl_usermaster u
+		left join 
+			tbl_journal_env e on (u.CN = e.user_id and u.tenant_id = e.tenant_id)
+		where 
+			u.CN = #userId#
+		and 
+			u.tenant_id = #tenantId#
 	</select>
 
 	<!-- 환경설정 저장하기 -->
 	<insert id="insertUpdateJournalEnv" parameterClass="map">
-		INSERT INTO jmocha.tbl_journal_env
+		INSERT INTO tbl_journal_env
 		(user_id,
 		tenant_id
 		<isNotEmpty property="listCnt">
@@ -1006,24 +1136,24 @@
 		</isNotEmpty>
 		)
 		ON DUPLICATE KEY UPDATE
-		user_id=#userId#
+		user_id = #userId#
 		<isNotEmpty property="listCnt">
-			,list_cnt=#listCnt#
+			,list_cnt = #listCnt#
 		</isNotEmpty>
 		<isNotEmpty property="viewenv">
-			,viewenv=#viewenv#
+			,viewenv = #viewenv#
 		</isNotEmpty>
 		<isNotEmpty property="replyAlert">
-			,reply_alert=#replyAlert#
+			,reply_alert = #replyAlert#
 		</isNotEmpty>
 		<isNotEmpty property="recvAlert">
-			,recv_alert=#recvAlert#
+			,recv_alert = #recvAlert#
 		</isNotEmpty>
 		<isNotEmpty property="previewWcontent">
-			,preview_wcontent=#previewWcontent#
+			,preview_wcontent = #previewWcontent#
 		</isNotEmpty>
 		<isNotEmpty property="previewHcontent">
-			,preview_hcontent=#previewHcontent#
+			,preview_hcontent = #previewHcontent#
 		</isNotEmpty>
 	</insert>
 
@@ -1047,34 +1177,37 @@
 	<!-- 일지 뷰 정보 저장 -->
 	<insert id="insertViewDate" parameterClass="map">
 		<selectKey resultClass="string" keyProperty="isUser">
-			select user_id
-			from jmocha.tbl_journal_recv
-			where journal_id=#journalId#
+			select 
+				user_id
+			from 
+				tbl_journal_recv
+			where 
+				journal_id = #journalId#
 			and
-			tenant_id=#tenantId#
-			and user_id=#userId#
+				tenant_id = #tenantId#
+			and 
+				user_id = #userId#
 		</selectKey>
 		<isEmpty property="isUser">
-			insert into jmocha.tbl_journal_view (user_id,tenant_id,journal_id,
-			view_date)
-			values(#userId#,#tenantId#,#journalId#,#viewDate#)
-<!-- 			from dual -->
-<!-- 			where not exists( -->
-<!-- 			select -->
-<!-- 			journal_id -->
-<!-- 			from jmocha.tbl_journal where journal_id = #journalId# and journal_writer -->
-<!-- 			= #userId# and tenant_id = #tenantId#) -->
-			<!-- values (#userId#,#tenantId#,#journalId#,#viewDate#) -->
-			on duplicate key update tenant_id = #tenantId#
+			insert into tbl_journal_view 
+				(user_id,	tenant_id,	journal_id, 	view_date)
+			values
+				(#userId#,	#tenantId#,	#journalId#,	#viewDate#)
+			on duplicate key update tenant_id = #tenantId# 
 		</isEmpty>
 		<isNotEmpty property="isUser">
-			update jmocha.tbl_journal_recv
-			set
-			recieve_date=#viewDate#
-			where journal_id=#journalId#
-			and
-			tenant_id=#tenantId#
-			and user_id=#userId#
+				update 
+					tbl_journal_recv
+				set
+					recieve_date = #viewDate#
+				where 
+					journal_id = #journalId#
+				and
+					tenant_id = #tenantId#
+				and 
+					user_id = #userId#
+				and 
+					recieve_date is null
 		</isNotEmpty>
 	</insert>
 
@@ -1084,30 +1217,36 @@
 			j.journal_id as journal_id, 
 			j.journal_title as journal_title, 
 			j.journal_content as journal_content, 
-			substring(j.journal_date,1,19) as journal_date, 
+			DATE_ADD(DATE_FORMAT(j.journal_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as journal_date,
 			u.DISPLAYNAME$lang$ as writer_name, 
 			f.form_name as form_name, 
 			f.type_id as type_id,
 			j.journal_sum as journal_sum,
-		    (select count(jr.reply_id) from jmocha.tbl_journal_reply jr where jr.journal_id=j.journal_id and jr.tenant_id=j.tenant_id) as reply_count,    
-		    (select count(r.user_id) from jmocha.tbl_journal_recv r where r.journal_id=j.journal_id and r.tenant_id=j.tenant_id) as total_recv,   
-		    (select count(r.recieve_date) from jmocha.tbl_journal_recv r where r.journal_id=j.journal_id and r.tenant_id=j.tenant_id) as check_recv,
+		    (select count(jr.reply_id) from tbl_journal_reply jr where jr.journal_id = j.journal_id and jr.tenant_id = j.tenant_id and jr.reply_writer in (select CN from tbl_usermaster)) as reply_count,    
+		    (select count(r.user_id) from tbl_journal_recv r where r.journal_id = j.journal_id and r.tenant_id = j.tenant_id and r.user_id in (select CN from tbl_usermaster)) as total_recv,   
+		    (select count(r.recieve_date) from tbl_journal_recv r where r.journal_id = j.journal_id and r.tenant_id = j.tenant_id and r.user_id in (select CN from tbl_usermaster)) as check_recv,
 		    f.form_id as form_id,
 		    j.dept_share as dept_share,
 			jf.file_path as file_path,
             jf.file_size as file_size,
-            jf.file_name as file_name
-            ,case u.CN
-			when #userId# then 'yes'
-			else 'no'
-			end as mine
-			,u.CN as writer_id
-		from jmocha.tbl_journal j
-		inner join	jmocha.tbl_journal_form f on (j.form_id=f.form_id and j.tenant_id =f.tenant_id)
-		inner join jmocha.tbl_usermaster u on(j.journal_writer=u.CN and u.TENANT_ID=j.tenant_id)
-		left join jmocha.tbl_journal_file jf on (jf.journal_id=j.journal_id and jf.tenant_id=j.tenant_id)
-		where j.tenant_id=#tenantId#
-		and j.journal_id=#journalId#
+            jf.file_name as file_name,
+            case u.CN
+				when #userId# then 'yes'
+				else 'no'
+			end as mine,
+			u.CN as writer_id
+		from 
+			tbl_journal j
+		inner join	
+			tbl_journal_form f on (j.form_id = f.form_id and j.tenant_id = f.tenant_id)
+		inner join 
+			tbl_usermaster u on (j.journal_writer = u.CN and u.TENANT_ID = j.tenant_id)
+		left join 
+			tbl_journal_file jf on (jf.journal_id = j.journal_id and jf.tenant_id = j.tenant_id)
+		where 
+			j.tenant_id = #tenantId#
+		and 
+			j.journal_id = #journalId#
 	</select>
 
 	<!-- 업무일지 등록 하기 -->
@@ -1126,8 +1265,7 @@
 			</isEqual>
 		)
 		<selectKey keyProperty="id" resultClass="Integer">
-			select
-			last_insert_id()
+			select last_insert_id()
 		</selectKey>
 	</insert>
 
@@ -1220,7 +1358,7 @@
 		select 
 			r.reply_id as reply_id,
 			r.reply_content as reply_content,
-			substring(r.reply_date,1,16) as reply_date,
+			DATE_ADD(DATE_FORMAT(r.reply_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as reply_date,
 			u.DISPLAYNAME$lang$ as reply_writer_name,
 			u.CN as reply_writer,
 			case u.CN
@@ -1228,16 +1366,16 @@
 				else 'N'
 			end as mine
 		from 
-			tbl_journal_reply r inner join tbl_usermaster u on(u.CN = r.reply_writer and u.TENANT_ID = r.tenant_id)
+			tbl_journal_reply r inner join tbl_usermaster u on (u.CN = r.reply_writer and u.TENANT_ID = r.tenant_id)
 		where 
-			r.journal_id=#journalId#
+			r.journal_id = #journalId#
 		and
-			r.tenant_id=#tenantId#
+			r.tenant_id = #tenantId#
 	</select>
 
 	<!-- 댓글입력 -->
 	<insert id="insertJournalReply" parameterClass="map">
-		insert into jmocha.tbl_journal_reply(
+		insert into tbl_journal_reply(
 			tenant_id,	reply_content,	journal_id,		reply_date,		reply_writer
 		) values(
 			#tenantId#,	#replyContent#,	#journalId#,	#replyDate#,	#userId#
@@ -1246,7 +1384,7 @@
 			select 
 				journal_writer 
 			from 
-				jmocha.tbl_journal 
+				tbl_journal 
 			where 
 				journal_id = #journalId#
 			and 
@@ -1257,7 +1395,7 @@
 	<!-- 댓글삭제 -->
 	<delete id="deleteJournalReply" parameterClass="map">
 		delete from 
-			jmocha.tbl_journal_reply
+			tbl_journal_reply
 		where 
 			tenant_id = #tenantId#
 		and 
@@ -1280,6 +1418,8 @@
 			b.journal_id = #journalId#
 		and
 			a.tenant_id = #tenantId#
+		and
+			b.user_id in (select CN from tbl_usermaster)
 	</select>
 	
 	<!-- 수신자 리스트 가져오기 -->
@@ -1289,7 +1429,7 @@
 			a.DISPLAYNAME$lang$ as user_name,
 			a.DESCRIPTION$lang$ as dept_name,
 			a.TITLE$lang$ as jikwi,
-			substring(ifnull(b.recieve_date, '-'),1,16) as date
+			ifnull(DATE_ADD(DATE_FORMAT(b.recieve_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '-') as date
 		from 
 			tbl_usermaster a join tbl_journal_recv b 
 		on 
@@ -1298,6 +1438,8 @@
 			b.journal_id = #journalId#
 		and
 			a.tenant_id = #tenantId#
+		and
+			b.user_id in (select CN from tbl_usermaster)
 		order by lpad(ifnull(a.EXTENSIONATTRIBUTE15,0),6,0) ,a.DISPLAYNAME$lang$
 		<isNotEmpty property="startCount">
 			<isNotEmpty property="listCnt">
@@ -1309,26 +1451,35 @@
 	
 	<!-- 조회자 리스트 갯수 가져오기 -->
 	<select id="getViewerCount" parameterClass="map" resultClass="String">
-		select count(us.user_id) as view_count from (
-		select
-		u.cn as user_id
-		from jmocha.tbl_journal_view v
-		inner join jmocha.tbl_usermaster u on(v.tenant_id=u.TENANT_ID and u.CN=v.user_id)
-		where v.journal_id=#journalId#
-		and v.tenant_id =#tenantId#
-		and not(v.user_id = (select journal_writer from tbl_journal where journal_id =#journalId# and tenant_id = #tenantId#))
-		union
-		select
-			b.user_id as user_id
-		from 
-			jmocha.tbl_usermaster a inner join jmocha.tbl_journal_recv b 
-		on 
-			(a.CN = b.user_id and a.TENANT_ID = b.tenant_id)
-		where 
-			b.journal_id = #journalId#
-		and
-			a.tenant_id = #tenantId#
-		and b.recieve_date is not null) us
+		select 
+			count(us.user_id) as view_count 
+		from (
+			select
+				u.cn as user_id
+			from 
+				tbl_journal_view v
+			inner join 
+				tbl_usermaster u on(v.tenant_id = u.TENANT_ID and u.CN = v.user_id)
+			where 
+				v.journal_id = #journalId#
+			and v.tenant_id = #tenantId#
+			and 
+				not(v.user_id = (select journal_writer from tbl_journal where journal_id = #journalId# and tenant_id = #tenantId#))
+			union
+			select
+				b.user_id as user_id
+			from 
+				tbl_usermaster a 
+			inner join 
+				tbl_journal_recv b on (a.CN = b.user_id and a.TENANT_ID = b.tenant_id)
+			where 
+				b.journal_id = #journalId#
+			and
+				a.tenant_id = #tenantId#
+			and
+				b.user_id in (select CN from tbl_usermaster)
+			and 
+				b.recieve_date is not null) us
 	</select>
 	
 	<!-- 조회자 리스트 가져오기 -->
@@ -1338,29 +1489,38 @@
 			a.DISPLAYNAME$lang$ as user_name,
 			a.DESCRIPTION$lang$ as dept_name,
 			a.TITLE$lang$ as jikwi,
-			substring(b.recieve_date,1,16) as date
+			DATE_ADD(DATE_FORMAT(b.recieve_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as date
 		from 
-			jmocha.tbl_usermaster a join jmocha.tbl_journal_recv b 
+			tbl_usermaster a join tbl_journal_recv b 
 		on 
 			(a.CN = b.user_id and a.TENANT_ID = b.tenant_id)
 		where 
 			b.journal_id = #journalId#
 		and
 			a.tenant_id = #tenantId#
+		and
+			b.user_id in (select CN from tbl_usermaster)
         and
 			b.recieve_date is not null)
 		union
 		(select
-		u.cn as user_id,
-		u.DISPLAYNAME$lang$ as user_name,
-		u.DESCRIPTION$lang$ as dept_name,
-		u.TITLE$lang$ as jikwi,
-		substring(v.view_date,1,16) as date
-		from jmocha.tbl_journal_view v
-		inner join jmocha.tbl_usermaster u on(v.tenant_id=u.TENANT_ID and u.CN=v.user_id)
-		where v.journal_id=#journalId#
-		and v.tenant_id =#tenantId#
-		and not(v.user_id = (select journal_writer from tbl_journal where journal_id =#journalId# and tenant_id = #tenantId#))
+			u.cn as user_id,
+			u.DISPLAYNAME$lang$ as user_name,
+			u.DESCRIPTION$lang$ as dept_name,
+			u.TITLE$lang$ as jikwi,
+			DATE_ADD(DATE_FORMAT(v.view_date, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as date
+		from 
+			tbl_journal_view v
+		inner join 
+			tbl_usermaster u on(v.tenant_id = u.TENANT_ID and u.CN = v.user_id)
+		where 
+			v.journal_id = #journalId#
+		and 
+			v.tenant_id = #tenantId#
+		and
+			v.user_id in (select CN from tbl_usermaster)
+		and 
+			not(v.user_id = (select journal_writer from tbl_journal where journal_id = #journalId# and tenant_id = #tenantId#))
 		)
 		order by 5 desc
 		limit
@@ -1370,30 +1530,38 @@
 	<!-- 일지 조회가능 유무 체크 -->
 	<select id="checkJournalAuth" parameterClass="map" resultMap="journalAuthCheckMap">
 		select 
-		count(r.user_id) as count,
-		case j.journal_id
-		when #journalId#
-		then 'Y'
-		else 'N'
-		end as is_live,
-		case r.user_id
-		when #userId#
-		then 'Y'
-		else 'N'
-		end as check_susin
-		from tbl_journal j
-		left join tbl_journal_recv r on(j.journal_id = r.journal_id and j.tenant_id = r.tenant_id)
+			count(r.user_id) as count,
+			case 
+				when j.journal_id = #journalId# and j.journal_writer in (select CN from tbl_usermaster) then 'Y'
+				else 'N'
+			end as is_live,
+			case 
+				when r.user_id = #userId# then 'Y'
+				else 'N'
+			end as check_susin
+		from 
+			tbl_journal j
+		left join 
+			tbl_journal_recv r on(j.journal_id = r.journal_id and j.tenant_id = r.tenant_id)
 		where
-		j.journal_id = #journalId#
-		and j.tenant_id = #tenantId#
-		and r.user_id = #userId#
+			j.journal_id = #journalId#
+		and 
+			j.tenant_id = #tenantId#
+		and 
+			r.user_id = #userId#
 	</select>
 	
 	<!-- 취합할 일지들 가져오기 -->
 	<select id="selectSumJournalList" parameterClass="map" resultMap="journalContentMap">
-		select journal_content,journal_title from tbl_journal
-		where tenant_id=#tenantId#
-		and journal_id in ($journalIdS$)
+		select 
+			journal_content,
+			journal_title 
+		from 
+			tbl_journal
+		where 
+			tenant_id = #tenantId#
+		and 
+			journal_id in ($journalIdS$)
 	</select>
 	
 	<!-- 내가 부서장인 부서 리스트 -->
@@ -1402,15 +1570,15 @@
 		d.CN as id,
 		'##' as parent,
 		d.extensionattribute2 as companyId,
-		d.DISPLAYNAME as text,
+		d.DISPLAYNAME$lang$ as text,
 		case d.CN
 			when (select dept_id from tbl_journal_auth where tenant_id = #tenantId# and user_id=#userId# and dept_id = d.CN)
 			then 'Y'
 			else 'N'
 		end as isComp,
 		case d.CN
-			when (select department from tbl_usermaster where tenant_id = #tenantId# and cn=#userId#) then 'yes'
-			when (select deptid from tbl_addjobmaster where tenant_id = #tenantId# and cn=#userId# and deptid=d.CN) then 'add'
+			when (select department from tbl_usermaster where tenant_id = #tenantId# and cn = #userId#) then 'yes'
+			when (select deptid from tbl_addjobmaster where tenant_id = #tenantId# and cn = #userId# and deptid = d.CN) then 'add'
 			else 'no'
 		end as myDept
 		from
@@ -1428,7 +1596,7 @@
 		d.CN as id,
 		d.extensionattribute1 as parent,
 		d.extensionattribute2 as companyId,
-		d.DISPLAYNAME as text,
+		d.DISPLAYNAME$lang$ as text,
 		case d.CN
 			when (select dept_id from tbl_journal_auth where tenant_id = #tenantId# and user_id=#userId# and dept_id = d.CN)
 			then 'Y'
@@ -1443,19 +1611,19 @@
 			tbl_deptmaster d 
 		where 
 			d.tenant_id = #tenantId#
-		and DEPT_CD_PATH like concat('%,',#deptId#,',%') 
+		and DEPT_CD_PATH like concat('%,', #deptId#, ',%') 
 		ORDER BY lpad(ifnull(d.EXTENSIONATTRIBUTE15, 0), 6, 0), d.DISPLAYNAME
 	</select>
 	
 	<!-- 권한 부서 한개 삭제 -->
 	<delete id="deleteAuthDeptOne" parameterClass="Map">
 		delete from
-			jmocha.tbl_journal_auth 
+			tbl_journal_auth 
 		where 
-			user_id=#userId# 
+			user_id = #userId# 
 		and
-			tenant_id=#tenantId#
+			tenant_id = #tenantId#
 		and
-			dept_id=#deptId#
+			dept_id = #deptId#
 	</delete>
 </sqlMap>

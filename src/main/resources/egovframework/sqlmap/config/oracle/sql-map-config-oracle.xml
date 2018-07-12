@@ -37,6 +37,18 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezCircular/EzCircular_SQL_Oracle.xml"/>
     <!-- 업무관리 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezTask/EzTask_SQL_Oracle.xml"/>
+	<!-- 웹폴더 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Oracle.xml"/>
+    <!-- 웹폴더 _y -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Oracle_y.xml"/>
+	<!-- 웹폴더 (이효민, 조영훈, 서재원) -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolder_SQL_Oracle_m.xml"/>
+	<!-- 모바일 oracle -->
+    <sqlMap resource="egovframework/sqlmap/ezMobile/ezOption/EzOptionMobile_SQL_Oracle.xml"/>
+    <!-- 사다리게임-->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezLadder/EzLadder_SQL_Oracle.xml"/>
+     <!--업무일지 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezJournal/EzJournal_SQL_Oracle.xml"/>
 
 	<!-- 2.관리자 모듈관리 SQL쿼리 XML -->
 	
@@ -60,4 +72,6 @@
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezSchedule/EzScheduleAdmin_SQL_Oracle.xml"/>
 	<!-- 시스템 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezSystem/EzSystemAdmin_SQL_Oracle.xml"/>
+	<!-- 웹폴더 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolderAdmin_SQL_Oracle.xml"/>
 </sqlMapConfig>

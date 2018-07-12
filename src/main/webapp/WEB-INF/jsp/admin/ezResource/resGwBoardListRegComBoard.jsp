@@ -169,6 +169,7 @@
 	</head>
 	<body class="mainbody">	
 		<h1><spring:message code="ezResource.t22" /></h1>
+		<div style="max-width:800px;">
 		<table class="content">
   			<tr>
     			<th><spring:message code="ezResource.t44" /></th>
@@ -179,7 +180,7 @@
 		<table class="content">
   			<tr>
     			<th><spring:message code="ezResource.t45" /></th>
-    			<td width="100%"><input type="text"  id="BRD_ID" name="BRD_ID" value="${brdID}" style="width:99%" readonly></td>
+    			<td width="100%"><input type="text"  id="BRD_ID" name="BRD_ID" value="${brdID}" style="width:100%" readonly></td>
   			</tr>
   			<tr>
     			<th><spring:message code="ezResource.t46" /></th>
@@ -187,18 +188,18 @@
 		 			<table style="width:100%">
 						<tr class="primary">
 							<th>${langPrimary}</th>
-							<td><input type="text"  id="Brd_NM" name="Brd_NM" value="<c:out value="${getBrdInfo.brdNm}" />" style="width:99%" maxlength="30"></td>
+							<td><input type="text"  id="Brd_NM" name="Brd_NM" value="<c:out value="${getBrdInfo.brdNm}" />" style="width:100%" maxlength="30"></td>
 						</tr>
 						<tr class="secondary">
 							<th>${langSecondary}</th>
-							<td><input type="text"  id="Brd_NM2" name="Brd_NM2" value="<c:out value="${getBrdInfo.brdNm2}" />" style="width:99%" maxlength="30"></td>
+							<td><input type="text"  id="Brd_NM2" name="Brd_NM2" value="<c:out value="${getBrdInfo.brdNm2}" />" style="width:100%" maxlength="30"></td>
 						</tr>
 					</table>
     			</td>
   			</tr>
   			<tr>
-    			<th><spring:message code="ezResource.t47" /></th>
-    			<td><textarea id="Brd_Explain" style="font-size:9pt ; width:98%" rows="3"><c:out value="${getBrdInfo.brdExplain}" /></textarea></td>
+    			<th style="text-align:center"><spring:message code="ezResource.t47" /></th>
+    			<td style="height: 300px;"><textarea id="Brd_Explain" style="resize:none; font-size:9pt ; width:98.5%; height:95%; overflow: auto;"><c:out value="${getBrdInfo.brdExplain}" /></textarea></td>
   			</tr>
   			<tr style="display:none">  
     			<th><spring:message code="ezResource.t48" /></th>
@@ -239,11 +240,12 @@
     			<td><textarea id="BRD_ACCESS" style="font-size:9pt ; width:100%" rows="3"><c:out value="${getBrdInfo.brdAccess}" /></textarea></td>
   			</tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionJsp">
     		<a class="imgbtn"><span onclick="cmdOK_onclick()" ><spring:message code="ezResource.t54" /></span></a>
 		</div>
 		<form name="brds">
 	  		<input type="hidden" id="proc" name="proc" value="MOD">
 		</form>
+		</div>
 	</body>
 </html>

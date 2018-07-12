@@ -118,15 +118,19 @@
 </script>
 </head>
 <body class="popup">
-<h1><spring:message code='ezApprovalG.t348'/></h1>
-<h2><spring:message code='ezApprovalG.t350'/></h2>
-<div ID="Table2" class="nobox">
-<input class="text" type="text" id="Text1" name="TxtAprDeptTempletName" style="width:100%">
-</div>
-<div class="btnposition" >
-<input type="submit" name="btn_SaveAprLineTempletName" id="btn_SaveAprLineTempletName" value="<spring:message code='ezApprovalG.t20'/>" onClick="return btn_SaveAprDeptTempletName_onclick()">
-<input type="button" name="btn_CancelAprLineTempletName" id="btn_CancelAprLineTempletName" value="<spring:message code='ezApprovalG.t119'/>" onClick="return btn_CancelAprDeptTempletName_onclick()">
-</div>	
+	<h1><spring:message code='ezApprovalG.t348'/></h1>
+	<div id="close">
+        <ul>
+            <li><span name="btn_CancelAprLineTempletName" id="btn_CancelAprLineTempletName" onclick="return btn_CancelAprDeptTempletName_onclick()"></span></li>
+        </ul>
+    </div>
+	<h2><spring:message code='ezApprovalG.t350'/></h2>
+	<div ID="Table2" class="nobox">
+	<input class="text" type="text" id="Text1" name="TxtAprDeptTempletName" style="width:100%">
+	</div>
+	<div class="btnposition btnpositionNew" >
+		<a class="imgbtn" name="btn_SaveAprLineTempletName" id="btn_SaveAprLineTempletName" onClick="return btn_SaveAprDeptTempletName_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
+	</div>	
 </body>
 </html>
 

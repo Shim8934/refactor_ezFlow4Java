@@ -3,9 +3,11 @@ package egovframework.ezEKP.ezCircular.web;
 import java.io.File;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -15,6 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +39,7 @@ import egovframework.ezEKP.ezCircular.service.EzCircularService;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+import egovframework.ezEKP.ezCircular.vo.CircularConfirmVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO;
@@ -284,12 +290,14 @@ public class EzCircularController extends EgovFileMngUtil {
 		String realPath = commonUtil.getRealPath(request);
 		String uploadFilePath = commonUtil.getUploadPath("upload_circular.ROOT", userInfo.getTenantId());
 		
-		if (request.getParameter("filePath") != null && !request.getParameter("filePath").equals("")) {
-			filePath = request.getParameter("filePath"); 
-        }
-		
 		if (request.getParameter("fileName") != null && !request.getParameter("fileName").equals("")) {
 			fileName = request.getParameter("fileName"); 
+		}
+
+		if (request.getParameter("filePath") != null && !request.getParameter("filePath").equals("")) {
+			filePath = request.getParameter("filePath");
+			//2018-07-09 김보미 - 파일부분 수정
+			filePath = filePath + fileName;
         }
 
 		if (request.getParameter("circularFileID") != null && !request.getParameter("circularFileID").equals("")) {
@@ -1108,8 +1116,11 @@ public class EzCircularController extends EgovFileMngUtil {
 			StringBuilder strAttach = new StringBuilder();
 			strAttach.append("<ROOT><NODES>");
 			
-			for (CircularAttachVO attach : attachList) {				
-				strAttach.append("<DATA><![CDATA[" + attach.getFilePath().split("/")[2] + "]]></DATA>");
+			for (CircularAttachVO attach : attachList) {
+				//2018-07-06 김보미 - 파일부분수정(data의 값 수정)
+//				strAttach.append("<DATA><![CDATA[" + attach.getFilePath().split("/")[2] + "]]></DATA>");
+				String data = attach.getFilePath().split("/")[2].replace(attach.getFileName(),"");
+				strAttach.append("<DATA><![CDATA[" + data + "]]></DATA>");
 				strAttach.append("<DATA2><![CDATA[" + attach.getFileName() + "]]></DATA2>");
 				strAttach.append("<DATA3><![CDATA[" + attach.getFileSize() + "]]></DATA3>");
 				strAttach.append("<DATA4><![CDATA[]]></DATA4>");
@@ -1363,6 +1374,11 @@ public class EzCircularController extends EgovFileMngUtil {
         		
         		String fileSize = commonUtil.byteCalculation(Long.toString(avo.getFileSize()));
         		avo.setFileTranSize(fileSize);
+        		
+        		//2018-07-09 김보미 - filePath수정
+        		String filePath = avo.getFilePath();
+        		filePath = filePath.substring(0, filePath.indexOf(avo.getFileName()));
+        		avo.setFilePath(filePath);
         	}
         	
         	model.addAttribute("attachList", aList);
@@ -1545,20 +1561,22 @@ public class EzCircularController extends EgovFileMngUtil {
             String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
             String newFileName = pUploadSN[i];
             
-            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {           	
-				strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
-				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
-				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
+            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {
+            	//2018-07-06 김보미
+				//strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
+				strXML.append("<DATA><![CDATA[" + newFileName + "]]></DATA>");//UUID
+				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");//파일명
+				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");//파일사이즈
 				strXML.append("<DATA4><![CDATA[]]></DATA4>");
 				strXML.append("<DATA5><![CDATA[denied]]></DATA5>");
             } else {
-//            	if (mode.equals("temp")) {
-            	writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "tempUploadFile");            		
-//            	} else {
-//            		writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
-//            	}
+            	//2018-07-06 김보미 - 불필요한 주석문 제거 및 파일명 변경
+            	//writeUploadedFile(multiFile.get(i), newFileName + ";" + pFileName[i], pDirPath + "tempUploadFile");            		
+            	writeUploadedFile(multiFile.get(i), newFileName + pFileName[i], pDirPath + "tempUploadFile");            		
             	
-				strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
+            	//2018-07-06 김보미
+				//strXML.append("<DATA><![CDATA[" + newFileName + ";" + pFileName[i] + "]]></DATA>");
+				strXML.append("<DATA><![CDATA[" + newFileName + "]]></DATA>");
 				strXML.append("<DATA2><![CDATA[" + pFileName[i] + "]]></DATA2>");
 				strXML.append("<DATA3><![CDATA[" + fileSize[i] + "]]></DATA3>");
 				strXML.append("<DATA4><![CDATA[]]></DATA4>");
@@ -1608,17 +1626,33 @@ public class EzCircularController extends EgovFileMngUtil {
 		
 		logger.debug("filePath : " + filePath);
 
-		if (fileList.length() != 0) {
-			String[] data = fileList.split(","); 
-			
-			for (int i=0; i<data.length; i++) {
-				String sGUID = data[i].split(";")[0];
-				String fileName = data[i].split(";")[1];
+		//2018-07-06 김보미 - 파일부분 수정
+//		if (fileList.length() != 0) {
+//			String[] data = fileList.split(","); 
+//			
+//			for (int i=0; i<data.length; i++) {
+//				String sGUID = data[i].split(";")[0];
+//				String fileName = data[i].split(";")[1];
+//				
+//				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
+//				
+//				file.delete();
+//			}			
+//		}
+		JSONParser jp = new JSONParser();
+		JSONArray jsonArr = (JSONArray)jp.parse(fileList);
+		
+		if (fileList.length() != 0 && !fileList.equals("")) {
+			for (int j = 0; j < jsonArr.size(); j++) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj = (JSONObject) jsonArr.get(j);
+				String sGUID = (String) jsonObj.get("newFileName");
+				String fileName = (String) jsonObj.get("pFileName");
 				
-				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + ";" + fileName);
+				File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + fileName);
 				
 				file.delete();
-			}			
+			}
 		}
 
         logger.debug("tempUploadFileDelete ended");
@@ -2556,5 +2590,40 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("restoreCircularList ended.");
 		
 		return "json";
+	}
+	
+	/**
+	 * 18-05-28 김민성 - 회람판 회람글 확인완료한 사람 정보 조회
+	 */
+	@RequestMapping(value = "/ezCircular/circularConfirmList.do")
+	public String circularConfirmList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("circularConfirmList started.");
+		
+		/*LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String circularID = request.getParameter("circularID");
+		
+		List<CircularConfirmVO> circularConfirmList = ezCircularService.getConfirmMember(circularID, userInfo.getTenantId(), userInfo.getOffset());
+		
+		model.addAttribute("list", circularConfirmList); */
+		
+		String circularID = request.getParameter("circularID");
+		model.addAttribute("circularID", circularID);
+		
+		logger.debug("circularConfirmList ended.");
+		
+		return "ezCircular/circularConfirmList";
+	}
+	
+	@RequestMapping(value = "/ezCircular/circularConfirmPagingList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String itemReadPagingList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, String circularID, int pageNum, int perCount) throws Exception {
+		logger.debug("circularConfirmPagingList started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		StringBuffer resultXML = ezCircularService.getConfirmMemberList(circularID, userInfo.getTenantId(), pageNum, perCount, userInfo.getOffset());
+
+		logger.debug("circularConfirmPagingList ended");
+		return resultXML.toString();
 	}
 }

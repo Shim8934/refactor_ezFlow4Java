@@ -483,6 +483,13 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	public void ezCkAdminACL2_U1(Map<String, Object> map) {
 		update("EzPortalDAO.ezCkAdminACL2_U1", map);
 	}
-		
+	
+	public String getMainMenuItemUID(Map<String, Object>map) {
+		return (String) select("EzPortalDAO.getMainMenuItemUID", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PortalUseTopMenuID2VO> getMainMenuItemUIDList(Map<String, Object>map) {
+		return (List<PortalUseTopMenuID2VO>) list("EzPortalDAO.getMainMenuItemUIDList", map);
+	}
 }
-

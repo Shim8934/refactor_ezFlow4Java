@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailAdminLetterService;
 import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
@@ -64,6 +66,9 @@ public class EzEmailAdminLetterController {
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 
 	/**
 	 * 편지지 메인화면 호출 함수
@@ -449,7 +454,13 @@ public class EzEmailAdminLetterController {
 	 * 편지지 추가,수정 팝업 화면 전환(수아)
 	 */
 	@RequestMapping("/admin/ezEmail/letterEditPopUp.do")
-	public String letterAdminAddSetPopUp(@CookieValue("loginCookie") String loginCookie, String letterBoxNo, String popUpType, String letterNo, Model model) throws Exception {
+	public String letterAdminAddSetPopUp(
+			@CookieValue("loginCookie") String loginCookie,
+			Locale locale,
+			String letterBoxNo, 
+			String popUpType, 
+			String letterNo, 
+			Model model) throws Exception {
 		logger.debug("letterAdminAddSetPopUp started.");
 		logger.debug("letterBoxNo=" + letterBoxNo + ", popUpType=" + popUpType + ", letterNo=" + letterNo);
 
@@ -457,13 +468,15 @@ public class EzEmailAdminLetterController {
 
         String primary = ezCommonService.getTenantConfig("LangPrimary" + loginInfo.getLang(), loginInfo.getTenantId());
         String secondary = ezCommonService.getTenantConfig("LangSecondary" + loginInfo.getLang(), loginInfo.getTenantId());
-
+        String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+        logger.debug("defaultFontAndSize : " + defaultFontAndSize);
+        
 		// 관리자 권한체크
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		if (auth == null) {
 			return "cmm/error/adminDenied";
 		}
-
+		
 		// 편지지 고유 id
 		UUID letterId = null;
 
@@ -472,12 +485,26 @@ public class EzEmailAdminLetterController {
 		}
 		logger.debug("letterId=" + letterId);
 
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (loginInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", loginInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				String fontFamily = editorFontStyle.split("\\|")[0];
+				String fontSize = editorFontStyle.split("\\|")[1];
+				
+				defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
+			}
+		}
+		logger.debug("defaultFontAndSize : " + defaultFontAndSize);
+		
 		model.addAttribute("letterBoxNo", letterBoxNo);
 		model.addAttribute("letterId", letterId);
 		model.addAttribute("letterNo", letterNo);
 		model.addAttribute("popUpType", popUpType);
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
+		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 
 		logger.debug("letterAdminAddSetPopUp ended.");
 		return "admin/ezEmail/letterEditPopUp";

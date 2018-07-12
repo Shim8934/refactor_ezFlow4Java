@@ -8,7 +8,12 @@
 		<link rel="stylesheet" href="<spring:message code='main.e4' />" type="text/css" />
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script>
+			var useHWP = "${useHWP}";
 			function window_onload(){
+				process();
+			}
+			
+			function process() {
 			    <c:if test="${packageType != 'standard' || firstScreen_Mail == 'YES'}">
 			    	window.open("/admin/ezOrgan/organMain.do", "bottom");
 			    </c:if>
@@ -20,6 +25,14 @@
 				<c:if test="${use_portal != 'YES'}">
 					window.open("/admin/ezPersonal/personalMain.do", "bottom");
 				</c:if>
+				
+				<c:if test="${useHWP == 'YES'}">
+					var userAgent = window.navigator.userAgent;
+					
+					if ((/msie/i.test(userAgent)) || (/rv:11.0/i.test(userAgent))) {
+						GetObject();
+					}
+		    	</c:if>
 			}
 			
 			function menu_change(width, e){
@@ -83,9 +96,27 @@
 				    case "menu20":
 				        parent.frames["bottom"].location.href = "/myoffice/ezStatistics/ezLog/index_Log.aspx";
 				        break;
-					//20120725 모바일 기기 관리자 메뉴 추가	end				
+					//20120725 모바일 기기 관리자 메뉴 추가	end
+				    //근태관리 관리자 메뉴 추가
+				    case "menu30":
+				    	parent.frames["bottom"].location.href = "/admin/ezAttitude/attitudeMain.do";
+				    	break;
 				}
 			}
+			
+			function GetObject() {
+                i_icd2.SetDocumentDisp(window.document);
+                i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/admin/ezApprovalG/componentListTransfer.do?admin=Y";
+                i_icd2.CheckVersion();
+                var nCount = i_icd2.nNeedDownload;
+
+                if (nCount) {
+                    if_Progress.StartOn();
+                }
+                else {
+                    finish_download();
+                }
+            }
 			
 			function finish_download() {
                 OfficeBugPatch();
@@ -102,6 +133,9 @@
 		</script>
 	</head>
 	<body class="admin_top" onload="javascript:window_onload()">
+		<c:if test="${useHWP == 'YES'}">
+			<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,19" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
+        </c:if>
 		<form method="post">
 			<h1 title="logo"><spring:message code="ezBoard.t84" /></h1>
 			<div id="adminmenu">
@@ -124,8 +158,8 @@
 		      			<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li>
 		      			
 		      			<c:if test="${packageType != 'mail'}">      
-		      			<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="main.t14" /></span></li>
-		      			<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="main.t12" /></span></li>
+			      			<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="main.t14" /></span></li>
+			      			<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="main.t12" /></span></li>
 		      			</c:if>
 		      			
 		      			<%-- 전자결재 --%>
@@ -136,24 +170,26 @@
 		      			</c:if>
 		      				
                     	<c:if test="${packageType == 'standard'}">
+							<%-- 커뮤니티 --%>
 		      				<li><span id="menu07" onClick="menu_change(630, event)"><spring:message code="main.t1006" /></span></li>
-                    	</c:if>
+							<%-- 자원관리 --%>
+		      				<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>
+							<%-- 업무일지 --%>
+		      				<li><span id="menu19" onClick="menu_change(690, event)"><spring:message code="ezJournal.t1" /></span></li>
+		      				<%-- 근태관리 --%>
+		      				<li><span id="menu30" onClick="menu_change(690, event)"><spring:message code="ezAttitude.t1" /></span></li>
+		      			</c:if>
                     	
 		      			<%-- 시스템 --%>          
 		      			<li><span id="menu18" onClick="menu_change(690, event)"><spring:message code="main.t10011" /></span></li>
 		      			<%-- 통계 --%>
 		      			<li><span id="menu09" onClick="menu_change(690, event)"><spring:message code="main.t27" /></span></li>
-                    	<c:if test="${packageType == 'standard'}">
-		      				<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>
-                    	</c:if>		      		
 		      			<c:if test="${use_ezKMS == 'YES'}">
 		      				<li><span id="menu14" onClick="menu_change(920, event);"><spring:message code="main.t19" /></span></li>
 		      			</c:if>
 		      			<c:if test="${use_ezDMS == 'YES'}">
 		      				<li><span id="menu15" onClick="menu_change(920, event);"><spring:message code="main.t52" /></span></li>
 		      			</c:if>
-<!-- 		      			업무일지 -->
-		      			<li><span id="menu19" onClick="menu_change(690, event)"><spring:message code="ezJournal.t1" /></span></li>
                     </c:if>
                     <li class='btn_logout' style='float:right;'><span style='cursor:pointer' onclick='top.location.href = "/user/login/actionLogout.do"'><spring:message code='ezPortal.t990043' /></span></li>
 		    	</ul>
@@ -162,6 +198,7 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("adminmenu"), "ul", "li", "0");
 		</script>
+		<iframe id=if_Progress style="display:none" src="/admin/ezApprovalG/progressAdmin.do?"></iframe>
 	</body>
 </html>
 

@@ -159,14 +159,14 @@ form{display:inline;margin:0}
 	border: solid #8c8c8c;
 	border-width: 0px 1px 0px 0px;
 	}
-.leftbody ul{background-color:#e6e6e6;list-style-type:none;padding:0;margin:0; width:100%;}
+.leftbody ul{background-color:#e8e8e8;list-style-type:none;padding:0;margin:0; width:100%;}
 .leftbody ul li{
 	border-bottom: 1px solid #dedede;
 	background:url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;
 	padding:8px 5px 7px 40px;
 	cursor:pointer;
 }
-.leftbody #iconul {background-color:#e6e6e6;list-style-type:none;padding:0;margin:0;}
+.leftbody #iconul {background-color:#e8e8e8;list-style-type:none;padding:0;margin:0;}
 .leftbody #iconul li{
 	border-bottom: 1px solid #dedede;
 	background:#fff;
@@ -1401,7 +1401,7 @@ form{display:inline;margin:0}
 .icon_btn {cursor:pointer;}
 .organwrap { border:1px solid #bebdbd; font-size:12px; width:400px; margin:3px 3px 0px 3px; table-layout:fixed;}
 .organwrap td {border:0px !important; padding:0px; }
-.organwrap .pictd { vertical-align:top; margin:0px; padding:3px; background:#f0f0f0;}
+.organwrap .pictd { vertical-align:top; margin:0px; padding:3px; /* background:#f0f0f0; */}
 .organwrap .pic { width:90px; height:90px; border:1px solid #ccc!important; overflow:hidden; background:url(/images/OrganTree/porson_noimg.gif) ;}
 .organwrap .pic img { border:0px !important;}
 .organinfo {border:0px !important;table-layout:fixed; width:100%;}
@@ -1422,7 +1422,7 @@ form{display:inline;margin:0}
 .popup_mainlist tr td img{vertical-align:middle;}
 .popup_mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .popup_mainlist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
-.td_gray {background:#e6e6e6;}
+.td_gray {background:#e8e8e8;}
 
 .popup_notice{height:100%;}
 .popup_notice .bg_noticeCL{height:100%; background:url(/images/kr/cm/bg_noticeCL.gif) repeat-y left top;}

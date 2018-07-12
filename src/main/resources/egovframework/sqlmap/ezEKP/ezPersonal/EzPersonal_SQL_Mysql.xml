@@ -24,7 +24,8 @@
                    		REGUSERID ,
                    		REGDATE ,
                    		SN ,
-                   		ISUSE 
+                   		ISUSE ,
+                   	 	URL
               		FROM
               			TBL_PS_SLIDERIMAGE 
              		WHERE
@@ -45,7 +46,8 @@
                    		REGUSERID ,
                    		REGDATE ,
                    		SN ,
-                   		ISUSE 
+                   		ISUSE , 
+                   		URL
               		FROM
               			TBL_PS_SLIDERIMAGE 
              		WHERE
@@ -69,7 +71,8 @@
                 	REGUSERID ,
                 	REGDATE ,
                 	SN ,
-                	ISUSE 
+                	ISUSE ,
+                	URL
            		FROM
            			TBL_PS_SLIDERIMAGE 
           		WHERE

@@ -326,7 +326,10 @@
 	                }
 	            }
 	        }
-	        
+
+	        function GetEditorBody() {
+	        	return DEXT5.getDext5BodyDom();
+	        }
 		</script> 
 	</head>
 	<body id="dextbody" style="margin: 0px; padding: 0px;">

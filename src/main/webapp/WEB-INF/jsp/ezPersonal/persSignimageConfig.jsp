@@ -261,13 +261,13 @@
 	            </td>
 	        </tr>
 	    </table>		
-		<div class="btnposition" style="width:400px;margin-top:15px;">
+		<div class="btnpositionJsp" style="width:395px;">
 		    <a class="imgbtn" onClick="add_sign()"><span><spring:message code='ezPersonal.t3013'/></span></a>
 		    <a class="imgbtn" onClick="del_sign()"><span><spring:message code='ezPersonal.t3014'/></span></a>
 		</div>
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
-			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" />
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px; display: none;" />
 		</form>
 	</body>
 </html>

@@ -31,7 +31,7 @@
 				margin-top: 3px;
 				vertical-align:top;
 				font-size: 9pt;
-				background-color : #F7FAE0;
+				background-color : #f4f5f5;
 				height : 15px;
 				cursor : hand;
 			}
@@ -261,7 +261,14 @@
 	</head>
 	<body class="popup" onload="javascript:window_onload()">
 		<h1><spring:message code='ezBoard.t135'/></h1>
-		<div class="box" style="width:320px;height:545px;overflow:auto;word-break:break-all" id=TopBoardsList></div>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close();"></span></li>
+            </ul>
+        </div>
+        <div class="box" style="overflow-x:hidden;overflow-y:auto;height:540px">
+			<div style="word-break:break-all" id=TopBoardsList></div>
+		</div>	
 		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn"><span onClick="Select()"><spring:message code='ezBoard.t47'/></span></a>
 		</div>

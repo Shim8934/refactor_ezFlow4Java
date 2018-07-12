@@ -9,27 +9,21 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
 		<link rel="stylesheet" type="text/css" href="/css/community.css" />
+		<style type="text/css">
+        	#tblList td, #tblList td div {
+        		white-space: nowrap;
+        		text-overflow: ellipsis;
+        		overflow: hidden;
+        	}
+        	 .cmhomelist tr td.boldClass  {
+        		font-weight: bold;
+        	}
+        </style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/ErrorHandler.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-        
-        <style type="text/css"> 
-	        .pagetd{padding-top:6px; }
-	        .pcol{padding-top:6px; }
-	        .Right_Point01 {
-		        font:bold;
-		        color:#017bec;
-        	}
-        	
-        	#tblList td{
-        		white-space: nowrap;
-        		text-overflow: ellipsis;
-        		overflow:hidden;
-        	}
-        </style>
-    	
     	<script type="text/javascript">
     		var pBoardID = '<c:out value="${boardInfo.boardID}" />';
     		var pBoardName = "<c:out value='${pBoardName}' />";
@@ -53,8 +47,8 @@
     		var gubun = "<c:out value='${boardInfo.gubun}' />";
     		var UserLevel = "<c:out value='${userLevel}' />";
     		var code = "<c:out value='${code}' />";
-//     		var ch_CommunityAdmin = "<c:out value='${fn:indexOf(userInfo.rollInfo, \'t=1\') }'/>";
     		var ListInfo = "";
+    		var pastDate = "<c:out value='${pastDate}' />";
     		
     		function SelectSingleOnlyTitle(node, tagName) {
     		    var strValue = "";
@@ -78,19 +72,26 @@
     		            if (node.selectSingleNode(tagName))
     		                return node.selectSingleNode(tagName).text;
     		    }
-    		    return strValue.replace(/&/g,"&amp;");
-
+//     		    return strValue.replace(/&/g,"&amp;");
+				//2018-07-03 김보미 - 제목 특수문자처리 버그 수정 
+    		    return strValue;
     		}
     		
     		$(function () {
     			var xmldoc = loadXMLString('${strXML}');
     			var listXML = '';
-    			
+    			var strSpace = '';
+				var strEmergent = '';
+				var bClass = '';
+				var urgency = "";
+				var writeDate = "";
+				
     			for (var i = 0; i < SelectNodes(xmldoc,"NODES/NODE").length; i++) {
-					var strSpace = '';
-					var strEmergent = '';
-					var bTag = '';
-					var urgency = "";
+					strSpace = '';
+					strEmergent = '';
+					bClass = '';
+					urgency = "";
+					writeDate = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate");
 					
 					if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Importance") == "1") {
 						//strEmergent = "<img src='/images/i_urgency.gif'>&nbsp;";
@@ -104,64 +105,76 @@
 						}
 					}
 					
+					/* 2018-07-10 홍승비 - bTag를 font-weight:bold 스타일이 포함된 클래스로 수정 */
 					if (pBoardID != "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 						if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadFlag") != "0") {
-							bTag = "";
+							bClass = "";
 						} else {
-							bTag = "<B>";
+							bClass = "boldClass";
 						}
 					} else {
-						bTag = "<B>";
+						bClass = "boldClass";
 					}
 					
 					listXML += "<TR>";
 					listXML += "<TD align=center><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID") + "\" , event)'></td>";
 					
 					if (pBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-                        listXML += "<TD class='"+ urgency +"'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardName") + "</TD>";
-                        listXML += "<TD class='"+ urgency +"' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
+                        listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardName") + "</TD>";
+                        listXML += "<TD class='"+ urgency + " " + bClass + "' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
                         	+ SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "boardName") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \""
-                        	+ SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID") + "\", event)'><nobr>" + bTag + strEmergent + strSpace + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title") + "</nobr>"
-                        	/* 2018-05-04 홍승비 - 커뮤니티 일반/그룹/익명게시판 리스트에서 댓글 표시하기 */
-                        	if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) { 
-                        		listXML += "<SPAN style='color:#c64200'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
-                        	}
+                        	+ SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID") + "\", event)'>";
+                        	
+                        /*  2018-05-18 홍승비 - 커뮤니티 일반/그룹/익명게시판 리스트에서 new 표시하기 */
+                       	if (pastDate <= writeDate) {
+                       		listXML += "<img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
+                       	}
+                       	listXML += strEmergent + strSpace + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title");
+                       	
+                       	/* 2018-05-04 홍승비 - 댓글 표시하기 */
+                       	if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) {
+                       		listXML += "<SPAN class= '" + bClass + "' style='color:#c64200'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                       	}
                         listXML += "</TD>";
 					}
 					else {
-						listXML += "<TD class='"+ urgency +"' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
-							+ pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Writer") + "\", event)'><nobr>"
-							+ bTag + strEmergent + strSpace + Replace2HTML(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title")) + "</nobr>";
-							/* 2018-05-04 홍승비 - 커뮤니티 일반/그룹/익명게시판 리스트에서 댓글 표시하기 */
-							if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) { 
-                        		listXML += "<SPAN style='color:#c64200'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
-                        	}
-                        listXML += "</TD>";
+						listXML += "<TD class='"+ urgency + " " + bClass + "' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
+							+ pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Writer") + "\", event)'>";
+							
+	                    if (pastDate <= writeDate) {
+	                   		listXML += "<img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
+	                   	}			
+	                    listXML += strEmergent + strSpace + Replace2HTML(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title"));
+	                    
+						if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) {
+                       		listXML += "<SPAN class ='" + bClass + "' style='color:#c64200'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                       	}
+                    	listXML += "</TD>";
 					}				
 					
 					if (gubun == '1') {
-						listXML += "<TD class='"+ urgency +"'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterCompanyName").trim() + "</TD>";
+						listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterCompanyName").trim() + "</TD>";
 					}
 					
 					if (gubun != '2') {
-						listXML += "<TD class='"+ urgency +"'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptname").trim() + "</TD>";
-                        listXML += "<TD class='"+ urgency +"'><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></TD>";
+						listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptname").trim() + "</TD>";
+                        listXML += "<TD class='"+ urgency + " " + bClass + "'><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></TD>";
 					} else {
-                        listXML += "<TD class='"+ urgency +"'><div onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></TD>";
+                        listXML += "<TD class='"+ urgency + " " + bClass + "'><div onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></TD>";
 					}
 					
-					listXML += "<TD class='"+ urgency +"'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</TD>";
+					listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</TD>";
 					
 					if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Attachments").trim() != "0") {
-						listXML += "<TD class='"+ urgency +"'><img src='/images/i_save01.gif'></TD>";
+						listXML += "<TD class='"+ urgency + "'><img src='/images/i_save01.gif'></TD>";
 					} else {
-						listXML += "<TD class='"+ urgency +"'></TD>";
+						listXML += "<TD class='"+ urgency + "'></TD>";
 					}
 					
 					if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadCount") == ""){
-						listXML += "<TD class='"+ urgency +"' align=center>0</TD>";
+						listXML += "<TD class='"+ urgency + " " + bClass + "' align=center>0</TD>";
 					} else {
-						listXML += "<TD class='"+ urgency +"' align=center>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadCount") + "</TD>";
+						listXML += "<TD class='"+ urgency + " " + bClass + "' align=center>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadCount") + "</TD>";
 					}
 					
 					listXML += "</TR>";
@@ -173,18 +186,18 @@
     			makePageSelPage();
     		});
     		
+    		document.onselectstart = function () {
+    		    window.event.cancelBubble = true;
+    		    window.event.returnValue = false;
+    		};
+    		
     		if (url != "") { 
 				window.location.href = url;
     		}
     		
     		function NewItem_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9") {
-				    alert("<spring:message code='ezCommunity.t896' />");
-				    return;
-				}
-    			    
-				if (Write_FG != "true") {
-				    alert("<spring:message code='ezCommunity.t897' />");
+    			if (UserLevel == "0" || UserLevel == "9" || Write_FG != "true") {
+				    alert("<spring:message code='ezCommunity.t431' />");
 				    return;
 				}
 				
@@ -198,20 +211,16 @@
 			}
     		 
     		function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {
-   				if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t899' />");
+   				if (UserLevel == "0" || UserLevel == "9" || Read_FG != "true") {
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
-    				
-    			if(Read_FG != "true") {
-    				alert("<spring:message code='ezCommunity.t423' />");
-    				return;
-    			}
-
-// 		       	var e = evt.currentTarget.innerHTML;
-  		        	
-   		        if (evt.currentTarget.getElementsByTagName("B").length == 1) {
-   		            evt.currentTarget.getElementsByTagName("nobr")[0].innerHTML = evt.currentTarget.getElementsByTagName("B")[0].innerHTML;
+   				
+   				var bTarget = evt.currentTarget.parentNode;
+   		         if (bTarget.childNodes[1].classList.contains("boldClass")) {
+   		            for (var i = 0; i < bTarget.childNodes.length; i++) {
+   		            	bTarget.childNodes[i].classList.remove("boldClass");
+   		            }
    		        }
 
     		    /* var pheight = window.screen.availHeight;
@@ -248,8 +257,8 @@
     		var checkpassword_dialogArguments = new Array();
     		
     		function DeleteItem_onclick() {	
-    			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t900' />");
+    			if (UserLevel == "0" || UserLevel == "9" || Delete_FG != "true") {
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
     					
@@ -265,11 +274,6 @@
     					alert("<spring:message code='ezCommunity.lhj01' />");
     					return;
     				}
-    			}
-
-    			if(Delete_FG != "true") {
-    				alert("<spring:message code='ezCommunity.t901' />");
-    				return;
     			}
     			
     			if (CheckIfHasReplies()) {
@@ -308,7 +312,7 @@
     		
     		function DeleteItem_onclick_Complete(ret) {
 		        if (typeof (ret) == "undefined") {
-		            alert("<spring:message code='ezCommunity.t901' />");
+		            alert("<spring:message code='ezCommunity.t431' />");
 		            return;
 		        }
 
@@ -400,25 +404,11 @@
     			}
     		}
 
-    		function AddToMyBoards() {
-    			var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    			xmlhttp.open("POST", "aspx/AddToMyBoards.aspx?BoardID=" + pBoardID + "&BoardName=" + escape(pBoardName), false);
-    			xmlhttp.send();
-    			
-    			if(xmlhttp.responseXML.text == "OK") {
-    				alert("<spring:message code='ezCommunity.t902' />");
-    			} else {
-    				alert("<spring:message code='ezCommunity.t903' />");
-    			}
-    			xmlhttp = null;		
-    		}
-    		
-            var BlockSize = 10;
-            
             function td_Create1(strtext) {
                 $("#tblPageRayer").html(strtext);
             }
             
+            var BlockSize = 10;
             function makePageSelPage() {
                 var strtext;
                 var PagingHTML = "";
@@ -429,23 +419,23 @@
                 var pageNum = CurPage;
                 
                 if (totalPage > 1 && pageNum != 1) {
-                    strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+                    strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
                     PagingHTML += strtext;
                 } else {
-                    strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+                    strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
                     PagingHTML += strtext;
                 }
                 
                 if (totalPage > BlockSize) {
                     if (pageNum > BlockSize) {
-                        strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+                        strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
                         PagingHTML += strtext;
                     } else {
-                    	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+                    	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
                         PagingHTML += strtext;
                     }
                 } else {
-                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
                     PagingHTML += strtext;
                 }
                 
@@ -471,25 +461,25 @@
                 
                 if (totalPage > BlockSize) {
                     if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-                        strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-                        strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+                        strtext = "";
+                        strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
                         PagingHTML += strtext;
                     } else {
-                        strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-                        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+                        strtext = "";
+                        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
                         PagingHTML += strtext;
                     }
                 } else {
-                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+                    strtext = "";
+                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
                     PagingHTML += strtext;
                 }
                 
                 if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-                    strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+                    strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
                     PagingHTML += strtext;
                 } else {
-                    strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+                    strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
                     PagingHTML += strtext;
                 }
                 
@@ -540,22 +530,6 @@
     			    window.location.href = "/ezCommunity/boardItemList.do?page=" + parseInt(newPage) + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + code;
     		    }
     		}
-            
-            function prevPage_onclick() {
-    			newPage = parseInt(CurPage) - 1;
-    			
-    			if(newPage > 0) {
-    				window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage.toString() + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + code;
-    			}
-    		}
-
-    		function nextPage_onclick() {
-    			newPage = parseInt(CurPage) + 1;
-    			
-    			if(newPage <= parseInt(totalPage)) {
-    				window.location.href = "/ezCommunity/BoardItemList.do?page=" + newPage.toString() + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + code;
-    			}
-    		}
 
     		function moveToPage() {
     			if(window.event.keyCode == 13) {
@@ -572,8 +546,8 @@
     		}
 
     		function CopyItem_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t905' />");
+    			if (UserLevel == "0" || UserLevel == "9" || (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false)) {
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
     					
@@ -581,12 +555,7 @@
     				alert("<spring:message code='ezCommunity.t430' />");
     				return;
     			}
-    			
-    			if(BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
-    				alert("<spring:message code='ezCommunity.t431' />");
-    				return;
-    			}
-    			
+
     			var arrList = new Array();
     			var strItemList = "";
     			var i=0;
@@ -612,13 +581,8 @@
     		}
     		
     		function SetRead_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t899' />");
-    				return;
-    			}
-    					
-    			if(Read_FG != "true") {
-    				alert("<spring:message code='ezCommunity.t423' />");
+    			if (UserLevel == "0" || UserLevel == "9" || Read_FG != "true") {
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
 
@@ -658,7 +622,7 @@
 
     		function MemberInfo_onclick(pUserID) {
     			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t906' />");
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
     					
@@ -672,21 +636,16 @@
 
     		function ReservationItem_onclick() {
     			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t907' />");
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
     			
     			window.location.href = "/ezCommunity/boardReservedItemList.do?page=" + encodeURIComponent(CurPage) + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + encodeURIComponent(pSortBy) + "&code=" + encodeURIComponent(code);
     		}
 
-    		document.onselectstart = function () {
-    		    window.event.cancelBubble = true;
-    		    window.event.returnValue = false;
-    		};
-
     		function search_onclick() {
     			if (UserLevel == "0" || UserLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t908' />");
+    				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
     					
@@ -694,32 +653,6 @@
     			window.location.href = "/ezCommunity/searchBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&orgBoardParameters=" + encodeURIComponent(OrgBoardParameters) + "&code=" + encodeURIComponent(code);
     		}
 
-    		function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
-   		        try {
-   		            var heigth = window.screen.availHeight;
-   		            var width = window.screen.availWidth;
-
-   		            var left = 0;
-   		            var top = 0;
-
-   		            if (window.screen.width > 800) {
-   		                var pleftpos;
-
-   		                pleftpos = parseInt(width) - 770;
-   		                heigth = parseInt(heigth) - 30;
-   		                width = parseInt(width) - pleftpos;
-
-   		                left = pleftpos / 2;
-   		            } else {
-   		                heigth = parseInt(heigth) - 30;
-   		                width = parseInt(width) - 10;
-   		            }
-   		            
-   		            window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
-   		        } catch (e) {
-   		            alert("openwindow :: " + e.description);
-   		        }
-   		    }
     	</script>    
         
 	</head>
@@ -731,8 +664,9 @@
 				<li><span onClick="SetRead_onclick()"><spring:message code='ezCommunity.t915'/></span></li>
 				
 				<c:if test="${pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
-					<li><span onClick="NewItem_onclick()"><spring:message code='ezCommunity.t910' /></span></li>
-					<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+				<!-- 2018-05-30 구해안 게시하기 동사형을 '등록'으로 변경 -->
+					<li><span onClick="NewItem_onclick()"><spring:message code='ezCommunity.t958' /></span></li>
+					<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 					<li><span onClick="DeleteItem_onclick()"><spring:message code='ezCommunity.t208' /></span></li>
 				</c:if>
 				
@@ -740,7 +674,7 @@
 					<li><span onClick="CopyItem_onclick()"><spring:message code='ezCommunity.t911' /></span></li>
 				</c:if>
 				
-				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+				<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 				<li><span onClick="refresh_onclick()"><spring:message code='ezCommunity.t912' /></span></li>
 				
 				<c:if test="${boardInfo.read_FG == 'true' && pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">

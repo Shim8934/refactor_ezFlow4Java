@@ -84,7 +84,9 @@
 	    		
 	    		if (ReturnFunction != null){
 	    		    RetValue["deptid"] = selRow.getAttribute("DATA3");
-	    		    RetValue["userid"] = selRow[0].getAttribute("DATA2");
+	    		    RetValue["userid"] = selRow.getAttribute("DATA2");
+    		    	RetValue["username"] = getNodeText(selRow.getElementsByTagName("td")[3]);
+	    		    
 	    		    ReturnFunction(RetValue);
 	    		}else{
 	    		    dialogArguments["deptid"] = selRow.getAttribute("DATA3");
@@ -114,6 +116,8 @@
 	    	    if (ReturnFunction != null) {
 	    	        RetValue["deptid"] = selRow[0].getAttribute("DATA3");
 	    	        RetValue["userid"] = selRow[0].getAttribute("DATA2");
+	    	        RetValue["username"] = getNodeText(selRow[0].getElementsByTagName("td")[3]);
+	    	        
 	    	        ReturnFunction(RetValue);
 	    	    }else{
 	    	        dialogArguments["deptid"] = selRow[0].getAttribute("DATA3");
@@ -131,6 +135,9 @@
 	    		window.close();
 	    	}
 	    </script>
+	    <style>
+	    	.mainlist tr th {border-top:0px}
+	    </style>
 	</head>
 	<body class="popup">		
 		<xml id="listviewheader" style ="display:none">
@@ -164,16 +171,19 @@
 				    </HEADER>
 		    	</HEADERS>
 		  	</LISTVIEWDATA>
-		</xml>
-		
-		<h1><spring:message code="ezBoard.t5" /></h1>		
-		<h2><spring:message code="ezBoard.t13" /></h2>
+		</xml>		
+		<h1><spring:message code="ezBoard.t5" /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="cancel_onClick()"></span></li>
+            </ul>
+        </div>
+		<h2 style="font-weight: normal">▒ <spring:message code="ezBoard.t13" /></h2>
         <div class="listview" style="width:100%; min-width:570px; height:285px;" >
             <div id="lvtDoclist" style="width:100%;min-width:570px; border:0; height:285px; overflow:AUTO;" ></div>
         </div>		            
-		<div class="btnposition">
+		<div class="btnpositionNew">
 		    <a class="imgbtn"><span onClick="change_onClick()"><spring:message code="ezBoard.t14" /></span></a>
-		    <a class="imgbtn"><span onClick="cancel_onClick()"><spring:message code="ezBoard.t15" /></span></a>
 		</div>
 	</body>
 </html>

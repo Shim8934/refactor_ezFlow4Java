@@ -193,7 +193,7 @@
 	                var extension = tempname.split(".")[last - 1];
 	
 	                if (extension.toUpperCase() != "EML") {
-	                    alert("<spring:message code='ezEmail.t401' />");
+	                    alert("<spring:message code='ezEmail.lsd05' />");
 	                    return;
 	                }
 	                var _Span = document.createElement("SPAN");
@@ -224,29 +224,33 @@
 	</head>
 	<body class="popup" style="overflow: hidden">
 	    <h1><spring:message code='ezEmail.t400' /></h1>
-	    <table class="popuplist">
+	    <div id="close">
+            <ul>
+                <li><span onclick="window_Close()"></span></li>
+            </ul>
+        </div>
+	    <table class="popuplist" style="width:100%">
 	        <tr>
 	            <th><spring:message code='ezEmail.t148' /></th>
 	            <td>
-	                <input id="foldername" type="text" name="textfield" style="width: 98%" disabled></td>
-	            <td><a class="imgbtn"><span onclick="selectFolder()" id="folderfindbutton"><spring:message code='ezEmail.t99000078' /></span></a></td>
+	                <input id="foldername" type="text" name="textfield" style="width: 100%" disabled></td>
+	            <td><a class="imgbtn imgbck" style="margin-top:2px"><span onclick="selectFolder()" id="folderfindbutton"><spring:message code='ezEmail.t99000078' /></span></a></td>
 	        </tr>
 	        <tr style="height: 40px">
 	            <th><spring:message code='ezEmail.t405' /></th>
 	            <td>
 	                <div id="filepath" style="overflow: auto; width: 310px; height: 260px; padding-top:5px"></div>
 	            </td>
-	            <td><a class="imgbtn"><span onclick="selectMail()" id="filefindbutton"><spring:message code='ezEmail.t99000079' /></span></a></td>
+	            <td><a class="imgbtn imgbck"><span onclick="selectMail()" id="filefindbutton"><spring:message code='ezEmail.t99000079' /></span></a></td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn" id="mailInBtn" onclick="mailIn()"><span><spring:message code='ezEmail.t407' /></span></a>
-	        <a class="imgbtn" id="cancelBtn" onclick="window_Close()"><span><spring:message code='ezEmail.t39' /></span></a>
 	    </div>
 	
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezEmail/mailImportUpload.do" target="ifrm">
-	        <input type="file" name="file1" id="file1" accept="message/rfc822" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="true" />
+	        <input type="file" name="file1" id="file1" accept="message/rfc822" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px; display:none;" multiple="true" />
 	        <input type="hidden" name="folderid" id="folderid" />
 	        <input type="hidden" name="cnt" id="cnt" />
 	    </form>

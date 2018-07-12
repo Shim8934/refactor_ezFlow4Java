@@ -75,7 +75,7 @@
 	<body class="mainbody">
 	    <h1><spring:message code='ezEmail.t99000070' /></h1>
 	        <div class="portlet_tabpart01">
-		        <div class="portlet_tabpart01_top" id="tab1">
+		        <div class="portlet_tabpart01_top" id="tab1" style="width:400px;">
 	                    <p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezEmail.t99000071' /></span></p>
 		        </div>
 	        </div>

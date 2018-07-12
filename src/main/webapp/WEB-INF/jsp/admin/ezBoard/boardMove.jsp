@@ -7,6 +7,14 @@
 		<title><spring:message code="ezBoard.t65" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />	    
+	    <style>
+	    .mwidth tr td:firstchild {
+	    	border : 1px solid #ddd;
+	    }
+	    #pSelectBoardName {
+	    	border : 1px solid #d2d2d2;
+	    }
+	    </style>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
@@ -92,7 +100,8 @@
 		    }
 	    </script>
 	</head>
-	<body class="mainbody">	
+	<body class="mainbody">
+	<div style="max-width:800px;">
 		<c:if test="${hasSubBoard == '1'}">
 			<br/>
 			<table class="content">
@@ -140,5 +149,6 @@
 			    <a class="imgbtn" name="cmdOk" ><span onClick="Move()" onkeydown="onkey_down()"><spring:message code="ezBoard.t134" /></span></a>
 			</div>
 		</c:if>
+		</div>
 	</body>
 </html>

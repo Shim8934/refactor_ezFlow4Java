@@ -159,10 +159,9 @@
 		
 				var listCount = arrRows.length;
 		
-				if (listCount == 0) 
-		        {		
-				    cancel_onClick();
-					return;
+				if (listCount == 0) {		
+// 				    cancel_onClick();
+// 					return;
 		        }
 				if (ReturnFunction!=null) {
 				    Arguments["recipientTDData"] = "change";
@@ -222,8 +221,8 @@
 		        var listCount = arrRows.length;
 
 		        if (listCount == 0) {
-		            cancel_onClick();
-		            return;
+// 		            cancel_onClick();
+// 		            return;
 		        }
 		        if (ReturnFunction != null) {
 		            Arguments["recipientTDData"] = "delete";
@@ -329,6 +328,11 @@
 		</LISTVIEWDATA>
 		</xml> 
 	<h1><spring:message code='ezEmail.t331' /></h1>
+	<div id="close">
+        <ul>
+            <li><span onclick="cancel_onClick()"></span></li>
+        </ul>
+    </div>
 	<div class="txt"><spring:message code='ezEmail.t335' /><br>
 	  <br><br>
 	  ▒&nbsp;<spring:message code='ezEmail.t337' /><span class="point" id="unresolveName" style="padding-left:5px"><spring:message code='ezEmail.t338' /></span></div>
@@ -336,7 +340,6 @@
 	<div class="btnposition btnpositionNew">
 	    <a class="imgbtn" onClick="delete_onClick()" ><span><spring:message code='ezEmail.t95' /></span></a>
 	    <a class="imgbtn" onClick="change_onClick()" ><span><spring:message code='ezEmail.t38' /></span></a>
-	    <a class="imgbtn" onClick="cancel_onClick()" ><span><spring:message code='ezEmail.t39' /></span></a>
 	</div>
 	</body>
 </html>

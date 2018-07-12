@@ -455,11 +455,11 @@
 			WHERE
 				c_clubname$v_USERINFO_LANG$ = #v_CLUBNAME#
 			AND
-				c_cate_a = #v_C_CATE_A#
+				RTRIM(c_cate_a) = #v_C_CATE_A#
 			AND
-				c_cate_b = #v_C_CATE_B#
+				RTRIM(c_cate_b) = #v_C_CATE_B#
 			AND
-				c_cate_c = #v_C_CATE_C#
+				RTRIM(c_cate_c) = #v_C_CATE_C#
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -1397,7 +1397,7 @@
 				AND
 					tenant_id = #tenantID#
 				ORDER BY
-					c_visited DESC
+					c_indate DESC
 			]]>
 		</isEqual>
 		
@@ -1421,7 +1421,7 @@
 					AND
 						TBL_C_CLUBUSER.tenant_id = #tenantID#
 					ORDER BY
-						TBL_C_CLUBUSER.c_visited DESC
+						TBL_C_CLUBUSER.c_indate DESC
 				]]>
 			</isEqual>
 			
@@ -1438,7 +1438,7 @@
 					AND
 						tenant_id = #tenantID#
 					ORDER BY
-						c_visited DESC
+						c_indate DESC
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -2126,7 +2126,7 @@
 					A.writerdeptname$v_USERINFO_LANG$,
 					A.writercompanyname$v_USERINFO_LANG$,
 					A.startdate,
-					A.writedate,
+					TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
 					A.parentwritedate,
 					A.importance,
 					A.title,
@@ -2407,7 +2407,7 @@
              		TBL_COMM_BOARDINFO.boardid,
 					A.itemid,
 					A.title,
-					A.writedate,
+					TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
 					gubun,
 					A.extensionattribute5,
 					(SELECT 
@@ -2684,6 +2684,7 @@
                     c_clubname,
                     c_clubname2,
                     a.boardid,
+                    readcount,
                     (SELECT 
                 		COUNT(*)  
 					FROM 

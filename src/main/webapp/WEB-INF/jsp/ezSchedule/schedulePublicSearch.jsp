@@ -217,7 +217,7 @@
 				<tr>
 			    	<th style="white-space:nowrap"><spring:message code='ezSchedule.t290' /></th>
 			    	<td style="width:20px;border-right:none">
-			    		<a href="#" class="imgbtn">
+			    		<a href="#" class="imgbtn imgbck">
 			    			<span onClick="select_entity();"><spring:message code='ezSchedule.t291' /></span>
 			    		</a>
 			    	</td>
@@ -230,7 +230,7 @@
 			    	<td colspan="2">
 			       		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~ 
 			       		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
-						<a href="#" class="imgbtn">
+						<a href="#" class="imgbtn imgbck">
 							<span onClick="search()"><spring:message code='ezSchedule.t24' /></span>
 						</a>
 					</td>
@@ -242,7 +242,7 @@
 		    </h2>
 			<table class="mainlist" style="table-layout:fixed;width:100%"> 
 				<tr>
-			    	<th colspan=2 style="padding:0 2px; width:30px;text-align:center;"><img src="/images/i_important.gif" /></th>      
+			    	<th colspan=2 style="padding:0 2px; width:30px;text-align:center;"><img src="/images/ImgIcon/view-importance.gif" /></th>      
 			    	<th style="width:50px"><spring:message code='ezSchedule.t270' /></th>
 			    	<th style="width:80px"><spring:message code='ezSchedule.t271' /></th>
 			    	<th style="width:80px"><spring:message code='ezSchedule.t161' /></th>

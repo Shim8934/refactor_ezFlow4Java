@@ -67,11 +67,11 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("MailListRayer").style.width = "100%";
             if (navigator.userAgent.indexOf('Firefox') != -1) {
-                document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-                document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px";
+                document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+                document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
             } else {
-                document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-                document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px"; 
+                document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+                document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px"; 
             }
             g_bPrevShow = false;
         }
@@ -93,13 +93,14 @@ function PreviewRayerChange(pGubun) {
 
             document.getElementById("MailListRayer").style.width = "100%";
             document.getElementById("PreviewRayerW").style.width = "100%";
+            
             document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
             if (navigator.userAgent.indexOf('Firefox') != -1) {
-                document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
-                document.getElementById("BoardList_BODY").style.height = (pMailListHeightW - 88) + "px";
+                document.getElementById("divList").style.height = (pMailListHeightW - 62) + "px";
+                document.getElementById("BoardList_BODY").style.height = (pMailListHeightW - 100) + "px";
             } else {
-                document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
-                document.getElementById("BoardList_BODY").style.height = (pMailListHeightW - 88) + "px";
+                document.getElementById("divList").style.height = (pMailListHeightW - 62) + "px";
+                document.getElementById("BoardList_BODY").style.height = (pMailListHeightW - 100) + "px";
             }
             document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
@@ -108,6 +109,8 @@ function PreviewRayerChange(pGubun) {
             } else {
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
             }
+            document.getElementById("PreW_subject").style.width = (CurrenWidth - 200) + "px";
+            
             pPreviewShow_HOW = "W";
             pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
             pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
@@ -151,17 +154,25 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("ResizeBarW").style.width = CurrenWidth + "px";
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
-            document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
+            
+            if ($("body").attr("class") == "tabbody") {            
+            	document.getElementById("MailListRayer").style.width = pMailListWidthH-20 + "px";
+            } else {
+            	document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
+            }            
+            
             if (navigator.userAgent.indexOf('Firefox') != -1) {
-                document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-            	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px";
+                document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+            	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
             } else
-                document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-            	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px";
+                document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+            	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
             /*document.getElementById("divList").style.overflow = "auto";*/
             document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
             document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68) + "px";
+            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 200) + "px";
+            
             pPreviewShow_HOW = "H";
             pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
             pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
@@ -175,10 +186,11 @@ function PreviewRayerChange(pGubun) {
         }
         MailOptionHidden();
         PreviewMode_ChangeBtn();
-        /*if ( firstFlag) {
+        // 주석처리한 이유?
+        if ( firstFlag) {
             Set_BoardConfig();
         
-        }*/
+        }
         isPreviewChange = false;
         scroll();
     } catch (e) { }
@@ -209,8 +221,8 @@ function PreviewRayerChange_photo(pGubun) {
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("MailListRayer").style.width = "100%";
             /* 2018-04-25 홍승비 - 크로스 브라우징 중복 코드 삭제 */
-            document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-            document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px";
+            document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+            document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
             g_bPrevShow = false;
         }
         else if (pGubun == "H") {
@@ -239,7 +251,11 @@ function PreviewRayerChange_photo(pGubun) {
                 }
             }
             document.getElementById("PreviewRayerH").style.width = "752px";
-            document.getElementById("MailListRayer").style.width = (CurrenWidth - 760) + "px";
+            if ($("body").attr("class") == "tabbody") {
+            	document.getElementById("MailListRayer").style.width = (CurrenWidth - 760-20) + "px";
+            } else{
+            	document.getElementById("MailListRayer").style.width = (CurrenWidth - 760) + "px";
+            }
             document.getElementById("PreContent_RayerH").style.width = "749px";
 
             document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
@@ -247,8 +263,8 @@ function PreviewRayerChange_photo(pGubun) {
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
             /* 2018-04-25 홍승비 - 크로스 브라우징 중복 코드 삭제 */
-			document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-           	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px";
+			document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+           	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
 
             /*document.getElementById("divList").style.overflow = "auto";*/
             document.getElementById("ifrmPreViewH_photo").style.height = (CurrentHeight - 60) + "px";
@@ -608,10 +624,11 @@ function MailPreviewEnd(e) {
             document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
             document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
             document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
-            document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
+            document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
             document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
             document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
             document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
+            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 200) + "px";
             pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
             pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
 
@@ -629,7 +646,7 @@ function MailPreviewEnd(e) {
             document.getElementById("MailListRayer").style.width = "100%";
             document.getElementById("PreviewRayerW").style.width = "100%";
             document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
-            document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
+            document.getElementById("divList").style.height = (pMailListHeightW - 62) + "px";
             document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
             if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1)
@@ -779,17 +796,18 @@ function Window_resize() {
                 document.getElementById("PreviewRayerW").style.width = "100%";
                 document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
                 if (navigator.userAgent.indexOf('Firefox') != -1) {
-                    document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (pMailListHeightW - 88) + "px";
+                    document.getElementById("divList").style.height = (pMailListHeightW - 62) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (pMailListHeightW - 100) + "px";
                 } else
-                    document.getElementById("divList").style.height = (pMailListHeightW - 50) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (pMailListHeightW - 88) + "px";
+                    document.getElementById("divList").style.height = (pMailListHeightW - 62) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (pMailListHeightW - 100) + "px";
                 document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
                 if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1)
                     document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 35) + "px";
                 else
                     document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
+                document.getElementById("PreW_subject").style.width = (CurrenWidth - 200) + "px";
                 pPreviewShow_HOW = "W";
                 pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
                 pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
@@ -822,16 +840,17 @@ function Window_resize() {
                 document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
                 document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
                 if (navigator.userAgent.indexOf('Firefox') != -1) {
-                    document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px";
+                    document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
                 } else
-                    document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px";
+                    document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
 
                 /*document.getElementById("divList").style.overflow = "auto";*/
                 document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
                 document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
                 document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
+                document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 200) + "px";
                 pPreviewShow_HOW = "H";
                 pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
                 pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
@@ -843,11 +862,11 @@ function Window_resize() {
                 document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
                 document.getElementById("MailListRayer").style.width = "100%";
                 if (navigator.userAgent.indexOf('Firefox') != -1) {
-                    document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px";
+                    document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
                 } else
-                    document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px";
+                    document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
                 	/*document.getElementById("divList").style.overflow = "auto";*/
             }
         }
@@ -912,11 +931,11 @@ function Window_resize_photo() {
                 document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
                 document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
                 if (navigator.userAgent.indexOf('Firefox') != -1) {
-                    document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px";
+                    document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
                 } else
-                    document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px";
+                    document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
 
                 document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
                 document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
@@ -932,11 +951,11 @@ function Window_resize_photo() {
                 document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
                 document.getElementById("MailListRayer").style.width = "100%";
                 if (navigator.userAgent.indexOf('Firefox') != -1) {
-                    document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px";
+                    document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
                 } else
-                    document.getElementById("divList").style.height = (CurrentHeight - 50) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 88) + "px";
+                    document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
             }
         }
         scroll();

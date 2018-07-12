@@ -594,6 +594,7 @@
 		      		<HEADER>
 		        		<NAME><spring:message code='ezBoard.t35' /></NAME>
 		        		<WIDTH>100</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		    	</HEADERS>
 		  	</LISTVIEWDATA>
@@ -604,44 +605,61 @@
 		      		<HEADER>
 		        		<NAME><spring:message code='ezBoard.t36' /></NAME>
 		        		<WIDTH>100</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezBoard.t9' /></NAME>
 		        		<WIDTH>100</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezBoard.t37' /></NAME>
 		        		<WIDTH>80</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezBoard.t38'/></NAME>
 		        		<WIDTH>100</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>		     
 		    	</HEADERS>
 		  	</LISTVIEWDATA>
 		</xml>
 		<h1><spring:message code='ezBoard.t16' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return window.close()"></span></li>
+            </ul>
+        </div>
 		<table>
 		  <tr align=left>
-		    <td  colspan=3 id="cnblock" align=right height="30">
-		        <input type="text" id="cnkeyword" style="WIDTH:100px" name="Input" onkeydown='Key_Down(event)'>
-		        <a class="imgbtn" name="button"><span onClick='cnsearch_click("displayName")'><spring:message code='ezBoard.t42'/></span></a>
-		    </td>
+		    <td  colspan="1" id="cnblock" style="height: 30px; background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;" align="right">
+		    		<div style="margin-right: 5px; margin-top: 2px;">
+			        	<input type="text" id="cnkeyword" style="WIDTH:124px; height: 22px;" name="Input" onkeydown='Key_Down(event)'>
+			        	<a class="imgbtn"  name="button"><span onClick='cnsearch_click("displayName")'><spring:message code='ezBoard.t42' /></span></a>
+		    		</div>
+		    	</td>
+		    	<td></td>
+		    	<td>
+		    	<h2 class="receiver_tltype01" style="margin-bottom: -15px;">
+		    		<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezBoard.t999003' /></span>
+		    	</h2>
+		    	</td>
 		  </tr>  
 		  <tr>
 		    <td rowspan="1" valign="top" >
 		        <table border="0" cellspacing="0" cellpadding="0">
 		            <tr>
 		              <td id="TreeViewTD" valign="top">
-		                  <table>
+		                  <table style="margin-top: 4px;">
 		                      <tr>
 		                            <td>
-		                                <div style="OVERFLOW-Y:auto;OVERFLOW-X:auto;WIDTH:225px;HEIGHT:370px;BACKGROUND-COLOR:#ffffff;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" class="box"></div>
+		                                <div style="OVERFLOW-Y:auto;OVERFLOW-X:auto;WIDTH:270px;HEIGHT:440px;BACKGROUND-COLOR:#ffffff;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" class="box"></div>
 		                            </td>
 		                            <td width="5"></td>
 		                            <td>
 		                                <div class="listview">
-		                                <div id=OrganListView style ="OVERFLOW:auto; WIDTH:310px; HEIGHT:370px; border:0"></div></div>
+		                                <div id=OrganListView style ="OVERFLOW:auto; WIDTH:100%; min-width:612px; HEIGHT:440px; border:0"></div></div>
 		                            </td>
 		                      </tr>
 		                 </table>
@@ -659,8 +677,8 @@
 		            </tr>
 		            <tr>
 		                <td>
-		                <div class="listview">
-		                    <div id=ListViewMsgTo style ="BORDER:0;HEIGHT: 370px; WIDTH:200px;overflow:auto"></div>
+		                <div class="listview" style="margin-top: 6px;">
+		                    <div id=ListViewMsgTo style ="BORDER:0;HEIGHT: 440px; WIDTH:230px;overflow:auto"></div>
 		                </div>
 		                </td>
 		            </tr>
@@ -668,9 +686,8 @@
 		    </td>
 		  </tr>
 		</table>
-		<div class="btnposition" style="float:right">
+		<div class="btnposition">
 		  <a class="imgbtn"><span onclick="confirm_onClick()"><spring:message code='ezBoard.t48'/></span></a>
-		  <a class="imgbtn"><span onclick="return window.close()"><spring:message code='ezBoard.t49'/></span></a>
 		</div>
 	</body>
 </html>

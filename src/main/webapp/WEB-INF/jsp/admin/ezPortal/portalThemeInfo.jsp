@@ -7,6 +7,7 @@
 		<title><spring:message code='ezPortal.t990001'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
+		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezPersonal/controls/ListView_list.js"></script>
@@ -303,18 +304,25 @@
 		</div>
 		<div id="close">
   			<ul>
-    			<li><span onClick="close_onclick()"><spring:message code='ezPortal.t8'/></span></li>
+    			<li><span onClick="close_onclick()"></span></li>
   			</ul>
 		</div>
-		<div id="tabnav">
+		<%-- <div id="tabnav">
   			<ul>
     			<li id="menu_1"><span onClick="toggle_menu(1)" ><spring:message code='ezPortal.t86'/></span></li>
-    			<%--<li id="menu_2"><span onClick="toggle_menu(2)"><%=RM.GetString("t87")%></span></li>--%>
+    			<!--<li id="menu_2"><span onClick="toggle_menu(2)"><%=RM.GetString("t87")%></span></li>-->
   			</ul>
 			<script type="text/javascript">
     			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-    			selToggleList(document.getElementById("close"), "ul", "li", "0");
     			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+			</script>
+		</div> --%>
+		<div class="portlet_tabpart01">
+			<div class="portlet_tabpart01_top" id="tab1" style="border-bottom: 0px;">
+				<p id="menu_1"><span style="min-width: 45px; cursor:pointer" onclick="toggle_menu(1)" class="tabon"><spring:message code='ezPortal.t86'/></span></p>
+			</div>
+			<script type="text/javascript">
+    			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			</script>
 		</div>
 		
@@ -339,7 +347,7 @@
                     		</tr>
                     		<tr class="secondary">
                         		<th style="width:16%"><spring:message code='ezPortal.t404'/></th>
-                        		<td style="border-bottom:1px solid #ddd;">
+                        		<td>
                         			<c:choose>
                         				<c:when test="${mode == 'new'}">
                         					<input type="text" id="Title2" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="255"/>
@@ -444,12 +452,12 @@
 	                    	            <div>(<spring:message code='ezPortal.t990012'/>)</div>
 								    </td>
 							    	<td style="border-left:1px solid #ddd;" align="center">
-								    	<a class="imgbtn" style="margin-left:2px;">
+								    	<a class="imgbtn imgbck" style="margin-left:2px;">
 								    		<span onclick="changeNormalImage()">
 										    	<spring:message code='ezPortal.t66'/><br />
 									    	</span>
 									    </a>
-									    <a class="imgbtn" style="margin-left:2px;">
+									    <a class="imgbtn imgbck" style="margin-left:2px;">
 									    	<span onclick="removeNormalImage()">
 										    	<spring:message code='ezPortal.t990008'/>
 									    	</span>

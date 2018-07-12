@@ -135,6 +135,10 @@ function SetAddACLList(objAddList) {
 		        AddUser.setAttribute("Member_nam", pCurrAcl[2]);
 		        AddUser.setAttribute("Member_ID", pCurrAcl[1]);
 		        AddUser.setAttribute("Access_lvl", "2");
+		        if (i+1 == acl_cnt) {
+		        	AddUser.setAttribute("selected", "selected");
+		        	brd_mng2.checked = true;
+		        }
 		    } else {
 		        AddUser.Dept_YN = "Y";
 		        AddUser.SDA_YN = "Y";

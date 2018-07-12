@@ -162,14 +162,36 @@ public class EzEmailAdminController {
 			Document doc = commonUtil.convertStringToDocument(bodyData);
 			String companyId = doc.getElementsByTagName("COMPID").item(0)
 					.getTextContent();
-
-			List<MailDistributionVO> distributionList = ezEmailService
+			String cn = doc.getElementsByTagName("CN").item(0).getTextContent() == null ? "" 
+					: doc.getElementsByTagName("CN").item(0).getTextContent();
+			
+			List<MailDistributionVO> distributionSearchList = ezEmailService
 					.getDistributionList(companyId, auth.getTenantId());
-
+			
+			List<MailDistributionVO> distributionResultList = new ArrayList<MailDistributionVO>();
+			
+			String isIncluded = "NO";
+			
+			if (!cn.equals("null") && !cn.equals("")) {
+				for (MailDistributionVO vo : distributionSearchList) {
+					if (!vo.getId().equals(cn)) {
+						isIncluded = ezEmailService.checkDistributionIsIncluded(cn, vo.getId(), auth.getTenantId());
+						
+						if (isIncluded.equals("NO")) {
+							distributionResultList.add(vo);
+						} 
+					} else {
+					distributionResultList.add(vo);
+					}	
+				}
+			} else {
+				distributionResultList = distributionSearchList;
+			}
+			
 			StringBuilder sb = new StringBuilder();
 			sb.append("<LISTVIEWDATA><ROWS>");
 
-			for (MailDistributionVO vo : distributionList) {
+			for (MailDistributionVO vo : distributionResultList) {
 				sb.append("<ROW><CELL>");
 
 				sb.append("<VALUE>");
@@ -491,7 +513,21 @@ public class EzEmailAdminController {
 								+ egovMessageSource.getMessage("ezOrgan.t68",
 										locale) + "</TITLE>");
 						sb.append("</ROW>");
-					}
+					} else {
+						sb.append("<ROW>");
+						sb.append("<CLASS>" + "distribution" + "</CLASS>");
+						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+						sb.append("<DISPLAYNAME>"
+								+ commonUtil.cleanValue(pCn)
+								+ "</DISPLAYNAME>");
+						sb.append("<MAIL>"
+								+ commonUtil.cleanValue(cn)
+								+ "</MAIL>");
+						sb.append("<DEPT>"
+								+ egovMessageSource.getMessage("ezEmail.t57",
+										locale) + "</DEPT>");
+						sb.append("</ROW>");
+						}
 
 				} else {
 					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn,
@@ -518,11 +554,9 @@ public class EzEmailAdminController {
 						sb.append("</ROW>");
 					}
 				}
-
 			}
 
 			sb.append("</DATA>");
-
 			returnData = sb.toString();
 
 		} catch (Exception e) {
@@ -827,10 +861,9 @@ public class EzEmailAdminController {
 			currPage = "1";
 		}
 
-		int maxItemPerPage = 20;
+		int maxItemPerPage = 20; 
 		int currentPage = Integer.parseInt(currPage);
 		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
-		int endRow = (Integer.parseInt(currPage)) * maxItemPerPage;
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;
@@ -854,7 +887,7 @@ public class EzEmailAdminController {
 
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow, 
-									   endRow, maxItemPerPage, searchKeycode, searchKeyword);
+									    maxItemPerPage, searchKeycode, searchKeyword);
 		
 		IMAPAccess ia = null;
 		Locale locale = Locale.getDefault();
@@ -928,7 +961,6 @@ public class EzEmailAdminController {
 
 		int maxItemPerPage = 20;
 		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
-		int endRow = (Integer.parseInt(currPage)) * maxItemPerPage;
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;
@@ -936,7 +968,7 @@ public class EzEmailAdminController {
 
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(Integer.valueOf(userInfo.getTenantId()), 
-									   startRow, endRow, maxItemPerPage, searchKeycode, searchKeyword);
+									   startRow, maxItemPerPage, searchKeycode, searchKeyword);
 		
 		int totalCount = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword);
 		

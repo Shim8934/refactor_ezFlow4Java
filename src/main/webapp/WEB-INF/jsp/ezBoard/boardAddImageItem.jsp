@@ -6,7 +6,15 @@
 	<head>
 	    <title><spring:message code='ezBoard.t1001' /></title>
 	    <style type="text/css">
-	         .preView { width: 70px; height: 70px; text-align: center; border:1px solid silver; }
+	         .preView {
+	         	width: 70px;
+	         	height: 70px;
+	         	text-align: center;
+	         	border:1px solid silver;
+	         }
+	          textarea {
+	         	resize:none;
+	         }
 	    </style>
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -39,10 +47,17 @@
 	        var g_fileList;
 	        var pNoneActiveX = "YES";
 	        var pUrl = "";
+	        var lastItemID = "000";
+	        
 	        window.onload = function () {
 	            var ua = navigator.userAgent;
 	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
 	                document.getElementById("file1").multiple = false;
+	            }
+	            
+	            // imageID 앞쪽에 순서 숫자 붙은 경우에만 substring하여 마지막 imageID 사용
+	            if ("${lastItemID}" != "") {
+	            	lastItemID = "${lastItemID}".substring(0,3);
 	            }
 	        };
 	
@@ -172,10 +187,10 @@
 	                if (document.getElementById(imageid) != "" && document.getElementById(imageid) != null)
 	                    return "false";
 	
-	                var resultHTML = "<table width='100%' class='content' id='" + "M_" + imageid + "' name='" + imgpath + "'  uniqueId='" + imgUniqueID + "' ><tr>" +
+	                var resultHTML = "<table style='margin-top:5px' width='100%' class='content' id='" + "M_" + imageid + "' name='" + imgpath + "'  uniqueId='" + imgUniqueID + "' ><tr>" +
 	                                 "<td style='width:25px;padding:0px; margin:0px;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
 	                                 "<td style='width:100px; height: 100px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
-	                                 "<td><textarea id='getcontent' style='width:97%; height:80px' maxlength='50' name='imgContent' ></textarea></input></td></tr></table>";
+	                                 "<td><textarea id='getcontent' style='width:94%; height:80px; margin:5px' maxlength='50' name='imgContent' ></textarea></input></td></tr></table>";
 	
 	                var imagecontent = document.getElementById("addimagecontent");
 	
@@ -209,7 +224,7 @@
 	            }
 	        }
 	
-	        function btn_ImgAddOnclick() { 
+	        function btn_ImgAddOnclick() {
 	            var bodycount = document.getElementById("addimagecontent").childNodes.length;
 	            var file = "";
 	            var content = "";
@@ -252,10 +267,11 @@
 	            strXML += "<ITEMID>" + pItemID + "</ITEMID>";
 	            strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
 	            
+	           	/* 2018-06-08 홍승비 - 사진 추가 시 imageID 순서 유지하며 추가 */
 	            if(filecount > 0)
 	            {
 	                for (var i = 0; i < filecount ; i++) {
-	                    imageid += "{" + GetGUID() + "} " + ";";
+	                    imageid += getZeroNum(i) + "{" + GetGUID() + "}" + ";";
 	                }
 	            }
 	            else{
@@ -432,7 +448,15 @@
 	        function GetGUID() {
 	            return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 	        }
-	
+	        
+	        /* 2018-06-08 홍승비 - 사진 추가 시 imageID 순서 유지하며 추가 */
+		    function getZeroNum(count){
+	        	var addCnt =  parseInt(count) + parseInt(lastItemID) + 1;
+		    	var zeroNum = "000" + addCnt;
+		    	zeroNum = zeroNum.substring(zeroNum.length - 3);
+		    	return zeroNum;
+		    }
+	        
 	        function CustomRandom() {
 	            var now = new Date();
 	            var seed = now.getMilliseconds();
@@ -453,14 +477,14 @@
 	            <td style="vertical-align:top" colspan="4">
 	                <div id="menu">
 	                <ul>
-	                    <li ID='btn_Modify' ><span  onclick="btn_ImgAddOnclick()" ><spring:message code='ezBoard.t279'/></span></li>
+	                    <li ID='btn_Modify' ><span  onclick="btn_ImgAddOnclick()" ><spring:message code='ezBoard.t98'/></span></li>
 	                    <li ID='Li1' ><span  onclick="btn_PhotoAttachAdd()" ><spring:message code='ezBoard.t1001'/></span></li>
 	                    <li ID='Li2' ><span  onclick="btn_PhotoAttachDel()" ><spring:message code='ezBoard.t1003'/></span></li>
 	                </ul>
 	                </div>
 	                <div id="close">
 	                <ul>
-	                    <li ><span  onClick="window.close();"><spring:message code='ezBoard.t12'/></span></li>
+	                    <li ><span  onClick="window.close();"></span></li>
 	                </ul>
 	              </div>
 	            </td>
@@ -478,7 +502,7 @@
 	            <th style="text-align:left; margin: 0px; padding-left:2px; width:25px; border-right: 0px">
 	                <input id="checkmenu" type="checkbox" onClick="imagecheckAll(this)"  name="checkmenu"/>
 	            </th>  
-	            <th style="text-align:center; height:25px; width:100%; border-left:0px"><spring:message code='ezBoard.t1010'/></th>
+	            <th style="text-align:center; height:25px; width:100%; border-left:0px;font-weight: normal;color:#333"><spring:message code='ezBoard.t1010'/></th>
 	        </tr>       
 	        <tr style="vertical-align:top">
 	            <td style="vertical-align:top; padding:0px; margin:0px" colspan="2">
@@ -495,7 +519,7 @@
 	                <div id="lstAttachLink">&nbsp;</div>
 	            </td>
 	        </tr>
-	        <tr>
+	        <tr style="display:none;">
 	            <td>
 	                <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	                <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">

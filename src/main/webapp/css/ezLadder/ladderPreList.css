@@ -7,11 +7,11 @@ body{margin:0px; padding:0px; font-family: 'Gulim', 'arial', 'verdana';}
 .ladderPreList_contents{width:1216px; height:670px;}
 .ladderPreList_left{float:left; width:300px; margin:0px 20px 0px 0px;}
 .search_title{position:relative; width:300px; height:30px; margin:0px 0px 12px 0px; padding:0px;}
-.search_title .input_text{float:left; width:256px; height:30px; padding:0px 5px; line-height:28px; border:1px solid #CCC; background:#FFF;}
-.search_title .search_btn{position:absolute; top:0px; right:0px; width:45px; height:30px; border:0;}
+.search_title .input_text{float:left; width:257px; height:30px; padding:0px 5px; line-height:28px; border:1px solid #ddd; background:#FFF; border-right:0px}
+.search_title .search_btn{position:absolute; top:0px; width:45px; height:30px; border:0;}
 
-.game_list{list-style:none; overflow:auto; width:300px; height:590px; margin:0px 0px 15px 0px; padding:0px; border:1px solid #CCC; font-size:12px; color:#333; background:#CCC; font-family:"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
-.game_list li{height:49px; line-height:49px; border-bottom:1px solid #CCC; cursor:pointer; background:#FFF; overflow:hidden;}
+.game_list{list-style:none; overflow:auto; width:300px; height:590px; margin:0px 0px 15px 0px; padding:0px; border:1px solid #ddd; font-size:12px; color:#333; background:#f8f8fa; font-family:"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.game_list li{height:49px; line-height:49px; border-bottom:1px solid #ddd; cursor:pointer; background:#FFF; overflow:hidden;}
 .game_list li:hover{background:#eef7ff;}
 .game_list li span{display:inline-block; vertical-align:middle;}
 .game_list li span.icon{width:45px; height:45px; margin:0px 5px;}
@@ -23,21 +23,21 @@ body{margin:0px; padding:0px; font-family: 'Gulim', 'arial', 'verdana';}
 .pagenavi span.txt{padding:0px 6px; border:1px solid #BBB; }
 .pagenavi span.on{border:1px solid #2670b9; } */
 
-.ladderPreList_right{float:left; width:894px; height:668px; background:#FFF; border:1px solid #CCC; overflow-y:auto; overflow-x: hidden;}
+.ladderPreList_right{float:left; width:894px; height:668px; background:#FFF; border:1px solid #ddd; overflow-y:auto; overflow-x: hidden;}
 /* .ladderPreList_right h2{width:100%; height:72px; margin:0px; padding:0px; background:#fafafb; border-bottom:1px solid #dcdcdc;} */
-.ladderPreList_right h2{height:90px; margin:0px; padding:0px; background:#fafafb; border-bottom:1px solid #dcdcdc;}
-.ladderGame_title{float:left; min-width: 200px; height: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin:0px; padding:0px 18px; line-height:90px; font-size:16px; font-weight:bold; color:#2568b3; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.ladderPreList_right h2{height:50px; margin:0px; padding:0px; background:#f9f9fa; border-bottom:1px solid #ddd;}
+.ladderGame_title{float:left; min-width: 200px; height: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin:0px; padding:0px 18px; line-height:48px; font-size:16px; font-weight:bold; color:#333; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
 
-.ladderGame_info{float:right;}
-.ladderGame_info .attribute{float:left; overflow:hidden; list-style:none; margin:22px 6px; padding:0px 6px; border-right:1px solid #DDD;}
+.ladderGame_info{padding-top:7px}
+.ladderGame_info .attribute{float:left; overflow:hidden; list-style:none; margin:0px 6px; padding:0px 6px; border-right:1px solid #DDD;}
 .ladderGame_info .attribute li{float:left; margin:0px 10px 0px 0px; border: 1px solid #DDD; border-radius: 15px; background: #FFF; width: 45px; height: 45px;}
 .ladderGame_info .pic{float:left; margin:15px 10px; padding:0px; border: 2px solid #DDD; border-radius: 30px; overflow: hidden; width: 56px; height: 56px;}
 .ladderGame_info .txt{float:left; margin: 18px 45px 18px 5px; padding:0px; color:#333; font-size:12px; font-weight:normal; font-family:"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif; clear: none;}
 .ladderGame_info .txt span{display:block; line-height:18px;}
 .ladderGame_info .txt span.name{font-size: 14px; font-weight: bold; color: #2568b3;}
 .ladderGame_info .txt span.date{color: #777;}
-.ladderGame_info .edit{float:left; list-style:none; margin:22px 0px; padding:0px;}
-.ladderGame_info .edit li{float:left; margin:0px 10px 0px 0px; border: 1px solid #DDD; border-radius: 15px; background: #FFF; width: 45px; height: 45px;}
+.ladderGame_info .edit{float:left; list-style:none; margin:0px 8px; padding:0px;}
+.ladderGame_info .edit li{float:left; margin:0px 10px 0px 0px; border: 1px solid #DDD; border-radius: 15px; background: #FFF; width: 45px; height: 45px; overflow: hidden;}
 
 .ladderGame_view{clear:both; width:796px; height:100%;}
 .btn_preview{float:right; margin:12px 20px 0px 0px;}

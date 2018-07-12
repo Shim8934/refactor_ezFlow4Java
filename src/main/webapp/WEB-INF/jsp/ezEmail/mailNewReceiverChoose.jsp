@@ -13,12 +13,6 @@
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
 	    	}
-	    	.mainlist_free tbody tr td:first-child{
-	    		padding-left:15px;
-	    	}
-	    	.mainlist_free thead tr th:first-child{
-	    		padding-left:15px;
-	    	}
 	    </style>
 	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -32,6 +26,7 @@
 	    <script type="text/javascript" src="/js/Common.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
+	    <script type="text/javascript" src="/js/jquery-ui/jquery.multipleSortable.js"></script>
 	    <script type="text/javascript">
 	        var m_orgImg = { "normal": "/images/tab_org1.gif", "select": "/images/tab_org.gif" };
 	        var m_dlImg = { "normal": "/imagefs/tab_dl1.gif", "select": "/images/tab_dl.gif" };
@@ -68,6 +63,8 @@
 	        var strSearch = "";
 	        var ua = navigator.userAgent;
 	        var tabSel = "";
+	        var divListArry = [];
+	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
@@ -246,12 +243,67 @@
 	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
 	            }
 	            
-	            // 수정 수아 재은 (수신자 설정 시 drag, drop으로 순서 조정)
-	            $("#listType1 tr").each(function(){
-	            	$(this).find("table tbody").sortable();
-	            });
-
+	            // (수신자 설정 시 drag, drop으로 순서 조정)
+	            $("#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC").multipleSortable({
+                  connectWith: "#ListViewMsgTo, #ListViewMsgCC, #ListViewMsgBCC",
+                  items : "tr",
+                  opacity: 0.3,
+                  start : function(event, elem) { 
+                      $(".receiver_borderbox tr").removeClass("multiple-sortable-selected");
+                      $(".receiver_borderbox tr").removeClass("ui-sortable-helper");
+                      
+                      divListArry = [];
+                     
+                  },
+                  click : function() {
+                	  
+                	  var selectList = $("#" + event.currentTarget.id + " tr[selected=true]");
+                      
+                      $(".receiver_borderbox tr").removeClass("multiple-sortable-selected");
+                      $(".receiver_borderbox tr").removeClass("ui-sortable-helper");
+                      
+                      for (var i = 0; i <selectList.length; i++) {
+                     	 divListArry[i] = selectList[i];
+                     	 $("#" + divListArry[i].id).addClass("multiple-sortable-selected");
+                      }
+                  },
+                  stop : function(event, elem) {
+                	  
+                	  //드랍되었을때 selected랑 색 변경해주기
+                	  var noSelectedList = $("#" + event.target.id + " tbody tr");
+                	  
+                	  for (var i = 0; i < noSelectedList.length; i++) {
+                		  noSelectedList[i].style.backgroundColor = m_strColorDefault;
+                		  noSelectedList[i].selected = false;
+                	  }
+                	  
+                	  // thead에 들어가는 현상 수정 
+                	  var elemParent = elem.item[0].parentNode;
+                	  
+                	  if (elemParent.tagName == 'THEAD'){
+                		  
+                		  var thName = '';
+                    	  if (elemParent.id == 'MsgToList_THEAD') {
+                    		  thName = 'MsgToList_TH';
+                    	  } else if (elemParent.id == 'MsgCCList_THEAD') {
+                    		  thName = 'MsgCCList_TH';
+                    	  } else if (elemParent.id == 'MsgBCCList_THEAD') {
+                    		  thName = 'MsgBCCList_TH';
+                    	  }
+                    	  
+                    	  var childArry = $("#" + elemParent.id + " tr[id!=" + thName + "]");
+                		  
+                		  for (var i = 0;i < childArry.length; i++) {
+                			  elemParent.nextSibling.appendChild(childArry[i]); // tbody에 추가
+                		  }
+                	  }
+                  }
+               });
+	         
+	            $(".receiver_borderbox tr").attr("restart", "true");
+	            ChangeListView_onClick(getOrganListType());
 	        }
+	        
 		    function recevieListview(pID, pListView) {
 		        var listview = new ListView();
 		        listview.SetID(pID);
@@ -1139,6 +1191,7 @@
 	                listid = "MsgBCCList";
 	            }
 	        }
+	        
 	        function CheckMailReceiver(selRow, option) {
 	            var rtnValue = false;
 	            var email;
@@ -1151,7 +1204,8 @@
 	            var _listview = new ListView();
 	            _listview.LoadFromID("MsgToList");
 	            var arrRows = _listview.GetDataRows();
-	            for (count2 = 0; count2 < arrRows.length; count2++) {
+	            
+	           for (count2 = 0; count2 < arrRows.length; count2++) {
 	                if (email == arrRows[count2].getAttribute("data2") && arrRows[count2].getAttribute("data2") != "mailgroup")
 	                    return true;
 	                else if (arrRows[count2].getAttribute("data2") == "mailgroup") {
@@ -1181,7 +1235,7 @@
 	                        return true;
 	                }
 	            }
-	            return rtnValue
+	            return rtnValue;
 	        }
 	
 	        function DeleteReceiver(pListView) {
@@ -1204,6 +1258,7 @@
 	                selList.DeleteRow(arrRows[i].id);
 	            }
 	        }
+	        
 	        function SelectReceiverWindow(Title, selectedWindow) {
 	            for (var count = 0; count < m_receiverTitleList.length; count++) {
 	                m_receiverTitleList[count].style.fontWeight = "normal";
@@ -1514,7 +1569,7 @@
 		        }
 		        
 		        var UserListHTML = "";
-		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
+		        if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) != null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
 		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
 		            SelectDeptNM.setAttribute("countinfo", "1")
 		        }
@@ -1524,24 +1579,30 @@
 		            //document.getElementById("tblPageRayer2").style.display = "none";
 		            document.getElementById("txtlist_table").style.display = "none";
 		            document.getElementById("Search_txtlist_table").style.display = "none";
-		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
-		                SelectDeptNM.setAttribute("countinfo", "1")
+		            
+		            if (typeof pSeach !== "undefined") {
+			            if (pSeach) {
+			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+			                SelectDeptNM.setAttribute("countinfo", "1")
+			            }
 		            }
 		        }
 		        else {
 		            document.getElementById("DeptUserImgList").style.display = "none";
 		            document.getElementById("txtlist_Layer").style.display = "";
 		            document.getElementById("tblPageRayer2").style.display = "";
-		            if (!pSeach) {
-		                document.getElementById("txtlist_table").style.display = "";
-		                document.getElementById("Search_txtlist_table").style.display = "none";
-		            }
-		            else {
-		                document.getElementById("Search_txtlist_table").style.display = "";
-		                document.getElementById("txtlist_table").style.display = "none";
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
-		                SelectDeptNM.setAttribute("countinfo", "1")
+		            
+		            if (typeof pSeach !== "undefined") {
+			            if (!pSeach) {
+			                document.getElementById("txtlist_table").style.display = "";
+			                document.getElementById("Search_txtlist_table").style.display = "none";
+			            }
+			            else {
+			                document.getElementById("Search_txtlist_table").style.display = "";
+			                document.getElementById("txtlist_table").style.display = "none";
+			                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + strLang_2 + "" + "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+			                SelectDeptNM.setAttribute("countinfo", "1")
+			            }
 		            }
 		        }
 		        
@@ -1994,6 +2055,7 @@
 	            pListType = Div;
 	            ListTypeChangeIcon();
 	            DisplayUserImageList();
+	            setOrganListType(pListType);
 	        }
 	        function keyword_Clear() {
 	            document.getElementsByName('keyword').value = "";
@@ -2738,21 +2800,21 @@
                 strtext = "<div class=\"pagenavi\">";
                 PagingHTML += strtext;
                 if (totalPage > 1 && pageNum != 1) {
-                    PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\" width=\"16\" height=\"16\"></span>";
+                    PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\"></span>";
                 }
                 else {
-                    PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_p_prev01.gif\" width=\"16\" height=\"16\"></span>";
+                    PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_p_prev01.gif\"></span>";
                 }
                 if (totalPage > BlockSize) {
                     if (parseInt(pageNum) > parseInt(BlockSize)) {
-                        PagingHTML += "<span class=\"btnimg\" onclick= 'return selbeforeBlock()'><img src=\"/images/kr/cm/btn_prev.gif\" width=\"16\" height=\"16\"></span><span class=\"ptxt\" onclick= 'return selbeforeBlock_one()'>" + strLang258 + "</span>";
+                        PagingHTML += "<span class=\"btnimg\" onclick= 'return selbeforeBlock()'><img src=\"/images/kr/cm/btn_prev.gif\"></span>";
                     }
                     else {
-                        PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\" width=\"16\" height=\"16\"></span><span class=\"ptxt\" onclick= 'return selbeforeBlock_one()'>" + strLang258 + "</span>";
+                        PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
                     }
                 }
                 else {
-                    PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\" width=\"16\" height=\"16\"></span><span class=\"ptxt\" onclick= 'return selbeforeBlock_one()'>" + strLang258 + "</span>";
+                    PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
                 }
                 var MaxNum;
                 var i;
@@ -2771,22 +2833,25 @@
                         PagingHTML += "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
                     }
                 }
+                if (MaxNum == 0) {
+                	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+                }
                 if (totalPage > BlockSize) {
                     if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-                        PagingHTML += "<span class=\"ptxt\" onclick='return selafterBlock_one()'>" + strLang259 + "</span><span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\" width=\"16\" height=\"16\"></span>";
+                        PagingHTML += "<span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\"></span>";
                     }
                     else {
-                        PagingHTML += "<span class=\"ptxt\" onclick='return selafterBlock_one()'>" + strLang259 + "</span><span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\" width=\"16\" height=\"16\"></span>";
+                        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
                     }
                 }
                 else {
-                    PagingHTML += "<span class=\"ptxt\" onclick='return selafterBlock_one()'>" + strLang259 + "</span><span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\" width=\"16\" height=\"16\"></span>";
+                    PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\" ></span>";
                 }
                 if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-                    PagingHTML += "<span class=\"btnimg\" onclick='return goToPageByNum(" + totalPage + ")'><img src=\"/images/kr/cm/btn_n_next.gif\" width=\"16\" height=\"16\"></span>";
+                    PagingHTML += "<span class=\"btnimg\" onclick='return goToPageByNum(" + totalPage + ")'><img src=\"/images/kr/cm/btn_n_next.gif\" ></span>";
                 }
                 else {
-                    PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_n_next01.gif\" width=\"16\" height=\"16\"></span>";
+                    PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_n_next01.gif\" ></span>";
                 }
                 PagingHTML += "</div>";
                 td_Create1(PagingHTML);
@@ -2980,6 +3045,7 @@
                 if (dropelement != "")
                     InsertReceiver(document.getElementById(dropelement));
             }
+            
             function event_listdragstart(obj) {
                 dropelement = "";
                 var islist = false;
@@ -3018,11 +3084,11 @@
                         event_listclick(obj);
                 }
             }
+            
             window.ondragover = function () {
                 dropelement = "";
             }
-
-
+            
             var BlockSize2 = 10;
             function td_Create2(strtext) {
                 document.getElementById("tblPageRayer2").innerHTML = strtext;
@@ -3035,25 +3101,25 @@
                 PagingHTML2 += strtext2;
                 var pageNum2 = CurPage;
                 if (totalPage2 > 1 && pageNum2 != 1) {
-                    strtext2 = "<span class='btnimg' onclick= 'return goToPageByNum2(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+                    strtext2 = "<span class='btnimg' onclick= 'return goToPageByNum2(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
                     PagingHTML2 += strtext2;
                 }
                 else {
-                    strtext2 = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+                    strtext2 = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
                     PagingHTML2 += strtext2;
                 }
                 if (totalPage2 > BlockSize2) {
                     if (pageNum2 > BlockSize2) {
-                        strtext2 = "<span class='btnimg' onclick= 'return selbeforeBlock2()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one2()'>" + strLang258 + "</span>";
+                        strtext2 = "<span class='btnimg' onclick= 'return selbeforeBlock2()'><img src='/images/sub/btn_prev.gif' ></span>";
                         PagingHTML2 += strtext2;
                     }
                     else {
-                        strtext2 = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one2()'>" + strLang258 + "</span>";
+                        strtext2 = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
                         PagingHTML2 += strtext2;
                     }
                 }
                 else {
-                    strtext2 = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one2()'>" + strLang258 + "</span>";
+                    strtext2 = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
                     PagingHTML2 += strtext2;
                 }
                 var MaxNum2;
@@ -3075,29 +3141,32 @@
                         PagingHTML2 += strtext2;
                     }
                 }
+                if (MaxNum2 == 0) {
+                	PagingHTML2 += "<span class=\"on\">" + 1 + "</span>";
+                }
                 if (totalPage2 > BlockSize2) {
                     if (totalPage2 >= parseInt(((parseInt((pageNum2 - 1) / BlockSize2) + 1) * BlockSize2) + 1)) {
-                        strtext2 = "<span class='ptxt' onclick='return selafterBlock_one2()'>" + strLang259 + "</span>";
-                        strtext2 = strtext2 + "<span class='btnimg' onclick='return selafterBlock2()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+                        strtext2 = "";
+                        strtext2 = strtext2 + "<span class='btnimg' onclick='return selafterBlock2()'><img src='/images/sub/btn_next.gif' ></span>";
                         PagingHTML2 += strtext2;
                     }
                     else {
-                        strtext2 = "<span class='ptxt' onclick='return selafterBlock_one2()'>" + strLang259 + "</span>";
-                        strtext2 = strtext2 + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+                        strtext2 = "";
+                        strtext2 = strtext2 + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
                         PagingHTML2 += strtext2;
                     }
                 }
                 else {
-                    strtext2 = "<span class='ptxt' onclick='return selafterBlock_one2()'>" + strLang259 + "</span>";
-                    strtext2 = strtext2 + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+                    strtext2 = "";
+                    strtext2 = strtext2 + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
                     PagingHTML2 += strtext2;
                 }
                 if (totalPage2 > 1 && totalPage2 != 1 && (totalPage2 != pageNum2)) {
-                    strtext2 = "<span class='btnimg' onclick='return goToPageByNum2(" + totalPage2 + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+                    strtext2 = "<span class='btnimg' onclick='return goToPageByNum2(" + totalPage2 + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
                     PagingHTML2 += strtext2;
                 }
                 else {
-                    strtext2 = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+                    strtext2 = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
                     PagingHTML2 += strtext2;
                 }
                 PagingHTML2 += "</div>";
@@ -3188,6 +3257,36 @@
             		tab4.className = "tabon";
             	}
             }
+            
+	        function setOrganListType(pListType) {
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/setListType.do",
+	        		async : false,
+	        		data : {
+	        			listType : pListType
+	        		},
+	        		success : function(result) {
+	        			
+	        		}
+	        		
+	        	})
+	        }
+	        
+	        function getOrganListType() {
+	        	var organListType = "TXT";
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		url : "/ezOrgan/getListType.do",
+	        		async : false,
+	        		success : function(result) {
+	        			organListType = result;
+	        		}
+	        	})
+	        	return organListType;
+	        }
 	    </script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -3256,11 +3355,16 @@
 		  </LISTVIEWDATA>
 		</xml>
 	    <h1 id="h1Title"><spring:message code='ezEmail.t572' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 	    <table style="width:100%;">
 	        <tr>
 	            <td style="vertical-align: top;">
 	            	<div class="portlet_tabpart01" style="margin:0px;">
-	            		<div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px;">
+	            		<div class="portlet_tabpart01_top" id="tab1" style="margin-bottom:3px;">
 	            			<p id="orgTabButton">
 	            				<span onclick="orgTabButton_onClick()"><spring:message code='ezEmail.t591' /></span>
 	            			</p>
@@ -3292,9 +3396,9 @@
 	                <table id="TreeViewTD">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px;">
-	                                <div class="portlet_tabpart03_top" id="tab1" style="border: 0px solid #eaeaea;">
-	                                    <table style="margin-top: 3px; width: 100%;">
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                                <div class="portlet_tabpart03_top" id="tab1" style="border-bottom: 0px; height:26px;">
+	                                    <table style="margin-top: 4px; width: 100%;">
 	                                        <tr>
 	                                            <td>
 	                                                <div style="margin-left: 5px;">
@@ -3302,6 +3406,7 @@
 	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezEmail.t31' /></option>
 	                                                        <option value="description" usedefault="1"><spring:message code='ezEmail.t26' /></option>
 	                                                        <option value="title" usedefault="1"><spring:message code='ezEmail.t28' /></option>
+                                      		                <option value="extensionAttribute10" usedefault="1"><spring:message code='ezEmail.t281' /></option>
 	                                                        <option value="telephonenumber" usedefault="1"><spring:message code='ezEmail.t99000045' /></option>
 	                                                        <option value="mobile" usedefault="0"><spring:message code='ezEmail.t99000046' /></option>
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezEmail.t29' /></option>
@@ -3344,7 +3449,7 @@
 	                                                </th>
 	                                            </tr>
 	                                        </table>
-	                                        <div style="vertical-align: top; height: 410px; overflow: auto; width: 446px;" id="txtlist_Layer">
+	                                        <div style="vertical-align: top; height: 394px; overflow: auto; width: 446px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
 	                                                    <td style="width: 150px;color:#333;background-color: #f8f8fa"><spring:message code='ezEmail.t31' /></td>
@@ -3361,7 +3466,7 @@
 	                                                </tr>
 	                                            </table>
 	                                        </div>
-	                                        <div style="vertical-align: top; text-align: center; height: 410px; overflow: auto; display: none; width: 446px;" id="DeptUserImgList"></div>
+	                                        <div style="vertical-align: top; text-align: center; height: 394px; overflow: auto; display: none; width: 446px;" id="DeptUserImgList"></div>
 	                                        <div id="tblPageRayer2"  style="text-align:center;"></div>
 	                                	</td>
 	                                </tr>
@@ -3375,9 +3480,9 @@
 	                            <table style="width: 100%;">
 	                                <tr>
 	                                    <td id="AddrSearch">
-	                                        <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px;">
-	                                            <div class="portlet_tabpart03_top" id="Div1" style="border: 0px solid #eaeaea;">
-	                                                <table style="margin-top: 3px; width: 100%;">
+	                                        <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                                            <div class="portlet_tabpart03_top" id="Div1" style="border-bottom: 0px; height:26px;">
+	                                                <table style="margin-top: 4px; width: 100%;">
 	                                                    <tr>
 	                                                        <td>
 	                                                            <div style="margin-left: 5px;">
@@ -3421,9 +3526,9 @@
 	                                <span id="addressFolderName" style="font-weight: normal;"></span>
 	                                -[<span id="addressFolderCnt" style="color: #017BEC;"></span>]
 	                            </div>
-	                            <div style="width: 446px; height: 410px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea" id="AddressListView" class="border_gray">
+	                            <div style="width: 446px; height: 395px; overflow: auto; background-color: #ffffff; border-bottom:0px; border-top: 1px solid #eaeaea" id="AddressListView" class="border_gray">
 	                            </div>
-	                            <div id="tblPageRayer" style="left: 446px; vertical-align: middle; border: 1px solid #ddd; border-top: 0px; height: 32px;"></div>
+	                            <div id="tblPageRayer" style="left: 446px; vertical-align: middle; border: 1px solid #ddd; border-top: 0px; width:auto !important"></div>
 	                            <div id="tblpage" style="display: none; padding-top: 2px; text-align: center; vertical-align: middle; left: 446px; border: 1px solid #ddd; border-top: 0px; height: 27px;">
 	                                <spring:message code='ezEmail.t588' /><span style="color: #017BEC; font-weight: bold;" id="totalcount"></span>
 	                                <spring:message code='ezEmail.t589' /><span id="td_Previous" onclick="pagemove(-1)"><img src="/images/kr/cm/btn_prev.gif"
@@ -3443,9 +3548,9 @@
 	                <table id="ListViewDLTD" style="display: none">
 	                    <tr>
 	                        <td>
-	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px;">
-	                                <div class="portlet_tabpart03_top" id="Div2" style="border: 0px solid #eaeaea;">
-	                                    <table style="margin-top: 3px; width: 100%;">
+	                            <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
+	                                <div class="portlet_tabpart03_top" id="Div2" style="border-bottom: 0px; height:26px;">
+	                                    <table style="margin-top: 4px; width: 100%;">
 	                                        <tr>
 	                                            <td id="dlmember" style="display: none">
 	                                                <a href="#" class="imgbtn" style="float: right; margin-right: 5px;"><span onclick="dlmember_click()">
@@ -3455,7 +3560,7 @@
 	                                    </table>
 	                                </div>
 	                            </div>
-	                            <div style="width: 668px; height: 473px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
+	                            <div style="width: 668px; height: 474px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -3464,17 +3569,17 @@
 	                    <tr>
 	                        <td>
 	                            <div id="ManualView" style="HEIGHT: 504px; width: 667px;" class="box">
-	                                <table class="content">
+	                                <table class="content" style="margin:5px">
 	                                    <tr>
 	                                        <th><spring:message code='ezEmail.t31' /></th>
 	                                        <td>
-	                                            <input type="text" id="emailname" style="WIDTH: 99%; ime-mode: active; box-sizing: border-box; -moz-box-sizing: border-box;">
+	                                            <input type="text" id="emailname" style="WIDTH: 100%; ime-mode: active; box-sizing: border-box; -moz-box-sizing: border-box;">
 	                                        </td>
 	                                    </tr>
 	                                    <tr>
 	                                        <th><spring:message code='ezEmail.t35' /></th>
 	                                        <td>
-	                                            <input type="text" id="emailaddr" style="WIDTH: 99%; ime-mode: inactive; box-sizing: border-box; -moz-box-sizing: border-box;" onkeyup="return on_keydown()">
+	                                            <input type="text" id="emailaddr" style="WIDTH: 100%; ime-mode: inactive; box-sizing: border-box; -moz-box-sizing: border-box;" onkeyup="return on_keydown()">
 	                                        </td>
 	                                    </tr>
 	                                </table>
@@ -3485,11 +3590,11 @@
 	                </table>
 	            </td>
 	            <td style="vertical-align: top;">
-	                <table id="listType1">
+	                <table id="listType1" style="margin-top:1px;">
 	                    <tr id="ListMsgTo">
 	                        <td style="width: 30px; text-align: center;">
 	                            <img src="../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
-	                                style="cursor: pointer;" onclick="InsertReceiver(ListViewMsgTo)"><br>
+	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgTo)"><br>
 	                            <img src="../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
 	                        </td>
@@ -3506,7 +3611,7 @@
 	                        <td style="width: 30px; text-align: center;">
 	                            <br />
 	                            <img src="../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
-	                                style="cursor: pointer;" onclick="InsertReceiver(ListViewMsgCC)"><br>
+	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgCC)"><br>
 	                            <img src="../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgCC)">
 	                        </td>
@@ -3524,7 +3629,7 @@
 	                        <td style="width: 30px; text-align: center;">
 	                            <br />
 	                            <img src="../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0"
-	                                style="cursor: pointer;" onclick="InsertReceiver(ListViewMsgBCC)"><br>
+	                                style="cursor: pointer;margin-top:22px" onclick="InsertReceiver(ListViewMsgBCC)"><br>
 	                            <img src="../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0"
 	                                style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgBCC)">
 	                        </td>
@@ -3544,9 +3649,8 @@
 	    </table>
 	    <table style="width: 100%; text-align: center;">
 	        <tr>
-	            <td class="btnposition btnpositionNew" style="text-align: center;background-color: white;border-top:0px">
+	            <td class="btnposition btnpositionNew" style="text-align: center;">
 	                <a class="imgbtn" onclick="confirm_onClick()" id="cmd_ok"><span><spring:message code='ezEmail.t599' /></span></a>
-	                <a class="imgbtn" onclick="window.close()"><span><spring:message code='ezEmail.t600' /></span></a>
 	            </td>
 	        </tr>
 	    </table>

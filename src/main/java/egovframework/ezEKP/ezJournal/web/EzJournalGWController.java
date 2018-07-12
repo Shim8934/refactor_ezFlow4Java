@@ -71,7 +71,7 @@ public class EzJournalGWController {
 
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
-
+	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 
@@ -98,7 +98,7 @@ public class EzJournalGWController {
 			ArrayList<String> typeList = new ArrayList<String>();
 			for (int i = 5; i < 11; i++) {
 				String num = "";
-				if (i<10) {
+				if (i < 10) {
 					num= "0" + i;
 				}else{
 					num = i + "";
@@ -137,7 +137,6 @@ public class EzJournalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			String companyId = request.getParameter("companyId");
-			
 			LOGGER.debug("companyId : " + companyId);
 			
 			ezJournalService.deleteJournaltype(companyId, info.getTenantId());
@@ -177,9 +176,9 @@ public class EzJournalGWController {
 			}
 			
 			LOGGER.debug("companyId : " + companyId);
-			
+
 			List<JournaltypeVO> typeList = ezJournalService.getJournaltypeList(companyId, info.getTenantId(), used);
-			
+	
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", typeList);
@@ -188,7 +187,7 @@ public class EzJournalGWController {
 			result.put("status", "error");
 			result.put("data", "");
 		}
-		
+
 		LOGGER.debug("G/W JOURNAL [GET /rest/ezjournal/types] ended.");
 		
 		return result;
@@ -380,7 +379,10 @@ public class EzJournalGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String companyId = info.getCompanyId();
+			String companyId = request.getParameter("companyId");
+			if (companyId == null || companyId.equals("")) {
+				companyId = info.getCompanyId();
+			}
 			
 			LOGGER.debug("companyId : " + companyId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
@@ -549,6 +551,7 @@ public class EzJournalGWController {
 			}
 			param.put("tenantId", info.getTenantId());
 			param.put("lang", lang);
+			param.put("offset", commonUtil.getMinuteUTC(info.getOffSet()));
 			
 			List<JournalVO> journalList = ezJournalService.getJournalList(param);
 			result.put("data", journalList);
@@ -584,6 +587,7 @@ public class EzJournalGWController {
 				param.put(key, request.getParameter(key));
 			}
 			param.put("tenantId", info.getTenantId());
+			param.put("offset", commonUtil.getMinuteUTC(info.getOffSet()));
 			String totalCount = ezJournalService.getTotalListCount(param);
 			
 			result.put("data", totalCount);
@@ -684,12 +688,14 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			/*
 			String viewDate = "";
 			if (request.getParameter("viewDate") != null) {
 				viewDate = request.getParameter("viewDate");
 			}
+			*/
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			JournalVO journal = ezJournalService.getJournal(journalId, userId, viewDate, info.getTenantId(),lang);
+			JournalVO journal = ezJournalService.getJournal(journalId, userId, info.getTenantId(), lang, info.getOffSet());
 			
 			if (journal.getFileList().size() > 0) {
 				List<JournalFileVO> fileList = journal.getFileList();
@@ -822,19 +828,19 @@ public class EzJournalGWController {
 		
 		Gson gson = new Gson();
 		JSONObject result = new JSONObject();
-		
+	
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String journalIdArray = request.getParameter("journalIdList").toString();
-			String viewDate = request.getParameter("viewDate");
+//			String viewDate = request.getParameter("viewDate");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
+		
 			List<String> journalIdList = gson.fromJson(journalIdArray, new TypeToken<List<String>>(){}.getType());
-			
+		
 			LOGGER.debug("journalIdList : " + journalIdList);
-			
-			ezJournalService.saveJournalViewInfo(journalIdList, viewDate,info.getUserId(), info.getTenantId());
-			
+	
+			ezJournalService.saveJournalViewInfo(journalIdList, info.getUserId(), info.getTenantId());
+		
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", "");
@@ -1079,7 +1085,7 @@ public class EzJournalGWController {
 		try {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName,  userId);
 		
 		//	String mode = "";
 		//	if (request.getParameter("mode") != null || request.getParameter("mode").equals("")) {
@@ -1104,9 +1110,9 @@ public class EzJournalGWController {
 						
 						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
 						if(file.exists()){
-							file.delete();
-						}
+						file.delete();
 					}			
+				}
 				}
 			} else {
 				if (fileList.length() != 0) {
@@ -1212,7 +1218,7 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName,  userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			List<JournalReceiverVO> receiverList = ezJournalService.getReceiverList(journalId, startCount, listCnt, info.getTenantId(), lang);
+			List<JournalReceiverVO> receiverList = ezJournalService.getReceiverList(journalId, startCount, listCnt, info.getTenantId(), lang, info.getOffSet());
 		
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1273,7 +1279,7 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			List<ReceiverFavoriteVO> favoriteList = ezJournalService.getFavoriteList(userId, info.getTenantId(), info.getOffSet());
 			
 			result.put("status", "ok");
@@ -1397,7 +1403,6 @@ public class EzJournalGWController {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			LOGGER.debug("servername: " + serverName);
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			List<JournalReceiverVO> userList = ezJournalService.getFavoriteUserList(favoriteId, info.getTenantId(),lang);
@@ -1433,7 +1438,7 @@ public class EzJournalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			List<JournalReplyVO> replyList = ezJournalService.getJournalReplyList(journalId, userId, tenantId,lang);
+			List<JournalReplyVO> replyList = ezJournalService.getJournalReplyList(journalId, userId, tenantId, lang, info.getOffSet());
 			
 			result.put("data", replyList);
 			result.put("status", "ok");
@@ -1462,12 +1467,12 @@ public class EzJournalGWController {
 			String serverName = request.getHeader("x-user-host");
 			String userId = request.getParameter("userId");
 			String replyContent = request.getParameter("replyContent");
-			String replyDate = request.getParameter("replyDate");
+		//	String replyDate = request.getParameter("replyDate");
 		//	String journalTitle = request.getParameter("journalTitle");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			String journalWriter = ezJournalService.saveJorunalReply(journalId, userId, replyContent, replyDate, tenantId);
+			String journalWriter = ezJournalService.saveJorunalReply(journalId, userId, replyContent, tenantId);
 			
 			result.put("data", journalWriter);
 			result.put("status", "ok");
@@ -1625,8 +1630,9 @@ public class EzJournalGWController {
 			String listCnt = request.getParameter("listCnt");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			List<JournalReceiverVO> viewerList= ezJournalService.getJournalViewerList(journalId,startCount,listCnt, info.getTenantId(),lang);
+			List<JournalReceiverVO> viewerList= ezJournalService.getJournalViewerList(journalId, startCount, listCnt, info.getTenantId(), lang, info.getOffSet());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", viewerList);
@@ -1686,7 +1692,7 @@ public class EzJournalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			JournalAuthCheckVO journalAuth = ezJournalService.checkJournalAuth(userId, journalId, info.getTenantId());
-			
+		
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", journalAuth);
@@ -1786,18 +1792,21 @@ public class EzJournalGWController {
 			String key = request.getParameter("key");
 			String value = request.getParameter("value");
 			String companyId = request.getParameter("companyId");
+			String curPage = request.getParameter("curPage");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			if (companyId.equals("") || companyId==null) {
+			if (companyId.equals("") || companyId == null) {
 				companyId = info.getCompanyId();
 			}
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-			List<JournalAuthorVO> userList = ezJournalService.getDeptUserList(info.getTenantId(), key, value, companyId, lang);
+			List<JournalAuthorVO> userList = ezJournalService.getDeptUserList(info.getTenantId(), key, value, companyId, lang, curPage);
+			int userCount = ezJournalService.getDeptUserListCount(info.getTenantId(), key, value, companyId, lang);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", userList);
+			result.put("totalCount", userCount);
 		} catch (Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");

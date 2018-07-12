@@ -51,7 +51,7 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 
-		        var height = parseInt(document.documentElement.clientHeight - 200);
+		        var height = parseInt(document.documentElement.clientHeight - 215);
 
 		        document.getElementById("list").style.height = height + "px";
 		        if (changeTab == "taskre") {
@@ -139,7 +139,8 @@
 		        
 	        	feature = GetOpenPosition(790, 810);
 	        	
-                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatcount + "&date=" + date, "", "height = 810px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	        	/*2018-05-18 구해안 윈도우 창 크기 개선*/
+                window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatcount + "&date=" + date, "", "height = 820px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 	
 		    function WriteTask() {
@@ -169,25 +170,25 @@
 			    var totalPage = totalpage;
 			    var pageNum = currentpage;
 			    if (totalPage > 1 && pageNum != 1) {
-			        strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+			        strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>"
 			        PagingHTML += strtext;
 			    }
 			    else {
-			        strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+			        strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>"
 			        PagingHTML += strtext;
 			    }
 			    if (totalPage > BlockSize) {
 			        if (pageNum > BlockSize) {
-			            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + "<spring:message code='ezTask.t997' />" + "</span>";
+			            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 			            PagingHTML += strtext;
 			        }
 			        else {
-			            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + "<spring:message code='ezTask.t997' />" + "</span>";
+			            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 			            PagingHTML += strtext;
 			        }
 			    }
 			    else {
-			        strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + "<spring:message code='ezTask.t997' />" + "</span>";
+			        strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 			        PagingHTML += strtext;
 			    }
 			    var MaxNum;
@@ -216,27 +217,27 @@
 		        
 			    if (totalPage > BlockSize) {
 			        if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-			            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + "<spring:message code='ezTask.t998' />" + "</span>";
-			            strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+			            strtext = "";
+			            strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 			            PagingHTML += strtext;
 			        }
 			        else {
-			            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + "<spring:message code='ezTask.t998' />" + "</span>";
-			            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+			            strtext = "";
+			            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 			            PagingHTML += strtext;
 			        }
 			    }
 			    else {
-			        strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + "<spring:message code='ezTask.t998' />" + "</span>";
-			        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+			        strtext = "";
+			        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 			        PagingHTML += strtext;
 			    }
 			    if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-			        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+			        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 			        PagingHTML += strtext;
 			    }
 			    else {
-			        strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+			        strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 			        PagingHTML += strtext;
 			    }
 			    PagingHTML += "</div>";
@@ -334,7 +335,7 @@
 			    		 progress_th.innerHTML = "";
 			    	 }
 			    	 else {
-			    		 column_prg.style.width = "110px";
+			    		 column_prg.style.width = "130px";
 			    		 progress_th.innerHTML = "<spring:message code='ezTask.t120' />";
 			    	 }
 			    }
@@ -457,7 +458,7 @@
 				        tr.cells[7].appendChild(div);
 				        
 				        if (type !== "3") {			        	
-				    		column_prg.style.width = "110px";
+				    		column_prg.style.width = "130px";
 				    		progress_th.innerHTML = "<spring:message code='ezTask.t120' />";
 				        	var completerate = SelectSingleNodeValue(node, "COMPLETERATE");
 					        var span = document.createElement("SPAN");
@@ -929,8 +930,8 @@
 		          <input name="searchCheck" id="Radio2" type="radio" value="title" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio2" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t118' /></label>
 		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t2005' /></label>
 				  &nbsp;
-				  <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align: top" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		          <a href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onClick="search()"></a>
+				  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+		          <a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
 		    </span>
 		</h1>
 		
@@ -944,8 +945,8 @@
 		<br />
 		<div id="mainmenu">
 			<ul>
+				<!-- 2018-05-24 구해안 이미지 이동 -->
 				<li><span id="pn_img" onClick="WriteTask()"><spring:message code='ezTask.t113' /></span></li>
-				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 				<li><span onClick="DeleteTask()"><spring:message code='ezTask.t115' /></span></li>
 				<li><span onClick="RefreshView()"><spring:message code='ezTask.t116' /></span></li>
 
@@ -978,34 +979,35 @@
 			<tr>
 				<td style="WIDTH: 100%;HEIGHT: 100%;vertical-align:top">
 					<%-- 2018-04-24 김민성 - 업무명, 메모 길이 조절  --%>
+					<!-- 2018-05-24 구해안 - 업무구분,완료율,시작일,종료일 사이간격 띄우기 -->
 					<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed;">
 						<col style ="width:30px;">
 						<col style ="width:50px;">
 						<col style ="width:20px;">
 						<col style ="width:100px;">
 						<c:if test="${useTodoMemo == 'YES'}">
-							<col style = "width:100%;">
+							<col style = "width:80%;">
 							<col style ="width:30px;">
-							<col style ="width:30%;">
+							<col style ="width:25%;">
 							<%-- <col >
 							<col style ="width:50px;">
 							<col style ="width:140px;"> --%>
 						</c:if>
 						<c:if test="${useTodoMemo == 'NO'}">
-							<col style = "width:100%;">
+							<col style = "width:80%;">
 							<col style = "width:30px;">
-							<col style = "width:30%;">
+							<col style = "width:25%;">
 							<%-- <col >
 							<col style ="width:50px;">
 							<col style ="width:30px;"> --%>
 						</c:if>
-		                <col style ="width:100px;">
+		                <col style ="width:120px;">
 						<col style ="width:130px;" id="col_progress">
-						<col style ="width:100px;">
-						<col style ="width:100px;">
+						<col style ="width:120px;">
+						<col style ="width:120px;">
 						<tr>
-							<th ><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
-							<th  style="text-align:center;"><spring:message code='ezTask.t156'/></th>
+							<th style="text-align:center"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding: 0px; margin-top: 0px; margin: 0px; vertical-align:middle;"/></th>
+							<th style="text-align:center;"><img src="/images/ImgIcon/view-importance.gif"></th>
 							<th ><img src="/images/newAttach.gif"></th>
 							<th ><spring:message code='ezTask.t2005' /></th>
 							<th ><spring:message code='ezTask.t118' /></th>
@@ -1016,20 +1018,22 @@
 							<c:if test="${useTodoMemo == 'NO'}">
 								<th ></th>
 							</c:if>
-		                    <th  style="text-align:center;"><spring:message code='ezTask.t2003'/></th>		                    
-							<th id="_thprogress"  style="text-align:center;"><spring:message code='ezTask.t120' /></th>							
-							<th  style="text-align:center;"><spring:message code='ezTask.t121'/></th>
-							<th  style="text-align:center;"><spring:message code='ezTask.t9002'/></th>
+		                    <!-- 2018-05-16 구해안 업무구분과 완료율 간격 조정 -->
+		                    <!-- 18-05-24 김민성 - 중요도 이미지로 수정 -->
+		                    <th style="padding-left:14px"><spring:message code='ezTask.t2003'/></th>		                    
+							<th id="_thprogress"  style="text-align:center;padding-right: 12px;"><spring:message code='ezTask.t120' /></th>						
+							<th style="text-align:center;"><spring:message code='ezTask.t121'/></th>
+							<th style="text-align:center;"><spring:message code='ezTask.t9002'/></th>
 						</tr>
 						<tr class="row_body" id="row_body" style="display:none;" startdate="" onclick="select_row(this)">
-							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 		                    <td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;padding-left: 15px;" ondblclick="ReadTask(this)"></td>							
+							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>							
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)" id="_tdprogress"></td>							
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>

@@ -11,6 +11,7 @@
     <script type="text/javascript">
         var pMod = "${mode}";
         var ItemList = "${itemList}";
+        
         function btn_OK() {
             if (trim_Cross(txt_OpinionContent.value) == "") {
                 alert("<spring:message code='ezBoard.t999067'/>");
@@ -42,6 +43,21 @@
                 } catch (e) {
 
                 }
+                
+		        var applyCount = "0";
+		        
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/getApplyCount.do",
+					success: function(text){
+						applyCount = text;
+					}     			
+				});
+		        
+		       	$(window.opener.parent.frames['left'].document.getElementById("applyCount")).text("(" + applyCount + ")");
+                
             }
         }
         function btn_close() {
@@ -51,11 +67,15 @@
 </head>
 <body class="popup">
     <h1><spring:message code='ezBoard.t999010'/></h1>
+    <div id="close">
+        <ul>
+            <li><span onclick="btn_close()"></span></li>
+        </ul>
+    </div>
     <h2 style="font-weight: normal">▒&nbsp;<spring:message code='ezBoard.t999011'/></h2>
     <textarea id="txt_OpinionContent" name="txt_OpinionContent" class="textarea" style="Width: 100%; Height: 150px; box-sizing: border-box; -moz-box-sizing: border-box;"></textarea>
     <div class="btnposition btnpositionNew">
         <a class="imgbtn" ><span onclick="btn_OK()"><spring:message code='ezBoard.t14'/></span></a>
-        <a class="imgbtn" ><span onclick="btn_close()"><spring:message code='ezBoard.t12'/></span></a>
     </div>
 </body>
 </html>

@@ -66,7 +66,7 @@ public interface EzPersonalAdminService {
 
 	void setEmpMonth(String type, String userID, String deptID, String term, LoginVO userInfo) throws Exception;
 
-	void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo) throws Exception;
+	void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo, String url) throws Exception;
 
 	void deleteSlider(String sliderID, int tenantID) throws Exception;
 

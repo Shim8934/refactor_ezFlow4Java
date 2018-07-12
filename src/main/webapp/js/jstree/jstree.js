@@ -1624,7 +1624,7 @@
 								i, j, c, e,
 								tmp = {
 									id			: tid,
-									text		: " "+d.text.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "") || '',
+									text		: d.text.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "") || '',
 									icon		: d.icon !== undefined ? d.icon : true,
 									parent		: p,
 									parents		: ps,

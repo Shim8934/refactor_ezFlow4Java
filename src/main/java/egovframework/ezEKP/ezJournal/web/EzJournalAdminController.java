@@ -7,7 +7,6 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -626,17 +624,20 @@ public class EzJournalAdminController {
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		String key = request.getParameter("key");
-		param.put("key",key );
+		param.put("key", key);
 		param.put("value", request.getParameter("value"));
 		param.put("userId", userInfo.getId());
 		param.put("companyId", request.getParameter("companyId"));
-		logger.debug(request.getParameter("key"));
-		logger.debug(request.getParameter("value"));
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users", param, request,"get",null);
+		param.put("curPage", request.getParameter("curPage"));
+
+		logger.debug("key : " + request.getParameter("key"));
+		logger.debug("value : " + request.getParameter("value"));
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users", param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		if (status.equals("ok")) {		
 			JSONArray userList = (JSONArray) resultBody.get("data");
-			
+			model.addAttribute("listType", request.getParameter("listType"));
 			model.addAttribute("userList", userList);
 			
 			String keyword = "";
@@ -654,6 +655,8 @@ public class EzJournalAdminController {
 			}
 			model.addAttribute("keyword",keyword);
 			model.addAttribute("userCount",userCount);
+			model.addAttribute("key", key);
+			model.addAttribute("totalCount", resultBody.get("totalCount"));
 		}
 		
 		logger.debug("userList ended");

@@ -2821,7 +2821,9 @@ function getNodeText(node) {
         result = node.text;
     }
     else if (window.DOMParser) {
-        result = node.textContent;
+    	if(node != null) {
+    		result = node.textContent;
+    	}
     }
     return result;
 }

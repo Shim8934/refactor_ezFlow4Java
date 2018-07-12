@@ -805,6 +805,10 @@
 		        OpenInformationUI_Complete();
 		    }
 		</script>
+		<style>
+			#mainmenu ul li {float:right !important}
+			#mainmenu ul li span {height:13px !important; background: none !important; margin-top:2px !important}
+		</style>
 	</head>
     <body class="popup">
         <div id="menu">
@@ -814,7 +818,7 @@
         </div>
         <div id="close">
             <ul>
-                <li><span id="btnClose" onClick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
+                <li><span id="btnClose" onClick="return btnClose_onclick()"></span></li>
             </ul>
         </div>
         <div class="portlet_tabpart01">

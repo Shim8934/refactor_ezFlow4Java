@@ -8,6 +8,25 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
+		<style>
+			.disableSelIE {
+				background: none;
+				background-Color: rgba(240, 240, 240, 1);
+	        	cursor: default;
+			}
+			.disableSelCH {
+				background: none;
+				background-Color: #ebebe4;
+	        	cursor: default;			
+			}
+			select {
+				font-size: 13px;
+				vertical-align: middle;
+				text-align: center;
+				height: 24px;
+				cursor: pointer;
+			}
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/datepicker.htc.js"></script>
@@ -29,11 +48,10 @@
 	        var pSelRes2 = "<c:out value = '${pSelRes2}' />";
 	        var StartDateTime = "<c:out value = '${startDate}' />";
 	        var EndDateTime = "<c:out value = '${endDate}' />";
-	            
+	        var agent = window.navigator.userAgent;
+	        
 	        window.onload = function () {
-	            //initdatepicker();
-	            //if (ExpireDays == "N") document.all.Makedate.style.display = "none";
-	
+	        	
 	            if ("${pState}" == 'PREV') {
 	                var pselType = document.getElementById('selType');
 	                for (var i = 0; i < pselType.options.length; i++) {
@@ -44,9 +62,10 @@
 				    }
 	                
 	                var selRes1 = document.getElementById('selRes1');
-
 	                if (pSelType == 3) {
 	                	selRes1.disabled = true;
+	                	//2018-07-11 김보미
+	                	selRes1.setAttribute("class", "disableSelCH");
 	                	document.getElementById('selRes2').disabled = true;
 	                } else {
 		                for (var i = 0; i < selRes1.options.length; i++) {
@@ -146,14 +165,28 @@
 	            poll_add.selRes2.value = "";
 	        }
 	
+	        /* 2018-06-05 홍승비 - 주관식 선택 시 우측 셀렉트박스 disable 처리 */
 	        function selType_onchange() {
+	        	var selRes1 = document.getElementById('selRes1');
+	        	
 	            if (poll_add.selType.selectedIndex == 1) {
 	                poll_add.selRes1.selectedIndex = 0;
 	                poll_add.selRes2.value = "";
-	                document.getElementById("selRes1").disabled = true;
+	                selRes1.disabled = true;
+	                if (agent.indexOf("Chrome") != -1) {
+	                	selRes1.classList.add("disableSelCH");
+	                } else {
+	                	selRes1.classList.add("disableSelIE");
+	                }
 	                document.getElementById("selRes2").disabled = true;
-	            } else {
-	                document.getElementById("selRes1").disabled = false;
+	            }
+	            else {
+	            	selRes1.disabled = false;
+	            	if (agent.indexOf("Chrome") != -1) {
+	                	selRes1.classList.remove("disableSelCH");
+	                } else {
+	                	selRes1.classList.remove("disableSelIE");
+	                }
 	                document.getElementById("selRes2").disabled = false;
 	            }
 	        }
@@ -419,17 +452,17 @@
 	    	<table class="content" style="margin-top:12px">
 	            <tr>
 	                <th><spring:message code='ezCommunity.t599' /></th>
-	                <td style="padding:3px"><textarea id="pollSubject" name="pollSubject" style="width: 98%; height: 130px" runat="server" onkeyup="ismaxlength(this)" value = "${pSubject}"></textarea></td>
+	                <td style="padding:3px"><textarea id="pollSubject" name="pollSubject" style="width: 98%; height: 130px; resize:none;" runat="server" onkeyup="ismaxlength(this)" value = "${pSubject}"></textarea></td>
 	            </tr>
 	            <tr>
 	                <th><spring:message code='ezCommunity.t600' /></th>
 	                <td>
-	                    <select id="selType" name="selType" onchange="return selType_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 24px;cursor: pointer;">
+	                    <select id="selType" name="selType" onchange="return selType_onchange()">
 	                        <option value="1"><spring:message code='ezCommunity.t601' />
 	                        <%-- <option value="2"><spring:message code='ezCommunity.t602' /> --%>
 	                        <option value="3"><spring:message code='ezCommunity.t603' />
 	                    </select>
-	                    <select id="selRes1" name="selRes1" onchange="return selRes1_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 24px;cursor: pointer;">
+	                    <select id="selRes1" name="selRes1" onchange="return selRes1_onchange()">
 	                    	<option value="0"><spring:message code='ezCommunity.t604' />
 	                        <option value="1"><spring:message code='ezCommunity.t605' />
 	                        <option value="2"><spring:message code='ezCommunity.t606' />

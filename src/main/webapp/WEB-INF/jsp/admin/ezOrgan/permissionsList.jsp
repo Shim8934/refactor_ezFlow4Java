@@ -9,6 +9,15 @@
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">	    
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <style>
+	    .mainlist_free tr td:first-child {
+	    		padding-left:10px;
+	    		height:25px;
+	    }
+	    .mainlist_free tr th:first-child {
+	    		padding-left:10px;
+	    }
+	    </style>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
@@ -37,24 +46,32 @@
 	    	
 			$(document).ready(function() {
 			    if (${isAdmin}) {
-			        Permissions_List('c=1');
+			    	type = 'c=1';
+			        Permissions_List();
 			    } else {
 		            document.getElementById("Permission_sub1").style.display = "none";
 		            document.getElementById("1tab2").click();
-		            Permissions_List('k=1');			        
+		            type = 'k=1';
+		            Permissions_List();			        
 			    }
-			});			
+			});
+			
+			function searchList() {
+				CurPage = 1;
+				Permissions_List();
+			}
 			
 			function company_change() {
-				Permissions_List(type);
+				clearSearchVal();
+				Permissions_List();
 		    }
 		    
-			function Permissions_List(type) {		        
+			function Permissions_List() {
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/admin/ezOrgan/getPermissionsList.do",		        	
-		        	data : {companyID : document.getElementById("ListCompany").value, type : type, pageNum : CurPage, pageSize : pageSize},
+		        	data : {companyID : document.getElementById("ListCompany").value, type : type, pageNum : CurPage, pageSize : pageSize, searchType : document.getElementById("searchType").value, searchValue : document.getElementById("searchValue").value},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		if (result.xml != "") {
@@ -139,7 +156,7 @@
 		    function movePage(newPage) {
 		        if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
 		            CurPage = newPage;
-		            Permissions_List(type)
+		            Permissions_List();
 		        }
 		    }
 			
@@ -153,23 +170,23 @@
 		        var pageNum = CurPage;
 		        
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16' /></span>"
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' /></span>";
 		            PagingHTML += strtext;
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16' /></span>"
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' /></span>";
 		            PagingHTML += strtext;
 		        }
 		        
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16' /></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang28 + "</span>";
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' /></span>";
 		                PagingHTML += strtext;
 		            } else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16' /></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang28 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' /></span>";
 		                PagingHTML += strtext;
 		            }
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16' /></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang28 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' /></span>";
 		            PagingHTML += strtext;
 		        }
 		        
@@ -195,25 +212,25 @@
 		        
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang29 + "</span>";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16' /></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' /></span>";
 		                PagingHTML += strtext;
 		            } else {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang29 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16' /></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' /></span>";
 		                PagingHTML += strtext;
 		            }
 		        } else {
-		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang29 + "</span>";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16' /></span>";
+		            strtext = "";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' /></span>";
 		            PagingHTML += strtext;
 		        }
 		        
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16' /></span>";
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' /></span>";
 		            PagingHTML += strtext;
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16' /></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' /></span>";
 		            PagingHTML += strtext;
 		        }
 		        
@@ -271,7 +288,8 @@
 		        type = pSelectTab + "=1";
 
 		        CurPage = 1;
-		        Permissions_List(type);
+		        clearSearchVal();
+		        Permissions_List();
 		    }
 			
 			function Tab1_NewTabIni(pTabNodeID) {
@@ -306,12 +324,14 @@
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value, Params, "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(970, 580));
-		            Permissions_List(type);
+		            clearSearchVal();
+		            Permissions_List();
 		        }
 		    }
 		    
 		    function Permissions_Add_Complete() {
-		        Permissions_List(type);
+		    	clearSearchVal();
+		        Permissions_List();
 		    }
 
 		    function Permissions_Del(mode) {
@@ -366,7 +386,7 @@
 		            });
 		        }
 		        CurPage = 1;
-		        Permissions_List(type);
+		        Permissions_List();
 		    }
 		    
 		    function email_onclick() {
@@ -405,6 +425,10 @@
 		        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(MsgTo), "",
                         "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		    }
+		    
+		    function clearSearchVal () {
+		    	$("#searchValue").val("");
+		    }
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -413,31 +437,38 @@
 		    	<HEADERS>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t218' /></NAME>
-		        		<WIDTH>10%</WIDTH>
+		        		<WIDTH>15%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t67' /></NAME>
-		        		<WIDTH>20%</WIDTH>
+		        		<WIDTH>15%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t69' /></NAME>
 		        		<WIDTH>10%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t68' /></NAME>
-		        		<WIDTH>20%</WIDTH>
+		        		<WIDTH>15%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t91' /></NAME>
-		        		<WIDTH>20%</WIDTH>
+		        		<WIDTH>25%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t95' /></NAME>
 		        		<WIDTH>10%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t123' /></NAME>
 		        		<WIDTH>10%</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		    	</HEADERS>
 		  	</LISTVIEWDATA>
@@ -452,17 +483,35 @@
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 	            </select>
-		        <ul style="margin-top:15px">
+	            
+		        <ul style="margin-top:15px;">
 		            <li><span onClick="Permissions_Add()"><spring:message code='ezOrgan.t00007' /></span></li>
+		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="Permissions_Del('MOD')"><spring:message code='ezOrgan.t00008' /></span></li>
 		            <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li>
+		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="email_onclick()"><spring:message code='ezOrgan.t00010' /></span></li>
+		            
+		            <span style="float: left; font-weight: normal; color: black; clear:inherit;margin-left:1px">
+		            	<select id="searchType" style="width:80px;">
+							<option selected="" value="displayname"><spring:message code='ezOrgan.t67' /></option>
+							<option value="cn"><spring:message code='ezOrgan.t218' /></option>
+							<option value="title"><spring:message code='ezOrgan.t69' /></option>
+							<option value="description"><spring:message code='ezOrgan.t68' /></option>
+							<option value="mail"><spring:message code = 'ezOrgan.t91' /></option>
+							<option value="telephonenumber"><spring:message code='ezOrgan.t95' /></option>
+							<option value="company"><spring:message code= 'ezOrgan.t123' /></option>
+						</select>
+						
+						<input id="searchValue" onkeypress="if(event.keyCode==13) {searchList(); return false;}" onfocus="clearSearchVal();" style="height: 29px;border: 1px solid #cbcbcb; border-right:0px;">
+						<a href="#" style="float: right"><img src="/images/bsearch_new.gif" border="0" onclick="searchList()" style="height:29px;"></a>
+		            </span>
 		        </ul>
 		    </div>
 		    <script type="text/javascript">
 		        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");        
 		    </script>
-		    <div class="portlet_tabpart01" style="padding-bottom:3px">
+		    <div class="portlet_tabpart01" style="padding-bottom:3px; width:100%;">
 		        <div class="portlet_tabpart01_top" id="tab1">
 	                <p id="Permission_sub1"><span divname="c" id="1tab1"><spring:message code='ezOrgan.t291' /></span></p>
 	                <p id="Permission_sub2"><span divname="k" id="1tab2"><spring:message code='ezOrgan.t293' /></span></p>
@@ -476,13 +525,15 @@
 	                <c:if test="${approvalForDoc == 'Y'}">
 	                	<p id="Permission_sub10"><span divname="f" id="1tab10"><spring:message code='ezOrgan.lhj1' /></span></p>
 	                </c:if>
+	                	<p id="Permission_sub11"><span divname="wf" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
+	                <p id="Permission_sub12"><span divname="wa" id="1tab12">근태관리자</span></p>
 		        </div>
 		    </div>
 		
-		    <div class="listview" style="Width:100%; border-top:0px; margin-top:7px">
-		        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:445PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+		    <div class="listview" style="Width:100%;">
+		        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:540px; /* overflow-x: auto; */ BACKGROUND-COLOR: white; /* overflow-y:auto; */"></div>
 		    </div>
-		    <div id="tblPageRayer" style="text-align:center;margin-top:10px"></div>
+		    <div id="tblPageRayer" style="Width:100%;text-align:center;margin-top:10px"></div>
 		</form>         
 	</body>
 	<script type="text/javascript">

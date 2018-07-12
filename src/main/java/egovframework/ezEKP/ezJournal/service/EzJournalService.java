@@ -121,7 +121,17 @@ public interface EzJournalService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalAuthorVO> getDeptUserList (int tenantId, String key, String value,String companyId, String lang) throws Exception;
+	public List<JournalAuthorVO> getDeptUserList (int tenantId, String key, String value,String companyId, String lang, String curPage) throws Exception;
+	
+	/**
+	 * 해당부서의 사원수
+	 * @param tenantId
+	 * @param deptId
+	 * @return
+	 * @throws Exception
+	 */
+	public int getDeptUserListCount (int tenantId, String key, String value,String companyId, String lang) throws Exception;
+	
 
 	/**
 	 * 양식 상세정보
@@ -261,10 +271,11 @@ public interface EzJournalService {
 	 * @param journalId
 	 * @param userId 
 	 * @param tenantId
+	 * @param offset 
 	 * @return
 	 * @throws Exception
 	 */
-	public JournalVO getJournal(String journalId, String userId, String viewDate, int tenantId,String lang) throws Exception;
+	public JournalVO getJournal(String journalId, String userId, int tenantId,String lang, String offset) throws Exception;
 
 	/**
 	 * 일지 저장하기
@@ -333,32 +344,33 @@ public interface EzJournalService {
 	 * 수신자 리스트 가져오기
 	 * @param journalId
 	 * @param tenantId
+	 * @param offset 
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalReceiverVO> getReceiverList(String journalId, String startCount, String listCnt, int tenantId,String lang) throws Exception;
+	public List<JournalReceiverVO> getReceiverList(String journalId, String startCount, String listCnt, int tenantId,String lang, String offset) throws Exception;
 
 	/**
 	 * 업무일지 댓글 리스트
 	 * @param journalId
 	 * @param userId
 	 * @param tenantId
+	 * @param offset 
 	 * @return
 	 * @throws Exception
 	 */
-	public List<JournalReplyVO> getJournalReplyList(String journalId, String userId, int tenantId,String lang) throws Exception;
+	public List<JournalReplyVO> getJournalReplyList(String journalId, String userId, int tenantId,String lang, String offset) throws Exception;
 	
 	/**
 	 * 업무일지 댓글 저장
 	 * @param journalId
 	 * @param userId
 	 * @param replyContent
-	 * @param replyDate
 	 * @param tenantId
 	 * @return 
 	 * @throws Exception
 	 */
-	public String saveJorunalReply(String journalId, String userId, String replyContent, String replyDate, int tenantId) throws Exception;
+	public String saveJorunalReply(String journalId, String userId, String replyContent, int tenantId) throws Exception;
 	
 	/**
 	 * 업무일지 댓글 삭제
@@ -378,10 +390,11 @@ public interface EzJournalService {
 	 * @param listCnt 
 	 * @param startCount 
 	 * @param tenantId
+	 * @param offset 
 	 * @return 
 	 * @throws Exception
 	 */
-	public List<JournalReceiverVO> getJournalViewerList(String journalId, String startCount, String listCnt, int tenantId,String lang) throws Exception;
+	public List<JournalReceiverVO> getJournalViewerList(String journalId, String startCount, String listCnt, int tenantId,String lang, String offset) throws Exception;
 	
 	/**
 	 * 일지 조회자 몇명?
@@ -395,11 +408,10 @@ public interface EzJournalService {
 	/**
 	 * 일지 조회정보 입력
 	 * @param journalIdList
-	 * @param viewDate
 	 * @param userId
 	 * @param tenantId
 	 */
-	public void saveJournalViewInfo(List<String> journalIdList,String viewDate, String userId, int tenantId) throws Exception;
+	public void saveJournalViewInfo(List<String> journalIdList, String userId, int tenantId) throws Exception;
 
 	/**
 	 * 일지함 삭제

@@ -9,7 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
-		<link rel="stylesheet" href="/css/font-awesome-4.7.0/css/font-awesome.css">
+		<link rel="stylesheet" href="/css/font-awesome-5.0.10/css/fontawesome-all.css">
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
@@ -206,7 +206,8 @@
 				emoticonPanelClose();
 				optImgSearch();
 				addThumbnailEvent();
-				dateTimePickerSetting()
+				dateTimePickerSetting();
+// 				stopButtonPosition();
 				
 			}
 			
@@ -394,9 +395,10 @@
 			        
 			        stompClient.subscribe('/reply/finishVoteForQst' + qstId + "+" + tenantId, function (updatedInfo) {			       
 			        	var ret = JSON.parse(updatedInfo.body).result;
+			        	var brdId = "${brdId}";
 			        	
 			            if (ret == "OK") {							
-			            	document.location.href = "/ezPoll/pollVote.do?qstId=" + qstId;
+			            	document.location.href = "/ezPoll/pollVote.do?qstId=" + qstId + "&brdId=" + brdId;
 					    }
 				    });
 			        
@@ -933,17 +935,19 @@
 		    
 		    function displayDetail(pQstID) {		    	
 		    	 var feature = GetOpenPosition(420, 438);
-		    	 window_open2 = window.open("/ezPoll/showUnJoinedUsersInfo.do?qstId=" + pQstID, "", "height=438px,width=395px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		    	 var target = "${question.target}";
+		    	 window_open2 = window.open("/ezPoll/showUnJoinedUsersInfo.do?qstId=" + pQstID + "&target=" + target, "", "height=438px,width=395px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 		    
 		    function displayVotedUser(pQstID, pOptId) {		    		    
 		    	var feature = GetOpenPosition(420, 438);
+		    	var target = "${question.target}";
 		    	
  		    	if (window_open3 != null && !window_open3.closed) {		    		
  		    		window_open3.close();
 		    	}
 		    	
-		    	window_open3 = window.open("/ezPoll/showVotedUsersInfo.do?qstId=" + pQstID + "&optId=" + pOptId, "", "height=384px,width=390px, status = no, toolbar=no, menubar=no,location=no, resizable=no" + feature);
+		    	window_open3 = window.open("/ezPoll/showVotedUsersInfo.do?qstId=" + pQstID + "&optId=" + pOptId  + "&target=" + target, "", "height=384px,width=390px, status = no, toolbar=no, menubar=no,location=no, resizable=no" + feature);
 		    }
 		    
 		    function finishVote() {	    	
@@ -2625,9 +2629,9 @@
 		  	//썸네일 이미지에 레이어 팝업 기능 관련
 		    var tempTimer;
 		    function addThumbnailEvent(){
-		  		$(document).on("mouseover",".thumbnail",function(e){
-		    		thumbnailImgMouseOver(e);
-		    	}).on("click", ".thumbCloseBtn", function(e){
+		  		$(document)
+// 		  		.on("mouseover",".thumbnail",function(e){thumbnailImgMouseOver(e);})
+		    	.on("click", ".thumbCloseBtn", function(e){
 					toggleImgPopupBox(e);
 				}).on("click", ".thumbnail", function(e){
 					toggleImgPopupBox(e);
@@ -2761,6 +2765,12 @@
 		  		var imgPopup = $("#imgPopup");
 		  		
 		  		$("#imgPopupDiv, #imgPopupBox, #imgPopup").attr("style","");
+		  		
+		  		//마우스 오버 이벤트 없애는 작업과 함께 이미지 뷰어가 보이는 상태에서 다른 그림 선택했을 때 처리하기 위해 수정. 2018-06-19 홍대표
+		  		if(imgPopup.attr("_filename") != e.target.getAttribute("_filename") && e.target.id !== "thumbCloseBtn"){
+		  			thumbnailImgMouseOver(e);
+		  			return;
+		  		}
 		  		
 		  		if(imgPopup.attr("src")){
 			  		imgPopupBox.removeClass("imgPopupBox").addClass("imgPopupBoxOff");
@@ -3099,6 +3109,26 @@
 		        w.focus();
 		  	}
 		  	
+		  	function stopButtonPosition(){
+		  		var stopBtnDiv = $("#stopButton");
+		  		var stopBtnToggle = $("#stopBtnToggle");
+		  		var posFromTop = 0.95;
+		  		if(stopBtnDiv){
+		  			stopBtnDiv.css({"top":(window.innerHeight - stopBtnDiv.outerHeight()) * posFromTop});
+		  			stopBtnToggle.css({"top":(window.innerHeight - stopBtnDiv.outerHeight()) * posFromTop});
+		  			
+		  			$(window).scroll(function(){
+			  			var stopBtn_TopOffset = (window.innerHeight - stopBtnDiv.outerHeight()) * posFromTop;
+			    		stopBtnDiv.css({"top":$(this).scrollTop() + stopBtn_TopOffset});
+		  				stopBtnToggle.css({"top":$(this).scrollTop() + stopBtn_TopOffset});
+	    			});
+		  			
+		  			$("#stopBtnToggle").click(function(){
+		  				stopBtnDiv.toggle();
+		  			});
+		  		}
+		  	}
+		  	
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${question.content}</xmp>
@@ -3286,6 +3316,11 @@
 								</c:choose>
 					  		</ul>
 						</div>
+						<c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
+							<div id="stopButtonDiv" class="stopButtonDiv" onclick="finishVote()">
+								<i class="far fa-stop-circle" title="<spring:message code = 'ezPoll.t124'/>"></i>
+							</div>
+						</c:if>	
 					</div>
 					
 					
@@ -3566,5 +3601,11 @@
 				<img id="imgPopup" class="imgPopup">
    			</div>
    		</div>
+<%--    		<c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}"> --%>
+<!--    			<div id="stopBtnToggle" class="stopBtnToggle"></div> -->
+<!-- 	   		<div id="stopButton" class="stopButton" onclick="finishVote()"> -->
+<%-- 	   			<i class="far fa-stop-circle" style="margin: 7.5px;" title="<spring:message code = 'ezPoll.t124'/>"></i> --%>
+<!-- 			</div> -->
+<%-- 		</c:if> --%>
 	</body>
 </html>

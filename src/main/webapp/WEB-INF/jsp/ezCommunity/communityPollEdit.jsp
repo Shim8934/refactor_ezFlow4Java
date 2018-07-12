@@ -8,6 +8,25 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
+		<style>
+			.disableSelIE {
+				background: none;
+				background-Color: rgba(240, 240, 240, 1);
+	        	cursor: default;
+			}
+			.disableSelCH {
+				background: none;
+				background-Color: #ebebe4;
+	        	cursor: default;			
+			}
+			select {
+				font-size: 13px;
+				vertical-align: middle;
+				text-align: center;
+				height: 24px;
+				cursor: pointer;
+			}
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/datepicker.htc.js"></script>
@@ -21,11 +40,17 @@
 		<!-- time picker -->
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css"/>
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-		
-		
 		<script type="text/javascript">
+		
 			window.onload = function() {
-				
+				/* 2018-06-05 홍승비 - 날짜변경 선택 시 주관식 우측 셀렉트박스 disable 처리 */
+				if (document.getElementById("selType").value == 3) {
+					if (window.navigator.userAgent.indexOf("Chrome") != -1) {
+			      		document.getElementById("selRes1").classList.add("disableSelCH");
+		          	} else {
+		          		document.getElementById("selRes1").classList.add("disableSelIE");
+			        }
+				}
 			}
 			
 			$(function () {
@@ -143,9 +168,10 @@
 			}
 			
 			function poll_send()  {
-				if(form_check() == false) {
+				if (form_check() == false) {
 					return;
-				} else {
+				}
+				else if (confirm("<spring:message code='ezAddress.t337'/>")) {
 					poll_edit.submit();
 				}
 			}
@@ -328,12 +354,12 @@
 			<table class="content" style="margin-top:12px">
 				<tr>
 					<th><spring:message code='ezCommunity.t599' /></th>
-					<td style="padding:3px"><textarea name="pollSubject" style="width: 98%;height:130px;background-color: #fafafa" readonly><c:out value="${managerVO.pollSubject}" /></textarea></td>
+					<td style="padding:3px"><textarea name="pollSubject" style="width: 98%;height:130px;resize:none;background-color: #fafafa" readonly><c:out value="${managerVO.pollSubject}" /></textarea></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCommunity.t600' /></th>
 	      			<td>
-	      				<select id="selType" name="selType" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;" onChange="selTypeChange('${questionVO.answerType}');" disabled>	      				
+	      				<select id="selType" name="selType" onChange="selTypeChange('${questionVO.answerType}');" disabled>	      				
 	      					<c:choose>
 	      						<c:when test="${questionVO.answerType == '1' }">
 	      							<option value="1" selected><spring:message code='ezCommunity.t601' />
@@ -365,7 +391,7 @@
 	      					</c:choose>	      					
 	        			</select>
 	        			
-	        			<select id="selRes1" name="selRes1" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;" onChange="selResChange('${questionVO.answerViewType}');" disabled>
+	        			<select id="selRes1" name="selRes1" onChange="selResChange('${questionVO.answerViewType}');" disabled>
 	        				<c:choose>
 	        					<c:when test="${questionVO.answerViewType == '0' }">
 	        						<option value="0" selected><spring:message code='ezCommunity.t661' />

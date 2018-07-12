@@ -145,6 +145,7 @@
 		</xml>
 		
 		<h1><spring:message code="ezBoard.t64"/></h1>
+		<div style="max-width:800px;">
 		<table class="content">
 			<tr>
 	            <th><spring:message code="ezBoard.t92"/></th>
@@ -178,8 +179,8 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnpositionJsp">
 	        <a class="imgbtn"><span onclick="Save()"><spring:message code="ezBoard.t98"/></span></a>
-	    </div>
+	    </div></div>
 	</body>
 </html>

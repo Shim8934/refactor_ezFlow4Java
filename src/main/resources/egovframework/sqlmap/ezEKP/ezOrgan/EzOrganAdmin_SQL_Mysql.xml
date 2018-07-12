@@ -602,6 +602,7 @@
                     TENANT_ID
                 FROM TBL_USERMASTER 
                 WHERE  CN = #v_CN#
+                AND TENANT_ID = #v_TENANT_ID#
                  )
 		]]>
 	</insert>
@@ -1285,27 +1286,27 @@
 			('SL06', '011', '결재노티', '결재노티', '決済完了通知', '결재노티', '1', '결재알림시 사용', #companyID#, #tenantID#),
 			('ST01', '0  ', '재기안 의견유무', '재기안 의견유무', '재기안 의견유무', '재기안 의견유무', '1', '재기안시 반송의견 삭제 유/무( Y : 삭제 or N : 삭제안함 )', #companyID#, #tenantID#),
 			('ST01', '001', 'N', 'N', 'N', 'N', '1', '재기안시 반송의견 삭제 유/무( Y : 삭제 or N : 삭제안함 )', #companyID#, #tenantID#),
-			('SA04','0  ','결재처리상태','0','결재처리상태','결재처리상태',null,null, #companyID#,#tenantID#),
-            ('SA04','000','미결','1','기안처리하지 않은 문서','Not approved','決裁処理進行状況','审批处理状态', #companyID#,#tenantID#),
-            ('SA04','001','대기','1','대기','Waiting','待機','待机', #companyID#,#tenantID#),
-            ('SA04','002','진행','1','진행','In progress','進行','进行中', #companyID#,#tenantID#),
-            ('SA04','003','승인','1','승인','Approved','決裁','审批', #companyID#,#tenantID#),
-            ('SA04','004','반송','1','반송','Rejected','差し戻し','退回', #companyID#,#tenantID#),
-            ('SA04','005','보류','1','보류','Hold','保留','保存', #companyID#,#tenantID#),
-            ('SA04','006','회수','1','회수','Withdrew','引き戻し','回收', #companyID#,#tenantID#),
-            ('SA04','010','완료','1','완료','Completed','完了','完成', #companyID#,#tenantID#),
-            ('SA04','011','도착','1','도착','Arrived','到着','到达', #companyID#,#tenantID#),
-            ('SA04','012','미접수','1','지정','Designated','未受付','未接收', #companyID#,#tenantID#),
-            ('SA04','013','접수','1','접수','Received','受付','接收', #companyID#,#tenantID#),
-            ('SA04','014','배부','1','배부','Distributed','配付','发行', #companyID#,#tenantID#),
-            ('SA04','015','회송','1','회송','Returned','差し戻し','退回', #companyID#,#tenantID#),
-            ('SA04','016','접수','1','수신진행','Received','受信進行','进行接收', #companyID#,#tenantID#),
-            ('SA04','017','수신완료','1','수신완료','Completed(receipt)','受信完了','接收完成', #companyID#,#tenantID#),
-            ('SA04','018','발신','1','수신부서미접수','Sending','未受付','未接收', #companyID#,#tenantID#),
-            ('SA04','019','전송실패','1','전송실패','Sending failure','送信エラー','传输失败', #companyID#,#tenantID#),
-            ('SA04','020','수신','1','전송성공','Receipt','受信','接待', #companyID#,#tenantID#),
-            ('SA04','021','도달','1','도달(G중계)','Arrived','到達','到达', #companyID#,#tenantID#),
-            ('SA04','022','재요청','1','재발신요청','ReRequest','ジェヨチョン','再生', #companyID#,#tenantID#)
+			('SA04','0  ','결재처리상태','결재처리상태','결재처리상태',null,null,'0', #companyID#,#tenantID#),
+            ('SA04','000','미결','Not approved','決裁処理進行状況','审批处理状态','1','기안처리하지 않은 문서', #companyID#,#tenantID#),
+            ('SA04','001','대기','Waiting','待機','待机', '1','대기',#companyID#,#tenantID#),
+            ('SA04','002','진행','In progress','進行','进行中', '1','진행',#companyID#,#tenantID#),
+            ('SA04','003','승인','Approved','決裁','审批', '1','승인',#companyID#,#tenantID#),
+            ('SA04','004','반송','Rejected','差し戻し','退回', '1','반송',#companyID#,#tenantID#),
+            ('SA04','005','보류','Hold','保留','保存', '1','보류',#companyID#,#tenantID#),
+            ('SA04','006','회수','Withdrew','引き戻し','回收', '1','회수',#companyID#,#tenantID#),
+            ('SA04','010','완료','Completed','完了','完成','1','완료', #companyID#,#tenantID#),
+            ('SA04','011','도착','Arrived','到着','到达', '1','도착',#companyID#,#tenantID#),
+            ('SA04','012','미접수','Designated','未受付','未接收', '1','지정',#companyID#,#tenantID#),
+            ('SA04','013','접수','Received','受付','接收', '1','접수',#companyID#,#tenantID#),
+            ('SA04','014','배부','Distributed','配付','发行', '1','배부',#companyID#,#tenantID#),
+            ('SA04','015','회송','Returned','差し戻し','退回','1','회송',#companyID#,#tenantID#),
+            ('SA04','016','접수','Received','受信進行','进行接收', '1','수신진행',#companyID#,#tenantID#),
+            ('SA04','017','수신완료','Completed(receipt)','受信完了','接收完成', '1','수신완료',#companyID#,#tenantID#),
+            ('SA04','018','발신','Sending','未受付','未接收', '1','수신부서미접수',#companyID#,#tenantID#),
+            ('SA04','019','전송실패','Sending failure','送信エラー','传输失败','1','전송실패', #companyID#,#tenantID#),
+            ('SA04','020','수신','Receipt','受信','接待', '1','전송성공',#companyID#,#tenantID#),
+            ('SA04','021','도달','Arrived','到達','到达', '1','도달(G중계)',#companyID#,#tenantID#),
+            ('SA04','022','재요청','ReRequest','ジェヨチョン','再生', '1','재발신요청',#companyID#,#tenantID#)
       ]]>
     </insert>
     
@@ -2100,6 +2101,75 @@
                 (1,#companyID#,#companyName#,#companyName2#,'A00','1',0,0,1,365,'',null,0,0,' ',20,null,null,null,null,null,null,null,null,null,null,null,null,null,'0',#tenantID#)
       ]]>
     </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I20" parameterClass="Map">
+	    <![CDATA[
+	    	INSERT INTO
+	    		TBL_ATTITUDE_CONF
+	    			(COMPANY_ID, TENANT_ID, WORK_STARTTIME, WORK_ENDTIME, CLOSED_DAY, ATTITUDE_MOD_APPL, CLOSED_DATE_ATTITUDE, CONF_SET_DATE)
+	    	VALUES
+	    			(#companyID#, #tenantID#, '00:00', '09:00', '1,0,0,0,0,0,1', '1', '1', #nowDate#)
+	    ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I21" parameterClass="Map">
+    	<isEqual property="lang" compareValue="1">
+    		<![CDATA[
+		    	INSERT INTO
+		    		TBL_ATTITUDE_TYPE
+		    			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
+		    	VALUES
+		    			('A01', #companyID#, #tenantID#, '출근', 'inCom', '1', null, null, 1),
+		    			('A02', #companyID#, #tenantID#, '지각', 'late', '1', null, null, 2),
+		    			('A03', #companyID#, #tenantID#, '퇴근', 'outCom', '1', null, null, 3),
+		    			('A07', #companyID#, #tenantID#, '휴근', 'working Holiday', '1', null, null, 6),
+		    			('A04', #companyID#, #tenantID#, '외근', 'outside work', '1', null, null, 8),
+		    			('A06', #companyID#, #tenantID#, '외출', 'outing', '1', null, null, 6),
+		    			('A05', #companyID#, #tenantID#, '휴가', 'vacation', '1', null, null, 0),
+		    			('A09', #companyID#, #tenantID#, '출장', 'business trip', '1', null, null, 7),
+		    			('A10', #companyID#, #tenantID#, '파견', 'dispatch', '1', null, null, 7),
+		    			('A08', #companyID#, #tenantID#, '조퇴', 'early leave', '1', null, null, 5),
+		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', null, 'A05', 4),
+		    			('A11', #companyID#, #tenantID#, '연차', 'annual leave', '1', null, 'A05', 9),
+		    			('A12', #companyID#, #tenantID#, '오전반차', 'morning off', '1', null, 'A05', 4),
+		    			('A13', #companyID#, #tenantID#, '오후반차', 'afternoon off', '1', null, 'A05', 4),
+		    			('A14', #companyID#, #tenantID#, '공가', 'official leave', '1', null, 'A05', 9),
+		    			('A15', #companyID#, #tenantID#, '오전공가', 'morning official leave', '1', null, 'A05', 9),
+		    			('A16', #companyID#, #tenantID#, '오후공가', 'after official leave', '1', null, 'A05', 9),
+		    			('A18', #companyID#, #tenantID#, '산휴', 'maternity leave', '1', null, 'A05', 9),
+		    			('A19', #companyID#, #tenantID#, '경조', 'congratulation and condolence leave', '1', null, 'A05', 9),
+		    			('A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', null, 'A05', 9)
+		    ]]>
+    	</isEqual>
+    	<isEqual property="lang" compareValue="3">
+    	    <![CDATA[
+		    	INSERT INTO
+		    		TBL_ATTITUDE_TYPE
+		    			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
+		    	VALUES
+		    			('A01', #companyID#, #tenantID#, '출근', 'inCom', '1', null, null, 1),
+		    			('A02', #companyID#, #tenantID#, '지각', 'late', '1', null, null, 2),
+		    			('A03', #companyID#, #tenantID#, '퇴근', 'outCom', '1', null, null, 3),
+		    			('A07', #companyID#, #tenantID#, '휴근', 'working Holiday', '1', null, null, 6),
+		    			('A04', #companyID#, #tenantID#, '외근', 'outside work', '1', null, null, 8),
+		    			('A06', #companyID#, #tenantID#, '외출', 'outing', '1', null, null, 6),
+		    			('A05', #companyID#, #tenantID#, '휴가', 'vacation', '1', null, null, 0),
+		    			('A09', #companyID#, #tenantID#, '출장', 'business trip', '1', null, null, 7),
+		    			('A10', #companyID#, #tenantID#, '파견', 'dispatch', '1', null, null, 7),
+		    			('A08', #companyID#, #tenantID#, '조퇴', 'early leave', '1', null, null, 5),
+		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', null, 'A05', 4),
+		    			('A11', #companyID#, #tenantID#, '연차', 'annual leave', '1', null, 'A05', 9),
+		    			('A12', #companyID#, #tenantID#, '오전반차', 'morning off', '1', null, 'A05', 4),
+		    			('A13', #companyID#, #tenantID#, '오후반차', 'afternoon off', '1', null, 'A05', 4),
+		    			('A14', #companyID#, #tenantID#, '공가', 'official leave', '1', null, 'A05', 9),
+		    			('A15', #companyID#, #tenantID#, '오전공가', 'morning official leave', '1', null, 'A05', 9),
+		    			('A16', #companyID#, #tenantID#, '오후공가', 'after official leave', '1', null, 'A05', 9),
+		    			('A18', #companyID#, #tenantID#, '산휴', 'maternity leave', '1', null, 'A05', 9),
+		    			('A19', #companyID#, #tenantID#, '경조', 'congratulation and condolence leave', '1', null, 'A05', 9),
+		    			('A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', null, 'A05', 9)
+		    ]]>
+    	</isEqual>
+    </insert>
   
 	<delete id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[
@@ -2220,7 +2290,7 @@
        		AND
        			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
             AND 
-                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                      
+                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                      
        		AND
        			TENANT_ID = #v_TENANT_ID#	
       		ORDER BY
@@ -2367,12 +2437,36 @@
       		AND
       			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
             AND 
-                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                                  
+                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                  
       		AND
       			TENANT_ID = #v_TENANT_ID#	
       		AND
       			EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
 		]]>
+		
+		<isNotEmpty property="searchValue" prepend="AND">
+			<isEqual property="searchType" compareValue="cn">
+				cn LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="displayname">
+				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="title">
+				title LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="description">
+				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="mail">
+				mail LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="telephonenumber">
+				telephonenumber LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="company">
+				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+		</isNotEmpty>
 	</select>
 	
 	<!-- <procedure id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
@@ -2383,65 +2477,56 @@
 	
 	<select id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
 		<![CDATA[
-			            SELECT
-							CN, 
-            				CASE
-            					#v_LANGDATA#  
-                  			WHEN
-                  				'1'
-                  			THEN
-                  				DISPLAYNAME 
-                  			ELSE
-                  				DISPLAYNAME2   
-                  			END
-                  				AS DISPLAYNAME, 
-            				CASE
-            					#v_LANGDATA#  
-                  			WHEN
-                  				'1'
-                  			THEN
-                  				DESCRIPTION 
-                  			ELSE
-                  				DESCRIPTION2   
-                  			END
-                  				AS DESCRIPTION,
-            				CASE
-            					#v_LANGDATA#  
-                  			WHEN
-                  				'1'
-                  			THEN
-                  				TITLE
-                  			ELSE
-                  				TITLE2
-                  			END
-                  				AS TITLE,
-            				MAIL,
-            				TELEPHONENUMBER,
-            				CASE
-            					#v_LANGDATA#  
-                  			WHEN
-                  				'1'
-                  			THEN
-                  				COMPANY
-                  			ELSE
-                  				COMPANY2
-                  			END
-                  				AS COMPANY,
-            				EXTENSIONATTRIBUTE1
-        				FROM
-        					TBL_USERMASTER 
-        				WHERE
-        					NULLIF(EXTENSIONATTRIBUTE1, '') IS NOT NULL
-        				AND
-        					PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
-        				AND
-        					EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
-                        AND 
-                            CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                         
-        				AND
-        					TENANT_ID = #v_TENANT_ID#
-                        ORDER BY DISPLAYNAME
-                        LIMIT #v_STARTNUM#, #v_COUNT#
+			SELECT
+				CN, 
+				CASE #v_LANGDATA# WHEN '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END AS DISPLAYNAME,
+				CASE #v_LANGDATA# WHEN '1' THEN DESCRIPTION ELSE DESCRIPTION2 END AS DESCRIPTION,
+				CASE #v_LANGDATA# WHEN '1' THEN TITLE ELSE TITLE2 END AS TITLE,
+				MAIL,
+				TELEPHONENUMBER,
+				CASE #v_LANGDATA# WHEN '1' THEN COMPANY ELSE COMPANY2 END AS COMPANY,
+				EXTENSIONATTRIBUTE1
+			FROM
+				TBL_USERMASTER 
+			WHERE
+				NULLIF(EXTENSIONATTRIBUTE1, '') IS NOT NULL
+			AND
+				PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+			AND
+				EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
+			AND 
+				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                         
+			AND
+				TENANT_ID = #v_TENANT_ID#
+		]]>
+		
+		<isNotEmpty property="searchValue" prepend="AND">
+			<isEqual property="searchType" compareValue="cn">
+				cn LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="displayname">
+				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="title">
+				title LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="description">
+				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="mail">
+				mail LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="telephonenumber">
+				telephonenumber LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="company">
+				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+		</isNotEmpty>
+		
+		<![CDATA[
+			ORDER BY DISPLAYNAME
+			LIMIT #v_STARTNUM#, #v_COUNT#
 		]]>
 	</select>
 	
@@ -2810,7 +2895,7 @@
      				WHERE
      					tenant_id = #tenantID# AND cn = #cn#
                     AND 
-                        CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+                        CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantID#)
      				UNION
      				SELECT 
      					cn
@@ -2838,7 +2923,7 @@
       		WHERE  
       			department = #cn#
             AND 
-                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                     
+                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantID#)                                                                                                                                                     
       		AND
       			tenant_id = #tenantID#	
 	     ]]>
@@ -2934,6 +3019,19 @@
       	]]>		
 	</update>
 	
+	<update id="EzOrganAdminDAO.updateDBData_userPermission" parameterClass="OrganUserVO">
+		<![CDATA[
+			UPDATE
+				TBL_USERMASTER
+     		SET
+     			extensionAttribute1 = #extensionAttribute1#
+      		WHERE
+      			cn = #cn#
+      		AND
+      			tenant_id = #tenantId#	
+      	]]>		
+	</update>
+		
 	<update id="EzOrganAdminDAO.setUserMail" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -3138,7 +3236,7 @@
 		FROM 
 	    	TBL_USERMASTER	
         WHERE 
-            tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
+            tenant_id = #tenantID# 
 			<include refid="EzOrganAdminDAO.searchQuery"/>
 	    ORDER BY 
 	    	displayName
@@ -3153,9 +3251,79 @@
 			COUNT(CN) 
 		FROM 
             TBL_USERMASTER 
-		WHERE	tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
+		WHERE	tenant_id = #tenantID# 
   		<include refid="EzOrganAdminDAO.searchQuery"/>
 	</select>
+ 	 
+	<insert id="EzOrganAdminDAO.insertDelUserDBData_I" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO TBL_USERMASTER_DELETE
+             ( CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, DESCRIPTION, DESCRIPTION2, DESCRIPTION3, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, INFO, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, EXTENSIONATTRIBUTE4, EXTENSIONATTRIBUTE5, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE7, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE9, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE11, EXTENSIONATTRIBUTE12, EXTENSIONATTRIBUTE13, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, UPDATEDT, MOBILE_ENABLE, MOBILE_NOTUSE, MOBILE_PIN, SIPURI,PASSWORD,
+                      TENANT_ID )
+             ( SELECT
+             		CN ,
+                   DisplayName ,
+                   DisplayName2 ,
+                   mail ,
+                   MAILNICKNAME ,
+                   UPNNAME ,
+                   DEPARTMENT ,
+                   DESCRIPTION ,
+                   DESCRIPTION2 ,
+                   DESCRIPTION3 ,
+                   PHYSICALDELIVERYOFFICENAME ,
+                   COMPANY ,
+                   COMPANY2 ,
+                   TITLE ,
+                   TITLE2 ,
+                   TELEPHONENUMBER ,
+                   HOMEPHONE ,
+                   FACSIMILETELEPHONENUMBER ,
+                   MOBILE ,
+                   POSTALCODE ,
+                   STREETADDRESS ,
+                   INFO ,
+                   EXTENSIONATTRIBUTE1 ,
+                   EXTENSIONATTRIBUTE2 ,
+                   EXTENSIONATTRIBUTE3 ,
+                   NULL ,
+                   EXTENSIONATTRIBUTE5 ,
+                   EXTENSIONATTRIBUTE6 ,
+                   EXTENSIONATTRIBUTE7 ,
+                   EXTENSIONATTRIBUTE8 ,
+                   EXTENSIONATTRIBUTE9 ,
+                   EXTENSIONATTRIBUTE10 ,
+                   EXTENSIONATTRIBUTE102 ,
+                   EXTENSIONATTRIBUTE11 ,
+                   EXTENSIONATTRIBUTE12 ,
+                   EXTENSIONATTRIBUTE13 ,
+                   EXTENSIONATTRIBUTE14 ,
+                   EXTENSIONATTRIBUTE15 ,
+                   ADSPATH ,
+                   #nowDate# ,
+                   MOBILE_ENABLE ,
+                   MOBILE_NOTUSE ,
+                   MOBILE_PIN ,
+                   SIPURI ,
+                   PASSWORD ,
+                   TENANT_ID
+               FROM TBL_USERMASTER 
+               WHERE  CN = #v_CN#
+               AND TENANT_ID = #v_TENANT_ID#
+                )
+	]]>
+	</insert>
+	
+	<delete id="EzOrganAdminDAO.deleteDelUserDBData_I" parameterClass="Map">
+	<![CDATA[
+		DELETE FROM
+			TBL_USERMASTER_DELETE
+        WHERE  
+        	CN = #v_CN#
+        AND 
+        	TENANT_ID = #v_TENANT_ID#
+	]]>
+	</delete>
  	 
      <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}

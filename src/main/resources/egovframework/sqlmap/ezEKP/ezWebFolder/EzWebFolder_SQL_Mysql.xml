@@ -1,0 +1,1547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezWebFolder">
+	<typeAlias  alias="webFolderFileVO"              type="egovframework.ezEKP.ezWebFolder.vo.FileVO"        />
+	<typeAlias  alias="webFolderFileTypeVO"          type="egovframework.ezEKP.ezWebFolder.vo.FileTypeVO"    />
+	<typeAlias  alias="webFolderFolderVO"            type="egovframework.ezEKP.ezWebFolder.vo.FolderVO"      />
+	<typeAlias  alias="webFolderFolderSimpleVO"      type="egovframework.ezEKP.ezWebFolder.vo.FolderSimpleVO"/>
+	<typeAlias  alias="webFolderFolderUserVO"        type="egovframework.ezEKP.ezWebFolder.vo.FolderUserVO"  />
+	<typeAlias  alias="webFolderSimpleDeptVO"        type="egovframework.ezEKP.ezWebFolder.vo.SimpleDeptVO"  />
+	<typeAlias  alias="webFolderSimpleUserVO"        type="egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO"  />
+	<typeAlias  alias="OrganDeptVO"                  type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"       />
+	<typeAlias  alias="EnvVO"                        type="egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO"/>
+	
+	<sql id="getAllFilesInFolderCont">
+		WHERE
+			f.USE_STATUS = 'Y'
+		AND
+			f.TENANT_ID  = #tenantId#
+		<isEqual property="fileType" compareValue="2" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = 'document'
+			]]> 
+		</isEqual>
+		<isEqual property="fileType" compareValue="3" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = 'music'
+			]]> 
+		</isEqual>
+		<isEqual property="fileType" compareValue="4" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = 'video'
+			]]> 
+		</isEqual>
+		<isEqual property="fileType" compareValue="5" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = 'image'
+			]]> 
+		</isEqual>
+		<isEqual property="fileType" compareValue="6" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME = 'zip'
+			]]>
+		</isEqual>
+		<isEqual property="fileType" compareValue="7" prepend="AND">
+			<![CDATA[
+				t.TYPE_NAME is null
+			]]>
+		</isEqual>
+		
+		<isEqual property="searchChk" compareValue="1">
+			<isNotEqual property="fileExt" compareValue="" prepend="AND">
+				<![CDATA[
+					f.FILE_EXT LIKE CONCAT(CONCAT('%', #fileExt#), '%')
+				]]> 
+			</isNotEqual>
+			
+			<isNotEqual property="fileName" compareValue="" prepend="AND">
+				<![CDATA[
+					f.FILE_NAME LIKE CONCAT(CONCAT('%', #fileName#), '%')
+				]]> 
+			</isNotEqual>
+			
+			<isNotEqual property="userName" compareValue="" prepend="AND">
+				<isEqual property="primary" compareValue="1">
+					<![CDATA[
+						f.CREATE_NAME1 LIKE CONCAT(CONCAT('%', #userName#), '%')
+					]]>
+				</isEqual>
+				<isEqual property="primary" compareValue="2">
+					<![CDATA[
+						f.CREATE_NAME2 LIKE CONCAT(CONCAT('%', #userName#), '%')
+					]]>
+				</isEqual> 
+			</isNotEqual>
+			
+			<isNotEqual property="startDate" compareValue="" prepend="AND">
+				<![CDATA[
+					(f.CREATE_DATE >= #startDate# AND f.CREATE_DATE <= #endDate#)
+				]]>
+			</isNotEqual>
+		</isEqual>
+	</sql>
+	
+	<!-- File resultMap -->
+	<resultMap id="fileVO" class="webFolderFileVO">
+		<result property="fileId"               column="file_id"                columnIndex="1"  />
+		<result property="fileName"             column="file_name"              columnIndex="2"  />
+		<result property="filePath"             column="file_path"              columnIndex="3"  />
+		<result property="fileSize"             column="file_size"              columnIndex="4"  />
+		<result property="typeId"               column="type_id"                columnIndex="5"  />
+		<result property="downloadCnt"          column="down_count"             columnIndex="6"  />
+		<result property="fileExt"              column="file_ext"               columnIndex="7"  />
+		<result property="folderId"             column="folder_id"              columnIndex="8"  />
+		<result property="useStatus"            column="use_status"             columnIndex="9"  />
+		<result property="createId"             column="create_id"              columnIndex="10" />
+		<result property="createName1"          column="create_name1"           columnIndex="11" />
+		<result property="createName2"          column="create_name2"           columnIndex="12" />
+		<result property="createDate"           column="create_date"            columnIndex="13" />
+		<result property="updateId"             column="update_id"              columnIndex="14" />
+		<result property="updateDate"           column="update_date"            columnIndex="15" />
+		<result property="fileTypeId"           column="filetype_id"            columnIndex="16" />
+		<result property="fileTypeName"         column="filetype_name"          columnIndex="17" />
+		<result property="fileIconUrl"          column="filetype_icon"          columnIndex="18" />
+		<result property="deleterId"            column="deleter_id"             columnIndex="19" />
+		<result property="tenantId"             column="tenant_id"              columnIndex="20" />
+	</resultMap>
+	
+	<!-- File resultMap2 -->
+	<resultMap id="fileVO2" class="webFolderFileVO">
+		<result property="fileId"               column="file_id"                columnIndex="1"  />
+		<result property="fileName"             column="file_name"              columnIndex="2"  />
+		<result property="filePath"             column="file_path"              columnIndex="3"  />
+		<result property="fileSize"             column="file_size"              columnIndex="4"  />
+		<result property="typeId"               column="type_id"                columnIndex="5"  />
+		<result property="downloadCnt"          column="down_count"             columnIndex="6"  />
+		<result property="fileExt"              column="file_ext"               columnIndex="7"  />
+		<result property="folderId"             column="folder_id"              columnIndex="8"  />
+		<result property="useStatus"            column="use_status"             columnIndex="9"  />
+		<result property="createId"             column="create_id"              columnIndex="10" />
+		<result property="createName1"          column="create_name1"           columnIndex="11" />
+		<result property="createName2"          column="create_name2"           columnIndex="12" />
+		<result property="createDate"           column="create_date"            columnIndex="13" />
+		<result property="updateId"             column="update_id"              columnIndex="14" />
+		<result property="updateDate"           column="update_date"            columnIndex="15" />
+		<result property="fileTypeId"           column="filetype_id"            columnIndex="16" />
+		<result property="fileTypeName"         column="filetype_name"          columnIndex="17" />
+		<result property="fileIconUrl"          column="filetype_icon"          columnIndex="18" />
+		<result property="filePosition"         column="file_position"          columnIndex="19" />
+		<result property="folderName"           column="folder_name"            columnIndex="20" />
+		<result property="folderPath"           column="folder_path"            columnIndex="21" />
+		<result property="deleterId"            column="deleter_id"             columnIndex="22" />
+		<result property="tenantId"             column="tenant_id"              columnIndex="23" />
+	</resultMap>
+	
+	<resultMap id="hashMapResult" class="java.util.HashMap">
+		<result property="bnkKey"   column="FOLDER_ID"/>
+		<result property="bnkValue" column="FOLDER_NAME"/>
+	</resultMap>
+	
+	<!-- 로그인  resultMap -->
+	<resultMap id="folderUserVO" class="webFolderFolderUserVO">
+		<result property="userId"               column="USER_ID"                 columnIndex="1"/>
+		<result property="displayName1"         column="DISPLAY_NAME1"           columnIndex="2"/>
+		<result property="displayName2"         column="DISPLAY_NAME2"           columnIndex="3"/>
+		<result property="userType"             column="USER_TYPE"               columnIndex="4"/>
+	</resultMap>
+	
+	<!-- FolderSimpleVO resultMap -->
+	<resultMap id="folderSimpleVO" class="webFolderFolderSimpleVO">
+		<result property="folderId"             column="FOLDER_ID"              columnIndex="1"/>
+		<result property="folderName"           column="FOLDER_NAME"            columnIndex="2"/>
+		<result property="folderName2"          column="FOLDER_NAME2"           columnIndex="3"/>
+		<result property="hasSubFolder"         column="HAS_SUB"                columnIndex="4"/>
+		<result property="folderLevel"          column="FOLDER_LEVEL"           columnIndex="5"/>
+	</resultMap>
+	
+	<!-- FolderSimpleVO resultMap -->
+	<resultMap id="folderSimpleVO2" class="webFolderFolderSimpleVO">
+		<result property="folderId"             column="FOLDER_ID"              columnIndex="1"/>
+		<result property="folderName"           column="FOLDER_NAME"            columnIndex="2"/>
+		<result property="folderName2"          column="FOLDER_NAME2"           columnIndex="3"/>
+		<result property="hasSubFolder"         column="HAS_SUB"                columnIndex="4"/>
+		<result property="folderLevel"          column="FOLDER_LEVEL"           columnIndex="5"/>
+		<result property="ownerId"              column="OWNER_ID"               columnIndex="6"/>
+	</resultMap>
+	
+	<!-- Folder resultMap -->
+	<resultMap id="folderVO" class="webFolderFolderVO">
+		<result property="folderId"             column="FOLDER_ID"                columnIndex="1"  />
+		<result property="folderName1"          column="FOLDER_NAME1"             columnIndex="2"  />
+		<result property="folderName2"          column="FOLDER_NAME2"             columnIndex="3"  />
+		<result property="folderType"           column="FOLDER_TYPE"              columnIndex="4"  />
+		<result property="folderPath"           column="FOLDER_PATH"              columnIndex="5"  />
+		<result property="folderStep"           column="FOLDER_STEP"              columnIndex="6"  />
+		<result property="folderLevel"          column="FOLDER_LEVEL"             columnIndex="7"  />
+		<result property="folderUpper"          column="FOLDER_UPPER"             columnIndex="8"  />
+		<result property="useStatus"            column="USE_STATUS"               columnIndex="9"  />
+		<result property="ownerId"              column="OWNER_ID"                 columnIndex="10" />
+		<result property="createId"             column="CREATE_ID"                columnIndex="11" />
+		<result property="createDate"           column="CREATE_DATE"              columnIndex="12" />
+		<result property="createName1"          column="CREATE_NAME1"             columnIndex="13" />
+		<result property="createName2"          column="CREATE_NAME2"             columnIndex="14" />
+		<result property="updateId"             column="UPDATE_ID"                columnIndex="15" />
+		<result property="updateDate"           column="UPDATE_DATE"              columnIndex="16" />
+		<result property="companyId"            column="COMPANY_ID"               columnIndex="17" />
+		<result property="deleterId"            column="DELETER_ID"               columnIndex="18" />
+		<result property="tenantId"             column="TENANT_ID"                columnIndex="19" />
+	</resultMap>
+	
+	<!-- FolderSimple resultMap -->
+	<resultMap id="fileTypeVO" class="webFolderFileTypeVO">
+		<result property="typeId"               column="TYPE_ID"                columnIndex="1" />
+		<result property="typeName"             column="TYPE_NAME"              columnIndex="2" />
+		<result property="fileExt"              column="FILE_EXT"               columnIndex="3" />
+		<result property="typeIcon"             column="TYPE_ICON"              columnIndex="4" />
+		<result property="tenantId"             column="TENANT_ID"              columnIndex="5" />
+	</resultMap>
+	
+	<!-- SimpleDept resultMap -->
+	<resultMap id="simpleDeptVO" class="webFolderSimpleDeptVO">
+		<result property="deptId"               column="DEPT_ID"                columnIndex="1"/>
+		<result property="deptName"             column="DEPT_NAME"              columnIndex="2"/>
+		<result property="level"                column="LEVEL"                  columnIndex="3"/>
+		<result property="hasSub"               column="HAS_SUB"                columnIndex="4"/>
+	</resultMap>
+	
+	<!-- OrganDeptVO resultMap -->
+	<resultMap id="deptMemberInfo" class="webFolderSimpleUserVO">
+		<result property="userId"               column="cn"                     columnIndex="1"/>
+		<result property="position"             column="position"               columnIndex="2"/>
+		<result property="userName"             column="displayName"            columnIndex="3"/>
+		<result property="deptId"               column="department"             columnIndex="4"/>
+		<result property="deptName"             column="departmentName"         columnIndex="5"/>
+	</resultMap>
+	
+	<resultMap id="envVO" class="EnvVO">
+		<result property="cn"                   column="CN"                     columnIndex="1"/>
+		<result property="envType"              column="ENV_TYPE"               columnIndex="2"/>
+		<result property="envValue"             column="ENV_VALUE"              columnIndex="3"/>
+		<result property="tenantId"             column="TENANT_ID"              columnIndex="4"/>
+	</resultMap>
+	
+	<insert id="EzWebFolderDAO.insertFile" parameterClass="Map">
+		<selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1
+				FROM
+					DUAL
+				WHERE
+					NOT EXISTS (SELECT
+									FILE_ID,
+									TENANT_ID
+									FROM
+										TBL_WEBFOLDER_FILE
+									WHERE
+										FILE_ID = #fileId#
+									AND
+										TENANT_ID = #tenantId#
+								)
+			]]>
+		</selectKey>
+		<isEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				INSERT INTO TBL_WEBFOLDER_FILE (
+					FILE_ID,            FILE_NAME,         FILE_PATH,           FILE_SIZE,          TYPE_ID,
+					DOWN_COUNT,         FILE_EXT,          FOLDER_ID,           USE_STATUS,         CREATE_ID,
+					CREATE_NAME1,       CREATE_NAME2,      CREATE_DATE,         UPDATE_ID,          UPDATE_DATE,
+					DELETER_ID,         TENANT_ID
+				)
+				VALUES (
+					#fileId#,           #fileName#,        #filePath#,          #fileSize#,         #typeId#, 
+					#downloadCnt#,      #fileExt#,         #folderId#,          #useStatus#,        #createId#,
+					#createName1#,      #createName2#,     #createDate#,        #updateId#,         #updateDate#,
+					#deleterId#,        #tenantId#
+				)
+			]]>
+		</isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				UPDATE
+					TBL_WEBFOLDER_FILE
+				SET
+					FILE_NAME      = #fileName#,
+					FILE_PATH      = #filePath#,
+					FILE_SIZE      = #fileSize#,
+					TYPE_ID        = #typeId#,
+					DOWN_COUNT     = #downloadCnt#,
+					FILE_EXT       = #fileExt#,
+					FOLDER_ID      = #folderId#,
+					USE_STATUS     = #useStatus#,
+					CREATE_ID      = #createId#,
+					CREATE_NAME1   = #createName1#,
+					CREATE_NAME2   = #createName2#,
+					CREATE_DATE    = #createDate#,
+					UPDATE_ID      = #updateId#,
+					UPDATE_DATE    = #updateDate#,
+					DELETER_ID     = #deleterId#
+				WHERE
+						FILE_ID    = #fileId#
+					AND
+						TENANT_ID  = #tenantId#
+			]]>
+		</isNotEqual>
+	</insert>
+	
+	<select id="EzWebFolderDAO.getFileSequence" resultClass="String">
+		<![CDATA[
+			SELECT
+				IFNULL(MAX(CONVERT(FILE_ID, UNSIGNED INTEGER)), -1) as maxno
+			FROM
+				TBL_WEBFOLDER_FILE
+			WHERE
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.checkDepartChief" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				IFNULL(COUNT(*), 0) as maxno
+			FROM
+				TBL_DEPTMASTER
+			WHERE
+				EXTENSIONATTRIBUTE9 = #userId#
+			AND
+				TENANT_ID           = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getFolderSequence" resultClass="String">
+		<![CDATA[
+			SELECT
+				IFNULL(MAX(CONVERT(FOLDER_ID, UNSIGNED INTEGER)),-1) as maxno
+			FROM
+				TBL_WEBFOLDER_FOLDER
+			WHERE
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getFolderUserSequence" resultClass="String">
+		<![CDATA[
+			SELECT
+				IFNULL(MAX(CONVERT(SEQ_ID, UNSIGNED INTEGER)),-1) as maxno
+			FROM
+				TBL_WEBFOLDER_FOLDERUSER
+			WHERE
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getMaxFolderStep" resultClass="String">
+		<![CDATA[
+			SELECT
+				IFNULL(MAX(FOLDER_STEP),-1) as maxno
+			FROM
+				TBL_WEBFOLDER_FOLDER
+			WHERE
+				FOLDER_UPPER = #folderId#
+			AND
+				TENANT_ID    = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getRootFolderId" resultMap="folderVO">
+		<![CDATA[
+			SELECT
+				FOLDER_ID                                       AS FOLDER_ID,
+				FOLDER_NAME1                                    AS FOLDER_NAME1,
+				FOLDER_NAME2                                    AS FOLDER_NAME2,
+				FOLDER_TYPE                                     AS FOLDER_TYPE,
+				FOLDER_PATH                                     AS FOLDER_PATH,
+				FOLDER_STEP                                     AS FOLDER_STEP,
+				FOLDER_LEVEL                                    AS FOLDER_LEVEL,
+				FOLDER_UPPER                                    AS FOLDER_UPPER,
+				USE_STATUS                                      AS USE_STATUS,
+				OWNER_ID                                        AS OWNER_ID,
+				CREATE_ID                                       AS CREATE_ID,
+				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				CREATE_NAME1                                    AS CREATE_NAME1,
+				CREATE_NAME2                                    AS CREATE_NAME2,
+				UPDATE_ID                                       AS UPDATE_ID,
+				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				COMPANY_ID                                      AS COMPANY_ID,
+				DELETER_ID                                      AS DELETER_ID,
+				TENANT_ID                                       AS TENANT_ID
+			FROM
+				TBL_WEBFOLDER_FOLDER
+			WHERE
+				OWNER_ID     = #companyId#
+			AND
+				FOLDER_TYPE  = #type#
+			AND
+				FOLDER_UPPER = 'root'
+			AND
+				TENANT_ID    = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getFileLogSequence" resultClass="String">
+		<![CDATA[
+			SELECT
+				IFNULL(MAX(CONVERT(LOG_ID, UNSIGNED INTEGER)),-1) as maxno
+			FROM
+				TBL_WEBFOLDER_LOG
+			WHERE
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getFileTypeByFileExt" resultMap="fileTypeVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				TBL_WEBFOLDER_FILETYPE
+			WHERE
+				FILE_EXT = #extension#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getFileByFileId" resultMap="fileVO">
+		<![CDATA[
+			SELECT
+				f.FILE_ID                                                                                                                                                        AS FILE_ID,
+				f.FILE_NAME                                                                                                                                                      AS FILE_NAME,
+				f.FILE_PATH                                                                                                                                                      AS FILE_PATH,
+				f.FILE_SIZE                                                                                                                                                      AS FILE_SIZE,
+				f.TYPE_ID                                                                                                                                                        AS TYPE_ID,
+				f.DOWN_COUNT                                                                                                                                                     AS DOWN_COUNT,
+				f.FILE_EXT                                                                                                                                                       AS FILE_EXT,
+				f.FOLDER_ID                                                                                                                                                      AS FOLDER_ID,
+				f.USE_STATUS                                                                                                                                                     AS USE_STATUS,
+				f.CREATE_ID                                                                                                                                                      AS CREATE_ID,
+				f.CREATE_NAME1                                                                                                                                                   AS CREATE_NAME1,
+				f.CREATE_NAME2                                                                                                                                                   AS CREATE_NAME2,
+				DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE)                                                                                                                AS CREATE_DATE,
+				UPDATE_ID                                                                                                                                                        AS UPDATE_ID,
+				DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE)                                                                                                                AS UPDATE_DATE,
+				t.TYPE_ID                                                                                                                                                        AS FILETYPE_ID,
+				CASE WHEN t.TYPE_NAME IS NOT NULL THEN t.TYPE_NAME ELSE (SELECT TYPE_NAME FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_NAME,
+				CASE WHEN t.TYPE_ICON IS NOT NULL THEN t.TYPE_ICON ELSE (SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_ICON,
+				f.DELETER_ID                                                                                                                                                     AS DELETER_ID,
+				f.TENANT_ID                                                                                                                                                      AS TENANT_ID
+			FROM
+				TBL_WEBFOLDER_FILE f LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
+			WHERE
+				f.FILE_ID   = #fileId#
+			AND
+				f.TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getAllFilesInFolder" resultMap="fileVO2">
+		<![CDATA[
+			SELECT
+				f.FILE_ID                                                                                                                                                        AS FILE_ID,
+				f.FILE_NAME                                                                                                                                                      AS FILE_NAME,
+				f.FILE_PATH                                                                                                                                                      AS FILE_PATH,
+				f.FILE_SIZE                                                                                                                                                      AS FILE_SIZE,
+				f.TYPE_ID                                                                                                                                                        AS TYPE_ID,
+				f.DOWN_COUNT                                                                                                                                                     AS DOWN_COUNT,
+				f.FILE_EXT                                                                                                                                                       AS FILE_EXT,
+				f.FOLDER_ID                                                                                                                                                      AS FOLDER_ID,
+				f.USE_STATUS                                                                                                                                                     AS USE_STATUS,
+				f.CREATE_ID                                                                                                                                                      AS CREATE_ID,
+				f.CREATE_NAME1                                                                                                                                                   AS CREATE_NAME1,
+				f.CREATE_NAME2                                                                                                                                                   AS CREATE_NAME2,
+				DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE)                                                                                                                AS CREATE_DATE,
+				UPDATE_ID                                                                                                                                                        AS UPDATE_ID,
+				DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE)                                                                                                                AS UPDATE_DATE,
+				t.TYPE_ID                                                                                                                                                        AS FILETYPE_ID,
+				CASE WHEN t.TYPE_NAME IS NOT NULL THEN t.TYPE_NAME ELSE (SELECT TYPE_NAME FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_NAME,
+				CASE WHEN t.TYPE_ICON IS NOT NULL THEN t.TYPE_ICON ELSE (SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_ICON,
+				CONCAT(#originalPath#, f.FILE_NAME)                                                                                                                              AS FILE_POSITION,
+				""                                                                                                                                                               AS FOLDER_NAME,
+				""                                                                                                                                                               AS FOLDER_PATH,
+				f.DELETER_ID                                                                                                                                                     AS DELETER_ID,
+				f.TENANT_ID                                                                                                                                                      AS TENANT_ID
+			FROM
+				TBL_WEBFOLDER_FILE f LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
+		]]>
+		<include refid="getAllFilesInFolderCont"/>
+		<![CDATA[
+			AND
+			 f.FOLDER_ID = #folderId#
+		]]>
+		
+		<isNotEqual property="realColmn" compareValue="">
+			ORDER BY
+				<isEqual property="realColmn" compareValue="FILE_SIZE">
+					CAST($realColmn$ AS INT) $order$,
+				</isEqual>
+				<isNotEqual property="realColmn" compareValue="FILE_SIZE">
+					$realColmn$ $order$,
+				</isNotEqual>
+				f.UPDATE_DATE DESC,
+				CAST(f.FILE_ID AS INT) DESC
+		</isNotEqual>
+		<isEqual property="realColmn" compareValue="">
+			<![CDATA[
+			ORDER BY
+				f.UPDATE_DATE DESC,
+				CAST(f.FILE_ID AS INT) DESC
+			]]>
+		</isEqual>
+		<isGreaterThan property="pageSize" compareValue="0">
+			<![CDATA[
+				LIMIT
+				#startPoint#, #pageSize#
+			]]>
+		</isGreaterThan>
+	</select>
+	
+	<select id="EzWebFolderDAO.getAllFiles" resultMap="fileVO2">
+		<![CDATA[
+			SELECT
+				f.FILE_ID                                                                                                                                                        AS FILE_ID,
+				f.FILE_NAME                                                                                                                                                      AS FILE_NAME,
+				f.FILE_PATH                                                                                                                                                      AS FILE_PATH,
+				f.FILE_SIZE                                                                                                                                                      AS FILE_SIZE,
+				f.TYPE_ID                                                                                                                                                        AS TYPE_ID,
+				f.DOWN_COUNT                                                                                                                                                     AS DOWN_COUNT,
+				f.FILE_EXT                                                                                                                                                       AS FILE_EXT,
+				f.FOLDER_ID                                                                                                                                                      AS FOLDER_ID,
+				f.USE_STATUS                                                                                                                                                     AS USE_STATUS,
+				f.CREATE_ID                                                                                                                                                      AS CREATE_ID,
+				f.CREATE_NAME1                                                                                                                                                   AS CREATE_NAME1,
+				f.CREATE_NAME2                                                                                                                                                   AS CREATE_NAME2,
+				DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE)                                                                                                                AS CREATE_DATE,
+				f.UPDATE_ID                                                                                                                                                      AS UPDATE_ID,
+				DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE)                                                                                                                AS UPDATE_DATE,
+				t.TYPE_ID                                                                                                                                                        AS FILETYPE_ID,
+				CASE WHEN t.TYPE_NAME IS NOT NULL THEN t.TYPE_NAME ELSE (SELECT TYPE_NAME FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_NAME,
+				CASE WHEN t.TYPE_ICON IS NOT NULL THEN t.TYPE_ICON ELSE (SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_ICON,
+				(
+					CASE
+						WHEN u.FOLDER_LEVEL = 0 THEN CONCAT(#originalPath#, f.FILE_NAME)
+						WHEN u.FOLDER_LEVEL = 1 THEN CONCAT(CONCAT(CONCAT(#originalPath#, IF(#primary# = '1', u.FOLDER_NAME1, u.FOLDER_NAME2)), "/"), f.FILE_NAME)
+						ELSE "" 
+					END
+				)                                                                                                                                                                AS FILE_POSITION,
+				""                                                                                                                                                               AS FOLDER_NAME,
+				u.FOLDER_PATH                                                                                                                                                    AS FOLDER_PATH,
+				f.DELETER_ID                                                                                                                                                     AS DELETER_ID,
+				f.TENANT_ID                                                                                                                                                      AS TENANT_ID
+			FROM
+				TBL_WEBFOLDER_FILE f LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT  AND f.TENANT_ID = t.TENANT_ID
+									 LEFT JOIN TBL_WEBFOLDER_FOLDER  u ON f.TENANT_ID = u.TENANT_ID AND f.FOLDER_ID = u.FOLDER_ID
+		]]>
+		<include refid="getAllFilesInFolderCont"/>
+		<![CDATA[
+			AND
+				u.FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+		]]>
+		<isNotEqual property="realColmn" compareValue="">
+			ORDER BY
+				<isEqual property="realColmn" compareValue="FILE_SIZE">
+					CAST($realColmn$ AS INT) $order$,
+				</isEqual>
+				<isNotEqual property="realColmn" compareValue="FILE_SIZE">
+					$realColmn$ $order$,
+				</isNotEqual>
+				f.UPDATE_DATE DESC,
+				CAST(f.FILE_ID AS INT) DESC
+		</isNotEqual>
+		<isEqual property="realColmn" compareValue="">
+			<![CDATA[
+			ORDER BY
+				f.UPDATE_DATE DESC,
+				CAST(f.FILE_ID AS INT) DESC
+			]]>
+		</isEqual>
+		LIMIT
+			#startPoint#, #pageSize#
+	</select>
+	
+	<select id="EzWebFolderDAO.getTotalFileCnt1" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_WEBFOLDER_FILE f LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
+		]]>
+		<include refid="getAllFilesInFolderCont"/>
+		<![CDATA[
+			AND
+			 f.FOLDER_ID = #folderId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getTotalFileCnt2" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_WEBFOLDER_FILE f LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
+									 LEFT JOIN TBL_WEBFOLDER_FOLDER u ON f.TENANT_ID = u.TENANT_ID AND f.FOLDER_ID = u.FOLDER_ID
+		]]>
+		<include refid="getAllFilesInFolderCont"/>
+		<![CDATA[
+			AND
+				u.FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getFolderByFolderId" resultMap="folderVO">
+		<![CDATA[
+			SELECT
+				FOLDER_ID                                       AS FOLDER_ID,
+				FOLDER_NAME1                                    AS FOLDER_NAME1,
+				FOLDER_NAME2                                    AS FOLDER_NAME2,
+				FOLDER_TYPE                                     AS FOLDER_TYPE,
+				FOLDER_PATH                                     AS FOLDER_PATH,
+				FOLDER_STEP                                     AS FOLDER_STEP,
+				FOLDER_LEVEL                                    AS FOLDER_LEVEL,
+				FOLDER_UPPER                                    AS FOLDER_UPPER,
+				USE_STATUS                                      AS USE_STATUS,
+				OWNER_ID                                        AS OWNER_ID,
+				CREATE_ID                                       AS CREATE_ID,
+				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				CREATE_NAME1                                    AS CREATE_NAME1,
+				CREATE_NAME2                                    AS CREATE_NAME2,
+				UPDATE_ID                                       AS UPDATE_ID,
+				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				COMPANY_ID                                      AS COMPANY_ID,
+				DELETER_ID                                      AS DELETER_ID,
+				TENANT_ID                                       AS TENANT_ID
+			FROM
+				TBL_WEBFOLDER_FOLDER
+			WHERE
+				FOLDER_ID = #folderId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getSimpleSubFolder" resultMap="folderSimpleVO">
+		<![CDATA[
+			SELECT
+				a.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
+				a.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
+				a.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = a.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				a.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
+			FROM
+				TBL_WEBFOLDER_FOLDER a
+			WHERE
+				a.FOLDER_ID  = #folderId#
+			AND
+				a.USE_STATUS = 'Y'
+			AND
+				a.TENANT_ID  = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getFolderUsers" resultMap="folderUserVO">
+		<![CDATA[
+			SELECT
+				CASE  WHEN USER_TYPE = "user" THEN a.CN else d.CN                     END AS USER_ID,
+				CASE  WHEN USER_TYPE = "user" THEN a.DISPLAYNAME else d.DISPLAYNAME   END AS DISPLAY_NAME1,
+				CASE  WHEN USER_TYPE = "user" THEN a.DISPLAYNAME2 else d.DISPLAYNAME2 END AS DISPLAY_NAME2,
+				USER_TYPE
+			FROM
+				TBL_WEBFOLDER_FOLDERUSER u LEFT JOIN TBL_USERMASTER a ON u.USER_ID = a.CN and u.TENANT_ID = a.TENANT_ID and u.USER_TYPE = 'user'
+										   LEFT JOIN TBL_DEPTMASTER d ON u.USER_ID = d.CN and u.TENANT_ID = d.TENANT_ID and u.USER_TYPE = 'dept'
+			WHERE
+				u.FOLDER_ID = #folderId#
+			AND
+				(u.USER_TYPE = 'user' OR u.USER_TYPE = 'dept')
+			AND
+				u.TENANT_ID = #tenantId#
+			ORDER BY
+				USER_TYPE ASC
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getAllSimpleSubFolders" resultMap="folderSimpleVO">
+		<![CDATA[
+			SELECT
+				a.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
+				a.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
+				a.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = a.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				a.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
+			FROM
+				TBL_WEBFOLDER_FOLDER a
+			WHERE
+				a.FOLDER_UPPER = #folderUpper#
+			AND
+				a.USE_STATUS   = 'Y'
+			AND
+				a.TENANT_ID    = #tenantId#
+			ORDER BY
+				a.FOLDER_NAME1,
+				a.FOLDER_LEVEL ASC,
+				a.FOLDER_STEP  ASC
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getAllSubFolders" resultMap="folderVO">
+		<![CDATA[
+			SELECT
+				FOLDER_ID                                       AS FOLDER_ID,
+				FOLDER_NAME1                                    AS FOLDER_NAME1,
+				FOLDER_NAME2                                    AS FOLDER_NAME2,
+				FOLDER_TYPE                                     AS FOLDER_TYPE,
+				FOLDER_PATH                                     AS FOLDER_PATH,
+				FOLDER_STEP                                     AS FOLDER_STEP,
+				FOLDER_LEVEL                                    AS FOLDER_LEVEL,
+				FOLDER_UPPER                                    AS FOLDER_UPPER,
+				USE_STATUS                                      AS USE_STATUS,
+				OWNER_ID                                        AS OWNER_ID,
+				CREATE_ID                                       AS CREATE_ID,
+				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+				CREATE_NAME1                                    AS CREATE_NAME1,
+				CREATE_NAME2                                    AS CREATE_NAME2,
+				UPDATE_ID                                       AS UPDATE_ID,
+				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
+				COMPANY_ID                                      AS COMPANY_ID,
+				DELETER_ID                                      AS DELETER_ID,
+				TENANT_ID                                       AS TENANT_ID
+			FROM
+				TBL_WEBFOLDER_FOLDER
+			WHERE
+				FOLDER_UPPER = #folderUpper#
+			AND
+				USE_STATUS   = 'Y'
+			AND
+				TENANT_ID    = #tenantId#
+			ORDER BY
+				FOLDER_NAME1,
+				FOLDER_LEVEL ASC,
+				FOLDER_STEP  ASC
+		]]>
+	</select>
+	
+	<delete id="EzWebFolderDAO.deleteFileByFileId" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_WEBFOLDER_FILE
+			WHERE
+				FILE_ID = #fileId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</delete>
+	
+	<update id="EzWebFolderDAO.updateFileUseStatus" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FILE
+			SET
+				USE_STATUS = 'T',
+				DELETER_ID = #userId#,
+				UPDATE_DATE = #timeUTC#
+			WHERE
+				FILE_ID    = #fileId#
+			AND
+				TENANT_ID  = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzWebFolderDAO.updateFolderUseStatus" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FOLDER
+			SET
+				USE_STATUS = 'T',
+				DELETER_ID = #userId#,
+				UPDATE_DATE = #timeUTC#
+			WHERE
+				FOLDER_ID = #folderId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzWebFolderDAO.updateSubFolderUseStatus" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FOLDER
+			SET
+				USE_STATUS = 'N',
+				DELETER_ID = #userId#,
+				UPDATE_DATE = #timeUTC#
+			WHERE
+				USE_STATUS = 'Y'
+			AND
+				FOLDER_PATH LIKE CONCAT(#folderPath#, '%') 
+			AND
+				FOLDER_ID != #folderId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzWebFolderDAO.updateStatusAllFilesInFolder" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FILE f JOIN
+					(
+					SELECT
+					  *
+					FROM
+						TBL_WEBFOLDER_FOLDER
+								WHERE
+									FOLDER_PATH LIKE CONCAT(#folderPath#, '%')
+								AND
+									TENANT_ID = #tenantId#
+					) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
+			SET
+				f.USE_STATUS = 'N',
+				f.DELETER_ID = #userId#,
+				UPDATE_DATE = #timeUTC#
+			WHERE
+				f.TENANT_ID = #tenantId#
+			AND
+				f.USE_STATUS = 'Y'
+		]]>
+	</update>
+	
+	<update id="EzWebFolderDAO.updateFileName" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FILE
+			SET
+				FILE_NAME = #name#,
+				UPDATE_DATE = #timeUTC#
+			WHERE
+				FILE_ID   = #fileId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzWebFolderDAO.moveFile" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FILE
+			SET
+				FOLDER_ID = #folderId#
+			WHERE
+				FILE_ID = #fileId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzWebFolderDAO.updateDownCnt" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_WEBFOLDER_FILE
+			SET
+				DOWN_COUNT = DOWN_COUNT + 1
+			WHERE
+				FILE_ID = #fileId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzWebFolderDAO.getAllSimpleDeptsOfCompany" resultMap="simpleDeptVO">
+		<![CDATA[
+			SELECT
+				c.CN AS DEPT_ID,
+				CASE WHEN #primary# = '1' THEN c.DISPLAYNAME ELSE c.DISPLAYNAME2 END AS DEPT_NAME,
+				c.level AS LEVEL,
+				c.has_sub AS HAS_SUB
+			FROM
+			(
+				SELECT
+					b.*,
+					CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER d WHERE b.CN = d.EXTENSIONATTRIBUTE1 AND b.TENANT_ID = d.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+					#level#                                                                                                                                  AS LEVEL 
+				FROM 
+					TBL_DEPTMASTER b
+				WHERE
+					b.CN = #companyId#
+				AND
+					b.TENANT_ID = #tenantId#
+					
+				UNION
+				
+				SELECT 
+					a.*,
+					CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER e WHERE a.CN = e.EXTENSIONATTRIBUTE1 AND e.CN <> e.EXTENSIONATTRIBUTE2 AND a.TENANT_ID = e.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+					(#level# + 1)                                                                                                                            AS LEVEL
+				FROM
+					TBL_DEPTMASTER a
+				WHERE
+					a.EXTENSIONATTRIBUTE1 = #companyId#
+				AND
+					a.CN <> a.EXTENSIONATTRIBUTE2
+				AND
+					a.TENANT_ID           = #tenantId#
+			) c
+			ORDER BY
+				LEVEL, lpad(ifnull(EXTENSIONATTRIBUTE15, 0),6,0), DISPLAYNAME
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getAllSimpleSubDepts" resultMap="simpleDeptVO">
+		<![CDATA[
+			SELECT
+				a.CN                                                                                                                                     AS DEPT_ID,
+				CASE WHEN #primary# = '1' THEN a.DISPLAYNAME ELSE a.DISPLAYNAME2 END                                                                     AS DEPT_NAME,
+				#level#                                                                                                                                  AS LEVEL,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE a.CN = b.EXTENSIONATTRIBUTE1 AND b.CN <> b.EXTENSIONATTRIBUTE2 AND a.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB
+			FROM
+				TBL_DEPTMASTER a
+			WHERE
+				a.EXTENSIONATTRIBUTE1 = #deptId#
+			AND
+				a.TENANT_ID = #tenantId#
+			AND
+				a.CN <> a.EXTENSIONATTRIBUTE2
+			ORDER BY
+				lpad(ifnull(a.EXTENSIONATTRIBUTE15, 0),6,0), a.DISPLAYNAME
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getSimpleCompany" resultMap="simpleDeptVO">
+		SELECT
+			a.CN                                                                                                                                     AS DEPT_ID,
+			CASE WHEN #primary# = '1' THEN a.DISPLAYNAME ELSE a.DISPLAYNAME2 END                                                                     AS DEPT_NAME,
+			#level#                                                                                                                                  AS LEVEL,
+			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE a.CN = b.EXTENSIONATTRIBUTE1 AND a.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB
+		FROM
+			TBL_DEPTMASTER a
+		WHERE
+			a.CN = #deptId#
+		AND
+			a.TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzWebFolderDAO.getDeptPath" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				DEPT_CD_PATH
+			FROM 
+				TBL_DEPTMASTER
+			WHERE
+				CN = #deptId#
+			AND
+				TENANT_ID = #tenantId#
+		]]> 
+	</select>
+	
+	<select id="EzWebFolderDAO.getDeptMemberList" resultMap="deptMemberInfo">
+		SELECT
+			AA.CN             AS CN,
+			AA.POSITION       AS POSITION,
+			AA.DISPLAYNAME    AS DISPLAYNAME,
+			AA.DEPARTMENT     AS DEPARTMENT,
+			AA.DEPARTMENTNAME AS DEPARTMENTNAME
+		FROM (
+			SELECT
+				CN                                                                                                                           AS CN,
+				CASE WHEN #primary# = '1'THEN TITLE ELSE TITLE2 END                                                                          AS POSITION,
+				CASE WHEN #primary# = '1'THEN DISPLAYNAME ELSE DISPLAYNAME2 END                                                              AS DISPLAYNAME,
+				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
+				DEPARTMENT                                                                                                                   AS DEPARTMENT,
+				CASE WHEN #primary# = '1'THEN DESCRIPTION ELSE DESCRIPTION2 END                                                              AS DEPARTMENTNAME
+			FROM
+				TBL_USERMASTER 
+			WHERE
+				DEPARTMENT = #deptId#
+			AND
+				CN != 'masteradmin'
+			AND
+				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			AND
+				TENANT_ID = #tenantId#
+				
+			UNION ALL
+			
+			SELECT
+				A.CN                                                                                                                         AS CN,
+				CASE WHEN #primary# = '1'THEN A.TITLE ELSE A.TITLE2 END                                                                      AS POSITION,
+				CASE WHEN #primary# = '1'THEN A.DISPLAYNAME ELSE A.DISPLAYNAME2 END                                                          AS DISPLAYNAME,
+				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
+				A.DEPARTMENT                                                                                                                 AS DEPARTMENT,
+				CASE WHEN #primary# = '1'THEN A.DESCRIPTION ELSE A.DESCRIPTION2 END                                                          AS DEPARTMENTNAME
+			FROM
+				TBL_ADDJOBMASTER B
+			JOIN
+				TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+			WHERE
+				B.DEPTID = #deptId#
+			AND
+				B.TENANT_ID = #tenantId#
+		) AA
+		ORDER BY
+			EXTENSIONATTRIBUTE15 ASC,
+			DISPLAYNAME ASC
+	</select>
+	
+	<select id="EzWebFolderDAO.getAllSimpleDeptFolder" resultMap="folderSimpleVO2">
+		<![CDATA[
+			SELECT
+				a.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
+				a.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
+				a.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = a.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				a.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL,
+				a.OWNER_ID                                                                                                                                                            AS OWNER_ID
+			FROM
+				TBL_WEBFOLDER_FOLDER a
+			WHERE
+				a.FOLDER_TYPE  = 'D'
+			AND
+				a.FOLDER_UPPER = 'root'
+			AND
+				a.USE_STATUS   = 'Y'
+			AND
+				a.COMPANY_ID   = #companyId#
+			AND
+				a.TENANT_ID    = #tenantId#
+			ORDER BY
+				a.FOLDER_NAME1,
+				a.FOLDER_LEVEL ASC,
+				a.FOLDER_STEP  ASC
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getAllDepartments" parameterClass="Map" resultClass="OrganDeptVO">
+		<![CDATA[
+			SELECT 
+				cn,
+				cn deptid,
+				CASE #primary#
+					WHEN '1' THEN
+						displayname
+					ELSE
+						displayname2
+					END
+						displayname,
+				CASE #primary#
+					WHEN '1' THEN 
+						displayname
+					ELSE
+						displayname2
+					END
+						deptnm,
+				displayname displayname1,
+				displayname2,
+				mail,
+				extensionattribute1,
+				extensionattribute2,
+				extensionattribute3,
+				extensionattribute4,
+				extensionattribute5,
+				extensionattribute6,
+				extensionattribute7,
+				extensionattribute8,
+				extensionattribute9,
+				extensionattribute10,
+				extensionattribute11,
+				extensionattribute12,
+				extensionattribute13,
+				extensionattribute14,
+				extensionattribute15,
+				adspath,
+				updatedt,
+				'dept' type
+			FROM
+				TBL_DEPTMASTER
+			WHERE
+				extensionattribute2  = #companyId#
+			AND
+				useflag              = 'Y'
+			AND
+				tenant_id            = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getDeptFolderTreeForUser" resultMap="folderSimpleVO">
+		<![CDATA[
+			SELECT
+				f.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
+				f.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
+				f.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = f.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				f.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
+			FROM
+				TBL_WEBFOLDER_FOLDER f JOIN
+						(
+							SELECT
+								d.* 
+							FROM
+								tbl_deptmaster d LEFT JOIN tbl_addjobmaster a ON d.CN = a.DEPTID AND d.TENANT_ID = a.TENANT_ID
+							WHERE
+								(a.CN = #userId# OR d.CN = #deptId#)
+							AND
+								d.TENANT_ID = #tenantId#
+						) AS s ON f.OWNER_ID = s.CN AND f.TENANT_ID = s.TENANT_ID AND f.FOLDER_UPPER = 'root' AND f.FOLDER_TYPE = 'D' AND f.OWNER_ID = s.CN
+			WHERE
+				f.FOLDER_TYPE  = 'D'
+			AND
+				f.TENANT_ID = #tenantId#
+			AND
+				f.USE_STATUS = 'Y'
+			ORDER BY
+				f.FOLDER_NAME1,
+				f.FOLDER_LEVEL ASC,
+				f.FOLDER_STEP  ASC
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getDeptFolderTreeForChief" resultMap="folderSimpleVO">
+		<![CDATA[
+			SELECT
+				f.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
+				f.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
+				f.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = f.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				f.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
+			FROM
+				(
+					SELECT
+						f1.*
+					FROM
+						tbl_webfolder_folder f1 JOIN 
+								(
+									SELECT
+										d.* 
+									FROM
+										tbl_deptmaster d LEFT JOIN tbl_addjobmaster a ON d.CN = a.DEPTID AND d.TENANT_ID = a.TENANT_ID
+									WHERE
+										(a.CN = #userId# OR d.CN = #deptId#)
+									AND
+										d.TENANT_ID = #tenantId#
+								) AS s ON f1.OWNER_ID = s.CN AND f1.TENANT_ID = s.TENANT_ID AND f1.FOLDER_UPPER = 'root' AND f1.FOLDER_TYPE = 'D' AND f1.OWNER_ID = s.CN
+					WHERE
+						f1.TENANT_ID = #tenantId#
+						
+					UNION
+					
+					SELECT
+						f2.*
+					FROM
+						tbl_webfolder_folder f2 JOIN tbl_webfolder_folderuser u 
+													ON f2.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f2.TENANT_ID = u.TENANT_ID
+												JOIN
+													(
+														SELECT
+															d1.*
+															FROM tbl_deptmaster d1 JOIN
+																					(
+																						SELECT
+																							*
+																						FROM
+																							tbl_deptmaster
+																						WHERE
+																							EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
+																					) AS d2 ON d1.DEPT_CD_PATH LIKE CONCAT(d2.DEPT_CD_PATH, '%')
+													) AS s1 ON s1.CN = f2.OWNER_ID AND s1.TENANT_ID = f2.TENANT_ID
+					WHERE
+						f2.TENANT_ID = #tenantId#
+				) AS f
+			WHERE
+				f.FOLDER_TYPE = 'D'
+			AND
+				f.TENANT_ID   = #tenantId#
+			AND
+				f.USE_STATUS  = 'Y'
+			ORDER BY
+				f.FOLDER_NAME1,
+				f.FOLDER_LEVEL ASC,
+				f.FOLDER_STEP  ASC
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getCompanySubSimpleFolder" resultMap="folderSimpleVO">
+		<![CDATA[
+			SELECT
+				f.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
+				f.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
+				f.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = f.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				f.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
+			FROM
+				TBL_WEBFOLDER_FOLDER f JOIN 
+									(
+										SELECT
+										 u.* 
+										FROM 
+										 tbl_webfolder_folderuser u LEFT JOIN
+																		(SELECT
+																			d.* 
+																		FROM
+																			tbl_deptmaster d LEFT JOIN tbl_addjobmaster a ON d.CN = a.DEPTID AND d.TENANT_ID = a.TENANT_ID
+																		WHERE
+																			(a.CN = #userId# OR d.CN = #deptId#)
+																		AND
+																			d.TENANT_ID = #tenantId#) AS s ON u.USER_ID = s.CN AND u.USER_TYPE = 'dept'  AND u.TENANT_ID = s.TENANT_ID
+										WHERE
+											u.TENANT_ID = #tenantId#
+										AND
+											((u.USER_ID = #userId# AND u.USER_TYPE = 'user') OR (u.USER_ID = s.CN AND u.USER_TYPE = 'dept')) 
+									) AS s ON f.TENANT_ID = s.TENANT_ID AND f.FOLDER_ID = s.FOLDER_ID
+			WHERE
+				f.FOLDER_TYPE  = 'C'
+			AND
+				f.USE_STATUS = 'Y'
+			AND
+				f.TENANT_ID    = #tenantId#
+			AND
+				f.FOLDER_UPPER = #compFolderId#
+			ORDER BY
+				f.FOLDER_NAME1,
+				f.FOLDER_LEVEL ASC,
+				f.FOLDER_STEP  ASC
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getCompanyFolderTreeForChief" resultMap="folderSimpleVO">
+		<![CDATA[
+			SELECT
+				f.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
+				f.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
+				f.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = f.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				f.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
+			FROM
+				(
+				SELECT
+					DISTINCT
+					f1.*
+				FROM
+					TBL_WEBFOLDER_FOLDER f1 JOIN
+					(
+						SELECT
+							u.*
+						FROM
+						 tbl_webfolder_folderuser u LEFT JOIN
+								(
+									SELECT
+										d1.*
+									FROM
+										TBL_DEPTMASTER d1 LEFT JOIN tbl_addjobmaster a
+																	ON d1.CN = a.DEPTID AND d1.TENANT_ID = a.TENANT_ID
+									WHERE
+										(a.CN = #userId# OR d1.CN = #deptId#)
+									AND
+										d1.TENANT_ID = #tenantId#
+								UNION
+									SELECT
+										d2.*
+									FROM
+										TBL_DEPTMASTER d2 JOIN
+											(
+											SELECT
+												f.*
+											FROM
+												(
+													tbl_webfolder_folder f JOIN tbl_webfolder_folderuser u 
+																				ON f.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f.TENANT_ID = u.TENANT_ID
+																			JOIN
+																				(
+																					SELECT
+																						d3.*
+																						FROM tbl_deptmaster d3 JOIN
+																												(
+																													SELECT
+																														*
+																													FROM
+																														tbl_deptmaster
+																													WHERE
+																														EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
+																												) AS d4 ON d3.DEPT_CD_PATH LIKE CONCAT(d4.DEPT_CD_PATH, '%')
+																				) AS s1 ON s1.CN = f.OWNER_ID AND s1.TENANT_ID = f.TENANT_ID
+												)
+											) AS a ON d2.CN = a.OWNER_ID AND a.FOLDER_UPPER = 'root' AND d2.TENANT_ID = a.TENANT_ID
+									WHERE
+										d2.TENANT_ID = #tenantId#
+								) AS s ON u.USER_ID = s.CN AND u.USER_TYPE = 'dept' AND u.TENANT_ID = s.TENANT_ID
+						WHERE
+							u.TENANT_ID = #tenantId#
+						AND
+							((u.USER_ID = #userId# AND u.USER_TYPE = 'user') OR (u.USER_ID = s.CN AND u.USER_TYPE = 'dept'))
+					) AS s ON f1.TENANT_ID = s.TENANT_ID AND f1.FOLDER_ID = s.FOLDER_ID
+			WHERE
+				f1.FOLDER_TYPE  = 'C'
+			AND
+				f1.USE_STATUS   = 'Y'
+			AND
+				f1.TENANT_ID    = #tenantId#
+			AND
+				f1.FOLDER_UPPER = #compFolderId#
+			) f
+			ORDER BY
+				f.FOLDER_NAME1,
+				f.FOLDER_LEVEL ASC,
+				f.FOLDER_STEP  ASC
+		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getCompanySimpleFolder" resultMap="folderSimpleVO">
+		SELECT
+				a.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
+				a.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
+				a.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
+				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = a.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+				a.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
+			FROM
+				TBL_WEBFOLDER_FOLDER a
+			WHERE
+				a.FOLDER_TYPE  = 'C'
+			AND
+				a.FOLDER_UPPER = 'root'
+			AND
+				a.USE_STATUS   = 'Y'
+			AND
+				a.COMPANY_ID   = #companyId#
+			AND
+				a.TENANT_ID    = #tenantId#
+			ORDER BY
+				a.FOLDER_NAME1,
+				a.FOLDER_LEVEL ASC,
+				a.FOLDER_STEP  ASC
+	</select>
+	
+	<select id="EzWebFolderDAO.getUserSimpleFolder" resultMap="folderSimpleVO">
+		SELECT
+			f.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
+			f.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
+			f.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
+			CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = f.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
+			f.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
+		FROM
+			TBL_WEBFOLDER_FOLDER f
+		WHERE
+			f.TENANT_ID = #tenantId#
+		AND
+			f.FOLDER_UPPER = 'root'
+		AND 
+			f.FOLDER_TYPE = 'U'
+		AND 
+			f.OWNER_ID = #userId#
+		AND
+			f.USE_STATUS = 'Y'
+	</select>
+	
+	<select id="EzWebFolderDAO.getListCount" resultMap="envVO">
+		SELECT
+			*
+		FROM
+			TBL_WEBFOLDER_ENV
+		WHERE
+			CN        = #userId#
+		AND
+			TENANT_ID = #tenantId#
+	</select>
+	
+	
+	<insert id="EzWebFolderDAO.updateListCount" parameterClass="Map">
+		<selectKey keyProperty="v_temp" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					1
+				FROM
+					DUAL
+				WHERE
+					NOT EXISTS (SELECT
+									CN,
+									TENANT_ID
+									FROM
+										TBL_WEBFOLDER_ENV
+									WHERE
+										CN        = #userId#
+									AND
+										ENV_TYPE  = 'P'
+									AND
+										TENANT_ID = #tenantId#
+								)
+			]]>
+		</selectKey>
+		<isEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				INSERT INTO TBL_WEBFOLDER_ENV (
+					CN,              ENV_TYPE,         ENV_VALUE,           TENANT_ID
+				)
+				VALUES (
+					#userId#,         'P',             #listCount#,         #tenantId#
+				)
+			]]>
+		</isEqual>
+		<isNotEqual property="v_temp" compareValue="1">
+			<![CDATA[
+				UPDATE
+					TBL_WEBFOLDER_ENV
+				SET
+					ENV_VALUE   = #listCount#
+				WHERE
+					CN          = #userId#
+				AND
+					ENV_TYPE    = 'P'
+				AND
+					TENANT_ID   = #tenantId#
+			]]>
+		</isNotEqual>
+	</insert>
+	
+	<select id="EzWebFolderDAO.getAllDeptsForChief" resultMap="simpleDeptVO">
+		SELECT
+		 	s.CN                                                                                                                                     AS DEPT_ID,
+			CASE WHEN #primary# = '1' THEN s.DISPLAYNAME ELSE s.DISPLAYNAME2 END                                                                     AS DEPT_NAME,
+			#level#                                                                                                                                  AS LEVEL,
+			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE s.CN = b.EXTENSIONATTRIBUTE1 AND s.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB
+		FROM
+			tbl_deptmaster s
+		WHERE
+			EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
+		ORDER BY
+			LEVEL, lpad(ifnull(EXTENSIONATTRIBUTE15, 0),6,0), DISPLAYNAME
+	</select>
+	
+	<select id="EzWebFolderDAO.getSelectedDeptsForChief" resultMap="simpleDeptVO">
+		SELECT
+			s.CN                                                                                                                                     AS DEPT_ID,
+			CASE WHEN #primary# = '1' THEN s.DISPLAYNAME ELSE s.DISPLAYNAME2 END                                                                     AS DEPT_NAME,
+			#level#                                                                                                                                  AS LEVEL,
+			CASE WHEN (SELECT COUNT(*) FROM TBL_DEPTMASTER b WHERE s.CN = b.EXTENSIONATTRIBUTE1 AND s.TENANT_ID = b.TENANT_ID) = 0 THEN 0 ELSE 1 END AS HAS_SUB
+		FROM
+			TBL_DEPTMASTER s JOIN
+							(
+								SELECT 
+									* 
+								FROM
+									TBL_DEPTMASTER
+								WHERE
+									EXTENSIONATTRIBUTE9 = #userId# AND TENANT_ID = #tenantId#
+							) AS d1 ON s.DEPT_CD_PATH LIKE CONCAT(d1.DEPT_CD_PATH, '%')
+							 JOIN
+							(
+								SELECT
+									d2.*
+								FROM
+									TBL_DEPTMASTER d2 JOIN
+										(
+										SELECT 
+											f.* 
+										FROM
+											(
+												tbl_webfolder_folder f JOIN tbl_webfolder_folderuser u 
+												ON f.FOLDER_ID = u.FOLDER_ID AND u.USER_ID = #userId# AND u.USER_TYPE = 'chief' AND f.TENANT_ID = u.TENANT_ID
+											)
+										) AS a ON d2.CN = a.OWNER_ID AND a.FOLDER_UPPER = 'root' AND d2.TENANT_ID = a.TENANT_ID
+							) AS s2 ON s.CN = s2.CN and s.TENANT_ID = s2.TENANT_ID
+		WHERE
+			s.TENANT_ID = #tenantId#
+		ORDER BY
+			LEVEL, lpad(ifnull(s.EXTENSIONATTRIBUTE15, 0),6,0), s.DISPLAYNAME
+	</select>
+	
+	<select id="EzWebFolderDAO.checkFilesOwner" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_WEBFOLDER_FILE
+		WHERE
+			FILE_ID IN ($fileList$)
+		AND
+			CREATE_ID = #userId#
+		AND
+			TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzWebFolderDAO.getTotalFilesSize" resultClass="Double">
+		SELECT
+			IFNULL(SUM(CAST(FILE_SIZE AS INT)), 0)
+		FROM
+			TBL_WEBFOLDER_FILE
+		WHERE
+			FILE_ID IN ($fileList$)
+		AND
+			TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzWebFolderDAO.getFolderNameList" resultClass="String">
+		SELECT
+			CASE WHEN #primary# = '1' THEN FOLDER_NAME1 ELSE FOLDER_NAME2 END AS FOLDER_NAME
+		FROM
+			TBL_WEBFOLDER_FOLDER
+		WHERE
+			FOLDER_ID IN
+			<iterate property="path" open="(" close=")" conjunction=",">
+				#path[]#
+			</iterate>
+		AND
+			TENANT_ID = #tenantId#
+		ORDER BY
+			FOLDER_LEVEL ASC
+	</select>
+	
+	<select id="EzWebFolderDAO.getAllFolderNameMap" resultMap="hashMapResult">
+		SELECT
+			FOLDER_ID                                                         AS FOLDER_ID,
+			CASE WHEN #primary# = '1' THEN FOLDER_NAME1 ELSE FOLDER_NAME2 END AS FOLDER_NAME
+		FROM
+			TBL_WEBFOLDER_FOLDER
+		WHERE
+			FOLDER_ID IN
+			<iterate property="testbnk" open="(" close=")" conjunction=",">
+				#testbnk[]#
+			</iterate>
+		AND
+			TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzWebFolderDAO.getFolderListFromFileId" resultClass="String">
+		SELECT
+			DISTINCT F1.FOLDER_ID AS FOLDER_ID
+		FROM
+			TBL_WEBFOLDER_FOLDER F1 JOIN TBL_WEBFOLDER_FILE F2 ON F2.FILE_ID IN
+			<iterate property="fileIds" open="(" close=")" conjunction=",">
+				#fileIds[]#
+			</iterate>
+			AND F1.FOLDER_ID = F2.FOLDER_ID AND F1.TENANT_ID = F2.TENANT_ID
+		WHERE
+			F1.TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzWebFolderDAO.getAllSimpleShareFolder" parameterClass="Map" resultMap="folderSimpleVO">
+		SELECT
+			FOLDER_ID,
+		    FOLDER_NAME1 AS FOLDER_NAME,
+		    FOLDER_NAME2 AS FOLDER_NAME2,
+		    CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER A WHERE A.FOLDER_UPPER = D.FOLDER_ID AND A.USE_STATUS = 'Y' AND A.TENANT_ID = #tenantId#) = 0 
+		    	THEN 0 
+		    	ELSE 1 
+		    END AS HAS_SUB,
+		    FOLDER_LEVEL,
+		    OWNER_ID
+		FROM TBL_WEBFOLDER_FOLDER D
+	    JOIN (
+	        SELECT DISTINCT
+	            S.FOLDERFILE_ID,
+	            S.TENANT_ID
+	        FROM TBL_WEBFOLDER_SHARE S
+	        JOIN TBL_WEBFOLDER_SHARE_SUB SS
+	        ON S.SHARE_ID = SS.SHARE_ID
+	        AND S.TENANT_ID = SS.TENANT_ID
+	        LEFT JOIN TBL_WEBFOLDER_SHARE_HIDE SH
+	        ON S.SHARE_ID = SH.SHARE_ID
+	        AND S.TENANT_ID = SH.TENANT_ID
+	        AND SH.USER_ID = #userId#
+	        WHERE SS.USER_ID IN 
+	        <iterate property="idList" open="(" close=")" conjunction=",">
+				#idList[].id#
+			</iterate>
+	        AND S. FOLDERFILE_TYPE = 'D'
+	        AND SH.USER_ID IS NULL ) SD
+	    ON D.FOLDER_ID = SD.FOLDERFILE_ID
+	    AND D.TENANT_ID = SD.TENANT_ID
+	    WHERE D.TENANT_ID = #tenantId#
+	    AND D.COMPANY_ID = #compId#
+		AND D.USE_STATUS = 'Y'
+		ORDER BY FOLDER_NAME1
+	</select>
+</sqlMap>

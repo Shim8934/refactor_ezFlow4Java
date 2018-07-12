@@ -76,7 +76,7 @@
 		<div id="close">
         	<ul>
             	<li>
-              		<span onClick="window_close()"><spring:message code='ezOrgan.t143'/></span>              
+              		<span onClick="window_close()"></span>              
             	</li>
           	</ul>
 		</div>

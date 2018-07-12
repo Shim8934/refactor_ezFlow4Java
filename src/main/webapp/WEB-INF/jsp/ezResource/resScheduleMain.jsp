@@ -14,11 +14,47 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezResource/CalendarDataPro_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezResource/CalendarView_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezResource/CalendarView_Cross.js"></script>		
 		<script type="text/javascript" src="/js/ezResource/CalendarMini_Cross.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
 		<script type="text/javascript" src="/js/ezResource/calendar_cross.js"></script>
 		<script type="text/javascript" src="/js/Holiday.js"></script>
+		<!-- data picker-->
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/monthpicker.js"></script>
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
+		<!-- modal -->
+		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+		<style>
+			#resourceDataTable tr td {
+				border : 1px solid #ccc;				
+			}
+						
+			#resourceDataTable tr td{
+				padding-left : 7px;
+			}
+			
+			#resourceDataTable tr th{
+				font-weight: normal;
+			}
+			/* 2018-06-13 구해안 추가 */
+			.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-year{ 
+ 			margin: 0 auto; 
+	 		}  
+					
+	 		.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-month { 
+	 		  display: none; 
+	 		} 
+			.ui-monthpicker td span {
+			  padding: 5px;
+			  cursor: pointer;
+			  text-align: center;
+			}		
+		</style>
 		<script type="text/javascript">
 		var timeZoneStr = "${timeZoneStr}";
 	    var pAdminFg = "${adminFg}";
@@ -89,8 +125,40 @@
 	                }
 	            }
 	            xmlhttp2 = null;
-	            CalendarMiniView("CalendarMini");
-	            CalendarView("Calendar");
+	            CalendarView("Calendar");	            
+	           
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		            closeText: "<spring:message code='main.t3' />",
+		            prevText: "<spring:message code='main.t0604' />",
+		            nextText: "<spring:message code='main.t0605' />",
+		            currentText: "<spring:message code='main.t0606' />",
+		            monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+		                         "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+		                         "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+		                         "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+		            monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+		                              "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+		                              "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+		                              "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+		            dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+		                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+		                       "<spring:message code='main.t0627' />"],
+		            dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+				                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+				                       "<spring:message code='main.t0627' />"],
+		            dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+			                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+			                       "<spring:message code='main.t0627' />"],
+		            weekHeader: "Wk",
+		            dateFormat: "yy-mm-dd",
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: "show",
+		            showMonthAfterYear: true
+		        };
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		     
 	        }
 	    }
 		
@@ -125,10 +193,8 @@
 	    
 	    var agent = navigator.userAgent.toLowerCase(); 
 	    window.onload = function () {
-	    	var objRInfo = document.getElementById('ResourceInfo');
-	        if (objRInfo) {
-	            objRInfo.style.height = document.documentElement.clientHeight - 371 + "px";
-	        }        
+	    	//2018-06-05 팝업창으로 정보 이동하여 ResourceInfo height 수정하는 부분 삭제
+	    	
 	 		var divH = document.getElementById("divExplain")
 			if(divH){
 				divH.style.height = document.documentElement.clientHeight - 618 + "px";
@@ -203,7 +269,7 @@
 	    function btnRefresh_onclick() {
 
 	        RefreshMessageList();
-	        CalendarMiniView("CalendarMini");
+	        /*CalendarMiniView("CalendarMini");*/
 	    }
 
 	    function j_MoveToSelectedDate(j_kind, j_movNum, j_dateStr) {
@@ -338,11 +404,66 @@
                 window.open("/ezResource/scheduleManageForm.do?resID=${resID}&brdName=" + encodeURIComponent("${brdNm}"), "", "width=700, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
             }
         }
-
+		//2018-06-05 구해안 showres 함수 추가
+		function showRes(val01) {
+    		$.ajax({
+				type : "POST",
+				dataType : "json",
+				async : false,
+				url : "/ezResource/scheduleResourceData.do",
+				data : { 
+					resourceId   : val01						
+				},
+				success: function(result){
+					if (result.primary == "1") {						
+						$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
+						$("#ownerDept").html(result.resBrd.ownDeptNm);
+						$("#brdNm").html(result.resBrd.brdNm);
+					} else {
+						$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
+						$("#ownerDept").html(result.resBrd.ownDeptNm2);
+						$("#brdNm").html(result.resBrd.brdNm2);
+					}
+					
+					$("#ownerCall").html(result.resBrd.ownerCall);
+					$("#resLocation").html(result.resBrd.resLocation);						
+					
+					var approveFlag = result.resBrd.approveFlag;
+					
+					if (approveFlag == "1") {
+						$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
+					} else {
+						$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
+					}
+					
+					var resbrdExc = result.resBrd.brdExplain.replace(/(?:\r\n|\r|\n)/g, '<br />');
+					
+					$("#brdExplain").html(resbrdExc);
+					
+					/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+		        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+		        	
+		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+		        	
+		        	$("#ResourceInfo").css("left", popupX);
+		        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+					
+					$("#ResourceInfo").modal();
+				}, 
+				error: function() {
+					
+				}
+			});	    		
+        }
+		
+		function SearchOptionHidden() {
+        	$.modal.close();
+        }
     </script>
 	
 	</head>
-	<body class="mainbody" style="overflow: auto; margin-bottom:0px;" id="BodyTop">
+	<!-- 2018-06-13 구해안 우측 여백수정 -->
+	<body class="mainbody" style="overflow: auto; margin-bottom:0px;padding-right: 6px;" id="BodyTop">
 		<h1><span id="titleimg"></span> <c:out value='${brdNm}' /></h1>
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
@@ -351,18 +472,22 @@
 		<div id="mainmenu">
   			<ul>
     			<li><span id="pn_img" onClick="newSchedule_onclick(event)"><spring:message code='ezResource.t171'/></span></li>
-    			<li><span onclick='onViewDate("DAY");'><spring:message code='ezResource.t251'/></span></li>
-    			<li><span onclick='onViewDate("WEEK");'><spring:message code='ezResource.t253'/></span></li>
-    			<li><span onclick='onViewDate("MONTH");'><spring:message code='ezResource.t255'/></span></li>
+    			<!-- 2018-06-05 구해안 자원정보 버튼 추가 및 resinfo 정보 popup으로 수정 -->
+    			<li><span onclick='showRes(${resID});'><spring:message code='ezResource.t142'/></span></li>
     			<c:if test="${adminFg eq 'Y'}" >
     				<li><span onClick="btnform_onclick();"><spring:message code='ezResource.t378'/></span></li>
     				<c:if test="${approveFlag eq '1'}" >
     					<li id="approvlist"><span onClick="btnApprov_list();"><spring:message code='ezResource.t1000'/></span></li>
     				</c:if>
     			</c:if>
-    			<li style="background:none;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t369'/></li>
-				<li style="background:none;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t370'/></li>
-  			</ul>
+    			<!-- <li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li> -->
+    			<li><span onclick='onViewDate("DAY");'><spring:message code='ezResource.t251'/></span></li>
+    			<li><span onclick='onViewDate("WEEK");'><spring:message code='ezResource.t253'/></span></li>
+    			<li><span onclick='onViewDate("MONTH");'><spring:message code='ezResource.t255'/></span></li>
+    			<!-- 2018-06-05 구해안 허가,비허가 오른쪽으로 ui 수정 -->
+				<li style="background:none;float:right;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t370'/></li>
+    			<li style="background:none;float:right;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t369'/></li>
+  			</ul>  			
 		</div>
 		<script type="text/javascript">
     		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
@@ -372,60 +497,45 @@
 				<td style="vertical-align:top;width:100%;">
 					<div  style="vertical-align:top;" id="Calendar"></div>
 				</td>
-				<td style="vertical-align:top;width:10px">&nbsp;</td>
-				<td id="calTD2" style="vertical-align:top;width:220px">
-				 <div style="padding:15px 10px 15px 10px;border:1px solid #ddd"><div id="CalendarMini"></div></div>
-					<table id="ResourceInfo" name="ResourceInfo" style="width:218px; border-collapse:collapse; border-spacing:0px; margin-top:5px;border:1px solid #ddd;">
-					<tr>
-							<td height="30" bgcolor="#EFEFEF" class="subtxt" style="padding:3px 0px 0px 12px;border:1px solid #d1ddec; color:#333;background-color:rgb(236, 243, 252);"><spring:message code='ezResource.t271'/></td>
-						</tr>
-						<tr>
-							<td style="vertical-align:">
-							<div id="ResDiv" style="height:100%; padding: 5px; overflow-x:hidden; overflow-y:auto;">
-								<table id="ResDivTable" style="height:100%;">
-									<tr>
-										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <spring:message code='ezResource.t153'/> :<a href="#" onClick="MemberInfo_onClick('${ownerID}')"> ${ownerNm}(${ownerPosition}) </a> </td>
-									</tr>
-									<tr>
-										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <spring:message code='ezResource.t151'/> :  ${ownerDeptNm} </td>
-									</tr>
-									<tr>
-										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <spring:message code='ezResource.t155'/> :  ${ownerCall} </td>
-									</tr>
-									<tr>
-										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <spring:message code='ezResource.t148'/></td>
-									</tr>
-									<tr>
-										<td style="padding:2px 10px; word-break:break-all; height:20px;">${resLocation}</td>
-									</tr>
-									<tr>
-										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t149'/></b></td>
-									</tr>
-									<tr>
-										<td style="padding-left:10px; height:24px">
-											<c:choose>
-												<c:when test="${approveFlag eq 1}">
-													<spring:message code='ezResource.t272'/>
-												</c:when>
-												<c:otherwise>
-													<spring:message code='ezResource.t273'/>
-												</c:otherwise>
-											</c:choose>
-										</td>
-									</tr>
-									<tr>
-										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t271'/></b></td>
-									</tr>
-									<tr>
-										<td style="padding:2px 10px; max-width:176px;"><div  id = "divExplain" style="max-width:176px; word-break : break-word; word-wrap : break-word;"><c:out value='${brdExplain}' /></div></td>
-									</tr>
-								</table>
-								</div>
-	                    	</td>
-               			</tr>
-           			</table>
-				</td>
+				<!-- 2018-06-04 구해안 mini+info td 삭제 -->				
 			</tr>
 		</table>	
+		<!-- 2018-06-04 구해안 resinfo display:none 으로 추가 -->
+		<div id="ResourceInfo" style="display: none">
+			<div class="popupJQLayer" style="padding-top:6px">
+				<div class="title" id="brdNm"></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span></span></a></li>
+		            </ul>
+		        </div>
+	        	<table id="resourceDataTable" style="width:478px; margin-top:10px;">
+					<tr>
+						<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
+						<td><span id="ownerNm"></span></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t151'/></th>
+						<td><span id="ownerDept"></span></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t155'/></th>
+						<td><span id="ownerCall"></span></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t148'/></th>
+						<td style="word-break:break-all;" id="resLocation"><%-- ${resLocation} --%></td>
+					</tr>							
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
+						<td id="approveFlag"></td>
+					</tr>
+					<tr>
+						<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
+						<td><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></td>
+					</tr>
+	         	</table>
+	         </div>	
+        </div>
 	</body>
 </html>

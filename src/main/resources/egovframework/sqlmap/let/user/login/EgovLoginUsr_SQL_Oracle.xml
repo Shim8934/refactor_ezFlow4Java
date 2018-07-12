@@ -178,5 +178,44 @@
                 SERVER_NAME = #serverName#
         ]]>
     </select>
+    
+    <select id="loginDAO.selectReceiver" resultMap="login">
+        <!-- 일반회원 -->       
+        <![CDATA[
+            SELECT 
+                cn,
+                password,               
+                displayname,
+                displayname2,
+                department,              
+                description,
+                description2,
+                title,
+                title2,
+                physicaldeliveryofficename as companyid,
+                company,
+                company2,
+                updatedt,
+                extensionattribute1 as rollinfo,
+                telephonenumber,
+                mail,
+                extensionattribute10 as jikchek,
+                tenant_id,
+                (SELECT 'top,Top,'|| dept_cd_path FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primary,
+                loginCnt,
+                extensionattribute4 as gyumJik,
+                extensionattribute2 as userFileUrl,
+                extensionattribute14 as sabun
+            FROM 
+                TBL_USERMASTER a
+            WHERE 
+                cn = #id# 
+            AND 
+                cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+            AND 
+            	tenant_id = #tenantId#
+        ]]>
+    </select> 
  
 </sqlMap>

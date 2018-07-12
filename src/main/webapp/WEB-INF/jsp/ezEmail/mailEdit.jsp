@@ -101,7 +101,6 @@
 		    var bigtrue = 0;
 		    var isClosedSave = false;
 		    var filedate = "${stateName}";
-		    var folderDate = "${folderDate}";
 		    var _pBigAttachDownloadDay = "${pBigAttachDownloadDay}";
 		    var _pBigAttachDownloadPeriod = "${pBigAttachDownloadPeriod}";
 		    var defaultFontAndSize = "${defaultFontAndSize}";
@@ -111,6 +110,8 @@
 		    var securePassword = "${securePassword}";
 		    var secureReadCount = "${secureMaxReadCount}";
 		    var secureReadDate = "${secureMaxReadDate}";
+		    var folderPath = "${draftsFolderName}";
+		    var multipartFirstIdx = "${multipartFirstIdx}";
 		    
 			function window_onload() {
 	            if (!CrossYN()) {
@@ -196,10 +197,6 @@
 					document.getElementById("bodyType").options[1].selected = true;
 		        	document.getElementById("SelMailSign").disabled = true;
 				}
-		        
-		        if (isSecureMail == "true") {
-		        	document.getElementById("chkSecureMail").checked = true;
-		        }
 		        
 		        <c:if test="${useFromAddress == 'YES'}">
 		            var selectTarget = $('.selectbox select'); 
@@ -637,45 +634,65 @@
 		        var objRow;
 		        var objRows;
 		        objNode = createNodeInsert(xmlReturnValue, objNode, "DATA");
+		        
 		        if (xmlhttp.status == "200") {
+		        	
 		        	if (xmlhttp.responseText.indexOf("NO APPEND failed.") > -1) {
 		        		alert(strLang241);
-		        	}
-		        	else {
+		        	} else {
 			            xmlDoc = loadXMLString(xmlhttp.responseText);
 			
-			            if (CrossYN())
+			            if (CrossYN()) {
 			                g_url = xmlDoc.getElementsByTagName("URL").item(0).textContent;
-			            else
+			            } else {
 			                g_url = xmlDoc.getElementsByTagName("URL").item(0).text;
+			            }
+		        
 			            var filelist = SelectNodes(xmlDoc, "DATA/FILELIST/FILE");
+			            var scheme = document.location.protocol + "//" + document.location.hostname;
+		        	    
+		                if (document.location.port != "80") {
+		                	scheme += ":" + document.location.port;
+		                }
+			            
+		                /* 2018-05-09 김유진 - 파일 첨부시 href에 넣어줄 aitem 수정 */
 			            for (var i = 0; i < filelist.length; i++) {
 			                filename = SelectSingleNodeValue(filelist[i], "NAME");
 			                path = SelectSingleNodeValue(filelist[i], "PATH");
 			                big_yn = SelectSingleNodeValue(filelist[i], "BIG");
 			                size = SelectSingleNodeValue(filelist[i], "SIZE");
 			                attid = SelectSingleNodeValue(filelist[i], "ITEMID");
-			                aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURIComponent(g_url) + "&ATTID=" + encodeURIComponent(attid);
+			                
 			                if (big_yn == "Y") {
-			                    bigtrue = bigtrue + 1;
-			                    aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + encodeURIComponent(path) + "&filedate=" + encodeURIComponent(attid.split('\\')[0]);
+			                	// 대용량 첨부시 
+			                	bigtrue = bigtrue + 1;
+			                	aitem = scheme  + "/ezEmail/downloadAttachCommon.do?"
+			                					+ "fileid=" + encodeURIComponent(path)
+			                					+ "&filedate=" + encodeURIComponent(attid.split('/')[0])
+			                					+ "&tid=" + tid;
+			                } else {
+			                	// 일반파일 첨부시
+				                aitem = "/ezEmail/downloadAttach.do?" 
+				                				+ "mode=Attach"
+				                				+ "&folderPath=" + encodeURIComponent(folderPath)
+				                				+ "&filename=" + encodeURIComponent(filename);
 			                }
-			                else {
-			                    aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURIComponent(g_url) + "&ATTID=" + encodeURIComponent(attid);
-			                }
+			                
 			                objRows = createNodeAndAppandNode(xmlReturnValue, objNode, objRows, "ROW");
 			                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "FILEPATH", path);
 			                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "URL", aitem);
 			                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "BIG", big_yn);
 			                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "ITEMID", attid);
+			                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "UID", g_url);
 			            }
 			            
 			            returnvalue(strXML);
 		        	}
-		        }
-		        else {
+		        	
+		        } else {
 		            alert(xmlhttp.status + " : " + strLang241);
 		        }
+		        
 		        return xmlReturnValue;
 		    }
 			
@@ -754,7 +771,7 @@
                     </c:if>
 		            <li style="display:none;"><span onClick="Print_onClick()"><spring:message code='ezEmail.t546' /></span></li>
 		            <li style="display:none;"><span onClick="LoadFormat_onClick()"><spring:message code='ezEmail.t824' /></span></li>
-		            <li><span onClick="NameCertify_onClick()"><spring:message code='ezEmail.t331' /></span></li>
+		            <li style="display:none;"><span onClick="NameCertify_onClick()"><spring:message code='ezEmail.t331' /></span></li>
 		              <li><span onClick="Option_onClick('M')" id="Span1"><spring:message code='ezEmail.t353' /></span></li>
 		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
 		                 <img src="/images/pbar.gif" align="absmiddle"></li> 
@@ -770,9 +787,9 @@
 		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
                         <img src="/images/pbar.gif"></li> 
                     <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
-                        <select id="bodyType" style="vertical-align:top;width:90px;" onchange="changeTextOption(this.value);">
+                        <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">
                         	<option value="0">HTML</option>
-                        	<option value="1">Plain Text</option>
+                        	<option value="1">PlainText</option>
                         </select>
                     </li>
 		            <li style="display:none;">
@@ -794,7 +811,7 @@
 		        </div>
 		        <div id="close">
 		          <ul>
-		            <li><span onClick="window_close()"><spring:message code='ezEmail.t63' /></span></li>
+		            <li><span onClick="window_close()"></span></li>
 		          </ul>
 		        </div></td>
 		    </tr>
@@ -824,7 +841,7 @@
 		                <select id="SelectToAddress" style="WIDTH:100px" onchange="simple_select('TO',this)">
 		                </select>
 		            </td>
-		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
+		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
 		          </tr>
 		          <tr>
 		            <td colspan="3"><div id="MsgToGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
@@ -838,7 +855,7 @@
 		                <select id="SelectCcAddress" style="WIDTH:100px" onchange="simple_select('CC',this)">
 		                </select>
 		            </td>
-		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
+		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
 		          </tr>
 		          <tr id="MsgCC_TRu">
 		            <td colspan="3"><div id="MsgCCGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
@@ -850,7 +867,7 @@
 		                <select id="SelectBCCAddress" style="WIDTH:100px" onchange="simple_select('BCC',this)">
 		                </select>
 		            </td>
-		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
+		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
 		          </tr>
 		          <tr id="MsgBCC_TRu" style="display:none;">
 		            <td colspan="3"><div id="MsgBCCGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
@@ -922,11 +939,11 @@
                                     <script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans","100%", "20");</script>                                
                                 </td>
                                 <td class="pos2">
-                                    <a href="#" class="imgbtn"><span id="btn_AttachAdd" onclick="attach_Add()"><spring:message code='ezEmail.t677' /></span></a>
+                                    <a href="#" class="imgbtn imgbck"><span id="btn_AttachAdd" onclick="attach_Add()"><spring:message code='ezEmail.t677' /></span></a>
                                     <br>
-                                    <a href="#" class="imgbtn"><span id="btn_bigAttachAdd" onclick="bigattach_Add()"><spring:message code='ezEmail.t663' /></span></a>
+                                    <a href="#" class="imgbtn imgbck"><span id="btn_bigAttachAdd" onclick="bigattach_Add()"><spring:message code='ezEmail.t663' /></span></a>
                                     <br>                                    
-                                    <a href="#" class="imgbtn"><span id="btn_AttachDel" onclick="attach_Delete()"><spring:message code='ezEmail.t678' /></span></a></td>
+                                    <a href="#" class="imgbtn imgbck"><span id="btn_AttachDel" onclick="attach_Delete()"><spring:message code='ezEmail.t678' /></span></a></td>
                             </tr>
                         </table>
                     </td>
@@ -960,7 +977,6 @@
 		<input type="hidden" name="eImportant" style="display:none;">
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 			
 			if (useSecureMail == "YES") {
 	        	$('.securemail').css('display', '');

@@ -207,32 +207,21 @@
 		        scheduleTerm = getPickerDate();
 		        occurrenceTerm = occurrencDate();
 		        
-		    	if (document.getElementsByName("optRangeEnd")[0].checked == true)
-		    	{
-		    		repetition = "-1";		
-		    	}
-		    	else if (document.getElementsByName("optRangeEnd")[1].checked == true)
-		    	{
-		    		if (list_ReCount.value == parseInt(list_ReCount.value) && parseInt(list_ReCount.value) > 0)
-		    		{
-		    			repetition = parseInt(list_ReCount.value);
-		    		}
-		    		else
-		    		{
+		    	if (document.getElementsByName("optRangeEnd")[0].checked == true) {		    		
+		    		repetition = "-1";				    		
+		    	} else if (document.getElementsByName("optRangeEnd")[1].checked == true) {		    		
+		    		if (list_ReCount.value == parseInt(list_ReCount.value) && parseInt(list_ReCount.value) > 0) {		    			
+		    			repetition = parseInt(list_ReCount.value);		    			
+		    		} else {		    			
 		    			alert("<spring:message code='ezSchedule.t61' />");
 		    			list_ReCount.focus();
-		    			return;
+		    			return;		    			
 		    		}		
-		    	}
-		    	else
-		    	{
-		    		
-		    	    if(!check_time())
-		    	    {
+		    	} else {		    		
+		    	    if(!check_time()) {		    	    	
 		    	        alert("<spring:message code='ezSchedule.t60' />");
-		    	        return;
-		    	    }
-		    	    
+		    	        return;		    	        
+		    	    }		    	    
 		    		repetition = "0";				
 		    	}
 		    	//2018.01-31 김기하 반복 시 시작일자 검사 
@@ -241,59 +230,45 @@
 	        		return;
 	        	}
 		    	
-		    	if (alldaycheck.checked == true)
-		    	{
+		    	if (alldaycheck.checked == true) {
 		    		repetition += "|1";
 		    		allDayString = strLang39;
-		    	}
-		    	else
-		    	{
+		    	} else {
 		    		repetition += "|0";
 		    	}
 		    		
-		    	if (mpDaily.checked == true)
-		    	{
-		    		repetition += "|0";
-		    		
-		    		if (id0D2.checked == true)
-		    		{
+		    	if (mpDaily.checked == true) {		    		
+		    		repetition += "|0";		    		
+		    		if (id0D2.checked == true) {		    			
 		    			repetition += "|0";						
-		    			recurString = strLang45;
+		    			recurString = strLang45;		    			
+		    		} else {		    			
+		    			if (txt_De.value == parseInt(txt_De.value) && parseInt(txt_De.value) > 0){
+		    				
+		    				repetition += "|" + parseInt(txt_De.value);	
+		    				console.log(repetition + ' text_De.value : '+txt_De.value + ' parseInt : ' + parseInt(txt_De.value));
+		    			}		    				
+		    			else {		    				
+			    				alert("<spring:message code='ezSchedule.t62' />");
+			    				txt_De.focus();
+			    				return;
+		    				 }
 		    			
-		    		}
-		    		else
-		    		{
-		    			if (txt_De.value == parseInt(txt_De.value) && parseInt(txt_De.value) > 0)
-		    				repetition += "|" + parseInt(txt_De.value);
-		    			else
-		    			{
-		    				alert("<spring:message code='ezSchedule.t62' />");
-		    				txt_De.focus();
-		    				return;
-		    			}
-		    			
-		    			if(txt_De.value == "1")
-		    			{
-		                    recurString = strLang34;						
-		    			}
-		    			else
-		    			{
-		    			    recurString = txt_De.value + strLang81;						
+		    			if(txt_De.value == "1") {		    				
+		                    recurString = strLang34;		                    
+		    			} else {		    				
+		    			    recurString = txt_De.value + strLang81;			    			    
 		    			}						
 		    		}
-		    	}
-		    	else if (mpWeekly.checked == true)
-		    	{
-		    		repetition += "|1";				
-		    		
+		    	} else if (mpWeekly.checked == true) {		    		
+		    		repetition += "|1";						    		
 		    		if (txt_We.value == parseInt(txt_We.value) && parseInt(txt_We.value) > 0)
 		    			repetition += "|" + parseInt(txt_We.value);
-		    		else
-		    		{
-		    			alert("<spring:message code='ezSchedule.t63' />");
-		    			txt_We.focus();
-		    			return;
-		    		}
+		    		else {
+			    			alert("<spring:message code='ezSchedule.t63' />");
+			    			txt_We.focus();
+			    			return;
+			    		 }
 		    		
 		    		var days = "";
 		    		var checks = daytable.getElementsByTagName("input");
@@ -427,13 +402,14 @@
 		    	}
 		    	
 		    	rtn["REPETITION"] = repetition;
+		    	/*2018-05-16 구해안 반복주기에서 표시되는 기간: -> 기간 : 으로 수정, 맨앞에 반복주기 : 추가*/
 		    	if(allDayString =="")
 		    	{
-		    	    rtn["REPDISPLAY"] = recurString + " " + occurrenceTerm + ", " + strLang79 + ":" + scheduleTerm;
+		    	    rtn["REPDISPLAY"] = strLang33 + " " + recurString + " " + occurrenceTerm + ", " + strLang79 + " : " + scheduleTerm;
 		    	}
 		    	else
 		    	{
-		    	    rtn["REPDISPLAY"] = recurString + " " + allDayString + ", " + strLang79 + ":" + scheduleTerm;
+		    	    rtn["REPDISPLAY"] = strLang33 + " " + recurString + " " + allDayString + ", " + strLang79 + " : " + scheduleTerm;
 		    	}
 		    	if (ReturnFunction != null) {
 		    	    //2018.01.30 김기하 일정반복 시 시간기준 점 변경  
@@ -936,6 +912,11 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezSchedule.t59' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="windows_close()"></span></li>
+            </ul>
+        </div>
 		<div id="TB_Promise">
 			<h2><spring:message code='ezSchedule.t67' /></h2>
 		  	<table class="content">
@@ -943,7 +924,7 @@
 		      		<th><spring:message code='ezSchedule.t68' /><u>T</u>)</th>
 		      		<td>
 		      			<div>
-		          			<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+		          			<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" />
 		        			<label for="btnT1" accesskye="T"></label>
 		        			<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" onChange="allDayTime()"/>
 		        			<spring:message code='ezSchedule.t69' />
@@ -953,7 +934,7 @@
 			    <tr>
 			    	<th><spring:message code='ezSchedule.t70' /><u>N</u>)</th>
 			      	<td>
-			        	<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+			        	<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" />
 			        	<label for="btnT2" accesskye="N"></label>
 			      	</td>
 			    </tr>
@@ -978,7 +959,7 @@
 	    			<div>
 		    			<input id="id0D1" type="radio" name="optDaily" checked />
 	    				<label for="txt_De" accesskey="V">
-	            			<input name="text" type="text" id="txt_De" style="Width:40px;" onFocus='window.document.all["optDaily"][0].checked=true;' value="1" maxlength='3' />
+	            			<input name="text" type="text" id="txt_De" style="Width:40px;text-align:center;" onFocus='window.document.all["optDaily"][0].checked=true;' value="1" maxlength='3' />
 	          				&nbsp;<spring:message code='ezSchedule.t77' />
 	          			</label>
 	          		</div>
@@ -992,7 +973,7 @@
 	    		<td style="padding:10px;height:85px">
 	    			<span style="margin-left:4px"><spring:message code='ezSchedule.t79' /></span>	    			
 	      			<label for="txt_We" accesskey="C">
-	      				<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px" value="1" />
+	      				<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px;text-align:center;" value="1" />
 	      				<spring:message code='ezSchedule.t80' />
 	      			</label>
 	      			<div id="daytable">
@@ -1018,15 +999,15 @@
 	    			<div>
 	    				<input type="radio" name='optMonthly' id="idOM1" checked />
 	            		<label for="idOM1" accesskey="A"><spring:message code='ezSchedule.t88' /><u>A</u>)&nbsp;</label>	            	
-		            	<input name="Input" id="list_MonthInterval" style="Width:40px;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="1" maxlength="3" />
+		            	<input name="Input" id="list_MonthInterval" style="Width:40px;text-align:center;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="1" maxlength="3" />
 						&nbsp;<spring:message code='ezSchedule.t89' />
-		            	<input name="Input" id="list_MonthlyDays" style="Width:40px;" onFocus='window.document.all["optMonthly"][0].checked=true;' maxlength="2" />
+		            	<input name="Input" id="list_MonthlyDays" style="Width:40px;text-align:center;" onFocus='window.document.all["optMonthly"][0].checked=true;' maxlength="2" />
 						&nbsp;<spring:message code='ezSchedule.t90' />
 					</div>
 					<div style="margin-top:3px">						
 						<input id="id0M2" type="radio" name='optMonthly' />
 						<label for="id0M2" accesskey="E"><spring:message code='ezSchedule.t91' /><u>E</u>)&nbsp;</label>
-		            	<input name="Input" id="list_MonthInterval2" style="Width:40px;" onFocus='window.document.all["optMonthly"][1].checked=true;' value="1" maxlength="3" />
+		            	<input name="Input" id="list_MonthInterval2" style="Width:40px;text-align:center;" onFocus='window.document.all["optMonthly"][1].checked=true;' value="1" maxlength="3" />
 						&nbsp;<spring:message code='ezSchedule.t89' />
 		            	<select name="select" id="list_MonthlyEach" onFocus='window.document.all["optMonthly"][1].checked=true;'>
 							<option value="1"><spring:message code='ezSchedule.t92' /></option>
@@ -1067,7 +1048,7 @@
 							<option value="11"><spring:message code='ezSchedule.t392' /></option>
 							<option value="12"><spring:message code='ezSchedule.t393' /></option>
 		            	</select>		            
-		            	<input name="Input" class="text" id="list_YearlyDays" style="Width:40px;" onFocus='window.document.all["optYearly"][0].checked=true;' maxlength="2" />
+		            	<input name="Input" class="text" id="list_YearlyDays" style="Width:40px;text-align:center;" onFocus='window.document.all["optYearly"][0].checked=true;' maxlength="2" />
 						&nbsp;<spring:message code='ezSchedule.t100' />
 					</div>
 		            <div style="margin-top:3px">	
@@ -1110,26 +1091,25 @@
 		</table>
 		<br/>
 		<h2><spring:message code='ezSchedule.t102' /></h2>
+			<!-- 2018-05-16 구해안 반복설정 UI 수정(테이블 td rowspan="4") 및 시작일 -->
 		<table class="content">
 			<tr>
-		    	<th align="right"><spring:message code='ezSchedule.t103' /><u>S</u>)</th>
+		    	<th align="right" rowspan="4">&nbsp;&nbsp;&nbsp;<spring:message code='ezTask.t65' />&nbsp;&nbsp;&nbsp;</th>
 		    	<td width="100%">
+		    		<span style="margin-left: 5px;" class="repeatRange"><spring:message code='ezTask.t121' /></span>
 		        	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/>
 		    	</td>
 		  	</tr>
 		  	<tr>
-		    	<th align="right"></th>
 		    	<td><input type="radio" name="optRangeEnd" value="radiobutton" value="-1" checked><spring:message code='ezSchedule.t111' /></td>
 		  	</tr>
 		  	<tr>
-		    	<th align="right"></th>
 		    	<td>
 		    		<input type="radio" id="Instances" name="optRangeEnd"  value="radiobutton" value="1"/><spring:message code='ezSchedule.t112' />
-		      		<input id="list_ReCount" maxlength="3" onFocus="Instances.checked = true" size="4" value='10' /><spring:message code='ezSchedule.t113' />		      		
+		      		<input id="list_ReCount" maxlength="3" onFocus="Instances.checked = true" style="text-align:center;" size="4" value='10' /><spring:message code='ezSchedule.t113' />		      		
 		      	</td>
 		  	</tr>
 		  	<tr>
-		    	<th align="right"></th>
 		    	<td>
 		    		<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton" value="0"/><spring:message code='ezSchedule.t114' />
 		      		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
@@ -1138,7 +1118,6 @@
 		</table>
 		<div class="btnpositionNew"> 
 		    <a class="imgbtn" onClick="ok_click()" ><span><spring:message code='ezSchedule.t4' /></span></a>
-		    <a class="imgbtn" onClick="windows_close()" ><span><spring:message code='ezSchedule.t5' /></span></a>
 		    <a class="imgbtn" onClick="remove_click()" ><span><spring:message code='ezSchedule.t115' /></span></a>
 		</div>
 		<form name="postaldata" style="display:none">

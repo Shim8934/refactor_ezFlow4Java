@@ -107,16 +107,16 @@
     	    		isSum = "Y"
 	    		}
 	    	
-	    	 	if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
-                    self.resizeTo(760, 800);
-                } else {
-                    self.resizeTo(785, 830);
-                } 
+// 	    	 	if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+//                     self.resizeTo(760, 800);
+//                 } else {
+//                     self.resizeTo(785, 830);
+//                 } 
 	    		
-	    		// IE10에서 에디터사이즈 조절
-	    		if (new RegExp(/MSIE 10/).test(navigator.userAgent)) {
-		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 310 + "PX";
-		    	}
+// 	    		// IE10에서 에디터사이즈 조절
+// 	    		if (new RegExp(/MSIE 10/).test(navigator.userAgent)) {
+// 		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 310 + "PX";
+// 		    	}
 	    	}; 
 	    
 	    	// 양식내용을 에디터에 넣어주는 작업 
@@ -254,7 +254,6 @@
 						journalIdList : JSON.stringify(journalIdList)
 					},
    					success : function(result){
-   						
    						if (result.formStatus == null) {
    							$("#btnGetOther").css("display", "none");
    						} else {
@@ -296,7 +295,10 @@
 						$("#loading").html('<img id="loading-image" src="/images/ProgressBar.gif" alt="Loading...">');
 					},
    					success : function(result){
-   						
+   						if (result.formInfo == "fail") {
+   							alert("<spring:message code='ezJournal.t177'/>");
+   							window.close();
+   						}
    						$("#title").val(result.journalTitle);
    						message.SetEditorContent(result.journalContent);
    						if(mode == "sum"){
@@ -334,7 +336,9 @@
 	    	function selectReceiver(){			
 				var url = "/ezJournal/selectReceiver.do";
 			//	url += "?companyId=" + companyId;
-				GetOpenWindow(url, "selectReceiver", 980, 610);
+				var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
+	    		try { OpenWin.focus(); } catch (e) { }
+			//	GetOpenWindow(url, "selectReceiver", 980, 650);
 			}
 	    	
 			// 선택된 수신자 화면에 뿌리기
@@ -616,21 +620,21 @@
 			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t26' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
-			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t73' /></span></li>
+	                    			<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezJournal.t73 => t26 -->
+			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t26' /></span></li>
 			                        <li><span onclick="btn_TempSave('temp')"><spring:message code='ezJournal.t74' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>
+	                    	<li id="btnGetOther"><span onclick="getOtherJournalList()"><spring:message code='ezJournal.t75' /></span></li>
 	                    </ul>
 	                </div>
 	                <div id="close">
-	                    <ul>
-	                        <li id="btnGetOther"><span onclick="getOtherJournalList()"><spring:message code='ezJournal.t75' /></span></li>
-	                        <li><span onclick="btn_Close();"><spring:message code='ezJournal.t27' /></span></li>
+	                    <ul>	                        
+	                        <li><span onclick="btn_Close();"></span></li>
 	                    </ul>
 	                </div>
 	                <script type="text/javascript">
 	                    selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	                    selToggleList(document.getElementById("close"), "ul", "li", "0");
 	                </script>
 	            </td>
 	        </tr>
@@ -669,7 +673,7 @@
 	                    <tr>
 	                        <th><spring:message code='ezJournal.t80' /></th>
 	                        <td style="width: 5%; border-right: none;">
-                        		<a class="imgbtn"><span style="text-align: right;" id="clickbtn" onclick="selectReceiver()"><spring:message code='ezJournal.t81'/></span></a>
+                        		<a class="imgbtn imgbck"><span style="text-align: right;" id="clickbtn" onclick="selectReceiver()"><spring:message code='ezJournal.t81'/></span></a>
 	                        </td>
 	                        <td colspan="3" style="border-left: none; vertical-align: middle; height: 28px;">
 	                       		<div style="overflow-y: auto; height: 28px;">

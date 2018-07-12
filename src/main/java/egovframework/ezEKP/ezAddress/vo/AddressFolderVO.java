@@ -7,7 +7,14 @@ public class AddressFolderVO {
 	private String folderType;
 	private String folderName;
 	private String childCount;
+	private String level;
 	
+	public String getLevel() {
+		return level;
+	}
+	public void setLevel(String level) {
+		this.level = level;
+	}
 	public String getFolderId() {
 		return folderId;
 	}
@@ -48,6 +55,6 @@ public class AddressFolderVO {
 	@Override
 	public String toString() {
 		return "AddressFolderVO [folderId=" + folderId + ", parentId=" + parentId + ", ownerId=" + ownerId
-				+ ", folderType=" + folderType + ", folderName=" + folderName + ", childCount=" + childCount + "]";
+				+ ", folderType=" + folderType + ", folderName=" + folderName + ", childCount=" + childCount + ", level=" + level + "]";
 	}
 }

@@ -31,9 +31,9 @@
 	    <script type="text/javascript" src="/js/ezApprovalG/getContainerInfo_Cross.js"></script>
 	    <script type="text/javascript" src="/js/Common.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
+	    <!-- <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 	    <link rel="stylesheet" href="/js/jquery/jquery-ui.css">
-	    <link rel="stylesheet" href="/js/jquery/jquery-ui.min.css"> 
+	    <link rel="stylesheet" href="/js/jquery/jquery-ui.min.css"> --> 
 	    <script type="text/javascript" src="/js/ezApprovalG/Common_Function.js"></script>
 	    <script type="text/javascript" id="clientEventHandlersJS">
 	        var labelcolor = "gray";
@@ -92,22 +92,23 @@
 	        document.onselectstart = function () { return false; };
 	
 	        $(function () {
-	            $("#sel_year").selectmenu({
+	        	/* 2018-06-19 김민성 - 전자결재 selectbox 기본으로 변경 */
+	           /*  $("#sel_year").selectmenu({
 	                change: function (event, data) {
 	                    onSelect_Year(data.item.value);
 	                }
-	            });
+	            }); 
 	
 	            $("#who_year").selectmenu({
 	                change: function (event, data) {
 	                    onSelect_Year(data.item.value);
 	                }
-	            });
+	            }); */
 	            
-	            $("#number")
+	            /* $("#number")
 	              .selectmenu()
 	              .selectmenu("menuWidget")
-	                .addClass("overflow");
+	                .addClass("overflow"); */
 	        });
 	
 	        window.onload = function () {
@@ -357,7 +358,7 @@
 		        ContainerID = ContainerID + "'" + retVal[i] + "'";
 		        subCondition = "";
 		        if (ContainerID != "'undefined'") {
-		            document.getElementById("presentcell").innerHTML = unescape("<spring:message code='ezApproval.t576'/>");
+		            document.getElementById("presentcell").innerHTML = unescape("<spring:message code='ezApprovalG.t1516'/>");
 		            GetDocList();
 		        }
 		    }
@@ -416,7 +417,7 @@
 		    var setsearchinfo_cross_dialogArguments = new Array();
 		    var OpenWin2;
 		    function SearchCondi_onclick() {
-		        var para;
+		        var para = LoadSquery;
 		        setsearchinfo_cross_dialogArguments[0] = para;
 		        setsearchinfo_cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 		
@@ -429,12 +430,15 @@
 		        	condition[i] = returnvalue[i]; 
 		        }
 	    	   
-		        if (condition) {
+	    	    if (LoadSquery == "usercontlist") {
+	    	    	MakeSubCondition();
+	    	    	GetUserContList();
+	    	    } else if (condition) {
 		            Init_Flag = "False";
 		            GetDocSearch();
 		        }
 		        $('#sel_year').val("ALL");
-		        $('#sel_year').selectmenu('refresh');
+		        /* $('#sel_year').selectmenu('refresh'); */
 		     
 		    }
 		    function lvtDoclist_onclick() {
@@ -460,6 +464,8 @@
 		            GetDocList();
 		        else if (DocListType == "GetDocSearch")
 		            GetDocSearch();
+		        else if (DocListType == "UserContDocList")
+		        	GetUserContList();
 		        else
 		            GetDocList();
 		    }
@@ -501,7 +507,7 @@
 		                } else {
 		                	left = (parseInt(width) - 1155) / 2;
 					        top = (parseInt(heigth) - 460) / 2;
-		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + escape(tr.getAttribute("DATA1")) + "&docState=011", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + escape(tr.getAttribute("DATA1")) + "&docState=011" + "&aprState=" + escape(tr.getAttribute("DATA4")), "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                }
 		            } else if (jobState == "ATTACH") {
 		            	var AttachfilenameA1 = tr.cells[1].innerHTML;
@@ -970,29 +976,29 @@
 		        var pageNum = curpage;
 		        if (totalPage > 1 && pageNum != 1) {
 		            strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' width='16' height='16' /></a></span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
 		            strtext = "<span class='btnimg'><a >";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' width='16' height='16' /></a></span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
 		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+		                strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
 		                strtext = "<span class='btnimg'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+		                strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
 		            strtext = "<span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -1020,29 +1026,29 @@
 		        }
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg' onclick='return selafterBlock()'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_next.gif' width='16' height='16'></span>";
+		                strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
+		                strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' width='16' height='16'></span>";
+		                strtext = "<span class='btnimg'>";
+		                strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
 		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' width='16' height='16' /></span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' /></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
 		            strtext = "<span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' width='16' height='16' /></span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
 		            PagingHTML += strtext;
 		        }
 		        PagingHTML += "</div>";
@@ -1175,10 +1181,16 @@
 		        }
 		        pageNum = 1;
 		        Init_Flag = "False";
-		        GetDocSearch();
+		        
+		        if (LoadSquery == "usercontlist") {
+		        	MakeSubCondition();
+	    	    	GetUserContList();
+		        } else {
+		       		GetDocSearch();
+		        }
 		
 		        $('#sel_year').val("ALL");
-		        $('#sel_year').selectmenu('refresh');
+		        /* $('#sel_year').selectmenu('refresh'); */
 		    }
 	    
 		    function resend_onclick() {
@@ -1251,7 +1263,7 @@
 	            aprgongramline_cross_dialogArguments[0] = para;
 	            aprgongramline_cross_dialogArguments[1] = sendCirCulation_onclick_Complete;
 	
-	            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 740));
+	            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 760));
 	            try { OpenWin.focus(); } catch (e) { }
 		    }
 
@@ -1321,23 +1333,19 @@
 	            <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1"><spring:message code='ezApprovalG.t106'/></label>
 		        <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2"><spring:message code='ezApprovalG.t445'/></label>
 		        &nbsp;
-		        <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align: top" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	            <a href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onClick="search()"></a>
+		        <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+	            <a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
 	        </span>
 	    </h1>
 	    <div id="mainmenu">
 	        <ul id="menuend">
-	        	<c:if test ="${approvalFlag == 'S'}">
-	        	<c:if test ="${tmpValue !='' && contID !=''}">
-	            <li><span onclick="return SelCont_onclick()"><spring:message code='ezApprovalG.t1516'/></span></li>
-	            </c:if>
+	        	<c:if test ="${approvalFlag == 'S'}">	        	
 	            <li id="tresend" style="display: none"><span id="resend" onClick="return resend_onclick()" ><spring:message code='ezApprovalG.t940'/></span></li>
 	            <li id="tsendCir" style="display: none"><span id="sendCir" onClick="return sendCirCulation_onclick()" ><spring:message code='ezApprovalG.hyj25'/></span></li>
 <!-- 	            시행문 변환 추후 개발 -->
 				<div style="display: none">
 		            <li id="tenforce" style="display: none"><span id="enforce" onclick="return enforce_onclick()"><spring:message code='ezApprovalG.t1524'/></span></li>
 				</div>
-	            <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li>
 	            <li id=tbtnRegUserCont><span id=btnRegUserCont onClick ="return btnRegUserCont_onclick()" ><spring:message code='ezApproval.t589'/></span></li>
 	            </c:if>
 	            <li id="tbar1" style="background: none; padding-right: 2px; display: none;">
@@ -1345,36 +1353,43 @@
 	            <li id="tbtnExcel"><span id="btnExcel" onclick="return btnExcel_onclick(0)"><spring:message code='ezApprovalG.t1526'/></span></li>
 	            <li id="tbtnExcelAll"><span id="btnExcelAll" onclick="return btnExcel_onclick(1)"><spring:message code='ezApprovalG.t1527'/></span></li>
 	            <c:if test ="${approvalFlag == 'S'}">
-	            <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li>
+	            <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li> -->
 	            <li id=tbtnRemoveDoc><span id=btnRemoveDoc onClick ="return btnRemoveDoc_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
+	            <c:if test ="${tmpValue !='' && contID !=''}">
+		            <li><span onclick="return SelCont_onclick()"><spring:message code='ezApprovalG.t1516'/></span></li>
+	            </c:if>
 			    <li id="tSearchCondi"><span id="SearchCondi" onClick="return SearchCondi_onclick()" ><spring:message code='ezApprovalG.t111'/></span></li>
 		        <li id="tViewDoc"><span id="ViewDoc" onClick="return ViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>      
 		        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-		        <li id="Li2" style="background: none; padding-right: 2px;">
-		        <img src="/images/i_bar.gif"></li>
+		        <!-- <li id="Li2" style="background: none; padding-right: 2px;">
+		        <img src="/images/i_bar.gif"></li> -->
 	            </c:if>
 	            <c:if test ="${approvalFlag == 'G'}">
 	            <li id="tDocInfo"><span id="DocInfo" onclick="return GongRamDocInfo()"><spring:message code='ezApprovalG.t946'/></span></li>
-	            <li id="tbar2" style="background: none; padding-right: 2px; display: none;"><img src="/images/i_bar.gif"></li>
+	            <!-- <li id="tbar2" style="background: none; padding-right: 2px; display: none;"><img src="/images/i_bar.gif"></li> -->
 	            <li id="tSearchCondi"><span id="SearchCondi" onclick="return SearchCondi_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
 	            <li id="tViewDoc"><span id="ViewDoc" onclick="return ViewDoc_onclick()"><spring:message code='ezApprovalG.t367'/></span></li>
 	            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
+	            <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
 	            </c:if>
 	            <!-- <img src="/images/i_bar.gif"> -->
-	            <select id="sel_year" name="sel_year" style="width:75px;" onchange="onSelect_Year(this);">    
-	                <option value="ALL">ALL</option>
-	            </select>  
+	            <li style="vertical-align: middle;">
+	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
+		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
+		        	</select>  
+		        </li>
 	        </ul>
 	        <!-- 	        후결 문서함 -->
 	    	<ul id="menuapr">
 		        <li id="tViewDocApr"><span id="ViewDocApr" onClick="return ViewDoc_onclick()" ><spring:message code='ezApproval.pjj35'/></span></li> 
 		        <li id="tSearchCondiApr"><span id="SearchCondiApr" onClick="return SearchCondi_onclick()" ><spring:message code='ezApprovalG.t111'/></span></li>
 		        <li id="Li1"><span id="Span1" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-		        <img src="/images/i_bar.gif">
-		        <select id="who_year" name="who_year" style="width:92px;" onchange="onSelect_Year(this);">
-		            <option value="ALL">ALL</option>
-		        </select>   
+		        <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
+		        <li style="vertical-align: middle;">
+		        	<select id="who_year" name="who_year" style="height:29px;" onchange="onSelect_Year(this);">
+		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
+		        	</select>  
+		        </li>
       		</ul>
 	    </div>
 	    <div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">

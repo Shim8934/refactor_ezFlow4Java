@@ -157,6 +157,12 @@
 	<body class="leftbody" style="overflow-y: auto;overflow-x: hidden">	
 		<div id="left">
   			<div class="left_admin"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code="ezResource.t17" /></div>
+			<div><h1 id="ToTitle" class="receiver_tltype01" style="border-bottom:0px;margin-left:8px;"><spring:message code="ezResource.t71" /></h1></div>
+    		<div id="TreeView" valign="top" style="behavior:url(/js/ezResource/organtreeview.htc); height:250px; width:200px; overflow-x:hidden;overflow-y:auto;
+    			BORDER:#eaeaea 1px solid; BACKGROUND-COLOR:white; margin-top:5px; margin-left:8px;" onrequestdata="TreeView_onNodeExpanded(event);"  onnodeselect="TreeView_onNodeClick();"
+				onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" onclick="brdlistsInit()">
+			</div>
+			<br />
 			<h2><span onClick="NavigateBrdAdmin_Res('MOD')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t22" /></span><ul></ul></h2>
 			<h2><span onClick="NavigateBrdAdmin_Res('NEW')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t23" /></span><ul></ul></h2>
 			<h2><span onClick="NavigateBrdAdmin_Res('ACL')" style="display:inline-block;width:100%;"><spring:message code="ezResource.t24" /></span><ul></ul></h2>
@@ -167,14 +173,10 @@
 				<script type="text/javascript">
 					initToggleList(document.getElementById("left"), "h2", "ul", "li");
 				</script>
-				<spring:message code="ezResource.t28" />
-				<select id="SCompID" name="SCompID" onChange="changeTree()" style="width: 145px"></select>
+				<%-- <spring:message code="ezResource.t28" /> --%>
+				<select id="SCompID" name="SCompID" onChange="changeTree()" style="width: 145px; display: none;"></select>
 			</div>
     		<br />
-    		<div id="TreeView" valign="top" style="behavior:url(/js/ezResource/organtreeview.htc);height:380px;width:174px;overflow-x:auto;overflow-y:auto;
-    			BORDER:#ddd 0px solid; BACKGROUND-COLOR:#f8f8fa;margin-top:5px;" onrequestdata="TreeView_onNodeExpanded(event);"  onnodeselect="TreeView_onNodeClick();"
-				onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" onclick="brdlistsInit()">
-			</div>
     		
 			<form name="brds">
 				<input type="hidden" id="up_id" name="up_id" value="0">

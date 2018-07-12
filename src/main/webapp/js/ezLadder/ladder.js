@@ -1,13 +1,14 @@
-var userDiv = 101;
+var userDiv = 100;
 var clickUserOrder = -1;
 var resultOrder = -1;
 var startXPoint = userDiv/2; // 시작 위치 왼쪽부터 떨어진 거리
 var startYPoint = 1; // 시작 위치 위부터 떨어진 거리
-var hInfo = 39 + 1; // 높이 수
+var hInfo = 39 + 6; // 높이 수
 var wInfo = 0; // 멤버 수
-var hSize = 20; // 세로 간격
-var wSize = 150; // 가로 간격
-var moveSpeed = 6/*hSize / 10*/; // 애니메이션 속도
+var hSize = 15; // 세로 간격
+var wSize; // 가로 간격
+var ladLeftPadding;
+var moveSpeed = 4/*hSize / 10*/; // 애니메이션 속도
 var lad = ""; // 사다리 정보
 var ladArr = []; // 사다리 정보를 배열로 저장
 var printLadInfo = []; // 사다리 방향 정보
@@ -15,9 +16,14 @@ var checkUserPath = []; // 유저별 사다리 이동 방향 정보
 var userStatus = []; // 유저의 사다리 실행 상태 (처음 실행 : 0, 다시 실행 : 1)
 var drawStatus = false; // true:애니메이션 진행 false:애니메이션 정지
 var beforeStatus = 0; // 0: 직전에 애니메이션 진행 1: 직전에 팝 진행
+var colors 	= ["#e04343", "#f79f3f", "#a9cd40", "#00b4c8", "#898cff", "#ff89b5", "#ffdc89", "#90d4f7", "#71e096", "#f5a26f",		
+			   "#668de5", "#ed6d79", "#5ad0e5", "#da97e0", "#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924",     
+          	   "#d41e47", "#4c64ae", "#01539c", "#f05f7c", "#00b3ca", "#bd8139", "#d9c622", "#4a2431", "#d41e47", "#eb148d"];
 
 function changeUser(len) {
 	wInfo = len;
+	
+	$("canvas").attr("width", wInfo * wSize + ladLeftPadding);
 	setDefaultLad();
 }
 
@@ -29,7 +35,7 @@ function changeSpeed(speed, flag) { // 속도 변화
 	}
 }
 
-function setDefaultLad() { // 세로선, 유저, 아이템 나타나기
+function setDefaultLad() { // 세로선 나타나기
 	for(var i = 0; i < wInfo; i++) {
 		drawLadLine('H', startXPoint + (wSize * i), startYPoint);
 		
@@ -71,22 +77,23 @@ function setUserPath() { // 각 유저의 이동경로 저장
 	var locX;
 	var locY;
 	var userPathInfo;
-	var colorArray = colors();
-	var colorCnt = 60;
+	/*var colorArray = colors();
+	var colorCnt = 60;*/
 	
 	for(var i = 0; i < wInfo; i++) {
 		locX = i;
 		locY = 0;
 		userPathInfo = {};
-		temp = Math.floor(Math.random()*colorCnt);
-		userPathInfo['color'] = colorArray[temp];
-		colorArray.splice(temp, 1);
+		/*temp = Math.floor(Math.random()*colorCnt);
+		userPathInfo['color'] = colorArray[temp];*/
+		userPathInfo['color'] = colors[i % 30];
+		/*colorArray.splice(temp, 1);
 		colorCnt--;
 		
 		if(colorCnt == 0) {
 			colorArray = colors();
 			colorCnt =60;
-		}
+		}*/
 		/*userPathInfo['color'] = '#' + Math.round(Math.random() * 0xffffff).toString(16);*/
 		
 		while(locY < hInfo) {
@@ -106,14 +113,14 @@ function setUserPath() { // 각 유저의 이동경로 저장
 		checkUserPath[i] = userPathInfo;
 	}
 }
-
+/*
 function colors() {
 	var color = [ '#FF7100','#FF4B14','#FF1B1B','#FF144B','#FF0071','#FFB420','#FF9440','#FF6D52','#FF526D','#FF4094','#FF20B4','#FFF231','#FFD75E','#FFDBBF','#FF8D8D',
 	              '#FF80B8','#FF5ED7','#FF31F2','#CEFF2F','#EAFF65','#FFF998','#FFDBBF','#FFBFDB','#FF98F9','#EA65FF','#CE2FFF','#8DFF1B','#A9FF54','#C6FF8D','#BFFFE3',
 	              '#E2C6FF','#C68DFF','#C68DFF','#8D1BFF','#60FF2F','#7AFF65','#98FF9F','#BFFFE3','#BFE3FF','#989FFF','#7A65FF','#602FFF','#31FF3E','#5EFF86','#80FFC7',
 	              '#8DFFFF','#80C7FF','#5E86FF','#313EFF','#20FF6B','#40FFAA','#52FFE4','#52E4FF','#40AAFF','#206BFF','#00FF8E','#14FFC8','#1BFFFF','#14C8FF','#008EFF'];
 	return (color);
-}
+}*/
 
 var moveImgHalfHeight;
 var canvasTop;
@@ -124,19 +131,28 @@ var moveLeft;
 var $moveImg;
 
 function ladderDrawInitSettingVar() {
-	moveImgHalfHeight = ($("#drag0 img").height() + Number($("#drag0 img").css("border-width").split("px")[0]) * 2) / 2;
+	var $userImg = $("#drag0").find("img");
+	moveImgHalfHeight = ($userImg.height() + Number($userImg.css("border-width").split("px")[0]) * 2) / 2;
 	canvasTop = $("canvas").position().top + startYPoint - moveImgHalfHeight;
 	canvasBottom = canvasTop + $("canvas").height();
-	canvasLeft = $("canvas").position().left + moveImgHalfHeight / 2;
+	canvasLeft = ($("canvas").position().left + moveImgHalfHeight / 2) + 1;
 	moveTop = 0;
 	moveLeft = 0;
 }
 
 function moveUserPicImg(type) {
+	if(!!$(".goLadder").length && clickUserOrder != $(".goLadder").parent().attr("id").slice(4)) {
+		$("[id^='drag']").find("div").removeClass("goLadder").css({"background": "#ffffff"})
+	}
+	
+	if(type != "popall") {
+		$("#drag" + clickUserOrder).find("div").addClass("goLadder").css({"background": "#ffffff", "color" : "#2568b3"});
+	}
+	
 	pathUser = checkUserPath[clickUserOrder];
 	var userImgHtml;
 	if($("#drag" + clickUserOrder + " span").hasClass("userPicWraper_d")) {
-		userImgHtml = '<span class="userPicWraper" style="border-color: #2568b3"><img src="/images/ezLadder/icon_defaultAttendant_hover.png" width="60px" height="60px" style="display: block;"></span>';
+		userImgHtml = '<span class="userPicWraper" style="border-color: #2568b3"><img src="/images/ezLadder/icon_defaultAttendant_hover.png" width="48px" height="48px" style="display: block;"></span>';
 	} else {
 		userImgHtml = document.getElementById("drag"+clickUserOrder).children[0].outerHTML;
 	}
@@ -152,7 +168,7 @@ function moveUserPicImg(type) {
 		if(userStatus[clickUserOrder] == 0) {
 			$("#moveImgUser" + clickUserOrder).remove();
 			
-			moveLeft = canvasLeft + wSize * resultOrder;
+			moveLeft = canvasLeft + wSize * resultOrder + 12;
 			
 			$("#lineDiv span:eq(0)").append(userImgHtml);
 			$("#lineDiv span:last")
@@ -164,7 +180,7 @@ function moveUserPicImg(type) {
 		ladderAnimationComplete(type);
 	} else {
 		
-		moveLeft = canvasLeft + wSize * clickUserOrder;
+		moveLeft = canvasLeft + wSize * clickUserOrder + 12;
 		moveTop = canvasTop;
 		
 		$("#lineDiv span:eq(0)").append(userImgHtml);
@@ -197,11 +213,11 @@ function aniOneUser() {
 	moveUserPicImg("anione");
 }
 
-function aniAllUser() {
+function aniAllUser(tempOrder) {
 	drawStatus = !drawStatus;
 	beforeStatus = 0;
 	
-	moveUserPicImg("aniall" + clickUserOrder);
+	moveUserPicImg("aniall" + tempOrder);
 }
 
 function popOneUser() {
@@ -253,10 +269,7 @@ function printUserPath(locX, locY, moveX, moveY, type) { // 유저 경로 그리
 		drawPathLine(clickUserOrder, moveX, moveY, typeStr2);
 		
 		$moveImg.css({"top": moveTop, "left": moveLeft});
-		/*if($moveImg.offset().top >= $(window).height()) {
-			$(window).scrollTop($moveImg.offset().top);
-		}
-		*/
+		
 		if(locY >= hInfo) { 
 			drawStatus = false;
 			resultOrder = locX;
@@ -276,7 +289,7 @@ function printUserPath(locX, locY, moveX, moveY, type) { // 유저 경로 그리
 				if(moveX <= startXPoint + (locX - 1) * wSize) {
 					locX--;
 					moveX = startXPoint + locX * wSize;
-					moveLeft = canvasLeft + locX * wSize;
+					moveLeft = canvasLeft + locX * wSize + 12;
 				}
 			} else if(path['direction'] == 'right') {
 				moveX += moveSpeed;
@@ -284,7 +297,7 @@ function printUserPath(locX, locY, moveX, moveY, type) { // 유저 경로 그리
 				if(moveX >= startXPoint + (locX + 1) * wSize) {
 					locX++;
 					moveX = startXPoint + locX * wSize;
-					moveLeft = canvasLeft + locX * wSize;
+					moveLeft = canvasLeft + locX * wSize + 12;
 				}
 			} 
 		} else {
@@ -310,14 +323,13 @@ function printUserPath(locX, locY, moveX, moveY, type) { // 유저 경로 그리
 }
 
 function drawLadLine(flag, startX, startY) {
-	console.log("draw ladder line");
 	var canvas = document.getElementById('ladderCanvas');
 	
 	if(canvas.getContext) {
 		var cv = canvas.getContext('2d');
 		
-		cv.strokeStyle = 'DimGray';
-		cv.lineWidth = 3;
+		cv.strokeStyle = '#999';
+		cv.lineWidth = 1;
 		
 		cv.beginPath();
 		cv.moveTo(startX, startY);
@@ -335,14 +347,13 @@ function drawLadLine(flag, startX, startY) {
 }
 
 function drawPathLine(user, moveX, moveY, type) {
-	console.log("draw path line");
 	var canvas = document.getElementById('ladderCanvasLine');
 	
 	if(canvas.getContext) {
 		var cv = canvas.getContext('2d');
 		
 		cv.strokeStyle = pathUser['color'];
-		cv.lineWidth = 5;
+		cv.lineWidth = 1;
 		
 		if(moveY == startYPoint) {
 			if(type == 'one' || user == 0) {

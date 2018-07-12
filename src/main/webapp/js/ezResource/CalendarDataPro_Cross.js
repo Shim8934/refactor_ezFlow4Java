@@ -659,7 +659,7 @@ function CalMonthDataBind(oAppointment, oAppointment2) {
             var timeeSplit = oAppointment.odtendDisplay.split(":");
             var timeofStart = timesSplit[0]+ ":" + ((timesSplit[1].length == 1)?("0" + timesSplit[1]):timesSplit[1]); 
             var timeofEnd = timeeSplit[0] + ":" + ((timeeSplit[1].length == 1)?("0" + timeeSplit[1]):timeeSplit[1]); 
-            pSubject.innerHTML = timeofStart + " - " + timeofEnd + "<p style='display:inline-block; width:10px; margin:0; padding:0;'></P>" + oAppointment.oSubject;
+            pSubject.innerHTML = timeofStart + " - " + timeofEnd + "<p style='display:inline-block; width:10px; margin:0; padding:0;'></P>" + MakeXMLString(oAppointment.oSubject);		// 2018-07-04 김민성 - 특수문자 태그 적용 안되도록 수정
         }
         else {
             pTime = strLang126;

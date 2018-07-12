@@ -12,6 +12,16 @@
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link href="/css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
 	    <style type="text/css">
+	    	.node_normal{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    	}
+	    	.node_selected{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    	}
 	        .instance.sbHolder{
 	            width: 100%;
 	        }
@@ -19,6 +29,10 @@
 	        #left ul li.on, #TopBoards ul li.on{
 				font-weight:bold;
 				color:black;
+			}
+ 			#left ul li.ing, #TopBoards ul li.ing{
+				font-weight:normal !important;
+				color:#9b9b9b !important;
 			}
 	    </style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
@@ -129,6 +143,16 @@
 		            treeView.SetNodeClick("UserContNodeClick");
 		            treeView.DataSource(xmlDom2);
 		            treeView.DataBind("divUserContTree");
+
+		            //title3[0].setAttribute("TITLE", title3[0].innerHTML); 
+ 		            $(".node_normal").css("width", "135px");
+ 		            
+					var node = $(".node_normal");
+					
+					for(var i=0; i<node.length; i++) {
+						node[i].setAttribute("TITLE", node[i].innerHTML);
+					} 
+
 		        } 
 			        if (parseInt(pListTypeValue) < 10) {
 			            window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
@@ -191,7 +215,22 @@
 
 	            var treeView = new TreeView();
 	            treeView.LoadFromID(pTreeID);
-	            treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID)
+	            treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID);
+	            
+	            var node = document.getElementById(pNodeID);
+		        var title2 = node.getElementsByClassName("node_div");
+		        var nodeLevel = title2[0].getAttribute("nodelevel");
+		        
+		        if(nodeLevel > 9) {
+		        	nodeLevel = 9;
+		        }
+		        for(var i=0; i<title2.length; i++) {
+		        	var title3 = title2[i].getElementsByClassName("node_normal");
+		        	title3[0].setAttribute("TITLE", title3[0].innerHTML); 
+		        	title3[0].style.width = 135 - 16*(nodeLevel-1) +'px';
+		        	title3[0].style.textOverflow = 'ellipsis';
+		        	title3[0].style.overflow = 'hidden';
+		        }		        
 	        }
 		    
 		    function Tree_setconfig() {
@@ -233,7 +272,7 @@
 	        function MngUserOnclick_Complete(RtnVal) {
 	            TreeViewRefresh();
 	        }
-	        
+	        // 여기
 	        function TreeViewRefresh() {
 	            var xmlHTTP = createXMLHttpRequest();
 	            var strQuery = "<DATA><USERID>" + pUserID + "</USERID><ParentContID>ROOT</ParentContID><NAME></NAME></DATA>";
@@ -251,6 +290,14 @@
 	            treeView.SetNodeClick("UserContNodeClick");
 	            treeView.DataSource(xmlDomRet);
 	            treeView.DataBind("divUserContTree");
+	            
+	            $(".node_normal").css("width", "135px");
+ 		          
+				var node = $(".node_normal");
+					
+				for(var i=0; i<node.length; i++) {
+					node[i].setAttribute("TITLE", node[i].innerHTML);
+				} 
 	        }
 	        
 		    function Open_Func(pthis) {
@@ -321,7 +368,7 @@
 		                    break;
 		            }
 		            parent.frames["right"].$('#sel_year').val("ALL");
-		            parent.frames["right"].$('#sel_year').selectmenu('refresh');
+		            /* parent.frames["right"].$('#sel_year').selectmenu('refresh'); */
 		        }
 		        catch (e) { }
 		    }
@@ -428,7 +475,7 @@
 				            }
 				            try { parent.frames["right"].document.getElementById("txt_keyword").value = ""; } catch (e) { }
 				            parent.frames["right"].$('#sel_year').val("ALL");
-				            parent.frames["right"].$('#sel_year').selectmenu('refresh');
+				            /* parent.frames["right"].$('#sel_year').selectmenu('refresh'); */
 		        		} else {
 				        	if (PresentOpen != "APPROVAL") {
 				                PresentOpen = "APPROVAL";
@@ -559,44 +606,44 @@
 		            ResultXML = xmlhttp_total.responseXML;
 		            
 		            // 결재할 문서
-		            if (pListTypeValue != "1") {
+		            if (pListTypeValue == "1") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) > 0)
-		                    count1.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")</b>";
+		                    count1.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")";
 		                else
 		                    count1.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")";
 		            }
 		            // 결재진행문서
 		            if (pListTypeValue != "3") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(1)) > 0)
-		                    count2.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(1)) + ")</b>";
+		                    count2.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(1)) + ")";
 		                else
 		                    count2.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(1)) + ")";
 		            }
 		            // 기안한문서
 		            if (pListTypeValue != "2") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(2)) > 0)
-		                    count3.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(2)) + ")</b>";
+		                    count3.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(2)) + ")";
 		                else
 		                    count3.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(2)) + ")";
 		            }
 		            // 부서수신함
 		            if (pListTypeValue != "4") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(3)) > 0)
-		                    count4.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(3)) + ")</b>";
+		                    count4.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(3)) + ")";
 		                else
 		                    count4.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(3)) + ")";
 		            }
 		            // 발송의뢰문서
 		            if (pListTypeValue != "6") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) > 0)
-		                    count6.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) + ")</b>";
+		                    count6.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) + ")";
 		                else
 		                    count6.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) + ")";
 		            }
 		            
 		            if (document.getElementById('countWHO') != null) {
 			            if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) > 0)
-		                    document.getElementById('countWHO').innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) + ")</b>";
+		                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) + ")";
 		                else
 		                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) + ")";
 		            }
@@ -604,7 +651,7 @@
 		            // 임시보관함
 		            if (pListTypeValue != "21") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) > 0)
-		                    count21.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")</b>";
+		                    count21.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
 		                else
 		                    count21.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
 		            }
@@ -620,7 +667,7 @@
 		                } else {
 		                	 if (pListTypeValue != "99") {
 				                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) > 0)
-				                        count99.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")</b>";
+				                        count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
 				                    else
 				                        count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
 				                }
@@ -636,7 +683,7 @@
 		                } else {
 		                	 if (pListTypeValue != "10") {
 				                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) > 0)
-				                    	count10.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")</b>";
+				                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
 				                    else
 				                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
 				                }
@@ -647,7 +694,7 @@
 		                if (pListTypeValue != "7") {
 		                	if("${userSendOut}" == "YES") {
 		                    	if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) > 0)
-		                        	count7.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) + ")</b>";
+		                        	count7.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) + ")";
 		                    	else
 		                        	count7.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) + ")";
 		                		}
@@ -1055,7 +1102,7 @@
 
         <h2><span id="USERCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t848'/></span></h2>
         <ul>
-            <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff;"></div>
+            <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff; border-bottom:1px solid #eaeaea"></div>
             <h3><span id="MNGUSERCONT"  onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t316'/></span></h3>
         </ul>
         </c:if>

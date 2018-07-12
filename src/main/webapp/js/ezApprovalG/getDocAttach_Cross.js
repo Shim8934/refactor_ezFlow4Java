@@ -44,7 +44,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     
 	var result = "";
 	
-	if (INGFlag != "TMP") {
+	if (INGFlag != "TMP" && INGFlag != "END_RECORD" && INGFlag != "APR_RECORD" && INGFlag != "END") {
     	   $.ajax({
     			type : "POST",
     			dataType : "text",
@@ -57,6 +57,8 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     				INGFlag = xml;
     			}        			
     	  });
+	} else {
+		INGFlag = INGFlag.substring(0,3);
 	}
 	$.ajax({
 		type : "POST",

@@ -329,7 +329,11 @@
 			</LISTVIEWDATA>
 		</xml>
 	    <h1><spring:message code='ezApprovalG.t424'/></h1>
-	
+		<div id="close">
+            <ul>
+                <li><span onclick="return btnCancel_onclick()"></span></li>
+            </ul>
+        </div>
 	    <table style="margin-top: -15px;">
 	        <tr>
 	            <td style="vertical-align: top;">
@@ -337,25 +341,21 @@
 	                <div class="box" style="overflow: auto; height: 242px; width: 200px" id="TreeView"></div>
 	            </td>
 	            <td style="vertical-align: top;padding-left:10px;">
-	                <h2 style="margin-top:7px"><spring:message code='ezApprovalG.t233'/></h2>
+	                <h2 style="margin-top:7px;float:left"><spring:message code='ezApprovalG.t233'/></h2>
+	                <div style="float:right;margin-top:6px;vertical-align: top">
+	                	<input type="text" id="textUser" name="textUser" style="width: 130px;height:21px;border:1px solid #aaa" value="" onkeypress="return textUser_onkeypress()" tabindex="1"><a class="imgbtn imgbck" style="margin-left:5px;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+	                </div>
+	                <div style="clear:both"></div>
 	                <div class="listview">
 
-	                    <div id="OrganListView" style="border: 0; Width: 370px; Height: 218px; overflow: auto;"></div>
+	                    <div id="OrganListView" style="border: 0; Width: 370px; Height: 244px; overflow: auto;"></div>
 
-	                </div>
-	                <table style="width: 100%;">
-	                    <tr>
-	                        <td style="height: 30px; text-align: left;">
-	                        	<input type="text" id="textUser" name="textUser" style="width: 130px;border:1px solid #aaa" value="" onkeypress="return textUser_onkeypress()" tabindex="1"><a class="imgbtn" style="margin-left:5px;vertical-align:middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
-	                        </td>
-	                    </tr>
-	                </table>
+	                </div>	                
 	            </td>
 	        </tr>
 	    </table>
 	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-	        <a class="imgbtn"><span onclick="return btnCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

@@ -220,12 +220,12 @@
 		    	<tr> 
 		      		<th><spring:message code='ezSchedule.t348'/></th> 
 		      		<td style="width:100%">
-		      			<select name="search_field" style="WIDTH: 70px"> 
+		      			<select name="search_field" style="WIDTH: 70px;height:22px"> 
 		          			<option value="title"selected><spring:message code='ezSchedule.t272'/></option> 
 		          			<option value="location"><spring:message code='ezSchedule.t273'/></option> 
 		        		</select> 
-		        		<input type="text" id="keyword" size="21" value="<c:out value="${keyword}"/>" onkeypress="return search_keypress(event)" /> 
-		        		<a href="#" class="imgbtn"><span onClick="search()"><spring:message code='ezSchedule.t24'/></span></a>
+		        		<input type="text" id="keyword" size="21" value="<c:out value="${keyword}"/>" onkeypress="return search_keypress(event)" style="height:22px" /> 
+		        		<a href="#" class="imgbtn imgbck"><span onClick="search()"><spring:message code='ezSchedule.t24'/></span></a>
 		        	</td> 
 		    	</tr> 
 		    	<tr> 
@@ -254,7 +254,7 @@
 		    </h2>		
 		  	<table class="mainlist" style="table-layout:fixed;width:100%">
 		    	<tr> 
-		      		<th colspan=2 style="width:30px; text-align:center; padding:0 2px"><img src="/images/i_important.gif" style="width:12px; height:9px"></th>      
+		      		<th colspan=2 style="width:30px; text-align:center; padding:0 2px"><img src="/images/ImgIcon/view-importance.gif"></th>      
 		      		<th style="width:50px"><spring:message code='ezSchedule.t270'/></th> 
 		      		<th style="width:80px"><spring:message code='ezSchedule.t271'/></th> 
 		      		<th style="width:80px"><spring:message code='ezSchedule.t161'/></th> 

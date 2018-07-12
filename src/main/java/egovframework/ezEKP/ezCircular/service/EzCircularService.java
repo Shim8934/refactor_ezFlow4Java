@@ -5,6 +5,7 @@ import java.util.List;
 import egovframework.ezEKP.ezCircular.vo.CircularAttachVO;
 import egovframework.ezEKP.ezCircular.vo.CircularCommentVO;
 import egovframework.ezEKP.ezCircular.vo.CircularConfigVO;
+import egovframework.ezEKP.ezCircular.vo.CircularConfirmVO;
 import egovframework.ezEKP.ezCircular.vo.CircularDeptVO;
 import egovframework.ezEKP.ezCircular.vo.CircularFolderVO;
 import egovframework.ezEKP.ezCircular.vo.CircularListHeaderVO;
@@ -45,6 +46,8 @@ public interface EzCircularService {
 	public List<CircularListHeaderVO> getListHeader(String listType, String lang, int tenantID) throws Exception;
 	
 	public List<CircularDeptVO> getcircularDeptList(String memberID, String offset, int tenantID) throws Exception;
+	
+	public StringBuffer getConfirmMemberList(String circularID, int tenantID, int pageNum, int perCount, String offset) throws Exception;
 	
 	public CircularConfigVO getCircularList_Config(String memberId, int tenantId) throws Exception;
 	

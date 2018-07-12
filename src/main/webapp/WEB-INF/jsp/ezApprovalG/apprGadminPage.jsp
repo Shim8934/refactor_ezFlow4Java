@@ -7,6 +7,7 @@
 	    <title>${pageTitle}</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <style>
 	        .IMG_BTN {
 	            behavior: url("/css/include/ImgBtn.htc");
@@ -1043,7 +1044,8 @@
 	}
 	var g_tagSelect = "";
 	var nSelTab = "";
-	function MM_swapImage(nSel, szSuffix) {
+	function MM_swapImage(nSel, szSuffix, obj) {
+		methodForTabAction(obj);
 	    nSelTab = nSel;
 	    var curTag = szSuffix + nSel.toString();
 	    if (curTag != g_tagSelect) {
@@ -1109,29 +1111,29 @@
 		    var pageNum = curpage;
 		    if (totalPage > 1 && pageNum != 1) {
 		        strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
-		        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' width='16' height='16' /></a></span>";
+		        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
 		        PagingHTML += strtext;
 		    }
 		    else {
 		        strtext = "<span class='btnimg'><a >";
-		        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' width='16' height='16' /></a></span>";
+		        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
 		        PagingHTML += strtext;
 		    }
 		    if (totalPage > BlockSize) {
 		        if (pageNum > BlockSize) {
 		            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
 		            strtext = "<span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
 		            PagingHTML += strtext;
 		        }
 		    }
 		    else {
 		        strtext = "<span class='btnimg'>";
-		        strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+		        strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
 		        PagingHTML += strtext;
 		    }
 		    var MaxNum;
@@ -1159,30 +1161,30 @@
 		    }
 		    if (totalPage > BlockSize) {
 		        if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		            strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg' onclick='return selafterBlock()'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_next.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_next.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' ></span>";
 		
 		            PagingHTML += strtext;
 		        }
 		    }
 		    else {
-		        strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg'>";
-		        strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' width='16' height='16'></span>";
+		        strtext = "<span class='btnimg'>";
+		        strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' ></span>";
 		        PagingHTML += strtext;
 		    }
 		    if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
 		        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
-		        strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' width='16' height='16' /></span>";
+		        strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' /></span>";
 		        PagingHTML += strtext;
 		    }
 		    else {
 		        strtext = "<span class='btnimg'>";
-		        strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' width='16' height='16' /></span>";
+		        strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
 		        PagingHTML += strtext;
 		    }
 		    PagingHTML += "</div>";
@@ -1199,6 +1201,14 @@
 	            document.getElementById("TitleInfo").innerHTML = "-&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
 			}
 			
+		}
+		function methodForTabAction(target) {
+			//var tabObjs = target.parentElement.parentElement.children;
+			var tabObjs = document.getElementById("tabs").children;
+			for (var i = 0; i < tabObjs.length; i++){
+				tabObjs[i].children[0].className = "";
+			}
+			target.className = "tabon";
 		}
 	    </script>
 	</head>
@@ -1231,8 +1241,8 @@
 				            <li id="tdConfirmList"><span onclick="return btnConfirmList_onclick()"><spring:message code='ezApprovalG.t520'/></span></li>
 				            <li id="tdViewCabList"><span onclick="return btnConfirmTargetCab_onclick()"><spring:message code='ezApprovalG.t525'/></span></li>
 				            <li id="tdViewRecList"><span onclick="return ViewRecListInCab()"><spring:message code='ezApprovalG.t526'/></span></li>
-				            <li id="tbar1" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li>
+				            <!-- <li id="tbar1" style="background: none; padding-right: 2px;">
+				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 				            <li id="tdViewContent"><span onclick="return btnViewContent_onclick()"><spring:message code='ezApprovalG.t528'/></span></li>
 				            <li id="tdViewHistory"><span onclick="return btnViewHistory_onclick()"><spring:message code='ezApprovalG.t529'/></span></li>
@@ -1247,8 +1257,8 @@
 				            <li id="tdProdStatistics"><span onclick="return btnProdStatistics_onclick()"><spring:message code='ezApprovalG.t532'/></span></li>
 				            <li id="tdSndProdList"><span onclick="return btnSndProdList_onclick()"><spring:message code='ezApprovalG.t533'/></span></li>
 				            <li id="tdViewRejectReason"><span onclick="return btnViewRejectReason_onclick('0')"><spring:message code='ezApprovalG.t534'/></span></li>
-				            <li id="tbar2" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li>
+				            <!-- <li id="tbar2" style="background: none; padding-right: 2px;">
+				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdSearch"><span onclick="return Search_Onclick('1')"><spring:message code='ezApprovalG.t111'/></span></li>
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t10017'/></span></li>
@@ -1261,13 +1271,13 @@
 				            <li id="tdTransList"><span onclick="return imgSndTransList_onclick()"><spring:message code='ezApprovalG.t535'/></span></li>
 				            <li id="tdTransFile"><span onclick="return imgSndTransFile_onclick()"><spring:message code='ezApprovalG.t536'/></span></li>
 				            <li id="tdTransComplete"><span onclick="return TransComplete_OnClick()"><spring:message code='ezApprovalG.t537'/></span></li>
-				            <li id="tbar3" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li>
+				            <!-- <li id="tbar3" style="background: none; padding-right: 2px;">
+				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdAddDelayList"><span onclick="return btnAddDelayList_onclick()"><spring:message code='ezApprovalG.t538'/></span></li>
 				            <li id="tdDelayList"><span onclick="return btnDelayList_onclick()"><spring:message code='ezApprovalG.t539'/></span></li>
 				            <li id="tdViewRejectReason"><span onclick="return btnViewRejectReason_onclick('0')"><spring:message code='ezApprovalG.t534'/></span></li>
-				            <li id="tbar4" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li>
+				            <!-- <li id="tbar4" style="background: none; padding-right: 2px;">
+				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdSearch"><span onclick="return Search_Onclick('1')"><spring:message code='ezApprovalG.t111'/></span></li>
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t10017'/></span></li>
@@ -1278,8 +1288,8 @@
 				    <div id="mainmenu">
 				        <ul>
 				            <li><span onclick="return btnDisuseItem_onclick()"><spring:message code='ezApprovalG.t523'/></span></li>
-				            <li id="tbar4" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li>
+				            <!-- <li id="tbar4" style="background: none; padding-right: 2px;">
+				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 				            <li id="tdViewContent"><span onclick="return btnViewContent_onclick()"><spring:message code='ezApprovalG.t528'/></span></li>
 				            <li id="tdViewHistory"><span onclick="return btnViewHistory_onclick()"><spring:message code='ezApprovalG.t529'/></span></li>
@@ -1292,13 +1302,13 @@
 				        <ul>
 				            <li id="tdConfirmEndY"><span onclick="return btnConfirmEndY_onclick('0')"><spring:message code='ezApprovalG.t524'/></span></li>
 				            <li id="tdConfirmEndYAll"><span onclick="return btnConfirmEndY_onclick('1')"><spring:message code='ezApprovalG.t540'/></span></li>
-				            <li id="tbar5" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li>
+				            <!-- <li id="tbar5" style="background: none; padding-right: 2px;">
+				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdCancelDelayEndY"><span onclick="return btnConfirmEndY_onclick('2')"><spring:message code='ezApprovalG.t541'/></span></li>
 				            <li id="tdViewCabList"><span onclick="return GetEndYConfirmList()"><spring:message code='ezApprovalG.t525'/></span></li>
 				            <li id="tdViewRecList"><span onclick="return ViewRecListInCab()"><spring:message code='ezApprovalG.t526'/></span></li>
-				            <li id="tbar6" style="background: none; padding-right: 2px;">
-				                <img src="/images/i_bar.gif" align="absmiddle"></li>
+				            <!-- <li id="tbar6" style="background: none; padding-right: 2px;">
+				                <img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				            <li id="tdViewInfo"><span onclick="return btnViewInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 				            <li id="tdViewContent"><span onclick="return btnViewContent_onclick()"><spring:message code='ezApprovalG.t528'/></span></li>
 				            <li id="tdListPrint"><span onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t10017'/></span></li>
@@ -1388,7 +1398,7 @@
 	            </td>
 	        </tr>
 	    </table>
-    	<c:choose>
+    	<%-- <c:choose>
 	    		<c:when test="${initFlag == '0'}">
 				    <div id="tabnav" style="width: 100%">
 				        <ul>
@@ -1432,6 +1442,51 @@
 	    		</c:when>
 	    		<c:when test="${initFlag == '4'}">
 	    		</c:when>
+	    	</c:choose> --%>
+    		<c:choose>
+	    		<c:when test="${initFlag == '0'}">
+		    		<div class="portlet_tabpart01" style="margin:0px;">
+						<div class="portlet_tabpart01_top" id="tabs" style="border-bottom:0px;">
+							<p id="tab01"><span onclick="MM_swapImage(1, 'confirm', this);btnConfirmTargetCab_onclick();"class="tabon"><spring:message code='ezApprovalG.t549'/></span></p>
+							<p id="tab02"><span onclick="MM_swapImage(2, 'confirm', this);btnNotArrangedCab_onclick();"><spring:message code='ezApprovalG.t550'/></span></p>
+						</div>
+					</div>
+	    		</c:when>
+	    		<c:when test="${initFlag == '1'}">
+	    			<div class="portlet_tabpart01" style="margin:0px;">
+						<div class="portlet_tabpart01_top" id="tabs" style="border-bottom:0px;">
+							<p id="tab08"><span onclick="MM_swapImage(8, 'd');btnProdReportCabList_onclick();"class="tabon"><spring:message code='ezApprovalG.t551'/></span></p>
+							<p id="tab07"><span onclick="MM_swapImage(7, 'd');btnProdReportRecList_onclick();"><spring:message code='ezApprovalG.t552'/></span></p>
+							<p id="tab13"><span onclick="MM_swapImage(13, 'd');GetCabHistList();"><spring:message code='ezApprovalG.t553'/></span></p>
+							<p id="tab14"><span onclick="MM_swapImage(14, 'd');GetRecHistList();"><spring:message code='ezApprovalG.t554'/></span></p>
+							<p id="tab15"><span onclick="MM_swapImage(15, 'd');GetSCList();"><spring:message code='ezApprovalG.t94'/></span></p>
+							<p id="tab16"><span onclick="MM_swapImage(16, 'd');GetAttachList();"><spring:message code='ezApprovalG.t555'/></span></p>
+							<p id="trTabDist" style="display: none"><span id="tab17" onclick="MM_swapImage(17, 'd');GetDistList();"><spring:message code='ezApprovalG.t556'/></span></p>
+						</div>
+					</div>
+	    		</c:when>
+	    		<c:when test="${initFlag == '2'}">
+	    			<div class="portlet_tabpart01" style="margin:0px;">
+						<div class="portlet_tabpart01_top" id="tabs" style="border-bottom:0px;">
+							<p id="tab08"><span onclick="MM_swapImage(8, 'd');btnProdReportCabList_onclick();"class="tabon"><spring:message code='ezApprovalG.t551'/></span></p>
+							<p id="tab07"><span onclick="MM_swapImage(7, 'd');btnProdReportRecList_onclick();"><spring:message code='ezApprovalG.t552'/></span></p>
+							<p id="tab13"><span onclick="MM_swapImage(13, 'd');GetCabHistList();"><spring:message code='ezApprovalG.t553'/></span></p>
+							<p id="tab14"><span onclick="MM_swapImage(14, 'd');GetRecHistList();"><spring:message code='ezApprovalG.t554'/></span></p>
+							<p id="tab15"><span onclick="MM_swapImage(15, 'd');GetSCList();"><spring:message code='ezApprovalG.t94'/></span></p>
+							<p id="tab16"><span onclick="MM_swapImage(16, 'd');GetAttachList();"><spring:message code='ezApprovalG.t555'/></span></p>
+						</div>
+					</div>
+	    		</c:when>
+	    		<c:when test="${initFlag == '3'}">
+	    			<div class="portlet_tabpart01" style="margin:0px;">
+						<div class="portlet_tabpart01_top" id="tabs" style="border-bottom:0px;">
+							<p id="tab01"><span onclick="MM_swapImage(1, 'disuse');btnDelTargetCabList_onclick();"class="tabon"><spring:message code='ezApprovalG.t557'/></span></p>
+							<p id="tab02"><span onclick="MM_swapImage(2, 'disuse');btnDelTargetRecList_onclick();"><spring:message code='ezApprovalG.t558'/></span></p>
+						</div>
+					</div>
+	    		</c:when>
+	    		<c:when test="${initFlag == '4'}">
+	    		</c:when>
 	    	</c:choose>
 	    <div class="div_scroll" style="width: 100%; HEIGHT: 360px; overflow: AUTO" id="divList">
 	        <div id="lvtDoclist"></div>
@@ -1441,7 +1496,7 @@
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	        
 			if ("${initFlag}" != "4") {
-        		selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+        		/* selToggleList(document.getElementById("tabnav"), "ul", "li", "1"); */
 	        }
 	    </script>
 	    

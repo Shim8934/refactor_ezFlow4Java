@@ -8,6 +8,14 @@
 		<title><spring:message code='ezPortal.t51'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
+		<style>
+	    	.mainlist tr td:first-child {
+	    		padding-left:15px;
+	    	}
+	    	.mainlist tr th:first-child {
+	    		padding-left:10px;
+	    	}
+	    </style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">
@@ -121,26 +129,30 @@
 		<div id="mainmenu">
 			<ul>
   				<li><span onClick="Add()"><spring:message code='ezPortal.t99'/></span></li>
+  				<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   				<li><span onClick="Delete()"><spring:message code='ezPortal.t67'/></span></li>
   				<%-- <li><span onClick="SetPosition()"><spring:message code='ezPortal.t100'/></span></li> --%>
   				<li><span onClick="preview()"><spring:message code='ezPortal.t63'/></span></li>
 			</ul>
 		</div>
-		<table class="content">
+		<div style="width:100%;">
+		<table class="content" style="height: 34px;">
 			<tr>
 				<th width="110"><spring:message code='ezPortal.t64'/></th>
 				<td>				
-					<select name="layoutList" id="layoutList" onchange="layout_change()">
+					<select name="layoutList" id="layoutList" onchange="layout_change()" style="height: 22px; margin-left:3px;">
 						${layoutList}
 					</select>
 				</td>
 			</tr>
 		</table>
+		</div>
 		<br>
+		<div style="width:100%; border: 1px solid #e8e8e8; border-bottom:0px;">
 		<table class="mainlist" style="width:100%">	
 			<tr>
-				<th width="60"><spring:message code='ezPortal.t101'/></th>
-				<th><spring:message code='ezPortal.t102'/></th>
+				<th style="width: 60px; border-top:0px;"><spring:message code='ezPortal.t101'/></th>
+				<th style="border-top:0px;"><spring:message code='ezPortal.t102'/></th>
 			</tr>
 		</table>
 		<table class="mainlist" style="width:100%">
@@ -149,5 +161,6 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>	
+		</div>
 	</body>
 </html>

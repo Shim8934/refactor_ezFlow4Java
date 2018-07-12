@@ -572,7 +572,7 @@ function ListView() {
                 if (strColName == "CONFIRMSTATUS") {
                 	var _HeaderSpanimg = document.createElement("IMG");
 //                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/circular_unread.gif");
-                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/msg-unrd.gif");
+                    _HeaderSpanimg.setAttribute("src", "/images/ImgIcon/msg-rd.gif");
                     _HeaderSpanimg.border = "0";
                    	objTd.style.textAlign = "CENTER";
                     
@@ -736,7 +736,7 @@ function ListView() {
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
-
+                    objTd.setAttribute("title", strValue);
                     if (getNodeText(oDatas[1]) != 0) {
                     	titleOneLineCnt = "<span style='color:#c64200'>[" + getNodeText(oDatas[1]) + "]</span>";
                     }

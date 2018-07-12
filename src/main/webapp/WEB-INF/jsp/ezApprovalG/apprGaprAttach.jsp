@@ -802,6 +802,11 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t264'/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return AttachCancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<table>
 		  <tr>
 		    <td style="text-align:center;">
@@ -823,7 +828,6 @@
 		        <a class="imgbtn"><label for="file1"><span id="btn_AttachAdd" style="cursor:pointer"><spring:message code='ezApprovalG.t268'/></span></label></a>
 		        <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
 		        <a class="imgbtn"><span id="btn_AttachSaveSure" onClick="return btn_AttachSaveSure_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-		        <a class="imgbtn"><span id="AttachCancel" onClick="return AttachCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 		    </div>
 		    
 			<input type="hidden" name="compid" id="compid" />

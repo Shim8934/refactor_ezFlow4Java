@@ -60,16 +60,11 @@
 		<h1><spring:message code='ezApprovalG.t1217'/></h1>
 		<div id="close">
 		  <ul>
-		    <li><span onClick="window_close()"><spring:message code='ezApprovalG.t64'/></span></li>
+		    <li><span onClick="window_close()"></span></li>
 		  </ul>
 		</div>
 		<div class="listview">
 		    <DIV id="lvAprLine" style="BORDER:0;WIDTH:auto; HEIGHT: 150px; overflow-x:hidden;overflow-y:auto"></DIV>
 		</div>
-					
-		<script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
-	
 	</body>
 </html>

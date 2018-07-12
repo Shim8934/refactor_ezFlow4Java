@@ -16,6 +16,14 @@
 			.category_select {
 				font-Weight : bold;
 			}
+			.tabpartMycommunityList table td.read {
+				text-align: center;
+				white-space: nowrap;
+    			text-overflow: ellipsis;
+    			overflow: hidden;
+   				width: 60px;
+   				padding-right:5px;
+			}
 		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -28,6 +36,7 @@
 	        var xmlhttp5 = null;
 	        var str = "<c:out value = '${strXML}' />";
 	        var primary = "<c:out value = '${primary}' />";
+	        var pastDate = "<c:out value = '${pastDate}' />";
 	        var totalPage = "<c:out value = '${totalPage}' />";
 	        var temptotalPage = totalPage;
 	        var CurPage = "1";
@@ -43,16 +52,17 @@
 	        var strLang8 = "<spring:message code = 'ezCommunity.t2002' />";
 	        
 			document.onselectstart = function () {
-		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
+		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 		            return false;
-		        else
+		        } else {
 		            return true;
-				};
+		        }
+			};
 			window.onload = function () {
-		            get_todaycop();
-		            get_bestCommunity();
-		            get_myCommunity();
-		            makePageSelPage();
+		    	get_todaycop();
+		        get_bestCommunity();
+		        get_myCommunity();
+		        makePageSelPage();   
 		    }
 	        function change_tab(val) {
 	            if (val == "best") {
@@ -348,7 +358,7 @@
                     var tr = document.createElement("TR");
                     
                     if (j != 4) {
-                    	tr.style.borderBottom = "1px solid #efefef";
+                    	tr.style.borderBottom = "1px solid #f2f2f2";
                     }
                     
                     if (j % 2 == 0) {
@@ -358,12 +368,14 @@
                     var td2 = document.createElement("TD");
                     var td3 = document.createElement("TD");
                     var td4 = document.createElement("TD");
+                    var td5 = document.createElement("TD");
                     
                     td.className = "text";
                     var boardid = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDID");
                     var itemid = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ITEMID");
                     var copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim();
                     var gubun = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "GUBUN");
+                    var writeDate = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITEDATE");
                     td.style.cursor = "pointer";
                     td.setAttribute("boardid", boardid);
                     td.setAttribute("itemid", itemid);
@@ -371,8 +383,13 @@
                     td.setAttribute("code", copno);
                     td.onclick = function () { ItemRead_onclick(this); };
                     
+                    /* 2018-05-17 홍승비 - 새 게시물의 제목 앞에 new 표시 추가 */
+                    if (pastDate <= writeDate ) {
+                    	td.innerHTML = "<img src='/images/i_new.gif'>&nbsp;";
+                    }
+                    
                     if (primary == "1") {
-                        td.innerHTML = "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
+                        td.innerHTML += "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
                         /* 2018-05-07 홍승비 - 커뮤니티 메인 MY커뮤니티 새글에서 댓글 표시하기 */
                         if (SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") > 0) {
                         	td.innerHTML += " <SPAN style='color:#c64200'> [" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") + "]</SPAN>";
@@ -382,7 +399,7 @@
                         td3.className = "name";
                         td3.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERNAME");
                     } else {
-                        td.innerHTML = "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
+                        td.innerHTML += "[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE");
                         /* 2018-05-07 홍승비 - 커뮤니티 메인 MY커뮤니티 새글에서 댓글 표시하기 */
                         if (SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") > 0) {
 							td.innerHTML += " <SPAN style='color:#c64200'> [" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") + "]</SPAN>";
@@ -394,12 +411,17 @@
                     }
                     
                     td4.className = "day";
-                    td4.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITEDATE").substring(0, 10);
+                    td4.innerHTML = writeDate.substring(0, 10);
+                    
+                    /* 2018-05-18 홍승비 - 커뮤니티 메인 페이지에서 게시물 조회수 표시 */
+                    td5.className = "read";
+                    td5.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "READCOUNT");
 
                     tr.appendChild(td);
                     tr.appendChild(td2);
                     tr.appendChild(td3);
                     tr.appendChild(td4);
+                    tr.appendChild(td5);
                     table.appendChild(tr);
                     
                     j++;
@@ -427,23 +449,23 @@
 	            var pageNum = CurPage;
 	            
 	            if (totalPage > 1 && pageNum != 1) {
-	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > BlockSize) {
 	                if (pageNum > BlockSize) {
-	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 	                    PagingHTML += strtext;
 	                } else {
-	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            
@@ -469,25 +491,25 @@
 	            
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+	                    strtext = "";
+	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 	                    PagingHTML += strtext;
 	                } else {
-	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                    strtext = "";
+	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
-	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                strtext = "";
+	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            
@@ -1190,9 +1212,9 @@
 						                        var type = val.getAttribute("type");
 						                        
 						                        if (type == "2") {
-						                            window.open("/ezCommunity/join1.do?no=" + idx, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
+						                            window.open("/ezCommunity/join1.do?no=" + idx, "", "location=0,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
 						                        } else if (type == "3") {
-						                            window.open("/ezCommunity/join2.do?no=" + idx, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
+						                            window.open("/ezCommunity/join2.do?no=" + idx, "", "location=0,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
 						                        }
 						                	} else {
 						                    	alert(strLang7);
@@ -1227,7 +1249,7 @@
 						success: function(result){
 							if (result == "FALSE") {
 								var wWidth = "330";
-				                var wHeight = "162";
+				                var wHeight = "197";
 				                var heigth = window.screen.availHeight;
 				                var width = window.screen.availWidth;
 		                        var left = (width - wWidth) / 2;
@@ -1235,9 +1257,9 @@
 		                        var type = mainVal.getAttribute("type");
 
 		                        if (type == "2") {
-		                            window.open("/ezCommunity/join1.do?no=" + idx, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
+		                            window.open("/ezCommunity/join1.do?no=" + idx, "", "location=0,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
 		                        } else if (type == "3") {
-		                            window.open("/ezCommunity/join2.do?no=" + idx, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
+		                            window.open("/ezCommunity/join2.do?no=" + idx, "", "location=0,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
 		                        }
 		                	} else {
 		                    	alert(strLang7);
@@ -1374,12 +1396,12 @@
 			                        <div class="right_tabpartContent">
 			                            <div class="right_CopSearchLayout">
 			                                <p class="right_CopSearch">
-			                                    <select id="search" name="select">
+			                                    <select id="search" name="select" style="height:22px">
 			                                        <option value ="NAME"><spring:message code = 'ezCommunity.t2007' /></option>
 			                                        <option value ="DESC"><spring:message code = 'ezCommunity.t2008' /></option>
 			                                    </select>
 			                                    
-			                                    <input id="keyword" name="keyword" onkeydown ="key_down(event)" />
+			                                    <input id="keyword" name="keyword" onkeydown ="key_down(event)" style="height:22px"/>
 			                                    <a class="imgbtn"><span onclick ="copsearch()"><spring:message code = 'ezCommunity.t31' /></span></a>
 			                                </p>
 			                            </div>			                            

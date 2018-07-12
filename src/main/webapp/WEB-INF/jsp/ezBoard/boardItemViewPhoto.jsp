@@ -65,29 +65,13 @@
 		        var pPage = 1;
 		        var imagepage = "0";
 		        var imagetotalcount = "";
-		        var imgWidth = "55px";
+		        var imgWidth = "57px";
 		        var imgHeight = "37px";
 		        var rsa = new RSAKey();
-// 		        var itemID = pItemID;
-// 				var boardID = pBoardID;
-				
+
 		        window.onload = function () {
 		            imageViewInit();
 		            pageimageout();
-		            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
-	                    self.resizeTo(780, 860);
-	                } else {
-	                    self.resizeTo(780, 860);
-	                }
-// 		            if (OneLineReplyFlag == "1") {
-// 		                getOneLineReply();
-// 		                if (CrossYN()) {
-// 		                	window.resizeTo(770, 990);
-// 		                } else {
-// 		                    window.resizeTo(770, 1010);
-// 		                }
-// 		            }
-            
 		            rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 		
 		            // GS 수정(2006.02.10) : 게시알림메일을 다시 게시하는 경우 url link와 게시물 link 기능이 겹치는 문제 수정
@@ -405,8 +389,8 @@
 				var item_readlist_cross_dialogArguments = new Array();
 				function ReaderList()
 				{
-		            var swidth = 600;
-		            var sheight = 415;
+		            var swidth = 620;
+		            var sheight = 425;
 		
 		            var pwidth = window.screen.availWidth;
 		            var pheight = window.screen.availHeight;
@@ -415,12 +399,12 @@
 		            var ptop = (pheight - sheight) / 2;
 		
 					var szHref = "/ezBoard/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;			
-					var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
+					var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
 		
 					if (CrossYN()) {
 					    item_readlist_cross_dialogArguments[0] = "";
 					    item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
-					    DivPopUpShow(600, 415, szHref);
+					    DivPopUpShow(620, 425, szHref);
 					}
 					else
 					    window.open(szHref,"", "width=" + swidth + ",height=" + sheight + ",top=" + ptop + ",left=" + pleft + ", resizable=yes, scrollbars=yes");
@@ -705,11 +689,7 @@
 		                    {
 		                        if(i == 0)
 		                        {
-		                            //if(pPage > 1)
-		                                btn_SmallIamge("Prev");
-		                            //else
-		                                //alert("맨처음 이미지 입니다");
-		                    
+		                        	btn_SmallIamge("Prev");
 		                            return;
 		                        }
 		                
@@ -774,7 +754,7 @@
 		                }
 		                else {
 		                    swidth = 440;
-		                    sheight = 500;
+		                    sheight = 520;
 		                    
 		                    pleft = (pwidth - swidth) / 2;
 				            ptop = (pheight - sheight) / 2;
@@ -790,8 +770,8 @@
 		            			swidth = 440;
 			               		sheight = 460;
 		            		} else {
-			            		swidth = 440;
-				                sheight = 480;
+			            		swidth = 460;
+				                sheight = 380;
 		            		}
 		            	} else {
 		               		swidth = 460;
@@ -813,7 +793,7 @@
 		        function btn_Add_Onclick()
 		        {
 		            var swidth = 500;
-		            var sheight = 580;
+		            var sheight = 525;
 		
 		            var pwidth = window.screen.availWidth;
 		            var pheight = window.screen.availHeight;
@@ -844,8 +824,6 @@
 		                if (imagetotalcount <= endpage) {
 		                    imagepage = 0;
 		                    NewPage = 1;
-		                    //alert("마지막 이미지입니다.");
-		                    //return;
 		                }
 		                else {
 		                    imagepage = 0;
@@ -861,8 +839,6 @@
 		                        pPage = Number(imagetotalcount / 10) + 1;
 		                    }
 		                    imagepage = imagetotalcount % 10 - 1;
-		                    //alert("처음 페이지입니다.");
-		                    //return;
 		                }
 		                NewPage = parseInt(pPage) - 1;
 		            }
@@ -882,6 +858,8 @@
 							ImageViewTable(result);
 						}        			
 					});
+		            
+		            pageimageout();
 		        }
 		
 		        function imageViewInit()
@@ -956,7 +934,7 @@
 		            }
 		        }
 		
-		        function imageonmouse(reslut)
+		        function imageonmouse(result)
 		        {
 		            for(var i = 0; i < ImageCount; i++)
 		            {
@@ -970,37 +948,43 @@
 		                    document.getElementById("image" + i).style.filter = "Alpha(Opacity=35)";
 		            }
 		
-		            document.getElementById(reslut).style.border = "#2e71ff 3px solid";
-					document.getElementById(reslut).style.margin = "0px 4px";
-		            document.getElementById(reslut).style.width = imgWidth;
-		            document.getElementById(reslut).style.height = imgHeight;
+		            document.getElementById(result).style.border = "#888 1px solid";
+					document.getElementById(result).style.margin = "0px 4px";
+		            document.getElementById(result).style.width = imgWidth;
+		            document.getElementById(result).style.height = imgHeight;
 		            if (CrossYN())
-		                document.getElementById(reslut).style.opacity = "1";
+		                document.getElementById(result).style.opacity = "1";
 		            else
-		                document.getElementById(reslut).style.filter = "Alpha(Opacity=100)";
+		                document.getElementById(result).style.filter = "Alpha(Opacity=100)";
 		        }
 		
+		        /* 2018-06-01 홍승비 - 포토/썸네일게시물 하단 UI 수정 */
 		        function imagemouseover(image)
 		        {
-		            if(document.getElementById("mainimages").name == image.name)
+		            if(document.getElementById("mainimages").name == image.name) {
 		                return;
-		            if(CrossYN())
+		            }
+		            if(CrossYN()) {
 		                image.style.opacity = "1";
-		            else
+		            } else {
 		                image.style.filter = "Alpha(Opacity=100)";
-		            image.style.border = "#2e71ff 3px solid";
+		            }
+		            
+		            image.style.border = "#888 0.015px solid";
 					image.style.margin = "0px 4px";
 		        }
 		        function imagemouseout(image)
 		        {
-		            if(document.getElementById("mainimages").name == image.name)
+		            if(document.getElementById("mainimages").name == image.name) {
 		                return;
-		            
-		            if (CrossYN())
+		            }
+		            if (CrossYN()) {
 		                image.style.opacity = "0.35";
-		            else
+		            } else {
 		                image.style.filter = "Alpha(Opacity=35)";
-		            image.style.border = "1px solid #ffffff";
+		            }
+		            
+		            image.style.border = "none";
 					image.style.margin = "0px 4px";
 		        }
 		
@@ -1035,23 +1019,18 @@
 		                page_reload();
 		        }
 		        
+		        /* 2018-06-01 홍승비 - 페이징 코드 수정, 도달 불가능 코드 삭제 */
 		        function pageimageover()
 		        {
 		            var endpage = pPage * 10;
-		            if(imagetotalcount >= endpage && pPage == 1)
+		            if(imagetotalcount > endpage && pPage == 1)
 		            {
-		                document.getElementById("SmallImageNext").style.display = "";
-		                
+		                document.getElementById("SmallImageNext").style.display = "";		                
 		            }
-		            else if(pPage == 1 && imagetotalcount < 10)
+		            else if(pPage == 1 && imagetotalcount <= 10)
 		            {
 		                document.getElementById("SmallImagePrev").style.display = "none";
 		                document.getElementById("SmallImageNext").style.display = "none";
-		            }
-		            else if(pPage == 1 && endpage > 10)
-		            {
-		                document.getElementById("SmallImagePrev").style.display = "none";
-		                document.getElementById("SmallImageNext").style.display = "";
 		            }
 		            else if(pPage != 1 && imagetotalcount <= endpage)
 		            {
@@ -1161,6 +1140,8 @@
 		                    window.opener.refresh_onclick();
 		                } catch (e) {
 		                }
+		                
+			            window.close();
 		            }
 		        }
 		        function refresh_onclick() {
@@ -1168,6 +1149,7 @@
 		                window.opener.refresh_onclick();
 		            } catch (e) {
 		            }
+		            window.close();
 		        }
 		    	//mouseWheel Event  END
 		        function btn_ReWrite() {
@@ -1177,7 +1159,8 @@
 		            var pLeft = (pwidth - 765) / 2;
 		            window.close();
 		
-		            window.open("/ezBoard/newBoardItemTempPhoto.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&location=", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            /* 2018-06-20 홍승비 - 승인게시물 반려 후 제작성 .do 경로 수정 */
+		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&location=", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        }
 		        
 		</script>
@@ -1189,22 +1172,18 @@
 		      <div id="menu">
 		        <ul>
 		        	<c:choose>
+		        		<%-- 2018-06-20 홍승비 - 승인/반려 버튼만 활성화, 작성자는 수정/삭제 가능 --%>
 		        		<c:when test="${apprFlag == 'N'}">
 			                <li><span onClick="Appr_onclick('Y')"><spring:message code='ezBoard.t999005'/></span></li>
 			                <li><span onClick="Appr_onclick('C')"><spring:message code='ezBoard.t999014'/></span></li>
-			                <!--		강민수92	   -->
-	        				<c:if test = "${oneLineReplyFlag == '1'}">
-	        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81'/>[${commentCount}]</span></li>
-	        				</c:if>
-								<!--		강민수92 end -->			                
-			                <c:if test="${boardInfo.boardAdmin_FG =='true' || boardInfo.boardGroupAdmin_FG == 'OK' || boardItem.writerID == userInfo.id}">
-			                    <li ID='btn_Reply' ><span onclick='btn_Add_Onclick()'><spring:message code='ezBoard.t1001'/></span></li>
-			                    <li ID='btn_Modify' ><span  onclick="btn_ImgOnclick('Mod')"><spring:message code='ezBoard.t1002'/></span></li>
-			                    <li ID='btn_Delete' ><span  onclick="btn_ImgOnclick('Del')"><spring:message code='ezBoard.t1003'/></span></li>
-			                    <li ID='btn_AllDelete' ><span  onclick="btn_Delete_Onclick()"><spring:message code='ezBoard.t1004'/></span></li>
-			                    <li ID='btn_AlbumModify' ><span  onclick="btn_albumEdit()"><spring:message code='ezBoard.t1004'/></span></li>
-			                </c:if>
-		        		</c:when>
+			                	<c:if test="${boardItem.writerID == userInfo.id}">
+				                	<li ID='btn_Reply' ><span onclick='btn_Add_Onclick()'><spring:message code='ezBoard.t1001'/></span></li>
+				                	<li ID='btn_Modify' ><span  onclick="btn_ImgOnclick('Mod')"><spring:message code='ezBoard.t1002'/></span></li>
+				                    <li ID='btn_Delete' ><span  onclick="btn_ImgOnclick('Del')"><spring:message code='ezBoard.t1003'/></span></li>
+				                    <li ID='btn_AllDelete' ><span  onclick="btn_Delete_Onclick()"><spring:message code='ezBoard.t1004'/></span></li>
+				                    <li ID='btn_AlbumModify' ><span  onclick="btn_albumEdit()"><spring:message code='ezBoard.t1005'/></span></li>
+		                    	</c:if>
+						</c:when>
 		        		<c:when test="${apprFlag == 'C'}">
 			                <li><span onClick="btn_ReWrite()"><spring:message code='ezBoard.t999021'/></span></li>
 		        		</c:when>
@@ -1229,12 +1208,11 @@
 		      </div>
 		      <div id="close">
 		        <ul>
-		            <li ><span  onclick="btnClose_onclick()"><spring:message code='ezBoard.t12'/></span></li>
+		            <li ><span  onclick="btnClose_onclick()"></span></li>
 		        </ul>
 		      </div>
 			<script type="text/javascript">
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
-				selToggleList(document.getElementById("close"), "ul", "li", "0");
 			</script>
 		    </td>
 		  </tr>
@@ -1265,8 +1243,8 @@
 		            </tr>
 		            <tr>
 		                <th><spring:message code='ezBoard.t1008'/></th>
-		                <td id="cimagecontent" colspan="3">
-		                    <div id="Div2" style="OVERFLOW-Y: auto; WIDTH: 100%; vertical-align:middle;"><c:out value="${boardItem.mainContent}"/></div>
+		                <td id="cimagecontent" colspan="3" style="padding-right:0px">
+		                    <div id="Div2" style="OVERFLOW-Y: auto; height:55px;WIDTH: 100%; padding-top:5px;padding-bottom:5px; vertical-align:middle;"><c:out value="${boardItem.mainContent}"/></div>
 		                </td>
 		            </tr>
 		          </table>
@@ -1276,29 +1254,29 @@
 		    <td style="width:100%;  text-align:center; vertical-align:top;padding-top:10px;" >
 		        <table style="width:100%; border:1px solid #ddd;  ">
 				  <tr>
-		        	<td style="height:68px;" colspan="3">
+		        	<td style="height:55px;" colspan="3">
 		            </td>
 		        </tr>
 		        <tr>
 		            <td style="width:100px; padding-left:50px; text-align:center">
-		                <img src="/images/etc/btn_005.gif" style="border:0;cursor:pointer;" onclick="Pagenationimage('prevPage');" />
+		                <img src="/images/previous.png" style="width:70px;height:70px;border:0;cursor:pointer;" onclick="Pagenationimage('prevPage');" />
 		            </td>
-		            <td style="padding-left:15px">
+		            <td style="padding-left:20px">
 		                <table id="imagetable" style="text-align:center; border:0px;">
 		                    <tr>  
-		                        <td style="width:400px;height:300px; min-height:300px; border:8px solid #e3e1e2; text-align:center">
-		                            <img id="mainimages" style="background-color:#ffffff;cursor:pointer;" src=""/>            
+		                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center">
+		                            <img id="mainimages" style="background-color:#ffffff;" src=""/>            
 		                        </td>
 		                    </tr>
 		           	    </table>
 		            </td>
 		            <td style="width:100px; padding-right:50px; text-align:center">
-		                <img src="/images/etc/btn_006.gif" style="border:0;cursor:pointer;" onclick="Pagenationimage('nextPage');" />
+		                <img src="/images/next.png" style="width:70px;height:70px;border:0;cursor:pointer;" onclick="Pagenationimage('nextPage');" />
 		            </td>
 		        </tr>
 		        <tr>
-		        	<td style="padding:10px 0px; height:88px; text-align:center" colspan="3">
-		            	<div id="MainContent" style="height:88px; padding-left:22%; padding-right:20%; overflow-y:auto;"></div>
+		        	<td style="padding:10px 0px; height:83px; text-align:center" colspan="3">
+		            	<div id="MainContent" style="height:60px; padding-left:23%; padding-right:24%;"></div>
 		            </td>
 		        </tr>
 		        </table>
@@ -1311,17 +1289,17 @@
 		    </tr>
 		    <tr>
 		        <td  >
-					<div style="background:#e5e5e5; border:1px solid #ddd; border-top:0 none; height:70px; text-align:center; padding-top:30px;">
+					<div style="background:#f8f8fa; border:1px solid #ddd; border-top:0 none; height:70px; text-align:center; padding-top:25px;">
 		            <table border="0">
 		                <tr>
-		                    <td style="width:30px; padding-bottom:5px; vertical-align:bottom; text-align:left" onmouseover="pageimageover()" onmouseout="pageimageout()">
-		                        <img src="/images/etc/btn_001.gif" id="SmallImagePrev" style="border:0;cursor:pointer;" onclick="btn_SmallIamge('Prev')" />
+		                    <td style="width:30px; padding-left:15px;padding-right:1px;padding-bottom:5px; vertical-align:bottom; text-align:left" onmouseover="pageimageover()" onmouseout="pageimageout()">
+		                        <img src="/images/previous.png" id="SmallImagePrev" style="width:30px;height:30px;border:0;cursor:pointer;" onclick="btn_SmallIamge('Prev')" />
 		                    </td>
 		                    <td onmouseover="pageimageover()" onmouseout="pageimageout()">
 		                        <div class="content" id="viewBox" style="width:100%; border:0;" ></div>
 		                    </td>
 		                    <td style="width:30px; padding-bottom:5px; vertical-align:bottom; text-align:right" onmouseover="pageimageover()" onmouseout="pageimageout()">
-		                        <img src="/images/etc/btn_002.gif" id="SmallImageNext" style="border:0;cursor:pointer;" onclick="btn_SmallIamge('Next')" />
+		                        <img src="/images/next.png" id="SmallImageNext" style="width:30px;height:30px;border:0;cursor:pointer;" onclick="btn_SmallIamge('Next')" />
 		                    </td>
 		                </tr>
 		            </table>

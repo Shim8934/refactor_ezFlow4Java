@@ -20,29 +20,17 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
-		
+		<!-- layer popup -->
+		<link rel="stylesheet"  href="/js/jquery/jquery.modal.css" type="text/css" />
+		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+
 		<style>
 			#layer_Viewpopup { 
 				z-index:1000; 
 				margin:0px; 
 				padding:0px;
 			}
-			#layer_Viewpopup .popupwrap1 {
-				border:1px solid #555a64;
-				padding:0px;
-				margin:0px;
-				
-			}
-			#layer_Viewpopup .shadow {
-				height:2px;
-				background:#d7d7d7;
-				
-			}
-			#layer_Viewpopup .popupwrap2 {
-				border:2px solid #e5e5e5;
-				padding:10px;
-				
-			}
+			
 			#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
 			
 			#layer_Viewpopup .popupwrap3 {
@@ -116,11 +104,18 @@
 		                document.body.style.UserSelect = 'none';
 		            }
 
-		            var height = parseInt(document.documentElement.clientHeight - 180);
+		            var height = parseInt(document.documentElement.clientHeight - 200);
 		            document.getElementById("divList").style.height = height + "px";
 		            window_onunload_Event = true;
 		            getBoardList();
 		        };
+		        
+		        /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
+		        $(window).on("resize", function(){
+					var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;	        	
+		        	$("#addpopup").css("left", popupX);
+		        	$("#srarchpopup").css("left", popupX);	        	
+		        });
 		        
 			    $(document).ready(function() {
 			    	var clickOutside;
@@ -404,25 +399,25 @@
 		            PagingHTML += strtext;
 		            var pageNum = CurPage;
 		            if (totalPage > 1 && pageNum != 1) {
-		                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+		                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>"
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>"
 		                PagingHTML += strtext;
 		            }
 		            if (totalPage > BlockSize) {
 		                if (pageNum > BlockSize) {
-		                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 		                    PagingHTML += strtext;
 		                }
 		                else {
-		                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		                    PagingHTML += strtext;
 		                }
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		            var MaxNum;
@@ -451,27 +446,27 @@
 			       
 		            if (totalPage > BlockSize) {
 		                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+		                    strtext = "";
+		                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 		                    PagingHTML += strtext;
 		                }
 		                else {
-		                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		                    strtext = "";
+		                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		                    PagingHTML += strtext;
 		                }
 		            }
 		            else {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		            if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+		                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		            PagingHTML += "</div>";
@@ -555,6 +550,13 @@
 		            else{
                     	window.open("/ezBoard/boardNewItem.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
 		            }
+		            
+		            /* 2018-07-09 홍승비 - 승인게시판 게시물 읽기 시 즉각적으로 폰트 변화하도록 수정 */
+		            for (var i = 0; i < obj.childNodes.length; i++) {
+				        if (obj.childNodes[i].style.fontWeight == "bold") {
+				            obj.childNodes[i].style.fontWeight = "normal";
+						}
+			        }	            
 		        }
 		
 		        function CheckIfHasReplies() {
@@ -720,35 +722,48 @@
 		    }
 		    
 		
-		
+		    /* 2018-06-12 김민성 - 게시판 검색 레이어팝업 변경 */ 
 		        function doLayerPopup(obj) {
-		            btn_PostDate_Clear();
-		            //document.getElementById("chkSearchSub").checked = false;
-		            document.getElementById("txtTitle").value = "";
-		            document.getElementById("txtAbstract").value = "";
-		            //document.getElementById("txtWriterName").value = "";
-		
-		            if (obj.getAttribute("mode") == "off") {
-		                document.getElementById("layer_popup").style.left = "10px";
-		                document.getElementById("layer_popup").style.top = "100px";
-		                document.getElementById("layer_popup").style.display = "";
-		                obj.setAttribute("mode", "on");
-		            }
-		            else {
-		                BoardSearchOptionHidden();
-		            }
+		        	/* btn_PostDate_Clear();
+			        document.getElementById("chkSearchSub").checked = false;
+			        document.getElementById("txtTitle").value = "";
+			        document.getElementById("txtWriterName").value = "";
+			        document.getElementById("txtAbstract").value = "";
+			
+			        if (obj.getAttribute("mode") == "off") {
+			            document.getElementById("layer_popup2").style.left = "10px";
+			            if (pAdminType == "y")
+			                document.getElementById("layer_popup2").style.top = "56px";
+			            else
+			                document.getElementById("layer_popup2").style.top = "100px";
+			            document.getElementById("layer_popup2").style.display = "";
+			            obj.setAttribute("mode", "on");
+			        }
+			        else {
+			            BoardSearchOptionHidden();
+			        } */
+			        
+			    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
+			    	parent.frames["left"].document.body.style.overflow = "hidden";
+			    	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+			    	$("#srarchpopup").css("left", popupX);
+			    	$("#srarchpopup").modal();
+			    	
 		        }
 		        function btn_PostDate_Clear() {
 			        $("#Sdatepicker").datepicker('setDate', "");
 			        $("#Edatepicker").datepicker('setDate', "");
 		        }
 		        function BoardSearchOptionHidden() {
-		            document.getElementById("layer_popup").style.display = "none";
-		            document.getElementById("SearchOption").setAttribute("mode", "off");
+		        	 document.getElementById("layer_popup").style.display = "none";
+				     document.getElementById("SearchOption").setAttribute("mode", "off");
+				       
+				     $.modal.close();
+				     parent.frames["right"].document.body.style.overflow = "hidden";
 		        }
 			    function search(type) {
 			        if (type == "basic") {
-			        	if (document.getElementById("txtWriterName").value == "" && document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == ""
+			        	if (document.getElementById("txtTitle").value == "" && document.getElementById("txtAbstract").value == ""
 			        			&& $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
 			                alert("<spring:message code='ezBoard.t192' />");
 			                return;
@@ -894,16 +909,16 @@
 	          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code='ezBoard.t208'/></label>
 			  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code='ezBoard.t223'/></label>
 			  &nbsp;
-			  <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align: top" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	          <a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onClick="search('quick')"></a>
+			  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+	          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
 	        </span>
 	    </h1>
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
-	            <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+	            <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 	            <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89'/></span></li>
-	            <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+	            <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 	            <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205'/></span></li>
 	            <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188'/></span></li>
 	            <li id="right">
@@ -966,7 +981,7 @@
 	        <span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;">
 	            <span style="width: 100%; height: 100px; display: block;">
 	                <span class="previewmail_info" style="display: block; width: 100%;">
-	                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width: 100%; display: none;">
+	                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
 	                        <p class="mail_title" style="margin-left: 0px;">
 	                            <span class="icon_btn"><span onclick="MailReadOpen_temp();" style="cursor: pointer; padding-right: 5px;">
 	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
@@ -993,10 +1008,10 @@
 	        <span id="PreContent_RayerW" style="display: block;">
 	            <span style="width: 100%; height: 100px; display: block;">
 	                <span class="previewmail_info" style="display: block; width: 100%;">
-	                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display: none;">
+	                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display: none;">
 	                        <p class="mail_title">
 	                            <span class="icon_btn"><span onclick="MailReadOpen_temp();" style="cursor: pointer; padding-right: 5px;">
-	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject"></span></span>
+	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
 	                        </p>
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
 	                        <dl class="mail_item">
@@ -1012,8 +1027,49 @@
 	        </span>
 	    </span>
 	
-	
-	    <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
+		<!-- 2018-06-08 김민성 - 게시판 검색 레이어팝업 변경 -->
+	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
+		<div id="srarchpopup" class="popupwrap1 modal" style="margin-bottom: 70px; left: 297.5px; display: inline-block;">
+			<div class="popupJQLayer">
+				<div class="title"><spring:message code='ezBoard.t0006' /><spring:message code='ezJournal.t43' /></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="BoardSearchOptionHidden()"></span></a></li>
+		            </ul>
+		        </div>
+				<table class="content">
+			        <tr>
+			            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
+			            <td><input type="text" id="txtTitle" style="width:98%" value=""></td>
+			        </tr>  
+			         <tr>
+			            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
+			            <td><input type="text" id="txtAbstract" style="width:98%" value=""></td>
+			        </tr>    
+			       <tr>
+			            <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
+			           <td>
+			               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+			                ~
+			               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"> 
+			           </td>
+			  		</tr>
+				</table>
+				<br />
+				<table style="width: 100%">
+			        <tr>
+			            <td style="text-align:center;">
+			            	<div class="btnpositionLayer">
+			                	<a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
+			                	<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a>
+			                </div>	
+			            </td>
+			        </tr>
+				</table>
+			</div>	
+		</div>
+	</div>
+	    <%-- <div id="layer_popup" style="width:700px;position:absolute;left:0px;top:0px;background-color:#ffffff;display:none;">
 	    	<div class="popupwrap1">
 	            <div class="popupwrap2">
 	        		<table class="content">
@@ -1048,6 +1104,6 @@
             	</div>
           	</div>
         	<div class="shadow"></div>
-		</div>
+		</div> --%>
 	</body>
 </html>

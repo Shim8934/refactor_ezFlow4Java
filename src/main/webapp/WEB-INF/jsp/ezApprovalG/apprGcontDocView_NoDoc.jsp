@@ -65,7 +65,7 @@
 		        QuitWindow();
 		    }
 		    else {
-		        setAttachInfo(pDocID, "END", lstAttachLink);
+		        setAttachInfo(pDocID, "END_RECORD", lstAttachLink);
 		    }
 		}
 		function GetRecInfo()
@@ -157,7 +157,7 @@
 		<body class="popup" style="OVERFLOW:hidden">
 		<h1><spring:message code='ezApprovalG.t9992'/></h1> 
 		
-		<div id="close"><ul><li id=btnClose ><span onClick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li></ul></div>
+		<div id="close"><ul><li id=btnClose ><span onClick="return btnClose_onclick()"></span></li></ul></div>
 		<div ID="divTabDis1" style="DISPLAY: block; WIDTH:100%; HEIGHT: 215px;"> 
 		    <table class="content">
 		        <tr>

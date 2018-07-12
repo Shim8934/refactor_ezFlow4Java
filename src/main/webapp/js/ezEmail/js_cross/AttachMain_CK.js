@@ -198,6 +198,7 @@ function AppendFileAttachInfo(ret) {
         strPreViewAttach = "";
         rep = /'/g;
         var fileIndex = $("#dadiframe").contents().find('#filelist tr[_big=N]').length;
+        
         for (i = 0; i < objAttachNodes.length; i++) {
             var realFileNM = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[1]);
             var ServerFile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[2]);
@@ -205,20 +206,24 @@ function AppendFileAttachInfo(ret) {
             var fileSize = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[6]);
             var is_big = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[7]);
             realFileNM = ReplaceText(realFileNM, "'", "&apos;")
-
+            
             if (is_newfile != "DEL") {
-                if (AttachFlag) {
-                    if (CrossYN()) {
+                
+            	if (AttachFlag) {
+                    
+            		if (CrossYN()) {
                         objTr = document.createElement("TR");
                         objTr.setAttribute("VALUE", ServerFile);
                         objTr.setAttribute("NEWFILE", getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]));
                         objTr.setAttribute("_big", is_big);
                         objTr.setAttribute("_itemid", ServerFile);
                         objTr.setAttribute("_filesize", fileSize);
+                        
                         if (is_big == "N") {
                         	objTr.setAttribute("_fileIndex", fileIndex);
                         	fileIndex++;
                         }
+                        
                         var objTd = document.createElement("TD");
                         objTd.style.textAlign = "center";
 
@@ -230,14 +235,40 @@ function AppendFileAttachInfo(ret) {
                         objTr.appendChild(objTd);
 
                         var objTd2 = document.createElement("TD");
-                        if(is_big == "Y")
-                            objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;" + "<font style='color:blue'>[" + strLangLHM10 + "]</font>";
-                        else
-                            objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
+                        
+                        if(is_big == "Y") {
+                        	objTd2.innerHTML = replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;");
+                        	objTd2.innerHTML += "&nbsp;" + "<font style='color:blue'>[" + strLangLHM10 + "]</font>";
+                        } else {
+                        	objTd2.innerHTML = replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;");
+                        	console.log("AppendFileAttachInfo CrossYN true.");
+                        	
+                        	/* 20180510 김윤진 - 수정창에서 파일클릭시 다운로드링크 적용 */
+                        	objTd2.onclick = function () { 
+                        		var partIdx = $(this).closest('tr').attr('_fileindex');
+                        		var filename = $(this).closest('tr').attr('_itemid');
+                        		var isBig = $(this).closest('tr').attr('_big');
+                        		var msgId = g_url;
+                        		var reqUrl = "/ezEmail/downloadAttach.do?" 
+		                            			+ "mode=Attach"
+		                            			+ "&folderPath=" + encodeURIComponent(folderPath)
+		                            			+ "&filename=" + encodeURIComponent(filename);
+                        		
+                        		$(this).attr('_href', reqUrl);
+                        		
+ 		                    	var firstIdx = multipartFirstIdx;
+ 		                    	partIdx = parseInt(partIdx) + parseInt(firstIdx);
+	                    	
+ 		                    	dadiframe.FileDownload(this, parseInt(partIdx), parseInt(msgId), isBig); 
+ 		                    };
+                        	
+                        }
+                        
                         objTr.appendChild(objTd2);
 
                         if (fileSize != strLang116) {
-                            if (fileSize / 1024 / 1024 > 1) {
+                            
+                        	if (fileSize / 1024 / 1024 > 1) {
                                 fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
                             }
                             else if (fileSize / 1024 > 1) {
@@ -252,30 +283,50 @@ function AppendFileAttachInfo(ret) {
                         }
 
                         var objTd3 = document.createElement("TD");
-                        if (CrossYN())
-                            objTd3.textContent = fileSize;
-                        else
-                            objTd3.innerText = fileSize;
+                        
+                        if (CrossYN()) {
+                        	objTd3.textContent = fileSize;
+                        } else {
+                        	objTd3.innerText = fileSize;
+                        }
+                        
                         objTr.appendChild(objTd3);
+                        
+                        // 대용량 다운로드 기한 표시
+                        var objTd4 = document.createElement("TD");
+                        
+                        if(is_big == "Y") {
+                        	if(CrossYN()) {
+                        		objTd4.textContent = _pBigAttachDownloadPeriod;
+                        	} else {
+                        		objTd4.innerText = _pBigAttachDownloadPeriod;
+                        	}
+                        }
+                        
+                        objTr.appendChild(objTd4);
 
                         dadiframe.document.getElementById("filelist").appendChild(objTr);
                     } else {
                         EzHTTPTrans.InsertFileList(ServerFile, ServerFile, "N", ServerFile, fileSize);
                     }
-                }
-                else {
-                    if (getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]) == "Y") {
-                        if (CrossYN()) {
+                
+            	} else {
+                    
+                	if (getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]) == "Y") {
+                        
+                		if (CrossYN()) {
                             objTr = document.createElement("TR");
                             objTr.setAttribute("VALUE", ServerFile);
                             objTr.setAttribute("NEWFILE", getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]));
                             objTr.setAttribute("_big", is_big);
                             objTr.setAttribute("_itemid", ServerFile);
                             objTr.setAttribute("_filesize", fileSize);
+                            
                             if (is_big == "N") {
                             	objTr.setAttribute("_fileIndex", fileIndex);
                             	fileIndex++;
                             }
+                            
                             var objTd = document.createElement("TD");
                             objTd.style.textAlign = "center";
 
@@ -287,14 +338,43 @@ function AppendFileAttachInfo(ret) {
                             objTr.appendChild(objTd);
 
                             var objTd2 = document.createElement("TD");
-                            if (is_big == "Y")
-                                objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;" + "<font style='color:blue'>[" + strLangLHM10 + "]</font>";
-                            else
-                                objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
+                            
+                            objTd2.setAttribute('style', 'cursor:pointer');
+                            objTd2.setAttribute("_href", "");
+
+                            
+                            if(is_big == "Y") {
+                            	objTd2.innerHTML = replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;");
+                            	objTd2.innerHTML += "&nbsp;" + "<font style='color:blue'>[" + strLangLHM10 + "]</font>";
+                            } else {
+                            	objTd2.innerHTML = replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;");
+                            	
+                            	/* 20180510 김윤진 - 수정창에서 파일클릭시 다운로드링크 적용 */
+                            	objTd2.onclick = function () { 
+                            		var partIdx = $(this).closest('tr').attr('_fileindex');
+                            		var filename = $(this).closest('tr').attr('_itemid');
+                            		var isBig = $(this).closest('tr').attr('_big');
+                            		var msgId = g_url;
+                            		var reqUrl = "/ezEmail/downloadAttach.do?" 
+			                            			+ "mode=Attach"
+			                            			+ "&folderPath=" + encodeURIComponent(folderPath)
+			                            			+ "&filename=" + encodeURIComponent(filename);
+                            		
+                            		$(this).attr('_href', reqUrl);
+                            		
+     		                    	var firstIdx = multipartFirstIdx;
+     		                    	partIdx = parseInt(partIdx) + parseInt(firstIdx);
+		                    	
+     		                    	dadiframe.FileDownload(this, parseInt(partIdx), parseInt(msgId), isBig); 
+     		                    };
+     		                    
+                            }
+                            
                             objTr.appendChild(objTd2);
 
                             if (fileSize != strLang116) {
-                                if (fileSize / 1024 / 1024 > 1) {
+                                
+                            	if (fileSize / 1024 / 1024 > 1) {
                                     fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
                                 }
                                 else if (fileSize / 1024 > 1) {
@@ -309,11 +389,27 @@ function AppendFileAttachInfo(ret) {
                             }
 
                             var objTd3 = document.createElement("TD");
-                            if (CrossYN())
-                                objTd3.textContent = fileSize;
-                            else
-                                objTd3.innerText = fileSize;
+                            
+                            if (CrossYN()) {
+                            	objTd3.textContent = fileSize;
+                            } else {
+                            	objTd3.innerText = fileSize;
+                            }
+                            
                             objTr.appendChild(objTd3);
+                            
+                            // 대용량 다운로드 기한 표시
+                            var objTd4 = document.createElement("TD");
+                            
+                            if(is_big == "Y") {
+                            	if(CrossYN()) {
+                            		objTd4.textContent = _pBigAttachDownloadPeriod;
+                            	} else {
+                            		objTd4.innerText = _pBigAttachDownloadPeriod;
+                            	}
+                            }
+                            
+                            objTr.appendChild(objTd4);
 
                             dadiframe.document.getElementById("filelist").appendChild(objTr);
                         } else {
@@ -323,9 +419,14 @@ function AppendFileAttachInfo(ret) {
                 }
             }
         }
+        
         AttachFlag = false;
     }
     catch (e) { alert("AppendFileAttachInfo :: " + e.description); }
+}
+
+function replaceAll(str, searchStr, replaceStr) {
+	return str.split(searchStr).join(replaceStr);
 }
 
 function AttachFileList() {
@@ -435,4 +536,8 @@ function AttachFileList_Photo() {
         }
     }
     return strRet;
+}
+
+function replaceAll(str, searchStr, replaceStr) {
+	return str.split(searchStr).join(replaceStr);
 }

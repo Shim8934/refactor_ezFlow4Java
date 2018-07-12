@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="<spring:message code='ezResource.e1' />" ></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js" ></script>
 		<script type="text/javascript" src="/js/ezResource/admin/gwBoard_Post_RegBoardRightMain.js" ></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
 			g_BrdID = "${brdID}";
 			g_BrdNm = "<c:out value='${brdNm}' />";
@@ -94,6 +95,7 @@
 	</head>
 	<body class="mainbody">	
 		<h1><spring:message code="ezResource.t24" /></h1>
+		<div style="max-width:800px;">
 		<table class="content">
   			<tr>
     			<th> <spring:message code="ezResource.t44" /></th>
@@ -101,7 +103,42 @@
   			</tr>
 		</table>
 		<br>
-		<table class="box" style="width:100%">
+		<div id="mainmenu">
+			<ul>
+				<li><span onClick="return cmdAdd_onclick()"><spring:message code="ezResource.t110" /></span></li>
+				<li><span onClick="return cmdDel_onclick()"><spring:message code="ezResource.t65" /></span></li>
+			</ul>
+		</div>
+		<script type="text/javascript">
+			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+		</script>
+		<div class="txt"><spring:message code="ezResource.t113" /></div>
+		<div>
+			<table class="box" style="width:100%">
+				<tr>
+					<th style="font-weight: normal;"><spring:message code="ezBoard.t606" /></th>
+					<td style="height:300px;">
+						<select id="acllist" name="acllist" style="width: 99%; height: 98.5%; background:none; margin-left:3px; overflow-y: auto; overflow-x: auto; padding-right:0px;" size="10" onChange="selAclList_Change(this);">
+							${strOptions}
+						</select>
+					</td>
+				</tr>
+				<tr>
+     				<th style="font-weight: normal; width: 30px;"><spring:message code="ezResource.t111" /></th>
+					<td style="border-bottom: 1px solid #d2d2d2;border-top: 1px solid #d2d2d2;">
+   						<table class="popuplist" style="width:100%">
+        				<tr>
+          					<td style="border:0px;">
+          						<input type="radio" id="brd_mng1" name="brd_mng" value="1" style="vertical-align: middle; margin-bottom:5px;" onClick="optAclLvl_Click(this);" ${optAdmLvl}> <spring:message code="ezResource.t112" />
+            					<input type="radio" id="brd_mng2" name="brd_mng" value="2" style="vertical-align: middle; margin-bottom:5px;" onClick="optAclLvl_Click(this);" ${optUserLvl}> <spring:message code="ezResource.t107" />
+            				</td>
+        				</tr>
+      					</table>
+       				</td>
+				</tr>
+			</table>
+		</div>
+		<%-- <table class="box" style="width:100%">
   			<tr>
     			<td style="padding:2px;"><select id="acllist" name="acllist" style="width: 830px; height: 120px; background:none;" size="10" language="javascript" onChange="selAclList_Change(this);"> ${strOptions}</select></td>
     			<td style="width:80px; text-align:center; vertical-align:middle">
@@ -122,14 +159,13 @@
       				</table>
       			</td>
   			</tr>
-		</table>
-		<br>
-		<div class="txt"><spring:message code="ezResource.t113" /></div>
-		<div class="btnposition">
+		</table> --%>
+		<div class="btnpositionJsp">
      		<a class="imgbtn"><span onclick="cmdOk_onclick()" ><spring:message code="ezResource.t114" /></span></a>
 		</div>
 		<form name="brds">
   			<input type="hidden" id="proc" name="proc" value="ACL">
 		</form>
+		</div>
 	</body>
 </html>

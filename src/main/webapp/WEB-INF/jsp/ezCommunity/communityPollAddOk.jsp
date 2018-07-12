@@ -19,9 +19,9 @@
 				if ( ByteLength(document.getElementById("pollSubject").value) > 200 ) {
 					alert("<spring:message code='ezCommunity.t614' />");
 					return;		
+				} else if (confirm("<spring:message code='ezPoll.t210'/>")) {			
+					document.getElementsByTagName("form")[0].submit();
 				}
-				
-				document.getElementsByTagName("form")[0].submit();
 			}
 	
 			function ByteLength(str) {
@@ -81,7 +81,7 @@
 			<table class="content" style="margin-top:12px">
 				<tr>
 					<th><spring:message code='ezCommunity.t599' /></th>
-					<td style="padding:3px"><textarea id="pollSubject" name="pollSubject" style="width: 98%;height:130px">${subject }</textarea></td>
+					<td style="padding:3px"><textarea id="pollSubject" name="pollSubject" style="width: 98%;height:130px; resize:none;">${subject }</textarea></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCommunity.t600' /></th>

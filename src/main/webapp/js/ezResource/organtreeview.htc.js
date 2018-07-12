@@ -902,14 +902,14 @@ function organtreeview(thisobjid, elobjid) {
 	        var targetEl = event.target;
 	        var elementid = targetEl.id;
 
-	        if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "")
-	            document.getElementById(elementid).className = g_baseClass["hover"];
+	        /*if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "")
+	            document.getElementById(elementid).className = g_baseClass["hover"];*/
 	    }).call(this, event) :
 	    (function() { // IE
 	        var elementid = window.event.srcElement.id;
 
-	        if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "")
-	            document.getElementById(elementid).className = g_baseClass["hover"];
+	        /*if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "")
+	            document.getElementById(elementid).className = g_baseClass["hover"];*/
 	    }).call(this);
     }
 
@@ -1119,12 +1119,12 @@ function organtreeview(thisobjid, elobjid) {
 				else
 				{
 				    if (findchildnodevalue(childNode, "DATA7") == 1) //자원관리에서 1:분류 2:자원 이미지 달리표현하기 2008-09-30
-					    nodeHtml += ("<img src='" + g_images["BASE"] + "' style='margin-right:5px'>"); 
+					    nodeHtml += ("<img src='" + g_images["BASE"] + "'>"); 
 				    else
 				        if (findchildnodevalue(childNode, "DATA15") == 1)
 				            nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");
 				        else
-				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' style='margin-right:4px'>");
+				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' style='padding-right:4px'>");
 				}
 
                 //if (childNode.selectSingleNode("SELECT") != null) {
@@ -1249,7 +1249,7 @@ function organtreeview(thisobjid, elobjid) {
 				        if (childNode.selectSingleNode("DATA15").text == 1)
 				            nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");
 				        else
-				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' style='margin-right:4px'>");
+				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' style='padding-right:4px'>");
 				}
 
                 if (childNode.selectSingleNode("SELECT") != null) {

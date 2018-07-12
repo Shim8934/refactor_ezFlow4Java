@@ -720,6 +720,7 @@
 		      		<HEADER>
 		        		<NAME><spring:message code = 'ezPersonal.t304' /></NAME>
 		        		<WIDTH>100</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		    	</HEADERS>
 			</LISTVIEWDATA>
@@ -730,20 +731,28 @@
 		    		<HEADER>
 		        		<NAME><spring:message code = 'ezPersonal.t68' /></NAME>
 		        		<WIDTH>80</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code = 'ezPersonal.t7' /></NAME>
 		        		<WIDTH>100</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code = 'ezPersonal.t69' />/<spring:message code = 'ezPersonal.t175' /></NAME>
 		        		<WIDTH>80</WIDTH>
+		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>		      		
 		    	</HEADERS>
 		  	</LISTVIEWDATA>
 		</xml>
 		
 	    <h1><spring:message code = 'ezPersonal.t1018' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return window.close()"></span></li>
+            </ul>
+        </div>
 	    <table>
 			<tr>
 	            <td rowspan="1" valign="top">
@@ -755,10 +764,9 @@
 	                                    <td>
 	                                        <div style="OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 225px; HEIGHT: 370px; BACKGROUND-COLOR: #ffffff;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)" class="box"></div>
 	                                    </td>
-	                                    <td width="5"></td>
 	                                    <td>
-	                                        <div class="listview">
-	                                            <div id="OrganListView" style="OVERFLOW: auto; WIDTH: 358px; HEIGHT: 370px; border: 0"></div>
+	                                        <div class="listview" style="margin-left: 2px;">
+	                                            <div id="OrganListView" style="OVERFLOW: auto; WIDTH: 358px; HEIGHT: 372px; border: 0;"></div>
 	                                        </div>
 	                                    </td>
 	                                </tr>
@@ -768,8 +776,8 @@
 	                </table>
 	            </td>
 	            <td width="30" align="center">
-	                <img style="cursor: pointer" src="/images/arr_right.gif" alt="" border="0" onclick="InsertReceiver(ListViewMsgTo)" width="16" height="16">
-	                <img style="cursor: pointer" src="/images/arr_left.gif" alt="" border="0" onclick="DeleteReceiver(ListViewMsgTo)" width="16" height="16">
+	                <img style="cursor: pointer" src="/images/kr/cm/arr_right.gif" alt="" border="0" onclick="InsertReceiver(ListViewMsgTo)" width="16" height="16">
+	                <img style="cursor: pointer" src="/images/kr/cm/arr_left.gif" alt="" border="0" onclick="DeleteReceiver(ListViewMsgTo)" width="16" height="16">
 	            </td>
 	            <td>
 	            	<table>
@@ -784,7 +792,7 @@
 	                        </td>
 	                    </tr>
 	                    <tr>
-	                        <table class="content" style="width:100%;">
+	                        <table class="content" style="width:100%; margin-top:2px;">
 	                            <tr>
 	                                <th><spring:message code = 'ezPersonal.t1019' /></th>
 	                                <td>
@@ -798,9 +806,8 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition" style="float: right">
+	    <div class="btnpositionNew" style="float: center">
 	        <a class="imgbtn"><span onclick="confirm_onClick()"><spring:message code = 'ezPersonal.t12' /></span></a>
-	        <a class="imgbtn"><span onclick="return window.close()"><spring:message code = 'ezPersonal.t13' /></span></a>
 	    </div>
 	</body>
 </html>

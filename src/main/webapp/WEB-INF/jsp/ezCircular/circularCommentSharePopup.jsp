@@ -36,28 +36,23 @@
 		
 		<div id="close">
 			<ul>
-				<li><span onclick="shareComment();"><spring:message code='ezCircular.t168'/></span></li>
-				<li><span onclick="closePopup();"><spring:message code='ezCircular.t84'/></span></li>
+				<li><span onclick="closePopup();"></span></li>
 			</ul>
 		</div>
-		
-		<script type="text/javascript" >
-   			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
-		
-		
-		
-		<div style='height:420px;overflow-y:auto;'>
+		<div style='height:380px;overflow-y:auto;'>
 			<table class="mainlist" style="width:98%;">
 				<tr>
 					<th style="width:10%;middle;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-left:1px solid #e2e2e2;">&nbsp;<spring:message code='ezCircular.t85' /></th>
 					<th style="text-align:right;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;">
-						<input type='text' id='searchValue' />&nbsp;<a class='imgbtn'><span onclick="getCommentShareUser()"><spring:message code='ezCircular.t85' /></span>&nbsp;</a>
+						<input type='text' id='searchValue' />&nbsp;<a class='imgbtn' style="height:22px"><span onclick="getCommentShareUser()"><spring:message code='ezCircular.t85' /></span>&nbsp;</a>
 					</th>
 				</tr>
 			</table>
 			
 			<table id="shareUserList" style="width:100%;margin-top:15px;table-layout: fixed;"></table>
 		</div>
+		<div class="btnpositionNew">
+	        <a class="imgbtn"><span onclick="shareComment()"><spring:message code='ezCircular.t168'/></span></a>
+	    </div>
 	</body>
 </html>

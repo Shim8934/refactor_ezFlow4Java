@@ -162,6 +162,7 @@
 		        			mode : mode,
 		        			displayName : txtDisplayName.value,
 		        			displayName2 : txtDisplayName2.value,
+		        			url : txtDisplayName3.value,
 		        			fileName : fileName,
 		        			sliderImage : SliderImgPath},
 		        	dataType : "text",
@@ -218,6 +219,7 @@
 		            xml = result;
 		            document.getElementById("txtDisplayName").value = getNodeText(SelectSingleNodeNew(xml, "DATA/ROW/SLIDERNAME"));
 		            document.getElementById("txtDisplayName2").value = getNodeText(SelectSingleNodeNew(xml, "DATA/ROW/SLIDERNAME2"));
+		            document.getElementById("txtDisplayName3").value = getNodeText(SelectSingleNodeNew(xml, "DATA/ROW/URL"));
 		            document.getElementById("UploadSliderImage").src = getNodeText(SelectSingleNodeNew(xml, "DATA/ROW/IMAGEPATH"));
 		            document.getElementById("UploadSliderImage").style.display = "";
 		    }
@@ -255,7 +257,12 @@
 	</head>
 	<body class = "popup" style = "overflow:hidden">
 		<h1><spring:message code = 'ezPersonal.t20001' /></h1>
-	    <h2><spring:message code = 'ezPersonal.t20002' /></h2>
+		<div id="close">
+            <ul>
+                <li><span onclick="return window.close();"></span></li>
+            </ul>
+        </div>
+	    <h2 style="font-weight: normal">▒ <spring:message code = 'ezPersonal.t20002' /></h2>
 	    <table style="width:500px" id="toggle_tbl1" class="content">
 			<tr>
 				<th>
@@ -274,6 +281,15 @@
 	                </table>
 				</td>
 			</tr>
+			<!-- 18-05-10 김민성 - URL 수정 추가 -->
+			<tr>
+				<th>
+					<spring:message code = 'ezPersonal.kmsp01' />
+				</th>
+				<td>
+					<input type="text" id="txtDisplayName3"  style="width:100%">
+				</td>
+			</tr>
 			<tr>
 				<th>
 					<a class="imgbtn"><span onclick="SliderImage()"><spring:message code = 'ezPersonal.t20003' /></span></a>
@@ -289,9 +305,8 @@
 				</td>
 			</tr>
 		</table>
-	    <div class="btnposition">
+	    <div class="btnpositionNew">
 	        <a href="#" class="imgbtn"><span onclick="btnSave_click();"><spring:message code = 'ezPersonal.t34' /></span></a>
-	        <a href="#" class="imgbtn"><span onclick="return window.close();"><spring:message code = 'ezPersonal.t13' /></span></a>
 	    </div>
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	     <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="width:1px;height:1px">

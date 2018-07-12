@@ -20,6 +20,8 @@
 		</c:if>
 		
 		<script type="text/javascript">
+			var content = "<c:out value='${item.content}' />";
+		
 			function sendit() {
 				if (document.getElementById("memo").value == "") {
 					alert("<spring:message code='ezCommunity.t568' />\n<spring:message code='ezCommunity.t569' />");
@@ -27,6 +29,10 @@
 					
 					return;
 				}
+				
+				//2018-07-02 김보미 - 개행문자 -> <br>태그로 변경
+				var memo = $("#memo").val();
+				memo = memo.replace(/(?:\r\n|\r|\n)/g, "<br>");
 				
 				$.ajax({
 		        	type : "POST",
@@ -36,7 +42,7 @@
 		        			name : $("#name").val(),
 		        			code : $("#code").val(),
 		        			mode : $("#mode").val(),
-		        			memo : encodeURIComponent($("#memo").val().trim())
+		        			memo : encodeURIComponent(memo.trim())
 		        			},
 		        	success : function(result) {
 		        		goPage(1);
@@ -55,6 +61,13 @@
 				
 			    window.location.href = url;
 			}
+			
+			$(function(){
+				//2018-07-02 김보미 - 방명록 내용 특수문자 처리
+				content = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(content, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", "'"),"&dquot;", '"'), "<br>", "\n");
+				$("#memo").val(content);
+			})
+				
 			
 			/* function checkIsZenkaku(value) { 
 				for (var i = 0; i < value.length; ++i) { 
@@ -107,7 +120,7 @@
 					</c:choose> --%>
 				</tr>
 				<tr>
-	          		<td colspan="2" style="padding:3px"><textarea id="memo" style="width:98%;height:200px" maxlength="3000"><c:out value='${item.content}' /></textarea></td>
+	          		<td colspan="2" style="padding:3px"><textarea id="memo" style="width:98%;height:200px;resize:none;" maxlength="3000"></textarea></td>
 	        	</tr>
 			</table>
 		</form>	

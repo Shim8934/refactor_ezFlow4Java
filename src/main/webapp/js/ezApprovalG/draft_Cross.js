@@ -2468,7 +2468,7 @@ function openAaprDocAttachUI() {
             aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
             
             if(approvalFlag == "G") {
-            	DivPopUpShow(820, 500, url);
+            	DivPopUpShow(1050, 500, url);
             } else {
             	DivPopUpShow(1050, 560, url);
             }
@@ -3264,7 +3264,7 @@ function chk_Passwd() {
     ezchkpasswd_cross_dialogArguments[0] = parameter;
     ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-    DivPopUpShow(330, 200, "/ezApprovalG/ezchkPasswd.do");
+    DivPopUpShow(330, 215, "/ezApprovalG/ezchkPasswd.do");
 }
 
 function setDrafterAddress() {
@@ -3394,6 +3394,7 @@ function getDeptSymbol(DeptID, DeptName) {
 }
 function getDeptSendName(DeptID) {
 	var result = "";
+	var resultNode;
 	
 	$.ajax({
 		type : "POST",
@@ -3410,7 +3411,13 @@ function getDeptSendName(DeptID) {
 		}        			
 	});
 	
-    return trim(SelectSingleNodeValue(loadXMLString(result), "EXTENSIONATTRIBUTE5"));
+	resultNode = loadXMLString(result);
+	
+	if (resultNode.firstChild) {
+		resultNode = resultNode.firstChild;
+	}
+	
+    return trim(SelectSingleNodeValue(resultNode, "EXTENSIONATTRIBUTE5"));
 }
 function setMenuBar(id, flag) {
     var strCmd, display_Value;

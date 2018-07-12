@@ -8,6 +8,7 @@
 		<title><spring:message code='ezPortal.t134'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
+		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>
@@ -125,7 +126,7 @@
 						return;
 					}
 				}
-				
+				methodForTabAction(pIndex);
 				switch(pIndex.toString()) {
 					case "1":
 						menu_1.src = "/images/tap_portal01o.gif";
@@ -756,10 +757,10 @@
 			function SelectBoard() {		    
 			    if (CrossYN()) {
 			        boardselect_cross_dialogArguments[1] = SelectBoard_Complete;
-			        var OpenWin = window.open("/ezBoard/boardSelect.do", "BoardSelect_Cross", GetOpenWindowfeature(275, 435));
+			        var OpenWin = window.open("/ezBoard/boardSelect.do", "BoardSelect_Cross", GetOpenWindowfeature(360, 656));
 			        try { OpenWin.focus(); } catch (e) { }
 			    } else {
-			        var ret = window.showModalDialog("/ezBoard/boardSelect.do", "", "DialogHeight:435px;DialogWidth:275px;status:no;help:no;edge:sunken" + GetShowModalPosition(275, 435));
+			        var ret = window.showModalDialog("/ezBoard/boardSelect.do", "", "DialogHeight:700px;DialogWidth:360px;status:no;help:no;edge:sunken" + GetShowModalPosition(360, 656));
 			        if (typeof(ret) != "undefined") {
 			            document.getElementById("txtBoardID").value = ret[0];
 			            document.getElementById("txtBoardName").value = ret[2];
@@ -898,7 +899,7 @@
 
 // 		        boardmoveselect_cross_dialogArguments[0] = parameter;
 		        boardmoveselect_cross_dialogArguments[0] = MoveSelect_Complete;
-		        var BoardMoveSelect_Cross = window.open("/admin/ezPortal/portalBoardSelect.do", "portalBoardSelect", GetOpenWindowfeature(340, 656));
+		        var BoardMoveSelect_Cross = window.open("/admin/ezPortal/portalBoardSelect.do", "portalBoardSelect", GetOpenWindowfeature(360, 656));
 		        try { 
 		        	BoardMoveSelect_Cross.focus(); 
 		        }catch (e) {}	   
@@ -907,6 +908,25 @@
 			function MoveSelect_Complete(ret) {
 				document.getElementById("newParamValue").value = ret[0];
 		        document.getElementById("newBoardName").value = ret[2];
+			}
+			
+			function methodForTabAction(target) {
+				var tab1 = document.getElementById("menu_1").children[0];
+				var tab2 = document.getElementById("menu_2").children[0];
+				var tab3 = document.getElementById("menu_3").children[0];
+				if (target == "1") {
+					tab1.className = "tabon";
+					tab2.className = "";
+					tab3.className = "";
+				} else if (target == "2") {
+					tab1.className = "";
+					tab2.className = "tabon";
+					tab3.className = "";
+				} else if (target == "3") {
+					tab1.className = "";
+					tab2.className = "";
+					tab3.className = "tabon";
+				}
 			}
     </script>
 	
@@ -921,20 +941,25 @@
 		</div>
 		<div id="close">
   			<ul>
-    			<li><span onClick="window.close()"><spring:message code='ezPortal.t8'/></span></li>
+    			<li><span onClick="window.close()"></span></li>
   			</ul>
 		</div>
-		<div id="tabnav">
+		<%-- <div id="tabnav">
   			<ul>
     			<li id="menu_1"><span onClick="toggle_menu(1)" ><spring:message code='ezPortal.t86'/></span></li>
     			<li id="menu_2"><span onClick="toggle_menu(2)" ><spring:message code='ezPortal.t150'/></span></li>
     			<li id="menu_3"><span onClick="toggle_menu(3)"><spring:message code='ezPortal.t87'/></span></li>
   			</ul>
+		</div> --%>
+		<div class="portlet_tabpart01" style="margin-top: 0px;">
+			<div class="portlet_tabpart01_top" id="tab1" style="border-bottom: 0px;">
+				<p id="menu_1"><span onClick="toggle_menu(1)" style="min-width: 45px; cursor:pointer;"><spring:message code='ezPortal.t86'/></span></p>
+				<p id="menu_2"><span onClick="toggle_menu(2)" style="min-width: 45px; cursor:pointer;"><spring:message code='ezPortal.t150'/></span></p>
+				<p id="menu_3"><span onClick="toggle_menu(3)" style="min-width: 45px; cursor:pointer;"><spring:message code='ezPortal.t87'/></span></p>
+			</div>
 		</div>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 		</script>
 		<!-- 일반설정 -->
 		<table id="toggle_tbl1" class="content">
@@ -1046,8 +1071,8 @@
               					</form>
           					</td>
           					<td width="65" align="center">             
-	              				<a class="imgbtn"><span onClick="changeNormalImage()"><spring:message code='ezPortal.t66'/></span></a>
-		      					<a class="imgbtn"><span  onClick="UserImage_Preview()"><spring:message code='ezPortal.t63'/></span></a>
+	              				<a class="imgbtn imgbck"><span onClick="changeNormalImage()"><spring:message code='ezPortal.t66'/></span></a>
+		      					<a class="imgbtn imgbck"><span  onClick="UserImage_Preview()"><spring:message code='ezPortal.t63'/></span></a>
 		      				</td>
         				</tr>
       				</table>
@@ -1109,7 +1134,7 @@
             						<input type="text" name="txtBoardName" id="txtBoardName" style="width:100%" value="${pBoardName}" readonly>          
             					</td>
           						<td width="99" align="center">
-		  							<a class="imgbtn"><span onClick="SelectBoard()"><spring:message code='ezPortal.t138'/></span></a>
+		  							<a class="imgbtn imgbck"><span onClick="SelectBoard()"><spring:message code='ezPortal.t138'/></span></a>
 		  						</td>
         					</tr>
       					</table>
@@ -1131,12 +1156,19 @@
   				</tr>
 			</table>
 			<!-- 인자설정 -->
-			<table id="toggle_tbl2_1" class="popuplist"  width="100%" style="display:none">
+			<table id="toggle_tbl2_1" class="popuplist"  width="100%" style="display:none; margin-top: -20px; margin-bottom:5px;">
   				<tr>
     				<th style="border-bottom:0px"><spring:message code='ezPortal.t115'/></th>
     				<th style="border-bottom:0px"><spring:message code='ezPortal.t116'/></th>
     				<th style="border-bottom:0px"></th>
   				</tr>
+  				<c:if test="${paramHtml == ''}">
+  					<tr>
+  						<td colspan="3" style="text-align: center; color:#5b5a5a;">
+		    				<spring:message code='main.t00026'/>
+  						</td>
+  					</tr>
+  				</c:if>
 				${paramHtml}
 			</table>
 			<table id="toggle_tbl2_2" class="content" style="display:none">
@@ -1192,7 +1224,7 @@
 	          						<td>
 	          							<input type="text" id="newBoardName" onClick="MoveSelect()" readonly style="width:75%">
 	          							<input type="text" id="newParamValue" style="width:75%; display:none">
-	          							<a class="imgbtn"><span onClick="MoveSelect()"><spring:message code='ezCommunity.t352'/></span></a>
+	          							<a class="imgbtn imgbck"><span onClick="MoveSelect()"><spring:message code='ezCommunity.t352'/></span></a>
 	          						</td>
 	        					</tr>
 	      					</table>
@@ -1200,11 +1232,11 @@
 	  				</tr>
   				</c:if>
 			</table>
-			<div class="btnposition" id="toggle_tbl2_3"  style="display:none">
+			<div class="btnpositionJsp" id="toggle_tbl2_3"  style="display:none">
 				<a class="imgbtn"><span onClick="AddParameter()"><spring:message code='ezPortal.t62'/></span></a>
 			</div>
 			<!-- 권한설정 -->
-				<table id="toggle_tbl3_1" class="popuplist" style="display:none" width="100%">
+				<table id="toggle_tbl3_1" class="popuplist" style="display:none; margin-top: -20px;" width="100%">
   					<tr>
 						<th width="80" ><spring:message code='ezPortal.t91'/></th>
 						<th width="80" ><spring:message code='ezPortal.t92'/></th>
@@ -1212,6 +1244,13 @@
 						<th width="80" ><spring:message code='ezPortal.t94'/></th>
 						<th>&nbsp;</th>
   					</tr>
+  					<c:if test="${aclList == '[]'}">
+	  					<tr>
+	  						<td colspan="5" style="text-align: center; color:#5b5a5a;">
+		    				<spring:message code='main.t00026'/>
+  							</td>
+  						</tr>
+  					</c:if>
 		  			<c:forEach items="${aclList}" var="item">
   	  					<tr>
     						<td>${item.accessID}</td>
@@ -1236,7 +1275,7 @@
     								</c:otherwise>
     							</c:choose>
     						</td>
-    						<td width="39" align="center"><a class="imgbtn"><span onClick="DeleteRight('${item.accessID}')" ><spring:message code='ezPortal.t67'/></span></a></td>
+    						<td width="39" align="center"><a class="imgbtn imgbck"><span onClick="DeleteRight('${item.accessID}')" ><spring:message code='ezPortal.t67'/></span></a></td>
   						</tr>
   					</c:forEach>
 				</table>
@@ -1249,7 +1288,7 @@
           							<td>
           								<input type="text" id="newAccessID" style="width:100%" readonly>
           							</td>
-          							<td width="39" align="center"><a class="imgbtn"><span onClick="SelectID()" ><spring:message code='ezPortal.t45'/></span></a></td>
+          							<td width="39" align="center"><a class="imgbtn imgbck"><span onClick="SelectID()" ><spring:message code='ezPortal.t45'/></span></a></td>
         						</tr>
       						</table>
       					</td>
@@ -1275,7 +1314,7 @@
       							<spring:message code='ezPortal.t174'/></td>
   					</tr>
 				</table>
-				<div id="toggle_tbl3_3" class="btnposition" style="display:none">
+				<div id="toggle_tbl3_3" class="btnpositionJsp" style="display:none">
     				<a class="imgbtn"><span onClick="AddRight()"><spring:message code='ezPortal.t62'/></span></a>
 				</div>
 				<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

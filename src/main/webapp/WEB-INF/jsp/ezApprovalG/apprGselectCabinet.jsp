@@ -83,6 +83,15 @@
 	                    InitCabClassInfo(GetCabinetClassInfo(g_SelCabID));
 	                }
 	            }
+	            var date = new Date();
+	            var nowYear = date.getFullYear();
+	            
+	            //2018-05-18 강민수92 셀렉트 박스 추가
+	            for (var i = nowYear + 5; i >= nowYear - 5; i--) {
+	            	$('#selYear').append("<option value='" + i + "'>" + i + "</option>")
+	            }
+				
+	            $("#selYear").val(nowYear).prop("selected", true);
 	            InitCategorySelection();
 	            selTaskCategory_onchange();
 	        };
@@ -119,7 +128,7 @@
 	                arrTask[3] = selnode[0].getAttribute("DATA2");
 	                bDisplayFlag = selnode[0].getAttribute("DATA4");
 	                bSpecialFlag = selnode[0].getAttribute("DATA5");
-	                GetCabinetSimpleList(arr_userinfo[4], "", arrTask[0], g_SelCabID, g_InitFlag);
+	                GetCabinetSimpleList(arr_userinfo[4], "", arrTask[0], g_SelCabID, g_InitFlag, $('#selYear').val());
 	                if (typeof (g_SelCabID) != "undefined") {
 	                    if (g_SelCabID != "") {
 	                        AddRowToCabList();
@@ -128,7 +137,7 @@
 	                g_SelCabID = "";
 	            }
 	            else {
-	                GetCabinetSimpleList("", "", "__Dump__Year__", "", g_InitFlag);
+	                GetCabinetSimpleList("", "", "__Dump__Year__", "", g_InitFlag, $('#selYear').val());
 	            }
 	        }
 	        function SelCabinetList_rowdblclick() {
@@ -397,7 +406,7 @@
 	    function btnCreateCab_onclick_Complete(rtn) {
 	        DivPopUpHidden();
 	        if (rtn[0] == "TRUE") {
-	            GetCabinetSimpleList(arr_userinfo[4], "", arrTask[0], rtn[1], g_InitFlag);
+	            GetCabinetSimpleList(arr_userinfo[4], "", arrTask[0], rtn[1], g_InitFlag, $('#selYear').val());
 	        }
 	    }
 	    function btnNewVolume_onclick() {
@@ -408,7 +417,7 @@
 	            var selnode = selnodes[0];
 	            var rtn = NewVolume(trim(GetAttribute(selnode, "DATA1")), trim(GetAttribute(selnode, "DATA3")));
 	            if (rtn != "FALSE") {
-	                GetCabinetSimpleList(arr_userinfo[4], "", arrTask[0], rtn, g_InitFlag);
+	                GetCabinetSimpleList(arr_userinfo[4], "", arrTask[0], rtn, g_InitFlag, $('#selYear').val());
 	            }
 	        }
 	        else {
@@ -520,12 +529,24 @@
 	</head>
 	<body class="popup" style="margin-left: 0px; margin-top: 0px">
 	    <h1 style="height: 30px;"><spring:message code='ezApprovalG.t711'/></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return cmdCancel_onclick()"></span></li>
+            </ul>
+        </div>
 	    <table>
 	        <tr>
 	            <%--기능분류선택--%>
 	            <td style="width: 190px; vertical-align: top">
 	                <h2 style="padding-top:7px;"><spring:message code='ezApprovalG.t1039'/></h2>
 	                <table class="content">
+	                    <tr>
+	                        <th><spring:message code='ezApprovalG.garm02'/></th>
+	                        <td>
+	                            <select id="selYear" style="width: 100%" onchange="return TaskList_rowclick()">
+	                            </select>
+	                        </td>
+	                    </tr>
 	                    <tr>
 	                        <th><spring:message code='ezApprovalG.t592'/></th>
 	                        <td>
@@ -629,7 +650,6 @@
 	            <input type="text" id="Cabinetkeyword" value="" onkeypress="CabinetSearch_Press(event)" style="cursor: text; padding: 0 0 0 0; margin-bottom: 2.5px; vertical-align: middle; background-color: White; width: 150px; height:21px; color:black;font-weight:normal">
 	            <a class="imgbtn" style="vertical-align: middle;" onclick="return CabinetSearch_onclick()"><span><spring:message code='ezApprovalG.t111'/></span></a>
 	            <a class="imgbtn" style="vertical-align: middle;" onclick="return cmdConfirm_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
-	            <a class="imgbtn" style="vertical-align: middle;" onclick="return cmdCancel_onclick()"><span><spring:message code='ezApprovalG.t119'/></span></a>
 	        </h2>
 	    </div>
 	    <div style="width: 1106px; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

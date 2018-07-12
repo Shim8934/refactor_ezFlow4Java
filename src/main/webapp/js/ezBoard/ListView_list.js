@@ -765,9 +765,9 @@ function ListView() {
                     if (getNodeText(oDatas[6]) == "Y") {
                         titleImage = titleImage + "<img src='/images/i_new.gif'>&nbsp;";                        
                     }
-                    if (getNodeText(oDatas[4]) == "0") 
+                    if (getNodeText(oDatas[4]) == "0") {
                         objTd.style.fontWeight = "BOLD";
-
+                    }
                     if (getNodeText(oDatas[10]) != "0" && Use_OneLineCount == "YES")
                         titleOneLineCnt = "<span style='color:#c64200'>[" + getNodeText(oDatas[10]) + "]</span>";
                     
@@ -792,6 +792,10 @@ function ListView() {
                 	objTd.style.overflow = "hidden";
                 	objTd.style.whiteSpace = "nowrap";
                 	objTd.style.textOverflow = "ellipsis";
+                }
+                /* 2018-07-09 홍승비 - 읽지 않은 일반&그룹&익명&QNA&포토게시판의 게시물 리스트 폰트를 bold로 수정 */
+                if (getNodeText(oDatas[4]) == "0") {
+                    objTd.style.fontWeight = "BOLD";
                 }
 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ATTACHMENTS") {
@@ -847,7 +851,7 @@ function ListView() {
                     } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('DOCNO') > -1) { //2018-01-09 강민수92 공지일 때 docNo 안보이게
                     	if (getNodeText(oDatas[8]) == "1") {
                     		objTd.style.padding = "0";
-                    		objTd.innerHTML = "<img src='/images/i_notice.gif'>";
+                    		objTd.innerHTML = "<img src='/images/i_notice.gif' style='vertical-align:middle' >";
                     	} else {
                     		objTd.style.padding = "0";
                     		objTd.innerHTML = titleImage + strValue;

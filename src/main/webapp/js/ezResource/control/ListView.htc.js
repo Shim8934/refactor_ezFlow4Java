@@ -83,7 +83,7 @@ function ListView(thisobjid, elobjid) {
     /* Color Settings */
     var m_strColorSelect = "#edf4fd";
     var m_strColorDefault = "#FFFFFF";
-    var m_strColorOver = "#F7FAE0";
+    var m_strColorOver = "#f4f5f5";
 
     /* Selected Nodes */
     var m_dicSelected = new Object(); //new ActiveXObject("Scripting.Dictionary"); // 교체
@@ -841,7 +841,7 @@ function ListView(thisobjid, elobjid) {
             overRow = document.getElementById(elementid);
 
             if (overRow.selected != true)
-                overRow.style.backgroundColor = "#F7FAE0";
+                overRow.style.backgroundColor = "#f4f5f5";
         }
     } :
     function() { // IE
@@ -852,7 +852,7 @@ function ListView(thisobjid, elobjid) {
             overRow = document.getElementById(elementid);
 
             if (overRow.selected != true)
-                overRow.style.backgroundColor = "#F7FAE0";
+                overRow.style.backgroundColor = "#f4f5f5";
         }
     }
 

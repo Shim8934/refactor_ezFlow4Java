@@ -202,3 +202,5 @@ img.voteUserMailImg{float: right; margin-right: 10px; cursor: pointer;}
 
 .qstSettingInnerDivRight{display: inline-block; float: right;}
 .qstSetting{height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;}
+
+.voteCmtCnt{color: #c64200;}

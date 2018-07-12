@@ -95,13 +95,17 @@
 	</head>
 	<body class="popup" onload="javascript:window_onload()">
 	    <h1><spring:message code='ezBoard.t275'/>/<spring:message code='ezBoard.t316'/></h1>
-	    <div class="txt" style="margin-top:15px">▒&nbsp;<spring:message code='ezBoard.t144'/></div>
+	    <div id="close">
+            <ul>
+                <li><span id="btn_cancel" onclick="btn_cancel_onclick()"></span></li>
+            </ul>
+        </div>
+	    <div class="txt" style="margin-top:15px">▒&nbsp;<spring:message code='ezBoard.kmsb01'/></div>
 	    <div class="nobox" style="margin-top:10px">
-	        <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%;height:25px;border:1px solid #ccc" maxlength="8">
+	        <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%;height:25px;border:1px solid #ccc" maxlength="20">
 	    </div>
 	    <div class="btnposition btnpositionNew">
 	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezBoard.t14'/></span></a>
-	        <a id="btn_cancel" class="imgbtn" onclick="btn_cancel_onclick()"><span><spring:message code='ezBoard.t15'/></span></a>
 	    </div>
 	
 	</body>

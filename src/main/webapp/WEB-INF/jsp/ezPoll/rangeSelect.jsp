@@ -383,8 +383,8 @@
     	            var rgParams = new Array();
         	        rgParams["addrBook"] = xmlDOM;
             	    rgParams["deptid"] = "";
-                	var feature = GetShowModalPosition(600, 320);
-                	window.showModalDialog("/admin/ezBoard/checkName.do", rgParams, "dialogHeight:352px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken" + feature);
+                	var feature = GetShowModalPosition(700, 415);
+                	window.showModalDialog("/admin/ezBoard/checkName.do", rgParams, "dialogHeight:415px; dialogWidth:700px; status:no;scroll:no; help:no; edge:sunken" + feature);
                 	if (rgParams["deptid"] != "") {
 	                    bSearch = true;
     	                xmlHttp_Depttree = null;
@@ -400,7 +400,7 @@
         	        rgParams["deptid"] = "";
             	    checkname2_cross_dialogArguments[0] = rgParams;
                 	checkname2_cross_dialogArguments[1] = cnsearch_click_Complete;
-                	var checkName2_Cross = window.open("/admin/ezBoard/checkName.do", "checkName2_Cross", GetOpenWindowfeature(609, 352));
+                	var checkName2_Cross = window.open("/admin/ezBoard/checkName.do", "checkName2_Cross", GetOpenWindowfeature(700, 415));
                 	try { checkName2_Cross.focus(); } catch (e) {
                 	}
             	}
@@ -726,6 +726,11 @@
   		</LISTVIEWDATA>
 		</xml>
 		<h1><spring:message code='ezPoll.t222' /></h1>
+		<div id="close">
+            <ul>
+                <li><span name="Submit2" onClick="close_onclick()"></span></li>
+            </ul>
+        </div>
 		<table> 
     		<tr> 
         		<td width="195" valign="top">
@@ -750,7 +755,13 @@
 			</tr>
 			<tr>
         		<td valign="top">
-        			<h2><spring:message code='ezPoll.t225' /></h2>
+        			<h2 style="float:left;margin-top:4px"><spring:message code='ezPoll.t225' /></h2>
+        			<div style="float:right;margin-top:1px">
+	        			<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="height:22px"/>
+	            		<%--<input id = "cnkeybtn" onclick="cnsearch_click()" type="button" value="<%=RM.GetString("t34")%>" class="imginput" style="cursor:pointer" /> --%>
+	            		<a class="imgbtn imgbck" onclick="cnsearch_click()" style="margin-top:1px"><span><spring:message code='ezPoll.t227' /></span></a>
+	            	</div>
+	            	<div style="clear:both"></div>
             		<div class="listview" style="margin-top:5px;margin-bottom:5px">
                 		<div id="OrganListView" style="OVERFLOW:auto;WIDTH:280px;HEIGHT:240px;border:0"></div>
             		</div>
@@ -773,18 +784,18 @@
     		</tr>
 			<tr>
         		<td>
-            		<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="WIDTH:130px" />
-            		<%--<input id = "cnkeybtn" onclick="cnsearch_click()" type="button" value="<%=RM.GetString("t34")%>" class="imginput" style="cursor:pointer" /> --%>
-            		<a class="imgbtn btnSearch"  = "cnkeybtn" onclick="cnsearch_click()"  ><span><spring:message code='ezPoll.t227' /></span></a>
         		</td>
         		<td></td>
         		<td>         
-            		<div class="btnposition" style="margin-top:0px;padding-top:0px">
-                		<a class="imgbtn btnSave" name="Submit" onClick="SetRange()" ><span><spring:message code='ezPoll.t228' /></span></a>
-                		<a class="imgbtn btnCancel" name="Submit2" onClick="close_onclick()" ><span><spring:message code='ezPoll.t139' /></span></a>
-            		</div>
         		</td>
     		</tr>
+    		<tr>
+    			<td>
+	           		<div class="btnpositionNew">
+	               		<a class="imgbtn btnSave" name="Submit" onClick="SetRange()" ><span><spring:message code='ezPoll.t228' /></span></a>
+	           		</div>
+           		</td>
+       		</tr>
 		</table> 
 	</body>
 </html>

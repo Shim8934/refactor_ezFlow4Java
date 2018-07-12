@@ -371,7 +371,7 @@
   box-shadow: none;
   border-radius: 0;
   font-weight: bold;
-  color : #004a87;
+  color : #333;
 }
 .jstree-default .jstree-wholerow {
   -moz-box-sizing: border-box;
@@ -946,10 +946,12 @@
 .jstree-default .icon-company{
 	background:url("/images/OrganTree_cross/ic-company.gif");
 	background-repeat: no-repeat;
+	padding-right: 3px;
 }
 .jstree-default .icon-dept{
 	background:url("/images/OrganTree_cross/ic-open.gif");
 	background-repeat: no-repeat;
+	padding-right: 3px;
 }
 @media (max-width: 768px) {
   #jstree-dnd.jstree-dnd-responsive {

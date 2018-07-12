@@ -124,14 +124,26 @@ INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTIO
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useMailLinkHostname','NO','대용량첨부메일 및 보안메일 링크의 hostname 지정 여부.');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'mailLinkHostname',' ','대용량첨부메일 및 보안메일 링크의 hostname.(port번호 포함)');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'PrimaryTimeZone','235|+09:00','시스템 Primary 표준 시간대 설정');
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useBottomFrameOnly','NO','하단프레임에 우리 모듈이 들어가게 되는 경우 (default : NO)');
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'attachFileNameMaxLength','100','첨부파일명 최대 길이 (default : 100)');
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'editorFontStyle','굴림|13px','에디터 폰트 스타일 (사용자의 언어가 한글일 경우에만 적용)');
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useReSend','YES','보낸편지함, 메일읽기창에서 재작성 사용여부 (default: YES)');
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useBallotSystem','YES','투표 사용 여부(YES:사용, NO:미사용)');
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useAllUserOldMailDelete','NO','관리자가 지정한 기간의 모든 유저의 모든 메일을 삭제하는 옵션 (default : NO)');
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useAllUserOldMailDeletePeriod','0','관리자가 지정한 기간의 모든 유저의 모든 메일을 삭제하는 옵션 (default : 0 사용안함, 단위 : 개월)');
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'isDefaultReceiptExternal','NO','메일 수신 확인 범위 (YES: 외부용, NO: 내부용) (default : NO)');
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useReceiptExternal','NO','수신확인 외부용 지원 여부');
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useRankMail','NO','직위,직책별 메일 발송 여부 (default : NO)');
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useLetter','YES','편지지 사용 여부 (default : NO)');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useZipCodeSearchInApr','NO','민원인 주소의 우편번호 검색 기능 유무 (default : NO)');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useMailWriteSenderClick','YES','메일 보낸사람 클릭시 보낸사람에게 메일 작성(no : 클릭 -> 행선택, yes : 클릭 -> 메일작성 팝업)');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useImapMoveCommand','YES','메일 이동 시 IMAP MOVE 커맨드를 이용함');
-
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useSearchContent','NO','메일 간단검색시 내용검색 사용여부');
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useMailAddrAutoComplete','NO','메일 쓰기창의 받는사람,참조,숨은참조에 수신인의 이름이 자동완성 되어지는 기능(default : NO)');
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'useMailNewWindow','NO','메일리스트에서 단일클릭으로 메일 읽기 가능한 아이콘 사용 여부 (default : NO)');
 
 INSERT INTO tbl_deptmaster (TENANT_ID,CN,DISPLAYNAME,DISPLAYNAME2,USEFLAG,MAIL,COMPNM2,DEPTLEVEL,DEPT_CD_PATH,DEPT_NM_PATH,EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE2,EXTENSIONATTRIBUTE3,EXTENSIONATTRIBUTE4,EXTENSIONATTRIBUTE5,EXTENSIONATTRIBUTE6,EXTENSIONATTRIBUTE7,EXTENSIONATTRIBUTE8,EXTENSIONATTRIBUTE9,EXTENSIONATTRIBUTE10,EXTENSIONATTRIBUTE11,EXTENSIONATTRIBUTE12,EXTENSIONATTRIBUTE13,EXTENSIONATTRIBUTE14,EXTENSIONATTRIBUTE15,ADFLAG,ADSPATH,UPDATEDT) VALUES (0,'Top','조직도','OrganizationChart',NULL,'Top@jtest.kaoni.com','OrganizationChart','1','Top','조직도',NULL,'Top','조직도',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Y','CN=Top,OU=조직도,OU=TopGroup,DC=jtest,DC=kaoni,DC=com',sysdate);
-INSERT INTO tbl_usermaster (TENANT_ID,CN,DISPLAYNAME,DISPLAYNAME2,MAIL,MAILNICKNAME,UPNNAME,DEPARTMENT,DESCRIPTION,DESCRIPTION2,DESCRIPTION3,PHYSICALDELIVERYOFFICENAME,COMPANY,COMPANY2,TITLE,TITLE2,TELEPHONENUMBER,HOMEPHONE,FACSIMILETELEPHONENUMBER,MOBILE,POSTALCODE,STREETADDRESS,INFO,EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE2,EXTENSIONATTRIBUTE3,EXTENSIONATTRIBUTE4,EXTENSIONATTRIBUTE5,EXTENSIONATTRIBUTE6,EXTENSIONATTRIBUTE7,EXTENSIONATTRIBUTE8,EXTENSIONATTRIBUTE9,EXTENSIONATTRIBUTE10,EXTENSIONATTRIBUTE102,EXTENSIONATTRIBUTE11,EXTENSIONATTRIBUTE12,EXTENSIONATTRIBUTE13,EXTENSIONATTRIBUTE14,EXTENSIONATTRIBUTE15,ADSPATH,SIPURI,UPDATEDT,MOBILE_ENABLE,MOBILE_NOTUSE,MOBILE_PIN,POSITIONCD,BIRTH,BIRTHTYPE,PASSWORD,IPADDRESS,LASTLOGIN,LOGINCNT) VALUES (0,'masteradmin','마스터관리자','MasterAdmin','masteradmin@jtest.kaoni.com','masteradmin',NULL,'Top','조직도','OrganizationChart',NULL,'Top','조직도','OrganizationChart','마스터>관리자','MasterAdmin',NULL,NULL,NULL,NULL,NULL,NULL,' ','c=1;a=1;k=1;i=1;g=1;l=1;n=0;m=0;w=0;t=0;',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'마스터관리자','MasterAdmin',NULL,NULL,NULL,NULL,'1','CN=masteradmin,OU=사용자,OU=조직도,OU=TopGroup,DC=jtest,DC=kaoni,DC=com',NULL,sysdate,NULL,'N',NULL,NULL,NULL,'Y','m7jsQtm1Uqm+n51H00wciQOeQm9rlarZxD0wuM9QVCU=','0:0:0:0:0:0:0:1',sysdate,0);
-
+INSERT INTO tbl_usermaster (TENANT_ID,CN,DISPLAYNAME,DISPLAYNAME2,MAIL,MAILNICKNAME,UPNNAME,DEPARTMENT,DESCRIPTION,DESCRIPTION2,DESCRIPTION3,PHYSICALDELIVERYOFFICENAME,COMPANY,COMPANY2,TITLE,TITLE2,TELEPHONENUMBER,HOMEPHONE,FACSIMILETELEPHONENUMBER,MOBILE,POSTALCODE,STREETADDRESS,INFO,EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE2,EXTENSIONATTRIBUTE3,EXTENSIONATTRIBUTE4,EXTENSIONATTRIBUTE5,EXTENSIONATTRIBUTE6,EXTENSIONATTRIBUTE7,EXTENSIONATTRIBUTE8,EXTENSIONATTRIBUTE9,EXTENSIONATTRIBUTE10,EXTENSIONATTRIBUTE102,EXTENSIONATTRIBUTE11,EXTENSIONATTRIBUTE12,EXTENSIONATTRIBUTE13,EXTENSIONATTRIBUTE14,EXTENSIONATTRIBUTE15,ADSPATH,SIPURI,UPDATEDT,MOBILE_ENABLE,MOBILE_NOTUSE,MOBILE_PIN,POSITIONCD,BIRTH,BIRTHTYPE,PASSWORD,IPADDRESS,LASTLOGIN,LOGINCNT, LISTTYPE) VALUES (0,'masteradmin','마스터관리자','MasterAdmin','masteradmin@jtest.kaoni.com','masteradmin',NULL,'Top','조직도','OrganizationChart',NULL,'Top','조직도','OrganizationChart','마스터>관리자','MasterAdmin',NULL,NULL,NULL,NULL,NULL,NULL,' ','c=1;a=1;k=1;i=1;g=1;l=1;n=0;m=0;w=0;t=0;',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'마스터관리자','MasterAdmin',NULL,NULL,NULL,NULL,'1','CN=masteradmin,OU=사용자,OU=조직도,OU=TopGroup,DC=jtest,DC=kaoni,DC=com',NULL,sysdate,NULL,'N',NULL,NULL,NULL,'Y','m7jsQtm1Uqm+n51H00wciQOeQm9rlarZxD0wuM9QVCU=','0:0:0:0:0:0:0:1',sysdate,0,'TXT');
 
 --Board insert 
 
@@ -394,7 +406,7 @@ INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMP
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A36','0  ','변환문서','0','변환문서URL','변환문서','변환문서','변환문서','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A36','001','/files/upload_approvalG/form/2003000007.mht','1','합의문서','/files/upload_approvalG/form/2003000007.mht','/files/upload_approvalG/form/2003000007.mht','/files/upload_approvalG/form/2003000007.mht','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A36','002','/upload_approvalG/Top/form/2006000001.hwp','1','감사문서','/upload_approval/Top/form/2003000008.mht','/upload_approvalG/Top/form/2006000001.hwp','/upload_approvalG/Top/form/2006000001.hwp','Top',0);
-INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A36','003','/upload_approvalG/Top/form/2006000001.hwp','1','유통문서(중계)','/upload_approvalG/Top/form/2006000001.hwp','/upload_approvalG/Top/form/2006000001.hwp','/upload_approvalG/Top/form/2006000001.hwp','Top',0);
+INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A36','003','/files/upload_approvalG/form/relay001.hwp','1','유통문서(중계)','/files/upload_approvalG/form/relay001.hwp','/files/upload_approvalG/form/relay001.hwp','/files/upload_approvalG/form/relay001.hwp','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A36','004','/upload_approvalG/Top/form/2006000001.hwp','1','행정문서(연계)','/upload_approvalG/Top/form/2006000001.hwp','/upload_approvalG/Top/form/2006000001.hwp','/upload_approvalG/Top/form/2006000001.hwp','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A36','005','/upload_approvalG/Top/form/2006000001.hwp','1','전자기안문','/upload_approvalG/Top/form/2006000001.hwp','/upload_approvalG/Top/form/2006000001.hwp','/upload_approvalG/Top/form/2006000001.hwp','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A36','006','/ekp/Upload_ApprovalG/','1','Document Path','/ekp/Upload_ApprovalG/','//ekp/Upload_ApprovalG/','//ekp/Upload_ApprovalG/','Top',0);
@@ -1802,6 +1814,8 @@ Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLA
 Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('451ef007-5316-472d-9a22-eeafbe8367e9','1dc7d4e1-303f-4d13-a8b6-d5ebf8f3f32d','F3633607-8E8B-42A1-B777-6E2969072E58','예약게시물','예약게시물_en',3,' ','/ezBoard/boardMain.do?subFunc=2','main',' ',0);
 Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('53fbc413-b279-4bc8-9a0b-e490660a6495','7acbc603-5383-4da4-ae14-523112a5c167','b0a4e923-d270-4353-9e81-e86c14424262','Dept.receipt folder','Dept.receipt folder',4,' ','/ezApproval/apprMain.do?listType=4','main',' ',0);
 Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('55eaf17c-55e9-485a-9b82-a5096d47a19c','1dc7d4e1-303f-4d13-a8b6-d5ebf8f3f32d','F3633607-8E8B-42A1-B777-6E2969072E58','전자설문','ezQuestion',4,' ','/ezBoard/boardMain.do?func=1','main',' ',0);
+Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('45eaf17c-55e9-326j-12hf-b6096d47789g','1dc7d4e1-303f-4d13-a8b6-d5ebf8f3f32d','F3633607-8E8B-42A1-B777-6E2969072E58','투표','ezPoll',5,' ','/ezBoard/boardMain.do?func=3','main',' ',0);
+Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('f85dc4dd-662d-414b-bf2c-20009cd87f4b','1dc7d4e1-303f-4d13-a8b6-d5ebf8f3f32d','F3633607-8E8B-42A1-B777-6E2969072E58','사다리게임','ezLadder',7,' ','/ezBoard/boardMain.do?func=4','main',' ',0);
 Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('57773384-f434-4450-92eb-1bdfe7e8a725','d00d04fb-3d8f-466c-9f0f-7fc974954c1c','b0a4e923-d270-4353-9e81-e86c14424262','To be process','To be process',1,' ','/ezApprovalG/apprGMain.do','main',' ',0);
 Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('5f930a90-0a15-4a5a-a48e-2111e86bd503','04bc1910-6e80-4904-9da2-e6c86eccc366','d4dcceee-01f5-42da-9093-a243d3056204','アドレス帳','アドレス帳',2,' ','/ezEmail/mailMain.do?funCode=2','main',' ',0);
 Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('64f2e977-8759-43a4-b746-555378d22274','d00d04fb-3d8f-466c-9f0f-7fc974954c1c','b0a4e923-d270-4353-9e81-e86c14424262','In process','In process',2,' ','/ezApprovalG/apprGMain.do?listType=3','main',' ',0);
@@ -1810,7 +1824,9 @@ Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLA
 Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('a8ec0f1d-e9f5-4689-a953-5338ce70f75c','7acbc603-5383-4da4-ae14-523112a5c167','b0a4e923-d270-4353-9e81-e86c14424262','To be process','To be process',1,' ','/ezApproval/apprMain.do','main',' ',0);
 Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('ad35d4e0-d885-43dc-899a-9c0ec92add53','1f613cb1-a2f6-4f73-8b89-f0511cd2f911','b0a4e923-d270-4353-9e81-e86c14424262','My board','My board',1,' ','/ezBoard/boardMain.do','main',' ',0);
 Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('c443c133-3172-4e22-b681-5edb5318628a','94ef77fe-04fd-434a-8508-7fba98631bb8','d4dcceee-01f5-42da-9093-a243d3056204','電子アンケート','電子アンケート',4,' ','/ezBoard/boardMain.do?func=1','main',' ',0);
+Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('c422d596-4890-8h34-g556-6sgj4236289t','94ef77fe-04fd-434a-8508-7fba98631bb8','d4dcceee-01f5-42da-9093-a243d3056204','投票','投票',5,' ','/ezBoard/boardMain.do?func=3','main',' ',0);
 Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('c54e8173-ad8f-43dd-a220-05e4cc979788','1f613cb1-a2f6-4f73-8b89-f0511cd2f911','b0a4e923-d270-4353-9e81-e86c14424262','Question','Question',4,' ','/ezBoard/boardMain.do?func=1','main',' ',0);
+Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('c76e9210-b9df-21gh-b110-34t2sg147345','1f613cb1-a2f6-4f73-8b89-f0511cd2f911','b0a4e923-d270-4353-9e81-e86c14424262','Vote','Vote',5,' ','/ezBoard/boardMain.do?func=3','main',' ',0);
 Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('c93e6f29-ac0a-46a4-84c2-ae809e9c7c9e','09e1d12c-5ffd-4240-8791-020431a5c47b','F3633607-8E8B-42A1-B777-6E2969072E58','메일','mail',1,' ','/ezEmail/mailMain.do?funCode=1','main',' ',0);
 Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('c9cd4fa8-4806-47e7-92c2-3daccb0bd6bb','b39f97e9-4272-45d2-bcda-2ceb6d6e46d0','F3633607-8E8B-42A1-B777-6E2969072E58','결재진행문서','결재진행문서_en',2,' ','/ezApprovalG/apprGMain.do?listType=3','main',' ',0);
 Insert into TBL_MENUITEM_ITEMS_MENUITEMS_S (UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) values ('ce4f389f-47bf-4cb8-ab86-76e049eb9dc8','a52e3c9c-171e-44aa-b540-b4311f357b55','d4dcceee-01f5-42da-9093-a243d3056204','決裁待ちの文書','決裁待ちの文書',1,' ','/ezApproval/apprMain.do','main',' ',0);
@@ -1900,6 +1916,7 @@ Insert into TBL_PORTAL_ACL (UID_,ACCESSID,ACCESSNAME,VIEW_RIGHT,EDIT_RIGHT,TENAN
 Insert into TBL_PORTAL_ACL (UID_,ACCESSID,ACCESSNAME,VIEW_RIGHT,EDIT_RIGHT,TENANT_ID) values ('53e846f4-3946-4614-a146-2866c14940dc','everyone','ENG_조직도',2,2,0);
 Insert into TBL_PORTAL_ACL (UID_,ACCESSID,ACCESSNAME,VIEW_RIGHT,EDIT_RIGHT,TENANT_ID) values ('53fbc413-b279-4bc8-9a0b-e490660a6495','everyone','조직도',2,2,0);
 Insert into TBL_PORTAL_ACL (UID_,ACCESSID,ACCESSNAME,VIEW_RIGHT,EDIT_RIGHT,TENANT_ID) values ('55eaf17c-55e9-485a-9b82-a5096d47a19c','everyone','조직도',2,2,0);
+Insert into TBL_PORTAL_ACL (UID_,ACCESSID,ACCESSNAME,VIEW_RIGHT,EDIT_RIGHT,TENANT_ID) values ('f85dc4dd-662d-414b-bf2c-20009cd87f4b','everyone','조직도',2,2,0);
 Insert into TBL_PORTAL_ACL (UID_,ACCESSID,ACCESSNAME,VIEW_RIGHT,EDIT_RIGHT,TENANT_ID) values ('57773384-f434-4450-92eb-1bdfe7e8a725','everyone','조직도',2,2,0);
 Insert into TBL_PORTAL_ACL (UID_,ACCESSID,ACCESSNAME,VIEW_RIGHT,EDIT_RIGHT,TENANT_ID) values ('5f930a90-0a15-4a5a-a48e-2111e86bd503','everyone','조직도',2,2,0);
 Insert into TBL_PORTAL_ACL (UID_,ACCESSID,ACCESSNAME,VIEW_RIGHT,EDIT_RIGHT,TENANT_ID) values ('c06b1862-ce83-4472-91d7-fd92cee3a7ac','everyone','조직도',2,2,0);
@@ -2039,7 +2056,7 @@ Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME
 Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('N',4,NULL,'HASFILE',NULL,NULL,'HASFILE',28,0);
 Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('N',5,'제목','TITLE','タイトル',NULL,'TITLE',350,0);
 Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('N',6,'작성자','MEMBERNAME','作成者',NULL,'MEMBERNAME',100,0);
-Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('N',7,'작성일','REGDATE','作成日',NULL,'REGDATE',140,0);
+Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('N',7,'등록일','REGDATE','登録日',NULL,'REGDATE',140,0);
 Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('N',8,'확인','CONFIRM','確認',NULL,'CONFIRM',55,0);
 Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('N',9,'상태','STATUS','ステータス',NULL,'STATUS',75,0);
 Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('T',0,'CHECK','CHECK','CHECK',NULL,'ITEMID',20,0);
@@ -2048,6 +2065,781 @@ Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME
 Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('T',3,NULL,'HASFILE',NULL,NULL,'HASFILE',28,0);
 Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('T',4,'제목','TITLE','タイトル',NULL,'TITLE',350,0);
 Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('T',5,'작성자','MEMBERNAME','作成者',NULL,'MEMBERNAME',100,0);
-Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('T',6,'작성일','REGDATE','作成日',NULL,'REGDATE',140,0);
+Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('T',6,'등록일','REGDATE','登録日',NULL,'REGDATE',140,0);
 Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('T',7,'확인','CONFIRM','確認',NULL,'CONFIRM',55,0);
 Insert into TBL_CIRCULAR_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,TENANTID) VALUES ('T',8,'상태','STATUS','ステータス',NULL,'STATUS',75,0);
+
+-------------------------- 업무일지 ---------------------------------
+Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t05','Top',0);
+Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t06','Top',0);
+Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t07','Top',0);
+Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t08','Top',0);
+Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t09','Top',0);
+Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t10','Top',0);
+
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
+values (0,'일일업무일지(기본)',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">일일업무일지</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금&nbsp;일</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">익&nbsp;일</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>'
+,'ezJournal.t05',SYS_EXTRACT_UTC(SYSTIMESTAMP),'기본일일업무일지','Top','basic');
+
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
+values (0,'주간업무일지(기본)',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">주간업무일지</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금&nbsp;주</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">차&nbsp;주</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>'
+,'ezJournal.t06',SYS_EXTRACT_UTC(SYSTIMESTAMP),'기본주간업무일지','Top','basic');
+
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
+values (0,'월간업무일지(기본)',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">월간업무일지</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금&nbsp;월</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">익&nbsp;월</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>'
+,'ezJournal.t07',SYS_EXTRACT_UTC(SYSTIMESTAMP),'기본월간업무일지','Top','basic');
+
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
+values (0,'분기업무일지(기본)',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">분기업무일지</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금분기</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">차분기</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>'
+,'ezJournal.t08',SYS_EXTRACT_UTC(SYSTIMESTAMP),'기본분기업무일지','Top','basic');
+
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
+values (0,'반기업무일지(기본)',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">반기업무일지</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금반기</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">차반기</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>'
+,'ezJournal.t09',SYS_EXTRACT_UTC(SYSTIMESTAMP),'기본반기업무일지','Top','basic');
+
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
+values (0,'연간업무일지(기본)',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">연간업무일지</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금&nbsp;년</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">익&nbsp;년</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>'
+,'ezJournal.t10',SYS_EXTRACT_UTC(SYSTIMESTAMP),'기본연간업무일지','Top','basic');
+
+-- webfolder fileType 
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('1','document','doc','/images/webfolder/msWord.png',0,'문서');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('2','document','docx','/images/webfolder/msWord.png',0,'문서');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('3','document','xls','/images/webfolder/msExcel.png',0,'문서');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('4','document','xlsx','/images/webfolder/msExcel.png',0,'문서');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('5','document','ppt','/images/webfolder/msPowerpoint.png',0,'문서');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('6','document','pptx','/images/webfolder/msPowerpoint.png',0,'문서');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('7','music','mp3','/images/webfolder/mp3.png',0,'음악');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('8','image','gif','/images/webfolder/gif.png',0,'그림');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('9','image','jpeg','/images/webfolder/jpeg.png',0,'그림');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('10','image','jpg','/images/webfolder/jpg.png',0,'그림');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('11','zip','zip','/images/webfolder/zip.png',0,'압축파일');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('12','zip','rar','/images/webfolder/rar.png',0,'압축파일');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('13','zip','iso','/images/webfolder/iso.png',0,'압축파일');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('14','document','pdf','/images/webfolder/pdf.png',0,'문서');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('15','document','hwp','/images/webfolder/hwp.png',0,'문서');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('16','image','png','/images/webfolder/png.png',0,'그림');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('17','folder','folder','/images/webfolder/fldr.png',0,'폴더');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('18','video','mp4','/images/webfolder/mp4.png',0,'영상');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('19','video','mkv','/images/webfolder/mkv.png',0,'영상');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('20','video','flv','/images/webfolder/flv.png',0,'영상');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('21','unknown','unknown','/images/webfolder/unknown.png',0,'기타');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('22','document','txt','/images/webfolder/txt.png',0,'문서');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('23','video','avi','/images/webfolder/video.png',0,'영상');
+Insert into EZEKP2017.TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('24','video','wmv','/images/webfolder/video.png',0,'영상');
+
+--webfolder config
+INSERT INTO TBL_WEBFOLDER_CONFIG VALUES(0,'Top',1,1);

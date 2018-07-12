@@ -11,23 +11,23 @@
 		<table id="journalListHead" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" class="mainlist">
 		<thead id="BoardList_THEAD">
 			<tr id="BoardList_TH">
-				<th id="BoardList_TH_0" style="text-align: left; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px;" class="h4_center" bgcolor="#CCCCCC">
+				<th id="BoardList_TH_0" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px;" class="h4_center" bgcolor="#CCCCCC">
 					<input type="checkbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);" style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 				</th>
-				<th id="BoardList_TH_2" onclick="setListOrder(this)" order="14" style="padding-left: 0; overflow: hidden; white-space: nowrap; cursor: pointer; width:25px; text-align: left;" class="h5_center">
+				<th id="BoardList_TH_2" onclick="setListOrder(this)" order="14" style="overflow: hidden; white-space: nowrap; cursor: pointer; width:25px; text-align: center;" class="h5_center">
 					<img style="cursor:pointer; vertical-align: middle;" src="/images/ImgIcon/view-document.gif ">
 				</th>
 				<!-- 취합여부아이콘 -->
-				<th id="BoardList_TH_10" onclick="setListOrder(this)" order="16" style="overflow: hidden; white-space: nowrap; cursor: pointer; width:35px; text-align: left; padding: 0px 3px;" class="h5_center">
+				<th id="BoardList_TH_10" onclick="setListOrder(this)" order="16" style="overflow: hidden; white-space: nowrap; cursor: pointer; width:35px; text-align: center; padding: 0px 3px;" class="h5_center">
 					<img src="/images/ImgIcon/addon.png" style="vertical-align: middle;">
 				</th>
-				<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="padding-left: 0; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px; text-align: left;" class="h5_center">
+				<th id="BoardList_TH_2" onclick="setListOrder(this)" order="10" style="padding-left: 0; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px; text-align: center;" class="h5_center">
 					<img src="/images/newAttach.gif" style="vertical-align: middle;">
 				</th>
 				<th id="BoardList_TH_1" onclick="setListOrder(this)" order="8" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; text-align: left; width:12%" class="h5_center" width="150">
 					<spring:message code='ezJournal.t176'/>
 				</th>
-				<th id="BoardList_TH_3" onclick="setListOrder(this)" order="2" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:23%;" class="h5_center">
+				<th id="BoardList_TH_3" onclick="setListOrder(this)" order="2" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:35%;" class="h5_center">
 					<spring:message code='ezJournal.t56'/>
 				</th>
 				<th id="BoardList_TH_4" onclick="setListOrder(this)" order="6" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width:10%;" class="h5_center">
@@ -53,16 +53,16 @@
 		<c:choose>
 			<c:when test="${fn:length(journalList) ne 0}">
 				<c:forEach items="${journalList}" var="journal" varStatus="status">
-				<tr id="${journal.journalId }" mine="${journal.mine }" formStatus="${journal.formStatus }" typeId="${journal.typeId}" formId="${journal.formId}" ondblclick="goJournalDetail(this);" style="cursor: pointer;">
-					<td class="cbTD" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:20px;"><input onchange="checkedCheckbox(this);" type="checkbox" name="journalCheckbox" style="width: 13px; height: 13px; padding : 0px; margin : 0px; vertical-align: middle"></td>
+				<tr class="${journal.isView }" id="${journal.journalId }" mine="${journal.mine }" formStatus="${journal.formStatus }" typeId="${journal.typeId}" formId="${journal.formId}" ondblclick="goJournalDetail(this);" style="cursor: pointer;">
+					<td class="cbTD" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:20px;"><input onchange="checkedCheckbox(this);" type="checkbox" name="journalCheckbox" style="width: 13px; height: 13px; padding : 0px; margin : 0px; vertical-align: middle"></td>
 					<c:choose>
 						<c:when test="${journal.isView == 'noView'}">
-							<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:25px;">
+							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:25px;">
 								<img style="cursor:pointer; vertical-align: middle;" src="/images/ImgIcon/view-document.gif">
 							</td>
 						</c:when>
 						<c:otherwise>
-							<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:25px;">
+							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:25px;">
 								<img style="cursor:pointer; vertical-align: middle;" draggable="false" src="/images/ImgIcon/icon-msg-read.gif">
 							</td>
 						</c:otherwise>
@@ -70,19 +70,19 @@
 					<!-- 취합여부아이콘 -->
 					<c:choose>
 						<c:when test="${journal.isSum eq 'Y'}">
-							<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;  padding: 0px 3px; width:35px;">
+							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;  padding: 0px 3px; width:35px;">
 								<img src="/images/ImgIcon/addon.png" style="vertical-align: middle;">
 							</td>
 						</c:when>
 						<c:otherwise>
-							<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;  padding: 0px 3px; width:35px;">
+							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;  padding: 0px 3px; width:35px;">
 								<img src="/images/ImgIcon/addoff.png" style="vertical-align: middle;">
 							</td>
 						</c:otherwise>
 					</c:choose>
 					<c:choose>
 						<c:when test="${journal.fileCount ne 0}">
-							<td onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:20px;">
+							<td onclick="selectedTR(this);" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 0px; width:20px;">
 								<img src="/images/newAttach.gif" style="vertical-align: middle;">
 							</td>
 						</c:when>
@@ -93,7 +93,7 @@
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:12%" width="150">
 						<spring:message code='${journal.typeId}'/>
 					</td>
-					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:23%;">
+					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:35%;">
 					<jsp:useBean id="toDay" class="java.util.Date" />
 					<fmt:formatDate value="${toDay}" pattern="yyyy-MM-dd" var="nowDay"/>
 					<fmt:parseDate value="${journal.journalDate}" pattern="yyyy-MM-dd"  var="jDay"/>
@@ -114,7 +114,7 @@
 						<c:out value='${journal.writerName}'/>
 					</td>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:12%;">
-						<c:out value='${journal.journalDate}'/>
+						<c:out value='${fn:substring(journal.journalDate, 0, 16) }'/>
 					</td>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:12%;">
 						<c:out value='${journal.formName}'/>
@@ -134,28 +134,28 @@
 	</table>
 	</div>
 </div>
-<div id='runtime' style="color: #666; padding-top: 5px"></div>
+<!-- <div id='runtime' style="color: #666; padding-top: 5px"></div> -->
 <c:choose>
 <c:when test="${paging.endPage>0 }">
 <div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">
 	<div class="pagenavi">   
 		<c:choose>
 				<c:when test="${paging.currentPage gt 1}">   
-					<span onclick="goToPageByNum(1)" class="btnimg"><img src="/images/sub/btn_p_prev.gif" width="16" height="16"></span>            
+					<span onclick="goToPageByNum(1)" class="btnimg"><img src="/images/sub/btn_p_prev.gif" ></span>            
 				</c:when>
 				<c:otherwise>
-					<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" width="16" height="16"></span>            
+					<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" ></span>            
 				</c:otherwise>         
 		</c:choose>
 		<c:choose>
 			<c:when test="${paging.startPage gt 1}">
-				<span onclick="goToPageByNum(${paging.startPage-1})" class="btnimg"><img src="/images/sub/btn_prev.gif" width="16" height="16"></span>              
+				<span onclick="goToPageByNum(${paging.startPage-1})" class="btnimg"><img src="/images/sub/btn_prev.gif" ></span>              
 			</c:when>
 			<c:otherwise>
-				<span class="btnimg"><img src="/images/sub/btn_prev01.gif" width="16" height="16"></span>              
+				<span class="btnimg"><img src="/images/sub/btn_prev01.gif" ></span>              
 			</c:otherwise>                                                                    
 		</c:choose>
-		<span class="ptxt" onclick="<c:if test="${paging.currentPage gt 1 }">goToPageByNum(${paging.currentPage-1})</c:if>"><spring:message code='ezApproval.t931'/></span>                                   
+		<%-- <span class="ptxt" onclick="<c:if test="${paging.currentPage gt 1 }">goToPageByNum(${paging.currentPage-1})</c:if>"><spring:message code='ezApproval.t931'/></span> --%>                                   
 		<c:forEach begin="0" end="${paging.endPage-paging.startPage }" varStatus="status">
 			<c:choose>
 				<c:when test="${paging.startPage+status.index eq  paging.currentPage}">
@@ -166,21 +166,21 @@
 				</c:otherwise>
 			</c:choose>
 		</c:forEach>
-		<span class="ptxt" onclick="<c:if test="${paging.totalPage gt paging.currentPage }">goToPageByNum(${paging.currentPage+1})</c:if>"><spring:message code='ezApproval.t932'/></span>
+		<%-- <span class="ptxt" onclick="<c:if test="${paging.totalPage gt paging.currentPage }">goToPageByNum(${paging.currentPage+1})</c:if>"><spring:message code='ezApproval.t932'/></span> --%>
 		<c:choose>
 			<c:when test="${paging.totalPage gt paging.endPage }">
-				<span class="btnimg" onclick="goToPageByNum(${paging.endPage+1})"><img src="/images/sub/btn_next.gif" width="16" height="16"></span>
+				<span class="btnimg" onclick="goToPageByNum(${paging.endPage+1})"><img src="/images/sub/btn_next.gif" ></span>
 			</c:when>
 			<c:otherwise>
-				<span class="btnimg"><img src="/images/sub/btn_next01.gif" width="16" height="16"></span>
+				<span class="btnimg"><img src="/images/sub/btn_next01.gif" ></span>
 			</c:otherwise>
 		</c:choose>
 		<c:choose>
 			<c:when test="${paging.totalPage gt paging.currentPage }">
-				<span class="btnimg" onclick="goToPageByNum(${paging.totalPage})"><img src="/images/sub/btn_n_next.gif" width="16" height="16"></span>
+				<span class="btnimg" onclick="goToPageByNum(${paging.totalPage})"><img src="/images/sub/btn_n_next.gif" ></span>
 			</c:when>
 			<c:otherwise>
-				<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" width="16" height="16"></span>
+				<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" ></span>
 			</c:otherwise>
 		</c:choose>
 	</div>
@@ -189,13 +189,13 @@
 <c:otherwise>
 <div id="tblPageRayer" style="width:470px; margin:6px auto; font-size:0">
 	<div class="pagenavi">  
-		<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" width="16" height="16"></span>
-		<span class="btnimg"><img src="/images/sub/btn_prev01.gif" width="16" height="16"></span>
-		<span class="ptxt"> <spring:message code='ezApproval.t931'/></span>  
+		<span class="btnimg"><img src="/images/sub/btn_p_prev01.gif" ></span>
+		<span class="btnimg"><img src="/images/sub/btn_prev01.gif" ></span>
+		<%-- <span class="ptxt"> <spring:message code='ezApproval.t931'/></span> --%>  
 		<span class="on">1</span> 
-		<span class="ptxt"><spring:message code='ezApproval.t932'/></span>
-		<span class="btnimg"><img src="/images/sub/btn_next01.gif" width="16" height="16"></span>
-		<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" width="16" height="16"></span>
+		<%-- <span class="ptxt"><spring:message code='ezApproval.t932'/></span> --%>
+		<span class="btnimg"><img src="/images/sub/btn_next01.gif" ></span>
+		<span class="btnimg"><img src="/images/sub/btn_n_next01.gif" ></span>
 	</div>
 </div>
 </c:otherwise>

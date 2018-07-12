@@ -512,8 +512,7 @@
 		        if (pDocID != "") {
 		        	message.SetEditorContent(message.GetEditorContent() + "<hr><br/><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML) + "</div>";
 		        }
-		            
-		        JSleep(1000);
+
 		        var strBody = message.GetEditorContent();
 		        
 		        if (trim_Cross(strBody) != "" || pDocID == "") {
@@ -569,7 +568,6 @@
 		                alert("<spring:message code='ezCommunity.t1150'/>" + pStartDate.substr(0, 16) + "<spring:message code='ezCommunity.t1151'/>");
 		            }
 		            
-		            JSleep(500);
 					window.opener.location.reload(true);
 					saveFlag = false;
 					
@@ -584,13 +582,14 @@
 		        clickFlag = true;
 		    }
 	
-		    function JSleep(sTime) {
+			 /* 2018-05-10 홍승비 - 게시물 저장 시 JSleep 함수 미사용 */
+		  	/* function JSleep(sTime) {
 		        var start = new Date().getTime();
 		        
 		        while (new Date().getTime() < start + sTime) {
 		        };
-		    }
-	
+		    } */
+
 		    function ReplaceText( orgStr, findStr, replaceStr ) {
 		        var re = new RegExp( findStr, "gi" );
 		        return ( orgStr.replace( re, replaceStr ) );
@@ -641,7 +640,7 @@
 		            document.getElementById("reservation_date").style.display = "none";
 		        }
 		    }
-						
+
 		    function PreviewItem() {
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
@@ -899,19 +898,19 @@
 				<td style="height: 20px">
 					<div id="menu">
 						<ul>
-							<li><span onclick="SaveItem();"><spring:message	code='ezCommunity.t155' /></span></li>
+							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezCommunity.t155 => t20 -->
+							<li><span onclick="SaveItem();"><spring:message	code='ezCommunity.t20' /></span></li>
 							<!-- 2017-12-27 장진혁 - 미리보기가 필요하지 않아 보임 주석처리함 -->
 							<%-- <li><span onclick="PreviewItem();"><spring:message code='ezCommunity.t1167' /></span></li> --%>
 						</ul>
 					</div>
 					<div id="close">
 						<ul>
-							<li><span onclick="window.close();"><spring:message	code='ezCommunity.t21' /></span></li>
+							<li><span onclick="window.close();"></span></li>
 						</ul>
 					</div> 
 					<script type="text/javascript">
 						selToggleList(document.getElementById("menu"), "ul", "li", "0");
-		                selToggleList(document.getElementById("close"), "ul", "li", "0");
 					</script>
 				</td>
 			</tr>
@@ -949,7 +948,7 @@
 								id="Sdatepicker" style="width: 80px; text-align: center" /> <input
 								id="Stimepicker" type="text" class="time"
 								style="width: 43px; margin-left: 10px; text-align: center;" /> <a
-								class="imgbtn" style="margin-top: 4px;"><span onclick="btn_PostDate_Clear()"
+								class="imgbtn imgbck" style="margin-top: 4px;"><span onclick="btn_PostDate_Clear()"
 									popuplocation='topright'><spring:message
 											code='ezCommunity.t444' /></span></a>
 						</span></td>
@@ -1046,8 +1045,8 @@
 												style="display: none; OVERFLOW: auto; HEIGHT: 50px;">&nbsp;</div>
 										</td>
 										<td class="pos2">
-											<a class="imgbtn"><span id="btn_AttachAdd" onClick="return btn_AttachAdd_onclick()"><spring:message code='ezCommunity.t1177' /></span></a><br>
-											<a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
+											<a class="imgbtn imgbck"><span id="btn_AttachAdd" onClick="return btn_AttachAdd_onclick()"><spring:message code='ezCommunity.t1177' /></span></a><br>
+											<a class="imgbtn imgbck"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
 										</td>
 									</tr>
 								</form>
@@ -1071,9 +1070,9 @@
 											<div id="lstAttachLink">&nbsp;</div>
 										</td>
 										<td class="pos2" style ="white-space:normal;">
-											<a class="imgbtn"><span id="btn_AttachAdd" onclick="return btn_AttachSelect_onclick()"><spring:message code='ezCommunity.t1177' /></span></a>
+											<a class="imgbtn imgbck"><span id="btn_AttachAdd" onclick="return btn_AttachSelect_onclick()"><spring:message code='ezCommunity.t1177' /></span></a>
 											<br>
-											<a class="imgbtn"><span id="btn_AttachDel" onclick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
+											<a class="imgbtn imgbck"><span id="btn_AttachDel" onclick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
 										</td>
 									</tr>
 								</form>

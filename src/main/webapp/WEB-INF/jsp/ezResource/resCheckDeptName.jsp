@@ -110,12 +110,15 @@
 		</xml>
 		
 		<h1><spring:message code="ezResource.t13"/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="cancel_onClick()"></span></li>
+            </ul>
+        </div>
 		<h2><spring:message code="ezResource.t167"/></h2>
-
 		<div id="ListView" style="behavior: url(#ListViewBehave#ListView); width: 570px; height: 200px; overflow-y:auto" onrowdblclick="change_onClick()"> </div>
 		<div class="btnposition btnpositionNew">
     		<a class="imgbtn" onClick="change_onClick()"><span><spring:message code="ezResource.t15"/></span></a>
-    		<a class="imgbtn" onClick="cancel_onClick()"><span><spring:message code="ezResource.t16"/></span></a>
 		</div>
 	</body>
 </html>

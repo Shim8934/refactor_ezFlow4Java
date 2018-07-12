@@ -7,14 +7,17 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title></title>
 	    <link rel="stylesheet" href="/css/ezEmail/style.css" />		
+	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	</head>
 	<body style="background: url(/images/kr/cm/popup_bg.gif) #ffffff repeat-x left top">
 		<div id="leTop">
-			<div class="leTitle"></div>
-			<div class="leLetter">
+			<div class="leTitle" style="margin-left:5px;"></div>
+			<div class="leLetter"  style="padding:8px; padding-top:3px;">
 				<!-- 편지지명, 편지지명(영문) input -->
 				<div class="leLetterInfo">
 					<table>
@@ -23,33 +26,45 @@
 							<col width="">
 						</colgroup>
 						<tr>
-							<th><spring:message code='ezEmail.letter8'/> (${primary })</th>
+							<th><spring:message code='ezEmail.letter37'/></th>
 							<td><input type="text" id="displayname" name="displayname" maxlength="40" placeholder="<spring:message code='ezEmail.letter10'/>"></td>
 						</tr>
 						<tr>
-							<th><spring:message code='ezEmail.letter8'/> (${secondary })</th>
+							<th><spring:message code='ezEmail.letter38'/></th>
 							<td><input type="text" id="displayname2" name="displayname2" maxlength="40" placeholder="<spring:message code='ezEmail.letter10'/>"></td>
 						</tr>
 					</table>
 				</div> <!-- leLetterInfo End -->
 				<!-- editor -->
-				<div class="leLetterEditer">
+				<div class="leLetterEditer" style="height:490px;">
 					<iframe id="tbContentElement" class="viewbox" src="" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 					<textarea id="plainTextArea" style="height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; display:none;"></textarea>
 				</div>
 				<!-- 에디터에서 사용 -->
-				<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0); display: none;" id="mailPanel">&nbsp;</div>
+				<div style="width: 100%; height: 90%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0); display: none;" id="mailPanel">&nbsp;</div>
 				<div class="layerpopup"  style="top: 10px; z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 					<iframe src="<spring:message code='main.kms4' />" style="border:1px solid #b6b6b6;" id="iFrameLayer"></iframe>
 				</div>
 				<!-- btns -->
-				<div class="leLetterBtns">
+				<%-- <div class="leLetterBtns">
 					<button id="leSave" onClick="letterSave(this)"><spring:message code='main.sp09'/></button>
 					<button id="leClose" onClick="letterPopUpClose()"><spring:message code='main.t135'/></button>
+				</div> --%>
+				<div style="width:100%;margin-left:-10px;position: fixed; bottom: 0px; z-index: 1000;height:45px;background-color:#f8f8fa;">
+					<div id="mainmenu" style="margin-top:8px; margin-left:45%; position:relative;">
+				        <ul>
+				            <li><span style="border-image: none;" onClick="letterSave(this)">&nbsp;<spring:message code='main.sp09'/>&nbsp;</span></li>
+				            <li><span style="border-image: none;" onClick="letterPopUpClose()">&nbsp;<spring:message code='main.t135'/>&nbsp;</span></li>
+				        </ul>
+				    </div>
 				</div>
 			</div> <!-- leLetter End -->
 		</div>
 			
+		<script>
+			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+		</script>
+		
 		<script>
 			var popUpType = "${popUpType}"; // add 작성, modify 수정
 			var popLetterBoxNo = "${letterBoxNo}";
@@ -61,7 +76,8 @@
 			var lengthMsg = opener.lengthMsg; // "<spring:message code='ezEmail.letter14'/>"; // 자 이하로 입력 가능합니다.
 			var contentMsg = "<spring:message code='ezEmail.letter10'/>"; // "<spring:message code='ezEmail.letter15'/>"; // 내용을 입력해주세요.
 			var letterNameMsg = "<spring:message code='ezEmail.letter32'/>"; // "<spring:message code='ezEmail.letter32'/>"; // 편지지명은
-			                            
+			var defaultFontAndSize = "${defaultFontAndSize}";
+			
 			window.onload = function() {
 				console.log(popUpType);
 				if (popUpType == "modify") {
@@ -82,6 +98,8 @@
 				if (popUpType == "modify") {
 					modifyDataView();
 				}
+				
+				rebody();
 			}
 			
 			function modifyDataView() {
@@ -172,6 +190,12 @@
 			function letterPopUpClose() {
 				window.close();
 			}
+			
+			function rebody() {
+				if (popUpType != "modify") {
+					window.message.SetEditorContent("<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P>");	
+				}
+		    }
 		</script>	
 	</body>
 </html>

@@ -1353,7 +1353,7 @@
 				AND
 					tenant_id = #tenantID#
 				ORDER BY
-					c_visited DESC
+					c_indate DESC
 			]]>
 		</isEqual>
 		
@@ -1377,7 +1377,7 @@
 					AND
 						TBL_C_CLUBUSER.tenant_id = #tenantID#
 					ORDER BY
-						TBL_C_CLUBUSER.c_visited DESC
+						TBL_C_CLUBUSER.c_indate DESC
 				]]>
 			</isEqual>
 			
@@ -1394,7 +1394,7 @@
 					AND
 						tenant_id = #tenantID#
 					ORDER BY
-						c_visited DESC
+						c_indate DESC
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -1758,7 +1758,7 @@
 				A.c_id,
 				A.companyid,
 				A.c_indate,
-				B.username$v_USERINFO_LANG$
+				CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
 			FROM
 				TBL_C_CLUBUSER A
 			INNER JOIN
@@ -2054,7 +2054,7 @@
 				A.writerdeptname$v_USERINFO_LANG$,
 				A.writercompanyname$v_USERINFO_LANG$,
 				A.startdate,
-				A.writedate,
+				DATE_ADD(DATE_FORMAT(A.writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
 				A.parentwritedate,
 				A.importance,
 				A.title,
@@ -2323,7 +2323,7 @@
             	TBL_COMM_BOARDINFO.boardid,
 				A.itemid,
 				A.title,
-				A.writedate,
+				DATE_ADD(DATE_FORMAT(A.writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
 				gubun,
 				A.extensionattribute5,
 				(SELECT 
@@ -2596,6 +2596,7 @@
                 c_clubname,
                 c_clubname2,
                 a.boardid,
+                readcount,
                 (SELECT 
                 	COUNT(*)  
 				FROM 

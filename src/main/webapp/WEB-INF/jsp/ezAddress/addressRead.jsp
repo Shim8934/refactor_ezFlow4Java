@@ -135,13 +135,12 @@
 		    </div>
 		    <div id="close">
 		      <ul>
-		        <li><span onClick="window.close()"><spring:message code='ezAddress.t5' /></span></li>
+		        <li><span onClick="window.close()"></span></li>
 		      </ul>
 		    </div>
 		    
 		    <script type="text/javascript">
 			    selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			    selToggleList(document.getElementById("close"), "ul", "li", "0");
 		    </script>
 		    <table class="popuplist" style="width:100%; table-layout: fixed; ">
 		          <tr>
@@ -163,7 +162,7 @@
 		            <td title="<spring:message code='ezAddress.t287' />" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"> <span onClick="show_personinfo(1)" style="cursor:pointer"><span id="TextModifier"><c:out value='${addressInfo.modifierName}' /></span></span></td>
 		          </tr>
 		          <tr>
-		            <th><spring:message code='ezAddress.t52' /></th>
+		            <th><spring:message code='main.t77' /></th>
 		            <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextTitle" title="${addressInfo.sTitle}" ><c:out value='${addressInfo.sTitle}' /></span></td>
 		            <th><spring:message code='ezAddress.t290' /></th>
 		            <td style="white-space:nowrap;"><span id="TextModifyDate"><c:out value='${addressInfo.modifyDate}' /></span></td>

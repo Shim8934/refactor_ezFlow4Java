@@ -1637,19 +1637,26 @@
 			<h1><spring:message code="ezPortal.t321" /></h1>
 			<div id="mainmenu">
 				<ul>
+					<li><span  onClick="save()"><spring:message code="ezPortal.t62" /></span></li>
+					<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   					<li><span onClick="layoutmode()"><spring:message code="ezPortal.t322" /></span></li>
   					<li><span onClick="editingmode()"><spring:message code="ezPortal.t323" /></span></li>
   					<li><span onClick="preview()"><spring:message code="ezPortal.t63" /></span></li>
+  					<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 					<c:if test="${parentPageID == 'top'}">
 						<li><span onClick="ACLEdit()"><spring:message code="ezPortal.t87" /></span></li>
   						<li style="display:none"><span onClick="inherit()"><spring:message code="ezPortal.t324" /></span></li>
+  						<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 					</c:if>
   					<li><span onClick="insertpage()"><spring:message code="ezPortal.t325" /></span></li>
   					<li><span onClick="removecell('field')"><spring:message code="ezPortal.t326" /></span></li>
+  					<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   					<li><span onClick="insertcell()"><spring:message code="ezPortal.t327" /></span></li>
   					<li><span onClick="removecell()"><spring:message code="ezPortal.t328" /></span></li>
+  					<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   					<li><span onClick="insertrow()"><spring:message code="ezPortal.t329" /></span></li>
   					<li><span onClick="removerow()"><spring:message code="ezPortal.t330" /></span></li>
+  					<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   					<li><span onClick="swaprow('up')"><spring:message code="ezPortal.t331" /></span></li>
   					<li><span onClick="swaprow('down')"><spring:message code="ezPortal.t332" /></span></li>
   					<li><span onClick="swaprow('left')"><spring:message code="ezPortal.t72" /></span></li>
@@ -1672,8 +1679,11 @@
   					<li><span onClick="DeletePortalPage()"><spring:message code="ezPortal.t333" /></span></li>
   				</c:if>
 			</ul>
-		</div>			
-		<table id="table_displayname" class="popuplist" width="820">
+		</div>
+		<script type="text/javascript">
+			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+		</script>
+		<table id="table_displayname" class="popuplist" width="1020">
 			<tr >
 				<th width="80" style="display:none"><spring:message code="ezPortal.t255" /></th>
 				<td style="display:none">									
@@ -1684,29 +1694,29 @@
 					<table style="width:100%;">
 						<tr class="primary">
 							<th style="width:80px;">${langPrimary}</th>
-							<td><input type="text" id="txtDisplayName" value="${displayName}" style="width:99%;" maxLength="255"></td>	
+							<td><input type="text" id="txtDisplayName" value="${displayName}" style="width:100%;" maxLength="255"></td>	
 						</tr>
 						<tr class="secondary">
 							<th style="width:80px;">${langSecondary}</th>
-							<td><input type="text" id="txtDisplayName2" value="${displayName2}" style="width:99%;" maxLength="255"></td>	
+							<td><input type="text" id="txtDisplayName2" value="${displayName2}" style="width:100%;" maxLength="255"></td>	
 						</tr>
 					</table>
 				</td>
 			</tr>
 		</table>
 
-		<table width="820" class="box">
+		<table style="width:1020px; margin-top:10px;" class="box">
 			<tr>
 				<td height="30" bgcolor="#F5f5f5">&nbsp;<spring:message code="ezPortal.t334" /><input type="text" name="txtWidth" id="txtWidth" style="WIDTH:50px" maxLength="10">
 					px * <spring:message code="ezPortal.t335" /><input type="text" name="txtHeight" id="txtHeight" style="WIDTH:50px" maxLength="10"> px <a class="imgbtn"><span onClick="resizeTable()"><spring:message code="ezPortal.t336" /></span></a>
 				</td>
-				<td bgcolor="#F5f5f5" ><spring:message code="ezPortal.t990022" /></td>
+				<td bgcolor="#F5f5f5" width="70"><spring:message code="ezPortal.t990022" /> : </td>
                 <td bgcolor="#F5f5f5">
 					<select id="Themeinfo">
 						${pThemeSelectObject}
 					</select>
 				</td>
-				<td bgcolor="#F5f5f5" ><spring:message code="ezPortal.t2000" /></td>
+				<td bgcolor="#F5f5f5" width="130"><spring:message code="ezPortal.t2000" /> : </td>
 				 <td bgcolor="#F5f5f5">
 					<select id="Optioninfo">
                     	<option value="D" selected>
@@ -1724,16 +1734,17 @@
 		</table>
 		<table class="box">
 				<tr>
-					<td id="td_mainframe" style="width:820px;HEIGHT:320px" valign="top">
-						<div id="main_div" style="OVERFLOW:auto;width:820px;HEIGHT:320px">
+					<td id="td_mainframe" style="width:1020px;HEIGHT:320px" valign="top">
+						<div id="main_div" style="OVERFLOW:auto;width:1020px;HEIGHT:320px">
 							${strHTML}
 						</div>
 					</td>
 				</tr>
 			</table>
+	  		<%-- 프레임 상단으로 버튼 이동
 	  		<div class="btnposition" style="width:820px;">
           		<a class="imgbtn"><span  onClick="save()"><spring:message code="ezPortal.t62" /></span></a>
-      		</div>
+      		</div> --%>
 			<br><br>
 		</body>
 		</c:when>

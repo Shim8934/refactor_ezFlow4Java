@@ -18,7 +18,7 @@
 							</span>
 							<span id="curMontxt"></span>
 							<img src="/images/kr/main/btn_calendar_next.gif" class="btn_img" onclick="moveBirth('NEXT')">
-								<span class="t11"><spring:message code='main.t1003' /></span> 
+							<%-- <span class="t11"><spring:message code='main.t1003' /></span> --%> 
 					</span>
         		</div>
         		<div class="birthcont" id="birthcont">

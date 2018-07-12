@@ -34,7 +34,6 @@
 			function listClick(val) {
 		    	selFormId = $(val).attr("formid");
 		    	formStatus = $(val).attr("formstatus");
-		    	console.log("formStatus : " + formStatus);
 				$(".formList tr").removeClass("active");
 				$(val).addClass("active");
 		    	
@@ -69,6 +68,7 @@
 		    function selectCompanyList(val) {
 				var url = "/admin/ezJournal/form.do";
 				parent.frames["right"].location.href = url+ "?companyId=" + val;
+				companyId = val;
 		    }
 		    
 			// 양식추가버튼
@@ -76,7 +76,7 @@
 		    	var url = "/admin/ezJournal/insertForm.do";
 		    	url += "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId);
 		    	
-		    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft, "");
+		    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=820,width=790,top=" + pTop + ",left=" + pLeft, "");
 		    //	GetOpenWindow(url + parameter, "FormMain", 830, 950, "yes");
 		    }
 		    
@@ -96,7 +96,7 @@
 			    	url += "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId)
 			    			+ "&formId=" + encodeURIComponent(selFormId);
 			    	
-			    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft, "");
+			    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=820,width=790,top=" + pTop + ",left=" + pLeft, "");
 			    //	GetOpenWindow(url + parameter, "FormMain", 830, 950, "yes");
 				}
 				
@@ -176,7 +176,7 @@
 			}
 			
 			#formType tr:hover,  #formList tr:hover {background:#eee; color:#fff; cursor: pointer;}
-			.active {background: rgb(233, 241, 255);}
+			.active {background: #edf4fd;}
 			
 		</style>
 	</head>
@@ -210,7 +210,7 @@
 						<div style="vertical-align:top; height:500px; border: none; width:100%; overflow-x:auto;overflow-y:auto;/* BORDER:#b6b6b6 1px solid; */ BACKGROUND-COLOR:#ffffff" >
 							<table id="formType" class="mainlist" style="width: 100%; border-width: 0px 0px 1px 0px;">
 								<tr>
-									<th style="text-align: center;"><spring:message code='ezJournal.t12'/></th>
+									<th style="text-align: center; border-top:none;"><spring:message code='ezJournal.t12'/></th>
 								</tr>
 								<c:forEach items="${typeList}" var="type">
 									<tr>
@@ -227,11 +227,11 @@
 			        		<table class="mainlist" style="width: 100%;">
 			        			<thead>
 			        				<tr>
-			        					<th style="width: 7%; text-align: center;"><spring:message code='ezJournal.t21'/></th>
-			        					<th style="width: 20%"><spring:message code='ezJournal.t22'/></th>
-			        					<th style="width: 20%"><spring:message code='ezJournal.t23'/></th>
-			        					<th style="width: 35%"><spring:message code='ezJournal.t24'/></th>
-			        					<th style="width: 13%"><spring:message code='ezJournal.t25'/></th>
+			        					<th style="width: 7%; text-align: center; border-top:none;"><spring:message code='ezJournal.t21'/></th>
+			        					<th style="width: 20%; border-top:none;"><spring:message code='ezJournal.t22'/></th>
+			        					<th style="width: 20%; border-top:none;"><spring:message code='ezJournal.t23'/></th>
+			        					<th style="width: 35%; border-top:none;"><spring:message code='ezJournal.t24'/></th>
+			        					<th style="width: 13%; border-top:none;"><spring:message code='ezJournal.t25'/></th>
 			        				</tr>
 			        			</thead>
 			        			<tbody id="formList" class="formList" style="margin: 0; padding: 0;" ondblclick="btnModForm()">

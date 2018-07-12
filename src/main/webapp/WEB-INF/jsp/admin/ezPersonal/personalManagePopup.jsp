@@ -235,7 +235,7 @@
 				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			</script>
 			<table class="mainlist" style="width:100%;">
-				<div id=AccessList style ="border:0;width:100%"></div>
+				<div id=AccessList style ="WIDTH:100%; border-right:1px solid #e8e8e8; border-left:1px solid #e8e8e8;"></div>
 			</table>
 		</form>
 	</body>

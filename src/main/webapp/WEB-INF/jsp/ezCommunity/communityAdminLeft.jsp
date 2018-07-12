@@ -8,11 +8,27 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
+		<style>
+			.groupBoard {
+				display:inline-block;
+				width:169px;
+				word-break:break-all;
+				overflow:hidden;
+				white-space:nowrap;
+				text-overflow:ellipsis;
+			}
+			.tree {
+				height:auto;
+				width:190px;
+				padding-left:20px;
+				margin-left:-40px;
+				overflow:hidden;
+			}
+		</style>
 		<script type="text/javascript" src="/js/ezCommunity/TreeView.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
 		<script type="text/javascript">
 			var beforeThis;
 			var topThis;
@@ -295,14 +311,16 @@
 				window.open(url,"right");
 			}
 			
+			/* 2018-06-20 홍승비 - 커뮤니티 관리메뉴 > 게시판 그룹명 스타일 수정 */
 			function makeTree() {
 				var retXML = loadXMLString('${xmlret}');
 				var treeXML = "";
 
 				for (var i = 0; i < SelectNodes(retXML, "TREEVIEWDATA/NODE").length; i++) {
-					treeXML += "<li><span id='" + SelectSingleNodeValue(SelectNodes(retXML, "TREEVIEWDATA/NODE")[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + SelectSingleNodeValue(SelectNodes(retXML, "TREEVIEWDATA/NODE")[i], "DATA1") + "\" , \"" + cnt + "\", event)'>" + SelectSingleNodeValue(SelectNodes(retXML, "TREEVIEWDATA/NODE")[i], "DATA2") + "</span>";
+					treeXML += "<li><span id='" + SelectSingleNodeValue(SelectNodes(retXML, "TREEVIEWDATA/NODE")[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + SelectSingleNodeValue(SelectNodes(retXML, "TREEVIEWDATA/NODE")[i], "DATA1") + "\" , \"" + cnt + "\", event)'"
+						+ "class='groupBoard'>" + SelectSingleNodeValue(SelectNodes(retXML, "TREEVIEWDATA/NODE")[i], "DATA2") + "</span>";
 					treeXML += "<span id=\"sub" + i + "\" style=\"display:none;margin-left:0px;padding-bottom:15px\">";
-					treeXML += "<div class='tree' id='TreeCtrl" + i + "obj' style='height:auto;width:135px;padding-left:20px;margin-left:-40px;overflow-x:auto;overflow-y:hidden;'></div>\n";
+					treeXML += "<div class='tree' id='TreeCtrl" + i + "obj'></div>\n";
 					treeXML += "</span></li>";
 				}
 				
@@ -313,7 +331,7 @@
 		
 	</head>
 	<body class="leftbody">  
-		<div id="left" style="height:500px;overflow-y:auto;">
+		<div id="left" style="height:526px;overflow-y:auto;">
 			<div class="left_admin" title="Community Administrator"><spring:message code = 'ezCommunity.t234' /></div>
 			<h2><span onClick="goPage(2)" id="goPage_2" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t2012' /></span><ul></ul></h2>	
 			<h2><span onClick="goPage(1)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t488' /></span><ul></ul></h2>	

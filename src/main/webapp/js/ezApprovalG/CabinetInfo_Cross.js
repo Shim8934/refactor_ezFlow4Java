@@ -1,4 +1,4 @@
-﻿function GetCabinetSimpleList(pDeptCode, pProduceYear, pTaskCode, pCabID, pFlag) {
+﻿function GetCabinetSimpleList(pDeptCode, pProduceYear, pTaskCode, pCabID, pFlag, selYear) {
 	var result = "";
 	
     $.ajax({
@@ -12,7 +12,8 @@
 			produceYear 	  : pProduceYear,
 			langType		  : UserLang,
 			flag			  : pFlag,
-			taskCode		  : pTaskCode
+			taskCode		  : pTaskCode,
+			selYear		      : selYear
 		},
 		success: function(xml){
 			result = xml;

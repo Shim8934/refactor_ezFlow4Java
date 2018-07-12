@@ -164,13 +164,18 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code="ezResource.t274"/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="event_btnCancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<div id="TB_Promise">
   			<h2><spring:message code="ezResource.t275"/></h2>
   			<table class="content">
     			<tr>
       				<th><spring:message code="ezResource.t276"/></th>
       				<td>
-       					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+       					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" />
      					<label for="btnT1"></label>
      					<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" />
      					<spring:message code="ezResource.t277"/>
@@ -179,7 +184,7 @@
     			<tr>
       				<th><spring:message code="ezResource.t278"/></th>
       				<td>
-          				<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+          				<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" />
         				<label for="btnT2"></label>
       				</td>
     			</tr>
@@ -205,7 +210,7 @@
     				<input id="id0D1" type="radio" name="optDaily" checked>
     				<label for="txt_De">
     					<spring:message code="ezResource.t285"/>&nbsp;
-            			<input name="text" type="text" id="txt_De" style="Width:40px;" onFocus='window.document.all["optDaily"][0].checked=true;' value="1" maxlength='3'>
+            			<input name="text" type="text" id="txt_De" style="Width:40px;text-align:center;" onFocus='window.document.all["optDaily"][0].checked=true;' value="1" maxlength='3'>
           				&nbsp;<spring:message code="ezResource.t286"/>
           			</label>
           			<br>
@@ -217,7 +222,7 @@
     			<td  style="padding:10px;height:85px">
     				<span style="margin-left:4px"><spring:message code="ezResource.t288"/></span>
       				<label for="txt_We">
-      					<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px" value="1">
+      					<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px;text-align:center;" value="1">
       					<spring:message code="ezResource.t289"/>
       				</label>
       				<div>
@@ -235,14 +240,14 @@
     			<td style="padding:10px;height:85px">
     				<input type="radio" name='optMonthly' id="idOM1" checked>
             		<label for="idOM1"><spring:message code="ezResource.t297"/>&nbsp;</label>
-            		<input name="Input" id="list_MonthInterval" style="Width:40px;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="1" maxlength="3">&nbsp;
+            		<input name="Input" id="list_MonthInterval" style="Width:40px;text-align:center;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="1" maxlength="3">&nbsp;
 					<spring:message code="ezResource.t298"/>
-            		<input name="Input" id="list_MonthlyDays" style="Width:40px;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="" maxlength="2">&nbsp;
+            		<input name="Input" id="list_MonthlyDays" style="Width:40px;text-align:center;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="" maxlength="2">&nbsp;
 					<spring:message code="ezResource.t299"/>
 					<br>
 					<input id="id0M2" type="radio" name='optMonthly'>
 					<label for="id0M2"><spring:message code="ezResource.t300"/>&nbsp;</label>
-            		<input name="Input" id="list_MonthInterval2" style="Width:40px;" onFocus='window.document.all["optMonthly"][1].checked=true;' value="1" maxlength="3">&nbsp;
+            		<input name="Input" id="list_MonthInterval2" style="Width:40px;text-align:center;" onFocus='window.document.all["optMonthly"][1].checked=true;' value="1" maxlength="3">&nbsp;
 					<spring:message code="ezResource.t298"/>
             		<select name="select" id="list_MonthlyEach" onFocus='window.document.all["optMonthly"][1].checked=true;'>
               			<option value="1"><spring:message code="ezResource.t301"/></option>
@@ -283,7 +288,7 @@
               			<option value="12">12<spring:message code="main.t00049"/></option>
             		</select>
             		
-            		<input name="Input" class="text" id="list_YearlyDays" style="Width:40px;" onFocus='window.document.all["optYearly"][0].checked=true;' maxlength="2">&nbsp;
+            		<input name="Input" class="text" id="list_YearlyDays" style="Width:40px;text-align:center;" onFocus='window.document.all["optYearly"][0].checked=true;' maxlength="2">&nbsp;
 					<spring:message code="ezResource.t311"/>
 					<br>
 					<input id="optY2" type="radio" name="optYearly" value="radiobutton">
@@ -326,45 +331,33 @@
 		</table>
   		<br>
 		<h2><spring:message code="ezResource.t312"/></h2>
+			<!-- 2018-05-24 구해안  자원예약 반복설정 UI 수정-->
 		<table class="content">
-  			<tr>
-    			<th style="text-align:right"><spring:message code="ezResource.t313"/></th>
-    			<td width="100%">
-        			<input type="text" id="Sdatepicker" onchange="changeDate(true)" style="width:80px;text-align:center" readonly="readonly">
-     			</td>
-  			</tr>
-  			<tr>
-    			<th style="text-align:right"></th>
-    			<td>
-    				<input type="radio" id="NoEnd" name="optRangeEnd" value="radiobutton" checked >
-    				<label for="NoEnd"><spring:message code="ezResource.t314"/></label>
-    			</td>
-  			</tr>
-  			<tr>
-    			<th align="right"></th>
-    			<td>
-    				<input type="radio" id="Instances" name="optRangeEnd"  value="radiobutton">
-    				<label for="Instances">
-    					<spring:message code="ezResource.t315"/>
-      					<input id="list_ReCount" onFocus='window.document.all["optRangeEnd"][1].checked=true;' maxlength="3" size="4" value="10" >
-      					<spring:message code="ezResource.t316"/>
-      				</label>
-      			</td>
-  			</tr>
-  			<tr>
-    			<th align="right"></th>
-    			<td>
-    				<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton">
-    				<label for="EndTimeSet">
-    					<spring:message code="ezResource.t317"/>
-      					<input type="text" id="Edatepicker" onchange="changeDate(false)" onFocus='window.document.all["optRangeEnd"][2].checked=true;' style="width:80px;text-align:center">
-      				</label>
-      			</td>
-  			</tr>
+			<tr>
+		    	<th align="right" rowspan="4">&nbsp;&nbsp;&nbsp;<spring:message code='ezTask.t65' />&nbsp;&nbsp;&nbsp;</th>
+		    	<td width="100%">
+		    		<span style="margin-left: 5px;" class="repeatRange"><spring:message code='ezTask.t121' /></span>
+		        	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/>
+		    	</td>
+		  	</tr>
+		  	<tr>
+		    	<td><input type="radio" name="optRangeEnd" value="radiobutton" value="-1" checked><spring:message code='ezResource.t314' /></td>
+		  	</tr>
+		  	<tr>
+		    	<td>
+		    		<input type="radio" id="Instances" name="optRangeEnd"  value="radiobutton" value="1"/><spring:message code='ezResource.t315' />
+		      		<input id="list_ReCount" maxlength="3" onFocus="Instances.checked = true" style="text-align:center;" size="4" value='10' /><spring:message code='ezResource.t316' />		      		
+		      	</td>
+		  	</tr>
+		  	<tr>
+		    	<td>
+		    		<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton" value="0"/><spring:message code='ezResource.t317' />
+		      		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
+		    	</td>
+		  	</tr>
 		</table>
 		<div class="btnpositionNew">
-		    <a class="imgbtn" onclick='event_btnOk_onclick()'><span><spring:message code="ezResource.t15"/></span></a>
-    		<a class="imgbtn" onclick='event_btnCancel_onclick()'><span><spring:message code="ezResource.t16"/></span></a>
+		    <a class="imgbtn" onclick='event_btnOk_onclick()'><span><spring:message code="ezResource.t15"/></span></a>    		
     		<a class="imgbtn" onclick='event_btnRemoveRecurrence_onclick()'><span><spring:message code="ezResource.t318"/></span></a>
 		</div>
 		<form name="postaldata" style="display:none">

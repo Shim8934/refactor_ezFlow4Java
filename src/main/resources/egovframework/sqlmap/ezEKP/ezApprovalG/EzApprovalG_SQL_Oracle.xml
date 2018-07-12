@@ -396,7 +396,7 @@
 								SELECT 
 									* 
 									FROM 
-										VAPRDOINGDOCLIST 
+										VGONGRAMAPRDOINGDOCLIST
 		               				WHERE 
 		               					APRMEMBERID = #v_USERID#
 		               				AND 
@@ -3216,6 +3216,8 @@
 	        AND
 	        	    TBL_FormContainer.COMPANYID = #companyID#
 		</isNotEmpty>
+		ORDER BY
+			TBL_FORMCONTAINER.formcontid
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSecurityType" parameterClass="Map" resultClass="ApprGLeftVO"> -->
 <!-- 		{CALL EZSP_GETSECURITYTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -3873,7 +3875,7 @@
 	   		<isNotEmpty property="v_PACCOUNTPYEAR" >
 	   		<![CDATA[
 	   			 AND 
-	   			 	TBL_CABINETCLASS.EXPIRATIONYEAR >= #v_PACCOUNTPYEAR#
+	   			 	TBL_CABINETCLASS.EXPIRATIONYEAR = #v_PACCOUNTPYEAR#
 	   		]]>
 	   		</isNotEmpty>
 	   		<isNotEmpty property="v_TASKCODE" >
@@ -4319,7 +4321,7 @@
 				   AND 
 				   		TBL_RECORD.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID				   		
 			  </isEqual> 
-				  INNER JOIN 
+				  LEFT JOIN 
 				   			TBL_ENDAPRLINEINFO 
 				   ON 
 				   			TBL_ENDAPRLINEINFO.TENANT_ID = TBL_RECORD.TENANT_ID
@@ -7318,6 +7320,18 @@
 							   	<isEqual property="v_CONTID" compareValue="ADMIN">
 							   		 AND 
 							   		 		CONTAINERID IS NOT NULL
+							   		 AND
+							   			containerid NOT IN (
+					                            SELECT
+					                                containerid
+					                            FROM
+					                                TBL_CONTAINER
+					                            WHERE
+					                                tenant_id = #v_TENANTID#
+					                            AND
+					                                companyid = #companyID#
+					                            AND
+					                                containertypeid = '999' ) 
 							   	</isEqual>
 							   	<isNotEmpty property="v_CONTID" >
 							   	<isNotEqual property="v_CONTID" compareValue="ADMIN">
@@ -8914,7 +8928,7 @@
    			SELECT 
    				COUNT(DOCID) 
    			FROM 
-   				VAPRDOINGDOCLIST 
+   				VGONGRAMAPRDOINGDOCLIST 
    			WHERE 
    				APRMEMBERID = #v_USERID# 
    			AND 
@@ -9382,6 +9396,37 @@
             	TENANT_ID = #v_TENANTID# 
            AND
            		COMPANYID = #companyID#             	
+		</isNotEqual>
+	</select>
+	
+	<select id="EzApprovalG.getDocHrefInfoHref" parameterClass="Map" resultClass="String">
+		<isEqual property="v_FLAG" compareValue="APR">
+			SELECT 
+				ATTACHFILEHREF
+            FROM 
+            	TBL_APRATTACHINFO 
+            WHERE  
+            	DOCID = #v_DOCID#
+            AND
+            	ATTACHFILESN = #docAttachSN#
+            AND
+            	TENANT_ID = #v_TENANTID#
+           	AND
+           		COMPANYID = #companyID#     	
+		</isEqual>
+		<isNotEqual property="v_FLAG" compareValue="APR">
+			SELECT 
+				ATTACHFILEHREF
+            FROM 
+            	TBL_ENDATTACHINFO 
+            WHERE  
+            	DOCID = #v_DOCID#
+            AND
+            	ATTACHFILESN = #docAttachSN#
+            AND
+            	TENANT_ID = #v_TENANTID#
+           	AND
+           		COMPANYID = #companyID#     	
 		</isNotEqual>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSusinSNInside" parameterClass="Map" resultClass="String"> -->
@@ -9897,7 +9942,7 @@
 			 SELECT 
 			 		COUNT(DOCID) 
 			 FROM 
-			 		VAPRDOINGDOCLIST  
+			 		VGONGRAMAPRDOINGDOCLIST
 			 WHERE 
 			 		APRMEMBERID = #v_USERID#
 			 AND 
@@ -10163,7 +10208,7 @@
 	   AND 
 	   		TBL_RECORD.DocID = TBL_EXPENDAPRDOCINFO.DocID 
   </isEqual> 
-  		INNER JOIN 
+  		LEFT JOIN 
      		TBL_ENDAPRLINEINFO 
     	 ON 
      		TBL_ENDAPRLINEINFO.TENANT_ID = TBL_RECORD.TENANT_ID
@@ -11554,6 +11599,18 @@
    		<![CDATA[
       	 AND 
       	 	CONTAINERID IS NOT NULL
+      	 AND
+   			containerid NOT IN (
+                          SELECT
+                              containerid
+                          FROM
+                              TBL_CONTAINER
+                          WHERE
+                              tenant_id = #v_TENANTID#
+                          AND
+                              companyid = #companyID#
+                          AND
+                              containertypeid = '999' ) 
    		 ]]>  
    		 </isEqual>
    		  
@@ -12254,7 +12311,7 @@
 				SELECT 
 					COUNT(DOCID) 
 				FROM 
-					vgongramaprdoingdoclist 
+					VGONGRAMAPRDOINGDOCLIST
          		WHERE 
          			TENANT_ID = #v_TENANTID#
          		AND
@@ -15905,6 +15962,12 @@
 			AND
 				COMPANYID = #companyID#
         ]]>
+        <isEqual property="approvalFlag" compareValue="G" prepend="AND">
+			aprtype IN ('002', '007', '008', '009', '080')
+        </isEqual>
+        <isNotEqual property="approvalFlag" compareValue="G" prepend="AND">
+			aprtype IN ('002', '007', '008', '009', '011', '012', '017', '040')
+        </isNotEqual> 
 	</select>
 			
 	<select id="EzApprovalG.getDocInfoHab" parameterClass="Map" resultClass="Integer">
@@ -17488,7 +17551,7 @@
            WHERE  
            		 DOCID = #v_ORGDOCID#
            AND 
-           		 PROCESSYN IN ( 'N','E','T' )
+           		 PROCESSYN IN ( 'N','E','T', '0' )
            AND
            		 TENANT_ID = #v_TENANTID#
            AND
@@ -20360,9 +20423,9 @@
    <insert id="EzApprovalG.insertGongRamExpAprDocInfo" parameterClass="Map">
    		    INSERT INTO 
    		    	TBL_EXPAPRDOCINFO 
-   		    (         DocID,      SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, PUBLICITYYN) 
+   		    (         DocID,      SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
    		    (SELECT 
-   		    	#v_GONGRAMDOCID#, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID, PUBLICITYYN 
+   		    	#v_GONGRAMDOCID#, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, PublicityYN, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
    		     FROM 
    		     	TBL_EXPENDAPRDOCINFO 
              WHERE 
@@ -23618,34 +23681,30 @@
 		   DELETE FROM 
 		  		TBL_APRDOCINFO
 		   WHERE 
-		  		DOCID IN (
-		  					SELECT 
-		  					* 
-		  					FROM
-			  					(SELECT 
-						  			A.DOCID
-								FROM 
-									TBL_RECRELAYINFO A 
-								INNER JOIN 
-									TBL_APRDOCINFO B
-								ON 
-									A.DOCID = B.DOCID
-								AND
-									A.TENANT_ID = B.TENANT_ID
-								AND
-									A.COMPANYID = B.COMPANYID
-								WHERE 
-									A.TENANT_ID = #v_TENANTID#
-								AND
-									A.COMPANYID = #companyID#
-								AND
-									A.XDOCID = #xDocID# 
-								AND 
-									XTOCODE = #xToCode#	
-								AND 
-									B.HREF IS NULL
-								OR 
-									B.HREF = '') A)
+	  			DOCID IN (	SELECT 
+					  			A.DOCID
+							FROM 
+								TBL_RECRELAYINFO A 
+							INNER JOIN 
+								TBL_APRDOCINFO B
+							ON 
+								A.DOCID = B.DOCID
+							AND
+								A.TENANT_ID = B.TENANT_ID
+							AND
+								A.COMPANYID = B.COMPANYID
+							WHERE 
+								A.TENANT_ID = #v_TENANTID#
+							AND
+								A.COMPANYID = #companyID#
+							AND
+								A.XDOCID = #xDocID# 
+							AND 
+								XTOCODE = #xToCode#	
+							AND 
+								B.HREF IS NULL
+							OR 
+								B.HREF = '')
 	  </delete>
 	  	  
       <insert id="EzApprovalG.insertRelayDB" parameterClass="Map">
@@ -24543,5 +24602,38 @@
 		<isEqual property="v_COUNTTYPE" compareValue="OTHER">
 			ADD_MONTHS(TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') , 1) > A.STARTDATE
 		</isEqual>
+	</select>
+	
+	<select id="EzApprovalG.getDocExt" parameterClass="Map" resultClass="String">
+		SELECT 
+			HREF
+		FROM
+			TBL_APRDOCINFO
+		WHERE 
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		UNION
+		SELECT
+			HREF
+		FROM
+			TBL_ENDAPRDOCINFO
+		WHERE 
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#	
+	</select>
+	
+	<select id="EzApprovalG.getLinkedAttachFileCount" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(ATTACHFILEHREF)
+		FROM
+			TBL_ENDATTACHINFO
+		WHERE
+			ATTACHFILEHREF = #href#
 	</select>
 </sqlMap>

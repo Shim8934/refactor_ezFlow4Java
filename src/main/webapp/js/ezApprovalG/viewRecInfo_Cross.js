@@ -244,6 +244,7 @@ function GetRecSCInfo() {
 }
 
 function MM_swapImagesub(nSel) {
+	methodForTabAction(nSel);
     if (nSel != g_strSelectedTab) {
         g_strSelectedTab = nSel;
 
@@ -264,4 +265,23 @@ function btnClose_onclick() {
 
 function window_onunload() {
     window.returnValue = rtnPara;
+}
+
+function methodForTabAction(target) {
+	var tab1 = document.getElementById("tab_ViewRec0").children[0];
+	var tab2 = document.getElementById("tab_ViewRec1").children[0];
+	var tab3 = document.getElementById("tab_ViewRec2").children[0];
+	if (target == "0") {
+		tab1.className = "tabon";
+		tab2.className = "";
+		tab3.className = "";
+	} else if (target == "1") {
+		tab1.className = "";
+		tab2.className = "tabon";
+		tab3.className = "";
+	} else if (target == "2") {
+		tab1.className = "";
+		tab2.className = "";
+		tab3.className = "tabon";
+	}
 }

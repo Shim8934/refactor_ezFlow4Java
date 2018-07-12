@@ -297,22 +297,18 @@
 		<h1><spring:message code='ezSchedule.t4003' /></h1>
 		<form id="Form1" method="post">
 			<div id="mainmenu">
-				<ul>
-			        <li style="background:none;padding-top:4px;height:24px">
-			            <select id="ListCompany" onchange="schedule_get_holiday()">
-			            	<c:forEach var="item" items="${list}">
-	            				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-            				</c:forEach>
-			            </select>
-			        </li>
-			    </ul>
-			    <ul style="margin-left:3px">
+		       		<span><b><spring:message code='ezResource.t28' /></b></span>&nbsp;
+		            <select id="ListCompany" onchange="schedule_get_holiday()">
+		            	<c:forEach var="item" items="${list}">
+            				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+           				</c:forEach>
+		            </select>
+			    <ul style="margin-top: 15px;">
 			        <li><span onClick="add_holiday()"><spring:message code='ezSchedule.t4004' /></span></li>
 			        <li><span onClick="event_dbclick()"><spring:message code='ezSchedule.t4005' /></span></li>
 			        <li><span onClick="del_holiday()"><spring:message code='ezSchedule.t4006' /></span></li>			        
 			    </ul>
 			</div>
-			<br />
 			<table style="width: 750px; height: 385px;" border="0">
 		        <tr>
 		            <td>

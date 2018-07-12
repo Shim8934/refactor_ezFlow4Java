@@ -94,6 +94,8 @@ function Get_SearchAddressList() {
     xmlHTTPAddressList.onreadystatechange = Complete_Get_AddressList;
     xmlHTTPAddressList.send(xmlDom);
     try { ShowMailProgress(); } catch (e) {}
+    
+    document.getElementById("HeaderAllCheckBox").checked = false;
 }
 function MakeAddressList() {
     var XmlRows = SelectNodes(ListXML, "DATA/ROW");
@@ -130,7 +132,7 @@ function MakeAddressList() {
             FolderType = SelectSingleNodeValue(XmlRows[Cnt], "FOLDERTYPE");
             FolderID = SelectSingleNodeValue(XmlRows[Cnt], "FOLDERID");
         }
-
+        
         if (document.getElementById("ListViewType").value == "list") {
             var _TR = document.createElement("TR");
             _TR.style.verticalAlign = "middle";
@@ -167,6 +169,7 @@ function MakeAddressList() {
             var _TD1 = document.createElement("TD");
             _TD1.style.width = "20px";
             _TD1.style.margin = "0px";
+            _TD1.style.textAlign = "center";
             var _TDCheckBox_Sub = document.createElement("INPUT");
             _TDCheckBox_Sub.type = "checkbox";
             _TDCheckBox_Sub.style.margin = "0px";
@@ -203,10 +206,11 @@ function MakeAddressList() {
             _TD3.style.whiteSpace = "nowrap";
             _TD3.style.overflow = "hidden";
             _TD3.style.textOverflow = "ellipsis";
+            
             if (CrossYN())
-                _TD3.innerText = Sname;
+                _TD3.innerText = Sname
             else
-                _TD3.innerHTML = "&nbsp;" + Sname;
+            	_TD3.innerHTML = "&nbsp;" + Sname;
             _TR.appendChild(_TD3);
 
             var _TD4 = document.createElement("TD");            
@@ -357,7 +361,9 @@ function MakeAddressList() {
             var ULTag = document.createElement("ul");
             /* 2018-04-25 장진혁 - 주소록 카드형식 UI 틀어짐현상때문에 수정 */
             ULTag.style.marginTop = "12px";
-
+            
+            Sname = replaceAll(Sname, "&", "&amp;");
+            
             var UITag1 = document.createElement("li");
             UITag1.className = "name";            
             UITag1.innerHTML = imgType + Sname;
@@ -430,7 +436,7 @@ function Complete_Get_AddressList() {
         if (XmlRows.length == 0) {
             if (searchFlag) {
                 pCurrentPage--;
-                if (pCurrentPage < 0) {
+                if (pCurrentPage <= 0) {
                     document.getElementById("mailBoxInfo").style.visibility = "hidden";
                     while (document.getElementById("MailList").childNodes.length > 0) {
                         document.getElementById("MailList").removeChild(document.getElementById("MailList").childNodes.item(0));
@@ -444,12 +450,13 @@ function Complete_Get_AddressList() {
                     makePageSelPage();
                     return;
                 }
-                Get_SearchAddressList();
+                //Get_SearchAddressList();
                 return;
             }
         }
         document.getElementById("mailBoxInfo").style.visibility = "visible";
         MakeAddressList();
+        
     }
 }
 function MakeNoDateList() {
@@ -461,6 +468,7 @@ function MakeNoDateList() {
 
         var _TD = document.createElement("TD");
         _TD.style.textAlign = "center";
+        _TD.id = "noData";
         _TD.innerHTML = strLang100;
         _TR.appendChild(_TD);
         document.getElementById("MailList").appendChild(_TR);
@@ -545,21 +553,21 @@ function makePageSelPage() {
         document.getElementById("mailBoxInfo").innerHTML = strLang_1 + "&nbsp;<span class='point'>" + pTotalCnt + "</span> " + strLang_2;
     }
     if (totalPage > 1 && pageNum != 1) {
-        PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\" width=\"16\" height=\"16\"></span>";
+        PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\"></span>";
     }
     else {
-        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_p_prev01.gif\" width=\"16\" height=\"16\"></span>";
+        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_p_prev01.gif\"></span>";
     }
     if (totalPage > BlockSize) {
         if (pageNum > BlockSize) {
-            PagingHTML += "<span class=\"btnimg\" onclick= 'return selbeforeBlock()'><img src=\"/images/kr/cm/btn_prev.gif\" width=\"16\" height=\"16\"></span><span class=\"ptxt\" onclick= 'return selbeforeBlock_one()'>" + strLang258 + "</span>";
+            PagingHTML += "<span class=\"btnimg\" onclick= 'return selbeforeBlock()'><img src=\"/images/kr/cm/btn_prev.gif\"></span>";
         }
         else {
-            PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\" width=\"16\" height=\"16\"></span><span class=\"ptxt\" onclick= 'return selbeforeBlock_one()'>" + strLang258 + "</span>";
+            PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
         }
     }
     else {
-        PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\" width=\"16\" height=\"16\"></span><span class=\"ptxt\" onclick= 'return selbeforeBlock_one()'>" + strLang258 + "</span>";
+        PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
     }
     var MaxNum;
     var i;
@@ -585,20 +593,20 @@ function makePageSelPage() {
     	
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-            PagingHTML += "<span class=\"ptxt\" onclick='return selafterBlock_one()'>" + strLang259 + "</span><span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\" width=\"16\" height=\"16\"></span>";
+            PagingHTML += "<span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\"></span>";
         }
         else {
-            PagingHTML += "<span class=\"ptxt\" onclick='return selafterBlock_one()'>" + strLang259 + "</span><span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\" width=\"16\" height=\"16\"></span>";
+            PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
         }
     }
     else {
-        PagingHTML += "<span class=\"ptxt\" onclick='return selafterBlock_one()'>" + strLang259 + "</span><span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\" width=\"16\" height=\"16\"></span>";
+        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
     }
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-        PagingHTML += "<span class=\"btnimg\" onclick='return goToPageByNum(" + totalPage + ")'><img src=\"/images/kr/cm/btn_n_next.gif\" width=\"16\" height=\"16\"></span>";
+        PagingHTML += "<span class=\"btnimg\" onclick='return goToPageByNum(" + totalPage + ")'><img src=\"/images/kr/cm/btn_n_next.gif\"></span>";
     }
     else {
-        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_n_next01.gif\" width=\"16\" height=\"16\"></span>";
+        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_n_next01.gif\"></span>";
     }
     PagingHTML += "</div>";
     td_Create1(PagingHTML);
@@ -617,11 +625,11 @@ function Window_onresize() {
     else {
         if (document.getElementById("ListViewType").value == "list") {
             document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 243) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 273) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 272) + "px";
         }
         else {
             document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 205) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 235) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 238) + "px";
         }
     }
 }
@@ -691,6 +699,11 @@ function event_listCheckboxclick(obj) {
     listEventCheckbox = true;
 }
 function event_HeaderCheckBoxClick(obj) {
+	
+	if (document.getElementById("MailList").childNodes.item(0).childNodes.item(0).id == 'noData') {
+		return;
+	}
+	
     if (obj.checked) {
         for (var i = 0; i < document.getElementById("MailList").childNodes.length; i++) {
             document.getElementById("MailList").childNodes.item(i).childNodes.item(0).childNodes.item(0).checked = true;
@@ -1019,4 +1032,9 @@ function Get_SameAddressCnt()
 
     if (xmlHTTP.status == 200 )
         return xmlHTTP.responseText;
+}
+
+// 재은 수정
+function replaceAll(str, searchStr, replaceStr) {
+	return str.split(searchStr).join(replaceStr);
 }

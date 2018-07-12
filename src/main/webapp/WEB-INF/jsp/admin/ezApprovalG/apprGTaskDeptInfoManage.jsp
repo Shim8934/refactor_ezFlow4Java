@@ -293,7 +293,7 @@
 		<h1><spring:message code = 'ezApprovalG.t799' /></h1>
 		<div id="close">
 			<ul>
-		    	<li><span onClick="window.close()"><spring:message code = 'ezApprovalG.t64' /></span></li>
+		    	<li><span onClick="window.close()"></span></li>
 			</ul>
 		</div>
 		
@@ -318,10 +318,6 @@
 		</table>
 		
 		<div class="point"><spring:message code = 'ezApprovalG.t807' /></div>
-		
-		<script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

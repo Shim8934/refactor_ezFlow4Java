@@ -59,11 +59,11 @@
 		    });
 		    
 		    window.onload = function() {
-	    		if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
-                    self.resizeTo(760, 800);
-                } else {
-                    self.resizeTo(785, 830);
-                }
+// 	    		if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+//                     self.resizeTo(760, 800);
+//                 } else {
+//                     self.resizeTo(785, 830);
+//                 }
 		    }
 		    
 		    // 수정시 양식내용을 에디터에 넣어주는 작업 
@@ -261,7 +261,7 @@
 			}
 			#infoTbl {padding: 0px;}
 			
-			.active {background: rgb(233, 241, 255);}
+			.active {background: #edf4fd;}
 			
 		</style>
 	</head>
@@ -273,7 +273,7 @@
         </div>
         <div id="close">
             <ul>
-                <li><span id="btnClose" onClick="return btnClose()"><spring:message code='ezJournal.t27'/></span></li>
+                <li><span id="btnClose" onClick="return btnClose()"></span></li>
             </ul>
         </div>
         <div class="portlet_tabpart01">
@@ -283,8 +283,7 @@
 	        </div>
         </div>
         
-        <div id="JournalForm_content1" style="width:100%;height:90%; padding-top:10px; display:none">
-			
+        <div id="JournalForm_content1" style="width:100%;height:90%; padding-top:10px; display:none">			
 			<table class="content" style="width:100%;">
 				<tr>                
 					<th style="width:100px; text-align:center"><spring:message code='ezJournal.t22'/></th>
@@ -360,12 +359,12 @@
                    			<tr>
                     			<th style="width: 12%;"><spring:message code='ezJournal.t32'/></th>
                     			<td style="vertical-align: middle; border-right: none;">
-					            	<a class="imgbtn"><span id="info_0" value="journalWriterDept" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t33' /></span></a>
-					            	<a class="imgbtn"><span id="info_1" value="journalWriterName" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t34' /></span></a>
-					            	<a class="imgbtn"><span id="info_2" value="journalWriteDate" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t35' /></span></a>
+					            	<a class="imgbtn imgbck"><span id="info_0" value="journalWriterDept" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t33' /></span></a>
+					            	<a class="imgbtn imgbck"><span id="info_1" value="journalWriterName" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t34' /></span></a>
+					            	<a class="imgbtn imgbck"><span id="info_2" value="journalWriteDate" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t35' /></span></a>
                     			</td>
                     			<td style="width: 8%; text-align: right; border-left: none; padding-right: 3px;" >
-		            				<a class="imgbtn"><span onclick="btnCancel()"><spring:message code='ezJournal.t16' /></span></a>
+		            				<a class="imgbtn imgbck"><span onclick="btnCancel()"><spring:message code='ezJournal.t16' /></span></a>
                     			</td>
                    			</tr>
                    		</tbody>
@@ -382,7 +381,6 @@
 		</div>
         <script type="text/javascript">
         	selToggleList(document.getElementById("menu"), "ul", "li", "0");
-            selToggleList(document.getElementById("close"), "ul", "li", "0");
             Tab1_NewTabIni("tab1");
         </script>
 	</body>

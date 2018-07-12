@@ -10,21 +10,25 @@
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<style>
+			.btype_list ul li .date {
+				-webkit-margin-start:20px;
+			}
+		</style>
 		<script type="text/javascript" src="/js/ezCommunity/TreeView.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
 		<script type="text/javascript">
 			var primary = "<c:out value='${primary}'/>";
 			var xmlDomTreeView = createXmlDom();
 			var treedate = "${retXML }";
 			var code = "<c:out value='${code }'/>";
 			var userLevel = "<c:out value='${userLevel }'/>";
-// 			var chCommunityAdmin = "<c:out value='${fn:indexOf(userInfo.rollInfo, \'t=1\') }'/>";
 			var chCheckSysop = "<c:out value='${checkSysop }'/>";
 			var newMemberConfirmType = "<c:out value='${newMemberConfirmType }'/>";
 			var joinFlag = "<c:out value='${joinFlag }'/>";
+			var pastDate = "<c:out value = '${pastDate}' />";
 			var xmlhttp;
 			
 			var strLang1 = "<spring:message code='ezCommunity.t78' />";
@@ -32,7 +36,7 @@
 		    var strLang3 = "<spring:message code='ezCommunity.t1103' />"; 
 		    var strLang4 = "<spring:message code='ezCommunity.t2009' />"; 
 		    var strLang5 = "<spring:message code='ezCommunity.t1102' />"; 
-		    var isCrossBrowser = "{isCrossBrowser}";
+		    var strLang6 =  "<spring:message code='ezCommunity.t431' />";
 		    
 		    $(function () {
 		        $.ajax({
@@ -81,7 +85,7 @@
 		        }
 		    });
 		    
-		    function getCommhomeBoardInfo() {		    	
+		    function getCommhomeBoardInfo() {
 		    	$.ajax({
 					type : "POST",
 					dataType : "json",
@@ -138,7 +142,6 @@
 	                            p.appendChild(span);
 
 	                            var ul = document.createElement("ul");
-	                            
 	                            $.ajax({
 	            					type : "POST",
 	            					dataType : "text",
@@ -157,8 +160,13 @@
 		                                    
 		                                    if (itemVO.gubun != "3") {
 		                                    	span2.className = "txt";
-		                                        span2.innerHTML = itemVO.title;		                                       
-		                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈 메인화면 일반/그룹/익명게시물 댓글수 표출 */
+		                                    	/* 2018-05-18 홍승비 - 커뮤니티 팝업홈 메인화면 일반/그룹/익명게시물 new 표시 */
+		                                    	if (pastDate <= itemVO.writeDate) {
+		                                    		span2.innerHTML = "<img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
+                   		 						}
+		                                        span2.innerHTML += itemVO.title;
+		                                        
+		                                        /* 2018-05-04 홍승비 - 댓글수 표출 */
 		                                        if (itemVO.oneLineCnt > 0) {
 		                                        	span2.innerHTML += ("<SPAN style='color:#c64200'> [" + itemVO.oneLineCnt + "]</SPAN>");
 		                                        }
@@ -185,15 +193,19 @@
 			                                        var img = document.createElement("IMG");
 			                                        var imgUrl = itemVO.extensionAttribute5;
 			                                        
-			                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈화면 사진경로 수정 */
+			                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈 메인화면 포토게시물 사진경로 수정 */
 			                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + itemVO.boardID + "&fileName=" + imgUrl;
 			                                        img.style.width = "68px";
 			                                        img.style.height = "68px";
 
 			                                        span2.appendChild(img);
 			                                        span3.className = "ptxt";
-			                                        span3.innerHTML = itemVO.title;
-			                                        /* 2018-05-07 홍승비 - 커뮤니티 팝업홈 메인화면 포토게시물 댓글수 표출 */
+			                                        /* 2018-05-18 홍승비 - new 표시 */
+			                                        if (pastDate <= itemVO.writeDate) {
+			                                    		span3.innerHTML = "<img src='/images/new_icon.gif'>&nbsp;";
+	                   		 						}
+			                                        span3.innerHTML += itemVO.title;
+			                                        /* 2018-05-07 홍승비 - 댓글수 표출 */
 			                                        if (itemVO.oneLineCnt > 0) {
 			                                        	span3.innerHTML += ("<SPAN style='color:#c64200'> [" + itemVO.oneLineCnt + "]</SPAN>");
 			                                        }
@@ -225,8 +237,7 @@
 					}
 				});
 		    }
-		    
-		    
+		    	    
 		    function event_get_commhomeinfo(result) {
 	            var xmldom = loadXMLString(result);
 	            
@@ -257,8 +268,12 @@
 	            document.getElementById("master").innerHTML += "(" + SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/DEPTNAME") + ")";
 	            document.getElementById("regdate").innerHTML =  strLang1 + ": " + SelectSingleNodeValueNew(xmldom, "DATA/C_REGDATE").substring(0, 10);
 	            document.getElementById("membercnt").innerHTML =  SelectSingleNodeValueNew(xmldom, "DATA/C_MEMBERCNT");
+	            //2018-07-11 김보미 - 공백 조정
+	            countSpanPadding(document.getElementById("membercnt"), SelectSingleNodeValueNew(xmldom, "DATA/C_MEMBERCNT"));
 	            document.getElementById("itemcnt").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/ITEMCNT");
-
+	            //2018-07-11 김보미 - 공백 조정
+	            countSpanPadding(document.getElementById("itemcnt"), SelectSingleNodeValueNew(xmldom, "DATA/ITEMCNT"));
+	            
 	            var userImage = SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERIMAGE").trim();
 
 	            var _img = document.createElement("img");
@@ -389,7 +404,7 @@
 		        try {
 		            var treeNode = new TreeNode();
 		            treeNode.LoadFromID(pNodeID);
-
+		            
 		            var SelectedBoardID = treeNode.GetNodeData("DATA1");
 		            var SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
 		            var chkPhotoBrd = treeNode.GetNodeData("DATA6")
@@ -397,6 +412,17 @@
 		            document.getElementById("rightfrm").style.display = "";
 		            document.getElementById("mainboard").style.display = "none";
 		            document.getElementById("makeguide").style.display = "none";
+		            
+		            //2018-07-02 김보미 - 클릭시 색 변경 안되게
+		            var boardColor = treeNode.GetNodeData("DATA4");
+		            if (boardColor != "" && boardColor != null) {
+			            var SelectedNodeID = treeNode.GetNodeData("id");
+		                var objSpan = document.getElementById("spn_" + SelectedNodeID);
+		                if(CrossYN())
+		                    objSpan.setAttribute("style", "color:" + boardColor);
+		                else
+		                    objSpan.style.color = boardColor;
+		            }
 		            
 		            document.getElementById("rightfrm").style.height = "659px";
 		            if (chkPhotoBrd != "3") {
@@ -441,7 +467,7 @@
 		                    document.getElementById("mainboard").style.display = "none";
 		                    document.getElementById("makeguide").style.display = "none";
 		                    break;
-		                case "btn_MemberInfo": alert(strLang5);
+		                case "btn_MemberInfo": alert(strLang6);
 		                    break;
 		                case "btn_MemberOut": alert(strLang5);
 		                    break;
@@ -484,16 +510,16 @@
 		                    }
 		                    
 		                    var wWeight = "330";
-		                    var wHeight = "170";
+		                    var wHeight = "197";
 		                    var heigth = window.screen.availHeight;
 		                    var width = window.screen.availWidth;
 		                    var left = (width - wWeight) / 2;
 		                    var top = (heigth - wHeight) / 2;
 		                    
 		                    if (newMemberConfirmType == "2") {
-		                        window.open("/ezCommunity/join1.do?no=" + code, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+		                        window.open("/ezCommunity/join1.do?no=" + code, "", "location=0,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 		                    } else if (newMemberConfirmType == "3") {
-		                        window.open("/ezCommunity/join2.do?no=" + code, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+		                        window.open("/ezCommunity/join2.do?no=" + code, "", "location=0,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 		                    }
 		                    
 		                    break;
@@ -563,7 +589,7 @@
 		                    }
 		                    
 		                    break;
-		                case "btn_Manager": open_admin_home(code,"2");
+		                case "btn_Manager": open_admin(code);
 		                    break;
 		                case "btn_Manager_home1": open_admin_home(code,"2");
 		                    break;
@@ -608,16 +634,16 @@
 		                    }
 		                    
 		                    var wWeight = "330";
-		                    var wHeight = "170";
+		                    var wHeight = "197";
 		                    var height = window.screen.availHeight;
 		                    var width = window.screen.availWidth;
 		                    var left = (width - wWeight) / 2;
 		                    var top = (height - wHeight) / 2;
 		                    
 		                    if (newMemberConfirmType == "2") {
-		                        window.open("/ezCommunity/join1.do?no=" + code, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+		                        window.open("/ezCommunity/join1.do?no=" + code, "", "location=0,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 		                    } else if (newMemberConfirmType == "3") {
-		                        window.open("/ezCommunity/join2.do?no=" + code, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+		                        window.open("/ezCommunity/join2.do?no=" + code, "", "location=0,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 		                    }
 		                    
 		                    break;
@@ -654,13 +680,8 @@
 		    			resultXML = loadXMLString(result);
 		    			
 		    			var master = "";
+		    			master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
 		    			
-		    			if (isCrossBrowser == 'true') {
-		    				master = SelectSingleNodeValue(resultXML, "COMMUNITY/MASTER/VALUE").textContent;
-		    			} else {
-		    				master = SelectSingleNodeValue(SelectNodes(resultXML, "COMMUNITY/MASTER")[0], "VALUE");
-		    			}
-	    		    
 				        if (master == null) {
 				        	master = "";
 				        }
@@ -673,8 +694,10 @@
 				            if (userID == master) {
 				                alert("Community <spring:message code='ezCommunity.t1103' />");
 				            } else {
-				                var wWeight = "425";
-				                var wHeight = "385";
+				            	//2018-07-09  김보미 - 너비값 조정
+ 				                //var wWeight = "425";
+				                var wWeight = "475";
+				                var wHeight = "395";
 				                var heigth = window.screen.availHeight;
 				                var width = window.screen.availWidth;
 				                var left = (width - wWeight) / 2;
@@ -689,7 +712,7 @@
 		    
 		    function open_admin(code) {
 		        var wWeight = "860";
-		        var wHeight = "530";
+		        var wHeight = "567";
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
 		        var left = (width - wWeight) / 2;
@@ -730,7 +753,7 @@
 		        var pLeft = (pwidth - 765) / 2;
 
 		        if (gubun == "3") {
-		        	GetOpenWindow("/ezCommunity/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 800);
+		        	GetOpenWindow("/ezCommunity/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
 		        } else {
 		        	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
 		        }
@@ -773,6 +796,32 @@
 		    		return temp;
 		    	}
 		    }
+		    
+		    /* 2018-05-11 홍승비 - 팝업홈 메인에서 글 삭제할 경우 새로고침 동작 */
+		    function refresh_onclick() {
+	            window.location.reload();
+	        }
+		    
+//		    window.onload = function(){
+		    	/* 2018-05-21 홍승비 - IE와 크롬에서 게시물 등록일 표시 동일하게 조정 */
+//		    	if (navigator.userAgent.toLowerCase().indexOf("chrome") > -1) {
+//		    		console.log("크롬이에요!");
+//		    		$(".date").css('margin-left', '20px');
+//		    	}	    	
+//		    }
+
+			//2018-07-11 김보미 - 공백 조정
+			function countSpanPadding(elem, cnt) {
+	            if (cnt.length == 1) {
+	            	elem.style.paddingLeft = "30px";
+	            } else if (cnt.length == 2) {
+	            	elem.style.paddingLeft = "22px";
+	            } else if (cnt.length == 3) {
+	            	elem.style.paddingLeft = "16px";
+	            } else if (cnt.length == 4) {
+	            	elem.style.paddingLeft = "12px";
+	            }
+			}
 		</script>
 	</head>
 	

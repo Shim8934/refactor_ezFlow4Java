@@ -93,10 +93,10 @@ function initReceptListView() {
     	docIDorSN = pDocSn;
         pMode = "TMP";
     }
-
-    if (isUsed == "reuse") {
+    //2018-06-21 재사용시 수신처정보 완료문서정보가 아닌 고정수신처 정보로 초기화
+    /*if (isUsed == "reuse") {
     	docIDorSN = beforeDocID;
-    }
+    }*/
     
     $.ajax({
 		type : "POST",
@@ -105,8 +105,9 @@ function initReceptListView() {
 		url : "/ezApprovalG/aprDeptRequest.do",
 		data : {
 			docID : docIDorSN,
-			mode  : pMode,
-			isUsed : isUsed
+			mode  : pMode
+			//2018-06-21 재사용시 수신처정보 완료문서정보가 아닌 고정수신처 정보로 초기화
+//			isUsed : isUsed
 		},
 		success: function(xml){
 			result = loadXMLString(xml);
@@ -626,18 +627,20 @@ function AprLineAddDept_User(pSelectedRow) {
             listview.SetRowOnDblClick("AprDeptDel_onclick");
             listview.DataSource(Resultxml);
             listview.DataBind("RECEPTLIST");
-
         } else {
-
             var objTr = listview.AddRow(0);
-            SetAttribute(objTr, "id", "lvtAPRDEPT" + "_TR_" + eval(MaxID + 1));
+//            2018-07-09 이효진 지정된 수신처 삭제시 id값 매칭
+//            SetAttribute(objTr, "id", "lvtAPRDEPT" + "_TR_" + eval(MaxID + 1));
+            SetAttribute(objTr, "id", "lvRECEPTLIST" + "_TR_" + eval(MaxID + 1));
             listview.AddDataRow(objTr, Resultxml);
 
         }
     }
     else {
         var objTr = listview.AddRow(0);
-        SetAttribute(objTr, "id", "lvtAPRDEPT" + "_TR_" + eval(MaxID + 1));
+//        2018-07-09 이효진 지정된 수신처 삭제시 id값 매칭
+//        SetAttribute(objTr, "id", "lvtAPRDEPT" + "_TR_" + eval(MaxID + 1));
+        SetAttribute(objTr, "id", "lvRECEPTLIST" + "_TR_" + eval(MaxID + 1));
         listview.AddDataRow(objTr, Resultxml);
     }
     DeptAddIndex = DeptAddIndex + 1;

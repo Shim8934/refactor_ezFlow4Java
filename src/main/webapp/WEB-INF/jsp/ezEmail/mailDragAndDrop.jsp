@@ -13,7 +13,7 @@
 		<style>
 			#lstAttachLink {
 				height: 117px;
-				border: 1px solid #3C2F2E;
+				border: 1px solid #d2d2d2;
 			}
 		</style>
 		<script type="text/javascript">
@@ -239,7 +239,7 @@
 		        objTr.appendChild(objTh);
 		
 		        var objTh2 = document.createElement("TH");
-		        objTh2.style.width = "87%";
+		        objTh2.style.width = "67%";
 		        setNodeText(objTh2, "<spring:message code='ezEmail.t725' />");
 		        objTr.appendChild(objTh2);
 		
@@ -247,6 +247,11 @@
 		        setNodeText(objTh3, "<spring:message code='ezEmail.t726' />");
 		        objTh3.style.width = "13%";
 		        objTr.appendChild(objTh3);
+		        
+		        var objTh4 = document.createElement("TH");
+		        setNodeText(objTh4, "<spring:message code='ezEmail.sjw04' />");
+		        objTh4.style.width = "20%";
+		        objTr.appendChild(objTh4);
 		
 		        oTable.appendChild(objTr);
 		        document.getElementById("lstAttachLink").appendChild(oTable);
@@ -366,11 +371,16 @@
 		                    TRRows.item(i).setAttribute("_big", big);
 		                    TRRows.item(i).setAttribute("_itemid", itemid);
 		                    TRRows.item(i).childNodes.item(1).setAttribute("style", "cursor:pointer");
+		                    
 		                    TRRows.item(i).childNodes.item(1).onclick = function () { 
-			                    var fileIndex = $(this).closest('tr').attr('_fileindex');
-		                    	var fileUid = $(this).closest('tr').attr('_uid');
+			                    var partIdx = $(this).closest('tr').attr('_fileindex');
+		                    	var msgId = $(this).closest('tr').attr('_uid');
+		                    	var isBig = $(this).closest('tr').attr('_big');
 		                    	
-		                    	FileDownload(this, fileIndex, parseInt(fileUid)); 
+		                    	var firstIdx = window.parent.multipartFirstIdx;
+		                    	partIdx = parseInt(partIdx) + parseInt(firstIdx);
+	                    		
+		                    	FileDownload(this, parseInt(partIdx), parseInt(msgId), isBig); 
 		                    };
 		                }
 		        		
@@ -400,18 +410,11 @@
 		    }
 		    
 		    /* 2018-04-25 김유진 - 일반첨부시 해당 index와 uid를 받아서 download href를 넘겨주는 메서드 */
-		    function FileDownload(obj, fileIndex, fileUid) {
-				var emptyStr = "";
-				
-		    	if (typeof (fileIndex) == "undefined" || fileIndex == null) {
-		    		fileIndex = emptyStr;
-		    	} else if (typeof (fileUid) == "undefiend" || fileUid == null) {
-		    		fileUid = emptyStr;
-		    	}
+		    function FileDownload(obj, partIdx, msgId, isBig) {
 		    	
-		    	if (fileIndex != emptyStr && fileUid != emptyStr) {
+		    	if (isBig == "N") {
 		    		var href = GetAttribute(obj, "_href");
-		    		href = href + "&index=" + fileIndex + "&uid=" + fileUid;
+		    		href = href + "&index=" + partIdx + "&uid=" + msgId;
 		    		window.parent.DownloadAttach(href);
 		    	} else {
 			    	window.parent.DownloadAttach(GetAttribute(obj, "_href"));
@@ -659,9 +662,9 @@
     <body ondragover ="defaultenter(event)" ondragenter ="defaultenter(event)" style="overflow:hidden">   
         <div style="width:845px;white-space:nowrap;display:inline-block">
             <span style="float:left;">
-                <a class="imgbtn" onclick="btnfileup()"><span><spring:message code='ezEmail.t677' /></span></a>
-                <a class="imgbtn" onclick="btnfileup_big()"><span><spring:message code='ezEmail.t663' /></span></a>
-                <a class="imgbtn" onclick="btnfiledel()"><span><spring:message code='ezEmail.t678' /></span></a>   
+                <a class="imgbtn imgbck" onclick="btnfileup()"><span><spring:message code='ezEmail.t677' /></span></a>
+                <a class="imgbtn imgbck" onclick="btnfileup_big()"><span><spring:message code='ezEmail.t663' /></span></a>
+                <a class="imgbtn imgbck" onclick="btnfiledel()"><span><spring:message code='ezEmail.t678' /></span></a>   
             </span>
             <div id="progdiv" class="progarea" style="display:none">
              	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
@@ -669,7 +672,7 @@
         </div>
         <div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
         </div>
-        <input id="file" type="file" onchange="filechange(event)" multiple="multiple" style="width:1px;height:1px" />
+        <input id="file" type="file" onchange="filechange(event)" multiple="multiple" style="width:1px;height:1px;display:none;" />
         <input type="hidden" value="업로드" onclick ="fileupload()" />
   </body>
 </html>

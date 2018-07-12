@@ -1862,17 +1862,33 @@ public class EzAddressController{
 	@RequestMapping(value = "/ezAddress/excelExport.do")
 	public void addressExport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model, HttpServletResponse response) throws Exception {		
 		logger.debug("addressExport started.");
-		logger.debug("folderid=" + request.getParameter("folderid") + ",foldertype=" + request.getParameter("foldertype") + ",ownerid=" + request.getParameter("ownerid"));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String folderId = request.getParameter("folderid");
 		String folderType = request.getParameter("foldertype");
 		String ownerId = request.getParameter("ownerid");
+		String format = request.getParameter("format");
 		
-        logger.debug("folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId);
+        logger.debug("folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId + ",format=" + format);
         
-		String fileName = "excelExport.csv";
+        String fileName = null;
+        
+		switch (format) {
+			case "outlookCSV" :
+				fileName = "outlook.csv";
+				break;
+			case "thunderbirdCSV" :
+				fileName = "thunderbird.csv";
+				break;
+			case "googleCSV" :
+				fileName = "google.csv";
+				break;
+			default : 
+				format = "outlookCSV";
+				fileName = "outlook.csv";
+				break;
+		}
 		
 		response.setContentType("application/x-msexcel; charset=utf-8");
 		String headerKey = "Content-Disposition";
@@ -1889,56 +1905,19 @@ public class EzAddressController{
 				charset = "shift-jis";
 			}
 			
+			if (format.equals("googleCSV")) {
+				charset = "utf-8";
+			}
+			
+			logger.debug("charset=" + charset);
+			
 			writer = new OutputStreamWriter(response.getOutputStream(), charset);
 			
 			csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, "\r\n");
 			
-	        String[] headArray = new String[87];
-	        headArray[0] = egovMessageSource.getMessage("ezAddress.t123", locale); headArray[1] = egovMessageSource.getMessage("ezAddress.x0001", locale);
-	        headArray[2] = egovMessageSource.getMessage("ezAddress.t125", locale); headArray[3] = egovMessageSource.getMessage("ezAddress.t126", locale);
-	        headArray[4] = egovMessageSource.getMessage("ezAddress.t127", locale); headArray[5] = egovMessageSource.getMessage("ezAddress.x0002", locale);
-	        headArray[6] = egovMessageSource.getMessage("ezAddress.t54", locale); headArray[7] = egovMessageSource.getMessage("ezAddress.t52", locale);
-	        headArray[8] = egovMessageSource.getMessage("ezAddress.t203", locale); headArray[9] = egovMessageSource.getMessage("ezAddress.t130", locale);
-	        headArray[10] = egovMessageSource.getMessage("ezAddress.t131", locale); headArray[11] = egovMessageSource.getMessage("ezAddress.t202", locale);
-	        headArray[12] = egovMessageSource.getMessage("ezAddress.t133", locale); headArray[13] = egovMessageSource.getMessage("ezAddress.t134", locale);
-	        headArray[14] = egovMessageSource.getMessage("ezAddress.t135", locale); headArray[15] = egovMessageSource.getMessage("ezAddress.t136", locale);
-	        headArray[16] = egovMessageSource.getMessage("ezAddress.t53", locale); headArray[17] = egovMessageSource.getMessage("ezAddress.t137", locale);
-	        headArray[18] = egovMessageSource.getMessage("ezAddress.t55", locale); headArray[19] = egovMessageSource.getMessage("ezAddress.t56", locale);
-	        headArray[20] = egovMessageSource.getMessage("ezAddress.t57", locale); headArray[21] = egovMessageSource.getMessage("ezAddress.t58", locale);
-	        headArray[22] = egovMessageSource.getMessage("ezAddress.t59", locale); headArray[23] = egovMessageSource.getMessage("ezAddress.t60", locale);
-	        headArray[24] = egovMessageSource.getMessage("ezAddress.t61", locale); headArray[25] = egovMessageSource.getMessage("ezAddress.t62", locale);
-	        headArray[26] = egovMessageSource.getMessage("ezAddress.t63", locale); headArray[27] = egovMessageSource.getMessage("ezAddress.t64", locale);
-	        headArray[28] = egovMessageSource.getMessage("ezAddress.t65", locale); headArray[29] = egovMessageSource.getMessage("ezAddress.t66", locale);
-	        headArray[30] = egovMessageSource.getMessage("ezAddress.t207", locale); headArray[31] = egovMessageSource.getMessage("ezAddress.t68", locale);
-	        headArray[32] = egovMessageSource.getMessage("ezAddress.t69", locale); headArray[33] = egovMessageSource.getMessage("ezAddress.t70", locale);
-	        headArray[34] = egovMessageSource.getMessage("ezAddress.t71", locale); headArray[35] = egovMessageSource.getMessage("ezAddress.t72", locale);
-	        headArray[36] = egovMessageSource.getMessage("ezAddress.t73", locale); headArray[37] = egovMessageSource.getMessage("ezAddress.t74", locale);
-	        headArray[38] = egovMessageSource.getMessage("ezAddress.t75", locale); headArray[39] = "ISDN"; headArray[40] = egovMessageSource.getMessage("ezAddress.t189", locale);
-	        headArray[41] = egovMessageSource.getMessage("ezAddress.t77", locale); headArray[42] = egovMessageSource.getMessage("ezAddress.t78", locale);
-	        headArray[43] = egovMessageSource.getMessage("ezAddress.t79", locale); headArray[44] = egovMessageSource.getMessage("ezAddress.t80", locale);
-	        headArray[45] = egovMessageSource.getMessage("ezAddress.t81", locale); headArray[46] = "TDD/TTY " + egovMessageSource.getMessage("ezAddress.t82", locale);
-	        headArray[47] = egovMessageSource.getMessage("ezAddress.t83", locale); headArray[48] = egovMessageSource.getMessage("ezAddress.t84", locale);
-	        headArray[49] = egovMessageSource.getMessage("ezAddress.t85", locale); headArray[50] = egovMessageSource.getMessage("ezAddress.t86", locale);
-	        headArray[51] = egovMessageSource.getMessage("ezAddress.t87", locale); headArray[52] = egovMessageSource.getMessage("ezAddress.t88", locale);
-	        headArray[53] = egovMessageSource.getMessage("ezAddress.t89", locale); headArray[54] = egovMessageSource.getMessage("ezAddress.t90", locale);
-	        headArray[55] = egovMessageSource.getMessage("ezAddress.t91", locale); headArray[56] = egovMessageSource.getMessage("ezAddress.t92", locale);
-	        headArray[57] = egovMessageSource.getMessage("ezAddress.t93", locale); headArray[58] = egovMessageSource.getMessage("ezAddress.t94", locale);
-	        headArray[59] = egovMessageSource.getMessage("ezAddress.t95", locale); headArray[60] = egovMessageSource.getMessage("ezAddress.t96", locale);
-	        headArray[61] = egovMessageSource.getMessage("ezAddress.t97", locale); headArray[62] = egovMessageSource.getMessage("ezAddress.t98", locale);
-	        headArray[63] = egovMessageSource.getMessage("ezAddress.t99", locale); headArray[64] = egovMessageSource.getMessage("ezAddress.t100", locale);
-	        headArray[65] = egovMessageSource.getMessage("ezAddress.t101", locale); headArray[66] = egovMessageSource.getMessage("ezAddress.t102", locale);
-	        headArray[67] = egovMessageSource.getMessage("ezAddress.t103", locale); headArray[68] = egovMessageSource.getMessage("ezAddress.t104", locale);
-	        headArray[69] = egovMessageSource.getMessage("ezAddress.t105", locale); headArray[70] = egovMessageSource.getMessage("ezAddress.t106", locale);
-	        headArray[71] = egovMessageSource.getMessage("ezAddress.t107", locale); headArray[72] = egovMessageSource.getMessage("ezAddress.t108", locale);
-	        headArray[73] = egovMessageSource.getMessage("ezAddress.t109", locale); headArray[74] = egovMessageSource.getMessage("ezAddress.t110", locale);
-	        headArray[75] = egovMessageSource.getMessage("ezAddress.t38", locale); headArray[76] = egovMessageSource.getMessage("ezAddress.t112", locale);
-	        headArray[77] = egovMessageSource.getMessage("ezAddress.t113", locale); headArray[78] = egovMessageSource.getMessage("ezAddress.t114", locale);
-	        headArray[79] = egovMessageSource.getMessage("ezAddress.t115", locale); headArray[80] = egovMessageSource.getMessage("ezAddress.t116", locale);
-	        headArray[81] = egovMessageSource.getMessage("ezAddress.t117", locale); headArray[82] = egovMessageSource.getMessage("ezAddress.t118", locale);
-	        headArray[83] = egovMessageSource.getMessage("ezAddress.t119", locale); headArray[84] = egovMessageSource.getMessage("ezAddress.t120", locale);
-	        headArray[85] = egovMessageSource.getMessage("ezAddress.t121", locale); headArray[86] = egovMessageSource.getMessage("ezAddress.t122", locale);
+	        String[] headerArray = egovMessageSource.getMessage("ezAddress." + format, locale).split(";");
 	        
-	        csvWriter.writeNext(headArray);
+	        csvWriter.writeNext(headerArray);
 	        csvWriter.flush();
 	        
 	        List<AddressVO> addressList = ezAddressService.getAllAddressList(userInfo.getTenantId(), folderId, ownerId, "", null);
@@ -1947,47 +1926,49 @@ public class EzAddressController{
 	        	String[] valueArray = new String[87];
 	        	Arrays.fill(valueArray, "");
 	        	
-	        	valueArray[1] = address.getsName();
-	        	valueArray[5] = address.getsCompany();
-	        	valueArray[6] = address.getsDept();
-	        	valueArray[7] = address.getsTitle();
-	        	valueArray[13] = address.getsCompanyZip();
-	        	valueArray[20] = address.getsHomeZip();
-	        	valueArray[30] = address.getsFax();
-	        	valueArray[31] = address.getsCompanyPhone();
-	        	valueArray[40] = address.getsMobile();
-	        	valueArray[72] = address.getsHomePage();
-	        	valueArray[75] = address.getsEmail();
-	        	valueArray[76] = address.getsName();
-	        	valueArray[55] = address.getsMemo();
-	        	
-	        	valueArray[8] = address.getsCompanyAddr();
-	        	valueArray[15] = address.getsHomeAddr();
-	        	/*if (xmldomInfo.GetElementsByTagName("SCOMPANYSTREET").Count > 0)
-                {
-                    valueList_Array[8] = xmldomInfo.GetElementsByTagName("SCOMPANYSTREET").Item(i).InnerText;
-                    valueList_Array[11] = xmldomInfo.GetElementsByTagName("SCOMPANYCITY").Item(i).InnerText;
-                    valueList_Array[12] = xmldomInfo.GetElementsByTagName("SCOMPANYSTATE").Item(i).InnerText;
-                }
-                else
-                {
-                    valueList_Array[8] = xmldomInfo.GetElementsByTagName("SCOMPANYADDR").Item(i).InnerText;
-                    valueList_Array[11] = "";
-                    valueList_Array[12] = "";
-                }
-                
-                if (xmldomInfo.GetElementsByTagName("SHOMESTREET").Count > 0)
-                {
-                    valueList_Array[15] = xmldomInfo.GetElementsByTagName("SHOMESTREET").Item(i).InnerText;
-                    valueList_Array[18] = xmldomInfo.GetElementsByTagName("SHOMECITY").Item(i).InnerText;
-                    valueList_Array[19] = xmldomInfo.GetElementsByTagName("SHOMESTATE").Item(i).InnerText;
-                }
-                else
-                {
-                    valueList_Array[15] = xmldomInfo.GetElementsByTagName("SHOMEADDR").Item(i).InnerText;
-                    valueList_Array[18] = "";
-                    valueList_Array[19] = "";
-                }*/
+	        	if (format.equals("outlookCSV")) {
+	        		valueArray[1] = address.getsName();
+		        	valueArray[5] = address.getsCompany();
+		        	valueArray[6] = address.getsDept();
+		        	valueArray[7] = address.getsTitle();
+		        	valueArray[31] = address.getsCompanyPhone();
+		        	valueArray[30] = address.getsFax();
+		        	valueArray[40] = address.getsMobile();
+		        	valueArray[77] = address.getsEmail();
+		        	valueArray[79] = address.getsName();
+		        	valueArray[74] = address.getsHomePage();
+		        	valueArray[13] = address.getsCompanyZip();
+		        	valueArray[8] = address.getsCompanyAddr();
+		        	valueArray[20] = address.getsHomeZip();
+		        	valueArray[15] = address.getsHomeAddr();
+		        	valueArray[58] = address.getsMemo();
+	        	} else if (format.equals("thunderbirdCSV")) {
+	        		valueArray[0] = address.getsName();
+	        		valueArray[2] = address.getsName();
+		        	valueArray[26] = address.getsCompany();
+		        	valueArray[25] = address.getsDept();
+		        	valueArray[24] = address.getsTitle();
+		        	valueArray[7] = address.getsCompanyPhone();
+		        	valueArray[9] = address.getsFax();
+		        	valueArray[11] = address.getsMobile();
+		        	valueArray[4] = address.getsEmail();
+		        	valueArray[27] = address.getsHomePage();
+		        	valueArray[22] = address.getsCompanyZip();
+		        	valueArray[18] = address.getsCompanyAddr();
+		        	valueArray[16] = address.getsHomeZip();
+		        	valueArray[12] = address.getsHomeAddr();
+		        	valueArray[36] = address.getsMemo();
+	        	} else if (format.equals("googleCSV")) {
+	        		valueArray[0] = address.getsName();
+		        	valueArray[43] = address.getsCompany();
+		        	valueArray[46] = address.getsDept();
+		        	valueArray[45] = address.getsTitle();
+		        	valueArray[32] = address.getsMobile();
+		        	valueArray[30] = address.getsEmail();
+		        	valueArray[51] = address.getsHomePage();
+		        	valueArray[34] = address.getsHomeAddr();
+		        	valueArray[25] = address.getsMemo();
+	        	}
 	        	
 	        	csvWriter.writeNext(valueArray);
 		        csvWriter.flush();
@@ -2020,8 +2001,9 @@ public class EzAddressController{
 		String folderId = request.getParameter("folderid");
         String folderType = request.getParameter("foldertype");
         String ownerId = request.getParameter("ownerid");
+        String format = request.getParameter("format");
 		
-        logger.debug("folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId);
+        logger.debug("folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId + ",format=" + format);
         
 		List<MultipartFile> multiFile = request.getFiles("file1");
 		
@@ -2032,6 +2014,69 @@ public class EzAddressController{
         }
         
         LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        
+        if (!format.equals("outlookCSV") && !format.equals("thunderbirdCSV") && !format.equals("googleCSV")) {
+        	format = "outlookCSV";
+        }
+        
+        String[] headerArray = egovMessageSource.getMessage("ezAddress." + format, locale).split(";");
+        String[] usedHeaderArray = null;
+        
+        if (format.equals("outlookCSV")) {
+        	usedHeaderArray = new String[]{
+        		headerArray[1],  //name        
+        		headerArray[3],  //lastName    
+        		headerArray[5],  //company     
+        		headerArray[6],  //dept        
+        		headerArray[7],  //title       
+        		headerArray[31], //companyPhone
+        		headerArray[30], //fax         
+        		headerArray[40], //mobile      
+        		headerArray[77], //email       
+        		headerArray[74], //homePage    
+        		headerArray[13], //companyZip  
+        		headerArray[8],  //companyAddr 
+        		headerArray[20], //homeZip     
+        		headerArray[15], //homeAddr    
+        		headerArray[58]  //memo        
+        	};
+        } else if (format.equals("thunderbirdCSV")) {
+        	usedHeaderArray = new String[]{
+        		headerArray[0],  //name        
+        		headerArray[1],  //lastName    
+        		headerArray[26], //company     
+        		headerArray[25], //dept        
+        		headerArray[24], //title       
+        		headerArray[7],  //companyPhone
+        		headerArray[9],  //fax         
+        		headerArray[11], //mobile      
+        		headerArray[4],  //email       
+        		headerArray[27], //homePage    
+        		headerArray[22], //companyZip  
+        		headerArray[18], //companyAddr 
+        		headerArray[16], //homeZip     
+        		headerArray[12], //homeAddr    
+        		headerArray[36]  //memo        
+        	};
+    	} else if (format.equals("googleCSV")) {
+    		usedHeaderArray = new String[]{
+        		headerArray[0],  //name        
+        		"",              //lastName    
+        		headerArray[43], //company     
+        		headerArray[46], //dept        
+        		headerArray[45], //title       
+        		"",              //companyPhone
+        		"",              //fax         
+        		headerArray[32], //mobile      
+        		headerArray[30], //email       
+        		headerArray[51], //homePage    
+        		"",              //companyZip  
+        		"",              //companyAddr 
+        		"",              //homeZip     
+        		headerArray[34], //homeAddr    
+        		headerArray[25]  //memo        
+        	};
+    	}
         
         InputStream stream = null;
         InputStreamReader reader = null;
@@ -2047,11 +2092,17 @@ public class EzAddressController{
 				charset = "shift-jis";
 			}
 			
+			if (format.equals("googleCSV")) {
+				charset = "utf-8";
+			}
+			
 			logger.debug("charset=" + charset);
 			
 	        reader = new InputStreamReader(stream, charset);
 	        csvReader = new CSVReader(reader);
 	        csvList = csvReader.readAll();
+	        
+	        
         } catch (IOException e) {
         	logger.error(e.getMessage());
         	e.printStackTrace();
@@ -2082,45 +2133,34 @@ public class EzAddressController{
             return "ezAddress/addressImportComplete";
         }
         
-        String[] headerArr = new String[]{
-        		egovMessageSource.getMessage("ezAddress.x0001", locale), //name
-        		egovMessageSource.getMessage("ezAddress.t126", locale), //lastName
-        		egovMessageSource.getMessage("ezAddress.x0002", locale), //company
-        		egovMessageSource.getMessage("ezAddress.t54", locale), //dept
-        		egovMessageSource.getMessage("ezAddress.t52", locale), //title
-        		egovMessageSource.getMessage("ezAddress.t68", locale), //companyPhone
-        		egovMessageSource.getMessage("ezAddress.t207", locale), //fax
-        		egovMessageSource.getMessage("ezAddress.t189", locale), //mobile
-        		egovMessageSource.getMessage("ezAddress.t38", locale), //email
-        		egovMessageSource.getMessage("ezAddress.t108", locale), //homePage
-        		egovMessageSource.getMessage("ezAddress.t134", locale), //companyZip
-        		egovMessageSource.getMessage("ezAddress.t203", locale), //companyAddr
-        		egovMessageSource.getMessage("ezAddress.t57", locale), //homeZip
-        		egovMessageSource.getMessage("ezAddress.t136", locale), //homeAddr
-        		egovMessageSource.getMessage("ezAddress.t91", locale) //memo
-        	};
-        
         String groupMailStr = egovMessageSource.getMessage("ezAddress.t180", locale);
         String[] csvHeader = csvList.get(0);
         String[] csvBody = null;
         Map<String, String> csvBodyMap = null;
         
+        // CSV 헤더에 필수 헤더들이 들어있는지 확인 (구글CSV 제외 - 구글CSV는 값을 입력하지 않은 필드의 경우 헤더가 없을 수 있음)
+        if (!format.equals("googleCSV") && !Arrays.asList(csvHeader).containsAll(Arrays.asList(usedHeaderArray))) {
+        	logger.error("Check CSV file format.");
+        	model.addAttribute("result", "FORMAT_ERROR");
+        	
+            return "ezAddress/addressImportComplete";
+        }
+        
         for (int i = 1; i < csvList.size(); i++) {
         	try {
         		csvBody = csvList.get(i);
-	        	
         		csvBodyMap = new HashMap<String, String>();
         		
-	        	for (int j=0; j<csvBody.length; j++) {
+	        	for (int j = 0; j < csvBody.length; j++) {
 	        		csvBodyMap.put(csvHeader[j], csvBody[j]);
 	        	}
 	        	
-	        	csvBody = new String[headerArr.length];
+	        	csvBody = new String[usedHeaderArray.length];
 	        	Arrays.fill(csvBody, "");
 	        	
-	        	for (int j=0; j<headerArr.length; j++) {
-	        		if (csvBodyMap.get(headerArr[j]) != null) {
-	        			csvBody[j] = csvBodyMap.get(headerArr[j]);
+	        	for (int j = 0; j < usedHeaderArray.length; j++) {
+	        		if (csvBodyMap.get(usedHeaderArray[j]) != null) {
+	        			csvBody[j] = csvBodyMap.get(usedHeaderArray[j]);
 	            	}
 	        	}
 	        	
@@ -2130,7 +2170,7 @@ public class EzAddressController{
 	        		csvBody[0] = csvBody[0].trim();
 	        	}
 	        	
-	        	// 가져오기시 메모에 줄바꿈이 있을 경우 치환
+	        	// 가져오기 시 메모에 줄바꿈이 있을 경우 치환
 	        	if (csvBody[14].contains("\n")) {
 	        		csvBody[14] = csvBody[14].replaceAll("\n", "<br>");
 	        	}
@@ -2157,7 +2197,7 @@ public class EzAddressController{
 	        		if (csvHeader != null) {
 	        			String csvHeaderStr = "";
 	        			
-	        			for (int j=0; j<csvHeader.length; j++) {
+	        			for (int j = 0; j < csvHeader.length; j++) {
 	        				csvHeaderStr += csvHeader[j] + ", ";
 	            		}
 	        			
@@ -2189,4 +2229,78 @@ public class EzAddressController{
         return "ezAddress/addressImportComplete";
 	}
 	
+	/**
+	 * 주소록 양식 다운로드 함수
+	 */
+	@RequestMapping(value = "/ezAddress/addressFormatDownload.do")
+	public void addressFormatDownload(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale, Model model, HttpServletResponse response) throws Exception {		
+		logger.debug("addressFormatDownload started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String format = request.getParameter("format");
+        logger.debug("format=" + format);
+        
+        String fileName = null;
+        
+		switch (format) {
+			case "outlookCSV" :
+				fileName = "outlook.csv";
+				break;
+			case "thunderbirdCSV" :
+				fileName = "thunderbird.csv";
+				break;
+			case "googleCSV" :
+				fileName = "google.csv";
+				break;
+			default : 
+				format = "outlookCSV";
+				fileName = "outlook.csv";
+				break;
+		}
+		
+		response.setContentType("application/x-msexcel; charset=utf-8");
+		String headerKey = "Content-Disposition";
+        String headerValue = String.format("attachment; filename=\"%s\"", fileName);
+        response.setHeader(headerKey, headerValue);
+		
+        OutputStreamWriter writer = null;
+		CSVWriter csvWriter = null;
+		
+		try {
+			String charset = "euc-kr";
+			
+			if (userInfo.getLang().equals("3")) {
+				charset = "shift-jis";
+			}
+			
+			if (format.equals("googleCSV")) {
+				charset = "utf-8";
+			}
+			
+			logger.debug("charset=" + charset);
+			
+			writer = new OutputStreamWriter(response.getOutputStream(), charset);
+			
+			csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, "\r\n");
+			
+	        String[] headArray = egovMessageSource.getMessage("ezAddress." + format, locale).split(";");
+	        
+	        csvWriter.writeNext(headArray);
+	        csvWriter.flush();
+	        
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (csvWriter != null) {
+				try {
+					csvWriter.close();
+				} catch(IOException e) {}
+			}
+			if (writer != null) {
+				writer.close();
+			}
+		}
+	    
+		logger.debug("addressFormatDownload ended.");
+	}
 }

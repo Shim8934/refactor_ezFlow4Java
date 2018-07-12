@@ -49,6 +49,7 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailSignatureVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -916,6 +917,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			
 			logger.debug("retireUser rc=" + rc);
 			
+			List<String> distributionList = null;
+			
 			if (rc == 0) { // retireUser 성공				
 				// 해당 User가 속한 Group Email 주소에서 해당 User를 제거한다.
 				OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], userInfo.getPrimary(), tenantID);
@@ -943,7 +946,18 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					
 					result = "EMAIL_ERROR";
 					break;					
-				}				
+				}
+				// 사용자가 속한 공용배포그룹의 Group Email 주소 목록을 구한다.
+				distributionList = ezEmailUserAdminService.getUserDistributionList(mailAddr);
+				
+				for (String dist : distributionList) {
+					logger.debug("dist=" + dist);
+					
+					// 공용배포그룹의 Group Email 주소로부터 해당 User를 제거한다.
+					rc = ezEmailUserAdminService.updateGroupDel(dist, mailAddr);	
+					
+					logger.debug("updateGroupDel rc=" + rc);							
+				}
 			}
 			// dhlee - end
 		}
@@ -1276,6 +1290,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    logger.debug("tenantID=" + tenantID + ",parentCn=" + vo.getParentCn());
 	    
 		String result = "";		
+		String jobTile2 = "";
+		String jobPostion2 = "";
+		OrganUserVO useRankMailUser = null;
+		String companyId = "";
 		
 		// 전체관리자가 아닌데 전체관리자 권한을 설정하려는 경우엔 CHECKPERMISSION을 반환한다.
         if (userInfo.getRollInfo().indexOf("c=1") == -1 
@@ -1283,9 +1301,73 @@ public class EzOrganAdminController extends EgovFileMngUtil {
                 && vo.getExtensionAttribute1().toLowerCase().indexOf("c=1") > -1) {
             result = "CHECKPERMISSION";		
 		// 기존 사용자를 수정하는 경우엔 parentCn의 값이 null 혹은 empty string 이다.
-        } else if (vo.getParentCn() == null || vo.getParentCn().equals("")) {				    
-	        ezOrganAdminService.updateDBData_user(vo);
-	        result = "OK";
+        } else if (vo.getParentCn() == null || vo.getParentCn().equals("")) {
+        	try {
+        		String useRankMail = ezCommonService.getTenantConfig("useRankMail", tenantID);
+        		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+    			String cn = vo.getCn();
+
+        		if (useRankMail != null && useRankMail.equals("YES")) {//직위,직책별 메일 발송 여부
+        			String jobTile = vo.getTitle() == null ? "" : vo.getTitle(); 
+					String jobPostion = vo.getExtensionAttribute10() == null ? "" : vo.getExtensionAttribute10();
+					useRankMailUser = ezOrganAdminService.getUserInfo(cn, userInfo.getPrimary(), tenantID);
+					OrganDeptVO deptVO = ezOrganService.getDeptInfo(vo.getParentCn(), userInfo.getPrimary(), tenantID);//user의 부서 정보
+					companyId = deptVO.getExtensionAttribute2();//회사 ID
+					String beforeTitle = useRankMailUser.getTitle();//이전의 직위
+					String beforePosition = useRankMailUser.getExtensionAttribute10(); //이전의 직책
+					
+					if (!jobTile.equals("")) {
+						String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile);
+						jobTile2 = String.valueOf(UUID.randomUUID()).substring(0,8);
+
+						logger.debug("jobTitle UUID=" + jobTile2);
+							
+							 if (beforeTitle != null && beforeTitle.equals(jobTile)) {//직위로 공용 배포그룹 존재할때
+								 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobTile, userName, companyId, tenantID, cn);
+								 
+							 } else {// 직위로 공용배포그룹이 없을때  or 직위 를 변경할때
+								 String beforeTitleUserName = ezOrganAdminService.getDistributionUserName(tenantID, beforeTitle);
+								 if (beforeTitleUserName != null && !beforeTitleUserName.equals("")) {
+									 result = ezOrganAdminService.deleteTargetAddressUser(tenantID, beforeTitle, cn, companyId);
+								 }
+
+								 result = ezOrganAdminService.mailAddDistributionList(domain, jobTile, jobTile2, companyId, tenantID, cn);
+							 }
+						}
+						
+					if (!jobPostion.equals("")) {
+						String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobPostion);
+						jobPostion2 = String.valueOf(UUID.randomUUID()).substring(0,8);
+						
+						logger.debug("jobPostion2 UUID=" + jobPostion2);
+						 
+						 if (beforePosition != null && beforePosition.equals(jobPostion)) {//직책으로 공용 배포그룹 존재할떄
+							 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobPostion, userName, companyId, tenantID, cn);
+						 } else {// 직책으로 공용배포그룹이 없을때 or 직책 을 변경할때
+							 String beforeTitleUserName = ezOrganAdminService.getDistributionUserName(tenantID, beforeTitle);
+							if (beforeTitleUserName != null && !beforeTitleUserName.equals("")) {
+								result = ezOrganAdminService.deleteTargetAddressUser(tenantID, beforePosition, cn, companyId);
+							}
+							 
+							 result = ezOrganAdminService.mailAddDistributionList(domain, jobPostion, jobPostion2, companyId, tenantID, cn);
+						 }
+					}
+        		}
+        		
+        		ezOrganAdminService.updateDBData_user(vo);
+        		result = "OK";
+        	} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+        		ezOrganAdminService.deleteTargetAddressUser(tenantID, jobTile2, vo.getCn(), companyId);//직위 공용배포 그룹에서 user 삭제
+        		ezOrganAdminService.deleteTargetAddressUser(tenantID, jobPostion2, vo.getCn(), companyId);//직책 공용배포 그룹에서 user 삭제
+        		String userNameTitle = ezOrganAdminService.getDistributionUserName(tenantID, vo.getTitle());//user의 기존 직위 공용 배포 그룹 이름 가져오기
+        		ezOrganAdminService.mailUpdateDistributionList(ezCommonService.getTenantConfig("DomainName", tenantID),
+        				vo.getTitle(), userNameTitle, companyId, tenantID, vo.getCn());//기존 user의 직위 공용 배포 그룹에 user 추가 
+        		String userNamePosition = ezOrganAdminService.getDistributionUserName(tenantID, vo.getTitle());//user의 기존 직책 공용 배포 그룹 이름 가져오기
+        		ezOrganAdminService.mailUpdateDistributionList(ezCommonService.getTenantConfig("DomainName", tenantID),
+        				vo.getExtensionAttribute10(), userNamePosition, companyId, tenantID, vo.getCn());//기존 user의 직책 공용 배포 그룹에 user 추가
+        		e.printStackTrace();
+        		result = "EMAIL_ERROR";
+        	}
 		// 새로운 사용자를 등록한다.
 		} else {
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
@@ -1350,6 +1432,41 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 								}
 							}
 							
+							String useRankMail = ezCommonService.getTenantConfig("useRankMail", tenantID);
+							
+							if (useRankMail != null && useRankMail.equals("YES")) {//직위,직책별 메일 발송 여부
+								
+								String jobTile = vo.getTitle() == null ? "" : vo.getTitle(); 
+								String jobPostion = vo.getExtensionAttribute10() == null ? "" : vo.getExtensionAttribute10();
+								OrganDeptVO deptVO = ezOrganService.getDeptInfo(vo.getParentCn(), userInfo.getPrimary(), tenantID);//user의 부서 정보
+								companyId = deptVO.getExtensionAttribute2();//회사 ID
+								
+								if (!jobTile.equals("")) {
+									String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile);
+									jobTile2 = String.valueOf(UUID.randomUUID()).substring(0,8);
+									logger.debug("jobTitle UUID=" + jobTile2);
+										
+									 if (userName != null & !userName.equals("")) {//직위 로 공용 배포그룹 존재할때
+										 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobTile, userName, companyId, tenantID, cn);
+									 } else {
+										 result = ezOrganAdminService.mailAddDistributionList(domain, jobTile, jobTile2, companyId, tenantID, cn);
+									 }
+									 
+								}
+									
+								if (!jobPostion.equals("")) {
+									String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobPostion);
+									jobPostion2 = String.valueOf(UUID.randomUUID()).substring(0,8);
+									logger.debug("jobPostion2 UUID=" + jobPostion2);
+									 
+									 if (userName != null & !userName.equals("")) {//직책 이름으로 공용 배포그룹 존재때
+										 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobPostion, userName, companyId, tenantID, cn);
+									 } else {
+										 result = ezOrganAdminService.mailAddDistributionList(domain, jobPostion, jobPostion2, companyId, tenantID, cn);
+									 }
+								}
+							}
+							
 							vo.setMail(mailAddr);				
 							String userPrincipalName = cn + "@" + domain;
 							vo.setUpnName(userPrincipalName);
@@ -1371,7 +1488,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 							ezEmailUserAdminService.removeUser(mailAddr);
-							
+							ezOrganAdminService.mailDelDistributionList(tenantID, vo.getTitle()); //직위 공용 배포 그룹 삭제
+							ezOrganAdminService.mailDelDistributionList(tenantID, vo.getExtensionAttribute10()); //직책 공용 배포 그룹 삭제
 							e.printStackTrace();
 							result = "EMAIL_ERROR";
 						}
@@ -2040,18 +2158,20 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String companyID = request.getParameter("companyID");
 		String type = request.getParameter("type");
 		String strLang = userInfo.getPrimary();
+		String searchType = request.getParameter("searchType");
+		String searchValue = request.getParameter("searchValue");
 		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
 		int startRow = (pageSize * (pageNum - 1)) + 1;
         int endRow = pageSize * pageNum;
                 
-        int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, strLang, tenantID);
+        int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, searchType, searchValue, strLang, tenantID);
 
         logger.debug("companyID=" + companyID + ",type=" + type + ",strLang=" + strLang + ",pageNum=" + pageNum
                 + ",pageSize=" + pageSize + ",startRow=" + startRow + ",endRow=" + endRow
                 + ",totalCount=" + cnt);
         
-        List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyID, type, strLang, startRow, endRow, tenantID);
+        List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyID, type, searchType, searchValue, strLang, startRow, endRow, tenantID);
         
 		StringBuilder result = new StringBuilder("<LISTVIEWDATA>");
 		result.append("<ROWS>");
@@ -2621,14 +2741,17 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String propertyValue = ezCommonService.getUserConfigInfo(tenantIdNum, userId, propertyName);
 		
-		if (propertyValue != null) {
+		if (!propertyValue.equals("")) {
 			returnValue = "SUCCESS";
 			model.addAttribute("propertyValue" , propertyValue);
 		} else {
 			returnValue = "NODATA";
 		}
 				
+		String defaultForDisablePopImap = ezCommonService.getTenantConfig("defaultForDisablePopImap", userInfo.getTenantId());
+		
 		model.addAttribute("result", returnValue);
+		model.addAttribute("defaultForDisablePopImap", defaultForDisablePopImap);
 		
 		logger.debug("configPop3Imap ended.");
 		
@@ -2660,7 +2783,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String getPropertyValue = ezCommonService.getUserConfigInfo(tenantIdNum, userId, propertyName);
 		
-		if (getPropertyValue != null) {
+		if (!getPropertyValue.equals("")) {
 			ezCommonService.updateUserConfigInfo(tenantIdNum, userId, propertyName, propertyValue);
 			returnValue = "SUCCESS";
 		} else {
@@ -2671,6 +2794,72 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("setUseDisablePop3Imap ended.");
 		
 		return returnValue;
+	}
+	
+	/**
+	 * 조직도 사원 추가, 수정시 직위,직책으로 공용배포그룹 생성 및 수정
+	 */
+	@RequestMapping(value="/admin/ezOrgan/mailSaveDistributionList.do")
+	@ResponseBody
+	public String mailSaveDistributionList(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model,  HttpServletRequest request) throws Exception{
+		//관리자 권한체크
+		LoginVO auth = commonUtil.aprCheckAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String memberId = request.getParameter("cn");
+		String jobTile = request.getParameter("jobTitle") == null ? "" : request.getParameter("jobTitle");
+		String jobPostion = request.getParameter("jobPosition") == null ? "" : request.getParameter("jobPosition");
+		
+		logger.debug("mailSaveDistributionList started.");
+		logger.debug("memberId=" + memberId + ", jobTile=" + jobTile +  ", jobPosition=" + jobPostion);
+		
+		int tenantID = auth.getTenantId();
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+		String companyId = userInfo.getCompanyID();
+		String result = "ERROR";
+		
+		try {
+			
+			String userName = "";
+			
+			if (!jobTile.equals("")) {
+				userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile);
+				String jobTile2 = String.valueOf(UUID.randomUUID()).substring(0,8);
+				logger.debug("jobTitle UUID=" + jobTile2);
+				
+				 if (!userName.equals("")) {//직위 이름으로 공용 배포그룹 존재시
+					 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobTile, userName, companyId, tenantID, memberId);
+				 } else {
+					 result = ezOrganAdminService.mailAddDistributionList(domain, jobTile, jobTile2, companyId, tenantID, memberId);
+				 }
+				 
+			}
+			
+			if (!jobPostion.equals("")) {
+				userName = ezOrganAdminService.getDistributionUserName(tenantID, jobPostion);
+				String jobPostion2 = String.valueOf(UUID.randomUUID()).substring(0,8);
+				logger.debug("jobPostion2 UUID=" + jobPostion2);
+				 
+				 if (!userName.equals("")) {//직책 이름으로 공용 배포그룹 존재시
+					 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobPostion, userName, companyId, tenantID, memberId);
+				 } else {
+					 result = ezOrganAdminService.mailAddDistributionList(domain, jobPostion, jobPostion2, companyId, tenantID, memberId);
+				 }
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("result=" + result);
+		logger.debug("mailSaveDistributionList ended.");
+		return result;
 	}
 	
 	private boolean createThumbnail(File sourceFile, File targetFile) {

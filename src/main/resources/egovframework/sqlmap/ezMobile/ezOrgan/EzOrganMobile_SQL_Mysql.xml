@@ -7,27 +7,38 @@
     
 	<select id="MOrganDAO.getPersonList" parameterClass="Map" resultClass="MPersonListVO">
         <![CDATA[
-            SELECT A.*
-            FROM
-            (SELECT
-                *,@rownum:=@rownum+1 as rowNum
-            FROM
-                tbl_usermaster, (select @rownum:=0) tmp
-            WHERE
-                PHYSICALDELIVERYOFFICENAME = #companyID#
-            AND
-                TENANT_ID = #tenantID#
+			SELECT 
+				*
+			FROM
+	            (SELECT
+	                A.*,@rownum:=@rownum+1 as rowNum
+	            FROM
+	               (select @rownum:=0) tmp, tbl_usermaster AS A
+	            LEFT JOIN 
+	            	tbl_usermaster_retire AS B
+	            ON
+	            	A.CN = B.CN
+	            AND
+	            	A.TENANT_ID = B.TENANT_ID
+	            AND
+	            	A.PHYSICALDELIVERYOFFICENAME = B.PHYSICALDELIVERYOFFICENAME
+	            WHERE
+	                A.PHYSICALDELIVERYOFFICENAME = #companyID#
+	            AND
+	                A.TENANT_ID = #tenantID#
+	            AND 
+	            	B.CN IS NULL
         ]]>        
         <isNotEmpty property="pSearchText">
             <![CDATA[
                 AND
-                    (DISPLAYNAME LIKE CONCAT('%' ,#pSearchText#, '%') OR DESCRIPTION LIKE CONCAT('%' ,#pSearchText#, '%'))    
+                    (A.DISPLAYNAME LIKE CONCAT('%' ,#pSearchText#, '%') OR A.DESCRIPTION LIKE CONCAT('%' ,#pSearchText#, '%'))    
             ]]>
         </isNotEmpty>
         
         <![CDATA[    
-            ORDER BY
-                DISPLAYNAME ASC)A
+	            ORDER BY
+	                A.DISPLAYNAME ASC ) C
         ]]>
         <isNotEmpty property="rowNum">
             <![CDATA[
@@ -45,22 +56,28 @@
             SELECT
                 COUNT(*)
             FROM
-                tbl_usermaster
-            WHERE
-                PHYSICALDELIVERYOFFICENAME = #companyID#
+                tbl_usermaster as A
+            LEFT JOIN
+            	tbl_usermaster_retire as B
+            ON
+            	A.CN = B.CN
+            AND 
+            	A.PHYSICALDELIVERYOFFICENAME = B.PHYSICALDELIVERYOFFICENAME
             AND
-                TENANT_ID = #tenantID#
+            	A.TENANT_ID = B.TENANT_ID
+            WHERE
+            	B.CN is null
+			AND
+                A.PHYSICALDELIVERYOFFICENAME = #companyID#
+            AND
+                A.TENANT_ID = #tenantID#
         ]]>        
         <isNotEmpty property="pSearchText">
             <![CDATA[
                 AND
-                    (DISPLAYNAME LIKE CONCAT('%' ,#pSearchText#, '%') OR DESCRIPTION LIKE CONCAT('%' ,#pSearchText#, '%'))    
+                    (A.DISPLAYNAME LIKE CONCAT('%' ,#pSearchText#, '%') OR A.DESCRIPTION LIKE CONCAT('%' ,#pSearchText#, '%'))    
             ]]>
         </isNotEmpty>
-        <![CDATA[    
-            ORDER BY
-                DISPLAYNAME ASC
-        ]]> 
     </select>
     
     <select id="MOrganDAO.getPersonInfo" parameterClass="Map" resultClass="MPersonListVO">

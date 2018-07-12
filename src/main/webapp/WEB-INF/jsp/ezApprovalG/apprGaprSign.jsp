@@ -154,7 +154,12 @@
 		</style>
 	</head>
 	<body class="popup">
-		<h1><spring:message code='ezApprovalG.t435'/></h1>		
+		<h1><spring:message code='ezApprovalG.t435'/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return btn_ImageCancel_onclick()"></span></li>
+            </ul>
+        </div>		
 		<table> 
 		  <tr> 
 		    <td><div class="listview" >
@@ -166,9 +171,8 @@
 		</table> 
 		
 		<div class="btnposition btnpositionNew">
-		        <a class="imgbtn" id="btn_ImageSave" onClick="return btn_ImageSave_onclick()"><span><spring:message code='ezApprovalG.t413'/></span></a>
-		        <a class="imgbtn" id="btn_Save" onClick="return btn_Save_onclick()"><span><spring:message code='ezApprovalG.t438'/></span></a>
-		        <a class="imgbtn" id="ImageCancel" onClick="return btn_ImageCancel_onclick()"><span><spring:message code='ezApprovalG.t414'/></span></a>
+		    <a class="imgbtn" id="btn_ImageSave" onClick="return btn_ImageSave_onclick()"><span><spring:message code='ezApprovalG.t413'/></span></a>
+			<a class="imgbtn" id="btn_Save" onClick="return btn_Save_onclick()"><span><spring:message code='ezApprovalG.t438'/></span></a>		        
 		</div>
 	</body>
 </html>

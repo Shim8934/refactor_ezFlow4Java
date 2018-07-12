@@ -73,6 +73,7 @@
 	    	var msgRtn = "";
 	    	var SdateNow = ""; 
 	    	var EdateNow = ""; 
+	    	var title = "${title}";
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -97,7 +98,9 @@
 	        	}
 	            
 	        	if (cmd == "mod") {
+	        		/* 2018-07-10 김민성 - 자원 수정시 특수문자 처리 */
 	            	document.getElementById("importance1").value = "${importance}";
+	            	document.getElementById("title").value = title;
 	        	}
 	        	if (document.getElementById("AllDay").checked) {
 		            document.getElementById("Stimepicker").style.display = "none";
@@ -111,7 +114,7 @@
 	    	    } else {
 	        	document.title = "<spring:message code="ezResource.t179"/>";
 		        }
-	            
+	        	
 		        var resultXML;
 	    	    var xmlHttp = createXMLHttpRequest();
 	        	var xmlpara = createXmlDom();
@@ -473,7 +476,8 @@
         					<c:choose>
         						<c:when test="${typeVal ne 'Readonly'}">
         							<div id="menuTable1" >
-          							<li><span onClick="btn_Save()"> <spring:message code="ezResource.t185"/></span></li>
+        							<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezResource.t185 => t114 -->
+          							<li><span onClick="btn_Save()"> <spring:message code="ezResource.t114"/></span></li>
           							<li><span onClick="print_onClick( false )"> <spring:message code="ezResource.t186"/></span></li>
           							<li id="deletebtbn"><span onClick="delSchedule_onClick('${num}','${ownerID}')"> <spring:message code="ezResource.t65"/></span></li>
           							
@@ -508,7 +512,7 @@
       				</div>
       				<div id="close">
         				<ul>
-          					<li><span onClick="window.close();"> <spring:message code="ezResource.t150"/></span></li>
+          					<li><span onClick="window.close();"></span></li>
         				</ul>
       				</div>
       				<table class="content" style="width:100%;">
@@ -590,7 +594,7 @@
 						</tr>
 						<tr>
 	         				<th> <spring:message code="ezResource.t224"/></th>
-	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="25" value="${title}" style="width: 98%" />          </td>
+	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="25"  style="width: 98%" />          </td>
 	       				</tr>
       				</table>
       			</td>
@@ -695,7 +699,6 @@
 		<xmp id="xmpEntryEmailList" style="display: none;"> ${entryList}</xmp>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
     	<script type="text/javascript">
 	       	document.getElementById("Iframe1").style.height = document.documentElement.clientHeight - 220 + "PX";

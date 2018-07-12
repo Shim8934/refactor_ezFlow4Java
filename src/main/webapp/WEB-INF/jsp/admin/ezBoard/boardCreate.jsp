@@ -69,10 +69,11 @@
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code="ezBoard.t62" /><br /></h1>
+		<div style="max-width:800px;">
 		<table class="content">
 			<tr>
 		    	<th><spring:message code="ezBoard.t110" /></th>
-		    	<td><b class="point"><c:out value='${parentBoardName}' /></b></td>
+		    	<td><b>&nbsp;<c:out value='${parentBoardName}' /></b></td>
 		    </tr>
 		    <tr>		
 		    	<th><spring:message code="ezBoard.t111" /></th>
@@ -81,20 +82,20 @@
 				    	<table style="width:100%">
 				        	<tr class="primary">
 				        		<th><c:out value='${lang_primary}'/></th>
-				          		<td><input name="text" type="text" id="txtNewName" style="WIDTH:200px" maxlength="30"></td>
+				          		<td><input name="text" type="text" id="txtNewName" style="WIDTH:100%" maxlength="30"></td>
 				        	</tr>
 				        	<tr class="secondary">
 				          		<th><c:out value='${lang_secondary}'/></th>
-				          		<td><input name="text" type="text" id="txtNewName2" style="WIDTH:200px" maxlength="30"></td>
+				          		<td><input name="text" type="text" id="txtNewName2" style="WIDTH:100%" maxlength="30"></td>
 				        	</tr>
 				      	</table>
 				 	</c:if>
 				 	<c:if test="${use_multiData != 'YES'}">
-				    	<input name="text" type="text" id="txtNewName" style="WIDTH:200px">
+				    	<input name="text" type="text" id="txtNewName" style="WIDTH:100%">
 				    </c:if>  
 			    </td>
 		  	</tr>
 		</table>
-		<div class="btnposition"><a class="imgbtn"><span onclick="Save()"><spring:message code="ezBoard.t98"/></span></a></div>	
+		<div class="btnpositionJsp"><a class="imgbtn"><span onclick="Save()"><spring:message code="ezBoard.t98"/></span></a></div></div>
 	</body>
 </html>

@@ -289,10 +289,15 @@
 	<body class = "popup">
 		<xmp id="sigBody" style="display:none;"><c:out value = '${personalPopupVO.content}' /></xmp> 
 		<h1><spring:message code = 'ezPersonal.t258' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table class="content"> 
   			<tr> 
     			<th><spring:message code = 'ezPersonal.t259' /></th> 
-    			<td>
+    			<td style="height:35px">
     				<spring:message code = 'ezPersonal.t260' /><br> 
       				<spring:message code = 'ezPersonal.t261' />
       			</td> 
@@ -301,8 +306,8 @@
     			<th><spring:message code = 'ezPersonal.t262' /></th> 
     			<td>
     				<spring:message code = 'ezPersonal.t263' />
-      				<input type="text" id=wWidth style="WIDTH:50" value="<c:out value = '${personalPopupVO.width}' />"> &nbsp;&nbsp;&nbsp;&nbsp; <spring:message code = 'ezPersonal.t264' />
-      				<input type="text" id=wHeight style="WIDTH:50" value="<c:out value = '${personalPopupVO.height}' />">
+      				<input type="text" id=wWidth style="width:50px;height:22px;" value="<c:out value = '${personalPopupVO.width}' />"> &nbsp;&nbsp;&nbsp;&nbsp; <spring:message code = 'ezPersonal.t264' />
+      				<input type="text" id=wHeight style="width:50px;height:22px;" value="<c:out value = '${personalPopupVO.height}' />">
       			</td> 
   			</tr> 
   			<tr> 
@@ -320,15 +325,15 @@
   			</tr> 
   			<tr> 
     			<th><spring:message code = 'ezPersonal.t154' /></th> 
-    			<td style="padding:0">
+    			<td style="padding:0px">
     				<table width="100%">
 			        	<tr class="primary">
 			          		<th><c:out value = '${langPrimary}' /></th>
-			          		<td><input type="text" name="Input" id=Title style="WIDTH:98%" value="<c:out value = '${personalPopupVO.title}' />"></td>
+			          		<td><input type="text" name="Input" id=Title style="WIDTH:100%" value="<c:out value = '${personalPopupVO.title}' />"></td>
 			        	</tr>
 			        	<tr class="secondary">
 			          		<th><c:out value = '${langSecondary}' /></th>
-			          		<td><input type="text" id=Title2 style="WIDTH:98%" value="<c:out value = '${personalPopupVO.title2}' />"></td>
+			          		<td><input type="text" id=Title2 style="WIDTH:100%" value="<c:out value = '${personalPopupVO.title2}' />"></td>
 			        	</tr>
 			    	</table>
     			</td> 
@@ -348,17 +353,16 @@
   					</tr> 
   					<tr> 
     					<th><spring:message code = 'ezPersonal.t155' /></th> 
-   						<td style="padding:0px; height:320px">
-    						<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" style="padding:0px; height:100%; width:100%; overflow:auto;border:none;"></iframe>
+   						<td style="padding:3px; height:325px">
+    						<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" style="padding:0px; height:100%; width:100%; overflow:auto;border:none; margin-bottom:-3px;"></iframe>
     					</td> 
   					</tr>
   				</td>
   			</tr>
 		</table> 
-		<div class="btnposition"> 
+		<div class="btnpositionNew"> 
 		    <%-- <a class="imgbtn"><span onclick="html_edit()">HTML<spring:message code = 'ezPersonal.t156' /></span></a> --%>
 		    <a class="imgbtn"><span onclick="OK_Click()"><spring:message code = 'ezPersonal.t12' /></span></a>
-		    <a class="imgbtn"><span onclick="window.close()"><spring:message code = 'ezPersonal.t13' /></span></a>
 		</div>
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

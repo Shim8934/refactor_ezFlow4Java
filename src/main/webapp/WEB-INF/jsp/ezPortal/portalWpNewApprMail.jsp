@@ -101,8 +101,8 @@
     			<!-- graph -->
     			<section class="apprgraph">
     				<div class="mailgraph_area">
-    					<p class="title"><img src="/images/<spring:message code='main.t00025' />/main/mail_graphtitle.gif" alt="<spring:message code='main.t00011' />" width="146" height="28"></p>
-    					<p class="graphimg"><img id="mailquateimg" src="/images/<spring:message code='main.t00025' />/main/mailgraph/g000.gif" width="146" height="114"></p>
+    					<%-- 2018-05-25 홍승비 - 메일 용량 표시 변경 --%>
+    					<div id="mailquatersize" style="width:168px; height:134px;margin-top:-20px;margin-left:-9px;margin-bottom:10px;"></div>
     					<ul>
     						<li><spring:message code='main.t00012' /><strong id="UseMailBox" class="rtxt"></strong></li>
     						<li><spring:message code='main.t00013' /><strong id="MailBoxSize"></strong></li>
@@ -131,6 +131,8 @@
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1' />"></script>
+		 <script src="/js/jquery/raphael.2.1.0.min.js"></script>
+		 <script src="/js/jquery/justgage.1.0.1.min.js"></script>
 		<script type="text/javascript">
 		    var arr_userinfo = new Array();
 		    
@@ -149,6 +151,7 @@
 		    var strLang1_NewApprMail = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
 		    var pNoneActiveX = "${noneActiveX}";
+		    var MailQuater;
 		    
 		    document.onselectstart = function () { return false; };
 		    
@@ -587,6 +590,17 @@
 	
 		    function getMailList_after() {
 		        if (xmlhttp_getMailGraph_NewApprMail == null || xmlhttp_getMailGraph_NewApprMail.readyState != 4) return;
+		        
+		        /* 2018-05-25 홍승비 - 메일 용량 표시 변경 */
+		        document.getElementById("mailquatersize").innerHTML = "";
+		    	MailQuater = new JustGage({
+		            id: "mailquatersize",
+		            value: 0,
+		            min: 0,
+		            max: 100,
+		            showInnerShadow: true,
+		            levelColorsGradient : true,
+		        });
 	
 		        try {          
 		            document.getElementById("MailList").innerHTML = "";
@@ -594,18 +608,11 @@
 		            var xmldom = createXmlDom();
 		            xmldom = xmlhttp_getMailGraph_NewApprMail.responseXML;
 		            
+		            MailQuater.refresh(parseInt(getNodeText(xmldom.getElementsByTagName("MAILPERCENT").item(0))));
 		            document.getElementById("InBoxCNT").innerHTML = "(" + getNodeText(xmldom.getElementsByTagName("TOTALCNT").item(0)) + ")";
-		            document.getElementById("UseMailBox").innerHTML = getNodeText(xmldom.getElementsByTagName("MAILBOXDETAIL").item(0));// + " " + getNodeText(xmldom.getElementsByTagName("MAILPERCENT").item(0)) +"%";
-		            var MailPercent = getNodeText(xmldom.getElementsByTagName("MAILPERCENT").item(0));
-		            
-		            if (MailPercent.length == 1)
-		                MailPercent = "00" + MailPercent;
-		            else if (MailPercent.length == 2)
-		                MailPercent = "0" + MailPercent;
-	
-		            document.getElementById("mailquateimg").src = "/images/<spring:message code='main.t00025' />/main/mailgraph/g" + MailPercent + ".gif";
-		            document.getElementById("MailBoxSize").innerHTML = getNodeText(xmldom.getElementsByTagName("MAILBOXSIZE").item(0));
-	
+		            document.getElementById("UseMailBox").innerHTML = getNodeText(xmldom.getElementsByTagName("MAILBOXDETAIL").item(0));
+                    document.getElementById("MailBoxSize").innerHTML = getNodeText(xmldom.getElementsByTagName("MAILBOXSIZE").item(0));
+                    
 		            var listHTML = "";
 		            if (xmldom.getElementsByTagName("NODE").length > 0) {
 		                var listHTML = "<ul class=\"listtype_txt \">";
@@ -633,7 +640,7 @@
 		        }
 		    }
 	
-		    function open_mail(url) {        
+		    function open_mail(url) {
 		        var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;

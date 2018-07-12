@@ -235,7 +235,9 @@ public class EzTaskController extends EgovFileMngUtil {
 	            //logger.debug("Value: " + value + " || Key: " + key);
 	            
 				dateList += key + ",";
-				String convertDate = commonUtil.getDateStringInUTC(key + " 00:00:00", userInfo.getOffset(), true);
+				/*2018-05-18 구해안 1일 클릭시 전달 말일로 넘어가는 버그, UTC -> 현재날짜로 수정*/
+				/*String convertDate = commonUtil.getDateStringInUTC(key + " 00:00:00", userInfo.getOffset(), true);*/
+				String convertDate = key + " 00:00:00";
 				int comRate = ezTaskService.selectCompletionOfRepTask(taskID, convertDate, tenantID);
 				completeRateList += Integer.toString(comRate) + ",";
 				
@@ -288,6 +290,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 *  업무상세화면 의견목록 조회
 	 */
+	/*2018-05-17 구해안 댓글삭제 버튼 유효성검사를 위해 userInfo Model로 넘기도록 수정*/
 	@RequestMapping(value = "/ezTask/getTaskCommentList.do")
 	public String getTaskCommentList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getTaskCommentList started.");
@@ -299,6 +302,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		List<TaskCommentVO> taskCommentList = ezTaskService.getCommentList(taskID, userInfo.getOffset(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		model.addAttribute("taskCommentList", taskCommentList);
+		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("getTaskCommentList ended.");
 		
@@ -479,7 +483,9 @@ public class EzTaskController extends EgovFileMngUtil {
             String key = entry.getKey();
             Integer value = entry.getValue();
             
-			String covertDate = commonUtil.getDateStringInUTC(key + " 00:00:00", userInfo.getOffset(), true);
+            /*2018-05-18 구해안 1일 클릭시 전달 말일로 넘어가는 버그, UTC -> 현재날짜로 수정*/
+			/*String covertDate = commonUtil.getDateStringInUTC(key + " 00:00:00", userInfo.getOffset(), true);*/
+            String covertDate = key + " 00:00:00";
 			int comRate = ezTaskService.selectCompletionOfRepTask(taskID, covertDate, tenantID);
 			rateList.add(Integer.toString(comRate));
 			int status = ezTaskService.getStatusOfRepTask(taskID, covertDate, tenantID);			
@@ -751,7 +757,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		String date = request.getParameter("date");
 		String realStartDate = date + "" + startDate.substring(10, 19);		
 
-		String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);
+		/*2018-05-18 구해안 1일 클릭시 전달 말일로 넘어가는 버그, UTC -> 현재날짜로 수정, realStartDate값을 realDate key값에 넣음*/
+		/*String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);*/	
 		
 		if (request.getParameter("repeatCount") != null || !request.getParameter("repeatCount").equals("")) {
 			repeatCnt = Integer.parseInt(request.getParameter("repeatCount"));
@@ -768,14 +775,14 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		//baonk added		
 		if (taskInfoVO.getTaskType().equals("4") || taskInfoVO.getTaskType().equals("5") || taskInfoVO.getTaskType().equals("6")) {
-			int status = ezTaskService.getStatusOfRepTask(taskInfoVO.getTaskID(), realDate, tenantID);
+			int status = ezTaskService.getStatusOfRepTask(taskInfoVO.getTaskID(), realStartDate, tenantID);
 			taskInfoVO.setTaskStatus(status);			
-			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskInfoVO.getTaskID(), realDate, tenantID);		
+			int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskInfoVO.getTaskID(), realStartDate, tenantID);				
 			taskInfoVO.setCompleteRate(completionPercentage);
 		}
 		//end
 
-		model.addAttribute("realDate", realDate);
+		model.addAttribute("realDate", realStartDate);
 		model.addAttribute("taskInfoVO", taskInfoVO);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("delayColor", configVO.getDelayColor());
@@ -1346,10 +1353,12 @@ public class EzTaskController extends EgovFileMngUtil {
     	taskInfoVO.setEndDate(date + " 23:59:59");		
     	
 		String realStartDate = date + " 00:00:00";
-		String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);
-		int status = ezTaskService.getStatusOfRepTask(taskID, realDate, tenantID);
+		/*2018-05-18 구해안 1일 클릭시 전달 말일로 넘어가는 버그, UTC -> 현재날짜로 수정*/
+		/*		String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);*/
+				
+		int status = ezTaskService.getStatusOfRepTask(taskID, realStartDate, tenantID);
 		taskInfoVO.setTaskStatus(status);
-		int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realDate, tenantID);
+		int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realStartDate, tenantID);
 		taskInfoVO.setCompleteRate(completionPercentage);    
 		
 		Map<String, Integer> result = ezTaskService.getRepTaskInfo(date, taskID, offset, primary, tenantID, taskInfoVO);

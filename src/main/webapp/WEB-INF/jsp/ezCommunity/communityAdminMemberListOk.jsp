@@ -9,6 +9,15 @@
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
+		<script>
+			/*  2018-06-05 홍승비 - html 인라인 이벤트 코드 스크립트로 분리 */
+			function submit() {
+				document.master.submit();
+			}
+			function back() {
+				history.back(-1);
+			}	
+		</script>
 		
 		<c:choose>
 			<c:when test="${userMode == '1' }">
@@ -130,10 +139,17 @@
 		
 		<div class="btnposition btnpositionNew">
         <!-- // 20090902 : 표준모듈 패치 -->
-        	<c:if test="${cID != userInfo.id && !(mode == 'master' && cID != userInfo.id && existOutList) }">
-        		<a class="imgbtn" name="Submit"  onClick="javascript:document.master.submit();"><span><spring:message code = 'ezCommunity.t532' /></span></a>
-	            <a class="imgbtn"name="Submit2"  onClick="javascript:history.back(-1);"><span><spring:message code = 'ezCommunity.t533' /></span></a>
-            </c:if>
+	        <c:choose>       
+	        	<c:when test="${cID != userInfo.id && !(mode == 'master' && cID != userInfo.id && existOutList) }">
+	        		<a class="imgbtn" name="Submit"  onClick="submit()"><span><spring:message code = 'ezCommunity.t532' /></span></a>
+		            <a class="imgbtn"name="Submit2"  onClick="back()"><span><spring:message code = 'ezCommunity.t533' /></span></a>
+	            </c:when>
+	            
+	            <%-- 2018-06-05 홍승비 - 마스터가 자기 자신을 탈퇴/이취임 선택 시 뒤로가기 버튼 추가 --%>
+	            <c:when test="${cID == userInfo.id}">
+	            	<a class="imgbtn"name="Submit2"  onClick="back()"><span><spring:message code = 'ezCommunity.t987' /></span></a>
+	        	</c:when>
+	    	</c:choose>
 		</div>
 		
 		<form name="master" method="post" action="/ezCommunity/adminMemberListOkGo.do">

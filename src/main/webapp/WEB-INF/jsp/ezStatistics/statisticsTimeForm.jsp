@@ -335,7 +335,7 @@
 	                </span>
 	            </td>
 	            <td>
-	                <div id="mainmenu" style="float: right; height: 28px;">
+	                <div id="mainmenu" style="float: right; height: 28px;margin:3px 0px !important">
 	                    <ul>
 	                        <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
 	                    </ul>

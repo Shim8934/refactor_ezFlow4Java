@@ -63,7 +63,10 @@
 			var repetition = "<c:out value = '${taskInfoVO.repetition}' />";		
 			var repetitiondel = "";
 			var mode = "<c:out value = '${mode}' />";	
-
+			/*2018-05-23 구해안 버그 수정을 위해 boolean 변수 2개 추가*/
+			var timeCheck = false;
+			var radioCheck = false;
+			
 			$(function () {
 				 $("#Sdatepicker").datepicker({
 					changeMonth: true,
@@ -610,6 +613,7 @@
 				                        <c:choose>
 				                           <c:when test="${taskID == ''}">				                              
 				                              <li style="display:none"><span onClick="check_name()"><spring:message code='ezTask.t11' /></span></li>
+											  <li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
 				                              <li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
 				                              <li class="sel" style="background: none; border: 0; padding-left: 0; padding-right: 0; padding-top: 4px; color: #fff; cursor: default;display:none"> <img src="/images/pbar.gif" style="vertical-align:middle" ><spring:message code='ezTask.t156' /></li>
 				                           </c:when>
@@ -630,8 +634,7 @@
 								</div>
 								<div id="close">
 									<ul>
-										<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
-										<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
+										<li><span onClick="close_onclick()"></span></li>
 									</ul>
 								</div>
 							</c:when>
@@ -665,9 +668,11 @@
 										</div>
 										<div id="close">
 											<ul>
-												<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
-												<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
+												<li><span onClick="close_onclick()"></span></li>
 											</ul>
+										</div>
+										<div class="btnposition btnpositionNew">
+										    <a class="imgbtn" onClick="save_task()" ><span><spring:message code='ezTask.t96' /></span></a>
 										</div>
 									 </c:when>
 									 
@@ -701,14 +706,16 @@
 														<option value='2' selected><spring:message code='ezTask.t172' /></option>
 														<option value='3'><spring:message code='ezTask.t173' /></option>
 													</select>
-												</li>
+												</li>												
 											</ul>
 										</div>
 										<div id="close">
 											<ul>
-												<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
-												<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
+												<li><span onClick="close_onclick()"></span></li>
 											</ul>
+										</div>
+										<div class="btnposition btnpositionNew">
+										    <a class="imgbtn" onClick="save_task()" ><span><spring:message code='ezTask.t96' /></span></a>
 										</div>
 									  </c:otherwise>
 								 </c:choose>								
@@ -717,7 +724,6 @@
 						
 						<script type="text/javascript">
 							selToggleList(document.getElementById("menu"), "ul", "li", "0");
-							selToggleList(document.getElementById("close"), "ul", "li", "0");
 						</script>
 					</td>
 				</tr>
@@ -1025,7 +1031,7 @@
 						<c:choose>
 							<c:when test="${ mode == '2'}">
 								<tr>
-									<td id="EdtorSize" style="height: 340px;">
+									<td id="EdtorSize" style="height: 440px;">
 										<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; margin-top: 2.3px; height: 100%; width: 99.7%; overflow: auto;"></iframe>
 									</td>
 								</tr>
@@ -1074,9 +1080,6 @@
 				
 			</table>
 		</div>
-		<c:if test="${ mode == '1'}">
-			<div class="btnpositionNew">&nbsp;</div>
-		</c:if>	
 		<div id="printScreen" style="display: none">
 			<table class="content">
 				<tr>

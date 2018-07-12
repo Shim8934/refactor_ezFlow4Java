@@ -776,6 +776,11 @@
 </XML>
 <!-- <OBJECT id="behave1" style="DISPLAY: none" height="0" width="0" classid="clsid:F8E93A35-2D04-4E2C-A04D-87947594C674"></OBJECT> -->
 <h1><spring:message code='ezApprovalG.t1225'/></h1>
+<div id="close">
+    <ul>
+        <li><span id="btn_CancelOK" onclick="return btn_CancelOK_onclick()"></span></li>
+    </ul>
+</div>
 <table>
   <tr>
     <td><div id="tabnav" style="width:383px">
@@ -793,7 +798,7 @@
           <td id="TD_Receipt2" style="display:none">
           <div class="box" style="overflow:auto;width:380px;height:389px" id="TreeView"></div>
               <input id="txtOuterDeptName" style="width: 150px;margin-top:2px;" name="textUser2" onkeyup="return btnSearchDept_onKeyPress2(event)"  maxlength="50">
-              <a style="margin-top: 2px" class="imgbtn"><span id="Span7" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
+              <a style="margin-top: 2px" class="imgbtn imgbck"><span id="Span7" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
           </td>
         </tr>
       </table>
@@ -805,9 +810,8 @@
   </tr>
 </table>
 
-<div class="btnposition">
+<div class="btnpositionNew">
   <a class="imgbtn"><span id="btn_OpinionOK" onclick="return btn_OpinionOK_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-  <a class="imgbtn"><span id="btn_CancelOK" onclick="return btn_CancelOK_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>  
 </div>
 <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

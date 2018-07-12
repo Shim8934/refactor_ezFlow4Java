@@ -741,6 +741,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         }
 	}
 		
+	public void updateDBData_userPermission(OrganUserVO vo) throws Exception {
+        update("EzOrganAdminDAO.updateDBData_userPermission", vo);		
+	}
+	
     private void updatePropertyForLocal(Map<String, Object> map) throws Exception{
         update("EzOrganAdminDAO.updateProperty", map);
     }
@@ -1263,6 +1267,13 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     
     public void insertCompanyInfo_I19(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I19", map);
+    }
+    
+    public void insertCompanyInfo_I20(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I20", map);
+    }
+    public void insertCompanyInfo_I21(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I21", map);
     }
     
 	/**
@@ -1957,5 +1968,15 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     // 사용자 이름,부서 목록개수를 반환한다.
     public int getUserCount(Map<String, Object> map) throws Exception {
     	return (int) select("EzOrganAdminDAO.getUserCount", map);        
+    }
+    
+    //삭제처리된 유저의 데이터를 저장한다. 2018-06-04 홍대표
+    public void insertDelUserDBData_I (Map<String, Object> map) throws Exception {
+		insert("EzOrganAdminDAO.insertDelUserDBData_I", map);
+	}
+    
+    //삭제처리된 유저의 데이터를 삭제한다. 2018-06-04 홍대표
+    public void deleteDelUserDBData_I (Map<String, Object> map) throws Exception {
+    	delete("EzOrganAdminDAO.deleteDelUserDBData_I", map);
     }
 }

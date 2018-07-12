@@ -10,6 +10,8 @@
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
+		<!-- 2018-05-16 구해안 스케쥴의 strLang 참조-->
+		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
@@ -116,29 +118,104 @@
 		            }
 		        }
 		    }
-		
-		    function cancel_click() {
-		        if (ReturnFunction != null)
-		            ReturnFunction("cancel");
+			
+		    /*2018-05-16 구해안 취소버튼 수정*/
+		    function cancel_click(){
+		    	parent.DivPopUpHidden();
 		        window.close();
 		    }
-		
+		    /*2018-05-16 구해안 일정관리를 참조하여 년 월 일 가져오는 함수 작성*/
+		    function getPickerDate()
+		    {
+		        var rtnString = "";
+		        if(document.getElementsByName("optRangeEnd")[0].checked == true)
+		        {
+		            var sdate = "";		            
+	                var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	                var sYear = sDate.split("-")[0];
+	                var sMon = sDate.split("-")[1] -1;
+	                var sDay = sDate.split("-")[2];		              
+	               
+	                sdate = new Date(sYear, sMon, sDay);
+		            
+		            rtnString = makeTermDate(sdate) + " ~ " + strLang46;	          
+		            
+		            return rtnString;
+		        }
+		        else if(document.getElementsByName("optRangeEnd")[1].checked == true)
+		        {
+	
+		            var sdate = "";	            
+	                var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	                var sYear = sDate.split("-")[0];
+	                var sMon = sDate.split("-")[1] -1;
+	                var sDay = sDate.split("-")[2];		               
+	
+		            sdate = new Date(sYear, sMon, sDay);
+		           
+		            rtnString = makeTermDate(sdate) + " ~ " + list_ReCount.value + strLang47;
+		        
+		            return rtnString;
+		        }
+		        else if(document.getElementsByName("optRangeEnd")[2].checked == true)
+		        {
+		            var sdate = "";
+		            var edate = "";
+		           
+	                var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	                var sYear = sDate.split("-")[0];
+	                var sMon = sDate.split("-")[1] -1;
+	                var sDay = sDate.split("-")[2];		                
+
+	                var eDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	                var eYear = eDate.split("-")[0];
+	                var eMon = eDate.split("-")[1] -1;
+	                var eDay = eDate.split("-")[2];	
+
+	                sdate = new Date(sYear, sMon, sDay);
+	                edate = new Date(eYear, eMon, eDay);		           
+		            
+		            rtnString = makeTermDate(sdate) + " ~ " + makeTermDate(edate);
+	
+		            return rtnString;
+		        }				 
+		    }
+			/*2018-05-16 구해안 버튼 클릭시 taskWrite의 반복설정 text에 자세하게 설정한 정보를 보이게 수정, 일정관리를 참조하였으며 시간,분은 제외하고 년, 월, 일만 반영하도록 수정*/
 		    function ok_click() {
-		
 		        var rtn = new Array();
 		        rtn["SDATE"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        rtn["EDATE"] = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		
 		        var repetition = "";
 		
-		        var startdate = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
-		        var enddate = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
-		
-		        if (startdate > enddate) {
-		            alert("<spring:message code='ezTask.t22' />");
-		            return;
+		        var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()
+		    	var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()
+		        var startYear = startDate.split("-")[0];
+		    	var endYear = endDate.split("-")[0];
+		    	var startMonth = startDate.split("-")[1];
+		    	var endMonth = endDate.split("-")[1];
+		    	var startDay = startDate.split("-")[2];
+		    	var endDay = endDate.split("-")[2];
+		    	var stime = $('#Stimepicker').val()		        
+		       
+				/*2018-05-16 구해안 라디오 버튼 끝날자 미선택시에도 조건체크 걸리는 것 수정*/
+		        if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) > parseInt(endDay))) {
+		    	    if (document.getElementsByName("optRangeEnd")[2].checked == true) {
+		    	        alert("<spring:message code='ezTask.t22' />");		
+		    	        return;
+		    	    }
+		    	}
+		        if (document.getElementsByName("optRangeEnd")[2].checked == false) {
+		        	if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) > parseInt(endDay))) {
+		        		radioCheck = true;
+		        	}
 		        }
-		
+		        
+		        var scheduleTerm = "";	
+		        var recurString = "";	
+		        
+		        scheduleTerm = getPickerDate();
+		        
 		        if (range1.checked == true)
 		            repetition = "-1";
 		        else if (range2.checked == true) {
@@ -161,8 +238,10 @@
 		        if (mpDaily.checked == true) {
 		            repetition += "|0";
 		
-		            if (id0D2.checked == true)
+		            if (id0D2.checked == true){
 		                repetition += "|0";
+		            	recurString = strLang45;
+		            }
 		            else {
 		                if (txt_De.value == parseInt(txt_De.value) && parseInt(txt_De.value) > 0)
 		                    repetition += "|" + parseInt(txt_De.value);
@@ -171,6 +250,12 @@
 		                    txt_De.focus();
 		                    return;
 		                }
+		                if(txt_De.value == "1"){
+		                    recurString = strLang34;						
+		    			}
+		    			else{
+		    			    recurString = txt_De.value + strLang81;						
+		    			}
 		            }
 		        }
 		        else if (mpWeekly.checked == true) {
@@ -187,15 +272,30 @@
 		            var days = "";
 		            var checks = daytable.getElementsByTagName("input");
 		            for (var i = 0; i < checks.length; i++)
-		                if (checks.item(i).checked == true)
+						if (checks.item(i).checked == true){
+		                	
 		                    days += checks.item(i).value;
-		
+		                    recurString = recurString + getDaystring(i);
+							
+		    		        recurString = recurString + ","			
+		                }
+		            var index = recurString.lastIndexOf(",");
+		    		recurString	= recurString.substring(0,recurString.length-1);
 		            if (days == "") {
 		                alert("<spring:message code='ezTask.t26' />");
 		                return;
 		            }
 		
 		            repetition += "|" + days
+		            
+		            if(txt_We.value == "1")
+		    		{
+		    		    recurString = strLang35 + " " + recurString;
+		    		}
+		    		else
+		    		{
+		    		    recurString = txt_We.value + strLang82 + " " + recurString;
+		    		}
 		        }
 		        else if (mpMonthly.checked == true) {
 		            repetition += "|2";
@@ -219,6 +319,13 @@
 		                    list_MonthlyDays.focus();
 		                    return;
 		                }
+
+		                if(list_MonthInterval.value == 1){
+		    			    recurString = strLang36 + " " + list_MonthlyDays.value + strLang80;
+		    			}
+		    			else{
+		    			    recurString = list_MonthInterval.value + strLang83 + " " + list_MonthlyDays.value + strLang80;						
+		    			}
 		            }
 		            else {
 		                repetition += "|2";
@@ -233,15 +340,23 @@
 		
 		                repetition += "|" + list_MonthlyEach.value;
 		                repetition += "|" + list_MonthlyDay.value;
+
+		                if(list_MonthInterval2.value == 1){
+		    			    recurString = strLang36 + " " + getOdinalString(parseInt(list_MonthlyEach.value)) + " " + getFullDaystring(parseInt(list_MonthlyDay.value));
+		    			} else {					
+		    			    recurString =  list_MonthInterval2.value + strLang83 + " " + getOdinalString(parseInt(list_MonthlyEach.value)) + " " + getFullDaystring(parseInt(list_MonthlyDay.value));					
+		    			}
 		            }
 		        }
 		        else {
 		            repetition += "|3";
-		
+		            recurString = strLang37;
 		            if (optY1.checked == true) {
 		                repetition += "|1";
 		                repetition += "|" + list_Month.value;
-		
+						
+		                recurString = recurString + " " + getMonthString(parseInt(list_Month.value)) + list_YearlyDays.value + strLang80;	
+		                
 		                var enddate0;
 		                var errorMeg;
 		
@@ -283,19 +398,29 @@
 		                repetition += "|" + list_Month2.value;
 		                repetition += "|" + list_YearlyEach.value;
 		                repetition += "|" + list_YearlyDay.value;
+		                
+		                recurString = recurString + " " + getMonthString(parseInt(list_Month2.value)) + " " + getOdinalString(parseInt(list_YearlyEach.value)) + " " + getFullDaystring(parseInt(list_YearlyDay.value));
 		            }
 		        }
 		
 		        rtn["REPETITION"] = repetition;
-
-		        if (ReturnFunction != null)
-		            ReturnFunction(rtn);
-		        else
+		        /*2018-05-16 구해안 task_write_cross */
+		        rtn["REPDISPLAY"] = strLang33 + " " + recurString + " , " + strLang79 + " : " + scheduleTerm;
+		        
+		        if (ReturnFunction != null){
+		            window.parent.timeCheck = true;
+		    		ReturnFunction(rtn);
+		    	    parent.DivPopUpHidden();
+		        }
+		        else{
 		            window.returnValue = rtn;
-		        window.close();
+			        window.close();
+		        }		        
 		    }
 					
 		    function remove_click() {
+		    	//2018.05.23 구해안 반복 일정 취소 시 시가 기준 점 기존으로 변경(스케쥴 참고)
+		    	window.parent.timeCheck = false;
 		        var rtn = new Array();
 		        rtn["SDATE"] = "";
 		        rtn["EDATE"] = "";
@@ -305,6 +430,7 @@
 		            ReturnFunction(rtn);
 		        else
 		            window.returnValue = rtn;
+		        parent.DivPopUpHidden();
 		        window.close();
 		    }
 		    function showMainPattern(idx) {
@@ -421,10 +547,160 @@
 			        $.datepicker.setDefaults($.datepicker.regional['en']);
 			    });
 		    }
+		    function makeTermDate(pdate)
+		    {
+		        var date = new Date(pdate);
+		        var dateYear = date.getFullYear();
+		        var dateMonth = (parseInt(date.getMonth()) + 1) 
+		        var dateDay = date.getDate();
+		        
+		        if(dateMonth < 10)
+		        {
+		            dateMonth = "0" + dateMonth;
+		        }
+		        
+		        if(dateDay < 10)
+		        {
+		            dateDay = "0" + dateDay;
+		        }
+	
+		        return dateYear + "-" + dateMonth + "-" + dateDay;
+		    }
+	
+		    function getDaystring(cnt)
+		    {			
+		        var rtnString = "";
+		        switch (cnt)
+		    	{
+		    		case 0:					   
+		    			rtnString = strLang48;
+		    			break;
+		    		case 1:
+		    			rtnString = strLang49;
+		    			break;
+		    		case 2:
+		    			rtnString = strLang50;
+		    			break;
+		    		case 3:
+		    			rtnString = strLang51;
+		    			break;
+		    		case 4:
+		    			rtnString = strLang52;
+		    			break;
+		    		case 5:
+		    			rtnString = strLang53;
+		    			break;
+		    		case 6:
+		    			rtnString = strLang54;
+		    			break;	
+		    	}				
+		    	return " " + rtnString;
+		    }
+		    function getMonthString(cnt)
+		    {					
+		        var rtnString = "";
+		        switch (cnt)
+		    	{				
+		    		case 1:
+		    			rtnString = strLang67;
+		    			break;
+		    		case 2:
+		    			rtnString = strLang68;
+		    			break;
+		    		case 3:
+		    			rtnString = strLang69;
+		    			break;
+		    		case 4:
+		    			rtnString = strLang70;
+		    			break;
+		    		case 5:
+		    			rtnString = strLang71;
+		    			break;
+		    		case 6:
+		    			rtnString = strLang72;
+		    			break;	
+		    		case 7:
+		    		    rtnString = strLang73;
+		    		    break;	
+		    		case 8:
+		    		    rtnString = strLang74;
+		    		    break;	
+		    		case 9:
+		    		    rtnString = strLang75;
+		    		    break;	
+		    		case 10:
+		    		    rtnString = strLang76;
+		    		    break;	
+		    		case 11:
+		    		    rtnString = strLang77;
+		    		    break;	
+		    		case 12:
+		    		    rtnString = strLang78;
+		    		    break;	
+		    	}
+		    	return rtnString;
+		    }
+		    function getFullDaystring(cnt)
+		    {
+		        var rtnString = "";
+		        switch (cnt)
+		    	{
+		    		case 0:
+		    			rtnString = strLang60;
+		    			break;
+		    		case 1:
+		    			rtnString = strLang61;
+		    			break;
+		    		case 2:
+		    			rtnString = strLang62;
+		    			break;
+		    		case 3:
+		    			rtnString = strLang63;
+		    			break;
+		    		case 4:
+		    			rtnString = strLang64;
+		    			break;
+		    		case 5:
+		    			rtnString = strLang65;
+		    			break;
+		    		case 6:
+		    			rtnString = strLang66;
+		    			break;	
+		    	}
+		    	return rtnString;
+		    }
+		    function getOdinalString(cnt)
+		    {			
+		        var rtnString = "";
+		        switch (cnt)
+		    	{					
+		    		case 1:
+		    			rtnString = strLang55;
+		    			break;
+		    		case 2:
+		    			rtnString = strLang56;
+		    			break;
+		    		case 3:
+		    			rtnString = strLang57;
+		    			break;
+		    		case 4:
+		    			rtnString = strLang58;
+		    			break;
+		    		case 5:
+		    			rtnString = strLang59;
+		    			break;					
+		    	}
+		    	return rtnString;
+		    }
 		</script>
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezTask.t21' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="cancel_click()"></span></li>
+            </ul>
+        </div>
 		<div id="TB_Promise" style="display:none">
 			<h2><spring:message code='ezTask.t29' /></h2>
 			<table class="content">
@@ -442,10 +718,10 @@
 				</tr>
 			</table>
 		</div>
-		<h2><spring:message code='ezTask.t33' /></h2>
-		<table class="popuplist" style="width:100%">
+		<h2 style="margin:0px;padding:0px"><spring:message code='ezTask.t33' /></h2>
+		<table class="popuplist" style="width:100%;margin-bottom:10px">
 			<tr>
-				<td>
+				<td style="padding-left:5px">
 					<input id="mpDaily" type="radio" name="optMainPattern" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;" onClick='showMainPattern(0);'>
 					<label for="mpDaily" style="vertical-align:middle;" accesskey="D"><spring:message code='ezTask.t34' /><u>D</u>)</label>
 					<input id="mpWeekly" type="radio" name="optMainPattern" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked onClick='showMainPattern(1);'>
@@ -457,11 +733,11 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="height:60px;">
+				<td style="height:80px;">
 					<div id='divRecurPatterns0' style="display:none;padding-left:5px;">
 						<input id="id0D1" type="radio" name="optDaily" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked>
 						<label for="txt_De" accesskey="V" style="vertical-align:middle;"><spring:message code='ezTask.t38' /><u>V</u>)&nbsp;
-						<input name="text" type="text" id="txt_De" style="Width:40px;height:18px" onFocus='window.document.all["optDaily"][0].checked=true;' value="1" maxlength='3'>
+						<input name="text" type="text" id="txt_De" style="Width:40px;height:18px;text-align: center;" onFocus='window.document.all["optDaily"][0].checked=true;' value="1" maxlength='3'>
 						&nbsp;<spring:message code='ezTask.t39' /></label>
 						<br>
 						<input id="id0D2" type="radio" name="optDaily" style="margin:0px 0px 0px 0px;vertical-align:middle;">
@@ -469,9 +745,9 @@
 					</div>
 					<div id='divRecurPatterns1'>&nbsp;<spring:message code='ezTask.t41' />
 						<label for="txt_We" accesskey="C">
-						<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px;height:18px" value="1">
+						<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px;height:18px;text-align: center;" value="1">
 						<spring:message code='ezTask.t42' /></label>
-						<table id="daytable">
+						<table id="daytable" style="margin-top:3px">
 							<tr>
 								<td style="height:0px;"><input type="checkbox" name="day" value="0" style="vertical-align:middle">
 								<span style="vertical-align:middle"><spring:message code='ezTask.t43' /></span></td>
@@ -496,13 +772,13 @@
 					<div  id='divRecurPatterns2' style="display:none;padding-left:5px;">
 						<input type="radio" name='optMonthly' id="idOM1" style="margin:0px 0px 0px 0px;vertical-align:middle;" checked>
 						<label for="idOM1" accesskey="A" style="vertical-align:middle"><spring:message code='ezTask.t50' /><u>A</u>)&nbsp;</label>
-						<input name="Input" id="list_MonthInterval" style="Width:40px;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="1" maxlength="3">
+						<input name="Input" id="list_MonthInterval" style="Width:40px;text-align: center;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="1" maxlength="3">
 						&nbsp;<spring:message code='ezTask.t51' />
-						<input name="Input" id="list_MonthlyDays" style="Width:40px;" onFocus='window.document.all["optMonthly"][0].checked=true;' maxlength="2">
+						<input name="Input" id="list_MonthlyDays" style="Width:40px;text-align: center;" onFocus='window.document.all["optMonthly"][0].checked=true;' maxlength="2">
 						&nbsp;<spring:message code='ezTask.t52' /><br>
 						<input id="id0M2" type="radio" name='optMonthly' style="margin:0px 0px 0px 0px;vertical-align:middle;">
 						<label for="id0M2" accesskey="E" style="vertical-align:middle"><spring:message code='ezTask.t53' /><u>E</u>)&nbsp;</label>
-						<input name="Input" id="list_MonthInterval2" style="Width:40px;" onFocus='window.document.all["optMonthly"][1].checked=true;' value="1" maxlength="3">
+						<input name="Input" id="list_MonthInterval2" style="Width:40px;text-align: center;" onFocus='window.document.all["optMonthly"][1].checked=true;' value="1" maxlength="3">
 						&nbsp;<spring:message code='ezTask.t51' />
 						<select name="select" id="list_MonthlyEach" onFocus='window.document.all["optMonthly"][1].checked=true;'>
 							<option value="1"><spring:message code='ezTask.t54' /></option>
@@ -538,7 +814,7 @@
 							<option value="11"><spring:message code='ezTask.t235' /></option>
 							<option value="12"><spring:message code='ezTask.t236' /></option>
 						</select>
-						<input name="Input" class="text" id="list_YearlyDays" style="Width:40px;" onFocus='window.document.all["optYearly"][0].checked=true;' maxlength="2">
+						<input name="Input" class="text" id="list_YearlyDays" style="Width:40px;text-align: center;" onFocus='window.document.all["optYearly"][0].checked=true;' maxlength="2">
 						&nbsp;<spring:message code='ezTask.t62' />
 						<c:if test="${userinfo.lang == 3}" >
 							<input type="checkbox" value="1" id="moonday" style="margin:0px 0px 2px 0px;vertical-align:middle;">
@@ -585,28 +861,43 @@
 			</tr>
 		</table>
 		<h2><spring:message code='ezTask.t64' /></h2>
+		<!-- 2018-05-16 구해안 테이블 UI수정 (좌측 td rowspan="4"주고 통합 및 용어, 위치 변경 하고 시작일 추가)-->
 		<table class="content">
-			<tr style="height:90px;">
-				<th><spring:message code='ezTask.t65' /></th>
-				<td style="padding:0px;">
-					<div style="height:25px;margin-top:5px"><input type="text" id="Sdatepicker" style="width:80px;text-align:center;margin-left:5px;margin-bottom:1px;" readonly="readonly"></div>					
-					<div style="height:25px;"><input type="radio" name="optRangeEnd" id="range1" value="-1" checked style="vertical-align:middle;margin-top:3px"><span><spring:message code='ezTask.t73' /></span></div>
-					<div style="height:32px;">
+			<tr>
+		    	<th align="right" rowspan="4">&nbsp;&nbsp;&nbsp;<spring:message code='ezTask.t65' />&nbsp;&nbsp;&nbsp;</th>
+		    	<td width="100%">		    		
+		    		<div style="height:25px;margin-top:5px">
+		    			<span style="margin-left: 5px;" class="repeatRange"><spring:message code='ezTask.t121' /></span>
+		    			<input type="text" id="Sdatepicker" style="width:80px;text-align:center;margin-left:3px;margin-bottom:1px;" readonly="readonly">
+		    		</div>
+		    	</td>
+		  	</tr>
+		  	<tr>
+		  		<td>
+		  		<div style="height:25px;">
+		  			<input type="radio" name="optRangeEnd" id="range1" value="-1" checked style="vertical-align:middle;margin-top:3px"><span><spring:message code='ezTask.t73' /></span>
+		  		</div>
+		  		</td>
+		  	</tr>
+		  	<tr>
+		    	<td>
+		    		<div style="height:32px;">
 						<input type="radio" id="range2" name="optRangeEnd" value="1" style="vertical-align:middle;margin-top:5px"><span><spring:message code='ezTask.t74' /></span>
 						<input id="list_ReCount" maxlength="3" onFocus="range2.checked = true" size="4" value='10'>
 						<span style="vertical-align:middle"><spring:message code='ezTask.t75' /></span>
 					</div>
-					<div style="height:32px">
-						<input id="range3" type="radio" name="optRangeEnd" value="0" style="margin-top:0px"><span style="vertical-align:middle"><spring:message code='ezTask.t76' /></span>
-						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-					</div>	
-				</td>
-			</tr>
-		</table>
-		<div class="btnposition">
-			<a class="imgbtn" onClick="remove_click()" ><span><spring:message code='ezTask.t77' /></span></a>
+		      	</td>
+		  	</tr>
+		  	<tr>
+		    	<td>
+		    		<input id="range3" type="radio" name="optRangeEnd" value="0" style="margin-top:0px"><span style="vertical-align:middle"><spring:message code='ezTask.t76' /></span>
+					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">		    		
+		    	</td>
+		  	</tr>
+		</table>		
+		<div class="btnposition btnpositionNew">
 			<a class="imgbtn" onClick="ok_click()" ><span><spring:message code='ezTask.t19' /></span></a>
-			<a class="imgbtn" onClick="cancel_click()" ><span><spring:message code='ezTask.t20' /></span></a>
+			<a class="imgbtn" onClick="remove_click()" ><span><spring:message code='ezTask.t77' /></span></a>
 		</div>
 	</body>
 </html>

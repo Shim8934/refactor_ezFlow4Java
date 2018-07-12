@@ -6,7 +6,6 @@ import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,7 +16,6 @@ import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
-import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -1549,7 +1547,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userEmail = userInfo.getId() + "@" + domainName;
-		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		IMAPAccess ia = null;
@@ -1560,35 +1557,13 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 			Folder folder = ia.getFolder(ezEmailUtil.getInboxFolderId());		
 			folder.open(Folder.READ_ONLY);
-	        UIDFolder uidFolder = (UIDFolder)folder;
-	        
-	        Message[] messages = ezEmailUtil.searchFolder(folder, "", "", null, sdf.parse(dateTime), false, null, true, false, true);
-	        
-	        // sort the messages
- 			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
-	        
- 			// set mailCount
- 			int unreadCount = ia.getUnreadCount(ezEmailUtil.getInboxFolderId());
- 			if (unreadCount < count) {
- 				count = unreadCount;
- 			}
- 			
- 			int messageCount = messages.length;
- 			
- 			if ( messageCount < 0 ) {
- 				messageCount = 0;
- 			}
- 			
- 			messages = Arrays.copyOfRange(messages, 0, messageCount);
-
- 			// pre-fetch
-	        FetchProfile fp = new FetchProfile();
-	        fp.add(UIDFolder.FetchProfileItem.UID);
-	        fp.add(FetchProfile.Item.ENVELOPE);
-	        folder.fetch(messages, fp);
+			
+	        Message[] messages = ezEmailUtil.searchFolder(ia, userEmail, folder, "", "", null, sdf.parse(dateTime), false, 
+	        		true, false, "receivedDate", false, 0, 30, true, null, userInfo.getTenantId());
 	        
 	        for (int i=0; i<messages.length; i++) {
 	        	Message message = messages[i];
+	        	UIDFolder uidFolder = (UIDFolder)message.getFolder();
 	        	
 	        	Date receivedDate = message.getReceivedDate();
 	        	String receivedDateStr = sdf.format(receivedDate);
@@ -1676,7 +1651,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",searchValue=" + searchValue);
 		
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
-				
 		String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
 		inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
 		inputParams += "&searchValue=" + URLEncoder.encode(searchValue, "UTF-8");
@@ -2099,4 +2073,62 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("getSecureMailReaderInfo ended.");
 		return list;
 	}
+	
+	@Override
+	public String checkDistributionIsIncluded (String standardCn, String searchCn, int tenantId) throws Exception {
+		logger.debug("checkDistributionIsIncluded started.");
+		logger.debug("standardCn=" + standardCn + ", searchCn=" + searchCn);
+		
+		String isIncluded = "NO";
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String inputParams = "cn=" + searchCn + "&domain=" + domainName;
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistribution";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		logger.debug("response=" + response);
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				JSONArray array = (JSONArray)responseObj.get("result");
+				
+				if (array != null) {
+					
+					JSONObject obj = null;
+					while (isIncluded.equals("NO")) {
+						
+						if (array.toString().indexOf("group") != -1) {
+							for (int i = 0; i < array.size(); i++) {
+								obj = (JSONObject)array.get(i);
+								if (((String)obj.get("class")).equals("group")) {
+									String resultAddress[] = ((String)obj.get("cn")).split("@");
+									String resultCn = resultAddress[0];
+									
+									if (resultCn.equals(standardCn)) {
+										isIncluded = "YES";
+										break;
+									} else if (!resultCn.equals(standardCn)) {
+										isIncluded = checkDistributionIsIncluded(standardCn, resultCn, tenantId);
+									}
+								} 
+							}
+						} else {
+							isIncluded = "NO";
+							break;
+						}
+					}
+				} else {
+					throw new Exception("JGwServer ERROR");
+				}
+			}
+		
+		}
+			
+		logger.debug("checkDistributionIsIncluded ended.");
+		return isIncluded;
+	}
+	
 }

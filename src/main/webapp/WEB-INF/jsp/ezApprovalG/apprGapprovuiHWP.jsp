@@ -300,6 +300,11 @@
 		            }
 		
 		            try {
+		            	var agent = navigator.userAgent.toLowerCase();
+		            	
+		            	if (!((navigator.appName == 'Netscape' && agent.indexOf('trident') != -1) || agent.indexOf("msie") != -1)) {
+		            		throw "hwp";
+		            	}
 		                HwpCtrl.SetImgReg();
 		                HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
 		                HwpCtrl.SetSaveMode(1);
@@ -327,7 +332,12 @@
 		            HwpCtrl.ezSetScrollPosInfo(0);
 		        }
 		        catch (e) {
-		            alert("<spring:message code='ezApprovalG.t1373'/>" + e.description);
+		        	if (e == "hwp") {
+		        		alert("한글(hwp)결재문서는 Internet Explorer에서만 열람 가능합니다.");	
+		        		window.close();
+		        	} else {
+			            alert("<spring:message code='ezApprovalG.t1373'/>" + e.description);
+		        	}
 			        hideProgress();
 			    }
 		    }
@@ -738,17 +748,19 @@
 			        var pInformationContent = "<spring:message code='ezApprovalG.t36'/>";
 			        var Ans = OpenInformationUI(pInformationContent);
 			        if (!Ans) return;
-			
-			        var chkpass = chk_Passwd(pingUserID);
-			        if (chkpass == "False") {
-			            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
-				        OpenAlertUI(pAlertContent);
-				        return;
-				    } else if (chkpass == "cancel") {
-				        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+			        
+			        if ("${approvalPWD}" != "N") {
+				        var chkpass = chk_Passwd(pingUserID);
+				        if (chkpass == "False") {
+				            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
 					        OpenAlertUI(pAlertContent);
 					        return;
-					}
+					    } else if (chkpass == "cancel") {
+					        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+						    OpenAlertUI(pAlertContent);
+						    return;
+						}
+			        }
 			
 			        var ret = openOpinionUI("BanSong");
 			        if (ret != "cancel") {
@@ -792,17 +804,19 @@
 			        var pInformationContent = "<spring:message code='ezApprovalG.t39'/>";
 			        var Ans = OpenInformationUI(pInformationContent);
 			        if (!Ans) return;
-			
-			        var chkpass = chk_Passwd(pingUserID);
-			        if (chkpass == "False") {
-			            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
-				        OpenAlertUI(pAlertContent);
-				        return;
-				    } else if (chkpass == "cancel") {
-				        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
-				        OpenAlertUI(pAlertContent);
-				        return;
-				    }
+			        
+			        if ("${approvalPWD}" != "N") {
+				        var chkpass = chk_Passwd(pingUserID);
+				        if (chkpass == "False") {
+				            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
+					        OpenAlertUI(pAlertContent);
+					        return;
+					    } else if (chkpass == "cancel") {
+					        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+					        OpenAlertUI(pAlertContent);
+					        return;
+					    }
+			        }
 			
 			        var ret = openOpinionUI("BoRyu");
 			
@@ -822,19 +836,21 @@
 			    }
 	
 			    function btnJunKyul_onclick() {
-			        var checkpass = chk_Passwd(pingUserID);
-			
-			        if (checkpass == "False") {
-			            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
-				        OpenAlertUI(pAlertContent);
-				        return;
-				    }
-				    else if (chkpass == "cancel") {
-				        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
-			            OpenAlertUI(pAlertContent);
-			            return;
-			        }
-			
+			    	if ("${approvalPWD}" != "N") {
+				        var checkpass = chk_Passwd(pingUserID);
+				
+				        if (checkpass == "False") {
+				            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
+					        OpenAlertUI(pAlertContent);
+					        return;
+					    }
+					    else if (chkpass == "cancel") {
+					        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+				            OpenAlertUI(pAlertContent);
+				            return;
+				        }
+			    	}
+			    	
 			        isjunkyul = true;
 			
 			        var rtnVal = upDateAprLine();
@@ -1006,7 +1022,7 @@
 				    }
 			
 			        var g_SepAttachLVXml = "";
-			        g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml");
+			        g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml", true);
 			        if (!g_SepAttachLVXml)
 			            g_SepAttachLVXml = "";
 			
@@ -1160,9 +1176,9 @@
 			                pSpecialRecordCode = ret[10];
 			                pLimitRange = ret[12];
 			                pPageNum = ret[13];
-			                //문서 공개 범위 설정
-// 			                setPublicFlag();
-			                setPublicFlag2();
+			                // 문서 공개 범위 설정 (대민 공개 여부)
+			                // setPublicFlag2();
+			                setPublicFlag();
 			                
 			                SummaryFlag = true;
 			                savexmlhttp = null;
@@ -1219,7 +1235,7 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li id="btnClose"><span onclick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
+	                        <li id="btnClose"><span onclick="return btnClose_onclick()"></span></li>
 	                    </ul>
 	                </div>
 	

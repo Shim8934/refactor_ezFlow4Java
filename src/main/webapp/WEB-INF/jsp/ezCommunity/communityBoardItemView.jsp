@@ -63,11 +63,6 @@
 	    		$("#message").contents().find("body").css("word-wrap", "break-word");
 	    		$("#message").contents().find("body").css("font-family", "Gulim, arial, verdana");
 				$("#message").contents().find("body").css("font-size", "13px");
-// 	    		if (gubun != 2) {
-// 	    			self.resizeTo(765, 800);
-// 	    		} else {
-// 	    			self.resizeTo(765, 800);
-// 	    		}
 	    		
 	    	    try {
 	    	    	var html = "";
@@ -575,17 +570,17 @@
 // 	            GetOpenWindow(szHref, "", 520, 400);
 	        	var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var left = (width - 600) / 2;
-		        var top = (heigth - 415) / 2;
+		        var left = (width - 620) / 2;
+		        var top = (heigth - 425) / 2;
 		        var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
-		        var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
+		        var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
 		        if (CrossYN()) {
 		            item_readlist_cross_dialogArguments[0] = "";
 		            item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
-		            DivPopUpShow(600, 415, szHref);
+		            DivPopUpShow(620, 425, szHref);
 		        }
 		        else
-		            window.open(szHref, "", "width=600, height=415, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
+		            window.open(szHref, "", "width=620, height=425, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
 		    }
 		    function ReaderList_Complete() {
 		        DivPopUpHidden();
@@ -854,10 +849,6 @@
 		</script>
 	</head>
 	<body class = "popup">
-		<script type="text/javascript">
-			var MSIE = window.navigator.userAgent.indexOf("MSIE");
-			var Trident = window.navigator.userAgent.indexOf("Trident");
-		</script>
 		<table class="layout">
 	        <tr>
 	            <td style="height: 20px">
@@ -867,19 +858,11 @@
 	                    	<c:choose>
 	                    		<c:when test="${pBoardID == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'}">
 	                    			<li id='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezCommunity.t207'/></span></li>
-	                    			
-<%-- 	                    			<c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
-<%-- 	                    				<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li> --%>
-<%-- 	                    			</c:if> --%>
 	                    		</c:when>
 	                    		
 	                    		<c:when test="${pReservedItem == 'true' }">
 									<li id='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezCommunity.t6'/></span></li>
 			                        <li id='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezCommunity.t208'/></span></li>
-			                        
-<%-- 			                        <c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
-<%--  	                    				<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li> --%>
-<%--  	                    			</c:if> --%>
 								</c:when>
 								
 								<c:otherwise>
@@ -889,11 +872,6 @@
 					                        <li id='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezCommunity.t6'/></span></li>
 					                        <li id='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezCommunity.t208'/></span></li>
 					                        <li id='btn_Mail'><span onclick='mail_boarditem()'><spring:message code='ezCommunity.t950'/></span></li>
-					                        
-<%-- 					                        <c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
-<%-- 					                        	<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li> --%>
-<%-- 					                        </c:if> --%>
-					                        
 					                        <li id='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezCommunity.t951'/></span></li>
 										</c:when>
 										
@@ -907,10 +885,6 @@
 					                        </c:if>
 					                        
 					                        <li id='btn_Mail'><span onclick='mail_boarditem()'><spring:message code='ezCommunity.t950'/></span></li>
-					                        
-<%-- 					                        <c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
-<%-- 					                        	<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li> --%>
-<%-- 					                        </c:if> --%>
 					                        
 					                        <c:if test="${boardInfo.gubun != '2' }">
 					                        	<li id='btn_ReaderList'><span onclick='ReaderList()'><spring:message code='ezCommunity.t952'/></span></li>
@@ -926,12 +900,6 @@
 				                        		<li id='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezCommunity.t6'/></span></li>
 					                        	<li id='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezCommunity.t208'/></span></li>
 				                        	</c:if>
-			                        		
-					                        <c:if test="${boardInfo.gubun != '2' }">
-<%-- 					                        	<c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
-<%-- 					                        		<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li> --%>
-<%-- 					                        	</c:if> --%>
-					                        </c:if>	
 					                        
 				                        	<li id='btn_ReaderList'><span onclick='ReaderList()'><spring:message code='ezCommunity.t952'/></span></li>
 					                        <li id='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezCommunity.t951'/></span></li>
@@ -954,12 +922,11 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li><span onclick="btnClose_onclick()"><spring:message code='ezCommunity.t21'/></span></li>
+	                        <li><span onclick="btnClose_onclick()"></span></li>
 	                    </ul>
 	                </div>
 	                <script type="text/javascript">
 	                    selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	                    selToggleList(document.getElementById("close"), "ul", "li", "0");
 	                </script>
 	            </td>
 	        </tr>
@@ -983,7 +950,7 @@
 	                        	</c:otherwise>
 	                        </c:choose>
 	                        <!-- 작성자 end -->
-								<!-- 부서명 -->
+							<!-- 부서명 -->
 		                    <th style="width:10%"><spring:message code='ezCommunity.t959'/></th>
 	                        <c:choose>
 	                        	<c:when test="${boardInfo.gubun != '2' }">
@@ -1038,7 +1005,6 @@
 	                        <!-- 게시종료일 -->
 	                        <th style="width:10%"><spring:message code='ezCommunity.t931'/></th>
 	                        <c:set var="t930"><spring:message code='ezCommunity.t930'/></c:set>
-	                        
 	                        <c:choose>
 	                        	<c:when test="${item.endDate == t930}">
 	                        		<td id="EndDate" style="padding-right: 15px; white-space: nowrap; width: 40%;">
@@ -1053,7 +1019,6 @@
 	                        	</c:otherwise>
 	                        </c:choose>
 	                        <!-- 게시종료일  end -->
-	                        
 	                    </tr>
 	                    
 	                    <tr>
@@ -1067,101 +1032,37 @@
 	        </tr>
 	        <tr> 
 	        <c:choose>
-	        <c:when test="${boardInfo.gubun == '2'}"> 
-	            <td class="pad1" id="messagePad" style="vertical-align:top; height:460px">
+	        	<c:when test="${boardInfo.gubun == '2'}"> 
+	            	<td class="pad1" id="messagePad" style="vertical-align:top; height:460px">
 	          			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
-	            </td>
-            </c:when>
-            <c:otherwise>
-	           	<td class="pad1" id="messagePad" style="vertical-align:top; height:440px">
+	            	</td>
+            	</c:when>
+            	<c:otherwise>
+	           		<td class="pad1" id="messagePad" style="vertical-align:top; height:440px">
 	          			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
-	            </td>
-            </c:otherwise>
+	            	</td>
+            	</c:otherwise>
 			</c:choose>
-
 	        </tr>
-	        
-	        <c:choose>
-	        	<c:when test="${oneLineReplyFlag == '1'}">
-	        		<tr>
-<%-- 	        			<c:choose> --%>
-<%-- 	        				<c:when test="${boardInfo.gubun != '2' }"> --%>
-<!-- 	        					<td style="height:20px"> -->
-<!-- 					                <table class="content"> -->
-<!-- 					                    <tr> -->
-<!-- 					                        <td height="50" colspan="3"> -->
-<!-- 					                            <div align="left" id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white"></div> -->
-<!-- 					                        </td> -->
-<!-- 					                    </tr> -->
-<!-- 					                    <tr> -->
-<%-- 					                        <th><spring:message code='ezCommunity.t961'/></th> --%>
-<!-- 					                        <td class="pos1"><input id="onelinereply" style="WIDTH: 100%" type="text" maxlength="100" onkeydown="OneLineReply_onkeydown()"></td> -->
-<%-- 					                        <td class="pos2"><a class="imgbtn"><span onclick="Save_OneLineReply()" style="width:70px;"><spring:message code='ezCommunity.t958'/></span></a></td> --%>
-<!-- 					                    </tr> -->
-<!-- 					                </table> -->
-<!-- 					            </td> -->
-<%-- 	        				</c:when> --%>
-	        				
-<%-- 	        				<c:otherwise> --%>
-<!-- 	        					<td style="height:20px"> -->
-<!-- 					                <table class="content"> -->
-<!-- 					                    <tr> -->
-<!-- 					                        <td height="50" colspan="5"> -->
-<!-- 					                            <div align="left" id="onelinereplylist" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white"></div> -->
-<!-- 					                        </td> -->
-<!-- 					                    </tr> -->
-<!-- 					                    <tr> -->
-<%-- 					                        <th><spring:message code='ezCommunity.t961'/></th> --%>
-<!-- 					                        <td class="pos1"><input id="onelinereply" style="WIDTH: 100%" type="text" maxlength="100" onkeydown="OneLineReply_onkeydown()"></td> -->
-<%-- 					                        <th><spring:message code='ezCommunity.t1175'/></th> --%>
-<!-- 					                        <td><input type="password" id="txtPassWord" style="WIDTH: 80px" maxlength="15"></td> -->
-<%-- 					                        <td class="pos2"><a class="imgbtn"><span onclick="Save_OneLineReply()" style="width:70px;"><spring:message code='ezCommunity.t958'/></span></a></td> --%>
-<!-- 					                    </tr> -->
-<!-- 					                </table> -->
-<!-- 					            </td> -->
-<%-- 	        				</c:otherwise> --%>
-<%-- 	        			</c:choose> --%>
-			        </tr>
-			        <tr>
-			            <td class="pad1" style="height:20px; vertical-align:top">
-			                <table class="file">
-			                    <tr>
-			                        <th><spring:message code='ezCommunity.t141'/></th>
-			                        <td class="pos1">
-			                            <div align="left" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white" id="lstAttachLink"></div>
-			                        </td>
-		                        	<td class="pos2" style ="white-space:normal;">
-		                        		<a class="imgbtn"><span onclick="attach_SelectAll()" style="width:70px;"><spring:message code='ezCommunity.t962'/></span></a>
-		                        		<br>
-		                        		<a class="imgbtn"><span onclick="attach_Download_Cross()" style="width:70px;"><spring:message code='ezCommunity.t20'/></span></a>
-		                        	</td>			                        
-			                        <td id="ItemLevel" style="display: none"></td>
-			                    </tr>
-			                </table>
-			            </td>
-			        </tr>
-	        	</c:when>
-	        	
-	        	<c:otherwise>
-	        		<tr>
-			            <td class="pad1"  style="height:20px; vertical-align:top">
-			                <table class="file">
-			                    <tr>
-			                        <th><spring:message code='ezCommunity.t141'/></th>
-			                        <td class="pos1"><div align="left" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white" id="lstAttachLink"></div></td>
-									<td class="pos2" style ="white-space:normal;">
-										<a class="imgbtn"><span onclick="attach_SelectAll()" style="width:70px;"><spring:message code='ezCommunity.t962'/></span></a>
-										<br>
-										<a class="imgbtn"><span onclick="attach_Download_Cross()" style="width:70px;"><spring:message code='ezCommunity.t20'/></span></a>
-									</td>
-			                        <td id="ItemLevel" style="display: none"></td>
-			                    </tr>
-			                </table>
-			            </td>
-		        	</tr>
-	        	</c:otherwise>
-	        </c:choose>
-			<!-- 2018-05-04 홍승비 - 일반/익명게시판 다음글, 이전글 테이블 삭제 -->		
+
+			<tr>
+				<td class="pad1" style="height:20px; vertical-align:top">
+			   		<table class="file">
+			   			<tr>
+			        		<th><spring:message code='ezCommunity.t141'/></th>
+			               	<td class="pos1">
+			               		<div align="left" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white" id="lstAttachLink"></div>
+			              	</td>
+		                  	<td class="pos2" style ="white-space:normal;">
+		                   		<a class="imgbtn imgbck"><span onclick="attach_SelectAll()" style="width:70px;"><spring:message code='ezCommunity.t962'/></span></a>
+		                        <br>
+		                        <a class="imgbtn imgbck"><span onclick="attach_Download_Cross()" style="width:70px;"><spring:message code='ezCommunity.t20'/></span></a>
+		               		</td>
+			           	</tr>
+			       	</table>
+			    </td>
+			</tr>
+			<%-- 2018-05-04 홍승비 - 일반/익명게시판 다음글, 이전글 테이블 삭제 --%>		
 	    </table>
 	    
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>

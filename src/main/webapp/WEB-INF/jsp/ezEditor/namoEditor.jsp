@@ -371,6 +371,10 @@
             return FieldsList;
         }
 
+        function GetEditorBody() {
+        	return CrossEditor.GetEditorDocument();
+        }
+        
         //사용하는 곳 없음
 //         function GetBodyFields() {
 //             var FieldsList = new Array();

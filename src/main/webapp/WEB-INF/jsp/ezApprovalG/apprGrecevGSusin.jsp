@@ -395,7 +395,7 @@
 		
 		            if (btnSendDraftEnable == "false") {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t1408'/>";
-		                OpenAlertUI(pAlertContent);
+		                OpenAlertUI(pAlertContent, check_btnSendDraft);
 		                return;
 		            }
 		            if (pGubun != "5" && pGubun != "7" && pGubun != "10" && pGubun != "12") {
@@ -1394,6 +1394,11 @@
 		            }
 		        }
 		    }
+		    
+		    function check_btnSendDraft() {
+		        DivPopUpHidden();
+		        btnApprovalInfo();
+		    }
 		</script>
 	</head>
 	<body class="popup" style="height:100%;">
@@ -1428,7 +1433,7 @@
 			</div>
 			<div id="close">
 		        <ul>
-		          <li id="btnClose" ><span onClick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
+		          <li id="btnClose" ><span onClick="return btnClose_onclick()"></span></li>
 		        </ul>
 		      </div>
 		</td>
@@ -1453,7 +1458,6 @@
 			</div>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
 		<XML ID="ATTACHINFO"></XML>

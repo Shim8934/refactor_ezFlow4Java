@@ -8,6 +8,14 @@
 		<title>portlet_list</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
+		<style>
+	    	.mainlist tr td:first-child {
+	    		padding-left:15px;
+	    	}
+	    	.mainlist tr th:first-child {
+	    		padding-left:10px;
+	    	}
+	    </style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>
@@ -195,19 +203,21 @@
 		<div id="mainmenu">
 			<ul>
   				<li><span onClick="newpage()"><spring:message code='ezPortal.t247'/></span></li>
+  				<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   				<li><span onClick="DeletePortlet()"><spring:message code='ezPortal.t67'/></span></li>
   				<li><span onClick="preview()"><spring:message code='ezPortal.t63'/></span></li>
 			</ul>
 		</div>
+		<div style="width:100%;">
 		<table class="popuplist" width="100%">		
 			<tr>
-				<th><spring:message code='ezPortal.t250'/></th>
-				<td width="100%">				
-					<select name="PortalGubun" id="PortalGubun">
+				<th><spring:message code='ezPortal.t252'/></th>
+				<td style="width:100%; padding-top:3px;">
+					<select name="PortalGubun" id="PortalGubun" style="height: 22px; margin-left:3px;">
 						<option value=""><spring:message code='ezPortal.t251'/></option>
 					</select>
 				
-				<input type="text" name="SearchString" id="SearchString" style="width:200px" value="${pSearchString}" onKeyDown="entercheck()">
+				<input type="text" name="SearchString" id="SearchString" style="width:140px; height: 22px;" value="${pSearchString}" onKeyDown="entercheck()">
                 	<a class="imgbtn">
                 		<span onClick="btnSearch_onClick()">
                 			<spring:message code='ezPortal.t252'/>
@@ -216,39 +226,41 @@
                 </td>
 			</tr>
 		</table>
-	
+		</div>
 		<div class="page">
 			<c:choose>
 				<c:when test="${intPage != '1'}">
-					<img src="/images/page_previous.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('front')" style="cursor:pointer"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
+					<img src="/images/page_previous.gif" align="absmiddle" hspace="2" onClick="goToPage('front')" style="cursor:pointer"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
 				</c:when>
 				<c:otherwise>
-					<img src="/images/page_previous.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('front')"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
+					<img src="/images/page_previous.gif" align="absmiddle" hspace="2" onClick="goToPage('front')"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
 				</c:otherwise>
 			</c:choose>
 			
   			<input type="text"name="txt_PageInputNum" style="width:30px" value='${intPage}' onKeyPress="if ( window.event.keyCode == 13 ) { goToPage('page'); }">
   			<c:choose>
   				<c:when test="${intPage != totalPage}">
-  					<img src="/images/page_next.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('next')" style="cursor:pointer">
+  					<img src="/images/page_next.gif" align="absmiddle" hspace="2" onClick="goToPage('next')" style="cursor:pointer">
   				</c:when>
   				<c:otherwise>
-  					<img src="/images/page_next.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('next')">
+  					<img src="/images/page_next.gif" align="absmiddle" hspace="2" onClick="goToPage('next')">
   				</c:otherwise>
   			</c:choose>  			
   		</div>
-		<table class="mainlist" style="width:100%;margin-top:15px;">	
+  		<br>
+  		<div style="width:100%; border: 1px solid #e8e8e8; border-bottom:0px;">
+		<table class="mainlist" style="width:100%;">	
 		<tr>
-			<th width="300"><spring:message code='ezPortal.t130'/></th>
-			<th><spring:message code='ezPortal.t260'/></th>
+			<th style="width: 300px; border-top:0px;"><spring:message code='ezPortal.t130'/></th>
+			<th style="border-top:0px;"><spring:message code='ezPortal.t260'/></th>
 		</tr>
 		</table>		
 		<table class="mainlist" style="width:100%">
 			${strHtml}
 		</table>
-		<br><br>
 		<script type="text/javascript">    
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
+		</div>
 	</body>
 </html>
