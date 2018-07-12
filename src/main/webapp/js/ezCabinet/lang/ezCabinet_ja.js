@@ -40,5 +40,7 @@ var CabinetMessages = {
 	strMovErr1   : "같은 캐비넷로 이동/복사할 수 없습니다.",
 	strPerm      : "권한이 없습니다.",
 	strMovErr2   : "기존 캐비넷로는 이동/복사 할 수 없습니다.",
-	strMovErr3   : "하위 캐비넷로 이동 / 복사 할 수 없습니다."
+	strMovErr3   : "하위 캐비넷로 이동 / 복사 할 수 없습니다.",
+	strNoTitle   : "제목을 입력하세요.",
+	strCapacity  : "용량을 초과하였습니다."
 }

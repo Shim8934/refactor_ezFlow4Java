@@ -94,7 +94,7 @@ function CabinetTree() {
 				break;
 		}
 		
-		if (currentNode) { document.querySelector("span[role='" + currentNode +"']").click();}
+		if (currentNode) {document.getElementById(_treeElmtId).querySelector("span[role='" + currentNode +"']").click();}
 	}
 	
 	function generateSubTree(divTree, divElmt, list) {

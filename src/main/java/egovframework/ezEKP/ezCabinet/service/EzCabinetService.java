@@ -40,7 +40,10 @@ public interface EzCabinetService {
 	JSONObject deleteCabinet(int cabinetId, LoginVO userInfo) throws Exception;
 	JSONObject moveCabinet(int cabinetId, int parentId, String mode, String realPath, LoginVO userInfo) throws Exception;
 	
-	//User upload attach file
+	//User upload attach file functions
 	String saveUploadFile(List<MultipartFile> multiFileLists, JSONArray nameArray, String realPath, int tenantId) throws Exception;
 	void deleteAttachFile(String filePath, String realPath, int tenantId) throws Exception;
+	
+	//User item functions
+	void saveItem(int cabinetId, JSONArray attacheFiles, JSONArray relatedFiles, String title, String summary, String realPath, LoginVO userInfo) throws Exception;
 }

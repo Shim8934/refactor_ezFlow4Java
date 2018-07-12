@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
+import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -23,11 +24,15 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
+import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetRelationVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -504,6 +509,23 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			moveCabinet(cabinet, parent, userInfo);
 		}
 		else {
+			//Check storage condition
+			long cabinetStorage     = getCabinetStorage(cabinet, userInfo);
+			UserCapacityVO capacity = getUserCapacity(userInfo);
+			
+			if (capacity.getCapacityType() == 1) {
+				//Check save condition
+				long totalUsed      = Long.parseLong(capacity.getTotalUsed());
+				long totalCapacity  = capacity.getTotalCapacity() * 1048576;
+				
+				if (cabinetStorage > (totalCapacity - totalUsed)) {
+					logger.debug("Not enough storage to copy this cabinet!");
+					result.put("status", "error");
+					result.put("code", 7);
+					return result;
+				}
+			}
+			
 			copyCabinet(cabinet, parent, realPath, userInfo);
 		}
 		
@@ -511,7 +533,25 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		result.put("code", 0);
 		return result;
 	}
+	
+	private long getCabinetStorage(CabinetVO cabinet, LoginVO userInfo) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId",    userInfo.getTenantId());
+		map.put("cabinetId",   cabinet.getCabinetId());
+		map.put("cabinetPath", cabinet.getCabinetPath());
+		return ezCabinetDAO.getCabinetStorage(map);
+	}
 
+	private UserCapacityVO getUserCapacity(LoginVO userInfo) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",    userInfo.getId());
+		map.put("primary",   userInfo.getPrimary());
+		map.put("tenantId",  userInfo.getTenantId());
+		map.put("companyId", userInfo.getCompanyID());
+		
+		return ezCabinetAdminDAO.getUserCapacity(map);
+	}
+	
 	private void copyCabinet(CabinetVO cabinet, CabinetVO parent, String realPath, LoginVO userInfo) throws Exception {
 		String userId                = userInfo.getId();
 		String offset                = userInfo.getOffset();
@@ -528,8 +568,8 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		int levelDistance            = parent.getCabinetLevel() + 1 - cabinet.getCabinetLevel();
 		
 		cabinet.setCreatorId(userId);
-		cabinet.setCabinetName1(userInfo.getDisplayName1());
-		cabinet.setCabinetName2(userInfo.getDisplayName2());
+		cabinet.setCreatorName1(userInfo.getDisplayName1());
+		cabinet.setCreatorName2(userInfo.getDisplayName2());
 		cabinet.setCabinetPath(newPath);
 		cabinet.setUpdateId(userId);
 		cabinet.setUpdatedDate(timeUTC);
@@ -540,7 +580,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		insertCabinet(cabinet);
 		
-		//copyItems(cabinet.getCabinetId(), newId, timeUTC, realPath, userInfo); *Note here
+		copyItems(cabinetId, newId, timeUTC, realPath, userInfo);
 		//copy all sub cabinet
 		copySubCabinets(cabinetId, newPath, timeUTC, levelDistance, realPath, userInfo);
 	}
@@ -560,8 +600,8 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 				subCabinet.setCabinetPath(cabinetPath);
 				subCabinet.setUpdatedDate(timeUTC);
 				subCabinet.setCreatorId(userInfo.getId());
-				subCabinet.setCabinetName1(userInfo.getDisplayName1());
-				subCabinet.setCabinetName2(userInfo.getDisplayName2());
+				subCabinet.setCreatorName1(userInfo.getDisplayName1());
+				subCabinet.setCreatorName2(userInfo.getDisplayName2());
 				subCabinet.setUpdateId(userInfo.getId());
 				subCabinet.setCabinetLevel(subCabinet.getCabinetLevel() + levelDistance);
 				subCabinet.setCabinetId(newSubId);
@@ -575,9 +615,9 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 				//Create new cabinet
 				insertCabinet(subCabinet);
 				
-				//copyItems(oldId, newSubId, timeUTC, realPath, userInfo); *Note here
+				copyItems(oldId, newSubId, timeUTC, realPath, userInfo);
 				
-				//copy all sub folders
+				//copy all sub cabinet
 				copySubCabinets(oldId, subCabinet.getCabinetPath(), timeUTC, levelDistance, realPath, userInfo);
 			}
 		}
@@ -625,23 +665,46 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		ezCabinetDAO.moveSubCabinetList(map);
 	}
 	
-	private void copyItems(String cabinetId, String newId, String timeUTC, String realPath, LoginVO userInfo) throws Exception {
-		/*List<CabinetItemVO> itemList = ezCabinetDAO.getAllItemsOfCabinet(cabinetId, );
+	private synchronized void copyItems(int cabinetId, int newId, String timeUTC, String realPath, LoginVO userInfo) throws Exception {
+		int tenantId  = userInfo.getTenantId();
+		String userId = userInfo.getId();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId",  tenantId);
+		map.put("cabinetId", cabinetId);
 		
-		
-		//Get all attach file and related file for cabinet item
+		List<CabinetItemVO> itemList = ezCabinetDAO.getAllItemsOfCabinet(map);
 		
 		if (itemList != null && itemList.size() > 0) {
+			int newItemId = ezCabinetDAO.getMaxItem(map) + 1;
 			for (CabinetItemVO item : itemList) {
-				List<AttachFileVO> listAttachFile = ezCabinetDAO.getAllAttachFileOfItem();
+				int itemId = item.getItemId();
+				//Save new Item
+				item.setItemId(newItemId);
+				item.setCabinetId(newId);
+				item.setCreatorId(userId);
+				item.setCreatorName1(userInfo.getDisplayName1());
+				item.setCreatorName2(userInfo.getDisplayName2());
+				item.setDepartmentId(userInfo.getDeptID());
+				item.setDepartmentName1(userInfo.getDeptName1());
+				item.setDepartmentName2(userInfo.getDeptName2());
+				item.setCreatedDate(timeUTC);
+				item.setUpdatedDate(timeUTC);
+				item.setUpdateId(userId);
+				item.setCompanyId(userInfo.getCompanyID());
+				
+				ezCabinetDAO.saveItem(item);
+				
+				map.put("itemId", itemId);
+				List<CabinetAttachFileVO> listAttachFile = ezCabinetDAO.getAllAttachFilesOfItem(map);
 				
 				if (listAttachFile != null && listAttachFile.size() > 0) {
-					for (AttachFileVO attach : listAttachFile) {
-						String fileName = file.getFileName();
+					int attachId = ezCabinetDAO.getMaxAttachId(map) + 1;
+					for (CabinetAttachFileVO attach : listAttachFile) {
+						String fileName = attach.getFileName();
 						int dotPos      = fileName.lastIndexOf(".");
 						String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
 						String newName  = UUID.randomUUID().toString() + "." + extend;
-						String newPath  = ezWebFolderService.getWebFolderDirPath(userInfo.getTenantId()) + newName;
+						String newPath  = getCabinetDirPath(tenantId) + newName;
 						File srcFile    = new File(realPath + attach.getFilePath());
 						File destFile   = new File(realPath  + newPath);
 						
@@ -653,38 +716,32 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 						}
 						
 						//AttachFile process here
-						attach.setDownloadCnt(0);
-						attach.setFolderId(newId);
-						attach.setUpdateDate(timeUTC);
-						attach.setCreateId(userInfo.getId());
-						attach.setUpdateId(userInfo.getId());
-						attach.setCreateName1(userInfo.getDisplayName1());
-						attach.setCreateName2(userInfo.getDisplayName2());
-						attach.setFileId(ezWebFolderService.getMaxFileID(userInfo.getTenantId()));
+						attach.setItemId(newItemId);
+						attach.setFilePath(newPath);
+						attach.setAttachId(attachId);
+						ezCabinetDAO.saveAttachFile(attach);
+						attachId ++;
 					}
 				}
 				
-				List<RelatedFileVO> listRelatedFile = ezCabinetDAO.getAllRelatedFileOfItem();
+				List<CabinetRelationVO> listRelatedFile = ezCabinetDAO.getAllRelatedFilesOfItem(map);
 				
 				if (listRelatedFile != null && listRelatedFile.size() > 0) {
-					for (RelatedFileVO relatedFile : listRelatedFile) {
-						relatedFile.setItemId();
-						//insert new related file
+					int relationId = ezCabinetDAO.getMaxRelationId(map) + 1;
+					for (CabinetRelationVO relatedFile : listRelatedFile) {
+						relatedFile.setItemId(newItemId);
+						relatedFile.setRelationId(relationId);
+						
+						ezCabinetDAO.saveRelationFile(relatedFile);
+						relationId ++;
 					}
 				}
 				
-				//Insert new item
-				item.setCabinetId(newId);
-				item.setCreateId(userInfo.getId());
-				item.setUpdateId(userInfo.getId());
-				item.setCreateName1(userInfo.getDisplayName1());
-				item.setCreateName2(userInfo.getDisplayName2());
-				
-				
+				newItemId ++;
 			}
-		}*/
+		}
 	}
-
+	
 	@Override
 	public String saveUploadFile(List<MultipartFile> multiFileLists, JSONArray nameArray, String realPath, int tenantId) throws Exception {
 		String pFileName   = (String)((JSONObject)nameArray.get(0)).get("originalFilename");
@@ -716,6 +773,75 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			}
 			catch (Exception e) {
 				e.printStackTrace();
+			}
+		}
+	}
+	
+	@Override
+	public synchronized void saveItem(int cabinetId, JSONArray attacheFiles, JSONArray relatedFiles, String title, String summary, String realPath, LoginVO userInfo) throws Exception {
+		String companyId           = userInfo.getCompanyID();
+		String userId              = userInfo.getId();
+		int tenantId               = userInfo.getTenantId();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+		Map<String,Object> map     = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//Save item
+		int itemId      = ezCabinetDAO.getMaxItem(map) + 1;
+		CabinetItemVO itemVO = new CabinetItemVO();
+		itemVO.setCabinetId(cabinetId);
+		itemVO.setItemId(itemId);
+		itemVO.setItemType(0);
+		itemVO.setTitle(title);
+		itemVO.setSummary(summary);
+		itemVO.setCreatorId(userId);
+		itemVO.setCreatorName1(userInfo.getDisplayName1());
+		itemVO.setCreatorName2(userInfo.getDisplayName2());
+		itemVO.setDepartmentId(userInfo.getDeptID());
+		itemVO.setDepartmentName1(userInfo.getDeptName1());
+		itemVO.setDepartmentName2(userInfo.getDeptName2());
+		itemVO.setConentPath(null);
+		itemVO.setCreatedDate(timeUTC);
+		itemVO.setUpdatedDate(timeUTC);
+		itemVO.setUseStatus(1);
+		itemVO.setUpdateId(userId);
+		itemVO.setDeleterId(null);
+		itemVO.setCompanyId(companyId);
+		itemVO.setTenantId(tenantId);
+		
+		ezCabinetDAO.saveItem(itemVO);
+		
+		int attachSize  = attacheFiles.size();
+		int relatedSize = relatedFiles.size();
+		
+		//Save attach files
+		if (attachSize > 0) {
+			int attachId = ezCabinetDAO.getMaxAttachId(map) + 1;
+			for (int i = 0; i < attachSize; i++, attachId++) {
+				JSONObject fileObj = (JSONObject)attacheFiles.get(i);
+				String filePath    = (String)fileObj.get("path");
+				String fileName    = (String)fileObj.get("name");
+				
+				File file          = new File(realPath + filePath);
+				long fileSize      = file.length();
+				
+				CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, filePath, fileName, fileSize, companyId, tenantId);
+				ezCabinetDAO.saveAttachFile(attachFile);
+			}
+		}
+		
+		//Save related files
+		if (relatedSize > 0) {
+			int relationId = ezCabinetDAO.getMaxRelationId(map) + 1;
+			
+			for (int i = 0; i < relatedSize; i++, relationId++) {
+				JSONObject relationObj = (JSONObject)relatedFiles.get(i);
+				int relatedItemId = Integer.parseInt((String)relationObj.get("relatedId"));
+				
+				CabinetRelationVO relationFile = new CabinetRelationVO(relationId, itemId, relatedItemId, companyId, tenantId);
+				ezCabinetDAO.saveRelationFile(relationFile);
 			}
 		}
 	}

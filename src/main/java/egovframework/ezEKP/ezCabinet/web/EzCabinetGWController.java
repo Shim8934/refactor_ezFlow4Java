@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCabinet.web;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,9 +31,6 @@ import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
-import egovframework.ezEKP.ezWebFolder.vo.FileVO;
-import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
-import egovframework.ezEKP.ezWebFolder.vo.WebfolderConfigVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -637,11 +635,14 @@ public class EzCabinetGWController {
 			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
 			CabinetSimpleVO mycabinet = new CabinetSimpleVO();
 					
-			if (cabinetId.equals("")) {
+			if (cabinetId.equals("") || cabinetId.equals("root")) {
 				String cabinetStr1  = egovMessageSource.getMessage("ezCabinet.t02", new Locale("ko"));
 				String cabinetStr2  = egovMessageSource.getMessage("ezCabinet.t02", new Locale("en"));
 				mycabinet           = cabinetService.getMyCabinetTreeNormal(cabinetStr1, cabinetStr2, userInfo);
-				result.put("node", mycabinet.getCabinetId());
+				
+				if (cabinetId.equals("root")) {
+					result.put("node", mycabinet.getCabinetId());
+				}
 			}
 			else {
 				mycabinet = cabinetService.getMyCabinetTreeDetail(cabinetId, userInfo);
@@ -792,7 +793,7 @@ public class EzCabinetGWController {
 	}
 	
 	@RequestMapping(value="/rest/ezcabinet/cabinet-move/mode/{mode}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject putFileMove(@PathVariable(value="mode") String mode, Locale locale, HttpServletRequest request) throws Exception {
+	public JSONObject putCabinetMove(@PathVariable(value="mode") String mode, Locale locale, HttpServletRequest request) throws Exception {
 		String userId     = request.getParameter("userId")    != null ? request.getParameter("userId")                      : "";
 		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")                      : "";
 		int cabinetId     = request.getParameter("cabinetId") != null ? Integer.parseInt(request.getParameter("cabinetId")) : -1;
@@ -890,65 +891,6 @@ public class EzCabinetGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("path", filePath);
-			
-			//Add checking permission here
-			/*List<Integer> cabinetList = new ArrayList<>(Arrays.asList(cabinetId));
-			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
-			
-			if ((int)permission.get("code") == 1) {
-				result.put("status", "error");
-				result.put("code", 3);
-				return result;
-			}*/
-			
-			//Check upload conditions
-			/*FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, offset, userInfo.getTenantId());
-			
-			WebfolderConfigVO webfolderConfig   = ezWebFolderAdminService.getWebfolderConfig(userInfo.getCompanyID(), userInfo.getTenantId());
-			double limitUploadValue             = webfolderConfig.getUploadLimit().equals("") ? 0 : Double.parseDouble(webfolderConfig.getUploadLimit());
-			double totalUploadSize              = 0;
-			
-			for (int i = 0; i < multiFileLists.size(); i++) {
-				totalUploadSize += multiFileLists.get(i).getSize();
-			}
-			
-			if (limitUploadValue * 1073741824 < totalUploadSize) {
-				logger.debug("limited upload value!");
-				result.put("status", "error");
-				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t249", locale));
-				result.put("code", 1);
-				result.put("data", "");
-				return result;
-			}
-			
-			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
-			
-			long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
-			long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
-			
-			if (totalUploadSize > (totalCapa - totalUsed)) {
-				logger.debug("Not enough storage to upload these files!");
-				result.put("status", "error");
-				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
-				result.put("code", 1);
-				result.put("data", "");
-				return result;
-			}
-			
-			String realPath   = request.getServletContext().getRealPath("");
-			List<FileVO> list = ezWebFolderService.saveUploadedFiles(multiFileLists, nameArray, folder, realPath, userInfo);
-			
-			if (list == null || list.size() == 0) {
-				result.put("status", "error");
-				result.put("code", 1);
-				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t134", locale));
-			}
-			else {
-				result.put("status", "ok");
-				result.put("code", 0);
-				result.put("data", list);
-			}*/
-			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -989,16 +931,89 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
+	@RequestMapping(value="/rest/ezcabinet/item/id/{cabinetid}/add", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveItem(@PathVariable(value="cabinetid") String cabinetId, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
+		String title      = request.getParameter("title")      != null ? request.getParameter("title")      : "";
+		String summary    = request.getParameter("summary")    != null ? request.getParameter("summary")    : "";
+		String fileArray  = request.getParameter("fileArray")  != null ? request.getParameter("fileArray")  : "";
+		String relatedArr = request.getParameter("relatedArr") != null ? request.getParameter("relatedArr") : "";
+		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
+		JSONObject result = new JSONObject();
+		JSONParser jp     = new JSONParser();
+		
+		if (serverName.equals("") || title.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
+			//Add checking permission here
+			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(Integer.parseInt(cabinetId)));
+			JSONObject permission     = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
+			JSONArray attacheFiles  = (JSONArray) jp.parse(fileArray);
+			JSONArray relatedFiles  = (JSONArray) jp.parse(relatedArr);
+			String realPath         = request.getServletContext().getRealPath("");
+			UserCapacityVO capacity = cabinetAdminService.getUserCapacity(userId, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
+			
+			if (capacity.getCapacityType() == 1) {
+				//Check save condition
+				long totalAttachSize = 0;
+				
+				if (attacheFiles.size() > 0) {
+					for (int i = 0; i < attacheFiles.size(); i++) {
+						JSONObject fileObj = (JSONObject)attacheFiles.get(i);
+						String filePath    = (String)fileObj.get("path");
+						File file          = new File(realPath + filePath);
+						totalAttachSize    = totalAttachSize + file.length();
+					}
+				}
+				
+				long totalUsed = Long.parseLong(capacity.getTotalUsed());
+				long totalCap  = capacity.getTotalCapacity() * 1048576;
+				
+				if (totalAttachSize > (totalCap - totalUsed)) {
+					logger.debug("Not enough storage to upload these files!");
+					result.put("status", "error");
+					result.put("code", 4);
+					return result;
+				}
+			}
+			
+			cabinetService.saveItem(Integer.parseInt(cabinetId), attacheFiles, relatedFiles, title, summary, realPath, userInfo);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
 	private boolean isCabinetAdmin(LoginVO user) {
 		return user.getRollInfo().contains("cb=1");
 	}
 	
 	private void setUsedRateForUser(UserCapacityVO capacity) {
-		if (capacity.getCapacityType() == 0 || capacity.getTotalUsed().equals("0") || capacity.getTotalCapacity().equals("0")) {
+		if (capacity.getCapacityType() == 0 || capacity.getTotalUsed().equals("0") || capacity.getTotalCapacity() == 0) {
 			capacity.setUsedRate(0);
 		}
 		else {
-			double totalCapByBytes = Double.parseDouble(capacity.getTotalCapacity()) * 10485.76;
+			double totalCapByBytes = capacity.getTotalCapacity() * 10485.76;
 			capacity.setUsedRate((int)(Double.parseDouble(capacity.getTotalUsed())/totalCapByBytes));
 		}
 	}
