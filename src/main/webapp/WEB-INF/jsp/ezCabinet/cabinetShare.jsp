@@ -20,9 +20,9 @@
 						<tr>
 							<!-- left -->
 							<td>
-								<table class="tblFileInf" style="padding: 15px;">
+								<table class="cabShareInf">
 									<tr>
-										<th style="width:20px;"><spring:message code="ezCabinet.t95"/></th>
+										<th><spring:message code="ezCabinet.t95"/></th>
 										<td>그룹웨어 업무</td>
 									</tr>
 								</table>
@@ -62,7 +62,7 @@
 								</div>
 									
 								<!-- 조직도 -->
-								<table class="organTree">
+								<table class="cabShareOrganTbl">
 									<tr>
 										<td class="box">
 											<div id="TreeView">
@@ -85,12 +85,12 @@
 													</th>
 												</tr>	
 											</table>
-											<div id="txtlist_Layer" style="vertical-align: top; height: 440px; overflow: auto; width: 440px;">
-												<table style="width: 100%;" id="txtlist_table" class="mainlist">
+											<div id="txtlist_Layer" class="cabShareLayer">
+												<table style="width: 100%;" id="txtlist_table" class="mainlist cabShareMainTbl">
 													<tr>
-														<td style="width: 150px;color:#333;background-color: #f8f8fa">이름</td>
-														<td style="width: 130px;color:#333;background-color: #f8f8fa">직위</td>
-														<td style="color:#333;background-color: #f8f8fa">사내전화</td>
+														<td style="width: 150px;">이름</td>
+														<td style="width: 130px;">직위</td>
+														<td>사내전화</td>
 													</tr>
 													<tr>
 														<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 150px; background-color: rgb(240, 246, 255);">지정석</td>
@@ -99,7 +99,7 @@
 													</tr>
 												</table>
 											</div>
-											<div id="tblPageRayer"></div>
+											<div id="tblPageRayer" class="cabSharePage"></div>
 										</td>
 									</tr>
 								</table>
@@ -112,9 +112,9 @@
 							</td>
 							
 							<!-- right -->
-							<td class="cabShareRig">
+							<td>
 								<h2 class="receiver_tltype01">
-									<span>공유자</span>
+									<span style="min-width: 45px;">공유자</span>
 								</h2>
 								
 								<div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 15px; padding: 0px; border: 1px solid #eaeaea;">
@@ -144,14 +144,14 @@
 									</div>
 								</div>
 									
-								<div class="receiver_borderbox">
+								<div class="receiver_borderbox cabShareList">
 									<div>
-										<table style="width: 100%;" id="txtlist_table" class="mainlist">
+										<table id="txtlist_table" class="mainlist cabShareMainTbl">
 											<tr>
-												<td style="color:#333;background-color: #f8f8fa"><spring:message code='ezCabinet.t103'/></td>
-												<td style="color:#333;background-color: #f8f8fa"><spring:message code='ezCabinet.t104'/></td>
-												<td style="color:#333;background-color: #f8f8fa"><spring:message code='ezCabinet.t105'/></td>
-												<td style="color:#333;background-color: #f8f8fa"><spring:message code='ezCabinet.t106'/></td>
+												<td><spring:message code='ezCabinet.t103'/></td>
+												<td><spring:message code='ezCabinet.t104'/></td>
+												<td><spring:message code='ezCabinet.t105'/></td>
+												<td><spring:message code='ezCabinet.t106'/></td>
 											</tr>
 											<tr>
 												<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">솔루션 3팀</td>
@@ -200,7 +200,12 @@
 			<a class="imgbtn"><span><spring:message code='ezCabinet.t15'/></span></a>
 		</div>
 		
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
+			$(document).ready(function() {
+				
+			});
+			
 			(function() {
 				initEvents();
 				
