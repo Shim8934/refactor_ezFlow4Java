@@ -37,20 +37,19 @@
 				<div id="myProgress"></div>
 				<div class="volumeBar">
 					<c:choose>
-						<c:when test="${percent > 90}"                 ><div id="myBar" class="myBar_red"    style="${'width: ' + percent < 100 ? percent : 100 + '%'}"></div></c:when>
-						<c:when test="${percent <= 90 && percent > 70}"><div id="myBar" class="myBar_orange" style="width: ${percent + '%;'}"></div></c:when>
-						<c:when test="${percent <= 70 && percent > 60}"><div id="myBar" class="myBar_yellow" style="width: ${percent + '%;'}"></div></c:when>
-						<c:when test="${percent <= 60 && percent > 0}" ><div id="myBar" class="myBar_green"  style="width: ${percent + '%;'}"></div></c:when>
+						<c:when test="${percent > 90}"                 ><div id="myBar" class="myBar_red"    style="width: ${percent < 100 ? percent : 100}'%';"></div></c:when>
+						<c:when test="${percent <= 90 && percent > 70}"><div id="myBar" class="myBar_orange" style="width: ${percent}'%';"></div></c:when>
+						<c:when test="${percent <= 70 && percent > 60}"><div id="myBar" class="myBar_yellow" style="width: ${percent}'%';"></div></c:when>
+						<c:when test="${percent <= 60 && percent > 0}" ><div id="myBar" class="myBar_green"  style="width: ${percent}'%';"></div></c:when>
 						<c:when test="${percent == 0}"                 ><div id="myBar" class="myBar_white"  style="width: 0%;"></div></c:when>
 					</c:choose>
-					
 				</div>
 				<c:choose>
 					<c:when test="${capacityType == 0}">
-						<div class="volumes"><c:out value="${useVolume}"/> / <spring:message code='ezCabinet.t114'/></div>
+						<div class="volumes"><c:out value='${useVolume}'/> / <spring:message code='ezCabinet.t114'/></div>
 					</c:when>
 					<c:otherwise>
-						<div class="volumes"><c:out value="${useVolume}"/> / <c:out value="${totalCapacity}"/> MB (<c:out value="${percent}"/>%)</div>
+						<div class="volumes"><c:out value='${useVolume}'/> / <c:out value="${totalCapacity}"/> MB (<c:out value="${percent}"/>%)</div>
 					</c:otherwise>
 				</c:choose>
 				
@@ -72,7 +71,6 @@
 		<script type="text/javascript">
 			var CabUserLeft = function() {
 				var cabinetTree = new CabinetTree();
-				getMyCabinet();
 				setButtons();
 				
 				function setButtons() {
@@ -85,24 +83,34 @@
 						type       : "normal",
 						initialUrl : "/ezCabinet/getMyCabinetTree.do",
 						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
-						click      : null,
+						click      : getCabinet,
 						dblClick   : null
 					});
 					
-					cabinetTree.makeTree();
+					cabinetTree.makeTree({cabinetNode : "root"});
 					
 					document.getElementById("myCabinet"        ).addEventListener("click", function(e) {getMyCabinet();} , false);
-					document.getElementById("cabinetAdmin"     ).addEventListener("click", function(e) {getAdminPage();} , false);
 					document.getElementById("cabinetConfig"    ).addEventListener("click", function(e) {getConfigPage();}, false);
 					document.getElementById("cabinetManagement").addEventListener("click", function(e) {getManagement();}, false);
 					
+					var cabinetAdminElmt = document.getElementById("cabinetAdmin");
+					if (cabinetAdminElmt) {cabinetAdminElmt.addEventListener("click", function(e) {getAdminPage();} , false);}
 					if (document.getElementById("myBar").className == "") {drawVolume();}
-					
+				}
+				
+				function getCabinet(obj) {
+					var cabinetId = obj.getAttribute("role");
+					window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do?cabinetId=" + cabinetId;
+				}
+				
+				function getMyCabinet()  {
+					var cabinetTreeElmt = document.getElementById("cabinetTree");
+					var spanElmt        = cabinetTreeElmt.querySelector("span[level='0']");
+					if (spanElmt) {spanElmt.click();}
 				}
 				
 				function getAdminPage()  {window.open("/admin/ezCabinet/cabinetAdminMain.do", "", "");}
 				function getConfigPage() {window.parent.frames["right"].location.href = "/ezCabinet/cabinetConfig.do";}
-				function getMyCabinet()  {window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do";}
 				function reloadTree(currentNode) {cabinetTree.makeTree({cabinetNode : currentNode});}
 				
 				function getManagement() {
@@ -162,9 +170,9 @@
 					var result = fileSize + "B";
 					
 					switch(true) {
-						case fileSize > 1073741824 : result = (Math.floor(parseFloat(fileSize / 1073741824 * 10)) / 10).toFixed(1) + "GB"; break;
-						case fileSize > 1048576    : result = (Math.floor(parseFloat(fileSize / 1048576) * 10) / 10).toFixed(1) + "MB"   ; break;
-						case fileSize > 1024       : result = parseInt(fileSize / 1024) + "KB"                                           ; break;
+						case fileSize > 1073741824 : result = parseFloat(fileSize / 1073741824).toFixed(2) + "GB"; break;
+						case fileSize > 1048576    : result = parseFloat(fileSize / 1048576).toFixed(2) + "MB"   ; break;
+						case fileSize > 1024       : result = parseFloat(fileSize / 1024).toFixed(2) + "KB"      ; break;
 					}
 					
 					return result;

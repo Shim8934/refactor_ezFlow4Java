@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezCabinet.web;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import javax.annotation.Resource;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
@@ -632,10 +635,14 @@ public class EzCabinetGWController {
 			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
 			CabinetSimpleVO mycabinet = new CabinetSimpleVO();
 					
-			if (cabinetId.equals("")) {
+			if (cabinetId.equals("") || cabinetId.equals("root")) {
 				String cabinetStr1  = egovMessageSource.getMessage("ezCabinet.t02", new Locale("ko"));
 				String cabinetStr2  = egovMessageSource.getMessage("ezCabinet.t02", new Locale("en"));
 				mycabinet           = cabinetService.getMyCabinetTreeNormal(cabinetStr1, cabinetStr2, userInfo);
+				
+				if (cabinetId.equals("root")) {
+					result.put("node", mycabinet.getCabinetId());
+				}
 			}
 			else {
 				mycabinet = cabinetService.getMyCabinetTreeDetail(cabinetId, userInfo);
@@ -676,6 +683,17 @@ public class EzCabinetGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			//Add checking permission here
+			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(parentId));
+			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
 			cabinetService.addCabinet(parentId, cabName1, cabName2, userInfo);
 			
 			result.put("status", "ok");
@@ -711,7 +729,18 @@ public class EzCabinetGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			result           = cabinetService.renameCabinet(cabinetId, cabName1, cabName2, userInfo);
+			
+			//Add checking permission here
+			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(cabinetId));
+			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
+			result = cabinetService.renameCabinet(cabinetId, cabName1, cabName2, userInfo);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
@@ -741,8 +770,62 @@ public class EzCabinetGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			result           = cabinetService.deleteCabinet(cabinetId, userInfo);
+			
+			//Add checking permission here
+			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(cabinetId));
+			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
+			result = cabinetService.deleteCabinet(cabinetId, userInfo);
 		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/cabinet-move/mode/{mode}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject putCabinetMove(@PathVariable(value="mode") String mode, Locale locale, HttpServletRequest request) throws Exception {
+		String userId     = request.getParameter("userId")    != null ? request.getParameter("userId")                      : "";
+		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")                      : "";
+		int cabinetId     = request.getParameter("cabinetId") != null ? Integer.parseInt(request.getParameter("cabinetId")) : -1;
+		int parentId      = request.getParameter("parentId")  != null ? Integer.parseInt(request.getParameter("parentId"))  : -1;
+		JSONObject result = new JSONObject();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName + " || Cabinet Id: " + cabinetId + " || Parent Id: " + parentId + " || Mode: " + mode);
+		
+		if (cabinetId == -1 || mode.equals("") || serverName.equals("") || userId.equals("") || parentId == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			
+			//Add checking permission here
+			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(cabinetId, parentId));
+			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
+			String realPath = request.getServletContext().getRealPath("");
+			result          = cabinetService.moveCabinet(cabinetId, parentId, mode, realPath, userInfo);
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -785,16 +868,152 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
+	@RequestMapping(value="/rest/ezcabinet/attachfile/file-upload", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	public JSONObject postFileUploadGW(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, Locale locale, HttpServletRequest request) throws Exception {
+		JSONParser jp          = new JSONParser();
+		JSONObject jsonObject  = (JSONObject) jp.parse(dataList);
+		JSONArray nameArray    = jsonObject.get("nameArray")    != null ? (JSONArray) jsonObject.get("nameArray") : null;
+		String serverName      = request.getHeader("host-name") != null ? request.getHeader("host-name")          : "";
+		JSONObject result      = new JSONObject();
+		
+		if (nameArray == null || serverName.equals("") || nameArray.size() != multiFileLists.size() || multiFileLists.size() != 1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			int tenantId     = loginService.getTenantId(serverName);
+			String realPath  = request.getServletContext().getRealPath("");
+			String filePath  = cabinetService.saveUploadFile(multiFileLists, nameArray, realPath, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("path", filePath);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/attachfile/file-delete", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")
+	public JSONObject delFileUploadGW(Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
+		String filePath   = request.getParameter("filePath") != null ? request.getParameter("filePath") : "";
+		JSONObject result = new JSONObject();
+		
+		if (serverName.equals("") || filePath.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			int tenantId      = loginService.getTenantId(serverName);
+			String realPath   = request.getServletContext().getRealPath("");
+			cabinetService.deleteAttachFile(filePath, realPath, tenantId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/item/id/{cabinetid}/add", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveItem(@PathVariable(value="cabinetid") String cabinetId, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
+		String title      = request.getParameter("title")      != null ? request.getParameter("title")      : "";
+		String summary    = request.getParameter("summary")    != null ? request.getParameter("summary")    : "";
+		String fileArray  = request.getParameter("fileArray")  != null ? request.getParameter("fileArray")  : "";
+		String relatedArr = request.getParameter("relatedArr") != null ? request.getParameter("relatedArr") : "";
+		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
+		JSONObject result = new JSONObject();
+		JSONParser jp     = new JSONParser();
+		
+		if (serverName.equals("") || title.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
+			//Add checking permission here
+			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(Integer.parseInt(cabinetId)));
+			JSONObject permission     = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
+			JSONArray attacheFiles  = (JSONArray) jp.parse(fileArray);
+			JSONArray relatedFiles  = (JSONArray) jp.parse(relatedArr);
+			String realPath         = request.getServletContext().getRealPath("");
+			UserCapacityVO capacity = cabinetAdminService.getUserCapacity(userId, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
+			
+			if (capacity.getCapacityType() == 1) {
+				//Check save condition
+				long totalAttachSize = 0;
+				
+				if (attacheFiles.size() > 0) {
+					for (int i = 0; i < attacheFiles.size(); i++) {
+						JSONObject fileObj = (JSONObject)attacheFiles.get(i);
+						String filePath    = (String)fileObj.get("path");
+						File file          = new File(realPath + filePath);
+						totalAttachSize    = totalAttachSize + file.length();
+					}
+				}
+				
+				long totalUsed = Long.parseLong(capacity.getTotalUsed());
+				long totalCap  = capacity.getTotalCapacity() * 1048576;
+				
+				if (totalAttachSize > (totalCap - totalUsed)) {
+					logger.debug("Not enough storage to upload these files!");
+					result.put("status", "error");
+					result.put("code", 4);
+					return result;
+				}
+			}
+			
+			cabinetService.saveItem(Integer.parseInt(cabinetId), attacheFiles, relatedFiles, title, summary, realPath, userInfo);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
 	private boolean isCabinetAdmin(LoginVO user) {
 		return user.getRollInfo().contains("cb=1");
 	}
 	
 	private void setUsedRateForUser(UserCapacityVO capacity) {
-		if (capacity.getCapacityType() == 0 || capacity.getTotalUsed().equals("0") || capacity.getTotalCapacity().equals("0")) {
+		if (capacity.getCapacityType() == 0 || capacity.getTotalUsed().equals("0") || capacity.getTotalCapacity() == 0) {
 			capacity.setUsedRate(0);
 		}
 		else {
-			double totalCapByBytes = Double.parseDouble(capacity.getTotalCapacity()) * 10485.76;
+			double totalCapByBytes = capacity.getTotalCapacity() * 10485.76;
 			capacity.setUsedRate((int)(Double.parseDouble(capacity.getTotalUsed())/totalCapByBytes));
 		}
 	}

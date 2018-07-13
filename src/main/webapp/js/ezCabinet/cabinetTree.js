@@ -94,11 +94,7 @@ function CabinetTree() {
 				break;
 		}
 		
-		if (currentNode) {
-			var spanElmt = document.querySelector("span[role='" + currentNode +"']");
-			getSelected(spanElmt);
-			if (_clickHandle != null) {_clickHandle(spanElmt);}
-		}
+		if (currentNode) {document.getElementById(_treeElmtId).querySelector("span[role='" + currentNode +"']").click();}
 	}
 	
 	function generateSubTree(divTree, divElmt, list) {
@@ -212,7 +208,8 @@ function CabinetTree() {
 	}
 	
 	function getSelected(selectElmt) {
-		var previousElmt = document.querySelector("span[class='selectedNode']");
+		var divTree      = document.getElementById(_treeElmtId);
+		var previousElmt = divTree.querySelector("span[class='selectedNode']");
 		
 		if (previousElmt != null) {
 			if (previousElmt.getAttribute("role") != selectElmt.getAttribute("role")) {

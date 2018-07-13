@@ -105,29 +105,6 @@
 					handleFunct(strName1, strName2);
 				}
 				
-				function addCabinet(strName1, strName2) {
-					var url      = "/ezCabinet/addCabinet.do";
-					var parentId = document.querySelector("span[class='selectedNode']").getAttribute("role");
-					var data     = {
-						parentId  : parentId,
-						cabName1  : strName1,
-						cabName2  : strName2
-					};
-					
-					makeAjaxCall(data, "GET", url, afterChangeCabinet, null, true, "add");
-				}
-				
-				function changeCabinet(strName1, strName2) {
-					var url  = "/ezCabinet/renameCabinet.do";
-					var data = {
-						cabinetId : document.querySelector("span[class='selectedNode']").getAttribute("role"),
-						cabName1  : strName1,
-						cabName2  : strName2
-					};
-					
-					makeAjaxCall(data, "GET", url, afterChangeCabinet, null, true, "change");
-				}
-				
 				function afterChangeCabinet(data, mode) {
 					var code           = data.code;
 					var successHandler = null;
@@ -136,28 +113,42 @@
 						case "add"   : successHandler = afterAddCabinetSuccessfully    ; break;
 						case "change": successHandler = afterChangeCabinetSuccessfully ; break;
 						case "del"   : successHandler = afterDeleteCabinetSuccessfully ; break;
+						case "copy"  :
+						case "move"  : successHandler = afterMoveCabinetSuccessfully   ; break;
 					}
 					
 					switch(code) {
-						case 0 : successHandler()                   ; break;
+						case 0 : successHandler(mode)               ; break;
 						case 1 : alert(CabinetMessages.strParamErr) ; break;
 						case 2 : alert(CabinetMessages.strError)    ; break;
+						case 3 : alert(CabinetMessages.strPerm)     ; break;
 						case 4 : alert(CabinetMessages.strRoot)     ; break;
+						case 5 : alert(CabinetMessages.strMovErr2)  ; break;
+						case 6 : alert(CabinetMessages.strMovErr3)  ; break;
+						case 7 : alert(CabinetMessages.strCapacity) ; break;
 						default: alert(CabinetMessages.strError)    ; return;
 					}
-					
-					document.getElementById("cabNameTxt1").value = "";
-					document.getElementById("cabNameTxt2").value = "";
+				}
+				
+				function afterMoveCabinetSuccessfully(mode) {
+					var strMessage = mode == "copy" ? CabinetMessages.strCopy : CabinetMessages.strMove;
+					alert(strMessage);
+					closeCabinetDialog("moveCab");
+					reloadTree();
 				}
 				
 				function afterChangeCabinetSuccessfully() {
 					alert(CabinetMessages.strSave);
+					document.getElementById("cabNameTxt1").value = "";
+					document.getElementById("cabNameTxt2").value = "";
 					closeCabinetDialog("addCab");
 					reloadTree();
 				}
 				
 				function afterAddCabinetSuccessfully() {
 					alert(CabinetMessages.strAdd);
+					document.getElementById("cabNameTxt1").value = "";
+					document.getElementById("cabNameTxt2").value = "";
 					closeCabinetDialog("addCab");
 					reloadTree();
 				}
@@ -172,9 +163,7 @@
 					var selectedNode = document.querySelector("span[class='selectedNode']");
 					var currentNode  = "";
 					
-					if (!mode || mode != "del") {
-						if (selectedNode) {currentNode = selectedNode.getAttribute("role");}
-					}
+					if (!mode || mode != "del") {if (selectedNode) {currentNode = selectedNode.getAttribute("role");}}
 					
 					myCabinetTree.makeTree({cabinetNode : currentNode});
 					var leftPanel   = window.opener;
@@ -182,22 +171,56 @@
 					if (leftPanel) {leftPanel.CabUserLeft.reloadTree(currentNode);}
 				}
 				
-				function moveCabinetHandler(){
+				function moveCabinetHandler() {
+					var selectedNode = document.getElementById("cabinetMgTree").querySelector("span[class='selectedNode']");
+					if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
+					if (selectedNode.getAttribute("level") == "0") {alert(CabinetMessages.strRoot); return;}
+					
 					var h1TtlElmt = document.getElementById("moveCabTtl");
 					var mode      = h1TtlElmt.getAttribute("role");
+					
 					if (!mode) {alert(CabinetMessages.strError); return;}
 					
-					//*Note check selected cabinet here
-					var handleFunct = mode == "move" ? moveCabinet : copyCabinet;
-					handleFunct();
+					moveCabinet(mode);
 				}
 				
-				function moveCabinet() {
-					//*Note move cabinet function here
+				function addCabinet(strName1, strName2) {
+					var url      = "/ezCabinet/addCabinet.do";
+					var parentId = document.getElementById("cabinetMgTree").querySelector("span[class='selectedNode']").getAttribute("role");
+					var data     = {
+						parentId  : parentId,
+						cabName1  : strName1,
+						cabName2  : strName2
+					};
+					
+					makeAjaxCall(data, "GET", url, afterChangeCabinet, null, true, "add");
 				}
 				
-				function copyCabinet() {
-					//*Note copy cabinet function here
+				function changeCabinet(strName1, strName2) {
+					var url  = "/ezCabinet/renameCabinet.do";
+					var data = {
+						cabinetId : document.getElementById("cabinetMgTree").querySelector("span[class='selectedNode']").getAttribute("role"),
+						cabName1  : strName1,
+						cabName2  : strName2
+					};
+					
+					makeAjaxCall(data, "GET", url, afterChangeCabinet, null, true, "change");
+				}
+				
+				function moveCabinet(mode) {
+					var url       = "/ezCabinet/moveCabinet.do";
+					var cabinetId = document.getElementById("cabinetMgTree").querySelector("span[class='selectedNode']").getAttribute("role");
+					var parentId  = document.getElementById("cabinetMoveTree").querySelector("span[class='selectedNode']").getAttribute("role");
+					
+					if (cabinetId == parentId) {alert(CabinetMessages.strMovErr1); return;}
+					
+					var data = {
+						cabinetId : cabinetId,
+						parentId  : parentId,
+						mode      : mode
+					};
+					
+					makeAjaxCall(data, "GET", url, afterChangeCabinet, null, true, mode);
 				}
 				
 				function delCabinet() {
@@ -207,7 +230,7 @@
 					makeAjaxCall(data, "GET", url, afterChangeCabinet, null, true, "del");
 				}
 				
-				function checkCabinetName(str){
+				function checkCabinetName(str) {
 					var regex = /[*:"\\|<>\/?]/g;
 					return regex.test(str);
 				}
@@ -232,6 +255,8 @@
 					var cabAddDiv       = document.getElementById(divInfo.cabDivId);
 					cabAddDiv.className = "popup " + divInfo.cabDivClass;
 					removeFogPanel();
+					
+					if (mode == "moveCab") {document.getElementById("cabinetMoveTree").innerHTML = "";}
 				}
 				
 				function addCabinetDialog() {
@@ -275,6 +300,22 @@
 					if (selectedNode.getAttribute("level") == "0") {alert(CabinetMessages.strRoot); return;}
 					
 					addFogPanel();
+					
+					//Add new tree
+					var subTree = new CabinetTree();
+					
+					subTree.setTreeInfo({
+						treeId     : "cabinetMoveTree",
+						treeType   : "cabinet",
+						type       : "normal",
+						initialUrl : "/ezCabinet/getMyCabinetTree.do",
+						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
+						click      : null,
+						dblClick   : null
+					});
+					
+					subTree.makeTree();
+					
 					changeCabinetTitle(mode, "moveCabinet");
 					showCabinetPopup("moveCab", 320, 400);
 				}

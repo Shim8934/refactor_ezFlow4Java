@@ -1,9 +1,12 @@
 package egovframework.ezEKP.ezCabinet.web;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,9 +60,12 @@ public class EzCabinetController {
 		if (resultObj.get("status").toString().equals("ok")) {
 			JSONObject capacity = (JSONObject)resultObj.get("capacity");
 			model.addAttribute("capacityType" , capacity.get("capacityType"));
+			logger.debug("UsedRate: " + capacity.get("usedRate"));
+			
+			
 			model.addAttribute("percent"      , capacity.get("usedRate"));
 			model.addAttribute("totalCapacity", capacity.get("totalCapacity"));
-			model.addAttribute("useVolume"    , getFileSize(Integer.parseInt(capacity.get("totalUsed").toString())));
+			model.addAttribute("useVolume"    , getFileSize(Long.parseLong((String)capacity.get("totalUsed"))));
 		}
 		
 		logger.debug("jspGetCabinetLeft ended");
@@ -129,7 +136,10 @@ public class EzCabinetController {
 	public String jspGetMyCabinet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetMyCabinet started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId   = request.getParameter("cabinetId");
 		
+		model.addAttribute("cabinetId", cabinetId);
+		model.addAttribute("mycabinet", 1);
 		logger.debug("jspGetMyCabinet ended");
 		return "ezCabinet/cabinetItem";
 	}
@@ -193,74 +203,72 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/uploadFile.do", method = RequestMethod.POST)
-	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+	@RequestMapping(value="/ezCabinet/uploadAttachFile.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonUploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("Upload file is running!");
-		
-		/*LoginSimpleVO userInfo         = commonUtil.userInfoSimple(loginCookie);
+		LoginSimpleVO userInfo         = commonUtil.userInfoSimple(loginCookie);
 		List<MultipartFile> multiFiles = request.getFiles("fileToUpload");
-		String folderId                = request.getParameter("folderId");
-		String gwServerUrl             = config.getProperty("config.webFolderGwServerURL");
-		String url                     = gwServerUrl + "/rest/ezwebfolder/filemanage/file-upload";
+		JSONObject resultObj           = new JSONObject();
 		
-		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-		requestFactory.setBufferRequestBody(false);
-		
-		RestTemplate restTemplate                       = new RestTemplate(requestFactory);
-		List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
-		
-		for (int i = 0; i < messageConverters.size(); i++) {
-			HttpMessageConverter<?> messageConverter = messageConverters.get(i);
-			
-			if (messageConverter.getClass().equals(ResourceHttpMessageConverter.class)) {
-				messageConverters.set(i, new BnkResourceHttpMessageConverter());
-			}
+		if (multiFiles.size() == 0) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
 		}
 		
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-		JSONObject jsonObject             = new JSONObject();
-		JSONArray jsonArray               = new JSONArray();
-		
-		for (MultipartFile file: multiFiles) {
-			JSONObject fileJson = new JSONObject();
-			
-			fileJson.put("originalFilename", file.getOriginalFilename());
-			jsonArray.add(fileJson);
-			map.add("files", new MultipartFileResource(file.getInputStream(), file.getOriginalFilename()));
-		}
-		
-		jsonObject.put("nameArray", jsonArray);
-		jsonObject.put("userId", userInfo.getId());
-		jsonObject.put("folderId", folderId);
-		
-		map.add("data", jsonObject);
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-		headers.set("host-name", request.getServerName());
-		
-		HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<MultiValueMap<String, Object>>(map, headers);
-		UriComponentsBuilder builder                     = UriComponentsBuilder.fromHttpUrl(url);
-		ResponseEntity<String> result                    = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
-		
-		JSONParser jp         = new JSONParser();
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-		String status         = resultBody.get("status").toString();
-		JSONArray listFileVO  = null;
-		
-		if (status.equals("ok")) {
-			listFileVO = (JSONArray) resultBody.get("data");
-			model.addAttribute("listFile", listFileVO);
-		}
-		else {
-			String reason = resultBody.get("reason").toString();
-			model.addAttribute("reason", reason);
-		}
-		
-		*/
+		resultObj = cabinetRestService.uploadAttachFile(request, userInfo.getId(), multiFiles);
 		
 		logger.debug("Upload file finishes!");
-		return "json";
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/deleteAttachFile.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonDeleteFile(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("Delete file is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String filePath        = request.getParameter("filePath") != null ? request.getParameter("filePath") : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		if (filePath.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.deleteAttachFile(request, userInfo.getId(), filePath);
+		
+		logger.debug("Delete file finishes!");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/saveItem.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonSaveItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("Save item is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId       = request.getParameter("cabinetId")   != null ? request.getParameter("cabinetId")   : "";
+		String title           = request.getParameter("title")       != null ? request.getParameter("title")       : "";
+		String summary         = request.getParameter("summary")     != null ? request.getParameter("summary")     : "";
+		String fileList        = request.getParameter("listFile")    != null ? request.getParameter("listFile")    : "";
+		String relatedList     = request.getParameter("relatedList") != null ? request.getParameter("relatedList") : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		if (cabinetId.equals("") || title.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		JSONParser jp        = new JSONParser();
+		JSONArray fileArray  = (JSONArray) jp.parse(fileList);
+		JSONArray relatedArr = (JSONArray) jp.parse(relatedList);
+		
+		resultObj = cabinetRestService.saveItem(request, userInfo.getId(), cabinetId, title, summary, fileArray, relatedArr);
+		
+		logger.debug("Save item finishes!");
+		return resultObj.toString();
 	}
 	
 	@RequestMapping(value="/ezCabinet/saveModules.do")
@@ -344,6 +352,12 @@ public class EzCabinetController {
 		String cabinetName2  = request.getParameter("cabName2")  != null ? request.getParameter("cabName2") : "";
 		JSONObject resultObj = new JSONObject();
 		
+		if (cabinetName1.equals("") || cabinetName2.equals("") || parentId.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
 		resultObj            = cabinetRestService.addCabinet(request, user.getId(), parentId, cabinetName1, cabinetName2);
 		
 		logger.debug("jsonAddCabinet end");
@@ -360,6 +374,12 @@ public class EzCabinetController {
 		String cabinetName2  = request.getParameter("cabName2")  != null ? request.getParameter("cabName2")  : "";
 		JSONObject resultObj = new JSONObject();
 		
+		if (cabinetName1.equals("") || cabinetName2.equals("") || cabinetId.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
 		resultObj            = cabinetRestService.renameCabinet(request, user.getId(), cabinetId, cabinetName1, cabinetName2);
 		
 		logger.debug("jsonRenameCabinet end");
@@ -374,9 +394,37 @@ public class EzCabinetController {
 		String cabinetId     = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
 		JSONObject resultObj = new JSONObject();
 		
+		if (cabinetId.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
 		resultObj            = cabinetRestService.deleteCabinet(request, user.getId(), cabinetId);
 		
 		logger.debug("jsonDeleteCabinet end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/moveCabinet.do")
+	@ResponseBody
+	public String jsonMoveCabinet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonMoveCabinet start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId     = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
+		String parentId      = request.getParameter("parentId")  != null ? request.getParameter("parentId")  : "";
+		String mode          = request.getParameter("mode")      != null ? request.getParameter("mode")      : "";
+		JSONObject resultObj = new JSONObject();
+		
+		if (cabinetId.equals("") || parentId.equals("") || mode.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj            = cabinetRestService.moveCabinet(request, user.getId(), cabinetId, parentId, mode);
+		
+		logger.debug("jsonMoveCabinet end");
 		return resultObj.toString();
 	}
 	
@@ -394,21 +442,20 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	private String getFileSize(int fileSize) {
+	private String getFileSize(long fileSize) {
 		String fileSize_ = "";
 		
 		if (fileSize / 1024 / 1024 >= 1) {
-			fileSize_ = String.format("%.2f", (double)(fileSize / 1024 / 1024 * 10) / 10);
+			fileSize_ = String.format("%.2f", ((double)fileSize / 1024 / 1024 * 10) / 10);
 			fileSize_ = fileSize_ + "MB";
 		}
 		else if (fileSize / 1024 >= 1) {
-			fileSize_ = String.format("%.2f", (double)(fileSize / 1024));
+			fileSize_ = String.format("%.2f", ((double)fileSize / 1024));
 			fileSize_ = fileSize_ + "KB";
 		}
 		else {
 			fileSize_ = fileSize + "B";
 		}
-		
 		return fileSize_;
 	}
 }

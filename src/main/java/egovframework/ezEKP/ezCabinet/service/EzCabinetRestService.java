@@ -4,6 +4,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 public interface EzCabinetRestService {
 	public JSONObject checkCabinetAdmin(HttpServletRequest request, String userId) throws Exception;
@@ -34,10 +36,20 @@ public interface EzCabinetRestService {
 	public JSONObject getUserPreviewConfig(HttpServletRequest request, String userId) throws Exception;
 	public JSONObject saveUserConfig(HttpServletRequest request, String userId, String prevMode, String listCount, String contentWPrev, String contentHPrev) throws Exception;
 	
-	//User my cabinet 
+	//User my cabinet tree
 	public JSONObject getMyCabinetTree(HttpServletRequest request, String currentNode, String userId) throws Exception;
-	public JSONObject addCabinet(HttpServletRequest request, String userId, String parentId, String cabinetName1, String cabinetName2) throws Exception;
 	public JSONObject getCabinetSubNodes(HttpServletRequest request, String userId, String nodeId) throws Exception;
+	
+	//User cabinet management
+	public JSONObject addCabinet(HttpServletRequest request, String userId, String parentId, String cabinetName1, String cabinetName2) throws Exception;
 	public JSONObject renameCabinet(HttpServletRequest request, String userId, String cabinetId, String cabinetName1, String cabinetName2) throws Exception;
 	public JSONObject deleteCabinet(HttpServletRequest request, String userId, String cabinetId) throws Exception;
+	public JSONObject moveCabinet(HttpServletRequest request, String userId, String cabinetId, String parentId, String mode) throws Exception;
+	
+	//User upload attach file
+	public JSONObject uploadAttachFile(MultipartHttpServletRequest request, String userId, List<MultipartFile> multiFiles) throws Exception;
+	public JSONObject deleteAttachFile(HttpServletRequest request, String userId, String filePath) throws Exception;
+	
+	//User item
+	public JSONObject saveItem(HttpServletRequest request, String userId, String cabinetId, String title, String summary, JSONArray fileArray, JSONArray relatedArr);
 }
