@@ -3734,10 +3734,20 @@
 			S.USER_ID = M.CN
 		AND
 			S.TENANT_ID = M.TENANT_ID
+		JOIN 
+			TBL_PMS_TASK T
+		ON
+			S.PROJECT_ID = T.PROJECT_ID
+		AND
+			S.TASK_ID = T.TASK_ID
+		AND
+			S.TENANT_ID = T.TENANT_ID
 		WHERE
 			S.PROJECT_ID = #projectId#
 		AND	
 			S.TENANT_ID	= #tenantId#
+		AND
+			T.DEL_STATUS = 0
 		ORDER BY
 			S.USER_ID, S.ASSIGNED_DATE
 	</select>
@@ -3745,15 +3755,16 @@
 	<insert id="EzPMSDAO.addMemberSchedule" parameterClass="map">
 	<![CDATA[
 		INSERT INTO TBL_PMS_MEMBERSCHEDULE (
-			PROJECT_ID,		TENANT_ID,		USER_ID,		ASSIGNED_DATE
+			PROJECT_ID,		TENANT_ID,		USER_ID,		ASSIGNED_DATE, TASK_ID
 		) VALUES (
-			#projectId#,	#tenantId#,		#memberId#,		#assignedDate#
+			#projectId#,	#tenantId#,		#memberId#,		#assignedDate#, #taskId#
 		)
 		ON DUPLICATE KEY UPDATE
 			USER_ID = #memberId#,
 			ASSIGNED_DATE = #assignedDate#,
 			PROJECT_ID = #projectId#,
-			TENANT_ID = #tenantId#
+			TENANT_ID = #tenantId#,
+			TASK_ID = #taskId#
 	]]>
 	</insert>
 	
@@ -4087,13 +4098,19 @@
 		DELETE FROM 
 			TBL_PMS_MEMBERSCHEDULE
 		WHERE
-			USER_ID = #memberId#
-		AND
 			PROJECT_ID = #projectId#
+	]]>
+	<isNotNull property="memberId">
+		AND
+			USER_ID = #memberId#
+	</isNotNull>	
+	<isNotNull property="searchDate">
 		AND
 			ASSIGNED_DATE = #searchDate#
+	</isNotNull>
 		AND
 			TENANT_ID = #tenantId#
-	]]>
+		AND
+			TASK_ID = #taskId#
 	</delete>
 </sqlMap>

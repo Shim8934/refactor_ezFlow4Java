@@ -539,7 +539,7 @@ public class EzPMSController {
 	}
 	
 	/**
-	 * 프로젝트 참여 멤버 조회
+	 * 프로젝트 참여 역할별 멤버 조회
 	 * @param loginCookie
 	 * @param request
 	 * @param resp
@@ -558,6 +558,7 @@ public class EzPMSController {
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
+		param.put("isGantt", 1);
 		
 		String url = "/rest/ezPMS/projects/" + projectId + "/roles/" + roleId;
 		
@@ -2108,6 +2109,7 @@ public class EzPMSController {
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
 		param.put("userId", userInfo.getId());
+		param.put("isGantt", 0);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
 		String status = resultBody.get("status").toString();

@@ -2783,13 +2783,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void addMemberSchedule(String memberId, int tenantId, String assignedDate, String projectId) {
+	public void addMemberSchedule(String memberId, int tenantId, String assignedDate, long projectId, long taskId) {
 		LOGGER.debug("[SERVICE] addMemberSchedule started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
 		map.put("memberId", memberId);
 		map.put("assignedDate", assignedDate);
+		map.put("taskId", taskId);
 		
 		ezPMSDAO.addMemberSchedule(map);
 		LOGGER.debug("[SERVICE] addMemberSchedule ended.");
@@ -3053,12 +3054,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void deleteMemberSchedule(String date, long projectId, int tenantId, String memberId) {
+	public void deleteMemberSchedule(String date, long projectId, int tenantId, String memberId, long taskId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchDate", date);
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
 		map.put("memberId", memberId);
+		map.put("taskId", taskId);
 		
 		ezPMSDAO.deleteMemberSchedule(map);
 		
