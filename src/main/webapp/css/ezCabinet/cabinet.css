@@ -200,7 +200,7 @@
 .cabShareList {border-top: 1px solid #ddd; margin-top: 3px;}
 .cabShareList >div {width: 410px; height: 505px; overflow-x: auto; overflow-y: auto;}
 
-.cabFogPanel {width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; z-index: 1000px; background: none rgba(0,0,0,0.5);}
+.cabFogPanel {width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; z-index: 1000; background: none rgba(0,0,0,0.5);}
 .popup .cabBttnDiv {text-align: center; margin: 10px auto;}
 
 .divInfo {width: 100%;}

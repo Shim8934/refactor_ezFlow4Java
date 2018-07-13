@@ -65,8 +65,9 @@ var CabinetPreview = function () {
 			});
 		}
 		
-		function setDestroyResizeable() {
-			$('#' + _mainDivId).resizable("destroy");
+		function setDestroyResizeable(mode) {
+			if (mode != "init") {$('#' + _mainDivId).resizable("destroy");}
+			
 			document.getElementById(_wrapperDivId).style.display = '';
 			var mainDiv           = document.getElementById(_mainDivId);
 			mainDiv.style.width   = "100%";

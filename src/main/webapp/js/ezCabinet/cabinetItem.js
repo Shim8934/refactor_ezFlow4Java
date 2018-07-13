@@ -39,8 +39,9 @@ var CabinetItem = function() {
 		});
 		
 		switch(prevMode) {
-			case "w"   : cabinetPreview.resizeByWidth() ; break;
-			case "h"   : cabinetPreview.resizeByHeight(); break;
+			case "w"   : cabinetPreview.resizeByWidth()      ; break;
+			case "h"   : cabinetPreview.resizeByHeight()     ; break;
+			case "off" : cabinetPreview.resizeDestroy("init"); break;
 		}
 		
 		crrPreMode = prevMode;
@@ -83,8 +84,8 @@ var CabinetItem = function() {
 		closeViewPopUp();
 		
 		switch(crrPreMode) {
-			case "w": cabinetPreview.resizeByWidth() ; break;
-			case "h": cabinetPreview.resizeByHeight(); break;
+			case "w"  : cabinetPreview.resizeByWidth()  ; break;
+			case "h"  : cabinetPreview.resizeByHeight() ; break;
 		}
 	}
 	
