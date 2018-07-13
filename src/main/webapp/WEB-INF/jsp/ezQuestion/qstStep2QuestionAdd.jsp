@@ -882,6 +882,13 @@
         		var table = document.getElementById("ResultTable");
         		if (table == null)
             		return;
+        		
+        		//2018-07-13 배현상, 테이블형식에서 질문수 추가 제한
+        		if (table.childNodes.length - 1 >= 10) {
+        			alert("<spring:message code='ezQuestion.bhs01'/>");
+        			return;
+        		}
+        		
         		var oTr = document.createElement("TR");
         		var oTh = document.createElement("TH");
         		var oTd, oRadioBtn;
@@ -904,6 +911,13 @@
 		        var table = document.getElementById("ResultTable");
 		        if (table == null)
             		return;
+		        
+		        //2018-07-13 배현상, 테이블형식에서 보기수 추가 제한
+		        if (table.childNodes[0].childNodes.length - 1 >= 10) {
+		        	alert("<spring:message code='ezQuestion.bhs02'/>");
+		        	return;
+		        }
+		        
         		var oTr, oTh, oTd, oRadioBtn;
 
 		        for (var i = 0; i < table.childNodes.length; i++) {
