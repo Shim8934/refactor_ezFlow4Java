@@ -23,8 +23,11 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
@@ -554,7 +557,7 @@ public class EzCabinetGWController {
 			LoginVO userInfo            = commonUtil.getUserForGw(userId, serverName);
 			int tenantId                = userInfo.getTenantId();
 			String companyId            = userInfo.getCompanyID();
-			CabinetGeneralVO userConfig = cabinetService.getUserPreviewConfig(userId, companyId, tenantId);
+			CabinetGeneralVO userConfig = cabinetService.getUserPreviewConfig(userId, userInfo.getCompanyID(), userInfo.getTenantId());
 			
 			if (userConfig == null) {
 				userConfig = new CabinetGeneralVO(userId, companyId, "off", 10, 50, 50, 50, 50, tenantId);
@@ -876,6 +879,8 @@ public class EzCabinetGWController {
 		String serverName      = request.getHeader("host-name") != null ? request.getHeader("host-name")          : "";
 		JSONObject result      = new JSONObject();
 		
+		logger.debug("serverName: " + serverName);
+		
 		if (nameArray == null || serverName.equals("") || nameArray.size() != multiFileLists.size() || multiFileLists.size() != 1) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
@@ -906,6 +911,8 @@ public class EzCabinetGWController {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
 		String filePath   = request.getParameter("filePath") != null ? request.getParameter("filePath") : "";
 		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " filePath: " + filePath);
 		
 		if (serverName.equals("") || filePath.equals("")) {
 			logger.debug("Parameter error!");
@@ -942,7 +949,9 @@ public class EzCabinetGWController {
 		JSONObject result = new JSONObject();
 		JSONParser jp     = new JSONParser();
 		
-		if (serverName.equals("") || title.equals("")) {
+		logger.debug("ServerName: " + serverName + " ||  title: " + title + " ||  summary: " + summary + " ||  userId: " + userId + " || fileArray: " + fileArray + " || relatedArr: " + relatedArr);
+		
+		if (serverName.equals("") || title.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -992,6 +1001,146 @@ public class EzCabinetGWController {
 			
 			cabinetService.saveItem(Integer.parseInt(cabinetId), attacheFiles, relatedFiles, title, summary, realPath, userInfo);
 			
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/item/id/{cabinetid}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getItems(@PathVariable(value="cabinetid") String cabinetId, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName    = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
+		String userId        = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
+		String title         = request.getParameter("title")       != null ? request.getParameter("title")                         : "";
+		String summary       = request.getParameter("summary")     != null ? request.getParameter("summary")                       : "";
+		String recursive     = request.getParameter("recursive")   != null ? request.getParameter("recursive")                     : "";
+		String creatorName   = request.getParameter("creatorName") != null ? request.getParameter("creatorName")                   : "";
+		String startDate     = request.getParameter("startDate")   != null ? request.getParameter("startDate")                     : "";
+		String endDate       = request.getParameter("endDate")     != null ? request.getParameter("endDate")                       : "";
+		String column        = request.getParameter("column")      != null ? request.getParameter("column")                        : "";
+		String order         = request.getParameter("order")       != null ? request.getParameter("order")                         : "";
+		String srchMode      = request.getParameter("srchMode")    != null ? request.getParameter("srchMode")                      : "";
+		String srchOption    = request.getParameter("srchOption")  != null ? request.getParameter("srchOption")                    : "";
+		int listCntSize      = request.getParameter("listCntSize") != null ? Integer.parseInt(request.getParameter("listCntSize")) : -1;
+		int currentPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : -1;
+		String sqlQuery      = "";
+		JSONObject result    = new JSONObject();
+		
+		logger.debug("CabinetId: " + cabinetId + " || Title: " + title + " || Summary: " + summary + " || Recursive: " + recursive + " || Creator name: " + creatorName + " || Start Date: " + startDate + " || End Date: " + endDate + " || Column: " + column + " || Order: " + order + " || Search mode: " + srchMode + " || Search option: " + srchOption + " || List count: " + listCntSize);
+		
+		if (serverName.equals("") || cabinetId.equals("") || userId.equals("") || currentPage < 1 || listCntSize < 1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
+			//Add checking permission here
+			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(Integer.parseInt(cabinetId)));
+			JSONObject permission     = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
+			int tenantId     = userInfo.getTenantId();
+			String primary   = userInfo.getPrimary();
+			int startPoint   = 0;
+			int totalItems   = 0;
+			int totalPages   = 0;
+			
+			if (!column.equals("") && !order.equals("")) {
+				switch(column) {
+					case "it": sqlQuery = "item_type "   + order; break;
+					case "tt": sqlQuery = "title "       + order; break;
+					case "un": sqlQuery = primary.equals("1") ? "creator_name1 " + order : "creator_name2 " + order; break;
+					case "cd": sqlQuery = "create_date " + order; break;
+					case "is": sqlQuery = "item_size "   + order; break;
+					default  : sqlQuery = "item_type "   + order; break;
+				}
+			}
+			
+			CabinetItemSearchVO searchVO = new CabinetItemSearchVO(Integer.parseInt(cabinetId), listCntSize, tenantId, userId, primary, title, summary, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption);
+			List<CabinetItemVO> itemList = new ArrayList<>();
+			
+			if (srchMode.equals("2") && recursive.equals("1")) {
+				CabinetVO cabinet = cabinetService.getCabinetById(cabinetId, userInfo.getTenantId());
+				searchVO.setCabinetPath(cabinet.getCabinetPath());
+				totalItems  = cabinetService.getTotalItemsRecursive(searchVO);
+				totalPages  = (totalItems + listCntSize - 1) / listCntSize;
+				currentPage = currentPage > totalPages ? totalPages : currentPage;
+				currentPage = currentPage == 0         ? 1          : currentPage;
+				startPoint  = (currentPage - 1) * listCntSize;
+				searchVO.setStartPoint(startPoint);
+				itemList    = cabinetService.getItemsRecursive(searchVO);
+			}
+			else {
+				totalItems  = cabinetService.getTotalItems(searchVO);
+				totalPages  = (totalItems + listCntSize - 1) / listCntSize;
+				currentPage = currentPage > totalPages ? totalPages : currentPage;
+				currentPage = currentPage == 0         ? 1          : currentPage;
+				startPoint  = (currentPage - 1) * listCntSize;
+				searchVO.setStartPoint(startPoint);
+				itemList    = cabinetService.getItems(searchVO);
+			}
+			
+			result.put("itemList",    itemList);
+			result.put("totalPages",  totalPages);
+			result.put("totalRows",   totalItems);
+			result.put("currentPage", currentPage);
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/cabinet/id/{cabinetid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getCabinetInfo(@PathVariable(value="cabinetid") String cabinetId, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
+		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
+		JSONObject result = new JSONObject();
+		
+		if (serverName.equals("") || userId.equals("") || cabinetId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
+			//Add checking permission here
+			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(Integer.parseInt(cabinetId)));
+			JSONObject permission     = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
+			CabinetVO cabinet = cabinetService.getCabinetById(cabinetId, userInfo.getTenantId());
+			cabinet.setCabinetName(userInfo.getPrimary().equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2());
+			
+			
+			
+			result.put("cabinet", cabinet);
 			result.put("status", "ok");
 			result.put("code", 0);
 		}

@@ -11,12 +11,12 @@
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css"/>
 	</head>
 	<body class="mainbody">
-		<h1 id="cabInfo" role="<c:out value="${cabId}"/>">
+		<h1 id="cabInfo">
 			<%-- <spring:message code='ezWebFolder.t220'/>
 			<span id="mailBoxInfo"></span> --%>
 			<span class="topSearchSpan">
-				<input name="searchCheck" id="radio1" type="radio" value="subject" checked><label for="radio1">&nbsp;<spring:message code='ezCabinet.t51'/></label>
-				<input name="searchCheck" id="radio2" type="radio" value="title"          ><label for="radio2">&nbsp;<spring:message code='ezCabinet.t52'/></label>
+				<input name="searchCheck" id="radio1" type="radio" value="title" checked><label for="radio1">&nbsp;<spring:message code='ezCabinet.t51'/></label>
+				<input name="searchCheck" id="radio2" type="radio" value="summary"      ><label for="radio2">&nbsp;<spring:message code='ezCabinet.t52'/></label>
 				&nbsp;
 				<input name="keyword" type="text" id="ssInput">
 				<a id="searchBttn"><img src="/images/sub/bsearch.gif"></a>
@@ -37,9 +37,9 @@
 				<li><a><span>파일상세</span></a></li>
 				<li><a><span><spring:message code='ezCabinet.t125'/></span></a></li>
 				<li id="right">
-					<img src="${previewMode == 'none' ? '/images/kr/cm/btn_onnoframe.gif'     : '/images/kr/cm/btn_noframe.gif'}"     class="btnimg cabinet" id="preViewNone"  >
-					<img src="${previewMode == 'H'    ? '/images/kr/cm/btn_onbottomframe.gif' : '/images/kr/cm/btn_bottomframe.gif'}" class="btnimg cabinet" id="preViewBottom">
-					<img src="${previewMode == 'W'    ? '/images/kr/cm/btn_onleftframe.gif'   : '/images/kr/cm/btn_leftframe.gif'}"   class="btnimg cabinet" id="preViewleft"  >
+					<img src="${config.previewMode == 'off' ? '/images/kr/cm/btn_onnoframe.gif'     : '/images/kr/cm/btn_noframe.gif'}"     class="btnimg cabinet" id="preViewNone"  >
+					<img src="${config.previewMode == 'h'    ? '/images/kr/cm/btn_onbottomframe.gif' : '/images/kr/cm/btn_bottomframe.gif'}" class="btnimg cabinet" id="preViewBottom">
+					<img src="${config.previewMode == 'w'    ? '/images/kr/cm/btn_onleftframe.gif'   : '/images/kr/cm/btn_leftframe.gif'}"   class="btnimg cabinet" id="preViewleft"  >
 					<img src="/images/kr/cm/btn_arrow_down.gif" role="off" id="sltView">
 				</li>
 			</ul>
@@ -56,7 +56,7 @@
 						<th class="cabSearchTh"><spring:message code='ezCabinet.t01'/></th>
 						<td class="cabSearchTd">
 							<div>
-								<span id="cabinetName" class="cabSearchName">그룹웨어 업무</span>
+								<span id="cabinetName" class="cabSearchName"><c:out value='${cabinetName}'/></span>
 								<span class="searchDetail"><input type="checkbox" id="dCheckBox"><span><spring:message code='ezCabinet.t91'/></span></span>
 							</div>
 						</td>
@@ -71,7 +71,7 @@
 					</tr>
 					<tr>
 						<th class="cabSearchTh"><spring:message code='ezCabinet.t52'/></th>
-						<td class="cabSearchTd"><input id="sCabIntro" type="text"></td>
+						<td class="cabSearchTd"><input id="sCabSum" type="text"></td>
 					</tr>
 					<tr>
 						<th class="cabSearchTh"><spring:message code='ezCabinet.t58'/></th>
@@ -115,19 +115,20 @@
 		</div>
 		
 		<div id="cabWraperDiv" style="height: 400px;">
-			<div id="cabinetFileList" style="width: 100%;">
-				<table class="mainlist cabTbl" id="tblCabinetList">
-					<tr>
-						<th headers=""   class="inputTh"><input type="checkbox"></th>
-						<th headers="ft" class="noTh"   ><spring:message code='ezCabinet.t60'/></th>
-						<th headers="fn" class="typeTh" ><spring:message code='ezCabinet.t61'/></th>
-						<th headers="fs" class="ttlTh"  ><spring:message code='ezCabinet.t62'/></th>
-						<th headers="un" class="userTh" ><spring:message code='ezCabinet.t63'/></th>
-						<th headers="cd" class="dateTh" ><spring:message code='ezCabinet.t64'/></th>
-						<th headers="dt" class="sizeTh" ><spring:message code='ezCabinet.t65'/></th>
-					</tr>
-					
-				</table>
+			<div id="cabinetFileList" style="width: 100%; display: none;">
+				<div>
+					<table class="mainlist cabTbl" id="tblCabinetList">
+						<tr>
+							<th headers=""   class="inputTh"><input type="checkbox"></th>
+							<th headers="it" class="typeTh" ><spring:message code='ezCabinet.t61'/></th>
+							<th headers="tt" class="ttlTh"  ><spring:message code='ezCabinet.t62'/></th>
+							<th headers="un" class="userTh" ><spring:message code='ezCabinet.t63'/></th>
+							<th headers="cd" class="dateTh" ><spring:message code='ezCabinet.t64'/></th>
+							<th headers="is" class="sizeTh" ><spring:message code='ezCabinet.t65'/></th>
+						</tr>
+					</table>
+				</div>
+				<div id="tblPageRayer" class="cabpagenaviDiv"></div>
 			</div>
 			
 			<div id="previewCabH" class="cabDivPrevH" style="display: none;">
@@ -146,7 +147,7 @@
 							</div>
 						</div>
 						
-						<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="" class="cabIfrmPreview"></iframe>
+						<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="" class="cabIfrmPreview" style="width: 100%; height: 0px;"></iframe>
 					</div>
 				</div>
 			</div>
@@ -170,12 +171,11 @@
 							</div>
 						</div>
 						
-						<iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
+						<iframe id="ifrmPreViewW" name="ifrmPreViewW" src="" class="cabIfrmPreview" style="width: 100%; height: 0px;"></iframe>
 					</div>
 				</div>
 			 </div>
 		</div>
-		<div id="tblPageRayer" class="cabpagenaviDiv"></div>
 		
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"                     ></script>
@@ -186,7 +186,7 @@
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTable.js"          ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetItem.js"           ></script>
 		<script type="text/javascript">
-			CabinetItem.start("<c:out value='${cabinetId}'/>", 50, 50, "none");
+			CabinetItem.start("<c:out value='${cabinetId}'/>", "<c:out value='${config.contentHpercent}'/>", "<c:out value='${config.contentWpercent}'/>", "<c:out value='${config.previewMode}'/>");
 		</script>
 	</body>
 </html>

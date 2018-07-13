@@ -42,5 +42,9 @@ var CabinetMessages = {
 	strMovErr2   : "기존 캐비넷로는 이동/복사 할 수 없습니다.",
 	strMovErr3   : "하위 캐비넷로 이동 / 복사 할 수 없습니다.",
 	strNoTitle   : "제목을 입력하세요.",
-	strCapacity  : "용량을 초과하였습니다."
+	strCapacity  : "용량을 초과하였습니다.",
+	strSearch    : "검색 조건이 없습니다.",
+	strDate1     : "검색 시작일을 종료일보다 빠르게 지정하세요.",
+	strDate2     : "검색기간의 종료일을 지정해 주세요.",
+	strDate3     : "검색기간의 시작일을 지정해 주세요."
 }

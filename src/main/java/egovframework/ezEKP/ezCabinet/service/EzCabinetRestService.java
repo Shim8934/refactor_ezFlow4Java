@@ -51,5 +51,11 @@ public interface EzCabinetRestService {
 	public JSONObject deleteAttachFile(HttpServletRequest request, String userId, String filePath) throws Exception;
 	
 	//User item
-	public JSONObject saveItem(HttpServletRequest request, String userId, String cabinetId, String title, String summary, JSONArray fileArray, JSONArray relatedArr);
+	public JSONObject saveItem(HttpServletRequest request, String userId, String cabinetId, String title, String summary, JSONArray fileArray, JSONArray relatedArr) throws Exception;
+	
+	//User cabinet information
+	public JSONObject getCabinetInfo(HttpServletRequest request, String userId, String cabinetId) throws Exception;
+	
+	//User get cabinet item
+	public JSONObject getCabinetItems(HttpServletRequest request, String userId, String cabinetId, String title, String summary, String recursive, String creatorName, String startDate, String endDate, String column, String order, String srchMode, String srchOption, String listCntSize, String currentPage) throws Exception;
 }

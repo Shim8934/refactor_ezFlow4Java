@@ -3,9 +3,13 @@ var CabinetItem = function() {
 	var crrPreMode     = null;
 	var cabinetNavi    = null;
 	var cabinetTable   = null;
+	var searchMode     = "0"; //0: normal, 1: simple, 2: detail
 	var startDateStr   = "";
 	var endDateStr     = "";
-	var recursiveMode  = "Y";
+	var recursiveMode  = "";
+	var titelStr       = "";
+	var summaryStr     = "";
+	var creatorNameStr = "";
 	var cabinetId      = null;
 	var minWPercent    = 30;
 	var maxWPercent    = 70;
@@ -38,25 +42,27 @@ var CabinetItem = function() {
 			case "w"   : cabinetPreview.resizeByWidth() ; break;
 			case "h"   : cabinetPreview.resizeByHeight(); break;
 		}
+		
+		crrPreMode = prevMode;
 	}
 	
 	function changePreview(mode) {
 		if (mode == crrPreMode) {return;}
 		
 		switch(mode) {
-			case "None":
+			case "off":
 				document.getElementById("preViewNone").src   = "/images/kr/cm/btn_onnoframe.gif";
 				document.getElementById("preViewBottom").src = "/images/kr/cm/btn_bottomframe.gif";
 				document.getElementById("preViewleft").src   = "/images/kr/cm/btn_leftframe.gif";
 				cabinetPreview.resizeDestroy();
 				break;
-			case "W":
+			case "w":
 				document.getElementById("preViewNone").src   = "/images/kr/cm/btn_noframe.gif";
 				document.getElementById("preViewBottom").src = "/images/kr/cm/btn_bottomframe.gif";
 				document.getElementById("preViewleft").src   = "/images/kr/cm/btn_onleftframe.gif";
 				cabinetPreview.resizeByWidth();
 				break;
-			case "H":
+			case "h":
 				document.getElementById("preViewNone").src   = "/images/kr/cm/btn_noframe.gif";
 				document.getElementById("preViewBottom").src = "/images/kr/cm/btn_onbottomframe.gif";
 				document.getElementById("preViewleft").src   = "/images/kr/cm/btn_leftframe.gif";
@@ -65,85 +71,35 @@ var CabinetItem = function() {
 			default:
 				return;
 		}
+		
+		crrPreMode = mode;
 	}
 	/* Preview option end */
 	
 	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	
-	function windowResize() {closeViewPopUp(); cabinetPreview.resizeByWidth();}
+	function windowResize() {
+		preProcessing();
+		closeViewPopUp();
+		
+		switch(crrPreMode) {
+			case "w": cabinetPreview.resizeByWidth() ; break;
+			case "h": cabinetPreview.resizeByHeight(); break;
+		}
+	}
+	
 	function keyPress(e) {if (e.which == 27) {if (document.getElementById("searchPanel").className == "cabSearchPanel") {toggleSearchPanel();}}}
 	
+	function preProcessing() {
+		var divList           = document.getElementById("cabWraperDiv");
+		var divChild          = divList.querySelector("div[class='tableDataDiv']");
+		var reheight          = document.documentElement.clientHeight - 150;
+		divList.style.height  = reheight + "px";
+		divChild.style.height = reheight - 40 + "px";
+	}
+	
 	function initEvents(cabId, height, width, prevMode) {
-		setData(50, 50, prevMode);
-		window.addEventListener("resize", function(e) {windowResize();}, false);
-		window.addEventListener("keydown", function(e) {keyPress(e);}, false);
-		cabinetId              = cabId;
-		document.onselectstart = function() {return false;};
-		var sSearchInputElmt   = document.getElementById("ssInput");
-		sSearchInputElmt.addEventListener("keypress", function(e) {onStartSimpleSearch(e);}, false);
-		sSearchInputElmt.addEventListener("mousedown", function(e) {clearKeyword(this);}, false);
-		
-		var searchBttnElmt = document.getElementById("searchBttn");
-		searchBttnElmt.addEventListener("click", function(e) {startSimpleSearch();}, false);
-		
-		var preViewNoneElmt   = document.getElementById("preViewNone");
-		var preViewBottomElmt = document.getElementById("preViewBottom");
-		var preViewleftElmt   = document.getElementById("preViewleft");
-		var optionViewElmt    = document.getElementById("sltView");
-		
-		preViewNoneElmt.addEventListener("click", function(e)   {changePreview("None");}, false);
-		preViewBottomElmt.addEventListener("click", function(e) {changePreview("H");}, false);
-		preViewleftElmt.addEventListener("click", function(e)   {changePreview("W");}, false);
-		optionViewElmt.addEventListener("click", function(e)    {toggleOptionView(this);}, false);
-		
-		var closeSearchBttn     = document.getElementsByClassName("cabCloseBttn")[0];
-		closeSearchBttn.onclick = function() {toggleSearchPanel();};
-		var cabdivBttnElmt      = document.getElementById("searchDivBttn");
-		var listBttns           = cabdivBttnElmt.children;
-		listBttns[0].onclick    = function(e) {clearSearchDate();};
-		listBttns[1].onclick    = function(e) {}; //*Note add main search function here
-		listBttns[2].onclick    = function(e) {toggleSearchPanel();};
-		
-		var cabDelBttnElmt      = document.getElementById("delDivBttn");
-		var dellistBttns        = cabDelBttnElmt.children;
-		dellistBttns[0].onclick = function(e) {deleteFile();};
-		dellistBttns[1].onclick = function(e) {toggleDeletePopup();};
-		
-		var cabMoveBttnElmt     = document.getElementById("moveDivBttn");
-		var movlistBttns        = cabMoveBttnElmt.children;
-		movlistBttns[0].onclick = function(e) {moveFile("copy");};
-		movlistBttns[1].onclick = function(e) {moveFile("move");};
-		movlistBttns[2].onclick = function(e) {toggleMovePopup();};
-		
-		var libttns = document.getElementById("mainmenu").firstElementChild.children;
-		libttns[0].firstElementChild.onclick  = function() {addFile();};
-		libttns[2].firstElementChild.onclick  = function() {deleteFileConfirm();};
-		libttns[3].firstElementChild.onclick  = function() {moveFileConfirm();};
-		libttns[5].firstElementChild.onclick  = function() {refresh();};
-		libttns[6].firstElementChild.onclick  = function() {toggleSearchPanel();};
-		libttns[8].firstElementChild.onclick  = function() {openSharePopup();};
-		libttns[9].firstElementChild.onclick  = function() {getFileDetail();};
-		libttns[10].firstElementChild.onclick = function() {addRelatedCabinet();};
-		
-		$("#Sdatepicker").datepicker({
-			changeMonth: true,
-			changeYear: true,
-			autoSize: true,
-			showOn: "both",
-			buttonImage: "/images/ImgIcon/calendar-month.gif",
-			buttonImageOnly: true,
-			dateFormat: "yy-mm-dd"
-		});
-		
-		$("#Edatepicker").datepicker({
-			changeMonth: true,
-			changeYear: true,
-			autoSize: true,
-			showOn: "both",
-			buttonImage: "/images/ImgIcon/calendar-month.gif",
-			buttonImageOnly: true,
-			dateFormat: "yy-mm-dd"
-		});
+		setData(height, width, prevMode);
 		
 		//Initial page navigation
 		var naviMessages = {
@@ -170,6 +126,79 @@ var CabinetItem = function() {
 		cabinetTable.setTableElement("tblCabinetList", "id");
 		cabinetTable.setCallBack(searchCallBack);
 		cabinetTable.setRenderFunct(renderCabinetTable);
+		
+		window.addEventListener("resize", function(e) {windowResize();}, false);
+		window.addEventListener("keydown", function(e) {keyPress(e);}, false);
+		cabinetId              = cabId;
+		document.onselectstart = function() {return false;};
+		var sSearchInputElmt   = document.getElementById("ssInput");
+		sSearchInputElmt.addEventListener("keypress", function(e) {onStartSimpleSearch(e);}, false);
+		sSearchInputElmt.addEventListener("mousedown", function(e) {clearKeyword(this);}, false);
+		
+		var searchBttnElmt = document.getElementById("searchBttn");
+		searchBttnElmt.addEventListener("click", function(e) {startSimpleSearch();}, false);
+		
+		var preViewNoneElmt   = document.getElementById("preViewNone");
+		var preViewBottomElmt = document.getElementById("preViewBottom");
+		var preViewleftElmt   = document.getElementById("preViewleft");
+		var optionViewElmt    = document.getElementById("sltView");
+		
+		preViewNoneElmt.addEventListener("click", function(e)   {changePreview("off");}, false);
+		preViewBottomElmt.addEventListener("click", function(e) {changePreview("h");}, false);
+		preViewleftElmt.addEventListener("click", function(e)   {changePreview("w");}, false);
+		optionViewElmt.addEventListener("click", function(e)    {toggleOptionView(this);}, false);
+		
+		var closeSearchBttn     = document.getElementsByClassName("cabCloseBttn")[0];
+		closeSearchBttn.onclick = function() {toggleSearchPanel();};
+		var cabdivBttnElmt      = document.getElementById("searchDivBttn");
+		var listBttns           = cabdivBttnElmt.children;
+		listBttns[0].onclick    = function(e) {clearSearchDate();};
+		listBttns[1].onclick    = function(e) {onMainSearch();};
+		listBttns[2].onclick    = function(e) {toggleSearchPanel();};
+		
+		var cabDelBttnElmt      = document.getElementById("delDivBttn");
+		var dellistBttns        = cabDelBttnElmt.children;
+		dellistBttns[0].onclick = function(e) {deleteFile();};
+		dellistBttns[1].onclick = function(e) {toggleDeletePopup();};
+		
+		var cabMoveBttnElmt     = document.getElementById("moveDivBttn");
+		var movlistBttns        = cabMoveBttnElmt.children;
+		movlistBttns[0].onclick = function(e) {moveFile("copy");};
+		movlistBttns[1].onclick = function(e) {moveFile("move");};
+		movlistBttns[2].onclick = function(e) {toggleMovePopup();};
+		
+		var libttns = document.getElementById("mainmenu").firstElementChild.children;
+		libttns[0].firstElementChild.onclick  = function(e) {addFile();};
+		libttns[2].firstElementChild.onclick  = function(e) {deleteFileConfirm();};
+		libttns[3].firstElementChild.onclick  = function(e) {moveFileConfirm();};
+		libttns[5].firstElementChild.onclick  = function(e) {refresh();};
+		libttns[6].firstElementChild.onclick  = function(e) {toggleSearchPanel();};
+		libttns[8].firstElementChild.onclick  = function(e) {openSharePopup();};
+		libttns[9].firstElementChild.onclick  = function(e) {getFileDetail();};
+		libttns[10].firstElementChild.onclick = function(e) {addRelatedCabinet();};
+		
+		$("#Sdatepicker").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			autoSize: true,
+			showOn: "both",
+			buttonImage: "/images/ImgIcon/calendar-month.gif",
+			buttonImageOnly: true,
+			dateFormat: "yy-mm-dd"
+		});
+		
+		$("#Edatepicker").datepicker({
+			changeMonth: true,
+			changeYear: true,
+			autoSize: true,
+			showOn: "both",
+			buttonImage: "/images/ImgIcon/calendar-month.gif",
+			buttonImageOnly: true,
+			dateFormat: "yy-mm-dd"
+		});
+		
+		startSearchCabinet("1");
+		preProcessing();
 	}
 	
 	/* Search Panel */
@@ -191,10 +220,10 @@ var CabinetItem = function() {
 		//Clear all fields
 		rightFrame.getElementById("Sdatepicker").value = "";
 		rightFrame.getElementById("Edatepicker").value = "";
-		rightFrame.getElementById("dCheckBox").checked = true;
+		rightFrame.getElementById("dCheckBox").checked = false;
 		rightFrame.getElementById("sUserName").value   = "";
 		rightFrame.getElementById("sCabTitle").value   = "";
-		rightFrame.getElementById("sCabIntro").value   = "";
+		rightFrame.getElementById("sCabSum").value     = "";
 	}
 	
 	function addFogPanel(mode) {
@@ -246,17 +275,11 @@ var CabinetItem = function() {
 		var width = window.parent.document.documentElement.clientWidth;
 		if (width == 0) {width = window.parent.document.body.clientWidth;}
 		
-		var pleftpos = parseInt(width) - popUpW;
-		heigth       = parseInt(heigth) - popUpH;
-		
-		if (heigth < (popUpH + 50)) {
-			returnValue[0] = (heigth / 2);
-		}
-		else {
-			returnValue[0] = (heigth / 2) - 50;
-		}
-		
+		var pleftpos   = parseInt(width) - popUpW;
+		heigth         = parseInt(heigth) - popUpH;
+		returnValue[0] = heigth < (popUpH + 50) ? (heigth / 2) : (heigth / 2) - 50;
 		returnValue[1] = pleftpos / 2;
+		
 		return returnValue;
 	}
 	
@@ -275,30 +298,40 @@ var CabinetItem = function() {
 	
 	function searchCallBack() {
 		//*Note add code here
+		var crrPage = cabinetNavi.get().currentPage;
+		crrPage     = crrPage ? crrPage : 1;
+		startSearchCabinet(crrPage);
 	}
 	/* Search Panel end*/
 	
 	/* Main search */
 	function startSearchCabinet(pPage) {
-		var orderInf = tableView.getOrderInfo();
-		var listCnt  = document.getElementById("listCount").value;
+		var orderInf  = cabinetTable.getOrderInfo();
+		var listCnt   = document.getElementById("listcount").value;
+		var searchOpt = document.querySelector("input[name='searchCheck']:checked").value;
 		
 		$.ajax({
 			type: "POST",
-			url: "",
+			url: "/ezCabinet/getCabinetItems.do",
 			data: {
 				"currentPage" : pPage,
+				"cabinetId"   : cabinetId,
+				"title"       : titelStr,
+				"summary"     : summaryStr,
+				"recursive"   : recursiveMode,
+				"creatorName" : creatorNameStr,
 				"startDate"   : startDateStr,
 				"endDate"     : endDateStr,
 				"column"      : orderInf.col ? orderInf.col : "",
 				"order"       : orderInf.ord ? orderInf.ord : "",
+				"srchMode"    : searchMode,
+				"srchOption"  : searchOpt,
 				"listCntSize" : listCnt
 			},
 			dataType: "JSON",
 			async: false,
 			success : function(data) {
-				cabinetTable.setDataSource(result.cabinetList);
-				cabinetTable.renderTable();
+				checkingData(data);
 			},
 			error : function(error) {
 				alert(CabinetMessages.strError + error);
@@ -306,11 +339,138 @@ var CabinetItem = function() {
 		});
 	}
 	
-	function renderCabinetTable(dataSource, unselectClass, tableDataElmt, getCheckedFunc, clickRowFunct) {
-		//*Note add code here
+	function checkingData(data) {
+		var code = data.code;
+		switch(code) {
+			case 0 : processData(data);                  break;
+			case 1 : alert(CabinetMessages.strParamErr); break;
+			case 2 : alert(CabinetMessages.strError);    break;
+			default: alert(CabinetMessages.strError);    return; 
+		}
+	}
+	
+	function processData(data) {
+		cabinetTable.setDataSource(data.itemList);
+		cabinetTable.renderTable();
+		cabinetNavi.init(data.currentPage, data.totalRows, data.totalPages);
+	}
+	
+	function renderCabinetTable(itemList, unselectClass, tableDataElmt, getCheckedFunct, clickRowFunct) {
+		if (itemList == null || itemList.length == 0) {
+			var trElmt = document.createElement("tr");
+			var tdElmt = document.createElement("td");
+			tdElmt.setAttribute("colspan", "6");
+			tdElmt.setAttribute("align", "center");
+			tdElmt.setAttribute("bgcolor", "#FFFFFF");
+			tdElmt.innerHTML = CabinetMessages.strNoData;
+			
+			trElmt.appendChild(tdElmt);
+			tableDataElmt.appendChild(trElmt);
+		}
+		else {
+			var len = itemList.length;
+			for (var i = 0; i < len; i++) {
+				var trElmt  = document.createElement("tr");
+				var tdElmt1 = document.createElement("td");
+				var tdElmt2 = document.createElement("td");
+				var tdElmt3 = document.createElement("td");
+				var tdElmt4 = document.createElement("td");
+				var tdElmt5 = document.createElement("td");
+				var tdElmt6 = document.createElement("td");
+				
+				trElmt.setAttribute("class", unselectClass);
+				trElmt.onclick = function(event) {clickRowFunct(event);};
+				
+				var inputElmt  = document.createElement("input");
+				inputElmt.setAttribute("type", "checkbox");
+				inputElmt.onclick = function(event) {getCheckedFunct(event);};
+				tdElmt1.appendChild(inputElmt);
+				
+				tdElmt2.textContent = getItemType(itemList[i]["itemType"]);
+				tdElmt2.setAttribute("title", tdElmt2.textContent);
+				
+				tdElmt3.textContent = itemList[i]["title"];
+				tdElmt3.setAttribute("title", tdElmt3.textContent);
+				
+				tdElmt4.textContent = itemList[i]["creatorName"];
+				tdElmt4.setAttribute("title", tdElmt4.textContent);
+				
+				tdElmt5.textContent = itemList[i]["createdDate"].substring(0, 19);
+				tdElmt5.setAttribute("title", tdElmt5.textContent);
+				
+				tdElmt6.textContent = getFileSize(itemList[i]["itemSize"]);
+				
+				tdElmt1.className = "inputTh";
+				tdElmt2.className = "typeTh";
+				tdElmt3.className = "ttlTh cabTxtOver";
+				tdElmt4.className = "userTh cabTxtOver";
+				tdElmt5.className = "dateTh cabTxtOver";
+				tdElmt6.className = "sizeTh cabTxtOver";
+				
+				trElmt.appendChild(tdElmt1);
+				trElmt.appendChild(tdElmt2);
+				trElmt.appendChild(tdElmt3);
+				trElmt.appendChild(tdElmt4);
+				trElmt.appendChild(tdElmt5);
+				trElmt.appendChild(tdElmt6);
+				tableDataElmt.appendChild(trElmt);
+			}
+		}
+	}
+	
+	function getFileSize(fileSize) {
+		var result = fileSize + "B";
+		
+		switch(true) {
+			case fileSize > 1073741824 : result = parseFloat(fileSize / 1073741824).toFixed(2) + "GB"; break;
+			case fileSize > 1048576    : result = parseFloat(fileSize / 1048576).toFixed(2) + "MB"   ; break;
+			case fileSize > 1024       : result = parseFloat(fileSize / 1024).toFixed(2) + "KB"      ; break;
+		}
+		
+		return result;
+	}
+	
+	function getItemType(type) {
+		var result = "";
+		
+		switch(type) {
+			case 0: result = "수동"; break;
+			case 1: result = "메일"; break;
+			case 2: result = "전자결재"; break;
+			case 3: result = "게시판"; break;
+			case 4: result = "일정관리"; break;
+			case 5: result = "업무관리"; break;
+			case 6: result = "회람판"; break;
+			case 7: result = "커뮤니티"; break;
+			case 8: result = "주소록"; break;
+			case 9: result = "업무일지"; break;
+			case 10: result = "프로젝트 관리"; break;
+		}
+		
+		return result;
 	}
 	
 	function onMainSearch() {
+		var title      = document.getElementById("sCabTitle").value;
+		var summary    = document.getElementById("sCabSum").value;
+		var userName   = document.getElementById("sUserName").value;
+		var sRecursive = document.getElementById("dCheckBox").checked ? "1" : "0";
+		var sDate      = document.getElementById("Sdatepicker").value;
+		var eDate      = document.getElementById("Edatepicker").value;
+		
+		if (!title && !summary && !userName && !sDate && !eDate) {alert(CabinetMessages.strSearch); return;}
+		if ((!sDate && eDate)) {alert(CabinetMessages.strDate3); return;}
+		if ((sDate && !eDate)) {alert(CabinetMessages.strDate2); return;}
+		if (sDate && eDate)    {if (sDate > eDate) {alert(CabinetMessages.strDate1); return;}}
+		
+		titelStr       = title;
+		summaryStr     = summary;
+		creatorNameStr = userName;
+		recursiveMode  = sRecursive;
+		startDateStr   = sDate;
+		endDateStr     = eDate;
+		
+		searchMode = "2";
 		toggleSearchPanel();
 		startSearchCabinet("1");
 	}
@@ -320,7 +480,15 @@ var CabinetItem = function() {
 	function onStartSimpleSearch(event) {if(event.keyCode == "13") {startSimpleSearch();}}
 	
 	function startSimpleSearch() {
+		var searchStr = document.getElementById("ssInput").value;
 		
+		if (!searchStr.replace(/\s/g,'')) {alert(CabinetMessages.strNoInput); return;}
+		
+		searchMode    = "1";
+		var searchOpt = document.querySelector("input[name='searchCheck']:checked").value;
+		if (searchOpt == "title") {titelStr = searchStr;} else {summaryStr = searchStr;}
+		
+		startSearchCabinet("1");
 	}
 	
 	function clearKeyword(inputElmt) {inputElmt.value = "";}
@@ -410,7 +578,7 @@ var CabinetItem = function() {
 	
 	function openSharePopup() {
 		if (!cabinetId) {alert(CabinetMessages.strError); return;}
-		var sharePopup = window.open("/ezCabinet/shareCabinet.do?cabId=" + cabinetId, "shareFile", getOpenWindowfeature(1000, 600));
+		var sharePopup = window.open("/ezCabinet/shareCabinet.do?cabId=" + cabinetId, "shareFile", getOpenWindowfeature(1125, 700));
 	}
 	
 	function addRelatedCabinet() {
@@ -419,7 +587,7 @@ var CabinetItem = function() {
 		window.open("/ezCabinet/cabinetAddRelated.do", "addRelated", getOpenWindowfeature(600, 690));
 	}
 	
-	function getFileDetail() {window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 670));}
+	function getFileDetail() {window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 690));}
 	
 	return {start : initEvents};
 }();

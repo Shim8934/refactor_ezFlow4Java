@@ -4,11 +4,13 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
-
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCabinetService {
@@ -46,4 +48,13 @@ public interface EzCabinetService {
 	
 	//User item functions
 	void saveItem(int cabinetId, JSONArray attacheFiles, JSONArray relatedFiles, String title, String summary, String realPath, LoginVO userInfo) throws Exception;
+	
+	//User get cabinet infor function
+	CabinetVO getCabinetById(String cabinetId, int tenantId) throws Exception;
+	
+	//User get cabinet item list function
+	List<CabinetItemVO> getItems(CabinetItemSearchVO searchVO) throws Exception;
+	int getTotalItems(CabinetItemSearchVO searchVO) throws Exception;
+	List<CabinetItemVO> getItemsRecursive(CabinetItemSearchVO searchVO) throws Exception;
+	int getTotalItemsRecursive(CabinetItemSearchVO searchVO) throws Exception;
 }

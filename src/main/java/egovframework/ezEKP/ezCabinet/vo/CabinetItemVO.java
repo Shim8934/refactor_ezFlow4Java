@@ -7,6 +7,7 @@ public class CabinetItemVO {
 	private String title;
 	private String summary;
 	private String creatorId;
+	private String creatorName;
 	private String creatorName1;
 	private String creatorName2;
 	private String departmentId;
@@ -20,6 +21,7 @@ public class CabinetItemVO {
 	private String deleterId;
 	private String companyId;
 	private int    tenantId;
+	private long   itemSize;
 	
 	public int getItemId() {
 		return itemId;
@@ -172,4 +174,21 @@ public class CabinetItemVO {
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
 	}
+	
+	public String getCreatorName() {
+		return creatorName;
+	}
+	
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
+	}
+	
+	public long getItemSize() {
+		return itemSize;
+	}
+	
+	public void setItemSize(long itemSize) {
+		this.itemSize = itemSize;
+	}
+	
 }
