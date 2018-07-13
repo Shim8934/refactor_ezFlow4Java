@@ -508,6 +508,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/boardItemList.do")
 	public String boardItemList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		//2018-07-13 김보미 - 파라메터 추가
+		String treeCtrl = request.getParameter("treeCtrl");
 		String code = request.getParameter("code");
 		String boardID = request.getParameter("boardID");
 		String boardName = request.getParameter("boardName");
@@ -545,6 +548,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
 		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
 		
+		model.addAttribute("treeCtrl", treeCtrl);
 		model.addAttribute("code", code);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
@@ -1070,6 +1074,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = request.getParameter("boardID");
 		String code = request.getParameter("code");
 		String showAdjacent = request.getParameter("showAdjacent");
+		//2018-07-13 김보미
+		String treeCtrl = request.getParameter("treeCtrl");
+		
 		
 		if (showAdjacent == null) {
 			showAdjacent = ezCommonService.getTenantConfig("ADJACENT_ITEMS_ENABLE", userInfo.getTenantId());
@@ -1102,6 +1109,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
+		model.addAttribute("treeCtrl", treeCtrl);
 		
 		logger.debug("boardItemView ended.");
 		
@@ -1398,10 +1406,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pItemIDList = request.getParameter("itemIDList");
 		String pBoardID = request.getParameter("boardID");
 		String code = request.getParameter("code");
+		//2018-07-13 김보미 - 파라메터 추가
+		String treeCtrl = request.getParameter("treeCtrl");
 		
 		model.addAttribute("itemIDList", pItemIDList);
 		model.addAttribute("boardID", pBoardID);
 		model.addAttribute("code", code);
+		model.addAttribute("treeCtrl", treeCtrl);
 		return "ezCommunity/communityCopyBoardItem";
 	}
 	

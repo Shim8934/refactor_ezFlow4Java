@@ -85,6 +85,7 @@
 	                            break;
 	                    }
 	                    IMG.style.display = "inline-block";
+	                    IMG.style.verticalAlign = "middle";
 	                    SPAN.style.paddingLeft = "5px";
 	                    SPAN.style.height = "16px";
 	                    SPAN.style.verticalAlign = "middle";

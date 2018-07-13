@@ -403,12 +403,12 @@
 				<c:forEach var="list"  items="${resBrdList}" begin="${start}">
   					<tr>
     					<td style="padding:0;"><input type="checkbox" name="chk" id="chk" value="${list.brdID}" ownerid="${list.ownerID}"></td>
-						<td title="<c:out value='${list.brdNm}' />" onClick="Item_View('${list.brdID}');"	style="cursor: pointer; text-overflow: ellipsis; overflow: hidden" align="left"><nobr><c:out value='${list.brdNm}' /></nobr> </td>
-						<td id="OwnDeptID" value="${list.ownDeptNm}" style="text-overflow: ellipsis; overflow: hidden"><nobr>${list.ownDeptNm}</nobr> </td>
-						<td id="OwnerID"  style="cursor:pointer;text-overflow: ellipsis; overflow: hidden;" value="${list.ownerID}" onClick="MemberInfo_onDblclick('${list.ownerID}')" nowrap>${list.ownerNm}</td>
-						<td id="OwnerPosition">${list.ownerPosition}</td>
-						<td id="OwnerCall">${list.ownerCall} </td>			
-						<td id="ResLocation" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><c:out value='${list.resLocation}'/></td>
+						<td onClick="Item_View('${list.brdID}');"	style="cursor: pointer; word-wrap:break-word;" align="left"><c:out value='${list.brdNm}' /> </td>
+						<td id="OwnDeptID" value="${list.ownDeptNm}" style="word-wrap:break-word;"><nobr>${list.ownDeptNm}</nobr> </td>
+						<td id="OwnerID"  style="cursor:pointer; word-wrap:break-word;" value="${list.ownerID}" onClick="MemberInfo_onDblclick('${list.ownerID}')" nowrap>${list.ownerNm}</td>
+						<td id="OwnerPosition" style="word-wrap:break-word;">${list.ownerPosition}</td>
+						<td id="OwnerCall" style="word-wrap:break-word;">${list.ownerCall} </td>			
+						<td id="ResLocation" style="word-wrap:break-word;"><c:out value='${list.resLocation}'/></td>				<!-- 2018-07-13 김민성 - 테이블 형식에서는 정보 모두 출력하도록 변경 -->
 					</tr> 
 				</c:forEach>
 			</c:if>
