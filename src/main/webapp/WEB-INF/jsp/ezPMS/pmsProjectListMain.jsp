@@ -1131,15 +1131,17 @@ function searchProject() {
 	<div class="layerpopup"  style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
 		<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
 	</div>
-	<div id="searchPopup" class="popupwrapAtt" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
-			<div class="popupwrap3">
-				<!-- 내용 -->
+	<div id="searchPopup" class="popupwrap1 modal" style="display:none;margin-bottom:50px;">
+		<div class="popupJQLayer">
+			<div class="title"><spring:message code='ezPMS.t13'/> <spring:message code='ezPMS.t1'/></div>
+			<div id="close">
+				<ul>
+					<li><a rel="modal:close"><span onclick="layerHidden()"></span></a></li>
+				</ul>
+			</div>
+			<!-- 내용 -->
 			<table class="content" style="width:100%;">
 			<tbody>
-				<tr>
-					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;
-					<spring:message code='ezPMS.t13'/> <spring:message code='ezPMS.t1'/></th>
-				</tr>
 				<tr>
 					<th><spring:message code='ezPMS.t31' /> </th>
 					<td><input type="text" id="searchByProjectName" style="width:67%; margin-right:5px;"><a class="imgbtn" onclick="getSearchProject()"><span><spring:message code='ezPMS.t150' /></span></a></td>
@@ -1164,10 +1166,14 @@ function searchProject() {
 		</table>
 				<!-- /내용 -->
 				<br />
-				<div style="text-align:center;">
+				<table style="width:100%">
+				<tr>
+				<td style="text-align:center;">
 					<a class="imgbtn" onclick="searchProject()"><span><spring:message code='ezPMS.t1' /></span></a>
 					<a class="imgbtn" rel="modal:close"><span onclick="layerHidden();"><spring:message code='ezAttitude.t34'/></span></a>
-			    </div>
+			    </td>
+			    </tr>
+			    </table>
 			</div>
 		</div>
 </body>

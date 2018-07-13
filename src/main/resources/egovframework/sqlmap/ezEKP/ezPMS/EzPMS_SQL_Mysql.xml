@@ -3779,6 +3779,7 @@
 			tenant_id = #tenantId#
 	]]>
 	</select>
+	
 	<select id="EzPMSDAO.getDateTaskList" parameterClass="map" resultClass="String">
 	<![CDATA[
 		SELECT DISTINCT 
