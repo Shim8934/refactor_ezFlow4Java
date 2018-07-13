@@ -595,7 +595,7 @@
 						</tr>
 						<tr>
 	         				<th> <spring:message code="ezResource.t224"/></th>
-	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="25"  style="width: 98%" />          </td>
+	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="100"  style="width: 100%" />          </td>		<!-- 2018-07-13 김민성 - 자원명 글자수 제한 25->100자로 변경 -->
 	       				</tr>
       				</table>
       			</td>

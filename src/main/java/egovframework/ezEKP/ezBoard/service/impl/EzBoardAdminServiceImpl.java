@@ -78,11 +78,18 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_TENANTID", tenantID);
 		map.put("v_PQUERY", userID);
 		
+		/* 2018-07-12 홍승비 - PRI 제약을 가지는 CompanyID 칼럼의 데이터 삽입 판단용 분기 추가(차후 companyID 통합 시 제거) */
 		try {
-			// 삽입되는 companyID는 boardInfo 테이블에서 가져온다(각 회사에 대해 companyID 조건으로 카운트하여 viewOrder 설정함)
-			ezBoardAdminDAO.addMyBoards(map);
-			// 트리캐시 제거
-			ezBoardAdminDAO.getBoardTree_Set_D(map);
+			// 해당 테이블이 companyID 칼럼을 가지고 있는 경우
+			if (ezBoardAdminDAO.checkCompanyIDCol() != 0) {
+				ezBoardAdminDAO.addMyBoardsComp(map);
+				ezBoardAdminDAO.getBoardTree_Set_D(map);
+			}
+			// 해당 테이블에 companyID 칼럼이 없는 경우
+			else {
+				ezBoardAdminDAO.addMyBoards(map);
+				ezBoardAdminDAO.getBoardTree_Set_D(map);
+			}
 			
 			logger.debug("addMyBoards ended");
 			return "OK";

@@ -1156,16 +1156,16 @@
 		
 		    function search() {
 		        if (document.getElementById("txt_keyword").value != "") {
-		            var radiosearch = document.getElementsByName('searchCheck');
+		            var selectSearch = document.getElementById('selectType');
 		
 		            for (var i = 0; i < 25; i++) {
 		                condition[i] = "";
 		            }
 		
-		            if (radiosearch.item(0).checked) {
+		            if (selectSearch.item(0).selected) {
 		                condition[1] = document.getElementById("txt_keyword").value;
 		            }
-		            else if (radiosearch.item(1).checked) {
+		            else if (selectSearch.item(1).selected) {
 		                condition[2] = document.getElementById("txt_keyword").value;
 		            }
 		        }
@@ -1324,9 +1324,10 @@
 	    <div id="MOC_Div" style="display: none"></div>
 	    <h1><span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
-	            <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1"><spring:message code='ezApprovalG.t106'/></label>
-		        <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2"><spring:message code='ezApprovalG.t445'/></label>
-		        &nbsp;
+	        	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+		    		<option selected value="rad_Subject"><spring:message code='ezApprovalG.t106'/></option>
+		    		<option value="rad_Writer"><spring:message code='ezApprovalG.t445'/></option>
+		    	</select>
 		        <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	            <a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
 	        </span>

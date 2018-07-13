@@ -1,7 +1,13 @@
 package egovframework.ezEKP.ezCircular.web;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,9 +16,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -2640,4 +2649,112 @@ public class EzCircularController extends EgovFileMngUtil {
 		logger.debug("circularConfirmPagingList ended");
 		return resultXML.toString();
 	}
+	
+	/**
+	 * 2018-07-12 김보미 - 모두저장(압축파일 내려받기)
+	 */
+	@RequestMapping(value="/ezCommunity/downloadAttachAll.do", produces="text/plain; charset=UTF-8")
+	public void downloadAttachAll(@CookieValue("loginCookie") String loginCookie, Locale locale, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("downloadAttachAll started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String filePath = request.getParameter("filePath");
+		String fileNames = request.getParameter("fileNames");
+		String fileNames2 = request.getParameter("fileNames2");
+		String realPath = commonUtil.getRealPath(request);
+		String uploadFilePath = commonUtil.getUploadPath("upload_circular.ROOT", userInfo.getTenantId());
+		String tempFileUploadPath = realPath + uploadFilePath + commonUtil.separator + "tempUploadFile";
+		String guid = UUID.randomUUID().toString();
+		String pDirTempPath = tempFileUploadPath + commonUtil.separator + guid;
+		int bufferSize = 4096;
+
+		logger.debug("filePath : " + filePath + " | fileName : " + fileNames);
+
+		String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + filePath;
+
+		logger.debug("fullFilePath : " + fullFilePath);
+		
+		ZipOutputStream zos = null;
+		String downFileName = "";
+		
+		try {
+			File tempFile = new File(pDirTempPath + commonUtil.separator + ".zip");
+			
+			if (tempFile.exists()) {
+				tempFile.delete();
+			}
+			
+			tempFile = new File(tempFileUploadPath);
+			
+			if (!tempFile.exists()) {
+				tempFile.mkdirs();
+			}
+			
+			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"));
+				
+			JSONParser jp = new JSONParser();
+			JSONArray fileNamesArr = (JSONArray)jp.parse(fileNames);
+			JSONArray fileNamesArr2 = (JSONArray)jp.parse(fileNames2);
+
+			downFileName = fileNamesArr2.get(0).toString() + " 외 " + (fileNamesArr2.size() - 1) + "개.zip";//zip파일명
+			
+			if (fileNamesArr.size() != 0) {// 파일이 있으면
+				for (int i = 0; i < fileNamesArr.size(); i++) { //파일 길이만큼
+					BufferedInputStream bis = null;
+					
+					try {
+				       File sourceFile = new File(fullFilePath + fileNamesArr.get(i).toString());
+	                   
+				        bis = new BufferedInputStream(new FileInputStream(sourceFile));
+				        ZipEntry zentry = new ZipEntry(fileNamesArr2.get(i).toString());
+				        zos.putNextEntry(zentry);
+				        
+				        byte[] buffer = new byte[bufferSize];
+				        int cnt = 0;
+				        while ((cnt = bis.read(buffer, 0, bufferSize)) != -1) {
+				            zos.write(buffer, 0, cnt);
+				        }
+				        zos.closeEntry();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} finally {
+						if (bis != null) {
+							try {
+								bis.close();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+				zos.flush();
+				zos.close();
+				zos = null;
+	
+				File file = new File(pDirTempPath + ".zip");
+				
+				if (file.exists()) {
+					downFile(request, response, pDirTempPath + ".zip", downFileName);
+					file.delete();
+				}
+			}
+		} catch (Exception e) {
+			File file = new File(pDirTempPath + ".zip");
+			
+			if (file.exists()) {
+				file.delete();
+			}
+		} finally {
+			if (zos != null) {
+				try {
+					zos.close();
+				} catch (Exception e) {
+				}
+			}
+		}
+		logger.debug("downloadAttachAll ended.");
+	}
+		
 }

@@ -3280,4 +3280,26 @@ public class EzAttitudeController {
 		LOGGER.debug("getSearchList ended.");
 		return XMLResult;
 	}
+	
+	@RequestMapping(value="/ezAttitude/attitudeModHistory.do",method=RequestMethod.GET, produces="application/json; charset=UTF-8")
+	public String attitudeModHistory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response,Model model) throws Exception{
+		LOGGER.debug("attitudeModHistory started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String attModId = request.getParameter("attModId");
+		String companyId = request.getParameter("companyId");
+		
+		if (companyId == null || companyId.equals("")) {
+			companyId = userInfo.getCompanyID();
+		}
+		
+		model.addAttribute("attModId", attModId);
+		model.addAttribute("companyId", companyId);
+		
+		
+		LOGGER.debug("attitudeModHistory ended");
+		
+		return "/ezAttitude/attitudeModHistory";
+	}
 }

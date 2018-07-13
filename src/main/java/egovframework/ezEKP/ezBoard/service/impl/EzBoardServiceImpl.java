@@ -2579,6 +2579,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 			}
 			
+			// 2018-07-12 자바렐 디버그용 로그 추가
+			logger.debug("각 게시판 트리뷰 순서       ::   " + brdBoardTreeList.get(i).getTreeViewOrder());
+			
 			result.append("<NODE>");
 			
 			if (pRootBoardID.equals("top")) {
