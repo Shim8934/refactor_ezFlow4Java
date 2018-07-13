@@ -834,11 +834,13 @@
 		        	alert("<spring:message code='ezTask.t990' />");
 		            return;
 		        }
+		        
+		        chkValue = $("#formId option:selected").val();
 
-		        for (var i = 0; i < document.getElementsByName("searchCheck").length; i++) {
+		       /*  for (var i = 0; i < document.getElementsByName("searchCheck").length; i++) {
 		            if (document.getElementsByName("searchCheck")[i].checked == true)
 		                chkValue = document.getElementsByName("searchCheck")[i].value;
-		        }
+		        } */
 
 		        filter = document.getElementById("txt_keyword").value;
 
@@ -917,6 +919,7 @@
 					$(".row_body").css("background", "");
 				}
 		    }
+		  
 		</script>
 	</head>
 	<body class="mainbody">
@@ -927,11 +930,15 @@
 	
 		<h1><spring:message code='ezTask.t84' /><span id="mailBoxInfo"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
-		          <input name="searchCheck" id="Radio2" type="radio" value="title" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio2" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t118' /></label>
-		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t2005' /></label>
+		    <select id="formId" name="searchCheck" style="height:29px;">
+		    	<option id="Radio2" value="title"><spring:message code='ezTask.t118' /></option>
+		    	<option id="Radio1" value="personName"><spring:message code='ezTask.t2005' /></option>
+		    </select>
+		         <%--  <input name="searchCheck" id="Radio2" type="radio" value="title" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio2" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t118' /></label>
+		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t2005' /></label> --%>
 				  &nbsp;
 				  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		          <a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
+		          <a href="#" style="float:right;padding-top: 1px;"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
 		    </span>
 		</h1>
 		

@@ -21,6 +21,11 @@
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
 		<!-- time picker-->
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<style>
+			.h2_dot {
+				background: url(/images/kr/left/left_dot02.gif) no-repeat 0px 70%;
+			}
+		</style>
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		
 		<script type="text/javascript">
