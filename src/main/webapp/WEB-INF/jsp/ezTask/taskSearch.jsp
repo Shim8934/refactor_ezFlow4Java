@@ -24,6 +24,9 @@
 				font:bold;
 				color:#017bec;
 			}
+			.h2_dot {
+				background: url(/images/kr/left/left_dot02.gif) no-repeat 0px 70%;
+			}
 		</STYLE>
 		<script type="text/javascript">
 			var startdate = "_startdate";
