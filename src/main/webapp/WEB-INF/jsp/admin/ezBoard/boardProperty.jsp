@@ -29,23 +29,30 @@
 			var BoardExtension_dialogArguments = new Array();
 			
 	        document.onselectstart = function (){
-	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
+	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 	                return false;
-	            else
+	            }
+	            else {
 	                return true;
+	            }
 	    	};
         
 			$(document).ready(function(){
-				if ("${use_portal}" != "YES")
+				if ("${use_portal}" != "YES") {
 	                $("#trPortlet").css("display","none");
-	            if (portlet == "Y")
+				}
+	            if (portlet == "Y") {
 	                $("#chkPortletBoard").prop("checked",true);
-	            if (background == "Y")
+	            }
+	            if (background == "Y") {
 	                $("#chkbackgroundimage").prop("checked",true);
-	            if(FormFlag == "Y")
+	            }
+	            if(FormFlag == "Y") {
 	                $("#chkform").prop("checked",true);
-	            if (pAdminType == "y")
+	            }
+	            if (pAdminType == "y") {
 	                parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t60' />";
+	            }
 	            if (APPRFLAG == "Y") {
 	                $("#chkApprBoard").prop("checked",true);
 	                document.getElementById("chkApprList").style.display = "";
@@ -71,25 +78,69 @@
 	                    checkApprBoard();
 	                    $("#chkApprBoard").prop("disabled",true);
 	                } else {
-	                	$("#chkApprBoard").prop("disabled",true);	                    
+	                	$("#chkApprBoard").prop("disabled",true);
 	                }
 	            }
 
-	            /* 2018-07-11 홍승비 - 포토+썸네일+익명 게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
+	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명, URL 게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
 	            //추가항목
 	            if ("${style}" == "") {
-	                if ($("#chkPhotoBoard").is(":checked") || $("#chkThumbBoard").is(":checked")) {
+	                if ($("#chkPhotoBoard").is(":checked") || $("#chkThumbBoard").is(":checked") || $("#chkURLBoard").is(":checked")) {
 	                    document.getElementById("trAttribute").style.display = "none";
 	                    document.getElementById("chkNotifyTr").style.display = "none";
 	                }
 	                else if ($("#chkAnonyBoard").is(":checked")) {
 	                	document.getElementById("chkNotifyTr").style.display = "none";
 	                }
-	                else {
-	                    document.getElementById("trAttribute").style.display = "";
-	                    document.getElementById("chkNotifyTr").style.display = "";
+	                else if ($("#chkPortletBoard").is(":checked")) { // 하단 스크립트에는 포틀릿 사용할 시 확장칼럼을 보이지 않게 한다고 되어있다. 일단 동일 표출로 수정함.
+	                	document.getElementById("trAttribute").style.display = "none";
 	                }
+	                 else {
+	                    document.getElementById("trAttribute").style.display = "";
+	             	    document.getElementById("chkNotifyTr").style.display = "";
+	                } 
 	            }
+	            
+	            /* URL게시판 구분 체크박스를 선택해야만 값 입력 필드 나오도록 수정 */
+	            // URL 게시판인 경우 여러 칼럼들을 보이지 않게 한다.
+	            if ($("#chkURLBoard").is(":checked")) {  	
+	            	document.getElementById("txtURL").style.display = "";
+                    document.getElementById("tr1").style.display = "none"; // 배경이미지
+                    document.getElementById("tr2").style.display = "none"; // 양식
+                    document.getElementById("tr3").style.display = "none"; // 승인여부
+                    document.getElementById("expireTr").style.display = "none"; // 게시만료일
+                    document.getElementById("deleteAfterTr").style.display = "none"; // 만료게시물 정책
+                    document.getElementById("attachLimitTr").style.display = "none"; // 첨부크기제한
+                    document.getElementById("oneLineTr").style.display = "none"; // 댓글사용
+                    
+                    $("#tr1").prop("checked", false);
+                    $("#tr2").prop("checked", false);
+                    $("#tr3").prop("checked", false);
+                    $("#chkExpires").prop("checked", false);
+                    $("#chkPermanent").prop("checked", true);
+                    $("#usedeleteafter").prop("checked", false);
+                    $("#chkApprBoard").prop("checked", false);
+                    $("#chkbackgroundimage").prop("checked", false);              
+                    $("#chkform").prop("checked", false);
+                    $("#chkNotify").prop("checked", false);
+                    $("#chkOneLine").prop("checked", false);
+                    
+                } else {
+                   	document.getElementById("txtURL").style.display = "none";
+                    document.getElementById("tr1").style.display = ""; // 배경이미지
+                    document.getElementById("tr2").style.display = ""; // 양식
+                    document.getElementById("tr3").style.display = ""; // 승인여부
+                    document.getElementById("expireTr").style.display = ""; // 게시만료일
+                    document.getElementById("deleteAfterTr").style.display = ""; // 만료게시물 정책
+                    document.getElementById("attachLimitTr").style.display = ""; // 첨부크기제한
+                    document.getElementById("oneLineTr").style.display = ""; // 댓글사용
+                }
+	            
+	            
+	            console.log("model.guBun      ::      ${model.guBun}");
+	            console.log("model.url      ::      ${model.url}");
+	            
+	            
 			});
 			
 			function Save() {
@@ -134,23 +185,22 @@
 	                gubun = "0";
 	            } else if ($("#chkQnABoard").is(":checked")) {
 	                gubun = "5";
-	            }
-
-	            if ($("#chkPortletBoard").is(":checked") && $("#txtURL").val() == "")
-	                portlet = "Y";
-	            else
-	                portlet = "N";
-
-	            if ($("#chkbackgroundimage").is(":checked"))
+	            } else if ($("#chkURLBoard").is(":checked")) {
+	                gubun = "0";
+	            } // URL게시판은 사실상 구분 0으로 취급된다. (컨트롤러에서 읽어올때만 6으로 수정)
+	            
+	            if ($("#chkbackgroundimage").is(":checked")) {
 	                background = "Y";
-	            else
+	            } else {
 	                background = "N";
-
-	            if ($("#chkform").is(":checked"))
+	            }
+	            
+	            if ($("#chkform").is(":checked")) {
 	                FormFlag = "Y";
-	            else
+	            } else {
 	                FormFlag = "N";
-
+				}
+	            
 	            if ($("#chkPermanent").is(":checked")) {
 	                Expires = "-1"
 	            } else {
@@ -158,12 +208,31 @@
 	            }
 
 	            var iDeleteAfter = "-1";
-
 	            if ($("#usedeleteafter").is(":checked") && $("#deleteafter").val() == "") {
 	                alert("<spring:message code='ezBoard.t146'/>");
 	                $("#deleteafter").focus();
 	                return;
 	            }
+	            
+	            /* URL게시판으로 저장하는 경우, url 필드 없으면 alert 처리 */
+	            var url = $("#txtURL").val().trim();
+	             if ($("#chkURLBoard").is(":checked") && url == "") {
+	                alert("<spring:message code='ezPortal.t123'/>");
+	                $("#txtURL").focus();
+	                return;
+	            } else if (!$("#chkURLBoard").is(":checked")) { //url게시판이 체크되어있지 않다면, url 값을 없앤다.
+	            	url = "";            
+	            }
+	             
+	             if ($("#chkURLBoard").is(":checked") && url != "" && url.toLowerCase().indexOf("http") == -1) {
+	            	url = "http://" + url;
+	            }
+	             
+				if ($("#chkPortletBoard").is(":checked") && url == "") {
+					portlet = "Y";
+				} else {
+					portlet = "N";
+				}
 
 	            if (orgAPPRFLAG != APPRFLAG) {
 	                if (orgAPPRFLAG == "N") {
@@ -180,20 +249,41 @@
 	            if ($("#usedeleteafter").is(":checked")) {
 	                iDeleteAfter = $("#deleteafter").val();
 	            }
-
-	            var url = $("#txtURL").val();
-	            if (url != "" && url.toLowerCase().indexOf("http") == -1) url = "http://" + url;
-
-	            if (AttachMax == "") AttachMax = "5";
-	            if (Expires == "") Expires = "30";
 	            
-	            var oneLineReply = "";
+	            if (AttachMax == "") {
+	            	AttachMax = "5";
+	            }
+	            if (Expires == "") {
+	            	Expires = "30";
+	            }
 	            
-	            if ($("#chkOneLine").is(":checked") == false){
+	            var oneLineReply = "";            
+	            if ($("#chkOneLine").is(":checked") == false) {
 	            	oneLineReply = 0;
-	            }else{
+	            } else {
 	            	oneLineReply = 1;
 	            }
+	            
+	            
+	            // 저장 전 모든 값 출력
+	            console.log("AttachMax   ::  " + AttachMax);
+	            console.log("Expires    ::  " + Expires);
+	            console.log("portlet    ::  " + portlet);
+	            console.log("gubun    ::  " + gubun);
+	            console.log("url    ::  " + url);
+	            console.log("replynotify   ::   " + replynotify);
+	            console.log("iDeleteAfter    ::  " + iDeleteAfter);
+	            console.log("background    ::  " + background);
+	            console.log("FormFlag   ::   " + FormFlag);
+	            console.log("oneLineReply    ::  " + oneLineReply);
+	            console.log("APPRFLAG   ::   " + APPRFLAG);
+	            console.log("orgAPPRFLAG    ::  " + orgAPPRFLAG);
+	            console.log("ApprUserList    ::  " + ApprUserList);
+	            console.log("APPRMAILFLAG   ::   " + APPRMAILFLAG);
+	            
+	            
+	            
+	            
 	            
 	            $.ajax({
 	            	type : "POST",
@@ -207,9 +297,8 @@
 	            		alert("<spring:message code='ezBoard.t79'/>");
 	            		
 	            		if ("${adminType}" == "y") {
-	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + BoardID;
-	            			
-	            			return;
+	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + BoardID;	            			
+	            			return;	            			
 	            		} else {
 	            			parent.frames.location = parent.frames.location;
 	            		}
@@ -217,7 +306,7 @@
 	            		location.href = location.href;
 	            	}	            		
 	            });
-	        }			
+	        }
 			function chkPermanent_onclick() {
 	            if (chkPermanent.checked) {
 	                chkExpires.checked = false;
@@ -235,34 +324,41 @@
 	                chkPermanent.checked = true;
 	                txtExpires.value = "";
 	            }
-	        }			
+	        }
+			
 			function checkboardtype() {
+				
 	        	if (event.srcElement.id == "chkGeneralBoard" && event.srcElement.checked) {
 	                chkGroupBoard.checked = false;
 	                chkAnonyBoard.checked = false;
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
+	                chkURLBoard.checked = false;
 	            }
+	        	
 	            if (event.srcElement.id == "chkGroupBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
 	                chkAnonyBoard.checked = false;
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
+	                chkURLBoard.checked = false;
 	            }
+	            
 	            if (event.srcElement.id == "chkAnonyBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
 	                chkGroupBoard.checked = false;
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
+	                chkURLBoard.checked = false;
 
 	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
 	                    if (chkApprBoard.checked) {
 	                        chkApprBoard.checked = false;
 	                        checkApprBoard();
-	                        chkApprBoard.disabled = true;
+	                      	chkApprBoard.disabled = true;
 	                    }
 	                }
 	            } else {
@@ -272,26 +368,32 @@
 	                    chkApprBoard.disabled = false;
 	                }
 	            }
+	            
 	            if (event.srcElement.id == "chkPhotoBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
 	                chkGroupBoard.checked = false;
 	                chkAnonyBoard.checked = false;
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
+	                chkURLBoard.checked = false;
 	            }
+	            
 	            if (event.srcElement.id == "chkThumbBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
 	                chkGroupBoard.checked = false;
 	                chkAnonyBoard.checked = false;
 	                chkPhotoBoard.checked = false;
 	                chkQnABoard.checked = false;
+	                chkURLBoard.checked = false;
 	            }
+	            
 	            if (event.srcElement.id == "chkQnABoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
 	                chkGroupBoard.checked = false;
 	                chkAnonyBoard.checked = false;
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
+	                chkURLBoard.checked = false;
 
 	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
 	                    if (chkApprBoard.checked) {
@@ -300,7 +402,7 @@
 	                        chkApprBoard.disabled = true;
 	                    }
 	                }
-	            } else {
+	            } else { 
 	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
 	                    chkApprBoard.disabled = true;
 	                }
@@ -308,24 +410,81 @@
 	                    chkApprBoard.disabled = false;
 	                }
 	            }
+	            
+	            /* 2018-07-12 홍승비 - URL게시판 게시판 구분 필드 추가 */
+                if (event.srcElement.id == "chkURLBoard" && event.srcElement.checked) {
+                	chkGeneralBoard.checked = false;
+	                chkGroupBoard.checked = false;
+	                chkAnonyBoard.checked = false;
+	                chkPhotoBoard.checked = false;
+	                chkThumbBoard.checked = false;
+	                chkQnABoard.checked = false;
+	            }
+	            
+                /* URL게시판 구분 체크박스를 선택해야만 값 입력 필드 나오도록 수정 */
+	            // URL 게시판 체크 시 게시만료, 만료게시물 정책, 승인여부, 배경이미지, 양식, 첨부크기, 답변메일, 댓글, 확장칼럼 모두 숨기기
+	             if (chkURLBoard.checked == false) {
+	                document.getElementById("txtURL").style.display = "none";
+                    document.getElementById("tr1").style.display = ""; // 배경이미지
+                    document.getElementById("tr2").style.display = ""; // 양식
+                    document.getElementById("tr3").style.display = ""; // 승인여부
+                    document.getElementById("expireTr").style.display = ""; // 게시만료일
+                    document.getElementById("deleteAfterTr").style.display = ""; // 만료게시물 정책
+                    document.getElementById("attachLimitTr").style.display = ""; // 첨부크기제한
+                    document.getElementById("oneLineTr").style.display = ""; // 댓글사용
+                    document.getElementById("trAttribute").style.display = "";// 확장칼럼
+                    
+	            } else {
+	                document.getElementById("txtURL").style.display = "";
+                    document.getElementById("tr1").style.display = "none"; // 배경이미지
+                    document.getElementById("tr2").style.display = "none"; // 양식
+                    document.getElementById("tr3").style.display = "none"; // 승인여부
+                    document.getElementById("expireTr").style.display = "none"; // 게시만료일
+                    document.getElementById("deleteAfterTr").style.display = "none"; // 만료게시물 정책
+                    document.getElementById("attachLimitTr").style.display = "none"; // 첨부크기제한
+                    document.getElementById("oneLineTr").style.display = "none"; // 댓글사용
+                    document.getElementById("trAttribute").style.display = "none";// 확장칼럼
+                    
+                    document.getElementById("chkApprBoard").checked = false;
+                    checkApprBoard();                   
+                    document.getElementById("chkExpires").checked = false;
+                    document.getElementById("chkPermanent").checked = true;
+                    document.getElementById("usedeleteafter").checked = false;
+                    document.getElementById("chkbackgroundimage").checked = false;
+                    document.getElementById("chkform").checked = false;
+                    document.getElementById("chkNotify").checked = false;
+                    document.getElementById("chkOneLine").checked = false;
+	            }
 
-	            /* 2018-07-11 홍승비 - 포토+썸네일+익명 게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
-	             if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkAnonyBoard.checked == true) {
+	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명, URL 게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
+	             if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkAnonyBoard.checked == true || chkURLBoard.checked == true) {
 	                document.getElementById("chkNotifyTr").style.display = "none";
 	                document.getElementById("chkNotify").checked = false;
 	            } else {
 	                document.getElementById("chkNotifyTr").style.display = "";
 	            }
 	            
-	            //추가항목
-	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkPortletBoard.checked == true) {
+	            /* 포토, 썸네일, 포틀릿(?->일단 기존 코드니까 유지함), URL게시판은 확장칼럼 사용하지 않음 */
+	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkPortletBoard.checked == true || chkURLBoard.checked == true) {
 	                document.getElementById("trAttribute").style.display = "none";
 	            } else {
 	                document.getElementById("trAttribute").style.display = "";
 	            }
-
+	            
+	            /* 포토, 썸네일 게시판은 배경이미지+양식 사용 못함 */
+	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true) {
+	            	document.getElementById("tr1").style.display = "none";
+	            	document.getElementById("tr2").style.display = "none";
+	                document.getElementById("chkbackgroundimage").checked = false;
+	                document.getElementById("chkform").checked = false;
+	            } else if (chkURLBoard.checked == false) {
+	            	document.getElementById("tr1").style.display = "";
+	            	document.getElementById("tr2").style.display = "";
+	            }
+	            
+ 
 	            /*
-	            //chkNotify 여부를 상단에서 체크하도록 수정했으므로 주석처리함
+	            // chkNotify 여부를 상단에서 체크하도록 수정했으므로 주석처리함
 	            if (chkNotify.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
 	                alert("<spring:message code='ezBoard.t150'/>");
 	                event.srcElement.checked = false;
@@ -333,24 +492,34 @@
 	            }
 				*/
 				
+				/* 포토, 썸네일 게시판은 배경이미지+양식 사용 못함 */				
 	            if (chkbackgroundimage.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
 	                alert("<spring:message code='ezBoard.t6000'/>");
 	                event.srcElement.checked = false;
 	                return;
 	            }
-
 	            if (chkform.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
 	                alert("<spring:message code='ezBoard.t6001'/>");
 	                event.srcElement.checked = false;
 	                return;
 	            }
 
-	            if (chkNotify.checked && chkAnonyBoard.checked) {
+	            // chkNotify 여부를 상단에서 체크하도록 수정했으므로 주석처리함
+	          /*   if (chkNotify.checked && chkAnonyBoard.checked) {
 	                alert("<spring:message code='ezBoard.t151'/>");
 	                event.srcElement.checked = false;
 	                return;
-	            }
-			}			
+	            } */
+	            
+	            console.log("chkGeneralBoard.checked   ::   " + chkGeneralBoard.checked);
+	            console.log("chkGroupBoard.checked   ::   " + chkGroupBoard.checked);
+	            console.log("chkAnonyBoard.checked   ::   " + chkAnonyBoard.checked);
+	            console.log("chkPhotoBoard.checked   ::   " + chkPhotoBoard.checked);
+	            console.log("chkThumbBoard.checked   ::   " + chkThumbBoard.checked);
+	            console.log("chkQnABoard.checked   ::   " + chkQnABoard.checked);
+	            console.log("chkURLBoard.checked   ::   " + chkURLBoard.checked);
+	            
+			}
 			function checkApprBoard() {
 			    if (chkApprBoard.checked == true) {
 			        document.getElementById("chkApprList").style.display = "";
@@ -570,7 +739,7 @@
 		<div style="max-width: 800px;">
 		<table class="content">
 	        <tr>
-	            <th><spring:message code="ezBoard.t114"/></th>
+	            <th style="min-width: 88px;"><spring:message code="ezBoard.t114"/></th>
 	            <td style="padding: 0;">
 	            	<c:if test="${use_multiData == 'YES'}">
 		                <table style="width: 100%">
@@ -593,7 +762,7 @@
 	    <div style="max-width : 800px;">
 	    <table class="content">
 	        <tr>
-	            <th><spring:message code="ezBoard.t111"/></th>
+	            <th style="min-width: 88px;"><spring:message code="ezBoard.t111"/></th>
 	            <td style="padding: 0;">
 	                <c:if test="${use_multiData == 'YES'}">
 		                <table style="width: 100%;">
@@ -626,7 +795,7 @@
 	                <input type="text" id="txtBoardDescription" style="width: 100%" value="<c:out value='${model.boardDescription}' />" maxlength="99" />
 	            </td>
 	        </tr>
-	        <tr style="${style}">
+	        <tr id="expireTr" style="${style}">
 	            <th><spring:message code="ezBoard.t156"/></th>
 	            <td>
 	            	<c:if test="${model.itemExpires == '-1'}">	            
@@ -645,7 +814,7 @@
 	                </c:if> 
 				</td>
 	        </tr>
-	        <tr style="${style}">	        
+	        <tr id="deleteAfterTr" style="${style}">	        
 	        	<c:if test="${model.deleteAfter == '-1'}">
 		            <th><spring:message code="ezBoard.t159"/></th>
 		            <td>
@@ -710,6 +879,8 @@
 	                	<input type="checkbox" id="chkThumbBoard" onclick="checkboardtype()" />
 	                	<spring:message code="ezBoard.t3000"/>
 	                </c:if>
+	                
+	                <br>
 	                <c:if test="${model.guBun == '5'}">	                   
 	                	<input type="checkbox" id="chkQnABoard" onclick="checkboardtype()" checked />
 	                	<spring:message code="ezBoard.t00054" />
@@ -718,8 +889,22 @@
 	                	<input type="checkbox" id="chkQnABoard" onclick="checkboardtype()" />
 	                	<spring:message code="ezBoard.t00054" />
 	                </c:if>
+	                
+	                <%-- URL게시판을 게시판 구분 필드로 수정(DB에 저장될 경우 실질적인 구분guBun값은 일반게시판과 동일한 '0') --%>
+	                <%-- 컨트롤러에서 임시로 수정한 구분(url을 가진다면 6으로 구분 수정)이 6이라면 체크된 상태로 표시함 --%>
+	                <c:if test="${model.guBun == '6' }">
+	                	<input type="checkbox" id="chkURLBoard" onclick="checkboardtype()" checked />
+	                	URL<spring:message code="ezBoard.t0006" />
+	                </c:if>
+	                <c:if test="${model.guBun != '6'}">
+	                	<input type="checkbox" id="chkURLBoard" onclick="checkboardtype()" />
+	                	URL<spring:message code="ezBoard.t0006"/>
+	                </c:if>
+	                 <input type="text" id="txtURL" style="width: 74%;margin-left: 1.5px;margin-bottom: 1px;" value="<c:out value='${model.url}' />" />                
 	            </td>
 	        </tr>
+	        
+	        
 	        <tr id="tr3" style="${style}">
 	            <th><spring:message code="ezBoard.t999020" /></th>
 	            <td>
@@ -762,18 +947,23 @@
 	                <spring:message code="ezBoard.t162" />
 	            </td>
 	        </tr>
-	        <tr style="${style}">
+	        <tr id="attachLimitTr" style="${style}">
 	            <th><spring:message code="ezBoard.t167" /></th>
 	            <td>
 	                <input type="text" id="txtAttachLimit" style="width: 30px" onkeydown="onlyNumber()" onkeyup="removeChar()" value="<c:out value='${model.attachSizeLimit}'/>" maxlength="4"/>&nbsp;MB
 	            </td>
 	        </tr>
+	        
+	        <%-- URL 필드를 게시판 구분 필드로 이동 --%>
+	   <%--      
 	        <tr style="${style}">
 	            <th>URL</th>
 	            <td>
 	                <input type="text" id="txtURL" style="width: 100%" value="<c:out value='${model.url}' />" />
 	            </td>
 	        </tr>
+	         --%>
+	        
 	        <tr id="chkNotifyTr" style="${style}">
 	            <th><spring:message code="ezBoard.t168" /></th>
 	            <td>
@@ -788,7 +978,7 @@
 	            </td>
 	        </tr>
 	        <%--2011-04 : 한줄 답변 옵션화 처리.--%>
-	        <tr style="${style}">
+	        <tr id="oneLineTr" style="${style}">
 	            <th><spring:message code="ezBoard.t81" /></th>
 	            <td>
 	            	<c:if test="${model.oneLineReply == '1'}">	                
