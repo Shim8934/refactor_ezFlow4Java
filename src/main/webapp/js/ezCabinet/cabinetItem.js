@@ -402,7 +402,7 @@ var CabinetItem = function() {
 	
 	function openSharePopup() {
 		var cabId      = document.getElementById("cabInfo").getAttribute("role");
-		var sharePopup = window.open("/ezCabinet/shareCabinet.do?cabId=" + cabId, "shareFile", getOpenWindowfeature(1000, 600));
+		var sharePopup = window.open("/ezCabinet/shareCabinet.do?cabId=" + cabId, "shareFile", getOpenWindowfeature(1125, 700));
 	}
 	
 	function getFileDetail() {
