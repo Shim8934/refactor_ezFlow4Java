@@ -98,6 +98,11 @@ function updateKanbanStatus() {
 	
 	kanbanOrder = kanbanOrder.slice(0,-1);
 	
+	if (kanbanOrder == "" || kanbanOrder == null) {
+		alert("<spring:message code='ezPMS.t324'/>");
+		return;
+	}
+	
 	 var data = {
 		projectId : projectId,
 		orderStatus : kanbanOrder
