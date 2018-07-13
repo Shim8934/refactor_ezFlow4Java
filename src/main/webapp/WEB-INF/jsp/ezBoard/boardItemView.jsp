@@ -565,6 +565,26 @@
 		            }
 		        }
 		    }
+		    
+		    function addRelatedCabinet() {
+	    		//* blank 2018.07.13
+	    		//* var cabId  = document.getElementById("cabInfo").getAttribute("role");
+		    	window.open("/ezCabinet/cabinetAddRelated.do", "addRelated", getOpenWindowfeature(600, 690));
+	    	}
+		    
+		    function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+				return feature;
+			}
+		    
 		    function btnClose_onclick() {
 		        window.close();
 		    }
@@ -974,6 +994,7 @@
 		            }
 		        }
 		    }
+		    
 		    function btn_Retrans_Onclick_Complete(RtnVal) {
 		        DivPopUpHidden();
 		
@@ -1172,6 +1193,9 @@
 		        	<c:if test="${(boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
 		        		<li ID='Retrans'><span onclick='btn_Retrans_Onclick()'><spring:message code='ezBoard.t10100' /></span></li>
 		        	</c:if>
+		        </ul>
+		        <ul>
+		            <li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
 		        </ul>
 		      </div>    
 		      <div id="close">

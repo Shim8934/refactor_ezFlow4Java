@@ -441,6 +441,26 @@
 	            	doCancel();
 	            }
 	        }
+	        
+	        function addRelatedCabinet() {
+	    		//* blank 2018.07.13
+	    		//* var cabId  = document.getElementById("cabInfo").getAttribute("role");
+		    	window.open("/ezCabinet/cabinetAddRelated.do", "addRelated", getOpenWindowfeature(600, 690));
+	    	}
+		    
+		    function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+				return feature;
+			}
+	        
 	        function doCancel(ans) {
 	        	DivPopUpHidden();
 	        	if (ans) {
@@ -573,6 +593,7 @@
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		          <li id="tbtncallback" style="display: none;"><span id="btncallback" onclick="return btncallback_onclick()"><spring:message code='ezApprovalG.t66'/></span></li>
                   <li id="tbtnforcecallback" style="display: none;"><span id="btnforcecallback" onclick="return btncallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
+                  <li id="btnrelatedcabinet"><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
 		        </ul>
 		      </div>
 		      <div id="close">

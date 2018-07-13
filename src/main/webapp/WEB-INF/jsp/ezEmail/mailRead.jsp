@@ -426,6 +426,25 @@
 		        newwin.focus();
 		    }
 		    
+		    function addRelatedCabinet() {
+	    		//* blank 2018.07.13
+	    		//* var cabId  = document.getElementById("cabInfo").getAttribute("role");
+		    	window.open("/ezCabinet/cabinetAddRelated.do", "addRelated", getOpenWindowfeature(600, 690));
+	    	}
+		    
+		    function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+				return feature;
+			}
+		    
 		</script>
 	</head>
 
@@ -448,6 +467,7 @@
 		                    <li id="HolderSent"><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
 		                    <li><span id="btnBookmark" onClick="toggle_flag()"><spring:message code="ezEmail.t550" /></span></li>
 		                    <li id="HolderElse"><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>          
+		                    <li><span id="addCabinet" onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
 		                    <c:if test="${isSecureMail == true}">
 		                    	<li><span id="btnSecureInfo" onClick="secureInfo_onClick()"><spring:message code="ezEmail.lhm44" /></span></li>
 		                    </c:if>
