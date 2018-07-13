@@ -344,7 +344,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	}
 	
 	@Override
-	public JSONObject saveItem(HttpServletRequest request, String userId, String cabinetId, String title, String summary, JSONArray fileArray, JSONArray relatedArr) {
+	public JSONObject saveItem(HttpServletRequest request, String userId, String cabinetId, String title, String summary, JSONArray fileArray, JSONArray relatedArr) throws Exception {
 		String url                = "/rest/ezcabinet/item/id/" + cabinetId + "/add";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("title",      title);
@@ -353,6 +353,37 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		param.put("relatedArr", relatedArr);
 		param.put("userId",     userId);
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject getCabinetInfo(HttpServletRequest request, String userId, String cabinetId) throws Exception {
+		String url                = "/rest/ezcabinet/cabinet/id/" + cabinetId;
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject getCabinetItems(HttpServletRequest request, String userId, String cabinetId, String title, String summary, String recursive, String creatorName, String startDate, String endDate, String column, String order, String srchMode, String srchOption, String listCntSize, String currentPage) throws Exception {
+		String url                = "/rest/ezcabinet/item/id/" + cabinetId + "/get";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",      userId);
+		param.put("title",       title);
+		param.put("summary",     summary);
+		param.put("recursive",   recursive);
+		param.put("creatorName", creatorName);
+		param.put("startDate",   startDate);
+		param.put("endDate",     endDate);
+		param.put("column",      column);
+		param.put("order",       order);
+		param.put("srchMode",    srchMode);
+		param.put("srchOption",  srchOption);
+		param.put("listCntSize", listCntSize);
+		param.put("currentPage", currentPage);
+		
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
 	

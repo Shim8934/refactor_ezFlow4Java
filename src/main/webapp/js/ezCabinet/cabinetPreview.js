@@ -10,6 +10,18 @@ var CabinetPreview = function () {
 		var _prevCntH     = generalInf["preContentH"];
 		var _prevCntW     = generalInf["preContentW"];
 		
+		function resizeHeight() {
+			var mainDiv           = document.getElementById(_mainDivId);
+			var divChild          = mainDiv.querySelector("div[class='tableDataDiv']");
+			if (divChild) {divChild.style.height = mainDiv.clientHeight - 70 + "px";}
+		}
+		
+		function resizeWidth() {
+			var wrapDiv           = document.getElementById(_wrapperDivId);
+			var divChild          = wrapDiv.querySelector("div[class='tableDataDiv']");
+			if (divChild) {divChild.style.height = wrapDiv.clientHeight - 40 + "px";}
+		}
+		
 		function setResizeableByHeight() {
 			var mainWrapper = document.getElementById(_wrapperDivId);
 			mainWrapper.style.display                          = 'flex';
@@ -17,15 +29,17 @@ var CabinetPreview = function () {
 			document.getElementById(_previewHId).style.display = "";
 			document.getElementById(_previewWId).style.display = "none";
 			
-			var mainDiv          = document.getElementById(_mainDivId);
-			mainDiv.style.width  = "100%";
-			mainDiv.style.height = _percentInf["height"] + "%";
+			var mainDiv           = document.getElementById(_mainDivId);
+			mainDiv.style.display = "";
+			mainDiv.style.width   = "100%";
+			mainDiv.style.height  = _percentInf["height"] + "%";
+			resizeHeight();
 			
 			$('#' + _mainDivId).resizable({
 				handles: 's',
 				minHeight: getHeight("min"),
 				maxHeight: getHeight("max"),
-				resize: addPanel,
+				resize: resizeByHeight,
 				stop: closePanel
 			});
 		}
@@ -36,9 +50,11 @@ var CabinetPreview = function () {
 			mainWrapper.style.flexFlow                           = "";
 			document.getElementById(_previewHId).style.display   = "none";
 			document.getElementById(_previewWId).style.display   = "";
-			var mainDiv          = document.getElementById(_mainDivId);
-			mainDiv.style.width  = _percentInf["width"] + "%";
-			mainDiv.style.height = "100%";
+			var mainDiv           = document.getElementById(_mainDivId);
+			mainDiv.style.width   = _percentInf["width"] + "%";
+			mainDiv.style.height  = "100%";
+			mainDiv.style.display = "";
+			resizeWidth();
 			
 			$('#' + _mainDivId).resizable({
 				handles: 'e',
@@ -52,9 +68,11 @@ var CabinetPreview = function () {
 		function setDestroyResizeable() {
 			$('#' + _mainDivId).resizable("destroy");
 			document.getElementById(_wrapperDivId).style.display = '';
-			var mainDiv          = document.getElementById(_mainDivId);
-			mainDiv.style.width  = "100%";
-			mainDiv.style.height = "100%";
+			var mainDiv           = document.getElementById(_mainDivId);
+			mainDiv.style.width   = "100%";
+			mainDiv.style.height  = "100%";
+			mainDiv.style.display = "";
+			resizeWidth();
 			document.getElementById(_previewHId).style.display = "none";
 			document.getElementById(_previewWId).style.display = "none";
 		}
@@ -85,6 +103,11 @@ var CabinetPreview = function () {
 			}
 			
 			return result / 100;
+		}
+		
+		function resizeByHeight(event, ui) {
+			resizeHeight();
+			addPanel(event, ui)
 		}
 		
 		function addPanel(event, ui) {

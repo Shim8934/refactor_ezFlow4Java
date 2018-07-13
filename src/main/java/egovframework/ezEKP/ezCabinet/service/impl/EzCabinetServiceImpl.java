@@ -26,6 +26,7 @@ import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationVO;
@@ -848,5 +849,34 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	private String getCabinetDirPath(int tenantId) {
 		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "cabinet" + commonUtil.separator;
+	}
+
+	@Override
+	public CabinetVO getCabinetById(String cabinetId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("cabinetId", cabinetId);
+		map.put("tenantId",  tenantId);
+		
+		return ezCabinetDAO.getCabinetById(map);
+	}
+
+	@Override
+	public List<CabinetItemVO> getItems(CabinetItemSearchVO searchVO) throws Exception {
+		return ezCabinetDAO.getItems(searchVO);
+	}
+
+	@Override
+	public int getTotalItems(CabinetItemSearchVO searchVO) throws Exception {
+		return ezCabinetDAO.getTotalItems(searchVO);
+	}
+
+	@Override
+	public List<CabinetItemVO> getItemsRecursive(CabinetItemSearchVO searchVO) throws Exception {
+		return ezCabinetDAO.getItemsRecursive(searchVO);
+	}
+
+	@Override
+	public int getTotalItemsRecursive(CabinetItemSearchVO searchVO) throws Exception {
+		return ezCabinetDAO.getTotalItemsRecursive(searchVO);
 	}
 }

@@ -13,9 +13,11 @@
 	function windowResize() {closeViewPopUp(); preProcessing();}
 	
 	function preProcessing() {
-		var divList          = document.getElementById("mainSetting");
-		var reheight         = document.documentElement.clientHeight - 190;
-		divList.style.height = reheight + "px";
+		var divList           = document.getElementById("mainSetting");
+		var divChild          = divList.querySelector("div[class='tableDataDiv']");
+		var reheight          = document.documentElement.clientHeight - 220;
+		divChild.style.height = reheight + "px";
+		divList.style.height  = "auto";
 	}
 	
 	function initEvents() {
@@ -282,7 +284,7 @@
 	}
 	
 	function renderCapacityTable(capacityList, unselectClass, tableDataElmt, getCheckedFunct, clickRowFunct) {
-		if (renderCapacityTable == null || renderCapacityTable.length == 0) {
+		if (capacityList == null || capacityList.length == 0) {
 			var trElmt = document.createElement("tr");
 			var tdElmt = document.createElement("td");
 			tdElmt.setAttribute("colspan", "9");

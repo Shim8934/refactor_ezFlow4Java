@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationVO;
@@ -154,5 +155,21 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 
 	public long getCabinetStorage(Map<String, Object> map) {
 		return (long)select("EzCabinetDAO.getCabinetStorage", map);
+	}
+
+	public List<CabinetItemVO> getItems(CabinetItemSearchVO searchVO) {
+		return (List<CabinetItemVO>)list("EzCabinetDAO.getItems", searchVO);
+	}
+
+	public int getTotalItems(CabinetItemSearchVO searchVO) {
+		return (int)select("EzCabinetDAO.getTotalItems", searchVO);
+	}
+
+	public List<CabinetItemVO> getItemsRecursive(CabinetItemSearchVO searchVO) {
+		return (List<CabinetItemVO>)list("EzCabinetDAO.getItemsRecursive", searchVO);
+	}
+
+	public int getTotalItemsRecursive(CabinetItemSearchVO searchVO) {
+		return (int)select("EzCabinetDAO.getTotalItemsRecursive", searchVO);
 	}
 }

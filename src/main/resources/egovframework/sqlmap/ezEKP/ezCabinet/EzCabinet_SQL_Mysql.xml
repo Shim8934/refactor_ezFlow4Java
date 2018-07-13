@@ -10,6 +10,7 @@
 	<typeAlias alias="CabinetAttachFileVO"  type="egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO"/>
 	<typeAlias alias="CabinetRelationVO"    type="egovframework.ezEKP.ezCabinet.vo.CabinetRelationVO"  />
 	<typeAlias alias="CabinetItemVO"        type="egovframework.ezEKP.ezCabinet.vo.CabinetItemVO"      />
+	<typeAlias alias="CabinetItemSearchVO"  type="egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO"/>
 	
 	<!-- SimpleDept resultMap -->
 	<resultMap id="simpleDeptVO" class="cabinetSimpleDeptVO">
@@ -153,6 +154,30 @@
 		<result property="tenantId"         column="tenant_id"           columnIndex="19"/>
 	</resultMap>
 	
+	<resultMap id="cabinetItemVO2"  class="CabinetItemVO">
+		<result property="itemId"           column="item_id"             columnIndex="1" />
+		<result property="cabinetId"        column="cabinet_id"          columnIndex="2" />
+		<result property="itemType"         column="item_type"           columnIndex="3" />
+		<result property="title"            column="title"               columnIndex="4" />
+		<result property="summary"          column="summary"             columnIndex="5" />
+		<result property="creatorId"        column="creator_id"          columnIndex="6" />
+		<result property="creatorName1"     column="creator_name1"       columnIndex="7" />
+		<result property="creatorName2"     column="creator_name2"       columnIndex="8" />
+		<result property="departmentId"     column="department_id"       columnIndex="9" />
+		<result property="departmentName1"  column="department_name1"    columnIndex="10"/>
+		<result property="departmentName2"  column="department_name2"    columnIndex="11"/>
+		<result property="conentPath"       column="content_path"        columnIndex="12"/>
+		<result property="createdDate"      column="create_date"         columnIndex="13"/>
+		<result property="updatedDate"      column="update_date"         columnIndex="14"/>
+		<result property="useStatus"        column="use_status"          columnIndex="15"/>
+		<result property="updateId"         column="update_id"           columnIndex="16"/>
+		<result property="deleterId"        column="delete_id"           columnIndex="17"/>
+		<result property="companyId"        column="company_id"          columnIndex="18"/>
+		<result property="tenantId"         column="tenant_id"           columnIndex="19"/>
+		<result property="creatorName"      column="creator_name"        columnIndex="20"/>
+		<result property="itemSize"         column="item_size"           columnIndex="21"/>
+	</resultMap>
+	
 	<!-- cabinet attach file resultMap -->
 	<resultMap id="cabinetAttachFileVO"  class="CabinetAttachFileVO">
 		<result property="attachId"         column="attach_id"           columnIndex="1"/>
@@ -188,6 +213,30 @@
 		]]>
 	</sql>
 	
+	<sql id="cabinetItemList">
+		i.use_status = 1 and i.tenant_id = #tenantId#
+		<isEqual property="searchMode" compareValue="1">
+			<isEqual property="searchOption" compareValue="title" prepend=" and ">
+				i.title like concat('%', concat(#title#, '%'))
+			</isEqual>
+			<isEqual property="searchOption" compareValue="summary" prepend=" and ">
+				i.summary like concat('%', concat(#summary#, '%'))
+			</isEqual>
+		</isEqual>
+		<isEqual property="searchMode" compareValue="2">
+			<isNotEmpty property="title"   prepend=" and ">i.title like concat('%', concat(#title#, '%'))</isNotEmpty>
+			<isNotEmpty property="summary" prepend=" and ">i.summary like concat('%', concat(#summary#, '%'))</isNotEmpty>
+			<isNotEmpty property="creatorName" prepend=" and ">
+				<isEqual property="primary"    compareValue="1">i.creator_name1 like concat('%', concat(#creatorName#, '%'))</isEqual>
+				<isNotEqual property="primary" compareValue="1">i.creator_name2 like concat('%', concat(#creatorName#, '%'))</isNotEqual>
+			</isNotEmpty>
+			<isNotEmpty property="startDate">
+				<isNotEmpty property="endDate" prepend=" and ">
+					<![CDATA[(i.create_date >= #startDate# and i.create_date <= #endDate#)]]>
+				</isNotEmpty>
+			</isNotEmpty>
+		</isEqual>
+	</sql>
 	<!--***********************************************************************************
 	**                            Organization tree process                              **
 	************************************************************************************-->
@@ -510,16 +559,16 @@
 						<iterate property="cabinetList" open="(" close=")" conjunction=",">
 							#cabinetList[]#
 						</iterate>
-						and c1.tenant_id = #tenantId#
+						and c1.use_status = 1 and c1.tenant_id = #tenantId#
 				</isNotEmpty>
 				<isNotEmpty property="itemList">
 				union
-					select c2.* from tbl_cb_cabinet c2 join tbl_cb_item i on c2.cabinet_id = i.cabinet_id and c2.tenant_id = i.tenant_id
+					select c2.* from tbl_cb_cabinet c2 join tbl_cb_item i on c2.cabinet_id = i.cabinet_id and c2.tenant_id = i.tenant_id and i.use_status = 1
 					where i.item_id in
 					<iterate property="itemList" open="(" close=")" conjunction=",">
 						#itemList[]#
 					</iterate>
-					and c2.tenant_id = #tenantId#
+					and c2.use_status = 1 and c2.tenant_id = #tenantId#
 				</isNotEmpty>
 			) c3
 	</select>
@@ -595,6 +644,63 @@
 	
 	<select id="EzCabinetDAO.getMaxItem" resultClass="Integer">
 		<![CDATA[select ifnull(max(item_id), 0) from tbl_cb_item where tenant_id = #tenantId#]]>
+	</select>
+	
+	<select id="EzCabinetDAO.getItems" resultMap="cabinetItemVO2" parameterClass="CabinetItemSearchVO">
+		<![CDATA[
+			select
+				i.*,
+				case when #primary# = '1' then i.creator_name1 else i.creator_name2 end                                       as creator_name,
+				(select sum(f.file_size) from tbl_cb_attach_file f where f.item_id = i.item_id and f.tenant_id = i.tenant_id) as item_size
+			from tbl_cb_item i
+			where
+		]]>
+			<include refid="cabinetItemList"/>
+				and i.cabinet_id = #cabinetId#
+			order by
+				<isEmpty property="sqlOrder">i.update_date desc, i.item_id desc</isEmpty>
+				<isNotEmpty property="sqlOrder">$sqlOrder$, i.update_date desc, i.item_id desc</isNotEmpty>
+			limit #startPoint#, #listCount#
+	</select>
+	
+	<select id="EzCabinetDAO.getTotalItems" resultClass="Integer">
+		<![CDATA[select count(item_id) from tbl_cb_item i where]]>
+		<include refid="cabinetItemList"/>
+			and i.cabinet_id = #cabinetId#
+	</select>
+	
+	<select id="EzCabinetDAO.getItemsRecursive" resultMap="cabinetItemVO2" parameterClass="CabinetItemSearchVO">
+		<![CDATA[
+			select 
+				i.*,
+				case when #primary# = '1' then i.creator_name1 else i.creator_name2 end                                       as creator_name,
+				(select sum(f.file_size) from tbl_cb_attach_file f where f.item_id = i.item_id and f.tenant_id = i.tenant_id) as item_size
+			from
+				tbl_cb_item i join
+					(
+						select * from tbl_cb_cabinet where cabinet_path like concat(#cabinetPath#, '%') and use_status = 1 and tenant_id = #tenantId#
+					) c on c.cabinet_id = i.cabinet_id and i.tenant_id = c.tenant_id
+			where
+		]]>
+		<include refid="cabinetItemList"/>
+		order by
+			<isEmpty property="sqlOrder">i.update_date desc, i.item_id desc</isEmpty>
+			<isNotEmpty property="sqlOrder">$sqlOrder$, i.update_date desc, i.item_id desc</isNotEmpty>
+		limit #startPoint#, #listCount#
+	</select>
+	
+	<select id="EzCabinetDAO.getTotalItemsRecursive" resultClass="Integer">
+		<![CDATA[
+			select 
+				count(i.item_id)
+			from
+				tbl_cb_item i join
+					(
+						select * from tbl_cb_cabinet where cabinet_path like concat(#cabinetPath#, '%') and use_status = 1 and tenant_id = #tenantId#
+					) c on c.cabinet_id = i.cabinet_id and i.tenant_id = c.tenant_id
+			where
+		]]>
+		<include refid="cabinetItemList"/>
 	</select>
 	
 	<!--***********************************************************************************

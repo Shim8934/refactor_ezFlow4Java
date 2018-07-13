@@ -133,10 +133,24 @@ public class EzCabinetController {
 	}
 	
 	@RequestMapping(value="/ezCabinet/myCabinet.do")
-	public String jspGetMyCabinet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public String jspGetCabinetPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetMyCabinet started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String cabinetId   = request.getParameter("cabinetId");
+		
+		JSONObject resultObj = cabinetRestService.getCabinetInfo(request, user.getId(), cabinetId);
+		
+		if (resultObj.get("status").toString().equals("ok")) {
+			JSONObject cabinet = (JSONObject) resultObj.get("cabinet");
+			model.addAttribute("cabinetName", cabinet.get("cabinetName"));
+		}
+		
+		JSONObject configObj = cabinetRestService.getUserPreviewConfig(request, user.getId());
+		
+		if (configObj.get("status").toString().equals("ok")) {
+			JSONObject userConfig = (JSONObject)configObj.get("config");
+			model.addAttribute("config", userConfig);
+		}
 		
 		model.addAttribute("cabinetId", cabinetId);
 		model.addAttribute("mycabinet", 1);
@@ -439,6 +453,41 @@ public class EzCabinetController {
 		resultObj            = cabinetRestService.getCabinetSubNodes(request, user.getId(), nodeId);
 		
 		logger.debug("jsonGetSubCabinetNodes end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/getCabinetItems.do")
+	@ResponseBody
+	public String jsonGetCabinetItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonGetCabinetItems start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String currentPage   = request.getParameter("currentPage") != null ? request.getParameter("currentPage") : "";
+		String cabinetId     = request.getParameter("cabinetId")   != null ? request.getParameter("cabinetId")   : "";
+		String title         = request.getParameter("title")       != null ? request.getParameter("title")       : "";
+		String summary       = request.getParameter("summary")     != null ? request.getParameter("summary")     : "";
+		String recursive     = request.getParameter("recursive")   != null ? request.getParameter("recursive")   : "";
+		String creatorName   = request.getParameter("creatorName") != null ? request.getParameter("creatorName") : "";
+		String startDate     = request.getParameter("startDate")   != null ? request.getParameter("startDate")   : "";
+		String endDate       = request.getParameter("endDate")     != null ? request.getParameter("endDate")     : "";
+		String column        = request.getParameter("column")      != null ? request.getParameter("column")      : "";
+		String order         = request.getParameter("order")       != null ? request.getParameter("order")       : "";
+		String srchMode      = request.getParameter("srchMode")    != null ? request.getParameter("srchMode")    : "";
+		String srchOption    = request.getParameter("srchOption")  != null ? request.getParameter("srchOption")  : "";
+		String listCntSize   = request.getParameter("listCntSize") != null ? request.getParameter("listCntSize") : "";
+		
+		logger.debug("CabinetId: " + cabinetId + " || Title: " + title + " || Summary: " + summary + " || Recursive: " + recursive + " || Creator name: " + creatorName + " || Start Date: " + startDate + " || End Date: " + endDate + " || Column: " + column + " || Order: " + order + " || Search mode: " + srchMode + " || Search option: " + srchOption + " || List count: " + listCntSize + " || Current page: " + currentPage);
+		
+		JSONObject resultObj = new JSONObject();
+		
+		if (cabinetId.equals("") || listCntSize.equals("") || currentPage.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.getCabinetItems(request, user.getId(), cabinetId, title, summary, recursive, creatorName, startDate, endDate, column, order, srchMode, srchOption, listCntSize, currentPage);
+		
+		logger.debug("jsonGetCabinetItems end");
 		return resultObj.toString();
 	}
 	
