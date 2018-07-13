@@ -304,10 +304,10 @@
 		      <th style="cursor:pointer" width="112" onClick="SortPage('B.BoardName desc')"><spring:message code='ezBoard.t185'/><img src="/images/etc/view-sortup.gif" ></th>
 	      	</c:when>
 	      	<c:when test="${sortBy == 'B.BoardName desc'}">
-		      <th style="cursor:pointer" width="160" onClick="SortPage('B.BoardName')"><spring:message code='ezBoard.t185'/><img src="/images/etc/view-sortdown.gif" ></th>
+		      <th style="cursor:pointer" width="112" onClick="SortPage('B.BoardName')"><spring:message code='ezBoard.t185'/><img src="/images/etc/view-sortdown.gif" ></th>
 	      	</c:when>
 	      	<c:otherwise>
-		      <th style="cursor:pointer" width="160" onClick="SortPage('B.BoardName')"><spring:message code='ezBoard.t185'/></th>
+		      <th style="cursor:pointer" width="112" onClick="SortPage('B.BoardName')"><spring:message code='ezBoard.t185'/></th>
 	      	</c:otherwise>
 	      </c:choose>    
 	      <c:choose>
