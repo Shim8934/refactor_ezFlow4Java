@@ -270,7 +270,9 @@
 		    
 		    function menu_Delete(){
 		    	itemList = "";
-		    	$("input:checkbox:checked").each(function(index) {
+		    	//2018-07-13 김보미
+// 		    	$("input:checkbox:checked").each(function(index) {
+		    	$("input:checkbox:not(#HeaderAllCheckBox):checked").each(function(index) {
 		    		if (index == 0) {
 		    			itemList = this.value;
 		    		} else {
@@ -564,6 +566,30 @@
 			function qstWhite() {
 				window.location = "/ezQuestion/qstStep1.do?brdID=5";		        	        
 		    }
+			
+			//2018-07-13 김보미
+		    function event_HeaderCheckBoxClick(obj) {
+		    	// tr 노드들 (리스트의 전체 행)
+				var QstNodes = $('#QstList tbody').children( 'tr:not(:first)' );
+		    	
+		    	// tr 노드 (하나의 행)
+		    	var QstNode;
+		    	// tr 노드 개수
+		    	var nodeCount = QstNodes.length;
+		        if (obj.checked) {
+		        	
+		            for (var i = 0; i < nodeCount; i++) {
+		            	QstNode = QstNodes.get(i);
+		            	QstNode.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
+		            }
+		        } else {
+		        	
+		            for (var i = 0; i < nodeCount; i++) {
+		            	QstNode = QstNodes.get(i);
+		            	QstNode.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
+		            }
+		        }
+		    }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -590,7 +616,9 @@
 		<div id = "QstDiv" style="overflow:auto;">
 			<table id="QstList" class="mainlist" style="width:100%;"> 
 			    <tr> 
-					<th width="30px" align="center"> <spring:message code="ezQuestion.t306" /></th> 
+			    	<!-- 2018-07-13 김보미 - '선택' 대신 체크박스로 -->
+<%-- 					<th width="30px" align="center"> <spring:message code="ezQuestion.t306" /></th>  --%>
+					<th width="30px" align="center"><input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/></th> 
 					<th><spring:message code="ezQuestion.t307" /></th> 
 					<th width="60px"><spring:message code="ezQuestion.t308" /></th> 
 					<th width="80px"><spring:message code="ezQuestion.t309" /></th> 
