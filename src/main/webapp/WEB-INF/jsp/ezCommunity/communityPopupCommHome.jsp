@@ -414,9 +414,9 @@
 		            document.getElementById("makeguide").style.display = "none";
 		            
 		            //2018-07-02 김보미 - 클릭시 색 변경 안되게
+			        var SelectedNodeID = treeNode.GetNodeData("id");
 		            var boardColor = treeNode.GetNodeData("DATA4");
 		            if (boardColor != "" && boardColor != null) {
-			            var SelectedNodeID = treeNode.GetNodeData("id");
 		                var objSpan = document.getElementById("spn_" + SelectedNodeID);
 		                if(CrossYN())
 		                    objSpan.setAttribute("style", "color:" + boardColor);
@@ -426,7 +426,9 @@
 		            
 		            document.getElementById("rightfrm").style.height = "659px";
 		            if (chkPhotoBrd != "3") {
-		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code;
+		            	//2018-07-13 김보미 - 파라메터 추가
+// 		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code;
+		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code + "&treeCtrl=" + SelectedNodeID;
 		            } else {
 		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemListPhoto.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code;
 		            }
