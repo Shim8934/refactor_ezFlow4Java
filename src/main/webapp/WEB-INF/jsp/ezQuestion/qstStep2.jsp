@@ -471,7 +471,9 @@
 		                    var trName = getNodeText(QuestionNode.childNodes[i].childNodes[1].getElementsByTagName("ROW")[j].getElementsByTagName("ATTACHTITLE")[0]);
     						trName = decodeURI(trName);
 		                    oTd = document.createElement("td");
-        		            oTd.setAttribute("style", "padding:5px; cursor:pointer; font-weight:bold;");
+		                    //2018-07-13 김보미 - 다운로드 안되게 막기
+         		            //oTd.setAttribute("style", "padding:5px; cursor:pointer; font-weight:bold;");
+        		            oTd.setAttribute("style", "padding:5px; font-weight:bold;");
                     		oTr.appendChild(oTd);
                     		if(attachType==1){
                     			oImg = document.createElement("img");
@@ -481,22 +483,22 @@
 		                    	oImg = document.createElement("img");
             		            oImg.setAttribute("src", "/images/poll/sound.gif");
                     		    oImg.setAttribute("style", "width:19px;height:17px");
-                    		    oTd.setAttribute("onclick", "file_down('"+pFileName+"',"+attachType+",'"+encodeURI(trName)+"')");
+//                     		    oTd.setAttribute("onclick", "file_down('"+pFileName+"',"+attachType+",'"+encodeURI(trName)+"')");
 		                    }else if(attachType==4){
 		                    	oImg = document.createElement("img");
             		            oImg.setAttribute("src", "/images/poll/link.gif");
                     		    oImg.setAttribute("style", "width:26px;height:17px");
-                    		    oTd.setAttribute("onclick","window.open('http://"+pFileName+"'),'',''");
+//                     		    oTd.setAttribute("onclick","window.open('http://"+pFileName+"'),'',''");
 		                    }else if(attachType==5){
 		                    	oImg = document.createElement("img");
             		            oImg.setAttribute("src", "/images/poll/video.gif");
                     		    oImg.setAttribute("style", "width:21px;height:17px");
-                    		    oTd.setAttribute("onclick", "file_down('"+pFileName+"',"+attachType+",'"+encodeURI(trName)+"')");
+//                     		    oTd.setAttribute("onclick", "file_down('"+pFileName+"',"+attachType+",'"+encodeURI(trName)+"')");
 		                    }else{
 		                    	oImg = document.createElement("img");
             		            oImg.setAttribute("src", "/images/poll/link.gif");
                     		    oImg.setAttribute("style", "width:26px;height:17px");
-                    		    oTd.setAttribute("onclick","window.open('http://"+pFileName+"'),'',''");
+//                     		    oTd.setAttribute("onclick","window.open('http://"+pFileName+"'),'',''");
 		                    }
                     		oTd.appendChild(oImg);
                     		if(attachType!=1){
