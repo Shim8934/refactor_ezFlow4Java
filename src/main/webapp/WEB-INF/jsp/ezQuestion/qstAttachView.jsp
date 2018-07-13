@@ -32,10 +32,12 @@
 		    if (useragentstr.indexOf(_MSIE) != -1) {
 		        ezQuestion_ActiveX(_href, type);
 		    } else {
-		        document.getElementById("Content2").style.margin = "10px 10px 10px 10px";
-		        document.getElementById("Content2").innerHTML = "<b>" + '<spring:message code="ezQuestion.t564" />' + "</br>" + '<spring:message code="ezQuestion.t565" />' + " <a href = '#'><span onclick=\"download_attach();\">" + '<spring:message code="ezQuestion.t567" />' + "</span></a>" + '<spring:message code="ezQuestion.t568" />' + "</b>";
-		        document.getElementById("Content").style.display = "none";
-		        document.getElementById("download_att").style.display = "none";
+		    	if (type != 1) {
+			        document.getElementById("Content2").style.margin = "10px 10px 10px 10px";
+			        document.getElementById("Content2").innerHTML = "<b>" + '<spring:message code="ezQuestion.t564" />' + "</br>" + '<spring:message code="ezQuestion.t565" />' + " <a href = '#'><span onclick=\"download_attach();\">" + '<spring:message code="ezQuestion.t567" />' + "</span></a>" + '<spring:message code="ezQuestion.t568" />' + "</b>";
+			        document.getElementById("Content").style.display = "none";
+			        document.getElementById("download_att").style.display = "none";
+		    	}
 		    }
 		    
 		    function download_attach() {
@@ -49,8 +51,13 @@
 						window.onload = function(){
 							var width = imgView.width;
 							var height = imgView.height;
-							if (width < 1024 && height < 768) {
-								window.resizeTo(width + 30, height + 65);
+							var screenWidth = screen.width;
+							var screenHeight = screen.height;
+							
+							if (width < screenWidth && height < screenHeight) {
+								window.resizeTo(width + 50, height + 85);
+							} else {
+								window.resizeTo(screenWidth, screenHeight);
 							}
 							var useragentstr = navigator.userAgent;
 							download_attach();
