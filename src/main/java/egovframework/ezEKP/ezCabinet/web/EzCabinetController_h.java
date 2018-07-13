@@ -4,17 +4,28 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
+import egovframework.let.utl.fcc.service.CommonUtil;
+
 @Controller
 public class EzCabinetController_h {
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetController_h.class);
 	
+	@Autowired
+	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzCabinetRestService cabinetRestService;
+	
 	/**
-	 * 캐비넷파일 상세내용 가져오기
+	 * 캐비넷파일 상세페이지
 	 * @param loginCookie
 	 * @param request
 	 * @param model
@@ -25,5 +36,27 @@ public class EzCabinetController_h {
 		logger.debug("jspGetCabinetFileDetail started");
 		logger.debug("jspGetCabinetFileDetail ended");
 		return "ezCabinet/cabinetFileDetail";
+	}
+	
+	/**
+	 * 캐비넷 공유페이지 
+	 * @param loginCookie
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/ezCabinet/shareCabinet.do")
+	public String jspGetShareCabinetPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetShareCabinetPage started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		
+		String cabinetId   = request.getParameter("cabId");
+
+		//부서아이디 가져오기
+		model.addAttribute("cabinetId", cabinetId);
+		
+		logger.debug("jspGetShareCabinetPage ended");
+		return "ezCabinet/cabinetShare";
 	}
 }

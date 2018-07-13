@@ -28,9 +28,9 @@
 								</table>
 								
 								<!-- 검색 -->
-								<div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 15px; padding: 0px; border: 1px solid #eaeaea;">
-									<div class="portlet_tabpart03_top" style="border-bottom: 0px; height:26px;">
-										<table class="cabShareSearchTbl">
+								<div class="cabShareSearPanel">
+									<div class="cabShareSearPanelSub">
+										<table class="cabShareSearTbl">
 											<tr>
 												<td>
 													<div>
@@ -62,7 +62,7 @@
 								</div>
 									
 								<!-- 조직도 -->
-								<table class="cabShareOrganTbl">
+								<table class="cabOrganTbl">
 									<tr>
 										<td class="box">
 											<div id="TreeView">
@@ -71,41 +71,42 @@
 										</td>
 										<td></td>
 										<td class="listview" style="width: 440px" id="orglistView">
-											<table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
+											<!-- 부서 정보 -->
+											<table style="margin-top: -1px;" class="cabOrganDeptTbl">
 												<tr>
-													<!-- 부서 정보 -->
-													<th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
-														<span id="SelectDeptNM" style="font-weight: normal;margin-top:2px; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"countinfo="1">
-															<img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;margin-right:3px">김혜정부서-[<span style="color:#017BEC;">6명</span>]
+													<th>
+														<span id="SelectDeptNM" countinfo="1">
+															<img src="/images/OrganTree_cross/ic-open.gif">김혜정부서-[<span>6명</span>]
 														</span>
-														<span style="float:right; position: relative;">
-														<span><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
-														<span><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
+														<span>
+															<span><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
+															<span><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
 														</span>
 													</th>
 												</tr>	
 											</table>
-											<div id="txtlist_Layer" class="cabShareLayer">
-												<table style="width: 100%;" id="txtlist_table" class="mainlist cabShareMainTbl">
+											<!-- 조직도 리스트  -->
+											<div id="txtlist_Layer" class="cabOrganListDiv">
+												<table id="txtlist_table" class="mainlist">
 													<tr>
-														<td style="width: 150px;">이름</td>
-														<td style="width: 130px;">직위</td>
+														<td>이름</td>
+														<td>직위</td>
 														<td>사내전화</td>
 													</tr>
 													<tr>
-														<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 150px; background-color: rgb(240, 246, 255);">지정석</td>
-														<td style="width: 80px; background-color: rgb(240, 246, 255);">대리</td>
+														<td style="background-color: rgb(240, 246, 255);">지정석</td>
+														<td style="background-color: rgb(240, 246, 255);">대리</td>
 														<td style="background-color: rgb(240, 246, 255);">02-1234-555</td>
 													</tr>
 												</table>
 											</div>
-											<div id="tblPageRayer" class="cabSharePage"></div>
+											<div id="tblPageRayer" class="cabOrganPageDiv"></div>
 										</td>
 									</tr>
 								</table>
 							</td>
 								
-							<!-- ShareBttn -->
+							<!-- shareBttn -->
 							<td class="cabShareBttn">
 								<img src="/images/kr/cm/arr_right.gif">
 								<img src="/images/kr/cm/arr_left.gif">
@@ -117,9 +118,9 @@
 									<span style="min-width: 45px;">공유자</span>
 								</h2>
 								
-								<div class="portlet_tabpart03" style="background-color: #f8f8fa; margin-top: 15px; padding: 0px; border: 1px solid #eaeaea;">
-									<div class="portlet_tabpart03_top" style="border-bottom: 0px; height:26px;">
-										<table class="cabShareSearchTbl">
+								<div class="cabShareSearPanel">
+									<div class="cabShareSearPanelSub">
+										<table class="cabShareSearTbl">
 											<tr>
 												<td>
 													<div>
@@ -144,9 +145,9 @@
 									</div>
 								</div>
 									
-								<div class="receiver_borderbox cabShareList">
+								<div class="cabShareListDiv">
 									<div>
-										<table id="txtlist_table" class="mainlist cabShareMainTbl">
+										<table id="txtlist_table" class="mainlist">
 											<tr>
 												<td><spring:message code='ezCabinet.t103'/></td>
 												<td><spring:message code='ezCabinet.t104'/></td>
@@ -154,7 +155,7 @@
 												<td><spring:message code='ezCabinet.t106'/></td>
 											</tr>
 											<tr>
-												<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">솔루션 3팀</td>
+												<td>솔루션 3팀</td>
 												<td>강민수</td>
 												<td>
 													<select width="65%">
