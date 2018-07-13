@@ -123,6 +123,9 @@
 						case 2 : alert(CabinetMessages.strError)    ; break;
 						case 3 : alert(CabinetMessages.strPerm)     ; break;
 						case 4 : alert(CabinetMessages.strRoot)     ; break;
+						case 5 : alert(CabinetMessages.strMovErr2)  ; break;
+						case 6 : alert(CabinetMessages.strMovErr3)  ; break;
+						case 7 : alert(CabinetMessages.strCapacity) ; break;
 						default: alert(CabinetMessages.strError)    ; return;
 					}
 				}
@@ -169,6 +172,7 @@
 				}
 				
 				function moveCabinetHandler() {
+					var selectedNode = document.getElementById("cabinetMgTree").querySelector("span[class='selectedNode']");
 					if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
 					if (selectedNode.getAttribute("level") == "0") {alert(CabinetMessages.strRoot); return;}
 					
@@ -182,7 +186,7 @@
 				
 				function addCabinet(strName1, strName2) {
 					var url      = "/ezCabinet/addCabinet.do";
-					var parentId = document.querySelector("span[class='selectedNode']").getAttribute("role");
+					var parentId = document.getElementById("cabinetMgTree").querySelector("span[class='selectedNode']").getAttribute("role");
 					var data     = {
 						parentId  : parentId,
 						cabName1  : strName1,
@@ -195,7 +199,7 @@
 				function changeCabinet(strName1, strName2) {
 					var url  = "/ezCabinet/renameCabinet.do";
 					var data = {
-						cabinetId : document.querySelector("span[class='selectedNode']").getAttribute("role"),
+						cabinetId : document.getElementById("cabinetMgTree").querySelector("span[class='selectedNode']").getAttribute("role"),
 						cabName1  : strName1,
 						cabName2  : strName2
 					};
@@ -204,7 +208,6 @@
 				}
 				
 				function moveCabinet(mode) {
-					//*Note move cabinet function here
 					var url       = "/ezCabinet/moveCabinet.do";
 					var cabinetId = document.getElementById("cabinetMgTree").querySelector("span[class='selectedNode']").getAttribute("role");
 					var parentId  = document.getElementById("cabinetMoveTree").querySelector("span[class='selectedNode']").getAttribute("role");
@@ -252,6 +255,8 @@
 					var cabAddDiv       = document.getElementById(divInfo.cabDivId);
 					cabAddDiv.className = "popup " + divInfo.cabDivClass;
 					removeFogPanel();
+					
+					if (mode == "moveCab") {document.getElementById("cabinetMoveTree").innerHTML = "";}
 				}
 				
 				function addCabinetDialog() {

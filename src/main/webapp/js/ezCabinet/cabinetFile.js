@@ -35,6 +35,7 @@ var CabinetFile = function() {
 		var fd              = new FormData();
 		var filePath        = null;
 		var fileName        = fileItem.name;
+		var fileSize        = fileItem.size;
 		var fileDivElmt     = document.getElementById("fileDiv");
 		var divfileListElmt = fileDivElmt.firstElementChild;
 		var ulElmt          = divfileListElmt.firstElementChild;
@@ -60,7 +61,7 @@ var CabinetFile = function() {
 		
 		spanChild1.textContent  = fileName;
 		spanChild1.setAttribute("title", fileName);
-		spanChild2.textContent  = getFileSize(fileItem.size);
+		spanChild2.textContent  = getFileSize(fileSize);
 		divChildElmt2.className = "cabFileInf";
 		divChildElmt2.appendChild(spanChild1);
 		divChildElmt2.appendChild(spanChild2);
@@ -68,6 +69,7 @@ var CabinetFile = function() {
 		divMainElmt.className = "cabDivFile";
 		divMainElmt.appendChild(divChildElmt1);
 		divMainElmt.appendChild(divChildElmt2);
+		liElmt.setAttribute("fname", fileName);
 		liElmt.appendChild(divMainElmt);
 		ulElmt.appendChild(liElmt);
 		
@@ -187,9 +189,9 @@ var CabinetFile = function() {
 		var result = fileSize + "B";
 		
 		switch(true) {
-			case fileSize > 1073741824 : result = (Math.floor(parseFloat(fileSize / 1073741824) * 10) / 10).toFixed(1) + "GB"; break;
-			case fileSize > 1048576    : result = (Math.floor(parseFloat(fileSize / 1048576) * 10) / 10).toFixed(1) + "MB"   ; break;
-			case fileSize > 1024       : result = parseInt(fileSize / 1024) + "KB"                                           ; break;
+			case fileSize > 1073741824 : result = parseFloat(fileSize / 1073741824).toFixed(2) + "GB"; break;
+			case fileSize > 1048576    : result = parseFloat(fileSize / 1048576).toFixed(2) + "MB"   ; break;
+			case fileSize > 1024       : result = parseFloat(fileSize / 1024).toFixed(2) + "KB"      ; break;
 		}
 		
 		return result;

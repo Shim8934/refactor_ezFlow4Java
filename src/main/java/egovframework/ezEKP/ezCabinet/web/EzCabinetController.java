@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,9 +60,12 @@ public class EzCabinetController {
 		if (resultObj.get("status").toString().equals("ok")) {
 			JSONObject capacity = (JSONObject)resultObj.get("capacity");
 			model.addAttribute("capacityType" , capacity.get("capacityType"));
+			logger.debug("UsedRate: " + capacity.get("usedRate"));
+			
+			
 			model.addAttribute("percent"      , capacity.get("usedRate"));
 			model.addAttribute("totalCapacity", capacity.get("totalCapacity"));
-			model.addAttribute("useVolume"    , getFileSize(Integer.parseInt(capacity.get("totalUsed").toString())));
+			model.addAttribute("useVolume"    , getFileSize(Long.parseLong((String)capacity.get("totalUsed"))));
 		}
 		
 		logger.debug("jspGetCabinetLeft ended");
@@ -201,7 +205,7 @@ public class EzCabinetController {
 	
 	@RequestMapping(value="/ezCabinet/uploadAttachFile.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String uploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+	public String jsonUploadFile(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("Upload file is running!");
 		LoginSimpleVO userInfo         = commonUtil.userInfoSimple(loginCookie);
 		List<MultipartFile> multiFiles = request.getFiles("fileToUpload");
@@ -221,7 +225,7 @@ public class EzCabinetController {
 	
 	@RequestMapping(value="/ezCabinet/deleteAttachFile.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String deleteFile(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+	public String jsonDeleteFile(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("Delete file is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String filePath        = request.getParameter("filePath") != null ? request.getParameter("filePath") : "";
@@ -236,6 +240,34 @@ public class EzCabinetController {
 		resultObj = cabinetRestService.deleteAttachFile(request, userInfo.getId(), filePath);
 		
 		logger.debug("Delete file finishes!");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/saveItem.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonSaveItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("Save item is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId       = request.getParameter("cabinetId")   != null ? request.getParameter("cabinetId")   : "";
+		String title           = request.getParameter("title")       != null ? request.getParameter("title")       : "";
+		String summary         = request.getParameter("summary")     != null ? request.getParameter("summary")     : "";
+		String fileList        = request.getParameter("listFile")    != null ? request.getParameter("listFile")    : "";
+		String relatedList     = request.getParameter("relatedList") != null ? request.getParameter("relatedList") : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		if (cabinetId.equals("") || title.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		JSONParser jp        = new JSONParser();
+		JSONArray fileArray  = (JSONArray) jp.parse(fileList);
+		JSONArray relatedArr = (JSONArray) jp.parse(relatedList);
+		
+		resultObj = cabinetRestService.saveItem(request, userInfo.getId(), cabinetId, title, summary, fileArray, relatedArr);
+		
+		logger.debug("Save item finishes!");
 		return resultObj.toString();
 	}
 	
@@ -410,21 +442,20 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	private String getFileSize(int fileSize) {
+	private String getFileSize(long fileSize) {
 		String fileSize_ = "";
 		
 		if (fileSize / 1024 / 1024 >= 1) {
-			fileSize_ = String.format("%.2f", (double)(fileSize / 1024 / 1024 * 10) / 10);
+			fileSize_ = String.format("%.2f", ((double)fileSize / 1024 / 1024 * 10) / 10);
 			fileSize_ = fileSize_ + "MB";
 		}
 		else if (fileSize / 1024 >= 1) {
-			fileSize_ = String.format("%.2f", (double)(fileSize / 1024));
+			fileSize_ = String.format("%.2f", ((double)fileSize / 1024));
 			fileSize_ = fileSize_ + "KB";
 		}
 		else {
 			fileSize_ = fileSize + "B";
 		}
-		
 		return fileSize_;
 	}
 }

@@ -48,5 +48,8 @@ public interface EzCabinetRestService {
 	
 	//User upload attach file
 	public JSONObject uploadAttachFile(MultipartHttpServletRequest request, String userId, List<MultipartFile> multiFiles) throws Exception;
-	public JSONObject deleteAttachFile(HttpServletRequest request, String id, String filePath) throws Exception;
+	public JSONObject deleteAttachFile(HttpServletRequest request, String userId, String filePath) throws Exception;
+	
+	//User item
+	public JSONObject saveItem(HttpServletRequest request, String userId, String cabinetId, String title, String summary, JSONArray fileArray, JSONArray relatedArr);
 }

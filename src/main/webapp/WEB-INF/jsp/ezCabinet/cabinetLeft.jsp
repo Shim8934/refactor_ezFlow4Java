@@ -37,20 +37,19 @@
 				<div id="myProgress"></div>
 				<div class="volumeBar">
 					<c:choose>
-						<c:when test="${percent > 90}"                 ><div id="myBar" class="myBar_red"    style="${'width: ' + percent < 100 ? percent : 100 + '%'}"></div></c:when>
-						<c:when test="${percent <= 90 && percent > 70}"><div id="myBar" class="myBar_orange" style="width: ${percent + '%;'}"></div></c:when>
-						<c:when test="${percent <= 70 && percent > 60}"><div id="myBar" class="myBar_yellow" style="width: ${percent + '%;'}"></div></c:when>
-						<c:when test="${percent <= 60 && percent > 0}" ><div id="myBar" class="myBar_green"  style="width: ${percent + '%;'}"></div></c:when>
+						<c:when test="${percent > 90}"                 ><div id="myBar" class="myBar_red"    style="width: ${percent < 100 ? percent : 100}'%';"></div></c:when>
+						<c:when test="${percent <= 90 && percent > 70}"><div id="myBar" class="myBar_orange" style="width: ${percent}'%';"></div></c:when>
+						<c:when test="${percent <= 70 && percent > 60}"><div id="myBar" class="myBar_yellow" style="width: ${percent}'%';"></div></c:when>
+						<c:when test="${percent <= 60 && percent > 0}" ><div id="myBar" class="myBar_green"  style="width: ${percent}'%';"></div></c:when>
 						<c:when test="${percent == 0}"                 ><div id="myBar" class="myBar_white"  style="width: 0%;"></div></c:when>
 					</c:choose>
-					
 				</div>
 				<c:choose>
 					<c:when test="${capacityType == 0}">
-						<div class="volumes"><c:out value="${useVolume}"/> / <spring:message code='ezCabinet.t114'/></div>
+						<div class="volumes"><c:out value='${useVolume}'/> / <spring:message code='ezCabinet.t114'/></div>
 					</c:when>
 					<c:otherwise>
-						<div class="volumes"><c:out value="${useVolume}"/> / <c:out value="${totalCapacity}"/> MB (<c:out value="${percent}"/>%)</div>
+						<div class="volumes"><c:out value='${useVolume}'/> / <c:out value="${totalCapacity}"/> MB (<c:out value="${percent}"/>%)</div>
 					</c:otherwise>
 				</c:choose>
 				
@@ -88,7 +87,7 @@
 						dblClick   : null
 					});
 					
-					cabinetTree.makeTree();
+					cabinetTree.makeTree({cabinetNode : "root"});
 					
 					document.getElementById("myCabinet"        ).addEventListener("click", function(e) {getMyCabinet();} , false);
 					document.getElementById("cabinetConfig"    ).addEventListener("click", function(e) {getConfigPage();}, false);
@@ -171,9 +170,9 @@
 					var result = fileSize + "B";
 					
 					switch(true) {
-						case fileSize > 1073741824 : result = (Math.floor(parseFloat(fileSize / 1073741824 * 10)) / 10).toFixed(1) + "GB"; break;
-						case fileSize > 1048576    : result = (Math.floor(parseFloat(fileSize / 1048576) * 10) / 10).toFixed(1) + "MB"   ; break;
-						case fileSize > 1024       : result = parseInt(fileSize / 1024) + "KB"                                           ; break;
+						case fileSize > 1073741824 : result = parseFloat(fileSize / 1073741824).toFixed(2) + "GB"; break;
+						case fileSize > 1048576    : result = parseFloat(fileSize / 1048576).toFixed(2) + "MB"   ; break;
+						case fileSize > 1024       : result = parseFloat(fileSize / 1024).toFixed(2) + "KB"      ; break;
 					}
 					
 					return result;

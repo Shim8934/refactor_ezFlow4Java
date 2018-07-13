@@ -16,8 +16,8 @@
 		
 		<div class="divInfo">
 			<table class="tblFileInf">
-				<tr><th><spring:message code='ezCabinet.t51'/></th><td><input maxlength="250" type="text" placeholder="<spring:message code='ezCabinet.t70'/>"></td></tr>
-				<tr><th><spring:message code='ezCabinet.t52'/></th><td><input maxlength="250" type="text" placeholder="<spring:message code='ezCabinet.t71'/>"></td></tr>
+				<tr><th><spring:message code='ezCabinet.t51'/></th><td><input maxlength="250" type="text" placeholder="<spring:message code='ezCabinet.t70'/>" id="itemTtl"></td></tr>
+				<tr><th><spring:message code='ezCabinet.t52'/></th><td><input maxlength="250" type="text" placeholder="<spring:message code='ezCabinet.t71'/>" id="itemSum"></td></tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t94'/></th>
 					<td><div class="rlFileDiv"><input type="text"><a><span id="rlBttn"><spring:message code='ezCabinet.t93'/></span></a></div></td>
@@ -57,7 +57,7 @@
 						closeBttn.onclick       = function(e) {closeWindow();};
 						var cabdivBttnElmt      = document.getElementById("cabAddBttn");
 						var listBttns           = cabdivBttnElmt.children;
-						listBttns[0].onclick    = function(e) {};
+						listBttns[0].onclick    = function(e) {saveItem();};
 						listBttns[1].onclick    = function(e) {closeWindow();};
 						
 						var fileUploadBttn      = document.getElementById("fileBttn");
@@ -77,6 +77,70 @@
 						if (rlWindow) {rlWindow.close();}
 						
 						rlWindow = window.open("/ezCabinet/getRelatedFile.do", "relatedWd", getOpenWindowfeature(800, 600));
+					}
+					
+					function saveItem() {
+						var title   = document.getElementById("itemTtl").value;
+						var summary = document.getElementById("itemSum").value;
+						
+						if (!title.replace(/\s/g,'')) {
+							alert(CabinetMessages.strNoTitle);
+							document.getElementById("itemTtl").value = "";
+							document.getElementById("itemTtl").focus;
+							return;
+						}
+						
+						var fileDivElmt  = document.getElementById("fileDiv");
+						var ulElmt       = fileDivElmt.querySelector("ul[class='ulFiles']");
+						var liChildren   = ulElmt.children;
+						var listRelated  = [];
+						var listFiles    = [];
+							
+						if (liChildren && liChildren.length > 0) {
+							for (var i = 0, len = liChildren.length; i < len; i++) {
+								var liElmt   = liChildren[i];
+								var filePath = liElmt.getAttribute("path");
+								var fileName = liElmt.getAttribute("fname");
+								
+								listFiles.push({path: filePath, name: fileName});
+							}
+						}
+						
+						//Add related files here
+						
+						$.ajax({
+							type: "POST",
+							url: "/ezCabinet/saveItem.do",
+							data: {
+								"cabinetId"   : cabinetId,
+								"title"       : title,
+								"summary"     : summary,
+								"relatedList" : JSON.stringify(listRelated),
+								"listFile"    : JSON.stringify(listFiles)
+							},
+							dataType: "JSON",
+							async: false,
+							success : function(data) {
+								var code = data.code;
+								
+								switch(code) {
+									case 0 : afterSaveSuccessfully()            ; break;
+									case 1 : alert(CabinetMessages.strParamErr) ; break;
+									case 2 : alert(CabinetMessages.strError)    ; break;
+									case 3 : alert(CabinetMessages.strPerm)     ; break;
+									case 4 : alert(CabinetMessages.strError)    ; break;
+									default: alert(CabinetMessages.strError)    ; return;
+								}
+							},
+							error : function(error) {
+								alert(CabinetMessages.strError + error);
+							}
+						});
+					}
+					
+					function afterSaveSuccessfully() {
+						alert(CabinetMessages.strSave);
+						closeWindow();
 					}
 					
 					function startUpload() {document.getElementById("fileBttn").click();}

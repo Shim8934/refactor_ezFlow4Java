@@ -343,6 +343,19 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		return resultBody;
 	}
 	
+	@Override
+	public JSONObject saveItem(HttpServletRequest request, String userId, String cabinetId, String title, String summary, JSONArray fileArray, JSONArray relatedArr) {
+		String url                = "/rest/ezcabinet/item/id/" + cabinetId + "/add";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("title",      title);
+		param.put("summary",    summary);
+		param.put("fileArray",  fileArray);
+		param.put("relatedArr", relatedArr);
+		param.put("userId",     userId);
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		return resultBody;
+	}
+	
 	private class MultipartFileResource extends InputStreamResource {
 		private String filename;
 		

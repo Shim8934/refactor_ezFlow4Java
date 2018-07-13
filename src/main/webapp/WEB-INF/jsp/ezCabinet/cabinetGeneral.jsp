@@ -189,7 +189,7 @@
 				
 				function displayCapacity(capacity) {
 					var capacityType = capacity["capacityType"];
-					var strMessage   = capacity["totalUsed"] + "MB" + "(" + capacity["usedRate"] + "%)" + " " + CabinetMessages.strTxt2;
+					var strMessage   = getFileSize(capacity["totalUsed"]) + "(" + capacity["usedRate"] + "%)" + " " + CabinetMessages.strTxt2;
 					strMessage       = capacityType == 1 ? CabinetMessages.strTotal + " " + capacity["totalCapacity"] + "MB" + CabinetMessages.strTxt1 + " " + strMessage : strMessage;
 					volumeDraw.refresh(capacity["usedRate"]);
 					volumeDraw.refreshtitle(strMessage);
@@ -199,9 +199,9 @@
 					var result = fileSize + "B";
 					
 					switch(true) {
-						case fileSize > 1073741824 : result = (Math.floor(parseFloat(fileSize / 1073741824 * 10)) / 10).toFixed(1) + "GB"; break;
-						case fileSize > 1048576    : result = (Math.floor(parseFloat(fileSize / 1048576) * 10) / 10).toFixed(1) + "MB"   ; break;
-						case fileSize > 1024       : result = parseInt(fileSize / 1024) + "KB"                                           ; break;
+						case fileSize > 1073741824 : result = parseFloat(fileSize / 1073741824).toFixed(2) + "GB"; break;
+						case fileSize > 1048576    : result = parseFloat(fileSize / 1048576).toFixed(2) + "MB"   ; break;
+						case fileSize > 1024       : result = parseFloat(fileSize / 1024).toFixed(2) + "KB"      ; break;
 					}
 					
 					return result;
