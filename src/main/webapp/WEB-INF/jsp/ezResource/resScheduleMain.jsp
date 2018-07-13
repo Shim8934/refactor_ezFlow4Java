@@ -463,8 +463,9 @@
 	
 	</head>
 	<!-- 2018-06-13 구해안 우측 여백수정 -->
+	<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
 	<body class="mainbody" style="overflow: auto; margin-bottom:0px;padding-right: 6px;" id="BodyTop">
-		<h1><span id="titleimg"></span> <c:out value='${brdNm}' /></h1>
+		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title="${brdNm}"><span id="titleimg"></span> <c:out value='${brdNm}' /></h1>
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
@@ -501,9 +502,10 @@
 			</tr>
 		</table>	
 		<!-- 2018-06-04 구해안 resinfo display:none 으로 추가 -->
+		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
 		<div id="ResourceInfo" style="display: none">
 			<div class="popupJQLayer" style="padding-top:6px">
-				<div class="title" id="brdNm"></div>
+				<div class="title" id="brdNm" style="overflow:hidden; text-overflow:ellipsis; width:450px; white-space:nowrap;" title="${brdNm }"></div>
 				<div id="close">
 		            <ul>
 		                <li><a rel="modal:close"><span></span></a></li>

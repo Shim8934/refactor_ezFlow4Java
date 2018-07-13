@@ -827,7 +827,8 @@
     			</HEADERS>
 			</LISTVIEWDATA>
 		</xml>
-    	<h1><c:out value='${brdNm}' /></h1>
+		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
+    	<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;"><c:out value='${brdNm}' /></h1>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
