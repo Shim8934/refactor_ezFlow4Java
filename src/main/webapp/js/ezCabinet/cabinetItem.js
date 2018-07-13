@@ -584,6 +584,8 @@ var CabinetItem = function() {
 	
 	function addRelatedCabinet() {
 		//* blank 2018.07.09
+		var cabId  = document.getElementById("cabInfo").getAttribute("role");
+		window.open("/ezCabinet/cabinetAddRelated.do", "addRelated", getOpenWindowfeature(600, 690));
 	}
 	
 	function getFileDetail() {window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 690));}
