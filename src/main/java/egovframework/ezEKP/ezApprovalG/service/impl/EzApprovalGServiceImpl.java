@@ -10094,6 +10094,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		for (int i = 0; i < apprGAttachInfoVOList.size(); i++) {
 			sb.append(commonUtil.getQueryResult(apprGAttachInfoVOList.get(i)));
 		}
+		
+		// 외부발송일 경우 외부발송 플래그 추가 2018-07-13 강민수92
+		if (temp > 0) {
+			sb.append("<ROW><EXTFLAG>Y</EXTFLAG></ROW>");
+		}
 		sb.append("</DATA>");
 
 		logger.debug("getTotalAttachSize ended");
