@@ -582,7 +582,7 @@
 		               AND 
 		                	A.STARTDATE > #nowDate#
 		           	   ORDER BY 
-		           			#v_PSORTBY# )
+		           			$v_PSORTBY$)
            		WHERE 
            			ROWNUM <= #v_PENDROW#
 			]]>		
