@@ -49,6 +49,8 @@
     		var code = "<c:out value='${code}' />";
     		var ListInfo = "";
     		var pastDate = "<c:out value='${pastDate}' />";
+    		//2018-07-13 김보미
+    		var treeCtrl = "<c:out value='${treeCtrl}' />";
     		
     		function SelectSingleOnlyTitle(node, tagName) {
     		    var strValue = "";
@@ -72,8 +74,8 @@
     		            if (node.selectSingleNode(tagName))
     		                return node.selectSingleNode(tagName).text;
     		    }
-//     		    return strValue.replace(/&/g,"&amp;");
 				//2018-07-03 김보미 - 제목 특수문자처리 버그 수정 
+     		    //return strValue.replace(/&/g,"&amp;");
     		    return strValue;
     		}
     		
@@ -227,7 +229,9 @@
     		    var pwidth = window.screen.availWidth;
     		    var pTop = (pheight - 720) / 2;
     		    var pLeft = (pwidth - 765) / 2; */
-    		    GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code) + "&showAdjacent=" + ShowAdjacent, "", 750, 721);
+    		    //2018-07-13 김보미 - 파라메터 추가
+//     		    GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code) + "&showAdjacent=" + ShowAdjacent, "", 750, 721);
+    		    GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code) + "&showAdjacent=" + ShowAdjacent + "&treeCtrl=" + treeCtrl, "", 750, 721);
     		}
     		
     		function checkBox_checked(pItemID, pUserID, evt) {
@@ -576,8 +580,9 @@
 
     			var left = (width - wWeight) / 2;
     			var top = (heigth - wHeight) / 2;
-    			
-    			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code), "", "height=656,width=440, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
+    			//2018-07-13 김보미 - 파라메터 추가    			
+//     			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code), "", "height=656,width=440, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
+    			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code) + "&treeCtrl=" + treeCtrl, "", "height=656,width=440, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
     		}
     		
     		function SetRead_onclick() {

@@ -2997,6 +2997,13 @@
    				$v_PWHEREBOARD$ 
    			AND
    				TENANT_ID = #v_TENANTID#
+   			AND (
+				(A.APPRFLAG <> 'C'  
+					AND 
+				A.APPRFLAG <> 'N')
+					OR 
+				A.APPRFLAG IS NULL
+			  )
    			AND 
    				STARTDATE < #nowDate# 
    			AND 

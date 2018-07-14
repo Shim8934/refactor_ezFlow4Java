@@ -1848,7 +1848,20 @@
       		AND
       			resid = #resID#
 			AND
-				member_id = #memberID#
+				IF((SELECT
+						COUNT(*)
+						FROM
+							TBL_RS_RESACL
+						WHERE
+			      			companyid = #companyID#
+			      		AND
+			      			resid = #resID#
+						AND
+							member_id = 'everyone'
+						AND
+							access_lvl = '1'
+						AND
+                			TENANT_ID = #tenantID#) > 0, member_id = 'everyone', member_id = #memberID#)
             AND
                 TENANT_ID = #tenantID#      			
 		]]>
