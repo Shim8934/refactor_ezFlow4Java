@@ -14,6 +14,19 @@
 			.btype_list ul li .date {
 				-webkit-margin-start:20px;
 			}
+			/* ellipisis 추가 */
+			.node_normal{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		width:135px;
+	    	}
+	    	.node_selected{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		width:135px;
+	    	}	    			
 		</style>
 		<script type="text/javascript" src="/js/ezCommunity/TreeView.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -354,6 +367,8 @@
 		        treeView.SetNodeClick("TreeCtrl_onNodeClick");
 		        treeView.DataSource(GetSubBoard(ID, "1"));
 		        treeView.DataBind(obj + "obj");
+		        
+		        applyEllipsis();
 		    }
 		    
 		    function SetTreeConfig() {
@@ -398,6 +413,8 @@
 		        var treeView = new TreeView();
 		        treeView.LoadFromID(pTreeID);
 		        treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+		        
+		        applyEllipsis();
 		    }
 		    
 		    function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
@@ -824,6 +841,27 @@
 	            	elem.style.paddingLeft = "12px";
 	            }
 			}
+			
+	        /**
+	        	게시판 트리 view  ellipsis 추가.
+	        	박종균
+	        */
+	        function applyEllipsis() {
+	        	
+	        	//nodelevel 값을 가져와서 처리한다.
+	        	$(".node_div").each(function(index, element){
+	        		var nodelevel = $(element).attr("nodelevel");
+	        		var title = $(element).attr("nodename");
+	        		var nodeId = $(element).attr("id");
+	        		
+	        		$("#spn_"+nodeId).attr("title", title);
+	        		
+	        		if (nodelevel > 0) {
+	        			var customWidth = 135 - (18 * nodelevel);
+	        			$("#spn_"+nodeId).css("width", customWidth+"px");
+	        		}
+	        	});
+	        }			
 		</script>
 	</head>
 	

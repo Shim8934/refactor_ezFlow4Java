@@ -15510,9 +15510,7 @@
 		AND 
 			TBL_APRRECEIPTPROCESSINFO.APRSTATE = '013'
 		AND 
-			TBL_APRDOCINFO.FUNCTIONTYPE != '006'
-		AND
-			TBL_APRDOCINFO.FUNCTIONTYPE != '004'
+			TBL_APRDOCINFO.FUNCTIONTYPE NOT IN ('006', '004')
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.doCallBack" parameterClass="Map"> -->
@@ -21768,7 +21766,7 @@
    	 	<isNotEqual property="v_LANGTYPE" compareValue="1">
    	 	<![CDATA[
    	 		SELECT 
-   				TASKNAME2, TASKNAME, KEEPINGPERIOD, tbl_taskcode.taskcode
+   				TASKNAME2 TASKNAME, KEEPINGPERIOD, tbl_taskcode.taskcode
 			FROM 
 				TBl_ENDAPRDOCINFO
 			JOIN 
