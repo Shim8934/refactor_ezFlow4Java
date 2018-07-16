@@ -338,15 +338,22 @@
 
 			}
 			
-			function chk_onselect(obj) {
-			    if (obj.checked) {
-			        strListInfo += obj.id;
-			    } else {
-			        strListInfo = ReplaceText(strListInfo, obj.id, "");
+			/* 2018-07-16 홍승비 - 체크박스를 사용하지 않는 게시판검색 전용 선택해제 함수 */
+			function tr_unselectedAll(pTableID) {
+			    var oList = document.getElementById(pTableID);
+			    if (!oList) {
+			        return;
 			    }
-			
-			    listEventCheckbox = true;
+		        var SelList = new ListView();
+		        SelList.LoadFromID("BoardListDiv");
+		
+		        for (var i = 0; i < SelList.GetRowCount() ; i++) {
+		            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false; 
+		            SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
+		            strListInfo = "";
+		        }
 			}
+			
 			var BlockSize = 10;
 			function td_Create1(strtext) {
 			    document.getElementById("tblPageRayer").innerHTML = strtext;
