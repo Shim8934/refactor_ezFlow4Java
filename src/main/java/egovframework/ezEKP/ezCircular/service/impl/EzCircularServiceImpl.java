@@ -168,7 +168,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		//파일이 있으면 hasFile을 1로 설정
-		if (fileList != null && !fileList.equals("[]")) {
+		if (fileList != null && !fileList.equals("")) {
 			hasFile = 1;
 		}
 
