@@ -11,8 +11,6 @@
     <link rel="stylesheet" href="/js/ezStatistics/js/jquery.jqplot.min.css" type="text/css">
   	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
     <link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
-    <link rel="stylesheet" href="/css/ezStatistics/demo.css" type="text/css" media="screen" charset="utf-8">
-	<link rel="stylesheet" href="/css/ezStatistics/demo-print.css" type="text/css" media="print" charset="utf-8">
     <style type="text/css">
         .jqplot-table-legend {
         white-space:nowrap

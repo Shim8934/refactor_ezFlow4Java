@@ -350,6 +350,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String contID = request.getParameter("fContID");
 		String deptList = request.getParameter("deptList");
 		String companyID = request.getParameter("companyID");
+		
+		if (contDept == "") {
+			contDept = "none";
+		}
 
 		String result = ezApprovalGAdminService.updateFormContainer(contName, contName2, contDescript, contParent, contDept, contID, deptList, companyID, userInfo.getTenantId());
 		
@@ -3092,7 +3096,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
-			return "main/warning";
+			return "cmm/error/adminDenied";
 		}
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
@@ -3400,7 +3404,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
-			return "main/warning";
+			return "cmm/error/adminDenied";
 		}
 				
 		String periodNode = ezApprovalGAdminService.getKeepType("", userInfo, userInfo.getCompanyID(), approvalFlag);

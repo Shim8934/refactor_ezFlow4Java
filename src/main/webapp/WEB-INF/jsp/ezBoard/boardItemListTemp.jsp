@@ -1032,7 +1032,7 @@
 	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
 		<div id="srarchpopup" class="popupwrap1 modal" style="margin-bottom: 70px; left: 297.5px; display: inline-block;">
 			<div class="popupJQLayer">
-				<div class="title"><spring:message code='ezBoard.t0006' /> <spring:message code='ezBoard.t188' /></div>
+				<div class="title"><spring:message code='ezBoard.t188' /></div>
 				<div id="close">
 		            <ul>
 		                <li><a rel="modal:close"><span onclick="BoardSearchOptionHidden()"></span></a></li>
@@ -1041,11 +1041,11 @@
 				<table class="content">
 			        <tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
-			            <td><input type="text" id="txtTitle" style="width:98%" value=""></td>
+			            <td><input type="text" id="txtTitle" style="width:100%" value=""></td>
 			        </tr>  
 			         <tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
-			            <td><input type="text" id="txtAbstract" style="width:98%" value=""></td>
+			            <td><input type="text" id="txtAbstract" style="width:100%" value=""></td>
 			        </tr>    
 			       <tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>

@@ -398,7 +398,8 @@
       				<table class="content" style="width:100%;border-bottom:0px">
         				<tr>
           					<th style="width:200px;"><spring:message code="ezCircular.t32"/></th>
-          					<td colspan="3" style="width:100%"><input type="text" id="title" style="width:100%"></td>
+          					<!-- 2018-07-16 김보미 - maxLength 추가. -->
+          					<td colspan="3" style="width:100%"><input type="text" id="title" style="width:100%"  maxlength="500"></td>
         				</tr>
 	        			<tr>
 	          				<th><spring:message code="ezCircular.t115"/></th>

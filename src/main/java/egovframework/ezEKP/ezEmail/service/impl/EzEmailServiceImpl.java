@@ -2095,8 +2095,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
 				JSONArray array = (JSONArray)responseObj.get("result");
 				
-				if (array != null) {
-					
+				if (array != null && !array.equals("")) {
 					JSONObject obj = null;
 					while (isIncluded.equals("NO")) {
 						
@@ -2124,11 +2123,72 @@ public class EzEmailServiceImpl implements EzEmailService {
 					throw new Exception("JGwServer ERROR");
 				}
 			}
-		
 		}
 			
 		logger.debug("checkDistributionIsIncluded ended.");
 		return isIncluded;
+	}
+	
+	@Override
+	public List<MailDistributionVO> getDistributioUpperList(String userName, int tenantId) throws Exception {
+		logger.debug("getDistributioIncludednList started.");
+		logger.debug("userName = " + userName + ",tenantId=" + tenantId);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String inputParams = "userName=" + URLEncoder.encode(userName, "UTF-8");
+		inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributioIncludednList";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		List<MailDistributionVO> distributionList = new ArrayList<MailDistributionVO>();
+		List<MailDistributionVO> distributionUpperList = null;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONArray resultArray = (JSONArray)responseObj.get("result");
+					
+					if (resultArray != null &&  resultArray.size() > 0) {
+						for (int i=0; i<resultArray.size(); i++) {
+							MailDistributionVO vo = new MailDistributionVO();
+							
+							JSONObject obj = (JSONObject)resultArray.get(i);
+							
+							vo.setName((String)obj.get("distributionName"));
+							vo.setId((String)obj.get("distributionId"));
+							vo.setMail((String)obj.get("distributionMail"));
+							
+							distributionList.add(vo);
+							
+							distributionUpperList = getDistributioUpperList(vo.getId(), tenantId);
+							if (distributionUpperList != null && distributionUpperList.size() >0) {
+								for (MailDistributionVO upperVO : distributionUpperList) {
+									distributionList.add(upperVO);
+								}
+							}
+						}
+					}
+				}
+			}
+		}						
+		
+		logger.debug("getDistributioIncludednList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		logger.debug(distributionList.toString());
+		
+		return distributionList;
 	}
 	
 }

@@ -206,8 +206,8 @@
 				<th style="text-align:center;">
 					<spring:message code="ezResource.t47" />
 				</th>
-				<td style="height: 300px;">
-					<textarea id="Brd_Explain" style="resize:none; font-size:9pt ; width:98%; height:95%; margin: 1px; overflow: auto;"><c:out value="${upExp}" /></textarea>
+				<td>
+					<textarea id="Brd_Explain" style="resize:none; font-size:9pt ; width:98%; height:300px; margin-top: 2px; overflow: auto;"><c:out value="${upExp}" /></textarea>
 				</td>
 			</tr>
 			<tr style="display:none">
