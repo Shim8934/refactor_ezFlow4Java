@@ -2122,26 +2122,27 @@ public class EzPMSGWController {
 
 			long taskId = ezPMSService.addTask(projectTaskVO, taskMemberList2, companyId, tenantId);
 
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			Date startDate = dateFormat.parse(planStartDate);
-			Date endDate = dateFormat.parse(planEndDate);
-
-			Calendar startCal = Calendar.getInstance();
-			Calendar endCal = Calendar.getInstance();
-
-			startCal.setTime(startDate);
-			endCal.setTime(endDate);
-
-			List<String> dateList = new ArrayList<String>();
-
-			while (startCal.compareTo(endCal) != 1) {
-				if (startCal.get(Calendar.DAY_OF_WEEK) == 1 || startCal.get(Calendar.DAY_OF_WEEK) == 7) {
-					startCal.add(Calendar.DATE, 1);
-				} else {
-					dateList.add(dateFormat.format(startCal.getTime()));
-					startCal.add(Calendar.DATE, 1);
-				}
-			}
+//			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//			Date startDate = dateFormat.parse(planStartDate);
+//			Date endDate = dateFormat.parse(planEndDate);
+//
+//			Calendar startCal = Calendar.getInstance();
+//			Calendar endCal = Calendar.getInstance();
+//
+//			startCal.setTime(startDate);
+//			endCal.setTime(endDate);
+//
+//			List<String> dateList = new ArrayList<String>();
+//
+//			while (startCal.compareTo(endCal) != 1) {
+//				if (startCal.get(Calendar.DAY_OF_WEEK) == 1 || startCal.get(Calendar.DAY_OF_WEEK) == 7) {
+//					startCal.add(Calendar.DATE, 1);
+//				} else {
+//					dateList.add(dateFormat.format(startCal.getTime()));
+//					startCal.add(Calendar.DATE, 1);
+//				}
+//			}
+			List<String> dateList = ezPMSService.getDateList(planStartDate, planEndDate);
 
 			for (int i = 0; i < taskMemberList2.size(); i++) {
 				String memberId = taskMemberList2.get(i).getUserId();

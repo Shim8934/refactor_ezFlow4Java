@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezPMS.service.impl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -3084,6 +3085,37 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map.put("groupId", ancGroupArr[i]);
 			ezPMSDAO.updateGroupProgress(map);
 		}
+		
+	}
+
+	@Override
+	public List<String> getDateList(String startDateStr, String EndDateStr) throws Exception {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date startDate = dateFormat.parse(startDateStr);
+		Date endDate = dateFormat.parse(EndDateStr);
+
+		Calendar startCal = Calendar.getInstance();
+		Calendar endCal = Calendar.getInstance();
+
+		startCal.setTime(startDate);
+		endCal.setTime(endDate);
+
+		List<String> dateList = new ArrayList<String>();
+
+		while (startCal.compareTo(endCal) != 1) {
+			if (startCal.get(Calendar.DAY_OF_WEEK) == 1 || startCal.get(Calendar.DAY_OF_WEEK) == 7) {
+				startCal.add(Calendar.DATE, 1);
+			} else {
+				dateList.add(dateFormat.format(startCal.getTime()));
+				startCal.add(Calendar.DATE, 1);
+			}
+		}
+		return dateList;
+	}
+
+	@Override
+	public void updateMemberSchedules(Map<String, Object> map) throws Exception {
+		// TODO Auto-generated method stub
 		
 	}
 }
