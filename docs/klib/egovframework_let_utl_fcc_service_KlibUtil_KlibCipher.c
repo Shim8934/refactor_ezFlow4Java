@@ -147,6 +147,8 @@ JNIEXPORT jbyteArray JNICALL Java_egovframework_let_utl_fcc_service_KlibUtil_000
 	int len = ulEncDataLen;
 	javaBytes = (*env)->NewByteArray(env, len);
 	(*env)->SetByteArrayRegion(env, javaBytes, 0, len, (jbyte *) EncDataBuf);
+	
+	free(EncDataBuf);
 
 	return javaBytes;
 
@@ -158,6 +160,8 @@ err:	;
 	int rtnStrLen = strlen(rtnStr);
 	rtnJavaBytes = (*env)->NewByteArray(env, rtnStrLen);
 	(*env)->SetByteArrayRegion(env, rtnJavaBytes, 0, rtnStrLen, (jbyte *)rtnStr);
+	
+	free(EncDataBuf);
 
 	
 	return rtnJavaBytes;
@@ -290,6 +294,8 @@ JNIEXPORT jbyteArray JNICALL Java_egovframework_let_utl_fcc_service_KlibUtil_000
 	int len = ulDecDataLen;
 	javaBytes = (*env)->NewByteArray(env, len);
 	(*env)->SetByteArrayRegion(env, javaBytes, 0, len, (jbyte *) DecDataBuf);
+	
+	free(DecDataBuf);
         
        return javaBytes;
         
@@ -301,6 +307,8 @@ err:	;
 	int rtnStrLen = strlen(rtnStr);
     rtnJavaBytes = (*env)->NewByteArray(env, rtnStrLen);
     (*env)->SetByteArrayRegion(env, rtnJavaBytes, 0, rtnStrLen, (jbyte *)rtnStr);
+	
+	free(DecDataBuf);
 
 
     return rtnJavaBytes;
