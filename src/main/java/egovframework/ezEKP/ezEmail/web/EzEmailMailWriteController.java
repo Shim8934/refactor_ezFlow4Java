@@ -4726,6 +4726,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String cn = request.getParameter("cn");
 		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String companyName = userInfo.getCompanyName();
 		
 		try {
 			String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
@@ -4763,11 +4764,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
 					
 					Map<String, String> map = new HashMap<String, String>();
-					map.put("displayName", dept.getDisplayName());
-					map.put("mail", dept.getMail());
-					map.put("company", dept.getExtensionAttribute3());
-					map.put("dept", dept.getDisplayName());
-					map.put("title", "");
+					if (dept != null) {
+						map.put("displayName", dept.getDisplayName());
+						map.put("mail", dept.getMail());
+						map.put("company", dept.getExtensionAttribute3());
+						map.put("dept", dept.getDisplayName());
+						map.put("title", "");
+					} else {
+						map.put("displayName", pCn);
+						map.put("mail", cn);
+						map.put("company", companyName);
+						map.put("dept", egovMessageSource.getMessage("ezEmail.t57", locale));
+						map.put("title", "");
+					}
 					
 					list.add(map);
 				} else {

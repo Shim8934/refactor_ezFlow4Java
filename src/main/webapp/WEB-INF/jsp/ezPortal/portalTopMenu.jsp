@@ -1418,7 +1418,8 @@
 	 		            }
 	 		        }
 				} */
-				window.open(url, location, option);
+				//window.open(url, location, option);
+				window.open(url, location, GetOpenWindowfeature(750, 550));
 			}
 			
 			function OpenWindow2(targetid, url, location, option) {
