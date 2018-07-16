@@ -1751,6 +1751,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				accessLvl = xmlDom.getElementsByTagName("ACCESSLVL").item(i).getTextContent().trim();
 			}
 		}
+		
+		// 2018-07-16 홍승비 - Jmail 디버그용 로그 추가
+		logger.debug("accessLvl    ::    " + accessLvl);
 	
 		if(accessLvl.trim().equals("1")) {
 			return "Y";
