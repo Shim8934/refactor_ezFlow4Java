@@ -1079,34 +1079,35 @@
 	<c:if test="${boardInfo.listView_FG != 'true'}">
 		<div style="margin-top:100px;text-align:center"><spring:message code='ezBoard.t272'/></div>
 	</c:if>
-	<c:choose>
-		<c:when test="${adminType != 'y'}">
-			<h1>${boardName}<span id="mailBoxInfo"></span>
-			     <span style="float:right;font-weight:normal;color:black;">
-					<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+	<c:if test="${boardInfo.listView_FG == true}">
+		<c:choose>
+			<c:when test="${adminType != 'y'}">
+				<h1>${boardName}<span id="mailBoxInfo"></span>
+				     <span style="float:right;font-weight:normal;color:black;">
+						<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+				    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
+				    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
+				    	</select>
+						<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+				        <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
+					</span>
+				</h1>
+			</c:when>
+			<c:otherwise>
+			    <script type="text/javascript">
+			        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}"+"<span id='mailBoxInfo'></span>";
+			    </script>
+			    <br />
+			    <span style="display:none; float:right;font-weight:normal;color:black;">
+			          <select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 			    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 			    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 			    	</select>
 					<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-			        <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
-				</span>
-			</h1>
-		</c:when>
-		<c:otherwise>
-		    <script type="text/javascript">
-		        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}"+"<span id='mailBoxInfo'></span>";
-		    </script>
-		    <br />
-		    <span style="display:none; float:right;font-weight:normal;color:black;">
-		          <select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
-		    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
-		    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
-		    	</select>
-				<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-				<a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
-		        </span>
-		</c:otherwise>
-	</c:choose>
+					<a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
+			        </span>
+			</c:otherwise>
+		</c:choose>
 	<c:if test="${buttonHidden == 'N'}">
 		<div id="mainmenu">
 		  <ul>
@@ -1242,7 +1243,7 @@
 	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
 		<div id="srarchpopup" class="popupwrap1 modal" style="margin-bottom: 70px; left: 297.5px; display: inline-block;">
 			<div class="popupJQLayer">
-				<div class="title"><spring:message code='ezBoard.t0006' /> <spring:message code='ezBoard.t188' /></div>
+				<div class="title"><spring:message code='ezBoard.t188' /></div>
 				<div id="close">
 		            <ul>
 		                <li><a rel="modal:close"><span onclick="BoardSearchOptionHidden()"></span></a></li>
@@ -1342,5 +1343,6 @@
 	        </div> 
 	   </c:otherwise>
 		</c:choose>    --%>  
+		</c:if>
 	</body>
 </html>
