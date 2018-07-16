@@ -540,6 +540,11 @@ public class EzPMSGWController2 {
 				projectTaskVO.setWriterDeptname2(request.getParameter("writerDeptname2"));
 				projectTaskVO.setTaskMember(taskMemberList2);
 				
+				if(request.getParameter("treeDepth") != null) {
+					projectTaskVO.setUpperTreeDepth(Integer.parseInt(request.getParameter("treeDepth")));
+				}
+				
+				
 				ezPMSService.updateTaskInfo(projectTaskVO, companyId, tenantId);
 			}
 			

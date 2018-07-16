@@ -311,7 +311,9 @@ function updateTaskInfo() {
 				writeDate : writeDate,
 				weight : weight,
 				pretaskId : pretaskId,
-				type : pretaskSetType
+				type : pretaskSetType,
+				// 상위그룹의 treeDepth + 1
+				treeDepth : treeDepth + 1
 		}
 		
 		$.ajax({
