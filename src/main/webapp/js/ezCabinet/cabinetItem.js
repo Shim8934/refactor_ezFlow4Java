@@ -114,7 +114,7 @@ var CabinetItem = function() {
 			messages : naviMessages,
 			divId    : "tblPageRayer",
 			divClass : "cabpagenavi",
-			headerId : "",
+			headerId : "cabinetInfo",
 			callback : startSearchCabinet
 		});
 		
@@ -524,7 +524,7 @@ var CabinetItem = function() {
 	}
 	
 	function deleteFileConfirm() {
-		if (getSelectedItems().length == 0) {alert(CabinetMessages.strItem); return;}
+		if (getSelectedItems().length == 0) {alert(CabinetMessages.strItemErr); return;}
 		
 		toggleDeletePopup();
 	}
@@ -548,7 +548,7 @@ var CabinetItem = function() {
 	function deleteFile() {
 		if (!cabinetId) {alert(CabinetMessages.strError); return;}
 		var itemArr = getSelectedItems();
-		if (itemArr.length == 0) {alert(CabinetMessages.strItem); return;}
+		if (itemArr.length == 0) {alert(CabinetMessages.strItemErr); return;}
 		
 		var url  = "/ezCabinet/deleteItems.do";
 		var data = {itemList : itemArr.toString()};
@@ -575,7 +575,7 @@ var CabinetItem = function() {
 	
 	function moveFileConfirm() {
 		if (!cabinetId) {alert(CabinetMessages.strError); return;}
-		if (getSelectedItems().length == 0) {alert(CabinetMessages.strItem); return;}
+		if (getSelectedItems().length == 0) {alert(CabinetMessages.strItemErr); return;}
 		
 		//Show folder Tree then toggle popup
 		toggleMovePopup();
@@ -620,7 +620,7 @@ var CabinetItem = function() {
 		if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
 		
 		var itemArr      = getSelectedItems();
-		if (itemArr.length == 0) {alert(CabinetMessages.strItem); return;}
+		if (itemArr.length == 0) {alert(CabinetMessages.strItemErr); return;}
 		
 		var cabinetId    = selectedNode.getAttribute("role");
 		var moveHandler  = null;

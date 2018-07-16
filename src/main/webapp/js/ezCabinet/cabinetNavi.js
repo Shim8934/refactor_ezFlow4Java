@@ -179,13 +179,13 @@ var CabinetNavi = function() {
 		
 		//Set public api
 		return {
-			init        : renderPageWithInfo,
-			header      : setHeaderInfo,
-			search      : setSearchCallBack,
-			get         : getCurrentInfo,
-			setBlock    : setBlockSize,
-			setDivs     : setDivInfo,
-			load        : makePage
+			init     : renderPageWithInfo,
+			header   : setHeaderInfo,
+			search   : setSearchCallBack,
+			get      : getCurrentInfo,
+			setBlock : setBlockSize,
+			setDivs  : setDivInfo,
+			load     : makePage
 		};
 	}
 }();
