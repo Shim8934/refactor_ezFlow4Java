@@ -15,7 +15,12 @@
 			
 			function SetEditorContent(Data) {
 	            try {
-	                xfe.setHtmlValue(Data);
+	            	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
+	            	if (parent.onloadflag || typeof parent.onloadflag === "undefined") {
+		                xfe.setHtmlValue(Data);
+	            	} else {
+	            		setTimeout(parent.Editor_Complete, 10);
+	            	}
 	            } catch (e) { }
 	        }
 		
