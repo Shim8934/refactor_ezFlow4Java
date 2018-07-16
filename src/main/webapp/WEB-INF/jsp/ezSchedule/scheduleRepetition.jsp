@@ -405,11 +405,11 @@
 		    	/*2018-05-16 구해안 반복주기에서 표시되는 기간: -> 기간 : 으로 수정, 맨앞에 반복주기 : 추가*/
 		    	if(allDayString =="")
 		    	{
-		    	    rtn["REPDISPLAY"] = strLang33 + " " + recurString + " " + occurrenceTerm + ", " + strLang79 + " : " + scheduleTerm;
+		    	    rtn["REPDISPLAY"] = strLang33 + " " + recurString + " " + occurrenceTerm + " " + strLang79 + " : " + scheduleTerm;
 		    	}
 		    	else
 		    	{
-		    	    rtn["REPDISPLAY"] = strLang33 + " " + recurString + " " + allDayString + ", " + strLang79 + " : " + scheduleTerm;
+		    	    rtn["REPDISPLAY"] = strLang33 + " " + recurString + " " + allDayString + " " + strLang79 + " : " + scheduleTerm;
 		    	}
 		    	if (ReturnFunction != null) {
 		    	    //2018.01.30 김기하 일정반복 시 시간기준 점 변경  
@@ -573,7 +573,7 @@
 		        var reEndMinute = edate.split(" ")[1].split(":")[1];
 		        reEndMinute = reEndMinute.length==1?"0"+reEndMinute:reEndMinute;
 	
-		        repeatinfo += reStartHour + ":" + reStartMinute + "" + " ~ " + "";
+		        repeatinfo += strLang104 + reStartHour + ":" + reStartMinute + "" + " ~ " + "";
 		        
 		        repeatinfo += reEndHour + ":" + reEndMinute;
 		        return repeatinfo;
