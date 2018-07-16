@@ -4102,7 +4102,11 @@
 	<select id="EzPMSDAO.getCustomHoliday" parameterClass="map" resultMap="projectHolidayVO">
 		<![CDATA[
 			SELECT
-				DATE_FORMAT(HOLIDAYDATE, '%m-%d') AS HOLIDAY,
+				(CASE WHEN ISREPEAT = 1
+						THEN date_format(HOLIDAYDATE, '%m-%d')
+    					ELSE date_format(HOLIDAYDATE, '%Y-%m-%d')
+    				END
+    			) AS HOLIDAY,
 				ISSOLAR,
 				ISREPEAT,
 				HOLIDAYNAME$lang$ AS HOLIDAY_NAME

@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezPMS.service;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectHolidayVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO;
@@ -267,4 +269,6 @@ public interface EzPMSService {
 	public List<String> getDateList(String startDate, String EndDate) throws Exception;
 	
 	public void updateMemberSchedules(Map<String, Object> map) throws Exception;
+
+	public HashSet<String> getHolidayList(String planStartDate, String planEndDate, int tenantId, String companyId);
 }

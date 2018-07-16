@@ -60,6 +60,7 @@
 	   		var preTaskIndex = -1;
 	   		var userRoleId = "${userRoleId}";
 	   		var msgStr01 = "<spring:message code='ezEmail.t269' />";
+	   		var holidayList = JSON.parse('${holidayList}');
 	   		
 			function setAllGanttItems(status) {
 	   			
@@ -1618,7 +1619,7 @@
 
 	   		};
 	   		
-	   		$(document).ready(function() {
+	   		$(document).ready(function() {	   			
 	   			$(".tooltipBox").hide();
 
 	   			GridEditor.prototype.openFullEditor = function (task, editOnlyAssig) {
@@ -2494,7 +2495,31 @@
 			
 			  });
 			
-			
+			  function isHoliday(date) {
+				  var friIsHoly =false;
+				  var satIsHoly =true;
+				  var sunIsHoly =true;
+				  
+				  var pad = function (val) {
+				    val = "0" + val;
+				    return val.substr(val.length - 2);
+				  };
+
+				  var holidays = "##";
+				 
+				  for (var i = 0; i < holidayList.length; i++) {
+					  var holiday = holidayList[i];
+					  holiday = holiday.replace(/-/g, "_");
+					  holidays += "#" + holiday + "#";
+				  }
+				  
+				  var ymd = "#" + date.getFullYear() + "_" + pad(date.getMonth() + 1) + "_" + pad(date.getDate()) + "#";
+				  var md = "#" + pad(date.getMonth() + 1) + "_" + pad(date.getDate()) + "#";
+				  var day = date.getDay();
+				  
+				  return  (day == 5 && friIsHoly) || (day == 6 && satIsHoly) || (day == 0 && sunIsHoly) || holidays.indexOf(ymd) > -1 || holidays.indexOf(md) > -1;
+			  }
+			  
 			  function loadI18n(){
 				// 메시지 영역
 			    GanttMaster.messages = {

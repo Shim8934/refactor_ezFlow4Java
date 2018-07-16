@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -51,6 +52,7 @@ import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectHolidayVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO;
@@ -3034,11 +3036,17 @@ public class EzPMSGWController {
 			String companyId = info.getCompanyId();
 			String deptId = info.getDeptId();
 
-			ProjectInfoVO data = ezPMSService.getProjectDetails(projectId, userId, info.getTenantId(), info.getOffSet(),
+			ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, info.getTenantId(), info.getOffSet(),
 					lang, deptId, companyId);
-			data.setProjectMember(ezPMSService.getProjectMemberList(projectId, 4, lang, info.getTenantId(), isGantt));
-			data.setWeight(ezPMSService.getProjectWeight(projectId, info.getTenantId()));
-
+			project.setProjectMember(ezPMSService.getProjectMemberList(projectId, 4, lang, info.getTenantId(), isGantt));
+			project.setWeight(ezPMSService.getProjectWeight(projectId, info.getTenantId()));
+			
+			HashSet<String> holidayList = ezPMSService.getHolidayList(project.getPlanStartDate(), project.getPlanEndDate(), info.getTenantId(), info.getCompanyId());
+			
+			JSONObject data = new JSONObject();
+			data.put("project", project);
+			data.put("holidayList", holidayList);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
