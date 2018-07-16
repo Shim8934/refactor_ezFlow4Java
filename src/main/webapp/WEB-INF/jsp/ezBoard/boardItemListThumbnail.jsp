@@ -1271,11 +1271,11 @@
 					</tr>
 					<tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t223' /></th>
-			            <td><input type="text" id="txtWriterName" style="width:98%" value=""></td>
+			            <td><input type="text" id="txtWriterName" style="width:100%" value=""></td>
 			        </tr>
 			        <tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
-			            <td><input type="text" id="txtTitle" style="width:98%" value=""></td>
+			            <td><input type="text" id="txtTitle" style="width:100%" value=""></td>
 			        </tr>  
 			        <%--  <tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
