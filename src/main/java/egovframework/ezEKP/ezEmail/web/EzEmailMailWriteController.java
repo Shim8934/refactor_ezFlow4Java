@@ -4757,27 +4757,29 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				String pCn = (String)address.get("cn");
 				pCn = pCn.substring(0, pCn.indexOf("@"));
 				isUser = (String)address.get("class");
-				
-				logger.debug("pCn=" + pCn + ", isUser=" + isUser);
+				String displayName = (String) address.get("displayName");
+
+				logger.debug("pCn=" + pCn + ", isUser=" + isUser + ", displayName=" + displayName);
 				
 				if(isUser.equals("group")) {
 					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
-					
+
 					Map<String, String> map = new HashMap<String, String>();
-					if (dept != null) {
+					
+					if (dept != null) { // 부서
 						map.put("displayName", dept.getDisplayName());
 						map.put("mail", dept.getMail());
 						map.put("company", dept.getExtensionAttribute3());
 						map.put("dept", dept.getDisplayName());
 						map.put("title", "");
-					} else {
-						map.put("displayName", pCn);
-						map.put("mail", cn);
-						map.put("company", companyName);
-						map.put("dept", egovMessageSource.getMessage("ezEmail.t57", locale));
-						map.put("title", "");
+					} else { // 공용배포그룹
+						map.put("displayName", displayName); // 배포그룹 이름
+						map.put("mail", (String)address.get("cn"));  // 메일
+						map.put("company", companyName); // 배포그룹 이름
+						map.put("dept", egovMessageSource.getMessage("ezEmail.t57",
+								locale));  //배포그룹이름
+						map.put("title", ""); // ""
 					}
-					
 					list.add(map);
 				} else {
 					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
