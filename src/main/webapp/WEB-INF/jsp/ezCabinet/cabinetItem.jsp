@@ -13,7 +13,7 @@
 	<body class="mainbody">
 		<h1 id="cabInfo">
 			<c:out value='${cabinetName}'/>
-			<span id="cabinetInfo"></span>
+			<span id="cabinetInfo" class="cabTtlInf"></span>
 			<span class="topSearchSpan">
 				<input name="searchCheck" id="radio1" type="radio" value="title" checked><label for="radio1">&nbsp;<spring:message code='ezCabinet.t51'/></label>
 				<input name="searchCheck" id="radio2" type="radio" value="summary"      ><label for="radio2">&nbsp;<spring:message code='ezCabinet.t52'/></label>

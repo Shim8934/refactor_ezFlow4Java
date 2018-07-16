@@ -196,6 +196,11 @@ var CabinetItem = function() {
 		
 		startSearchCabinet("1");
 		preProcessing();
+		
+		var leftFrameBody = window.parent.frames["left"].document.body;
+		var leftFogPanel  = leftFrameBody.querySelector("div[class='blockLeft'");
+		
+		if (leftFogPanel) {leftFrameBody.style.overflow = "auto"; leftFrameBody.removeChild(leftFogPanel);}
 	}
 	
 	/* Search Panel */

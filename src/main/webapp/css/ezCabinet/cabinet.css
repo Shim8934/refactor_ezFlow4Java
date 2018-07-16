@@ -34,6 +34,8 @@
 .compOrg .usersPart {flex-grow: 1;}
 .compOrg .deptPart, .compOrg .usersPart, .cabGroupDiv .userDiv {border: 1px solid #ddd;}
 .cabGroupDiv .userDiv {flex-grow: 1;}
+.cabTtlInf {font-weight: normal; color: #666;}
+.cabTtlInf >span {color: #017BEC !important; font-weight: bold !important;}
 
 .compSelect {margin: 10px 0px;}
 .compSelect >span {font-size: 12px; display:inline-block; vertical-align: middle;}

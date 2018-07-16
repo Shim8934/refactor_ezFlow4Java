@@ -172,7 +172,7 @@ var CabinetNavi = function() {
 		
 		function setHeaderInfo() {
 			var headerElmt = document.getElementById(_headerId);
-			if (headerElmt) {headerElmt.innerHTML = " - [" + _messages.total + "<span style='color:#017BEC;'> " + _totalRows + " </span>" + _messages.item + "]";}
+			if (headerElmt) {headerElmt.innerHTML = " - [" + _messages.total + "<span> " + _totalRows + " </span>" + _messages.item + "]";}
 		}
 		
 		function setSearchCallBack(functionName) {_searchCallBack = functionName;}
