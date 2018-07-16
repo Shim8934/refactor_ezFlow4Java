@@ -84,7 +84,7 @@
 	        		2. 그 안에서 들여쓰기가 된 img 갯수를 가져온다.
 	        		3. 이미지 갯수를 통해 list가 표현될 width를 재설정한다.
 	        	*/
-	        	$($("[id^='PostTreeView_node']")).each(function(index, element){
+	        	$("[id^='PostTreeView_node']").each(function(index, element){
 	        		
 	        		var imgCnt = $(element).parent().find('img').length - 2;
 	        		var title = $(element)[0].innerHTML;
