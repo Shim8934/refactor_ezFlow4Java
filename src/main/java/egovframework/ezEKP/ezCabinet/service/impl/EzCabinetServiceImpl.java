@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -20,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
@@ -49,6 +52,9 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
 	@Override
 	public List<SimpleDeptVO> getAllSubDepts(String companyId, int level, String primary, int tenantId) throws Exception {
@@ -247,11 +253,13 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	}
 	
 	@Override
-	public CabinetSimpleVO getMyCabinetTreeNormal(String cabinetStr1, String cabinetStr2, LoginVO userInfo) throws Exception {
+	public CabinetSimpleVO getMyCabinetTreeNormal(LoginVO userInfo) throws Exception {
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
 		String userId          = userInfo.getId();
 		String primary         = userInfo.getPrimary();
+		String cabinetStr1     = egovMessageSource.getMessage("ezCabinet.t02", new Locale("ko"));
+		String cabinetStr2     = egovMessageSource.getMessage("ezCabinet.t02", new Locale("en"));
 		Map<String,Object> map = new HashMap<String, Object>();
 		
 		map.put("companyId", companyId);
@@ -878,5 +886,75 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	@Override
 	public int getTotalItemsRecursive(CabinetItemSearchVO searchVO) throws Exception {
 		return ezCabinetDAO.getTotalItemsRecursive(searchVO);
+	}
+
+	@Override
+	public void deleteItems(List<Integer> itemIdList, LoginVO userInfo) throws Exception {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+		Map<String,Object> map     = new HashMap<String, Object>();
+		map.put("tenantId",   userInfo.getTenantId());
+		map.put("itemList",   itemIdList);
+		map.put("userId",     userInfo.getId());
+		map.put("updateTime", timeUTC);
+		
+		ezCabinetDAO.deleteItems(map);
+	}
+
+	@Override
+	public List<CabinetSimpleVO> getRelatedCabinetListForUser(LoginVO userInfo) throws Exception {
+		int tenantId                  = userInfo.getTenantId();
+		String userId                 = userInfo.getId();
+		List<CabinetModuleVO> modules = getModuleListForUser(userId, userInfo.getCompanyID(), tenantId);
+		List<Integer> moduleTypes     = modules.stream().filter(i -> i.getActiveStatus() == 1).map(CabinetModuleVO::getType).collect(Collectors.toList());
+		Map<String,Object> map        = new HashMap<String, Object>();
+		map.put("listType", moduleTypes);
+		map.put("tenantId", tenantId);
+		map.put("userId",   userId);
+		
+		List<CabinetVO> list = ezCabinetDAO.getRelatedCabinetListForUser(map);
+		if (list == null || list.size() == 0) {
+			list = insertRelatedCabinet(moduleTypes, userInfo);
+		}
+		else {
+			if (list.size() < moduleTypes.size()) {
+				List<Integer> existedModules = list.stream().map(CabinetVO::getCabinetType).collect(Collectors.toList());
+				moduleTypes.removeAll(existedModules);
+				List<CabinetVO> remainModule = insertRelatedCabinet(moduleTypes, userInfo);
+				list.addAll(remainModule);
+			}
+		}
+		
+		List<CabinetSimpleVO> listRelatedCabinet = generateSimpleCabinet(list, userInfo.getPrimary());
+		
+		return listRelatedCabinet;
+	}
+
+	private List<CabinetSimpleVO> generateSimpleCabinet(List<CabinetVO> list, String primary) {
+		List<CabinetSimpleVO> result = new ArrayList<>();
+		list.stream().sorted((cabinet1, cabinet2) -> Integer.compare(cabinet1.getCabinetType(), cabinet2.getCabinetType()));
+		
+		for (CabinetVO cabinet : list) {
+			String cabinetName            = primary.equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2();
+			CabinetSimpleVO simpleCabinet = new CabinetSimpleVO(cabinet.getCabinetId(), cabinetName, cabinet.getCabinetName1(), cabinet.getCabinetName2(), 0, 0, 0, null);
+			result.add(simpleCabinet);
+		}
+		
+		return result;
+	}
+
+	private synchronized List<CabinetVO> insertRelatedCabinet(List<Integer> moduleTypes, LoginVO userInfo) throws Exception {
+		List<CabinetVO> result = new ArrayList<>();
+		
+		for (int moduleType : moduleTypes) {
+			String cabinetStr1 = egovMessageSource.getMessage("ezCabinet.m" + moduleType, new Locale("ko"));
+			String cabinetStr2 = egovMessageSource.getMessage("ezCabinet.m" + moduleType, new Locale("en"));
+			CabinetVO cabinet  = generateCabinetVO(cabinetStr1, cabinetStr2, 0, moduleType, -1, userInfo);
+			insertCabinet(cabinet);
+			result.add(cabinet);
+		}
+		
+		return result;
 	}
 }

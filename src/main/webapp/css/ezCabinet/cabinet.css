@@ -250,8 +250,8 @@
 .popup.cabFileDeloff, .popup.cabFileMoveoff, .popup.cabAddoff, .popup.cabMoveoff, .popup.cabDeloff, .fileList.off, .cabSearchPanel.off, .perSettingOff, .cabSearchPanel2.off, .popup.cabChgoff {display: none;}
 .popup .cabfdTop {margin: 0px; margin-top: 2px; padding-left: 0px;}
 .popup .delTxt {margin: 0px; height: 62px; border: 1px solid #ddd; padding: 15px; font-size: 12px;}
-.popup.cabFileMoveoff, .popup.cabFileMoveon {overflow: hidden; width: 260px; height: 350px; position: fixed; z-index: 2000;}
-.popup .cabMoveFile {margin-top: 4px; border: 1px solid #ddd; min-height: 245px; height: 245px; overflow: auto; padding: 5px 0px 0px 5px; white-space: nowrap;}
+.popup.cabFileMoveoff, .popup.cabFileMoveon {overflow: hidden; width: 320px; height: 380px; position: fixed; z-index: 2000;}
+.popup .cabMoveFile {margin-top: 4px; border: 1px solid #ddd; min-height: 283px; height: 283px; overflow: auto; padding: 5px 0px 0px 5px; white-space: nowrap;}
 .popup .cabMgTree {margin: 0px 3px; padding: 5px; border: 1px solid #ddd; min-height: 383px; height: 383px; overflow: auto; white-space: nowrap;}
 .popup.cabMag {padding-bottom: 0px !important; overflow: hidden;}
 .popup.cabAddoff, .popup.cabAddon {overflow: hidden; width: 300px; height: 162px; position: fixed; z-index: 2000;}

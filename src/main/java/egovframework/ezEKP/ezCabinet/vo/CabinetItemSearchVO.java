@@ -8,6 +8,7 @@ public class CabinetItemSearchVO {
 	private String cabinetPath;
 	private String userId;
 	private String primary;
+	private String offset;
 	private String title;
 	private String summary;
 	private String creatorName;
@@ -19,12 +20,13 @@ public class CabinetItemSearchVO {
 	
 	public CabinetItemSearchVO() {}
 	
-	public CabinetItemSearchVO(int cabinetId, int listCount, int tenantId, String userId, String primary, String title, String summary, String creatorName, String startDate, String endDate, String sqlOrder, String searchMode, String searhOption) {
+	public CabinetItemSearchVO(int cabinetId, int listCount, int tenantId, String userId, String primary, String offset, String title, String summary, String creatorName, String startDate, String endDate, String sqlOrder, String searchMode, String searhOption) {
 		this.cabinetId    = cabinetId;
 		this.listCount    = listCount;
 		this.tenantId     = tenantId;
 		this.userId       = userId;
 		this.primary      = primary;
+		this.offset       = offset;
 		this.title        = title;
 		this.summary      = summary;
 		this.creatorName  = creatorName;
@@ -152,5 +154,13 @@ public class CabinetItemSearchVO {
 	
 	public void setCabinetPath(String cabinetPath) {
 		this.cabinetPath = cabinetPath;
+	}
+	
+	public String getOffset() {
+		return offset;
+	}
+	
+	public void setOffset(String offset) {
+		this.offset = offset;
 	}
 }

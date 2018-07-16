@@ -63,4 +63,22 @@ public class CabinetModuleVO {
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
 	}
+	
+	public int getType() {
+		int mdlType = -1;
+		switch(moduleType) {
+			case "todo"  : mdlType = 5 ; break;
+			case "resrc" : mdlType = 11; break;
+			case "projt" : mdlType = 10; break;
+			case "option": mdlType = 6 ; break;
+			case "commu" : mdlType = 7 ; break;
+			case "addrs" : mdlType = 8 ; break;
+			case "schedl": mdlType = 4 ; break;
+			case "email" : mdlType = 1 ; break;
+			case "board" : mdlType = 3 ; break;
+			case "apprv" : mdlType = 2 ; break;
+		}
+		
+		return mdlType;
+	}
 }

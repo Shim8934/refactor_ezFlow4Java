@@ -139,15 +139,11 @@ var CabinetItem = function() {
 		var searchBttnElmt = document.getElementById("searchBttn");
 		searchBttnElmt.addEventListener("click", function(e) {startSimpleSearch();}, false);
 		
-		var preViewNoneElmt   = document.getElementById("preViewNone");
-		var preViewBottomElmt = document.getElementById("preViewBottom");
-		var preViewleftElmt   = document.getElementById("preViewleft");
-		var optionViewElmt    = document.getElementById("sltView");
-		
-		preViewNoneElmt.addEventListener("click", function(e)   {changePreview("off");}, false);
-		preViewBottomElmt.addEventListener("click", function(e) {changePreview("h");}, false);
-		preViewleftElmt.addEventListener("click", function(e)   {changePreview("w");}, false);
-		optionViewElmt.addEventListener("click", function(e)    {toggleOptionView(this);}, false);
+		document.getElementById("preViewNone").addEventListener("click", function(e)   {changePreview("off");}, false);
+		document.getElementById("preViewBottom").addEventListener("click", function(e) {changePreview("h");}, false);
+		document.getElementById("preViewleft").addEventListener("click", function(e)   {changePreview("w");}, false);
+		document.getElementById("sltView").addEventListener("click", function(e)       {toggleOptionView(this);}, false);
+		document.getElementById("listcount").addEventListener("change", function(e)    {startSearchCabinet("1");}, false);
 		
 		var closeSearchBttn     = document.getElementsByClassName("cabCloseBttn")[0];
 		closeSearchBttn.onclick = function() {toggleSearchPanel();};
@@ -172,7 +168,7 @@ var CabinetItem = function() {
 		libttns[0].firstElementChild.onclick  = function(e) {addFile();};
 		libttns[2].firstElementChild.onclick  = function(e) {deleteFileConfirm();};
 		libttns[3].firstElementChild.onclick  = function(e) {moveFileConfirm();};
-		libttns[5].firstElementChild.onclick  = function(e) {refresh();};
+		libttns[5].firstElementChild.onclick  = function(e) {searchCallBack();};
 		libttns[6].firstElementChild.onclick  = function(e) {toggleSearchPanel();};
 		libttns[8].firstElementChild.onclick  = function(e) {openSharePopup();};
 		libttns[9].firstElementChild.onclick  = function(e) {getFileDetail();};
@@ -298,7 +294,6 @@ var CabinetItem = function() {
 	}
 	
 	function searchCallBack() {
-		//*Note add code here
 		var crrPage = cabinetNavi.get().currentPage;
 		crrPage     = crrPage ? crrPage : 1;
 		startSearchCabinet(crrPage);
@@ -343,10 +338,10 @@ var CabinetItem = function() {
 	function checkingData(data) {
 		var code = data.code;
 		switch(code) {
-			case 0 : processData(data);                  break;
+			case 0 : processData(data)                 ; break;
 			case 1 : alert(CabinetMessages.strParamErr); break;
-			case 2 : alert(CabinetMessages.strError);    break;
-			default: alert(CabinetMessages.strError);    return; 
+			case 2 : alert(CabinetMessages.strError)   ; break;
+			default: alert(CabinetMessages.strError)   ; return; 
 		}
 	}
 	
@@ -380,6 +375,7 @@ var CabinetItem = function() {
 				var tdElmt6 = document.createElement("td");
 				
 				trElmt.setAttribute("class", unselectClass);
+				trElmt.setAttribute("role",  itemList[i]["itemId"]);
 				trElmt.onclick = function(event) {clickRowFunct(event);};
 				
 				var inputElmt  = document.createElement("input");
@@ -435,16 +431,16 @@ var CabinetItem = function() {
 		var result = "";
 		
 		switch(type) {
-			case 0: result = "수동"; break;
-			case 1: result = "메일"; break;
-			case 2: result = "전자결재"; break;
-			case 3: result = "게시판"; break;
-			case 4: result = "일정관리"; break;
-			case 5: result = "업무관리"; break;
-			case 6: result = "회람판"; break;
-			case 7: result = "커뮤니티"; break;
-			case 8: result = "주소록"; break;
-			case 9: result = "업무일지"; break;
+			case 0 : result = "수동"      ; break;
+			case 1 : result = "메일"      ; break;
+			case 2 : result = "전자결재"   ; break;
+			case 3 : result = "게시판"    ; break;
+			case 4 : result = "일정관리"   ; break;
+			case 5 : result = "업무관리"   ; break;
+			case 6 : result = "회람판"    ; break;
+			case 7 : result = "커뮤니티"   ; break;
+			case 8 : result = "주소록"    ; break;
+			case 9 : result = "업무일지"   ; break;
 			case 10: result = "프로젝트 관리"; break;
 		}
 		
@@ -522,10 +518,8 @@ var CabinetItem = function() {
 	}
 	
 	function deleteFileConfirm() {
-		if (!cabinetId) {alert(CabinetMessages.strError); return;}
-		var fileId = null;
+		if (getSelectedItems().length == 0) {alert(CabinetMessages.strItem); return;}
 		
-		//*Note: add checking conditions before open popup
 		toggleDeletePopup();
 	}
 	
@@ -546,12 +540,35 @@ var CabinetItem = function() {
 	}
 	
 	function deleteFile() {
-		//*Note add code here
+		if (!cabinetId) {alert(CabinetMessages.strError); return;}
+		var itemArr = getSelectedItems();
+		if (itemArr.length == 0) {alert(CabinetMessages.strItem); return;}
+		
+		var url  = "/ezCabinet/deleteItems.do";
+		var data = {itemList : itemArr.toString()};
+		
+		makeAjaxCall(data, "GET", url, afterDeleteItem, null, true);
+	}
+	
+	function afterDeleteItem(data) {
+		var code = data.code;
+		switch(code) {
+			case 0 : afterDeleteSuccessfully()         ; break;
+			case 1 : alert(CabinetMessages.strParamErr); break;
+			case 2 : alert(CabinetMessages.strError)   ; break;
+			default: alert(CabinetMessages.strError)   ; return; 
+		}
+	}
+	
+	function afterDeleteSuccessfully() {
+		alert(CabinetMessages.strDel);
+		searchCallBack();
+		toggleDeletePopup();
 	}
 	
 	function moveFileConfirm() {
 		if (!cabinetId) {alert(CabinetMessages.strError); return;}
-		var fileId = null;
+		if (getSelectedItems().length == 0) {alert(CabinetMessages.strItem); return;}
 		
 		//Show folder Tree then toggle popup
 		toggleMovePopup();
@@ -562,7 +579,23 @@ var CabinetItem = function() {
 		var movePanel = rightFrame.getElementById("cabFileMove");
 		if (movePanel.className == "popup cabFileMoveoff") {
 			addFogPanel("move");
-			var position          = getPosition(260, 350);
+			
+			//Add new tree
+			var subTree = new CabinetTree();
+			
+			subTree.setTreeInfo({
+				treeId     : "moveCabTree",
+				treeType   : "cabinet",
+				type       : "list",
+				initialUrl : "/ezCabinet/getAllCabinetTree.do",
+				extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
+				click      : null,
+				dblClick   : null
+			});
+			
+			subTree.makeTree();
+			
+			var position          = getPosition(320, 380);
 			movePanel.style.top   = position[0] + "px";
 			movePanel.style.right = position[1] + "px";
 			movePanel.className   = "popup cabFileMoveon";
@@ -589,6 +622,36 @@ var CabinetItem = function() {
 	}
 	
 	function getFileDetail() {window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 690));}
+	
+	function getSelectedItems() {
+		var result        = [];
+		var itemListElmt  = document.getElementById("cabinetFileList");
+		var selectedItems = itemListElmt.querySelectorAll("tr[class='bnkCabSelect']");
+		
+		for (var i = 0, len = selectedItems.length; i< len; i++) {
+			result.push(selectedItems[i].getAttribute("role"));
+		}
+		
+		return result;
+	}
+	
+	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode) {
+		$.ajax({
+			type: ajaxType,
+			url: ajaxUrl,
+			data: ajaxData,
+			dataType: "JSON",
+			async: asyncMode != false ? true : false,
+			success : function(data) {
+				handleSuccess(data);
+			},
+			error : function(error) {
+				if (handleError != null) {handleError();}
+				
+				alert(CabinetMessages.strError);
+			}
+		});
+	}
 	
 	return {start : initEvents};
 }();

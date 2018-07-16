@@ -128,7 +128,7 @@
 			companyId : document.getElementById("companyList").value
 		};
 		
-		makeAjaxCall(data, "GET", url, afterChangeCapacity, null, true, null);
+		makeAjaxCall(data, "GET", url, afterChangeCapacity, null, true);
 	}
 	
 	function afterChangeCapacity(data) {
@@ -264,7 +264,7 @@
 			"companyId"   : document.getElementById("companyList").value
 		};
 		
-		makeAjaxCall (data, "GET", url, checkingData, null, true, null);
+		makeAjaxCall (data, "GET", url, checkingData, null, true);
 	}
 	
 	function checkingData(data) {
@@ -432,7 +432,7 @@
 	function getUserCapacities() {
 		var url  = "/admin/ezCabinet/getCompanyCapacity.do";
 		var data = {companyId : document.getElementById("companyList").value};
-		makeAjaxCall(data, "GET", url, processData, null, true, null);
+		makeAjaxCall(data, "GET", url, processData, null, true);
 	}
 	
 	function changeCapacitySuccess()       {alert(CabinetMessages.strSave); refreshPage(); toggleChangePanel();}

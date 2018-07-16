@@ -185,6 +185,7 @@
 		<script type="text/javascript" src="/js/ezCabinet/cabinetNavi.js"           ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTable.js"          ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetItem.js"           ></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetTree.js"           ></script>
 		<script type="text/javascript">
 			CabinetItem.start("<c:out value='${cabinetId}'/>", "<c:out value='${config.contentHpercent}'/>", "<c:out value='${config.contentWpercent}'/>", "<c:out value='${config.previewMode}'/>");
 		</script>

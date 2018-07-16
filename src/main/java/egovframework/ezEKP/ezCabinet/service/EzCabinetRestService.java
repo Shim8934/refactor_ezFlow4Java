@@ -38,6 +38,7 @@ public interface EzCabinetRestService {
 	
 	//User my cabinet tree
 	public JSONObject getMyCabinetTree(HttpServletRequest request, String currentNode, String userId) throws Exception;
+	public JSONObject getAllCabinetTree(HttpServletRequest request, String currentNode, String userId) throws Exception;
 	public JSONObject getCabinetSubNodes(HttpServletRequest request, String userId, String nodeId) throws Exception;
 	
 	//User cabinet management
@@ -56,6 +57,9 @@ public interface EzCabinetRestService {
 	//User cabinet information
 	public JSONObject getCabinetInfo(HttpServletRequest request, String userId, String cabinetId) throws Exception;
 	
-	//User get cabinet item
+	//User get cabinet items
 	public JSONObject getCabinetItems(HttpServletRequest request, String userId, String cabinetId, String title, String summary, String recursive, String creatorName, String startDate, String endDate, String column, String order, String srchMode, String srchOption, String listCntSize, String currentPage) throws Exception;
+	
+	//User delete cabinet items
+	public JSONObject deleteItems(HttpServletRequest request, String id, List<String> itemList) throws Exception;
 }
