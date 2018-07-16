@@ -2205,7 +2205,9 @@ public class EzPMSController {
 		status = resultBodyProject.get("status").toString();
 		
 		if(status.equals("ok")) {
-			model.addAttribute("projectDetail", resultBodyProject.get("data"));
+			JSONObject data = (JSONObject) resultBodyProject.get("data");
+			model.addAttribute("projectDetail", data.get("project"));
+			model.addAttribute("holidayList", data.get("holidayList"));
 		}
 		
 		JSONObject resultBodyGroup = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/groups/users/" + userInfo.getId() + "/gantt", param, request, "get", null);
@@ -3908,7 +3910,9 @@ public class EzPMSController {
 		status = resultBodyProject.get("status").toString();
 		
 		if(status.equals("ok")) {
-			model.addAttribute("projectDetails", resultBodyProject.get("data"));
+			JSONObject data = (JSONObject) resultBodyProject.get("data");
+			model.addAttribute("projectDetails", data.get("project"));
+			model.addAttribute("holidayList", data.get("holidayList"));
 		}
 		
 		JSONObject resultBodyGroup = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/groups/users/" + userInfo.getId() + "/gantt", param, request, "get", null);
