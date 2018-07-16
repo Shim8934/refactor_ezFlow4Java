@@ -1418,8 +1418,13 @@
 	 		            }
 	 		        }
 				} */
-				//window.open(url, location, option);
-				window.open(url, location, GetOpenWindowfeature(750, 550));
+				
+				/* 2018-07-16 천성준 - 직원조회 팝업 가운데로 나오게  */
+				if (url == "/ezPersonal/personSearch.do") {
+					option = GetOpenWindowfeature(750, 550);
+				}
+				
+				window.open(url, location, option);
 			}
 			
 			function OpenWindow2(targetid, url, location, option) {
