@@ -21768,7 +21768,7 @@
    	 	<isNotEqual property="v_LANGTYPE" compareValue="1">
    	 	<![CDATA[
    	 		SELECT 
-   				TASKNAME2, TASKNAME, KEEPINGPERIOD, tbl_taskcode.taskcode
+   				TASKNAME2 TASKNAME, KEEPINGPERIOD, tbl_taskcode.taskcode
 			FROM 
 				TBl_ENDAPRDOCINFO
 			JOIN 
