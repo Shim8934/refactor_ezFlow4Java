@@ -180,4 +180,16 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 	public List<CabinetVO> getRelatedCabinetListForUser(Map<String, Object> map) {
 		return (List<CabinetVO>)list("EzCabinetDAO.getRelatedCabinetListForUser", map);
 	}
+
+	public void moveItemsForUser(Map<String, Object> map) {
+		update("EzCabinetDAO.moveItemsForUser", map);
+	}
+
+	public long getTotalItemsSize(Map<String, Object> map) {
+		return (long)select("EzCabinetDAO.getTotalItemsSize", map);
+	}
+
+	public List<CabinetItemVO> getItemsFromIdList(Map<String, Object> map) {
+		return (List<CabinetItemVO>)list("EzCabinetDAO.getItemsFromIdList", map);
+	}
 }

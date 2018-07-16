@@ -684,6 +684,13 @@
 		</isNotEmpty>
 	</select>
 	
+	<select id="EzCabinetDAO.getItemsFromIdList" resultMap="cabinetItemVO">
+		<![CDATA[select * from tbl_cb_item where tenant_id = #tenantId# and use_status = 1 and item_id in]]>
+		<iterate property="itemList" open="(" close=")" conjunction=",">
+			#itemList[]#
+		</iterate>
+	</select>
+	
 	<select id="EzCabinetDAO.getMaxItem" resultClass="Integer">
 		<![CDATA[select ifnull(max(item_id), 0) from tbl_cb_item where tenant_id = #tenantId#]]>
 	</select>
@@ -749,6 +756,35 @@
 			#itemList[]#
 		</iterate>
 	</update>
+	
+	<update id="EzCabinetDAO.moveItemsForUser" parameterClass="Map">
+		<![CDATA[
+			update
+				tbl_cb_item
+			set
+				cabinet_id  = #cabinetId#,
+				update_date = #updateTime#,
+				update_id   = #userId#
+			where
+				tenant_id   = #tenantId# and use_status = 1 and item_id in
+		]]>
+		<iterate property="itemList" open="(" close=")" conjunction=",">
+			#itemList[]#
+		</iterate>
+	</update>
+	
+	<select id="EzCabinetDAO.getTotalItemsSize" resultClass="Long">
+		<![CDATA[
+			select
+				ifnull (sum(f.file_size), 0)
+			from
+				tbl_cb_attach_file f join tbl_cb_item i on f.item_id = i.item_id and f.tenant_id = i.tenant_id
+			where f.tenant_id = #tenantId# and i.use_status = 1 and i.item_id in
+		]]>
+		<iterate property="itemList" open="(" close=")" conjunction=",">
+			#itemList[]#
+		</iterate>
+	</select>
 	
 	<!--***********************************************************************************
 	**                              Cabinet attach file process                          **

@@ -59,6 +59,7 @@ public interface EzCabinetService {
 	List<CabinetItemVO> getItemsRecursive(CabinetItemSearchVO searchVO) throws Exception;
 	int getTotalItemsRecursive(CabinetItemSearchVO searchVO) throws Exception;
 	
-	//User delete items function
+	//User delete/move items function
 	void deleteItems(List<Integer> itemIdList, LoginVO userInfo) throws Exception;
+	JSONObject moveItems(String realPath, int cabinetId, String mode, List<Integer> itemIdList, LoginVO userInfo) throws Exception;
 }

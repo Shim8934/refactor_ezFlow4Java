@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -519,11 +520,11 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		}
 		else {
 			//Check storage condition
-			long cabinetStorage     = getCabinetStorage(cabinet, userInfo);
 			UserCapacityVO capacity = getUserCapacity(userInfo);
 			
 			if (capacity.getCapacityType() == 1) {
 				//Check save condition
+				long cabinetStorage = getCabinetStorage(cabinet, userInfo);
 				long totalUsed      = Long.parseLong(capacity.getTotalUsed());
 				long totalCapacity  = capacity.getTotalCapacity() * 1048576;
 				
@@ -675,13 +676,19 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	}
 	
 	private synchronized void copyItems(int cabinetId, int newId, String timeUTC, String realPath, LoginVO userInfo) throws Exception {
-		int tenantId  = userInfo.getTenantId();
-		String userId = userInfo.getId();
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("tenantId",  tenantId);
+		map.put("tenantId",  userInfo.getTenantId());
 		map.put("cabinetId", cabinetId);
 		
 		List<CabinetItemVO> itemList = ezCabinetDAO.getAllItemsOfCabinet(map);
+		copyListItems(realPath, timeUTC, itemList, newId, userInfo);
+	}
+	
+	private void copyListItems(String realPath, String timeUTC, List<CabinetItemVO> itemList, int newCabinetId, LoginVO userInfo) {
+		int tenantId           = userInfo.getTenantId();
+		String userId          = userInfo.getId();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId",  tenantId);
 		
 		if (itemList != null && itemList.size() > 0) {
 			int newItemId = ezCabinetDAO.getMaxItem(map) + 1;
@@ -689,7 +696,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 				int itemId = item.getItemId();
 				//Save new Item
 				item.setItemId(newItemId);
-				item.setCabinetId(newId);
+				item.setCabinetId(newCabinetId);
 				item.setCreatorId(userId);
 				item.setCreatorName1(userInfo.getDisplayName1());
 				item.setCreatorName2(userInfo.getDisplayName2());
@@ -933,7 +940,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 
 	private List<CabinetSimpleVO> generateSimpleCabinet(List<CabinetVO> list, String primary) {
 		List<CabinetSimpleVO> result = new ArrayList<>();
-		list.stream().sorted((cabinet1, cabinet2) -> Integer.compare(cabinet1.getCabinetType(), cabinet2.getCabinetType()));
+		Collections.sort(list, (CabinetVO cabinet1, CabinetVO cabinet2) -> Integer.compare(cabinet1.getCabinetType(), cabinet2.getCabinetType()));
 		
 		for (CabinetVO cabinet : list) {
 			String cabinetName            = primary.equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2();
@@ -956,5 +963,81 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		}
 		
 		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject moveItems(String realPath, int cabinetId, String mode, List<Integer> itemIdList, LoginVO userInfo) throws Exception {
+		JSONObject result      = new JSONObject();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("cabinetId", cabinetId);
+		map.put("tenantId",  userInfo.getTenantId());
+		CabinetVO cabinet      = ezCabinetDAO.getCabinetById(map);
+		
+		if (cabinet == null || cabinet.getUseStatus() == 0) {
+			result.put("status", "error");
+			result.put("code", 2);
+			return result;
+		}
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+		
+		if (mode.equals("move")) {
+			moveItemsForUser(cabinetId, timeUTC, itemIdList, userInfo);
+		}
+		else {
+			//Check storage condition
+			UserCapacityVO capacity = getUserCapacity(userInfo);
+			
+			if (capacity.getCapacityType() == 1) {
+				//Check save condition
+				long totalItemsSize = getTotalItemsSize(itemIdList, userInfo);
+				long totalUsed      = Long.parseLong(capacity.getTotalUsed());
+				long totalCapacity  = capacity.getTotalCapacity() * 1048576;
+				
+				if (totalItemsSize > (totalCapacity - totalUsed)) {
+					logger.debug("Not enough storage to copy these files!");
+					result.put("status", "error");
+					result.put("code", 4);
+					return result;
+				}
+			}
+			
+			List<CabinetItemVO> itemList = getItemsFromIdList(itemIdList, userInfo);
+			copyListItems(realPath, timeUTC, itemList, cabinetId, userInfo);
+		}
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
+
+	private List<CabinetItemVO> getItemsFromIdList(List<Integer> itemIdList, LoginVO userInfo) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("itemList", itemIdList);
+		
+		return ezCabinetDAO.getItemsFromIdList(map);
+	}
+
+	private long getTotalItemsSize(List<Integer> itemIdList, LoginVO userInfo) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("itemList", itemIdList);
+		
+		return ezCabinetDAO.getTotalItemsSize(map);
+	}
+
+	private void moveItemsForUser(int cabinetId, String timeUTC, List<Integer> itemIdList, LoginVO userInfo) {
+		Map<String,Object> map     = new HashMap<String, Object>();
+		map.put("cabinetId",  cabinetId);
+		map.put("userId",     userInfo.getId());
+		map.put("tenantId",   userInfo.getTenantId());
+		map.put("itemList",   itemIdList);
+		map.put("updateTime", timeUTC);
+		
+		ezCabinetDAO.moveItemsForUser(map);
 	}
 }

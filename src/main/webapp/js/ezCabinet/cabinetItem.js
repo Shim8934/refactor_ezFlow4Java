@@ -160,8 +160,8 @@ var CabinetItem = function() {
 		
 		var cabMoveBttnElmt     = document.getElementById("moveDivBttn");
 		var movlistBttns        = cabMoveBttnElmt.children;
-		movlistBttns[0].onclick = function(e) {moveFile("copy");};
-		movlistBttns[1].onclick = function(e) {moveFile("move");};
+		movlistBttns[0].onclick = function(e) {moveFile("move");};
+		movlistBttns[1].onclick = function(e) {moveFile("copy");};
 		movlistBttns[2].onclick = function(e) {toggleMovePopup();};
 		
 		var libttns = document.getElementById("mainmenu").firstElementChild.children;
@@ -297,6 +297,12 @@ var CabinetItem = function() {
 		var crrPage = cabinetNavi.get().currentPage;
 		crrPage     = crrPage ? crrPage : 1;
 		startSearchCabinet(crrPage);
+	}
+	
+	function refreshAllFrames() {
+		searchCallBack();
+		var leftFrame = window.parent.frames["left"];
+		if (leftFrame) {leftFrame.CabUserLeft.draw();}
 	}
 	/* Search Panel end*/
 	
@@ -547,7 +553,7 @@ var CabinetItem = function() {
 		var url  = "/ezCabinet/deleteItems.do";
 		var data = {itemList : itemArr.toString()};
 		
-		makeAjaxCall(data, "GET", url, afterDeleteItem, null, true);
+		makeAjaxCall(data, "GET", url, afterDeleteItem, null, true, null);
 	}
 	
 	function afterDeleteItem(data) {
@@ -556,13 +562,14 @@ var CabinetItem = function() {
 			case 0 : afterDeleteSuccessfully()         ; break;
 			case 1 : alert(CabinetMessages.strParamErr); break;
 			case 2 : alert(CabinetMessages.strError)   ; break;
+			case 3 : alert(CabinetMessages.strPerm)    ; break;
 			default: alert(CabinetMessages.strError)   ; return; 
 		}
 	}
 	
 	function afterDeleteSuccessfully() {
 		alert(CabinetMessages.strDel);
-		searchCallBack();
+		refreshAllFrames();
 		toggleDeletePopup();
 	}
 	
@@ -607,7 +614,47 @@ var CabinetItem = function() {
 	}
 	
 	function moveFile(mode) {
-		//*Note implement here
+		//Check selected node
+		var moveTreeElmt = document.getElementById("moveCabTree");
+		var selectedNode = moveTreeElmt.querySelector("span[class='selectedNode']");
+		if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
+		
+		var itemArr      = getSelectedItems();
+		if (itemArr.length == 0) {alert(CabinetMessages.strItem); return;}
+		
+		var cabinetId    = selectedNode.getAttribute("role");
+		var moveHandler  = null;
+		
+		var url  = "/ezCabinet/moveItems.do";
+		var data = {
+			cabinetId : cabinetId,
+			mode      : mode,
+			itemList  : itemArr.toString()
+		};
+		
+		makeAjaxCall(data, "GET", url, afterMoveItem, null, true, mode);
+	}
+	
+	function afterMoveItem(data, mode) {
+		var code = data.code;
+		switch(code) {
+			case 0 : afterMoveItemSuccessfully(mode)   ; break;
+			case 1 : alert(CabinetMessages.strParamErr); break;
+			case 2 : alert(CabinetMessages.strError)   ; break;
+			case 3 : alert(CabinetMessages.strPerm)    ; break;
+			case 4 : alert(CabinetMessages.strCapacity); break;
+			default: alert(CabinetMessages.strError)   ; return;
+		}
+	}
+	
+	function afterMoveItemSuccessfully(mode) {
+		switch(mode) {
+			case "copy": alert(CabinetMessages.strCopyItem); break;
+			case "move": alert(CabinetMessages.strMoveItem); break;
+		}
+		
+		refreshAllFrames();
+		toggleMovePopup();
 	}
 	
 	function openSharePopup() {
@@ -635,7 +682,7 @@ var CabinetItem = function() {
 		return result;
 	}
 	
-	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode) {
+	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {
 		$.ajax({
 			type: ajaxType,
 			url: ajaxUrl,
@@ -643,7 +690,7 @@ var CabinetItem = function() {
 			dataType: "JSON",
 			async: asyncMode != false ? true : false,
 			success : function(data) {
-				handleSuccess(data);
+				handleSuccess(data, moreParam);
 			},
 			error : function(error) {
 				if (handleError != null) {handleError();}

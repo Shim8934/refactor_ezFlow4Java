@@ -698,6 +698,38 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
+	@RequestMapping(value="/rest/ezcabinet/relatedcabinet/id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getRelatedCabinetTree(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
+		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo                  = commonUtil.getUserForGw(userId, serverName);
+			List<CabinetSimpleVO> relatedList = cabinetService.getRelatedCabinetListForUser(userInfo);
+			
+			result.put("node", relatedList.get(0).getCabinetId());
+			result.put("tree", relatedList);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
 	@RequestMapping(value="/rest/ezcabinet/cabinet/add", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject addCabinet(HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")                     : "";
@@ -1078,6 +1110,49 @@ public class EzCabinetGWController {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/item-move/mode/{mode}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject moveItems(@PathVariable(value="mode") String mode, @RequestParam(value = "itemList") List<String> itemList, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
+		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
+		int cabinetId     = request.getParameter("cabinetId") != null ? Integer.parseInt(request.getParameter("cabinetId")) : -1;
+		JSONObject result = new JSONObject();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName + " || Cabinet Id: " + cabinetId + " || Mode: " + mode + " || itemList: " + String.join(",", itemList));
+		
+		if (cabinetId == -1 || mode.equals("") || serverName.equals("") || userId.equals("") || itemList.size() == 0) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
+			result.put("code", "1");
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
+			List<Integer> itemIdList  = itemList.stream().map(Integer::parseInt).collect(Collectors.toList());
+			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(cabinetId));
+			
+			//Add checking permission here
+			JSONObject permission     = cabinetService.checkPermission(cabinetList, itemIdList, userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
+			String realPath = request.getServletContext().getRealPath("");
+			result          = cabinetService.moveItems(realPath, cabinetId, mode, itemIdList, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

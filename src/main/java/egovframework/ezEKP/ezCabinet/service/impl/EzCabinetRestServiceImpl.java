@@ -236,6 +236,13 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	}
 	
 	@Override
+	public JSONObject getRelatedCabinetTree(HttpServletRequest request, String userId) throws Exception {
+		String url                = "/rest/ezcabinet/relatedcabinet/id/" + userId;
+		JSONObject resultBody     = getJsonResult(url, null, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
 	public JSONObject getCabinetSubNodes(HttpServletRequest request, String userId, String nodeId) throws Exception {
 		String url                = "/rest/ezcabinet/cabinet/id/" + nodeId + "/sub-node";
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -381,6 +388,17 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		param.put("userId",   userId);
 		param.put("itemList", String.join(",", itemList));
 		JSONObject resultBody     = getJsonResult(url, param, request, "delete", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject moveItems(HttpServletRequest request, String userId, String cabinetId, String mode, List<String> itemList) throws Exception {
+		String url                = "/rest/ezcabinet/item-move/mode/" + mode;
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",    userId);
+		param.put("cabinetId", cabinetId);
+		param.put("itemList",  String.join(",", itemList));
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
 	

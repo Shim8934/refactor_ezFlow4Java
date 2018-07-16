@@ -23,7 +23,7 @@
 			</ul>
 			
 			<!-- 연동 캐비넷 -->
-			<h2><span><spring:message code='ezCabinet.t32'/></span></h2>
+			<h2 id="relatedCabinet"><span><spring:message code='ezCabinet.t32'/></span></h2>
 			<ul>
 				<div id="cabinetModulesTree" class="cabinetTree"></div>
 			</ul>
@@ -37,10 +37,10 @@
 				<div id="myProgress"></div>
 				<div class="volumeBar">
 					<c:choose>
-						<c:when test="${percent > 90}"                 ><div id="myBar" class="myBar_red"    style="width: ${percent < 100 ? percent : 100}'%';"></div></c:when>
-						<c:when test="${percent <= 90 && percent > 70}"><div id="myBar" class="myBar_orange" style="width: ${percent}'%';"></div></c:when>
-						<c:when test="${percent <= 70 && percent > 60}"><div id="myBar" class="myBar_yellow" style="width: ${percent}'%';"></div></c:when>
-						<c:when test="${percent <= 60 && percent > 0}" ><div id="myBar" class="myBar_green"  style="width: ${percent}'%';"></div></c:when>
+						<c:when test="${percent > 90}"                 ><div id="myBar" class="myBar_red"    style="width: ${percent < 100 ? percent : 100}%;"></div></c:when>
+						<c:when test="${percent <= 90 && percent > 70}"><div id="myBar" class="myBar_orange" style="width: ${percent}%;"></div></c:when>
+						<c:when test="${percent <= 70 && percent > 60}"><div id="myBar" class="myBar_yellow" style="width: ${percent}%;"></div></c:when>
+						<c:when test="${percent <= 60 && percent > 0}" ><div id="myBar" class="myBar_green"  style="width: ${percent}%;"></div></c:when>
 						<c:when test="${percent == 0}"                 ><div id="myBar" class="myBar_white"  style="width: 0%;"></div></c:when>
 					</c:choose>
 				</div>
@@ -49,7 +49,7 @@
 						<div class="volumes"><c:out value='${useVolume}'/> / <spring:message code='ezCabinet.t114'/></div>
 					</c:when>
 					<c:otherwise>
-						<div class="volumes"><c:out value='${useVolume}'/> / <c:out value="${totalCapacity}"/> MB (<c:out value="${percent}"/>%)</div>
+						<div class="volumes"><c:out value='${useVolume}'/> / <c:out value="${totalCapacity}"/> MB (<c:out value="${percent > 100 ? 100 : percent}"/>%)</div>
 					</c:otherwise>
 				</c:choose>
 				
@@ -71,6 +71,7 @@
 		<script type="text/javascript">
 			var CabUserLeft = function() {
 				var cabinetTree = new CabinetTree();
+				var subTree     = new CabinetTree();
 				setButtons();
 				
 				function setButtons() {
@@ -89,9 +90,10 @@
 					
 					cabinetTree.makeTree({cabinetNode : "root"});
 					
-					document.getElementById("myCabinet"        ).addEventListener("click", function(e) {getMyCabinet();} , false);
-					document.getElementById("cabinetConfig"    ).addEventListener("click", function(e) {getConfigPage();}, false);
-					document.getElementById("cabinetManagement").addEventListener("click", function(e) {getManagement();}, false);
+					document.getElementById("myCabinet"        ).addEventListener("click", function(e) {getMyCabinet();     }, false);
+					document.getElementById("cabinetConfig"    ).addEventListener("click", function(e) {getConfigPage();    }, false);
+					document.getElementById("cabinetManagement").addEventListener("click", function(e) {getManagement();    }, false);
+					document.getElementById("relatedCabinet"   ).addEventListener("click", function(e) {getRelatedCabinet();}, false);
 					
 					var cabinetAdminElmt = document.getElementById("cabinetAdmin");
 					if (cabinetAdminElmt) {cabinetAdminElmt.addEventListener("click", function(e) {getAdminPage();} , false);}
@@ -122,6 +124,20 @@
 					window.open("/ezCabinet/cabinetManagement.do?node=" + selectedNodeId, "management", getOpenWindowfeature(600, 500));
 				}
 				
+				function getRelatedCabinet() {
+					subTree.setTreeInfo({
+						treeId     : "cabinetModulesTree",
+						treeType   : "cabinet",
+						type       : "list",
+						initialUrl : "/ezCabinet/getRelatedCabinetTree.do",
+						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
+						click      : getCabinet,
+						dblClick   : null
+					});
+					
+					subTree.makeTree();
+				}
+				
 				function getOpenWindowfeature(popUpW, popUpH) {
 					var heigth   = window.screen.availHeight;
 					var width    = window.screen.availWidth;
@@ -144,12 +160,12 @@
 						success : function(data) {
 							var result            = data.capacity;
 							var capacityType      = result["capacityType"];
-							var percent           = result["usedRate"];
+							var percent           = result["usedRate"] > 100 ? 100 : result["usedRate"];
 							var totalVolume       = capacityType == 0 ? CabinetMessages.strNolimit : result["totalCapacity"] + "MB"  + " (" + percent + "%)";
 							var useVolume         = getFileSize(result["totalUsed"]);
 							var barElmt           = document.getElementById("myBar");
 							var volumeInf         = document.getElementsByClassName("volumes")[0];
-							barElmt.style.width   = percent < 100 ? percent + "%" : "100%";
+							barElmt.style.width   = percent + "%";
 							volumeInf.textContent = useVolume + " / " + totalVolume;
 							var colorClass        = "myBar_green";
 							
@@ -178,7 +194,10 @@
 					return result;
 				}
 				
-				return {reloadTree : reloadTree};
+				return {
+					reloadTree : reloadTree,
+					draw       : drawVolume
+				};
 			}();
 		</script>
 	</body>

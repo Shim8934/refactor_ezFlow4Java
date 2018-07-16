@@ -47,5 +47,7 @@ var CabinetMessages = {
 	strDate1     : "검색 시작일을 종료일보다 빠르게 지정하세요.",
 	strDate2     : "검색기간의 종료일을 지정해 주세요.",
 	strDate3     : "검색기간의 시작일을 지정해 주세요.",
-	strItem      : "파일을 선택하세요."
+	strItem      : "파일을 선택하세요.",
+	strMoveItem  : "파일을 이동에 성공하셨습니다.",
+	strCopyItem  : "파일을 복사에 성공하셨습니다."
 }
