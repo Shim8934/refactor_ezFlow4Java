@@ -165,10 +165,10 @@
 	            strAttach += "<span class='title_btn' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' onclick='AttachAllDownload();'>" + strLang3 + "</span></p>";
 	            strAttach += "<ul class='list' id='PreviewAttachList'>";
 	
-	
+				/* 2018-07-16 홍승비 - 게시물 미리보기 시 첨부파일 특수문자 처리 */
 	            for (i = 0; i < xmldomNodes.length; i++) {
 	            	filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-	            	filename = filepath.substr(120, filepath.length - 119);
+	            	filename = MakeXMLString(filepath.substr(120, filepath.length - 119));
 // 	                filename = filepath.substr(filepath.indexOf("}_") + 2);
 // 	                filename = ReplaceText(filename, "%2b", "+");
 // 	                filename = ReplaceText(filename, "%3b", ";");

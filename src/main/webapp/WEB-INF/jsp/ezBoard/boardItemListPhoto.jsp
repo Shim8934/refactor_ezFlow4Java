@@ -924,7 +924,7 @@
 		
 			 /* 2018-06-12 김민성 - 게시판 검색 레이어팝업 변경 */ 
 			function doLayerPopup(obj) {
-				if (window.parent.frames['left'] == undefined) {	// 2018-06-15 김민성 - 즐겨찾기 내 게시판일때 기존 팝업으로 변경
+				if (window.parent.frames['left'] == undefined && parent.frames["BoardEnv_ifrm"] == undefined) {	// 즐겨찾기 검색
 					$("<div id='blockLeft' class='blockLeft' onclick='parent.frames[\"right\"].frames[\"FBoard_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["left"].document.body);
 		    		$("<div id='blockTop' class='blockTop' onclick='parent.frames[\"right\"].frames[\"FBoard_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["right"].document.body);
 		    		
@@ -953,7 +953,18 @@
 			            BoardSearchOptionHidden();
 			        } */
 		    	}
-		    	else {
+				else if (parent.frames["BoardEnv_ifrm"] != undefined) {			// 관리자 모드 검색
+		    		$("<div id='blockLeft' class='blockLeft' onclick='parent.parent.frames[\"right\"].frames[\"BoardEnv_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["board_menu"].document.body);
+		    		$("<div id='blockTop' class='blockTop' onclick='parent.parent.frames[\"right\"].frames[\"BoardEnv_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["board_main"].document.body);
+		    		
+		    		parent.parent.frames["board_menu"].document.body.style.overflow = "hidden";		    		
+		    				    		
+			    	var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;			    	
+
+			    	$("#srarchpopup").css("board_menu", popupX).css("bottom", "66px");
+			    	$("#srarchpopup").modal();
+		    	}
+		    	else {																				// 일반 게시판 검색
 			    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
 			    	parent.frames["left"].document.body.style.overflow = "hidden";
 			    	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
@@ -1085,34 +1096,35 @@
 	<c:if test="${boardInfo.listView_FG != 'true'}">
 		<div style="margin-top:100px;text-align:center"><spring:message code='ezBoard.t272'/></div>
 	</c:if>
-	<c:choose>
-		<c:when test="${boardInfo.adminType != 'y'}">
-			<h1>${boardName}<span id="mailBoxInfo"></span>
-			      <span style="float:right;font-weight:normal;color:black;">
-			          <select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
-			    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
+	<c:if test="${boardInfo.listView_FG == true}">
+		<c:choose>
+			<c:when test="${boardInfo.adminType != 'y'}">
+				<h1>${boardName}<span id="mailBoxInfo"></span>
+				      <span style="float:right;font-weight:normal;color:black;">
+				          <select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+				    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
+				    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
+				    	</select>
+						  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+				          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
+				        </span>
+				</h1>
+			</c:when>
+			<c:otherwise>
+			    <script type="text/javascript">
+			        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}" +"<span id='mailBoxInfo'></span>";
+			    </script>
+			    <br />
+			    <span style="display:none; float:right;font-weight:normal;color:black;">
+					<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+						<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 			    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 			    	</select>
 					  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 			          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
-			        </span>
-			</h1>
-		</c:when>
-		<c:otherwise>
-		    <script type="text/javascript">
-		        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}" +"<span id='mailBoxInfo'></span>";
-		    </script>
-		    <br />
-		    <span style="display:none; float:right;font-weight:normal;color:black;">
-				<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
-					<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
-		    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
-		    	</select>
-				  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
-	        </span>
-		</c:otherwise>
-	</c:choose>
+		        </span>
+			</c:otherwise>
+		</c:choose>
 	<c:if test="${boardInfo.buttonHidden == 'N'}">
 		<div id="mainmenu">
 		  <ul>
@@ -1250,7 +1262,7 @@
 		<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
 			<div id="srarchpopup" class="popupwrap1 modal" style="margin-bottom: 70px; left: 297.5px; display: inline-block;">
 				<div class="popupJQLayer">
-					<div class="title"><spring:message code='ezBoard.t0006' /> <spring:message code='ezBoard.t188' /></div>
+					<div class="title"><spring:message code='ezBoard.t188' /></div>
 					<div id="close">
 			            <ul>
 			                <li><a rel="modal:close"><span onclick="BoardSearchOptionHidden()"></span></a></li>
@@ -1307,5 +1319,6 @@
 		</div>
 	<%-- </c:otherwise>
 	</c:choose> --%>
+	</c:if>
 	</body>
 </html>
