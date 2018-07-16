@@ -23,9 +23,9 @@ function getProjectTaskTree(containerId, data, location) {
 				result = (a1.original.sort > b1.original.sort) ? 1 : -1;
 			} else if (a1.id.indexOf("t") != -1 || b1.id.indexOf("t") != -1) {
 				if (a1.id.indexOf("t") != -1) {
-					result = 1;
-				} else {
 					result = -1;
+				} else {
+					result = 1;
 				}
 				
 			} else {
