@@ -38,7 +38,7 @@
 	var itemIds;
 	var orderWhat = "";
 	var orderHow = "";
-	var limit = 10;
+	var limit = 15;
 	
 	//검색을 위한 variables
 	var searchByTaskName = "";
