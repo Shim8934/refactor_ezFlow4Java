@@ -435,7 +435,8 @@
 			                } else {
 			                	listHTML += "";
 			                }
-			                listHTML += TITLE.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/\'/g,"&#39;").replace(/\n/g,"<br />")+ "</span></li>";
+			                /* listHTML += TITLE.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/\'/g,"&#39;").replace(/\n/g,"<br />")+ "</span></li>"; */
+			                listHTML += MakeXMLString(TITLE)+"</span></li>"
 			                count++;
 			        	}
 			        }
