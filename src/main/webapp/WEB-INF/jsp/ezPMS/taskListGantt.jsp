@@ -181,15 +181,7 @@
 		   			
 		   			ganttData.tasks.push(tempTask);
 		   			
-		   			//그룹 리스트 가공부분.
-		   			var gl = {};
-	   				gl = groupList.filter(function(group){
-					    return group.upperGroupId == pd.groupId;
-					});
-	   				
-	   				matchGroupData(ganttData, gl);
-	   				
-	   				//프로젝트 직속 업무 추가.
+		   			//프로젝트 직속 업무 추가.
 	   				var subTl = {};
 	   				subTl = taskList.filter(function(task){
 					    return task.groupId == pd.groupId;
@@ -198,6 +190,16 @@
 	   				if(subTl.length > 0){
 	   					matchTaskData(ganttData ,subTl, "", "");
 	   				}
+	   				
+		   			//그룹 리스트 가공부분.
+		   			var gl = {};
+	   				gl = groupList.filter(function(group){
+					    return group.upperGroupId == pd.groupId;
+					});
+	   				
+	   				matchGroupData(ganttData, gl);
+	   				
+	   				
 	   				
 	   				//프로젝트의 목표진행률은 계산으로 구해서 넣어준다.
 	   				ganttData.tasks[0].planProgress = getPrjPlanProgress(ganttData);
@@ -1025,6 +1027,8 @@
 	   				async : false,
 	   				success : function(result) {
 	   					if (result == "permitted") {
+	   						<%-- toastPopupShow(<spring:message code='ezPMS.t777' />);
+	   						addTaskLog(projectId, 1, groupId, taskIdParam, <spring:message code='ezPMS.t777' /> ); --%>
 	   						toastPopupShow("[" + preTaskRowName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t241' />");
 	   						addTaskLog(projectId, 1, groupId, taskIdParam, "[" + preTaskRowName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t241' />");
 	   						returnVal = true;
@@ -1271,7 +1275,9 @@
 	   						alert("<spring:message code='ezPMS.t184' />");
 	   						return "false";
 	   					} else {
+							location.reload();
 	   						return "true";
+	   						
 	   					}
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
