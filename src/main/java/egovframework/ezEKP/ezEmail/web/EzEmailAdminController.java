@@ -164,34 +164,26 @@ public class EzEmailAdminController {
 					.getTextContent();
 			String cn = doc.getElementsByTagName("CN").item(0).getTextContent() == null ? "" 
 					: doc.getElementsByTagName("CN").item(0).getTextContent();
-			
-			List<MailDistributionVO> distributionSearchList = ezEmailService
+			//모든 공용배포그룹
+			List<MailDistributionVO> distributionTotalList = ezEmailService
 					.getDistributionList(companyId, auth.getTenantId());
 			
-			List<MailDistributionVO> distributionResultList = new ArrayList<MailDistributionVO>();
+			logger.debug("cn=" + cn);
 			
-			String isIncluded = "NO";
-			
-			if (!cn.equals("null") && !cn.equals("")) {
+			if (cn != null && !cn.equals("null")) {
+				//cn을 포함하는 공용배포그룹
+				List<MailDistributionVO> distributionSearchList = ezEmailService
+						.getDistributioUpperList(cn, auth.getTenantId());
+				
 				for (MailDistributionVO vo : distributionSearchList) {
-					if (!vo.getId().equals(cn)) {
-						isIncluded = ezEmailService.checkDistributionIsIncluded(cn, vo.getId(), auth.getTenantId());
-						
-						if (isIncluded.equals("NO")) {
-							distributionResultList.add(vo);
-						} 
-					} else {
-					distributionResultList.add(vo);
-					}	
+					distributionTotalList.remove(vo);
 				}
-			} else {
-				distributionResultList = distributionSearchList;
 			}
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append("<LISTVIEWDATA><ROWS>");
 
-			for (MailDistributionVO vo : distributionResultList) {
+			for (MailDistributionVO vo : distributionTotalList) {
 				sb.append("<ROW><CELL>");
 
 				sb.append("<VALUE>");
