@@ -12,6 +12,16 @@
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link href="/css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
 	    <style type="text/css">
+	    	.node_normal{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    	}
+	    	.node_selected{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    	}
 	        .instance.sbHolder{
 	            width: 100%;
 	        }
@@ -19,6 +29,10 @@
 	        #left ul li.on, #TopBoards ul li.on{
 				font-weight:bold;
 				color:black;
+			}
+ 			#left ul li.ing, #TopBoards ul li.ing{
+				font-weight:normal !important;
+				color:#9b9b9b !important;
 			}
 	    </style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
@@ -129,6 +143,16 @@
 		            treeView.SetNodeClick("UserContNodeClick");
 		            treeView.DataSource(xmlDom2);
 		            treeView.DataBind("divUserContTree");
+
+		            //title3[0].setAttribute("TITLE", title3[0].innerHTML); 
+ 		            $(".node_normal").css("width", "135px");
+ 		            
+					var node = $(".node_normal");
+					
+					for(var i=0; i<node.length; i++) {
+						node[i].setAttribute("TITLE", node[i].innerHTML);
+					} 
+
 		        } 
 			        if (parseInt(pListTypeValue) < 10) {
 			            window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
@@ -191,7 +215,22 @@
 
 	            var treeView = new TreeView();
 	            treeView.LoadFromID(pTreeID);
-	            treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID)
+	            treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID);
+	            
+	            var node = document.getElementById(pNodeID);
+		        var title2 = node.getElementsByClassName("node_div");
+		        var nodeLevel = title2[0].getAttribute("nodelevel");
+		        
+		        if(nodeLevel > 9) {
+		        	nodeLevel = 9;
+		        }
+		        for(var i=0; i<title2.length; i++) {
+		        	var title3 = title2[i].getElementsByClassName("node_normal");
+		        	title3[0].setAttribute("TITLE", title3[0].innerHTML); 
+		        	title3[0].style.width = 135 - 16*(nodeLevel-1) +'px';
+		        	title3[0].style.textOverflow = 'ellipsis';
+		        	title3[0].style.overflow = 'hidden';
+		        }		        
 	        }
 		    
 		    function Tree_setconfig() {
@@ -233,7 +272,7 @@
 	        function MngUserOnclick_Complete(RtnVal) {
 	            TreeViewRefresh();
 	        }
-	        
+
 	        function TreeViewRefresh() {
 	            var xmlHTTP = createXMLHttpRequest();
 	            var strQuery = "<DATA><USERID>" + pUserID + "</USERID><ParentContID>ROOT</ParentContID><NAME></NAME></DATA>";
@@ -251,6 +290,14 @@
 	            treeView.SetNodeClick("UserContNodeClick");
 	            treeView.DataSource(xmlDomRet);
 	            treeView.DataBind("divUserContTree");
+	            
+	            $(".node_normal").css("width", "135px");
+ 		          
+				var node = $(".node_normal");
+					
+				for(var i=0; i<node.length; i++) {
+					node[i].setAttribute("TITLE", node[i].innerHTML);
+				} 
 	        }
 	        
 		    function Open_Func(pthis) {
@@ -969,7 +1016,7 @@
 			</c:if>
 			<h2><span style="width:100%; display:inline-block;" id="APPROVAL" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t102'/></span></h2>
 			<ul id="iconul">
-				<li><span style="width:100%;display:inline-block;" id="APPROVAL1" onClick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1747'/><span id=count1 style="font-weight: bold"></span></span></li>
+				<li><span style="width:100%;display:inline-block;" id="APPROVAL1" onClick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1747'/><span id=count1></span></span></li>
 
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL2" onClick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3','')"><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1706'/><span id=count2></span></span></li>
 
@@ -1055,7 +1102,7 @@
 
         <h2><span id="USERCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t848'/></span></h2>
         <ul>
-            <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff; border-bottom:1px solid #f0f0f0"></div>
+            <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff; border-bottom:1px solid #eaeaea"></div>
             <h3><span id="MNGUSERCONT"  onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t316'/></span></h3>
         </ul>
         </c:if>

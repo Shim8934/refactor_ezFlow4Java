@@ -134,18 +134,18 @@
             <li><span onclick="window.close()"></span></li>
         </ul>
     </div>
-    <table>
+    <table style="border:1px solid #ddd">
         <tr>
-            <td>
-                <div class="listview">
+            <td style="border-right:1px solid #ddd">
+                <div class="listview" style="border:0px">
                     <div id="NotiList" style="BORDER: 0; HEIGHT: 340px; WIDTH: 300px; overflow:auto;"></div>
                 </div>
             </td>
             <td>
-                <div style="padding-left:8px">
-                    <a class="imgbtn"><span onclick="movenoti(1)" style="font-family: 'Gulim', 'arial', 'verdana'">△</span></a>
+                <div style="padding:0px 5px">
+                    <a class="imgbtn imgbck"><span onclick="movenoti(1)" style="font-family: 'Gulim', 'arial', 'verdana'">△</span></a>
                     <br />
-                    <a class="imgbtn"><span onclick="movenoti(2)" style="font-family: 'Gulim', 'arial', 'verdana'">▽</span></a>
+                    <a class="imgbtn imgbck"><span onclick="movenoti(2)" style="font-family: 'Gulim', 'arial', 'verdana'">▽</span></a>
                 </div>
             </td>
         </tr>

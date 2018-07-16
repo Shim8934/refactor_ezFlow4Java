@@ -384,17 +384,17 @@ public class EzApprovalGRelayScheduler {
         								 ezApprovalGService.fieldUpdate("sealURL", strCont_Name, strXDocID, strReceiveID, strCompanyID, tenantID);
         								 break;
         							 case "sign":
-        								 boolean WriteSignFile = WriteFileFromBase64(config.getProperty("relay_root"), strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strCont_Name);
+        								 boolean WriteSignFile = WriteFileFromBase64(config.getProperty("relay_root"), strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
         								 logger.debug("#sign생성=" + WriteSignFile, "");
         								 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
         								 break;
         							 case "logo":
-        								 boolean WritetLogoFile = WriteFileFromBase64(config.getProperty("relay_root"), strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strCont_Name);
+        								 boolean WritetLogoFile = WriteFileFromBase64(config.getProperty("relay_root"), strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
         								 logger.debug("#logo생성=" + WritetLogoFile, "");
         								 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
         								 break;
         							 case "symbol":
-        								 boolean WriteSymbolFile = WriteFileFromBase64(config.getProperty("relay_root"), strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strCont_Name);
+        								 boolean WriteSymbolFile = WriteFileFromBase64(config.getProperty("relay_root"), strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocUserSign" ,  strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
         								 logger.debug("#symbol생성=" + WriteSymbolFile, "");
         								 ezApprovalGService.addSignInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, strCompanyID, tenantID);
         								 break;

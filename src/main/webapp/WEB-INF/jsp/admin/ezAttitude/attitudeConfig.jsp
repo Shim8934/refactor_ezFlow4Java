@@ -243,12 +243,16 @@
 	        </tr>
 		</table>
 		<table style="border: 0; border-collapse: collapse; border-spacing: 0; padding: 0px; width: 500px;">
-	        <tbody><tr>
-	            <td style="height: 50px; text-align: center;">
-	                <a class="imgbtn"><span onclick="save_config()"><spring:message code='ezAttitude.t16' /></span></a>
-	                <a class="imgbtn"><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></a>
-	            </td>
-	        </tr>
-	    </tbody></table>
+	        <tbody>
+	        	<tr>
+		            <td>
+		            	<div class="btnpositionJsp">
+		                	<a class="imgbtn"><span onclick="save_config()"><spring:message code='ezAttitude.t16' /></span></a>
+		                	<a class="imgbtn"><span onclick="company_change()"><spring:message code='ezAttitude.t34' /></span></a>
+		                </div>	
+		            </td>
+	        	</tr>
+	    	</tbody>
+	    </table>
 	</body>
 </html>

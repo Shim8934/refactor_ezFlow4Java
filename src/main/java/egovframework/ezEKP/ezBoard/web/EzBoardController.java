@@ -798,6 +798,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("use_oneLineCount", use_oneLineCount);
 		
 		logger.debug("boardItemList ended");
+		logger.debug("requestURL : " + requestURL);
         return requestURL;
 	}
 
@@ -2238,7 +2239,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA3>" + boardSearchList.get(j).get("WRITERID") + "</DATA3>");
 					resultXML.append("<DATA4>" + boardSearchList.get(j).get("IMPORTANCE") + "</DATA4>");
 					resultXML.append("<DATA5>" + boardSearchList.get(j).get("READFLAG") + "</DATA5>");
-					resultXML.append("<DATA6>" + boardSearchList.get(j).get("ABSTRACT") + "</DATA6>");
+					resultXML.append("<DATA6>" + commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get("ABSTRACT"))) + "</DATA6>");
 					
 					String nowDate = commonUtil.getTodayUTCTime("");
 					nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
@@ -3591,6 +3592,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		/* 2018-04-27 홍승비 - 게시요약의 \문자 변환 */ 
 		if (boardListVO.getABSTRACT() != null && !boardListVO.getABSTRACT().equals("")) {
 			boardListVO.setABSTRACT(boardListVO.getABSTRACT().replace("\\", "&#92;"));
+		}
+		
+		/* 2018-07-09 홍승비 - 임시저장 게시물 더블클릭 시 조회한 것으로 확인되지 않는 현상 수정 */
+		if (mode.equals("temp")) {
+			ezBoardService.setAsRead(userInfo, boardID, itemID);
 		}
 
 		model.addAttribute("boardInfo", boardInfo);
@@ -6299,7 +6305,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
-		int page = 0;
+		int page = 1;
 		
 		if (request.getParameter("page") != null) {
 			page = Integer.parseInt(request.getParameter("page"));
@@ -7685,7 +7691,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA3>" + boardSearchList.get(j).get("WRITERID") + "</DATA3>");
 					resultXML.append("<DATA4>" + boardSearchList.get(j).get("IMPORTANCE") + "</DATA4>");
 					resultXML.append("<DATA5>" + boardSearchList.get(j).get("READFLAG") + "</DATA5>");
-					resultXML.append("<DATA6>" + boardSearchList.get(j).get("ABSTRACT") + "</DATA6>");
+					resultXML.append("<DATA6>" + commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get("ABSTRACT"))) + "</DATA6>");
 					
 					String nowDate = commonUtil.getTodayUTCTime("");
 					nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");

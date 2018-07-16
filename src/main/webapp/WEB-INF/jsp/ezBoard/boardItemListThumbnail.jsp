@@ -33,22 +33,7 @@
 			margin:0px; 
 			padding:0px;
 		}
-		#layer_Viewpopup .popupwrap1 {
-			border:1px solid #555a64;
-			padding:0px;
-			margin:0px;
-			
-		}
-		#layer_Viewpopup .shadow {
-			height:2px;
-			background:#d7d7d7;
-			
-		}
-		#layer_Viewpopup .popupwrap2 {
-			border:2px solid #e5e5e5;
-			padding:10px;
-			
-		}
+		
 		#layer_Viewpopup .btn_area { border-top:1px solid #e5e5e5; margin:10px 0px 0px 0px; padding:10px 0px 0px;}
 		
 		#layer_Viewpopup .popupwrap3 {
@@ -371,15 +356,15 @@
 		        }
 		
 		        if (document.getElementById("txt_keyword").value != "") {
-		            var radiosearch = document.getElementsByName('searchCheck');
-		            if (radiosearch.item(0).checked) {
-		                TYPE += "TITLE;";
-		                DATA += "<TITLE>" + document.getElementById("txt_keyword").value + "</TITLE>";
-		            }
-		            else if (radiosearch.item(1).checked) {
-		                TYPE += "WRITERNAME;";
-		                DATA += "<WRITERNAME>" + document.getElementById("txt_keyword").value + "</WRITERNAME>";
-		            }
+		        	var selectSearch = document.getElementById('selectType');
+	                if (selectSearch.item(0).selected) {
+	                    TYPE += "TITLE;";
+	                    DATA += "<TITLE>" + document.getElementById("txt_keyword").value + "</TITLE>";
+	                }
+	                else if (selectSearch.item(1).selected) {
+	                    TYPE += "WRITERNAME;";
+	                    DATA += "<WRITERNAME>" + document.getElementById("txt_keyword").value + "</WRITERNAME>";
+	                }
 		        }
 		        else {
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
@@ -517,11 +502,17 @@
 	    	    	var height = 785;
 	    	    }
 		
-		        if (document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight == "bold") {
+	    	    /* 2018-07-09 홍승비 - 게시물 클릭 시 spn_content의 아이디를 사용해 폰트를 변경하도록 수정함 */
+	    	    if (document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight == "bold") {
 		            document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
-		       // document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
+					document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
 		        }
-		
+	    	    for (var i = 0; i < obj.childNodes.length; i++) {
+			        if (obj.childNodes[i].style.fontWeight == "bold") {
+			            obj.childNodes[i].style.fontWeight = "normal";
+					}
+		        }
+	    	    
 		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		
@@ -1088,32 +1079,35 @@
 	<c:if test="${boardInfo.listView_FG != 'true'}">
 		<div style="margin-top:100px;text-align:center"><spring:message code='ezBoard.t272'/></div>
 	</c:if>
-	<c:choose>
-		<c:when test="${adminType != 'y'}">
-			<h1>${boardName}<span id="mailBoxInfo"></span>
-			     <span style="float:right;font-weight:normal;color:black;">
-			          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code='ezBoard.t208'/></label>
-					  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code='ezBoard.t223'/></label>
-					  &nbsp;
-					  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-			          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
+	<c:if test="${boardInfo.listView_FG == true}">
+		<c:choose>
+			<c:when test="${adminType != 'y'}">
+				<h1>${boardName}<span id="mailBoxInfo"></span>
+				     <span style="float:right;font-weight:normal;color:black;">
+						<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+				    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
+				    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
+				    	</select>
+						<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+				        <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
+					</span>
+				</h1>
+			</c:when>
+			<c:otherwise>
+			    <script type="text/javascript">
+			        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}"+"<span id='mailBoxInfo'></span>";
+			    </script>
+			    <br />
+			    <span style="display:none; float:right;font-weight:normal;color:black;">
+			          <select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+			    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
+			    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
+			    	</select>
+					<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+					<a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
 			        </span>
-			</h1>
-		</c:when>
-		<c:otherwise>
-		    <script type="text/javascript">
-		        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}"+"<span id='mailBoxInfo'></span>";
-		    </script>
-		    <br />
-		    <span style="display:none; float:right;font-weight:normal;color:black;">
-		          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; ">&nbsp;<spring:message code='ezBoard.t208'/>
-				  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; ">&nbsp;<spring:message code='ezBoard.t223'/>
-				  &nbsp;
-				  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
-		        </span>
-		</c:otherwise>
-	</c:choose>
+			</c:otherwise>
+		</c:choose>
 	<c:if test="${buttonHidden == 'N'}">
 		<div id="mainmenu">
 		  <ul>
@@ -1227,7 +1221,7 @@
 	                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display: none;">
 	                        <p class="mail_title">
 	                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
-	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject"></span></span>
+	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
 	                        </p>
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
 	                        <dl class="mail_item">
@@ -1247,14 +1241,15 @@
 	<%-- <c:choose>
 	<c:when test="${adminType != 'y'}"> --%>
 	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
-		<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
-			<table class="content">
-				<tr>
-					<th class="layerHeader" colspan="2">
-						<img src="/images/kr/left/left_mail.png" style="vertical-align: middle; padding-bottom: 1px"> 
-						<spring:message code='ezBoard.t0006' /> <spring:message code='ezJournal.t43' />
-					</th>
-				</tr>
+		<div id="srarchpopup" class="popupwrap1 modal" style="margin-bottom: 70px; left: 297.5px; display: inline-block;">
+			<div class="popupJQLayer">
+				<div class="title"><spring:message code='ezBoard.t188' /></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="BoardSearchOptionHidden()"></span></a></li>
+		            </ul>
+		        </div>
+				<table class="content">
 					<tr>
 						<th style="text-align: center">
 							<spring:message code='ezBoard.t185' />
@@ -1263,37 +1258,39 @@
 		      				<input type="checkbox" id="chkSearchSub" ><spring:message code='ezBoard.t498' />
 		    			</td>
 					</tr>
-				<tr>
-		            <th style="text-align:center"><spring:message code='ezBoard.t223' /></th>
-		            <td><input type="text" id="txtWriterName" style="width:98%" value=""></td>
-		        </tr>
-		        <tr>
-		            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
-		            <td><input type="text" id="txtTitle" style="width:98%" value=""></td>
-		        </tr>  
-		        <%--  <tr>
-		            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
-		            <td><input type="text" id="txtAbstract" style="width:98%" value=""></td>
-		        </tr>     --%>
-		       <tr>
-		            <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
-		           <td>
-		               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-		                ~
-		               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"> 
-		           </td>
-		  		</tr>
-			</table>
-			<br />
-			<table style="width: 100%">
-		        <tr>
-		            <td style="text-align:center;">
-		                <a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
-		                <a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a>
-		                <a class="imgbtn"><span onClick="BoardSearchOptionHidden()"><spring:message code='ezBoard.t15' /></span></a>
-		            </td>
-		        </tr>
-			</table>
+					<tr>
+			            <th style="text-align:center"><spring:message code='ezBoard.t223' /></th>
+			            <td><input type="text" id="txtWriterName" style="width:98%" value=""></td>
+			        </tr>
+			        <tr>
+			            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
+			            <td><input type="text" id="txtTitle" style="width:98%" value=""></td>
+			        </tr>  
+			        <%--  <tr>
+			            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
+			            <td><input type="text" id="txtAbstract" style="width:98%" value=""></td>
+			        </tr>     --%>
+			       <tr>
+			            <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
+			           <td>
+			               <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+			                ~
+			               <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"> 
+			           </td>
+			  		</tr>
+				</table>
+				<br />
+				<table style="width: 100%">
+			        <tr>
+			            <td style="text-align:center;">
+			            	<div class="btnpositionLayer">
+			                	<a class="imgbtn"><span onClick="btn_PostDate_Clear()"><spring:message code='ezBoard.t220' /></span></a>
+			                	<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a>
+			                </div>	
+			            </td>
+			        </tr>
+				</table>
+			</div>	
 		</div>
 	</div>
 	<%-- </c:when>
@@ -1346,5 +1343,6 @@
 	        </div> 
 	   </c:otherwise>
 		</c:choose>    --%>  
+		</c:if>
 	</body>
 </html>

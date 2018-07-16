@@ -113,6 +113,10 @@
 			    }
 			}
 	    </script>
+	    <style>
+	    	.mainlist tr th {border-top:0px}
+	    </style>
+	    
 	</head>
 	<body class="popup">
 	    <xml id="listviewheader" style="display:none">

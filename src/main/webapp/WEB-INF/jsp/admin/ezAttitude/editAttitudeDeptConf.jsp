@@ -185,7 +185,7 @@
 			tr.hover:hover{background:#eee; color:#fff;}
 			
 			.selectTR{
-				background-color: #efeff0;
+				background-color: #edf4fd;
 			}
 		</style>
 	</head>
@@ -206,7 +206,7 @@
                 	<img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="addDeptInLP()"><br>
                 	<img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="delTargetDept(targetDept)">
                 </td>
-                <td class="listview" style="width: 200px; height: 465px; vertical-align: top;" id="lplistView" rowspan="2">
+                <td class="listview" style="width: 250px; height: 465px; vertical-align: top;" id="lplistView" rowspan="2">
                 	<div style="width: 200px; height: 100%; overflow: auto;">
 	                	<table class="mainlist_free">
 						</table>
@@ -223,9 +223,8 @@
 				<th><spring:message code='ezAttitude.t12' /></th>
 				<td><span><input id="workStartTime" type="text" style="width:50px;" />&nbsp; ~ &nbsp;<input id="workEndTime" type="text" style="width:50px;" /></span></td>
 			</tr>
-		</table> 
-		
-		<div class="btnposition">
+		</table>
+		<div class="btnpositionNew">
 			<a class="imgbtn"><span onclick="return btnOk_onclick()"><spring:message code='ezAttitude.t16' /></span></a>
 		</div>
 	</body>

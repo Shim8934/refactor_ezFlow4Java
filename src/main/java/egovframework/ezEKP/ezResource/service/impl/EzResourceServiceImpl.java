@@ -1740,7 +1740,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	public String getAdminFlag(String companyID, String brdID, String userID, int tenantID) throws Exception {
 		String accessLvl = "";
 
-		
+		/* 2018-07-13 홍승비 - everyone을 관리자로 설정한 경우 우선적으로 해당 관리자 플래그 받아오도록 수정 */
 		ResGetAdminFlagVO resGetAdminFlag = getAdmFlag(companyID, brdID, userID, tenantID);
 
 		String strXML = "<DATA>"+commonUtil.getQueryResult(resGetAdminFlag)+"</DATA>";

@@ -21,6 +21,10 @@
 		var arrSubFolder   = [];
 		var mode           = "<c:out value='${mode}'/>";
 		
+		window.onbeforeunload = function() {
+			parent.closeAllPopup();
+		}
+		
 		window.onload = function () {
 			getData();
 		};

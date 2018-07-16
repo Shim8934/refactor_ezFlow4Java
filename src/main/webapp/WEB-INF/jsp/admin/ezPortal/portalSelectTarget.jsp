@@ -252,7 +252,7 @@
 	            g_xmlHTTP = null;
 	        }
 	    }
-	    var m_strColorSelect = "#efeff0";
+	    var m_strColorSelect = "#edf4fd";
 	    var m_strColorOver = "#f4f5f5";
 	    var m_strColorDefault = "#ffffff";
 	    var p_ListOrderObject = null;
@@ -974,7 +974,7 @@
         </tr>
     </table>
     <br />
-    <div class="btnposition">
+    <div class="btnpositionNew">
         <a class="imgbtn"><span onclick="dept_select()"><spring:message code='ezPortal.t43'/></span></a>
         <a class="imgbtn" onclick="Save_onclick()"><span><spring:message code='ezPortal.t45'/></span></a>
     </div>

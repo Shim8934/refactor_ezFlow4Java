@@ -110,11 +110,15 @@
 </head>
 <body class="popup">
 	<h1><spring:message code='ezBoard.khj1'/></h1>
-	<div class="box" style="width: auto;height:485px;overflow:auto;overflow-x:hidden;margin-left:5px;margin-rignt:5px; padding: 10px;" id=TopBoardsList></div>
+	<div id="close">
+        <ul>
+            <li><span onclick="javascript:window.close()"></span></li>
+        </ul>
+    </div>
+	<div class="box" style="width: auto;height:465px;overflow:auto;overflow-x:hidden;margin-left:5px;margin-rignt:5px; padding: 10px;" id=TopBoardsList></div>
 	<div class="btnposition btnpositionNew">
 		<a class="imgbtn" onclick="AllSelect()"><span><spring:message code='ezBoard.khj3'/></span></a>
 		<a class="imgbtn" name="Submit"  onClick="Select()" ><span><spring:message code='ezBoard.t47'/></span></a>
-		<a class="imgbtn" name="Submit"  onClick="javascript:window.close();" ><span><spring:message code='ezBoard.t15'/></span></a>
 	</div>
 	
 	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>

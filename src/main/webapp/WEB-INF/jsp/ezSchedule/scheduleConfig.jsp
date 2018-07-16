@@ -242,9 +242,10 @@
 		        	</td>
 		    	</tr>
 		  	</table>
-		  	<br/>
 		  	<div align="center" style="width:450px;">
-		    	<a class="imgbtn" onClick="save_info()"><span><spring:message code='ezSchedule.t157' /></span></a>
+		  		<div class="btnpositionJsp">
+		    		<a class="imgbtn" onClick="save_info()"><span><spring:message code='ezSchedule.t157' /></span></a>
+		    	</div>	
 		    	<%-- <a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezSchedule.t5' /></span></a> --%>
 		  	</div>
 		</form>

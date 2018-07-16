@@ -7271,6 +7271,18 @@
 							   	<isEqual property="v_CONTID" compareValue="ADMIN">
 							   		 AND 
 							   		 		CONTAINERID IS NOT NULL
+							   		 AND
+							   			containerid NOT IN (
+					                            SELECT
+					                                containerid
+					                            FROM
+					                                TBL_CONTAINER
+					                            WHERE
+					                                tenant_id = #v_TENANTID#
+					                            AND
+					                                companyid = #companyID#
+					                            AND
+					                                containertypeid = '999' ) 
 							   	</isEqual>
 							   	<isNotEmpty property="v_CONTID" >
 							   	<isNotEqual property="v_CONTID" compareValue="ADMIN">
@@ -11530,6 +11542,18 @@
    		<![CDATA[
       	 AND 
       	 	CONTAINERID IS NOT NULL
+      	 AND
+   			containerid NOT IN (
+                          SELECT
+                              containerid
+                          FROM
+                              TBL_CONTAINER
+                          WHERE
+                              tenant_id = #v_TENANTID#
+                          AND
+                              companyid = #companyID#
+                          AND
+                              containertypeid = '999' ) 
    		 ]]>  
    		 </isEqual>
    		  
@@ -15486,9 +15510,7 @@
 		AND 
 			TBL_APRRECEIPTPROCESSINFO.APRSTATE = '013'
 		AND 
-			TBL_APRDOCINFO.FUNCTIONTYPE != '006'
-		AND
-			TBL_APRDOCINFO.FUNCTIONTYPE != '004'
+			TBL_APRDOCINFO.FUNCTIONTYPE NOT IN ('006', '004')
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.doCallBack" parameterClass="Map"> -->
@@ -24379,5 +24401,14 @@
 			TENANT_ID = #tenantID#
 		AND
 			COMPANYID = #companyID#	
+	</select>
+	
+	<select id="EzApprovalG.getLinkedAttachFileCount" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(ATTACHFILEHREF)
+		FROM
+			TBL_ENDATTACHINFO
+		WHERE
+			ATTACHFILEHREF = #href#
 	</select>
 </sqlMap>

@@ -603,7 +603,7 @@
 	                        bodyObj.style.textAlign = "left";
 	                    //}
 	                    if (DocTitleObj.getAttribute("free") != null) {
-	                        titleObj.innerHTML = GetDocTitle();
+	                        titleObj.innerHTML = ConvertCharToEntityReference(GetDocTitle());
 	                        //titleObj.style.textAlign = "left";
 	                    }
 	                }

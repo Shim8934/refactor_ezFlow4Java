@@ -992,7 +992,7 @@
 		        BoardSelect_Cross_dialogArgument[1] = CompleteFunction;
 		        var url = "/ezBoard/boardSelect.do";
 		
-		        OpenWin = window.open(url, "BoardSelect_Cross", GetOpenWindowfeature(352, 700));
+		        OpenWin = window.open(url, "BoardSelect_Cross", GetOpenWindowfeature(360, 656));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -2111,7 +2111,7 @@
 		                                &nbsp;<input type="checkbox" style="display: none" id="noticePost" />
 	                            	</c:otherwise>
 	                            </c:choose>
-								<c:if test="${mode != 'new' && mode != 'new1' && mode != 'boardContent' && mode != 'boardAttach' && mode != 'temp' && reservedItem == '' }">
+								<c:if test="${mode != 'new' && mode != 'new1' && mode != 'boardContent' && mode != 'boardAttach' && mode != 'temp' && mode != 'reply' && reservedItem == '' }">
 						              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="readCount" /></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t00002' /></span>
 								</c:if>	
 		                        </td>
@@ -2188,8 +2188,8 @@
 	                        		</c:otherwise>
 	                        	</c:choose>
 	                            <span id="reservation_date">
-		                            <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center; margin-bottom:1.2px;"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center; margin-bottom:1.2px;" />
-	                                   &nbsp;<a class="imgbtn imgbck" style= "margin-top:3px;"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezBoard.t220' /></span></a></td>
+		                            <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center; "><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+	                                   &nbsp;<a class="imgbtn imgbck" style= "height:21px;margin-top:1px"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezBoard.t220' /></span></a></td>
 	                            </span>
 	                    </tr>
 	                    <tr id="tdEndDate">

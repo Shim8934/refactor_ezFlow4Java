@@ -152,7 +152,7 @@
 				  <td>&nbsp;<spring:message code='ezPersonal.t409'/></td>
 				</tr> 
 			</table>					
-			<div class="btnposition" style="width:520px;margin-top:15px;">
+			<div class="btnpositionJsp" style="width:506px;">
 			    <a class="imgbtn" onClick="Save()"><span><spring:message code='ezPersonal.t12'/></span></a>
 			    <a class="imgbtn" onClick="window.document.location.reload()"><span><spring:message code='ezPersonal.t13'/></span></a>
 			</div>

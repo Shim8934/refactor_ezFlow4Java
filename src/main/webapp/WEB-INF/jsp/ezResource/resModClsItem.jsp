@@ -37,7 +37,8 @@
 				}
 				
 				/* 2018-05-02 서주연 #12558 */
-				var brdNmTag = document.getElementById("Brd_NM");
+				// 2018-07-10 김민성 - 자원관리 글자수 체크 maxlength로 수정
+				/* var brdNmTag = document.getElementById("Brd_NM");
 				var brdNm2Tag = document.getElementById("Brd_NM2");
 				var resLocTag = document.getElementById("ResLocation");
 				
@@ -51,7 +52,7 @@
 				
 				if(CheckLenthForRes(resLocTag , 50)){
 					return;
-				};	
+				};	 */
 
 				var xmlPara = createXmlDom();
 				var xmlHttp = createXMLHttpRequest();
@@ -199,18 +200,18 @@
           						<table style="width:100%">
               						<tr class="primary">
                 						<th>${langPrimary}</th>
-                						<td><input type="text" name="Brd_NM" id="Brd_NM" idval="${strBrdID}" value="<c:out value='${strBrdNm}' />" style="width: 100%"></td>
+                						<td><input type="text" name="Brd_NM" id="Brd_NM" idval="${strBrdID}" value="<c:out value='${strBrdNm}' />" style="width: 100%" maxlength="500"></td>
               						</tr>
               						<tr class="secondary">
                 						<th>${langSecondary}</th>
-                						<td><input type="text" name="Brd_NM2" id="Brd_NM2" idval="${strBrdID}" value="<c:out value='${strBrdNm2}' />" style="width: 100%"></td>
+                						<td><input type="text" name="Brd_NM2" id="Brd_NM2" idval="${strBrdID}" value="<c:out value='${strBrdNm2}' />" style="width: 100%" maxlength="500"></td>
 									</tr>
 								</table>          
 							</td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t148"/></th>
-          					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="${resLocation}" style="width: 100%"></td>
+          					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="${resLocation}" style="width: 100%" maxlength="100"></td>
         				</tr>
         				<tr>
 							<th> <spring:message code="ezResource.t149"/></th>
@@ -236,7 +237,7 @@
   			</tr>
   			<tr>
     			<td style="padding-bottom:1px; height:100%; padding-right:12px; padding-top:10px;">
-        			<textarea name="Brd_Explain" id="Brd_Explain" style="width: 100%; height: 100%;resize:none"><c:out value='${brdExplain}' /></textarea>
+        			<textarea name="Brd_Explain" id="Brd_Explain" style="width: 100%; height: 100%;resize:none" maxlength="2000"><c:out value='${brdExplain}' /></textarea>
     			</td>
   			</tr>
 		</table>

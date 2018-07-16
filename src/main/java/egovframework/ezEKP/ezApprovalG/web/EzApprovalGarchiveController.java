@@ -6,7 +6,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.StringReader;
 import java.net.URLDecoder;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -24,6 +27,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -1764,7 +1768,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	
 	
 	/** 전자결재 개인 문서함 리스트*/
-	@RequestMapping(value = "/ezApprovalG/getUserContListSave.do")
+	@RequestMapping(value = "/ezApprovalG/getUserContListSave.do", produces = "text/xml;charset=utf-8")
 	public void getUserContListSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model, @RequestBody String xmlPara) throws Exception{
 		logger.debug("getUserContListSave started");
 		
@@ -1773,8 +1777,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		response.setContentType("application/vnd.ms-excel");
-		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application/ms-excel");
+		response.setCharacterEncoding("utf-8");
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptID() + "_" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), messageSource.getMessage("ezApprovalG.t1750", userInfo.getLocale())) + ".xls\"");
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
@@ -1893,14 +1897,13 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			String headerName = objXML.getElementsByTagName("NAME").item(k).getTextContent();
 			String headerWidth = objXML.getElementsByTagName("WIDTH").item(k).getTextContent();
 			
-			int width = Integer.parseInt(headerWidth);
+			int width = Integer.parseInt(headerWidth) * 2;
 			
-			resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'>"
-			+"<p align='center'><STRONG>" + commonUtil.cleanValue(headerName) + "</STRONG></p></td>        ");
+			resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=center><STRONG>" + " " + commonUtil.cleanValue(headerName) + "</STRONG></p></td>        ");
 		}
-		resultExcel.append("</tr>");
+		resultExcel.append("</tr></table>");
 		
-		resultExcel.append("");
+		resultExcel.append("<table>");
 
 		NodeList objRow = objXML.getElementsByTagName("ROW");
 		
@@ -1913,14 +1916,18 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 				Element cell = (Element) objCell.item(p);
 				String cellValue = cell.getElementsByTagName("VALUE").item(0).getTextContent();
 				String headerWidth = objXML.getElementsByTagName("WIDTH").item(p).getTextContent();
-				int width = Integer.parseInt(headerWidth);
+				int width = Integer.parseInt(headerWidth) * 2;
 				
-				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align='left'>" + commonUtil.cleanValue(cellValue) + "</p></td>       ");
+				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + " </p></td>       ");
 			}
 			resultExcel.append("</tr>");
 		}
 		resultExcel.append("</table>");
-		response.getWriter().write(resultExcel.toString());
+		
+//		response.getWriter().write(resultExcel.toString());
+		
+		//2018-07-13 천성준 - (#13042) 임시로 euc-kr로 해결, 추후에 왜 utf-8이 안먹는지 분석해서 utf-8로 고쳐야됨.  
+		response.getOutputStream().write(resultExcel.toString().getBytes("euc-kr"));
 		
 		logger.debug("getUserContListSave ended");
 	}
@@ -2342,35 +2349,47 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		} catch (Exception e) {
 		} 
 		
-		    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
-		    DocumentBuilder builder;  
-	        builder = factory.newDocumentBuilder();  
-	        Document xmlDom = builder.parse( new InputSource( new StringReader( xmlData.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "").replace("\n", "").replace("\t", "") ) ) );  
-			
-			String sendID = xmlDom.getElementsByTagName("send-id").item(0).getTextContent();
-			String receiveID = xmlDom.getElementsByTagName("receive-id").item(0).getTextContent();
-			String[] arrReceiveID = receiveID.split(";");
-			String strReceiveID = receiveID;
-			
-			if (receiveID.substring(0, 1).equals(";")) {
-				strReceiveID = receiveID.substring(1);
-			}
-	
-	        if (receiveID.substring(receiveID.length() - 1, receiveID.length()).equals(";")) {
-	        	strReceiveID = receiveID.substring(0, receiveID.length() - 1);
-	        }
-	
-	        xmlDom.getElementsByTagName("receive-id").item(0).setTextContent(strReceiveID);
-	        xmlDom.getElementsByTagName("date").item(0).setTextContent(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
-	
-	        String strXML = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
-	        strXML = strXML + commonUtil.convertDocumentToString(xmlDom); //.Replace("&amp;", "&");
-	
-	        String strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMddHHmmss"), userInfo.getOffset(), false);
-	     
-	        String result = ezApprovalGService.getFileName(commonUtil.getRealPath(request), sendID + arrReceiveID[arrReceiveID.length - 1].toString() + strTime, "sendtemp", strXML, userInfo.getTenantId());
-	        logger.debug("sendMsg ended");
-	        return result;
+	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
+	    DocumentBuilder builder;  
+        builder = factory.newDocumentBuilder();  
+        Document xmlDom = builder.parse( new InputSource( new StringReader( xmlData.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "").replace("\n", "").replace("\t", "") ) ) );  
+		
+		String sendID = xmlDom.getElementsByTagName("send-id").item(0).getTextContent();
+		String receiveID = xmlDom.getElementsByTagName("receive-id").item(0).getTextContent();
+		String[] arrReceiveID = receiveID.split(";");
+		String strReceiveID = receiveID;
+		
+		if (receiveID.substring(0, 1).equals(";")) {
+			strReceiveID = receiveID.substring(1);
+		}
+
+        if (receiveID.substring(receiveID.length() - 1, receiveID.length()).equals(";")) {
+        	strReceiveID = receiveID.substring(0, receiveID.length() - 1);
+        }
+
+        xmlDom.getElementsByTagName("receive-id").item(0).setTextContent(strReceiveID);
+        xmlDom.getElementsByTagName("date").item(0).setTextContent(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
+
+        String strXML = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
+        strXML = strXML + commonUtil.convertDocumentToString(xmlDom); //.Replace("&amp;", "&");
+
+        String strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMddHHmmss"), userInfo.getOffset(), false);
+        String result = "";
+        
+        //여러부서 보낼수 있게 수정
+        for (String recevID : arrReceiveID) {
+        	result = ezApprovalGService.getFileName(commonUtil.getRealPath(request), sendID + recevID + strTime, "sendtemp", strXML, userInfo.getTenantId());
+        	
+        	if (result.equals("FALSE")) {
+        		logger.debug("sendMsg Fail : " + sendID + recevID + strTime);
+        		
+        		return result;
+        	}
+		}
+        
+        logger.debug("sendMsg ended");
+        
+        return result;
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/cert.do", produces = "text/xml;charset=utf-8")

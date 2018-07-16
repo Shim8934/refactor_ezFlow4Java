@@ -3,8 +3,8 @@ package egovframework.ezEKP.ezEmail.web;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.mail.Address;
-import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -50,11 +49,9 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
-import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailReadVO;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -220,8 +217,6 @@ public class EzEmailMailListController {
         String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
         String userEmail = userInfo.getId() + "@" + domainName;
         
-        logger.debug("userEmail=" + userEmail);
-        
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String folderId = doc.getElementsByTagName("FOLDERID").item(0).getTextContent();
 		String inboxName = egovMessageSource.getMessage("ezEmail.t644", locale);
@@ -246,7 +241,6 @@ public class EzEmailMailListController {
 					
 			Folder folder = ia.getFolder(folderId);		
 			folder.open(Folder.READ_ONLY);
-	        UIDFolder uidFolder = (UIDFolder)folder;
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append("<maillist><contentrange>").append(start).append("-").append(end).append("</contentrange>");
@@ -254,6 +248,9 @@ public class EzEmailMailListController {
 			Message[] messages = null; 
 			boolean isUnreadOnly = false;
 			boolean isImportantOnly = false;
+			int totalCount = 0;
+			int startNo = 0;
+			int endNo = 0;
 			
 			if (sortType.indexOf("\"urn:schemas:httpmail:read\" = false") >= 0) {
 				isUnreadOnly = true;
@@ -261,27 +258,13 @@ public class EzEmailMailListController {
 					
 			logger.debug("isUnreadOnly=" + isUnreadOnly + ", isImportantOnly=" + isImportantOnly);
 			
-			if (!search.equals("")) {
-				int index = search.indexOf("=");
-				if (index >= 0) {
-					String searchField = search.substring(0, index);
-					final String searchValue = search.substring(index + 1);
-					
-					logger.debug("searchField=" + searchField + ",searchValue=" + searchValue);
-					
-					messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, null, false, null, isUnreadOnly, isImportantOnly);
-				}
-			}
-			else if (isUnreadOnly) {
-				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, isImportantOnly);
-			}
+			String searchField = "";
+			String searchValue = "";
+			int index = search.indexOf("=");
 			
-			else if (isImportantOnly) {
-				messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, isImportantOnly);
-			}
-			
-			if (messages == null) {
-				messages = folder.getMessages(); 
+			if (index > -1) {
+				searchField = search.substring(0, index);
+				searchValue = search.substring(index + 1);
 			}
 			
 			String sortTypeSpecifier = null;
@@ -309,75 +292,28 @@ public class EzEmailMailListController {
 			else if (sortType.indexOf(" ORDER BY \"urn:schemas:httpmail:datereceived\"") >= 0
 					|| sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/exchange/date-iso\"") >= 0) {
 				sortTypeSpecifier = "receivedDate";
-			}		
-			
-			// sort the messages
-			if (sortTypeSpecifier != null) {
-				ezEmailUtil.sortMessages(folder, messages, sortTypeSpecifier, isAscending);
-			}
-							
-			int startNo = Integer.parseInt(start);
-			int endNo = Math.min(Integer.parseInt(end), messages.length - 1);
-			
-			logger.debug("startNo=" + startNo + ",endNo=" + endNo);
-			
-			if (startNo <= endNo) {
-				Message[] fetchMessages = Arrays.copyOfRange(messages, startNo, endNo + 1);
-				FetchProfile fp = new FetchProfile();
-				
-				// subject or sender or recipient
-				if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e1d001f\"") >= 0
-						|| sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/mapi/sent_representing_name\"") >= 0
-						|| sortType.indexOf(" ORDER BY \"urn:schemas:httpmail:displayto\"") >= 0) {
-					// pre-fetch the remaining fields after pre-fetching fields for sorting
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.FLAGS);				
-				}
-				// importance (X-Priority) or received date or received date in sent mailbox
-				else if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/exchange/x-priority-long\"") >= 0
-							|| sortType.indexOf(" ORDER BY \"urn:schemas:httpmail:datereceived\"") >= 0
-							|| sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/exchange/date-iso\"") >= 0) {						
-					// pre-fetch the remaining fields after pre-fetching fields for sorting
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(FetchProfile.Item.SIZE);
-					fp.add(FetchProfile.Item.FLAGS);				
-				}
-				
-				// read/unread or bookmark
-				else if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/exchange/smallicon\"") >= 0
-							|| sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x10900003\"") >= 0) {
-					// pre-fetch the remaining fields after pre-fetching fields for sorting
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(FetchProfile.Item.SIZE);				
-				}
-				
-				else {
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
-					fp.add(FetchProfile.Item.SIZE);
-					fp.add(FetchProfile.Item.FLAGS);
-				}
-				
-				fp.add("Subject");
-				fp.add("From");
-				fp.add("To");
-				
-				folder.fetch(fetchMessages, fp);					
 			}
 			
-			for (int i = startNo; i <= endNo; i++) {
-				Message message = messages[i];
+			startNo = Integer.parseInt(start);
+			endNo = Integer.parseInt(end);
+			int listCount = endNo - startNo + 1;
+			
+			if (listCount < 0) {
+				listCount = 0;
+			}
+			
+			logger.debug("searchField=" + searchField + ",searchValue=" + searchValue + ",sortTypeSpecifier=" + sortTypeSpecifier 
+					+ ",isAscending=" + isAscending + ",startNo=" + startNo + ",endNo=" + endNo + ",listCount=" + listCount);
+			
+			Map<String, Object> extraMap = new HashMap<String, Object>();
+			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, null, null, false, 
+					isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId());
+			
+			totalCount = (int)extraMap.get("totalCount");
+			logger.debug("totalCount=" + totalCount);
+			
+			for (Message message : messages) {
+				UIDFolder uidFolder = (UIDFolder)message.getFolder();
 				
 				sb.append("<response>");
 				sb.append(String.format("<href><![CDATA[%s/%s]]></href>", folderId, uidFolder.getUID(message)));
@@ -478,17 +414,17 @@ public class EzEmailMailListController {
 				List<String> tempMailList = new ArrayList<String>();
 				
 				readDate = "UNREAD";
+				readCount = 0;
+				
 				for (Address address : addresses1) {
 					String email = ((InternetAddress)address).getAddress();
 					if (email != null) {
-						
-						
 						for (MailReadVO vo : readList) {
 							if (vo.getReaderEmail().equals(email)) {
 								readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), userInfo.getOffset(), false);
-								break;
+								readCount++;
+								//break;
 							}
-							readCount++;
 						}
 						
 						tempMailList.add(email);
@@ -496,23 +432,24 @@ public class EzEmailMailListController {
 					}
 				}
 				
+				
+				
 				String returnValue1 = Integer.toString(tempMailList.size());
 				if (tempMailList.size() == 1) {
 					returnValue1 += ";" + readDate;
 				} else {
 					//다수일때 unreadCount도 리턴해주기
-					returnValue1 += ";" + (tempMailList.size() - readCount);
+					returnValue1 += ";" + readCount;
 				}
 					
 				nameLength = Integer.parseInt(returnValue1.split(";")[0]);
 				
 				if (nameLength > 1) {
-					if (nameLength - Integer.parseInt(returnValue1.split(";")[1]) == 0) {
+					if (nameLength - readCount == nameLength) {
 						name = String.format(egovMessageSource.getMessage("ezEmail.jje02", locale), Integer.toString(nameLength));
 					} else {
 						name = String.format(egovMessageSource.getMessage("ezEmail.jje03", locale), Integer.toString(nameLength), returnValue1.split(";")[1]);
 					}
-					
 					readDate = "";
 				} else {
 					readDate = returnValue1.split(";")[1];
@@ -583,8 +520,9 @@ public class EzEmailMailListController {
 				
 				sb.append("</response>");
 			}
+			
 			sb.append(String.format("<CONTENTRANGE><![CDATA[rows;%s;%s;total;%d;BoxTCount;%d;BoxUCount;%d;]]></CONTENTRANGE>", 
-					start, end, messages.length, folder.getMessageCount(), folder.getUnreadMessageCount()));
+					start, end, totalCount, folder.getMessageCount(), folder.getUnreadMessageCount()));
 			sb.append("</maillist>");
 			folder.close(false);
 			
@@ -632,7 +570,6 @@ public class EzEmailMailListController {
 		String end = doc.getElementsByTagName("END").item(0).getTextContent();
 		String search = doc.getElementsByTagName("SEARCH").item(0).getTextContent();
 		String viewSelectIndex = doc.getElementsByTagName("VIEWSELECTINDEX").item(0).getTextContent();
-		String useAdvancedMailSearch = ezCommonService.getTenantConfig("useAdvancedMailSearch", userInfo.getTenantId());
 		
 		logger.debug("userId=" + userInfo.getId() + ",tenantId=" + userInfo.getTenantId() + ",serverName=" + userInfo.getServerName() 
 		            + ",folderId=" + folderId + ",sortType=" + sortType + ",start=" + start + ",end=" + end
@@ -648,12 +585,14 @@ public class EzEmailMailListController {
 					
 			Folder folder = ia.getFolder(folderId);		
 			folder.open(Folder.READ_ONLY);
-	        UIDFolder uidFolder = (UIDFolder)folder;
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append("<maillist><contentrange>").append(start).append("-").append(end).append("</contentrange>");
 			
 			Message[] messages = null; 
+			int totalCount = 0;
+			int startNo = 0;
+			int endNo = 0;
 			boolean isUnreadOnly = false;
 			boolean isImportantOnly = false;
 			
@@ -663,40 +602,17 @@ public class EzEmailMailListController {
 					
 			logger.debug("isUnreadOnly=" + isUnreadOnly + ", isImportantOnly=" + isImportantOnly);
 			
-			if (!search.equals("")) {
-				int index = search.indexOf("=");
-				if (index >= 0) {
-					String searchField = search.substring(0, index);
-					final String searchValue = search.substring(index + 1);
-					
-					logger.debug("searchField=" + searchField + ",searchValue=" + searchValue);
-					
-					if (useAdvancedMailSearch.equals("YES")) {
-						messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, searchField, searchValue, null, null, false, isUnreadOnly, isImportantOnly);
-					} else {
-						messages = ezEmailUtil.searchFolder(folder, searchField, searchValue, null, null, false, null, isUnreadOnly, isImportantOnly);
-					}
-				}
-			}
-			else if (isUnreadOnly) {
-				if (useAdvancedMailSearch.equals("YES")) {
-					messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, "", "", null, null, false, isUnreadOnly, isImportantOnly);
-				} else {
-					messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, isImportantOnly);
-				}
+			String searchField = "";
+			String searchValue = "";
+			
+			int index = search.indexOf("=");
+			
+			if (search.indexOf("=") > -1) {
+				searchField = search.substring(0, index);
+				searchValue = search.substring(index + 1);
 			}
 			
-			else if (isImportantOnly) {
-				if (useAdvancedMailSearch.equals("YES")) {
-					messages = ezEmailUtil.advancedSearchFolder(userEmail, folder, "", "", null, null, false, isUnreadOnly, isImportantOnly);
-				} else {
-					messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, isUnreadOnly, isImportantOnly);
-				}
-			}
-			
-			if (messages == null) {
-				messages = folder.getMessages(); 
-			}
+			logger.debug("searchField=" + searchField + ",searchValue=" + searchValue);
 			
 			String sortTypeSpecifier = null;
 			boolean isAscending = sortType.endsWith("ASC") ? true : false;
@@ -737,91 +653,25 @@ public class EzEmailMailListController {
 			else if (sortType.indexOf(" ORDER BY \"urn:schemas:httpmail:datereceived\"") >= 0
 					|| sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/exchange/date-iso\"") >= 0) {
 				sortTypeSpecifier = "receivedDate";
-			}		
-			
-			// sort the messages
-			if (sortTypeSpecifier != null) {
-				ezEmailUtil.sortMessages(folder, messages, sortTypeSpecifier, isAscending);
-			}
-							
-			int startNo = Integer.parseInt(start);
-			int endNo = Math.min(Integer.parseInt(end), messages.length - 1);
-			
-			logger.debug("startNo=" + startNo + ",endNo=" + endNo);
-			
-			if (startNo <= endNo) {
-				Message[] fetchMessages = Arrays.copyOfRange(messages, startNo, endNo + 1);
-				FetchProfile fp = new FetchProfile();
-				
-				// subject or sender or recipient
-				if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e1d001f\"") >= 0
-						|| sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/mapi/sent_representing_name\"") >= 0
-						|| sortType.indexOf(" ORDER BY \"urn:schemas:httpmail:displayto\"") >= 0) {
-					// pre-fetch the remaining fields after pre-fetching fields for sorting
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.FLAGS);				
-				}
-				// attachment
-				else if (sortType.indexOf(" ORDER BY \"urn:schemas:httpmail:hasattachment\"") >= 0) {
-					// pre-fetch the remaining fields after pre-fetching fields for sorting
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(FetchProfile.Item.SIZE);
-					fp.add(FetchProfile.Item.FLAGS);				
-				}
-				// read/unread or bookmark
-				else if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/exchange/smallicon\"") >= 0
-							|| sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x10900003\"") >= 0) {
-					// pre-fetch the remaining fields after pre-fetching fields for sorting
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(FetchProfile.Item.SIZE);				
-				}
-				// importance (X-Priority) or received date or received date in sent mailbox
-				else if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/exchange/x-priority-long\"") >= 0
-							|| sortType.indexOf(" ORDER BY \"urn:schemas:httpmail:datereceived\"") >= 0
-							|| sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/exchange/date-iso\"") >= 0) {						
-					// pre-fetch the remaining fields after pre-fetching fields for sorting
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(FetchProfile.Item.SIZE);
-					fp.add(FetchProfile.Item.FLAGS);				
-				}
-				// size
-				else if (sortType.indexOf(" ORDER BY \"http://schemas.microsoft.com/mapi/proptag/x0e080003\"") >= 0) {
-					// pre-fetch the remaining fields after pre-fetching fields for sorting
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(FetchProfile.Item.FLAGS);				
-				}
-				else {
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
-					fp.add(FetchProfile.Item.SIZE);
-					fp.add(FetchProfile.Item.FLAGS);
-				}
-				
-				fp.add("Subject");
-				fp.add("From");
-				fp.add("To");
-				
-				folder.fetch(fetchMessages, fp);					
 			}
 			
-			for (int i = startNo; i <= endNo; i++) {
-				Message message = messages[i];
+			startNo = Integer.parseInt(start);
+			endNo = Integer.parseInt(end);
+			int listCount = endNo - startNo + 1;
+			
+			if (listCount < 0) {
+				listCount = 0;
+			}
+			
+			Map<String, Object> extraMap = new HashMap<String, Object>();
+			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, searchField, searchValue, null, null, false, 
+					isUnreadOnly, isImportantOnly, sortTypeSpecifier, isAscending, startNo, listCount, false, extraMap, userInfo.getTenantId());
+			
+			totalCount = (int)extraMap.get("totalCount");
+			logger.debug("totalCount=" + totalCount);
+		
+			for (Message message : messages) {
+				UIDFolder uidFolder = (UIDFolder)message.getFolder();
 				
 				sb.append("<response>");
 				sb.append(String.format("<href><![CDATA[%s/%s]]></href>", folderId, uidFolder.getUID(message)));
@@ -987,8 +837,9 @@ public class EzEmailMailListController {
 				
 				sb.append("</response>");
 			}
+			
 			sb.append(String.format("<CONTENTRANGE><![CDATA[rows;%s;%s;total;%d;BoxTCount;%d;BoxUCount;%d;]]></CONTENTRANGE>", 
-					start, end, messages.length, folder.getMessageCount(), folder.getUnreadMessageCount()));
+					start, end, totalCount, folder.getMessageCount(), folder.getUnreadMessageCount()));
 			sb.append("</maillist>");
 		    
 			folder.close(false);
@@ -1608,34 +1459,18 @@ public class EzEmailMailListController {
 			
 			Folder folder = ia.getFolder(folderPath);		
 			folder.open(Folder.READ_ONLY);
-	        UIDFolder uidFolder = (UIDFolder)folder;
 	        
-	        String useAdvancedMailSearch = ezCommonService.getTenantConfig("useAdvancedMailSearch", userInfo.getTenantId());
 	        Message[] messages = null;
 	        
-	        if (useAdvancedMailSearch.equals("YES")) {
-	        	messages = ezEmailUtil.advancedSearchFolder(userAccount, folder, "", "", null, null, false, true, false);
-	        } else {
-	        	messages = ezEmailUtil.searchFolder(folder, "", "", null, null, false, null, true, false);
-	        }
-	        
-	        // sort the messages
- 			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
-	        
- 			// set mailCount
+	        // set mailCount
  			int mailCount = 7;
  			int unreadCount = ia.getUnreadCount(folderPath);
  			if (unreadCount < mailCount) {
  				mailCount = unreadCount;
  			}
  			
- 			messages = Arrays.copyOfRange(messages, 0, mailCount);
- 			
-	        // pre-fetch
-	        FetchProfile fp = new FetchProfile();
-	        fp.add(UIDFolder.FetchProfileItem.UID);
-	        fp.add(FetchProfile.Item.ENVELOPE);
-	        folder.fetch(messages, fp);
+	        messages = ezEmailUtil.searchFolder(ia, userAccount, folder, "", "", null, null, false, 
+	        		true, false, "receivedDate", false, 0, mailCount, false, null, userInfo.getTenantId());
 	        
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -1645,6 +1480,7 @@ public class EzEmailMailListController {
 			
 			for (int i=0; i<messages.length; i++) {
 				Message message = messages[i];
+				UIDFolder uidFolder = (UIDFolder)message.getFolder();
 				
 				// href
 				String href = "INBOX/" + uidFolder.getUID(message);
