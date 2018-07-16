@@ -168,7 +168,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		//파일이 있으면 hasFile을 1로 설정
-		if (fileList != null && !fileList.equals("[]")) {
+		if (fileList != null && !fileList.equals("")) {
 			hasFile = 1;
 		}
 
@@ -195,7 +195,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		//첨부파일 저장
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 		
-		if (fileList != null && !fileList.equals("[]")) {
+		if (fileList != null && !fileList.equals("")) {
 			//2018-02-13 주홍선 파일경로 잘못되어있던 것 수정
 			File file = new File(pDirPath + "uploadFile" + commonUtil.separator + circularID + "_uploadFile");
 
