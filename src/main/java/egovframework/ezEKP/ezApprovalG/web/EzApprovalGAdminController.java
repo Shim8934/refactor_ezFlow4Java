@@ -350,6 +350,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String contID = request.getParameter("fContID");
 		String deptList = request.getParameter("deptList");
 		String companyID = request.getParameter("companyID");
+		
+		if (contDept == "") {
+			contDept = "none";
+		}
 
 		String result = ezApprovalGAdminService.updateFormContainer(contName, contName2, contDescript, contParent, contDept, contID, deptList, companyID, userInfo.getTenantId());
 		

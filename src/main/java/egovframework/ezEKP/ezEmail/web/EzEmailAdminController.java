@@ -478,8 +478,9 @@ public class EzEmailAdminController {
 				String pCn = (String) address.get("cn");
 				pCn = pCn.substring(0, pCn.indexOf("@"));
 				String pClass = (String) address.get("class");
+				String displayName = (String) address.get("displayName"); //
 
-				logger.debug("pCn=" + pCn + ", pClass=" + pClass);
+				logger.debug("pCn=" + pCn + ", pClass=" + pClass + ", displayName=" + displayName);
 
 				if (pClass.equals("group")) {
 					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn,
@@ -510,7 +511,7 @@ public class EzEmailAdminController {
 						sb.append("<CLASS>" + "distribution" + "</CLASS>");
 						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
 						sb.append("<DISPLAYNAME>"
-								+ commonUtil.cleanValue(pCn)
+								+ displayName
 								+ "</DISPLAYNAME>");
 						sb.append("<MAIL>"
 								+ commonUtil.cleanValue(cn)
