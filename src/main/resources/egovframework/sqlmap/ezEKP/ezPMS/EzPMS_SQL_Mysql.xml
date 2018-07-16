@@ -229,6 +229,15 @@
     	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="6"/>
     	<result property="pctinput"							column="PCTINPUT"					columnIndex="7"/>
     </resultMap>
+    
+    <resultMap id="projectTaskMemberVOForSchedule" class="ProjectTaskMemberVO">
+    	<result property="taskId"							column="TASK_ID"/>
+    	<result property="userId"							column="USER_ID"/>
+    	<result property="planStartDate"					column="PLAN_START_DATE"/>
+    	<result property="planEndDate"						column="PLAN_END_DATE"/>
+    	<result property="userName"							column="USER_NAME"/>
+    	<result property="userDeptname"						column="USER_DEPTNAME"/>
+    </resultMap>
    
     <resultMap id="projectMemberScheduleVO" class="ProjectMemberScheduleVO">
     	<result property="userId"							column="USER_ID"					columnIndex="1"/>
@@ -3702,38 +3711,21 @@
 		 ]]>
 	</select>
 	
-	<select id="EzPMSDAO.getMemberSchedule" parameterClass="map" resultMap="projectMemberScheduleVO">
-		SELECT DISTINCT
-			S.USER_ID,
-			S.ASSIGNED_DATE,
-			S.PROJECT_ID,
-			S.TENANT_ID,
-			M.DISPLAYNAME$lang$ AS USER_NAME,
-			M.DESCRIPTION$lang$ AS DEPT_NAME
-		FROM
-			TBL_PMS_MEMBERSCHEDULE S
-		JOIN
-			TBL_USERMASTER M
-		ON
-			S.USER_ID = M.CN
-		AND
-			S.TENANT_ID = M.TENANT_ID
-		JOIN 
-			TBL_PMS_TASK T
-		ON
-			S.PROJECT_ID = T.PROJECT_ID
-		AND
-			S.TASK_ID = T.TASK_ID
-		AND
-			S.TENANT_ID = T.TENANT_ID
+	<select id="EzPMSDAO.getMemberSchedule" parameterClass="map" resultMap="projectTaskMemberVOForSchedule">
+		SELECT
+			M.task_id, 			M.user_id, 			T.plan_start_date, 			T.plan_end_date, 		M.USER_NAME$lang$, 
+			M.user_deptname$lang$ 
+		FROM tbl_pms_task T
+		JOIN tbl_pms_taskmember M
+		ON T.task_id = M.task_id
 		WHERE
-			S.PROJECT_ID = #projectId#
+			T.PROJECT_ID = #projectId#
 		AND	
-			S.TENANT_ID	= #tenantId#
+			T.TENANT_ID	= #tenantId#
 		AND
 			T.DEL_STATUS = 0
 		ORDER BY
-			S.USER_ID, S.ASSIGNED_DATE
+			M.USER_ID
 	</select>
 	
 	<insert id="EzPMSDAO.addMemberSchedule" parameterClass="map">
