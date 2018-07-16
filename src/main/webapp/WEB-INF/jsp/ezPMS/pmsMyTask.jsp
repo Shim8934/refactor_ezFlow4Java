@@ -31,7 +31,7 @@ var status = "";
 var kanbanOrder = "MA";
 var projectId = 0;
 var startRow = 0;
-var listNumber = 10;
+var listNumber = 15;
 var currentPage = 1;
 var orderWhat = "";
 var orderHow = "";
@@ -514,7 +514,7 @@ function goGroupDetails(elem) {
 </style>
 </head>
 <body class="mainbody" style="height: 95%; overflow: hidden" marginwidth="0" marginheight="0">
-	<h1><c:out value='ezPMS.t142'/><span id="mailBoxInfo"> <spring:message code='ezPMS.t3' /> <span style="color:#017BEC;" id="totalCount"> </span><spring:message code='ezPMS.t4' /></span></h1>
+	<h1><spring:message code='ezPMS.t142'/><span id="mailBoxInfo"> <spring:message code='ezPMS.t3' /> <span style="color:#017BEC;" id="totalCount"> </span><spring:message code='ezPMS.t4' /></span></h1>
 	<div class="portlet_tabpart01" style="margin-bottom: 10px">
 	   <div class="portlet_tabpart01_top" id="tab1">
 	   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t147' /></span></p>
@@ -527,7 +527,7 @@ function goGroupDetails(elem) {
 	<ul>
 		<li><span id="addTaskBtn" onclick="searchPopup()"><spring:message code='ezPMS.t1' /></span></li>
 		<li style="float:right"><div>
-		<spring:message code='ezPMS.t270' /> <select id="searchStatus" onchange="searchStatus(this.value)">
+		<select id="searchStatus" onchange="searchStatus(this.value)">
 			<option value="A"><spring:message code='ezPMS.t14' /></option>
 			<option value="P"><spring:message code='ezPMS.t15' /></option>
 			<option value="W"><spring:message code='ezPMS.t16' /></option>
@@ -542,14 +542,16 @@ function goGroupDetails(elem) {
 	<span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
 	</span>
 	</div>
-	<div id="searchPopup" class="popupwrapAtt" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
-	<div id = "popupwrap3">
-	<table class="content" style="width:100%;">
-		<tbody id="taskSearch">
-				<tr>
-					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;
-					<spring:message code='ezPMS.t1'/></th>
-				</tr>
+	<div id="searchPopup" class="popupwrap1 modal" style="display:none;margin-bottom:50px;">
+	<div class = "popupJQLayer">
+		<div class="title"><spring:message code='ezPMS.t1'/></div>
+			<div id="close">
+				<ul>
+					<li><a rel="modal:close"><span onclick="layerHidden()"></span></a></li>
+				</ul>
+			</div>
+		<table class="content" style="width:100%;">
+			<tbody id="taskSearch">
 			<tr>
 				<th id="taskName"><spring:message code='ezPMS.t98' /> </th>
 				<td><input type="text" id="searchByTaskName" style="width:100%; margin-right:5px;"></td>
@@ -608,10 +610,14 @@ function goGroupDetails(elem) {
 	</table>
 	<!-- /내용 -->
 		<br />
-		<div style="text-align:center;">
-			<a class="imgbtn" onclick="searchContent()"><span><spring:message code='ezPMS.t1' /></span></a>
-			<a class="imgbtn" rel="modal:close"><span onclick="layerHidden();"><spring:message code='ezAttitude.t34'/></span></a>
-	    </div>
+		<table style="width:100%">
+			<tr>
+			<td style="text-align:center;">
+				<a class="imgbtn" onclick="searchContent()"><span><spring:message code='ezPMS.t1' /></span></a>
+				<a class="imgbtn" rel="modal:close"><span onclick="layerHidden();"><spring:message code='ezAttitude.t34'/></span></a>
+		    </td>
+		    </tr>
+	    </table>
 	</div>
 	</div>
 </body>

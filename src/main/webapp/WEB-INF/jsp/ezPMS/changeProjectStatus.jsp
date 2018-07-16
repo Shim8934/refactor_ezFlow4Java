@@ -19,43 +19,51 @@ var strHTML = "";
 var viewType = parent.viewType;
 
 $(function(){
-	strHTML += "<tr><td>";
+	strHTML += "<tr><th>";
 	
 	switch(nowStatus) {
 	case 'W' :
 	case 'D' :
 		strHTML += "<input type='radio' value='P' name='status' checked>";
+		strHTML += "</th><td>";
 		strHTML += "<spring:message code='ezPMS.t258' />";
 		strHTML += "</input></td></tr>";
-		strHTML += "<tr><td>";
+		strHTML += "<tr><th>";
 		strHTML += "<input type='radio' value='S' name='status'>";
+		strHTML += "</th><td>";
 		strHTML += "<spring:message code='ezPMS.t259' />";
 		strHTML += "</input></td></tr>";
 		break;
 	case 'P' :
 		strHTML += "<input type='radio' value='C' name='status' checked>";
+		strHTML += "</th><td>";
 		strHTML += "<spring:message code='ezPMS.t261' />";
 		strHTML += "</input></td></tr>";
-		strHTML += "<tr><td>";
+		strHTML += "<tr><th>";
 		strHTML += "<input type='radio' value='S' name='status'>";
+		strHTML += "</th><td>";
 		strHTML += "<spring:message code='ezPMS.t259' />";
 		strHTML += "</input></td></tr>";
 		break;
 	case 'L' :
 		strHTML += "<input type='radio' value='C' name='status' checked>";
+		strHTML += "</th><td>";
 		strHTML += "<spring:message code='ezPMS.t261' />";
 		strHTML += "</input></td></tr>";
-		strHTML += "<tr><td>";
+		strHTML += "<tr><th>";
 		strHTML += "<input type='radio' value='S' name='status' checked>";
+		strHTML += "</th><td>";
 		strHTML += "<spring:message code='ezPMS.t259' />";
 		strHTML += "</input></td></tr>";
 		break;
 	case 'S' :
 		strHTML += "<input type='radio' value='P' name='status' checked>";
+		strHTML += "</th><td>";
 		strHTML += "<spring:message code='ezPMS.t258' />";
 		strHTML += "</input></td></tr>";
-		strHTML += "<tr><td>";
+		strHTML += "<tr><th>";
 		strHTML += "<input type='radio' value='C' name='status'>";
+		strHTML += "</th><td>";
 		strHTML += "<spring:message code='ezPMS.t261' />";
 		strHTML += "</input></td></tr>";
 		break;
@@ -152,11 +160,6 @@ function getStatusStr(status) {
 	}
 }
 </script>
-<style type="text/css">
-input {
-	font-size : 15px;
-}
-</style>
 </head>
 <body class="popup">
 <h1><spring:message code='ezPMS.t92' />
@@ -169,13 +172,11 @@ input {
 		</div>
 </h1>
 <div class="main_body">
-<spring:message code='ezPMS.t39' />
-	<div style="border:1px gray solid">
-		<table id="statusList">
-		
+<span><spring:message code='ezPMS.t39' /></span>
+	<div>
+		<table id="statusList" class="content" style="margin-top:10px">
 		</table>
 	</div>
-	
 		<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 			<tr>
 				<td><a class="imgbtn" id="submit" onclick="changeStatus()"><span><spring:message code='ezPMS.t40' /></span></a></td>

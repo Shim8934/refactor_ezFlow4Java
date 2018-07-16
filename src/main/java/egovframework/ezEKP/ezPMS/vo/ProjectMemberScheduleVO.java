@@ -8,6 +8,7 @@ public class ProjectMemberScheduleVO {
 	private String assignedDate;
 	private long projectId;
 	private int tenantId;
+	private long taskId;
 	
 	public String getUserId() {
 		return userId;
@@ -55,5 +56,13 @@ public class ProjectMemberScheduleVO {
 	
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	public long getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(long taskId) {
+		this.taskId = taskId;
 	}
 }

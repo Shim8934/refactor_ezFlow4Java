@@ -13,6 +13,7 @@
 			background : none;
 			overflow-y : auto;
 			overflow-x : auto;
+			padding-right : 0px;
 		}
 		</style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>

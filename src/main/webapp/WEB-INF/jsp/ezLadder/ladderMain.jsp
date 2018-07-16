@@ -84,6 +84,7 @@
 			label {position:relative; top: -3px;}
 			.participantBtn:HOVER, label:HOVER {cursor: pointer;}
 			.mainlist tr td {padding-top:0px;padding-bottom:0px;}
+			input[type=radio] {border: 0;}
 		</style>
 	</head>
 	<body class="mainbody" style="overflow: hidden;">

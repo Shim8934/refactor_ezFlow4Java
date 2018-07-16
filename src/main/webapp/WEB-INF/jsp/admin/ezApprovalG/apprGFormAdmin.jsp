@@ -666,18 +666,20 @@
 		<table class="content" style="width:1000px">
 			<tr>
 		    	<th><spring:message code = 'ezApprovalG.t1540' /></th>
-		    	<td><select name="select" style="WIDTH:200px;" onchange="return select_onchange()" id="FromList">
-		        	<option value="000" selected><spring:message code = 'ezApprovalG.t1541' /></option>
-		        	${docType}
-		      	</select></td>
-				<td style="white-space: nowrap">
-					<select id="searchoption">
+		    	<td style="border:0px">
+		    		<select name="select" style="WIDTH:200px;" onchange="return select_onchange()" id="FromList">
+		        		<option value="000" selected><spring:message code = 'ezApprovalG.t1541' /></option>
+		        		${docType}
+		      		</select>
+		      	</td>
+				<td style="white-space: nowrap;border:0px">
+					<select id="searchoption" style="height:22px; margin-top: 3px;">
 						<option value="1"><spring:message code = 'ezApprovalG.t442' /></option>
 						<option value="2"><spring:message code = 'ezApprovalG.t598' /></option>
 					</select>
-					<input id="forminfo" onkeypress="search_press(event)" type="text" style="margin-bottom: 3px;" />
-					<a class="imgbtn" onclick="searchform()"><span><spring:message code = 'ezApprovalG.t111' /></span></a>
-					<a class="imgbtn" onclick="reset()"><span><spring:message code = 'ezApprovalG.t1301' /></span></a>
+					<input id="forminfo" onkeypress="search_press(event)" type="text" style="height:22px; margin-top: -2px; vertical-align:unset;" />
+					<a class="imgbtn imgbck" onclick="searchform()" style="margin-top: 3px;"><span><spring:message code = 'ezApprovalG.t111' /></span></a>
+					<a class="imgbtn imgbck" onclick="reset()" style="margin-top: 3px;"><span><spring:message code = 'ezApprovalG.t1301' /></span></a>
 				</td>
 		  	</tr>
 		</table>
@@ -704,10 +706,12 @@
 		    	</td>
 		  	</tr>   
 		    <tr>
-		    	<td style="padding-left:5px; padding-right:5px; padding-top:5px; vertical-align:top; text-align:center">
-			        <a class="imgbtn"><span onclick="return MoveUp_onclick()"><spring:message code = 'ezApprovalG.t403' /></span></a>
-			        <a class="imgbtn"><span onclick="return MoveDown_onclick()"><spring:message code = 'ezApprovalG.t404' /></span></a>
-			        <a class="imgbtn"><span onclick="return FormOrder_Save()"><spring:message code = 'ezApprovalG.t59' /></span></a>
+		    	<td>
+		    		<div class="btnpositionJsp">
+			        	<a class="imgbtn"><span onclick="return MoveUp_onclick()"><spring:message code = 'ezApprovalG.t403' /></span></a>
+			        	<a class="imgbtn"><span onclick="return MoveDown_onclick()"><spring:message code = 'ezApprovalG.t404' /></span></a>
+			        	<a class="imgbtn"><span onclick="return FormOrder_Save()"><spring:message code = 'ezApprovalG.t59' /></span></a>
+			        </div>	
 		    	</td>
 		  	</tr>  
 		</table>

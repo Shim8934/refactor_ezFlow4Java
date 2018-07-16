@@ -2,8 +2,6 @@
  * 프로젝트 업무트리 가져오기
  */
 function getProjectTaskTree(containerId, data, location) {
-	console.log(data);
-	
 	$("#"+containerId).jstree({
 		'core' : {
 			'data' : data,
@@ -19,7 +17,22 @@ function getProjectTaskTree(containerId, data, location) {
 		'sort' : function(a, b) {
 			var a1 = this.get_node(a);
 			var b1 = this.get_node(b);
-			return (a1.original.sort > b1.original.sort) ? 1 : -1;
+			var result = 1;
+			
+			if (a1.id.indexOf("t") != -1 && b1.id.indexOf("t") != -1) {
+				result = (a1.original.sort > b1.original.sort) ? 1 : -1;
+			} else if (a1.id.indexOf("t") != -1 || b1.id.indexOf("t") != -1) {
+				if (a1.id.indexOf("t") != -1) {
+					result = 1;
+				} else {
+					result = -1;
+				}
+				
+			} else {
+				result = (a1.original.sort > b1.original.sort) ? 1 : -1;
+			}
+			
+			return result;
 		}
 	})
 	.bind("ready.jstree", function (event, data) {
@@ -175,7 +188,6 @@ function getCheckedVal() {
 		}
 		
 	} else {
-		console.log($("input[type='checkbox']:checked").parent().parent().parent().parent().parent().parent());
 		$("input[type='checkbox']:checked").parent().parent().parent().parent().parent().parent().each(function(){
 			checkedVal += "_" + $(this).attr("id");
 		});

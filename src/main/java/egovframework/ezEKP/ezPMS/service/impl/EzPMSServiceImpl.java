@@ -645,8 +645,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanStartDate());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanEndDate());
 			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getWriteDate());
-			System.out.println(startDate);
-			System.out.println(endDate);
+			
 			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
 
 			int createAndEndDateComp = createDate.compareTo(endDate);
@@ -1283,7 +1282,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				list.add(vo);
 			}
 		}
-
+		
 		return list;
 	}
 
@@ -2573,15 +2572,19 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void updateTaskGroupId(long projectId, long targetTaskId, long changeGroupId, int tenantId) {
+	public void updateTaskGroupId(long projectId, long targetTaskId, long toGroupId, long fromGroupId, int tenantId, int treeDepth) throws Exception {
 		LOGGER.debug("[SERVICE] updateTaskGroupId started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("targetTaskId", targetTaskId);
-		map.put("changeGroupId", changeGroupId);
+		map.put("toGroupId", toGroupId);
 		map.put("tenantId", tenantId);
+		map.put("treeDepth", treeDepth);
 
 		ezPMSDAO.updateTaskGroupId(map);
+		updateGroupLatestInfo(projectId, toGroupId, tenantId);
+		updateGroupLatestInfo(projectId, fromGroupId, tenantId);
+		
 		LOGGER.debug("[SERVICE] updateTaskGroupId ended.");
 	}
 
@@ -2780,13 +2783,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void addMemberSchedule(String memberId, int tenantId, String assignedDate, String projectId) {
+	public void addMemberSchedule(String memberId, int tenantId, String assignedDate, long projectId, long taskId) {
 		LOGGER.debug("[SERVICE] addMemberSchedule started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
 		map.put("memberId", memberId);
 		map.put("assignedDate", assignedDate);
+		map.put("taskId", taskId);
 		
 		ezPMSDAO.addMemberSchedule(map);
 		LOGGER.debug("[SERVICE] addMemberSchedule ended.");
@@ -3036,5 +3040,50 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map.put("workingdaySum", projectWorkingdaySum);
 			ezPMSDAO.updateAllTaskWeight((HashMap<String, Object>)map);
 		}
+	}
+
+	@Override
+	public int getDateTaskCount(String date, long projectId, int tenantId, String memberId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("searchDate", date);
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		map.put("memberId", memberId);
+		
+		return ezPMSDAO.getDateTaskCount(map);
+	}
+
+	@Override
+	public void deleteMemberSchedule(String date, long projectId, int tenantId, String memberId, long taskId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("searchDate", date);
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		map.put("memberId", memberId);
+		map.put("taskId", taskId);
+		
+		ezPMSDAO.deleteMemberSchedule(map);
+		
+	}
+
+	@Override
+	public void updateGroupLatestInfo(long projectId, long groupId, int tenantId) throws Exception {
+		String ancesterGroup = getAncesterGroup(groupId, tenantId);
+		String[] ancGroupArr = ancesterGroup.split(",");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//해당 그룹과 상위그룹 일정 업데이트
+		for (int i = 0; i < ancGroupArr.length; i++) {
+			updateGroupDate(Long.parseLong(ancGroupArr[i]), tenantId, "companyid");
+		}
+		
+		//해당 그룹과 상위그룹 진행률 업데이트
+		for (int i = 0; i < ancGroupArr.length; i++) {
+			map.put("groupId", ancGroupArr[i]);
+			ezPMSDAO.updateGroupProgress(map);
+		}
+		
 	}
 }

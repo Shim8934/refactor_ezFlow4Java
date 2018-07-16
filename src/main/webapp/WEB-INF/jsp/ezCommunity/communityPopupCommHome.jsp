@@ -14,10 +14,6 @@
 			.btype_list ul li .date {
 				-webkit-margin-start:20px;
 			}
-			/* 2018-07-03 김보미 - 카운트 수 잘려보이는 현상 버그 수정 */
-			#cmhome_type5 .info_count span.count {
-				padding-left:20px;
-			}
 		</style>
 		<script type="text/javascript" src="/js/ezCommunity/TreeView.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -272,8 +268,12 @@
 	            document.getElementById("master").innerHTML += "(" + SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/DEPTNAME") + ")";
 	            document.getElementById("regdate").innerHTML =  strLang1 + ": " + SelectSingleNodeValueNew(xmldom, "DATA/C_REGDATE").substring(0, 10);
 	            document.getElementById("membercnt").innerHTML =  SelectSingleNodeValueNew(xmldom, "DATA/C_MEMBERCNT");
+	            //2018-07-11 김보미 - 공백 조정
+	            countSpanPadding(document.getElementById("membercnt"), SelectSingleNodeValueNew(xmldom, "DATA/C_MEMBERCNT"));
 	            document.getElementById("itemcnt").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/ITEMCNT");
-
+	            //2018-07-11 김보미 - 공백 조정
+	            countSpanPadding(document.getElementById("itemcnt"), SelectSingleNodeValueNew(xmldom, "DATA/ITEMCNT"));
+	            
 	            var userImage = SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERIMAGE").trim();
 
 	            var _img = document.createElement("img");
@@ -414,9 +414,9 @@
 		            document.getElementById("makeguide").style.display = "none";
 		            
 		            //2018-07-02 김보미 - 클릭시 색 변경 안되게
+			        var SelectedNodeID = treeNode.GetNodeData("id");
 		            var boardColor = treeNode.GetNodeData("DATA4");
 		            if (boardColor != "" && boardColor != null) {
-			            var SelectedNodeID = treeNode.GetNodeData("id");
 		                var objSpan = document.getElementById("spn_" + SelectedNodeID);
 		                if(CrossYN())
 		                    objSpan.setAttribute("style", "color:" + boardColor);
@@ -426,7 +426,9 @@
 		            
 		            document.getElementById("rightfrm").style.height = "659px";
 		            if (chkPhotoBrd != "3") {
-		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code;
+		            	//2018-07-13 김보미 - 파라메터 추가
+// 		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code;
+		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code + "&treeCtrl=" + SelectedNodeID;
 		            } else {
 		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemListPhoto.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code;
 		            }
@@ -810,6 +812,18 @@
 //		    	}	    	
 //		    }
 
+			//2018-07-11 김보미 - 공백 조정
+			function countSpanPadding(elem, cnt) {
+	            if (cnt.length == 1) {
+	            	elem.style.paddingLeft = "30px";
+	            } else if (cnt.length == 2) {
+	            	elem.style.paddingLeft = "22px";
+	            } else if (cnt.length == 3) {
+	            	elem.style.paddingLeft = "16px";
+	            } else if (cnt.length == 4) {
+	            	elem.style.paddingLeft = "12px";
+	            }
+			}
 		</script>
 	</head>
 	

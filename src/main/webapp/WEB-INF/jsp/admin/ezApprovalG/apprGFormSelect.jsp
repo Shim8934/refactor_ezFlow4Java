@@ -217,7 +217,9 @@
 			</tr>
 			<tr>
 				<td style="padding-left: 5px; padding-right: 5px; padding-top: 5px; vertical-align: top; text-align: center">
-					<a class="imgbtn"><span onclick="return Move_onclick()"><spring:message code = 'ezApprovalG.t948' /></span></a>
+					<div class="btnpositionNew">
+						<a class="imgbtn"><span onclick="return Move_onclick()"><spring:message code = 'ezApprovalG.t948' /></span></a>
+					</div>	
 				</td>
 			</tr>
 		</table>

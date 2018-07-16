@@ -523,7 +523,6 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 		
 		var targetStatus = $("#" + targetPosition).attr("name");
 		var startRow = $("#" + targetPosition).find(".overview_list").length;
-		console.log(taskList.length);
 		
 		if (taskList.length >= 10) {
 			if (!isBoard) {
@@ -737,6 +736,11 @@ function getTaskDetails(elem) {
 	max-height : 132px;
 	word-wrap : break-word;
 }
+
+.boardArea_new p img {
+	width : 100%;
+	height : 73px;
+}
 </style>
 </head>
 <body>
@@ -766,7 +770,7 @@ function getTaskDetails(elem) {
 			</div>
 			<div class="overview_textbox">${project.overview }</div>
 			<ul class="overview_infomationBox">
-				<li><img src="/images/ezPMS/icon_defaultAttendant.png" alt="${project.headManagerName }" />${project.headManagerName }</li>
+				<li style="cursor:default;"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="${project.headManagerName }" />${project.headManagerName }</li>
 				<li onclick="getProjectMember('1')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="<spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' />" /><spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' /></li>
 				<li onclick="getProjectMember('2')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="<spring:message code='ezPMS.t64' /><spring:message code='ezPMS.t156' />" /><spring:message code='ezPMS.t64' /><spring:message code='ezPMS.t156' /></li>
 				<li onclick="getProjectMember('3')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="<spring:message code='ezPMS.t65' /><spring:message code='ezPMS.t156' />" /><spring:message code='ezPMS.t65' /><spring:message code='ezPMS.t156' /></li>

@@ -16,6 +16,8 @@
 			.selectbox:before { /* 화살표 대체 */ content: ""; position: absolute; top: 50%; right: 15px; width: 0; height: 0; margin-top: -1px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #333; } 
 			.selectbox label { position: absolute; top: 1px; /* 위치정렬 */ left: 5px; /* 위치정렬 */ color: #999; z-index: -1; /* IE8에서 label이 위치한 곳이 클릭되지 않는 것 해결 */ } 
 			.selectbox select { width: 100%; height: auto; /* 높이 초기화 */ line-height: normal; /* line-height 초기화 */ font-family: inherit; /* 폰트 상속 */ border: 0; opacity: 0; /* 숨기기 */ filter:alpha(opacity=0); /* IE8 숨기기 */ -webkit-appearance: none; /* 네이티브 외형 감추기 */ -moz-appearance: none; appearance: none; }
+			.ui-autocomplete { height: 200px; max-height: 200px; overflow-y: auto; overflow-x: hidden;}
+			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
 		</style>
 		</c:if>
 		<!-- 수신인란 height 작업 -->
@@ -45,7 +47,8 @@
 			#menu > ul:nth-child(2) > li {
 				margin: 0 2px !important;
 			}
-			.ui-autocomplete { height: 200px; overflow-y: scroll; overflow-x: hidden;}
+			.ui-autocomplete { height: 200px; max-height: 200px; overflow-y: auto; overflow-x: hidden;}
+			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
 		</style>
 		
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
@@ -1759,6 +1762,10 @@
 	    	
 	    	return appPtag;
 	    }
+	    
+	    function keyEventNone(e) {
+	    	e.preventDefault();
+	    }
 	    /* 
 	    $(document).on("click", "#MailSign", function() {
 	    	if (mailsel == 0) {
@@ -1774,6 +1781,45 @@
 	    
 	    var IsInsert_MsgTo = false;
 		$(function() {
+			var widgetInst = $("#MsgTo").autocomplete({}).data('ui-autocomplete');
+			widgetInst._renderMenu = function(ul, items) {
+				var self = this;
+				ul.append("<li id='theadTr' onkeydown='keyEventNone(event)' style='background-color:#e9e9e9; border-bottom:1px solid #d1d1d1; height:22px; pointer-events: none;'><a><table class='width100percent' width='100%' height='100%' style='display:inline-table'><thead><tr>"
+				+ "<td style='width:20%; border:none; align:left'><spring:message code='ezAddress.t124' /></td>"
+				+ "<td style='width:15%; border:none; align:left'><spring:message code='ezApproval.t171' /></td>"
+				+ "<td style='width:20%; border:none; align:left'><spring:message code='ezPortal.t34' /></td>"
+				+ "<td style='max-width:45%; border:none; align:left'><spring:message code='ezEmail.t713' /></td>"
+				+ "</tr></thead></table></li></a>");
+				$.each( items, function( index, item ) {
+					self._renderItem( ul, item );
+				});
+			};
+			var widgetInst = $("#MsgCC").autocomplete({}).data('ui-autocomplete');
+			widgetInst._renderMenu = function(ul, items) {
+				var self = this;
+				ul.append("<li id='theadTr' onkeydown='keyEventNone(event)' style='background-color:#e9e9e9; border-bottom:1px solid #d1d1d1; height:22px; pointer-events: none;'><a><table class='width100percent' width='100%' height='100%' style='display:inline-table'><thead><tr>"
+				+ "<td style='width:20%; border:none; align:left'><spring:message code='ezAddress.t124' /></td>"
+				+ "<td style='width:15%; border:none; align:left'><spring:message code='ezApproval.t171' /></td>"
+				+ "<td style='width:20%; border:none; align:left'><spring:message code='ezPortal.t34' /></td>"
+				+ "<td style='max-width:45%; border:none; align:left'><spring:message code='ezEmail.t713' /></td>"
+				+ "</tr></thead></table></li></a>");
+				$.each( items, function( index, item ) {
+					self._renderItem( ul, item );
+				});
+			};
+			var widgetInst = $("#MsgBCC").autocomplete({}).data('ui-autocomplete');
+			widgetInst._renderMenu = function(ul, items) {
+				var self = this;
+				ul.append("<li id='theadTr' onkeydown='keyEventNone(event)' style='background-color:#e9e9e9; border-bottom:1px solid #d1d1d1; height:22px; pointer-events: none;'><a><table class='width100percent' width='100%' height='100%' style='display:inline-table'><thead><tr>"
+				+ "<td style='width:20%; border:none; align:left'><spring:message code='ezAddress.t124' /></td>"
+				+ "<td style='width:15%; border:none; align:left'><spring:message code='ezApproval.t171' /></td>"
+				+ "<td style='width:20%; border:none; align:left'><spring:message code='ezPortal.t34' /></td>"
+				+ "<td style='max-width:45%; border:none; align:left'><spring:message code='ezEmail.t713' /></td>"
+				+ "</tr></thead></table></li></a>");
+				$.each( items, function( index, item ) {
+					self._renderItem( ul, item );
+				});
+			};
 			$("#MsgTo").autocomplete(
 					{
 						source : function(request, response) {
@@ -1804,7 +1850,7 @@
 						},
 						minLength : 2,
 						selectFirst : false,
-						autoFocus:true,
+						autoFocus : false,
 						select : function(event, ui) {
 							var addressType = "email";
 							if(ui.item.type == "G") {
@@ -1830,7 +1876,7 @@
 						},
 						appendTo : "#AutoCompleteResults"
 					}).data("ui-autocomplete")._renderItem = function(ul, item) {
-				return $("<li>")
+				return $("<li style='border-bottom:1px solid #e8e8ef'>")
 						.data("ui-autocomplete-item", item)
 						.append(
 								"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
@@ -1874,7 +1920,7 @@
 						minLength : 2,
 						selectFirst : false,
 						select : function(event, ui) {
-							newElem = PrepareMailTag("0", "email", ui.item.value,
+							newElem = PrepareMailTag("1", "email", ui.item.value,
 									ui.item.email, "");
 							IsInsert_MsgCC = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgCC) {
@@ -1893,18 +1939,18 @@
 						},
 						appendTo : "#AutoCompleteResults"
 					}).data("ui-autocomplete")._renderItem = function(ul, item) {
-				return $("<li>")
-						.data("ui-autocomplete-item", item)
-						.append(
-								"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
-										+ item.value
-										+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
-										+ item.title
-										+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
-										+ item.dept
-										+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
-										+ item.email + "</td></tr></table></a>")
-						.appendTo(ul);
+				return $("<li style='border-bottom:1px solid #e8e8ef'>")
+				.data("ui-autocomplete-item", item)
+				.append(
+						"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+								+ item.value
+								+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+								+ item.title
+								+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+								+ item.dept
+								+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+								+ item.email + "</td></tr></table></a>")
+				.appendTo(ul);
 			};
 			var IsInsert_MsgBCC = false;
 			$("#MsgBCC").autocomplete(
@@ -1937,7 +1983,7 @@
 						minLength : 2,
 						selectFirst : false,
 						select : function(event, ui) {
-							newElem = PrepareMailTag("0", "email", ui.item.value,
+							newElem = PrepareMailTag("2", "email", ui.item.value,
 									ui.item.email, "");
 							IsInsert_MsgBCC = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgBCC) {
@@ -1956,18 +2002,18 @@
 						},
 						appendTo : "#AutoCompleteResults"
 					}).data("ui-autocomplete")._renderItem = function(ul, item) {
-				return $("<li>")
-						.data("ui-autocomplete-item", item)
-						.append(
-								"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
-										+ item.value
-										+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
-										+ item.title
-										+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
-										+ item.dept
-										+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
-										+ item.email + "</td></tr></table></a>")
-						.appendTo(ul);
+				return $("<li style='border-bottom:1px solid #e8e8ef'>")
+				.data("ui-autocomplete-item", item)
+				.append(
+						"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+								+ item.value
+								+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+								+ item.title
+								+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+								+ item.dept
+								+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+								+ item.email + "</td></tr></table></a>")
+				.appendTo(ul);
 			};
 		})
 	    
@@ -2122,7 +2168,7 @@
 	                            </div>
 	                        </th>
 	                        <td style="width: 76%">
-	                            <input type="text" name="MsgCC" id="MsgCC" class="width100percent" onkeyup="return on_keydown(event)" tabindex="2" style="width: 100%">
+	                            <input type="text" name="MsgCC" id="MsgCC" class="width100percent" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="2" style="width: 100%">
 	                        </td>
 	                        <td style="width: 100px; border-left: #ffffff 1px solid;">
 	                            <select id="SelectCcAddress" style="width: 106px;height:24px" onchange="simple_select('CC',this)">
@@ -2146,7 +2192,7 @@
 	                                <spring:message code='ezEmail.t562' /></span></a>
 	                        </th>
 	                        <td>
-	                            <input type="text" name="MsgBCC" id="MsgBCC" class="width100percent" onkeyup="return on_keydown(event)" tabindex="3" style="width: 100%">
+	                            <input type="text" name="MsgBCC" id="MsgBCC" class="width100percent" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="3" style="width: 100%">
 	                        </td>
 	                        <td style="width: 100px; border-left: #ffffff 1px solid;">
 	                            <select id="SelectBCCAddress" style="width: 106px;height:24px" onchange="simple_select('BCC',this)">
