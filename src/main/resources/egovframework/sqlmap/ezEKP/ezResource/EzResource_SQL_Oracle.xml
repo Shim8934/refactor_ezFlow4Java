@@ -1973,9 +1973,30 @@
       		AND
       			resid = #resID#
 			AND
-				member_id = #memberID#
+				member_id =
+				(CASE
+                WHEN
+                	(SELECT
+						COUNT(*)
+						FROM
+							TBL_RS_RESACL
+						WHERE
+			      			companyid = #companyID#
+			      		AND
+			      			resid = #resID#
+						AND
+							member_id = 'everyone'
+						AND
+							access_lvl = '1'
+						AND
+                			TENANT_ID = #tenantID#) > 0
+               	THEN
+               		 'everyone'
+               	ELSE
+					#memberID#
+				END)
             AND
-                TENANT_ID = #tenantID#      			
+                TENANT_ID = #tenantID#
 		]]>
 	</select>
   
