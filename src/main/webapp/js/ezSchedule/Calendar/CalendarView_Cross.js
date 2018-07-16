@@ -1053,6 +1053,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         var dDiv = document.createElement("DIV")
         dDiv.setAttribute("id", divID + "ALL");
         dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+        dDiv.setAttribute("dispDate", divID);
         dDiv.style.height = "100px";
         dDiv.style.overflowY = "auto";
         dDiv.style.overflowN = "hidden";

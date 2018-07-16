@@ -719,6 +719,12 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			style = "display:none";			
 		}
 		
+		/* 2018-07-12 홍승비 - 모든 URL게시판은 임시 구분값(6)을 가지도록 수정 */
+		// 실제로 저장, 수정될 때의 값은 일반게시판과 동일한 0으로 들어가게 된다. 단지 화면을 부를때만 임시로 처리하는 것.
+		if (boardPropertyVO.getUrl() != null && !(boardPropertyVO.getUrl().trim().equals(""))) {
+			boardPropertyVO.setGuBun("6");
+		}
+		
 		model.addAttribute("model", boardPropertyVO);
 		model.addAttribute("use_multiData", use_multiData);
 		model.addAttribute("lang", lang);

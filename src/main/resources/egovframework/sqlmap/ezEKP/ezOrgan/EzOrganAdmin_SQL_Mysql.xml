@@ -2498,26 +2498,26 @@
 		    		TBL_ATTITUDE_TYPE
 		    			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES
-		    			('A01', #companyID#, #tenantID#, '출근', 'inCom', '1', null, null, 1),
-		    			('A02', #companyID#, #tenantID#, '지각', 'late', '1', null, null, 2),
-		    			('A03', #companyID#, #tenantID#, '퇴근', 'outCom', '1', null, null, 3),
-		    			('A07', #companyID#, #tenantID#, '휴근', 'working Holiday', '1', null, null, 6),
-		    			('A04', #companyID#, #tenantID#, '외근', 'outside work', '1', null, null, 8),
-		    			('A06', #companyID#, #tenantID#, '외출', 'outing', '1', null, null, 6),
-		    			('A05', #companyID#, #tenantID#, '휴가', 'vacation', '1', null, null, 0),
-		    			('A09', #companyID#, #tenantID#, '출장', 'business trip', '1', null, null, 7),
-		    			('A10', #companyID#, #tenantID#, '파견', 'dispatch', '1', null, null, 7),
-		    			('A08', #companyID#, #tenantID#, '조퇴', 'early leave', '1', null, null, 5),
-		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', null, 'A05', 4),
-		    			('A11', #companyID#, #tenantID#, '연차', 'annual leave', '1', null, 'A05', 9),
-		    			('A12', #companyID#, #tenantID#, '오전반차', 'morning off', '1', null, 'A05', 4),
-		    			('A13', #companyID#, #tenantID#, '오후반차', 'afternoon off', '1', null, 'A05', 4),
-		    			('A14', #companyID#, #tenantID#, '공가', 'official leave', '1', null, 'A05', 9),
-		    			('A15', #companyID#, #tenantID#, '오전공가', 'morning official leave', '1', null, 'A05', 9),
-		    			('A16', #companyID#, #tenantID#, '오후공가', 'after official leave', '1', null, 'A05', 9),
-		    			('A18', #companyID#, #tenantID#, '산휴', 'maternity leave', '1', null, 'A05', 9),
-		    			('A19', #companyID#, #tenantID#, '경조', 'congratulation and condolence leave', '1', null, 'A05', 9),
-		    			('A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', null, 'A05', 9)
+		    			('A01', #companyID#, #tenantID#, '출근', 'inCom', '1', 'inOut', null, 1),
+		    			('A02', #companyID#, #tenantID#, '지각', 'late', '1', 'inOut', null, 2),
+		    			('A03', #companyID#, #tenantID#, '퇴근', 'outCom', '1', 'inOut', null, 3),
+		    			('A07', #companyID#, #tenantID#, '휴근', 'working Holiday', '1', 'inOut', null, 6),
+		    			('A04', #companyID#, #tenantID#, '외근', 'outside work', '1', 'trip', null, 8),
+		    			('A06', #companyID#, #tenantID#, '외출', 'outing', '1', 'trip', null, 6),
+		    			('A05', #companyID#, #tenantID#, '휴가', 'vacation', '1', 'refresh', null, 0),
+		    			('A09', #companyID#, #tenantID#, '출장', 'business trip', '1', 'trip', null, 7),
+		    			('A10', #companyID#, #tenantID#, '파견', 'dispatch', '1', 'trip', null, 7),
+		    			('A08', #companyID#, #tenantID#, '조퇴', 'early leave', '1', 'absence', null, 5),
+		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', 'absence', 'A05', 4),
+		    			('A11', #companyID#, #tenantID#, '연차', 'annual leave', '1', 'refresh', 'A05', 9),
+		    			('A12', #companyID#, #tenantID#, '오전반차', 'morning off', '1', 'refresh', 'A05', 4),
+		    			('A13', #companyID#, #tenantID#, '오후반차', 'afternoon off', '1', 'refresh', 'A05', 4),
+		    			('A14', #companyID#, #tenantID#, '공가', 'official leave', '1', 'refresh', 'A05', 9),
+		    			('A15', #companyID#, #tenantID#, '오전공가', 'morning official leave', '1', 'refresh', 'A05', 9),
+		    			('A16', #companyID#, #tenantID#, '오후공가', 'after official leave', '1', 'refresh', 'A05', 9),
+		    			('A18', #companyID#, #tenantID#, '산휴', 'maternity leave', '1', 'refresh', 'A05', 9),
+		    			('A19', #companyID#, #tenantID#, '경조', 'congratulation and condolence leave', '1', 'refresh', 'A05', 9),
+		    			('A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', 'refresh', 'A05', 9)
 		    ]]>
     	</isEqual>
     	<isEqual property="lang" compareValue="3">
@@ -2526,26 +2526,26 @@
 		    		TBL_ATTITUDE_TYPE
 		    			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
 		    	VALUES
-		    			('A01', #companyID#, #tenantID#, '출근', 'inCom', '1', null, null, 1),
-		    			('A02', #companyID#, #tenantID#, '지각', 'late', '1', null, null, 2),
-		    			('A03', #companyID#, #tenantID#, '퇴근', 'outCom', '1', null, null, 3),
-		    			('A07', #companyID#, #tenantID#, '휴근', 'working Holiday', '1', null, null, 6),
-		    			('A04', #companyID#, #tenantID#, '외근', 'outside work', '1', null, null, 8),
-		    			('A06', #companyID#, #tenantID#, '외출', 'outing', '1', null, null, 6),
-		    			('A05', #companyID#, #tenantID#, '휴가', 'vacation', '1', null, null, 0),
-		    			('A09', #companyID#, #tenantID#, '출장', 'business trip', '1', null, null, 7),
-		    			('A10', #companyID#, #tenantID#, '파견', 'dispatch', '1', null, null, 7),
-		    			('A08', #companyID#, #tenantID#, '조퇴', 'early leave', '1', null, null, 5),
-		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', null, 'A05', 4),
-		    			('A11', #companyID#, #tenantID#, '연차', 'annual leave', '1', null, 'A05', 9),
-		    			('A12', #companyID#, #tenantID#, '오전반차', 'morning off', '1', null, 'A05', 4),
-		    			('A13', #companyID#, #tenantID#, '오후반차', 'afternoon off', '1', null, 'A05', 4),
-		    			('A14', #companyID#, #tenantID#, '공가', 'official leave', '1', null, 'A05', 9),
-		    			('A15', #companyID#, #tenantID#, '오전공가', 'morning official leave', '1', null, 'A05', 9),
-		    			('A16', #companyID#, #tenantID#, '오후공가', 'after official leave', '1', null, 'A05', 9),
-		    			('A18', #companyID#, #tenantID#, '산휴', 'maternity leave', '1', null, 'A05', 9),
-		    			('A19', #companyID#, #tenantID#, '경조', 'congratulation and condolence leave', '1', null, 'A05', 9),
-		    			('A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', null, 'A05', 9)
+		    			('A01', #companyID#, #tenantID#, '출근', 'inCom', '1', 'inOut', null, 1),
+		    			('A02', #companyID#, #tenantID#, '지각', 'late', '1', 'inOut', null, 2),
+		    			('A03', #companyID#, #tenantID#, '퇴근', 'outCom', '1', 'inOut', null, 3),
+		    			('A07', #companyID#, #tenantID#, '휴근', 'working Holiday', '1', 'inOut', null, 6),
+		    			('A04', #companyID#, #tenantID#, '외근', 'outside work', '1', 'trip', null, 8),
+		    			('A06', #companyID#, #tenantID#, '외출', 'outing', '1', 'trip', null, 6),
+		    			('A05', #companyID#, #tenantID#, '휴가', 'vacation', '1', 'refresh', null, 0),
+		    			('A09', #companyID#, #tenantID#, '출장', 'business trip', '1', 'trip', null, 7),
+		    			('A10', #companyID#, #tenantID#, '파견', 'dispatch', '1', 'trip', null, 7),
+		    			('A08', #companyID#, #tenantID#, '조퇴', 'early leave', '1', 'absence', null, 5),
+		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', 'absence', 'A05', 4),
+		    			('A11', #companyID#, #tenantID#, '연차', 'annual leave', '1', 'refresh', 'A05', 9),
+		    			('A12', #companyID#, #tenantID#, '오전반차', 'morning off', '1', 'refresh', 'A05', 4),
+		    			('A13', #companyID#, #tenantID#, '오후반차', 'afternoon off', '1', 'refresh', 'A05', 4),
+		    			('A14', #companyID#, #tenantID#, '공가', 'official leave', '1', 'refresh', 'A05', 9),
+		    			('A15', #companyID#, #tenantID#, '오전공가', 'morning official leave', '1', 'refresh', 'A05', 9),
+		    			('A16', #companyID#, #tenantID#, '오후공가', 'after official leave', '1', 'refresh', 'A05', 9),
+		    			('A18', #companyID#, #tenantID#, '산휴', 'maternity leave', '1', 'refresh', 'A05', 9),
+		    			('A19', #companyID#, #tenantID#, '경조', 'congratulation and condolence leave', '1', 'refresh', 'A05', 9),
+		    			('A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', 'refresh', 'A05', 9)
 		    ]]>
     	</isEqual>
     </insert>

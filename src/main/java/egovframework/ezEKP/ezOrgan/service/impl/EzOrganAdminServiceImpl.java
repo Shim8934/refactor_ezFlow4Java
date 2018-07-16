@@ -610,6 +610,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_I17(map1);
 				ezOrganAdminDao.insertCompanyInfo_I18(map1);
 				ezOrganAdminDao.insertCompanyInfo_I19(map1);
+				
 				ezOrganAdminDao.insertCompanyInfo_IKMS(map1);
 				ezOrganAdminDao.insertCompanyInfo_IKMS2(map1);
 				ezOrganAdminDao.insertCompanyInfo_IKMS3(map1);
@@ -620,7 +621,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				
 				//회사등록시 근태설정(근태규율관리) 기본값 insert
 				ezOrganAdminDao.insertCompanyInfo_I20(map1);
-				//회사등록시 근태유형 기본값 insert
 				map1.put("lang", userInfo.getLang());
 				ezOrganAdminDao.insertCompanyInfo_I21(map1);
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.

@@ -688,12 +688,13 @@
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
 
-		        if (listview.GetSelectedRows().length == 0){
+		        if (listview.GetSelectedRows().length == 0) {
 					alert("<spring:message code='ezOrgan.t50' />");
 					return;
-				}
-
-			    if (listview.GetSelectedRows().length > 1){
+				} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+                    alert(strLang13);
+                    return;
+			    } else if (listview.GetSelectedRows().length > 1) {
 					alert("<spring:message code='ezOrgan.t51' />");
 					return;
 				}
@@ -878,7 +879,7 @@
 		        }
 		    }
 		    
-			function info_user(){
+			function info_user() {
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
 		        
@@ -889,17 +890,17 @@
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
 
-				if (document.getElementById("listOpt2").checked == true){
-					return;
-				}
-				if (listview.GetSelectedRows().length == 0){
+				if (listview.GetSelectedRows().length == 0) {
 					alert("<spring:message code='ezOrgan.t9' />");
 					return;
-				}
-			    if (listview.GetSelectedRows().length > 1){
+				} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+                    alert(strLang13);
+                    return;
+		        } if (listview.GetSelectedRows().length > 1) {
 					alert("<spring:message code='ezOrgan.t10' />");
 					return;
-				}				
+				}
+		        
 				var args = new Array();
 				args[0] = treeNode.GetNodeData("CN");
 				
@@ -943,19 +944,17 @@
 		        }
 		    }
 		    
-		    function mod_quota()
-		    {
+		    function mod_quota() {
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
 
-		        if (listview.GetSelectedRows().length == 0)
-		        {
+		        if (listview.GetSelectedRows().length == 0) {
 		            alert("<spring:message code='ezOrgan.t43' />");
 		            return;
-		        }
-
-		        if (listview.GetSelectedRows().length > 1)
-		        {
+		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+                    alert(strLang13);
+                    return;
+		        } else if (listview.GetSelectedRows().length > 1) {
 		            alert("<spring:message code='ezOrgan.t44' />");
 		            return;
 		        }
@@ -970,11 +969,14 @@
 		        if (listview.GetSelectedRows().length == 0) {
 		            alert("<spring:message code='ezOrgan.t45' />");
 		            return;
-		        }
-		        if (listview.GetSelectedRows().length > 1) {
+		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+                    alert(strLang13);
+                    return;
+				} else if (listview.GetSelectedRows().length > 1) {
 		            alert("<spring:message code='ezOrgan.t46' />");
 		            return;
 		        }
+		        
 		        //2016-04-15 장진혁과장 -- cross 버전으로 통일하기 위한 주석처리
 		        //if (CrossYN()){
 		        	 //크롬일때 alert창 크기때문에 크롬일때 구별
@@ -991,14 +993,18 @@
 		    
 		    var inputpassword_dialogArguments = new Array();
 		    
-			function mod_password(){
+			function mod_password() {
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
 
-		        if (listview.GetSelectedRows().length == 0){
+		        if (listview.GetSelectedRows().length == 0) {
 					alert("<spring:message code='ezOrgan.t39' />");
 					return;
+				} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+                    alert(strLang13);
+                    return;
 				}
+		        
 		        //2016-04-18 장진혁과장 -- Cross 사용으로 인한 주석처리
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
 		        
@@ -1058,10 +1064,16 @@
 	            var listview = new ListView();
 	            listview.LoadFromID("lvUserList");
 
-	            if (listview.GetSelectedRows().length == 0){
+	            if (listview.GetSelectedRows().length == 0) {
 	        		alert(strLang2);
 	        		return;
-	        	}
+	        	} else {
+				    if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+	                    alert(strLang13);
+	                    return;
+				    }
+				}
+	            
 	            var length = listview.GetSelectedRows().length;		            
 	        	
 	        	if (!confirm(length + strLang1)){
@@ -1111,9 +1123,9 @@
 					return;
 				} else {
 				    if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
-	                    alert("<spring:message code='ezOrgan.t12' />");
-	                    return;				        
-				    }    
+				    	alert(strLang13);
+	                    return;
+				    }
 				}
 		        
 		        //2016-04-18 장진혁 과장 -- Cross 버전 사용으로 인한 주석 처리
@@ -1309,9 +1321,10 @@
 		    	if (length == 0) {
 		    		alert("<spring:message code='ezOrgan.kyj05' />");
 		    		return;
-		    	} 
-		    	
-		    	if (length > 1) {
+		    	} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+                    alert(strLang13);
+                    return;
+				} else if (length > 1) {
 	    			alert("<spring:message code='ezOrgan.kyj06' />");
 		    		return;
 	    		}
@@ -1424,8 +1437,8 @@
 			<tr>
 				<th style="height:30px"><spring:message code='ezOrgan.t73' /></th>
 				<th>
-					<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><spring:message code='ezOrgan.t74' />					
-					<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><spring:message code='ezOrgan.t75' />
+					<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>					
+					<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
 				</th>
 				<th style="width:80px;text-align:center" rowspan="3">
 					<table>

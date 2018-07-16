@@ -1419,6 +1419,7 @@ public class EzScheduleController extends EgovFileMngUtil {
             	strAttach.append("<ROOT><NODES>");
             	
                 for (AttachListVO attach : attachList) {
+//                    strAttach.append("<DATA><![CDATA[" + commonUtil.cleanPropertyValue(attach.getFilePath().split("uploadFile/")[1] + "/" + attach.getFileName() + "/" + attach.getFileSize()) + "]]></DATA>");
                     strAttach.append("<DATA><![CDATA[" + attach.getFilePath().split("uploadFile/")[1] + "/" + attach.getFileName() + "/" + attach.getFileSize() + "]]></DATA>");
                     strAttach.append("<DATA2><![CDATA[]]></DATA2>");
                     strAttach.append("<DATA3><![CDATA[OK]]></DATA3>");

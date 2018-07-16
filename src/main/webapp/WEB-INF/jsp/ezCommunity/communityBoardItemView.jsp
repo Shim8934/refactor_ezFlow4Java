@@ -58,6 +58,8 @@
 	    	var pUse_Editor = "<c:out value='${useEditor}' />";
 	    	var rsa = new RSAKey();
 	    	var commentCount = "<c:out value='${commentCount}' />";
+	    	//2018-07-13 김보미
+	    	var treeCtrl = "<c:out value='${treeCtrl}' />";
 	    	
 	    	window.onload = function () {
 	    		$("#message").contents().find("body").css("word-wrap", "break-word");
@@ -369,8 +371,9 @@
 	            pwidth = parseInt(pwidth) / 2;
 	            pheigth = pheigth - 200;
 	            pwidth = pwidth - 127;
-
-	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code, "", "height=656,width=440px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
+				//2018-07-13 김보미 - 파라메터 추가
+// 	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code, "", "height=656,width=440px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
+	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code + "&treeCtrl=" + treeCtrl, "", "height=656,width=440px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
 	        }
 
 	        function btnClose_onclick() {
