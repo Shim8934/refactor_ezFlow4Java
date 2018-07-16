@@ -924,7 +924,7 @@
 		
 			 /* 2018-06-12 김민성 - 게시판 검색 레이어팝업 변경 */ 
 			function doLayerPopup(obj) {
-				if (window.parent.frames['left'] == undefined) {	// 2018-06-15 김민성 - 즐겨찾기 내 게시판일때 기존 팝업으로 변경
+				if (window.parent.frames['left'] == undefined && parent.frames["BoardEnv_ifrm"] == undefined) {	// 즐겨찾기 검색
 					$("<div id='blockLeft' class='blockLeft' onclick='parent.frames[\"right\"].frames[\"FBoard_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["left"].document.body);
 		    		$("<div id='blockTop' class='blockTop' onclick='parent.frames[\"right\"].frames[\"FBoard_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["right"].document.body);
 		    		
@@ -953,7 +953,18 @@
 			            BoardSearchOptionHidden();
 			        } */
 		    	}
-		    	else {
+				else if (parent.frames["BoardEnv_ifrm"] != undefined) {			// 관리자 모드 검색
+		    		$("<div id='blockLeft' class='blockLeft' onclick='parent.parent.frames[\"right\"].frames[\"BoardEnv_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["board_menu"].document.body);
+		    		$("<div id='blockTop' class='blockTop' onclick='parent.parent.frames[\"right\"].frames[\"BoardEnv_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["board_main"].document.body);
+		    		
+		    		parent.parent.frames["board_menu"].document.body.style.overflow = "hidden";		    		
+		    				    		
+			    	var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;			    	
+
+			    	$("#srarchpopup").css("board_menu", popupX).css("bottom", "66px");
+			    	$("#srarchpopup").modal();
+		    	}
+		    	else {																				// 일반 게시판 검색
 			    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
 			    	parent.frames["left"].document.body.style.overflow = "hidden";
 			    	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
