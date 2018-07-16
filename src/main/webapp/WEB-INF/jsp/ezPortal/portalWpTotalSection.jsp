@@ -727,7 +727,7 @@
 		                    var ret = window.showModalDialog(url, "", feature);
 
 		                    if (ret != undefined && ret[0][0] != undefined) {
-		                        url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ret[0][0] + "&brdName=" + encodeURIComponent(ret[1][0]);
+		                        url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ret[0][0];
 		                        feature = "status:no;dialogWidth:770px;dialogHeight:700px;help:no;scroll:no;edge:sunken";
 		                        feature = feature + GetShowModalPosition(700, 700);
 		                        window.showModalDialog(url, ret, feature);
@@ -752,7 +752,7 @@
 		    
 		    function btnWrite_onclick_Complete(ret) {
 		        if (ret != "close" && ret != undefined && ret[0][0] != undefined) {
-		            url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ret[0][0] + "&brdName=" + encodeURIComponent(ret[1][0]);
+		            url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ret[0][0];
 
 		            var Schedule_Add_ck = window.open(url, "Schedule_Add_Cross", GetOpenWindowfeature(820, 700));
 		            

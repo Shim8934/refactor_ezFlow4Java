@@ -1,5 +1,5 @@
 body {
-    background: #999 url(../images/bgbg.png);
+    /* background: #999 url(../images/bgbg.png); 2018-07-16 배현상, 통계화면 background 회색으로 바뀌는 현상 제거*/
     font: 100.01% "Fontin Sans", Fontin-Sans, "Myriad Pro", "Lucida Grande", "Lucida Sans Unicode", Lucida, Verdana, Helvetica, sans-serif;
     color: #000;
     margin: 10px 0 0 0;
