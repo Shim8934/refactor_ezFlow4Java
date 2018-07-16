@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.ChineseCalendar;
 
 import egovframework.ezEKP.ezPMS.dao.EzPMSDAO;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
@@ -37,6 +38,7 @@ import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectHolidayVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO;
@@ -96,8 +98,15 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 						Date today = new Date();
 						String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 						Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
-
-						int restDueday = getWorkingDays(now, endDate, companyId, tenantId);
+						Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanStartDate());
+						int restDueday = 0;
+						
+						if (startDate.before(now)) {
+							restDueday = getWorkingDays(now, endDate, companyId, tenantId);
+						} else {
+							restDueday = getWorkingDays(startDate, endDate, companyId, tenantId);
+						}
+						
 						projectList.get(i).setRestDueday(restDueday);
 					}
 
@@ -1341,10 +1350,10 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("tenantId", tenantId);
 		map.put("planStartDate", start);
 		map.put("planEndDate", end);
-		// map.put("planStartDateShort",
-		// start.toString().substring(start.toString().indexOf("-") + 1));
-		// map.put("planEndDateShort",
-		// end.toString().substring(end.toString().indexOf("-") + 1));
+		map.put("planStartDateShort",
+				start.toString().substring(start.toString().indexOf("-") + 1));
+		map.put("planEndDateShort",
+				end.toString().substring(end.toString().indexOf("-") + 1));
 
 		// Ignore argument check
 		Calendar c1 = GregorianCalendar.getInstance();
@@ -1367,19 +1376,170 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		if (w2 == Calendar.SUNDAY) {
 			w2 = Calendar.MONDAY;
 		}
-		
-		// List<String> compHoliday = ezPMSDAO.getHolidaysCount(map);
-		//
-		// for (int i = 0; i < compHoliday.size(); i++) {
-		//
-		// }
 
 		int workingDays = (int) (daysWithoutSunday - w1 + w2 + 1);
+		
+		HashSet<String> solarHolidayMap = new HashSet<String>();
+		HashSet<String> lunarHolidayMap = new HashSet<String>();
+		int noRepeatHolidayCount = 0;
+		
+		//고정공휴일 & 사용자 정의 공휴일 불러오기
+		map.put("lang", ""); //parameter추가
+		List<ProjectHolidayVO> holidayList = ezPMSDAO.getCustomHoliday(map);
+		
+		for (int i = 0; i < holidayList.size(); i++) {
+			if (holidayList.get(i).getIsRepeat() == 1) {
+				if (holidayList.get(i).getIsSolar() == 1) {
+					solarHolidayMap.add(holidayList.get(i).getHoliday());
+				} else {
+					lunarHolidayMap.add(holidayList.get(i).getHoliday());
+				}
+			} else {
+				noRepeatHolidayCount++;
+			}
+		}
+		
+		//토요일 일요일이 포함이 안된 고정공휴일 & 사용자 정의 공휴일 개수 구하기
+		int holidays = getWorkingDays2(start, end, solarHolidayMap, lunarHolidayMap);
+		
+		System.out.println(workingDays);
+		System.out.println(holidays);
+		System.out.println(noRepeatHolidayCount);
+		//고정공휴일과 사용자 정의 공휴일이 개수를  workindays에서 뺌
+		workingDays = workingDays - holidays - noRepeatHolidayCount;
+		
 		LOGGER.debug("WORKINGDAYS : " + workingDays);
 		LOGGER.debug("[SERVICE]getWorkingDays ended");
 		return workingDays;
 	}
+	
+	 public String getDateByString(Date date, String separator) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy"+separator+"MM"+separator+"dd");
+		return sdf.format(date);
+	 }
+	 
+	    /**
+	     * 양력날짜를 음력날짜로 변환
+	     * @param 양력날짜 (yyyyMMdd)
+	     * @return 음력날짜 (yyyyMMdd)
+	     */ 
+	 public String converSolarToLunar(String date, String separator) {
+	        ChineseCalendar cc = new ChineseCalendar();
+	        Calendar cal = Calendar.getInstance();
+	 
+	        cal.set(Calendar.YEAR, Integer.parseInt(date.substring(0, 4)));
+	        cal.set(Calendar.MONTH, Integer.parseInt(date.substring(5, 7)) - 1);
+	        cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date.substring(8)));
+	 
+	        cc.setTimeInMillis(cal.getTimeInMillis());
+	 
+	        int y = cc.get(ChineseCalendar.EXTENDED_YEAR) - 2637;
+	        int m = cc.get(ChineseCalendar.MONTH) + 1;
+	        int d = cc.get(ChineseCalendar.DAY_OF_MONTH);
+	 
+	        StringBuffer ret = new StringBuffer();
+	        ret.append(String.format("%04d", y)).append(separator);
+	        ret.append(String.format("%02d", m)).append(separator);
+	        ret.append(String.format("%02d", d));
+	 
+	        return ret.toString();
+	 } // end converSolarToLunar
+	 
+	 public String getDay(String date, int amount) {
+		 Calendar cal = Calendar.getInstance();
+		 cal.set(Integer.parseInt(date.substring(0, 4)), Integer.parseInt(date.substring(5, 7)) - 1, Integer.parseInt(date.substring(8)));
+		 cal.add(Calendar.DAY_OF_MONTH, amount);
+	 
+		 return getDateByString(cal.getTime(), "-");
+	}
+	    
+	public int getWorkingDays2(Date startDate, Date endDate, HashSet<String> solarHolidayMap, HashSet<String> lunarHolidayMap) {
+		HashSet<String> holidayList = new HashSet<String>();
+		
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(startDate);
+		Calendar endCal = Calendar.getInstance();
+		endCal.setTime(endDate);
+		
+		int startYear = startCal.get(Calendar.YEAR);
+		int endYear = endCal.get(Calendar.YEAR);
+		
+		 SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
 
+	        String solarDate = "";
+	        String lunarDate = "";
+	        
+	        for(int i = startYear; i <= endYear;) {
+	            solarDate = getDateByString(startCal.getTime(), "-");
+	            lunarDate = converSolarToLunar(solarDate, "-");
+	 
+	            startCal.add(Calendar.DAY_OF_MONTH, 1);
+	            
+	            // 양력휴일 체크
+	            String solarMmdd = solarDate.substring(5);
+	            
+	            if(solarHolidayMap.contains(solarMmdd)) {
+	                try {
+						Date date = fmt.parse(solarDate);
+						Calendar cal = Calendar.getInstance();
+						cal.setTime(date);
+						
+						if (cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
+							holidayList.add(solarDate);
+						}
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+	                
+	            }
+	 
+	            // 음력휴일 체크
+	            String lunarMmdd = lunarDate.substring(5);
+	            if(lunarHolidayMap.contains(lunarMmdd)) {
+	                // 음력 12월은 마지막날이 29일, 30일 계속 번갈아가면서 있으므로
+	                // 양력에서 하루를 빼준날이 구정시작하는 날짜이다.
+	                if(lunarMmdd.equals("01-01")) {
+	                	String lunarDay = getDay(solarDate, -1);
+	                	
+	                	try {
+	    					Date date = fmt.parse(lunarDay);
+	    					Calendar cal = Calendar.getInstance();
+	    					cal.setTime(date);
+	    					
+	    					if (cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
+	    						holidayList.add(lunarDay);
+	    					}
+	    				} catch (ParseException e) {
+	    					// TODO Auto-generated catch block
+	    					e.printStackTrace();
+	    				}
+	                }
+	                
+	            	try {
+						Date date = fmt.parse(solarDate);
+						Calendar cal = Calendar.getInstance();
+						cal.setTime(date);
+						
+						if (cal.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && cal.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
+							holidayList.add(solarDate);
+						}
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+	            }
+	 
+	            startYear = startCal.get(Calendar.YEAR);
+	            
+	            if (startYear != i) {
+	                i++;
+	            }
+	            
+	            if(startCal.getTimeInMillis() > endCal.getTimeInMillis()) break;
+	        } // end for_i
+	        	System.out.println(holidayList.size());
+		
+		return holidayList.size();
+	}
 	// 유저 정보 불러오기
 	@Override
 	public ProjectMemberVO getUserInfo(String userId, int tenantId, String userIdType) throws Exception {

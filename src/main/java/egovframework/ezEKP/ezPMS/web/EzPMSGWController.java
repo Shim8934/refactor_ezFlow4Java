@@ -119,7 +119,7 @@ public class EzPMSGWController {
 			String searchByUser = request.getParameter("searchByUser");
 			String searchByOverview = request.getParameter("searchByOverview");
 			String companyId = info.getCompanyId();
-
+			
 			if (searchByName != null && !searchByName.equals("")) {
 				searchByName = searchByName.replace("\\", "\\\\");
 				searchByName = searchByName.replace("%", "\\%");

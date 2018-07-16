@@ -23,6 +23,7 @@
 	<typeAlias 	alias="FileVO" 								type="egovframework.ezEKP.ezPMS.vo.FileVO"/>
 	<typeAlias 	alias="BoardViewerVO" 						type="egovframework.ezEKP.ezPMS.vo.BoardViewerVO"/>
 	<typeAlias 	alias="CommentVO" 							type="egovframework.ezEKP.ezPMS.vo.CommentVO"/>
+	<typeAlias 	alias="ProjectHolidayVO" 					type="egovframework.ezEKP.ezPMS.vo.ProjectHolidayVO"/>
 	
     <resultMap id="projectInfoVO" class="ProjectInfoVO">
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="1"/>
@@ -407,6 +408,12 @@
     	<result property="planEndDate"						column="plan_end_date"/>
     </resultMap>
     
+    <resultMap id="projectHolidayVO" class="ProjectHolidayVO">
+    	<result property="holidayName"						column="HOLIDAY_NAME"/>
+    	<result property="holiday"							column="HOLIDAY"/>
+    	<result property="isSolar"							column="ISSOLAR"/>
+    	<result property="isRepeat"							column="ISREPEAT"/>
+    </resultMap>
     <!-- 조직도 만들기 위한 쿼리 -->
 	<select id="EzPMSDAO.selectDeptList" parameterClass="map" resultMap="projectDeptViewMap">
 		select 
@@ -3490,30 +3497,6 @@
 		]]>
 	</select>
 	
-	<select id="EzPMSDAO.getHolidaysCount" parameterClass="map" resultClass="String">
-		<![CDATA[
-			SELECT
-				HOLIDAYDATE
-			FROM
-				TBL_HOLIDAYLIST
-			WHERE
-				((HOLIDAYDATE >= #planStartDate# AND HOLIDAYDATE <= #planEndDate#)
-    				OR
-				 ( DATE_FORMAT(HOLIDAYDATE, '%m-%d')  >= #planStartDateShort#
-					AND DATE_FORMAT(HOLIDAYDATE, '%m-%d')  <= #planEndDateShort#
-    				AND ISREPEAT = 1))
-    		 	AND
-					ISREST = 1
-				AND
-					ISUSE = 1
-				AND
-					USECOMPANY = #companyId#
-				AND
-					TENANT_ID = #tenantId#;		
-				
-		]]>
-	</select>
-	
 	<update id="EzPMSDAO.updateGroupDate" parameterClass="map">
 		<![CDATA[
 			UPDATE
@@ -4114,4 +4097,36 @@
 		AND
 			TASK_ID = #taskId#
 	</delete>
+	
+	<select id="EzPMSDAO.getCustomHoliday" parameterClass="map" resultMap="projectHolidayVO">
+		<![CDATA[
+			SELECT
+				DATE_FORMAT(HOLIDAYDATE, '%m-%d') AS HOLIDAY,
+				ISSOLAR,
+				ISREPEAT,
+				HOLIDAYNAME$lang$ AS HOLIDAY_NAME
+			FROM
+				TBL_HOLIDAYLIST
+			WHERE
+				((HOLIDAYDATE >= #planStartDate# AND HOLIDAYDATE <= #planEndDate#)
+    				OR
+				 (ISREPEAT = 1))
+    		 	AND
+					ISREST = 1
+				AND
+					ISUSE = 1
+				AND
+					USECOMPANY = #companyId#
+				AND
+					TENANT_ID = #tenantId#
+			UNION
+				SELECT
+					HOLIDAY,
+					SOLARLUNAR AS ISSOLAR,
+					1 AS ISREPEAT,
+					HOLIDAY_NAME$lang$ AS HOLIDAY_NAME
+				FROM
+					TBL_PMS_FIXEDHOLIDAY
+		]]>
+	</select>
 </sqlMap>

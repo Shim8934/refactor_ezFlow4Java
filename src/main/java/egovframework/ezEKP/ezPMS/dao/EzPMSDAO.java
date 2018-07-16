@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezPMS.dao;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectHolidayVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
@@ -487,11 +489,6 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (Float) select("EzPMSDAO.getProjectWeight", map);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<String> getHolidaysCount(Map<String, Object> map) {
-		return (List<String>) select("EzPMSDAO.getHolidaysCount", map);
-	}
-	
 	public void updateGroupProgress(Map<String, Object> map){
 		update("EzPMSDAO.updateGroupProgress", map);
 	}
@@ -636,5 +633,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void deleteMemberSchedule(Map<String, Object> map) {
 		delete ("EzPMSDAO.deleteMemberSchedule", map);
 		
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ProjectHolidayVO> getCustomHoliday(Map<String, Object> map) {
+		return (List<ProjectHolidayVO>) list("EzPMSDAO.getCustomHoliday", map);
 	}
 } 

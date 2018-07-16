@@ -74,6 +74,7 @@ $(function(){
 		$("div[name=" + projectList[i].projectId+"]").LineProgressbar({
 			percentage : projectList[i].progress,
 			fillBackgroundColor : progressColor,
+			duration : 0,
 			height : '15px',
 			radius : '15px',
 			width : '74%'
@@ -82,6 +83,7 @@ $(function(){
 		$("div[complete=" + projectList[i].projectId+"]").LineProgressbar({
 			percentage : completeTaskPercent,
 			fillBackgroundColor : completeColor,
+			duration : 0,
 			height : '15px',
 			radius : '15px',
 			width : '74%'
@@ -90,6 +92,7 @@ $(function(){
 		$("div[overdue=" + projectList[i].projectId+"]").LineProgressbar({
 			percentage : lateTaskPercent,
 			fillBackgroundColor : overdueColor,
+			duration : 0,
 			height : '15px',
 			radius : '15px',
 			width : '74%'
