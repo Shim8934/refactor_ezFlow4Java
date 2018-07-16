@@ -365,10 +365,6 @@
 						if (document.getElementById("rdTotal").checked) {
 				    		InsFContTotal();
 						} else {
-							if ($('#tbManage').val() == "") {
-								alert(strLanggarm01);
-								return;
-							}
 				    		InsFContGroup();
 						}
 						
@@ -397,10 +393,6 @@
 						if (document.getElementById("rdTotal").checked) {
 				    		UpFcontTotal();
 						} else {
-							if ($('#tbManage').val() == "") {
-								alert(strLanggarm01);
-								return;
-							}
 				    		UpFContGroup();
 						}
 						

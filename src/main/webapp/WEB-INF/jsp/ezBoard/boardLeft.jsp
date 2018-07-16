@@ -75,7 +75,7 @@
 		                MyBoard();
 		            }
 		            else if (subFunc == "2") {
-		                /* ReservationItem_onclick(); */
+		                ReservationItem_onclick();
 		            }
 		            else {
 		                if (RedirectBoardID != "") {

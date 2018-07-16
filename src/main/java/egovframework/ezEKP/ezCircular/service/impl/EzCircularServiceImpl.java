@@ -401,7 +401,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		//파일이 있으면 hasFile을 1로 설정
 		int hasFile = 0;
 
-		if (fileList != null && !fileList.equals("")) {
+		if (fileList != null && !fileList.equals("[]")) {
 			hasFile = 1;
 		}
 
@@ -447,7 +447,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 
 		Map<String, Object> attachMap = new HashMap<String, Object>();
 
-		if (fileList != null && !fileList.equals("")) {
+		if (fileList != null && !fileList.equals("[]")) {
 			//2018-07-06 김보미 - 파일부분 수정
 //			int fileLength = fileList.split(",").length;
 //			String[] fileLists = fileList.split(",");
