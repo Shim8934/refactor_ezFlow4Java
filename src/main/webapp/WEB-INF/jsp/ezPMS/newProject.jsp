@@ -212,7 +212,7 @@ var groupId = "${groupId}";
 	 planEndDate = $("#Edatepicker").val();
 	 overview = convertString($("#overview").val().trim());
 	 
-	 if (parent.userRole != 1) {
+	 if (mode == "edit" && parent.userRole != 1) {
 		alert("<spring:message code='ezPMS.t9'/>");
 		return;
 	 }
