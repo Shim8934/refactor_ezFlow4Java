@@ -526,8 +526,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ProjectMemberScheduleVO> getMemberSchedule(Map<String, Object> map) {
-		return (List<ProjectMemberScheduleVO>) list("EzPMSDAO.getMemberSchedule", map);
+	public List<TaskMemberVO> getMemberSchedule(Map<String, Object> map) {
+		return (List<TaskMemberVO>) list("EzPMSDAO.getMemberSchedule", map);
 	}
 
 	public void addMemberSchedule(Map<String, Object> map) {

@@ -19,7 +19,10 @@ public class TaskMemberVO {
 	private String userDeptname2;
 	
 	private float pctinput;
-
+	
+	private String planStartDate;
+	
+	private String planEndDate;
 	
 	public long getTaskMemberId() {
 		return taskMemberId;
@@ -92,6 +95,20 @@ public class TaskMemberVO {
 	public void setPctinput(float pctinput) {
 		this.pctinput = pctinput;
 	}
-	
-	
+
+	public String getPlanStartDate() {
+		return planStartDate;
+	}
+
+	public void setPlanStartDate(String planStartDate) {
+		this.planStartDate = planStartDate;
+	}
+
+	public String getPlanEndDate() {
+		return planEndDate;
+	}
+
+	public void setPlanEndDate(String planEndDate) {
+		this.planEndDate = planEndDate;
+	}
 }

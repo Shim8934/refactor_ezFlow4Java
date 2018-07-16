@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezPMS.service.impl;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,7 +18,6 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.ibatis.annotations.Param;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,9 +42,9 @@ import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectUserVO;
-import egovframework.ezEKP.ezPMS.vo.ProjectTaskTreeVO;
 import egovframework.ezEKP.ezPMS.vo.SearchVO;
 import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
 import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
@@ -2939,8 +2937,41 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("tenantId", tenantId);
 		map.put("lang", lang);
 		
+		List<ProjectMemberScheduleVO> memberScheduleVOs = new ArrayList<ProjectMemberScheduleVO>();
+		
+		List<TaskMemberVO> taskMemberVOs = ezPMSDAO.getMemberSchedule(map);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		taskMemberVOs.forEach(vo -> {
+			Calendar planStartDate = new GregorianCalendar();
+			Calendar planEndDate   = new GregorianCalendar();
+			try {
+				planStartDate.setTime(sdf.parse(vo.getPlanStartDate()));
+				planEndDate.setTime(sdf.parse(vo.getPlanEndDate()));
+				
+				do {
+					if(planStartDate.get(Calendar.DAY_OF_WEEK) != 1 && planStartDate.get(Calendar.DAY_OF_WEEK) != 7) {
+						ProjectMemberScheduleVO scheduleVO = new ProjectMemberScheduleVO();
+						scheduleVO.setAssignedDate(sdf.format(planStartDate.getTime()));
+						scheduleVO.setTaskId(vo.getTaskId());
+						scheduleVO.setDeptName(vo.getUserDeptname());
+						scheduleVO.setUserName(vo.getUserName());
+						scheduleVO.setUserId(vo.getUserId());
+						scheduleVO.setProjectId(projectId);
+						scheduleVO.setTenantId(tenantId);
+						
+						memberScheduleVOs.add(scheduleVO);
+					}
+					
+					planStartDate.add(Calendar.DATE, 1);
+				} while(planStartDate.compareTo(planEndDate) < 1);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		
 		LOGGER.debug("[SERVICE] getMemberSchedule ended.");
-		return ezPMSDAO.getMemberSchedule(map);
+		return memberScheduleVOs;
 	}
 
 	@Override
