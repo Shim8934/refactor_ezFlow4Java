@@ -2780,7 +2780,8 @@
    			HEAD_MANAGER_DEPTNAME = #headManagerDeptname#,
    			HEAD_MANAGER_DEPTNAME2 = #headManagerDeptname2#,
    			PLAN_START_DATE = #planStartDate#,
-   			PLAN_END_DATE = #planEndDate#
+   			PLAN_END_DATE = #planEndDate#,
+   			TREE_DEPTH = #treeDepth#
   			WHERE
   				TASK_ID = #taskId#
   			AND

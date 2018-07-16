@@ -263,4 +263,8 @@ public interface EzPMSService {
 	public void deleteMemberSchedule(String date, long projectId, int tenantId, String memberId, long taskId);
 	
 	public void updateGroupLatestInfo(long projectId, long groupId, int tenantId) throws Exception;
+	
+	public List<String> getDateList(String startDate, String EndDate) throws Exception;
+	
+	public void updateMemberSchedules(Map<String, Object> map) throws Exception;
 }
