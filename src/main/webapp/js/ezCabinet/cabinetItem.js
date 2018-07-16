@@ -39,8 +39,9 @@ var CabinetItem = function() {
 		});
 		
 		switch(prevMode) {
-			case "w"   : cabinetPreview.resizeByWidth() ; break;
-			case "h"   : cabinetPreview.resizeByHeight(); break;
+			case "w"   : cabinetPreview.resizeByWidth()      ; break;
+			case "h"   : cabinetPreview.resizeByHeight()     ; break;
+			case "off" : cabinetPreview.resizeDestroy("init"); break;
 		}
 		
 		crrPreMode = prevMode;
@@ -83,8 +84,8 @@ var CabinetItem = function() {
 		closeViewPopUp();
 		
 		switch(crrPreMode) {
-			case "w": cabinetPreview.resizeByWidth() ; break;
-			case "h": cabinetPreview.resizeByHeight(); break;
+			case "w"  : cabinetPreview.resizeByWidth()  ; break;
+			case "h"  : cabinetPreview.resizeByHeight() ; break;
 		}
 	}
 	
@@ -583,6 +584,8 @@ var CabinetItem = function() {
 	
 	function addRelatedCabinet() {
 		//* blank 2018.07.09
+		var cabId  = document.getElementById("cabInfo").getAttribute("role");
+		window.open("/ezCabinet/cabinetAddRelated.do", "addRelated", getOpenWindowfeature(600, 690));
 	}
 	
 	function getFileDetail() {window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 690));}
