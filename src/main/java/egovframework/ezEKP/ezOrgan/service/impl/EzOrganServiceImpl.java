@@ -771,14 +771,14 @@ public class EzOrganServiceImpl implements EzOrganService {
                 	
                 	//수정(2017-01-23)
                 	// 검색 시 _가 들어간 문자가 검색이 안되어, [_]로 replace하는부분 제거
-                	searchParemeta[i] = searchInfo[1].replace("%", "\\%").replace("_", "\\_");
+                	searchParemeta[0] = searchInfo[1].replace("%", "\\%").replace("_", "\\_");
                 	
                     if (checkSearchField(searchInfo[0])){
                         if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParemeta[0].toString().equals("/")){
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParemeta[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParemeta[i] + "'";
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParemeta[0] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParemeta[0] + "'";
                             searchParemeta[0] = searchParemeta[0].substring(0, searchParemeta[0].length() - 1);
                         }else{
-                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + searchParemeta[i] + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + searchParemeta[i] + "%'";
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + searchParemeta[0] + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + searchParemeta[0] + "%'";
                         }
                     }else{
                         if (searchInfo[0].indexOf("EXACT_") == 0){
