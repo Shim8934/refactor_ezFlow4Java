@@ -998,11 +998,14 @@ function event_SaveonClick() {
     	
         var xmlResult = loadXMLString(g_saveHttp.responseText);
         var pRtnMessage = "";
-        if (!CrossYN()) {
-            pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).text;
-        }
-        else if (CrossYN()) {
-        	pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).textContent;
+        
+        try {
+            if (!CrossYN()) {
+                pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).text;
+            } else if (CrossYN()) {
+                pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).textContent;
+            }
+        } catch (e) {
         }
         
         //메일 발송인 경우
@@ -2047,7 +2050,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
         for (var i = 0; i < AttachRows.length; i++) {
             var filepath = SelectSingleNodeValue(AttachRows[i], "FilePath");
             var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
-            var filename = MakeXMLString(filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length));
+            var filename = filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length);
             var filesize = SelectSingleNodeValue(AttachRows[i], "FileSize2");
 
             pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
@@ -2390,7 +2393,8 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         for (var i = 0 ; i < nodes.length ; i++) {
             if (getNodeText(GetChildNodes(nodes[i])[5]) == "Y") {
                 if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
-                    var strTarget = "target='_blank'";
+                	// skyblue0o0 20180709 : 모든 대용량 첨부파일 다운로드 링크에 target을 ''로 수정
+                    var strTarget = "target=''";
                     var FileName = getNodeText(GetChildNodes(nodes[i])[2]);
                     FileName = replaceAll(FileName, "&", "&amp;");
                     var fileSize = getNodeText(GetChildNodes(nodes[i])[3]);
@@ -2399,12 +2403,13 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                     var strFileExt = FileName.substr(FileName.lastIndexOf('.'));
                     strFileExt = strFileExt.toLowerCase();
                     
+                    /*
                     if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
                     strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
                     strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
                     strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mp3" || strFileExt == ".zip") {
                         strTarget = "target=''";
-                    }
+                    }*/
                     
                     if (fileSize / 1024 / 1024 / 1024 > 1) {
                         fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 / 1024 * 10)) / 10).toFixed(1) + "GB";

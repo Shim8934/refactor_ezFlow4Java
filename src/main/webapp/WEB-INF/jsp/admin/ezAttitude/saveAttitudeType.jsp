@@ -124,7 +124,7 @@
     			</td> 
   			</tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionNew">
 	        <a class="imgbtn"><span onclick="OK_Click();" ><spring:message code='ezAttitude.t16' /></span></a>
 	    </div>
 	</body>

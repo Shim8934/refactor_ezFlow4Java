@@ -33,22 +33,6 @@
 	padding: 0px;
 }
 
-#layer_Viewpopup .popupwrap1 {
-	border: 1px solid #555a64;
-	padding: 0px;
-	margin: 0px;
-}
-
-#layer_Viewpopup .shadow {
-	height: 2px;
-	background: #d7d7d7;
-}
-
-#layer_Viewpopup .popupwrap2 {
-	border: 2px solid #e5e5e5;
-	padding: 10px;
-}
-
 #layer_Viewpopup .btn_area {
 	border-top: 1px solid #e5e5e5;
 	margin: 10px 0px 0px 0px;
@@ -82,11 +66,11 @@
 }
 
 .selectTR {
-	background-color: #efeff0;
+	background-color: #edf4fd;
 }
 
 .selectTD {
-	background-color: #efeff0;
+	background-color: #edf4fd;
 }
 
 #journalListBody #journalList tr<c:if test="${listType ne 'temp' }">.noView</c:if> td {
@@ -135,14 +119,14 @@
 		    var replyJournalTitle;
 			
 			window.onresize = function () {
-		        MailOptionHidden();
-		        journalPreviewRayerChange(pPreviewShow_HOW);
-		        var textContentSize;
-				textContentSize = $("#PreviewRayerH").height() - 55;
-				$("#Preview_ContentH").css("height", textContentSize);
-				textContentSize = $("#PreviewRayerW").height() - 80;
-				$("#Preview_ContentW").css("height", textContentSize);
-// 		        Window_resize();
+// 		        MailOptionHidden();
+// 		        journalPreviewRayerChange(pPreviewShow_HOW);
+// 		        var textContentSize;
+// 				textContentSize = $("#PreviewRayerH").height() - 55;
+// 				$("#Preview_ContentH").css("height", textContentSize);
+// 				textContentSize = $("#PreviewRayerW").height() - 80;
+// 				$("#Preview_ContentW").css("height", textContentSize);
+		        Window_resize();
 		    };
 		    
 			document.onselectstart = function () { return false; };
@@ -155,6 +139,109 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		    };
+		    
+		    function Window_resize() {
+		        try {
+		        	document.getElementById("layer_popup").style.left = document.documentElement.clientWidth - 260 + "px";
+		            document.getElementById("layer_popup").style.top = "100px";
+
+		            if (!isPreviewChange) {
+		            	
+		            	/* 단암 일정사이즈 이하로 width가 줄어도 좌우 미리보기 유지 
+		                if (parseInt(document.documentElement.clientWidth) < 1000) {
+		                	document.getElementById("PreViewleft").style.display = "none";
+		                	pPreviewShow_HOW = "W";
+		                }
+		                else {
+		                    document.getElementById("PreViewleft").style.display = "";
+		                } */
+		            	
+		                if (pPreviewShow_HOW == "W") {
+		                	if (pMailListDiv == 0 || pMailPreVDiv == 0) {
+		                        pMailListDiv = 50; pMailPreVDiv = 50;
+		                    }
+		                    document.getElementById("MailListRayer").style.display = "inline-block";
+		                    document.getElementById("PreviewRayerW").style.display = "block";
+		                    document.getElementById("PreviewRayerH").style.display = "none";
+
+		                    CurrenWidth = document.documentElement.clientWidth - 10;
+		                    CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+		                    document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
+		                    document.getElementById("ResizeBarW").style.width = (CurrenWidth + 10) + "px";
+		                    pMailListHeightW = parseInt(CurrentHeight * (pMailListDiv / 100));
+		                    pMailPreHeightW = parseInt(CurrentHeight * (pMailPreVDiv / 100));
+		                    document.getElementById("MailListRayer").style.width = "100%";
+		                    document.getElementById("PreviewRayerW").style.width = "100%";
+		                    document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
+		                    
+							document.getElementById("divList").style.height = (pMailListHeightW - 62) + "px";
+							document.getElementById("journalListBody").style.height = (pMailListHeightW - 100) + "px";
+							document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45)+ "px";
+							
+		                    document.getElementById("PreW_subject").style.width = (CurrenWidth - 185) + "px";
+		                }
+		                else if (pPreviewShow_HOW == "H") {
+		                	if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
+		                        pMailListDiv_H = 50; pMailPreVDiv_H = 50;
+		                    }
+		                	
+		                    document.getElementById("MailListRayer").style.display = "inline-block";
+		                    document.getElementById("PreviewRayerW").style.display = "none";
+		                    document.getElementById("PreviewRayerH").style.display = "inline-block";
+
+		                    CurrenWidth = document.documentElement.clientWidth - 20;
+		                    CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+		                    pMailListWidthH = parseInt(CurrenWidth * (pMailListDiv_H / 100));
+		                    pMailPreWidthH = parseInt(CurrenWidth * (pMailPreVDiv_H / 100)) - 3;
+
+		                    if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
+		                        var ChangeListWidthDiv = parseInt(CurrenWidth * 0.40) - pMailListWidthH;
+		                        pMailListWidthH = parseInt(CurrenWidth * 0.40);
+		                        pMailPreWidthH = pMailPreWidthH - ChangeListWidthDiv;
+		                    }
+		                    
+		                    document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
+		                    document.getElementById("ResizeBarW").style.width = CurrenWidth + "px";
+		                    document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
+		                    document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
+		                    document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
+		                    
+		                    document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+							document.getElementById("journalListBody").style.height = (CurrentHeight - 100) + "px";
+		                    
+		                    document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
+		                    document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
+		                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+		                    
+		                    /* 좌우 리사이징 시 round로 인해 비율의 합이 100%가 되지 않아
+		                       오른쪽 끝에 여백이 발생하여 제거함
+		                    pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
+		                    pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
+		                    */
+		                    
+		                    // 화면 폭이 일정 크기보다 작아지면 헤더 구성을 변경한다.
+		                    // 중요도, 책갈피, 첨부파일, 크기 컬럼을 제거한다.
+		                    if (pMailListWidthH < 470) {
+		                        BasicViewHeaderChange(true);
+		                    } else {
+		                        BasicViewHeaderChange(false);
+		                    }
+		                }
+		                else if (pPreviewShow_HOW == "OFF") {
+		                    document.getElementById("PreviewRayerW").style.display = "none";
+		                    document.getElementById("PreviewRayerH").style.display = "none";
+		                    CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
+		                    document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
+		                    document.getElementById("MailListRayer").style.width = "100%";
+		                    
+		                    if (navigator.userAgent.indexOf('Firefox') != -1)
+		                        document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
+		                    else
+		                        document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
+		                }
+		            }            
+		        } catch (e) { }
+		    }
 			
 			//업무일지 리스트 뿌리기
 			function setJournalList() {
@@ -265,7 +352,8 @@
 			}
 			
 			function quickSearch() {
-				var searchFlag = $("input[type='radio'][name='searchKey']:checked").val();
+// 				var searchFlag = $("input[type='radio'][name='searchKey']:checked").val();
+				var searchFlag = $("#searchKey").val();
 				searchWriter = "";
 				searchTitle = "";
 				
@@ -401,7 +489,7 @@
 		   				url : url,
 		   				success: function(forms){
 // 		   					var trs = "<tr><th style='text-align: center;'><spring:message code='ezJournal.t72' /></th></tr>";
-							var trs = "<tr><th style='margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic; text-align: center; border:1px solid #0470e4; font-size:18px; font-weight: bold;'><spring:message code='ezJournal.t70' /></th></tr>";
+							var trs = "";
 		   					$(forms).each(function(){
 		   						trs += "<tr onclick='sumFormClick(this);' ondblclick='writeSumJournal();' style='cursor:pointer;' sumTypeId=" + this.typeId + " sumFormId=" + this.formId + "><td>" + this.formName + "</td></tr>";
 		   					})
@@ -513,6 +601,7 @@
 							$("#Preview_ContentH").css("height", textContentSize);
 							textContentSize = $("#PreviewRayerW").height() - 80;
 							$("#Preview_ContentW").css("height", textContentSize);
+							document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
 // 		   					ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 // 		   					ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerHTML =data.journalContent;
 		   				}
@@ -943,18 +1032,26 @@
 		</c:otherwise>
 	</c:choose>
 	<span style="float: right; font-weight: normal; color: black;">
-		<c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
-			<input name="searchKey" id="Radio1" type="radio" value="journalTitle"
-				checked
-				style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
-			<label for="Radio1">&nbsp;<spring:message code='ezBoard.t208' /></label>
-		</c:if> 
-		<c:if test="${listType eq 'department' or listType eq 'recv' }">
-			<input name="searchKey" id="Radio2" type="radio"
-				value="journalWriter"
-				style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
-			<label for="Radio2">&nbsp;<spring:message code='ezJournal.t34' /></label>
-		</c:if> &nbsp; 
+<%-- 		<c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }"> --%>
+<!-- 			<input name="searchKey" id="Radio1" type="radio" value="journalTitle" -->
+<!-- 				checked -->
+<!-- 				style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;"> -->
+<%-- 			<label for="Radio1">&nbsp;<spring:message code='ezBoard.t208' /></label> --%>
+<%-- 		</c:if>  --%>
+<%-- 		<c:if test="${listType eq 'department' or listType eq 'recv' }"> --%>
+<!-- 			<input name="searchKey" id="Radio2" type="radio" -->
+<!-- 				value="journalWriter" -->
+<!-- 				style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;"> -->
+<%-- 			<label for="Radio2">&nbsp;<spring:message code='ezJournal.t34' /></label> --%>
+<%-- 		</c:if> &nbsp;  --%>
+		<select id="searchKey" name="searchKey" style="height:29px;">    
+			<c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
+	           	<option value="journalTitle"><spring:message code='ezBoard.t208' /></option>
+           	</c:if>
+			<c:if test="${listType eq 'department' or listType eq 'recv' }">
+	       		<option value="journalWriter"><spring:message code='ezJournal.t34' /></option>
+       		</c:if>
+       	</select>
 		<c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
 			<input id="searchValue" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
 			<a href="#" style="float: right"><img src="../../images/bsearch_new.gif" border="0" onclick="quickSearch()"></a>
@@ -1090,68 +1187,71 @@
 	<div id="ListInfo" style="display: none"></div>
 
 	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
-		<div id="srarchpopup" class="popupwrap1 modal" style="padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 297.5px; display: inline-block;">
-			<table class="content">
-				<tr>
-					<th class="layerHeader" colspan="2">
-						<img src="/images/kr/left/left_mail.png" style="vertical-align: middle; padding-bottom: 1px"> 
-						<spring:message code='ezJournal.t1' /> <spring:message code='ezJournal.t43' />
-					</th>
-				</tr>
-				<c:if test="${listType ne 'mine' }">
+		<div id="srarchpopup" class="popupwrap1 modal" style="margin-bottom: 70px; left: 297.5px; display: inline-block;">
+			<div class="popupJQLayer">
+				<div class="title"><spring:message code='ezJournal.t1' /><spring:message code='ezJournal.t43' /></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="BoardSearchOptionHidden()"></span></a></li>
+		            </ul>
+		        </div>
+				<table class="content">
+					<c:if test="${listType ne 'mine' }">
+						<tr>
+							<th style="text-align: center">
+								<spring:message code='ezJournal.t34' />
+							</th>
+							<td>
+								<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchWriter" style="width: 98%" value="">
+							</td>
+						</tr>
+					</c:if>
 					<tr>
 						<th style="text-align: center">
-							<spring:message code='ezJournal.t34' />
+							<spring:message code='ezBoard.t208' />
 						</th>
 						<td>
-							<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchWriter" style="width: 98%" value="">
+							<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchTitle" style="width: 98%" value="">
 						</td>
 					</tr>
-				</c:if>
-				<tr>
-					<th style="text-align: center">
-						<spring:message code='ezBoard.t208' />
-					</th>
-					<td>
-						<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchTitle" style="width: 98%" value="">
-					</td>
-				</tr>
-				<tr>
-					<th style="text-align: center">
-						<spring:message code='ezEmail.t649' />
-					</th>
-					<td>
-						<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchContent" style="width: 98%" value="">
-					</td>
-				</tr>
-				<tr>
-					<th style="text-align: center">
-						<spring:message code='ezJournal.t22' />
-					</th>
-					<td>
-						<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchFormName" style="width: 98%" value="">
-					</td>
-				</tr>
-				<tr>
-					<th style="text-align: center">
-						<spring:message code='ezBoard.t210' />
-					</th>
-					<td>
-						<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly">
-						~ 
-						<input type="text" id="Edatepicker" style="width: 80px; text-align: center" readonly="readonly">
-					</td>
-				</tr>
-			</table>
-			<br />
-			<table style="width: 100%">
-				<tr>
-					<td style="text-align: center;">
-						<a class="imgbtn"><span onClick="goToPageBySearch()"><spring:message code='ezBoard.t188' /></span></a> 
-						<a class="imgbtn"><span onClick="BoardSearchOptionHidden()"><spring:message code='ezBoard.t15' /></span></a>
-					</td>
-				</tr>
-			</table>
+					<tr>
+						<th style="text-align: center">
+							<spring:message code='ezEmail.t649' />
+						</th>
+						<td>
+							<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchContent" style="width: 98%" value="">
+						</td>
+					</tr>
+					<tr>
+						<th style="text-align: center">
+							<spring:message code='ezJournal.t22' />
+						</th>
+						<td>
+							<input type="text" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13){goToPageBySearch(); return false;}" id="searchFormName" style="width: 98%" value="">
+						</td>
+					</tr>
+					<tr>
+						<th style="text-align: center">
+							<spring:message code='ezBoard.t210' />
+						</th>
+						<td>
+							<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly">
+							~ 
+							<input type="text" id="Edatepicker" style="width: 80px; text-align: center" readonly="readonly">
+						</td>
+					</tr>
+				</table>
+				<br />
+				<table style="width: 100%">
+					<tr>
+						<td style="text-align: center;">
+							<div class="btnpositionLayer">
+								<a class="imgbtn"><span onClick="goToPageBySearch()"><spring:message code='ezBoard.t188' /></span></a>
+							</div>	
+						</td>
+					</tr>
+				</table>
+			</div>	
 		</div>
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.5); display: none;" id="mailPanel_sub">&nbsp;</div>
@@ -1159,22 +1259,30 @@
 		<iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer_sub"></iframe>
 	</div>
 	<div class="jquery-modal blocker current" id="selectSumJournal" style="display: none;">
-		<div id="sumpopup" class="popupwrap1 modal popup" style="text-align: center; width: 300px; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px; left: 500px; display: inline-block;">
+		<div id="sumpopup" class="popupwrap1 modal" style="text-align: center; width: 300px; margin-bottom: 70px; left: 500px; display: inline-block;">
 			<%-- 			<h1 style="margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic;"><spring:message code='ezJournal.t70' /></h1> --%>
-			<table class="mainlist" id="basicFormList" style="width: 100%; border: 1px solid #ddd !important; border-top: none;">
-				<!-- 				<tr> -->
-				<%-- 					<th style="margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic; text-align: center; border:1px solid #0470e4; font-size:18px; font-weight: bold;"><spring:message code='ezJournal.t70' /></th> --%>
-				<!-- 				</tr>			 -->
-			</table>
-			<br />
-			<table style="width: 100%">
-				<tr>
-					<td style="text-align: center;">
-						<a class="imgbtn"><span onClick="writeSumJournal();"><spring:message code='ezJournal.t60' /></span></a> 
-						<a class="imgbtn"><span onClick="sumSearchOptionHidden();"><spring:message code='ezBoard.t15' /></span></a>
-					</td>
-				</tr>
-			</table>
+			<div class="popupJQLayer">
+				<div class="title" style="text-align:left"><spring:message code='ezJournal.t70' /></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="sumSearchOptionHidden()"></span></a></li>
+		            </ul>
+		        </div>
+				<table class="mainlist" id="basicFormList" style="width: 100%; border: 1px solid #ddd !important; border-top: none;">
+					<!-- 				<tr> -->
+					<%-- 					<th style="margin-bottom:0px; padding-top:3px; height:40px; background-color: #0470e4; color:#fff; font-family: malgun-gothic; text-align: center; border:1px solid #0470e4; font-size:18px; font-weight: bold;"><spring:message code='ezJournal.t70' /></th> --%>
+					<!-- 				</tr>			 -->
+				</table>
+				<table style="width: 100%">
+					<tr>
+						<td style="text-align: center;">
+							<div class="btnpositionLayer">
+								<a class="imgbtn"><span onClick="writeSumJournal();"><spring:message code='ezJournal.t60' /></span></a>
+							</div>	
+						</td>
+					</tr>
+				</table>
+			</div>	
 		</div>
 	</div>
 
@@ -1207,6 +1315,7 @@
 	            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
 // 	            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
 	            document.getElementById("Preview_ContentH").style.height = (CurrentHeight - 55) + "px";
+	            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
 	            pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
 	            pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
 

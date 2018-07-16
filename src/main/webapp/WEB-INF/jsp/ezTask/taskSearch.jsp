@@ -24,6 +24,9 @@
 				font:bold;
 				color:#017bec;
 			}
+			.h2_dot {
+				background: url(/images/kr/left/left_dot02.gif) no-repeat 0px 70%;
+			}
 		</STYLE>
 		<script type="text/javascript">
 			var startdate = "_startdate";
@@ -89,7 +92,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "#efeff0";
+		        elem.style.backgroundColor = "#edf4fd";
 		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
 		    }
 		    
@@ -98,7 +101,7 @@
 
 				if ($("#checkboxAll").is(":checked")) {
 					$(":checkbox[name=myCheckbox]").prop("checked", true);
-					$(".row_body td").css("background", "#efeff0");
+					$(".row_body td").css("background", "#edf4fd");
 				} else {
 					$(":checkbox[name=myCheckbox]").prop("checked", false);
 					$(".row_body td").css("background", "");

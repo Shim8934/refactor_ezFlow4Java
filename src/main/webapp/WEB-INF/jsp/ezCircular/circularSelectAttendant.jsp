@@ -382,7 +382,7 @@
 		        } 
 		    }	    
 	        
-	        var m_strColorSelect = "#efeff0";
+	        var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -1067,7 +1067,9 @@
 				var UserListHTML = "";
 				if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != null && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
 					SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>"
-							+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
+							//2018-07-10 김보미 - 전체 결과 갯수로 변경
+ 							//+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
+							+ getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])
 							+ strLang256 + "</span>]";
 					SelectDeptNM.setAttribute("countinfo", "1")
 				}
@@ -1083,7 +1085,9 @@
 								+ strLang257
 								+ ""
 								+ "-[<span style='color:#017BEC;'>"
-								+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
+								//2018-07-10 김보미 - 전체 결과 갯수로 변경
+	 							//+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
+								+ getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])
 								+ strLang256 + "</span>]";
 						SelectDeptNM.setAttribute("countinfo", "1");
 					}
@@ -1101,7 +1105,9 @@
 								+ strLang257
 								+ ""
 								+ "-[<span style='color:#017BEC;'>"
-								+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
+								//2018-07-10 김보미 - 전체 결과 갯수로 변경
+	 							//+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
+								+ getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])
 								+ strLang256 + "</span>]";
 						SelectDeptNM.setAttribute("countinfo", "1")
 					}
@@ -1795,7 +1801,7 @@
 				_RowObjectID = obj.id;
 				_RowObjectName = $(obj).attr("name");
 
-				obj.style.backgroundColor = "#efeff0";
+				obj.style.backgroundColor = "#edf4fd";
 
 				$
 						.ajax({
@@ -1846,7 +1852,7 @@
 				_RowObject = obj;
 				_RowObjectID = obj.id;
 				_RowObjectName = $(obj).attr("name");
-				obj.style.backgroundColor = "#efeff0";
+				obj.style.backgroundColor = "#edf4fd";
 			}
 
 			var Tab1_SelectID = "1tab1";
@@ -1941,7 +1947,7 @@
 	                                        <tr>
 	                                            <td>
 	                                                <div style="margin-left: 5px;">
-	                                                    <select id="search_type">
+	                                                    <select id="search_type" style="height:21px">
 	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezCircular.t80' /></option>
 	                                                        <option value="description" usedefault="1"><spring:message code='ezCircular.t78' /></option>
 	                                                        <option value="title" usedefault="1"><spring:message code='ezCircular.t154' /></option>
@@ -1952,7 +1958,7 @@
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezCircular.t159' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezCircular.t160' /></option>
 	                                                    </select>
-	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
+	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;height:21px">
 	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezCircular.t85' /></span></a>
 	                                                </div>
 	                                            </td>

@@ -117,7 +117,7 @@
 			
 			function SubMenus()
 			{
-			    window.open("/admin/ezPortal/subMenuItemsEdit.do?uID=" + uid + "&pageID=" + pageid, "", "height = 356px, width = 390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(390, 356));
+			    window.open("/admin/ezPortal/subMenuItemsEdit.do?uID=" + uid + "&pageID=" + pageid, "", "height = 360px, width = 390px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(390, 356));
 			}
 			
 			function toggle_menu(pIndex)
@@ -537,12 +537,12 @@
 									</c:choose>
 						
 									<td width="100%" align="center" nowrap>
-										<a class="imgbtn">
+										<a class="imgbtn imgbck">
 											<span onclick="changeNormalImage()">
 												<spring:message code='ezPortal.t66'/>
 											</span>
 										</a>
-										<a class="imgbtn">
+										<a class="imgbtn imgbck">
 											<span onclick="removeNormalImage()" style="width: 20px">
 												<spring:message code='ezPortal.t67'/>
 											</span>
@@ -569,12 +569,12 @@
 									</c:choose>
 					
 									<td width="100%" align="center" nowrap>
-										<a class="imgbtn">
+										<a class="imgbtn imgbck">
 											<span onclick="changeOverImage()">
 												<spring:message code='ezPortal.t66'/>
 											</span>
 										</a>
-										<a class="imgbtn">
+										<a class="imgbtn imgbck">
 											<span onclick="removeOverImage()" style="width: 20px">
 												<spring:message code='ezPortal.t67'/>
 											</span>
@@ -621,12 +621,12 @@
 										&nbsp;<img id="txtNormalImage" src="" style="display: none">
 									</td>
 									<td width="100%" align="center" nowrap>
-										<a class="imgbtn">
+										<a class="imgbtn imgbck">
 											<span onclick="changeNormalImage()">
 												<spring:message code='ezPortal.t66'/>
 											</span>
 										</a>
-										<a class="imgbtn">
+										<a class="imgbtn imgbck">
 											<span onclick="removeNormalImage()" style="width: 20px">
 												<spring:message code='ezPortal.t67'/>
 											</span>
@@ -647,12 +647,12 @@
 										&nbsp;<img id="txtOverImage" src="" style="display: none">
 									</td>
 									<td width="100%" align="center" nowrap>
-										<a class="imgbtn">
+										<a class="imgbtn imgbck">
 											<span onclick="changeOverImage()">
 												<spring:message code='ezPortal.t66'/>
 											</span>
 										</a>
-										<a class="imgbtn">
+										<a class="imgbtn imgbck">
 											<span onclick="removeOverImage()" style="width: 20px">
 												<spring:message code='ezPortal.t67'/>
 											</span>
@@ -732,10 +732,16 @@
 				</td>
 			</tr>
 		</table>
-		<table id="toggle_tbl2_3" style="display: none; margin-top: 10px" width="510" border="0"cellspacing="0" cellpadding="0">
+		<table id="toggle_tbl2_3" style="display: none;" width="510" border="0"cellspacing="0" cellpadding="0">
 			<tr>
-				<td align="right">
-					<input type="button" value="<spring:message code='ezPortal.t62'/>" class="btn" onclick="AddParameter()">
+				<td>
+					<div class="btnpositionJsp">
+						<a class="imgbtn">
+							<span onclick="AddParameter()">
+								<spring:message code='ezPortal.t62'/>
+							</span>
+						</a>
+					</div>	
 				</td>
 			</tr>
 		</table>
@@ -780,11 +786,13 @@
     					</c:choose>
     				</td>
     				<td align="center">
-						<a class="imgbtn">
-							<span onclick="DeleteRight('${item.accessID}')" style="width: 20px">
-								<spring:message code='ezPortal.t67'/>
-							</span>
-						</a>
+    					<div class="btnpositionJsp">
+							<a class="imgbtn">
+								<span onclick="DeleteRight('${item.accessID}')" style="width: 20px">
+									<spring:message code='ezPortal.t67'/>
+								</span>
+							</a>
+						</div>
 					</td>
   				</tr>
   			</c:forEach>
@@ -802,7 +810,7 @@
 								<input type="text" id="newAccessID" style="width: 100%" readonly>
 							</td>
 							<td width="39" align="center">
-								<a class="imgbtn">
+								<a class="imgbtn imgbck">
 									<span onclick="SelectID()" style="width: 20px">
 										<spring:message code='ezPortal.t45'/>
 									</span>
@@ -843,9 +851,9 @@
 				</td>
 			</tr>
 		</table>
-		<div class="btnposition" id="toggle_tbl3_3" style="display: none">
-			<input type="button" value="<spring:message code='ezPortal.t62'/>" onclick="AddRight()">
-			<input onclick="window.close();" type="button" value="<spring:message code='ezPortal.t12'/>">
+		<div class="btnpositionJsp" id="toggle_tbl3_3" style="display: none">
+			<a class="imgbtn"><span onclick="AddRight()"><spring:message code='ezPortal.t62'/></span></a>
+			<a class="imgbtn"><span onclick="window.close();"><spring:message code='ezPortal.t12'/></span></a>
 		</div>
     	<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
         <form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezPortal/portletImageUpload.do?mode=SubMenu" target="ifrm">

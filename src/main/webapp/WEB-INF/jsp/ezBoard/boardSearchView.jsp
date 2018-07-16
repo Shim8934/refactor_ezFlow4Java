@@ -21,6 +21,11 @@
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
 		<!-- time picker-->
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<style>
+			.h2_dot {
+				background: url(/images/kr/left/left_dot02.gif) no-repeat 0px 70%;
+			}
+		</style>
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		
 		<script type="text/javascript">
@@ -453,7 +458,7 @@
 		<tr>
 			<th style="text-align: center"><spring:message code='ezBoard.t185' /></th>
 			<td style="text-align: left" colspan="3">
-			<a class="imgbtn" style="vertical-align:middle"><span onClick="selectBoard()"><spring:message code='ezBoard.khj2' /></span></a>
+			<a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="selectBoard()"><spring:message code='ezBoard.khj2' /></span></a>
 			<span id="selectedBoardName" style="height: 100%; vertical-align: middle; overflow: hidden; display: inline-block; line-height: 27px"></span> 
 			<input type ="text" id="selectedBoard" style="display:none;" value="">
 			<input type ="text" id="selectedBoardParentBoardID" style="display:none;" value="">

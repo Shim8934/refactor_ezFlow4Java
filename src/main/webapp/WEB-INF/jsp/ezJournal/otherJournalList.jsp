@@ -16,7 +16,7 @@
 				background-color: rgb(244,245,245);
 			}
 			.selectTR{
-				background-color: #efeff0;
+				background-color: #edf4fd;
 			}
 		</style>
 		<script type="text/javascript">
@@ -49,11 +49,6 @@
 		  		<li onClick="close_onclick()"><span></span></li>
 		    </ul>
 		  </div>
-		  <div id="menu" class="extraMenu">
-		    <ul>
-		    	<li onClick="bindOtherJournal();"><span><spring:message code='ezJournal.t86'/></span></li>
-		    </ul>
-		  </div>
 	      <div style="width:100%; height:305px" id="divList">
 	            <table class="mainlist" id="otherJournalList" style="width:100%">
 	            <c:choose>
@@ -75,8 +70,11 @@
 						</tr>
 		            </c:otherwise>
 	            </c:choose>
-			</table>
+				</table>
 	        </div>
+	        <div class="btnpositionNew">
+		        <a class="imgbtn"><span onclick="bindOtherJournal()"><spring:message code='ezJournal.t86' /> </span></a>
+		    </div>
 	        <!-- <div id='runtime' style="color:#666;padding-top:5px"></div> -->
 		</form>
 	</body>

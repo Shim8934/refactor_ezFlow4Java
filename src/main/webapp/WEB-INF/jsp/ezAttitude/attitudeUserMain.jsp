@@ -49,7 +49,7 @@
 			}
 			
 			.span_list table td:hover, .td_day:hover {
-				background-color:#e8e8ea;
+				background-color:#f0f6ff;
 			}
 			
 			.attiVacation {
@@ -1167,6 +1167,10 @@
 	        		$("#divisionBar").css("display","");
 	        	}
 			}
+			
+			function popup_close() {
+		    	$.modal.close();
+		    }
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto; margin-bottom:0px;" marginwidth="0" marginheight="0">
@@ -1183,7 +1187,7 @@
 		        	<li id="btnExcelDown"><span onClick="excelDown()"><spring:message code='ezAttitude.t145'/></span></li>
 					<!-- <li id="divisionBar" style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
 					<li>
-						<select id="authDeptList" style="width:100px; height:28px;<c:if test="${displayFlag == 'false'}"> display:none </c:if>" onchange="deptChange()">
+						<select id="authDeptList" style="width:130px; height:28px;<c:if test="${displayFlag == 'false'}"> display:none </c:if>" onchange="deptChange()">
 							<c:forEach var="dept" items="${deptList}">
 								<c:if test="${dept.mine != 'yes' }">
 									<c:if test="${selectedDeptID == dept.deptId}">
@@ -1241,30 +1245,17 @@
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 		<!-- 근태유형별 팝업창 -->
-		<div id="popup" class="popupwrapAtt" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;max-width:800px;">
-			<div class="popupwrap3" style="max-height:496px;">
-				<!-- 내용 -->
-			    <table class="popuplist" style="table-layout:fixed; display:block;">
-				    <thead>
-				    	<tr>
-					    	<c:if test="${deptFlag == 'true'}">
-								<th class="layerHeader" colspan="5" style="width:740px;">
-								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
-								<span id="popup_title">&nbsp;<spring:message code='ezAttitude.t141'/></span>
-								</th>
-							</c:if>
-							<c:if test="${deptFlag != 'true'}">
-								<th class="layerHeader" colspan="3" style="width:740px;">
-								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
-								<span id="popup_title">&nbsp;<spring:message code='ezAttitude.t141'/></span>
-								</th>
-							</c:if>
-						</tr>
-				    </thead>
-				</table>
+		<div id="popup" class="popupwrap1" style="display:none;margin-bottom:50px;max-width:800px;">
+			<div class="popupJQLayer">
+				<div id="popup_title" class="title"><spring:message code='ezAttitude.t141'/></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="popup_close()"></span></a></li>
+		            </ul>
+		        </div>
 				<div style="max-height:466px; overflow-y:auto;">
 				<table class="popuplist" id="addpopup_list" style="table-layout:fixed; display:block;">
-				    <tbody style="max-height:466px; overflow-y:auto; width:740px; display:block;">
+				    <tbody style="max-height:466px; overflow-y:auto; display:block;">
 				    	<tr>
 				    		<c:if test="${deptFlag == 'true'}">
 				    			<th style="height:30px">No.</th>
@@ -1284,26 +1275,21 @@
 				</div>
 				<br />
 			</div>
-			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
 		</div>
 		
 		<!-- 근태날짜별 팝업창 -->
-		<div id="popupDay" class="popupwrap4" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px; max-width:880px;">
-			<div class="popupwrap5">
+		<div id="popupDay" class="popupwrap1" style="display:none;margin-bottom:50px; max-width:850px;">
+			<div class="popupJQLayer">
+				<div id="popupDay_title" class="title"><spring:message code='ezAttitude.t141'/></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="popup_close()"></span></a></li>
+		            </ul>
+		        </div>
 				<!-- 내용 -->
-			    <table class="popuplist" style="table-layout:fixed; display:block;">
-				    <thead>
-				    	<tr>
-						<th class="layerHeader" colspan="6" style="width:820px;">
-							<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
-							<span id="popupDay_title">&nbsp;<spring:message code='ezAttitude.t141'/></span>
-						</th>
-						</tr>
-				    </thead>
-				</table>
 				<div style="max-height:466px; overflow-y:auto;">
 				<table class="popuplist" id="addpopupDay_list" style="table-layout:fixed; display:block;">
-				    <tbody style="max-height:466px; width:820; display:block; overflow-y:auto;">
+				    <tbody style="max-height:466px; display:block; overflow-y:auto;">
 				    	<tr>
 				    		<th style="height:30px">No.</th>
 				    		<th style="height:30px"><spring:message code='ezAttitude.t134'/></th>
@@ -1317,7 +1303,7 @@
 				</div>
 				<!-- /내용 -->
 				<br />
-			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
+			</div>
 		</div>
 		<div class="shadow"></div>
 	</body>

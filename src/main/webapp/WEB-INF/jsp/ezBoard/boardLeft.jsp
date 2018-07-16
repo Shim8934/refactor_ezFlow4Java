@@ -231,7 +231,7 @@
 		        for(var i=0; i<title2.length; i++) {
 		        	title3 = title2[i].getElementsByClassName("node_normal");
 		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
-		        	title3[0].style.width = 156 - 16*nodeLevel +'px';
+		        	title3[0].style.width = 152 - 18*nodeLevel +'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
 		        }
@@ -326,7 +326,7 @@
 		        for(var i=0; i<title2.length; i++) {
 		        	title3 = title2[i].getElementsByClassName("node_normal");
 		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
-		        	title3[0].style.width = 156 - 16*nodeLevel +'px';
+		        	title3[0].style.width = 152 - 18*nodeLevel +'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
 		        }
@@ -388,7 +388,7 @@
 				var node = $(".node_normal");
 				for(var i=0; i<node.length; i++) {
 					node[i].setAttribute("TITLE", node[i].parentElement.getAttribute("DATA2"));
-					node[i].style.width = '156px';
+					node[i].style.width = '152px';
 					node[i].style.textOverflow = 'ellipsis';
 					node[i].style.overflow = 'hidden';
 				} 
@@ -456,7 +456,7 @@
 					var node = $(".node_normal");
 					for(var i=0; i<node.length; i++) {
 						node[i].setAttribute("TITLE", node[i].parentElement.getAttribute("DATA2"));
-						node[i].style.width = '156px';
+						node[i].style.width = '152px';
 						node[i].style.textOverflow = 'ellipsis';
 						node[i].style.overflow = 'hidden';
 					} 
@@ -676,7 +676,7 @@
 		            </h2>
 		        </div>
 		        <ul id="TreeCtrl_MyBoardTree_ul">
-		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #f0f0f0' id='TreeCtrl_MyBoardTree'></div>
+		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #eaeaea' id='TreeCtrl_MyBoardTree'></div>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></h3>
@@ -715,7 +715,7 @@
 		            </h2>
 		        </div>
 		        <ul id="TreeCtrl_MyBoardTree_ul">
-		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #f0f0f0' id='TreeCtrl_MyBoardTree'></div>
+		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #eaeaea' id='TreeCtrl_MyBoardTree'></div>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></h3>

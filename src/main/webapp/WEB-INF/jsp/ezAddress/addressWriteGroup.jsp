@@ -67,7 +67,7 @@
 	                //document.getElementById("txtlist_Layer").style.height = "455px";
 	            }
 	            document.getElementById("AddressListView").hotTrackColor = "#f4f5f5";
-	            document.getElementById("AddressListView").selectColor = "#efeff0";
+	            document.getElementById("AddressListView").selectColor = "#edf4fd";
 	            document.getElementById("AddressListView").dataSource = listviewheader;
 	            AddressTreeView = new window['treeview.htc'].TreeView('AddressTreeView', 'AddressTreeView');
 	            AddressTreeView.attachEvent('requestdata', address_requestdata);
@@ -322,6 +322,9 @@
 	                    PagingHTML += "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
 	                }
 	            }
+	            if (MaxNum == 0) {
+                	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+                }
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                    PagingHTML += "<span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\" ></span>";
@@ -1394,7 +1397,7 @@
 	            document.getElementById("subtitle").innerText = "<spring:message code='ezAddress.t352' />";
 	            document.getElementById("emailname").focus();
 	        }
-	        var m_strColorSelect = "#efeff0";
+	        var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -1648,6 +1651,9 @@
 	                    PagingHTML2 += strtext2;
 	                }
 	            }
+	            if (MaxNum2 == 0) {
+                	PagingHTML2 += "<span class=\"on\">" + 1 + "</span>";
+                }
 	            if (totalPage2 > BlockSize2) {
 	                if (totalPage2 >= parseInt(((parseInt((pageNum2 - 1) / BlockSize2) + 1) * BlockSize2) + 1)) {
 	                    strtext2 = "";
@@ -1958,9 +1964,11 @@
 	                                </td>
 	                            </tr>
 	                        </table>
-	                        <br>
-	
-	                        <div style="text-align: center"><a href="#" class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a></div>
+	                        <div style="text-align: center">
+	                        	<div class="btnpositionJsp">
+	                        		<a href="#" class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a>
+	                        	</div>	
+	                        </div>
 	                    </div>
 	                    <div id="TreeViewPane" style="DISPLAY: none;">
 				            <div class="portlet_tabpart03_top" id="tab1" style="background-color: #f8f8fa; border: 1px solid #eaeaea; ">

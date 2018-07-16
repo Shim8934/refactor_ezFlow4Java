@@ -30,7 +30,7 @@
 	    		cursor : pointer;
 	    }
     	tr.hover:hover {background:#eee; color:#fff;}
-		.selectTR {background-color: #efeff0;}
+		.selectTR {background-color: #edf4fd;}
 		#searchTable {
 			border-top: 1px solid #e8e8e8;
 			border-left: 1px solid #e8e8e8;
@@ -51,7 +51,7 @@
 		var g_timezone 		  = "${userTimeSet}";
 		var offsetMin 		  = "${offsetMin}";
 		var type 			  = "all";
-		var m_strColorSelect = "#efeff0";
+		var m_strColorSelect = "#edf4fd";
 		var m_strColorOver = "#f4f5f5";
 		var m_strColorDefault = "#ffffff";
 		var adminFlag = "${adminFlag}";
@@ -1092,91 +1092,9 @@
 	    }
 	    
 	    function getHistory(t) {
-			
-			var obj = new Object();
-	    	
-		    obj.attModId = $(t).parent().parent().find('td input').attr("value");
-			obj.companyId = $("#ListCompany").val();
-			
-			$.ajax({
-				type : 'get',
-			    url : '/ezAttitude/getAttHistory.do',
-			    data : obj,
-			    dataType : "json",
-			    error: function(xhr, status, error){
-			    	ajaxRunning = false;
-			    },
-			    success : function(json){
-			    	$('#addpopup_list tbody').children('tr').not(":first").remove();
-			    	
-			    	if (json.length == 0) {
-			    		var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:440px;'></td>").text("<spring:message code='ezAttitude.t142'/>"));
-			    		
-			    		$("#addpopup_list tbody").append(objTr);
-			    	}
-			    	
-			    	for(var i = 0; i < json.length; i++) {
-						if (json.length == 1 && json[i].apprStatus == 0) {
-							var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:440px;'></td>").text("<spring:message code='ezAttitude.t142'/>"));
-				    		
-				    		$("#addpopup_list tbody").append(objTr);
-			    		} else {
-			    			var name = json[i].apprUserName;
-			    			
-			    			if (json[i].apprStatus == 1) {
-				    			json[i].apprStatus = "<spring:message code='ezAttitude.t210'/>";
-				    		} else if (json[i].apprStatus == 2){
-				    			json[i].apprStatus = "<spring:message code='ezAttitude.t211'/>";
-				    		} else {
-				    			json[i].apprStatus = "<spring:message code='ezAttitude.t209'/>";
-				    		}
-				    		
-			    			if (json[i].apprDate != null) {
-			    				json[i].apprDate = json[i].apprDate.substring(0,16);
-			    			}
-			    			
-			    			if (json[i].apprDate == null) {
-			    				json[i].apprDate = "";
-			    			}
-			    			
-			    			if (json[i].apprUserName == null) {
-			    				json[i].description = "";
-			    				json[i].apprUserName = "";
-			    				json[i].title = "";
-			    				name = "";
-			    			}
-			    			
-			    			//"\u00a0"
-				    		var objTr = $("<tr></tr>").append($("<td style='width:35%'></td>").append($("<div style='width:89px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].originDate.substring(0,11))));
-				    		objTr.append($("<td style='width:5%'></td>").append($("<div style='width:64px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].originDate.substring(11,16))));
-				    		objTr.append($("<td style='width:5%'></td>").append($("<div style='width:64px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].changeDate.substring(11,16))));
-				    		objTr.append($("<td style='width:5%' title='" + json[i].description + " " + json[i].apprUserName + " " + json[i].title + "'></td>").append($("<div style='width:52px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(name)));
-				    		objTr.append($("<td style='width:45%'></td>").append($("<div style='width:118px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].apprDate)));
-				    		objTr.append($("<td style='width:5%'></td>").append($("<div style='width:64px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].apprStatus)));
-				    		
-				    		$("#addpopup_list tbody").append(objTr);
-				    		
-				  			//<th style="width:120px;height:30px">수정신청일시</th>
-				    		//<th style="width:30px; height:30px">기존시간</th>
-				    		//<th style="width:30px; height:30px">신청시간</th>
-				    		//<th style="width:120px;height:30px">승인일시</th>
-				  			//<th style="height:30px">승인자</th>
-				  			//<th style="height:30px">승인상태</th>
-			    		}
-			    	}
-			    },
-			    complete : function() {
-			    	try {
-			    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"attitude_main\"].layerHidden()'></div>").appendTo(parent.frames["attitude_menu"].document.body);
-			    	} catch(e) {   	}
-		        	
-		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-		        	
-		        	$("#popup").css("left", popupX);
-		        	
-					$("#popup").modal();
-			    }
-		    });
+		    var attModId = $(t).parent().parent().find('td input').attr("value");
+			var companyId = $("#ListCompany").val();
+			window.open("/ezAttitude/attitudeModHistory.do?attModId=" + attModId + "&companyId=" + companyId, "history", GetOpenWindowfeature(550, 260));
 	    }
 	    
 	    function layerHidden() {
@@ -1274,19 +1192,17 @@
 			</tr>
 		</table>
 <!-- 		팝업 -->
-		<div id="popup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;max-width:550px;">
-			<div class="popupwrap3">
+		<div id="popup" class="popupwrap1" style="display:none;margin-bottom:50px;max-width:550px;">
+			<div class="popupJQLayer">
+				<div class="title"><spring:message code='ezAttitude.t141'/></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="popup_close()"></span></a></li>
+		            </ul>
+		        </div>
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopup_list" style="display:block; width:490px; margin:10px 0px 0px 1px;">
-				    <thead>
-				    	<tr>
-							<th class="layerHeader" colspan="4" style="width:490px;">
-								<img src="/images/kr/left/left_schedule.png" style="vertical-align: middle;padding-bottom:1px"/>
-								&nbsp;<spring:message code='ezAttitude.t141'/>
-							</th>
-						</tr>
-				    </thead>
-				    <tbody style="max-height:500px; width:490px; display:block; overflow-y:auto;">
+			    <table class="popuplist" id="addpopup_list" style="display:block;margin:10px 0px 0px 1px;">
+				    <tbody style="max-height:500px; display:block; overflow-y:auto;">
 				    	<tr>
 							<th style="width:120px;height:30px"><spring:message code='ezAttitude.t107'/></th>
 				    		<th style="width:30px; height:30px"><spring:message code='ezAttitude.t206'/></th>
@@ -1300,7 +1216,6 @@
 				<!-- /내용 -->
 				<br />
 			</div>
-			<a href="#close-modal" rel="modal:close" class="close-modal ">Close</a>
 		</div>
 		
 		<form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezAttitude/saticGetXlsAtt.do">

@@ -133,7 +133,7 @@
 			tr.hover:hover{background:#eee; color:#fff;}
 			
 			.selectTR{
-				background-color: #efeff0;
+				background-color: #edf4fd;
 			}
 		</style>
 	</head>
@@ -143,11 +143,6 @@
 			<ul id="menuTable">
 				<li class="sel">
 					<h1 style="padding: 0px; margin-top: -5px;"><spring:message code='ezAttitude.t201' /></h1>
-				</li>
-			</ul>
-			<ul style="float: right; margin-right: 50px">
-				<li id="menuTable" style="background: none; border: none;">
-					<span onclick="setAuthorViewDept()"><spring:message code='main.t4008'/></span>
 				</li>
 			</ul>
 		</div>
@@ -173,5 +168,8 @@
                 </td>    
             </tr>
         </table>
+        <div class="btnpositionNew" id="menuTable">        	
+			<a class="imgbtn"><span onclick="setAuthorViewDept()"><spring:message code='main.t4008'/></span></a>			
+        </div>
 	</body>
 </html>

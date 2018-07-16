@@ -21,7 +21,7 @@
 	        var pMaxPage = "";
 	        var BlockSize = 10;
 	        var pFolderName = "";
-	        var m_strColorSelect = "#efeff0";
+	        var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var CardHeader1 = "<spring:message code='ezAddress.t263' />";
@@ -373,7 +373,7 @@
 	            <li><span onclick="delete_address()"><spring:message code='ezAddress.t175' /></span></li>
 	            <li><span onclick="window.location.reload(false)"><spring:message code='ezAddress.t240' /></span></li>
 	            <li style="background:none;float:right">
-	                <select style="margin-top: -3px;" id="ListViewType" onchange="View_Change();">
+	                <select id="ListViewType" onchange="View_Change();">
 	                    <option value="card" <c:if test="${pListType == 'card'}"> selected</c:if>><spring:message code='ezAddress.t2000' /></option>
 	                    <option value="list" <c:if test="${pListType == 'list'}"> selected</c:if>><spring:message code='ezAddress.t2001' /></option>
 	                </select>
@@ -405,7 +405,7 @@
 	                    <option value="S_HOMEPAGE"><spring:message code='ezAddress.t293' /></option>
 	                </select>
 	                <input type="text" name="search_text" id="search_text" class="textarea" onkeypress="return search_keypress()" onmousedown="Search_Clear();" style="height:22px;">
-	                <a href="#" class="imgbtn" style="vertical-align: middle;margin-top:2px"><span onclick="search_start()"><spring:message code='ezAddress.t142' /></span></a></td>
+	                <a href="#" class="imgbtn imgbck" style="vertical-align: middle;margin-top:2px"><span onclick="search_start()"><spring:message code='ezAddress.t142' /></span></a></td>
 	        </tr>
 	    </table>
 	    <br>	    

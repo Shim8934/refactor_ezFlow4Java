@@ -19,13 +19,24 @@
 			.modal p {
 				background:none;
 			}			
-			.warning_wrap{ overflow:hidden; width:600px}
-			.warning_wrap p{ margin:0px; padding:0px; font-family:Malgun Gothic; text-align:center; float:left;}
-			.warning_wrap dl{ margin:7px 0px 0px 20px;; padding:0px; font-family:Malgun Gothic; float:left; overflow:hidden;}
+			.warning_wrap{ overflow:hidden; width:600px; margin:auto}
+			.warning_wrap p{ margin:0px; padding:0px; font-family:Malgun Gothic, Meiryo UI; text-align:center; float:left;}
+			.warning_wrap dl{ margin:7px 0px 0px 20px;; padding:0px; font-family:Malgun Gothic, Meiryo UI; float:left; overflow:hidden;}
 			.warning_wrap dt{ font-size:18px; color:#000; padding:0px 0px 5px 0px; margin:0px; font-weight:bold; border-bottom:1px solid #d7d7d7;}
 			.warning_wrap dd.count{ color:#000; font-weight:normal; font-size:15px; padding:10px 0px;}
-			.warning_wrap dd.count .pointRed{ color:#ff0000; font-weight:bold; display:inline-block; font-family: Malgun Gothic; font-size:15px;}
+			.warning_wrap dd.count .pointRed{ color:#ff0000; font-weight:bold; display:inline-block; font-family: Malgun Gothic, Meiryo UI; font-size:15px;}
 			.warning_wrap dd{color:#8e8e8e; font-size:12px; padding:0px 0px 2px 0px; margin:0px;letter-spacing:-1px;}
+			
+			.password_reset{ margin:0 auto; padding:0px; width:385px;}
+			.password_reset .passwordTitle{ margin:0px; padding:0px; font-family:Malgun Gothic, Meiryo UI; font-size:17px; color:#000; text-align:center; line-height:25px;}
+			.password_reset .passwordTitle span{ display:inline-block; color:#006be4; font-family:Malgun Gothic, Meiryo UI; font-size:17px;}
+			.password_reset .passwordForm{ margin:15px 0px; padding:8px 5px; list-style:none; border-top:1px solid #000; border-bottom:1px solid #000;}
+			.password_reset .passwordForm li{ margin:0px 0px 15px 0px; padding:5px 15px 0px; font-size:13px; clear:both; overflow:hidden;}
+			.password_reset .passwordForm li .formText{ display:inline-block; line-height:35px; font-size:13px;}
+			.password_reset .passwordForm li .formID{ display:inline-block; font-weight:bold;font-size:13px; float:right; width:199px; height:35px; line-height:35px; border:1px solid #d9d9d9; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px; text-align:center; box-sizing:border-box;}
+			.password_reset .passwordForm li .formInput{ display:inline-block; float:right; font-size:13px;}
+			.password_reset .passwordForm li .formInput input{font-size:13px; width:199px; height:35px; line-height:35px; border:1px solid #d9d9d9; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px; padding:0px 0px 0px 5px;}
+			.password_reset .passwordForm li.grayText{ color:#8e8e8e; font-size:12px; margin:0px; padding:0px}
 		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -106,6 +117,7 @@
 			    
 			    var message = document.loginForm.message.value;
 			    if ("${isWrongPass}" == "Y") {
+			    	$("#imgMnt").html("<img src='/images/warning2.png'>");
 			    	$("#exDiv2").modal();
 			    }
 			    else if (message != "") {
@@ -226,8 +238,35 @@
 			</span>
 			<p><span>[<strong class="yellow_txt">Caps Lock</strong>]?pCapsLockMsg?></span></p>
 		</div>
-		<div id="exDiv" style="display:none;margin-bottom:100px">
-			<div style="float:left">
+		<div id="exDiv" style="display:none;margin-bottom:100px;padding:15px">
+			<div id="close">
+	            <ul>
+	                <li><a rel="modal:close"><span></span></a></li>
+	            </ul>
+	        </div>			
+			<div class="password_reset">
+				<p class="passwordTitle" style="border-bottom:0px">
+					<c:if test="${isFirstLogin == 'Y'}">
+						<spring:message code='main.jjh07'/>
+					</c:if>
+					<c:if test="${isFirstLogin != 'Y'}">
+						<spring:message code='fail.user.passwordExpired'/>
+					</c:if>
+					<br/>
+					<span><spring:message code='main.jjh03'/></span>
+				</p>
+				<ul class="passwordForm">
+					<li style="padding-top:10px"><span class="formText"><spring:message code='main.jjh09'/></span><span class="formID" id="chooseId">${userId}</span></li>
+					<li><span class="formText"><spring:message code='ezPersonal.t949'/></span><span class="formInput"><input type="password" id="txtOldPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
+					<li><span class="formText"><spring:message code='main.jjh05'/></span><span class="formInput"><input type="password" id="txtNewPassword" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
+					<li><span class="formText"><spring:message code='main.jjh06'/></span><span class="formInput"><input type="password" id="txtNewPasswordConfirm" onKeyPress="if(event.keyCode==13) PassWordChange();"/></span></li>
+					<li style="padding-bottom:10px;padding-top:3px" class="grayText">▒ <spring:message code='main.jjh04'/></li>
+				</ul>
+			</div>
+			<div class="btnpositionLayer" style="background-color: white;border:0px">
+			    <a class="imgbtn" onClick="javascript:PassWordChange()" ><span><spring:message code='ezSchedule.t4' /></span></a>
+			</div>			
+			<%-- <div style="float:left">
 				<c:if test="${isFirstLogin == 'Y'}"><img src="/images/hello.png" width="52" height="52"/></c:if>
 				<c:if test="${isFirstLogin != 'Y'}"><img src="/images/warning.png" width="52" height="52"/></c:if>
 			</div>
@@ -258,16 +297,20 @@
 				<label style="color:rgb(0, 72, 149);"><spring:message code='main.jjh06'/> : </label>
 				<input type="password" id="txtNewPasswordConfirm" onKeyPress="if(event.keyCode==13) PassWordChange();"/>
 			</p>
-			<div class="btnposition" style="margin:10px">
+			<div class="btnpositionLayer" style="background-color: white;border:0px">
 			    <a class="imgbtn" onClick="javascript:PassWordChange()" ><span><spring:message code='ezSchedule.t4' /></span></a>
-			    <a class="imgbtn" rel="modal:close"><span><spring:message code='ezSchedule.t5' /></span></a>
-			</div>			
+			</div> --%>			
 		</div>
 		
 		<%-- 2018-05-24 홍승비 - 비밀번호 오류 시 레이어팝업 출력 --%>
 		<div id="exDiv2" style="display:none;max-width:620px;height:190px;padding-top:27px;margin-bottom:100px">
-			<div class="warning_wrap">
-		    	<p><img src="/images/warning2.png"></p>
+			<div id="close">
+	            <ul>
+	                <li><a rel="modal:close"><span></span></a></li>
+	            </ul>
+	        </div>
+			<div class="warning_wrap" style="padding-left:20px">
+		    	<p style="border:0px" id="imgMnt"></p>
 		        <dl>
 		        	<dt>${message1}</dt>
 		            <dd class="count">${message2}<span class="pointRed">${message3}</span>${message4}</dd>

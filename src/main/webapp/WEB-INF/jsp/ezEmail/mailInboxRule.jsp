@@ -7,6 +7,7 @@
 		<title>mail_filter</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -14,6 +15,9 @@
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript">
 		    var Xmlhttp = null;
+		    var sortRuleNameStatNum = 0;
+		    var sortRuleNameStat = [["PRIORITY",""],["ASC","sortup"],["DESC","sortdown"]];
+		    	
 		    document.onselectstart = function () { return false; };
 		    function window_onload() {
 		        //alert(navigator.userAgent);
@@ -30,13 +34,16 @@
 		        Xmlhttp.send("");
 		    }
 		    function Rule_Reload() {
+		    	var type = sortRuleNameStat[sortRuleNameStatNum][0];
+		    	
 		        document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td style='text-align:center;'><img src='/images/email/progress_img.gif' /></td></tr></table>";
 		        _RowObject = null;
 		        document.getElementById("ContentDescription").innerHTML = "";
 		        Xmlhttp = createXMLHttpRequest();
 		        Xmlhttp.open("POST", "/ezEmail/mailGetInboxRule.do", true);
+		        Xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		        Xmlhttp.onreadystatechange = event_Get_listComplite;
-		        Xmlhttp.send("");  
+		        Xmlhttp.send("sortType=" + type);  
 		    }
 		    function event_Get_listComplite() {
 		        if (Xmlhttp == null || Xmlhttp.readyState != 4)
@@ -318,9 +325,9 @@
 		        }
 		            
 		        _RowObject = obj;
-		        obj.childNodes.item(0).style.backgroundColor = "#efeff0";
-		        obj.childNodes.item(1).style.backgroundColor = "#efeff0";
-		        obj.childNodes.item(2).style.backgroundColor = "#efeff0";
+		        obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(1).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(2).style.backgroundColor = "#edf4fd";
 		        MakeDescription();
 		    }
 		    function MakeDescription() {
@@ -748,6 +755,22 @@
 		         pStr = ReplaceText(pStr, ">", "&gt;");
 		         return pStr;
 		     }
+		     
+			function sortRuleName(td) {
+				sortRuleNameStatNum = sortRuleNameStatNum == 2 ? 0 : sortRuleNameStatNum+1;
+				var sortImg = sortRuleNameStat[sortRuleNameStatNum][1];
+				var pointerEvent = sortRuleNameStatNum == 0 ? "auto" : "none";		 
+				
+				$(td).find("img").remove();
+				$(".prevLi span").css("pointer-events", pointerEvent);
+				
+		    	if (sortRuleNameStatNum != 0) {
+		    		$(td).append("<img src='/images/etc/view-" + sortImg + ".gif' alt=''>");
+		    	}
+			    
+		    	Rule_Reload();
+		     };
+		     
 		</script>
 		<script>
 		    window.onload = window_onload;
@@ -768,8 +791,8 @@
 		          <li><span onclick="Detail_InboxRule();"><img src="/images/ImgIcon/options.gif"   style="margin-top:-2px;"  /><spring:message code='ezEmail.t805' /></span></li>
 		          <li><span onclick="event_DeleteRule();"><img src="/images/ImgIcon/delete.gif"   style="margin-top:-2px;"  /><spring:message code='ezEmail.t95' /></span></li>
 		          <li><span onclick="Rule_Reload();"><img src="/images/ImgIcon/recur.gif"    style="margin-top:-2px;"  /><spring:message code='ezEmail.t515' /></span></li>
-		          <li><span onclick="Priority_UP();"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code='ezEmail.t833' />"/></span></li>
-		          <li><span onclick="Priority_DOWN();"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code='ezEmail.t834' />" /></span></li>
+		          <li class="prevLi"><span onclick="Priority_UP();"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code='ezEmail.t833' />"/></span></li>
+		          <li class="prevLi"><span onclick="Priority_DOWN();"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code='ezEmail.t834' />" /></span></li>
 		          </ul>        
 			</div>
 			<table style="width:750px;height:385px;" border="0">
@@ -779,7 +802,7 @@
 							<table class="mainlist" style="width:100%;">
 			                    <tr>
 			                        <td style="width:8%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:2px solid #dbdbda;"><span><spring:message code='ezEmail.t808' /></span></td>
-			                        <td style="width:60%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:2px solid #dbdbda;"><span style="padding-left:10px;"><spring:message code='ezEmail.t809' /></span></td>
+			                        <td onclick="sortRuleName(this)" style="width:60%;background-color:#f8f8f8;border-right:1px solid #dbdbda;border-bottom:2px solid #dbdbda;cursor:pointer"><span style="padding-left:10px;"><spring:message code='ezEmail.t809' /></span></td>
 			                        <td style="width:32%;background-color:#f8f8f8;text-align:center;border-bottom:2px solid #dbdbda;"><span><spring:message code='ezEmail.t810' /></span></td>
 			                    </tr>
 							</table>

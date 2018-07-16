@@ -99,6 +99,8 @@
 		    var nowDate = "${nowDateUTC}";
 		    var ext;
 		   
+		    var currentpage = 1;
+		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -804,32 +806,17 @@
 		        if (oArrRows.length != 0) {
 		            var pCurSelRow = oArrRows[0];
 		            var DocID = pCurSelRow.getAttribute("DATA1");
-		
+					
+		            //2018-07-10 배현상, btnforcecallback_onclick 수정 (강제회수)
+		            tempDocID = DocID;
+		            
 		            if (pListTypeValue == "3") {
 		                var pMsg = "<spring:message code='ezApprovalG.t67'/>";
-		                if (CrossYN()) {
-		                    tempDocID = DocID;
-		                    OpenInformationUI(pMsg, btnforcecallback_onclick_Complete, "open");
-		                }
-		                else {
-		                    var Ans = OpenInformationUI(pMsg);
-		                    if (Ans) {
-		                        doCancelForce(DocID, pListTypeValue);
-		                    }
-		                }
+		                var Ans = OpenInformationUI(pMsg, btnforcecallback_onclick_Complete, "open");
 		            }
 		            else {
 		                var pMsg = "<spring:message code='ezApprovalG.t68'/>";
-		                if (CrossYN()) {
-		                    tempDocID = DocID;
-		                    OpenInformationUI(pMsg, btnforcecallback_onclick_Complete, "open");
-		                }
-		                else {
-		                    var Ans = OpenInformationUI(pMsg);
-		                    if (Ans) {
-		                        doCancelForce(DocID, pListTypeValue);
-		                    }
-		                }
+		                var Ans = OpenInformationUI(pMsg, btnforcecallback_onclick_Complete, "open");
 		            }
 		        }
 		    }
@@ -860,14 +847,17 @@
     	            }
 	        	});
 		        
+	        	//2018-07-10 배현상, OpenAlertUI에서 브라우저alert으로 변경 및 로직 수정
+	        	var RtnVal = getNodeText(loadXMLString(result).documentElement);
+	        	
 		        if (RtnVal == "TRUE") {
 		            if (tempListType == "3") {
-		                var pAlertContent = strLang891 + "<br> " + strLang892;
-		                OpenAlertUI(pAlertContent,"","OPEN");
+		                var pAlertContent = strLang891 + "\n" + strLang892;
+		                alert(pAlertContent);
 		            }
 		            else {
-		                var pAlertContent = strLang893 + "<br> " + strLang894;
-		                OpenAlertUI(pAlertContent, "", "OPEN");
+		                var pAlertContent = strLang893 + "\n" + strLang894;
+		                alert(pAlertContent);
 		            }
 		            getDocList();
 		
@@ -878,18 +868,18 @@
 		        }
 		        else if (RtnVal == "ERR01") {
 		            var pAlertContent = strLang895;
-		            OpenAlertUI(pAlertContent, "", "OPEN");
+		            alert(pAlertContent);
 		        }
 		        else if (RtnVal == "ERR02") {
 		            var pAlertContent = strLang896;
-		            OpenAlertUI(pAlertContent, "", "OPEN");
+		            alert(pAlertContent);
 		        }
 		        else if (RtnVal == "ERR03") {
 		            var pAlertContent = strLang897;
-		            OpenAlertUI(pAlertContent, "", "OPEN");
+		            alert(pAlertContent);
 		        }else {
 	            	var pAlertContent = strLang898;
-	                OpenAlertUI(pAlertContent);
+	                alert(pAlertContent);
 	            }
 		    }
 		    function Recipent_onclick() {
@@ -1527,26 +1517,26 @@
 		    function search() {
 		        pChackYN = "SEARCH";
 		        if (document.getElementById("txt_keyword").value != "") {
-		            var radiosearch = document.getElementsByName('searchCheck');
+		            var selectSearch = document.getElementById('selectType');
 					if (approvalFlag == "G") {
 			            for (var i = 0; i < 25; i++) {
 			                SearchCond[i] = "";
 			            }
 			
-			            if (radiosearch.item(0).checked) {
+			            if (selectSearch.item(0).selected) {
 			                SearchCond[1] = replaceCond(document.getElementById("txt_keyword").value);
 			            }
-			            else if (radiosearch.item(1).checked) {
+			            else if (selectSearch.item(1).selected) {
 			                SearchCond[2] = replaceCond(document.getElementById("txt_keyword").value);
 			            }
 					} else {
 						for (i = 0; i < 11; i++)
 							condition[i] = "";
 
-		                if (radiosearch.item(0).checked) {
+		                if (selectSearch.item(0).selected) {
 		                	condition[1] = replaceCond(document.getElementById("txt_keyword").value);
 		                }
-		                else if (radiosearch.item(1).checked) {
+		                else if (selectSearch.item(1).selected) {
 		                	condition[2] = replaceCond(document.getElementById("txt_keyword").value);
 		                }
 					}
@@ -1710,9 +1700,10 @@
 		<h1>
 			<span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
-		        <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1"><spring:message code='ezApprovalG.t106'/></label>
-			    <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2"><spring:message code='ezApprovalG.t445'/></label>
-			    &nbsp;
+		    	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+		    		<option selected value="rad_Subject"><spring:message code='ezApprovalG.t106'/></option>
+		    		<option value="rad_Writer"><spring:message code='ezApprovalG.t445'/></option>
+		    	</select>
 			    <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 		        <a href="#" style="float:right;"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
 		    </span>
@@ -1736,7 +1727,7 @@
 				<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		
 				<li id="tbtncallback" style="DISPLAY:none"><span id="btncallback" onclick="return btncallback_onclick('CALLBACK')" ><spring:message code='ezApprovalG.t66'/></span></li>
 		        
-		        	<li id="tbtnforcecallback" style="display:none"><span id="btnforcecallback" onclick="return btncallback_onclick('FORCECALLBACK')"><spring:message code='ezApprovalG.t2005'/></span></li>
+		        	<li id="tbtnforcecallback" style="display:none"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
 				
 				<li id="tbtnRemoveDoc" style="DISPLAY:none"><span id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
 				<li id="tbtnViewDoc" style="DISPLAY:none"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>

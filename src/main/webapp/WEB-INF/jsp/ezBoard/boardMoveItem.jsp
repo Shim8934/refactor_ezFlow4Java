@@ -19,7 +19,7 @@
 				margin-top: 3px;
 				vertical-align:top;
 				font-size: 9pt;				
-				background-color : #efeff0;
+				background-color : #edf4fd;
 				cursor : hand;
 			}
 			.node_hover{
@@ -44,8 +44,8 @@
 		    var xmlDom_treeview = createXmlDom();
 		    var ReturnFunction;
 		    
+		    /* 2018-07-11 홍승비 - 서로 다른 유형의 게시판 간 이동 시도 시 메세지 수정 */
 		    var board_alertArguments = new Array();
-		    
 		    function Select() {
 		    	board_alertArguments[1] = DivPopUpHidden;
 		    	if (selectedBoard == "") {
@@ -57,30 +57,30 @@
 
 		    	if (oldguBun > 0) {
 			    	if (oldguBun != newguBun) {
-			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.jsh01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.jsh01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
-// 			        	alert("<spring:message code='ezBoard.jsh01'/>");
+// 			        	alert("<spring:message code='ezBoard.hsb01'/>");
 			            return;
 			        }
 			    	if (oldguBun == "3" && newguBun == "3") {
-			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.jsh01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.jsh01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
-// 			        	alert("<spring:message code='ezBoard.jsh01'/>");
+// 			        	alert("<spring:message code='ezBoard.hsb01'/>");
 			            return;
 			        }
 		    	} else {
 		    		if (newguBun != "0") {
-		    			var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.jsh01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.jsh01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+		    			var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
-// 			        	alert("<spring:message code='ezBoard.jsh01'/>");
+// 			        	alert("<spring:message code='ezBoard.hsb01'/>");
 			            return;
 			        }
 		    	}
 
 		    	if (CheckIfAnonyBoard(selectedBoard) == "1") {
-		    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.jsh01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.jsh01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+		    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb01' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb01'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
-// 		            alert("<spring:message code='ezBoard.jsh01'/>");
+// 		            alert("<spring:message code='ezBoard.hsb01'/>");
 		            return;
 		        }
 
@@ -206,9 +206,12 @@
 		            MakeTopBoardView(xmlhttp.responseText);
 		        }
 		    }
+		    /* 2018-07-11 홍승비 - 하위게시판 선택한 후 다른 게시판그룹 선택 시, 기존에 선택한 하위게시판 해제 */
 		    function TopBoard_onclick(obj, ID, items) {
 		        var rootBoardID = "{" + ID + "}";
 		        var num = obj.split("TreeCtrl");
+		        selectedBoard = "";
+		        
 		        if (document.getElementById(obj).style.display != "none") {
 		            document.getElementById(obj).style.display = "none";
 		            document.getElementById("TopBoardsList").getElementsByTagName("h2").item(Number(num[1])).className = "off";

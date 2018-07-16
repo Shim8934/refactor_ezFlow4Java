@@ -168,9 +168,9 @@
                 	_RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
             	}
             	_RowObject = obj;
-            	obj.childNodes.item(0).style.backgroundColor = "#efeff0";
-            	obj.childNodes.item(1).style.backgroundColor = "#efeff0";
-            	obj.childNodes.item(2).style.backgroundColor = "#efeff0";
+            	obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
+            	obj.childNodes.item(1).style.backgroundColor = "#edf4fd";
+            	obj.childNodes.item(2).style.backgroundColor = "#edf4fd";
         	}
         	function swapNodes(item1, item2) {
             	var itemtmp = item1.cloneNode(1);
@@ -335,8 +335,7 @@
                 	</tr>
             	</table>
         	</div>
-        	<br />
-        	<div style="width:435px; text-align:center;">
+        	<div class="btnpositionJsp" style="width:422px; text-align:center;">
             	<a class="imgbtn" onclick="Save();">
                 	<span><spring:message code="ezBoard.t98" /></span>
             	</a>

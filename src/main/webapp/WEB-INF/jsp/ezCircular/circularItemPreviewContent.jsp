@@ -203,7 +203,6 @@
 // 	                filename = ReplaceText(filename, "%3b", ";");
 // 	                filename = ReplaceText(filename, "%7e", "~");
 // 	                filename = ReplaceText(filename, "%3d", "=");
-	                filepath = "/upload_board/" + filepath;
 	                filesize = parseInt(getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize")));
 	
 	                var strTarget = "target=''";
@@ -219,7 +218,9 @@
 	                strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems' onclick=\"DownloadFile('/ezCircular/downloadAttach.do?circularFileID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "CircularFileId")) + "')\"><img style='cursor:pointer;vertical-align:middle' src='/images/icon_adddownload.gif' width='16' height='16' /></span>";
 	                strAttach += "&nbsp;";
 	                strAttach += "<span onmouseover=\"this.style.color='#164aad'\" onmouseout=\"this.style.color='#666'\" style='cursor: pointer; color: rgb(102, 102, 102);'>";
-	                strAttach += "<a name='filename' href='/ezCircular/downloadAttach.do?circularFileID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "CircularFileId")) + "'>" + filename + " (" + File_Size(filesize) + ")</a>";
+	                //2018-07-12 김보미 - a태그 속성값 추가(파일 모두저장)
+// 	                strAttach += "<a name='filename' href='/ezCircular/downloadAttach.do?circularFileID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "CircularFileId")) + "'>" + filename + " (" + File_Size(filesize) + ")</a>";
+	                strAttach += "<a name='filename' href='/ezCircular/downloadAttach.do?circularFileID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "CircularFileId")) + "' filePath='" + filepath + "' fileName='" + filename + "'>" + filename + " (" + File_Size(filesize) + ")</a>";
 	                strAttach += "</span>";
 	                strAttach += "</li>";
 	            }
@@ -263,7 +264,33 @@
 	                document.getElementById("PreviewAttachList").style.display = "none";
 	            }
 	        }
-	
+			//2018-07-12 김보미 - 모두저장시 zip파일로 다운
+			function AttachAllDownload() {
+				var allobj = document.getElementsByName("filename");
+				
+				var filePath = ""; // 파일경로
+				var fileNames = []; // UUID + 파일이름
+				var fileNames2 = []; //파일이름
+				for (var i = 0; i < allobj.length; i++) {
+					filePath = GetAttribute(allobj[i], "filepath");
+					fileNames.push(filePath.split("/")[2]);
+					filePath = "/" + filePath.split("/")[1] + "/";
+					fileNames2.push(GetAttribute(allobj[i], "filename"));
+				}
+				
+				var $frm = $("<form></form>");
+		    	$frm.attr('action', "/ezCommunity/downloadAttachAll.do");
+		    	$frm.attr('method', 'post');
+		    	$frm.appendTo('body');
+		
+		    	param1 = $('<input type="hidden" value="' + filePath + '" name="filePath" />');
+		    	param2 = $("<input type='hidden' value='" + JSON.stringify(fileNames) + "' name='fileNames' />");
+		    	param3 = $("<input type='hidden' value='" + JSON.stringify(fileNames2) + "' name='fileNames2' />");
+		    	
+		    	$frm.append(param1).append(param2).append(param3);
+		    	$frm.submit();
+			}
+			/*
 	        function AttachAllDownload(attachObj) {
 	            var allobj = document.getElementsByName("filename");
 	            downloadAll(allobj);
@@ -279,6 +306,7 @@
 	            else
 	                suffix = 0;
 	        }
+	 		*/
 	        
 	        /* function getCircularComment(circularID, userInfoID, status) {
 				var divComment = document.createElement("DIV");
@@ -374,5 +402,7 @@
 		<div id="txtContent" name="txtContent" style="margin:10px 14px;word-wrap:break-word;font-size:12px;">
 			<span style="margin-top:50px;height:10px;display:inline-block;"></span>    
 		</div>
+		<!-- 2018-07-12 김보미 -->
+		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
 	</body>
 </html>

@@ -1624,28 +1624,28 @@ function makePageSelPage() {
     	if (ViewLeftCount == "YES") {
     		switch (pListTypeValue) {
     		case "1":
-    			parent.frames["left"].document.getElementById("count1").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count1").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "2":
-    			parent.frames["left"].document.getElementById("count3").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count3").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "3":
-    			parent.frames["left"].document.getElementById("count2").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count2").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "4":
-    			parent.frames["left"].document.getElementById("count4").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count4").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "6":
-    			parent.frames["left"].document.getElementById("count6").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count6").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "7":
-    			parent.frames["left"].document.getElementById("count7").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count7").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "21":
-    			parent.frames["left"].document.getElementById("count21").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count21").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		case "99":
-    			parent.frames["left"].document.getElementById("count99").innerHTML = "<b>(" + pTotalCnt + ")</b>";
+    			parent.frames["left"].document.getElementById("count99").innerHTML = "(" + pTotalCnt + ")";
     			break;
     		}
     	}
@@ -1754,7 +1754,7 @@ function selbeforeBlock_one() {
         return;
 }
 function selafterBlock() {
-    var pageNum = currentpage;
+	var pageNum = currentpage;
     pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
     goToPageByNum(pageNum);
 }
@@ -2325,7 +2325,7 @@ function doCancel(pDocID, tempListType) {
 		type : "POST",
 		dataType : "text",
 		async : false,
-		url : "/ezApprovalG/doCancelForce.do",
+		url : "/ezApprovalG/doCancel.do",
 		data : {
 			docID : pDocID,
 			userID : pUserID
@@ -2338,16 +2338,17 @@ function doCancel(pDocID, tempListType) {
 		}
 	});
 	
+	//2018-07-10 배현상, OpenAlertUI에서 브라우저 alert으로 수정
     var RtnVal = getNodeText(loadXMLString(result).documentElement);
 
     if (RtnVal == "TRUE") {
         if (tempListType == "3") {
-            var pAlertContent = strLang891 + "<br> " + strLang892;
-            OpenAlertUI(pAlertContent, "", "OPEN");
+            var pAlertContent = strLang891 + "\n" + strLang892;
+            alert(pAlertContent);
         }
         else {
-            var pAlertContent = strLang893 + "<br> " + strLang894;
-            OpenAlertUI(pAlertContent, "", "OPEN");
+            var pAlertContent = strLang893 + "\n" + strLang894;
+            alert(pAlertContent);
         }
         SendMailToCancel(pDocID); 
         openergetDocInfo();
@@ -2359,18 +2360,18 @@ function doCancel(pDocID, tempListType) {
     }
     else if (RtnVal == "ERR01") {
         var pAlertContent = strLang895;
-        OpenAlertUI(pAlertContent, "", "OPEN");
+        alert(pAlertContent);
     }
     else if (RtnVal == "ERR02") {
         var pAlertContent = strLang896;
-        OpenAlertUI(pAlertContent, "", "OPEN");
+        alert(pAlertContent);
     }
     else if (RtnVal == "ERR03") {
         var pAlertContent = strLang897;
-        OpenAlertUI(pAlertContent, "", "OPEN");
+        alert(pAlertContent);
     } else {
     	var pAlertContent = strLang898;
-        OpenAlertUI(pAlertContent);
+        alert(pAlertContent);
     }
 }
 

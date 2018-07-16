@@ -169,7 +169,7 @@
                 	makePageSelPage();
 		        } 
 		    } 
-		    var m_strColorSelect = "#efeff0";
+		    var m_strColorSelect = "#edf4fd";
 	    	var m_strColorOver = "#f4f5f5";
 	    	var m_strColorDefault = "#ffffff";
 	    	var p_ListOrderObject = null;
@@ -735,6 +735,9 @@
 	                	PagingHTML += strtext;
 	            	}
 	        	}
+	        	if (MaxNum == 0) {
+                	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+                }
 	        	if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                	strtext = "";

@@ -74,6 +74,56 @@
 	            previewSubTreeCall();
 	        }
 	        
+	        /**
+	        	메일함 ellipsis 추가.
+	        	박종균
+	        */
+	        function applyEllipsisMailTree() {
+	        	/**
+	        		1. 왼쪽 메뉴에 존재하는 트리 node를 전부 가져온다.
+	        		2. 그 안에서 들여쓰기가 된 img 갯수를 가져온다.
+	        		3. 이미지 갯수를 통해 list가 표현될 width를 재설정한다.
+	        	*/
+	        	$($("[id^='PostTreeView_node']")).each(function(index, element){
+	        		
+	        		var imgCnt = $(element).parent().find('img').length - 2;
+	        		var title = $(element)[0].innerHTML;
+	        		
+	        		if (imgCnt > 0) {
+	        			// 최초값 164, 한 블럭의 값 18
+	        			var customWidth = 140 - (18 * imgCnt);
+	        			$(element).css("width", customWidth+"px");
+	        			$(element).attr("title", title);	
+	        		}
+							
+	        	});
+	        }
+	        
+	        /**
+	        	주소록 ellipsis 추가.
+	        	박종균
+	        */
+	        function applyEllipsisAddressTree() {
+	        	/**
+	        		1. 왼쪽 메뉴에 존재하는 트리 node를 전부 가져온다.
+	        		2. 그 안에서 들여쓰기가 된 img 갯수를 가져온다.
+	        		3. 이미지 갯수를 통해 list가 표현될 width를 재설정한다.
+	        	*/
+	        	$($("[id^='AddressTreeView_node']")).each(function(index, element){
+	        		
+	        		var imgCnt = $(element).parent().find('img').length - 2;
+	        		var title = $(element)[0].innerHTML;
+	        		
+	        		if (imgCnt > 0) {
+	        			// 최초값 164, 한 블럭의 값 18
+	        			var customWidth = 140 - (18 * imgCnt);
+	        			$(element).css("width", customWidth+"px");
+	        			$(element).attr("title", title);	
+	        		}
+							
+	        	});
+	        }	        
+	        
 	        
 	        // 수정 수아 재은
 	        function detailView() {
@@ -233,6 +283,11 @@
 	            }
 	            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true, false);
 	            PostTreeView.putchildxml(nodeIdx, childxml);
+	            
+	            /**
+	            	ellipsis 적용을 위해 함수 호출
+	            */
+	            applyEllipsisMailTree();
 	        }
 	        
 	        function selectnode(event) {
@@ -252,7 +307,7 @@
 		            else
 		                window.open(url, "right");
 		            get_unreadcount();
-	        	}
+	        	}        	
 	        }
 	        
 	        function email_dragdrop(event) {
@@ -333,6 +388,7 @@
 	                }
 	            }
 	            xmlHTTP_Unread = null;
+	            applyEllipsisMailTree();
 	        }
 	        function get_unreadcount() {
 	            return get_unreadcount_2010();
@@ -544,6 +600,8 @@
 	                AddressTreeView.select(1);
 	            else
 	                selectnode_address();
+	            
+	            applyEllipsisAddressTree();
 	        }
 	        var AddressTreeView = null;
 	        function LoadAddressTree() {
@@ -592,6 +650,11 @@
 	
 	            var childxml = get_Address_childXML(AddressTreeView.getvalue(nodeIdx, "folderid"), AddressTreeView.getvalue(nodeIdx, "ownerid"), AddressTreeView.getvalue(nodeIdx, "type"))
 	            AddressTreeView.putchildxml(nodeIdx, childxml);
+	            
+	            /**
+	            	주소록 ellipsis 추가
+	            */
+	            applyEllipsisAddressTree();
 	        }
 	        function selectnode_address() {
 	            var nodeIdx = AddressTreeView.selectedIndex();
@@ -925,7 +988,7 @@
 				}
 			}
 			
-			// 재은 수정중
+			// 수신확인 메뉴 클릭
 			function reception_check() {
 				var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent("<spring:message code='ezEmail.t516' />") + "&url=receiveChk";
 				
@@ -954,6 +1017,18 @@
 			  height: 7px;				  
 			  background-color: #4faaff;
 			}
+			.node_normal{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		white-space: nowrap;
+	    	}
+			.node_selected{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		white-space: nowrap;
+	    	}	    	
 		</style>
 	</head>
 	<body class="leftbody" style="overflow: auto; height: 100%;">
@@ -961,7 +1036,7 @@
 	        <div class="left_mail" title="<spring:message code="ezEmail.t99000012" />"><span><spring:message code="ezEmail.t99000012" /></span></div>
 	        <h2><span onclick="Email_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000012" /></span></h2>
 	        <ul>
-	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #f0f0f0; overflow: auto; padding-left: 20px;" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;"></div>
+	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;"></div>
 	            <li><span onclick="write_Letter()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000013" /></span></li>
 	            
 	            <c:if test="${useMailReceiveScreen == 'YES'}">
@@ -982,12 +1057,12 @@
 	        </ul>
 	        <h2><span onclick="Address_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000041" /></span></h2>
 	        <ul>
-	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #f0f0f0; overflow: auto; padding-left: 20px;" id="AddressTreeView"></div>
+	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" id="AddressTreeView"></div>
 	            <li><span id='Address_Search' onclick="address_Search();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000042" /></span></li>
 	            <li style="border-bottom-color:#e8e8e8" evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
 	        </ul>	        
 	    	<!-- 수정 수아 재은 -->
-	    	<!-- <div style="border:1px solid #e8e8ef;margin:10px 10px 2px;background-color:#f8f8fa">
+	    	<!-- <div style="border:1px solid #e8e8e8;margin:10px 10px 2px;background-color:#f8f8fa">
 			    <div id='myProgress' style='margin-left:20px;margin-top:10px'></div>
 			    <div style="width:80%">
 			    	<div id='myBar'></div>

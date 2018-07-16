@@ -13,7 +13,10 @@
         	#tblList td, #tblList td div {
         		white-space: nowrap;
         		text-overflow: ellipsis;
-        		overflow:hidden;
+        		overflow: hidden;
+        	}
+        	 .cmhomelist tr td.boldClass  {
+        		font-weight: bold;
         	}
         </style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -46,6 +49,8 @@
     		var code = "<c:out value='${code}' />";
     		var ListInfo = "";
     		var pastDate = "<c:out value='${pastDate}' />";
+    		//2018-07-13 김보미
+    		var treeCtrl = "<c:out value='${treeCtrl}' />";
     		
     		function SelectSingleOnlyTitle(node, tagName) {
     		    var strValue = "";
@@ -69,8 +74,8 @@
     		            if (node.selectSingleNode(tagName))
     		                return node.selectSingleNode(tagName).text;
     		    }
-//     		    return strValue.replace(/&/g,"&amp;");
 				//2018-07-03 김보미 - 제목 특수문자처리 버그 수정 
+     		    //return strValue.replace(/&/g,"&amp;");
     		    return strValue;
     		}
     		
@@ -79,14 +84,14 @@
     			var listXML = '';
     			var strSpace = '';
 				var strEmergent = '';
-				var bTag = '';
+				var bClass = '';
 				var urgency = "";
 				var writeDate = "";
 				
     			for (var i = 0; i < SelectNodes(xmldoc,"NODES/NODE").length; i++) {
 					strSpace = '';
 					strEmergent = '';
-					bTag = '';
+					bClass = '';
 					urgency = "";
 					writeDate = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate");
 					
@@ -102,22 +107,23 @@
 						}
 					}
 					
+					/* 2018-07-10 홍승비 - bTag를 font-weight:bold 스타일이 포함된 클래스로 수정 */
 					if (pBoardID != "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 						if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadFlag") != "0") {
-							bTag = "";
+							bClass = "";
 						} else {
-							bTag = "<B>";
+							bClass = "boldClass";
 						}
 					} else {
-						bTag = "<B>";
+						bClass = "boldClass";
 					}
 					
 					listXML += "<TR>";
 					listXML += "<TD align=center><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID") + "\" , event)'></td>";
 					
 					if (pBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-                        listXML += "<TD class='"+ urgency +"'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardName") + "</TD>";
-                        listXML += "<TD class='"+ urgency +"' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
+                        listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardName") + "</TD>";
+                        listXML += "<TD class='"+ urgency + " " + bClass + "' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
                         	+ SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "boardName") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \""
                         	+ SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID") + "\", event)'>";
                         	
@@ -125,52 +131,52 @@
                        	if (pastDate <= writeDate) {
                        		listXML += "<img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
                        	}
-                       	listXML += "<nobr>" + bTag + strEmergent + strSpace + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title") + "</nobr>";
+                       	listXML += strEmergent + strSpace + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title");
                        	
                        	/* 2018-05-04 홍승비 - 댓글 표시하기 */
                        	if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) {
-                       		listXML += "<SPAN style='color:#c64200'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                       		listXML += "<SPAN class= '" + bClass + "' style='color:#c64200'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
                        	}
                         listXML += "</TD>";
 					}
 					else {
-						listXML += "<TD class='"+ urgency +"' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
+						listXML += "<TD class='"+ urgency + " " + bClass + "' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
 							+ pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Writer") + "\", event)'>";
 							
 	                    if (pastDate <= writeDate) {
 	                   		listXML += "<img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
 	                   	}			
-	                    listXML += "<nobr>" + bTag + strEmergent + strSpace + Replace2HTML(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title")) + "</nobr>";
+	                    listXML += strEmergent + strSpace + Replace2HTML(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title"));
 	                    
 						if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) {
-                       		listXML += "<SPAN style='color:#c64200'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                       		listXML += "<SPAN class ='" + bClass + "' style='color:#c64200'> [" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
                        	}
                     	listXML += "</TD>";
 					}				
 					
 					if (gubun == '1') {
-						listXML += "<TD class='"+ urgency +"'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterCompanyName").trim() + "</TD>";
+						listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterCompanyName").trim() + "</TD>";
 					}
 					
 					if (gubun != '2') {
-						listXML += "<TD class='"+ urgency +"'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptname").trim() + "</TD>";
-                        listXML += "<TD class='"+ urgency +"'><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></TD>";
+						listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptname").trim() + "</TD>";
+                        listXML += "<TD class='"+ urgency + " " + bClass + "'><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></TD>";
 					} else {
-                        listXML += "<TD class='"+ urgency +"'><div onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></TD>";
+                        listXML += "<TD class='"+ urgency + " " + bClass + "'><div onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></TD>";
 					}
 					
-					listXML += "<TD class='"+ urgency +"'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</TD>";
+					listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</TD>";
 					
 					if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Attachments").trim() != "0") {
-						listXML += "<TD class='"+ urgency +"'><img src='/images/i_save01.gif'></TD>";
+						listXML += "<TD class='"+ urgency + "'><img src='/images/i_save01.gif'></TD>";
 					} else {
-						listXML += "<TD class='"+ urgency +"'></TD>";
+						listXML += "<TD class='"+ urgency + "'></TD>";
 					}
 					
 					if (SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadCount") == ""){
-						listXML += "<TD class='"+ urgency +"' align=center>0</TD>";
+						listXML += "<TD class='"+ urgency + " " + bClass + "' align=center>0</TD>";
 					} else {
-						listXML += "<TD class='"+ urgency +"' align=center>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadCount") + "</TD>";
+						listXML += "<TD class='"+ urgency + " " + bClass + "' align=center>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ReadCount") + "</TD>";
 					}
 					
 					listXML += "</TR>";
@@ -211,16 +217,21 @@
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
-  	
-   		        if (evt.currentTarget.getElementsByTagName("B").length == 1) {
-   		            evt.currentTarget.getElementsByTagName("nobr")[0].innerHTML = evt.currentTarget.getElementsByTagName("B")[0].innerHTML;
+   				
+   				var bTarget = evt.currentTarget.parentNode;
+   		         if (bTarget.childNodes[1].classList.contains("boldClass")) {
+   		            for (var i = 0; i < bTarget.childNodes.length; i++) {
+   		            	bTarget.childNodes[i].classList.remove("boldClass");
+   		            }
    		        }
 
     		    /* var pheight = window.screen.availHeight;
     		    var pwidth = window.screen.availWidth;
     		    var pTop = (pheight - 720) / 2;
     		    var pLeft = (pwidth - 765) / 2; */
-    		    GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code) + "&showAdjacent=" + ShowAdjacent, "", 750, 721);
+    		    //2018-07-13 김보미 - 파라메터 추가
+//     		    GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code) + "&showAdjacent=" + ShowAdjacent, "", 750, 721);
+    		    GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code) + "&showAdjacent=" + ShowAdjacent + "&treeCtrl=" + treeCtrl, "", 750, 721);
     		}
     		
     		function checkBox_checked(pItemID, pUserID, evt) {
@@ -569,8 +580,9 @@
 
     			var left = (width - wWeight) / 2;
     			var top = (heigth - wHeight) / 2;
-    			
-    			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code), "", "height=656,width=440, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
+    			//2018-07-13 김보미 - 파라메터 추가    			
+//     			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code), "", "height=656,width=440, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
+    			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code) + "&treeCtrl=" + treeCtrl, "", "height=656,width=440, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
     		}
     		
     		function SetRead_onclick() {

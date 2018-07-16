@@ -418,7 +418,7 @@
 	        </tr>
 	        <tr>
 	            <th style="height:28px; line-height:28px; border-bottom:0 none; background:#fff;">
-	    	        <ul id = "btnUl"><li><span onClick="btn_PhotoChange()"><spring:message code='ezAddress.t301'/><spring:message code='ezBoard.t47'/></span></li></ul>
+	    	        <ul id = "btnUl"><li><span style="border:1px solid #d2d2d2" onClick="btn_PhotoChange()"><spring:message code='ezAddress.t301'/><spring:message code='ezBoard.t47'/></span></li></ul>
 	            </th>
 	        </tr>
 	        <tr>

@@ -258,12 +258,12 @@
 			</tr>  --%>
 			<tr> 
 				<th><spring:message code='ezOrgan.t163' /></th> 
-				<td>
+				<td style="padding:3px">
 					${listEmailHtml}	
 				</td> 
 			</tr> 
 		</table> 
-		<div class="btnposition">
+		<div class="btnpositionNew">
 			<a class="imgbtn" onClick="Add_Address()"><span><spring:message code='ezOrgan.t164' /></span></a>
 			<a class="imgbtn" onClick="Delete_Address()"><span><spring:message code='ezOrgan.t165' /></span></a>
 			<a class="imgbtn" style="WIDTH:auto" onClick="Set_Primary()"><span>Primary<spring:message code='ezOrgan.t166' /></span></a>

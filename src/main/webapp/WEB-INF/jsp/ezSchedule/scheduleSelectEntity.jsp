@@ -289,7 +289,7 @@
                 	makePageSelPage();
 		        } 
 		    }
-		    var m_strColorSelect = "#efeff0";
+		    var m_strColorSelect = "#edf4fd";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var p_ListOrderObject = null;
@@ -1175,7 +1175,7 @@
 	                                        <tr>
 	                                            <td>
 	                                                <div style="margin-left: 5px;">
-	                                                    <select id="search_type">
+	                                                    <select id="search_type" style="height:22px">
 	                                                        <option selected value="displayname"><spring:message code='ezSchedule.t18' /></option>
 	                                                        <option value="description"><spring:message code='ezSchedule.t12' /></option>
 	                                                        <option value="title"><spring:message code='ezSchedule.t14' /></option>
@@ -1186,7 +1186,7 @@
 	                                                        <option value="mail"><spring:message code='ezSchedule.t22' /></option>
 	                                                        <option value="streetAddress"><spring:message code='ezSchedule.t23' /></option>
 	                                                    </select>
-	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
+	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px; height:22px">
 	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezSchedule.t24' /></span></a>
 	                                                </div>
 	                                            </td>

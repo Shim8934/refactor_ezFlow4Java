@@ -395,7 +395,7 @@
 		
 		            if (btnSendDraftEnable == "false") {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t1408'/>";
-		                OpenAlertUI(pAlertContent);
+		                OpenAlertUI(pAlertContent, check_btnSendDraft);
 		                return;
 		            }
 		            if (pGubun != "5" && pGubun != "7" && pGubun != "10" && pGubun != "12") {
@@ -1393,6 +1393,11 @@
 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
 		            }
 		        }
+		    }
+		    
+		    function check_btnSendDraft() {
+		        DivPopUpHidden();
+		        btnApprovalInfo();
 		    }
 		</script>
 	</head>

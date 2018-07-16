@@ -39,7 +39,7 @@
 	        var pMaxPage = "";
 	        var BlockSize = 10;
 	        var pFolderName = "";
-	        var m_strColorSelect = "#efeff0";
+	        var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var searchFlag = false;
@@ -902,13 +902,16 @@
 		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 			<img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
 		</div>		
-		<div id="addpopup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:50px;">
-			<div class="popupwrap3">
+		<div id="addpopup" class="popupwrap1" style="display:none;margin-bottom:60px;">
+			<div class="popupJQLayer">
+				<div class="title"><spring:message code='ezAddress.t2003' /></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="quick_add_close()"></span></a></li>
+		            </ul>
+		        </div>
 				<!-- 내용 -->
-			    <table class="popuplist" id="addpopup_list" style="width:440px;margin:10px 0px 0px 1px;">
-			    	<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezAddress.t2003' /></th>
-					</tr>
+			    <table class="popuplist" id="addpopup_list" style="width:478px;margin:10px 0px 0px 1px;">
 					<tr>
 			  			<th style="width:90px;height:30px"><spring:message code='ezAddress.t124' /></th>
 						<td><input type="text" id="qname" name="qname" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="24"></td>
@@ -930,20 +933,21 @@
 						<td><input type="text" id="qemail" name="qemail" class="textarea" style="width:98%;box-sizing:border-box;-moz-box-sizing:border-box;margin-left:3px" maxlength="100"></td>
 					</tr>
 				</table>
-				<!-- /내용 -->
-				<br />
-				<div style="text-align:center;">
+				<!-- /내용 -->				
+				<div class="btnpositionLayer">
 					<a class="imgbtn"><span onclick="quick_add()" ><spring:message code='ezAddress.t173' /></span></a>
-					<a class="imgbtn" rel="modal:close"><span onclick="quick_add_close();"><spring:message code='ezAddress.t11' /></span></a>
 			    </div>
 			</div>
 		</div>
-		<div id="srarchpopup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
-			<div class="popupwrap3">
-				<table class="content" style="margin-top:10px;">  
-					<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezAddress.t312' /></th>
-					</tr>
+		<div id="srarchpopup" class="popupwrap1" style="display:none;margin-bottom:70px">
+			<div class="popupJQLayer">
+				<div class="title"><spring:message code='ezAddress.t312' /></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="SearchOptionHidden()"></span></a></li>
+		            </ul>
+		        </div>
+				<table class="content" style="margin-top:10px;">
 					<tr>
 						<th style="text-align:center;height:30px"><spring:message code='ezAddress.t314' /></th>
 						<td style="text-align:left;height:30px">
@@ -978,27 +982,31 @@
 				<table style="width:100%">
 					<tr>
 						<td style="text-align:center;">
-							<a class="imgbtn"><span onClick="search_start()"><spring:message code='ezAddress.t142' /></span></a>
-							<a class="imgbtn"><span onClick="SearchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
+							<div class="btnpositionLayer">
+								<a class="imgbtn"><span onClick="search_start()"><spring:message code='ezAddress.t142' /></span></a>
+							</div>								
 						</td>
 					</tr>
 				</table>
 			</div>
 		</div>
 		
-		<div id="importPopup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px;vertical-align:middle">
-			<div class="popupwrap3">
+		<div id="importPopup" class="popupwrap1" style="display:none;margin-bottom:70px;vertical-align:middle">
+			<div class="popupJQLayer">
+				<div class="title"><spring:message code='ezAddress.t309' /></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="SearchOptionHidden()"></span></a></li>
+		            </ul>
+		        </div>
 				<table class="content" style="width:100%;margin-top:10px;">
-					<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezAddress.t309' /></th>
-					</tr>
 					<tr>
 						<td style="width:70%;border-right-width:0px;">
 							<input type="radio" name="importFormat" id="importOutlookCSV" checked="checked" value="outlookCSV" />
 							<label for="importOutlookCSV" style="vertical-align:middle;cursor:pointer;">MS Outlook 2013/2016 CSV</label>
 						</td>
-						<td style="width:30%;text-align:center;border-left-width:0px;">
-							<a class="imgbtn" href="/ezAddress/addressFormatDownload.do?format=outlookCSV"><span><spring:message code='ezAddress.lhm2' /></span></a>
+						<td style="width:30%;text-align:right;border-left-width:0px;">
+							<a class="imgbtn imgbck" href="/ezAddress/addressFormatDownload.do?format=outlookCSV"><span><spring:message code='ezAddress.lhm2' /></span></a>
 						</td>
 					</tr>
 					<!-- 
@@ -1026,20 +1034,24 @@
 				<table style="width:100%">
 					<tr>
 						<td style="text-align:center;">
-							<a class="imgbtn"><span onClick="crossImport()"><spring:message code='ezAddress.t25' /></span></a>
-							<a class="imgbtn"><span onClick="SearchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
+							<div class="btnpositionLayer">
+								<a class="imgbtn"><span onClick="crossImport()"><spring:message code='ezAddress.t25' /></span></a>
+							</div>	
 						</td>
 					</tr>
 				</table>
 			</div>
 		</div>
 		
-		<div id="exportPopup" class="popupwrap1" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px;vertical-align:middle">
-			<div class="popupwrap3">
+		<div id="exportPopup" class="popupwrap1" style="display:none;margin-bottom:70px;vertical-align:middle">
+			<div class="popupJQLayer">
+				<div class="title"><spring:message code='ezAddress.t31' /></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="SearchOptionHidden()"></span></a></li>
+		            </ul>
+		        </div>
 				<table class="content" style="width:100%;margin-top:10px;">
-					<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezAddress.t31' /></th>
-					</tr>
 					<tr>
 						<td>
 							<input type="radio" name="exportFormat" id="exportOutlookCSV" checked="checked" value="outlookCSV" />
@@ -1065,8 +1077,9 @@
 				<table style="width:100%">
 					<tr>
 						<td style="text-align:center;">
-							<a class="imgbtn"><span onClick="crossexport()"><spring:message code='ezAddress.t25' /></span></a>
-							<a class="imgbtn"><span onClick="SearchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
+							<div class="btnpositionLayer">
+								<a class="imgbtn"><span onClick="crossexport()"><spring:message code='ezAddress.t25' /></span></a>								
+							</div>	
 						</td>
 					</tr>
 				</table>
