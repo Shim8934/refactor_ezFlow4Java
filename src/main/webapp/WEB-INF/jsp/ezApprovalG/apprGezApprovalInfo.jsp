@@ -39,6 +39,11 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    <script src="/js/Common.js" type="text/javascript"></script>
+	    <style type="text/css">
+	    	.h2_dot {
+	    		background: url(/images/kr/left/left_dot02.gif) no-repeat 0px 70%;
+	    	}
+	    </style>
 	    <script type="text/javascript">
 	    	var approvalFlag = "${approvalFlag}";
 	        var OrderCell = "";
