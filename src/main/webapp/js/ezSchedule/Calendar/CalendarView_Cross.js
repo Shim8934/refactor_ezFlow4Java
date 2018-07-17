@@ -250,6 +250,7 @@ function CalendarView(pTagetID,chk_str) {
                 var dDiv = document.createElement("DIV")
                 dDiv.setAttribute("id", dayText.substring(0,10) + "ALL");
                 dDiv.setAttribute("ondblclick", "WriteDateSchedule(this)");
+                dDiv.setAttribute("dispDate", dayText.substring(0,10));
                 dDiv.style.width = "100%"
                 dDiv.style.height = "100px";
                 dDiv.style.overflowY = "auto";
