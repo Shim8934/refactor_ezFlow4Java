@@ -1032,30 +1032,14 @@
 		</c:otherwise>
 	</c:choose>
 	<span style="float: right; font-weight: normal; color: black;">
-<%-- 		<c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }"> --%>
-<!-- 			<input name="searchKey" id="Radio1" type="radio" value="journalTitle" -->
-<!-- 				checked -->
-<!-- 				style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;"> -->
-<%-- 			<label for="Radio1">&nbsp;<spring:message code='ezBoard.t208' /></label> --%>
-<%-- 		</c:if>  --%>
-<%-- 		<c:if test="${listType eq 'department' or listType eq 'recv' }"> --%>
-<!-- 			<input name="searchKey" id="Radio2" type="radio" -->
-<!-- 				value="journalWriter" -->
-<!-- 				style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;"> -->
-<%-- 			<label for="Radio2">&nbsp;<spring:message code='ezJournal.t34' /></label> --%>
-<%-- 		</c:if> &nbsp;  --%>
-		<select id="searchKey" name="searchKey" style="height:29px;">    
-			<c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
-	           	<option value="journalTitle"><spring:message code='ezBoard.t208' /></option>
-           	</c:if>
+		<select id="searchKey" name="searchKey" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb; width: 70px;">    
+           	<option value="journalTitle"><spring:message code='ezBoard.t208' /></option>
 			<c:if test="${listType eq 'department' or listType eq 'recv' }">
 	       		<option value="journalWriter"><spring:message code='ezJournal.t34' /></option>
        		</c:if>
        	</select>
-		<c:if test="${listType eq 'department' or listType eq 'mine' or listType eq 'recv' }">
-			<input id="searchValue" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
-			<a href="#" style="float: right"><img src="../../images/bsearch_new.gif" border="0" onclick="quickSearch()"></a>
-		</c:if>
+		<input id="searchValue" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onfocus="journalKeywordClear(this);" onkeypress="if(event.keyCode==13) {quickSearch(); return false;}">
+		<a href="#" style="float: right"><img src="../../images/bsearch_new.gif" border="0" onclick="quickSearch()"></a>
 	</span>
 	</h1>
 	<div id="mainmenu">
