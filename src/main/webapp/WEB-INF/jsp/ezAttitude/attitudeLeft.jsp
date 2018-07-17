@@ -8,7 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<title>left_attitude</title>
 		<link rel="stylesheet" href="/css/email_tree.css" type="text/css"/>
-		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
+		<link rel="stylesheet" href="<spring:message code = 'main.e15' />" type="text/css"/>
 		<link rel="stylesheet" href="/css/main.css" type="text/css"/>	
 		<link rel="stylesheet" href="/css/ezAttitude/clockTemp1.css" type="text/css" />
 		<link rel="stylesheet" href="/css/ezAttitude/timecheck.css" type="text/css" />	
@@ -19,7 +19,6 @@
 		<script type="text/javascript" src="/js/ezAttitude/Calendar.js"></script>
 		<style>
 			.time {
-				font-family: Gulim, Dotum, Arial, Helvetica, sans-serif;
 				float:left;
 				width:100%;
 				margin:0px 0px 5px 0px;
@@ -424,7 +423,7 @@
 						<div class="digits" style="padding:18px 5px 0px 5px; width:186px; margin:16px; margin-left:10px; height:130px"></div>
 					</div>
 				</div>
-				<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:219px; margin-bottom: 12px">
+				<div id="atti_area" style="text-align:center; width:219px; margin-bottom: 12px">
 					<div class="sub_time">
     					<dl class="timeCheckIn">
     						<dt>출근</dt>
