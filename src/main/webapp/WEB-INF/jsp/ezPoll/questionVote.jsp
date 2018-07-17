@@ -2028,9 +2028,11 @@
 		    }
 		    
 		    function addSticker() {
-		    	if (document.getElementById("emoticonPanel").style.display == "block") {
-		    		document.getElementById("emoticonPanel").style.display = "none";
-		    		document.getElementById("_addEmoticon").src = "/images/poll/add_emo_vote.png";
+		    	var targetPanel = event.target.parentElement.querySelector(".emoticonPanel") || document.getElementById("emoticonPanel");
+		    	if (targetPanel && targetPanel.style && (targetPanel.style.display == "block")) {
+		    		targetPanel.style.display = "none";
+// 		    		document.getElementById("_addEmoticon").src = "/images/poll/add_emo_vote.png";
+		    		$("._addEmoticon").attr("src", "/images/poll/add_emo_vote.png");
 		    	}
 		    	else {
 		    		//baonk added
@@ -2038,7 +2040,7 @@
 			    		evt = evt || window.event;
 			    		
 			    	    if (evt.keyCode == 27) {
-				    		document.getElementById("emoticonPanel").style.display = "none";
+			    	    	targetPanel.style.display = "none";
 				    		document.getElementById("_addEmoticon").src = "/images/poll/add_emo_vote.png";
 			    	    }
 			    	    
@@ -2046,7 +2048,8 @@
 			    	});	 
 		    		//end
 		    		
-		    		document.getElementById("_addEmoticon").src = "/images/poll/add_emo_vote2.png";
+// 		    		document.getElementById("_addEmoticon").src = "/images/poll/add_emo_vote2.png";
+		    		event.target.src = "/images/poll/add_emo_vote2.png";
 			    	processGroupStickers();
 			    	stickerIndex = 1;		    	
 			    	document.getElementById("_group1").style.backgroundColor  = "#d9d9d9";
@@ -2057,9 +2060,9 @@
 			    		document.getElementById("_listG" + i).style.display = "none";
 			    	}		    		    	
 			    	
-			    	document.getElementById("emoticonPanel").style.display = "block";
+			    	targetPanel.style.display = "block";
 			    	checkScrollBars();
-			    	emoticonPanelClose();
+// 			    	emoticonPanelClose();
 		    	}
 		    }
 		    
@@ -2120,7 +2123,7 @@
 		    			// Add cancel image in top right of files/sticker
 		    			var cancelImg = document.createElement("img"); 
 		    			cancelImg.src = "/images/close.png";
-		    			cancelImg.setAttribute("style", "height: 20; width: 20px; top: 0; left: 50px; position: absolute; cursor: pointer;");
+		    			cancelImg.setAttribute("style", "height: 20; width: 20px; top: 0px; left: 20px; position: absolute; cursor: pointer;");
 		    			cancelImg.onclick = function () { deleteFileInCmt(); };
 		    			editPreviewTag.parentElement.appendChild(cancelImg);
 		    		}
@@ -2578,13 +2581,26 @@
 		    //이모티콘 패널이 아닌 영역을 선택하면 패널이 닫힘
 		    function emoticonPanelClose(){
 		    	var emoticonPanel = document.getElementById("emoticonPanel");
-		    	if(emoticonPanel){
-			        $(document).click(function(e){
+		    	var targetPanel;
+		    	if(event.target.parentElement){
+			    	targetPanel = event.target.parentElement.querySelector(".emoticonPanel");
+		    	}
+		    	else{
+		    		targetPanel = emoticonPanel;
+		    	}
+		    	if(targetPanel){
+			        $(document).on("click.emo", function(e){
 			            var target = e.target;
-			            var onOff = emoticonPanel.getAttribute("style").indexOf("display: block")!= -1 ? true : false;
+// 			            var onOff = targetPanel.getAttribute("style").indexOf("display: block")!= -1 ? true : false;
+			            var panelDiv = $(".emoticonPanel").filter(function(idx, panel){
+							return panel.style.display == "block";	            	
+			            });
+			            var onOff = !!panelDiv;
 			            
 			            if(onOff && target.id != "_addEmoticon"){
-	                        addSticker();
+// 	                        addSticker();
+							$(".emoticonPanel").hide();
+							$("._addEmoticon").attr("src", "/images/poll/add_emo_vote.png");
 			            }
 			        });
 		    	}
@@ -3463,7 +3479,7 @@
 							<div id="emoticonPanel" class="emoticonPanel" style="display:none">
 								<div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #ddd;">
 									<div style="float:left; display:block;">
-										<img id="previousEmoticon" src="/images/previous1.png" height=40 width=30 style="padding-top: 3px; ">
+										<img id="previousEmoticon" src="/images/previous1.png">
 									</div>
 									<div id="_ePresentors" style="float:left; display:block; ">
 										<div id="_group1" style="background-color: #d9d9d9; float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/girl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
@@ -3478,7 +3494,7 @@
 										<div id="_group10" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>  -->
 									</div>
 									<div style="float: right; display:block;">
-										<img id="nextEmoticon" src="/images/next1.png" height=40 width=30 style="padding-top: 3px; ">
+										<img id="nextEmoticon" src="/images/next1.png">
 									</div>
 								</div>						
 								<div id="emoticonList" style="display:inline-block;width:100%; background-color: #fff;">
@@ -3509,7 +3525,8 @@
 							<img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker()">
 						</div >				
 						<div class="comment_input_layout">
-							<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
+							<!-- <textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea> -->
+							<input type="text" id="comment_input" oninput="auto_grow(this)" maxlength="500" style="width: 100%"/>
 						</div>
 						<div class="commentBtn">
 							<div id="uploadedFile" class="uploadedFile" style="display:none;">

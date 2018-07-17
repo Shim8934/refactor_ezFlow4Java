@@ -37,7 +37,8 @@
 		    window.onresize = function () {
 	            var height = parseInt(document.documentElement.clientHeight - 200);
 	            document.getElementById("divList").style.height = height + "px";
-	            Window_resize();
+	            // 예약게시물은 Preview.js 사용하지 않으므로, 스크립트 주석처리함
+	            // Window_resize();
 	        };
 	        
 		    function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID) {
@@ -303,10 +304,10 @@
 		      <th style="cursor:pointer" width="112" onClick="SortPage('B.BoardName desc')"><spring:message code='ezBoard.t185'/><img src="/images/etc/view-sortup.gif" ></th>
 	      	</c:when>
 	      	<c:when test="${sortBy == 'B.BoardName desc'}">
-		      <th style="cursor:pointer" width="160" onClick="SortPage('B.BoardName')"><spring:message code='ezBoard.t185'/><img src="/images/etc/view-sortdown.gif" ></th>
+		      <th style="cursor:pointer" width="112" onClick="SortPage('B.BoardName')"><spring:message code='ezBoard.t185'/><img src="/images/etc/view-sortdown.gif" ></th>
 	      	</c:when>
 	      	<c:otherwise>
-		      <th style="cursor:pointer" width="160" onClick="SortPage('B.BoardName')"><spring:message code='ezBoard.t185'/></th>
+		      <th style="cursor:pointer" width="112" onClick="SortPage('B.BoardName')"><spring:message code='ezBoard.t185'/></th>
 	      	</c:otherwise>
 	      </c:choose>    
 	      <c:choose>

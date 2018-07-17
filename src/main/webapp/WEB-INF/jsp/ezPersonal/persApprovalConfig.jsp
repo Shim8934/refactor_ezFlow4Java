@@ -284,7 +284,7 @@
 			   	 </div>
 			</div>
 			<div class="btnpositionJsp" style="width:436px">
-			    <a class="imgbtn" onClick="Change_Click()" ><span><spring:message code='ezPersonal.t12'/></span></a>
+			    <a class="imgbtn" onClick="Change_Click()" ><span><spring:message code='ezPersonal.t34'/></span></a>
 			    <a class="imgbtn" onClick="Cancel_Click()" ><span><spring:message code='ezPersonal.t13'/></span></a>
 			</div>
 			<input id="publicModulus" value="${publicModulus}" type="hidden"/>

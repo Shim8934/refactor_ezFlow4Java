@@ -2495,10 +2495,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		//오름차순으로 정렬!
+		/* 2018-07-13 홍승비 - o1=o2(0), o1>o2(1), o1<o2(-1) 분기 추가 */
 		Collections.sort(brdBoardTreeList, new Comparator<BoardTreeVO>() {
 			@Override
 			public int compare(BoardTreeVO o1, BoardTreeVO o2) {
-				return Integer.parseInt(o1.getTreeViewOrder()) > Integer.parseInt(o2.getTreeViewOrder()) ? 1 : 0;
+				return Integer.parseInt(o1.getTreeViewOrder()) < Integer.parseInt(o2.getTreeViewOrder()) ? -1 : Integer.parseInt(o1.getTreeViewOrder()) > Integer.parseInt(o2.getTreeViewOrder()) ? 1 : 0;
 			}
 		});
 		
@@ -2508,6 +2509,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					continue;
 				}
 			}
+			
+			// 2018-07-12 자바렐 디버그용 로그 추가
+			logger.debug("각 게시판 트리뷰 순서       ::   " + brdBoardTreeList.get(i).getTreeViewOrder());
 			
 			result.append("<NODE>");
 			

@@ -1,4 +1,4 @@
-﻿//오늘의 날짜 (년도, 월, 일, 오늘의 요일)
+﻿﻿//오늘의 날짜 (년도, 월, 일, 오늘의 요일)
 var weektodate = new Date();
 
 //전역변수 (년도, 월, 일, 요일)
@@ -498,10 +498,11 @@ function tableListControl_Week()
             var _mtr2 = document.createElement("TR");
             _mtd = document.createElement("TD");
             _mtd.style.width = "200px";
-            _mtd.setAttribute("style", "vertical-align:middle;cursor:pointer;");
+            _mtd.setAttribute("style", "vertical-align:middle;cursor:pointer;overflow:hidden; text-overflow:ellipsis;white-space: nowrap;");
             _mtd.setAttribute("class", "weektd_01");
             _mtd.setAttribute("DATA1", title_name[k].split("/")[0]);
             _mtd.setAttribute("DATA2", title_name[k].split("/")[1]);
+            _mtd.setAttribute("title", _mtd.getAttribute("DATA2"));
             _mtd.align = "left";
             _mtd.style.height = "60px";
             //_mtd.onselectstart = "return false";
@@ -1338,7 +1339,7 @@ function idCalendarViewer_OnDoubleClickAppointment2(sz_Num, sz_OwnerID, sz_Start
 
     if (sz_Num != "" && sz_Num != null) {
         ////읽기창////
-        window.open("/ezResource/scheduleRead.do?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + encodeURIComponent(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+        window.open("/ezResource/scheduleRead.do?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End, "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
     } else if (p_Type != "MAIN") {
 
         if (CrossYN() || pNoneActiveX == "YES") {

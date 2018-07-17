@@ -128,8 +128,8 @@
                 <li><span onclick="btn_cancel()"></span></li>
             </ul>
         </div>
-	    <div style="overflow: auto;">
-	    	<table class="popuplist" id="msg" style="overflow: auto; width: 100%; height: 203px; word-break: break-all;"></table>
+	    <div style="overflow: auto; height: 203px;">
+	    	<table class="popuplist" id="msg" style="overflow: auto; width: 100%; height: 100%; word-break: break-all;"></table>
 	    </div>
 	    <div class="btnpositionNew">
 	        <a class="imgbtn"><span onclick="btn_click()" id="btn_close"><spring:message code='ezEmail.t38' /> </span></a>

@@ -775,15 +775,15 @@
 			    pChackYN = "SEARCH";
 			    
 			    if (document.getElementById("txt_keyword").value != "") {
-			        var radiosearch = document.getElementsByName('searchCheck');
+			        var selectSearch = document.getElementById('selectType');
 			
 			        for (var i = 0; i < 20; i++) {
 			            SearchCond[i] = "";
 			        }
 			
-			        if (radiosearch.item(0).checked) {
+			        if (selectSearch.item(0).selected) {
 			            SearchCond[1] = document.getElementById("txt_keyword").value;
-			        } else if (radiosearch.item(1).checked) {
+			        } else if (selectSearch.item(1).selected) {
 			            SearchCond[2] = document.getElementById("txt_keyword").value;
 			        }
 			    } else {
@@ -878,9 +878,10 @@
 		<h1>
 			<spring:message code = 'ezApprovalG.t1315' /><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
-	        	<input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code = 'ezApprovalG.t106' /></label>
-				<input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code = 'ezApprovalG.t445' /></label>
-				&nbsp;
+	        	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+		    		<option selected value="rad_Subject"><spring:message code='ezApprovalG.t106'/></option>
+		    		<option value="rad_Writer"><spring:message code='ezApprovalG.t445'/></option>
+		    	</select>
 				<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	        	<a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
 	        </span>

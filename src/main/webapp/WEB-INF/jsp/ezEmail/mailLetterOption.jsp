@@ -132,10 +132,10 @@
 		        } else {
 		        	document.getElementById("responseReadid").checked = true;
 		        	
-			        if ("${useOnlyInnerMail}" === "NO") {
-			        	readTypeElement.selectedIndex = replyReadTime === "2" ? "1" : "0";
-			        } else {
+			        if ("${useOnlyInnerMail}" === "YES") {
 			        	readTypeElement.selectedIndex = "0";
+			        } else {
+			        	readTypeElement.selectedIndex = replyReadTime === "2" ? "1" : "0";			            
 			        }
 		        }
 		
@@ -366,7 +366,7 @@
 							</select>
 						</c:otherwise>
 					</c:choose> -->
-					<select <c:if test="${useOnlyInnerMail == 'YES'}">style="display:none" </c:if>id="responseReadType" onChange="" <c:if test="${useReceiptExternal != 'YES'}">disabled</c:if>>
+					<select <c:if test="${useOnlyInnerMail == 'YES'}">style="display:none" </c:if>id="responseReadType" onChange="" style="vertical-align: middle;" <c:if test="${useReceiptExternal != 'YES'}">disabled</c:if>>
 						<option value="1"><spring:message code='ezEmail.t371' /></option>
 						<c:if test="${useReceiptExternal == 'YES'}">
 						<option value="2"><spring:message code='ezEmail.t372' /></option>
@@ -380,7 +380,7 @@
 			<tr>
 				<td>
 					<input type="checkbox" value="1" id="deliverySend" onclick="ReservedSend(this);">
-					<spring:message code='ezEmail.t374' />
+					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t374' /> </span>
 					<input type="text" id="Sdatepicker" style="width:80px;text-align:center">
 					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 				</td>
@@ -391,7 +391,8 @@
 			<table width="100%" class="content">
 				<tr>
 					<td>
-						<input type="checkbox" name="eachMailSend" id="eachMailSend" value="checkbox">&nbsp;<spring:message code='ezEmail.t748' />
+						<input type="checkbox" name="eachMailSend" id="eachMailSend" value="checkbox">
+						<span style="vertical-align:middle;"> <spring:message code='ezEmail.t748' /> </span>
 					</td>
 				</tr>
 			</table>  
