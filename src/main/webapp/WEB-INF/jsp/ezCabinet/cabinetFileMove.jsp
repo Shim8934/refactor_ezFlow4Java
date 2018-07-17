@@ -4,7 +4,7 @@
 <div class="popup cabFileMoveoff" id="cabFileMove">
 	<h1 class="cabfdTop"><spring:message code='ezCabinet.t72'/></h1>
 	
-	<div class="cabMoveFile" style="" id="moveCabTree"></div>
+	<div class="cabMoveFile" id="moveCabTree"></div>
 	
 	<div class="cabdivBttn" id="moveDivBttn">
 		<a class="cabBttn"><span><spring:message code='ezWebFolder.t121'/></span></a>

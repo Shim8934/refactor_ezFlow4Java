@@ -4,10 +4,12 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -20,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
@@ -49,6 +53,9 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
 	@Override
 	public List<SimpleDeptVO> getAllSubDepts(String companyId, int level, String primary, int tenantId) throws Exception {
@@ -247,11 +254,13 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	}
 	
 	@Override
-	public CabinetSimpleVO getMyCabinetTreeNormal(String cabinetStr1, String cabinetStr2, LoginVO userInfo) throws Exception {
+	public CabinetSimpleVO getMyCabinetTreeNormal(LoginVO userInfo) throws Exception {
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
 		String userId          = userInfo.getId();
 		String primary         = userInfo.getPrimary();
+		String cabinetStr1     = egovMessageSource.getMessage("ezCabinet.t02", new Locale("ko"));
+		String cabinetStr2     = egovMessageSource.getMessage("ezCabinet.t02", new Locale("en"));
 		Map<String,Object> map = new HashMap<String, Object>();
 		
 		map.put("companyId", companyId);
@@ -511,11 +520,11 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		}
 		else {
 			//Check storage condition
-			long cabinetStorage     = getCabinetStorage(cabinet, userInfo);
 			UserCapacityVO capacity = getUserCapacity(userInfo);
 			
 			if (capacity.getCapacityType() == 1) {
 				//Check save condition
+				long cabinetStorage = getCabinetStorage(cabinet, userInfo);
 				long totalUsed      = Long.parseLong(capacity.getTotalUsed());
 				long totalCapacity  = capacity.getTotalCapacity() * 1048576;
 				
@@ -667,13 +676,19 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	}
 	
 	private synchronized void copyItems(int cabinetId, int newId, String timeUTC, String realPath, LoginVO userInfo) throws Exception {
-		int tenantId  = userInfo.getTenantId();
-		String userId = userInfo.getId();
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("tenantId",  tenantId);
+		map.put("tenantId",  userInfo.getTenantId());
 		map.put("cabinetId", cabinetId);
 		
 		List<CabinetItemVO> itemList = ezCabinetDAO.getAllItemsOfCabinet(map);
+		copyListItems(realPath, timeUTC, itemList, newId, userInfo);
+	}
+	
+	private void copyListItems(String realPath, String timeUTC, List<CabinetItemVO> itemList, int newCabinetId, LoginVO userInfo) {
+		int tenantId           = userInfo.getTenantId();
+		String userId          = userInfo.getId();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId",  tenantId);
 		
 		if (itemList != null && itemList.size() > 0) {
 			int newItemId = ezCabinetDAO.getMaxItem(map) + 1;
@@ -681,7 +696,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 				int itemId = item.getItemId();
 				//Save new Item
 				item.setItemId(newItemId);
-				item.setCabinetId(newId);
+				item.setCabinetId(newCabinetId);
 				item.setCreatorId(userId);
 				item.setCreatorName1(userInfo.getDisplayName1());
 				item.setCreatorName2(userInfo.getDisplayName2());
@@ -878,5 +893,151 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	@Override
 	public int getTotalItemsRecursive(CabinetItemSearchVO searchVO) throws Exception {
 		return ezCabinetDAO.getTotalItemsRecursive(searchVO);
+	}
+
+	@Override
+	public void deleteItems(List<Integer> itemIdList, LoginVO userInfo) throws Exception {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+		Map<String,Object> map     = new HashMap<String, Object>();
+		map.put("tenantId",   userInfo.getTenantId());
+		map.put("itemList",   itemIdList);
+		map.put("userId",     userInfo.getId());
+		map.put("updateTime", timeUTC);
+		
+		ezCabinetDAO.deleteItems(map);
+	}
+
+	@Override
+	public List<CabinetSimpleVO> getRelatedCabinetListForUser(LoginVO userInfo) throws Exception {
+		int tenantId                  = userInfo.getTenantId();
+		String userId                 = userInfo.getId();
+		List<CabinetModuleVO> modules = getModuleListForUser(userId, userInfo.getCompanyID(), tenantId);
+		List<Integer> moduleTypes     = modules.stream().filter(i -> i.getActiveStatus() == 1).map(CabinetModuleVO::getType).collect(Collectors.toList());
+		Map<String,Object> map        = new HashMap<String, Object>();
+		map.put("listType", moduleTypes);
+		map.put("tenantId", tenantId);
+		map.put("userId",   userId);
+		
+		List<CabinetVO> list = ezCabinetDAO.getRelatedCabinetListForUser(map);
+		if (list == null || list.size() == 0) {
+			list = insertRelatedCabinet(moduleTypes, userInfo);
+		}
+		else {
+			if (list.size() < moduleTypes.size()) {
+				List<Integer> existedModules = list.stream().map(CabinetVO::getCabinetType).collect(Collectors.toList());
+				moduleTypes.removeAll(existedModules);
+				List<CabinetVO> remainModule = insertRelatedCabinet(moduleTypes, userInfo);
+				list.addAll(remainModule);
+			}
+		}
+		
+		List<CabinetSimpleVO> listRelatedCabinet = generateSimpleCabinet(list, userInfo.getPrimary());
+		
+		return listRelatedCabinet;
+	}
+
+	private List<CabinetSimpleVO> generateSimpleCabinet(List<CabinetVO> list, String primary) {
+		List<CabinetSimpleVO> result = new ArrayList<>();
+		Collections.sort(list, (CabinetVO cabinet1, CabinetVO cabinet2) -> Integer.compare(cabinet1.getCabinetType(), cabinet2.getCabinetType()));
+		
+		for (CabinetVO cabinet : list) {
+			String cabinetName            = primary.equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2();
+			CabinetSimpleVO simpleCabinet = new CabinetSimpleVO(cabinet.getCabinetId(), cabinetName, cabinet.getCabinetName1(), cabinet.getCabinetName2(), 0, 0, 0, null);
+			result.add(simpleCabinet);
+		}
+		
+		return result;
+	}
+
+	private synchronized List<CabinetVO> insertRelatedCabinet(List<Integer> moduleTypes, LoginVO userInfo) throws Exception {
+		List<CabinetVO> result = new ArrayList<>();
+		
+		for (int moduleType : moduleTypes) {
+			String cabinetStr1 = egovMessageSource.getMessage("ezCabinet.m" + moduleType, new Locale("ko"));
+			String cabinetStr2 = egovMessageSource.getMessage("ezCabinet.m" + moduleType, new Locale("en"));
+			CabinetVO cabinet  = generateCabinetVO(cabinetStr1, cabinetStr2, 0, moduleType, -1, userInfo);
+			insertCabinet(cabinet);
+			result.add(cabinet);
+		}
+		
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject moveItems(String realPath, int cabinetId, String mode, List<Integer> itemIdList, LoginVO userInfo) throws Exception {
+		JSONObject result      = new JSONObject();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("cabinetId", cabinetId);
+		map.put("tenantId",  userInfo.getTenantId());
+		CabinetVO cabinet      = ezCabinetDAO.getCabinetById(map);
+		
+		if (cabinet == null || cabinet.getUseStatus() == 0) {
+			result.put("status", "error");
+			result.put("code", 2);
+			return result;
+		}
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+		
+		if (mode.equals("move")) {
+			moveItemsForUser(cabinetId, timeUTC, itemIdList, userInfo);
+		}
+		else {
+			//Check storage condition
+			UserCapacityVO capacity = getUserCapacity(userInfo);
+			
+			if (capacity.getCapacityType() == 1) {
+				//Check save condition
+				long totalItemsSize = getTotalItemsSize(itemIdList, userInfo);
+				long totalUsed      = Long.parseLong(capacity.getTotalUsed());
+				long totalCapacity  = capacity.getTotalCapacity() * 1048576;
+				
+				if (totalItemsSize > (totalCapacity - totalUsed)) {
+					logger.debug("Not enough storage to copy these files!");
+					result.put("status", "error");
+					result.put("code", 4);
+					return result;
+				}
+			}
+			
+			List<CabinetItemVO> itemList = getItemsFromIdList(itemIdList, userInfo);
+			copyListItems(realPath, timeUTC, itemList, cabinetId, userInfo);
+		}
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
+
+	private List<CabinetItemVO> getItemsFromIdList(List<Integer> itemIdList, LoginVO userInfo) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("itemList", itemIdList);
+		
+		return ezCabinetDAO.getItemsFromIdList(map);
+	}
+
+	private long getTotalItemsSize(List<Integer> itemIdList, LoginVO userInfo) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("itemList", itemIdList);
+		
+		return ezCabinetDAO.getTotalItemsSize(map);
+	}
+
+	private void moveItemsForUser(int cabinetId, String timeUTC, List<Integer> itemIdList, LoginVO userInfo) {
+		Map<String,Object> map     = new HashMap<String, Object>();
+		map.put("cabinetId",  cabinetId);
+		map.put("userId",     userInfo.getId());
+		map.put("tenantId",   userInfo.getTenantId());
+		map.put("itemList",   itemIdList);
+		map.put("updateTime", timeUTC);
+		
+		ezCabinetDAO.moveItemsForUser(map);
 	}
 }

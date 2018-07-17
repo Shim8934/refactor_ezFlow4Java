@@ -12,8 +12,8 @@
 	</head>
 	<body class="mainbody">
 		<h1 id="cabInfo">
-			<%-- <spring:message code='ezWebFolder.t220'/>
-			<span id="mailBoxInfo"></span> --%>
+			<c:out value='${cabinetName}'/>
+			<span id="cabinetInfo" class="cabTtlInf"></span>
 			<span class="topSearchSpan">
 				<input name="searchCheck" id="radio1" type="radio" value="title" checked><label for="radio1">&nbsp;<spring:message code='ezCabinet.t51'/></label>
 				<input name="searchCheck" id="radio2" type="radio" value="summary"      ><label for="radio2">&nbsp;<spring:message code='ezCabinet.t52'/></label>
@@ -38,8 +38,8 @@
 				<li><a><span><spring:message code='ezCabinet.t125'/></span></a></li>
 				<li id="right">
 					<img src="${config.previewMode == 'off' ? '/images/kr/cm/btn_onnoframe.gif'     : '/images/kr/cm/btn_noframe.gif'}"     class="btnimg cabinet" id="preViewNone"  >
-					<img src="${config.previewMode == 'h'    ? '/images/kr/cm/btn_onbottomframe.gif' : '/images/kr/cm/btn_bottomframe.gif'}" class="btnimg cabinet" id="preViewBottom">
-					<img src="${config.previewMode == 'w'    ? '/images/kr/cm/btn_onleftframe.gif'   : '/images/kr/cm/btn_leftframe.gif'}"   class="btnimg cabinet" id="preViewleft"  >
+					<img src="${config.previewMode == 'h'   ? '/images/kr/cm/btn_onbottomframe.gif' : '/images/kr/cm/btn_bottomframe.gif'}" class="btnimg cabinet" id="preViewBottom">
+					<img src="${config.previewMode == 'w'   ? '/images/kr/cm/btn_onleftframe.gif'   : '/images/kr/cm/btn_leftframe.gif'}"   class="btnimg cabinet" id="preViewleft"  >
 					<img src="/images/kr/cm/btn_arrow_down.gif" role="off" id="sltView">
 				</li>
 			</ul>
@@ -185,6 +185,7 @@
 		<script type="text/javascript" src="/js/ezCabinet/cabinetNavi.js"           ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTable.js"          ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetItem.js"           ></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetTree.js"           ></script>
 		<script type="text/javascript">
 			CabinetItem.start("<c:out value='${cabinetId}'/>", "<c:out value='${config.contentHpercent}'/>", "<c:out value='${config.contentWpercent}'/>", "<c:out value='${config.previewMode}'/>");
 		</script>

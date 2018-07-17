@@ -15,7 +15,7 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCabinetService {
 	//Check user permission
-	JSONObject checkPermission(List<Integer> cabinetList, List<Integer> arrayList, LoginVO userInfo) throws Exception;
+	JSONObject checkPermission(List<Integer> cabinetList, List<Integer> itemList, LoginVO userInfo) throws Exception;
 	
 	//Company Tree process functions
 	List<SimpleDeptVO> getAllSubDepts(String companyId, int level, String primary, int tenantId) throws Exception;
@@ -32,9 +32,10 @@ public interface EzCabinetService {
 	void saveUserConfig(String prevMode, int listCount, int contentWPrev, int contentHPrev, String userId, String companyId, int tenantId) throws Exception;
 	
 	//User my cabinet tree functions
-	CabinetSimpleVO getMyCabinetTreeNormal(String cabinetStr1, String cabinetStr2, LoginVO userInfo) throws Exception;
+	CabinetSimpleVO getMyCabinetTreeNormal(LoginVO userInfo) throws Exception;
 	CabinetSimpleVO getMyCabinetTreeDetail(String cabinetId, LoginVO userInfo) throws Exception;
 	List<CabinetSimpleVO> getCabinetSubTree(String cabinetId, LoginVO userInfo) throws Exception;
+	List<CabinetSimpleVO> getRelatedCabinetListForUser(LoginVO userInfo) throws Exception;
 	
 	//User cabinet management functions
 	void addCabinet(int parentId, String cabName1, String cabName2, LoginVO userInfo) throws Exception;
@@ -57,4 +58,8 @@ public interface EzCabinetService {
 	int getTotalItems(CabinetItemSearchVO searchVO) throws Exception;
 	List<CabinetItemVO> getItemsRecursive(CabinetItemSearchVO searchVO) throws Exception;
 	int getTotalItemsRecursive(CabinetItemSearchVO searchVO) throws Exception;
+	
+	//User delete/move items function
+	void deleteItems(List<Integer> itemIdList, LoginVO userInfo) throws Exception;
+	JSONObject moveItems(String realPath, int cabinetId, String mode, List<Integer> itemIdList, LoginVO userInfo) throws Exception;
 }

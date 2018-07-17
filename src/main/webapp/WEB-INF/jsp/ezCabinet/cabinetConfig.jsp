@@ -26,7 +26,7 @@
 				window.addEventListener("resize", resizeWindow, false);
 				
 				function init() {
-					document.onselectstart = function () { return false;};
+					document.onselectstart = function (e) {return false;};
 					
 					if (navigator.userAgent.indexOf('Firefox') != -1) {
 						document.body.style.MozUserSelect    = 'none';

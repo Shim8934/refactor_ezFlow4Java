@@ -237,6 +237,31 @@
 			</isNotEmpty>
 		</isEqual>
 	</sql>
+	
+	<sql id="selectItems">
+		select
+			i.item_id as item_id,
+			i.cabinet_id as cabinet_id,
+			i.item_type as item_type,
+			i.title as title,
+			i.summary as summary,
+			i.creator_id as creator_id,
+			i.creator_name1 as creator_name1,
+			i.creator_name2 as creator_name2,
+			i.department_id as department_id,
+			i.department_name1 as department_name1,
+			i.department_name2 as department_name2,
+			i.content_path as content_path,
+			date_add(i.create_date, interval #offset# minute) as create_date,
+			date_add(i.update_date, interval #offset# minute) as update_date,
+			i.use_status as use_status,
+			i.update_id as update_id,
+			i.delete_id as delete_id,
+			i.company_id as company_id,
+			i.tenant_id as tenant_id,
+			case when #primary# = '1' then i.creator_name1 else i.creator_name2 end as creator_name,
+			(select sum(f.file_size) from tbl_cb_attach_file f where f.item_id = i.item_id and f.tenant_id = i.tenant_id) as item_size
+	</sql>
 	<!--***********************************************************************************
 	**                            Organization tree process                              **
 	************************************************************************************-->
@@ -543,6 +568,20 @@
 		]]>
 	</update>
 	
+	<select id="EzCabinetDAO.getRelatedCabinetListForUser" resultMap="cabinetVO">
+		<![CDATA[
+			select c1.*
+			from
+				tbl_cb_cabinet c1
+			where
+				c1.creator_id = #userId# and c1.tenant_id = #tenantId# and c1.cabinet_level = 0 and c1.use_status = 1 
+				and c1.cabinet_type in
+		]]>
+		<iterate property="listType" open="(" close=")" conjunction=",">
+			#listType[]#
+		</iterate>
+	</select>
+	
 	<!--***********************************************************************************
 	**                             Check permission process                              **
 	************************************************************************************-->
@@ -562,7 +601,7 @@
 						and c1.use_status = 1 and c1.tenant_id = #tenantId#
 				</isNotEmpty>
 				<isNotEmpty property="itemList">
-				union
+					<isNotEmpty property="cabinetList">union</isNotEmpty>
 					select c2.* from tbl_cb_cabinet c2 join tbl_cb_item i on c2.cabinet_id = i.cabinet_id and c2.tenant_id = i.tenant_id and i.use_status = 1
 					where i.item_id in
 					<iterate property="itemList" open="(" close=")" conjunction=",">
@@ -639,7 +678,17 @@
 	</insert>
 	
 	<select id="EzCabinetDAO.getAllItemsOfCabinet" resultMap="cabinetItemVO">
-		<![CDATA[select * from tbl_cb_item where cabinet_id = #cabinetId# and use_status = 1 and tenant_id = #tenantId#]]>
+		<![CDATA[select * from tbl_cb_item where cabinet_id = #cabinetId# and tenant_id = #tenantId#]]>
+		<isNotEmpty property="useStatus" prepend="and">
+			use_status = #useStatus#
+		</isNotEmpty>
+	</select>
+	
+	<select id="EzCabinetDAO.getItemsFromIdList" resultMap="cabinetItemVO">
+		<![CDATA[select * from tbl_cb_item where tenant_id = #tenantId# and use_status = 1 and item_id in]]>
+		<iterate property="itemList" open="(" close=")" conjunction=",">
+			#itemList[]#
+		</iterate>
 	</select>
 	
 	<select id="EzCabinetDAO.getMaxItem" resultClass="Integer">
@@ -647,14 +696,8 @@
 	</select>
 	
 	<select id="EzCabinetDAO.getItems" resultMap="cabinetItemVO2" parameterClass="CabinetItemSearchVO">
-		<![CDATA[
-			select
-				i.*,
-				case when #primary# = '1' then i.creator_name1 else i.creator_name2 end                                       as creator_name,
-				(select sum(f.file_size) from tbl_cb_attach_file f where f.item_id = i.item_id and f.tenant_id = i.tenant_id) as item_size
-			from tbl_cb_item i
-			where
-		]]>
+		<include refid="selectItems"/>
+		<![CDATA[from tbl_cb_item i where]]>
 			<include refid="cabinetItemList"/>
 				and i.cabinet_id = #cabinetId#
 			order by
@@ -670,16 +713,12 @@
 	</select>
 	
 	<select id="EzCabinetDAO.getItemsRecursive" resultMap="cabinetItemVO2" parameterClass="CabinetItemSearchVO">
+		<include refid="selectItems"/>
 		<![CDATA[
-			select 
-				i.*,
-				case when #primary# = '1' then i.creator_name1 else i.creator_name2 end                                       as creator_name,
-				(select sum(f.file_size) from tbl_cb_attach_file f where f.item_id = i.item_id and f.tenant_id = i.tenant_id) as item_size
 			from
-				tbl_cb_item i join
-					(
-						select * from tbl_cb_cabinet where cabinet_path like concat(#cabinetPath#, '%') and use_status = 1 and tenant_id = #tenantId#
-					) c on c.cabinet_id = i.cabinet_id and i.tenant_id = c.tenant_id
+				tbl_cb_item i join (
+					select * from tbl_cb_cabinet where cabinet_path like concat(#cabinetPath#, '%') and use_status = 1 and tenant_id = #tenantId#
+				) c on c.cabinet_id = i.cabinet_id and i.tenant_id = c.tenant_id
 			where
 		]]>
 		<include refid="cabinetItemList"/>
@@ -694,13 +733,57 @@
 			select 
 				count(i.item_id)
 			from
-				tbl_cb_item i join
-					(
-						select * from tbl_cb_cabinet where cabinet_path like concat(#cabinetPath#, '%') and use_status = 1 and tenant_id = #tenantId#
-					) c on c.cabinet_id = i.cabinet_id and i.tenant_id = c.tenant_id
+				tbl_cb_item i join (
+					select * from tbl_cb_cabinet where cabinet_path like concat(#cabinetPath#, '%') and use_status = 1 and tenant_id = #tenantId#
+				) c on c.cabinet_id = i.cabinet_id and i.tenant_id = c.tenant_id
 			where
 		]]>
 		<include refid="cabinetItemList"/>
+	</select>
+	
+	<update id="EzCabinetDAO.deleteItems" parameterClass="Map">
+		<![CDATA[
+			update
+				tbl_cb_item
+			set
+				update_date = #updateTime#,
+				delete_id   = #userId#,
+				use_status  = 0
+			where
+				tenant_id = #tenantId# and use_status = 1 and item_id in
+		]]>
+		<iterate property="itemList" open="(" close=")" conjunction=",">
+			#itemList[]#
+		</iterate>
+	</update>
+	
+	<update id="EzCabinetDAO.moveItemsForUser" parameterClass="Map">
+		<![CDATA[
+			update
+				tbl_cb_item
+			set
+				cabinet_id  = #cabinetId#,
+				update_date = #updateTime#,
+				update_id   = #userId#
+			where
+				tenant_id   = #tenantId# and use_status = 1 and item_id in
+		]]>
+		<iterate property="itemList" open="(" close=")" conjunction=",">
+			#itemList[]#
+		</iterate>
+	</update>
+	
+	<select id="EzCabinetDAO.getTotalItemsSize" resultClass="Long">
+		<![CDATA[
+			select
+				ifnull (sum(f.file_size), 0)
+			from
+				tbl_cb_attach_file f join tbl_cb_item i on f.item_id = i.item_id and f.tenant_id = i.tenant_id
+			where f.tenant_id = #tenantId# and i.use_status = 1 and i.item_id in
+		]]>
+		<iterate property="itemList" open="(" close=")" conjunction=",">
+			#itemList[]#
+		</iterate>
 	</select>
 	
 	<!--***********************************************************************************
@@ -725,7 +808,7 @@
 	</select>
 	
 	<!--***********************************************************************************
-	**                              Cabinet attach file process                          **
+	**                              Cabinet relation file process                        **
 	************************************************************************************-->
 	
 	<insert id="EzCabinetDAO.saveRelationFile" parameterClass="CabinetRelationVO">

@@ -144,32 +144,52 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 	public List<CabinetItemVO> getAllItemsOfCabinet(Map<String, Object> map) {
 		return (List<CabinetItemVO>)list("EzCabinetDAO.getAllItemsOfCabinet", map);
 	}
-
+	
 	public List<CabinetAttachFileVO> getAllAttachFilesOfItem(Map<String, Object> map) {
 		return (List<CabinetAttachFileVO>)list("EzCabinetDAO.getAllAttachFilesOfItem", map);
 	}
-
+	
 	public List<CabinetRelationVO> getAllRelatedFilesOfItem(Map<String, Object> map) {
 		return (List<CabinetRelationVO>)list("EzCabinetDAO.getAllRelatedFilesOfItem", map);
 	}
-
+	
 	public long getCabinetStorage(Map<String, Object> map) {
 		return (long)select("EzCabinetDAO.getCabinetStorage", map);
 	}
-
+	
 	public List<CabinetItemVO> getItems(CabinetItemSearchVO searchVO) {
 		return (List<CabinetItemVO>)list("EzCabinetDAO.getItems", searchVO);
 	}
-
+	
 	public int getTotalItems(CabinetItemSearchVO searchVO) {
 		return (int)select("EzCabinetDAO.getTotalItems", searchVO);
 	}
-
+	
 	public List<CabinetItemVO> getItemsRecursive(CabinetItemSearchVO searchVO) {
 		return (List<CabinetItemVO>)list("EzCabinetDAO.getItemsRecursive", searchVO);
 	}
-
+	
 	public int getTotalItemsRecursive(CabinetItemSearchVO searchVO) {
 		return (int)select("EzCabinetDAO.getTotalItemsRecursive", searchVO);
+	}
+	
+	public void deleteItems(Map<String, Object> map) {
+		update("EzCabinetDAO.deleteItems", map);
+	}
+	
+	public List<CabinetVO> getRelatedCabinetListForUser(Map<String, Object> map) {
+		return (List<CabinetVO>)list("EzCabinetDAO.getRelatedCabinetListForUser", map);
+	}
+
+	public void moveItemsForUser(Map<String, Object> map) {
+		update("EzCabinetDAO.moveItemsForUser", map);
+	}
+
+	public long getTotalItemsSize(Map<String, Object> map) {
+		return (long)select("EzCabinetDAO.getTotalItemsSize", map);
+	}
+
+	public List<CabinetItemVO> getItemsFromIdList(Map<String, Object> map) {
+		return (List<CabinetItemVO>)list("EzCabinetDAO.getItemsFromIdList", map);
 	}
 }

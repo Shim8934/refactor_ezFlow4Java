@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -91,8 +92,6 @@ public class EzCabinetController {
 	@RequestMapping(value="/ezCabinet/cabinetConfig.do")
 	public String jspGetCabinetConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetCabinetConfig started");
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		
 		logger.debug("jspGetCabinetConfig ended");
 		return "ezCabinet/cabinetConfig";
 	}
@@ -345,6 +344,47 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
+	@RequestMapping(value="/ezCabinet/getAllCabinetTree.do")
+	@ResponseBody
+	public String jsonAllCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonAllCabinetTree start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String currentNode   = request.getParameter("cabinetNode") != null ? request.getParameter("cabinetNode") : "";
+		JSONObject resultObj = new JSONObject();
+		
+		resultObj            = cabinetRestService.getAllCabinetTree(request, currentNode, user.getId());
+		
+		logger.debug("jsonAllCabinetTree end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/getRelatedCabinetTree.do")
+	@ResponseBody
+	public String jsonRelatedCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonRelatedCabinetTree start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		JSONObject resultObj = new JSONObject();
+		
+		resultObj            = cabinetRestService.getRelatedCabinetTree(request, user.getId());
+		
+		logger.debug("jsonRelatedCabinetTree end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/getSubCabinetNodes.do")
+	@ResponseBody
+	public String jsonGetSubCabinetNodes(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonGetSubCabinetNodes start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String nodeId        = request.getParameter("nodeId")  != null ? request.getParameter("nodeId") : "";
+		JSONObject resultObj = new JSONObject();
+		
+		resultObj            = cabinetRestService.getCabinetSubNodes(request, user.getId(), nodeId);
+		
+		logger.debug("jsonGetSubCabinetNodes end");
+		return resultObj.toString();
+	}
+	
 	@RequestMapping(value="/ezCabinet/addCabinet.do")
 	@ResponseBody
 	public String jsonAddCabinet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -431,20 +471,6 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getSubCabinetNodes.do")
-	@ResponseBody
-	public String jsonGetSubCabinetNodes(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug("jsonGetSubCabinetNodes start");
-		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String nodeId        = request.getParameter("nodeId")  != null ? request.getParameter("nodeId") : "";
-		JSONObject resultObj = new JSONObject();
-		
-		resultObj            = cabinetRestService.getCabinetSubNodes(request, user.getId(), nodeId);
-		
-		logger.debug("jsonGetSubCabinetNodes end");
-		return resultObj.toString();
-	}
-	
 	@RequestMapping(value="/ezCabinet/getCabinetItems.do")
 	@ResponseBody
 	public String jsonGetCabinetItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -477,6 +503,52 @@ public class EzCabinetController {
 		resultObj = cabinetRestService.getCabinetItems(request, user.getId(), cabinetId, title, summary, recursive, creatorName, startDate, endDate, column, order, srchMode, srchOption, listCntSize, currentPage);
 		
 		logger.debug("jsonGetCabinetItems end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/deleteItems.do")
+	@ResponseBody
+	public String jsonDeleteItems(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "itemList") List<String> itemList, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonDeleteItems start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		
+		logger.debug("ItemList: " + String.join(",", itemList));
+		
+		JSONObject resultObj = new JSONObject();
+		
+		if (itemList.size() == 0) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.deleteItems(request, user.getId(), itemList);
+		
+		logger.debug("jsonDeleteItems end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/moveItems.do")
+	@ResponseBody
+	public String jsonMoveItems(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "itemList") List<String> itemList, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonMoveItems start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId     = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
+		String mode          = request.getParameter("mode")      != null ? request.getParameter("mode")      : "";
+		
+		logger.debug("CabinetId: " + cabinetId + " || Mode: " + mode + "ItemList: " + String.join(",", itemList));
+		
+		JSONObject resultObj = new JSONObject();
+		
+		if (cabinetId.equals("") || itemList.size() == 0 || mode.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.moveItems(request, user.getId(), cabinetId, mode, itemList);
+		
+		logger.debug("jsonMoveItems end");
 		return resultObj.toString();
 	}
 	
