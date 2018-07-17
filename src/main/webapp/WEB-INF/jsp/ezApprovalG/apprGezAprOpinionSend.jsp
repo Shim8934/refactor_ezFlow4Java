@@ -67,13 +67,13 @@
 		</script>
 	</head>
 	<body class="popup">
-		<h1>메일발송 선택</h1>
+		<h1><spring:message code='ezApprovalG.hyh01' /></h1>
 		<div id="close">
             <ul>
                 <li><span onclick="return Cancel()"></span></li>
             </ul>
         </div>
-		<span>▒ 문서 하단에 함께 발송할 항목을 선택하세요</span>
+		<span><spring:message code='ezApprovalG.hyh02' /></span>
 		<span id=pMessageContent></span>
 		<table class="content" style="margin-top:10px">
 			<tr><th><input id='doc' name ='doc' type='checkbox' checked="checked" disabled="disabled"></th>
