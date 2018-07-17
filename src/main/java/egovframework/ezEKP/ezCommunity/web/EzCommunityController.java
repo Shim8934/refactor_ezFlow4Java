@@ -1910,6 +1910,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 				bIsMyContent = true;
 				//2018-07-02 김보미 - 화면에서 처리하기 위해 주석.
 //				item.setContent(item.getContent().replaceAll("<br>", "\n"));
+//				2018-07-16 김보미 - 특수문자 처리
+				item.setContent(commonUtil.cleanValue(item.getContent().trim()));
 			}
 		}
 		
@@ -1936,7 +1938,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String code = request.getParameter("code");
 		String mode = request.getParameter("mode");
-		String memo = URLDecoder.decode(request.getParameter("memo"), "utf-8");
+//		String memo = URLDecoder.decode(request.getParameter("memo"), "utf-8");
+		String memo = request.getParameter("memo");
 		
 		logger.debug("code : " + code + ", mode : " + mode + ", memo : " + memo);
 		

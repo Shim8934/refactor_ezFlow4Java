@@ -16,7 +16,7 @@
 <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
 <script type="text/javascript" src="/js/ezApprovalG/SendOffer_Cross.js"></script>
 <link rel="stylesheet" href="/css/main_Cross.css"  type="text/css"/>
-<link rel="stylesheet" href="/css/organ_tree.css" type="text/css"/>
+<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css"/>
 <script type="text/javascript">
     var pDocID = "${docID}";
     var pServerName = "${serverName}";

@@ -47,7 +47,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview_namespace.htc.js"></script>
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezAttitude/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/ListView_list.js"></script>

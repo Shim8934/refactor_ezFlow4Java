@@ -949,11 +949,11 @@ function tableListControl_today() {
         for (var k = 0; k < title_name.length; k++) {
             var _Tr2 = document.createElement("TR");
             var _TD = document.createElement("TD");
-            _TD.style.width = "250px";
-            _TD.style.cursor = "pointer";
+            _TD.setAttribute("style", "width:250px; vertical-align:middle; cursor:pointer; overflow:hidden; text-overflow:ellipsis; white-space: nowrap;");
             _TD.setAttribute("class", "todaytd_01");
             _TD.setAttribute("DATA1", title_name[k].split("/")[0]);
             _TD.setAttribute("DATA2", title_name[k].split("/")[1]);
+            _TD.setAttribute("title", _TD.getAttribute("DATA2"));
             _TD.setAttribute("ondblclick", "newSchedule_onclick(event)");
             
             _TD.align = "left";
@@ -1107,7 +1107,7 @@ function tableListControl_today() {
         var _table = document.createElement("TABLE");
         _table.setAttribute("class", "table_layout");
         var _tr = document.createElement("TR");
-        _tr.style.borderTop="0px solid #dedede";
+        _tr.style.borderTop="1px solid #dedede";
         _tr.style.borderLeft="0px solid #dedede";
         var _th = document.createElement("TH");
         _th.style.textAlign = "center";

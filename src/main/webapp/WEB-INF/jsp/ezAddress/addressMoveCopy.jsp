@@ -59,7 +59,7 @@
 	            
 	            var addressTreeChild = document.getElementById("AddressTreeView").childNodes[0].childNodes;
 	            for (var i = 0; i < addressTreeChild.length; i++) {
-	            	addressTreeChild[i].style.marginBottom = "5px";
+	            	addressTreeChild[i].style.marginBottom = "0px";
 	            }
 	        }
 
