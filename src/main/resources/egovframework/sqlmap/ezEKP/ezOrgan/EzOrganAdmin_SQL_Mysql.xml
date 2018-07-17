@@ -969,7 +969,6 @@
 			(#menuItemUUID88#,'204','062d1b08-991f-414b-80b2-406312da7095',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID89#,'204','09e1d12c-5ffd-4240-8791-020431a5c47b',#topMenuKoUUID#,null,null,null,null,null,null,null,100,null,#tenantID#),
 			(#menuItemUUID90#,'203',null,#topMenuJaUUID#,'コミュニティ','Community',null,6,'9dcb873f-4254-45b2-87f2-1e326a63db78','/ezCommunity/communityMain.do',null,null,null,#tenantID#),
-			(#menuItemUUID90#,'203',null,#topMenuJaUUID#,'回覧板','Circular',null,6,'','/ezCircular/circularIndex.do',null,null,null,#tenantID#),
 			(#menuItemUUID91#,'203',null,#topMenuEnUUID#,'자원관리','자원관리',null,9,'bf71381c-4e0e-415a-82aa-dfcc1f0b4c7d','/ezResource/resMain.do',null,null,null,#tenantID#),
 			(#menuItemUUID92#,'203',null,#topMenuKoUUID#,'홈','HOME',null,1,'d7e86d24-137e-4934-bf70-87fed28f5530','/ezPortal/myPortal.do','main',null,' ',#tenantID#),
 			(#menuItemUUID93#,'203',null,#topMenuEnUUID#,'전자결재','전자결재',null,10,'1ab34e97-4c6b-4249-a80a-4c4214486b95','/ezApprovalG/apprGMain.do',null,null,null,#tenantID#),
@@ -989,7 +988,8 @@
 			(#menuItemUUID107#,'204','eca0b70d-7324-4c49-bc35-15e72f148fe2',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID108#,'204','ba0d5a0d-7ea9-469a-a981-a00e2b8825ec',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID109#,'204','698d7b32-1fe1-4fcc-af02-643b08fddfce',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
-			(#menuItemUUID110#,'204','7d3b9b37-5975-4cf5-9096-1adb43f7e755',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#)
+			(#menuItemUUID110#,'204','7d3b9b37-5975-4cf5-9096-1adb43f7e755',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
+			(#menuItemUUID111#,'203',null,#topMenuJaUUID#,'回覧板','Circular',null,10,'','/ezCircular/circularIndex.do','main',null,null,#tenantID#)
       ]]>
     </insert>
     

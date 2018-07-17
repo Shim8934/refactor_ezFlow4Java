@@ -583,7 +583,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				map1.put("topMenuLogoJaUUID", UUID.randomUUID().toString());
 				map1.put("topMenuLogoEnUUID", UUID.randomUUID().toString());
 				
-				for (int i = 0; i < 111; i++) {
+				for (int i = 0; i < 112; i++) {
 					map1.put("menuItemUUID"+String.valueOf(i), UUID.randomUUID().toString());
 				}
 				
