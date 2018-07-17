@@ -841,51 +841,75 @@
 	<!-- 2018-02-02 김보미 - 50명 제한 삭제(LIMIT 50), limit부분 수정. -->
 	<select id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
 		<![CDATA[
-			SELECT  
-				USERID, 
-				USERNAME$lang$ AS USERNAME, 
-				USERDEPTNAME$lang$ AS USERDEPTNAME, 
-				USERCOMPANYNAME$lang$ AS USERCOMPANYNAME, 
-				IFNULL(USERTITLE$lang$, '') AS USERTITLE, 
+			SELECT
+				USERID,
+				USERNAME$lang$ AS USERNAME,
+				USERDEPTNAME$lang$ AS USERDEPTNAME,
+				USERCOMPANYNAME$lang$ AS USERCOMPANYNAME,
+				IFNULL(USERTITLE$lang$, '') AS USERTITLE,
 				DATE_FORMAT(READDATE ,'%Y-%m-%d %H:%i:%s') AS READDATE,
-				IFNULL(MAX(C.DEPTID), '') AS DEPTID
-		   	FROM 
+				DEPTID
+		   	FROM
 		   		TBL_Board_Item_Read A
-		   	JOIN
-				tbl_deptmaster B
-			ON
-				A.COMPANYID = B.EXTENSIONATTRIBUTE2
-			AND
-				A.TENANT_ID = B.TENANT_ID
-			LEFT OUTER JOIN
-				tbl_addjobmaster C
-			ON
-				A.TENANT_ID = C.TENANT_ID
-			AND
-				A.USERID = C.CN
-			AND
-			    B.CN = C.DEPTID
-		   	WHERE 
-		   		A.tenant_id = #tenantID#
-		   	AND
-		   		A.BoardID = #boardID# 
-		   	AND 
-		   		A.ItemID =  #itemID#  
-		   	AND
-		   		A.UserID <> ( SELECT 
-		   							WRITERID 
-		   						FROM 
-		   							TBL_BOARD_ITEM 
-		   						WHERE 
-		   							TENANT_ID = #tenantID#
-		   						AND
-		   							ITEMID = #itemID# )
-			GROUP BY
-				ITEMID, USERID
-			ORDER BY
-				ReadDate DESC, C.DEPTID DESC
- 		   	LIMIT 
-      			#start#, #perCount# 
+	   		INNER JOIN
+			   ((SELECT
+					D.CN, D.DEPARTMENT as DEPTID,
+					D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+					D.TENANT_ID
+				FROM
+					TBL_USERMASTER D
+				WHERE
+					D.TENANT_ID = #tenantID#
+				AND
+					D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+					
+				UNION ALL
+				
+				(SELECT
+					B.cn, A2.DEPTID,
+					C.EXTENSIONATTRIBUTE2 as COMPANYID,
+					A2.TENANT_ID
+				FROM
+					TBL_USERMASTER B
+				INNER JOIN
+					TBL_ADDJOBMASTER A2
+				ON
+					A2.CN = B.CN
+				AND
+					A2.TENANT_ID = B.TENANT_ID
+				RIGHT JOIN
+					TBL_DEPTMASTER C
+				ON
+					A2.DEPTID = C.CN
+				AND
+					B.TENANT_ID = C.TENANT_ID)) T
+		ON
+			A.USERID = T.CN
+		AND
+			A.TENANT_ID = T.TENANT_ID           
+	   	WHERE
+	   		A.tenant_id = #tenantID#
+		AND
+			T.COMPANYID = #companyID#
+	   	AND
+	   		A.BoardID = #boardID#
+	   	AND
+	   		A.ItemID = #itemID#
+	   	AND
+	   		A.UserID <> ( SELECT
+	   							WRITERID
+	   						FROM
+	   							TBL_BOARD_ITEM
+	   						WHERE
+	   							TENANT_ID = #tenantID#
+	   						AND
+	   							ITEMID = #itemID#)
+		GROUP BY
+			ITEMID, USERID
+		ORDER BY
+			ReadDate DESC
+		LIMIT
+     		#start#, #perCount#
 		]]>
 	</select>
 	
@@ -3557,33 +3581,55 @@
 	
 	<select id="EzBoardDAO.readOneLineReply" parameterClass="Map" resultClass="BoardLineReplyVO">
 		<![CDATA[
-			SELECT 
-				A.REPLYID, 
-				A.$v_UserName$ AS USERNAME, 
-				A.USERID, 
-				A.CONTENT, 
+			SELECT
+				A.REPLYID,
+				A.$v_UserName$ AS USERNAME,
+				A.USERID,
+				A.CONTENT,
 				A.WRITEDATE,
-				IFNULL(MAX(C.DEPTID), '') AS DEPTID
-	        FROM 
+				DEPTID
+	        FROM
 	        	TBL_BOARD_ONELINEREPLY A
 	        INNER JOIN
- 				TBL_DEPTMASTER B
+			   ((SELECT
+					D.CN, D.DEPARTMENT as DEPTID,
+					D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+					D.TENANT_ID
+				FROM
+					TBL_USERMASTER D
+				WHERE
+					D.TENANT_ID = #v_TENANTID#
+				AND
+					D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#)
+					
+				UNION ALL
+				
+				(SELECT
+					B.cn, A2.DEPTID,
+					C.EXTENSIONATTRIBUTE2 as COMPANYID,
+					A2.TENANT_ID
+				FROM
+					TBL_USERMASTER B
+				INNER JOIN
+					TBL_ADDJOBMASTER A2
+				ON
+					A2.CN = B.CN
+				AND
+					A2.TENANT_ID = B.TENANT_ID
+				RIGHT JOIN
+					TBL_DEPTMASTER C
+				ON
+					A2.DEPTID = C.CN
+				AND
+					B.TENANT_ID = C.TENANT_ID)) T
 			ON
-				A.TENANT_ID = B.TENANT_ID
+				A.USERID = T.CN
 			AND
-			 	A.COMPANYID = B.EXTENSIONATTRIBUTE2	 	
-			 LEFT OUTER  JOIN
-				TBL_ADDJOBMASTER C
-			ON
-				A.TENANT_ID = C.TENANT_ID
-			AND
-			 	A.USERID = C.CN
-			AND
-				B.CN = C.DEPTID
-	        WHERE  
+				A.TENANT_ID = T.TENANT_ID
+	        WHERE
 	        	A.TENANT_ID = #v_TENANTID#
 	        AND
-	        	A.COMPANYID = #v_COMPANYID#
+	        	T.COMPANYID = #v_COMPANYID#
 	        AND
 	       		A.BOARDID = #v_BoardID#
 			AND 
@@ -3591,8 +3637,8 @@
 			GROUP BY
 				A.USERID, A.REPLYID
 			ORDER BY 
-				writedate ASC, C.DEPTID DESC
-		]]>                
+				writedate ASC
+		]]>
 	</select>
 		
 	<select id="EzBoardDAO.checkOneLineOwner" parameterClass="Map" resultClass="Integer">

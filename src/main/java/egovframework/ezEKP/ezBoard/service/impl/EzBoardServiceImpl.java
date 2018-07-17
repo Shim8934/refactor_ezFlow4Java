@@ -729,9 +729,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.brdGetItemAttachmentInfo(map);
 	}
 
-	// 조회자 정보는 boardID 조건으로 이미 회사ID를 거르고 가져오는 것임. 굳이 companyID 추가할 필요는 없음
+	// deptID 확인을 위해 companyID 조건 추가
 	@Override
-	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, int tenantID, int pageNum, int perCount, String offset) throws Exception {
+	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, String companyID, int tenantID, int pageNum, int perCount, String offset) throws Exception {
 		logger.debug("getReaderList started");
 		/* 2018-02-06 김보미 - 페이징 */
     	if(pageNum == 0){
@@ -747,6 +747,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("userID", userID);
 		map.put("lang", lang);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		map.put("start", startRowNum);
 		map.put("perCount", perCount);
 		
