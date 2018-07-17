@@ -29,9 +29,11 @@
 			<a class="cabBttn"><span><spring:message code="ezCabinet.t15"/></span></a>
 		</div>
 		
-		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
+		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTree.js"           ></script>
+		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
+		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript">
 			(function() {
 				var myCabinetTree = new CabinetTree();
@@ -85,7 +87,20 @@
 				function closeWindow() {window.close();}
 				
 				function addRelatedCabinet() {
-					//*Note add function here
+					var messageFrame = window.opener.document.getElementById("message");
+					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
+					console.log(contentWd.document.body.innerHTML);
+					
+					if(document.getElementById("1").checked){
+						var tblCabinetList = document.getElementById("tblCabinetList");
+						var normalScreen = contentWd.document.getElementById("normalScreen");
+						console.log(normalScreen);
+						console.log(tblCabinetList);
+						
+					}else if(document.getElementById("2").checked){
+						
+					}
+					
 				}
 				
 			})();
