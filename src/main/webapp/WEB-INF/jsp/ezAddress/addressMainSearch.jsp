@@ -387,10 +387,10 @@
 	        <tr>
 	            <th><spring:message code='ezAddress.t314' /></th>
 	            <td>
-	                <input type="checkbox" name="chkType" id="CheckUser" /><span onclick="check_click('CheckUser')" style="cursor: pointer;"><spring:message code='ezAddress.t145' /></span>
-	                <input type="checkbox" name="chkType" id="CheckDept" /><span onclick="check_click('CheckDept')" style="cursor: pointer;"><spring:message code='ezAddress.t146' /></span>
-	                <input type="checkbox" name="chkType" id="CheckCompany" /><span onclick="check_click('CheckCompany')" style="cursor: pointer;"><spring:message code='ezAddress.t147' /></span>&nbsp;
-	                <select name="search_case" id="search_case" style="height:22px">
+	                <input type="checkbox" name="chkType" id="CheckUser" /><span onclick="check_click('CheckUser')" style="cursor: pointer; vertical-align:middle;"><spring:message code='ezAddress.t145' /></span>
+	                <input type="checkbox" name="chkType" id="CheckDept" /><span onclick="check_click('CheckDept')" style="cursor: pointer; vertical-align:middle;"><spring:message code='ezAddress.t146' /></span>
+	                <input type="checkbox" name="chkType" id="CheckCompany" /><span onclick="check_click('CheckCompany')" style="cursor: pointer; vertical-align:middle;"><spring:message code='ezAddress.t147' /></span>&nbsp;
+	                <select name="search_case" id="search_case" style="height:22px; vertical-align:middle;">
 	                    <option value="S_NAME"><spring:message code='ezAddress.t124' /></option>
 	                    <option value="S_COMPANY"><spring:message code='ezAddress.t51' /></option>
 	                    <option value="S_DEPT"><spring:message code='ezAddress.t54' /></option>

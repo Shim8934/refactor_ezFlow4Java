@@ -69,7 +69,7 @@
             iframeStyle += "UL   	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
             iframeStyle += "OL   	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
             iframeStyle += "LI   	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-            iframeStyle += "BODY 	    { MARGIN: 10px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic; overflow-x: auto; overflow-y: hidden;}";
+            iframeStyle += "BODY 	    { MARGIN: 10px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic, Meiryo UI; overflow-x: auto; overflow-y: hidden;}";
             iframeStyle += "TABLE TD    { text-indent: 0px }";
             iframeStyle += "BLOCKQUOTE  { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
             iframeStyle += "</style>";          

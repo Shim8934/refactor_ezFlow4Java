@@ -8,7 +8,6 @@
 	    <style type="text/css">
 	    	.list {
 	    		font-size:12px;
-				font-family: 'Gulim', 'arial', 'verdana';
 				text-decoration: none;
 	    	}
 	    </style>
