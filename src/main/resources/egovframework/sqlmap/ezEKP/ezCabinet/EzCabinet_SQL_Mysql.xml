@@ -270,7 +270,7 @@
 			i.company_id as company_id,
 			i.tenant_id as tenant_id,
 			case when #primary# = '1' then i.creator_name1 else i.creator_name2 end as creator_name,
-			(ifnull (select sum(f.file_size) from tbl_cb_attach_file f where f.item_id = i.item_id and f.tenant_id = i.tenant_id), 0) as item_size
+			ifnull ((select sum(f.file_size) from tbl_cb_attach_file f where f.item_id = i.item_id and f.tenant_id = i.tenant_id), 0) as item_size
 	</sql>
 	
 	<sql id="selectSimpleItem">
