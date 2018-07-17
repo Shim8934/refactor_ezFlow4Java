@@ -1032,7 +1032,7 @@
 		</c:otherwise>
 	</c:choose>
 	<span style="float: right; font-weight: normal; color: black;">
-		<select id="searchKey" name="searchKey" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb; width: 70px;">    
+		<select id="searchKey" name="searchKey" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb; width: 80px;">    
            	<option value="journalTitle"><spring:message code='ezBoard.t208' /></option>
 			<c:if test="${listType eq 'department' or listType eq 'recv' }">
 	       		<option value="journalWriter"><spring:message code='ezJournal.t34' /></option>
