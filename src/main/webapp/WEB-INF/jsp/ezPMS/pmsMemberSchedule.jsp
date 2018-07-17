@@ -177,14 +177,29 @@ window.onload = function() {
 	<div id="calendar">
 	<table id="workSchedule" class="content">
 	<tr>
-	<c:forEach items="${dateList }" var="date">
-		<th>${date }</th>
+	<c:forEach items="${dateList }" var="dateVO">
+		<c:choose>
+			<c:when test="${dateVO.holidayOrNot eq true}">
+				<th style="background-color: rgba(236, 195, 176, 0.40);">${dateVO.date}</th>
+			</c:when>
+			<c:otherwise>
+				<th>${dateVO.date}</th>
+			</c:otherwise>
+		</c:choose>
 	</c:forEach>
 	</tr>
-	<c:forEach items="${memberList }" var="member">
+	<c:forEach items="${memberList}" var="member">
 	<tr userId="${member.userId }">
-	<c:forEach items="${dateList }" var="date">
-		<td date="${date }" style="text-align:center">&nbsp;</td>
+	<c:forEach items="${dateList}" var="dateVO">
+		<c:choose>
+			<c:when test="${dateVO.holidayOrNot eq true}">
+				<td date="${dateVO.date}" style="text-align:center; background-color: #FFFAF2;">&nbsp;</td>
+			</c:when>
+			<c:otherwise>
+				<td date="${dateVO.date}" style="text-align:center">&nbsp;</td>
+			</c:otherwise>
+		</c:choose>
+		
 	</c:forEach>
 	</tr>
 	</c:forEach>

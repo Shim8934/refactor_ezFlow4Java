@@ -218,7 +218,7 @@ public interface EzPMSService {
 	
 	public ProjectInfoVO getProjectBoundaryDate(long projectId, int tenantId) throws Exception;
 
-	public List<ProjectMemberScheduleVO> getMemberSchedule(long projectId, int tenantId, String lang);
+	public List<ProjectMemberScheduleVO> getMemberSchedule(long projectId, int tenantId, String lang, String companyId, String planStartDate, String planEndDate) throws Exception;
 
 	public void addMemberSchedule(String memberId, int tenantId, String assignedDate, long projectId, long taskId);
 	

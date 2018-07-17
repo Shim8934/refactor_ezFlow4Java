@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
@@ -50,6 +51,7 @@ import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
 import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+
 
 @Service("EzPMSService")
 public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSService {
@@ -2930,7 +2932,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectMemberScheduleVO> getMemberSchedule(long projectId, int tenantId, String lang) {
+	public List<ProjectMemberScheduleVO> getMemberSchedule(long projectId, int tenantId, String lang, String companyId, String planStartDate, String planEndDate) throws Exception {
 		LOGGER.debug("[SERVICE] getMemberSchedule started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
@@ -2942,17 +2944,31 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		List<TaskMemberVO> taskMemberVOs = ezPMSDAO.getMemberSchedule(map);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
-		taskMemberVOs.forEach(vo -> {
-			Calendar planStartDate = new GregorianCalendar();
-			Calendar planEndDate   = new GregorianCalendar();
+		// 공휴일 리스트를 가져와서 Calendar클래스로 변환
+		Set<String> holidayList = getHolidayList(planStartDate, planEndDate, tenantId, companyId);
+		Set<Calendar> holidaySet = new HashSet<Calendar>();
+		
+		holidayList.forEach(holiday -> {
 			try {
-				planStartDate.setTime(sdf.parse(vo.getPlanStartDate()));
-				planEndDate.setTime(sdf.parse(vo.getPlanEndDate()));
+				Calendar cal = new GregorianCalendar();
+				cal.setTime(sdf.parse(holiday));
+				holidaySet.add(cal);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		
+		taskMemberVOs.forEach(vo -> {
+			Calendar startDate = new GregorianCalendar();
+			Calendar endDate   = new GregorianCalendar();
+			try {
+				startDate.setTime(sdf.parse(vo.getPlanStartDate()));
+				endDate.setTime(sdf.parse(vo.getPlanEndDate()));
 				
 				do {
-					if(planStartDate.get(Calendar.DAY_OF_WEEK) != 1 && planStartDate.get(Calendar.DAY_OF_WEEK) != 7) {
+					if(startDate.get(Calendar.DAY_OF_WEEK) != 1 && startDate.get(Calendar.DAY_OF_WEEK) != 7 && !holidaySet.contains(startDate)) {
 						ProjectMemberScheduleVO scheduleVO = new ProjectMemberScheduleVO();
-						scheduleVO.setAssignedDate(sdf.format(planStartDate.getTime()));
+						scheduleVO.setAssignedDate(sdf.format(startDate.getTime()));
 						scheduleVO.setTaskId(vo.getTaskId());
 						scheduleVO.setDeptName(vo.getUserDeptname());
 						scheduleVO.setUserName(vo.getUserName());
@@ -2963,8 +2979,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 						memberScheduleVOs.add(scheduleVO);
 					}
 					
-					planStartDate.add(Calendar.DATE, 1);
-				} while(planStartDate.compareTo(planEndDate) < 1);
+					startDate.add(Calendar.DATE, 1);
+				} while(startDate.compareTo(endDate) < 1);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

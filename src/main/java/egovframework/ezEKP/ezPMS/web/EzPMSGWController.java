@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Base64.Decoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
@@ -22,14 +23,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.UUID;
-import java.util.Base64.Decoder;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Param;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -47,12 +47,12 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
 import egovframework.ezEKP.ezPMS.vo.CommentVO;
+import egovframework.ezEKP.ezPMS.vo.DateVO;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
-import egovframework.ezEKP.ezPMS.vo.ProjectHolidayVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO;
@@ -65,7 +65,6 @@ import egovframework.ezEKP.ezPMS.vo.TaskLogListVO;
 import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
-import egovframework.ezMobile.ezCommon.web.MCommonGWController;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -1839,6 +1838,7 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			String companyId = info.getCompanyId();
 
 			ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, tenantId, "gantt", lang,
 					info.getDeptId(), info.getCompanyId());
@@ -1846,7 +1846,7 @@ public class EzPMSGWController {
 			String planEndDate = project.getPlanEndDate();
 			List<ProjectMemberVO> memberList = project.getProjectMember();
 			List<ProjectMemberScheduleVO> memberScheduleList = ezPMSService.getMemberSchedule(projectId, tenantId,
-					lang);
+					lang, companyId, planStartDate, planEndDate);
 
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date startDate = dateFormat.parse(planStartDate);
@@ -1857,16 +1857,36 @@ public class EzPMSGWController {
 
 			startCal.setTime(startDate);
 			endCal.setTime(endDate);
-
-			List<String> dateList = new ArrayList<String>();
-
-			while (startCal.compareTo(endCal) != 1) {
-				if (startCal.get(Calendar.DAY_OF_WEEK) == 1 || startCal.get(Calendar.DAY_OF_WEEK) == 7) {
-					startCal.add(Calendar.DATE, 1);
-				} else {
-					dateList.add(dateFormat.format(startCal.getTime()));
-					startCal.add(Calendar.DATE, 1);
+			
+			// 공휴일 리스트를 가져와서 Calendar클래스로 변환
+			Set<String> holidayList = ezPMSService.getHolidayList(planStartDate, planEndDate, tenantId, companyId);
+			Set<Calendar> holidaySet = new HashSet<Calendar>();
+			
+			holidayList.forEach(holiday -> {
+				try {
+					Calendar cal = new GregorianCalendar();
+					cal.setTime(dateFormat.parse(holiday));
+					holidaySet.add(cal);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
+			});
+			
+			List<DateVO> dateList = new ArrayList<DateVO>();
+
+			while (startCal.compareTo(endCal) < 1) {
+				DateVO date = new DateVO();
+				date.setDate(dateFormat.format(startCal.getTime()));
+				
+				// 휴일 여부를 판단
+				if(startCal.get(Calendar.DAY_OF_WEEK) != 1 && startCal.get(Calendar.DAY_OF_WEEK) != 7 && !holidaySet.contains(startCal)) {
+					date.setHolidayOrNot(false);
+				} else {
+					date.setHolidayOrNot(true);
+				}
+				
+				dateList.add(date);
+				startCal.add(Calendar.DATE, 1);
 			}
 
 			JSONObject data = new JSONObject();
