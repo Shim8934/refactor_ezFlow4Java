@@ -9,6 +9,7 @@ function CabinetTable(data) {
 	this.getOrderInfo     = getOrderInfo;
 	this.setRenderFunct   = setRenderFunct;
 	this.setClickHandler  = setClickHandler;
+	this.resetEvents      = resetRowEvents;
 	
 	//private variables
 	var _tableElmt       = null;
@@ -17,18 +18,22 @@ function CabinetTable(data) {
 	var _unselectClass   = data.normal   ? data.normal   : "bnkCabNormal";
 	var _lastSelectedRow = null;
 	var _dataSource      = null;
-	var _tableType       = "";
-	var _callBackSearch  = null;
-	var _clickHandler    = null;
-	var _renderFunction  = null;
+	var _tableType       = data.tableType ? data.tableType : "";
+	var _callBackSearch  = data.callBack  ? data.callBack  : null;
+	var _clickHandler    = data.click     ? data.click     : null;
+	var _dblClickHandler = data.dblclick  ? data.dblclick  : null;
+	var _renderFunction  = data.render    ? data.render    : null;
 	var _cellInfo        = {};
 	var _selectedCell    = null;
+	var _tableMode       = data.mode ? data.mode : null;
 	
 	//private functions
 	function getOrderInfo() {return _cellInfo;}
 	function setRenderFunct(renderFunctName) {_renderFunction = renderFunctName;}
 	function setClickHandler(clickHandler) {_clickHandler = clickHandler;}
+	function setTableMode(tableMode) {_tableMode = tableMode;}
 	function setCallBack(callBackName) {_callBackSearch = callBackName;}
+	function setTableType(tableType) {_tableType = tableType;}
 	
 	function setTableElement(identify, type) {
 		switch(type.toLowerCase()) {
@@ -41,24 +46,26 @@ function CabinetTable(data) {
 		var currentStyle = _tableElmt.getAttribute("style");
 		_tableElmt.setAttribute("style", "-webkit-touch-callout: none;-webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; " + currentStyle);
 		
-		var headerRow    = _tableElmt.rows[0];
-		var len          = headerRow.cells.length;
-		var firstTd      = headerRow.cells[0];
-		var firstTdChild = firstTd.firstElementChild;
-		
-		if (!firstTdChild || (firstTdChild.tagName).toLowerCase() != "input") {
-			firstTd.onclick = function() {sortByHeader(this);};
+		if (_tableMode == null) {
+			var headerRow    = _tableElmt.rows[0];
+			var len          = headerRow.cells.length;
+			var firstTd      = headerRow.cells[0];
+			var firstTdChild = firstTd.firstElementChild;
+			
+			if (!firstTdChild || (firstTdChild.tagName).toLowerCase() != "input") {
+				firstTd.onclick = function() {sortByHeader(this);};
+			}
+			
+			for (var i = 1; i < len; i++) {
+				var cell     = headerRow.cells[i];
+				cell.onclick = function() {sortByHeader(this);};
+			}
+			
+			_cellInfo     = {};
+			_selectedCell = null;
+			
+			setTableData();
 		}
-		
-		for (var i = 1; i < len; i++) {
-			var cell     = headerRow.cells[i];
-			cell.onclick = function() {sortByHeader(this);};
-		}
-		
-		_cellInfo     = {};
-		_selectedCell = null;
-		
-		setTableData();
 	}
 	
 	function setTableData() {
@@ -88,8 +95,6 @@ function CabinetTable(data) {
 		_dataSource = dataSource;
 		cleanTable();
 	}
-	
-	function setTableType(tableType) {_tableType = tableType;}
 	
 	//Row process functions
 	function sortByHeader(cell) {
@@ -210,19 +215,24 @@ function CabinetTable(data) {
 	}
 	
 	function toggleRow(row, rowClass) {
-		if (rowClass == _unselectClass) {
-			var firstInputCheckBox     = _tableElmt.rows[0].firstElementChild.firstElementChild;
-			firstInputCheckBox.checked = false;
+		if (_tableMode == null) {
+			if (rowClass == _unselectClass) {
+				var firstInputCheckBox     = _tableElmt.rows[0].firstElementChild.firstElementChild;
+				firstInputCheckBox.checked = false;
+			}
+			
+			var checkboxElmt     = row.firstElementChild.firstElementChild;
+			checkboxElmt.checked = rowClass == _selectedClass ? true : false;
 		}
 		
-		var checkboxElmt     = row.firstElementChild.firstElementChild;
-		checkboxElmt.checked = rowClass == _selectedClass ? true : false;
-		row.className        = rowClass;
+		row.className = rowClass;
 	}
-
+	
 	function selectRowsBetweenIndexes(indexArr) {
 		indexArr.sort(function(a, b) {return a - b;});
-		var listOfRows = _tableDataElmt.rows;
+		var tableMainELmt = _tableMode == null ? _tableDataElmt : _tableElmt;
+		
+		var listOfRows = tableMainELmt.rows;
 		
 		for (var i = indexArr[0] + 1; i <= indexArr[1] + 1; i++) {
 			toggleRow(listOfRows[i-1], _selectedClass);
@@ -243,19 +253,38 @@ function CabinetTable(data) {
 	function renderTable() {
 		switch (_tableType) {
 			case 'cabinet'  : _renderFunction(_dataSource, _unselectClass, _tableDataElmt, getChecked, clickRowType2); break;
-			case 'capacity' : _renderFunction(_dataSource, _unselectClass, _tableDataElmt, getChecked, clickRow); break;
+			case 'capacity' : _renderFunction(_dataSource, _unselectClass, _tableDataElmt, getChecked, clickRow)     ; break;
+			case 'files'    : _renderFunction(_dataSource, _unselectClass, _tableElmt, clickRow)                     ; break;
 		}
 	}
 	
 	function cleanTable() {
-		var firstInputCheckBox = _tableElmt.rows[0].firstElementChild.firstElementChild;
-		if (firstInputCheckBox) {
-			firstInputCheckBox.checked = false; //Clear first input check box
-			firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
+		if (_tableMode == null) {
+			var firstInputCheckBox = _tableElmt.rows[0].firstElementChild.firstElementChild;
+			if (firstInputCheckBox) {
+				firstInputCheckBox.checked = false; //Clear first input check box
+				firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};
+			}
+			
+			while (_tableDataElmt.rows.length > 0) {
+				_tableDataElmt.deleteRow(0);
+			}
 		}
+		else {
+			while (_tableElmt.rows.length > 1) {
+				_tableElmt.deleteRow(1);
+			}
+		}
+	}
+	
+	function resetRowEvents() {
+		if (_tableMode != "received") {return;}
 		
-		while (_tableDataElmt.rows.length > 0) {
-			_tableDataElmt.deleteRow(0);
+		var listOfRows = _tableElmt.rows;
+		
+		for (var i = 0, len = listOfRows.length; i < len; i++) {
+			listOfRows[i].onclick = function(e) {clickRow(e);};
+			listOfRows[i].ondblclick = function(e) {_dblClickHandler(this);};
 		}
 	}
 }

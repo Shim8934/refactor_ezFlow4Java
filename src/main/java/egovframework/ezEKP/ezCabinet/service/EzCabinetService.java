@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetItemSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
@@ -58,8 +59,11 @@ public interface EzCabinetService {
 	int getTotalItems(CabinetItemSearchVO searchVO) throws Exception;
 	List<CabinetItemVO> getItemsRecursive(CabinetItemSearchVO searchVO) throws Exception;
 	int getTotalItemsRecursive(CabinetItemSearchVO searchVO) throws Exception;
+	List<CabinetItemSimpleVO> getCabinetFiles(String cabinetId, int tenantId) throws Exception;
+	List<CabinetItemSimpleVO> getFilesByTitle(String itemTitle, String userId, int tenantId) throws Exception;
 	
 	//User delete/move items function
 	void deleteItems(List<Integer> itemIdList, LoginVO userInfo) throws Exception;
 	JSONObject moveItems(String realPath, int cabinetId, String mode, List<Integer> itemIdList, LoginVO userInfo) throws Exception;
+	
 }

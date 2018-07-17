@@ -11,6 +11,7 @@
 	<typeAlias alias="CabinetRelationVO"    type="egovframework.ezEKP.ezCabinet.vo.CabinetRelationVO"  />
 	<typeAlias alias="CabinetItemVO"        type="egovframework.ezEKP.ezCabinet.vo.CabinetItemVO"      />
 	<typeAlias alias="CabinetItemSearchVO"  type="egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO"/>
+	<typeAlias alias="CabinetItemSimpleVO"  type="egovframework.ezEKP.ezCabinet.vo.CabinetItemSimpleVO"/>
 	
 	<!-- SimpleDept resultMap -->
 	<resultMap id="simpleDeptVO" class="cabinetSimpleDeptVO">
@@ -178,6 +179,15 @@
 		<result property="itemSize"         column="item_size"           columnIndex="21"/>
 	</resultMap>
 	
+	<!-- cabinet item simple resultMap -->
+	<resultMap id="cabinetItemSimpleVO"  class="CabinetItemSimpleVO">
+		<result property="itemId"           column="item_id"             columnIndex="1"/>
+		<result property="cabinetId"        column="cabinet_id"          columnIndex="2"/>
+		<result property="itemType"         column="item_type"           columnIndex="3"/>
+		<result property="title"            column="title"               columnIndex="4"/>
+		<result property="tenantId"         column="tenant_id"           columnIndex="5"/>
+	</resultMap>
+	
 	<!-- cabinet attach file resultMap -->
 	<resultMap id="cabinetAttachFileVO"  class="CabinetAttachFileVO">
 		<result property="attachId"         column="attach_id"           columnIndex="1"/>
@@ -260,7 +270,18 @@
 			i.company_id as company_id,
 			i.tenant_id as tenant_id,
 			case when #primary# = '1' then i.creator_name1 else i.creator_name2 end as creator_name,
-			(select sum(f.file_size) from tbl_cb_attach_file f where f.item_id = i.item_id and f.tenant_id = i.tenant_id) as item_size
+			(ifnull (select sum(f.file_size) from tbl_cb_attach_file f where f.item_id = i.item_id and f.tenant_id = i.tenant_id), 0) as item_size
+	</sql>
+	
+	<sql id="selectSimpleItem">
+		select
+			item_id    as item_id,
+			cabinet_id as cabinet_id,
+			item_type  as item_type,
+			title      as title,
+			tenant_id  as tenant_id
+		from
+			tbl_cb_item
 	</sql>
 	<!--***********************************************************************************
 	**                            Organization tree process                              **
@@ -648,6 +669,16 @@
 		<isNotEmpty property="useStatus" prepend="and">
 			use_status = #useStatus#
 		</isNotEmpty>
+	</select>
+	
+	<select id="EzCabinetDAO.getCabinetFiles" resultMap="cabinetItemSimpleVO">
+		<include refid="selectSimpleItem"/>
+		<![CDATA[where cabinet_id = #cabinetId# and tenant_id = #tenantId# and use_status = 1]]>
+	</select>
+	
+	<select id="EzCabinetDAO.getFilesByTitle" resultMap="cabinetItemSimpleVO">
+		<include refid="selectSimpleItem"/>
+		<![CDATA[where creator_id = #userId# and tenant_id = #tenantId# and use_status = 1 and title like concat('%', concat(#title#, '%'))]]>
 	</select>
 	
 	<select id="EzCabinetDAO.getItemsFromIdList" resultMap="cabinetItemVO">

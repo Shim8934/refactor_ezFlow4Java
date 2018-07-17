@@ -16,74 +16,25 @@
 		
 		<div class="cabRlSearch">
 			<div>
-				<input type="text" placeholder="<spring:message code='ezCabinet.t88'/>">
-				<a class="cabBttn2"><span><spring:message code='ezCabinet.t49'/></span></a>
+				<input id="ssInput" type="text" placeholder="<spring:message code='ezCabinet.t88'/>">
+				<a id="searchBttn" class="cabBttn2"><span><spring:message code='ezCabinet.t49'/></span></a>
 			</div>
 		</div>
 		<div class="cabRlMain">
 			<div class="cabRlTreeMain">
 				<div class="cabRlTreeDiv">
-					<div id="folderTree" style="width: 100%; height: 100%; overflow: auto; white-space: nowrap; padding: 5px 0px 0px 5px;">
-						<div>
-							<img id="3" src="/images/OrganTree_cross/minus.gif" class="webfolderMinus">
-							<img class="webfolderImg" src="/images/webfolder/fldr.png">
-							<span class="spanName" name="3" level="0" fldname1="(주)가온아이" fldname2="Kaoni, Inc." style="color: rgb(0, 74, 135); font-weight: bold;">(주)가온아이</span>
-							<div>
-								<div>
-									<img class="webfolderImg" src="/images/OrganTree_cross/dot_continue.gif">
-									<img id="84" src="/images/OrganTree_cross/plus.gif" class="webfolderPlus">
-									<img class="webfolderImg" src="/images/webfolder/fldr.png">
-									<span class="spanName" name="84" level="1" fldname1="aa" fldname2="eee">aa</span>
-								</div>
-								<div>
-									<img class="webfolderImg" src="/images/OrganTree_cross/dot_continue.gif">
-									<img id="91" src="/images/OrganTree_cross/dot_continue.gif" class="webfolderImg">
-									<img class="webfolderImg" src="/images/webfolder/fldr.png">
-									<span class="spanName" name="91" level="1" fldname1="ewew" fldname2="ewtwet">ewew</span>
-								</div>
-								<div>
-									<img class="webfolderImg" src="/images/OrganTree_cross/dot_continue.gif">
-									<img id="86" src="/images/OrganTree_cross/dot_continue.gif" class="webfolderImg">
-									<img class="webfolderImg" src="/images/webfolder/fldr.png">
-									<span class="spanName" name="86" level="1" fldname1="gdsgs" fldname2="sdgsdg">gdsgs</span>
-								</div>
-								<div>
-									<img class="webfolderImg" src="/images/OrganTree_cross/dot_continue.gif">
-									<img id="90" src="/images/OrganTree_cross/dot_continue.gif" class="webfolderImg">
-									<img class="webfolderImg" src="/images/webfolder/fldr.png">
-									<span class="spanName" name="90" level="1" fldname1="hhh" fldname2="hhhh">hhh</span>
-								</div>
-								<div>
-									<img class="webfolderImg" src="/images/OrganTree_cross/dot_continue.gif">
-									<img id="89" src="/images/OrganTree_cross/dot_continue.gif" class="webfolderImg">
-									<img class="webfolderImg" src="/images/webfolder/fldr.png">
-									<span class="spanName" name="89" level="1" fldname1="ooo" fldname2="oiooo">ooo</span>
-								</div>
-								<div>
-									<img class="webfolderImg" src="/images/OrganTree_cross/dot_continue.gif">
-									<img id="87" src="/images/OrganTree_cross/dot_continue.gif" class="webfolderImg">
-									<img class="webfolderImg" src="/images/webfolder/fldr.png">
-									<span class="spanName" name="87" level="1" fldname1="ttt" fldname2="ttt">ttt</span>
-								</div>
-							</div>
-						</div>
-					</div>
+					<div id="cabinetTree" class="cbTree"></div>
 				</div>
 				<div class="cabRlSelect">
 					<div class="rlSelectTtl"><spring:message code='ezCabinet.t89'/></div>
 					<div class="rlSelectTblDiv">
-						<table class="rlSelectTbl">
+						<table class="rlSelectTbl" id="tableFiles">
 							<tr>
 								<th class="thType"><spring:message code='ezCabinet.t61'/></th>
 								<th><spring:message code='ezCabinet.t62'/></th>
 							</tr>
 							<tr>
-								<td><img src="/images/webfolder/document.png"></td>
-								<td>리소스 관련</td>
-							</tr>
-							<tr>
-								<td><img src="/images/webfolder/document.png"></td>
-								<td>QC 관련</td>
+								<td colspan="2" style="text-align: center; background-color: #fff;"><spring:message code='ezCabinet.err3'/></td>
 							</tr>
 						</table>
 					</div>
@@ -92,25 +43,17 @@
 			</div>
 			<div class="cabRlBttnDiv">
 				<div>
-					<img src="/images/arr_right.gif">
-					<img src="/images/arr_left.gif" >
+					<img id="addBttn"    src="/images/kr/cm/arr_right.gif">
+					<img id="removeBttn" src="/images/kr/cm/arr_left.gif" >
 				</div>
 			</div>
 			<div class="cabRlSelected">
 				<div class="rlSelectTtl"><spring:message code='ezCabinet.t90'/></div>
 				<div class="rlSelectTblDiv">
-					<table class="rlSelectTbl">
+					<table class="rlSelectTbl" id="selectedTable">
 						<tr>
 							<th class="thType"><spring:message code='ezCabinet.t61'/></th>
 							<th><spring:message code='ezCabinet.t62'/></th>
-						</tr>
-						<tr>
-							<td><img src="/images/webfolder/document.png"></td>
-							<td>리소스 관련</td>
-						</tr>
-						<tr>
-							<td><img src="/images/webfolder/document.png"></td>
-							<td>QC 관련</td>
 						</tr>
 					</table>
 				</div>
@@ -121,8 +64,28 @@
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
 		</div>
+		
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
+		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetTree.js"           ></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetTable.js"          ></script>
 		<script type="text/javascript">
 			(function() {
+				var cabinetTree   = new CabinetTree();
+				var fileTable     = new CabinetTable({
+					normal   : "bnkCabNormal",
+					selected : "bnkCabSelect",
+					mode     : "normal",
+					render   : renderFileList
+				});
+				var selectedFiles = new CabinetTable({
+					normal   : "bnkCabNormal",
+					selected : "bnkCabSelect",
+					mode     : "received",
+					click    : null,
+					dblclick : removeFile
+				});
+				
 				initEvents();
 				
 				function initEvents() {
@@ -134,13 +97,238 @@
 					var listRlBttns        = cabRlBttnElmt.children;
 					listRlBttns[0].onclick = function(e) {saveRelatedFiles();};
 					listRlBttns[1].onclick = function(e) {closeWindow();};
+					document.getElementById("addBttn").onclick    = function(e) {addFiles();};
+					document.getElementById("removeBttn").onclick = function(e) {removeFiles();};
+					
+					var sSearchInputElmt   = document.getElementById("ssInput");
+					sSearchInputElmt.addEventListener("keypress", function(e) {onStartSimpleSearch(e);}, false);
+					sSearchInputElmt.addEventListener("mousedown", function(e) {clearKeyword(this);}, false);
+					
+					var searchBttnElmt = document.getElementById("searchBttn");
+					searchBttnElmt.addEventListener("click", function(e) {startSimpleSearch();}, false);
+					
+					cabinetTree.setTreeInfo({
+						treeId     : "cabinetTree",
+						treeType   : "cabinet",
+						type       : "list",
+						initialUrl : "/ezCabinet/getAllCabinetTree.do",
+						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
+						click      : getAllItems,
+						dblClick   : null
+					});
+					
+					cabinetTree.makeTree();
+					
+					//Set file tables 
+					fileTable.setTableType("files");
+					fileTable.setTableElement("tableFiles", "id");
+					
+					//Set selected tables 
+					selectedFiles.setTableElement("selectedTable", "id");
+					
+					setSelectedItem();
+				}
+				
+				function setSelectedItem() {
+					var parentWd    = window.opener;
+					var selectedArr = null;
+					if (parentWd && parentWd.CabinetAddFile) {selectedArr = parentWd.CabinetAddFile.get();}
+					
+					if (selectedArr != null && selectedArr.length != 0) {
+						var tableElmt = document.getElementById("selectedTable");
+						for (var i = 0, len = selectedArr.length; i < len; i++) {
+							var item    = selectedArr[i];
+							var trElmt  = document.createElement("tr");
+							var tdElmt1 = document.createElement("td");
+							var tdElmt2 = document.createElement("td");
+							var imgElmt = document.createElement("img");
+							imgElmt.src = getImageSource(item["itemType"]);
+							tdElmt1.appendChild(imgElmt);
+							tdElmt2.textContent = item["itemTitle"];
+							tdElmt2.setAttribute("title", item["itemTitle"]);
+							trElmt.setAttribute("role", item["itemId"]);
+							trElmt.setAttribute("type", item["itemType"]);
+							trElmt.className = "bnkCabNormal";
+							trElmt.appendChild(tdElmt1);
+							trElmt.appendChild(tdElmt2);
+							
+							tableElmt.appendChild(trElmt);
+						}
+						
+						selectedFiles.resetEvents();
+					}
 				}
 				
 				function saveRelatedFiles() {
-					//*Note implements function here
+					var data      = [];
+					var tableElmt = document.getElementById("selectedTable");
+					var trList    = tableElmt.rows;
+					
+					for (var i = 1, len = trList.length; i < len; i++) {
+						var itemId    = trList[i].getAttribute("role");
+						var itemType  = trList[i].getAttribute("type");
+						var itemTitle = trList[i].lastElementChild.getAttribute("title");
+						data.push({
+							itemId    : itemId,
+							itemType  : itemType,
+							itemTitle : itemTitle
+						});
+					}
+					
+					var parentWd = window.opener;
+					if (parentWd && parentWd.CabinetAddFile) {parentWd.CabinetAddFile.save(data);}
+					
+					closeWindow();
 				}
 				
+				function getAllItems(nodeElmt) {
+					var cabinetId = nodeElmt.getAttribute("role");
+					var url       = "/ezCabinet/getCabinetFiles.do";
+					var data      = {cabinetId : cabinetId};
+					
+					makeAjaxCall(data, "GET", url, afterGetData, null, true, null);
+				}
+				
+				function afterGetData(data) {
+					var code = data.code;
+					switch(code) {
+						case 0 : getDataSuccessfully(data.itemList); break;
+						case 1 : alert(CabinetMessages.strParamErr); break;
+						case 2 : alert(CabinetMessages.strError)   ; break;
+						case 3 : alert(CabinetMessages.strPerm)    ; break;
+						default: alert(CabinetMessages.strError)   ; return; 
+					}
+				}
+				
+				function getDataSuccessfully(data) {
+					fileTable.setDataSource(data);
+					fileTable.renderTable();
+				}
+				
+				function renderFileList(itemList, unselectClass, tableElmt, clickRow) {
+					if (itemList == null || itemList.length == 0) {
+						var trElmt = document.createElement("tr");
+						var tdElmt = document.createElement("td");
+						tdElmt.setAttribute("colspan", "2");
+						tdElmt.setAttribute("style", "text-align: center; background-color: #fff;");
+						tdElmt.innerHTML = CabinetMessages.strNoData;
+						
+						trElmt.appendChild(tdElmt);
+						tableElmt.appendChild(trElmt);
+					}
+					else {
+						var len = itemList.length;
+						for (var i = 0; i < len; i++) {
+							var trElmt  = document.createElement("tr");
+							var tdElmt1 = document.createElement("td");
+							var tdElmt2 = document.createElement("td");
+							var imgElmt = document.createElement("img");
+							imgElmt.src = getImageSource(itemList[i]["itemType"]);
+							tdElmt1.appendChild(imgElmt);
+							tdElmt2.textContent = itemList[i]["title"];
+							tdElmt2.setAttribute("title", itemList[i]["title"]);
+							trElmt.setAttribute("role", itemList[i]["itemId"]);
+							trElmt.setAttribute("type", itemList[i]["itemType"]);
+							trElmt.className = unselectClass;
+							trElmt.appendChild(tdElmt1);
+							trElmt.appendChild(tdElmt2);
+							trElmt.addEventListener("click", function(e) {clickRow(e);}, false);
+							trElmt.addEventListener("dblclick", function(e) {addFile(this, "one")}, false);
+							
+							tableElmt.appendChild(trElmt);
+						}
+					}
+				}
+				
+				function addFile(trElmt, mode) {
+					var selectedTable = document.getElementById("selectedTable");
+					var itemId        = trElmt.getAttribute("role");
+					var checkElmt     = selectedTable.querySelector("tr[role='" + itemId + "']");
+					
+					if (checkElmt) {if(mode) {alert(CabinetMessages.strExist);}; return;}
+						
+					var cloneTr       = trElmt.cloneNode(true);
+					cloneTr.className = "bnkCabNormal";
+					selectedTable.appendChild(cloneTr);
+					selectedFiles.resetEvents();
+				}
+				
+				function addFiles() {
+					var listTableElmt  = document.getElementById("tableFiles");
+					var selectedTrList = listTableElmt.querySelectorAll("tr[class='bnkCabSelect']");
+					
+					for (var i = 0, len = selectedTrList.length; i < len; i++) {
+						addFile(selectedTrList[i]);
+					}
+				}
+				
+				function removeFile(trElmt) {
+					var selectedTable = document.getElementById("selectedTable");
+					selectedTable.removeChild(trElmt);
+				}
+				
+				function removeFiles() {
+					var selectedTblElmt = document.getElementById("selectedTable");
+					var selectedTrList  = selectedTblElmt.querySelectorAll("tr[class='bnkCabSelect']");
+					
+					for (var i = 0, len = selectedTrList.length; i < len; i++) {
+						removeFile(selectedTrList[i]);
+					}
+				}
+				
+				function getImageSource(moduleType) {
+					var srcImg = "";
+					switch(parseInt(moduleType)) {
+						case 0 : srcImg = "/images/cabinet/docx.png"     ; break;
+						case 1 : srcImg = "/images/cabinet/mail.png"     ; break;
+						case 2 : srcImg = "/images/cabinet/approval.png" ; break;
+						case 3 : srcImg = "/images/cabinet/board.png"    ; break;
+						case 4 : srcImg = "/images/cabinet/schedule.png" ; break;
+						case 5 : srcImg = "/images/cabinet/schedule.png" ; break;
+						case 6 : srcImg = "/images/cabinet/circular.png" ; break;
+						case 7 : srcImg = "/images/cabinet/community.png"; break;
+						case 8 : srcImg = "/images/cabinet/mail.png"     ; break;
+						case 9 : srcImg = "/images/cabinet/circular.png" ; break;
+						case 10: srcImg = "/images/cabinet/rar.png"      ; break;
+						case 11: srcImg = "/images/cabinet/resource.png" ; break;
+					}
+					
+					return srcImg;
+				}
+				
+				function onStartSimpleSearch(event) {if(event.keyCode == "13") {startSimpleSearch();}}
+				
+				function startSimpleSearch() {
+					var searchStr = document.getElementById("ssInput").value;
+					if (!searchStr.replace(/\s/g,'')) {alert(CabinetMessages.strNoInput); return;}
+					
+					var url  = "/ezCabinet/getFilesBySearching.do";
+					var data = {title : searchStr};
+					
+					makeAjaxCall(data, "POST", url, afterGetData, null, true, null);
+				}
+				
+				function clearKeyword(inputElmt) {inputElmt.value = "";}
+				
 				function closeWindow() {window.close();}
+				
+				function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {
+					$.ajax({
+						type: ajaxType,
+						url: ajaxUrl,
+						data: ajaxData,
+						dataType: "JSON",
+						async: asyncMode != false ? true : false,
+						success : function(data) {
+							handleSuccess(data, moreParam);
+						},
+						error : function(error) {
+							if (handleError != null) {handleError();}
+							
+							alert(CabinetMessages.strError);
+						}
+					});
+				}
 			})();
 		</script>
 	</body>

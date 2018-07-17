@@ -123,6 +123,7 @@ var CabinetItem = function() {
 			normal   : "bnkCabNormal",
 			selected : "bnkCabSelect"
 		});
+		
 		cabinetTable.setTableType("cabinet");
 		cabinetTable.setTableElement("tblCabinetList", "id");
 		cabinetTable.setClickHandler(itemClickHandler);

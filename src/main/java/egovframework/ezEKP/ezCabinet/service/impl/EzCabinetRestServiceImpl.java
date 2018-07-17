@@ -454,4 +454,23 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 			return contentLength == null || contentLength < 0 ? null : contentLength;
 		}
 	}
+
+	@Override
+	public JSONObject getCabinetFiles(HttpServletRequest request, String userId, String cabinetId) throws Exception {
+		String url                = "/rest/ezcabinet/relate-item/id/" + cabinetId + "/get";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+
+	@Override
+	public JSONObject getFilesBySearching(HttpServletRequest request, String userId, String itemTitle) throws Exception {
+		String url                = "/rest/ezcabinet/relate-item/search";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		param.put("title",  itemTitle);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
 }

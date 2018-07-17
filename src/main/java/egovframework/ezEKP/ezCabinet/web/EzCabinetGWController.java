@@ -25,6 +25,7 @@ import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetItemSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
@@ -1297,6 +1298,81 @@ public class EzCabinetGWController {
 			cabinet.setCabinetName(userInfo.getPrimary().equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2());
 			
 			result.put("cabinet", cabinet);
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/relate-item/id/{cabinetid}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getFiles(@PathVariable(value="cabinetid") String cabinetId, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName    = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		String userId        = request.getParameter("userId") != null ? request.getParameter("userId") : "";
+		JSONObject result    = new JSONObject();
+		
+		logger.debug("CabinetId: " + cabinetId + " || Server name: " + serverName + " User Id: " + userId);
+		
+		if (serverName.equals("") || cabinetId.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
+			//Add checking permission here
+			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(Integer.parseInt(cabinetId)));
+			JSONObject permission     = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
+			List<CabinetItemSimpleVO> itemList = cabinetService.getCabinetFiles(cabinetId, userInfo.getTenantId());
+			
+			result.put("itemList", itemList);
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/relate-item/search", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getFilesBySearching(Locale locale, HttpServletRequest request) throws Exception {
+		String serverName    = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		String userId        = request.getParameter("userId") != null ? request.getParameter("userId") : "";
+		String itemTitle     = request.getParameter("title")  != null ? request.getParameter("title")  : "";
+		JSONObject result    = new JSONObject();
+		
+		logger.debug("itemTitle: " + itemTitle + " || Server name: " + serverName + " User Id: " + userId);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo                   = commonUtil.getUserForGw(userId, serverName);
+			List<CabinetItemSimpleVO> itemList = cabinetService.getFilesByTitle(itemTitle, userInfo.getId(), userInfo.getTenantId());
+			
+			result.put("itemList", itemList);
 			result.put("status", "ok");
 			result.put("code", 0);
 		}

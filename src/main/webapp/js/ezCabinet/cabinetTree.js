@@ -196,7 +196,6 @@ function CabinetTree() {
 	}
 	
 	function makeSubTree(data, divElmt) {
-		console.log(data);
 		var resultData = data.subNodes;
 		
 		if (resultData == null) {alert(CabinetMessages.strTreeErr); return;}

@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
@@ -31,6 +30,7 @@ import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetItemSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationVO;
@@ -1021,7 +1021,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	}
 
 	private void moveItemsForUser(int cabinetId, String timeUTC, List<Integer> itemIdList, LoginVO userInfo) {
-		Map<String,Object> map     = new HashMap<String, Object>();
+		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("cabinetId",  cabinetId);
 		map.put("userId",     userInfo.getId());
 		map.put("tenantId",   userInfo.getTenantId());
@@ -1029,5 +1029,24 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("updateTime", timeUTC);
 		
 		ezCabinetDAO.moveItemsForUser(map);
+	}
+
+	@Override
+	public List<CabinetItemSimpleVO> getCabinetFiles(String cabinetId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("cabinetId", cabinetId);
+		map.put("tenantId",  tenantId);
+		
+		return ezCabinetDAO.getCabinetFiles(map);
+	}
+
+	@Override
+	public List<CabinetItemSimpleVO> getFilesByTitle(String itemTitle, String userId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("title",    itemTitle);
+		map.put("userId",   userId);
+		map.put("tenantId", tenantId);
+		
+		return ezCabinetDAO.getFilesByTitle(map);
 	}
 }

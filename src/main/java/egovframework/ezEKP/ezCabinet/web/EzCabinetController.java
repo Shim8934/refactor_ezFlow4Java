@@ -109,8 +109,6 @@ public class EzCabinetController {
 	@RequestMapping(value="/ezCabinet/getRelatedFile.do")
 	public String jspGetRelatedFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetRelatedFile started");
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		
 		logger.debug("jspGetRelatedFile ended");
 		return "ezCabinet/cabinetFileSelect";
 	}
@@ -159,8 +157,7 @@ public class EzCabinetController {
 	@RequestMapping(value="/ezCabinet/addCabinetFile.do")
 	public String jspGetAddCabinetFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetAddCabinetFile started");
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String cabinetId   = request.getParameter("cabId");
+		String cabinetId = request.getParameter("cabId");
 		model.addAttribute("cabinetId", cabinetId);
 		
 		logger.debug("jspGetAddCabinetFile ended");
@@ -468,7 +465,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getCabinetItems.do")
+	@RequestMapping(value="/ezCabinet/getCabinetItems.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String jsonGetCabinetItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetCabinetItems start");
@@ -546,6 +543,52 @@ public class EzCabinetController {
 		resultObj = cabinetRestService.moveItems(request, user.getId(), cabinetId, mode, itemList);
 		
 		logger.debug("jsonMoveItems end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/getCabinetFiles.do")
+	@ResponseBody
+	public String jsonGetCabinetFiles(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonGetCabinetFiles start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId     = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
+		
+		logger.debug("CabinetId: " + cabinetId);
+		
+		JSONObject resultObj = new JSONObject();
+		
+		if (cabinetId.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.getCabinetFiles(request, user.getId(), cabinetId);
+		
+		logger.debug("jsonGetCabinetFiles end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/getFilesBySearching.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonGetFilesBySearching(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonGetFilesBySearching start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String itemTitle     = request.getParameter("title") != null ? request.getParameter("title") : "";
+		
+		logger.debug("Item title: " + itemTitle);
+		
+		JSONObject resultObj = new JSONObject();
+		
+		if (itemTitle.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.getFilesBySearching(request, user.getId(), itemTitle);
+		
+		logger.debug("jsonGetFilesBySearching end");
 		return resultObj.toString();
 	}
 	

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetItemSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationVO;
@@ -176,16 +177,24 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 	public List<CabinetVO> getRelatedCabinetListForUser(Map<String, Object> map) {
 		return (List<CabinetVO>)list("EzCabinetDAO.getRelatedCabinetListForUser", map);
 	}
-
+	
 	public void moveItemsForUser(Map<String, Object> map) {
 		update("EzCabinetDAO.moveItemsForUser", map);
 	}
-
+	
 	public long getTotalItemsSize(Map<String, Object> map) {
 		return (long)select("EzCabinetDAO.getTotalItemsSize", map);
 	}
-
+	
 	public List<CabinetItemVO> getItemsFromIdList(Map<String, Object> map) {
 		return (List<CabinetItemVO>)list("EzCabinetDAO.getItemsFromIdList", map);
+	}
+	
+	public List<CabinetItemSimpleVO> getCabinetFiles(Map<String, Object> map) {
+		return (List<CabinetItemSimpleVO>)list("EzCabinetDAO.getCabinetFiles", map);
+	}
+	
+	public List<CabinetItemSimpleVO> getFilesByTitle(Map<String, Object> map) {
+		return (List<CabinetItemSimpleVO>)list("EzCabinetDAO.getFilesByTitle", map);
 	}
 }
