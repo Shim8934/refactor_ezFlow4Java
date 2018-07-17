@@ -844,7 +844,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			
 			for (int i = 0; i < relatedSize; i++, relationId++) {
 				JSONObject relationObj = (JSONObject)relatedFiles.get(i);
-				int relatedItemId = Integer.parseInt((String)relationObj.get("relatedId"));
+				int relatedItemId = Integer.parseInt((String)relationObj.get("itemId"));
 				
 				CabinetRelationVO relationFile = new CabinetRelationVO(relationId, itemId, relatedItemId, companyId, tenantId);
 				ezCabinetDAO.saveRelationFile(relationFile);

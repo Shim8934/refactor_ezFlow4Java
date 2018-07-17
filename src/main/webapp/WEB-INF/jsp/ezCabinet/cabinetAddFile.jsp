@@ -51,7 +51,7 @@
 			var CabinetAddFile = function() {
 				var rlWindow    = null;
 				var cabinetId   = null;
-				var relatedArr  = null;
+				var relatedArr  = [];
 				
 				function initEvents(cabId) {
 					cabinetId               = cabId;
@@ -98,7 +98,6 @@
 					var fileDivElmt  = document.getElementById("fileDiv");
 					var ulElmt       = fileDivElmt.querySelector("ul[class='ulFiles']");
 					var liChildren   = ulElmt.children;
-					var listRelated  = [];
 					var listFiles    = [];
 						
 					if (liChildren && liChildren.length > 0) {
@@ -106,12 +105,9 @@
 							var liElmt   = liChildren[i];
 							var filePath = liElmt.getAttribute("path");
 							var fileName = liElmt.getAttribute("fname");
-							
 							listFiles.push({path: filePath, name: fileName});
 						}
 					}
-					
-					//Add related files here
 					
 					$.ajax({
 						type: "POST",
@@ -120,7 +116,7 @@
 							"cabinetId"   : cabinetId,
 							"title"       : title,
 							"summary"     : summary,
-							"relatedList" : JSON.stringify(listRelated),
+							"relatedList" : JSON.stringify(relatedArr),
 							"listFile"    : JSON.stringify(listFiles)
 						},
 						dataType: "JSON",
@@ -167,9 +163,15 @@
 				}
 				
 				function saveRelatedFiles(relatedFile) {relatedArr = JSON.parse(JSON.stringify(relatedFile)); showRelatedFiles();}
-				function afterSaveSuccessfully() {alert(CabinetMessages.strSave); closeWindow();}
 				function startUpload() {document.getElementById("fileBttn").click();}
 				function closeWindow() {window.close();}
+				
+				function afterSaveSuccessfully() {
+					alert(CabinetMessages.strSave);
+					var parentWd    = window.opener;
+					if (parentWd && parentWd.CabinetItem) {parentWd.CabinetItem.reload();}
+					closeWindow();
+				}
 				
 				function getOpenWindowfeature(popUpW, popUpH) {
 					var heigth   = window.screen.availHeight;

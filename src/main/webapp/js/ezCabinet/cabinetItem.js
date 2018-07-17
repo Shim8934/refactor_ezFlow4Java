@@ -702,5 +702,8 @@ var CabinetItem = function() {
 		});
 	}
 	
-	return {start : initEvents};
+	return {
+		start  : initEvents,
+		reload : refreshAllFrames
+	};
 }();
