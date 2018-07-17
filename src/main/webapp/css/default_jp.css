@@ -2259,9 +2259,10 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .volumeDL dd{margin:0px; padding:0px; float:right; color:#0470e4;}
 
 .imgbck {background-color: #e8e8ea; border:1px solid #cccccf;}
+/*2018-07-17 김보미 - 일본어일때만 메뉴의 오른쪽 "º"기호의 높이가 맞지 않아 조정 */
 .leftbody .extra span{
 	border-bottom: 1px solid white;
-	background:url('/images/kr/left/left_dot02.gif') no-repeat 25px 14px #fff;
+	background:url('/images/kr/left/left_dot02.gif') no-repeat 25px 16px #fff;
 	padding:12px 5px 0px 40px;
 	cursor:pointer;
 }
