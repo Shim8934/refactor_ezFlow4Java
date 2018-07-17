@@ -67,7 +67,8 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	public JSONObject getCompanyTree(HttpServletRequest request, String userId, String companyId) throws Exception {
 		String url                = "/rest/ezcabinet/company-tree/comp/" + companyId;
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userId", userId);
+		param.put("userId",    userId);
+		param.put("companyId", companyId);
 		JSONObject resultBody = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}

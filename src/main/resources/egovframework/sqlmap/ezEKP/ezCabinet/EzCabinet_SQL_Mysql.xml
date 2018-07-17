@@ -265,40 +265,6 @@
 	<!--***********************************************************************************
 	**                            Organization tree process                              **
 	************************************************************************************-->
-	<select id="EzCabinetDAO.getAllSimpleDeptsOfCompany" resultMap="simpleDeptVO">
-		<![CDATA[
-			select
-				c.cn                                                                 as dept_id,
-				case when #primary# = '1' then c.displayname else c.displayname2 end as dept_name,
-				c.level                                                              as dept_level,
-				c.has_sub                                                            as has_sub
-			from
-			(
-				select
-					b.*,
-					case when (select count(d.cn) from tbl_deptmaster d where b.cn = d.extensionattribute1 and b.tenant_id = d.tenant_id) = 0 then 0 else 1 end as has_sub,
-					#level#                                                                                                                                     as dept_level 
-				from 
-					tbl_deptmaster b
-				where
-					b.cn = #companyId# and b.tenant_id = #tenantId#
-					
-				union
-				
-				select 
-					a.*,
-					case when (select count(e.cn) from tbl_deptmaster e where a.cn = e.extensionattribute1 and e.cn <> e.extensionattribute2 and a.tenant_id = e.tenant_id) = 0 then 0 else 1 end as has_sub,
-					(#level# + 1)                                                                                                                                                                 as dept_level
-				from
-					tbl_deptmaster a
-				where
-					a.extensionattribute1 = #companyId# and a.cn <> a.extensionattribute2 and a.tenant_id = #tenantId#
-			) c
-			order by
-				dept_level, lpad(ifnull(extensionattribute15, 0), 6, 0), displayname
-		]]>
-	</select>
-	
 	<select id="EzCabinetDAO.getDeptPath" parameterClass="Map" resultClass="String">
 		<![CDATA[ select dept_cd_path from tbl_deptmaster where cn = #deptId# and tenant_id = #tenantId# ]]> 
 	</select>

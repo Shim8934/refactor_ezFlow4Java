@@ -143,31 +143,34 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/company-tree/comp/{companyid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getCompanyTree(@PathVariable(value="companyid") String companyId, HttpServletRequest request) {
-		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
-		String deptId     = request.getParameter("deptId") != null ? request.getParameter("deptId") : "";
-		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+	@RequestMapping(value="/rest/ezcabinet/company-tree/comp", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getCompanyTree(HttpServletRequest request) {
+		String userId     = request.getParameter("userId")    != null ? request.getParameter("userId")    : "";
+		String companyId  = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
+		String deptId     = request.getParameter("deptId")    != null ? request.getParameter("deptId")    : "";
+		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")    : "";
 		JSONObject result = new JSONObject();
 		
-		if (companyId.equals("") || serverName.equals("")) {
+		if (userId.equals("") || serverName.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
 			return result;
 		}
 		
-		logger.debug("CompanyId: " + companyId + " || serverName: " + serverName);
+		logger.debug("Company Id: " + companyId + " || serverName: " + serverName + " || User Id: " + userId);
 		
 		try {
 			LoginVO userInfo      = commonUtil.getUserForGw(userId, serverName);
 			String primary        = userInfo.getPrimary();
 			int tenantId          = userInfo.getTenantId();
-			deptId                = deptId.equals("") ? userInfo.getDeptID() : deptId;
-			SimpleDeptVO sCompany = null;
+			deptId                = deptId.equals("")    ? userInfo.getDeptID()    : deptId;
+			companyId             = companyId.equals("") ? userInfo.getCompanyID() : companyId;
+			SimpleDeptVO sCompany = new SimpleDeptVO();
 			
-			/*if (deptId.equals("")) {
-				sCompany = cabinetService.getAllDepts(companyId, 0, primary, tenantId);
+			if (deptId.equals("")) {
+				List<SimpleDeptVO> deptList = cabinetService.getAllSubDepts(companyId, 1, primary, tenantId);
+				sCompany.setSubDepts(deptList);
 			}
 			else {
 				String deptPath  = cabinetService.getDeptPath(deptId, tenantId);
@@ -175,7 +178,7 @@ public class EzCabinetGWController {
 				sCompany         = cabinetService.getSimpleCompany(companyId, 0, primary, tenantId);
 				
 				cabinetService.getAllDepts(sCompany, path, primary, tenantId, 1, 1);
-			}*/
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -209,7 +212,7 @@ public class EzCabinetGWController {
 		
 		try {
 			LoginVO userInfo            = commonUtil.getUserForGw(userId, serverName);
-			List<SimpleDeptVO> subDepts = cabinetService.getAllSubDepts(deptId, level, userInfo.getPrimary(), userInfo.getTenantId());
+			List<SimpleDeptVO> subDepts = cabinetService.getAllSubDepts(deptId, level + 1, userInfo.getPrimary(), userInfo.getTenantId());
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("subNodes", subDepts);

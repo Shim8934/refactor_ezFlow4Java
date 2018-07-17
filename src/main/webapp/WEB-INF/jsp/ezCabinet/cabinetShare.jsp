@@ -65,7 +65,7 @@
 								<table class="cabOrganTbl">
 									<tr>
 										<td class="box">
-											<div id="TreeView">
+											<div id="treeView">
 													
 											</div>
 										</td>
@@ -201,12 +201,12 @@
 			<a class="imgbtn"><span><spring:message code='ezCabinet.t15'/></span></a>
 		</div>
 		
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
+		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetTree.js"           ></script>
 		<script type="text/javascript">
-			var pDeptID =  "<c:out value='${userInfo.deptID}'/>";
-			var pCompanyID = "<c:out value='${userInfo.companyID}'/>";
-			
 			(function() {
+				var companyTree = new CabinetTree();
 				initEvents();
 				
 				function initEvents() {
@@ -216,6 +216,20 @@
 					var listBttns           = cabShareBttnElmt.children;
 					listBttns[0].onclick    = function(e) {saveShareUsers();};
 					listBttns[1].onclick    = function(e) {closeWindow();};
+					
+					//Set Company Tree
+					companyTree.setTreeInfo({
+						treeId     : "treeView",
+						treeType   : "organ",
+						type       : "normal",
+						initialUrl : "/ezCabinet/getCompanyTree.do",
+						extendUrl  : "/ezCabinet/getSubNodes.do",
+						click      : null,
+						dblClick   : null,
+						companyId  : ""
+					});
+
+					companyTree.makeTree();
 				}
 				
 				function closeWindow() {window.close();}
@@ -224,24 +238,6 @@
 					//*Note add function here
 				}
 			})();
-			
-			window.onload = function () {
-				console.log(pDeptID);
-				console.log(pCompanyID);
-				preProcess();
-			}
-			
-			function preProcess() {
-				document.onselectstart = function() {
-					return false;
-				}
-				
-				//getData(pDeptID, pCompanyID);
-			}
-			
-			function renderData(result, currentDept) {
-				
-			}
 			
 		</script>
 	</body>
