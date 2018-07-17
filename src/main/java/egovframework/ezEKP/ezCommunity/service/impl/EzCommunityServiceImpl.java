@@ -3253,8 +3253,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return result;
 	}
 
+	/* 2018-07-17 홍승비 - 사원정보 deptID 파라미터 선택을 위해 companyID 조건 추가 */
 	@Override
-	public List<CommunityOneLineReplyVO> readOneLineReply(String primary, String pBoardID, String pItemID, int tenantID, String offset) throws Exception {
+	public List<CommunityOneLineReplyVO> readOneLineReply(String primary, String pBoardID, String pItemID, String companyID, int tenantID, String offset) throws Exception {
 		logger.debug("readOneLineReply started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -3263,6 +3264,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pItemID", pItemID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		
 		List<CommunityOneLineReplyVO> list = ezCommunityDAO.readOneLineReply(map);
 		
@@ -3808,9 +3810,9 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 //		return list;
 //	}
 	
-	/* 커뮤니티 게시물 조회자 정보 가져올 때 deptID도 함께 가져오도록 수정(companyID 조건 추가 불필요) */
+	/* 커뮤니티 게시물 조회자 정보 가져올 때 deptID도 함께 가져오도록 수정(companyID 조건 추가) */
 	@Override
-	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, int tenantID, int pageNum, int perCount, String offset) throws Exception {
+	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, String companyID, int tenantID, int pageNum, int perCount, String offset) throws Exception {
 		logger.debug("getReaderList started");
 		// 2018-02-06 김보미 
     	if(pageNum == 0){
@@ -3827,6 +3829,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
     	map.put("userID", userID);
     	map.put("lang", lang);
     	map.put("tenantID", tenantID);
+    	map.put("companyID", companyID);
     	
     	/* MySQL */
     	map.put("perCount", perCount);

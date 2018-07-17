@@ -1187,33 +1187,57 @@
 				A.userid,
 				A.content,
 				DATE_FORMAT(DATE_ADD(writedate, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS writedate,
-				IFNULL(MAX(C.DEPTID), '') AS DEPTID
+				DEPTID
 			FROM
 				TBL_COMM_ONELINEREPLY A
 			INNER JOIN
- 				TBL_DEPTMASTER B
+			   ((SELECT
+					D.CN, D.DEPARTMENT as DEPTID,
+					D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+					D.TENANT_ID
+				FROM
+					TBL_USERMASTER D
+				WHERE
+					D.TENANT_ID = #tenantID#
+				AND
+					D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+					
+				UNION ALL
+				
+				(SELECT
+					B.cn, A2.DEPTID,
+					C.EXTENSIONATTRIBUTE2 as COMPANYID,
+					A2.TENANT_ID
+				FROM
+					TBL_USERMASTER B
+				INNER JOIN
+					TBL_ADDJOBMASTER A2
+				ON
+					A2.CN = B.CN
+				AND
+					A2.TENANT_ID = B.TENANT_ID
+				RIGHT JOIN
+					TBL_DEPTMASTER C
+				ON
+					A2.DEPTID = C.CN
+				AND
+					B.TENANT_ID = C.TENANT_ID)) T
 			ON
-				A.TENANT_ID = B.TENANT_ID
+				A.USERID = T.CN
 			AND
-			 	A.COMPANYID = B.EXTENSIONATTRIBUTE2	 	
-			 LEFT OUTER  JOIN
-				TBL_ADDJOBMASTER C
-			ON
-				A.TENANT_ID = C.TENANT_ID
-			AND
-			 	A.USERID = C.CN
-			AND
-				B.CN = C.DEPTID
+				A.TENANT_ID = T.TENANT_ID
 			WHERE
 				A.boardid = #v_pBoardID#
 			AND
 				A.itemid = #v_pItemID#
 			AND
 				A.tenant_id = #tenantID#
+			AND
+				T.COMPANYID = #companyID#
 			GROUP BY
 				A.USERID, A.REPLYID
 			ORDER BY 
-				writedate ASC, C.DEPTID DESC
+				writedate ASC
 		]]>
 	</select>
 	
@@ -1235,29 +1259,53 @@
 				usertitle,
 				usertitle2,
 				DATE_FORMAT(READDATE ,'%Y-%m-%d %H:%i:%s') AS READDATE,
-				IFNULL(MAX(C.DEPTID), '') AS DEPTID
+				DEPTID
 			FROM
 				TBL_COMM_ITEM_READ A
-			JOIN
-				tbl_deptmaster B
+			INNER JOIN
+			   ((SELECT
+					D.CN, D.DEPARTMENT as DEPTID,
+					D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+					D.TENANT_ID
+				FROM
+					TBL_USERMASTER D
+				WHERE
+					D.TENANT_ID = #tenantID#
+				AND
+					D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+					
+				UNION ALL
+				
+				(SELECT
+					B.cn, A2.DEPTID,
+					C.EXTENSIONATTRIBUTE2 as COMPANYID,
+					A2.TENANT_ID
+				FROM
+					TBL_USERMASTER B
+				INNER JOIN
+					TBL_ADDJOBMASTER A2
+				ON
+					A2.CN = B.CN
+				AND
+					A2.TENANT_ID = B.TENANT_ID
+				RIGHT JOIN
+					TBL_DEPTMASTER C
+				ON
+					A2.DEPTID = C.CN
+				AND
+					B.TENANT_ID = C.TENANT_ID)) T
 			ON
-				A.COMPANYID = B.EXTENSIONATTRIBUTE2
+				A.USERID = T.CN
 			AND
-				A.TENANT_ID = B.TENANT_ID
-			LEFT OUTER JOIN
-				tbl_addjobmaster C
-			ON
-				A.TENANT_ID = C.TENANT_ID
-			AND
-				A.USERID = C.CN
-			AND
-			    B.CN = C.DEPTID
+				A.TENANT_ID = T.TENANT_ID
 			WHERE
 				A.BOARDID = #boardID#
 			AND
 				A.ITEMID = #itemID#
 			AND
 				A.TENANT_ID = #tenantID#
+			AND
+				T.COMPANYID = #companyID#
 		   	AND
 		   		A.USERID <> ( SELECT 
 		   							WRITERID 
@@ -1270,7 +1318,7 @@
 			GROUP BY
 				ITEMID, USERID
 			ORDER BY
-				ReadDate DESC, C.DEPTID DESC
+				ReadDate DESC
  		   	LIMIT 
       			#start#, #perCount#
 		]]>
@@ -1380,7 +1428,7 @@
 			<![CDATA[
 				SELECT
 					A.*,
-					IFNULL(MAX(C.DEPTID), '') AS DEPTID,
+					DEPTID,
 					CASE WHEN #primary# = '1' THEN T.DEPTNAME ELSE T.DEPTNAME2 END AS DEPTNAME
 				FROM
 					TBL_C_CLUBUSER A
@@ -1392,20 +1440,42 @@
 					A.COMPANYID = T.COMPANYID
 				AND
 					T.userid = RTRIM(A.c_id)
-				JOIN
-					TBL_DEPTMASTER B
+				INNER JOIN
+				   ((SELECT
+						D.CN, D.DEPARTMENT as DEPTID,
+						D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+						D.TENANT_ID
+					FROM
+						TBL_USERMASTER D
+					WHERE
+						D.TENANT_ID = #tenantID#
+					AND
+						D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+						
+					UNION ALL
+					
+					(SELECT
+						B.cn, A2.DEPTID,
+						C.EXTENSIONATTRIBUTE2 as COMPANYID,
+						A2.TENANT_ID
+					FROM
+						TBL_USERMASTER B
+					INNER JOIN
+						TBL_ADDJOBMASTER A2
+					ON
+						A2.CN = B.CN
+					AND
+						A2.TENANT_ID = B.TENANT_ID
+					RIGHT JOIN
+						TBL_DEPTMASTER C
+					ON
+						A2.DEPTID = C.CN
+					AND
+						B.TENANT_ID = C.TENANT_ID)) T2
 				ON
-					A.COMPANYID = B.EXTENSIONATTRIBUTE2
+					A.C_ID = T2.CN
 				AND
-					A.TENANT_ID = B.TENANT_ID
-				LEFT OUTER JOIN
-					TBL_ADDJOBMASTER C
-				ON
-					A.TENANT_ID = C.TENANT_ID
-				AND
-					A.C_ID = C.CN
-				AND
-				    B.CN = C.DEPTID
+					A.TENANT_ID = T2.TENANT_ID
 				WHERE
 					RTRIM(c_clubno) = #v_code#
 				AND
@@ -1414,6 +1484,8 @@
 					permit <> 0
 				AND
 					A.tenant_id = #tenantID#
+				AND
+					T2.companyid = #companyID#
 				GROUP BY
 					C_CLUBNO, C_ID
 				ORDER BY
@@ -1426,32 +1498,54 @@
 				<![CDATA[
 					SELECT
 						A.*,
-						IFNULL(MAX(D.DEPTID), '') AS DEPTID,
+						DEPTID,
 						CASE WHEN #primary# = '1' THEN B.DEPTNAME ELSE B.DEPTNAME2 END AS DEPTNAME
 					FROM
 						TBL_C_CLUBUSER A
 					JOIN
-						TBL_C_MEMBERINFO B
+						TBL_C_MEMBERINFO T
 					ON
-						A.TENANT_ID = B.TENANT_ID
+						A.TENANT_ID = T.TENANT_ID
 					AND
-						A.COMPANYID = B.COMPANYID
+						A.COMPANYID = T.COMPANYID
 					AND
-						B.userid = RTRIM(A.c_id)
-					JOIN
-						TBL_DEPTMASTER C
+						T.userid = RTRIM(A.c_id)
+					INNER JOIN
+					   ((SELECT
+							D.CN, D.DEPARTMENT as DEPTID,
+							D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+							D.TENANT_ID
+						FROM
+							TBL_USERMASTER D
+						WHERE
+							D.TENANT_ID = #tenantID#
+						AND
+							D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+							
+						UNION ALL
+						
+						(SELECT
+							B.cn, A2.DEPTID,
+							C.EXTENSIONATTRIBUTE2 as COMPANYID,
+							A2.TENANT_ID
+						FROM
+							TBL_USERMASTER B
+						INNER JOIN
+							TBL_ADDJOBMASTER A2
+						ON
+							A2.CN = B.CN
+						AND
+							A2.TENANT_ID = B.TENANT_ID
+						RIGHT JOIN
+							TBL_DEPTMASTER C
+						ON
+							A2.DEPTID = C.CN
+						AND
+							B.TENANT_ID = C.TENANT_ID)) T2
 					ON
-						A.COMPANYID = C.EXTENSIONATTRIBUTE2
+						A.C_ID = T2.CN
 					AND
-						A.TENANT_ID = C.TENANT_ID
-					LEFT OUTER JOIN
-						TBL_ADDJOBMASTER D
-					ON
-						A.TENANT_ID = D.TENANT_ID
-					AND
-						A.C_ID = D.CN
-					AND
-					    C.CN = D.DEPTID
+						A.TENANT_ID = T2.TENANT_ID
 					WHERE
 						RTRIM(A.c_clubno) = #v_code#
 					AND
@@ -1460,6 +1554,8 @@
 						A.permit <> 0
 					AND
 						A.tenant_id = #tenantID#
+					AND
+						T2.companyid = #companyID#
 					GROUP BY
 						A.C_CLUBNO, A.C_ID
 					ORDER BY
@@ -1471,7 +1567,7 @@
 				<![CDATA[
 					SELECT
 						A.*,
-						IFNULL(MAX(C.DEPTID), '') AS DEPTID,
+						DEPTID,
 						CASE WHEN #primary# = '1' THEN T.DEPTNAME ELSE T.DEPTNAME2 END AS DEPTNAME
 					FROM
 						TBL_C_CLUBUSER A
@@ -1483,26 +1579,50 @@
 						A.COMPANYID = T.COMPANYID
 					AND
 						T.userid = RTRIM(A.c_id)
-					JOIN
-						TBL_DEPTMASTER B
+					INNER JOIN
+					   ((SELECT
+							D.CN, D.DEPARTMENT as DEPTID,
+							D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+							D.TENANT_ID
+						FROM
+							TBL_USERMASTER D
+						WHERE
+							D.TENANT_ID = #tenantID#
+						AND
+							D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+							
+						UNION ALL
+						
+						(SELECT
+							B.cn, A2.DEPTID,
+							C.EXTENSIONATTRIBUTE2 as COMPANYID,
+							A2.TENANT_ID
+						FROM
+							TBL_USERMASTER B
+						INNER JOIN
+							TBL_ADDJOBMASTER A2
+						ON
+							A2.CN = B.CN
+						AND
+							A2.TENANT_ID = B.TENANT_ID
+						RIGHT JOIN
+							TBL_DEPTMASTER C
+						ON
+							A2.DEPTID = C.CN
+						AND
+							B.TENANT_ID = C.TENANT_ID)) T2
 					ON
-						A.COMPANYID = B.EXTENSIONATTRIBUTE2
+						A.C_ID = T2.CN
 					AND
-						A.TENANT_ID = B.TENANT_ID
-					LEFT OUTER JOIN
-						TBL_ADDJOBMASTER C
-					ON
-						A.TENANT_ID = C.TENANT_ID
-					AND
-						A.C_ID = C.CN
-					AND
-					    B.CN = C.DEPTID
+						A.TENANT_ID = T2.TENANT_ID
 					WHERE
 						RTRIM(c_clubno) = #v_code#
 					AND
 						permit <> 0
 					AND
 						A.tenant_id = #tenantID#
+					AND
+						T2.companyid = #companyID#
 					GROUP BY
 						C_CLUBNO, C_ID
 					ORDER BY

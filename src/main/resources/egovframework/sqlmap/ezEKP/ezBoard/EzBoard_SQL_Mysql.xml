@@ -886,7 +886,7 @@
 		ON
 			A.USERID = T.CN
 		AND
-			A.TENANT_ID = T.TENANT_ID           
+			A.TENANT_ID = T.TENANT_ID
 	   	WHERE
 	   		A.tenant_id = #tenantID#
 		AND

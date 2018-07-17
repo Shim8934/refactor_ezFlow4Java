@@ -78,6 +78,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_TENANTID", tenantID);
 		map.put("v_PQUERY", userID);
 		
+		
 		/* 2018-07-12 홍승비 - PRI 제약을 가지는 CompanyID 칼럼의 데이터 삽입 판단용 분기 추가(차후 companyID 통합 시 제거) */
 		try {
 			// 해당 테이블이 companyID 칼럼을 가지고 있는 경우
