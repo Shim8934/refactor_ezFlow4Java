@@ -760,6 +760,7 @@
 			(#menuItemUUID108#,#companyID#,#companyName#,2,2,#tenantID#),
 			(#menuItemUUID109#,#companyID#,#companyName#,2,2,#tenantID#),
 			(#menuItemUUID110#,#companyID#,#companyName#,2,2,#tenantID#),
+			(#menuItemUUID111#,#companyID#,#companyName#,2,2,#tenantID#),
 			(#topMenuLogoKoUUID#,#companyID#,#companyName#,2,2,#tenantID#),
       		(#topMenuLogoJaUUID#,#companyID#,#companyName#,2,2,#tenantID#),
       		(#topMenuLogoEnUUID#,#companyID#,#companyName#,2,2,#tenantID#)
