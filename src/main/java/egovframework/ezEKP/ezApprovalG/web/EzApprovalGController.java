@@ -7797,4 +7797,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("nonElecRecTempCabSwitch ended.");
 	}
+	
+	/* 2018-07-17 천성준
+	 * 비전자문서 등록 후, 바로 기안자 문서함에서 삭제
+	 * */
+	@RequestMapping(value = "/ezApprovalG/setNonElecRecDocDel.do")
+	@ResponseBody
+	public void setNonElecRecDocDel(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("setNonElecRecDocDel started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		
+		ezApprovalGService.setNonElecRecDocDelFlag(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("setNonElecRecDocDel ended.");
+	}
 }

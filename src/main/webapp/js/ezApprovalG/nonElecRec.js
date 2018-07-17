@@ -46,6 +46,11 @@ function InitCode() {
 
         g_NodesRcdgAVType = SelectNodes(result, "CODELIST/RECORDINGAVTYPE/CODE");
         g_NodesPhotoAVType = SelectNodes(result, "CODELIST/PHOTOAVTYPE/CODE");
+        
+        document.getElementById("selRegisterType").selectedIndex = 1; // 일반문서 접수로 고정
+        document.getElementById("selRegisterType").disabled = "disabled"; // 변경불가능
+        
+        selRegisterType_onchange();
     }
 }
 /*
@@ -251,6 +256,7 @@ function nonElecRecInfoInit() {
 function setNonElecRecInfo(ret) {
 	if (isIE()) {
 		var objNodes, count;
+		var title = "비전자문서";
 		var xmldom = new ActiveXObject("Microsoft.XMLDOM");
 		xmldom.async = false;
 		xmldom.loadXML(ret);
@@ -273,12 +279,20 @@ function setNonElecRecInfo(ret) {
 		if (HwpCtrl.CheckFieldExist("nonElecRec_SepAttachYN"))
 			HwpCtrl.SetFieldText("nonElecRec_SepAttachYN", "");
 		
+		if (HwpCtrl.CheckFieldExist("doctitle"))
+			HwpCtrl.SetFieldText("doctitle", "");
+
+		if (HwpCtrl.CheckFieldExist("docnumber"))
+			HwpCtrl.SetFieldText("docnumber", "");
+			
 		objNodes = xmldom.selectNodes("NONELECRECINFO/NONELECREC");
 		
 		HwpCtrl.SetFieldText("nonElecRec_Title", getNodeText(objNodes.item(0).childNodes(6)));
 		HwpCtrl.SetFieldText("nonElecRec_RegDate", getNodeText(objNodes.item(0).childNodes(4)));
 		HwpCtrl.SetFieldText("nonElecRec_ExeDate", getNodeText(objNodes.item(0).childNodes(11)));
 		HwpCtrl.SetFieldText("nonElecRec_RegType", regTypePicker(getNodeText(objNodes.item(0).childNodes(3))));
+		HwpCtrl.SetFieldText("doctitle", getNodeText(objNodes.item(0).childNodes(6)) + " " + title);
+		HwpCtrl.SetFieldText("docnumber", getNodeText(objNodes.item(0).childNodes(16)));
 		
 		objNodes = xmldom.selectNodes("NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW");
 		count = objNodes.length;
@@ -951,5 +965,16 @@ function GetElectronicRecFlag() {
         return "1";
     else if (document.getElementsByName("rdoElectronicFlag")[1].checked)
         return "2";
+}
+
+function RemoveEndNonElecRecDoc(DocID) {
+	$.ajax({
+       type : "POST",
+       dataType : "text",
+       async : false,
+       url : "/ezApprovalG/setNonElecRecDocDel.do",
+       data : {
+               docID  : DocID
+       }});
 }
 

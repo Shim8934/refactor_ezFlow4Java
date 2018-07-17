@@ -14516,10 +14516,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						nonElecRecDocXML.getElementsByTagName("AUDIOVISUALRECINFO").item(0).getTextContent().trim(),
 						nonElecRecDocXML.getElementsByTagName("AUDIOVISUALRECSUMMARY").item(0).getTextContent().trim()
 						);
-				
-				if (strSQL.equals("TRUE")) {
-					ezApprovalGDAO.setEndNonElecRecDocDel(map);
-				}
 			} else {
 				strSQL = regDocToCabinet("0", docID, docSN, 
 						docXML.getElementsByTagName("CABINETID").item(0).getTextContent().trim(), 
@@ -14640,14 +14636,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			String docSN = docXML.getElementsByTagName("DOCNUMCODE").item(0).getTextContent().trim();
 			
-			if (docSN != null && !docSN.equals("")) {
-				docSN = docSN.substring(docSN.length() - 6);
-				
-				int pDocSN = Integer.parseInt(docSN);
-				
-				docSN = String.valueOf(pDocSN);
-			} else {
-				docSN = "";
+			if (nonElecRecXML.trim().equals("")) {
+				if (docSN != null && !docSN.equals("")) {
+					docSN = docSN.substring(docSN.length() - 6);
+					
+					int pDocSN = Integer.parseInt(docSN);
+					
+					docSN = String.valueOf(pDocSN);
+				} else {
+					docSN = "";
+				}
 			}
 			
 			String hasAttach = "0";
@@ -26800,5 +26798,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("saveSpecialInfoNonElecRec ended");
         
 		return "TRUE";
+	}
+	
+	public void setNonElecRecDocDelFlag(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("setNonElecRecDocDelFlag ended");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_docID",  docID);
+		map.put("v_companyID",  companyID);
+		map.put("v_tenantID",  tenantID);
+		
+		ezApprovalGDAO.setEndNonElecRecDocDel(map);
+		
+		logger.debug("setNonElecRecDocDelFlag ended");
 	}
 }

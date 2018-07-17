@@ -2688,13 +2688,13 @@
 								<tr id="trDeliveryNo" style="display: none;">
 						 	        <th><spring:message code='ezApprovalG.t1069'/></th><!-- 문서과 배부번호 -->
 									<td>
-							       		<input type="text" name="txtDeliveryNo" id="txtDeliveryNo" class="text" style="Width:100%;" maxlength="6">
+							       		<input type="text" name="txtDeliveryNo" id="txtDeliveryNo" class="text" style="Width:100%;" maxlength="5">
 								    </td>
 								</tr>
 								<tr id="trOriginSN" style="display: none;">
 								    <th><spring:message code='ezApprovalG.t866'/></th><!-- 생산기관등록번호 -->
 									<td>
-							        	<input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="13">
+							        	<input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="9">
 								    </td>
 								</tr>
 								<c:if test="${guBun ne '1'}">

@@ -1696,15 +1696,10 @@
 			function btnNonElecRec_onclick() {
 				if (isIE()) {
 					var url = "/ezApprovalG/draftuiHWP.do?formURL=";
-//				    var form = "/fileroot/0/files/upload_approvalG/S907000/form/2018000074.hwp";
-				    var form = "/files/upload_approvalG/form/2018000074.hwp";
+				    var form = "/files/upload_approvalG/form/2018999999.hwp";
 				    var docInfo = "&draftFlag=DRAFT&formDocType=003&susinSN=0&docState=&listType=4&aprState=&isTmpDoc=&nonElecRec=Y";
-                } else {
-				   	var url = "/ezApprovalG/draftui.do?formURL=";
-				   	var form = "/fileroot/0/files/upload_approvalG/S907000/form/2018000021.mht";
-				   	var docInfo = "&draftFlag=DRAFT&formDocType=003&susinSN=0&docState=&listType=1&aprState=&isTmpDoc=&nonElecRec=Y";
                 }
-			   	window.open(url + form + docInfo, "", GetOpenWindowfeature(1144, 750));
+			   	window.open(url + form + docInfo, "", GetOpenWindowfeature(1145, 1000));
 			}
 		    
 		</script>
@@ -1730,7 +1725,7 @@
 				<!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" ></li> -->
 				<li id="tbtnApprove" style="DISPLAY:none"><span id="btnApprove" onclick="return  btnApprove_onclick('0')" ><spring:message code='ezApprovalG.t1'/></span></li>
 				<li id="tbtnApprove1" style="DISPLAY:none"><span id="btnApprove1"  onclick ="return  btnApprove_onclick('1')" ><spring:message code='ezApprovalG.t1739'/></span></li>
-				<li id="tbtnNonElecRec" style="DISPLAY:none"><span id="btnNonElecRec" onclick="return btnNonElecRec_onclick()" >비전자등록</span></li><%-- 비전자문서 등록 --%>
+				<li id="tbtnNonElecRec" style="DISPLAY:none"><span id="btnNonElecRec" onclick="return btnNonElecRec_onclick()" >비전자문서등록</span></li><%-- 비전자문서 등록 --%>
 				<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>
 				<li id="tbtnApprove2" style="DISPLAY:none"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
 				<li id="tbtnReceipt"  style="DISPLAY:none"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>

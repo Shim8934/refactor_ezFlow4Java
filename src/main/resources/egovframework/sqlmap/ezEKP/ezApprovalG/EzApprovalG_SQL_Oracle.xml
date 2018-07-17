@@ -24771,20 +24771,11 @@
     	SET 
     		DELFLAG = '1' 
     	WHERE 
-    		DOCID = (SELECT 
-    					ORGDOCID 
-    				FROM 
-    					TBL_ENDAPRDOCINFO 
-    				WHERE 
-    					DOCID = #v_DOCID# 
-    				AND 
-    					TENANT_ID = #v_TENANTID# 
-    				AND 
-    					COMPANYID = #companyID#) 
+    		DOCID = #v_docID#  
     	AND 
-    		TENANT_ID = #v_TENANTID# 
+    		TENANT_ID = #v_tenantID# 
     	AND 
-    		COMPANYID = #companyID#
+    		COMPANYID = #v_companyID#
     </update>
     <select id="EzApprovalG.getOrgDocID" parameterClass="Map" resultClass="String">
     	SELECT 
