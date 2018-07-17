@@ -1693,6 +1693,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		StringBuilder sb = new StringBuilder();
 		String primary = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+		
+		logger.debug("userInfo.getLang()    ::    " + userInfo.getLang());
 
 		// 여기서 회원리스트를 받아온다. CommunityCClubUserVO에 deptID, deptName 필드를 추가했다.
 		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, primary, keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId());
@@ -5884,6 +5886,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("v_s_radio", sRadio.toUpperCase());
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
+		
+		logger.debug("primary          ::             " + primary);
 		
 		List<CommunityCClubUserVO> list = ezCommunityDAO.commViewMemberGet1(map);
 		

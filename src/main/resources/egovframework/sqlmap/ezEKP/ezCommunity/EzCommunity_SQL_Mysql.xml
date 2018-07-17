@@ -1489,7 +1489,7 @@
 				GROUP BY
 					C_CLUBNO, C_ID
 				ORDER BY
-					c_indate DESC, C.DEPTID DESC
+					c_indate DESC
 			]]>
 		</isEqual>
 		
@@ -1499,7 +1499,7 @@
 					SELECT
 						A.*,
 						DEPTID,
-						CASE WHEN #primary# = '1' THEN B.DEPTNAME ELSE B.DEPTNAME2 END AS DEPTNAME
+						CASE WHEN #primary# = '1' THEN T.DEPTNAME ELSE T.DEPTNAME2 END AS DEPTNAME
 					FROM
 						TBL_C_CLUBUSER A
 					JOIN
@@ -1549,7 +1549,7 @@
 					WHERE
 						RTRIM(A.c_clubno) = #v_code#
 					AND
-						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END LIKE CONCAT('%', #v_keyword#, '%')
+						CASE WHEN #primary# = '1' THEN T.username ELSE T.username2 END LIKE CONCAT('%', #v_keyword#, '%')
 					AND
 						A.permit <> 0
 					AND
@@ -1559,7 +1559,7 @@
 					GROUP BY
 						A.C_CLUBNO, A.C_ID
 					ORDER BY
-						A.c_indate DESC, D.DEPTID DESC
+						A.c_indate DESC
 				]]>
 			</isEqual>
 			
@@ -1626,7 +1626,7 @@
 					GROUP BY
 						C_CLUBNO, C_ID
 					ORDER BY
-						c_indate DESC, C.DEPTID DESC
+						c_indate DESC
 				]]>
 			</isNotEqual>
 		</isNotEqual>
