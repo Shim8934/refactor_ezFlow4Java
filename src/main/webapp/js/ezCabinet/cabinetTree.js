@@ -64,7 +64,10 @@ function CabinetTree() {
 		}
 	}
 	
-	function getInitalData(params) {makeAjaxCall(params, "GET", _initialUrl, makeTree, null, true, null);}
+	function getInitalData(params) {
+		if (params && _treeType == "organ") {params.companyId = _companyId}
+		makeAjaxCall(params, "GET", _initialUrl, makeTree, null, true, null);
+	}
 	
 	function makeTree(data) {
 		var nodesTree   = data.tree;
@@ -193,6 +196,7 @@ function CabinetTree() {
 	}
 	
 	function makeSubTree(data, divElmt) {
+		console.log(data);
 		var resultData = data.subNodes;
 		
 		if (resultData == null) {alert(CabinetMessages.strTreeErr); return;}

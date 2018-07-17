@@ -141,7 +141,7 @@ public class EzCabinetController {
 		
 		if (resultObj.get("status").toString().equals("ok")) {
 			JSONObject cabinet = (JSONObject) resultObj.get("cabinet");
-			model.addAttribute("cabinetName", cabinet.get("cabinetName"));
+			model.addAttribute("cabinet", cabinet);
 		}
 		
 		JSONObject configObj = cabinetRestService.getUserPreviewConfig(request, user.getId());
@@ -152,7 +152,6 @@ public class EzCabinetController {
 		}
 		
 		model.addAttribute("cabinetId", cabinetId);
-		model.addAttribute("mycabinet", 1);
 		logger.debug("jspGetMyCabinet ended");
 		return "ezCabinet/cabinetItem";
 	}
@@ -175,12 +174,6 @@ public class EzCabinetController {
 		String companyId       = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		if (companyId.equals("")) {
-			resultObj.put("code", 1);
-			resultObj.put("status", "error");
-			return resultObj.toString();
-		}
-		
 		resultObj = cabinetRestService.getCompanyTree(request, userInfo.getId(), companyId);
 		
 		return resultObj.toString();
@@ -189,18 +182,21 @@ public class EzCabinetController {
 	@RequestMapping(value="/ezCabinet/getSubNodes.do")
 	@ResponseBody
 	public String jsonGetSubNodes(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
+		logger.debug("jsonGetSubNodes started");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String deptId          = request.getParameter("deptId") != null ? request.getParameter("deptId") : "";
-		String level           = request.getParameter("level") != null ? request.getParameter("level") : "";
+		String deptId          = request.getParameter("nodeId") != null ? request.getParameter("nodeId") : "";
+		String level           = request.getParameter("level")  != null ? request.getParameter("level")  : "";
 		JSONObject resultObj   = new JSONObject();
 		
 		if (deptId.equals("") || level.equals("")) {
+			logger.debug("Parameter error");
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
 		resultObj = cabinetRestService.getDeptSubNodes(request, userInfo.getId(), deptId, level);
+		logger.debug("jsonGetSubNodes ended");
 		
 		return resultObj.toString();
 	}
@@ -363,9 +359,10 @@ public class EzCabinetController {
 	public String jsonRelatedCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonRelatedCabinetTree start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String currentNode   = request.getParameter("cabinetNode") != null ? request.getParameter("cabinetNode") : "";
 		JSONObject resultObj = new JSONObject();
 		
-		resultObj            = cabinetRestService.getRelatedCabinetTree(request, user.getId());
+		resultObj            = cabinetRestService.getRelatedCabinetTree(request, user.getId(), currentNode);
 		
 		logger.debug("jsonRelatedCabinetTree end");
 		return resultObj.toString();

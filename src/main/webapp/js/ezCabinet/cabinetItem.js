@@ -125,6 +125,7 @@ var CabinetItem = function() {
 		});
 		cabinetTable.setTableType("cabinet");
 		cabinetTable.setTableElement("tblCabinetList", "id");
+		cabinetTable.setClickHandler(itemClickHandler);
 		cabinetTable.setCallBack(searchCallBack);
 		cabinetTable.setRenderFunct(renderCabinetTable);
 		
@@ -165,14 +166,13 @@ var CabinetItem = function() {
 		movlistBttns[2].onclick = function(e) {toggleMovePopup();};
 		
 		var libttns = document.getElementById("mainmenu").firstElementChild.children;
-		libttns[0].firstElementChild.onclick  = function(e) {addFile();};
-		libttns[2].firstElementChild.onclick  = function(e) {deleteFileConfirm();};
-		libttns[3].firstElementChild.onclick  = function(e) {moveFileConfirm();};
-		libttns[5].firstElementChild.onclick  = function(e) {searchCallBack();};
-		libttns[6].firstElementChild.onclick  = function(e) {toggleSearchPanel();};
-		libttns[8].firstElementChild.onclick  = function(e) {openSharePopup();};
-		libttns[9].firstElementChild.onclick  = function(e) {getFileDetail();};
-		libttns[10].firstElementChild.onclick = function(e) {addRelatedCabinet();};
+		libttns[0].firstElementChild.onclick = function(e) {addFile();};
+		libttns[2].firstElementChild.onclick = function(e) {deleteFileConfirm();};
+		libttns[3].firstElementChild.onclick = function(e) {moveFileConfirm();};
+		libttns[5].firstElementChild.onclick = function(e) {searchCallBack();};
+		libttns[6].firstElementChild.onclick = function(e) {toggleSearchPanel();};
+		libttns[8].firstElementChild.onclick = function(e) {openSharePopup();};
+		libttns[9].firstElementChild.onclick = function(e) {getFileDetail();};
 		
 		$("#Sdatepicker").datepicker({
 			changeMonth: true,
@@ -196,11 +196,6 @@ var CabinetItem = function() {
 		
 		startSearchCabinet("1");
 		preProcessing();
-		
-		var leftFrameBody = window.parent.frames["left"].document.body;
-		var leftFogPanel  = leftFrameBody.querySelector("div[class='blockLeft'");
-		
-		if (leftFogPanel) {leftFrameBody.style.overflow = "auto"; leftFrameBody.removeChild(leftFogPanel);}
 	}
 	
 	/* Search Panel */
@@ -582,7 +577,6 @@ var CabinetItem = function() {
 		if (!cabinetId) {alert(CabinetMessages.strError); return;}
 		if (getSelectedItems().length == 0) {alert(CabinetMessages.strItemErr); return;}
 		
-		//Show folder Tree then toggle popup
 		toggleMovePopup();
 	}
 	
@@ -619,7 +613,6 @@ var CabinetItem = function() {
 	}
 	
 	function moveFile(mode) {
-		//Check selected node
 		var moveTreeElmt = document.getElementById("moveCabTree");
 		var selectedNode = moveTreeElmt.querySelector("span[class='selectedNode']");
 		if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
@@ -667,12 +660,6 @@ var CabinetItem = function() {
 		var sharePopup = window.open("/ezCabinet/shareCabinet.do?cabId=" + cabinetId, "shareFile", getOpenWindowfeature(1125, 700));
 	}
 	
-	function addRelatedCabinet() {
-		//* blank 2018.07.09
-		var cabId  = document.getElementById("cabInfo").getAttribute("role");
-		window.open("/ezCabinet/cabinetAddRelated.do", "addRelated", getOpenWindowfeature(600, 690));
-	}
-	
 	function getFileDetail() {window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 690));}
 	
 	function getSelectedItems() {
@@ -685,6 +672,15 @@ var CabinetItem = function() {
 		}
 		
 		return result;
+	}
+	
+	function itemClickHandler(trObj) {
+		var itemId   = trObj.getAttribute("role");
+		var crrClass = trObj.className;
+		
+		if (crrClass == "bnkCabSelect") {
+			//Add preview code here
+		}
 	}
 	
 	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {

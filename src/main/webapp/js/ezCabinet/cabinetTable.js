@@ -8,6 +8,7 @@ function CabinetTable(data) {
 	this.setCallBack      = setCallBack;
 	this.getOrderInfo     = getOrderInfo;
 	this.setRenderFunct   = setRenderFunct;
+	this.setClickHandler  = setClickHandler;
 	
 	//private variables
 	var _tableElmt       = null;
@@ -18,15 +19,15 @@ function CabinetTable(data) {
 	var _dataSource      = null;
 	var _tableType       = "";
 	var _callBackSearch  = null;
+	var _clickHandler    = null;
 	var _renderFunction  = null;
 	var _cellInfo        = {};
 	var _selectedCell    = null;
 	
 	//private functions
 	function getOrderInfo() {return _cellInfo;}
-	
 	function setRenderFunct(renderFunctName) {_renderFunction = renderFunctName;}
-	
+	function setClickHandler(clickHandler) {_clickHandler = clickHandler;}
 	function setCallBack(callBackName) {_callBackSearch = callBackName;}
 	
 	function setTableElement(identify, type) {
@@ -157,6 +158,40 @@ function CabinetTable(data) {
 		}
 	}
 	
+	function clickRowType2(event) {
+		var currentRow = event.currentTarget;
+		var crrClass   = currentRow.className;
+		var rowClass   = crrClass == _selectedClass ? _unselectClass : _selectedClass;
+		
+		if (event.ctrlKey) {toggleRow(currentRow, rowClass); _lastSelectedRow = currentRow;}
+		
+		if (!event.ctrlKey && !event.shiftKey) {
+			var listOfRows = document.getElementsByClassName(_selectedClass);
+			
+			if (listOfRows.length > 1) {
+				toggleAllRow(false);
+				toggleRow(currentRow, _selectedClass);
+			}
+			else {
+				toggleAllRow(false);
+				toggleRow(currentRow, _selectedClass);
+			}
+			
+			_lastSelectedRow = currentRow;
+		}
+		
+		if (event.shiftKey) {
+			var currentIdx = currentRow.rowIndex;
+			switch (checkFirstSelect()) {
+				case 0: toggleAllRow(false); selectRowsBetweenIndexes([_lastSelectedRow.rowIndex, currentIdx]); break;
+				case 1: toggleRow(currentRow, _selectedClass); _lastSelectedRow = currentRow; break;
+				case 2: toggleAllRow(false); selectRowsBetweenIndexes([0, currentIdx]); break;
+			}
+		}
+		
+		if (_clickHandler != null) {_clickHandler(_lastSelectedRow);}
+	}
+	
 	function checkFirstSelect() {
 		var listOfSelectedRows = document.getElementsByClassName(_selectedClass);
 		if (_lastSelectedRow == null) {return listOfSelectedRows.length == 0 ? 1 : 2;}
@@ -207,7 +242,7 @@ function CabinetTable(data) {
 	// process table function
 	function renderTable() {
 		switch (_tableType) {
-			case 'cabinet'  : _renderFunction(_dataSource, _unselectClass, _tableDataElmt, getChecked, clickRow); break;
+			case 'cabinet'  : _renderFunction(_dataSource, _unselectClass, _tableDataElmt, getChecked, clickRowType2); break;
 			case 'capacity' : _renderFunction(_dataSource, _unselectClass, _tableDataElmt, getChecked, clickRow); break;
 		}
 	}

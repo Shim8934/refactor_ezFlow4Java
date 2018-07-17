@@ -114,6 +114,7 @@
 				function getAdminPage()  {window.open("/admin/ezCabinet/cabinetAdminMain.do", "", "");}
 				function getConfigPage() {window.parent.frames["right"].location.href = "/ezCabinet/cabinetConfig.do";}
 				function reloadTree(currentNode) {cabinetTree.makeTree({cabinetNode : currentNode});}
+				function reloadRelatedTree(currentNode) {subTree.makeTree({cabinetNode : currentNode});}
 				
 				function getManagement() {
 					var mycabinetElmt  = document.getElementById("cabinetTree");
@@ -196,6 +197,7 @@
 				
 				return {
 					reloadTree : reloadTree,
+					relateTree : reloadRelatedTree,
 					draw       : drawVolume
 				};
 			}();

@@ -106,16 +106,6 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		return ezCabinetDAO.getAllSimpleSubDepts(map);
 	}
 	
-	private List<SimpleDeptVO> getAllSimpleDeptsOfCompany(String companyId, int level, String primary, int tenantId) {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("companyId",  companyId);
-		map.put("primary",    primary);
-		map.put("level",      level);
-		map.put("tenantId",   tenantId);
-		
-		return ezCabinetDAO.getAllSimpleDeptsOfCompany(map);
-	}
-
 	@Override
 	public List<CabinetModuleVO> getModuleListForUser(String userId, String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();

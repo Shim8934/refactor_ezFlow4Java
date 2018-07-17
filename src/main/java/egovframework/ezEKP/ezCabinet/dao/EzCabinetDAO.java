@@ -17,10 +17,6 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 @SuppressWarnings("unchecked")
 @Repository("EzCabinetDAO")
 public class EzCabinetDAO extends EgovAbstractDAO {
-	public List<SimpleDeptVO> getAllSimpleDeptsOfCompany(Map<String, Object> map) {
-		return (List<SimpleDeptVO>)list("EzCabinetDAO.getAllSimpleDeptsOfCompany", map);
-	}
-	
 	public String getDeptPath(Map<String, Object> map) {
 		return (String)select("EzCabinetDAO.getDeptPath", map);
 	}

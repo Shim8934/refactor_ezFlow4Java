@@ -67,7 +67,8 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	public JSONObject getCompanyTree(HttpServletRequest request, String userId, String companyId) throws Exception {
 		String url                = "/rest/ezcabinet/company-tree/comp/" + companyId;
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userId", userId);
+		param.put("userId",    userId);
+		param.put("companyId", companyId);
 		JSONObject resultBody = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
@@ -236,9 +237,11 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	}
 	
 	@Override
-	public JSONObject getRelatedCabinetTree(HttpServletRequest request, String userId) throws Exception {
+	public JSONObject getRelatedCabinetTree(HttpServletRequest request, String userId, String currentNode) throws Exception {
 		String url                = "/rest/ezcabinet/relatedcabinet/id/" + userId;
-		JSONObject resultBody     = getJsonResult(url, null, request, "get", null);
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("mode", currentNode);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
 	
