@@ -930,7 +930,8 @@
 	
 		<h1><spring:message code='ezTask.t84' /><span id="mailBoxInfo"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
-		    <select id="formId" name="searchCheck" style="height:29px;">
+		    <!-- 2018-07-17 구해안 라디오박스 검색창 select box로 변경 및 스타일 다른 모듈과 같도록 수정-->
+		    <select id="formId" name="searchCheck" style="width:80px; height:27px; border-color: #c8c8c8;">
 		    	<option id="Radio2" value="title"><spring:message code='ezTask.t118' /></option>
 		    	<option id="Radio1" value="personName"><spring:message code='ezTask.t2005' /></option>
 		    </select>
