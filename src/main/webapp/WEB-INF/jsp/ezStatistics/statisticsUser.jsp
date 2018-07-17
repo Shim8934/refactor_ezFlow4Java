@@ -7,7 +7,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="<spring:message code='ezStatistics.e2'/>" type="text/css" />
 	    <link rel="stylesheet" href="/js/ezStatistics/js/jquery.jqplot.min.css" type="text/css">
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 	    <link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
 	    <script type="text/javascript" src="<spring:message code='ezStatistics.e1'/>"></script>

@@ -3,8 +3,8 @@
 
 * { position:relative;}
 html { height:100%; }
-body {height:100%; margin:0; color:#444444; font-family:"맑은고딕", Malgun Gothic, "굴림", Gullim,"돋움", Dotum, verdana, Arial, sans-serif;}
-input,button { margin:0; outline:none; color:#444444; font-family:"맑은고딕", Malgun Gothic, "굴림", Gullim,"돋움", Dotum, verdana, Arial, sans-serif; }
+body {height:100%; margin:0; color:#444444; font-family:Malgun Gothic, Meiryo UI;}
+input,button { margin:0; outline:none; color:#444444; font-family:Malgun Gothic, Meiryo UI; }
 img { border:0 none; vertical-align:top; }
 hr,caption,legend  { display:none; }
 address { font-style:normal; }
@@ -35,7 +35,7 @@ article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,addre
 
 .saveid {float:right; margin:0px 10px 0px 0px; padding:0px;}
 .saveid input[type="checkbox"] {display:none;}
-.saveid input[type="checkbox"] + label {color:#000000; font-size:12px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif; cursor:pointer;}
+.saveid input[type="checkbox"] + label {color:#000000; font-size:12px; font-family:Malgun Gothic, Meiryo UI; cursor:pointer;}
 .saveid input[type="checkbox"] + label span {display:inline-block;width:14px;height:12px;margin:-2px 5px 0 0;vertical-align:middle;background:url(/images/kr/login/bg_check.png) left top no-repeat;cursor:pointer;}
 .saveid input[type="checkbox"]:checked + label span {background:url(/images/kr/login/bg_check.png) -14px top no-repeat;}
 

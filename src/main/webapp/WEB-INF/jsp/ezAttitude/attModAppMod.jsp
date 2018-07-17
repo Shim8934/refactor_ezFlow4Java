@@ -289,7 +289,7 @@
 	                </tr>
 	            </table>
 	            <div class="btnpositionNew" id="menuTable">
-	            	<a class="imgbtn"><span onclick="modify()"><spring:message code='ezAttitude.t163'/></span></a>
+	            	<a class="imgbtn"><span onclick="modify()"><spring:message code='ezAttitude.t16'/></span></a>
 	                <a class="imgbtn" style="display:none;"><span onclick="del()"><spring:message code='ezAttitude.t164'/></span></a>
 	            </div>
 	        </div>

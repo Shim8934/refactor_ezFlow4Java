@@ -488,7 +488,7 @@
 
                 g_nodeCount++;
 
-                var nodeHtml = "<div style='height:16px;overflow-y:hidden;white-space:nowrap;'><nobr>";
+                var nodeHtml = "<div style='height:22px;overflow-y:hidden;white-space:nowrap;'><nobr>";
                 for (var j = 0; j < depth; j++) {
                     if (g_nodeArray["depth"][nodeIdx].charAt(j) == "1")
                         nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "' width='16' height='16' >");
@@ -569,7 +569,7 @@
 
                 g_nodeCount++;
 
-                var nodeHtml = "<div style='height:16px;overflow-y:hidden;white-space:nowrap;' >";
+                var nodeHtml = "<div style='height:22px;overflow-y:hidden;white-space:nowrap;' >";
                 for (var j = 0; j < depth; j++) {
                     if (g_nodeArray["depth"][nodeIdx].charAt(j) == "1")
                         nodeHtml += ("<img src='" + g_baseImage["dot_continue"] + "'>");
@@ -968,7 +968,7 @@
                            
 
                 var mydepth = depth;
-                var nodeHtml = "<div style='white-space: nowrap;'><div style='height:16px;'><nobr>";
+                var nodeHtml = "<div style='white-space: nowrap;'><div style='height:22px;'><nobr>";
 
                 for (var j = 0; j < depth.length; j++) {
                     if (depth.charAt(j) == "1")
@@ -1087,7 +1087,7 @@
                 g_nodeCount++;
                 var mydepth = depth;                
                 var childNode = nodeXML.item(i);
-                var nodeHtml = "<div><div style='height:16px;overflow-y:hidden;white-space:nowrap;'>";
+                var nodeHtml = "<div><div style='height:22px;overflow-y:hidden;white-space:nowrap;'>";
 
                 for (var j = 0; j < depth.length; j++) {
                     if (depth.charAt(j) == "1")

@@ -8,7 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 	<script type="text/javascript" src="/js/ezApprovalG/Common_Function.js"></script>
     <script type="text/javascript" id="clientEventHandlersJS">
