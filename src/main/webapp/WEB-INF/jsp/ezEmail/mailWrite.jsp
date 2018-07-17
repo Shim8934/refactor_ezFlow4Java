@@ -1726,6 +1726,25 @@
 						.appendTo(ul);
 			};
 		})
+		
+		function addRelatedCabinet() {
+	    		//* blank 2018.07.13
+	    		//* var cabId  = document.getElementById("cabInfo").getAttribute("role");
+		    	window.open("/ezCabinet/cabinetAddRelated.do", "addRelated", getOpenWindowfeature(600, 690));
+	    	}
+		    
+		    function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+				return feature;
+			}
 	    
 	    </script>
         <c:if test="${isCrossBrowser != true}">
@@ -1758,6 +1777,8 @@
 	                            <spring:message code='ezEmail.t331' /></span></li>
 	                        <li><span onclick="Option_onClick()" id="Span1">
 	                            <spring:message code='ezEmail.t353' /></span></li>
+	                        <li><span id="addCabinet" onclick="addRelatedCabinet()">
+	                            <spring:message code='ezCabinet.t01'/></span></li>    
 	                    </ul>
 	                    <ul style="float:right;margin-right:50px">
 	                    	<li class="sel securemail" style="background:none; border:none; padding:0px;padding-top:4px; display:none;">

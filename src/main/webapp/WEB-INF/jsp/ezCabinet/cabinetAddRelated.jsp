@@ -41,8 +41,8 @@
 					myCabinetTree.setTreeInfo({
 						treeId     : "cabinetMgTree",
 						treeType   : "cabinet",
-						type       : "normal",
-						initialUrl : "/ezCabinet/getMyCabinetTree.do",
+						type       : "list",
+						initialUrl : "/ezCabinet/getAllCabinetTree.do",
 						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
 						click      : null,
 						dblClick   : null
