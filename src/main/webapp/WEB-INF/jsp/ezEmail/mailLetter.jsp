@@ -11,7 +11,6 @@
 	    <link rel="stylesheet" href="/js/dist/themes/default/style.min.css" />
 	    <link rel="stylesheet" href="/css/ezEmail/style.css" />	
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<link rel="stylesheet" href="/css/default_kr.css" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script src="/js/dist/jstree.min.js"></script>
@@ -20,7 +19,6 @@
 	    <style>
 			.imgbtn {
 			    vertical-align: middle;
-			    margin-top: 3px;
 			    height:22px
 			}
 			
@@ -109,8 +107,8 @@
 				<th colspan="2" align="center" style="border:1px solid #ddd;padding:0px">
 					<div class="lmtitle lmLetterBoxTitle" style="border-bottom:0px;">
 						<input type="text" name="" id="lmSearchInput" class="searchInput" onkeydown="letterSearchEnter();" placeholder="<spring:message code="ezEmail.t10"/>" style="border-color:#ddd">
-						<a id="lmSearch" class="imgbtn" onclick="letterSearch()"><span style="line-height:23px"><spring:message code='ezEmail.letter1'/></span></a>
-						<a id="lmSearchReset" class="imgbtn" onclick="inputReset()"><span style="line-height:23px"><spring:message code='ezBoard.t999035'/></span></a>
+						<a id="lmSearch" class="imgbtn" onclick="letterSearch()"><span style="line-height:22px"><spring:message code='ezEmail.letter1'/></span></a>
+						<a id="lmSearchReset" class="imgbtn" onclick="inputReset()"><span style="line-height:22px"><spring:message code='ezBoard.t999035'/></span></a>
 					</div>	
 				</th>
 			</tr>
