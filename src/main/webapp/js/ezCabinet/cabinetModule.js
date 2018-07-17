@@ -120,7 +120,17 @@
 		}
 	}
 	
-	function saveSuccessfully() {alert(CabinetMessages.strSave); setListModules();}
+	function saveSuccessfully() {
+		alert(CabinetMessages.strSave);
+		setListModules();
+		var leftFrame = window.parent.parent.frames["left"];
+		console.log("WTFFFF");
+		if (leftFrame && leftFrame.CabUserLeft) {
+			if (leftFrame.document.getElementById("relatedCabinet").className == "on") {
+				leftFrame.CabUserLeft.relateTree("1");
+			}
+		}
+	}
 	
 	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode) {
 		$.ajax({

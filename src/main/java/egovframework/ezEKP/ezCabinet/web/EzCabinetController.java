@@ -141,7 +141,7 @@ public class EzCabinetController {
 		
 		if (resultObj.get("status").toString().equals("ok")) {
 			JSONObject cabinet = (JSONObject) resultObj.get("cabinet");
-			model.addAttribute("cabinetName", cabinet.get("cabinetName"));
+			model.addAttribute("cabinet", cabinet);
 		}
 		
 		JSONObject configObj = cabinetRestService.getUserPreviewConfig(request, user.getId());
@@ -152,7 +152,6 @@ public class EzCabinetController {
 		}
 		
 		model.addAttribute("cabinetId", cabinetId);
-		model.addAttribute("mycabinet", 1);
 		logger.debug("jspGetMyCabinet ended");
 		return "ezCabinet/cabinetItem";
 	}
@@ -363,9 +362,10 @@ public class EzCabinetController {
 	public String jsonRelatedCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonRelatedCabinetTree start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String currentNode   = request.getParameter("cabinetNode") != null ? request.getParameter("cabinetNode") : "";
 		JSONObject resultObj = new JSONObject();
 		
-		resultObj            = cabinetRestService.getRelatedCabinetTree(request, user.getId());
+		resultObj            = cabinetRestService.getRelatedCabinetTree(request, user.getId(), currentNode);
 		
 		logger.debug("jsonRelatedCabinetTree end");
 		return resultObj.toString();

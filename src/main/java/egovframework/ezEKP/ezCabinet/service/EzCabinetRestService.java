@@ -40,7 +40,7 @@ public interface EzCabinetRestService {
 	public JSONObject getMyCabinetTree(HttpServletRequest request, String currentNode, String userId) throws Exception;
 	public JSONObject getAllCabinetTree(HttpServletRequest request, String currentNode, String userId) throws Exception;
 	public JSONObject getCabinetSubNodes(HttpServletRequest request, String userId, String nodeId) throws Exception;
-	public JSONObject getRelatedCabinetTree(HttpServletRequest request, String userId) throws Exception;
+	public JSONObject getRelatedCabinetTree(HttpServletRequest request, String userId, String currentNode) throws Exception;
 	
 	//User cabinet management
 	public JSONObject addCabinet(HttpServletRequest request, String userId, String parentId, String cabinetName1, String cabinetName2) throws Exception;

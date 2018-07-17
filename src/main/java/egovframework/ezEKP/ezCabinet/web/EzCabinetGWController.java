@@ -700,10 +700,11 @@ public class EzCabinetGWController {
 	
 	@RequestMapping(value="/rest/ezcabinet/relatedcabinet/id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getRelatedCabinetTree(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
-		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name") : "";
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		String mode       = request.getParameter("mode")   != null ? request.getParameter("mode")   : "";
 		JSONObject result = new JSONObject();
 		
-		logger.debug("UserId: " + userId + " || serverName: " + serverName);
+		logger.debug("UserId: " + userId + " || serverName: " + serverName + " || Mode: " + mode);
 		
 		if (serverName.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
@@ -716,7 +717,10 @@ public class EzCabinetGWController {
 			LoginVO userInfo                  = commonUtil.getUserForGw(userId, serverName);
 			List<CabinetSimpleVO> relatedList = cabinetService.getRelatedCabinetListForUser(userInfo);
 			
-			result.put("node", relatedList.get(0).getCabinetId());
+			if (!mode.equals("1")) {
+				result.put("node", relatedList.get(0).getCabinetId());
+			}
+			
 			result.put("tree", relatedList);
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -12,7 +12,7 @@
 	</head>
 	<body class="mainbody">
 		<h1 id="cabInfo">
-			<c:out value='${cabinetName}'/>
+			<c:out value='${cabinet.cabinetName}'/>
 			<span id="cabinetInfo" class="cabTtlInf"></span>
 			<span class="topSearchSpan">
 				<input name="searchCheck" id="radio1" type="radio" value="title" checked><label for="radio1">&nbsp;<spring:message code='ezCabinet.t51'/></label>
@@ -35,7 +35,6 @@
 				<li><img src="/images/i_bar.gif"></li>
 				<li><a><span><spring:message code='ezCabinet.t50'/></span></a></li>
 				<li><a><span>파일상세</span></a></li>
-				<li><a><span><spring:message code='ezCabinet.t125'/></span></a></li>
 				<li id="right">
 					<img src="${config.previewMode == 'off' ? '/images/kr/cm/btn_onnoframe.gif'     : '/images/kr/cm/btn_noframe.gif'}"     class="btnimg cabinet" id="preViewNone"  >
 					<img src="${config.previewMode == 'h'   ? '/images/kr/cm/btn_onbottomframe.gif' : '/images/kr/cm/btn_bottomframe.gif'}" class="btnimg cabinet" id="preViewBottom">
@@ -56,7 +55,7 @@
 						<th class="cabSearchTh"><spring:message code='ezCabinet.t01'/></th>
 						<td class="cabSearchTd">
 							<div>
-								<span id="cabinetName" class="cabSearchName"><c:out value='${cabinetName}'/></span>
+								<span id="cabinetName" class="cabSearchName"><c:out value='${cabinet.cabinetName}'/></span>
 								<span class="searchDetail"><input type="checkbox" id="dCheckBox"><span><spring:message code='ezCabinet.t91'/></span></span>
 							</div>
 						</td>
