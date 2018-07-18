@@ -741,7 +741,12 @@ function ListView() {
                     objTd.style.color = "RED";
                 }
 
-                objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
+                /* 2018-07-16 홍승비 - 체크박스를 사용하지 않는 게시판검색 기능 분기 위치 수정 */
+                if (SelectSingleNodeValue(oHeaders[j], "WIDTH") == 0) {
+                	continue;
+                } else {
+                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
+                }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TITLE") {
                     objTd.style.margin = "0";
@@ -827,19 +832,14 @@ function ListView() {
                     objTd.style.textAlign = "center";
                 }
                 
-                /* 2018-07-16 홍승비 - 체크박스를 사용하지 않는 게시판검색 기능을 위해 분기 추기 */
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ITEMID") {
-                	if (SelectSingleNodeValue(oHeaders[j], "WIDTH") == 0) {
-                		continue;
-                	} else {
-	                    var _TDCheckBox_Sub = document.createElement("INPUT");
-	                    _TDCheckBox_Sub.type = "checkbox";
-	                    _TDCheckBox_Sub.id = strValue + "," + getNodeText(oDatas[2]) + ";";
-						_TDCheckBox_Sub.setAttribute("style", "width: 13px; height: 13px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle");
-						
-	                    _TDCheckBox_Sub.onclick = new Function("chk_onselect(this)");
-	                    objTd.appendChild(_TDCheckBox_Sub);
-                	}
+                    var _TDCheckBox_Sub = document.createElement("INPUT");
+                    _TDCheckBox_Sub.type = "checkbox";
+                    _TDCheckBox_Sub.id = strValue + "," + getNodeText(oDatas[2]) + ";";
+					_TDCheckBox_Sub.setAttribute("style", "width: 13px; height: 13px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle");
+					
+                    _TDCheckBox_Sub.onclick = new Function("chk_onselect(this)");
+                    objTd.appendChild(_TDCheckBox_Sub);
                 }
                 else {
                     if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERNAME') > -1) {

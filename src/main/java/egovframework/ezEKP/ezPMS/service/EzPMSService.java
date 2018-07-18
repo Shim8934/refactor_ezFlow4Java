@@ -29,7 +29,7 @@ import egovframework.ezEKP.ezPMS.vo.TaskMemberVO;
 
 public interface EzPMSService {
 
-	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status, Map<String, Object> search, String lang, String position, String companyId);
+	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, Map<String, Object> search, String lang, String position, String companyId);
 	
 	public Long addNewProject(Map<String, Object> map);
 	
@@ -270,5 +270,5 @@ public interface EzPMSService {
 	
 	public void updateMemberSchedules(Map<String, Object> map) throws Exception;
 
-	public HashSet<String> getHolidayList(String planStartDate, String planEndDate, int tenantId, String companyId);
+	public HashSet<String> getHolidayList(String planStartDate, String planEndDate, int tenantId, String companyId, String lang);
 }

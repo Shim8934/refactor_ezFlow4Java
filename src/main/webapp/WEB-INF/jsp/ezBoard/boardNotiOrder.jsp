@@ -143,9 +143,9 @@
             </td>
             <td>
                 <div style="padding:0px 5px">
-                    <a class="imgbtn imgbck"><span onclick="movenoti(1)" style="font-family: 'Gulim', 'arial', 'verdana'">△</span></a>
+                    <a class="imgbtn imgbck"><span onclick="movenoti(1)">△</span></a>
                     <br />
-                    <a class="imgbtn imgbck"><span onclick="movenoti(2)" style="font-family: 'Gulim', 'arial', 'verdana'">▽</span></a>
+                    <a class="imgbtn imgbck"><span onclick="movenoti(2)">▽</span></a>
                 </div>
             </td>
         </tr>

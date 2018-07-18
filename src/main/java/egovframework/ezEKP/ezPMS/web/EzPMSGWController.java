@@ -114,7 +114,6 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			String status = request.getParameter("status");
 			String deptId = info.getDeptId();
 			String searchByName = request.getParameter("searchByProjectName");
 			String searchByUser = request.getParameter("searchByUser");
@@ -144,7 +143,6 @@ public class EzPMSGWController {
 			search.put("projectSort", request.getParameter("projectSort"));
 			search.put("listNumber", request.getParameter("listNumber"));
 			search.put("listProjectStatus", request.getParameter("listProjectStatus"));
-			search.put("listCount", request.getParameter("listCount"));
 			search.put("currentPage", request.getParameter("currentPage"));
 			search.put("startCount", request.getParameter("startCount"));
 			search.put("viewType", request.getParameter("viewType"));
@@ -164,10 +162,10 @@ public class EzPMSGWController {
 			// admin 파라미터는 관리자모드에서만 넘어온다. 이 때 userId를 ""로 넘겨서 모든 프로젝트 검색이 가능하도록
 			// 한다.
 			if (request.getParameter("admin") != null && request.getParameter("admin").equals("true")) {
-				projectList = ezPMSService.getProjectList(info.getTenantId(), "", deptId, status, search, lang,
+				projectList = ezPMSService.getProjectList(info.getTenantId(), "", deptId, search, lang,
 						request.getParameter("position"), companyId);
 			} else {
-				projectList = ezPMSService.getProjectList(info.getTenantId(), userId, deptId, status, search, lang,
+				projectList = ezPMSService.getProjectList(info.getTenantId(), userId, deptId, search, lang,
 						request.getParameter("position"), companyId);
 			}
 
@@ -325,7 +323,7 @@ public class EzPMSGWController {
 					LOGGER.debug("projectId : " + projectIdList[i] + ", role : " + userRole);
 
 					if (userRole != 1) {
-						roleCheck = "reject";
+						roleCheck = "rejected";
 					}
 				}
 			}
@@ -483,7 +481,7 @@ public class EzPMSGWController {
 					LOGGER.debug("projectId : " + projectIdList[i] + ", role : " + userRole);
 
 					if (userRole != 1) {
-						roleCheck = "reject";
+						roleCheck = "rejected";
 					}
 				}
 			} else {
@@ -920,7 +918,7 @@ public class EzPMSGWController {
 			taskLog.setUserDeptname(userDeptname);
 			taskLog.setUserDeptname2(userDeptname2);
 			taskLog.setTenantId(tenantId);
-			taskLog.setProjectId(Long.parseLong(request.getParameter("projectId")));
+			taskLog.setProjectId(projectId);
 			taskLog.setLogStatus(Integer.parseInt(request.getParameter("logStatus")));
 			taskLog.setLogContent(request.getParameter("logContent"));
 			taskLog.setLogDate(request.getParameter("logDate"));
@@ -974,13 +972,23 @@ public class EzPMSGWController {
 			search.put("location", request.getParameter("location"));
 			search.put("startCount", request.getParameter("startCount"));
 			search.put("listNumber", request.getParameter("listNumber"));
-			search.put("listCount", request.getParameter("listCount"));
-			search.put("orderWhat", request.getParameter("orderWhat"));
-			search.put("orderHow", request.getParameter("orderHow"));
 			search.put("taskId", request.getParameter("taskId"));
 			search.put("groupId", request.getParameter("groupId"));
 			search.put("searchByStatus", request.getParameter("searchByStatus"));
 
+			//header 정렬 프로젝트 순서
+			if (request.getParameter("orderWhat") == null || request.getParameter("orderWhat").equals("")) {
+				search.put("orderWhat", "init");
+			} else {
+				search.put("orderWhat", request.getParameter("orderWhat"));
+			}
+			
+			if (request.getParameter("orderHow") == null || request.getParameter("orderHow").equals("")) {
+				search.put("orderHow", "asc");
+			} else {
+				search.put("orderHow", request.getParameter("orderHow"));
+			}
+			
 			if (searchByContent != null) {
 				searchByContent = searchByContent.replace("\\", "\\\\");
 				searchByContent = searchByContent.replace("%", "\\%");
@@ -1072,7 +1080,7 @@ public class EzPMSGWController {
 			project.setOverview(searchByOverview);
 			project.setHeadManagerName(searchByUser);
 
-			String deptId = request.getParameter("deptId");
+			String deptId = info.getDeptId();
 
 			LOGGER.debug("status : " + project.getStatus() + ", deptId : " + deptId);
 			int projectListCount;
@@ -1859,7 +1867,7 @@ public class EzPMSGWController {
 			endCal.setTime(endDate);
 			
 			// 공휴일 리스트를 가져와서 Calendar클래스로 변환
-			Set<String> holidayList = ezPMSService.getHolidayList(planStartDate, planEndDate, tenantId, companyId);
+			Set<String> holidayList = ezPMSService.getHolidayList(planStartDate, planEndDate, tenantId, companyId, lang);
 			Set<Calendar> holidaySet = new HashSet<Calendar>();
 			
 			holidayList.forEach(holiday -> {
@@ -3061,7 +3069,7 @@ public class EzPMSGWController {
 			project.setProjectMember(ezPMSService.getProjectMemberList(projectId, 4, lang, info.getTenantId(), isGantt));
 			project.setWeight(ezPMSService.getProjectWeight(projectId, info.getTenantId()));
 			
-			HashSet<String> holidayList = ezPMSService.getHolidayList(project.getPlanStartDate(), project.getPlanEndDate(), info.getTenantId(), info.getCompanyId());
+			HashSet<String> holidayList = ezPMSService.getHolidayList(project.getPlanStartDate(), project.getPlanEndDate(), info.getTenantId(), info.getCompanyId(), lang);
 			
 			JSONObject data = new JSONObject();
 			data.put("project", project);
@@ -4183,7 +4191,7 @@ public class EzPMSGWController {
 			ProjectBoardVO boardVO = ezPMSService.getBoardDetail(info.getTenantId(), param);
 
 			int authority = ezPMSService.getUserProjectRole(userId, info.getTenantId(), projectId,
-					request.getParameter("deptId"));
+					info.getDeptId());
 
 			LOGGER.debug("authority : " + authority);
 

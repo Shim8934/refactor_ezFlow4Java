@@ -64,8 +64,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	private EzPMSDAO ezPMSDAO;
 
 	@Override
-	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, String status,
-			Map<String, Object> search, String lang, String position, String companyId) {
+	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, Map<String, Object> search, String lang, String position, String companyId) {
 		LOGGER.debug("[SERVICE] getProjectList started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2950,7 +2949,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		// 공휴일 리스트를 가져와서 Calendar클래스로 변환
-		Set<String> holidayList = getHolidayList(planStartDate, planEndDate, tenantId, companyId);
+		Set<String> holidayList = getHolidayList(planStartDate, planEndDate, tenantId, companyId, lang);
 		Set<Calendar> holidaySet = new HashSet<Calendar>();
 		
 		holidayList.forEach(holiday -> {
@@ -3332,7 +3331,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public HashSet<String> getHolidayList(String planStartDate, String planEndDate, int tenantId, String companyId) {
+	public HashSet<String> getHolidayList(String planStartDate, String planEndDate, int tenantId, String companyId, String lang) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
@@ -3348,7 +3347,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		HashSet<String> lunarHolidayMap = new HashSet<String>();
 		
 		//고정공휴일 & 사용자 정의 공휴일 불러오기
-		map.put("lang", ""); //parameter추가
+		map.put("lang", lang); //parameter추가
+		
+		if (lang.equals("3")) {
+			map.put("country", "jap");
+		} else {
+			map.put("country", "kor");
+		}
+		
 		List<ProjectHolidayVO> holidayList = ezPMSDAO.getCustomHoliday(map);
 		HashSet<String> holidayDateList = new HashSet<String>();
 		

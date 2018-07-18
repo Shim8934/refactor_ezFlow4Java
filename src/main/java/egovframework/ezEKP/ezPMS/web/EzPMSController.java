@@ -866,15 +866,6 @@ public class EzPMSController {
 					param.put("listCount", logListCount);
 					param.put("startCount", paging.getStartCount());
 					
-					//header 정렬 프로젝트 순서
-					if (param.get("orderWhat") == null || param.get("orderWhat").equals("")) {
-						param.put("orderWhat", "init");
-					}
-					
-					if (param.get("orderHow") == null || param.get("orderHow").equals("")) {
-						param.put("orderHow", "asc");
-					}
-					
 					JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
 					String status = result.get("status").toString();
 		

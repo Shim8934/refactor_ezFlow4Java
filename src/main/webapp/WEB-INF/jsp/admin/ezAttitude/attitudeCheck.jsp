@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code = 'ezAttitude.t5' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
+		<link rel="stylesheet" href="<spring:message code = 'main.e15' />" type="text/css"/>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
 	    <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />

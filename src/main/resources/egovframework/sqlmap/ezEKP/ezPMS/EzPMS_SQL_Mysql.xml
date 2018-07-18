@@ -4124,6 +4124,8 @@
 					HOLIDAY_NAME$lang$ AS HOLIDAY_NAME
 				FROM
 					TBL_PMS_FIXEDHOLIDAY
+				WHERE
+					COUNTRY = #country#
 		]]>
 	</select>
 </sqlMap>

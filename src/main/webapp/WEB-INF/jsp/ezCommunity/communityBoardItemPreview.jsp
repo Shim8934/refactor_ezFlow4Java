@@ -191,7 +191,7 @@
 		    }
 		</script>
 	</head>
-	<body class="popup" style="background-image: none; word-wrap: break-word; font-family: Gulim;" onresize="ResizeDiv()">
+	<body class="popup" style="background-image: none; word-wrap: break-word;" onresize="ResizeDiv()">
 		<table class="layout">
 	        <tr>
 	        	<td style="height:20px">

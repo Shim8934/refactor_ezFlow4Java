@@ -807,7 +807,7 @@
 	        }
 	        function InsertReceiver(pListView) {
 	            try {
-	                if (inputTabButton.getAttribute("class") == "on") {
+	                if (inputTabButton.children[0].getAttribute("class") == "tabon") {
 	                    inputAddress();
 	                    return;
 	                }

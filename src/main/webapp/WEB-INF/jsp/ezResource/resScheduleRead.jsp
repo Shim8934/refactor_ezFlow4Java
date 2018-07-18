@@ -97,7 +97,7 @@
 	            iframeStyle += "UL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
 	            iframeStyle += "OL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
 	            iframeStyle += "LI { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-	            iframeStyle += "BODY { MARGIN-RIGHT: 8px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic }";
+	            iframeStyle += "BODY { MARGIN-RIGHT: 8px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic, Meiryo UI; }";
 	            iframeStyle += "TABLE TD { text-indent: 0px }";
 	            iframeStyle += "BLOCKQUOTE { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
 	            iframeStyle += "</style>";	            
@@ -266,7 +266,7 @@
 	            iframeStyle += "UL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
 	            iframeStyle += "OL { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
 	            iframeStyle += "LI { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-	            iframeStyle += "BODY { MARGIN-RIGHT: 8px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic }";
+	            iframeStyle += "BODY { MARGIN-RIGHT: 8px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic, Meiryo UI }";
 	            iframeStyle += "TABLE TD { text-indent: 0px }";
 	            iframeStyle += "BLOCKQUOTE { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
 	            iframeStyle += "</style>";
