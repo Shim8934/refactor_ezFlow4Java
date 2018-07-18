@@ -176,6 +176,9 @@
 				})
 				
 			$("#toList").on("click", function() {
+					if(mode === "none") {
+						mode = "all";
+					}
 					window.location.href = '/ezLadder/ladderMain.do?&mode=' + mode + '&currPage=' + currPage + '&searchSelect=' 
 							+ searchSelect + '&searchInput=' + searchInput + '&sort=' + sort + '&sortFlag=' + sortFlag;
 				});
