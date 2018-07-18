@@ -11,9 +11,6 @@
 		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<link href="/css/default_kr.css" rel="stylesheet" type="text/css">
-		<style>
-		</style>
 		<script language="JavaScript" type="text/javascript" ID="clientEventHandlersJS">
 		  	var pBrdID = "${pBrdID}";
 		   	var pItemNo = "${itemNo}";
@@ -69,6 +66,11 @@
 	<body class="popup">
 		<form id="Form1" method="post"> 
 			<h1><spring:message code='ezQuestion.t262' /></h1>
+			<div id="close">
+	            <ul>
+	                <li><span onclick="window.close()"></span></li>
+	            </ul>
+	        </div>
   			<table class="content"> 
     			<tr > 
       				<th><spring:message code='ezQuestion.t255' /></th> 
@@ -83,8 +85,8 @@
   				<spring:message code='ezQuestion.t266' /><br> 
         		<spring:message code='ezQuestion.t267' />
         	</div>
-			<div class="btnposition"><input type="button" name="Submit" value="<spring:message code='ezQuestion.t268' />" onclick="btn_Delete()"> 
-        		<input type="button" name="Submit2" value="<spring:message code='ezQuestion.t269' />" onclick="window.close()">
+			<div class="btnpositionNew">
+				<input type="button" name="Submit" value="<spring:message code='ezQuestion.t268' />" onclick="btn_Delete()">
         	</div>
 		</form> 
 	</body>

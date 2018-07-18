@@ -7,7 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />		
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css" />		
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
@@ -100,9 +100,9 @@
 		        }
 		
 		        _RowObject = obj;
-		        obj.childNodes.item(0).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(1).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(2).style.backgroundColor = "#f0f6ff";
+		        obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(1).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(2).style.backgroundColor = "#edf4fd";
 		    }
 		
 		    function event_dbclick() {}

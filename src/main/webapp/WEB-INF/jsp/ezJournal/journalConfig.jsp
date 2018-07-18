@@ -20,7 +20,7 @@
 		}
 			
 		.selectTR{
-			background-color: #f0f6ff;
+			background-color: #edf4fd;
 		}
 	</style>
 	
@@ -365,9 +365,8 @@
 					</span>		
            		</td>
            	</tr>
-       	</table>       
-   		<br />
-   		<div style="width:480px;text-align:center;">      
+       	</table>
+   		<div style="width:466px;" class="btnpositionJsp">      
        		<a class="imgbtn" onclick="saveListEnv()"><span><spring:message code="ezCircular.t25" /></span></a>
        		<a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code="ezCircular.t26" /></span></a>
    		</div>
@@ -399,8 +398,7 @@
     			<td>&nbsp;<spring:message code="ezJournal.t123"/></td>
     		</tr>
     	</table>
-    	<br/>
-    	<div style="width:480px;text-align:center;">      
+    	<div style="width:466px;" class="btnpositionJsp">      
        		<a class="imgbtn" onclick="saveMailAlert()"><span><spring:message code="ezCircular.t25" /></span></a>
    		</div>
 	</div>	
@@ -447,10 +445,8 @@
 						</div>
 					</td>
 				</tr>
-			
-			</table>
-		 	<br />
-			<div style="width:650px;text-align:center;">      
+			</table>		 	
+			<div style="width:650px;" class="btnpositionJsp">      
 				<a class="imgbtn" onclick="saveAuthEnv();"><span><spring:message code="ezCircular.t25" /></span></a>
 	       		<a class="imgbtn" onclick="authCancel();"><span><spring:message code="ezCircular.t26" /></span></a>
 			</div>

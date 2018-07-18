@@ -291,21 +291,34 @@
 	        
 	     	// 전달, 회신 시 보낸 시간
 	        function sentDateView(msg) {
-			    if (sentDateMsg != "") {
-			    	
-			    	$("body").prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
-			    	$(".sentDateStr").css({
-			    		"padding" : "5px 0",
-				        "margin-bottom" : "10px",
-				        "font-size" : "14px",
-				        "background" : "rgba(255,250,205,0.5)"
+				$(".previewmail_info", parent.document).find(".sentDateStr").remove();
+     			parent.sentDateChk = false;
+
+	     		if (sentDateMsg != "") {
+	     			$(".previewmail_info", parent.document).prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
+			    	$(".previewmail_info", parent.document).find(".sentDateStr").css({
+			    		"height" : "37px",
+			        	"box-sizing" : "border-box",
+			        	"background" : "#fdfec1",
+		        		"border-top" : "1px solid #e9ea94",
+			        	"line-height" : "37px",
+			    		"width" : "100%",
+			        	"padding" : "0px 0px 0px 10px",
+			    		"margin" : "0px",
+			    		"font-family" : "Gulim",
+			    		"font-size" : "12px",
+			    		"color" : "#333"
 			    	});
+
+	     			parent.sentDateChk = true;
 			    }
-	        }
+	     		
+		    	parent.mailPrevSentDateChk();
+	     	}
 	    </script> 
 	</head>
 
-	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">
+	<body style="margin:10px 13px" onload="javascript:window_onload()">
 		<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' onclick='Smaller()' style='cursor:pointer;' />
 		<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; margin-left: -4px;' />
 		<span style="float:right;">

@@ -7,7 +7,7 @@
 		<title><spring:message code='ezOrgan.t00004' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <style>
 	    	.box {
 	    		border-right:0px;
@@ -467,7 +467,7 @@
 	            }
 	        }
 		    
-		    var m_strColorSelect = "#f0f6ff";
+		    var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -1040,10 +1040,16 @@
 			            </CELL>
 			        </ROW>   
                     </c:if>
-					<ROW>
-			            <CELL>
+                    <ROW>
+			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.t303'/></VALUE>
 			                <DATA1>wf</DATA1>
+			            </CELL>
+			        </ROW>
+                    <ROW>
+			            <CELL>            
+			                <VALUE>근태관리자</VALUE>
+			                <DATA1>wa</DATA1>
 			            </CELL>
 			        </ROW>
 				</ROWS>
@@ -1056,12 +1062,11 @@
 	    </div>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="close_Click()"><spring:message code='ezOrgan.t143'/></span></li>
+	            <li><span onclick="close_Click()"></span></li>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 	    <table id="TreeViewTD">
 	        <tr>

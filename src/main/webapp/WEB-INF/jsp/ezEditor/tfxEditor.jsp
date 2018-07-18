@@ -8,13 +8,19 @@
 		<script  type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezEditor/tfxEditor/js/xfe_main.js"></script>
 		<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
+		<style>.xfeToolbar {border-top-left-radius : 0px !important; border-top-right-radius : 0px !important;}</style>
 		<script  type="text/javascript">
 			var type = "${type}";
 			var editorLoadFlag = false;
 			
 			function SetEditorContent(Data) {
 	            try {
-	                xfe.setHtmlValue(Data);
+	            	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
+	            	if (parent.onloadflag || typeof parent.onloadflag === "undefined") {
+		                xfe.setHtmlValue(Data);
+	            	} else {
+	            		setTimeout(parent.Editor_Complete, 10);
+	            	}
 	            } catch (e) { }
 	        }
 		
@@ -194,7 +200,8 @@
 	            initFontSize : defaultFontSize,
 	            skin : "classic",
 	            uploadFilePath : uploadFilePath,
-	            uploadPasteContentsPath : uploadPasteContentsPath
+	            uploadPasteContentsPath : uploadPasteContentsPath,
+	            autoFocus : false
 	        });
 	        
 	        xfe.render('xfe');

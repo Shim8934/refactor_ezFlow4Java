@@ -1758,7 +1758,7 @@
 				A.c_id,
 				A.companyid,
 				A.c_indate,
-				B.username$v_USERINFO_LANG$
+				CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
 			FROM
 				TBL_C_CLUBUSER A
 			INNER JOIN
@@ -1968,6 +1968,8 @@
 					$v_searchName$ LIKE CONCAT('%', #v_searchValue#, '%')
 				AND
 					T1.tenant_id = #tenantID#
+				AND
+					T1.C_ADMINCONFIRM = 'Y'
 				ORDER BY
 					T1.c_regdate
 				LIMIT
@@ -2003,6 +2005,8 @@
 						$v_searchName$ LIKE CONCAT('%', #v_searchValue#, '%')
 					AND
 						T1.tenant_id = #tenantID#
+					AND
+						T1.C_ADMINCONFIRM = 'Y'
 					ORDER BY
 						T1.c_regdate
 					) T2

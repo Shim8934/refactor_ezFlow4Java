@@ -2819,7 +2819,7 @@ function chk_Passwd(pPwd, CompleteFunction) {
     else
         ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-    DivPopUpShow(330, 200, "/ezApprovalG/ezchkPasswd.do");
+    DivPopUpShow(330, 215, "/ezApprovalG/ezchkPasswd.do");
 }
 
 function sendMail() {
@@ -2905,7 +2905,7 @@ function openAaprDocAttachUI() {
         aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
         
         if(approvalFlag == "G") {
-        	DivPopUpShow(850, 500, "/ezApprovalG/aprCabinetAttach.do");
+        	DivPopUpShow(1050, 500, "/ezApprovalG/aprCabinetAttach.do");
         } else {
         	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do");
         }
@@ -3005,9 +3005,10 @@ function putSignXML(SignXML) {
                 var SignName = getNodeText(SelectSingleNode(NodeList[i], "SIGNNAME"));
                 var SignCont = getNodeText(SelectSingleNode(NodeList[i], "CONTENT"));
                 
-                if (!(SignName.indexOf("habyui") > -1)) {
-                	continue;
-                }
+                //2018-07-11 천성준 -전자결재G 중간결재자 부재설정 시, 부재내용 서명란에 표기안되서 주석
+//                if (!(SignName.indexOf("habyui") > -1)) {
+//                	continue;
+//                }
                 
                 var field = message.GetListItem(fields, SignName);
                 var field2 = message.GetListItem(fields, SignName.replace("habyuisign", "habyuija"));
@@ -3016,9 +3017,10 @@ function putSignXML(SignXML) {
                     retVal = true;
                     if (SignType == "TEXT" || SignType == "HTML") {
                         field.innerHTML = SignCont;
-                        if (field2) {
-                        	field2.textContent = SignCont.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
-                        }
+                        //2018-07-11 천성준 - replace가 서명 볼드처리 해제시켜버려서 주석 
+//                        if (field2) {
+//                        	field2.textContent = SignCont.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+//                        }
                     }
                     else {
                     	var seumyung = message.GetListItem(fields, "seumyungdate" + (i + 1));

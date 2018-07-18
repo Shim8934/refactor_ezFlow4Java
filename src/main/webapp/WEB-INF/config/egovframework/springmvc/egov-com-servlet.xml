@@ -60,6 +60,7 @@
             <mvc:exclude-mapping path="/ezEmail/readSecureMailContent.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadSecureAttach.do"/>
             <mvc:exclude-mapping path="/ezEmail/downloadSecureInline.do"/>
+            <mvc:exclude-mapping path="/ezEmail/readExternalRecipient.do"/>
             <mvc:exclude-mapping path="/admin/ezApprovalG/componentListTransfer.do"/>
             <mvc:exclude-mapping path="/ezPortal/componentListTransfer.do"/>     
             <mvc:exclude-mapping path="/ezSystem/util/getSysInfo"/>   

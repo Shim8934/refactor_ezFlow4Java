@@ -500,12 +500,11 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li id="btnClose"><span onclick="return btnClose_onclick()"><spring:message code='ezApproval.t70'/></span></li>
+	                        <li id="btnClose"><span onclick="return btnClose_onclick()"></span></li>
 	                    </ul>
 	                </div>
 	                <script type="text/javascript">
 	                    selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	                    selToggleList(document.getElementById("close"), "ul", "li", "0");
 	                </script>
 	            </td>
 	        </tr>

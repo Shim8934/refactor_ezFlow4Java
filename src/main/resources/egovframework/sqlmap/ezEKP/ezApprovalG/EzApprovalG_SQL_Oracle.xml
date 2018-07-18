@@ -7320,6 +7320,18 @@
 							   	<isEqual property="v_CONTID" compareValue="ADMIN">
 							   		 AND 
 							   		 		CONTAINERID IS NOT NULL
+							   		 AND
+							   			containerid NOT IN (
+					                            SELECT
+					                                containerid
+					                            FROM
+					                                TBL_CONTAINER
+					                            WHERE
+					                                tenant_id = #v_TENANTID#
+					                            AND
+					                                companyid = #companyID#
+					                            AND
+					                                containertypeid = '999' ) 
 							   	</isEqual>
 							   	<isNotEmpty property="v_CONTID" >
 							   	<isNotEqual property="v_CONTID" compareValue="ADMIN">
@@ -11587,6 +11599,18 @@
    		<![CDATA[
       	 AND 
       	 	CONTAINERID IS NOT NULL
+      	 AND
+   			containerid NOT IN (
+                          SELECT
+                              containerid
+                          FROM
+                              TBL_CONTAINER
+                          WHERE
+                              tenant_id = #v_TENANTID#
+                          AND
+                              companyid = #companyID#
+                          AND
+                              containertypeid = '999' ) 
    		 ]]>  
    		 </isEqual>
    		  
@@ -23657,34 +23681,30 @@
 		   DELETE FROM 
 		  		TBL_APRDOCINFO
 		   WHERE 
-		  		DOCID IN (
-		  					SELECT 
-		  					* 
-		  					FROM
-			  					(SELECT 
-						  			A.DOCID
-								FROM 
-									TBL_RECRELAYINFO A 
-								INNER JOIN 
-									TBL_APRDOCINFO B
-								ON 
-									A.DOCID = B.DOCID
-								AND
-									A.TENANT_ID = B.TENANT_ID
-								AND
-									A.COMPANYID = B.COMPANYID
-								WHERE 
-									A.TENANT_ID = #v_TENANTID#
-								AND
-									A.COMPANYID = #companyID#
-								AND
-									A.XDOCID = #xDocID# 
-								AND 
-									XTOCODE = #xToCode#	
-								AND 
-									B.HREF IS NULL
-								OR 
-									B.HREF = '') A)
+	  			DOCID IN (	SELECT 
+					  			A.DOCID
+							FROM 
+								TBL_RECRELAYINFO A 
+							INNER JOIN 
+								TBL_APRDOCINFO B
+							ON 
+								A.DOCID = B.DOCID
+							AND
+								A.TENANT_ID = B.TENANT_ID
+							AND
+								A.COMPANYID = B.COMPANYID
+							WHERE 
+								A.TENANT_ID = #v_TENANTID#
+							AND
+								A.COMPANYID = #companyID#
+							AND
+								A.XDOCID = #xDocID# 
+							AND 
+								XTOCODE = #xToCode#	
+							AND 
+								B.HREF IS NULL
+							OR 
+								B.HREF = '')
 	  </delete>
 	  	  
       <insert id="EzApprovalG.insertRelayDB" parameterClass="Map">
@@ -24595,5 +24615,25 @@
 			TENANT_ID = #tenantID#
 		AND
 			COMPANYID = #companyID#
+		UNION
+		SELECT
+			HREF
+		FROM
+			TBL_ENDAPRDOCINFO
+		WHERE 
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#	
+	</select>
+	
+	<select id="EzApprovalG.getLinkedAttachFileCount" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(ATTACHFILEHREF)
+		FROM
+			TBL_ENDATTACHINFO
+		WHERE
+			ATTACHFILEHREF = #href#
 	</select>
 </sqlMap>

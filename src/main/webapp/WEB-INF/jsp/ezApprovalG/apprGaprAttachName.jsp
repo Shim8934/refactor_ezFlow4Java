@@ -128,7 +128,12 @@
 		</script>
 	</head>
 		<body class="popup">		
-		<h1><spring:message code='ezApprovalG.t25004'/></h1>		
+		<h1><spring:message code='ezApprovalG.t25004'/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return AttachCancel_onclick()"></span></li>
+            </ul>
+        </div>		
 		<span>▒ <spring:message code='ezApprovalG.t292'/></span>		
 		<table class="content" style="margin-top: 15px">		  
 			<tr style="display: none">
@@ -144,9 +149,8 @@
 		      	</td>
 		  	</tr>
 		</table>		
-		<div class="btnposition btnpositionNew" style="margin-top:25px"> 
+		<div class="btnposition btnpositionNew"> 
 			<a class="imgbtn" id="btn_SaveAprDeptTempletName" onClick="return btn_SaveAprDeptTempletName_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
-			<a class="imgbtn"><span id="AttachCancel" onClick="return AttachCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

@@ -15,7 +15,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e3'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<style>
 			.mainlist tr th {
 				border-top:0px;
@@ -722,7 +722,7 @@
 		        		<li><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApproval.t708' /></span></li>
 						<li><span onClick="return btnEditTree_onclick()"><spring:message code = 'ezApproval.t709' /></span></li>
 						<li><span onClick="return btnDelTree_onclick()"><spring:message code = 'ezApproval.t710' /></span></li>
-						<li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li>
+						<!-- <li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li> -->
 						<li><span onClick="return btnAddItem_onclick()"><spring:message code = 'ezApprovalG.t795' /></span></li>
 						<li><span onClick="return btnEditItem_onclick()"><spring:message code = 'ezApprovalG.t796' /></span></li>
 						<li><span onClick="return btnDelItem_onclick()"><spring:message code = 'ezApprovalG.t797' /></span></li>
@@ -731,10 +731,10 @@
 		        		<li><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApprovalG.t790' /></span></li>
 						<li><span onClick="return btnEditTree_onclick()"><spring:message code = 'ezApprovalG.t791' /></span></li>
 						<li><span onClick="return btnDelTree_onclick()"><spring:message code = 'ezApprovalG.t792' /></span></li>
-						<li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li>
+						<!-- <li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li> -->
 						<li><span onClick="return btnViewTaskInfo_onclick()"><spring:message code = 'ezApprovalG.t793' /></span></li>
 						<li><span onClick="return btnViewTaskHistoryInfo_onclick()"><spring:message code = 'ezApprovalG.t794' /></span></li>
-						<li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li>
+						<!-- <li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li> -->
 						<li><span onClick="return btnAddItem_onclick()"><spring:message code = 'ezApprovalG.t795' /></span></li>
 						<li><span onClick="return btnEditItem_onclick()"><spring:message code = 'ezApprovalG.t796' /></span></li>
 						<li><span onClick="return btnDelItem_onclick()"><spring:message code = 'ezApprovalG.t797' /></span></li>

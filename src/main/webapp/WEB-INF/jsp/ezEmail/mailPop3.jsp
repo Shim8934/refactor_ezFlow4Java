@@ -474,11 +474,11 @@
 		    <td style="width:100%;"> <input type="text" name="popID1" id="popID1" class="textarea" style="width:200px"><span id="popSpan1"></span></td> 
 		    <th style="white-space:nowrap" ><spring:message code='ezEmail.t264' /></th> 
 		    <td style="white-space:nowrap;width:250px;"> <input type="password" name="popPW1" id="popPW1" class="textarea" style="width:100px;margin:0px 1px 0px 0px;">
-		        <a  class="imgbtn"><span onClick="connect_test(1)"><spring:message code='ezEmail.t265' /></span></a></td> 
+		        <a  class="imgbtn imgbck"><span onClick="connect_test(1)"><spring:message code='ezEmail.t265' /></span></a></td> 
 		  </tr> 
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t266' /></th> 
-		    <td colspan="3"><a  class="imgbtn"><span onClick="search_mailbox(1)"><spring:message code='ezEmail.t37' /></span></a> <spring:message code='ezEmail.t267' /><span id='popBox1' url=""><spring:message code='ezEmail.t158' /></span> 
+		    <td colspan="3"><a  class="imgbtn imgbck" style="margin-right:3px"><span onClick="search_mailbox(1)"><spring:message code='ezEmail.t37' /></span></a> <spring:message code='ezEmail.t267' /><span id='popBox1' url=""><spring:message code='ezEmail.t158' /></span> 
 		      <input type="checkbox" name="popDelete1" id="popDelete1" value="checkbox"> 
 		      <spring:message code='ezEmail.t268' /></td> 
 		  </tr> 
@@ -519,11 +519,11 @@
 		    <td style="width:100%;"> <input type="text" name="popID2" id="popID2" class="textarea" style="width:200px"> <span id="popSpan2"></span></td> 
 		    <th style="white-space:nowrap" ><spring:message code='ezEmail.t264' /></th> 
 		    <td style="white-space:nowrap;width:250px;"> <input type="password" name="popPW2" id="popPW2" class="textarea" style="width:100px;margin:0px 0px 0px 0px;"> 
-		      <a  class="imgbtn"><span onClick="connect_test(2)"><spring:message code='ezEmail.t265' /></span></a> </td> 
+		      <a  class="imgbtn imgbck"><span onClick="connect_test(2)"><spring:message code='ezEmail.t265' /></span></a> </td> 
 		  </tr> 
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t266' /></th> 
-		    <td colspan="3"><a  class="imgbtn"><span onClick="search_mailbox(2)"><spring:message code='ezEmail.t37' /></span></a><span><spring:message code='ezEmail.t267' /></span><span id='popBox2' url=""><spring:message code='ezEmail.t158' /></span> 
+		    <td colspan="3"><a  class="imgbtn imgbck" style="margin-right:5px"><span onClick="search_mailbox(2)"><spring:message code='ezEmail.t37' /></span></a><span><spring:message code='ezEmail.t267' /></span><span id='popBox2' url=""><spring:message code='ezEmail.t158' /></span> 
 		      <input type="checkbox" name="popDelete2" id="popDelete2" value="checkbox"> 
 		      <spring:message code='ezEmail.t268' /></td> 
 		  </tr> 
@@ -564,19 +564,20 @@
 		    <td style="width:100%;"> <input type="text" name="popID3" id="popID3" class="textarea" style="width:200px"> <span id="popSpan3"></span></td> 
 		    <th style="white-space:nowrap" ><spring:message code='ezEmail.t264' /></th> 
 		    <td style="white-space:nowrap;width:250px;"> <input type="password" name="popPW3" id="popPW3" class="textarea" style="width:100px;margin:0px 0px 0px 0px;"> 
-		      <a  class="imgbtn"><span onClick="connect_test(3)"><spring:message code='ezEmail.t265' /></span></a></td> 
+		      <a  class="imgbtn imgbck"><span onClick="connect_test(3)"><spring:message code='ezEmail.t265' /></span></a></td> 
 		  </tr> 
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t266' /></th> 
-		    <td colspan="3"> <a  class="imgbtn"><span onClick="search_mailbox(3)"><spring:message code='ezEmail.t37' /></span></a><span><spring:message code='ezEmail.t267' /></span><span id='popBox3' url=""><spring:message code='ezEmail.t158' /></span> 
+		    <td colspan="3"> <a  class="imgbtn imgbck" style="margin-right:5px"><span onClick="search_mailbox(3)"><spring:message code='ezEmail.t37' /></span></a><span><spring:message code='ezEmail.t267' /></span><span id='popBox3' url=""><spring:message code='ezEmail.t158' /></span> 
 		      <input type="checkbox" name="popDelete3" value="checkbox" id="popDelete3"> 
 		      <spring:message code='ezEmail.t268' /></td> 
 		  </tr> 
-		</table> 
-		<br />
+		</table>
 		<div style="width:720px;text-align:center;">
-		    <a class="imgbtn" onClick="SavePop3()"><span><spring:message code='main.sp09' /></span></a>
-		    <a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
+			<div class="btnpositionJsp">
+		    	<a class="imgbtn" onClick="SavePop3()"><span><spring:message code='main.sp09' /></span></a>
+		    	<a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
+		    </div>	
 		</div>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 		<input id="publicExponent" value="${publicExponent}" type="hidden"/>

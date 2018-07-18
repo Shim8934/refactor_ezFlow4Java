@@ -139,6 +139,11 @@
 		    	<c:if test="${id == null}"><spring:message code='ezSchedule.t4004' /></c:if>
 		    	<c:if test="${id != null}"><spring:message code='ezSchedule.t4005' /></c:if>
 		    </h1>
+		    <div id="close">
+	            <ul>
+	                <li><span onclick="window.close()"></span></li>
+	            </ul>
+	        </div>
 		    <table class="content">
 		    	<tr>
 		        	<th style="width: 80px; text-align:center"><spring:message code='ezSchedule.t9990003' /></th>
@@ -188,10 +193,9 @@
 		            </td>
 		        </tr>
 		    </table>
-		    <div class="btnposition">
+		    <div class="btnpositionNew">
 		        <a class="imgbtn" id="add"><span onclick="save_holiday(1)" ><spring:message code='ezSchedule.t157' /></span></a>
 		        <a class="imgbtn" id="mod" style="display:none"><span onclick="save_holiday(2)" ><spring:message code='ezSchedule.t302' /></span></a>
-		        <a class="imgbtn"><span onclick="window.close()"><spring:message code='ezSchedule.t5' /></span></a>      
 		    </div>
 		</form>
 	</body>

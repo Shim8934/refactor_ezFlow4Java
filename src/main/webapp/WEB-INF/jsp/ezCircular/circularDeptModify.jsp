@@ -100,6 +100,11 @@
 	</head>
 	<body class="popup">
 	    <h1><spring:message code='ezCircular.t43' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 	    <table class="content">
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezCircular.t32' /></th>
@@ -111,13 +116,13 @@
 	            <th style="width:200px; text-align:center"><spring:message code='ezCircular.t34' /></th>
 	            <td>
 	            	<input type="hidden" name="Input" id="receiverinput" style="WIDTH: 30%;-moz-box-sizing:border-box;box-sizing:border-box;" onkeyup="return _on_keydown(event)">
-	                <a href="#" id="imgbutton" class="imgbtn"><span id="clickbtn" onclick="_manage_attendant()"><spring:message code='ezCircular.t39' /></span></a>
+	                <a href="#" id="imgbutton" class="imgbtn imgbck"><span id="clickbtn" onclick="_manage_attendant()"><spring:message code='ezCircular.t39' /></span></a>
 	            </td>
 	        </tr>
 	        <tr>
 	        	<th style="width:200px; text-align:center"><spring:message code='ezCircular.t34' /></br><spring:message code='ezCircular.t42' /></th>
 	        	<td>
-		        	<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 100px"/></div>
+		        	<div id="receiverlist" style="OVERFLOW-Y: auto; HEIGHT: 100px; margin:5px 2px"/></div>
 		        	<div id="receiverlist2" style="OVERFLOW-Y: auto; HEIGHT: 100px; display:none;"/></div>
 		        	<div id="receiverID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
 	        	</td>
@@ -125,7 +130,6 @@
 	    </table>
 	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="save_info()" ><spring:message code='ezCircular.t25' /></span></a>
-	        <a class="imgbtn"><span onclick="window.close()"><spring:message code='ezCircular.t26' /></span></a>      
 	    </div>
 	</body>
 </html>

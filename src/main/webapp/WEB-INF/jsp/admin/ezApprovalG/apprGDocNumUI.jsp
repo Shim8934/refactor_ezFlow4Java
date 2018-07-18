@@ -6,7 +6,7 @@
 	    <title><spring:message code='ezApproval.t75'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -201,6 +201,11 @@
 		  </LISTVIEWDATA>
 		</xml>
 	    <h1><spring:message code='ezApproval.t83' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return btn_Cancle()"></span></li>
+            </ul>
+        </div>
 	    <table>
 	        <tr>
 	            <td>
@@ -215,7 +220,6 @@
 	    </table>
 	    <div class="btnposition">
 	        <a class="imgbtn" onclick="return btn_OK()"><span><spring:message code='ezApprovalG.t1760' /></span></a>
-	        <a class="imgbtn" onclick="return btn_Cancle()"><span><spring:message code='ezApprovalG.t1761' /></span></a>
 	    </div>
 	</body>
 </html>

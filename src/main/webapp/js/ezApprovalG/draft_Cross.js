@@ -2468,7 +2468,7 @@ function openAaprDocAttachUI() {
             aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
             
             if(approvalFlag == "G") {
-            	DivPopUpShow(820, 500, url);
+            	DivPopUpShow(1050, 500, url);
             } else {
             	DivPopUpShow(1050, 560, url);
             }
@@ -3264,7 +3264,7 @@ function chk_Passwd() {
     ezchkpasswd_cross_dialogArguments[0] = parameter;
     ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-    DivPopUpShow(330, 200, "/ezApprovalG/ezchkPasswd.do");
+    DivPopUpShow(330, 215, "/ezApprovalG/ezchkPasswd.do");
 }
 
 function setDrafterAddress() {

@@ -44,7 +44,7 @@
 		    }
 	
 		    function HWP_GetDocumentElement() {
-		        return GetDocumentElement(HwpCtrl, "CONNROOT");
+		        return GetDocumentElement(HwpCtrl, "CONNROOT", true);
 		    }
 	
 		    function HWP_SetDocumentElement(ConnValue) {

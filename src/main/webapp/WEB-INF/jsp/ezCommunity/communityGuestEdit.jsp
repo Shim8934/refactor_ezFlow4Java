@@ -20,6 +20,8 @@
 		</c:if>
 		
 		<script type="text/javascript">
+			var content = '${item.content}';
+		
 			function sendit() {
 				if (document.getElementById("memo").value == "") {
 					alert("<spring:message code='ezCommunity.t568' />\n<spring:message code='ezCommunity.t569' />");
@@ -27,6 +29,11 @@
 					
 					return;
 				}
+				
+				//2018-07-16 김보미 - 특수문자, 개행처리
+				var memoTemp = $("#memo").val();
+				memoTemp = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(memoTemp, "&", "&amp;"), "&lt;", "<"), "&gt;", ">"), "&quot;", "'"),"&dquot;", '"');
+				memo = memoTemp.split("\n");
 				
 				$.ajax({
 		        	type : "POST",
@@ -36,7 +43,8 @@
 		        			name : $("#name").val(),
 		        			code : $("#code").val(),
 		        			mode : $("#mode").val(),
-		        			memo : encodeURIComponent($("#memo").val().trim())
+// 		        			memo : encodeURIComponent(memo.trim())
+		        			memo : JSON.stringify(memo)
 		        			},
 		        	success : function(result) {
 		        		goPage(1);
@@ -55,6 +63,23 @@
 				
 			    window.location.href = url;
 			}
+			
+			$(function(){
+				//2018-07-16 김보미 - 방명록 내용 특수문자 처리
+				content = ReplaceText(ReplaceText(content, "&quot;", "\""), "&amp;", "&");
+	        	var contentArr = JSON.parse(content);
+	        	var contentStr = "";
+	        	
+	        	for (var k = 0; k < contentArr.length; k++) {
+	        		contentStr += ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(contentArr[k], "&lt;", "<"), "&gt;", ">"), "&quot;", "'"),"&dquot;", '"'), "&amp;", "&");
+	        		if (k != contentArr.length - 1) { //마지막에는 개행을 붙이지 않는다
+		        		contentStr += "\n";
+	        		}
+	        	}
+	        	
+	        	$("#memo").val(contentStr);
+			})
+				
 			
 			/* function checkIsZenkaku(value) { 
 				for (var i = 0; i < value.length; ++i) { 
@@ -107,7 +132,7 @@
 					</c:choose> --%>
 				</tr>
 				<tr>
-	          		<td colspan="2" style="padding:3px"><textarea id="memo" style="width:98%;height:200px" maxlength="3000"><c:out value='${item.content}' /></textarea></td>
+	          		<td colspan="2" style="padding:3px"><textarea id="memo" style="width:98%;height:200px;resize:none;" maxlength="3000"></textarea></td>
 	        	</tr>
 			</table>
 		</form>	

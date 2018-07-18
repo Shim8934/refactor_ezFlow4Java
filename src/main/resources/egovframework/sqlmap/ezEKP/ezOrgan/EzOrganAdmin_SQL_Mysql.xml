@@ -606,7 +606,7 @@
                  )
 		]]>
 	</insert>
-	
+  
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I1" parameterClass="Map">
       <![CDATA[
         INSERT INTO
@@ -2101,6 +2101,75 @@
                 (1,#companyID#,#companyName#,#companyName2#,'A00','1',0,0,1,365,'',null,0,0,' ',20,null,null,null,null,null,null,null,null,null,null,null,null,null,'0',#tenantID#)
       ]]>
     </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I20" parameterClass="Map">
+	    <![CDATA[
+	    	INSERT INTO
+	    		TBL_ATTITUDE_CONF
+	    			(COMPANY_ID, TENANT_ID, WORK_STARTTIME, WORK_ENDTIME, CLOSED_DAY, ATTITUDE_MOD_APPL, CLOSED_DATE_ATTITUDE, CONF_SET_DATE)
+	    	VALUES
+	    			(#companyID#, #tenantID#, '00:00', '09:00', '1,0,0,0,0,0,1', '1', '1', #nowDate#)
+	    ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I21" parameterClass="Map">
+    	<isEqual property="lang" compareValue="1">
+    		<![CDATA[
+		    	INSERT INTO
+		    		TBL_ATTITUDE_TYPE
+		    			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
+		    	VALUES
+		    			('A01', #companyID#, #tenantID#, '출근', 'inCom', '1', 'inOut', null, 1),
+		    			('A02', #companyID#, #tenantID#, '지각', 'late', '1', 'inOut', null, 2),
+		    			('A03', #companyID#, #tenantID#, '퇴근', 'outCom', '1', 'inOut', null, 3),
+		    			('A07', #companyID#, #tenantID#, '휴근', 'working Holiday', '1', 'inOut', null, 6),
+		    			('A04', #companyID#, #tenantID#, '외근', 'outside work', '1', 'trip', null, 8),
+		    			('A06', #companyID#, #tenantID#, '외출', 'outing', '1', 'trip', null, 6),
+		    			('A05', #companyID#, #tenantID#, '휴가', 'vacation', '1', 'refresh', null, 0),
+		    			('A09', #companyID#, #tenantID#, '출장', 'business trip', '1', 'trip', null, 7),
+		    			('A10', #companyID#, #tenantID#, '파견', 'dispatch', '1', 'trip', null, 7),
+		    			('A08', #companyID#, #tenantID#, '조퇴', 'early leave', '1', 'absence', null, 5),
+		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', 'absence', 'A05', 4),
+		    			('A11', #companyID#, #tenantID#, '연차', 'annual leave', '1', 'refresh', 'A05', 9),
+		    			('A12', #companyID#, #tenantID#, '오전반차', 'morning off', '1', 'refresh', 'A05', 4),
+		    			('A13', #companyID#, #tenantID#, '오후반차', 'afternoon off', '1', 'refresh', 'A05', 4),
+		    			('A14', #companyID#, #tenantID#, '공가', 'official leave', '1', 'refresh', 'A05', 9),
+		    			('A15', #companyID#, #tenantID#, '오전공가', 'morning official leave', '1', 'refresh', 'A05', 9),
+		    			('A16', #companyID#, #tenantID#, '오후공가', 'after official leave', '1', 'refresh', 'A05', 9),
+		    			('A18', #companyID#, #tenantID#, '산휴', 'maternity leave', '1', 'refresh', 'A05', 9),
+		    			('A19', #companyID#, #tenantID#, '경조', 'congratulation and condolence leave', '1', 'refresh', 'A05', 9),
+		    			('A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', 'refresh', 'A05', 9)
+		    ]]>
+    	</isEqual>
+    	<isEqual property="lang" compareValue="3">
+    	    <![CDATA[
+		    	INSERT INTO
+		    		TBL_ATTITUDE_TYPE
+		    			(TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID)
+		    	VALUES
+		    			('A01', #companyID#, #tenantID#, '출근', 'inCom', '1', 'inOut', null, 1),
+		    			('A02', #companyID#, #tenantID#, '지각', 'late', '1', 'inOut', null, 2),
+		    			('A03', #companyID#, #tenantID#, '퇴근', 'outCom', '1', 'inOut', null, 3),
+		    			('A07', #companyID#, #tenantID#, '휴근', 'working Holiday', '1', 'inOut', null, 6),
+		    			('A04', #companyID#, #tenantID#, '외근', 'outside work', '1', 'trip', null, 8),
+		    			('A06', #companyID#, #tenantID#, '외출', 'outing', '1', 'trip', null, 6),
+		    			('A05', #companyID#, #tenantID#, '휴가', 'vacation', '1', 'refresh', null, 0),
+		    			('A09', #companyID#, #tenantID#, '출장', 'business trip', '1', 'trip', null, 7),
+		    			('A10', #companyID#, #tenantID#, '파견', 'dispatch', '1', 'trip', null, 7),
+		    			('A08', #companyID#, #tenantID#, '조퇴', 'early leave', '1', 'absence', null, 5),
+		    			('A17', #companyID#, #tenantID#, '결근', 'absenteeism', '1', 'absence', 'A05', 4),
+		    			('A11', #companyID#, #tenantID#, '연차', 'annual leave', '1', 'refresh', 'A05', 9),
+		    			('A12', #companyID#, #tenantID#, '오전반차', 'morning off', '1', 'refresh', 'A05', 4),
+		    			('A13', #companyID#, #tenantID#, '오후반차', 'afternoon off', '1', 'refresh', 'A05', 4),
+		    			('A14', #companyID#, #tenantID#, '공가', 'official leave', '1', 'refresh', 'A05', 9),
+		    			('A15', #companyID#, #tenantID#, '오전공가', 'morning official leave', '1', 'refresh', 'A05', 9),
+		    			('A16', #companyID#, #tenantID#, '오후공가', 'after official leave', '1', 'refresh', 'A05', 9),
+		    			('A18', #companyID#, #tenantID#, '산휴', 'maternity leave', '1', 'refresh', 'A05', 9),
+		    			('A19', #companyID#, #tenantID#, '경조', 'congratulation and condolence leave', '1', 'refresh', 'A05', 9),
+		    			('A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', 'refresh', 'A05', 9)
+		    ]]>
+    	</isEqual>
+    </insert>
   
 	<delete id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[
@@ -2374,6 +2443,30 @@
       		AND
       			EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
 		]]>
+		
+		<isNotEmpty property="searchValue" prepend="AND">
+			<isEqual property="searchType" compareValue="cn">
+				cn LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="displayname">
+				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="title">
+				title LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="description">
+				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="mail">
+				mail LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="telephonenumber">
+				telephonenumber LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="company">
+				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+		</isNotEmpty>
 	</select>
 	
 	<!-- <procedure id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
@@ -2384,65 +2477,56 @@
 	
 	<select id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
 		<![CDATA[
-			            SELECT
-							CN, 
-            				CASE
-            					#v_LANGDATA#  
-                  			WHEN
-                  				'1'
-                  			THEN
-                  				DISPLAYNAME 
-                  			ELSE
-                  				DISPLAYNAME2   
-                  			END
-                  				AS DISPLAYNAME, 
-            				CASE
-            					#v_LANGDATA#  
-                  			WHEN
-                  				'1'
-                  			THEN
-                  				DESCRIPTION 
-                  			ELSE
-                  				DESCRIPTION2   
-                  			END
-                  				AS DESCRIPTION,
-            				CASE
-            					#v_LANGDATA#  
-                  			WHEN
-                  				'1'
-                  			THEN
-                  				TITLE
-                  			ELSE
-                  				TITLE2
-                  			END
-                  				AS TITLE,
-            				MAIL,
-            				TELEPHONENUMBER,
-            				CASE
-            					#v_LANGDATA#  
-                  			WHEN
-                  				'1'
-                  			THEN
-                  				COMPANY
-                  			ELSE
-                  				COMPANY2
-                  			END
-                  				AS COMPANY,
-            				EXTENSIONATTRIBUTE1
-        				FROM
-        					TBL_USERMASTER 
-        				WHERE
-        					NULLIF(EXTENSIONATTRIBUTE1, '') IS NOT NULL
-        				AND
-        					PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
-        				AND
-        					EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
-                        AND 
-                            CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                         
-        				AND
-        					TENANT_ID = #v_TENANT_ID#
-                        ORDER BY DISPLAYNAME
-                        LIMIT #v_STARTNUM#, #v_COUNT#
+			SELECT
+				CN, 
+				CASE #v_LANGDATA# WHEN '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END AS DISPLAYNAME,
+				CASE #v_LANGDATA# WHEN '1' THEN DESCRIPTION ELSE DESCRIPTION2 END AS DESCRIPTION,
+				CASE #v_LANGDATA# WHEN '1' THEN TITLE ELSE TITLE2 END AS TITLE,
+				MAIL,
+				TELEPHONENUMBER,
+				CASE #v_LANGDATA# WHEN '1' THEN COMPANY ELSE COMPANY2 END AS COMPANY,
+				EXTENSIONATTRIBUTE1
+			FROM
+				TBL_USERMASTER 
+			WHERE
+				NULLIF(EXTENSIONATTRIBUTE1, '') IS NOT NULL
+			AND
+				PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
+			AND
+				EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
+			AND 
+				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                         
+			AND
+				TENANT_ID = #v_TENANT_ID#
+		]]>
+		
+		<isNotEmpty property="searchValue" prepend="AND">
+			<isEqual property="searchType" compareValue="cn">
+				cn LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="displayname">
+				CASE #v_LANGDATA# WHEN '1' THEN displayname ELSE displayname2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="title">
+				title LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="description">
+				CASE #v_LANGDATA# WHEN '1' THEN description ELSE description2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="mail">
+				mail LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="telephonenumber">
+				telephonenumber LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+			<isEqual property="searchType" compareValue="company">
+				CASE #v_LANGDATA# WHEN '1' THEN company ELSE company2 END LIKE CONCAT('%', #searchValue#,'%')
+			</isEqual>
+		</isNotEmpty>
+		
+		<![CDATA[
+			ORDER BY DISPLAYNAME
+			LIMIT #v_STARTNUM#, #v_COUNT#
 		]]>
 	</select>
 	
@@ -3152,7 +3236,7 @@
 		FROM 
 	    	TBL_USERMASTER	
         WHERE 
-            tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
+            tenant_id = #tenantID# 
 			<include refid="EzOrganAdminDAO.searchQuery"/>
 	    ORDER BY 
 	    	displayName
@@ -3167,10 +3251,10 @@
 			COUNT(CN) 
 		FROM 
             TBL_USERMASTER 
-		WHERE	tenant_id = #tenantID# AND CN NOT IN ('MASTERADMIN')
+		WHERE	tenant_id = #tenantID# 
   		<include refid="EzOrganAdminDAO.searchQuery"/>
 	</select>
-	
+ 	 
 	<insert id="EzOrganAdminDAO.insertDelUserDBData_I" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_USERMASTER_DELETE

@@ -8,7 +8,6 @@
 	    <style type="text/css">
 	    	.list {
 	    		font-size:12px;
-				font-family: 'Gulim', 'arial', 'verdana';
 				text-decoration: none;
 	    	}
 	    </style>
@@ -108,7 +107,7 @@
 	                _img1.onclick = function () { Smaller(); };
 	
 	                _img1.style.cursor = "pointer";
-	                _img1.style.margin = "5px";
+	                _img1.style.margin = "5px 4px 5px 0px";
 	                _img1.src = "/images/minus.png";
 	
 	                _img2 = document.createElement("IMG");
@@ -165,10 +164,10 @@
 	            strAttach += "<span class='title_btn' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' onclick='AttachAllDownload();'>" + strLang3 + "</span></p>";
 	            strAttach += "<ul class='list' id='PreviewAttachList'>";
 	
-	
+				/* 2018-07-16 홍승비 - 게시물 미리보기 시 첨부파일 특수문자 처리 */
 	            for (i = 0; i < xmldomNodes.length; i++) {
 	            	filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-	            	filename = filepath.substr(120, filepath.length - 119);
+	            	filename = MakeXMLString(filepath.substr(120, filepath.length - 119));
 // 	                filename = filepath.substr(filepath.indexOf("}_") + 2);
 // 	                filename = ReplaceText(filename, "%2b", "+");
 // 	                filename = ReplaceText(filename, "%3b", ";");
@@ -187,7 +186,7 @@
 	                }
 	                
 	                strAttach += "<li>";
-	                strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems' onclick=\"DownloadFile('/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID")) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "')\"><img style='cursor:pointer' src='/images/icon_adddownload.gif' width='16' height='16' /></span>";
+	                strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems' onclick=\"DownloadFile('/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID")) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "')\"><img style='cursor:pointer;vertical-align:middle' src='/images/icon_adddownload.gif' width='16' height='16' /></span>";
 	                strAttach += "&nbsp;";
 	                strAttach += "<span onmouseover=\"this.style.color='#164aad'\" onmouseout=\"this.style.color='#666'\" style='cursor: pointer; color: rgb(102, 102, 102);'>";
 	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID")) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "'>" + filename + " (" + File_Size(filesize) + ")</a>";

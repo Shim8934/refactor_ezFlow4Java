@@ -1,4 +1,4 @@
-﻿﻿/*###########################################################################################
+﻿﻿﻿/*###########################################################################################
 
 
 
@@ -14,7 +14,7 @@ var PressShiftKey = false;
 //모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
 //따라서 List의 SetMulSelectable 속성의 값이 true인 경우에만
 //document 객체에 keydown, keyup 이벤트를 등록하여 FLAG의 값을 지정한다.
-var m_strColorSelect = "#f0f6ff";
+var m_strColorSelect = "#edf4fd";
 var m_strColorDefault = "#FFFFFF";
 var m_strColorOver = "#f4f5f5";
 var m_UrgentColor = "#E9101A";
@@ -511,6 +511,31 @@ function ListView() {
                 if (strColName == "ISPUBLIC") {
                 	objTd.style.textAlign = "center";
                 }
+                
+                // 헤더에  컬럼 가운데정렬 2018-06-28 강민수92
+                if (strColName == "ReSendFlag") {
+                	objTd.style.textAlign = "center";
+                }
+                
+                if (strColName == "AttachFlag") {
+                	objTd.style.textAlign = "center";
+                }
+                
+                if (strColName == "RejectFlag") {
+                	objTd.style.textAlign = "center";
+                }
+                
+                if (strColName == "TransferFlag") {
+                	objTd.style.textAlign = "center";
+                }
+               
+                if (strColName == "DelayFlag") {
+                	objTd.style.textAlign = "center";
+                }
+                
+                if (strName == "비치" || strName == "특수목록" || strName == "연기신청") {
+                	objTd.style.textAlign = "center";
+                }
 
                 if (strClass != "") {
                     if (i == 0) {       //// 현재는 header에 class가 없으므로 고정함.
@@ -775,7 +800,15 @@ function ListView() {
                 }
                 
                 if (oHeaders.length > 0) {
-                    if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "HASATTACHYN") {
+                	if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "AttachFlag") {
+                		objTd.style.textAlign = "center";
+                		if (SelectSingleNodeValue(oCells[j], "HASATTACHYN") == "Y" || SelectSingleNodeValue(oCells[j], "HASATTACHYN") == "1") {
+                            var _img = document.createElement("img");
+                            _img.src = "/images/newAttach.gif";
+                            objTd.appendChild(_img);
+                        }
+                	}
+                	else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "HASATTACHYN") {
                         objTd.style.textAlign = "center";
                         if (SelectSingleNodeValue(oCells[j], "HASATTACHYN") == "Y" || SelectSingleNodeValue(oCells[j], "HASATTACHYN") == "1") {
                             var _img = document.createElement("img");
@@ -791,7 +824,7 @@ function ListView() {
                             objTd.appendChild(_img);
                         }
                     }
-                    else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "REJECTFLAG") {
+                    else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "REJECTFLAG" || SelectSingleNodeValue(oHeaders[j], "COLNAME") == "RejectFlag") {
                         objTd.style.textAlign = "center";
                         if (SelectSingleNodeValue(oCells[j], "REJECTFLAG") == "1") {
                             strValue = "O";
@@ -800,6 +833,17 @@ function ListView() {
                         }
                         oText = document.createTextNode(strValue);
                         objTd.appendChild(oText);
+                    }
+                	// 전자결재G 한글로 하드코딩 해도 되겠지? 2018-07-03
+                    else if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "CreateDate" || SelectSingleNodeValue(oHeaders[j], "NAME") == "등록일") {
+                    	objTd.style.textAlign = "left";
+                    	oText = document.createTextNode(strValue);
+                    	objTd.appendChild(oText);
+                    }
+                    else if (SelectSingleNodeValue(oHeaders[j], "NAME") == "비치" || SelectSingleNodeValue(oHeaders[j], "NAME") == "연기신청") {
+                    	objTd.style.textAlign = "center";
+                    	oText = document.createTextNode(strValue);
+                    	objTd.appendChild(oText);
                     }
                     else {
                         objTd.appendChild(oText);

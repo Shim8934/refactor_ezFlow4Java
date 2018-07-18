@@ -29,23 +29,30 @@
 			var BoardExtension_dialogArguments = new Array();
 			
 	        document.onselectstart = function (){
-	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
+	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 	                return false;
-	            else
+	            }
+	            else {
 	                return true;
+	            }
 	    	};
         
-			$(document).ready(function(){				
-				if ("${use_portal}" != "YES")
+			$(document).ready(function(){
+				if ("${use_portal}" != "YES") {
 	                $("#trPortlet").css("display","none");
-	            if (portlet == "Y")
+				}
+	            if (portlet == "Y") {
 	                $("#chkPortletBoard").prop("checked",true);
-	            if (background == "Y")
+	            }
+	            if (background == "Y") {
 	                $("#chkbackgroundimage").prop("checked",true);
-	            if(FormFlag == "Y")
+	            }
+	            if(FormFlag == "Y") {
 	                $("#chkform").prop("checked",true);
-	            if (pAdminType == "y")
+	            }
+	            if (pAdminType == "y") {
 	                parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t60' />";
+	            }
 	            if (APPRFLAG == "Y") {
 	                $("#chkApprBoard").prop("checked",true);
 	                document.getElementById("chkApprList").style.display = "";
@@ -57,27 +64,60 @@
 	                $("#chkApprBoardMail").prop("checked",true);
 	            }
 	            
+	            /* 2018-06-29 홍승비 - 기존 승인여부가 null인 게시판은 'N'값으로 처리 */
+	            if (orgAPPRFLAG.trim() == "") {
+	            	orgAPPRFLAG = "N";
+	            }
+	            if (APPRFLAG.trim() == "") {
+	            	APPRFLAG = "N";
+	            }
+	            
 	            if ($("#chkQnABoard").is(":checked") || $("#chkAnonyBoard").is(":checked")) {
 	                if ($("#chkApprBoard").is(":checked")) {
 	                	$("#chkApprBoard").prop("checked",false);	                    
 	                    checkApprBoard();
 	                    $("#chkApprBoard").prop("disabled",true);
 	                } else {
-	                	$("#chkApprBoard").prop("disabled",true);	                    
+	                	$("#chkApprBoard").prop("disabled",true);
 	                }
 	            }
 
+	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명, URL 게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
 	            //추가항목
 	            if ("${style}" == "") {
 	                if ($("#chkPhotoBoard").is(":checked") || $("#chkThumbBoard").is(":checked")) {
 	                    document.getElementById("trAttribute").style.display = "none";
-	                } else {
-	                    document.getElementById("trAttribute").style.display = "";
+	                    document.getElementById("chkNotifyTr").style.display = "none";
+	                    document.getElementById("tr1").style.display = "none";
+	                    document.getElementById("tr2").style.display = "none";
+	                }
+	                else if ($("#chkAnonyBoard").is(":checked")) {
+	                	document.getElementById("chkNotifyTr").style.display = "none";
+	                }
+	                else if ($("#chkPortletBoard").is(":checked")) {
+	                	document.getElementById("trAttribute").style.display = "none";
+	                }
+	                /* 2018-07-13 홍승비 - URL게시판 구분 추가 */
+	                else if ($("#chkURLBoard").is(":checked")) {
+		            	document.getElementById("txtURL").style.display = "";
+		            	document.getElementById("trAttribute").style.display = "none";
+	                    document.getElementById("chkNotifyTr").style.display = "none";
+	                    document.getElementById("tr1").style.display = "none";
+	                    document.getElementById("tr2").style.display = "none";
+	                    document.getElementById("tr3").style.display = "none";
+	                    document.getElementById("expireTr").style.display = "none";
+	                    document.getElementById("deleteAfterTr").style.display = "none";
+	                    document.getElementById("attachLimitTr").style.display = "none";
+	                    document.getElementById("oneLineTr").style.display = "none";
+	                }
+	                
+	                if (!$("#chkURLBoard").is(":checked")) {
+	                	document.getElementById("txtURL").style.display = "none";
 	                }
 	            }
 			});
 			
-			function Save() {				
+			function Save() {
 	            if ($.trim($("#txtBoardName").val()) == "") {
 	                alert("<spring:message code='ezBoard.t144'/>");
 	                return;
@@ -119,23 +159,22 @@
 	                gubun = "0";
 	            } else if ($("#chkQnABoard").is(":checked")) {
 	                gubun = "5";
+	            } else if ($("#chkURLBoard").is(":checked")) {
+	                gubun = "0";
 	            }
-
-	            if ($("#chkPortletBoard").is(":checked") && $("#txtURL").val() == "")
-	                portlet = "Y";
-	            else
-	                portlet = "N";
-
-	            if ($("#chkbackgroundimage").is(":checked"))
+	            
+	            if ($("#chkbackgroundimage").is(":checked")) {
 	                background = "Y";
-	            else
+	            } else {
 	                background = "N";
-
-	            if ($("#chkform").is(":checked"))
+	            }
+	            
+	            if ($("#chkform").is(":checked")) {
 	                FormFlag = "Y";
-	            else
+	            } else {
 	                FormFlag = "N";
-
+				}
+	            
 	            if ($("#chkPermanent").is(":checked")) {
 	                Expires = "-1"
 	            } else {
@@ -143,12 +182,30 @@
 	            }
 
 	            var iDeleteAfter = "-1";
-
 	            if ($("#usedeleteafter").is(":checked") && $("#deleteafter").val() == "") {
 	                alert("<spring:message code='ezBoard.t146'/>");
 	                $("#deleteafter").focus();
 	                return;
 	            }
+	            
+	            var url = $("#txtURL").val().trim();
+	             if ($("#chkURLBoard").is(":checked") && url == "") {
+	                alert("<spring:message code='ezPortal.t123'/>");
+	                $("#txtURL").focus();
+	                return;
+	            } else if (!$("#chkURLBoard").is(":checked")) {
+	            	url = "";            
+	            }
+	             
+	             if ($("#chkURLBoard").is(":checked") && url != "" && url.toLowerCase().indexOf("http") == -1) {
+	            	url = "http://" + url;
+	            }
+	             
+				if ($("#chkPortletBoard").is(":checked") && url == "") {
+					portlet = "Y";
+				} else {
+					portlet = "N";
+				}
 
 	            if (orgAPPRFLAG != APPRFLAG) {
 	                if (orgAPPRFLAG == "N") {
@@ -165,18 +222,18 @@
 	            if ($("#usedeleteafter").is(":checked")) {
 	                iDeleteAfter = $("#deleteafter").val();
 	            }
-
-	            var url = $("#txtURL").val();
-	            if (url != "" && url.toLowerCase().indexOf("http") == -1) url = "http://" + url;
-
-	            if (AttachMax == "") AttachMax = "5";
-	            if (Expires == "") Expires = "30";
 	            
-	            var oneLineReply = "";
+	            if (AttachMax == "") {
+	            	AttachMax = "5";
+	            }
+	            if (Expires == "") {
+	            	Expires = "30";
+	            }
 	            
-	            if ($("#chkOneLine").is(":checked") == false){
+	            var oneLineReply = "";            
+	            if ($("#chkOneLine").is(":checked") == false) {
 	            	oneLineReply = 0;
-	            }else{
+	            } else {
 	            	oneLineReply = 1;
 	            }
 	            
@@ -192,9 +249,8 @@
 	            		alert("<spring:message code='ezBoard.t79'/>");
 	            		
 	            		if ("${adminType}" == "y") {
-	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + BoardID;
-	            			
-	            			return;
+	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + BoardID;	            			
+	            			return;	            			
 	            		} else {
 	            			parent.frames.location = parent.frames.location;
 	            		}
@@ -202,7 +258,7 @@
 	            		location.href = location.href;
 	            	}	            		
 	            });
-	        }			
+	        }
 			function chkPermanent_onclick() {
 	            if (chkPermanent.checked) {
 	                chkExpires.checked = false;
@@ -220,7 +276,8 @@
 	                chkPermanent.checked = true;
 	                txtExpires.value = "";
 	            }
-	        }			
+	        }
+			
 			function checkboardtype() {
 	        	if (event.srcElement.id == "chkGeneralBoard" && event.srcElement.checked) {
 	                chkGroupBoard.checked = false;
@@ -228,6 +285,7 @@
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
+	                chkURLBoard.checked = false;
 	            }
 	            if (event.srcElement.id == "chkGroupBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
@@ -235,6 +293,7 @@
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
+	                chkURLBoard.checked = false;
 	            }
 	            if (event.srcElement.id == "chkAnonyBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
@@ -242,12 +301,13 @@
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
+	                chkURLBoard.checked = false;
 
 	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
 	                    if (chkApprBoard.checked) {
 	                        chkApprBoard.checked = false;
 	                        checkApprBoard();
-	                        chkApprBoard.disabled = true;
+	                      	chkApprBoard.disabled = true;
 	                    }
 	                }
 	            } else {
@@ -263,6 +323,7 @@
 	                chkAnonyBoard.checked = false;
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
+	                chkURLBoard.checked = false;
 	            }
 	            if (event.srcElement.id == "chkThumbBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
@@ -270,6 +331,7 @@
 	                chkAnonyBoard.checked = false;
 	                chkPhotoBoard.checked = false;
 	                chkQnABoard.checked = false;
+	                chkURLBoard.checked = false;
 	            }
 	            if (event.srcElement.id == "chkQnABoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
@@ -277,6 +339,7 @@
 	                chkAnonyBoard.checked = false;
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
+	                chkURLBoard.checked = false;
 
 	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
 	                    if (chkApprBoard.checked) {
@@ -285,7 +348,7 @@
 	                        chkApprBoard.disabled = true;
 	                    }
 	                }
-	            } else {
+	            } else { 
 	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
 	                    chkApprBoard.disabled = true;
 	                }
@@ -293,38 +356,98 @@
 	                    chkApprBoard.disabled = false;
 	                }
 	            }
-
-	            //추가항목
-	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkPortletBoard.checked == true) {
-	                document.getElementById("trAttribute").style.display = "none";
+	            /* 2018-07-13 홍승비 - URL게시판 구분 추가 */
+                if (event.srcElement.id == "chkURLBoard" && event.srcElement.checked) {
+                	chkGeneralBoard.checked = false;
+	                chkGroupBoard.checked = false;
+	                chkAnonyBoard.checked = false;
+	                chkPhotoBoard.checked = false;
+	                chkThumbBoard.checked = false;
+	                chkQnABoard.checked = false;
+	            }
+	            
+	             if (chkURLBoard.checked == true) {
+                    document.getElementById("txtURL").style.display = "";
+                    document.getElementById("tr1").style.display = "none";
+                    document.getElementById("tr2").style.display = "none";
+                    document.getElementById("tr3").style.display = "none";
+                    document.getElementById("expireTr").style.display = "none";
+                    document.getElementById("deleteAfterTr").style.display = "none";
+                    document.getElementById("attachLimitTr").style.display = "none";
+                    document.getElementById("oneLineTr").style.display = "none";
+                    document.getElementById("trAttribute").style.display = "none";
+                    document.getElementById("chkNotifyTr").style.display = "none";
+                    
+                    document.getElementById("chkApprBoard").checked = false;
+                    checkApprBoard();                   
+                    document.getElementById("chkExpires").checked = false;
+                    document.getElementById("chkPermanent").checked = true;
+                    document.getElementById("usedeleteafter").checked = false;
+                    document.getElementById("chkbackgroundimage").checked = false;
+                    document.getElementById("chkform").checked = false;
+                    document.getElementById("chkNotify").checked = false;
+                    document.getElementById("chkOneLine").checked = false;
 	            } else {
-	                document.getElementById("trAttribute").style.display = "";
+					document.getElementById("txtURL").style.display = "none";
+                    document.getElementById("tr1").style.display = "";
+                    document.getElementById("tr2").style.display = "";
+                    document.getElementById("tr3").style.display = "";
+                    document.getElementById("expireTr").style.display = "";
+                    document.getElementById("deleteAfterTr").style.display = "";
+                    document.getElementById("attachLimitTr").style.display = "";
+                    document.getElementById("oneLineTr").style.display = "";
+                    document.getElementById("trAttribute").style.display = "";
+                    document.getElementById("chkNotifyTr").style.display = "";
 	            }
 
+	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
+	             if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkAnonyBoard.checked == true) {
+	                document.getElementById("chkNotifyTr").style.display = "none";
+	                document.getElementById("chkNotify").checked = false;
+	            } else if (chkURLBoard.checked == false) {
+	                document.getElementById("chkNotifyTr").style.display = "";
+	            }
+	            
+	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkPortletBoard.checked == true) {
+	                document.getElementById("trAttribute").style.display = "none";
+	            } else if (chkURLBoard.checked == false) {
+	                document.getElementById("trAttribute").style.display = "";
+	            }
+	            
+	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true) {
+	            	document.getElementById("tr1").style.display = "none";
+	            	document.getElementById("tr2").style.display = "none";
+	                document.getElementById("chkbackgroundimage").checked = false;
+	                document.getElementById("chkform").checked = false;
+	            } else if (chkURLBoard.checked == false) {
+	            	document.getElementById("tr1").style.display = "";
+	            	document.getElementById("tr2").style.display = "";
+	            }
+	            
+	            /*
+	            // chkNotify, chkform 등의 TR 표출을 상단에서 제어하도록 수정했으므로 주석처리
 	            if (chkNotify.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
 	                alert("<spring:message code='ezBoard.t150'/>");
 	                event.srcElement.checked = false;
 	                return;
 	            }
-
 	            if (chkbackgroundimage.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
 	                alert("<spring:message code='ezBoard.t6000'/>");
 	                event.srcElement.checked = false;
 	                return;
 	            }
-
 	            if (chkform.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
 	                alert("<spring:message code='ezBoard.t6001'/>");
 	                event.srcElement.checked = false;
 	                return;
 	            }
-
-	            if (chkNotify.checked && chkAnonyBoard.checked) {
+	             if (chkNotify.checked && chkAnonyBoard.checked) {
 	                alert("<spring:message code='ezBoard.t151'/>");
 	                event.srcElement.checked = false;
 	                return;
-	            }
-			}			
+	            } */
+			}
+			
 			function checkApprBoard() {
 			    if (chkApprBoard.checked == true) {
 			        document.getElementById("chkApprList").style.display = "";
@@ -470,7 +593,7 @@
 			        brd_color = color;
 			    }
 			}			
-		    function ExtensionAttribute_onClick() {    	
+		    function ExtensionAttribute_onClick() {
 		        if (chkGroupBoard.checked) {
 		            gubun = "1"
 		        } else if (chkAnonyBoard.checked) {
@@ -490,12 +613,13 @@
 		        para[1] = gubun;
 		        var url = "/admin/ezBoard/boardExtensionAttribute.do";
 
+		        /* 2018-07-12 홍승비 - 확장칼럼 설정 팝업창 width 조절 */
 		        if (CrossYN()) {
 		            BoardExtension_dialogArguments[0] = para;
-		            var ExtensionAttribute = window.open(url, "ExtensionAttribute", GetOpenWindowfeature(750, 750));
+		            var ExtensionAttribute = window.open(url, "ExtensionAttribute", GetOpenWindowfeature(770, 750));
 		            try { ExtensionAttribute.focus(); } catch (e) { }
 		        } else {
-		            var retVal = window.showModalDialog(url, para, "dialogWidth:750px;dialogHeight:750px;status:no;help:no;scroll:yes;edge:sunken");
+		            var retVal = window.showModalDialog(url, para, "dialogWidth:770px;dialogHeight:750px;status:no;help:no;scroll:yes;edge:sunken");
 		        }
 		    }
 		    
@@ -537,13 +661,13 @@
 		<body class="mainbody"><h1><spring:message code="ezBoard.t60"/></h1>
 	</c:if>	
 	<c:if test="${adminType == 'y'}">
-		<body style="padding-top:5px;">
+		<body class="tabbody" style="margin-top:10px; overflow-y:auto;">
 	</c:if>		
 		<xml id="listviewheader" style ="display:none"></xml>
 		<div style="max-width: 800px;">
 		<table class="content">
 	        <tr>
-	            <th><spring:message code="ezBoard.t114"/></th>
+	            <th style="min-width: 88px;"><spring:message code="ezBoard.t114"/></th>
 	            <td style="padding: 0;">
 	            	<c:if test="${use_multiData == 'YES'}">
 		                <table style="width: 100%">
@@ -566,26 +690,26 @@
 	    <div style="max-width : 800px;">
 	    <table class="content">
 	        <tr>
-	            <th><spring:message code="ezBoard.t111"/></th>
+	            <th style="min-width: 88px;"><spring:message code="ezBoard.t111"/></th>
 	            <td style="padding: 0;">
 	                <c:if test="${use_multiData == 'YES'}">
 		                <table style="width: 100%;">
 		                    <tr class="primary">
 		                        <th><c:out value='${lang_primary}' /></th>
 		                        <td style="border-bottom:1px solid #ddd;">
-		                            <input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="25" />
+		                            <input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="20" />
 		                        </td>
 		                    </tr>
 		                    <tr class="secondary">
 		                        <th><c:out value='${lang_secondary}' /></th>
 		                        <td>
-		                            <input type="text" id="txtBoardName2" style="width: 100%" value="<c:out value='${model.boardName2}' />" maxlength="25" />
+		                            <input type="text" id="txtBoardName2" style="width: 100%" value="<c:out value='${model.boardName2}' />" maxlength="20" />
 		                        </td>
 		                    </tr>
 		                </table>
 		            </c:if>    
 	          		<c:if test="${use_multiData != 'YES'}">
-	                	<input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="25" />
+	                	<input type="text" id="txtBoardName" style="width: 100%" value="<c:out value='${model.boardName}' />" maxlength="20" />
 	                </c:if>
 	            </td>
 	        </tr>
@@ -599,7 +723,7 @@
 	                <input type="text" id="txtBoardDescription" style="width: 100%" value="<c:out value='${model.boardDescription}' />" maxlength="99" />
 	            </td>
 	        </tr>
-	        <tr style="${style}">
+	        <tr id="expireTr" style="${style}">
 	            <th><spring:message code="ezBoard.t156"/></th>
 	            <td>
 	            	<c:if test="${model.itemExpires == '-1'}">	            
@@ -618,12 +742,12 @@
 	                </c:if> 
 				</td>
 	        </tr>
-	        <tr style="${style}">	        
+	        <tr id="deleteAfterTr" style="${style}">	        
 	        	<c:if test="${model.deleteAfter == '-1'}">
 		            <th><spring:message code="ezBoard.t159"/></th>
 		            <td>
 		            	<spring:message code="ezBoard.t160"/>
-	                	<input type="inputbox" id="deleteafter" style="width: 50px"/>
+	                	<input type="inputbox" id="deleteafter" style="width: 50px;height:20px;margin-top:3px"/>
 	                	<spring:message code="ezBoard.t161"/><br/>
 	                	<input type="checkbox" id="usedeleteafter"/>
 	                	<spring:message code="ezBoard.t162"/>
@@ -633,7 +757,7 @@
 	            	<th><spring:message code="ezBoard.t159"/></th>
 	            	<td>
 	            		<spring:message code="ezBoard.t160"/>
-	                	<input type="inputbox" id="deleteafter" style="width: 50px" value="<c:out value='${model.deleteAfter}' />"/>
+	                	<input type="inputbox" id="deleteafter" style="width: 50px;height:20px;margin-top:3px" value="<c:out value='${model.deleteAfter}' />"/>
 	                	<spring:message code="ezBoard.t161"/><br/>
 	                	<input type="checkbox" id="usedeleteafter" checked />
 	                	<spring:message code="ezBoard.t162"/>
@@ -683,6 +807,8 @@
 	                	<input type="checkbox" id="chkThumbBoard" onclick="checkboardtype()" />
 	                	<spring:message code="ezBoard.t3000"/>
 	                </c:if>
+	                
+	                <br>
 	                <c:if test="${model.guBun == '5'}">	                   
 	                	<input type="checkbox" id="chkQnABoard" onclick="checkboardtype()" checked />
 	                	<spring:message code="ezBoard.t00054" />
@@ -691,6 +817,16 @@
 	                	<input type="checkbox" id="chkQnABoard" onclick="checkboardtype()" />
 	                	<spring:message code="ezBoard.t00054" />
 	                </c:if>
+	                <%-- 2018-07-13 홍승비 - URL게시판 구분 추가 --%>
+	                <c:if test="${model.guBun == '6' }">
+	                	<input type="checkbox" id="chkURLBoard" onclick="checkboardtype()" checked />
+	                	URL<spring:message code="ezBoard.t0006" />
+	                </c:if>
+	                <c:if test="${model.guBun != '6'}">
+	                	<input type="checkbox" id="chkURLBoard" onclick="checkboardtype()" />
+	                	URL<spring:message code="ezBoard.t0006"/>
+	                </c:if>
+	                 <input type="text" id="txtURL" style="width: 74%;margin-left: 1.5px;margin-bottom: 1px;" value="<c:out value='${model.url}' />" />                
 	            </td>
 	        </tr>
 	        <tr id="tr3" style="${style}">
@@ -735,19 +871,24 @@
 	                <spring:message code="ezBoard.t162" />
 	            </td>
 	        </tr>
-	        <tr style="${style}">
+	        <tr id="attachLimitTr" style="${style}">
 	            <th><spring:message code="ezBoard.t167" /></th>
 	            <td>
 	                <input type="text" id="txtAttachLimit" style="width: 30px" onkeydown="onlyNumber()" onkeyup="removeChar()" value="<c:out value='${model.attachSizeLimit}'/>" maxlength="4"/>&nbsp;MB
 	            </td>
 	        </tr>
+	        
+	        <%-- URL 필드를 게시판 구분 필드로 이동 --%>
+	   <%--      
 	        <tr style="${style}">
 	            <th>URL</th>
 	            <td>
 	                <input type="text" id="txtURL" style="width: 100%" value="<c:out value='${model.url}' />" />
 	            </td>
 	        </tr>
-	        <tr style="${style}">
+	         --%>
+	        
+	        <tr id="chkNotifyTr" style="${style}">
 	            <th><spring:message code="ezBoard.t168" /></th>
 	            <td>
 	            	<c:if test="${model.replyNotify == '1'}">	            	
@@ -761,7 +902,7 @@
 	            </td>
 	        </tr>
 	        <%--2011-04 : 한줄 답변 옵션화 처리.--%>
-	        <tr style="${style}">
+	        <tr id="oneLineTr" style="${style}">
 	            <th><spring:message code="ezBoard.t81" /></th>
 	            <td>
 	            	<c:if test="${model.oneLineReply == '1'}">	                
@@ -777,7 +918,7 @@
 	        <tr id="trAttribute" style="${style}">
 	            <th><spring:message code="ezBoard.t999028" /></th>
 	            <td>
-	            	<a class="imgbtn"><span onClick="ExtensionAttribute_onClick()"><spring:message code="ezBoard.t999029" /></span></a>
+	            	<a class="imgbtn imgbck"><span onClick="ExtensionAttribute_onClick()"><spring:message code="ezBoard.t999029" /></span></a>
 	            </td>
 	        </tr>	
 	        <tr style="${style}">
@@ -792,15 +933,14 @@
 	                            <span id="colorID" style="width: 80px;"><c:out value='${model.boardColor}' /></span>
 	                        </td>
 	                        <td style="text-align: right; width: 100px">
-	                            <a class="imgbtn"><span onclick="change_brdColor()"><spring:message code="ezBoard.t170" /></span></a>
+	                            <a class="imgbtn imgbck"><span onclick="change_brdColor()"><spring:message code="ezBoard.t170" /></span></a>
 	                        </td>
 	                    </tr>
 	                </table>
 	            </td>
 	        </tr>
 		</table>
-    	<br/>
-	    <div class="btnposition">
+	    <div class="btnpositionJsp">
 	        <a class="imgbtn" href="javascript:Save()"><span><spring:message code="ezBoard.t98" /></span></a>
 	    </div>
 	    </div>

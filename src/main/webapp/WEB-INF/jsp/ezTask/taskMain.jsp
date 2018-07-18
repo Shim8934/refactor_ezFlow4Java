@@ -51,7 +51,7 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 
-		        var height = parseInt(document.documentElement.clientHeight - 200);
+		        var height = parseInt(document.documentElement.clientHeight - 215);
 
 		        document.getElementById("list").style.height = height + "px";
 		        if (changeTab == "taskre") {
@@ -117,7 +117,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "#f0f6ff";
+		        elem.style.backgroundColor = "#edf4fd";
 		        $("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", true);
 
 		        // 목록화면 나오고 처음 선택할 때 strListInfo 값 셋팅
@@ -170,25 +170,25 @@
 			    var totalPage = totalpage;
 			    var pageNum = currentpage;
 			    if (totalPage > 1 && pageNum != 1) {
-			        strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+			        strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>"
 			        PagingHTML += strtext;
 			    }
 			    else {
-			        strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+			        strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>"
 			        PagingHTML += strtext;
 			    }
 			    if (totalPage > BlockSize) {
 			        if (pageNum > BlockSize) {
-			            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + "<spring:message code='ezTask.t997' />" + "</span>";
+			            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 			            PagingHTML += strtext;
 			        }
 			        else {
-			            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + "<spring:message code='ezTask.t997' />" + "</span>";
+			            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 			            PagingHTML += strtext;
 			        }
 			    }
 			    else {
-			        strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + "<spring:message code='ezTask.t997' />" + "</span>";
+			        strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 			        PagingHTML += strtext;
 			    }
 			    var MaxNum;
@@ -217,27 +217,27 @@
 		        
 			    if (totalPage > BlockSize) {
 			        if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-			            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + "<spring:message code='ezTask.t998' />" + "</span>";
-			            strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+			            strtext = "";
+			            strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 			            PagingHTML += strtext;
 			        }
 			        else {
-			            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + "<spring:message code='ezTask.t998' />" + "</span>";
-			            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+			            strtext = "";
+			            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 			            PagingHTML += strtext;
 			        }
 			    }
 			    else {
-			        strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + "<spring:message code='ezTask.t998' />" + "</span>";
-			        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+			        strtext = "";
+			        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 			        PagingHTML += strtext;
 			    }
 			    if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-			        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+			        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 			        PagingHTML += strtext;
 			    }
 			    else {
-			        strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+			        strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 			        PagingHTML += strtext;
 			    }
 			    PagingHTML += "</div>";
@@ -834,11 +834,13 @@
 		        	alert("<spring:message code='ezTask.t990' />");
 		            return;
 		        }
+		        
+		        chkValue = $("#formId option:selected").val();
 
-		        for (var i = 0; i < document.getElementsByName("searchCheck").length; i++) {
+		       /*  for (var i = 0; i < document.getElementsByName("searchCheck").length; i++) {
 		            if (document.getElementsByName("searchCheck")[i].checked == true)
 		                chkValue = document.getElementsByName("searchCheck")[i].value;
-		        }
+		        } */
 
 		        filter = document.getElementById("txt_keyword").value;
 
@@ -897,7 +899,7 @@
 					strListInfo = "";
 
 					$(":checkbox[name=myCheckbox]").prop("checked", true);
-					$(".row_body").css("background", "#f0f6ff");
+					$(".row_body").css("background", "#edf4fd");
 
 					$(":checkbox[name=myCheckbox]:checked").each(function(){
 						deleteList.push($(this).attr("creatorid") + ";");
@@ -917,6 +919,7 @@
 					$(".row_body").css("background", "");
 				}
 		    }
+		  
 		</script>
 	</head>
 	<body class="mainbody">
@@ -927,11 +930,16 @@
 	
 		<h1><spring:message code='ezTask.t84' /><span id="mailBoxInfo"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
-		          <input name="searchCheck" id="Radio2" type="radio" value="title" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio2" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t118' /></label>
-		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t2005' /></label>
+		    <!-- 2018-07-17 구해안 라디오박스 검색창 select box로 변경 및 스타일 다른 모듈과 같도록 수정-->
+		    <select id="formId" name="searchCheck" style="width:80px; height:27px; border-color: #c8c8c8;">
+		    	<option id="Radio2" value="title"><spring:message code='ezTask.t118' /></option>
+		    	<option id="Radio1" value="personName"><spring:message code='ezTask.t2005' /></option>
+		    </select>
+		         <%--  <input name="searchCheck" id="Radio2" type="radio" value="title" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio2" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t118' /></label>
+		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t2005' /></label> --%>
 				  &nbsp;
-				  <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align: top" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		          <a href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onClick="search()"></a>
+				  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+		          <a href="#" style="float:right;padding-top: 1px;"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
 		    </span>
 		</h1>
 		
@@ -948,7 +956,6 @@
 				<!-- 2018-05-24 구해안 이미지 이동 -->
 				<li><span id="pn_img" onClick="WriteTask()"><spring:message code='ezTask.t113' /></span></li>
 				<li><span onClick="DeleteTask()"><spring:message code='ezTask.t115' /></span></li>
-				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 				<li><span onClick="RefreshView()"><spring:message code='ezTask.t116' /></span></li>
 
 				<!-- 완료 -->
@@ -1007,8 +1014,8 @@
 						<col style ="width:120px;">
 						<col style ="width:120px;">
 						<tr>
-							<th ><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
-							<th  style="text-align:center;"><img src="/images/ImgIcon/view-importance.gif"></th>
+							<th style="text-align:center"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding: 0px; margin-top: 0px; margin: 0px; vertical-align:middle;"/></th>
+							<th style="text-align:center;"><img src="/images/ImgIcon/view-importance.gif"></th>
 							<th ><img src="/images/newAttach.gif"></th>
 							<th ><spring:message code='ezTask.t2005' /></th>
 							<th ><spring:message code='ezTask.t118' /></th>
@@ -1021,13 +1028,13 @@
 							</c:if>
 		                    <!-- 2018-05-16 구해안 업무구분과 완료율 간격 조정 -->
 		                    <!-- 18-05-24 김민성 - 중요도 이미지로 수정 -->
-		                    <th  style="padding-left:14px"><spring:message code='ezTask.t2003'/></th>		                    
+		                    <th style="padding-left:14px"><spring:message code='ezTask.t2003'/></th>		                    
 							<th id="_thprogress"  style="text-align:center;padding-right: 12px;"><spring:message code='ezTask.t120' /></th>						
-							<th  style="text-align:center;"><spring:message code='ezTask.t121'/></th>
-							<th  style="text-align:center;"><spring:message code='ezTask.t9002'/></th>
+							<th style="text-align:center;"><spring:message code='ezTask.t121'/></th>
+							<th style="text-align:center;"><spring:message code='ezTask.t9002'/></th>
 						</tr>
 						<tr class="row_body" id="row_body" style="display:none;" startdate="" onclick="select_row(this)">
-							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>

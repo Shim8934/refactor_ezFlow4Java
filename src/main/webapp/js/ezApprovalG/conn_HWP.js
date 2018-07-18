@@ -1,5 +1,5 @@
 
-function GetDocumentElement(HwpCtrl, CharName)
+function GetDocumentElement(HwpCtrl, CharName, gubun)
 {
 	var fChar = CharName.substring(0,1);
 	
@@ -22,7 +22,12 @@ function GetDocumentElement(HwpCtrl, CharName)
 		DocumentKeywordInfo = loadXMLString(getXmlString(DocumentInfo.getElementsByTagName("KEYWORD")[0]));
 		
 		if (DocumentKeywordInfo.getElementsByTagName(CharName).length > 0) {
-		    return getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
+			//gubun = ture:tag포함, false:value값만
+			if (gubun == true) {
+				return getXmlString(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
+			} else {
+				return getNodeText(DocumentKeywordInfo.getElementsByTagName(CharName).item(0));
+			}
 		} else {
 			return "";
 		}
@@ -95,7 +100,7 @@ function ExcuteInfo(pprocessIdx, currTD) {
 
     rtnVal = true;
 
-    var ConnRootText = GetDocumentElement(HwpCtrl, "CONNROOT");
+    var ConnRootText = GetDocumentElement(HwpCtrl, "CONNROOT", true);
     if (ConnRootText == "") {
         return true;
     }
@@ -155,7 +160,7 @@ function ExcuteInfo(pprocessIdx, currTD) {
         }
         rtnVal = setData(xmlData, currTD);
     }
-    setMenuBar("btnHelper", true);
+//    setMenuBar("btnHelper", true);
     return rtnVal;
 }
 function callQuery(pconnFlag, pconnString, pqueryString, pkeyNodes) {
@@ -542,8 +547,8 @@ function setData(pobjXml, currTD) {
                 if (GetAttribute(row(0),"name") != GetAttribute(rowBefore(0),"name"))
                     tblRowIdx = 0;
             }
-            if (GetDocumentElement(HwpCtrl, "tblinfo") != "") {
-                xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo"));
+            if (GetDocumentElement(HwpCtrl, "tblinfo", true) != "") {
+                xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo", true));
                 tblinfoNodes = xmlTbl.documentElement.childNodes
 
                 fieldName = GetAttribute(row(0),"name")

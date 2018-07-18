@@ -7,7 +7,7 @@
 		<title><spring:message code='ezOrgan.t00013' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <style>
 	    	.box {
 	    		border-right:0px;
@@ -211,7 +211,7 @@
 		        });
 		    }
 		    
-		    var m_strColorSelect = "#f0f6ff";
+		    var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -1033,12 +1033,11 @@
 	    </div>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="closeWindow()"><spring:message code='ezOrgan.t143' /></span></li>
+	            <li><span onclick="closeWindow()"></span></li>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 	    <table id="TreeViewTD">
 	        <tr>

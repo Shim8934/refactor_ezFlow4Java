@@ -6,36 +6,12 @@
 		<title><spring:message code='ezBoard.t135'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/TreeView.js"></script>
 		<style>
-			.node_normal{
-				margin-top: 3px;
-				vertical-align:top;
-				font-size: 9pt;
-				background-color : #ffffff;
-				height : 15px;
-				cursor : hand;
-			}
-			.node_selected{
-				margin-top: 3px;
-				vertical-align:top;
-				font-size: 9pt;
-				height : 15px;
-				background-color : #f0f6ff;
-				cursor : hand;
-			}
-			.node_hover{
-				margin-top: 3px;
-				vertical-align:top;
-				font-size: 9pt;
-				background-color : #F7FAE0;
-				height : 15px;
-				cursor : hand;
-			}
-			
 			img {
 				padding-top:0px
 			}
@@ -261,7 +237,14 @@
 	</head>
 	<body class="popup" onload="javascript:window_onload()">
 		<h1><spring:message code='ezBoard.t135'/></h1>
-		<div class="box" style="width:320px;height:545px;overflow:auto;word-break:break-all" id=TopBoardsList></div>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close();"></span></li>
+            </ul>
+        </div>
+        <div class="box" style="overflow-x:hidden;overflow-y:auto;height:540px">
+			<div style="word-break:break-all" id=TopBoardsList></div>
+		</div>	
 		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn"><span onClick="Select()"><spring:message code='ezBoard.t47'/></span></a>
 		</div>

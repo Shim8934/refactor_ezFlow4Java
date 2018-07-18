@@ -97,7 +97,7 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li id="btnClose"><span onclick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
+	                        <li id="btnClose"><span onclick="return btnClose_onclick()"></span></li>
 	                    </ul>
 	                </div>
 	            </td>
@@ -110,7 +110,6 @@
 	    </table>
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	        selToggleList(document.getElementById("close"), "ul", "li", "0");
 	    </script>
 	    <iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>
 	</body>

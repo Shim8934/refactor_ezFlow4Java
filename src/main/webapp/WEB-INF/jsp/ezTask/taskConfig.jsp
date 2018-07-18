@@ -138,7 +138,7 @@
 							<tr>
 								<td><div id=DelayColorDisplay style="background-color:${delayColor}; height:21px; border:1px inset gray"></div></td>
 								<td id="DelayColor" style="display:none;">${delayColor}</td>
-								<td style="width:100px"><a class="imgbtn"><span onClick="manyColorShow('DelayColor')"><spring:message code='ezTask.t91' /></span></a></td>
+								<td style="width:100px"><a class="imgbtn imgbck"><span onClick="manyColorShow('DelayColor')"><spring:message code='ezTask.t91' /></span></a></td>
 							</tr>
 						</table>
 					</td>
@@ -151,16 +151,17 @@
 							<tr>
 								<td><div id=CompleteColorDisplay style="background-color:${completeColor}; height:21px; border:1px inset gray"></div></td>
 								<td id="CompleteColor" style="display:none;">${completeColor}</td>
-								<td style="width:100px"><a class="imgbtn"><span onClick="manyColorShow('CompleteColor')"><spring:message code='ezTask.t91' /></span></a></td>
+								<td style="width:100px"><a class="imgbtn imgbck"><span onClick="manyColorShow('CompleteColor')"><spring:message code='ezTask.t91' /></span></a></td>
 							</tr>
 						</table>
 					</td>
 				</tr>
 			</table>
-			<br />
-			<div align="center" style="width:265px;">
-				<a class="imgbtn" onClick="save_info()"><span><spring:message code='ezTask.t96' /></span></a>
-				<a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezTask.t20' /></span></a>
+			<div align="center" style="width:280px;">
+				<div class="btnpositionJsp">
+					<a class="imgbtn" onClick="save_info()"><span><spring:message code='ezTask.t96' /></span></a>
+					<a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezTask.t20' /></span></a>
+				</div>	
 			</div>
 		</form>
 	</body>

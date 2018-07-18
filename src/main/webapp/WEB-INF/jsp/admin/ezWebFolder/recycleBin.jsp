@@ -58,11 +58,10 @@
 			divList.style.height = reheight + "px";
 		};
 		
-		document.onselectstart = function(){
-			return false;
-		}
+		document.onselectstart = function() {return false;}
 		
 		window.onload = function () {
+			closeAllPopup();
 			tableView.setTableId("tblFileList");
 			tableView.setTableType("deletedfile");
 			tableView.setSelectedClass("bnkWebFolder2");

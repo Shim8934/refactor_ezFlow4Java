@@ -60,12 +60,13 @@ var strLang61	=	"リストのIDが指定されていません。";
 var strLang62	=	"データが指定されていません。";
 var strLang63	=	"ノードが存在しません。";
 var strLang64	=	"メモ";
-var strLang65   =   "タスクを保存しました。";
+var strLang65   =   "保存しました。";
 var strLang66	=	"タスク名を入力してください。";
-var strLang67	=	"期間の指定が正しくありません";
-var strLang68	=	"タスクを保存しました。";
-var strLang69	=	"指示事項を保存しました。";
+var strLang67	=	"保存しました。";
+var strLang68	=	"保存しました。";
+var strLang69	=	"保存しました。";
 var strLang70	=	"機関の指定が正しくありません。";
 /*2018-05-24 구해안*/
 var strLang71 = "期間";
 var strLang72 = "終了日を指定しない";
+var strLang73 = "保存";

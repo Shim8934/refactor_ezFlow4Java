@@ -76,7 +76,7 @@
 		    	var url = "/admin/ezJournal/insertForm.do";
 		    	url += "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId);
 		    	
-		    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft, "");
+		    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=820,width=790,top=" + pTop + ",left=" + pLeft, "");
 		    //	GetOpenWindow(url + parameter, "FormMain", 830, 950, "yes");
 		    }
 		    
@@ -96,7 +96,7 @@
 			    	url += "?companyId=" + encodeURIComponent(companyId) + "&typeId=" + encodeURIComponent(typeId)
 			    			+ "&formId=" + encodeURIComponent(selFormId);
 			    	
-			    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft, "");
+			    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=820,width=790,top=" + pTop + ",left=" + pLeft, "");
 			    //	GetOpenWindow(url + parameter, "FormMain", 830, 950, "yes");
 				}
 				
@@ -176,7 +176,7 @@
 			}
 			
 			#formType tr:hover,  #formList tr:hover {background:#eee; color:#fff; cursor: pointer;}
-			.active {background: #f0f6ff;}
+			.active {background: #edf4fd;}
 			
 		</style>
 	</head>

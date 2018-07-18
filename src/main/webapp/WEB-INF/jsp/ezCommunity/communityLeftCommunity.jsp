@@ -7,7 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>left_community</title>
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<style>
 			.btn_comm {
@@ -484,8 +484,10 @@
 				            if (userID == master) {
 				                alert("Community <spring:message code='ezCommunity.t1103' />");
 				            } else {
-				                var wWeight = "425";
-				                var wHeight = "385";
+				            	//2018-07-09  김보미 - 너비값 조정
+ 				                //var wWeight = "425";
+				                var wWeight = "475";
+				                var wHeight = "395";
 				                var heigth = window.screen.availHeight;
 				                var width = window.screen.availWidth;
 				                var left = (width - wWeight) / 2;
@@ -575,7 +577,7 @@
 	    <div id="left">
 	        <div class="left_cop" title="<spring:message code='main.t1006' />"><span><spring:message code='main.t1006' /></span></div>
 	        <!-- mylist -->	        
-	        <div style="overflow: auto; overflow-x: hidden; background-color: white; min-height:435px; border-bottom:1px solid #e8e8e8; padding:5px" id="MyCopList">
+	        <div style="overflow: auto; overflow-x: hidden; background-color: white; min-height:435px; padding:5px" id="MyCopList">
 	            <!-- list -->
 	            <ul class="list_thumbnail" id="list_thumbnail">
 	            </ul>

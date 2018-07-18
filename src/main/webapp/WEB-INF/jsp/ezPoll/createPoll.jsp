@@ -595,7 +595,7 @@
 	            var useragentstr = navigator.userAgent;
 	            
 	            if (useragentstr.indexOf(_MSIE) != -1) {	            	
-	                var szParam = "dialogHeight:705px;dialogWidth:562px;edge:sunken;status:no;resizable:no;help:no;center:yes;scroll:no" + GetShowModalPosition(562, 705);
+	                var szParam = "dialogHeight:708px;dialogWidth:562px;edge:sunken;status:no;resizable:no;help:no;center:yes;scroll:no" + GetShowModalPosition(562, 708);
 	                var rv = window.showModalDialog(szUrl, document.getElementById("RangeXMLStr").value, szParam);
 	                
 	                if (rv[0] == "OK") {
@@ -618,8 +618,8 @@
 	                        g_windowReference = window.open(szUrl, "SelectRange", "height=730,width=560,resizable=no,center=yes" + feature);
 	                    } 
 	                    else {
-	                        var feature = GetOpenPosition(730, 700);
-	                        g_windowReference = window.open(szUrl, "SelectRange", "height=700,width=560,resizable=no,center=yes" + feature);
+	                        var feature = GetOpenPosition(730, 708);
+	                        g_windowReference = window.open(szUrl, "SelectRange", "height=708,width=560,resizable=no,center=yes" + feature);
 	                    }
 	                }
 	                
@@ -1214,9 +1214,9 @@
 					</td>
 				</tr>
 			</table>
-	
-			<button type="button" id="addOpt" onclick="javascript:addOption();" class="pollButton01" style="width:129px; height:30px; line-height:28px; font-size:13px; background:#FFF; border:1px solid #dcdcdc; border-radius:5px; cursor:pointer; color:#0470e4;"><spring:message code="ezPoll.t153"/></button>
-	
+			<div style="text-align: left">
+				<button type="button" id="addOpt" onclick="javascript:addOption();" class="pollButton01" style="box-shadow:0px 2px 0px 0px rgba(0,0,0,0.1); width:129px; height:30px; vertical-align:top;font-size:13px; background:#FFF; border:1px solid #d2d2d2;padding-bottom:3px; border-radius:2px; cursor:pointer;font-weight:bold; color:black;"><spring:message code="ezPoll.t153"/></button>
+			</div>
 			<table class="content" style="width: 100%; margin:10px 0px 0px 0px;"> 
 				<tr>    <!------------Question setting---------------->
 					<td>
@@ -1291,11 +1291,11 @@
 --%>
 					<div id="target_select" style="height:30px; line-height:30px; margin:0px; padding:0px 5px; position: relative;">
 						<span style="margin-right: 3px;"><spring:message code="ezPoll.t162"/></span>
-						<select id="set_Target">
+						<select id="set_Target" style="height:23px">
 							<option value="0" selected="selected"><spring:message code="ezPoll.t237" /></option>
 							<option value="1"><spring:message code="ezPoll.t238" /></option>
 						</select>	
-						<a class="pollImgbtn1" id="receiverBttn" style="display: none;"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
+						<a class="pollImgbtn1" id="receiverBttn" style="display: none;background-color: #e8e8e8;height:21px"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
 						<div style="display:none; position: absolute; left: 190px; top: 0px; height: 30px; line-height: 30px; overflow: hidden; text-overflow: ellipsis; max-width: 60%; white-space: nowrap;" id="newTargetDiv"></div>																		
 						<div id="sendPostNotiMailDiv" class="qstSettingInnerDivRight">
 							<input id="sendPostMail" type="checkbox">
@@ -1328,9 +1328,9 @@
 					</td>
 				</tr>						
 			</table>			
-			<div class="button pollButton02" style="padding-top: 20px;margin-bottom:30px">				
-				<a class="imgbtn pollButton03" onclick="fun_OK()"><span><spring:message code="ezPoll.t145" /></span></a>				
-				<a class="imgbtn pollButton04" onclick="fun_Cancel()" style="background:#efefef; color:#000;"><span style="background:#efefef; color:#000;"><spring:message code="ezPoll.t139" /></span></a>				
+			<div class="btnpositionJsp">				
+				<a class="imgbtn" onclick="fun_OK()"><span><spring:message code="ezPoll.t145" /></span></a>				
+				<a class="imgbtn" onclick="fun_Cancel()"><span><spring:message code="ezPoll.t139" /></span></a>				
 			</div>
 		</div>	
 	</form>

@@ -7,6 +7,7 @@
 		<script  type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezEditor/tfxEditor/js/xfe_main.js"></script>
 		<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
+		<style>.xfeToolbar {border-top-left-radius : 0px !important; border-top-right-radius : 0px !important;}</style>
 		<script  type="text/javascript">
 			function SetEditorContent(Data) {
 	            try {

@@ -64,7 +64,7 @@ function check_time() {
 
 var SaveScheduleId = "";
 var saveCheck = false;
-function save_schedule()
+function save_schedule(pageFrom)
 {
 	if(saveCheck) {
 		return;
@@ -394,8 +394,12 @@ function save_schedule()
 	        }
 	    }
 	    alert(strLang18);
-	    try { window.opener.RefreshView() } catch (e) { }
-
+	    if(pageFrom == 'Portal'){
+	    	try { window.opener.location.reload(); } catch (e) { }
+	    }else{
+	    	try { window.opener.RefreshView() } catch (e) { }
+	    }
+	    
 	    window.close();
 	}
 }
@@ -741,50 +745,177 @@ function show_repetition_info()
 	switch (info[2])
 	{
 		case "0":
-			repeatinfo += strLang34;
+			{
+				if(info[3] == '0'){				
+					repeatinfo += strLang34;
+				}else{
+					repeatinfo += info[3] + strLang81 + " ";
+				}			
+			}
 			break;
 		case "1":
-			repeatinfo += strLang35;
+			{
+				if(info[3] == '1'){				
+					repeatinfo += strLang35;
+				}else{
+					repeatinfo += info[3] + strLang82 + " ";
+					if(info[4]){
+						
+						for (var i = 0; i< info[4].length; i++){
+							
+							switch (info[4]){
+							case "0":
+								repeatinfo += strLang48;
+								break;
+							case "1":
+								repeatinfo += strLang49;
+								break;
+							case "2":
+								repeatinfo += strLang50;
+								break;
+							case "3":
+								repeatinfo += strLang51;
+								break;
+							case "4":
+								repeatinfo += strLang55;
+								break;
+							case "5":
+								repeatinfo += strLang53;
+								break;
+							case "6":
+								repeatinfo += strLang54;
+								break;
+							}
+						}
+					}
+					
+				}
+				
+			}
 			break;
 	    case "2":
 	        {
-	            repeatinfo += strLang36;
+		    	if(info[3] == '1'){
+		    		
+					repeatinfo += info[4] + strLang83 + " ";
+					repeatinfo += info[5] + strLang80 + " ";
+		    		
+				}else{					
+					repeatinfo += info[4] + strLang83 + " ";
+					console.log('info[5] : ' + info[5]);
+					for (var i = 0; i< info[5].length; i++){
+						switch (info[5]){
+						case "1":
+							repeatinfo += strLang55;
+							break;
+						case "2":
+							repeatinfo += strLang56;
+							break;
+						case "3":
+							repeatinfo += strLang57;
+							break;
+						case "4":
+							repeatinfo += strLang58;
+							break;
+						case "5":
+							repeatinfo += strLang59;
+							break;
+						}
+					}
+					repeatinfo += " ";
+					for (var i = 0; i < info[6].length; i++) {
+						var idx = info[6].substr(i, 1);
+						switch (idx) {
+						case "0":
+							repeatinfo += strLang48;
+							break;
+						case "1":
+							repeatinfo += strLang49;
+							break;
+						case "2":
+							repeatinfo += strLang50;
+							break;
+						case "3":
+							repeatinfo += strLang51;
+							break;
+						case "4":
+							repeatinfo += strLang52;
+							break;
+						case "5":
+							repeatinfo += strLang53;
+							break;
+						case "6":
+							repeatinfo += strLang54;
+							break;
+						}
+					}
+				}
 
-	            repeatinfo += " ";
-	            for (var i = 0; i < info[4].length; i++) {
-	                var idx = info[4].substr(i, 1);
-	                switch (idx) {
-	                    case "0":
-	                        repeatinfo += strLang48;
-	                        break;
-	                    case "1":
-	                        repeatinfo += strLang49;
-	                        break;
-	                    case "2":
-	                        repeatinfo += strLang50;
-	                        break;
-	                    case "3":
-	                        repeatinfo += strLang51;
-	                        break;
-	                    case "4":
-	                        repeatinfo += strLang52;
-	                        break;
-	                    case "5":
-	                        repeatinfo += strLang53;
-	                        break;
-	                    case "6":
-	                        repeatinfo += strLang54;
-	                        break;
-	                }
-	            }
 	        }
 			break;
 		case "3":
-			repeatinfo += strLang37;
+			{
+				if(info[3] == '1'){
+		    		
+					repeatinfo += strLang37 + " ";
+					repeatinfo += info[4] + strLang122 + " ";
+					repeatinfo += info[5] + strLang81;
+		    		
+				} else {	
+					repeatinfo += strLang37 + " ";
+					repeatinfo += info[4] + strLang122 + " ";
+					for (var i = 0; i< info[5].length; i++){
+						switch (info[5]){
+						case "1":
+							repeatinfo += strLang55;
+							break;
+						case "2":
+							repeatinfo += strLang56;
+							break;
+						case "3":
+							repeatinfo += strLang57;
+							break;
+						case "4":
+							repeatinfo += strLang58;
+							break;
+						case "5":
+							repeatinfo += strLang59;
+							break;
+						}
+					}
+					repeatinfo += " ";
+					for (var i = 0; i < info[6].length; i++) {
+						var idx = info[6].substr(i, 1);
+						switch (idx) {
+						case "0":
+							repeatinfo += strLang48;
+							break;
+						case "1":
+							repeatinfo += strLang49;
+							break;
+						case "2":
+							repeatinfo += strLang50;
+							break;
+						case "3":
+							repeatinfo += strLang51;
+							break;
+						case "4":
+							repeatinfo += strLang52;
+							break;
+						case "5":
+							repeatinfo += strLang53;
+							break;
+						case "6":
+							repeatinfo += strLang54;
+							break;
+						}
+					}
+				}
+			}
 			break;
 	}	
 
-	repeatinfo += ", " + strLang38;
+	repeatinfo += " " + strLang38;
 	
 	if (info[1] == "1")
 		repeatinfo += strLang39;
@@ -829,7 +960,7 @@ function show_repetition_info()
 		var reEndMinute = edate.split(" ")[1].split(":")[1];
 		reEndMinute = reEndMinute.length==1?reEndMinute+"0":reEndMinute;
         
-        if( Number(reStartHour) < 12)   
+        /*if( Number(reStartHour) < 12)   
         { 
 			repeatinfo += "" + strLang1 + " "; 			
 		}
@@ -839,9 +970,13 @@ function show_repetition_info()
 			reStartHour = Number(reStartHour)-12; 
 		}        
                 
-        repeatinfo += reStartHour + ":" + reStartMinute + "" + " ~ " + "";
+        repeatinfo += reStartHour + ":" + reStartMinute + "" + " ~ " + "";*/
+		var sTime = $('#Stimepicker').val();
+		var eTime = $('#Etimepicker').val();
+		
+		repeatinfo += sTime + " ~ " +eTime;
         
-        if(Number(reEndHour) < 12)   
+       /* if(Number(reEndHour) < 12)   
         { 
 			repeatinfo += "" + strLang1 + " "; 
 		}
@@ -851,7 +986,31 @@ function show_repetition_info()
 			reEndHour = Number(reEndHour)-12;
 		}
         
-        repeatinfo += reEndHour + ":" + reEndMinute;
+        repeatinfo += reEndHour + ":" + reEndMinute;*/
+	}
+	
+	if(info[0] == -1){
+		var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	    var sYear = sDate.split("-")[0];
+	    var sMon = sDate.split("-")[1];
+	    var sDay = sDate.split("-")[2];
+	    repeatinfo += " " + strLang79 + " : " + sDate + " ~ " + strLang46;
+	}else if(info[0] == 0){
+		var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	    var sYear = sDate.split("-")[0];
+	    var sMon = sDate.split("-")[1];
+	    var sDay = sDate.split("-")[2];
+	    var eDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	    var eYear = eDate.split("-")[0];
+	    var eMon = eDate.split("-")[1];
+	    var eDay = eDate.split("-")[2];
+		repeatinfo += " " + strLang79 + " : " + sDate + " ~ " + eDate;
+	}else{
+		var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	    var sYear = sDate.split("-")[0];
+	    var sMon = sDate.split("-")[1];
+	    var sDay = sDate.split("-")[2];
+		repeatinfo += " " + strLang79 + " : " + sDate + " ~ " + info[0] + strLang47;
 	}
 	document.getElementById("repeatinfo").innerHTML = repeatinfo;
 }

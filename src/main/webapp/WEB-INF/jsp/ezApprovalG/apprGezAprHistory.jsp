@@ -89,7 +89,7 @@
 		        listview.LoadFromID("lvAttachList");
 		        var href = listview.GetSelectedRows()[0].getAttribute("DATA1");
 		        var rep = /'/g;
-		        href = "/ezApprovalG/downloadAttach.do?fileName=" + escapenew(listview.GetSelectedRows()[0].getAttribute("DATA3")) + "&filePath=" + escapenew(listview.GetSelectedRows()[0].getAttribute("DATA4")).replace(rep, "&#39;");
+		        href = "/ezApprovalG/downloadAttach.do?fileName=" + encodeURI(listview.GetSelectedRows()[0].getAttribute("DATA3")) + "&filePath=" + encodeURI(listview.GetSelectedRows()[0].getAttribute("DATA4"));
 		        document.getElementById("filedown").src = href;
 		    }
 		    function btnrecovery_onclick() {
@@ -296,7 +296,7 @@
 	</head>
 	<body class="popup" style="overflow:hidden;">
 		<h1><spring:message code='ezApprovalG.t373'/></h1>
-		<div id="close"><ul><li id="Table1" ><span onClick="close_Click()"><spring:message code='ezApprovalG.t64'/></span></li></ul></div>
+		<div id="close"><ul><li id="Table1" ><span onClick="close_Click()"></span></li></ul></div>
 		<div class="portlet_tabpart01" style="margin:0px;">
        		<div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px;">
        			<p id="orgTabButton3"><span onclick="BtnChange('3')" class="tabon"><spring:message code='ezApprovalG.t375'/></span></p>
@@ -330,10 +330,6 @@
 			</td>
 		  </tr>
 		</table>
-		    <iframe id="filedown" style="display:none"></iframe>
-		<script type="text/javascript" >
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
-		</script>
+		<iframe id="filedown" style="display:none"></iframe>
 	</body>
 </html>

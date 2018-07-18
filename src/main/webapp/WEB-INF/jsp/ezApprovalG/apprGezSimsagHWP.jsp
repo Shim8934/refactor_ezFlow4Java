@@ -17,7 +17,6 @@
 	<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
 	<script type="text/javascript" src="/js/ezApprovalG/ezSimsaG_Cross.js"></script>
 	<script type="text/javascript" src="/js/ezApprovalG/ezSimsaG_HWP.js"></script>
-	
 	<script type="text/javascript" src="/js/escapenew.js"></script>
 	<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
     <script type="text/javascript">
@@ -85,6 +84,7 @@
         arrDelFiles[0] = "c:\\" + pDocID + ".xml";
         arrDelFiles[1] = "c:\\" + pOrgDocID + ".xml";
         var pUse_Editor = "${useEditor}";
+        var approvalRoot = "${approvalRoot}";
         var ext = "hwp";
         
         function btnPrint_onclick() {
@@ -184,8 +184,6 @@
                             var SeqNum = escapenew(SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA2"));
                             attachPath[i] = SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA1");
                             attachType[i] = "N";
-                        } else {
-
                         }
                     }
                 }
@@ -233,7 +231,7 @@
                     HwpCtrl.ClearDocument();
                 }
             } catch (e) {
-                alert("ezsimsag_hwp.aspx.FieldsAvailable()" + e.description);
+                alert("ezsimsag_hwp.FieldsAvailable()" + e.description);
             }
         }
 
@@ -254,7 +252,7 @@
         }
 
         function btnSend_onclick() {
-            try {
+//             try {
                 if (!stampFlag && !NostampFlag) {
                     var pAlertContent = "<spring:message code='ezApprovalG.t216'/>";
                     OpenAlertUI(pAlertContent);
@@ -282,8 +280,7 @@
                         rtnVal = SetContainer();
                     } else {
                         is_Enc = OpenCheckUI();
-                        if (!sendExt()) {
-                        } else {
+                        if (sendExt()) {
                             rtnVal = SetContainer();
                         }
                     }
@@ -291,7 +288,8 @@
                     rtnVal = SetContainer();
                 }
 
-                DeleteLocalFiles();
+                //이거 할필요없을듯 로컬에다 저장하고 이용하고 이런식인데 박정진은 안쓴듯
+//                 DeleteLocalFiles();
 
                 if (rtnVal == "TRUE") {
                     HwpCtrl.SetFieldFocus("doctitle");
@@ -303,9 +301,9 @@
                     var pAlertContent = "<spring:message code='ezApprovalG.t217'/>";
                     OpenAlertUI(pAlertContent);
                 }
-            } catch (e) {
-                alert("ezsimsag_hwp.aspx.btnSend_onclick()" + e.description);
-        	}
+//             } catch (e) {
+//                 alert("ezsimsag_hwp.aspx.btnSend_onclick()" + e.description);
+//         	}
         }
 
         function DeleteLocalFiles() {
@@ -487,7 +485,6 @@
 
 
         function SaveFile() {
-
 			var result = "";
 			
 	        $.ajax({
@@ -514,7 +511,6 @@
 	    			html  :  HwpCtrl.GetCloneData("", "HWP")
 	    		},
 	    		success: function(text){
-	    			result = text;
 	    		}        			
 	    	});
 	        
@@ -570,11 +566,10 @@
             }
 
             if (!stampFlag) {
-
                 var DeptSealXML = GetDeptSealInfo();
                 var CompSealXML = GetSealInfo();
 
-	            if (GetChildNodes(DeptSealXML, "ROWS/ROW").length > 0 && GetChildNodes(CompSealXML, "ROWS/ROW").length > 0) {
+                if (SelectNodes(DeptSealXML, "ROWS/ROW").length > 0 && SelectNodes(CompSealXML, "ROWS/ROW").length > 0) {
                     var pInformationContent = "<spring:message code='ezApprovalG.t192'/><BR><spring:message code='ezApprovalG.t193'/>";
                     var Ans = OpenInformationUI(pInformationContent);
                     if (!Ans) {
@@ -582,19 +577,19 @@
                     } else {
                         SealXML = DeptSealXML;
                     }
-	            } else if (GetChildNodes(DeptSealXML, "ROWS/ROW").length <= 0 && GetChildNodes(CompSealXML, "ROWS/ROW").length <= 0) {
+                } else if (SelectNodes(DeptSealXML, "ROWS/ROW").length <= 0 && SelectNodes(CompSealXML, "ROWS/ROW").length <= 0) {
                     var pAlertContent =  "<spring:message code='ezApprovalG.t194'/><BR><spring:message code='ezApprovalG.t195'/>";
                         OpenAlertUI(pAlertContent);
                         return;
-	            } else if (GetChildNodes(DeptSealXML, "ROWS/ROW").length > 0) {
-                        SealXML = DeptSealXML;
-                }  else if (GetChildNodes(CompSealXML, "ROWS/ROW").length > 0) {
-                        SealXML = CompSealXML;
+                } else if (SelectNodes(DeptSealXML, "ROWS/ROW").length > 0) {
+                    SealXML = DeptSealXML;
+                } else if (SelectNodes(CompSealXML, "ROWS/ROW").length > 0) {
+                    SealXML = CompSealXML;
                 }
 
-	            var SealHref = getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[0], "DATA2"));
-	            var SealWidth = Number(getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[1], "VALUE")));
-	            var SealHeight = Number(getNodeText(SelectSingleNode(SelectNodes(SealXML, "ROWS/ROW/CELL")[2], "VALUE")));
+                var SealHref = getNodeText(SelectNodes(SealXML, "ROWS/ROW/CELL")[0].getElementsByTagName("DATA2")[0]);
+	            var SealWidth = parseInt(getNodeText(GetChildNodes(SelectNodes(SealXML, "ROWS/ROW/CELL")[1])[0]));
+	            var SealHeight = parseInt(getNodeText(GetChildNodes(SelectNodes(SealXML, "ROWS/ROW/CELL")[2])[0]));
 
                 if (HwpCtrl.CheckFieldExist("sealsign")) {
                     HwpCtrl.SetFieldText("sealsign", "");
@@ -1158,7 +1153,7 @@ function PercentToMillimeter(strFontSize, strPercent) {
                 </div>
                 <div id="close">
                     <ul>
-                        <li id="btnClose"><span onclick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
+                        <li id="btnClose"><span onclick="return btnClose_onclick()"></span></li>
                     </ul>
                 </div>
                 <script type="text/javascript">

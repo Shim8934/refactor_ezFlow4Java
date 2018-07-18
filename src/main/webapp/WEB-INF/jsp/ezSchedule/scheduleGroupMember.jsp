@@ -247,7 +247,7 @@
 				    <li title="<spring:message code='ezSchedule.t189' />"><span onClick="renew_member()"><spring:message code='ezSchedule.t169' /></span></li>
 			  	</ul>
 			</div>
-			<div id="close"><ul><li><span onClick="window.close()"><spring:message code='ezSchedule.t16' /></span></li></ul></div>
+			<div id="close"><ul><li><span onClick="window.close()"></span></li></ul></div>
 			<span class="txt">▒ <spring:message code="ezSchedule.t17902" /></span>
 			<div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:440px; HEIGHT:277px"> 
 				<table width="100%" class="popuplist">
@@ -282,7 +282,6 @@
 			</div>
 			<script type="text/javascript">
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
-				selToggleList(document.getElementById("close"), "ul", "li", "0");
 			</script> 
 		</form>
 	</body>

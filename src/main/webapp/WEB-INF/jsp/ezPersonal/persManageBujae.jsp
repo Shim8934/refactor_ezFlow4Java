@@ -373,8 +373,8 @@
 					<th><spring:message code='ezPersonal.t31'/></th>
 					<td>
 						<input type="text" name="TextName" id="TextName" Width="120" value="${textName}" ReadOnly />
-						&nbsp;<a class="imgbtn" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person('')"><spring:message code='ezPersonal.t32'/></span></a> 
-		                <a class="imgbtn" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName').value=''; $('#TextName').attr('check','clear')"><spring:message code='ezPersonal.t33'/></span></a>
+						<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person('')"><spring:message code='ezPersonal.t32'/></span></a> 
+		                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName').value=''; $('#TextName').attr('check','clear')"><spring:message code='ezPersonal.t33'/></span></a>
 					</td>
 				</tr>
 				<c:if test="${fn:indexOf(fn:toLowerCase(userInfo.rollInfo), 'a=1;') > -1}">
@@ -382,8 +382,8 @@
 			            <th><spring:message code='ezPersonal.t399'/></th>
 					    <td>
 					    	<input type="text" name="TextProxyName" id="TextProxyName" value="${textProxyName}" Width="120" ReadOnly />
-						    &nbsp;<a class="imgbtn" style="vertical-align:middle"><span onclick="gIsProxyUser = true;select_person('Proxy')"><spring:message code='ezPersonal.t32'/></span></a> 
-			                <a class="imgbtn" style="vertical-align:middle"><span onClick="gIsProxyUser = false;document.getElementById('TextProxyName').value=''"><spring:message code='ezPersonal.t33'/></span></a>
+						    <a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsProxyUser = true;select_person('Proxy')"><spring:message code='ezPersonal.t32'/></span></a> 
+			                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsProxyUser = false;document.getElementById('TextProxyName').value=''"><spring:message code='ezPersonal.t33'/></span></a>
 					    </td>
 				    </tr>
 				</c:if>
@@ -432,9 +432,11 @@
 					</tr>
 				</c:if>
 			</table>            
-			<div style="width:520px;text-align:center;margin-top:15px;">
-		    	<a class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezPersonal.t34'/></span></a>
-		    	<a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezPersonal.t13'/></span></a>
+			<div style="width:520px;text-align:center;">
+				<div class="btnpositionJsp">
+		    		<a class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezPersonal.t34'/></span></a>
+		    		<a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezPersonal.t13'/></span></a>
+		    	</div>	
 		  	</div>
 		</form>
 	</body>

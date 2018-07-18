@@ -1,8 +1,8 @@
-﻿var PressCtrlKey = false;
+﻿﻿var PressCtrlKey = false;
 var PressShiftKey = false;
-var m_strColorSelect =  "#f0f6ff";
+var m_strColorSelect =  "#edf4fd";
 var m_strColorDefault =  "#FFFFFF";
-var m_strColorOver = "#F7FAE0";
+var m_strColorOver = "#f4f5f5";
 var m_UrgentColor = "#E9101A";
 var HeaerCnt = 0;
 
@@ -878,7 +878,7 @@ function ListView() {
 
     //리스트뷰 바디 생성
     function GetTableBodyObj() {
-    	var oTbody = document.createElement("TBODY");
+        var oTbody = document.createElement("TBODY");
         oTbody.style.backgroundColor = m_strColorDefault;
 
         var oRows = _dataSource.getElementsByTagName("ROW");
@@ -1094,8 +1094,8 @@ function ListView() {
             objTd.appendChild(oText);
             objTr.appendChild(objTd);
             
-            objTd.onclick = function () { event_listclick(this); };
-            objTd.setAttribute("draggable", true);
+            // 수정 수아 재은
+            objTr.draggable = "true";
             
             objTd = null;
             oText = null;

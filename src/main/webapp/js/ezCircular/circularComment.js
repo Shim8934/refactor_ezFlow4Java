@@ -155,7 +155,7 @@ function showEdit(obj) {
 		$(".circularCommentEdit").remove();
 		
 		var circularEdit = "<tr class='circularCommentEdit' circularUserID='" + circularUserID + "' style='border:1px solid #e2e2e2; padding:10px'>";
-		circularEdit += "<td style='background-color:#ececec;' colspan='2'><textarea style='width:105%;height:35px;resize:none;overflow:auto;vertical-align:middle;'></textarea></td>";
+		circularEdit += "<td style='background-color:#ececec;' colspan='2'><textarea style='width:105%;height:50px;resize:none;overflow:auto;vertical-align:middle;margin:5px;border:1px solid #ddd'></textarea></td>";
 		circularEdit += "<td style='background-color:#ececec; text-align:center;'><a class='imgbtn' style='margin-left:47px;padding-left:2px;'>&nbsp;<span onclick='editCircularComment(this);' style='padding-right:3px;'>" + strLang3 + "</span>&nbsp;</a><br/><div style='margin-left:35px;'><input type='checkbox' id='commentStatus' style='vertical-align:middle;'>" + strLang4 + "</input></div></td>";
 		circularEdit += "</tr>";
 		
@@ -184,8 +184,9 @@ function editCircularComment(obj) {
 		alert(strLang5);
 		return ;
 	}
-	
-	circularComment = trim(ReplaceText(circularComment, "\n", "<br>"));
+	//2018-07-06 배현상, 회람판 의견 표힌 시 \n의 <br>치환 불필요 제거
+	//circularComment = trim(ReplaceText(circularComment, "\n", "<br>"));
+	circularComment = trim(circularComment);
 	
 	$.ajax({
 		type : "POST",

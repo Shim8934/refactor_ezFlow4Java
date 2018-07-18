@@ -187,10 +187,10 @@
 	                if (document.getElementById(imageid) != "" && document.getElementById(imageid) != null)
 	                    return "false";
 	
-	                var resultHTML = "<table width='100%' class='content' id='" + "M_" + imageid + "' name='" + imgpath + "'  uniqueId='" + imgUniqueID + "' ><tr>" +
+	                var resultHTML = "<table style='margin-top:5px' width='100%' class='content' id='" + "M_" + imageid + "' name='" + imgpath + "'  uniqueId='" + imgUniqueID + "' ><tr>" +
 	                                 "<td style='width:25px;padding:0px; margin:0px;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
 	                                 "<td style='width:100px; height: 100px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
-	                                 "<td><textarea id='getcontent' style='width:97%; height:80px' maxlength='50' name='imgContent' ></textarea></input></td></tr></table>";
+	                                 "<td><textarea id='getcontent' style='width:94%; height:80px; margin:5px' maxlength='50' name='imgContent' ></textarea></input></td></tr></table>";
 	
 	                var imagecontent = document.getElementById("addimagecontent");
 	
@@ -484,7 +484,7 @@
 	                </div>
 	                <div id="close">
 	                <ul>
-	                    <li ><span  onClick="window.close();"><spring:message code='ezBoard.t12'/></span></li>
+	                    <li ><span  onClick="window.close();"></span></li>
 	                </ul>
 	              </div>
 	            </td>
@@ -502,7 +502,7 @@
 	            <th style="text-align:left; margin: 0px; padding-left:2px; width:25px; border-right: 0px">
 	                <input id="checkmenu" type="checkbox" onClick="imagecheckAll(this)"  name="checkmenu"/>
 	            </th>  
-	            <th style="text-align:center; height:25px; width:100%; border-left:0px"><spring:message code='ezBoard.t1010'/></th>
+	            <th style="text-align:center; height:25px; width:100%; border-left:0px;font-weight: normal;color:#333"><spring:message code='ezBoard.t1010'/></th>
 	        </tr>       
 	        <tr style="vertical-align:top">
 	            <td style="vertical-align:top; padding:0px; margin:0px" colspan="2">

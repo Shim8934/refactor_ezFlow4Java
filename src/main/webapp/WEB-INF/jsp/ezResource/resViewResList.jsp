@@ -230,26 +230,26 @@
 	        	var pageNum = pcurpage;
 	        	if (ptotalPage > 1 && pageNum != 1) {
 		            strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' width='16' height='16' /></a></span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
 		            PagingHTML += strtext;
 	    	    } else {
 		            strtext = "<span class='btnimg'><a >";
-		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' width='16' height='16' /></a></span>";
+		            strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
 		            PagingHTML += strtext;
 	    	    }
 	        	if (ptotalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
 		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>&nbsp;" + strLang1000 + "&nbsp;</span>";
+		                strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif'></span>";
 	    	            PagingHTML += strtext;
 	        	    } else {
 	                	strtext = "<span class='btnimg'>";
-	                	strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>&nbsp;" + strLang1000 + "&nbsp;</span>";
+	                	strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
 	                	PagingHTML += strtext;
 	            	}
 	        	} else {
 	            	strtext = "<span class='btnimg'>";
-	            	strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>&nbsp;" + strLang1000 + "&nbsp;</span>";
+	            	strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	var MaxNum;
@@ -271,26 +271,26 @@
 	        	}
 	        	if (ptotalPage > BlockSize) {
 	            	if (ptotalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang1001 + "</span><span class='btnimg' onclick='return selafterBlock()'>";
-		                strtext = strtext + "<img src='/images/kr/cm/btn_next.gif' width='16' height='16'></span>";
+		                strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
+		                strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'></span>";
 		                PagingHTML += strtext;
 	    	        } else {
-	                	strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang1001 + "</span><span class='btnimg'>";
-	                	strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' width='16' height='16'></span>";
+	                	strtext = "<span class='btnimg'>";
+	                	strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
 	                	PagingHTML += strtext;
 	            	}
 	        	} else {
-	            	strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang1001 + "</span><span class='btnimg'>";
-	            	strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' width='16' height='16'></span>";
+	            	strtext = "<span class='btnimg'>";
+	            	strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	if (ptotalPage > 1 && ptotalPage != 1 && (ptotalPage != pageNum)) {
 	            	strtext = "<span class='btnimg' onclick='return goToPageByNum(" + ptotalPage + ")'>";
-	            	strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' width='16' height='16' /></span>";
+	            	strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' /></span>";
 	            	PagingHTML += strtext;
 	        	} else {
 	            	strtext = "<span class='btnimg'>";
-	            	strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' width='16' height='16' /></span>";
+	            	strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	PagingHTML += "</div>";
@@ -403,12 +403,12 @@
 				<c:forEach var="list"  items="${resBrdList}" begin="${start}">
   					<tr>
     					<td style="padding:0;"><input type="checkbox" name="chk" id="chk" value="${list.brdID}" ownerid="${list.ownerID}"></td>
-						<td title="<c:out value='${list.brdNm}' />" onClick="Item_View('${list.brdID}');"	style="cursor: pointer; text-overflow: ellipsis; overflow: hidden" align="left"><nobr><c:out value='${list.brdNm}' /></nobr> </td>
-						<td id="OwnDeptID" value="${list.ownDeptNm}" style="text-overflow: ellipsis; overflow: hidden"><nobr>${list.ownDeptNm}</nobr> </td>
-						<td id="OwnerID"  style="cursor:pointer;text-overflow: ellipsis; overflow: hidden;" value="${list.ownerID}" onClick="MemberInfo_onDblclick('${list.ownerID}')" nowrap>${list.ownerNm}</td>
-						<td id="OwnerPosition">${list.ownerPosition}</td>
-						<td id="OwnerCall">${list.ownerCall} </td>			
-						<td id="ResLocation" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><c:out value='${list.resLocation}'/></td>
+						<td onClick="Item_View('${list.brdID}');"	style="cursor: pointer; word-wrap:break-word;" align="left"><c:out value='${list.brdNm}' /> </td>
+						<td id="OwnDeptID" value="${list.ownDeptNm}" style="word-wrap:break-word;"><nobr>${list.ownDeptNm}</nobr> </td>
+						<td id="OwnerID"  style="cursor:pointer; word-wrap:break-word;" value="${list.ownerID}" onClick="MemberInfo_onDblclick('${list.ownerID}')" nowrap>${list.ownerNm}</td>
+						<td id="OwnerPosition" style="word-wrap:break-word;">${list.ownerPosition}</td>
+						<td id="OwnerCall" style="word-wrap:break-word;">${list.ownerCall} </td>			
+						<td id="ResLocation" style="word-wrap:break-word;"><c:out value='${list.resLocation}'/></td>				<!-- 2018-07-13 김민성 - 테이블 형식에서는 정보 모두 출력하도록 변경 -->
 					</tr> 
 				</c:forEach>
 			</c:if>

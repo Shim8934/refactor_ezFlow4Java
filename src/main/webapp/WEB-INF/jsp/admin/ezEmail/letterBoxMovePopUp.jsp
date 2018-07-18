@@ -7,7 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezEmail.letter4'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
+	    <link rel="stylesheet" href="<spring:message code = 'main.e15' />" type="text/css" />
 	    <link rel="stylesheet" href="/css/ezEmail/style.css" />
 	    <link rel="stylesheet" href="/js/dist/themes/default/style.min.css" />
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>

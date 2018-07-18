@@ -226,7 +226,7 @@
 	                        var DocumentInfo = new ActiveXObject("Microsoft.XMLDOM");
 	                        DocumentInfo.loadXML(HwpCtrl.GetDocumentInfo());
 	
-	                        if (GetDocumentElement(HwpCtrl, "CONNROOT") != "") {
+	                        if (GetDocumentElement(HwpCtrl, "CONNROOT", true) != "") {
 	                            var pAlertContent = "<spring:message code='ezApprovalG.t1391'/><br><br><spring:message code='ezApprovalG.t1392'/>";
 	                            OpenAlertUI(pAlertContent);
 	                            HwpCtrl.ClearDocument();
@@ -490,13 +490,29 @@
 			    		}        			
 			    	});
 			    	
+			    	// 본문의 용량을 구하기 위함 2018-07-13
+			    	var strClone = HwpCtrl.GetCloneData("", "HWPML2X");
+			    	var strBytes = parseInt(getByteLength(strClone));
+								    	
+			    	console.log(strBytes);
+			    	
 	                var rtnAttachXML = new ActiveXObject("Microsoft.XMLDOM");
-	                rtnAttachXML.loadXML(loadXMLString(result).xml);
-	
+	                rtnAttachXML.loadXML(result);
+					
+	                var attachTotalSize = getNodeText(rtnAttachXML.getElementsByTagName("TOTALSIZE").item(0));
+	                
+	                
 	                if (getNodeText(rtnAttachXML.getElementsByTagName("FLAG").item(0)) == "Y") {
 	                    OpenAlertUI("외부발송문서 총 첨부용량은 최대 6MB 입니다" + "<br>" + "첨부용량을 줄여주시기 바랍니다.");
 	                    return;
+	                    
 	                }
+
+	                // 본문과 첨부파일의 총합이 7.4mb가 초과시 알러트 2018-07-13 강민수92
+                    if (getNodeText(rtnAttachXML.getElementsByTagName("EXTFLAG").item(0)) == "Y" && strBytes + parseInt(attachTotalSize) > 7400000) {
+                    	OpenAlertUI("외부발송문서 총 용량은 최대 7.4MB 입니다" + "<br>" + "첨부파일이나 본문용량을 줄여주시기 바랍니다.");
+	                    return;
+                    }
 	
 	                bAttachProcess = false;
 	
@@ -997,7 +1013,7 @@
 					}
 				
 				    var g_SepAttachLVXml = "";
-				    g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml");
+				    g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml", true);
 				    if (!g_SepAttachLVXml)
 				        g_SepAttachLVXml = "";
 				
@@ -1261,6 +1277,15 @@
 	            }
 	            catch (e) { }
 	        }
+	        
+	    	function getByteLength(s){
+	    		var bytes;
+	    		var i;
+	    		var c;
+	    		
+	    	    for(bytes=i=0; c=s.charCodeAt(i++); bytes += c >> 11? 3 : c >> 7 ? 2 : 1);
+	    	    return bytes;
+	    	}
 	    </script>
 	</head>
 	<body class="popup">
@@ -1293,7 +1318,7 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li id="btnClose"><span onclick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
+	                        <li id="btnClose"><span onclick="return btnClose_onclick()"></span></li>
 	                    </ul>
 	                </div>
 	                <script type="text/javascript">

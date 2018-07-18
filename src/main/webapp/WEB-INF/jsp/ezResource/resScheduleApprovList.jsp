@@ -216,10 +216,10 @@
 	        	var szType = "Master";
 	        	if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 700);
-	            	window.open("/ezResource/scheduleRead.do?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate + "&brdName=" + encodeURIComponent("${brdNm}"), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	window.open("/ezResource/scheduleRead.do?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate, "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	} else {
 	            	var feature = GetOpenPosition(790, 700);
-	            	window.open("/ezResource/scheduleRead.do?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate + "&brdName=" + encodeURIComponent("${brdNm}"), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	            	window.open("/ezResource/scheduleRead.do?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        	}
 	    	}
 
@@ -572,22 +572,22 @@
 	        	PagingHTML += strtext;
 	        	var pageNum = CurPage;
 	        	if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>"
 		            PagingHTML += strtext;
 	    	    } else {
-	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>"
 	            	PagingHTML += strtext;
 	        	}
 	        	if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang1000 + "</span>";
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 	    	            PagingHTML += strtext;
 	        	    } else {
-	                	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang1000 + "</span>";
+	                	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 	                	PagingHTML += strtext;
 	            	}
 	        	} else {
-	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang1000 + "</span>";
+	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	var MaxNum;
@@ -618,24 +618,24 @@
 	        	
 	        	if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang1001 + "</span>";
-	    	            strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+		                strtext = "";
+	    	            strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 	        	        PagingHTML += strtext;
 	            	} else {
-	                	strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang1001 + "</span>";
-	                	strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                	strtext = "";
+	                	strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 	                	PagingHTML += strtext;
 	            	}
 	        	} else {
-	            	strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang1001 + "</span>";
-	            	strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	            	strtext = "";
+	            	strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	            	strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+	            	strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 	            	PagingHTML += strtext;
 	        	} else {
-	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	PagingHTML += "</div>";
@@ -827,7 +827,8 @@
     			</HEADERS>
 			</LISTVIEWDATA>
 		</xml>
-    	<h1><c:out value='${brdNm}' /></h1>
+		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
+    	<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;"><c:out value='${brdNm}' /></h1>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
@@ -847,7 +848,7 @@
     			</li>
   			</ul>
 		</div>
-		<div class="portlet_tabpart03" style="background-color: #f8f8fa; border:1px solid #ddd; padding:5px 0px 5px 5px">
+		<div class="portlet_tabpart03" style="background-color: #f8f8fa; border:1px solid #ddd;border-bottom:0px; padding:5px 0px 5px 5px">
     		<input id="writername" type="text" style="width: 80px" />
     		<a class="imgbtn" style="padding-top:2px"><span id="Span2" onclick="seluser()"><spring:message code='ezResource.t2003'/></span></a>
     		<!-- 2018.03.23 서주연 - #12122 부서명 출력 칸 width 늘림 -->

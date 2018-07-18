@@ -23,6 +23,10 @@
 			getData();
 		};
 		
+		window.onbeforeunload = function() {
+			parent.closeAllPopup();
+		}
+		
 		function getData() {
 			var type = document.querySelector('input[name=treeType]:checked').value;
 			$.ajax({
@@ -295,7 +299,7 @@
 	<h1 id ="topmenu"><spring:message code='ezWebFolder.t30'/></h1>
 	<div id="close">
 		<ul>
-			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110'/></span></li>
+			<li><span onclick="wClose();"></span></li>
 		</ul>
 	</div>
 	

@@ -874,7 +874,7 @@
 										</div>
 									</c:when>
 									<c:otherwise>
-										<div style="width: 500px; height: 140px; background: white; text-align: center;border:1px solid #e8e8ef">
+										<div style="width: 500px; height: 140px; background: white; text-align: center;border:1px solid #e8e8e8">
 											<span style="font-size: large; color: palevioletred; font-weight: bold; display: inline-block; margin-top: 45px; margin-bottom: 20px;"><spring:message code="ezLadder.t049" /></span>
 											<span style="display: inline-block;"><spring:message code="ezLadder.t049" /></span>
 										</div>
@@ -909,7 +909,7 @@
 									</ul>
 								</div>
 								<div id="lineDiv" style="position: relative; height: 400px; z-index: 1;">
-									<div id="blackBox" style="height: 398px;background: #f9f9fc; position: absolute;left: -50px;right: 0;border-top:1px solid #dde;border-bottom:1px solid #dde">
+									<div id="blackBox" style="height: 398px;background: #f8f8f8; position: absolute;left: -50px;right: 0;border-top:1px solid #ddd;border-bottom:1px solid #ddd">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
 									<span></span>

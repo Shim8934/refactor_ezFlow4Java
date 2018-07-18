@@ -8,7 +8,7 @@
 		<title><spring:message code='ezCircular.t35' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -85,7 +85,7 @@
 						$(obj).css("backgroundColor", "#FFFFFF");
 					} else {
 						$(obj).find("input").prop("checked", true);
-						$(obj).css("backgroundColor", "#f0f6ff");
+						$(obj).css("backgroundColor", "#edf4fd");
 					}
 				} else {
 					if (_RowObject != null) {
@@ -95,7 +95,7 @@
 
 					_RowObject = obj;
 					$(obj).find("input").prop("checked", true);
-					$(obj).css("backgroundColor", "#f0f6ff");
+					$(obj).css("backgroundColor", "#edf4fd");
 				}
         	}
 
@@ -178,7 +178,7 @@
 				// 전체 체크박스 선택, 해제
 				if ($("#checkboxAll").prop("checked") == true) {
 					$(".myCheckbox").prop("checked", true);
-					$("#circularDeptList tr").css("background", "#f0f6ff");
+					$("#circularDeptList tr").css("background", "#edf4fd");
 				} else {
 					$(".myCheckbox").prop("checked", false);
 					$("#circularDeptList tr").css("background", "#FFFFFF");
@@ -192,7 +192,7 @@
 					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#FFFFFF");
 				} else {
 					$(obj).prop("checked", true);
-					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#f0f6ff");
+					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#edf4fd");
 				}
 
 				event.stopPropagation();

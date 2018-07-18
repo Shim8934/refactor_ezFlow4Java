@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='main.t70' /></title>
+		<title><spring:message code='ezPoll.t112' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='main.e15' />" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -64,10 +64,15 @@
 	<body class = "popup" id="mainbody" style="overflow: hidden;">
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
-			    <div id="menu1" style="float:left; display: block; width:100%; text-align:center;">
-			        	<h1><spring:message code='ezPoll.t135'/></h1>
+			    <div id="menu1" style="float:left; display: block; width:100%; text-align:left; padding-left:5px;">
+			        <h1><spring:message code='ezPoll.t135'/></h1>
 			    </div>				
 			</div>
+			<div id="close">
+	            <ul>
+	                <li><span onclick="window.close()"></span></li>
+	            </ul>
+	        </div>
 			<div style="height:359px; overflow-y: auto; overflow-x: hidden;" id="divTbl">
 				<table border=1 style="float: left;clear: none;width : 50%; border-color: grey" class="voteSeenTbl">
 					<tr> 

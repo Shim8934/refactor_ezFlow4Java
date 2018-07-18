@@ -7,7 +7,7 @@
 		<title><spring:message code='ezPortal.t13'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<style>
 			.box {
 				border-right:0px;
@@ -252,7 +252,7 @@
 	            g_xmlHTTP = null;
 	        }
 	    }
-	    var m_strColorSelect = "#f0f6ff";
+	    var m_strColorSelect = "#edf4fd";
 	    var m_strColorOver = "#f4f5f5";
 	    var m_strColorDefault = "#ffffff";
 	    var p_ListOrderObject = null;
@@ -339,7 +339,7 @@
 	            document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
 	        }
 	        var UserListHTML = "";
-	        if (SelectDeptNM.getAttribute("countinfo") != "1") {
+	        if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
 	            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	            SelectDeptNM.setAttribute("countinfo", "1")
 	        }
@@ -885,6 +885,11 @@
     </tree>
 </xml>
     <h1 id="h1Title"><spring:message code='ezPortal.t13'/></h1>
+    <div id="close">
+        <ul>
+            <li><span onclick="window.close()"></span></li>
+        </ul>
+    </div>
     <table style="width: 100%">
         <tr>
             <td>
@@ -969,10 +974,9 @@
         </tr>
     </table>
     <br />
-    <div class="btnposition">
+    <div class="btnpositionNew">
         <a class="imgbtn"><span onclick="dept_select()"><spring:message code='ezPortal.t43'/></span></a>
         <a class="imgbtn" onclick="Save_onclick()"><span><spring:message code='ezPortal.t45'/></span></a>
-        <a class="imgbtn" onclick="window.close()"><span><spring:message code='ezPortal.t46'/></span></a>
     </div>
 	</body>
 </html>

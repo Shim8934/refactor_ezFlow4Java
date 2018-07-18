@@ -276,11 +276,10 @@
 		  		<li><span onClick="return btnOK_onclick()" ><spring:message code = 'ezApprovalG.t1249' /></span></li>
 			</ul>
 		</div>
-		<div id="close"><ul><li><span onClick="window.close()" ><spring:message code = 'ezApprovalG.t64' /></span></li></ul></div>
+		<div id="close"><ul><li><span onClick="window.close()" ></span></li></ul></div>
 		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
 		<table class="content">

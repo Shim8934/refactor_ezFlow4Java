@@ -102,15 +102,11 @@
 		<h1><spring:message code='ezBoard.t81'/><span id="headTitle" style="font-size: 14px">[${totalCommentCount}]</span></h1>
 		<div id="close">
 			<ul>
-				<li><span onclick="closePopup();"><spring:message code='ezCircular.t84' /></span></li>
+				<li><span onclick="closePopup();"></span></li>
 			</ul>
 		</div>
 		
-		<script type="text/javascript" >
-   			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
-		
-		<div style='height:530px;overflow-y:auto;'>
+		<div style='height:500px;overflow-y:auto;'>
 			<table class="mainlist" style="width:99.5%" >
 				<c:choose>
 					<c:when test="${gubun == 2}">

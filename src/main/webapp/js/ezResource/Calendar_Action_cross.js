@@ -1,4 +1,4 @@
-﻿//오늘의 날짜 (년도, 월, 일, 오늘의 요일)
+﻿﻿//오늘의 날짜 (년도, 월, 일, 오늘의 요일)
 var weektodate = new Date();
 
 //전역변수 (년도, 월, 일, 요일)
@@ -498,10 +498,11 @@ function tableListControl_Week()
             var _mtr2 = document.createElement("TR");
             _mtd = document.createElement("TD");
             _mtd.style.width = "200px";
-            _mtd.setAttribute("style", "vertical-align:middle;cursor:pointer;");
+            _mtd.setAttribute("style", "vertical-align:middle;cursor:pointer;overflow:hidden; text-overflow:ellipsis;white-space: nowrap;");
             _mtd.setAttribute("class", "weektd_01");
             _mtd.setAttribute("DATA1", title_name[k].split("/")[0]);
             _mtd.setAttribute("DATA2", title_name[k].split("/")[1]);
+            _mtd.setAttribute("title", _mtd.getAttribute("DATA2"));
             _mtd.align = "left";
             _mtd.style.height = "60px";
             //_mtd.onselectstart = "return false";
@@ -948,11 +949,11 @@ function tableListControl_today() {
         for (var k = 0; k < title_name.length; k++) {
             var _Tr2 = document.createElement("TR");
             var _TD = document.createElement("TD");
-            _TD.style.width = "250px";
-            _TD.style.cursor = "pointer";
+            _TD.setAttribute("style", "width:250px; vertical-align:middle; cursor:pointer; overflow:hidden; text-overflow:ellipsis; white-space: nowrap;");
             _TD.setAttribute("class", "todaytd_01");
             _TD.setAttribute("DATA1", title_name[k].split("/")[0]);
             _TD.setAttribute("DATA2", title_name[k].split("/")[1]);
+            _TD.setAttribute("title", _TD.getAttribute("DATA2"));
             _TD.setAttribute("ondblclick", "newSchedule_onclick(event)");
             
             _TD.align = "left";
@@ -1041,6 +1042,8 @@ function tableListControl_today() {
 
                             document.getElementById(pObjectId + "_" + TCnt).style.backgroundColor = "rgba(237, 244, 253, 1)";
                             document.getElementById(pObjectId + "_" + TCnt).style.border = "1.1px solid #b5c8e3";//일보기>공유자원 td border
+                            document.getElementById(pObjectId + "_" + TCnt).style.borderTopWidth = "0px";
+                            document.getElementById(pObjectId + "_" + TCnt).style.borderLeftWidth = "0px";
                             document.getElementById(pObjectId + "_" + TCnt).style.cursor = "pointer";
                             document.getElementById(pObjectId + "_" + TCnt).onmouseover = function (event) { onmouse_over_today(this, event); };
                             document.getElementById(pObjectId + "_" + TCnt).onmouseout = new Function("onmouse_out_today(this);");
@@ -1081,6 +1084,8 @@ function tableListControl_today() {
 
                     document.getElementById(pObjectId + "_1").style.backgroundColor = "rgba(237, 244, 253, 1)";
                     document.getElementById(pObjectId + "_1").style.border = "1.1px solid #b5c8e3";
+                    document.getElementById(pObjectId + "_1").style.borderTopWidth = "0px";
+                    document.getElementById(pObjectId + "_1").style.borderLeftWidth = "0px";
                     document.getElementById(pObjectId + "_1").style.cursor = "pointer";
                     document.getElementById(pObjectId + "_1").onmouseover = function (event) { onmouse_over_today(this, event); };
                     document.getElementById(pObjectId + "_1").onmouseout = new Function("onmouse_out_today(this);");
@@ -1103,6 +1108,7 @@ function tableListControl_today() {
         _table.setAttribute("class", "table_layout");
         var _tr = document.createElement("TR");
         _tr.style.borderTop="1px solid #dedede";
+        _tr.style.borderLeft="0px solid #dedede";
         var _th = document.createElement("TH");
         _th.style.textAlign = "center";
         _th.style.verticalAlign = "middle";
@@ -1213,6 +1219,8 @@ function tableListControl_today() {
                                     _TD.align = "center";
                                     _TD.style.backgroundColor = "rgba(237, 244, 253, 1)";
                                     _TD.style.border = "1.1px solid #b5c8e3";
+                                    _TD.style.borderTopWidth = "0px";
+                                    _TD.style.borderLeftWidth = "0px";
                                     _TD.style.width = Math.floor((100/48)*width_td) + "%";
                                     _TD.setAttribute("class", "todaytd_02");
                                     _TD.setAttribute("id", "nDay_" + title_name[k].split("/")[0] + "_" + (j + 1));
@@ -1264,7 +1272,9 @@ function tableListControl_today() {
                             _TD.title_name = strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "&#13;" + strLang268 + " : " + getNodeText(xmldom.getElementsByTagName("dept_name")[j]);
                             _TD.align = "center";
                             _TD.style.backgroundColor = "rgba(237, 244, 253, 1)";
-                            _TD.style.border = "1.1px solid #b5c8e3";//일보기>허가요청중인 자원 td border
+                            _TD.style.border = "1px solid #b5c8e3";//일보기>허가요청중인 자원 td border
+                            _TD.style.borderTopWidth = "0px";
+                            _TD.style.borderLeftWidth = "0px";
                             _TD.style.width = 100 + "%";
                             _TD.setAttribute("class", "todaytd_02");
                             _TD.setAttribute("id", "nDay_" + title_name[k].split("/")[0] + "_" + (j + 1));
@@ -1329,7 +1339,7 @@ function idCalendarViewer_OnDoubleClickAppointment2(sz_Num, sz_OwnerID, sz_Start
 
     if (sz_Num != "" && sz_Num != null) {
         ////읽기창////
-        window.open("/ezResource/scheduleRead.do?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + encodeURIComponent(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+        window.open("/ezResource/scheduleRead.do?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End, "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
     } else if (p_Type != "MAIN") {
 
         if (CrossYN() || pNoneActiveX == "YES") {
@@ -1421,7 +1431,7 @@ function showTooltip_MouseOver(obj, e) {
     tTable.setAttribute("border", "0");
     tTable.setAttribute("width", "100%");
     tTh.setAttribute("scope", "col");
-    tTh.style.background = "#f0f6ff";
+    tTh.style.background = "#edf4fd";
     tTh.style.border = "1px solid #d1ddec";
     setNodeText(tTh,GetAttribute(obj,"subject").split("&apos;").join("'"));
     tTr.appendChild(tTh);
@@ -1430,6 +1440,7 @@ function showTooltip_MouseOver(obj, e) {
     var tTr = document.createElement("TR");
     var tTd = document.createElement("TD");
     tTd.style.borderTop = "0px";
+    tTd.style.borderLeft = "0px";
     tTd.style.backgroundColor = "white";
     tTd.className = "text";
     

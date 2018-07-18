@@ -124,6 +124,11 @@
 	</head>
 	<body class="popup" style="overflow:hidden">		
 		<h1><spring:message code="ezBoard.t5000"/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return window.close();"></span></li>
+            </ul>
+        </div>
 		<table style="width:500px" id="toggle_tbl1" class="content">
 			<tr>
 				<th>
@@ -144,9 +149,9 @@
 				<th><spring:message code="ezBoard.t5001"/></th>
 				<td colspan="3">					
 					<input type="file" name="file1" id="file1" style="width:85%;margin-left:3px; display:none;" onchange="btn_AttachAdd_onclick()"/>
-					<input type="text" name="filetxt" id="filetxt" style="width:77%; margin-left:5px; margin-top:2.5px; cursor:default;"
+					<input type="text" name="filetxt" id="filetxt" style="width:78%;cursor:default;"
 					 readonly onclick="SliderImage()"/>
-					<a href="#" class="imgbtn" style="margin-top:2px;"><span onclick="SliderImage();"><spring:message code="ezBoard.t5010"/></span></a>
+					<a href="#" class="imgbtn imgbck" style="height:22px"><span onclick="SliderImage();"><spring:message code="ezBoard.t5010"/></span></a>
 					<input type="hidden" name="backgroundID" id="backgroundID" value="<c:out value='${backgroundID}'/>"/>
 					<input type="hidden" name="saveFileName" id="saveFileName" />
 					<input type="hidden" name="guid" />
@@ -155,15 +160,14 @@
 			</tr>
 	        <tr>
 	            <th><spring:message code="ezBoard.t5002"/></th>
-	            <td>&nbsp;<input type="text" name="width" id="imagewidth" readonly style="cursor:default; background-color:#f8f8fa;"/>&nbsp;px</td>
+	            <td><input type="text" name="width" id="imagewidth" readonly style="cursor:default; background-color:#f8f8fa;"/>&nbsp;px</td>
 	            <th><spring:message code="ezBoard.t5003"/></th>
-	            <td>&nbsp;<input type="text" name="height" id="imageheight" />&nbsp;px</td>
+	            <td><input type="text" name="height" id="imageheight" />&nbsp;px</td>
 	        </tr>
 	        </form>	
 		</table>
-	    <div class="btnposition">	    	
+	    <div class="btnpositionNew">	    	
 	        <a href="#" class="imgbtn"><span onclick="btnSave_click();"><spring:message code="ezBoard.t98"/></span></a>
-	        <a href="#" class="imgbtn"><span onclick="return window.close();"><spring:message code="ezBoard.t15"/></span></a>
 	    </div>	    
 	</body>
 </html>

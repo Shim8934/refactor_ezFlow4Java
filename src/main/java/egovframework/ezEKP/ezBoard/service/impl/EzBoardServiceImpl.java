@@ -932,6 +932,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
 		
+		
 		if (boardVO.getSubFlag().equals("Y")) {
 			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
 		} else {
@@ -1037,8 +1038,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
 		map.put("limit", boardListVO.getStartRow() - 1);
 		
+		/* 2018-06-22 홍승비 - 게시판 즐겨찾기 > 썸네일게시판 쿼리 BOARDID 중복 문제 수정(TBL_BOARD_ITEM as A) */
 		if (boardVO.getSubFlag().equals("Y")) {
-			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
+			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
 		} else {
 			map.put("v_PWHEREBOARD", " A.BOARDID = '" + boardVO.getBoardId() + "' ");
 		}
@@ -1562,7 +1564,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 
 		logger.debug("getSearchBoardItemCount ended");
-		return ezBoardDAO.getSearchBoardItemCount(map);
+		return ezBoardDAO.getSearchBoardItemCount(map); 
 	}
 
 	@Override
@@ -2493,10 +2495,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		//오름차순으로 정렬!
+		/* 2018-07-13 홍승비 - o1=o2(0), o1>o2(1), o1<o2(-1) 분기 추가 */
 		Collections.sort(brdBoardTreeList, new Comparator<BoardTreeVO>() {
 			@Override
 			public int compare(BoardTreeVO o1, BoardTreeVO o2) {
-				return Integer.parseInt(o1.getTreeViewOrder()) > Integer.parseInt(o2.getTreeViewOrder()) ? 1 : 0;
+				return Integer.parseInt(o1.getTreeViewOrder()) < Integer.parseInt(o2.getTreeViewOrder()) ? -1 : Integer.parseInt(o1.getTreeViewOrder()) > Integer.parseInt(o2.getTreeViewOrder()) ? 1 : 0;
 			}
 		});
 		
@@ -2506,6 +2509,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					continue;
 				}
 			}
+			
+			// 2018-07-12 자바렐 디버그용 로그 추가
+			logger.debug("각 게시판 트리뷰 순서       ::   " + brdBoardTreeList.get(i).getTreeViewOrder());
 			
 			result.append("<NODE>");
 			
@@ -3841,6 +3847,60 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("moveOneLineReply ended");
 	}
 
+	@Override
+	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> accessBoardList, int pMode) throws Exception{
+		logger.debug("getSearchAllBoardItemList started");
+
+		if (boardListVO.getOrderBySub().length() > 0) {
+			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
+				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
+					boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
+				} else {
+					boardListVO.setOrderBySub(" A.WRITEDATE ");
+				}
+			}
+		} else {
+			if (globals.getProperty("Globals.DbType").equals("oracle")) {
+				boardListVO.setOrderBySub(" TO_NUMBER(A.PARENTWRITEDATE) DESC, TO_CHAR(A.UPPERITEMIDTREE) "); 
+			} else {
+				boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
+			}
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PUSERID", boardListVO.getUserID());
+		map.put("v_PBOARDID", boardVO.getBoardId());
+		map.put("v_PSTARTROW", boardListVO.getStartRow());
+		map.put("v_PENDROW", boardListVO.getEndRow());
+		map.put("v_PTOTALCOUNT", boardListVO.getTotalCount());
+		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
+		map.put("v_PSUBFLAG", boardVO.getSubFlag());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		map.put("v_TITLE", boardVO.getTitle());
+		map.put("v_WRITERNAME", boardVO.getWriterName());
+		map.put("v_ABSTRACT", boardVO.getABSTRACT());
+		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
+		map.put("limit", boardListVO.getStartRow() - 1);
+		map.put("v_pDeptID", userInfo.getDeptID());
+		map.put("v_pCompanyID", userInfo.getCompanyID());
+		map.put("v_MODE", pMode); 
+		map.put("v_boardList", accessBoardList);
+		
+		if (boardVO.getSubFlag().equals("A")) { 
+			map.put("v_PWHEREBOARD", " (1=1) ");
+		} else if (boardVO.getSubFlag().equals("G")) {
+			map.put("v_PWHEREBOARD", " A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND BOARDGROUPID = '" + boardVO.getBoardId() + "')");
+		} else if (boardVO.getSubFlag().equals("YY")) {
+			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR I.BOARDTREEPATH LIKE '" + "%" + boardVO.getBoardId() + "%" + "')");
+		}
+		
+		logger.debug("getSearchAllBoardItemList ended");
+		return ezBoardDAO.getSearchAllBoardItemList(map);
+	}
+
 	/* 2018-06-11 홍승비 - 포토/썸네일 이미지 리스트 중에서 가장 큰 IMAGEID 가져오기 */
 	@Override
 	public String getLastImageID(String boardID, String itemID, int tenantID) throws Exception {
@@ -3854,6 +3914,94 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		logger.debug("getLastImageID ended");
 		return ezBoardDAO.getLastImageID(map);
+
+	}
+	
+	@Override
+	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> accessBoardList, int pMode) throws Exception {
+		logger.debug("getSearchAllBoardItemCount started");
+
+		if (boardVO.getSearchQuery().length() > 0) {
+			boardVO.setSearchQuery(" AND " + boardVO.getSearchQuery());
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_pBoardID", boardVO.getBoardId());
+		map.put("v_PSUBFLAG", boardVO.getSubFlag());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("v_boardList", accessBoardList);
+		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_pDeptID", userInfo.getDeptID());
+		map.put("v_pCompanyID", userInfo.getCompanyID());
+		map.put("v_MODE", pMode); 
+		
+		if (boardVO.getSubFlag().equals("A")) { 
+			map.put("v_PWHEREBOARD", " (1=1) ");
+		} else if (boardVO.getSubFlag().equals("G")) {
+			map.put("v_PWHEREBOARD", " A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND BOARDGROUPID = '" + boardVO.getBoardId() + "')");
+		} else if (boardVO.getSubFlag().equals("YY")) {
+			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR I.BOARDTREEPATH LIKE '" + "%" + boardVO.getBoardId() + "%" + "')");
+		}
+		
+		logger.debug("getSearchAllBoardItemCount ended");
+		return ezBoardDAO.getSearchAllBoardItemCount(map);
+	}
+	
+	/* 2018-06-28 홍승비 - 승인게시물 검색 카운트 추가 */
+	@Override
+	public int getSearchApprBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception {
+		logger.debug("getSearchApprBoardItemCount started");
+
+		if (boardVO.getSearchQuery().length() > 0) {
+			boardVO.setSearchQuery(" AND " + boardVO.getSearchQuery());
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_PUSERID", userInfo.getId());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+
+		logger.debug("getSearchApprBoardItemCount ended");
+		return ezBoardDAO.getSearchApprBoardItemCount(map);
+	}
+	
+	/* 2018-06-28 홍승비 - 승인게시물 검색 리스트 추가 */
+	@Override
+	public List<HashMap<String, Object>> getSearchApprBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception {
+		logger.debug("getSearchApprBoardItemList started");
+		
+		if (boardListVO.getOrderBySub().length() > 0) {
+			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
+				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
+					boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
+				} else {
+					boardListVO.setOrderBySub(" A.WRITEDATE ");
+				}
+			}
+		} else {
+			boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("lang", commonUtil.getMultiData(boardVO.getLang(), boardVO.getTenantID()));
+		map.put("v_PUSERID", boardListVO.getUserID());
+		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
+		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
+		map.put("v_PSTARTROW", boardListVO.getStartRow());
+		map.put("v_PENDROW", boardListVO.getEndRow());
+		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
+		map.put("limit", boardListVO.getStartRow() - 1);
+
+		logger.debug("getSearchApprBoardItemList ended");
+		return ezBoardDAO.getSearchApprBoardItemList(map);
 	}
 
 }

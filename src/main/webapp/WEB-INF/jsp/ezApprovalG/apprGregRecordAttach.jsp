@@ -494,7 +494,12 @@
 </script>
 </HEAD>
 <body class="popup">	
-		<h1><spring:message code='ezApprovalG.t264'/></h1>
+<h1><spring:message code='ezApprovalG.t264'/></h1>
+<div id="close">
+    <ul>
+        <li><span id="btn_AttachCancle" onclick="return btn_AttachCancle_onclick()"></span></li>
+    </ul>
+</div>
 <table>
   <tr>
     <td style="width:285px;text-align:center"><div class="listview">
@@ -506,11 +511,12 @@
 
 <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/upload.do" target="ifrm">
   <div class="btnposition btnpositionNew">       
-        <input id="file1" name="file1" type="file" style="display: none;" onchange="btn_AttachAdd_onclick()" /> 
-        <a class="imgbtn" style="vertical-align:top"><label for="file1"><span id="btn_AttachAdd" ><spring:message code='ezApprovalG.t268'/></span></label></a>
+        <a class="imgbtn">
+          <input id="file1" name="file1" type="file" onchange="btn_AttachAdd_onclick()" style="opacity:0;position:absolute;width:53px;left:202px"/> 
+		  <span for="file" id="btn_AttachAdd" ><spring:message code='ezApprovalG.t268'/></span>
+        </a>
         <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
         <a class="imgbtn"><span id="btn_AttachSaveSure" onclick="return btn_AttachSaveSure_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-        <a class="imgbtn"><span id="btn_AttachCancle" onclick="return btn_AttachCancle_onclick()"><spring:message code='ezApprovalG.t1761'/></span></a>
         <span id="BtnBodyAttach" style="display:none">
             <a id="btn_AttachBodyAdd" class="imgbtn" onClick="return btn_AttachBodyAdd_onclick()"><span><spring:message code='ezApprovalG.t285'/></span></a>
         </span>
