@@ -3535,7 +3535,11 @@ public class EzPMSGWController {
 
 		try {
 			String realPath = commonUtil.getRealPath(request);
-
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.get("userId"));
+			
+			jsonParam.put("tenantId", info.getTenantId());
+			
 			ezPMSService.addBoard(jsonParam, realPath);
 
 			result.put("status", "ok");
@@ -3568,7 +3572,11 @@ public class EzPMSGWController {
 
 		try {
 			String realPath = commonUtil.getRealPath(request);
-
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.get("userId"));
+			
+			jsonParam.put("tenantId", info.getTenantId());
+			
 			// 메인 화면에서 게시물을 다른 작업으로 이동 시, 여러 개를 선택할 수 있다. 그 때만 itemIds가 넘어옴
 			if (jsonParam.get("itemIds") != null) {
 				ezPMSService.moveBoard(jsonParam);
