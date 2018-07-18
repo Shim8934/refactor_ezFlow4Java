@@ -721,6 +721,12 @@ public class EzCabinetGWController {
 			LoginVO userInfo                  = commonUtil.getUserForGw(userId, serverName);
 			List<CabinetSimpleVO> relatedList = cabinetService.getRelatedCabinetListForUser(userInfo);
 			
+			if (relatedList.size() == 0) {
+				result.put("status", "error");
+				result.put("code", 4);
+				return result;
+			}
+			
 			if (!mode.equals("1")) {
 				result.put("node", relatedList.get(0).getCabinetId());
 			}

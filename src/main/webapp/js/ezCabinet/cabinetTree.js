@@ -70,15 +70,22 @@ function CabinetTree() {
 	}
 	
 	function makeTree(data) {
-		var nodesTree   = data.tree;
-		var currentNode = data.node;
-		
-		if (!nodesTree) {alert(CabinetMessages.strTreeErr); return;}
-		
 		var divTree = document.getElementById(_treeElmtId);
 		
 		if (!divTree) {alert("Cannot find element with this id: " + _treeElmtId); return;}
 		
+		var code = data.code;
+		switch(code) {
+			case 1 : alert(CabinetMessages.strParamErr); return;
+			case 2 : alert(CabinetMessages.strError)   ; return;
+			case 4 : while (divTree.hasChildNodes()) {divTree.removeChild(divTree.lastChild);}
+					 alert(CabinetMessages.strTreeErr2);
+					 return;
+		}
+		
+		var nodesTree   = data.tree;
+		var currentNode = data.node;
+		if (!nodesTree) {alert(CabinetMessages.strTreeErr); return;}
 		while (divTree.hasChildNodes()) {divTree.removeChild(divTree.lastChild);}
 		
 		switch(_genType) {

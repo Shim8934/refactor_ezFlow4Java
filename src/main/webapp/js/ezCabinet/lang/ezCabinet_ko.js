@@ -1,6 +1,7 @@
 var CabinetMessages = {
 	strError     : "오류가 발생했습니다.",
 	strTreeErr   : "데이터 오류",
+	strTreeErr2  : "활성화된 모듈이 없습니다.",
 	strPrev      : "이전",
 	strNext      : "다음",
 	strTotal     : "총",

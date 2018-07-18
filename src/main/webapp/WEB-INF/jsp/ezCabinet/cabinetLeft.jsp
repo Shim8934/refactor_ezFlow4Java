@@ -25,7 +25,7 @@
 			<!-- 연동 캐비넷 -->
 			<h2 id="relatedCabinet"><span><spring:message code='ezCabinet.t32'/></span></h2>
 			<ul>
-				<div id="cabinetModulesTree" class="cabinetTree"></div>
+				<div id="cabinetModulesTree" class="cabinetTree2"></div>
 			</ul>
 			
 			<!-- 공유 반은 캐비넷 -->

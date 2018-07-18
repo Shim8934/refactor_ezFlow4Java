@@ -561,8 +561,7 @@
 			from
 				tbl_cb_cabinet c1
 			where
-				c1.creator_id = #userId# and c1.tenant_id = #tenantId# and c1.cabinet_level = 0 and c1.use_status = 1 
-				and c1.cabinet_type in
+				c1.creator_id = #userId# and c1.tenant_id = #tenantId# and c1.cabinet_level = 0 and c1.use_status = 1 and c1.cabinet_type in
 		]]>
 		<iterate property="listType" open="(" close=")" conjunction=",">
 			#listType[]#

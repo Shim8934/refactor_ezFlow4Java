@@ -905,7 +905,13 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		String userId                 = userInfo.getId();
 		List<CabinetModuleVO> modules = getModuleListForUser(userId, userInfo.getCompanyID(), tenantId);
 		List<Integer> moduleTypes     = modules.stream().filter(i -> i.getActiveStatus() == 1).map(CabinetModuleVO::getType).collect(Collectors.toList());
-		Map<String,Object> map        = new HashMap<String, Object>();
+		List<CabinetSimpleVO> result  = new ArrayList<>();
+		
+		if (moduleTypes == null || moduleTypes.size() == 0) {
+			return result;
+		}
+		
+		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("listType", moduleTypes);
 		map.put("tenantId", tenantId);
 		map.put("userId",   userId);
@@ -923,9 +929,9 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			}
 		}
 		
-		List<CabinetSimpleVO> listRelatedCabinet = generateSimpleCabinet(list, userInfo.getPrimary());
+		result = generateSimpleCabinet(list, userInfo.getPrimary());
 		
-		return listRelatedCabinet;
+		return result;
 	}
 
 	private List<CabinetSimpleVO> generateSimpleCabinet(List<CabinetVO> list, String primary) {

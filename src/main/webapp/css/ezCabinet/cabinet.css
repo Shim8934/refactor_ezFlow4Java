@@ -85,6 +85,8 @@
 .cabMainPrevH {width: 100%; position: relative; padding-top: 5px;}
 .cabMainPrevH div {height: 100%;}
 .cabinetTree {padding: 5px; min-height: 22px;}
+.cabinetTree2:empty {padding: 0px !important;}
+.cabinetTree2 {padding: 5px;}
 .cabinetImg {width: 18px; height: 18px; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
 .cabSpanName {height: 22px; line-height: 22px; color: #666666; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent;}
 

@@ -104,10 +104,10 @@
 		}
 		else {
 			url  = "/ezCabinet/saveModules.do";
-			data = {"modules"   : getAllModulesInfo()};
+			data = {"modules" : getAllModulesInfo()};
 		}
 		
-		makeAjaxCall (data, "GET", url, afterSaveChange, null, true, null);
+		makeAjaxCall (data, "GET", url, afterSaveChange, null, true);
 	}
 	
 	function afterSaveChange(data) {
