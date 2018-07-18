@@ -42,21 +42,21 @@ public class EzCabinetController_m {
 	public String jsonSaveRelatedItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("Save relatedItem is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String cabinetId       = request.getParameter("cabinetId")   != null ? request.getParameter("cabinetId")   : "";
 		String title           = request.getParameter("title")       != null ? request.getParameter("title")       : "";
 		String author          = request.getParameter("author")      != null ? request.getParameter("author")      : "";
 		String normalScreen    = request.getParameter("normalScreen")!= null ? request.getParameter("normalScreen"): "";
 		JSONObject resultObj   = new JSONObject();
 		
-		if (cabinetId.equals("") || title.equals("")) {
+		if (title.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
 		JSONParser jp        = new JSONParser();
+		JSONArray normalScr  = (JSONArray) jp.parse(normalScreen);
 		
-		resultObj = cabinetRestService.SaveRelatedItem(request, userInfo.getId(), cabinetId, title, author, normalScreen);
+		resultObj = cabinetRestService.SaveRelatedItem(request, userInfo.getId(), title, author, normalScr);
 		
 		logger.debug("Save relatedItem finishes!");
 		return resultObj.toString();

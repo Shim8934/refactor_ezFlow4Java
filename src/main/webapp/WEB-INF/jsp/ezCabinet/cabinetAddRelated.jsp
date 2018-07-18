@@ -89,31 +89,26 @@
 				function closeWindow() {window.close();}
 				
 				function addRelatedCabinet() {
-					var msgToGot = window.opener.document.getElementById("MsgToGot");
-					var mailSubject = window.opener.document.getElementById("mailSubject");
+					var msgToGot = window.opener.document.getElementById("MsgToGot").innerText;
+					var mailSubject = window.opener.document.getElementById("mailSubject").innerText;
 					var messageFrame = window.opener.document.getElementById("message");
 					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
-					var normalScreen = contentWd.document.getElementById("normalScreen");
+					var normalScreen = contentWd.document.getElementById("normalScreen").innerHTML;
 					var ifrmPreViewRayer = contentWd.document.getElementById("ifrmPreViewRayer");
 					//console.log(contentWd.document.body.innerHTML);
 					
 					if(document.getElementById("1").checked){
 						console.log(normalScreen);
-						//console.log(msgToGot);
-						//console.log(mailSubject);
-						//console.log(ifrmPreViewRayer);
-						
-						var title = mailSubject;
-						var author = msgToGot;
-						
-					    $.ajax({
+						console.log(mailSubject);
+						console.log(msgToGot);
+					    
+						$.ajax({
 							type: "POST",
 							url: "/ezCabinet/saveRelatedItem.do",
 							data: {
-								"cabinetId"   : cabinetId,
-								"title"       : title,
-								"author"      : author,
-								"normalScreen": normalScreen
+								"title"       : mailSubject,
+								"author"      : msgToGot,
+								"normalScreen": JSON.stringify(normalScreen)
 							},
 							dataType: "JSON",
 							async: false,
