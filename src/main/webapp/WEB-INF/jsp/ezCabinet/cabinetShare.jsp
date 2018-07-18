@@ -1,6 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core"   %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page language="java"   contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core"      %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"    %>
+<%@ taglib prefix="fn"     uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -66,7 +67,6 @@
 									<tr>
 										<td class="box">
 											<div id="treeView">
-													
 											</div>
 										</td>
 										<td></td>
@@ -76,30 +76,48 @@
 												<tr>
 													<th>
 														<span id="SelectDeptNM" countinfo="1">
-															<img src="/images/OrganTree_cross/ic-open.gif">김혜정부서-[<span>6명</span>]
+															<img src="/images/OrganTree_cross/ic-open.gif">김혜정부서-[<span id="MemberCount"></span>]
 														</span>
 														<span>
-															<span><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
-															<span><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
+															<span onclick="changeListView('TXT')"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
+															<span onclick="changeListView('IMG')"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
 														</span>
 													</th>
 												</tr>	
 											</table>
-											<!-- 조직도 리스트  -->
-											<div id="txtlist_Layer" class="cabOrganListDiv">
+											<!-- 조직도 텍스트 리스트  -->
+											<div id="txtlist_Layer" class="cabOrganTextListDiv">
 												<table id="txtlist_table" class="mainlist">
 													<tr>
 														<td>이름</td>
 														<td>직위</td>
 														<td>사내전화</td>
 													</tr>
-													<tr>
+													<!-- <tr>
 														<td style="background-color: rgb(240, 246, 255);">지정석</td>
 														<td style="background-color: rgb(240, 246, 255);">대리</td>
 														<td style="background-color: rgb(240, 246, 255);">02-1234-555</td>
-													</tr>
+													</tr> -->
 												</table>
 											</div>
+											<!-- 조직도 이미지 리스트 -->
+											<!-- <div id="DeptUserImgList" class="cabOrganImgListDiv">
+												
+												<table class="organwrap" cellspacing="0" cellpadding="0" style="margin-top: 5px; margin-left: auto; margin-right: auto; display: none;">
+												<tr id="MailUserlist_0" draggable="true" style="cursor: pointer;">
+													<td class="pictd" style="background-color: rgb(255, 255, 255);">
+													<div class="pic"></div>
+													</td>
+													<td style="width: 300px; background-color: rgb(255, 255, 255);">
+													<table class="organinfo"><tr><td class="name" style="text-align: left;">그룹</td></tr><tr><td style="text-align: left;">김혜정부서</td></tr><tr><td style="text-align: left;">
+													<img class="icon" src="/images/OrganTree/icon_hp.gif"> - </td></tr>
+													<tr>
+													<td style="text-align: left;"><img class="icon" src="/images/OrganTree/icon_mail.gif">jeonggroup@svn.opensol2014.com</td>
+													</tr>
+													</table></td></tr>
+												</table>
+												
+											</div> -->
 											<div id="tblPageRayer" class="cabOrganPageDiv"></div>
 										</td>
 									</tr>
@@ -205,6 +223,8 @@
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTree.js"           ></script>
 		<script type="text/javascript">
+			var cabinetId = "<c:out value='${cabinetId}'/>";
+			
 			(function() {
 				var companyTree = new CabinetTree();
 				initEvents();
@@ -224,12 +244,136 @@
 						type       : "normal",
 						initialUrl : "/ezCabinet/getCompanyTree.do",
 						extendUrl  : "/ezCabinet/getSubNodes.do",
-						click      : null,
+						click      : getSelectedList,
 						dblClick   : null,
 						companyId  : ""
 					});
 
 					companyTree.makeTree();
+					getShareList();
+					
+					function getSelectedList(node) {
+						var selectedDept = node.getAttribute("role");
+						var searchOpt = "";
+						var searchValue =  "";
+						
+						$.ajax({
+							type: "POST",
+							url: "/ezCabinet/getDeptMembers.do",
+							data: {
+								"deptId"     : selectedDept,
+								"srchOption" : searchOpt,
+								"srchValue"  : searchValue
+							},
+							dataType: "JSON",
+							async: true,
+							success : function(data) {
+								var count = data.memberCount;
+								var result = data.memberList;
+								
+								processUserList(count, result);
+							},
+							error : function(error) {
+							}
+						});
+					}
+					
+					function processUserList(count, result) {
+						document.getElementById("MemberCount").innerHTML = count + "명";
+						
+						var tableList = document.getElementById("txtlist_table");
+						
+						while (tableList.rows.length > 1) {
+							tableList.deleteRow(1);
+						}
+						
+						if(result == null || count == 0) {
+							var trElmt = document.createElement("tr");
+							var tdElmt = document.createElement("td");
+							
+							trElmt.appendChild(tdElmt);
+							tableList.appendChild(trElmt);
+						}else{
+							for(var i = 0; i < count ; i++) {
+								var trElmt  = document.createElement("tr");
+								var tdElmt1 = document.createElement("td");
+								var tdElmt2 = document.createElement("td");
+								var tdElmt3 = document.createElement("td");
+								
+								tdElmt1.textContent = result[i]["userName"];
+								tdElmt2.textContent = result[i]["position"];
+								tdElmt3.textContent = result[i]["telNumber"];
+								
+								trElmt.appendChild(tdElmt1);
+								trElmt.appendChild(tdElmt2);
+								trElmt.appendChild(tdElmt3);
+								tableList.appendChild(trElmt);
+							}	
+						}
+					}
+					
+					$(document).ready(function() {
+						changeListView(getOrganListType());
+					})
+					
+					function changeListView(flag) {
+						console.log("실행확인");
+						if (flag == 'TXT') {
+							$("#txtlist").attr("src","/images/kr/cm/btn_onlist.gif");
+							$("#imglist").attr("src","/images/kr/cm/btn_imglist.gif");
+						} else {
+							$("#txtlist").attr("src","/images/kr/cm/btn_list.gif");
+							$("#imglist").attr("src","/images/kr/cm/btn_onimglist.gif");
+						}
+						
+						//setOrganListType(flag);
+					}
+					
+					function getOrganListType() {
+						var organListType = "TXT";
+						
+						$.ajax({
+							type : "POST",
+							dataType : "text",
+							url : "/ezOrgan/getListType.do",
+							async : false,
+							success : function(result) {
+								organListType = result;
+							}
+						});
+						
+						return organListType;
+					}
+					
+					/* function setOrganListType() {
+						$.ajax({
+							type : "POST",
+							dataType : "text",
+							url : "/ezOrgan/setListType.do",
+							async : false,
+							data : {
+							listType : pListType
+							},
+							success : function(result) {
+							}
+						});
+					} */
+					
+					function getShareList() {
+						$.ajax({
+							type: "POST",
+							url: "/ezCabinet/getShareUserList.do",
+							data: {
+								"cabinetId": cabinetId
+							},
+							dataType: "JSON",
+							async: false,
+							success: function(data) {
+							},
+							error: function(error) {
+							}
+						});
+					}
 				}
 				
 				function closeWindow() {window.close();}

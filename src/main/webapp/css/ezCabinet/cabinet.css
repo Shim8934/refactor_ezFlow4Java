@@ -204,13 +204,14 @@
 .cabShareInf tr th {width: 20px;}
 .cabShareSearPanel {background-color: #f8f8fa; margin-top: 15px; border: 1px solid #eaeaea; margin: 10px 0px 0px 0px; padding: 0px; clear: both; overflow: hidden; z-index: 1;}
 .cabShareSearPanelSub {border-bottom: 0px; height:26px; list-style: none; margin: 0px; padding: 0px;}
-.cabOrganListDiv {vertical-align: top; height: 440px; overflow: auto; width: 440px;}
-.cabOrganListDiv .mainlist {width: 100%;}
-.cabOrganListDiv .mainlist tr:first-child td {color: #333; background-color: #f8f8fa;}
-.cabOrganListDiv .mainlist tr:first-child td:nth-child(1){width: 150px;}
-.cabOrganListDiv .mainlist tr:first-child td:nth-child(2){width: 130px;}
-.cabOrganListDiv .mainlist tr:not(first-child) td:nth-child(1) {overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 150px;}
-.cabOrganListDiv .mainlist tr:not(first-child) td:nth-child(2) {width: 80px;}
+.cabOrganTextListDiv, .cabOrganImgListDiv {vertical-align: top; height: 440px; overflow: auto; width: 440px;}
+.cabOrganTextListDiv .mainlist {width: 100%;}
+.cabOrganTextListDiv .mainlist tr:first-child td {color: #333; background-color: #f8f8fa;}
+.cabOrganTextListDiv .mainlist tr:first-child td:nth-child(1){width: 150px;}
+.cabOrganTextListDiv .mainlist tr:first-child td:nth-child(2){width: 130px;}
+.cabOrganTextListDiv .mainlist tr:not(first-child) td:nth-child(1) {overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 150px;}
+.cabOrganTextListDiv .mainlist tr:not(first-child) td:nth-child(2) {width: 80px;}
+.cabOrganImgListDiv {text-align: center;}
 .cabOrganPageDiv {text-align: center; height: 32px;}
 .cabShareBttn {width: 30px; text-align: center;}
 .cabShareBttn >img {width: 16px; height: 16px; margin: 2px 0px; border: 0px; cursor: pointer;}
