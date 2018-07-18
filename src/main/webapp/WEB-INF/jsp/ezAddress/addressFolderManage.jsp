@@ -11,7 +11,7 @@
 	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 	    <style>
 	    	.tree div div{
-	    		margin-bottom:5px;
+	    		margin-bottom:0px;
 	    	}
 	    </style>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>

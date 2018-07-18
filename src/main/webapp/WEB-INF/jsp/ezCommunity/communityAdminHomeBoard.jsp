@@ -304,19 +304,19 @@
 	                <div id="LeftBoardList" style="overflow:auto;height:390px;"></div>
 	            </td>
 	            <td style="text-align:center">
-	                <a class="imgbtn"><span onclick="leftmoveboard(1)" style="font-family:'Gulim', 'arial', 'verdana'" >△</span></a>
-	                <a class="imgbtn"><span onclick="leftmoveboard(2)" style="font-family:'Gulim', 'arial', 'verdana'">▽</span></a>
-	                <a class="imgbtn"><span onclick="leftmoveboard(3)" style="font-family:'Gulim', 'arial', 'verdana'">◁</span></a>
-	                <a class="imgbtn"><span onclick="leftmoveboard(4)" style="font-family:'Gulim', 'arial', 'verdana'">▷</span></a>
+	                <a class="imgbtn"><span onclick="leftmoveboard(1)" >△</span></a>
+	                <a class="imgbtn"><span onclick="leftmoveboard(2)" >▽</span></a>
+	                <a class="imgbtn"><span onclick="leftmoveboard(3)" >◁</span></a>
+	                <a class="imgbtn"><span onclick="leftmoveboard(4)" >▷</span></a>
 	            </td>
 	            <td style="width:170px;vertical-align:top;border:1px solid #ccc;">
 	                <div id="CopBoardList" style="overflow:auto;height:390px;"></div>
 	            </td>
 	            <td style="text-align:center">
-	                <a class="imgbtn"><span onclick="rightmoveboard(1)" style="font-family:'Gulim', 'arial', 'verdana'">△</span></a>
-	                <a class="imgbtn"><span onclick="rightmoveboard(2)" style="font-family:'Gulim', 'arial', 'verdana'">▽</span></a>
-	                <a class="imgbtn"><span onclick="rightmoveboard(4)" style="font-family:'Gulim', 'arial', 'verdana'">▷</span></a>
-	                <a class="imgbtn"><span onclick="rightmoveboard(3)" style="font-family:'Gulim', 'arial', 'verdana'">◁</span></a>
+	                <a class="imgbtn"><span onclick="rightmoveboard(1)" >△</span></a>
+	                <a class="imgbtn"><span onclick="rightmoveboard(2)" >▽</span></a>
+	                <a class="imgbtn"><span onclick="rightmoveboard(4)" >▷</span></a>
+	                <a class="imgbtn"><span onclick="rightmoveboard(3)" >◁</span></a>
 	            </td>
 	            <td style="width:170px;vertical-align:top;border:1px solid #ccc;">
 	                <div id="RightBoardList" style="overflow:auto;height:390px;"></div>

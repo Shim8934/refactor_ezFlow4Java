@@ -11,17 +11,9 @@
 		<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link href="/css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
+		<link href="/css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
+		<link href="<spring:message code='ezOrgan.e3'/>" type="text/css" rel="stylesheet" />
 	    <style type="text/css">
-	    	.node_normal{
-	    		overflow:hidden;
-	    		text-overflow:ellipsis;
-	    		display:inline-block;
-	    	}
-	    	.node_selected{
-	    		overflow:hidden;
-	    		text-overflow:ellipsis;
-	    		display:inline-block;
-	    	}
 	        .instance.sbHolder{
 	            width: 100%;
 	        }
@@ -40,7 +32,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery.selectbox-0.2.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
