@@ -775,7 +775,7 @@
 		              <li><span onClick="Option_onClick('M')" id="Span1"><spring:message code='ezEmail.t353' /></span></li>
 		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
 		                 <img src="/images/pbar.gif" align="absmiddle"></li> 
-					<li id="menuTable" class="sel" style="background:none; border:none;padding:4px 0 2px 0; margin:0; vertical-align:top;">
+					<li id="menuTable" class="sel" style="background:none; border:none; margin:0; vertical-align:top;">
 		              <select name="importantSelect" id="importantSelect" onChange="important_change()">
 		                <option><spring:message code='ezEmail.t360' /></option>
 		                <option selected="selected"><spring:message code='ezEmail.t361' /></option>
@@ -786,7 +786,7 @@
 		            <li class="bar" style="background:none; border:0;padding-left:0;padding-right:0;cursor:default; display:none;"><img src="/images/pbar.gif" align="absmiddle"></li>                        
 		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
                         <img src="/images/pbar.gif"></li> 
-                    <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
+                    <li class="sel" style="background:none; border:none; padding:0px;">
                         <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">
                         	<option value="0">HTML</option>
                         	<option value="1">PlainText</option>

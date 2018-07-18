@@ -610,7 +610,7 @@
 		                    _SubjectColumSpan.innerText = SUBJECT;
 		                    SUBJECT = _SubjectColumSpan.innerHTML;
 	
-		                    listHTML += "<li onclick=\"open_mail('" + HREF + "')\">" + SUBJECT + "</span> <span class='date'>" + DATE + "</span> <span class='name'>" + SENDER + "</span></li>";
+		                    listHTML += "<li onclick=\"open_mail('" + HREF + "')\"> <span class='txt'>" + SUBJECT + "</span> <span class='date'>" + DATE + "</span> <span class='name'>" + SENDER + "</span></li>";
 		                }
 	
 		                listHTML += "</ul>";
