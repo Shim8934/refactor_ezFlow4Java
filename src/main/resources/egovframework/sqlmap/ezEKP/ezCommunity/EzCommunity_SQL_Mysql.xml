@@ -1853,11 +1853,11 @@
 <!-- 	<procedure id="EzCommunityDAO.adminMemberListGet3"			parameterClass="Map"		resultClass="CommunityCClubUserVO"> -->
 <!-- 		{CALL EZSP_ADMIN_MEMBERLIST_GET3(#v_CODE#, #v_FLAG#, #v_USERINFO_LANG#, #v_SER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzCommunityDAO.adminMemberListGet3"				parameterClass="Map"		resultClass="CommunityCClubUserVO" remapResults="true">
+	<select id="EzCommunityDAO.adminMemberListGet3"				parameterClass="Map"		resultClass="CommunityCClubUserVO">
 		<isEqual property="v_FLAG" compareValue="ID">
 			<![CDATA[
 				SELECT
-					DISTINCT A.c_id,
+					A.c_id,
 					A.companyid,
 					CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
 				FROM
@@ -1868,6 +1868,8 @@
 					RTRIM(A.c_id) = RTRIM(B.userid)
 				AND
 					A.tenant_id = B.tenant_id
+				AND
+					A.companyid = B.companyid
 				WHERE
 					RTRIM(c_clubno) = #v_CODE#
 				AND
@@ -1875,7 +1877,7 @@
 				AND
 					A.c_id LIKE CONCAT('%', #v_SER#, '%')
 				AND
-					A.companyid = #companyID#
+					B.companyid = #companyID#
 				AND
 					A.tenant_id = #tenantID#
 			]]>
@@ -1884,7 +1886,7 @@
 			<isEqual property="v_FLAG" compareValue="NAME">
 				<![CDATA[
 					SELECT
-						DISTINCT A.c_id,
+						A.c_id,
 						A.companyid,
 						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
 					FROM
@@ -1895,6 +1897,8 @@
 						RTRIM(A.c_id) = RTRIM(B.userid)
 					AND
 						A.tenant_id = B.tenant_id
+					AND
+						A.companyid = B.companyid
 					WHERE
 						RTRIM(c_clubno) = #v_CODE#
 					AND
@@ -1902,7 +1906,7 @@
 					AND
 						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END LIKE CONCAT('%', #v_SER#, '%')
 					AND
-						A.companyid = #companyID#
+						B.companyid = #companyID#
 					AND
 						A.tenant_id = #tenantID#
 				]]>
@@ -1910,7 +1914,7 @@
 			<isNotEqual property="v_FLAG" compareValue="NAME">
 				<![CDATA[
 					SELECT
-						DISTINCT A.c_id,
+						A.c_id,
 						A.companyid,
 						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
 					FROM
@@ -1921,12 +1925,14 @@
 						RTRIM(A.c_id) = RTRIM(B.userid)
 					AND
 						A.tenant_id = B.tenant_id
+					AND
+						A.companyid = B.companyid
 					WHERE
 						RTRIM(c_clubno) = #v_CODE#
 					AND
 						permit <> 0
 					AND
-						A.companyid = #companyID#
+						B.companyid = #companyID#
 					AND
 						A.tenant_id = #tenantID#
 				]]>
@@ -2001,7 +2007,7 @@
 				A.companyid,
 				A.c_indate,
 				CASE WHEN #primary# = '1' THEN T.username ELSE T.username2 END AS username,
-				IFNULL(MAX(C.DEPTID), '') AS DEPTID
+				DEPTID
 			FROM
 				TBL_C_CLUBUSER A
 			INNER JOIN
@@ -2012,26 +2018,48 @@
 				A.tenant_id = T.tenant_id
 			AND 
 				A.COMPANYID = T.COMPANYID
-			JOIN
-				TBL_DEPTMASTER B
+			INNER JOIN
+			   ((SELECT
+					D.CN, D.DEPARTMENT as DEPTID,
+					D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+					D.TENANT_ID
+				FROM
+					TBL_USERMASTER D
+				WHERE
+					D.TENANT_ID = #tenantID#
+				AND
+					D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+					
+				UNION ALL
+				
+				(SELECT
+					B.cn, A2.DEPTID,
+					C.EXTENSIONATTRIBUTE2 as COMPANYID,
+					A2.TENANT_ID
+				FROM
+					TBL_USERMASTER B
+				INNER JOIN
+					TBL_ADDJOBMASTER A2
+				ON
+					A2.CN = B.CN
+				AND
+					A2.TENANT_ID = B.TENANT_ID
+				RIGHT JOIN
+					TBL_DEPTMASTER C
+				ON
+					A2.DEPTID = C.CN
+				AND
+					B.TENANT_ID = C.TENANT_ID)) T2
 			ON
-				A.COMPANYID = B.EXTENSIONATTRIBUTE2
+				A.C_ID = T2.CN
 			AND
-				A.TENANT_ID = B.TENANT_ID
-			LEFT OUTER JOIN
-				TBL_ADDJOBMASTER C
-			ON
-				A.TENANT_ID = C.TENANT_ID
-			AND
-				A.C_ID = C.CN
-			AND
-			    B.CN = C.DEPTID
+				A.TENANT_ID = T2.TENANT_ID
 			WHERE
 				RTRIM(A.c_clubno) = #v_CODE#
 			AND
 				permit = '0'
 			AND
-				A.companyid = #companyID#
+				T2.companyid = #companyID#
 			AND
 				A.tenant_id = #tenantID#
 			GROUP BY
