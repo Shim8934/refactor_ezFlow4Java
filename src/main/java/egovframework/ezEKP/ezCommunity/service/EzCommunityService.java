@@ -35,9 +35,11 @@ public interface EzCommunityService {
 	
 	public List<CommunityCBoardVO> getLeftBoardList(int tenantID) throws Exception;
 
-	public List<CommunityOneLineReplyVO> readOneLineReply(String primary, String pBoardID, String pItemID, int tenantID, String offset) throws Exception;
+	/* 2018-07-17 홍승비 - 사원정보 deptID 파라미터 선택을 위해 companyID 조건 추가 */
+	public List<CommunityOneLineReplyVO> readOneLineReply(String primary, String pBoardID, String pItemID, String companyID, int tenantID, String offset) throws Exception;
 	
-	public StringBuffer getReaderList(String pBoardID, String pItemID, String string, String string2, int tenantID, int pageNum, int perCount, String offset) throws Exception;
+	/* 커뮤니티 게시물 조회자 정보 가져올 때 deptID도 함께 가져오도록 수정(companyID 조건 추가) */
+	public StringBuffer getReaderList(String pBoardID, String pItemID, String string, String string2, String companyID, int tenantID, int pageNum, int perCount, String offset) throws Exception;
 
 	public List<CommunityCPollResponseVO> pollETCTableGet(String questionID, int tenantID) throws Exception;
 	
