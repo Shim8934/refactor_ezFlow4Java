@@ -46,8 +46,8 @@ var searchByOverview = "";
 var searchByUpperGroupName = "";
 
 $(function() {
-	setMyTaskList("task");
-	nowPosition = "task";
+	setMyTaskList("myTask");
+	nowPosition = "myTask";
 	
 	$("#taskSearch").css("display", "");
 	$("#projectSearch").css("display", "none");
@@ -59,7 +59,7 @@ $(function() {
 		changeTab(clickTabId, nowTabAttr);
 		
 		//담당 업무
-		nowPosition = "task";;
+		nowPosition = "myTask";;
 		orderWhat = "";
 		currentPage = 1;
 		$("#taskName").text("<spring:message code='ezPMS.t98' />");
@@ -69,7 +69,7 @@ $(function() {
 		$("#taskSearch").css("display", "");
 		$("#projectSearch").css("display", "none")
 		searchClear();
-		setMyTaskList("task");
+		setMyTaskList("myTask");
 	});
 	
 	$("#1tab1").click(function(){
@@ -78,7 +78,7 @@ $(function() {
 		changeTab(clickTabId, nowTabAttr);
 		
 		//담당 그룹
-		nowPosition = "group";
+		nowPosition = "myGroup";
 		$("#mainmenu").find("div").css("display", "none");
 		orderWhat = "";
 		currentPage = 1;
@@ -94,7 +94,7 @@ $(function() {
 		}
 
 		searchClear();
-		setMyTaskList("group");
+		setMyTaskList("myGroup");
 	});
 	
 	$("#1tab2").click(function() {
@@ -103,7 +103,7 @@ $(function() {
 		changeTab(clickTabId, nowTabAttr);
 		
 		//담당 프로젝트
-		nowPosition = "project";
+		nowPosition = "myProject";
 		orderWhat = "";
 		currentPage = 1;
 		$("#mainmenu").find("div").css("display", "");
@@ -116,7 +116,7 @@ $(function() {
 		}
 
 		searchClear();
-		setMyTaskList("project")
+		setMyTaskList("myProject")
 	});
 	
 	$(".tab").hover(function(){
@@ -148,10 +148,10 @@ function layerHidden() {
 
 function searchClear() {
 	//업무 및 그룹 검색 초기화
-	if (nowPosition == "task") {
+	if (nowPosition == "myTask") {
 		$("#searchByTaskName").val("");
 		$("#searchByUpperGroupName").val("");
-	} else if (nowPosition == "group") {
+	} else if (nowPosition == "myGroup") {
 		$("#searchByGroupName").val("");
 		$("#searchByUpperGroupName").val("");
 	}
@@ -284,9 +284,9 @@ function setMyTaskList(position) {
 	
 	var url = "";
 	
-	if (position == "task") {
+	if (position == "myTask") {
 		url = "/ezPMS/getProjectTaskList.do";
-	} else if (position == "group") {
+	} else if (position == "myGroup") {
 		url = "/ezPMS/getGroupList.do";
 	} else {
 		url = "/ezPMS/getMyProjectList.do";
@@ -438,7 +438,7 @@ function setListOrder(elem) {
 function searchContent() {
 	currentPage = 1;
 	
-	if (nowPosition == "project") {
+	if (nowPosition == "myProject") {
 		searchByUser = $("#PsearchByUser").val();
 		searchByProjectName = $("#PsearchByProjectName").val();
 		searchByPlanStartDate = $("#PSdatepicker").val();

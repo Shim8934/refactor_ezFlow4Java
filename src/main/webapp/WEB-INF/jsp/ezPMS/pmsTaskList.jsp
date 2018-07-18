@@ -57,7 +57,7 @@ $(function() {
 								style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
 						</th>
 							<c:choose>
-								<c:when test="${position eq 'group' }">
+								<c:when test="${position eq 'myGroup' }">
 								<th id="BoardList_TH_1" onclick="setListOrder(this)" order="GROUP_NAME" style="text-align: center; overflow: hidden; white-space: nowrap; 
 									text-overflow: ellipsis; cursor: pointer;" class="h5_center"><spring:message code='ezPMS.t87' />
 								</th>
@@ -71,7 +71,7 @@ $(function() {
 						<th id="BoardList_TH_2" onclick="setListOrder(this)" order="UPPER_GROUP_NAME"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 250px;"
 							class="h5_center"><spring:message code='ezPMS.t42' /></th>
-						<c:if test="${position eq 'task' || position eq 'group'}">
+						<c:if test="${position eq 'myTask' || position eq 'myGroup'}">
 						<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PROJECT_NAME"
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 250px;"
 							class="h5_center"><spring:message code='ezPMS.t31' /></th>	
@@ -86,7 +86,7 @@ $(function() {
 							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 100px"
 							class="h5_center"><spring:message code='ezPMS.t62' /></th>
 						<c:choose>
-							<c:when test="${position ne 'group' }">
+							<c:when test="${position ne 'myGroup' }">
 								<th id="BoardList_TH_7" onclick="setListOrder(this)" order="STATUS"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 50px;"
 								class="h5_center"><spring:message code='ezPMS.t38' /></th>
@@ -107,7 +107,7 @@ $(function() {
 										<td colspan="8" style="text-align : center"> <spring:message code='ezPMS.t30' /> </td>
 									</tr>
 								</c:when>
-								<c:when test="${position ne 'group' }">
+								<c:when test="${position ne 'myGroup' }">
 									<c:forEach items="${taskList }" var="task">
 								<tr style="cursor: pointer;" id="${task.taskId }" data-groupId="${task.groupId}" class="listRow" ondblclick="goTaskDetails(this)">
 									<td style="width: 20px; cursor: default; text-align: center"><input
@@ -120,7 +120,7 @@ $(function() {
 									<td class="groupName" onclick="selectedTR(this);"
 										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 250px"><c:out
 											value="${task.groupName }" /></td>
-									<c:if test="${position eq 'task' }">
+									<c:if test="${position eq 'myTask' }">
 									<td onclick="selectedTR(this);" class="projectName" projectId="${task.projectId }"
 										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 250px"><c:out
 											value="${task.projectName }" /></td>
@@ -170,7 +170,7 @@ $(function() {
 								</tr>
 							</c:forEach>
 								</c:when>
-							<c:when test="${position eq 'group' }">
+							<c:when test="${position eq 'myGroup' }">
 								<c:forEach items="${taskList }" var="task">
 								<tr style="cursor: pointer;" id="${task.groupId }" class="listRow" ondblclick="goGroupDetails(this)">
 									<td style="width: 20px; cursor: default; text-align: center"><input
