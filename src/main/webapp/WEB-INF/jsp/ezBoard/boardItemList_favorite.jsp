@@ -9,12 +9,64 @@
 	    <!-- <link rel="stylesheet" href="/css/tab_over.css" type="text/css"> -->
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <style type="text/css">
+	    .tabpart01UL{
+	    	position:absolute;
+	    	top:35px;
+	    	background:white;
+	    	padding:25px;
+	    	border:1px solid #999;
+	    	width:120px;
+	    	list-style-image:url("/images/kr/cm/dot_blue.gif");
+	    }
+	    .tabpart01UL li {
+	    	height:20px;
+	    	color:#777;
+	    }
+	    </style>
 	    <script type="text/javascript">
 	        var userLang = "${userInfo.primary}";
 	        var xmlhttp = createXMLHttpRequest();
+	        var delta = 300;
+	        var timer = null;
+			window.onresize = function () {
+				clearTimeout(timer);
+				timer = setTimeout(resizeMenuTab, delta);
+			}
 	        window.onload = function () {
 	            GetMyBoardItem();
 	        };
+	        
+	        function resizeMenuTab() {
+				var doNotRefresh = true;
+				var isOpenUL;                 // 추가 탭이 열리있는지 확인
+				var isResize = true;          // 리사이즈 중인지 확인.
+				
+				if(document.getElementById("tabpart01UL") === null || document.getElementById("tabpart01UL").style.display == "none") {
+					isOpenUL = false;
+				} else {
+					isOpenUL = true;	
+				}
+				
+				var selectedNode = document.getElementsByClassName("tabon")[0];
+				
+				if(selectedNode !== undefined) {
+					selectedNode = selectedNode.id;	
+				}
+				
+				document.getElementById("tab1").innerHTML = "";
+				widthCheck = false;
+				
+				GetMyBoardItem_evnet(doNotRefresh, isResize);
+				
+				if(isOpenUL) {
+					document.getElementById("tabpart01UL").style.display = "";	
+				}
+				// 기존에 선택되는 0번탭 해제 후 재설정.
+				document.getElementById("1tab0").className = "";
+                document.getElementById(selectedNode).className = "tabon";
+                Tab1_SelectID = selectedNode;
+	        }
 	        function GetMyBoardItem() {
 	            xmlhttp.open("POST", "/ezBoard/get_favoriteList.do?mode=USE", true);
 	            xmlhttp.onreadystatechange = GetMyBoardItem_evnet;
@@ -22,8 +74,11 @@
 	        }
 	        var overCnt = 0;
 	        var widthCheck = false;
-	        function GetMyBoardItem_evnet() {
-	            if (xmlhttp == null || xmlhttp.readyState != 4) return;
+	        var overCntText = '...';
+	        function GetMyBoardItem_evnet(doNotRefresh, isResize) {
+	        	if(isResize === undefined) {
+	            	if (xmlhttp == null || xmlhttp.readyState != 4) return;
+	        	}
 	            try {
 	                var xmlnode = SelectNodes(xmlhttp.responseXML, "ROOT/DATA/ROW");
 	                if (xmlnode.length != 0) {
@@ -58,10 +113,11 @@
 	                        _p.appendChild(_span);
 	                        document.getElementById("tab1").appendChild(_p);
 	
-	
-	                        if (tabAllWidth() >= document.getElementById("tab1").offsetWidth - 55 || widthCheck) {
+							var tabAllWidthVal = tabAllWidth(); 
+	                        if (tabAllWidthVal >= document.getElementById("tab1").offsetWidth - 55 || widthCheck) {
 	                            widthCheck = true;
-	                            overCnt = overCnt + 1;
+	                            //overCnt = overCnt + 1;
+	                            
 	                            document.getElementById("tab1").removeChild(_p);
 	                            if (document.getElementById("tabpartMore") == null) {
 	                                var _p2 = document.createElement("P");
@@ -75,7 +131,8 @@
 	                                if (document.getElementById("tabpart01UL") != null)
 	                                    _span2.textContent = document.getElementById("tabpart01UL").getElementsByTagName("li").length;
 	                                else
-	                                    _span2.textContent = overCnt;
+	                                    //_span2.textContent = overCnt;
+	                                _span2.textContent = overCntText;
 	
 	                                var _ul = document.createElement("UL");
 	                                _ul.className = "tabpart01UL";
@@ -93,7 +150,7 @@
 	                                _p2.appendChild(_span2);
 	                                _p2.appendChild(_ul);
 	                                _p2.style.cursor = "pointer";
-	
+									
 	                                document.getElementById("tab1").appendChild(_p2);
 	                            }
 	                            else {
@@ -107,10 +164,15 @@
 	
 	                                document.getElementById("tabpart01UL").appendChild(_li);
 	
-	                                if (document.getElementById("tabpart01UL") != null)
-	                                    document.getElementById("overSpan").textContent = document.getElementById("tabpart01UL").getElementsByTagName("li").length;
-	                                else
-	                                    document.getElementById("overSpan").textContent = overCnt;
+	                                if (document.getElementById("tabpart01UL") != null) {
+	                                    //document.getElementById("overSpan").textContent = document.getElementById("tabpart01UL").getElementsByTagName("li").length;
+	                                    document.getElementById("overSpan").textContent = overCntText;
+	                                }
+	                                else {
+	                                    //document.getElementById("overSpan").textContent = overCnt;
+	                                	document.getElementById("overSpan").textContent = overCntText;
+	                                }
+	                                
 	
 	                                insertOption = "LAST";
 	                            }
@@ -118,12 +180,18 @@
 	                        }
 	                       
 	                    }
-	                    if (xmlnode.length > 0)
+	                    
+	                    if (xmlnode.length > 0) {
 	                        Tab1_NewTabIni("tab1");
-	
-	                    document.getElementById("1tab0").setAttribute("class", "tabon");
-	                    Tab1_SelectID = "1tab0";
-	                    ChangeTab(document.getElementById("1tab0"));
+	                    }    
+
+	                    if(doNotRefresh !== true) {
+	                    	if(isResize === undefined || isResize === false) {
+	                    		document.getElementById("1tab0").setAttribute("class", "tabon");
+	                    		Tab1_SelectID = "1tab0";	                    	
+	                    		ChangeTab(document.getElementById("1tab0"));	
+	                    	}
+	                    }
 	                }
 	                else {
 	                    var _p = document.createElement("P");
@@ -142,12 +210,19 @@
 	
 	                    _p.appendChild(_span);
 	                    document.getElementById("tab1").appendChild(_p);
-	                    if (xmlnode.length > 0)
-	                        Tab1_NewTabIni("tab1");
-	
-	                    document.getElementById("1tab0").setAttribute("class", "tabon");
-	                    Tab1_SelectID = "1tab0";
-	                    ChangeTab(document.getElementById("1tab0"));
+
+	                    	
+	                    if (xmlnode.length > 0) {
+	                       	Tab1_NewTabIni("tab1");
+	                    }	 	                    
+	                    
+	                    if(doNotRefresh !== true) {
+	                    	if(isResize === undefined || isResize === false) {
+	                    		document.getElementById("1tab0").setAttribute("class", "tabon");
+	                    		Tab1_SelectID = "1tab0";	                    	
+	                    		ChangeTab(document.getElementById("1tab0"));
+	                    	}
+	                    }
 	                }
 	
 	            } catch (e) { }
