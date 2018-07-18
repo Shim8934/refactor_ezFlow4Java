@@ -251,7 +251,7 @@ function onloadPreview(ifr) {
 $(document).on("click", ".lmLetterListUl li:not(.lmLetterSelect)", function(){
 	var letterNo = $(this).attr("data-letterno");
 	
-	$(this).css("background","#efefea");
+	$(this).css("background","#f0f6ff");
 	$(this).parents("ul").find(".lmLetterSelect").css("background","none").removeClass("lmLetterSelect");
 	$(this).addClass("lmLetterSelect");
 	

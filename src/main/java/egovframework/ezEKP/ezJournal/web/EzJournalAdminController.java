@@ -657,6 +657,7 @@ public class EzJournalAdminController {
 			model.addAttribute("userCount",userCount);
 			model.addAttribute("key", key);
 			model.addAttribute("totalCount", resultBody.get("totalCount"));
+			model.addAttribute("totalCount2", resultBody.get("totalCount2"));
 		}
 		
 		logger.debug("userList ended");

@@ -57,10 +57,19 @@
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float: left; display: inline-block; padding-left: 5px; text-align:left; width: 100%;">
-			        <h1 style="display: inline-block;"><c:out value='${content}'/>&nbsp;(<c:out value='${totalVotesForOption}'/>)</h1>
-			        <img style="float: right; margin-right: 10px; cursor: pointer;" src="/images/poll/sendMail01.png" onClick="sendMailAll('${qstID}','${optID}')">
+			        <h1 style="display: inline-block;"><c:out value='${content}'/>&nbsp;(<c:out value='${totalVotesForOption}'/>)</h1>			        
 			    </div>				
 			</div>
+			<div id="close">			    	
+	            <ul>		            	
+	                <li><span onclick="window.close()"></span></li>
+	            </ul>
+	        </div>
+	        <div id="menu" class="extraMenu">
+	            <ul>
+	            	<li><img style="float: right; cursor: pointer;" src="/images/poll/sendMail01.png" onClick="sendMailAll('${qstID}','${optID}')"></li>		                
+	            </ul>
+	        </div>
 			<%-- <div style="display: inline-block; width: 100%; height:35px; line-height:34px; text-align:center; font-size:16px; background:#d1e3f5; border-radius:5px; color:#212121;"><b><c:out value='${content}'/></b></div>	
 			<div style="display: inline-block; padding:8px 0px 2px 0px;">
 				<img src="/images/group2.png" height="22" width="35" style="float:left; display:block; vertical-align:middle; padding:0px 5px 0px 0px;">

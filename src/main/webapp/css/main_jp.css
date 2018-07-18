@@ -68,7 +68,7 @@ header .logo {float:left;margin:0px; padding:5px 0px 0px 0px; width:150px;height
 
 /*------------ nav ------------*/
 nav .topmenu {margin:0 auto; padding:0px; height:55px; overflow:hidden;text-align:center; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;}
-nav .topmenu li {letter-spacing:-3px; list-style:none; cursor:pointer; display:inline-block;  text-align:center; margin:0px; padding:0px 25px; height:55px; line-height:53px; color:#333; font-size:17px; font-weight:bold; }
+nav .topmenu li {letter-spacing:-3px; list-style:none; cursor:pointer; display:inline-block;  text-align:center; margin:0px; padding:0px 25px; height:55px; line-height:53px; color:#333; font-size:16px; font-weight:bold; }
 nav .topmenu li:hover{ color:#146bb8;  /*background:url(../images/kr/cm/top_menuPoint.gif) no-repeat bottom center;*/}
 nav .topmenu li  span { margin:0px; padding:0px;}
 
