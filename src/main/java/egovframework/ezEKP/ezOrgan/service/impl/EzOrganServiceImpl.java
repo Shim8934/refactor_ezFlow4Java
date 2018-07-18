@@ -413,11 +413,11 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map2.put("v_TENANT_ID", tenantID);
 		
 		// 하위부서 포함
-		String containCompany= ezCommonService.getTenantConfig("containCompany", tenantID);
+		String containLow= ezCommonService.getTenantConfig("containLow", tenantID);
 		int totalCount2 = 0;
 		
-		if (containCompany.equals("YES")) {
-			totalCount2 = getMemberListCount2(pDeptID, null, totalCount2, containCompany, tenantID);
+		if (containLow.equals("YES")) {
+			totalCount2 = getMemberListCount2(pDeptID, null, totalCount2, containLow, tenantID);
 		} else {
 			totalCount2 = memberCount;
 		}
@@ -502,11 +502,11 @@ public class EzOrganServiceImpl implements EzOrganService {
 		String totalcount = ezOrganDAO.getMemberListCount(map2);
 		
 		//본인포함 자기하위(하위 하위 제외) 
-		String containCompany= ezCommonService.getTenantConfig("containCompany", tenantID);
+		String containLow= ezCommonService.getTenantConfig("containLow", tenantID);
 		int totalCount2 = 0;
 		
-		if (containCompany.equals("YES")) {
-			totalCount2 = getMemberListCount2(pDeptID, null, totalCount2, containCompany, tenantID);
+		if (containLow.equals("YES")) {
+			totalCount2 = getMemberListCount2(pDeptID, null, totalCount2, containLow, tenantID);
 		} else {
 			totalCount2 = Integer.parseInt(totalcount);
 		}
@@ -528,17 +528,17 @@ public class EzOrganServiceImpl implements EzOrganService {
 	 * 하위부서 포함하여 카운트 필요시 사용 
 	 * @param companyList 하위회사 목록
 	 * @param totalCount2 하위포함 전체카운트
-	 * @param containConfig YES일때 본인포함 하위, NO일때 본인제외 하위 (하위가 회사인경우를 위해 추가함)
+	 * @param containLow YES일때 본인포함 하위, NO일때 본인제외 하위 (하위가 회사인경우를 위해 추가함)
 	 * @param tenantID
 	 * @return
 	 * @throws Exception
 	 */
-	private int getMemberListCount2(String deptCN, List<String> companyList, int totalCount2, String containConfig, int tenantID) throws Exception {
+	private int getMemberListCount2(String deptCN, List<String> companyList, int totalCount2, String containLow, int tenantID) throws Exception {
 		logger.debug("getMemberListCount2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("deptCN", deptCN);
-		map.put("containConfig", containConfig);
+		map.put("containConfig", containLow);
 		map.put("tenantID", tenantID);
 		
 		totalCount2 = ezOrganDAO.getMemberListCount2(map);
@@ -558,7 +558,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		}
 		
 		
-		logger.debug("getMemberListCount2 ended. deptCN = " + deptCN + " || totalCount2 = " + totalCount2 + " || containConfig = " + containConfig);
+		logger.debug("getMemberListCount2 ended.);
 		
 		return totalCount2;
 	}
