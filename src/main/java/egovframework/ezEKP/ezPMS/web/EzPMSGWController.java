@@ -3820,6 +3820,7 @@ public class EzPMSGWController {
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
+			result.put("taskName", "");
 			e.printStackTrace();
 		}
 
@@ -3912,6 +3913,7 @@ public class EzPMSGWController {
 			result.put("code", 0);
 		} catch (Exception e) {
 			result.put("data", "");
+			result.put("data2", "");
 			result.put("status", "error");
 			result.put("code", 1);
 			e.printStackTrace();
