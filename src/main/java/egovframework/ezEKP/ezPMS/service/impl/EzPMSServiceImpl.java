@@ -1747,6 +1747,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			vo.setItemLevel(Integer.parseInt((String) jsonParam.get("itemLevel")) + 1);
 			lastInsertId = ezPMSDAO.addBoardReplay(vo);
 		} else {
+			// 게시물의 id가 rootId가 됨
 			lastInsertId = ezPMSDAO.addBoard(vo);
 			ezPMSDAO.updateRootItemId(lastInsertId);
 		}
@@ -1816,13 +1817,17 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		Iterator<String> keysItr = jsonParam.keySet().iterator();
-
+		
+		String keyStr = "";
+		
 		while (keysItr.hasNext()) {
 			String key = keysItr.next();
 			Object value = jsonParam.get(key);
-
+			keyStr += key + ", ";
 			map.put(key, value);
 		}
+		
+		LOGGER.debug("Parameters : " + keyStr);
 
 		ezPMSDAO.updateBoard(map);
 

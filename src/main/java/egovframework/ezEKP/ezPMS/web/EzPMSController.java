@@ -2874,7 +2874,7 @@ public class EzPMSController {
 		String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		String mode = (String) jsonParam.get("mode");
 		
-		jsonParam.put("tenantId", userInfo.getTenantId());
+		jsonParam.put("userId", userInfo.getId());
 		
 		Map<String, Object> param = null;
 		JSONObject resultBody = null;
@@ -2956,7 +2956,6 @@ public class EzPMSController {
 		Map<String, Object> param = null;
 		jsonParam.put("userId", userInfo.getId());
 		jsonParam.put("deptId", userInfo.getDeptID());
-		jsonParam.put("tenantId", userInfo.getTenantId());
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards", param, request, "put", jsonParam);
 		String status = resultBody.get("status").toString();
