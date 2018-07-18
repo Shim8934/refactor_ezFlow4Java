@@ -558,7 +558,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		}
 		
 		
-		logger.debug("getMemberListCount2 ended.);
+		logger.debug("getMemberListCount2 ended.");
 		
 		return totalCount2;
 	}
