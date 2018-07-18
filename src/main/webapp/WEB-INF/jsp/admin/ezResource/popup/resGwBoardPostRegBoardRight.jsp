@@ -637,10 +637,24 @@
 	                    document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
 	                }
 	                var UserListHTML = "";
-	                if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
-	                    SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
+	                if (SelectDeptNM.getAttribute("countinfo") != "1") {
+	                	if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "" && typeof (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length) != "undefined") {
+	                		if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length !=  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang400 + "</span>]";
+			        		} else {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
+			        		}
+	                	} else {
+	                		if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length !=  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + "0/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang400 + "</span>]";
+			        		} else {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + "0" + strLang400 + "</span>]";
+			        		}
+	                	}
+	                    
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
+	                
 	                if (pListType == "IMG") {
 	                    document.getElementById("DeptUserImgList").style.display = "";
 	                    document.getElementById("txtlist_Layer").style.display = "none";
@@ -946,7 +960,7 @@
 	    	function ChangeListView_onClick(Div) {
 	        	pListType = Div;
 	        	ListTypeChangeIcon();
-	        	DisplayUserImageList();
+// 	        	DisplayUserImageList();
 	            setOrganListType(pListType);
 	    	}
 	    	

@@ -18,9 +18,6 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +31,8 @@ import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 
 @Service("EzOrganService")
 public class EzOrganServiceImpl implements EzOrganService {
@@ -409,8 +408,21 @@ public class EzOrganServiceImpl implements EzOrganService {
             memberInfo[memberCount] = getMemberInfo(sb.toString(), pCellList, pPropList, cn, obj.getType());
             memberCount++;
         }
+		
+		map2.put("v_CN", pDeptID);
+		map2.put("v_TENANT_ID", tenantID);
+		
+		// 하위부서 포함
+		String containLow= ezCommonService.getTenantConfig("containLow", tenantID);
+		int totalCount2 = 0;
+		
+		if (containLow.equals("YES")) {
+			totalCount2 = getMemberListCount2(pDeptID, null, totalCount2, containLow, tenantID);
+		} else {
+			totalCount2 = memberCount;
+		}
 
-        StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA><ROWS>");
+        StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA><TOTALCOUNT2>" + totalCount2 + "</TOTALCOUNT2><ROWS>");
         
         for (int i = 0; i < memberCount; i++) {
             memberlist.append(memberInfo[i]);
@@ -418,7 +430,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         
         memberlist.append("</ROWS></LISTVIEWDATA>");
         
-        logger.debug("getDeptMemberList ended");
+        logger.debug("getDeptMemberList ended. totalCount2 = " + totalCount2);
         
         return memberlist.toString();
 	}
@@ -441,12 +453,12 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_STARTROW", (Integer.parseInt(pPage) -1) * 50 + 1);
 		map.put("v_ENDROW", Integer.parseInt(pPage) * 50 + 1);
         map.put("v_STARTROWForMySQL", (Integer.parseInt(pPage) -1) * 50);
-        map.put("v_COUNT", 50);		
+        map.put("v_COUNT", 50);
 		
 		// 지정된 부서의 멤버 목록을 페이지를 고려하여 구한다.
 		List<OrganDeptVO> list = ezOrganDAO.getDeptMemberListPage(map);
 		
-		int memberCount = 0;		
+		int memberCount = 0;
 		String[] memberInfo = new String[list.size()];
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -489,8 +501,19 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map2.put("v_TENANT_ID", tenantID);
 		String totalcount = ezOrganDAO.getMemberListCount(map2);
 		
+		//본인포함 자기하위(하위 하위 제외) 
+		String containLow= ezCommonService.getTenantConfig("containLow", tenantID);
+		int totalCount2 = 0;
+		
+		if (containLow.equals("YES")) {
+			totalCount2 = getMemberListCount2(pDeptID, null, totalCount2, containLow, tenantID);
+		} else {
+			totalCount2 = Integer.parseInt(totalcount);
+		}
+		
         StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA>");
-        memberlist.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
+        
+    	memberlist.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><TOTALCOUNT2>" + totalCount2 + "</TOTALCOUNT2><ROWS>");
         
         for (int i = 0; i < memberCount; i++) {
             memberlist.append(memberInfo[i]);
@@ -499,6 +522,45 @@ public class EzOrganServiceImpl implements EzOrganService {
         memberlist.append("</ROWS></LISTVIEWDATA>");
         
         return memberlist.toString();
+	}
+	
+	/**
+	 * 하위부서 포함하여 카운트 필요시 사용 
+	 * @param companyList 하위회사 목록
+	 * @param totalCount2 하위포함 전체카운트
+	 * @param containLow YES일때 본인포함 하위, NO일때 본인제외 하위 (하위가 회사인경우를 위해 추가함)
+	 * @param tenantID
+	 * @return
+	 * @throws Exception
+	 */
+	private int getMemberListCount2(String deptCN, List<String> companyList, int totalCount2, String containLow, int tenantID) throws Exception {
+		logger.debug("getMemberListCount2 started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deptCN", deptCN);
+		map.put("containConfig", containLow);
+		map.put("tenantID", tenantID);
+		
+		totalCount2 = ezOrganDAO.getMemberListCount2(map);
+		
+		logger.debug("totalCount2 = " + totalCount2);
+		
+		if (companyList == null) {
+			companyList = ezOrganDAO.getChildCompany(map);
+		}
+		
+		for (String company : companyList) {
+			map.put("deptCN", company);
+			
+			List<String> childCompanyList = ezOrganDAO.getChildCompany(map);
+			
+			totalCount2 += getMemberListCount2(company, childCompanyList, totalCount2, "NO", tenantID);
+		}
+		
+		
+		logger.debug("getMemberListCount2 ended.);
+		
+		return totalCount2;
 	}
 	
 	private String getMemberInfo(String pXMLString, String pCellList, String pPropList, String pMemberID, String pCategory) {		
