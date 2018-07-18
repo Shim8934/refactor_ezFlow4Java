@@ -8,7 +8,7 @@
 		<title><c:out value = '${title }' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <style>
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;

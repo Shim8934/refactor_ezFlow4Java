@@ -9,7 +9,7 @@
 		<title><spring:message code="ezLadder.t071" /></title>
 		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
 	    <style>
 	    	.mainlist tr td:first-child {

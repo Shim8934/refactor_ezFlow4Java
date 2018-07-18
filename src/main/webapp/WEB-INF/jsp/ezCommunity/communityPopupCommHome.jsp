@@ -9,7 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<style>
 			.btype_list ul li .date {
 				-webkit-margin-start:20px;

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 	<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
     <script type="text/javascript" src="/js/mouseeffect.js"></script>
-   	<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+   	<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
     <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
     <link rel="stylesheet" href="/js/ezWebFolder/jsTree/dist/themes/default/style.css" />
     <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">

@@ -46,7 +46,7 @@
 .list_element, .list_element th, .list_element td {border:0;}
 .list_element {width:100%; font-size:12px; table-layout:fixed;}
 .list_element caption {display:none}
-.list_element th {padding:5px 0 5px 8px; background:url(/images/kr/cm/dot_blue.gif) no-repeat 0px 12px; color:#666; text-align:left; vertical-align:top; line-height:16px; font-weight:normal;}
+.list_element th {padding:5px 0 5px 8px; background:url(/images/kr/cm/dot_blue.gif) no-repeat 0px 12px; color:#666; text-align:left; vertical-align:top; line-height:20px; font-weight:normal;}
 .list_element td {padding:5px 0px 5px 5px; line-height:16px; vertical-align:top; color:#666; text-align:left;}
 
 .btnSearch {border:1px solid #ccc; height:18px; line-height:16px;}

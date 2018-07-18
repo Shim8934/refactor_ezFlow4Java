@@ -7,7 +7,7 @@
 		<title><spring:message code='ezOrgan.t00004' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <style>
 	    	.box {
 	    		border-right:0px;
