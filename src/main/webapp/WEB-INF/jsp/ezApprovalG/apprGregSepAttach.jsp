@@ -72,6 +72,8 @@
 			        InitRegisterType(); // '분리첨부 정보입력' 부분 설정
 		        } else {
 		        	document.getElementById("CabinetInfoView").style.display = "none";
+		        	document.getElementById("selRegisterType").selectedIndex = 1; // 일반문서 접수로 고정
+		            document.getElementById("selRegisterType").disabled = "disabled"; // 변경불가능
 		        	selRegisterType_onchange();
 		        }
 		        rtnVal[0] = "FALSE";

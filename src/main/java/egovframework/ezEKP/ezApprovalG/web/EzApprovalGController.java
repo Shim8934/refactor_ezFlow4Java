@@ -7813,4 +7813,47 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("setNonElecRecDocDel ended.");
 	}
+	
+	/* 2018-07-18 천성준
+	 * 수신된 비전자문서 삭제 버튼 Action
+	 * */
+	@RequestMapping(value = "/ezApprovalG/susinNonElecRecDocDel.do")
+	@ResponseBody
+	public String susinNonElecRecDocDel(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("susinNonElecRecDocDel started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		
+		String result = ezApprovalGService.susinNonElecRecDocDel(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("susinNonElecRecDocDel ended. result = " + result);
+		
+		return result;
+	}
+	
+	/* 2018-07-18 천성준
+	 * 비전자문서 여부
+	 * */
+	@RequestMapping(value = "/ezApprovalG/checkNonElecRec.do")
+	@ResponseBody
+	public String checkNonElecRec(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("checkNonElecRec started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String orgDocID = request.getParameter("orgDocID");
+		String rtnVal = "";
+		
+		String result = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		if (result.equals("Y")) {
+			rtnVal = "TRUE";
+		} else {
+			rtnVal = "FALSE";
+		}
+		
+		logger.debug("checkNonElecRec ended. result = " + rtnVal);
+		
+		return rtnVal;
+	}
 }

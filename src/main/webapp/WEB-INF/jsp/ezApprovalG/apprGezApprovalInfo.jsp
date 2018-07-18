@@ -1048,7 +1048,7 @@
 			                	}
 			                	
 			                	if (g_SepAttachLVXml != "") {
-			                		if (sepAttachCheckYN != "TRUE") {
+			                		if (sepAttachCheckYN != "TRUE" && pIniGubun != "6") {
 			                			OpenAlertUI("분리첨부가 있습니다. 확인해주세요.");
 			                			document.getElementById("1tab6").onclick();
 			    		                return;

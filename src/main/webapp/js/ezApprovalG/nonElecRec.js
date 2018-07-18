@@ -978,3 +978,54 @@ function RemoveEndNonElecRecDoc(DocID) {
        }});
 }
 
+function RemoveSusinNonElecRecDoc(DocID) {
+	$.ajax({
+       type : "POST",
+       dataType : "text",
+       async : false,
+       url : "/ezApprovalG/susinNonElecRecDocDel.do",
+       data : {
+               docID  : DocID
+       },
+		success: function(result) {
+			if (result == "TRUE") {
+				alert("삭제되었습니다.");
+				window.close();
+			} else if (result == "FALSE") {
+				alert("삭제 실패했습니다.");
+				return;
+			}
+		},
+		error : function() {
+			alert("삭제 중 에러가 발생했습니다.");
+			return;
+		}
+	});
+}
+
+function checkNonElecRec(orgDocID) {
+	var rtnVal;
+	$.ajax({
+	       type : "POST",
+	       dataType : "text",
+	       async : false,
+	       url : "/ezApprovalG/checkNonElecRec.do",
+	       data : {
+	    	   orgDocID  : orgDocID
+	       },
+	       success: function(result) {
+	    	   if (result == "TRUE") {
+	    		   rtnVal = true;
+	    	   } else {
+	    		   rtnVal = false;
+	    	   }
+	       },
+	       error: function() {
+	    	   alert("checkNonElecRec Error!!");
+	    	   rtnVal = false;
+	       }
+	});
+	
+	return rtnVal;
+}
+

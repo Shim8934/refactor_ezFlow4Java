@@ -3035,4 +3035,25 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public int getLinkedAttachFileCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.getLinkedAttachFileCount", map);
 	}
+	public void susinNonElecRecDocDel1(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.susinNonElecRecDocDel1", map);
+	}
+	public void susinNonElecRecDocDel2(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.susinNonElecRecDocDel2", map);
+	}
+	public void susinNonElecRecDocDel3(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.susinNonElecRecDocDel3", map);
+	}
+	public void susinNonElecRecDocDel4(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.susinNonElecRecDocDel4", map);
+	}
+	public void susinNonElecRecDocDel5(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.susinNonElecRecDocDel5", map);
+	}
+	public void susinNonElecRecDocDel6(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.susinNonElecRecDocDel6", map);
+	}
+	public void susinNonElecRecDocDel7(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.susinNonElecRecDocDel7", map);
+	}
 }

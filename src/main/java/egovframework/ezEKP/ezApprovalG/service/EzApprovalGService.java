@@ -571,4 +571,5 @@ public interface EzApprovalGService {
 	
 	public void setNonElecRecDocDelFlag(String docID, String companyID, int tenantID) throws Exception;
 	
+	public String susinNonElecRecDocDel(String docID, String companyID, int tenantID) throws Exception;
 }

@@ -1433,6 +1433,69 @@
 			    SetHref("DEL");
 			    window.location.reload(true);
 			}
+			
+			function insertApprovConn() {
+	        	$.ajax({
+            		type : "POST",
+            		dataType : "text",
+            		async : false,
+            		url : "/ezConn/insertApprovConn.do",
+            		data : {
+            				htmlPK : "${htmlPK}",
+            				docID : pDocID,
+            				writerID : arr_userinfo[1],
+            				formID : pFormID
+            				},
+            		success : function(data) {
+            		}
+            	});
+	        }
+			
+			function updateApprovConn() {
+		    	$.ajax({
+            		type : "POST",
+            		dataType : "text",
+            		async : false,
+            		url : "/ezConn/updateApprovConn.do",
+            		data : {
+            				docID : pDocID,
+            				formID : pFormID
+            				},
+            		success : function(data) {
+            		}
+            	});
+		    }
+	        
+	        function ezNotieSetting() {
+	        }
+			
+			function GetObject() {
+				i_icd2.SetDocumentDisp(window.document);
+                i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/ezPortal/componentListTransfer.do";
+                i_icd2.CheckVersion();
+                var nCount = i_icd2.nNeedDownload;
+
+                if (nCount) {
+                    if_Progress.StartOn();
+                } else {
+                    finish_download();
+                }
+			}
+	
+			function finish_download() {
+				OfficeBugPatch();
+			}
+			
+			function OfficeBugPatch() {
+			}
+			
+			function btnDel_onclick() {
+				if (nonElecRec == "Y") {
+					if (confirm("삭제하시겠습니까 ?")) {
+						RemoveSusinNonElecRecDoc(pDocID);
+					}
+				}
+			}
 		</script>
 <!-- 		<script type="text/vbscript" language="vbscript"> -->
 <!-- Function ConversionPt(cmm) -->
@@ -1478,7 +1541,14 @@
 	                        <li id="btnReAssign" style="display: none"><span onclick="return btnReAssign_onclick()"><spring:message code='ezApprovalG.t1431'/></span></li>
 	                        <li id="btnDistribute"><span onclick="return btnDistribute_onclick()"><spring:message code='ezApprovalG.t1432'/></span></li>
 	                        <li id="btnReDistribute" style="display: none"><span onclick="return btnReDistribute_onclick()"><spring:message code='ezApprovalG.t1433'/></span></li>
-	                        <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
+	                        <c:choose>
+		                        <c:when test="${isNonElecRec eq 'Y'}">
+			                        <li id="btnDel"><span onclick="return btnDel_onclick()">삭제</span></li>
+		                        </c:when>
+		                        <c:otherwise>
+			                        <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
+		                        </c:otherwise>
+	                        </c:choose>
 	                        <li id="btnReqReSend" style="display: none"><span onclick="return btnReqReSend_onclick()"><spring:message code='ezApprovalG.t1435'/></span></li>
 	                        <li id="btnEdit"><span onclick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
 	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>

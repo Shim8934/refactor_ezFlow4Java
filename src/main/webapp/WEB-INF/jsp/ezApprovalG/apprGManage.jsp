@@ -32,6 +32,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery.js"></script>
 		<!-- <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script> -->
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
 		
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    window.onload = window_onload;
@@ -744,22 +745,32 @@
 		        
 		        if (approvalFlag == "G") {
 			        if (oArrRows.length > 0) {
-			            var pCurSelRow = oArrRows[0];
-			            if (pCurSelRow.cells.length >= 7) {
-			                if (pCurSelRow.cells[6].innerHTML == "<spring:message code='ezApprovalG.t1731'/>") {
-			                    var pAlertContent = "<spring:message code='ezApprovalG.t1732'/>";
-			                    //OpenAlertUI(pAlertContent);
-			                    alert(pAlertContent);
-			                    return;
-			                }
-			            }
-			            if (pListTypeValue == "1") {
-			                g_selReturn = "Y";
-			                OpenReceiveENDDraftUI(pCurSelRow, "REDRAFT");
-			            }
-			            else
-			                OpenOpinionUI(pCurSelRow, "HeSong");
-			        }
+			        	if (checkNonElecRec(oArrRows[0].getAttribute("DATA7"))) {
+			        		alert("비전자문서는 회송이 불가능 합니다.");
+			        		return;
+			        		/* if (confirm("삭제 하시겠습니까 ?")) {
+			        			RemoveSusinNonElecRecDoc(oArrRows[0].getAttribute("DATA1"));
+			        		} else {
+				        		return;
+			        		} */
+			        	} else {
+				            var pCurSelRow = oArrRows[0];
+				            if (pCurSelRow.cells.length >= 7) {
+				                if (pCurSelRow.cells[6].innerHTML == "<spring:message code='ezApprovalG.t1731'/>") {
+				                    var pAlertContent = "<spring:message code='ezApprovalG.t1732'/>";
+				                    //OpenAlertUI(pAlertContent);
+				                    alert(pAlertContent);
+				                    return;
+				                }
+				            }
+				            if (pListTypeValue == "1") {
+				                g_selReturn = "Y";
+				                OpenReceiveENDDraftUI(pCurSelRow, "REDRAFT");
+				            }
+				            else
+				                OpenOpinionUI(pCurSelRow, "HeSong");
+					        }
+			        	}
 			    } else {
 			    	if (oArrRows != 0) {
 		                var pCurSelRow = oArrRows[0];
@@ -1698,8 +1709,10 @@
 					var url = "/ezApprovalG/draftuiHWP.do?formURL=";
 				    var form = "/files/upload_approvalG/form/2018999999.hwp";
 				    var docInfo = "&draftFlag=DRAFT&formDocType=003&susinSN=0&docState=&listType=4&aprState=&isTmpDoc=&nonElecRec=Y";
+				   	window.open(url + form + docInfo, "", GetOpenWindowfeature(1145, 1000));
+                } else {
+                	alert("비전자문서 등록은 IE에서만 가능합니다.");
                 }
-			   	window.open(url + form + docInfo, "", GetOpenWindowfeature(1145, 1000));
 			}
 		    
 		</script>

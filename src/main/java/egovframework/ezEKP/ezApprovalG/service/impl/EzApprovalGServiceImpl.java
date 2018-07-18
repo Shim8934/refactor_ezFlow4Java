@@ -26800,17 +26800,62 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return "TRUE";
 	}
 	
+	@Override
 	public void setNonElecRecDocDelFlag(String docID, String companyID, int tenantID) throws Exception {
 		logger.debug("setNonElecRecDocDelFlag ended");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("v_docID",  docID);
-		map.put("v_companyID",  companyID);
-		map.put("v_tenantID",  tenantID);
+		map.put("docID",  docID);
+		map.put("companyID",  companyID);
+		map.put("tenantID",  tenantID);
 		
 		ezApprovalGDAO.setEndNonElecRecDocDel(map);
 		
 		logger.debug("setNonElecRecDocDelFlag ended");
+	}
+	
+	@Override
+	public String susinNonElecRecDocDel(String docID, String companyID, int tenantID) throws Exception {
+		logger.debug("setNonElecRecDocDelFlag ended");
+		
+		String result = "";
+		String orgDocID = "";
+		int flag = 0;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("docID",  docID);
+		map.put("companyID",  companyID);
+		map.put("tenantID",  tenantID);
+		
+		//orgDocID로 비전자등록으로 수신된 문서인지 체크 후 삭제처리 한다.
+		orgDocID = ezApprovalGDAO.getOrgDocID(map);
+		map.put("orgDocID", orgDocID);
+		
+		flag = ezApprovalGDAO.checkNonElecRec(map);
+		logger.debug("NonElecRec Flag = " + flag + " (0:FALSE, 1:TRUE)");
+	    
+	    if (flag > 0) {
+			try {
+				ezApprovalGDAO.susinNonElecRecDocDel1(map); //TBL_APRDOCINFO
+				ezApprovalGDAO.susinNonElecRecDocDel2(map); //TBL_APRLINEINFO
+				ezApprovalGDAO.susinNonElecRecDocDel3(map); //TBL_APROPINIONINFO
+				ezApprovalGDAO.susinNonElecRecDocDel4(map); //TBL_APRATTACHINFO
+				ezApprovalGDAO.susinNonElecRecDocDel5(map); //TBL_APRDOCATTACHINFO
+				ezApprovalGDAO.susinNonElecRecDocDel6(map); //TBL_EXPAPRDOCINFO
+				ezApprovalGDAO.susinNonElecRecDocDel7(map); //TBL_EXPAPRLINE
+				result = "TRUE";
+			} catch(Exception e) {
+				e.printStackTrace();
+				result = "FALSE";
+			}
+	    } else {
+	    	result = "FALSE";
+	    }
+		
+		logger.debug("setNonElecRecDocDelFlag ended. result = " + result);
+		
+		return result;
 	}
 }
