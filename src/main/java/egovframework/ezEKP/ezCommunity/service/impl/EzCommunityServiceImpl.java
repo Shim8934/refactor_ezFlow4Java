@@ -7343,6 +7343,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		logger.debug("joinOkSendMail ended.");
 	}
 	
+	/* 2018-07-18 - 탈퇴신청 메일 보낼 시 마스터 셀렉트에 companyID 조건 추가 */
 	public void commOutOkSendMail(String loginCookie, LoginVO userInfo, String code, String reason) throws Exception {
 		logger.debug("commOutOkSendMail started.");
 		
@@ -7350,6 +7351,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         map.put("v_code", code);
         map.put("v_userInfo_lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
         map.put("tenantID", userInfo.getTenantId());
+        map.put("companyID", userInfo.getCompanyID());
         
         CommunityClubVO vo = ezCommunityDAO.commOutOkGet2(map);
         

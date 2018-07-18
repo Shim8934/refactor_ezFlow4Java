@@ -245,17 +245,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		int pSelectBy = 0;
 		
-		//가장 처음의 parentBoardID는 top.
 		String pRootBoardID = "top";
 		String pSubFlag = "0";
-		
-		//사실상 제외 게시판ID는 사용하지 않는다.(" "로 되어있으니까...)
 		String pExcludeBoardID = " ";
 		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(pRootBoardID, pUserID, pDeptID, pCompanyID, tenantID);
 		
-		// 승인게시판의 승인자를 전부 가져온다. /* 2018-06-27 홍승비 - 게시물 승인권한 확인 companyID 조건 추가 */
+		/* 2018-06-27 홍승비 - 게시물 승인권한 확인 companyID 조건 추가 */
 		List<BoardVO> applyUserList = ezBoardAdminService.checkApplyUser(pCompanyID, tenantID);
-		// 현재 사용자가 승인자인지 확인하고 승인 플래그를 설정한다.(동일 승인자에 대해 A사의 승인권한와 B사의 승인권한이 구분된다.)
+		// 현재 사용자가 승인자인지 확인하고 companyID 조건을 추가해 승인 플래그를 설정한다.(동일 승인자에 대해 A사의 승인권한와 B사의 승인권한이 구분된다.)
 		for (BoardVO vo: applyUserList) {
 			if (vo.getApprUserId().toLowerCase().indexOf(pUserID.toLowerCase()) > -1) {
 				applyFlag = "OK";
@@ -264,15 +261,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		int pMode = 0;
 		
-		// 해당 게시판에 권한이 있거나, 전체관리자이거나, 회사관리자이거나, 게시관리자라면 Admin(pMode=0)으로 설정한다.
 		if (pRollInfo != null && (boardGroupAdmin_FG.equals("OK") || pRollInfo.toLowerCase().indexOf("c=1") > -1 || pRollInfo.toLowerCase().indexOf("k=1") > -1 || pRollInfo.toLowerCase().indexOf("n=1") > -1)) {
 			pMode = 0;
 		} else {
 			pMode = 1;
 		}
 		
-		//Library 연결 부분 Method화
-		// pRootBoardID = "top" // pSelectBy = 0
+		// Library 연결 부분 Method화
 		String resultXML = ezBoardService.getBoardTree(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(strLang, userInfo.getTenantId()), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(resultXML);
 		int resultCount = doc.getElementsByTagName("NODE").getLength();
@@ -289,10 +284,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			useQuestion = "YES";
 		}
 		
-		//2018-05-08 강민수92 게시물 승인 카운트 출력
+		// 2018-05-08 강민수92 게시물 승인 카운트 출력
 		if (applyFlag.equals("OK")) {
 			int applyCount = 0;
-			// WriterCompanyID로 현재 회사의 승인대기 게시물만 카운트한다.
 			applyCount = ezBoardService.getApprBoardTotalItemCount(userInfo);
 			modelMap.addAttribute("applyCount", applyCount);
 		}
@@ -624,7 +618,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		   String strName = "";
 		   int intCount = 0;
 		   
-		   for (int i = 0; i < nList.getLength(); i++) { // 마이게시판 하위에 새게시물 게시판이 있는 경우(현재 불가능)
+		   for (int i = 0; i < nList.getLength(); i++) {
 			   if (nList.item(i).getChildNodes().item(4).getTextContent().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 				   intCount = ezBoardService.getBrdNewItemCount(userInfo.getId(), userInfo.getTenantId());
 				   
@@ -635,7 +629,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				   nList.item(i).getChildNodes().item(0).setTextContent(nList.item(i).getChildNodes().item(0).getTextContent() + strName);
 				   
 				   resultXML = commonUtil.convertDocumentToString(doc);
-			   } else { // 마이게시판 하위 게시판에 대해 반복
+			   } else {
 				   if (nList.item(i).getChildNodes().item(5).getTextContent().trim().equals("BOARD")) {
 					   BoardPropertyVO boardInfo = getBoardInfo(nList.item(i).getChildNodes().item(4).getTextContent().trim(), userInfo);
 					   BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
@@ -646,9 +640,9 @@ public class EzBoardController extends EgovFileMngUtil{
 					   myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
 					   
 					   if (boardInfo != null) {
-						   if (boardInfo.getGuBun() != null && boardInfo.getGuBun().equals("4")) { // 썸네일 게시판인 경우
+						   if (boardInfo.getGuBun() != null && boardInfo.getGuBun().equals("4")) {
 							   intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
-						   } else { // 다른 게시판인 경우
+						   } else {
 							   intCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
 						   }
 					   }
@@ -1063,7 +1057,6 @@ public class EzBoardController extends EgovFileMngUtil{
     	String orderOption2 = "";
     	String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
     	
-    	// 헤더를 가져오는 곳이...
     	List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
     	
     	int i = 0;
@@ -1086,16 +1079,15 @@ public class EzBoardController extends EgovFileMngUtil{
     	int noticeCount = 0;
     	int boardCount = 0;
     	
-    	if (mode == null || !mode.equals("temp")) { // 승인게시판 카운트
+    	if (mode == null || !mode.equals("temp")) {
     		boardCount = ezBoardService.getApprBoardTotalItemCount(userInfo);
-    	} else { // 임시보관함 카운트
+    	} else {
     		boardCount = ezBoardService.getMyBoardTotalItemCountTemp(userInfo);
     	}
     	
     	int startRow = 1;
     	int endRow = 0;
     	
-    	// 개인설정(리스트 표시 갯수 등)
     	BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo);
     	
     	int personalCount = boardConfigVO.getListCount();
@@ -1387,14 +1379,12 @@ public class EzBoardController extends EgovFileMngUtil{
     	resultXML.append("<DOCLIST>");
     	
     	if (mode == null || !mode.equals("temp")) {
-    		// 이부분 뭔지 모르겠음...나의 게시물 관련?
     		noticeCount = ezBoardService.getMyNoticePostItemCount(userInfo);
     		
     		if (noticeCount > 0) {
     			int start = ((boardVO.getPageNum() - 1) * personalCount) + 1;
     			int end = (boardVO.getPageNum() * personalCount);
     			
-    			// 나의 게시물 정보?
     			List<HashMap<String, Object>> noticeList = ezBoardService.getMyNoticePostItem(userInfo, "Y", start, end);
     			
     			int k = 0;
@@ -2638,7 +2628,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		String fieldName = "";
 		String fieldValue = "";
 		
-		// 개인의 리스트 표시갯수 설정 등 게시판설정 받아옴
 		BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo);
 		
 		// 새게시물 카운트 시 companyID 조건 추가
@@ -2654,7 +2643,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		endRow = (personalCount_ * boardVO.getPageNum());
 		
 		boardListVO.setUserID(userInfo.getId());
-		// 이부분 companyID 필드 추가한것 없애고 기존 writerCompanyID로 값 부여 
 		boardListVO.setWriterCompanyID(userInfo.getCompanyID());
 		boardListVO.setTenantID(userInfo.getTenantId());
 		boardListVO.setStartRow(startRow);
@@ -3130,7 +3118,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		String pBoardList = request.getParameter("pBoardList");
 		String pDelBoardList = request.getParameter("pDelboardList");
 		
-		// 즐겨찾기 순서조정
 		ezBoardService.setListOrder(userInfo, pBoardList, pDelBoardList);
 
 		logger.debug("saveListOrder ended");
@@ -3279,8 +3266,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardItem == null) {
 			return "main/warning";
 		}
-		
-		logger.debug("정보를 읽을 사원의 부서ID     ::    " + boardItem.getWriterDeptID());
 		
 		ezBoardService.setAsRead(userInfo, boardID, itemID);
 		
@@ -3660,11 +3645,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
-		
-		logger.debug("boardListVO.getTitle()    ::    "+boardListVO.getTitle());
-		logger.debug("boardListVO.getAbstract()    ::    "+boardListVO.getABSTRACT());
-		logger.debug("boardListVO.getContent()    ::    "+boardListVO.getContent());
-		logger.debug("requestURL    ::    "+requestURL);
 		
 		logger.debug("newBoardItem ended");
 		return requestURL;
@@ -6375,7 +6355,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String[] tempItem = itemList.split(";");
 		
-		// 승인게시물 승인&반려시 업데이트(itemID 사용하므로 companyID 필요없음) // result는 ok 또는 error.
 		for (int k = 0; k < tempItem.length; k++) {
 			result = ezBoardService.apprItem(userInfo.getId(), tempItem[k], pMod, userInfo.getCompanyID(), userInfo.getTenantId());
 		}
@@ -6494,8 +6473,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
-		/* 2018-06-29 홍승비 -댓글쓴 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정헤야함 */
-		// 현재 겸직한 회사에 대해 모든 부서정보 가져오므로, 레코드를 하나로 제한할 것.
+		/* 2018-06-29 홍승비 -댓글쓴 사원정보 확인 시 겸직부서 대응하여 정보 보여주도록 수정 */
 		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		StringBuffer sb = new StringBuffer();
@@ -7068,9 +7046,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("showAdjacent", showAdjacent);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
-		
-		//logger.debug("현재 선택한 사원의 부서 ID 정보       ::   " + boardInfo.get);
-		
+				
 		logger.debug("boardItemPreViewPhotoContent ended");
 		
 		return "ezBoard/boardItemPreViewPhotoContent";
@@ -7271,8 +7247,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 
-		/* 2018-07-02 홍승비 - 게시물 조회자 정보 가져올때  deptID 함께 가져오기 */
-		// companyID 조건 추가
+		/* 2018-07-02 홍승비 - companyID 조건 추가, 게시물 조회자 정보 가져올때  deptID 함께 가져오기 */
 		StringBuffer resultXML = ezBoardService.getReaderList(boardID,itemID,userInfo.getId(),commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()), userInfo.getCompanyID(), userInfo.getTenantId(), pageNum, perCount, userInfo.getOffset());
 
 		logger.debug("itemReadPagingList ended");
@@ -7369,9 +7344,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		return "/ezBoard/boardSelectItem2";
 	}
 
-	/*
+	/**
 	 * 2018-05-09 강민수92 게시물승인 카운트 호출
-	 * */
+	 */
 	@RequestMapping(value="/ezBoard/getApplyCount.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getApplyCount(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {

@@ -438,14 +438,12 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
 		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
 		map.put("v_PARENTBOARDID", "top");
-		// 현재 관리자의 companyID 필드 삽입
 		map.put("v_COMPANYID", boardPropertyVO.getCompanyID());
 		map.put("v_TENANTID", boardPropertyVO.getTenantID());
 		
 		ezBoardAdminDAO.createBoardGroup(map);
 		ezBoardAdminDAO.createBoardGroup2(map);
 		
-		// 새로 게시판 그룹이 추가되었으므로, 해당 테넌트의 모든 TBL_BOARD_TREECACHE를 삭제한다.(이후 새로 만들게된다.)
 		trunkBoard(boardPropertyVO.getTenantID());
 
 		logger.debug("createBoardGroup ended");
@@ -479,7 +477,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		// TBL_Board_BoardInfo 테이블을 업데이트한다.(하위게시판 경로 설정 등)
 		ezBoardAdminDAO.createBoard_U(map);
 		
-		// 새로운 게시판이 등록되었으므로, 해당 테넌트의 TBL_BOARD_TREECACHE 레코드를 삭제한다.
 		trunkBoard(boardPropertyVO.getTenantID());
 
 		logger.debug("createBoard ended");
@@ -631,9 +628,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_pNewBoardGroupID", newBoardGroupID);
 		map.put("v_TENANTID", tenantID);
 		
-		// TBL_Board_BoardInfo 업데이트(해당 게시판의 새 부모게시판과 새 게시판그룹ID) -> companyID 불필요(boardID 조건)
 		ezBoardAdminDAO.moveBoard(map);
-		// TBL_Board_BoardManage 업데이트(해당 게시판에 대한 권한을 가진 정보 업데이트) -> companyID 불필요(boardID 조건)
 		ezBoardAdminDAO.moveBoard2(map);
 		
 		trunkBoard(tenantID);
@@ -668,7 +663,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PAPPRMAILFLAG", boardPropertyVO.getApprMailFlag());
 		map.put("v_TENANTID", boardPropertyVO.getTenantID());
 		
-		// 게시판에 대한 모든 일반설정을 저장한다. (동일 테넌트 상에서 고유한 게시판ID 조건을 사용하므로, companyID 불필요)
 		ezBoardAdminDAO.saveBoardProperty(map);
 		ezBoardAdminDAO.saveBoardProperty2(map);
 		
@@ -679,7 +673,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 		
 		if (boardPropertyVO.getApprFlag() != null) {
-			if (boardPropertyVO.getApprFlag().equals("Y")) { // 승인자 추가
+			if (boardPropertyVO.getApprFlag().equals("Y")) {
 				String[] flag = boardPropertyVO.getApprUserList().split(";");				
 				
 				for (int i=0; i < flag.length; i++) {
@@ -689,29 +683,27 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 					if (i != 0) {
 						pMode = "";
 					}
-					// 승인게시판의 승인자 설정 -> (동일 테넌트 상에서 고유한 게시판ID 조건을 사용하므로, companyID 불필요)
+					
 					saveBoardProperty_appr(boardID, apprUserID, pMode, boardPropertyVO.getTenantID());
 				}
 				
 				if (boardPropertyVO.getOrgApprFlag() != null) {
 					if (!boardPropertyVO.getApprFlag().equals(boardPropertyVO.getOrgApprFlag())) {
-						// 승인 사용하지 않다가 승인게시판으로 바꾼 경우, 기존 게시판의 게시물들을 대기/반려상태로 전환
 						apprProperty_info(boardID, "Y", boardPropertyVO.getTenantID());
 					}
 				}
-			} else { // 승인자 제거
+			} else {
 				String pMode = "DEL";				
 				saveBoardProperty_appr(boardID, "", pMode, boardPropertyVO.getTenantID());
 				
 				if (boardPropertyVO.getOrgApprFlag() != null) {
 					if (!boardPropertyVO.getApprFlag().equals(boardPropertyVO.getOrgApprFlag())) {
-						// 승인 사용하지 않다가 승인게시판으로 바꾼 경우, 기존 게시판의 게시물들을 대기/반려상태로 전환
 						apprProperty_info(boardID, "N", boardPropertyVO.getTenantID());
 					}
 				}
 			}
-		}		
-		// board_treechache 테이블 trunk
+		}
+		
 		trunkBoard(boardPropertyVO.getTenantID());
 
 		logger.debug("saveBoardProperty ended");
@@ -874,7 +866,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			ezBoardAdminDAO.saveACL_I(map);
 		}
 		
-		// 게시판 권한이 변경되었으므로, 해당 테넌트의 트리캐시 삭제
 		trunkBoard((int) map.get("v_TENANTID"));
 
 		logger.debug("saveACL ended");
