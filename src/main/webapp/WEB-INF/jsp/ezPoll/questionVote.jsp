@@ -3152,7 +3152,7 @@
 		<form method="post">
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
 			<div id="ballotSystemBody">
-				<div id="mainmenu3" style="overflow: hidden; margin:27px 0px 5px 0px">
+				<div id="mainmenu3" style="overflow: hidden;">
 					  <div style="float: left; display: block;" class="voteInfo">
 					  		
 					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
@@ -3438,7 +3438,7 @@
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
-			               			<img id="mailSend<c:out value ="${_option.ansId}" />" src="/images/poll/sendMailSmall.png" style="vertical-align:middle; margin-left:5px; cursor:pointer; display:none; margin-top: -9px;" onClick="sendMailAll('${question.qstId}','${_option.ansId}')"/>
+			               			<img id="mailSend<c:out value ="${_option.ansId}" />" src="/images/poll/sendMail.png" style="vertical-align:middle; margin-left:7px; cursor:pointer; display:none; margin-top: -7px; width:26px" onClick="sendMailAll('${question.qstId}','${_option.ansId}')"/>
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" id="_tax${loop.index}">
 			               				<div style="float:left; display:block; margin: 0px 0px 0px 10px; cursor: pointer;" id="vAll${loop.index}" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}');"><spring:message code = 'ezPoll.t122'/></div>
 			               				<img src="/images/arrow_right.png" height="14px" width="14px" style="cursor: pointer; float:left; display:block; margin: 2px 0px 0px 2px;" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}')">

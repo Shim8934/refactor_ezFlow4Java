@@ -702,6 +702,117 @@
               			B.TENANT_ID = #v_TENANT_ID#) AA
 		]]>
 	</select>
+	
+	<select id="EzOrganDAO.getMemberListCount2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(CN) TOTALCOUNT  
+        	FROM
+        		(
+		]]>
+		
+		<isEqual property="containConfig" compareValue="YES">
+			<![CDATA[
+				SELECT
+					CN 
+				FROM
+					TBL_USERMASTER 
+				WHERE
+					DEPARTMENT = #deptCN#
+				AND
+					CN <> 'masteradmin'
+				AND 
+					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantID#)
+				AND
+					TENANT_ID = #tenantID#	
+				UNION ALL
+				 
+				SELECT
+					B.CN 
+				FROM
+					TBL_ADDJOBMASTER B
+				JOIN
+					TBL_USERMASTER A
+				ON
+					A.CN = B.CN
+				AND
+					A.TENANT_ID = B.TENANT_ID
+				WHERE
+					B.DEPTID = #deptCN#
+				AND
+					B.TENANT_ID = #tenantID#
+					
+				UNION ALL
+			]]>
+		</isEqual>
+		
+		<![CDATA[
+			SELECT
+				C.cn
+			FROM
+				TBL_USERMASTER C
+			WHERE
+				C.tenant_ID = #tenantID#
+			AND
+				cn <> 'masteradmin'
+			AND
+				cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantID#)
+			AND
+				C.department IN
+				(SELECT
+					cn
+				FROM
+					TBL_DEPTMASTER
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					(INSTR(dept_cd_path, (SELECT CONCAT(dept_cd_path, ',') from TBL_DEPTMASTER where tenant_id = #tenantID# AND cn = #deptCN#)) = 1
+				OR
+					extensionattribute1 = #deptCN#))
+					
+			UNION ALL
+			
+			SELECT
+				D.cn
+			FROM
+				TBL_ADDJOBMASTER D
+			JOIN
+				TBL_USERMASTER E
+			ON
+				D.tenant_id = E.tenant_id
+			AND
+				D.cn = E.cn
+			WHERE
+				D.tenant_id = #tenantID#
+			AND
+				D.deptid IN
+				(SELECT
+					cn
+				FROM
+					TBL_DEPTMASTER
+				WHERE
+					D.tenant_id = #tenantID#
+				AND
+					(INSTR(dept_cd_path, (SELECT CONCAT(dept_cd_path, ',') FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = #deptCN#)) = 1)
+				OR
+					extensionattribute1 = #deptCN#)) AA
+		]]>
+	</select>
+	
+	<select id="EzOrganDAO.getChildCompany" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				CN
+			FROM
+				TBL_DEPTMASTER
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				extensionattribute1 = #deptCN#
+			AND
+				extensionattribute2 = dept_cd_path
+		]]>
+	</select>
 
 	<select id="EzOrganDAO.getTBLDeptMaster" parameterClass="Map" resultClass="OrganDeptVO">
 		<![CDATA[

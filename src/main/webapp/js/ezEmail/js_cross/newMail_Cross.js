@@ -941,6 +941,7 @@ function Save_onClick_Complete(ReturnValue) {
                         MailSend_Show_Progress();                        
                     }
 
+                    g_saveHttp.timeout = 20000;
                     g_saveHttp.onreadystatechange = event_SaveonClick;
                     g_saveHttp.send(xmlDoc);
                 }

@@ -67,7 +67,7 @@
 			<tbody>
 				<tr>
 			    	<th style="white-space:normal;background-color: white;border-top:0px solid #ddd;border-bottom:1px solid #eaeaea">
-			    		<span id="selectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;padding-right: 3px;"><c:out value='${keyword }'/>-[<span style="color:#017BEC;"><c:out value='${totalCount }'/><spring:message code='main.t20000'/></span>]</span>
+			    		<span id="selectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;padding-right: 3px;"><c:out value='${keyword }'/>-[<span style="color:#017BEC;"><c:choose><c:when test="${totalCount eq totalCount2 }"><c:out value='${totalCount }'/></c:when><c:otherwise><c:out value='${totalCount }'/>/<c:out value='${totalCount2 }'/></c:otherwise></c:choose> <spring:message code='main.t20000'/></span>]</span>
 			    		<c:choose>
 			    			<c:when test="${listType eq 'TXT' }">
 					    		<span style="float:right;">
