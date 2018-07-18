@@ -317,10 +317,10 @@
             				
             				if (vo.status == 1) {
             					//확인 이미지
-            					printCircularUserList += "<img src='/images/ImgIcon/circular_read.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            					printCircularUserList += "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
             				} else {
             					//미확인 이미지
-            					printCircularUserList += "<img src='/images/ImgIcon/circular_unread.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            					printCircularUserList += "<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
             				}
             				
             				printCircularUserList += "</th>";
@@ -786,7 +786,7 @@
 						</tr>
 						<tr style="height:25px"> 
  							<th style="padding-left:10px"><spring:message code='ezCircular.t86' /></th>
-		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
+		            		<td class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
 		            			<c:choose>
 		            				<c:when test="${result.confirmStatus == '0'}">
 		            					<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />
@@ -796,6 +796,10 @@
 		            					<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />
 		            				</c:when>
 		            			</c:choose>
+		            		</td>
+		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezPoll.t161' /></th>
+		            		<td>
+		            			<div id="status" style="padding-left: 4px;">${fn:substring(result.endDate,0,16) }</div>
 		            		</td>
 						</tr>
 					</table>

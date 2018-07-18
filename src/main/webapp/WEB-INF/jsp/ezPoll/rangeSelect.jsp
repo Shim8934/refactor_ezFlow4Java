@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code='ezPoll.t222' /></title>
 		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">   
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">   
 		<link href="/css/ezPoll/rangeSelect.css" rel="stylesheet" type="text/css">     
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -204,7 +204,7 @@
             		pparsingXML2 = "<LISTVIEWDATA><ROWS>";
             		pparsingXML = pparsingXML + "<ROW><CELL><DATA2>" + selRow.getAttribute("DATA2") + "</DATA2>";
             		pparsingXML = pparsingXML + "<DATA4>" + selRow.getAttribute("DATA4") + "</DATA4>";
-            		pparsingXML = pparsingXML + "<DATA5>" + selRow.getAttribute("DATA5") + "</DATA5>";
+            		pparsingXML = pparsingXML + "<DATA5>" + MakeXMLString(selRow.getAttribute("DATA5")) + "</DATA5>";
             		pparsingXML = pparsingXML + "<VALUE>" + selRow.cells[0].innerText + "</VALUE></CELL></ROW>";
             		pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
             		Resultxml = loadXMLString(pparsingXML2);

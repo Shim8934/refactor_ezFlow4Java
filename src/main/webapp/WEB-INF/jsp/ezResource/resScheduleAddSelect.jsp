@@ -456,9 +456,9 @@
               if (CrossYN() || pNoneActiveX == "YES") {
                   schedule_add_ck_dialogArguments[0] = parameter;
                   strTitle = "scheduleAdd";
-                  url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0] + "&brdName=" + encodeURIComponent(ReturnValue_Name[0]);
+                  url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0];
               } else {
-                  url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0] + "&brdName=" + encodeURIComponent(ReturnValue_Name[0]);
+                  url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0];
               }
 
               if (ReturnFunction != null) {
