@@ -385,20 +385,55 @@
 	<select id="EzCommunityAdminDAO.aspSearchKeyGet1"					parameterClass="Map"		resultClass="CommunityClubVO">
 		<![CDATA[
 			SELECT
-				c_clubno,
-				c_clubname,
-				c_sysopid,
-				c_clubdesc,
-				c_regdate
+				*
 			FROM
 				(SELECT
 					c_clubno,
 					CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END AS c_clubname,
 					c_sysopid,
 					c_clubdesc,
-					c_regdate
+					c_regdate,
+					DEPTID
 				FROM
-					TBL_C_CLUB
+					TBL_C_CLUB A
+				INNER JOIN
+				   ((SELECT
+						D.CN, D.DEPARTMENT as DEPTID,
+						D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+						D.TENANT_ID
+					FROM
+						TBL_USERMASTER D
+					WHERE
+						D.TENANT_ID = #tenantID#
+					AND
+						D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+						
+					UNION ALL
+					
+					(SELECT
+						B.cn, A2.DEPTID,
+						C.EXTENSIONATTRIBUTE2 as COMPANYID,
+						A2.TENANT_ID
+					FROM
+						TBL_USERMASTER B
+					INNER JOIN
+						TBL_ADDJOBMASTER A2
+					ON
+						A2.CN = B.CN
+					AND
+						A2.TENANT_ID = B.TENANT_ID
+					RIGHT JOIN
+						TBL_DEPTMASTER C
+					ON
+						A2.DEPTID = C.CN
+					AND
+						B.TENANT_ID = C.TENANT_ID)) T
+				ON
+					A.C_SYSOPID = T.CN
+				AND
+					A.TENANT_ID = T.TENANT_ID
+				AND
+					A.COMPANYID = T.COMPANYID
 		]]>
 		
 		<isEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
@@ -417,9 +452,9 @@
 				AND
 					c_adminconfirm = 'Y'
 				AND
-					companyid = #companyID#
+					A.companyid = #companyID#
 				AND
-					tenant_id = #tenantID#
+					A.tenant_id = #tenantID#
 			]]>
 		</isEqual>
 		
@@ -440,9 +475,9 @@
 					AND
 						c_adminconfirm = 'Y'
 					AND
-						companyid = #companyID#
+						A.companyid = #companyID#
 					AND
-						tenant_id = #tenantID#
+						A.tenant_id = #tenantID#
 				]]>
 			</isEqual>
 			
@@ -451,18 +486,20 @@
 					WHERE
 						c_adminconfirm = 'Y'
 					AND
-						companyid = #companyID#
+						A.companyid = #companyID#
 					AND
-						tenant_id = #tenantID#
+						A.tenant_id = #tenantID#
 				]]>
 			</isNotEqual>
 		</isNotEqual>
 		
 		<![CDATA[
+					GROUP BY
+						C_CLUBNO, C_SYSOPID
 					ORDER BY
 						c_regdate ASC
 					LIMIT
-						#v_IQUERYCOUNT#) A
+						#v_IQUERYCOUNT#) T2
 				ORDER BY
 					c_regdate DESC
 				LIMIT

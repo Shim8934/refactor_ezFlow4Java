@@ -197,7 +197,7 @@ public class EzCommunityAdminController {
 		curPage = Math.min(curPage, totalPage);
 		int iQueryCount = keywordCount - (curPage -1) * 10;
 		
-		/* 관리자 > 커뮤니티검색화면 표출(하단 리스트) 시 companyID 조건 추가 */
+		/* 관리자 > 커뮤니티검색화면 표출(하단 리스트) 시 companyID 조건 추가, deptID 가져오기 */
 		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(userInfo.getPrimary(), iQueryCount, select , query, userInfo.getCompanyID(), userInfo.getTenantId());
 
 		// 이미 companyID로 걸러진 커뮤니티를 가지고 후작업
