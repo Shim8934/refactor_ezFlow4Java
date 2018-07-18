@@ -2723,6 +2723,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String eSimpleMIMEContentTransferEncoding = "";
 		
 		String realPath = commonUtil.getRealPath(request);
+		List<Map<String, Object>> addressCheck = null; 		// 메일 주소록 자동저장을 위한 name, address 담을 list
 		
 		// 클라이언트로부터 전달된 XML 형태의 요청 데이터를 XML 문서로 변환한다.
 		Document xmlDoc = commonUtil.convertStringToDocument(bodyData);
@@ -3035,6 +3036,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					message.setFrom(internetAddress);
 				}
 				
+				// 외부메일 주소록 자동저장을 위한 name, address 담을 list 객체 생성 
+				addressCheck = new ArrayList<Map<String, Object>>();
+				
 				// To
 				logger.debug("to=" + to);
 				m = r.matcher(to);
@@ -3044,6 +3048,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					internetAddress.setPersonal(name, "UTF-8");
 					internetAddress.setAddress(address);
 					message.addRecipient(RecipientType.TO, internetAddress);
+					
+					// 외부메일 주소록 자동저장을 위한 addressCheck list에  name, address add
+					Map<String, Object> autoAddress = new HashMap<String, Object>();
+					autoAddress.put("name", name);
+					autoAddress.put("address", address);
+					addressCheck.add(autoAddress);
 				}
 				
 				// Cc
@@ -3055,6 +3065,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					internetAddress.setPersonal(name, "UTF-8");
 					internetAddress.setAddress(address);
 					message.addRecipient(RecipientType.CC, internetAddress);
+					
+					Map<String, Object> autoAddress = new HashMap<String, Object>();
+					autoAddress.put("name", name);
+					autoAddress.put("address", address);
+					addressCheck.add(autoAddress);
 				}
 				
 				// Bcc
@@ -3066,6 +3081,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					internetAddress.setPersonal(name, "UTF-8");
 					internetAddress.setAddress(address);
 					message.addRecipient(RecipientType.BCC, internetAddress);
+					
+					Map<String, Object> autoAddress = new HashMap<String, Object>();
+					autoAddress.put("name", name);
+					autoAddress.put("address", address);
+					addressCheck.add(autoAddress);
 				}				
 				
 				// 메일 제목
@@ -4016,6 +4036,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        
 		        pResult = "<RESULT>OK</RESULT>";
 		        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";
+		        
+		        // useAutoSaveMailAddress가 YES일 경우, 외부수신자의 메일주소를 개인주소록에 자동 저장 (코린도)
+				String autoSaveAddress = ezCommonService.getTenantConfig("useAutoSaveMailAddress", userInfo.getTenantId());
+				
+				if (autoSaveAddress.equals("YES")) {
+					try {
+						ezEmailUtil.outerMailInsertAddress(addressCheck, userId, userInfo.getTenantId(), 
+								userAccount, userInfo.getDisplayName(), userInfo.getDisplayName1());
+					} catch (Exception e) {
+						logger.debug("AutoEmailAddress insert fail.");
+						e.printStackTrace();
+					}
+				}
 	        
 			} catch (Exception e) {
 				
@@ -4564,6 +4597,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	
 	/**
 	 * 편지쓰기 창에서 입력받은 메일이 존재하는지 검색. 
+	 * 메일쓰기 창에서 받는사람 도메인 확인 메소드
 	 */
 	@RequestMapping(value="/ezEmail/mailCheck.do")
 	@ResponseBody
@@ -4574,7 +4608,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String email = request.getParameter("name");
 		List<String> resultList = new ArrayList<String>();
 
-		String inputParams = "address=" + URLEncoder.encode(email, "UTF-8");;
+		String inputParams = "address=" + URLEncoder.encode(email, "UTF-8");
 		
 		logger.debug("inputParams=" + inputParams);
 		
