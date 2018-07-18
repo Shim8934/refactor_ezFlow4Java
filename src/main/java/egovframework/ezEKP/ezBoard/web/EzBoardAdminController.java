@@ -99,10 +99,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String redirectBoardID = "";
 		String redirectBoardGroupID = "";
 		
-		// 게시판ID는 게시판 일반설정 시 사용하게 된다.(boardProperty.jsp -> /admin/ezBoard/saveBoardProperty.do 참고)
 		if (request.getParameter("boardID") != null) {
 			redirectBoardID = request.getParameter("boardID");
-			// BoardGroupID를 가져온다. 이 부분은 companyID로 제한할 필요가 없다.(관리자는 이미 자신의 companyID로 걸러진 게시판에만 접근하므로)
 			List<BoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID, user.getTenantId());
 			
 			redirectBoardGroupID = leftBoardList.get(0).getBoardGroupId();
@@ -112,8 +110,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("redirectBoardGroupID", redirectBoardGroupID);
 		model.addAttribute("user", user);
 		model.addAttribute("serverName", serverName);
-
-		logger.debug("지금 회사ID는      ::   " + user.getCompanyID());
 		
 		logger.debug("boardLeft ended");
 		return "admin/ezBoard/boardLeft";
@@ -138,8 +134,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		String parentBoardID = request.getParameter("boardType");
 		
-		// 게시판 리스트들을 가져온다. 여기서 관리자가 볼 수 있는 게시판 그룹을 companyID로 제한할 필요가 있다.
-		// parentBoardID는 top이다.
 		/* 2018-06-25 홍승비 - 게시판 > 관리자 > 좌측 게시판리스트 표출 시 companyID 조건 추가 */
 		List<BoardTreeVO> list = ezBoardAdminService.get_Admin_TopBoardList(parentBoardID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getCompanyID(), userInfo.getTenantId());
 		
@@ -197,7 +191,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boardPropertyVO.setAccessID(uID);
 		boardPropertyVO.setAccessName(accessName1);
 		boardPropertyVO.setAccessName2(accessName2);
-		// 현재 관리자의 companyID 필드 삽입
 		boardPropertyVO.setCompanyID(user.getCompanyID());
 		boardPropertyVO.setTenantID(user.getTenantId());
 
@@ -263,7 +256,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boardPropertyVO.setAccessID(uID);
 		boardPropertyVO.setAccessName(accessName1);
 		boardPropertyVO.setAccessName2(accessName2);
-		// 하위게시판 등록시에도 companyID 부여
 		boardPropertyVO.setCompanyID(user.getCompanyID());
 		boardPropertyVO.setTenantID(user.getTenantId());
 		
@@ -300,12 +292,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	public void saveBoardOrder(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("saveBoardOrder started");
 
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		// pBoardIDList로는 게시판순서조정 테이블에 표시된 게시판만 가져와 카운트한다.
+		userInfo = commonUtil.userInfo(loginCookie);		
 		String pBoardIDList = request.getParameter("boardList");
 		
-		// 게시판 순서조정 시 companyID 필요없음(동일 테넌트 상에서 고유한 boardID로 접근하므로)
 		ezBoardAdminService.saveBoardOrder(pBoardIDList, userInfo.getTenantId());
 
 		logger.debug("saveBoardOrder ended");
@@ -719,8 +708,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			style = "display:none";			
 		}
 		
-		/* 2018-07-12 홍승비 - 모든 URL게시판은 임시 구분값(6)을 가지도록 수정 */
-		// 실제로 저장, 수정될 때의 값은 일반게시판과 동일한 0으로 들어가게 된다. 단지 화면을 부를때만 임시로 처리하는 것.
+		/* 2018-07-12 홍승비 - 모든 URL게시판은 임시 구분값(실제로는 0, 임시로 6)을 가지도록 수정 */
 		if (boardPropertyVO.getUrl() != null && !(boardPropertyVO.getUrl().trim().equals(""))) {
 			boardPropertyVO.setGuBun("6");
 		}
@@ -749,7 +737,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		boardPropertyVO.setTenantID(userInfo.getTenantId());
 		
-		// 게시판 이름뿐만이 아니라, 만료일이나 승인여부 등 온갖 설정을 다 변경한다.
 		ezBoardAdminService.saveBoardProperty(boardPropertyVO);
 
 		logger.debug("saveBoardProperty ended");
@@ -894,8 +881,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		String boardName = boardProperty.getBoardName();
 		
-		// 사용자 ID와 부서(회사)ID로 권한 있는 사람/부서의 정보 가져온다.(권한설정 테이블에 나타내기 위해)
-		// 이미 게시판이 각 회사 별로 묶여있기 때문에(companyID추가됨), 해당 게시판에 대한 권한 레코드는 그 회사 사람/부서만이 가진다.
+		/* 겸직한 사람이면 해당 회사 겸직한 정보를 보여주는게 나을까? 일단 권한은 무조건 게시판 당 그 사람에게 하나만 저장된다.(겸직 여러개라도 동일인에게 설정됨) */
 		List<BoardPropertyVO> list = ezBoardAdminService.getBoardAccessList(boardID, userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
@@ -1166,20 +1152,19 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardID = request.getParameter("boardID");		
 		String type = request.getParameter("type");
 		
-		// 권한전파 시 companyID 추가 필요
-		// 게시판ID와 부모 게시판ID를 리스트로 받아온다.
+		// 권한전파 시 companyID 추가
 		List<BoardPropertyVO> list = ezBoardAdminService.getUnderBoardID("%"+boardID+"%", "2", userInfo.getTenantId());
 		
-		if (type.equals("1")) { // 권한 복사(type 1) // 하위 게시판의 ID와 정보들을 리스트로 받아온다.
+		if (type.equals("1")) { // 권한 복사(type 1)
 			List<BoardPropertyVO> list2 = ezBoardAdminService.getUnderBoardID("%"+boardID+"%", "1", userInfo.getTenantId());
 			
-			for (int i = 0; i < list.size(); i++) { // 게시판ID와 부모 게시판ID만 받아온 리스트에 대해 반복
+			for (int i = 0; i < list.size(); i++) {
 				BoardPropertyVO vo1 = list.get(i);
 				
-				for (int j = 0; j < list2.size(); j++) { // 모든 정보를 가져온 하위게시판 하나에 대해 반복
+				for (int j = 0; j < list2.size(); j++) {
 					BoardPropertyVO vo2 = list2.get(j); 
 					
-					vo2.setBoardID(vo1.getBoardID()); // 권한을 전파할 게시판ID를 하나씩 가져와 삽입
+					vo2.setBoardID(vo1.getBoardID());
 					vo2.setCompanyID(userInfo.getCompanyID());
 					vo2.setTenantID(userInfo.getTenantId());
 					
