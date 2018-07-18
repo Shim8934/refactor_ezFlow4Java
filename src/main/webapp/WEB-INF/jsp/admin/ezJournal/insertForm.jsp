@@ -333,7 +333,7 @@
 				<tr id="setUseDeptList">
 					<td style="width: 48%;">
 						<div class="box"> 
-						<div style="width: 100%; height: 450px; overflow-x: auto; overflow-y: auto;" id="deptTreeView"></div>
+						<div style="width: 100%; height: 520px; overflow-x: auto; overflow-y: auto;" id="deptTreeView"></div>
 						</div>
 					</td>
 					<td style="width: 30px; text-align: center;">                            
@@ -342,7 +342,7 @@
                     </td>
                     <td style="width: 48%; vertical-align: top;">
                        	<div class="listview">
-                           	<div ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 100%; Height: 450px; overflow-x: auto; overflow-y: auto;" >
+                           	<div ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 100%; Height: 523px; overflow-x: auto; overflow-y: auto;" >
                            		<table id="useFormDept" style="width: 100%; border: 0; padding: 0;" class="mainlist"></table>
                            	</div>
                        	</div>
