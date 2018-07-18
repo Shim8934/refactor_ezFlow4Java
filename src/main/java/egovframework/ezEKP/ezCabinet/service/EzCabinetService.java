@@ -59,8 +59,10 @@ public interface EzCabinetService {
 	int getTotalItems(CabinetItemSearchVO searchVO) throws Exception;
 	List<CabinetItemVO> getItemsRecursive(CabinetItemSearchVO searchVO) throws Exception;
 	int getTotalItemsRecursive(CabinetItemSearchVO searchVO) throws Exception;
-	List<CabinetItemSimpleVO> getCabinetFiles(String cabinetId, int tenantId) throws Exception;
-	List<CabinetItemSimpleVO> getFilesByTitle(String itemTitle, String userId, int tenantId) throws Exception;
+	int getTotalFiles(String cabinetId, int tenantId) throws Exception;
+	int getTotalFilesByTitle(String itemTitle, String id, int tenantId) throws Exception;
+	List<CabinetItemSimpleVO> getCabinetFiles(String cabinetId, int startPoint, int listCount, int tenantId) throws Exception;
+	List<CabinetItemSimpleVO> getFilesByTitle(String itemTitle, int startPoint, int listCount, String userId, int tenantId) throws Exception;
 	
 	//User delete/move items function
 	void deleteItems(List<Integer> itemIdList, LoginVO userInfo) throws Exception;

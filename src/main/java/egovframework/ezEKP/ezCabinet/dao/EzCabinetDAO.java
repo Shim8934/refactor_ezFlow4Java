@@ -197,4 +197,12 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 	public List<CabinetItemSimpleVO> getFilesByTitle(Map<String, Object> map) {
 		return (List<CabinetItemSimpleVO>)list("EzCabinetDAO.getFilesByTitle", map);
 	}
+
+	public int getTotalFiles(Map<String, Object> map) {
+		return (int)select("EzCabinetDAO.getTotalFiles", map);
+	}
+
+	public int getTotalFilesByTitle(Map<String, Object> map) {
+		return (int)select("EzCabinetDAO.getTotalFilesByTitle", map);
+	}
 }

@@ -550,20 +550,21 @@ public class EzCabinetController {
 	@ResponseBody
 	public String jsonGetCabinetFiles(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetCabinetFiles start");
-		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String cabinetId     = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId   = request.getParameter("cabinetId")   != null ? request.getParameter("cabinetId")   : "";
+		String currentPage = request.getParameter("currentPage") != null ? request.getParameter("currentPage") : "";
 		
-		logger.debug("CabinetId: " + cabinetId);
+		logger.debug("CabinetId: " + cabinetId + " || Current page: " + currentPage);
 		
 		JSONObject resultObj = new JSONObject();
 		
-		if (cabinetId.equals("")) {
+		if (cabinetId.equals("") || currentPage.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.getCabinetFiles(request, user.getId(), cabinetId);
+		resultObj = cabinetRestService.getCabinetFiles(request, user.getId(), cabinetId, currentPage);
 		
 		logger.debug("jsonGetCabinetFiles end");
 		return resultObj.toString();
@@ -574,19 +575,20 @@ public class EzCabinetController {
 	public String jsonGetFilesBySearching(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetFilesBySearching start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String itemTitle     = request.getParameter("title") != null ? request.getParameter("title") : "";
+		String itemTitle     = request.getParameter("title")       != null ? request.getParameter("title")       : "";
+		String currentPage   = request.getParameter("currentPage") != null ? request.getParameter("currentPage") : "";
 		
-		logger.debug("Item title: " + itemTitle);
+		logger.debug("Item title: " + itemTitle + " || Current page: " + currentPage);
 		
 		JSONObject resultObj = new JSONObject();
 		
-		if (itemTitle.equals("")) {
+		if (itemTitle.equals("") || currentPage.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.getFilesBySearching(request, user.getId(), itemTitle);
+		resultObj = cabinetRestService.getFilesBySearching(request, user.getId(), itemTitle, currentPage);
 		
 		logger.debug("jsonGetFilesBySearching end");
 		return resultObj.toString();

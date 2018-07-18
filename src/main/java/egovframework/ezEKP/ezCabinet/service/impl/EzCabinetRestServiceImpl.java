@@ -456,20 +456,22 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	}
 
 	@Override
-	public JSONObject getCabinetFiles(HttpServletRequest request, String userId, String cabinetId) throws Exception {
+	public JSONObject getCabinetFiles(HttpServletRequest request, String userId, String cabinetId, String currentPage) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/id/" + cabinetId + "/get";
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userId", userId);
+		param.put("userId",      userId);
+		param.put("currentPage", currentPage);
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
 
 	@Override
-	public JSONObject getFilesBySearching(HttpServletRequest request, String userId, String itemTitle) throws Exception {
+	public JSONObject getFilesBySearching(HttpServletRequest request, String userId, String itemTitle, String currentPage) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/search";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("title",  itemTitle);
+		param.put("currentPage", currentPage);
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}

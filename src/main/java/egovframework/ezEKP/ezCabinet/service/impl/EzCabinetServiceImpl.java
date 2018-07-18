@@ -1017,7 +1017,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		return ezCabinetDAO.getItemsFromIdList(map);
 	}
-
+	
 	private long getTotalItemsSize(List<Integer> itemIdList, LoginVO userInfo) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("tenantId", userInfo.getTenantId());
@@ -1025,7 +1025,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		return ezCabinetDAO.getTotalItemsSize(map);
 	}
-
+	
 	private void moveItemsForUser(int cabinetId, String timeUTC, List<Integer> itemIdList, LoginVO userInfo) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("cabinetId",  cabinetId);
@@ -1036,23 +1036,46 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		ezCabinetDAO.moveItemsForUser(map);
 	}
+	
+	@Override
+	public List<CabinetItemSimpleVO> getCabinetFiles(String cabinetId, int startPoint, int listCount, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("cabinetId",  cabinetId);
+		map.put("tenantId",   tenantId);
+		map.put("startPoint", startPoint);
+		map.put("listCount",  listCount);
+		
+		return ezCabinetDAO.getCabinetFiles(map);
+	}
+	
+	@Override
+	public List<CabinetItemSimpleVO> getFilesByTitle(String itemTitle, int startPoint, int listCount, String userId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("title",      itemTitle);
+		map.put("startPoint", startPoint);
+		map.put("listCount",  listCount);
+		map.put("userId",     userId);
+		map.put("tenantId",   tenantId);
+		
+		return ezCabinetDAO.getFilesByTitle(map);
+	}
 
 	@Override
-	public List<CabinetItemSimpleVO> getCabinetFiles(String cabinetId, int tenantId) throws Exception {
+	public int getTotalFiles(String cabinetId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("cabinetId", cabinetId);
 		map.put("tenantId",  tenantId);
 		
-		return ezCabinetDAO.getCabinetFiles(map);
+		return ezCabinetDAO.getTotalFiles(map);
 	}
 
 	@Override
-	public List<CabinetItemSimpleVO> getFilesByTitle(String itemTitle, String userId, int tenantId) throws Exception {
+	public int getTotalFilesByTitle(String itemTitle, String userId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("title",    itemTitle);
 		map.put("userId",   userId);
 		map.put("tenantId", tenantId);
 		
-		return ezCabinetDAO.getFilesByTitle(map);
+		return ezCabinetDAO.getTotalFilesByTitle(map);
 	}
 }

@@ -51,6 +51,8 @@
 			var CabinetAddFile = function() {
 				var rlWindow    = null;
 				var cabinetId   = null;
+				var lastScrollY = 0;
+				var scrolled    = true;
 				var relatedArr  = [];
 				
 				function initEvents(cabId) {
@@ -72,6 +74,8 @@
 					fileDivElmt.addEventListener("dragenter", function(e) {CabinetFile.dragEnter(e);}, false);
 					fileDivElmt.addEventListener("dragover" , function(e) {CabinetFile.dragOver(e);} , false);
 					fileDivElmt.addEventListener("drop"     , function(e) {CabinetFile.upload(e);}   , false);
+					
+					document.getElementById("fileListDiv").onscroll = function(e) {scrollListOfItem(this);}
 					
 					var relatedBttn         = document.getElementById("rlBttn");
 					relatedBttn.onclick     = function(e) {getRelatedFile();};
@@ -150,8 +154,15 @@
 						spanElmt.setAttribute("role", relatedArr[i]["itemId"]);
 						spanElmt.setAttribute("title", relatedArr[i]["itemTitle"]);
 						spanElmt.textContent = relatedArr[i]["itemTitle"];
+						spanElmt.className   = "rlSpanBnk";
 						spanElmt.addEventListener("click", function(e) {readRelatedItem(this);}, false);
 						divElmt.appendChild(spanElmt);
+						
+						if (i != len - 1) {
+							var divideEm         = document.createElement("em");
+							divideEm.textContent = ";";
+							divElmt.appendChild(divideEm);
+						}
 					}
 				}
 				
@@ -171,6 +182,15 @@
 					var parentWd    = window.opener;
 					if (parentWd && parentWd.CabinetItem) {parentWd.CabinetItem.reload();}
 					closeWindow();
+				}
+				
+				function scrollListOfItem(divElmt) {
+					if (scrolled) {
+						scrolled = false;
+						var distance      = divElmt.scrollTop < lastScrollY ? -20 : 20;
+						divElmt.scrollTop = lastScrollY + distance;
+						setTimeout(function () {scrolled = true; lastScrollY = divElmt.scrollTop;}, 500);
+					}
 				}
 				
 				function getOpenWindowfeature(popUpW, popUpH) {

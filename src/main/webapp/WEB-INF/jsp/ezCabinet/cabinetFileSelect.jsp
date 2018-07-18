@@ -26,7 +26,7 @@
 					<div id="cabinetTree" class="cbTree"></div>
 				</div>
 				<div class="cabRlSelect">
-					<div class="rlSelectTtl"><spring:message code='ezCabinet.t89'/></div>
+					<div class="rlSelectTtl"><div id="bnkDivMain"><spring:message code='ezCabinet.t89'/></div><div id="cabinetInfo"></div></div>
 					<div class="rlSelectTblDiv">
 						<table class="rlSelectTbl" id="tableFiles">
 							<tr>
@@ -38,7 +38,7 @@
 							</tr>
 						</table>
 					</div>
-					<div id="tblPageRayer" style="height: 10px;"></div>
+					<div id="tblPageRayer" style="display: flex;"></div>
 				</div>
 			</div>
 			<div class="cabRlBttnDiv">
@@ -48,7 +48,7 @@
 				</div>
 			</div>
 			<div class="cabRlSelected">
-				<div class="rlSelectTtl"><spring:message code='ezCabinet.t90'/></div>
+				<div class="rlSelectTtl2"><spring:message code='ezCabinet.t90'/></div>
 				<div class="rlSelectTblDiv">
 					<table class="rlSelectTbl" id="selectedTable">
 						<tr>
@@ -68,9 +68,14 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTree.js"           ></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetNavi.js"           ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTable.js"          ></script>
 		<script type="text/javascript">
 			(function() {
+				var cabinetId     = null;
+				var searchTtl     = "";
+				var searchMode    = "normal";
+				var cabinetNavi   = null;
 				var cabinetTree   = new CabinetTree();
 				var fileTable     = new CabinetTable({
 					normal   : "bnkCabNormal",
@@ -106,6 +111,23 @@
 					
 					var searchBttnElmt = document.getElementById("searchBttn");
 					searchBttnElmt.addEventListener("click", function(e) {startSimpleSearch();}, false);
+					
+					var naviMessages = {
+						next     : CabinetMessages.strNext,
+						previous : CabinetMessages.strPrev,
+						item     : CabinetMessages.strItem,
+						total    : CabinetMessages.strTotal
+					};
+					
+					cabinetNavi = new CabinetNavi({
+						messages : naviMessages,
+						divId    : "tblPageRayer",
+						divClass : "cabpagenavi",
+						headerId : "cabinetInfo",
+						callback : searchItem
+					});
+					
+					cabinetNavi.setBlock(3);
 					
 					cabinetTree.setTreeInfo({
 						treeId     : "cabinetTree",
@@ -182,17 +204,32 @@
 				}
 				
 				function getAllItems(nodeElmt) {
-					var cabinetId = nodeElmt.getAttribute("role");
-					var url       = "/ezCabinet/getCabinetFiles.do";
-					var data      = {cabinetId : cabinetId};
+					document.getElementById("bnkDivMain").textContent = nodeElmt.textContent;
+					cabinetId = nodeElmt.getAttribute("role");
+					searchMode = "normal";
+					searchItem("1");
+				}
+				
+				function searchItem(page) {
+					var url  = "";
+					var data = null;
 					
-					makeAjaxCall(data, "GET", url, afterGetData, null, true, null);
+					switch(searchMode) {
+						case "normal" : url  = "/ezCabinet/getCabinetFiles.do";
+										data = {cabinetId : cabinetId, currentPage : page};
+										makeAjaxCall(data, "GET", url, afterGetData, null, true, null);
+										break;
+						case "search" : url  = "/ezCabinet/getFilesBySearching.do";
+										data = {title : searchTtl, currentPage : page};
+										makeAjaxCall(data, "POST", url, afterGetData, null, true, null);
+										break;
+					}
 				}
 				
 				function afterGetData(data) {
 					var code = data.code;
 					switch(code) {
-						case 0 : getDataSuccessfully(data.itemList); break;
+						case 0 : getDataSuccessfully(data); break;
 						case 1 : alert(CabinetMessages.strParamErr); break;
 						case 2 : alert(CabinetMessages.strError)   ; break;
 						case 3 : alert(CabinetMessages.strPerm)    ; break;
@@ -201,7 +238,8 @@
 				}
 				
 				function getDataSuccessfully(data) {
-					fileTable.setDataSource(data);
+					cabinetNavi.init(data.currentPage, data.totalRows, data.totalPages);
+					fileTable.setDataSource(data.itemList);
 					fileTable.renderTable();
 				}
 				
@@ -301,11 +339,10 @@
 				function startSimpleSearch() {
 					var searchStr = document.getElementById("ssInput").value;
 					if (!searchStr.replace(/\s/g,'')) {alert(CabinetMessages.strNoInput); return;}
-					
-					var url  = "/ezCabinet/getFilesBySearching.do";
-					var data = {title : searchStr};
-					
-					makeAjaxCall(data, "POST", url, afterGetData, null, true, null);
+					document.getElementById("bnkDivMain").textContent = CabinetMessages.strResult;
+					searchTtl  = searchStr;
+					searchMode = "search";
+					searchItem("1");
 				}
 				
 				function clearKeyword(inputElmt) {inputElmt.value = "";}
