@@ -3263,12 +3263,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		// 회원들 총 카운트는 정상임(TBL_C_CLUBUSER에는 겸직 상관없이 가입한 당시의 회사id로 레코드가 하나만 들어감)
-		int postCount = ezCommunityService.adminMemberListGet1(code, userInfo.getTenantId());
-		// 현재 커뮤니티의 관리자는 한 명임
+		/* 2018-07-18 홍승비 - 회원탈퇴/마스터이취임 화면 회원 검색 시 카운트 변하도록 수정 */
+		int postCount = ezCommunityService.adminMemberListGet1(code, flag.toUpperCase(), ser, userInfo.getPrimary(), userInfo.getTenantId());
 		String strSysopID = ezCommunityService.adminMemberListGet2(code, userInfo.getTenantId());
-		// 이부분 companyID로 조건 추가 필요
-		String idSpanValue = ezCommunityService.adminMemberList(userInfo, code, flag, ser, strSysopID, mode);
+		String idSpanValue = ezCommunityService.adminMemberList(userInfo, code, flag.toUpperCase(), ser, strSysopID, mode);
 		
 		model.addAttribute("code", code);
 		model.addAttribute("mode", mode);
