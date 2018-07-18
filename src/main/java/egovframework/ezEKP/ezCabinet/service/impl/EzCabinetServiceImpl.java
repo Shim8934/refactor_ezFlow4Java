@@ -795,7 +795,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("tenantId", tenantId);
 		
 		//Save item
-		int itemId      = ezCabinetDAO.getMaxItem(map) + 1;
+		int itemId           = ezCabinetDAO.getMaxItem(map) + 1;
 		CabinetItemVO itemVO = new CabinetItemVO();
 		itemVO.setCabinetId(cabinetId);
 		itemVO.setItemId(itemId);
