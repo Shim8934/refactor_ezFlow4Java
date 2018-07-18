@@ -1808,11 +1808,11 @@ public class EzJournalGWController {
 			int userCount = ezJournalService.getDeptUserListCount(info.getTenantId(), key, value, companyId, lang);
 			
 			// 하위부서 포함
-			String containCompany= ezCommonService.getTenantConfig("containLow", info.getTenantId());
+			String containLow= ezCommonService.getTenantConfig("containLow", info.getTenantId());
 			int totalCount2 = 0;
 			
-			if (containCompany.equals("YES") && key.equals("DEPARTMENT")) {
-				totalCount2 = ezOrganService.getMemberListCount2(value, null, totalCount2, containCompany, info.getTenantId());
+			if (containLow.equals("YES") && key.equals("DEPARTMENT")) {
+				totalCount2 = ezOrganService.getMemberListCount2(value, null, totalCount2, containLow, info.getTenantId());
 			} else {
 				totalCount2 = userCount;
 			}
