@@ -97,8 +97,8 @@
 				<spring:message code="ezBoard.t116"/><b>'<c:out value="${boardName}"/>'</b>
 				<spring:message code="ezBoard.t117"/><br/>
 			  	<spring:message code="ezBoard.t118"/>
-			</div><br/>			
-			<div class="btnposition">
+			</div>			
+			<div class="btnpositionJsp">
 			    <a class="imgbtn"><span onclick="Delete()" ><spring:message code="ezBoard.t89"/></span></a>
 			</div>
 		</c:if>

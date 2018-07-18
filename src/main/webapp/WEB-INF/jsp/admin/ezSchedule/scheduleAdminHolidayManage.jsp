@@ -309,10 +309,10 @@
 			        <li><span onClick="del_holiday()"><spring:message code='ezSchedule.t4006' /></span></li>			        
 			    </ul>
 			</div>
-			<table style="width: 750px; height: 385px;" border="0">
+			<table style="width: 750px; height: 500px;" border="0">
 		        <tr>
 		            <td>
-		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 750px; height: 385px;">
+		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 750px; height: 500px;">
 		                    <table class="mainlist" style="width: 100%;">
 		                        <tr>
 		                            <th style="width: 5%;"><span><spring:message code='ezSchedule.t403' /></span></th>
@@ -324,7 +324,7 @@
 		                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t2000' /></span></th>
 		                        </tr>
 		                    </table>
-		                    <div id="contentlist" name="contentlist" style="height: 365px; overflow-y: auto;">
+		                    <div id="contentlist" name="contentlist" style="height: 468px; overflow-y: auto;">
 		                        <table class="mainlist" style="width: 100%;">
 		                            <tr>
 		                                <td style="text-align: center;">

@@ -936,10 +936,9 @@
 		    	<option id="Radio1" value="personName"><spring:message code='ezTask.t2005' /></option>
 		    </select>
 		         <%--  <input name="searchCheck" id="Radio2" type="radio" value="title" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio2" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t118' /></label>
-		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t2005' /></label> --%>
-				  &nbsp;
+		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t2005' /></label> --%>				  
 				  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		          <a href="#" style="float:right;padding-top: 1px;"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
+		          <a href="#" style="float:right;"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
 		    </span>
 		</h1>
 		
@@ -988,7 +987,7 @@
 				<td style="WIDTH: 100%;HEIGHT: 100%;vertical-align:top">
 					<%-- 2018-04-24 김민성 - 업무명, 메모 길이 조절  --%>
 					<!-- 2018-05-24 구해안 - 업무구분,완료율,시작일,종료일 사이간격 띄우기 -->
-					<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed;">
+					<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed; min-width:800px;">
 						<col style ="width:30px;">
 						<col style ="width:50px;">
 						<col style ="width:20px;">

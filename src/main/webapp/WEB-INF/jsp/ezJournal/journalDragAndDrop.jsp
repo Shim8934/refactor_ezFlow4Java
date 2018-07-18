@@ -145,7 +145,7 @@
 	
 		    function setAttachFileInfo(str) {
 		        var filelist = JSON.parse(str);
-		        
+
 		        try {
 		            var listtable;
 		            var extCheck = false; 
@@ -201,8 +201,9 @@
 		                    extCheck = true;
 		                }
 		            }
-		            if (extCheck)
-		                alert("<spring:message code='main.sp12'/>");
+		            if (extCheck) {
+						alert("<spring:message code='ezJournal.kms01'/>");
+		            }
 		        }
 		        catch (e) { alert("returnvalue :: " + e.description); }
 		    }

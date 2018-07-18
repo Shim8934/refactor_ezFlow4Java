@@ -148,7 +148,7 @@
         	</tr>
     	</table>
     	<br>
-    	* <spring:message code="ezResource.t98" />
+    	▒ <spring:message code="ezResource.t98" />
     	<br>
         
         <c:choose>
