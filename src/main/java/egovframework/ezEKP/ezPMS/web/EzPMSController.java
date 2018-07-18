@@ -2948,7 +2948,7 @@ public class EzPMSController {
 		jsonParam.put("userId", userInfo.getId());
 		jsonParam.put("deptId", userInfo.getDeptID());
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards", param, request, "put", jsonParam);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/moveBoards", param, request, "put", jsonParam);
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {

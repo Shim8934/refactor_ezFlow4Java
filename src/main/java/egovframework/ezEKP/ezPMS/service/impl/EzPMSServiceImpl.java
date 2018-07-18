@@ -1907,7 +1907,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		while (keysItr.hasNext()) {
 			String key = keysItr.next();
 			Object value = jsonParam.get(key);
-			LOGGER.debug("parameter = [ key : " + key + ", value : " + value + "]");
+			// LOGGER.debug("parameter = [ key : " + key + ", value : " + value + "]");
 			map.put(key, value);
 		}
 

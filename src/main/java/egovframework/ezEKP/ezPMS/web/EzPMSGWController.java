@@ -3577,13 +3577,8 @@ public class EzPMSGWController {
 			
 			jsonParam.put("tenantId", info.getTenantId());
 			
-			// 메인 화면에서 게시물을 다른 작업으로 이동 시, 여러 개를 선택할 수 있다. 그 때만 itemIds가 넘어옴
-			if (jsonParam.get("itemIds") != null) {
-				ezPMSService.moveBoard(jsonParam);
-			} else {
-				ezPMSService.modifyBoard(jsonParam, realPath);
-			}
-
+			ezPMSService.modifyBoard(jsonParam, realPath);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", "");
@@ -3597,7 +3592,43 @@ public class EzPMSGWController {
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/boards] ended");
 		return result;
 	}
+	
+	/**
+	 * 게시물 이동
+	 * 
+	 * @param request
+	 * @param jsonParam
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/moveBoards", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject moveBoards(HttpServletRequest request, @RequestBody JSONObject jsonParam) {
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/moveBoards] started");
 
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.get("userId"));
+			
+			jsonParam.put("tenantId", info.getTenantId());
+			
+			ezPMSService.moveBoard(jsonParam);
+		
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+			e.printStackTrace();
+		}
+
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/moveBoards] ended");
+		return result;
+	}
+	
 	/**
 	 * 게시물 삭제
 	 * 
