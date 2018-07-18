@@ -409,8 +409,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("mode : " + mode);
 		String primary = userInfo.getPrimary();
-		
-		// 동일 테넌트 내에서, C_CLUBNO와 다른 정보들을 합친 쿼리로 게시판 트리를 가져온다(companyID가 이미 쿼리 안에 들어가 있고, 추가는 불필요)
 		String retXML = ezCommunityService.getBoardTree("top", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), mode, 0, 0, " ", code, primary, userInfo.getTenantId());
 		
 		if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
@@ -1094,9 +1092,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
-		
-		// 여기에서 writerDeptID 넘겨주도록 수정함
 		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo);
+		
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);		
 		ezCommunityService.boardItemView(userInfo, boardInfo, item, pItemID, pBoardID, showAdjacent, adjacentItemsEnableFlag, model);
 		String commentCount = ezCommunityService.getOneLineReplyCount(pBoardID, pItemID, userInfo.getTenantId()); // 2018-01-10 강민수92 댓글 카운트 세기
@@ -1186,8 +1183,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = request.getParameter("boardID");
 		String pItemID = request.getParameter("itemID");
 		
-		/* 2018-07-02 홍승비 -댓글쓴 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정헤야함 */
-		// 현재 겸직한 회사에 대해 모든 부서정보 가져오므로, 레코드를 하나로 제한할 것. companyID 조건 추가.
+		/* 2018-07-02 홍승비 - CompanyID 조건 추가, 댓글쓴 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
 		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(userInfo.getPrimary(), pBoardID, pItemID, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		String totalCommentCount = String.valueOf(oneLineReplyList.size());
@@ -3210,7 +3206,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		// 탈퇴희망자 카운트는 정상(TBL_C_OUTAPPLICATION 테이블에는 레코드가 하나만 들어감)
 		int postCount = ezCommunityService.adminOuterListGet1(code, userInfo.getTenantId());
 		
 		/* 2018-06-22 홍승비 - 사간겸직 탈퇴희망자 companyID로 중복레코드 제거 */
@@ -3823,7 +3818,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		// 여기에서는 비승인된 회원수를 중복없이 받아온다.(신청자 레코드는 하나만 등록됨) companyID가 필요할까?
 		int postCount = ezCommunityService.adminMemPermitGet1(code, userInfo.getTenantId());
 
 		/* 승인대기 회원 표시 companyID 조건 추가 */
@@ -3898,9 +3892,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		/* 2018-06-21 홍승비 - 오늘의 커뮤니티 표출 companyID 조건 추가 */
 		// 18-05-08 김민성 - 커뮤니티 회원수 수정
-		CommunityClubVO club = ezCommunityService.todayCopGet2(num, userInfo.getCompanyID(), userInfo.getTenantId());		
+		CommunityClubVO club = ezCommunityService.todayCopGet2(num, userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		/* companyID로 표출을 제한하게 되므로, 해당 회사의 커뮤니티에만 가입할 수 있게 된다. -> 즉, 동일 테넌트 내부에서는 C_CLUBNO가 고유하므로 companyID로 조건을 줄 필요는 없다. */
 		if (club != null) {
 			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
 			
@@ -3912,7 +3905,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 				cCatecBName = ezCommunityService.todayCopGet3(club.getC_Cate_B(), "B", userInfo.getTenantId());
 			}
 			
-			/* 회사A의 사원은 해당 회사의 커뮤니티에 가입하고, 그 커뮤니티에서 게시글을 작성한다. -> 즉, companyID로 조건을 주지 않아도 해당 회사의 회원이 쓴 글만 카운트된다. */
 			itemCnt = ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId());
 		}
 		
@@ -3940,10 +3932,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		/* 2018-06-21 홍승비 - 커뮤니티 메인홈 하단 카테고리별 커뮤니티 표출 companyID 조건 추가 */
 		if (mode.equals("A")) {
-			//카테고리는 테넌트마다 동일하게 사용한다.
 			List<CommunityCCategoryVO> categoryList= ezCommunityService.mainPageGet4("a", userInfo.getTenantId());
 			for(CommunityCCategoryVO category : categoryList) {
-				/* 2018-06-21 홍승비 - 커뮤니티 메인홈 하단 카테고리별 커뮤니티 표출 companyID 조건 추가 */
 				CommunityCCategoryVO vo = ezCommunityService.mainPageCategory(category.getC_Code(), "a", userInfo.getCompanyID(), userInfo.getTenantId());
 				if (vo != null) {
 					logger.debug("code = " + category.getC_Code() + " || cat = a");
@@ -3955,7 +3945,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 			List<CommunityCCategoryVO> categoryList= ezCommunityService.mainPageGet4("b", userInfo.getTenantId());
 			
 			for(CommunityCCategoryVO category : categoryList) {
-				/* 2018-06-21 홍승비 - 커뮤니티 메인홈 하단 카테고리별 커뮤니티 표출 companyID 조건 추가 */
 				CommunityCCategoryVO vo = ezCommunityService.mainPageCategory(category.getC_Code(), "b", userInfo.getCompanyID(), userInfo.getTenantId());
 				if (vo != null) {
 					logger.debug("code = " + category.getC_Code() + " || cat = b");
@@ -4492,7 +4481,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return sb.toString();
 	}
 	
-	/*
+	/**
 	 * 커뮤니티 관리메뉴 전체메일보내기 화면 조회
 	 */
 	@RequestMapping(value = "/ezCommunity/adminNoticeMail.do")
@@ -4515,7 +4504,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		return "ezCommunity/communityAdminNoticeMail";
 	}
 	
-	/*
+	/**
 	 * 커뮤니티 관리메뉴 전체메일보내기 화면 조회
 	 */
 	@RequestMapping(value = "/ezCommunity/adminNoticeMailOk.do")

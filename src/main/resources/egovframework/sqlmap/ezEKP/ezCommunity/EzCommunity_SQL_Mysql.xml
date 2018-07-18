@@ -1693,22 +1693,24 @@
 	<select id="EzCommunityDAO.commOutOkGet2"					parameterClass="Map"		resultClass="CommunityClubVO" remapResults="true">
 		<![CDATA[
 			SELECT
-				TBL_C_CLUB.c_clubname$v_userInfo_lang$ c_clubname,
-				TBL_C_CLUB.c_sysopid,
-				TBL_C_MEMBERINFO.email,
-				TBL_C_MEMBERINFO.username
+				A.c_clubname$v_userInfo_lang$ c_clubname,
+				A.c_sysopid,
+				B.email,
+				B.username
 			FROM
-				TBL_C_CLUB 
+				TBL_C_CLUB A
 			INNER JOIN
-				TBL_C_MEMBERINFO
+				TBL_C_MEMBERINFO B
 			ON
-				TRIM(TBL_C_CLUB.c_sysopid) = TBL_C_MEMBERINFO.userid
+				TRIM(A.c_sysopid) = B.userid
 			AND
-				TBL_C_CLUB.tenant_id = TBL_C_MEMBERINFO.tenant_id
+				A.tenant_id = B.tenant_id
 			WHERE
-				RTRIM(TBL_C_CLUB.c_clubno) = #v_code#
+				RTRIM(A.c_clubno) = #v_code#
 			AND
-				TBL_C_CLUB.tenant_id = #tenantID#
+				A.tenant_id = #tenantID#
+			AND
+				B.companyid = #companyID#
 		]]>
 	</select>
 	
