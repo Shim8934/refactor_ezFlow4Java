@@ -533,7 +533,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 	 * @return
 	 * @throws Exception
 	 */
-	private int getMemberListCount2(String deptCN, List<String> companyList, int totalCount2, String containConfig, int tenantID) throws Exception {
+	@Override
+	public int getMemberListCount2(String deptCN, List<String> companyList, int totalCount2, String containConfig, int tenantID) throws Exception {
 		logger.debug("getMemberListCount2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
