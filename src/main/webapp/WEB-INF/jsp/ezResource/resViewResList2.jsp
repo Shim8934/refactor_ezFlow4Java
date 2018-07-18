@@ -30,7 +30,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<style type="text/css">
-			.warningbox01 { width:540px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
+			.warningbox01 { width:540px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;}
 			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}
 			.warnintxt01 { position:relative; margin-bottom:10px;margin-top:20px}
 			.warningimg { position:absolute; top:0px; left:0px;}

@@ -99,7 +99,7 @@
 		        <WIDTH>100</WIDTH>
 		      </HEADER>
 		      <HEADER>
-		        <NAME><spring:message code='main.t76' /></NAME>
+		        <NAME><spring:message code='main.t75' /></NAME>
 		        <WIDTH>100</WIDTH>
 		      </HEADER>
 		      <HEADER>

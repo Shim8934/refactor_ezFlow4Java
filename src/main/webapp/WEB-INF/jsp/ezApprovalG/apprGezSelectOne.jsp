@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<link rel="stylesheet" href="/css/organ_tree.css"   type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>"   type="text/css">
 		<script type="text/javascript"  src="/js/ezApprovalG/TreeView.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/TreeViewCtrl_Cross.js"></script>

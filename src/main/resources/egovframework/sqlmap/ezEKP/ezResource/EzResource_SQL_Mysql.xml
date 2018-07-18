@@ -1969,7 +1969,7 @@
 						AND
                 			TENANT_ID = #tenantID#) > 0, member_id = 'everyone', member_id = #memberID#)
             AND
-                TENANT_ID = #tenantID#      			
+                TENANT_ID = #tenantID#
 		]]>
 	</select>
   

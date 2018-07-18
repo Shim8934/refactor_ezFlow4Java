@@ -2,7 +2,7 @@
 
 /* 월보기 */
 .calendar_month_navi{table-layout:fixed; border-bottom:0px solid #014b88;}
-.calendar_month_navi th{height:33px; line-height:24px; border:1px solid #d1ddec; font-family:Malgun Gothic; padding:0px 0px 2px 0px; margin:0; color:#2f2f2f;background-color: #f0f6ff; font-size: 15px;}
+.calendar_month_navi th{height:33px; line-height:24px; border:1px solid #d1ddec; font-family:Malgun Gothic, Meiryo UI; padding:0px 0px 2px 0px; margin:0; color:#2f2f2f;background-color: #f0f6ff; font-size: 15px;}
 .calendar_month_navi th .btn_prev{display: inline-block; vertical-align: top; margin: 2px 12px 0px; height:17px;cursor:pointer;}
 .calendar_month_navi th .btn_next{display: inline-block; vertical-align: top; margin: 2px 0px 0px 12px; height:17px;cursor:pointer;}
 .calendar_month{table-layout:fixed; vertical-align:top;}

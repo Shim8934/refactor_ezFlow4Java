@@ -47,11 +47,14 @@
                 	var parentBoardName = getNodeText(listdom.getElementsByTagName("TOPBOARDLIST")[0]).split(';');
                 	for (var i = 0; i < listdom.getElementsByTagName("ROW").length; i++) {
                     	strHTML += "<tr BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' BoardOrder='" + i + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);'>";
-                    	if (getNodeText(listdom.getElementsByTagName("TABUSED")[i]) == "Y")
-	                        strHTML += "<td style='width:12%;text-align:center;'><input type='checkbox' BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' onclick='event_statuschange(this);' checked></td>";
-    	                else
-        	                strHTML += "<td style='width:12%;text-align:center;'><input type='checkbox' BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' onclick='event_statuschange(this);'></td>";
-        	            
+                    	
+                    	/* 2018-07-16 홍승비 - 게시판 환경설정 >  즐겨찾기 체크박스 정렬 */
+                    	if (getNodeText(listdom.getElementsByTagName("TABUSED")[i]) == "Y") {
+	                        strHTML += "<td style='width:12%;text-align:center; padding-right:20px;'><input type='checkbox' BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' onclick='event_statuschange(this);' checked></td>";
+                    	} else {
+        	                strHTML += "<td style='width:12%;text-align:center; padding-right:20px;'><input type='checkbox' BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' onclick='event_statuschange(this);'></td>";
+                    	}
+                    	
         	            if (strPrimary == "1") {
 	           		        strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + getNodeText(listdom.getElementsByTagName("BOARDNAME")[i]) + "</td>";
         	            } else {

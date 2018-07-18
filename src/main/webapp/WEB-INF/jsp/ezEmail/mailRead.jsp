@@ -134,7 +134,9 @@
 		            document.getElementById("message").style.height = document.documentElement.clientHeight - 220 + "px";
 		        else
 			        document.getElementById("message").style.height = document.documentElement.clientHeight - 190 + "px";
-			}	
+				
+		        mailPrevSentDateChk();
+		    }	
 			
 			function HideMenu()
 			{
@@ -426,6 +428,15 @@
 		        newwin.focus();
 		    }
 		    
+		    function mailPrevSentDateChk() {
+		    	if (sentDateMsg != "") { // 전달 및 회신시 보낸시각
+		    		var sentDateHeight = $(".sentDateStr").innerHeight();
+		    		sentDateHeight = (Math.ceil(sentDateHeight/10) * 10);
+		    		
+		    		var messageH = $("#message").height();
+		    		$("#message").height(messageH - sentDateHeight);
+		    	}
+		    }
 		</script>
 	</head>
 

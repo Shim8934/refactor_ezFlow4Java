@@ -190,7 +190,8 @@
 									onclick="OpenUserInfo(${reply.replyWriter});"><c:out value='${reply.replyWriterName }'/></span></td>
 								<td
 									style="text-align: left; vertical-align: middle; padding: 10px; word-wrap: break-word; line-height: 1.5">
-									${fn:replace(reply.replyContent,newLineChar,"<br/>") }
+									<!-- 2018-07-16 구해안 #13097 엔터&특문 동시처리 -->
+									${fn:replace(fn:escapeXml(reply.replyContent),newLineChar,"<br/>") }
 									<c:if test="${reply.mine eq 'Y' }">
 									<img src="/images/ImgIcon/comment_del.gif"
 									style="cursor: pointer; vertical-align: middle; inline-block; padding-bottom: 1.6px"

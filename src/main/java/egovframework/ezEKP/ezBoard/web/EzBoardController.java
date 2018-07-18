@@ -7324,12 +7324,22 @@ public class EzBoardController extends EgovFileMngUtil{
         resultXML.append("<LISTVIEWDATA>");
         resultXML.append("<HEADERS>");
         
+        /* 2018-07-16 홍승비 - 체크박스를 사용하지 않는 게시판검색 기능 */
         for (BoardListHeaderVO vo : headerList) {
-        	resultXML.append("<HEADER>");
-    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
-        	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
-        	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
-        	resultXML.append("</HEADER>");
+        	if(vo.getName().toUpperCase().equals("CHECK")){
+        		resultXML.append("<HEADER>");
+        		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+            	resultXML.append("<WIDTH>0</WIDTH>");
+            	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
+            	resultXML.append("</HEADER>");
+        	}
+        	else{
+	        	resultXML.append("<HEADER>");
+	    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+	        	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+	        	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
+	        	resultXML.append("</HEADER>");
+        	}
         }
 
         resultXML.append("</HEADERS>");
@@ -7533,12 +7543,22 @@ public class EzBoardController extends EgovFileMngUtil{
 		resultXML.append("<LISTVIEWDATA>");
 		resultXML.append("<HEADERS>");
 		
+		/* 2018-07-16 홍승비 - 체크박스를 사용하지 않는 게시판검색 기능 */
 		for (BoardListHeaderVO vo:headerList) {
-			resultXML.append("<HEADER>");
-			resultXML.append("<NAME>" + vo.getName() + "</NAME>");
-			resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
-			resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
-			resultXML.append("</HEADER>");
+			if(vo.getName().toUpperCase().equals("CHECK")){
+        		resultXML.append("<HEADER>");
+        		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+            	resultXML.append("<WIDTH>0</WIDTH>");
+            	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
+            	resultXML.append("</HEADER>");
+        	}
+        	else{
+	        	resultXML.append("<HEADER>");
+	    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+	        	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+	        	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
+	        	resultXML.append("</HEADER>");
+        	}
 		}
 		
 		resultXML.append("</HEADERS>");

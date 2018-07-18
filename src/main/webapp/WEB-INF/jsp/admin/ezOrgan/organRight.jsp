@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code="ezBoard.t84" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href='/css/organ_tree.css' type="text/css" />
+		<link rel="stylesheet" href='<spring:message code='ezOrgan.e3'/>' type="text/css" />
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
 	    <style>
 	    	.mainlist_free tr th {
@@ -1435,12 +1435,12 @@
 		</h1>
 		<table style="margin-top:10px;width:900px;border:1px solid #ddd">
 			<tr>
-				<th style="height:30px"><spring:message code='ezOrgan.t73' /></th>
-				<th>
+				<th style="height:30px;border-bottom:0px"><spring:message code='ezOrgan.t73' /></th>
+				<th style="border-bottom:0px">
 					<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>					
 					<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
 				</th>
-				<th style="width:80px;text-align:center" rowspan="3">
+				<th style="width:80px;text-align:center;" rowspan="3">
 					<table>
                         <tr id="companybutton3">
                             <td><a class="imgbtn"><span onClick="info_company()"><spring:message code='ezCommunity.t1070' /></span></a></td>
@@ -1518,11 +1518,11 @@
 				</th>
 			</tr>
 			<tr>
-				<th style="height:30px">
+				<th style="height:30px;border-top:0px">
 					<input id="deptkeyword" onKeyPress="deptsearch_press();" style="WIDTH:130px; height:22px;" />
 					<a class="imgbtn" style="vertical-align:middle"><span onClick="deptsearch_click()"><spring:message code='main.t74' />/<spring:message code='ezOrgan.t93' /></span></a>
 				</th>
-				<th>
+				<th style="border-top:0px">
 					<select id="search_type" style="WIDTH:60px; height:22px;">
 						<option selected value="displayname"><spring:message code='ezOrgan.t67' /></option>
 						<option value="cn"><spring:message code='ezOrgan.t94' /></option>

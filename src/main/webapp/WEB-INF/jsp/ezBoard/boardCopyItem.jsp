@@ -5,7 +5,8 @@
 	<head>
 		<title><spring:message code='ezBoard.t350'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -258,32 +259,6 @@
 		        }
 		    }
 		</script>
-		<style>
-		.node_normal{
-			margin-top: 3px;
-			vertical-align:top;
-			font-size: 9pt;
-			background-color : #ffffff;
-			height : 15px;
-			cursor : hand;
-		}
-		.node_selected{
-			margin-top: 3px;
-			vertical-align:top;
-			font-size: 9pt;
-			height : 15px;
-			background-color : #edf4fd;
-			cursor : hand;
-		}
-		.node_hover{
-			margin-top: 3px;
-			vertical-align:top;
-			font-size: 9pt;
-			background-color : #f4f5f5;
-			height : 15px;
-			cursor : hand;
-		}
-		</style>
 	</head>
 	<body class="popup"> 
 	<h1><spring:message code='ezBoard.t135'/></h1>

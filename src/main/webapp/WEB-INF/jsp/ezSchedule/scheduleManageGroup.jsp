@@ -52,7 +52,7 @@
 				        listview.SetSelectFlag(false);
 				        listview.SetMulSelectable(true);
 				        listview.SetRowOnClick("View_Detail");
-				        listview.SetRowOnDblClick("show_groupinfo");
+				        listview.SetRowOnDblClick("show_groupinfo2");
 				        listview.DataSource(xmlDoc);
 				        listview.DataBind("GroupList");				        
 				        xmldom = null;
@@ -60,7 +60,7 @@
 		    	});		        
 		    }
 		
-		    function View_Detail() {
+		    function View_Detail(obj) {
 		        document.getElementById("Group_View").innerHTML = "";
 		        
 		        var listview = new ListView();
@@ -85,9 +85,9 @@
 		        DIV.style.wordBreak = "break-all";
 		
 		        if (CrossYN())
-		            DIV.textContent = GetAttribute(Selected[0], "data2")
+		            DIV.textContent = obj.getAttribute('data2');
 		        else
-		            DIV.innerText = GetAttribute(Selected[0], "data2")
+		            DIV.innerText = obj.getAttribute('data2');
 		
 		        DIV_Description.appendChild(DIV);
 		        DIV_Description.appendChild(P);
@@ -99,7 +99,7 @@
 		    		dataType : "xml",
 		    		async : false,
 		    		data : {
-		    			groupID : GetAttribute(Selected[0], "data1")
+		    			groupID : obj.getAttribute('data1')
 		    		},
 		    		url : "/ezSchedule/getGroupDetail.do",		    		
 		    		success: function(text){
@@ -189,7 +189,21 @@
 		    }
 					
 		    function del_group() {		
-		        if (strListInfo == "") {
+		    	var strListInfo = "";
+		    	var checkId = $("input[name=chk_group]:checked");
+		    	
+		    	if(checkId.length == 0){
+		    		 alert("<spring:message code='ezSchedule.t253' />");
+			         return;
+		    	}
+		    	
+		    	for(var i=0; i<$("input[name=chk_group]:checked").length; i++){
+		    		strListInfo += $("input[name=chk_group]:checked")[i].id;
+		    	}
+		    	console.log('strListInfo : ' + strListInfo);
+		    	 var count = strListInfo.split(';').length - 1;
+		    	
+		      /*   if (strListInfo == "") {
 		            alert("<spring:message code='ezSchedule.t253' />");
 		            return;
 		        }
@@ -197,7 +211,7 @@
 		        var count = strListInfo.split(';').length - 1;
 		
 		        if (!confirm(count + "<spring:message code='ezSchedule.t254' />"))
-		            return;
+		            return; */
 
 		        $.ajax({
 		    		type : "POST",
@@ -237,9 +251,12 @@
 		        }
       		            
 		        var Selected = listview.GetSelectedRows();
+		        console.log('Selected : ' + Selected);
+		        
 		        var feature = GetOpenPosition(430, 370);
 		        //window.open("/myoffice/ezSchedule/schedule_group_member.aspx?id=" + GetAttribute(Selected[0], "data1"), "", "height = 370px, width = 430px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		        
+		        console.log('GetAttribute(Selected[0], "data1") : ' + GetAttribute(Selected[0], "data1"));
 		        window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + GetAttribute(Selected[0], "data1"), "", "height = 370px, width = 460px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		        
 		        //getGroupList();		
@@ -256,7 +273,7 @@
 	    <div id="mainmenu" style="margin-top:20px">
 	        <ul>
 	            <li><span onClick="add_group()"><spring:message code='ezSchedule.t191' /></span></li>
-	            <li><span onClick="show_groupinfo()"><spring:message code='ezSchedule.t00001' /></span></li>
+	            <li><span onClick="show_groupinfo2('show')"><spring:message code='ezSchedule.t00001' /></span></li>
 	            <li><span onclick='del_group();'><spring:message code='ezSchedule.t215' /></span></li>
 	        </ul>
 	    </div>
