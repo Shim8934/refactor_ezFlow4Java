@@ -2269,6 +2269,8 @@
 					T1.companyid = #companyID#
 				AND
 					T1.tenant_id = #tenantID#
+				AND
+					T1.C_ADMINCONFIRM = 'Y'
 				ORDER BY
 					T1.c_regdate
 				LIMIT
@@ -2306,6 +2308,8 @@
 						T1.companyid = #companyID#
 					AND
 						T1.tenant_id = #tenantID#
+					AND
+						T1.C_ADMINCONFIRM = 'Y'
 					ORDER BY
 						T1.c_regdate
 					) T2

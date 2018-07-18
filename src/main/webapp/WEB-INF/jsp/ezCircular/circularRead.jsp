@@ -83,6 +83,8 @@
 				
 				//2018-07-10 김보미 - 제목이 2줄이상일 경우 공백 추가
 				titleSpace();
+				//2018-07-16 김보미 - 제목이길어질때 내용부분 높이 조정
+				titleHeight();
 	        });
 			
 			window.onresize = function () {
@@ -92,6 +94,8 @@
 
 				//2018-07-10 김보미 - 제목 공백 조절
 				titleSpace();
+				//2018-07-16 김보미 - 제목이길어질때 내용부분 높이 조정
+				titleHeight();
 			};
 			
 			/* 18-05-25 김민성 - 회람판 > 회람 상세정보 회람확인 시 창 새로고침 되도록 수정 */
@@ -329,10 +333,10 @@
             				
             				if (vo.status == 1) {
             					//확인 이미지
-            					printCircularUserList += "<img src='/images/ImgIcon/circular_read.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            					printCircularUserList += "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
             				} else {
             					//미확인 이미지
-            					printCircularUserList += "<img src='/images/ImgIcon/circular_unread.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            					printCircularUserList += "<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
             				}
             				
             				printCircularUserList += "</th>";
@@ -503,6 +507,18 @@
 					$("#titleTd").css("padding-left","4px");
 				}
 			}
+			
+			//2018-07-16 김보미 - 타이틀 높이에 따라 content부분 높이 조절
+			function titleHeight() {
+				var titleHeight = $("#titleTd").height();
+				var tdHeight = 26; //한줄일때의 td 높이
+				
+				var res = (titleHeight - tdHeight);
+				res = ($("#divCross").css("height").replace(/[^-\d\.]/g, '') - res) + "px";
+				
+				$("#divCross").css("height", res);
+			}
+			
 		</script>
 	</head>
 	<style>
@@ -786,7 +802,7 @@
 						</tr>
 						<tr style="height:25px"> 
  							<th style="padding-left:10px"><spring:message code='ezCircular.t86' /></th>
-		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
+		            		<td class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
 		            			<c:choose>
 		            				<c:when test="${result.confirmStatus == '0'}">
 		            					<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />
@@ -796,6 +812,10 @@
 		            					<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />
 		            				</c:when>
 		            			</c:choose>
+		            		</td>
+		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezPoll.t161' /></th>
+		            		<td>
+		            			<div id="status" style="padding-left: 4px;">${fn:substring(result.endDate,0,16) }</div>
 		            		</td>
 						</tr>
 					</table>

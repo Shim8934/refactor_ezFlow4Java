@@ -389,7 +389,7 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		<table class="mainlist" style="width:100%">
+		<table class="mainlist" style="width:100%; min-width:700px;">
   			<tr>
     			<th style="padding:0px; width:30px"><input type="checkbox" name="checkbox" onClick="reverse(this.checked)" id="Checkbox1"></th>
     			<th> <spring:message code='ezResource.t39' /></th>

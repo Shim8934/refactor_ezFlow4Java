@@ -71,6 +71,8 @@ function MailPreviewEnd(e) {
             if($("#PreH_CCMain").css("display") != "none") {
             	$("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
             }
+
+            mailPrevSentDateChk();
         }
         else if (PreviewW_Move) {
             var newPos_W = parseInt(document.getElementById("ResizeBarW").style.top) - 90;
@@ -81,6 +83,7 @@ function MailPreviewEnd(e) {
                 pMailPreHeightW = CurrentHeight - newPos_W;
                 pMailListHeightW = newPos_W;
             }
+            
             document.getElementById("ifrmPreViewW").style.display = "";
             document.getElementById("MailListRayer").style.width = "100%";
             document.getElementById("PreviewRayerW").style.width = "100%";
@@ -93,6 +96,8 @@ function MailPreviewEnd(e) {
             if($("#PreW_CCMain").css("display") != "none") {
             	$("#ifrmPreViewW").height($("#ifrmPreViewW").height()-20);
             }
+            
+            mailPrevSentDateChk();
         }
         PreviewH_Move = false;
         PreviewW_Move = false;
@@ -1006,7 +1011,7 @@ function PreviewRayerChange(pGubun) {
     try {
         if (pPreviewShow_HOW == pGubun)
             return;
-
+        
         isPreviewChange = true;
         if (pGubun == "NONE") {
             pPreviewShow_HOW = "OFF";
@@ -1179,6 +1184,8 @@ function Window_resize() {
                 if($("#PreW_CCMain").css("display") != "none") {
                 	$("#ifrmPreViewW").height($("#ifrmPreViewW").height()-20);
                 }
+                
+                mailPrevSentDateChk();
             }
             else if (pPreviewShow_HOW == "H") {
             	if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
@@ -1234,6 +1241,7 @@ function Window_resize() {
                 	$("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
                 }
                 
+                mailPrevSentDateChk();
             }
             else if (pPreviewShow_HOW == "OFF") {
                 document.getElementById("PreviewRayerW").style.display = "none";
@@ -1703,3 +1711,11 @@ function mailOpenPopup(btn, event) {
 	event_listDBClick(obj.parentElement);
 }
 
+function mailPrevSentDateChk() {
+	if (sentDateChk) { // 전달 및 회신시 보낸시각
+		var sentDateHeight = $(".sentDateStr").innerHeight();
+		sentDateheight = (Math.ceil(sentDateHeight/10) * 10);
+		
+		$("#ifrmPreView" + pPreviewShow_HOW).height($("#ifrmPreView" + pPreviewShow_HOW).height() - sentDateheight);
+	}
+}

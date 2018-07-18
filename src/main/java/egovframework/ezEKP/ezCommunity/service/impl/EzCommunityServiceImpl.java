@@ -3764,7 +3764,9 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	public boolean guestEditOk(LoginVO userInfo, CommunityCClubGuestVO item, String code, String mode, String memo, String[] cNo, boolean bIsMyContent) throws Exception {
 		switch (mode) {
 			case "write" :
-				guestEditOkInsert(code, userInfo, memo.replaceAll("\n", "<br>").replaceAll("\'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getTenantId());
+				//2018-07-16 김보미 - 특수문자 앞단에서 처리 
+//				guestEditOkInsert(code, userInfo, memo.replaceAll("\n", "<br>").replaceAll("\'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getTenantId());
+				guestEditOkInsert(code, userInfo, memo, userInfo.getTenantId());
 				
 				break;
 			case "delete" :
@@ -3784,7 +3786,9 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 					
 					if (item != null) {
 						bIsMyContent = true;
-						guestEditOkUpdate(no, code, memo.replaceAll("\n", "<br>").replaceAll("\'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getId(), userInfo.getTenantId());
+						//2018-07-16 김보미 - 특수문자 앞단에서 처리 
+//						guestEditOkUpdate(no, code, memo.replaceAll("\n", "<br>").replaceAll("\'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getId(), userInfo.getTenantId());
+						guestEditOkUpdate(no, code, memo, userInfo.getId(), userInfo.getTenantId());
 					}
 				}
 				

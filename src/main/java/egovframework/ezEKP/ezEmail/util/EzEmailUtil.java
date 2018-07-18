@@ -84,6 +84,7 @@ import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPMessage;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
@@ -123,6 +124,9 @@ public class EzEmailUtil {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzAddressService ezAddressService;
 	
 	public String getInboxFolderId() {
 		return "INBOX";
@@ -3912,5 +3916,48 @@ public class EzEmailUtil {
 		return folderAndMsgIdArray;
 	}
 	
+	/**
+	 * 메일 전송시 외부로 보내는 메일 주소 자동검색 되도록 주소록에 저장시키는 메소드
+	 * @param param			to, cc, bcc 의 주소록에 들어갈 name, address
+	 * @param userId		주소록 user
+	 * @param tenantId			
+	 * @param userAccount	user 주소
+	 * @param displayName	user name	
+	 * @param displayName2	user name2
+	 * @throws Exception 
+	 */
+	public void outerMailInsertAddress(List<Map<String, Object>> param, String userId, int tenantId, 
+			String userAccount, String displayName, String displayName2) throws Exception {
+		logger.debug("outerMailInsertAddress start.");
+		String name = "";
+		String address = "";
+		String innerDomain = ezCommonService.getTenantConfig("MailInnerDomain", tenantId);
+		List<String> innerDomainArray = Arrays.asList(innerDomain.split(";"));
+		
+		for (int i = 0; i < param.size(); i++) {
+			
+			try {
+				name = (String) param.get(i).get("name");
+				address = (String) param.get(i).get("address");
+				String recipientDomain = address.split("@")[1];	
+			
+				if (!innerDomainArray.contains(recipientDomain)) {
+					// exists가 false이면 존재하지 않음
+					boolean exists = ezAddressService.checkDuplicateAddress(tenantId, userId, address);
+					if (!exists) {
+						logger.debug("autoMailAddress make : " + address);
+						ezAddressService.insertAddress(tenantId, userId, "0", userAccount, 
+								displayName, displayName2, name, address, "", "", "", 
+								"", "", "", "", "", "", "", "", "", "P");
+					}
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.debug("outerMail insert Address fail / failAddress:" + address );
+			}
+		}
+		logger.debug("outerMailInsertAddress end.");
+	}
 }
 

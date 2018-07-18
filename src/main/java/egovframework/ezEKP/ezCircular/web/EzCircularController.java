@@ -1229,7 +1229,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		String fileList = "";
 		String pDirPath = "";
 
-		if (request.getParameter("fileList") != null && !request.getParameter("fileList").equals("")) {
+		if (request.getParameter("fileList") != null && !request.getParameter("fileList").equals("[]")) {
 			fileList = request.getParameter("fileList");
 			
 			pDirPath = commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());
@@ -1304,7 +1304,7 @@ public class EzCircularController extends EgovFileMngUtil {
 			mode = request.getParameter("mode");
 		}
 
-		if (request.getParameter("fileList") != null && !request.getParameter("fileList").equals("")) {
+		if (request.getParameter("fileList") != null && !request.getParameter("fileList").equals("[]")) {
 			fileList = request.getParameter("fileList");
 
 			pDirPath = commonUtil.getUploadPath("upload_circular.ROOT", loginSimpleVO.getTenantId());

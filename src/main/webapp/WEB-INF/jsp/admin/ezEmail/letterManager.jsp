@@ -5,23 +5,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-<link rel="stylesheet" href="/js/dist/themes/default/style.min.css" />
-<link rel="stylesheet" href="/css/ezEmail/style.css" />
-<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-<script src="/js/dist/jstree.min.js"></script>
-<script type="text/javascript"
-	src="/js/ezEmail/js_cross/letterBoxTree.js"></script>
-<script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title></title>
+	<link rel="stylesheet" href="/js/dist/themes/default/style.min.css" />
+	<link rel="stylesheet" href="<spring:message code = 'main.e15' />" type="text/css" />
+	<link rel="stylesheet" href="/css/ezEmail/style.css" />
+	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	<script src="/js/dist/jstree.min.js"></script>
+	<script type="text/javascript" src="/js/ezEmail/js_cross/letterBoxTree.js"></script>
+	<script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
 </head>
 <style>
 	.lmtitle {
 		font-weight: normal;
 	}
 	.lmLetterModifyBtn, .lmLetterDeleteBtn {
-		background-color: #e8e8e8 !important;
+		background-color: #e8e8ea !important;
 	}
 </style>
 <body>
@@ -37,7 +37,7 @@
 									<spring:message code='ezEmail.letter1' />
 								</div>
 									<input type="text" name="" id="lmSearchInput"
-										class="searchInput" onkeydown="letterSearchEnter();">
+										class="searchInput" onkeydown="letterSearchEnter();" style="height:22px">
 									<button id="lmSearch" onclick="letterSearch()">
 										<spring:message code='ezBoard.t188' />
 									</button>
@@ -51,7 +51,7 @@
 				</tr>
 			</table>
 			<!-- 편지지 목록 -->
-			<table>
+			<table style="margin-top:6px">
 				<tr>
 					<td>
 						<div class="lmLetter">
@@ -67,25 +67,30 @@
 				</tr>
 			</table>
 			<!-- 버튼 -->
-			<div class="lmBtns" style="margin-top: 5px;">
-				<div class="boxNo" data-boxNo="">
+			<div style="width:950px">
+				<div class="boxNo btnpositionJsp" data-boxNo="">
 					<!-- boxNo -->
-					<button onClick="letterEditPopUp(this, 'add')" class="searchDis">
+					<a class="imgbtn" onClick="letterEditPopUp(this, 'add')" ><span><spring:message code='ezEmail.letter3' /></span></a>
+					<%-- <button onClick="letterEditPopUp(this, 'add')" class="searchDis">
 						<spring:message code='ezEmail.letter3' />
-					</button>
-					<button onClick="letterBoxMove(this)">
+					</button> --%>
+					<a class="imgbtn" onClick="letterBoxMove(this)" ><span><spring:message code='ezEmail.letter4' /></span></a>
+					<%-- <button onClick="letterBoxMove(this)">
 						<spring:message code='ezEmail.letter4' />
-					</button>
+					</button> --%>
 					<!-- <img src="/images/i_bar.gif" alt="line"> -->
-					<button class="lmBtnPrev searchDis" onclick="orderSelect('prev')">
+					<a class="imgbtn" onClick="orderSelect('prev')" ><span><img src="/images/ImgIcon/prev.gif" alt="prev"></span></a>
+					<!-- <button class="lmBtnPrev searchDis" onclick="orderSelect('prev')">
 						<img src="/images/ImgIcon/prev.gif" alt="prev">
-					</button>
-					<button class="lmBtnNext searchDis" onclick="orderSelect('next')">
+					</button> -->
+					<a class="imgbtn" onClick="orderSelect('next')" ><span><img src="/images/ImgIcon/next.gif" alt="next"></span></a>
+					<!-- <button class="lmBtnNext searchDis" onclick="orderSelect('next')">
 						<img src="/images/ImgIcon/next.gif" alt="next">
-					</button>
-					<button onclick="orderChange()" class="searchDis">
+					</button> -->
+					<a class="imgbtn" onClick="orderChange()" ><span><spring:message code='ezOrgan.t104' /></span></a>
+					<%-- <button onclick="orderChange()" class="searchDis">
 						<spring:message code='ezOrgan.t104' />
-					</button>
+					</button> --%>
 				</div>
 			</div>
 		</div>

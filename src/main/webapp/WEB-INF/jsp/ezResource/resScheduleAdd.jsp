@@ -76,6 +76,9 @@
 	    	var EdateNow = ""; 
 	    	var title = "${title}";
 	    	
+	    	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
+	    	var onloadflag = false;
+	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
@@ -165,6 +168,8 @@
 	            	if (result != "FALSE") {
 	                	msgRtn = result;
 	            	}
+	            	
+	            	onloadflag = true;
 	        	}
 
 	        	if (m_Arguments != undefined) {
@@ -296,9 +301,7 @@
 	        	}
 
 	        	if (cmd == "add") {
-		            if (msgRtn != "") {
-		                message.SetEditorContent(msgRtn);
-	    	        }
+	                message.SetEditorContent(msgRtn);
 		        }
 	    	}
 

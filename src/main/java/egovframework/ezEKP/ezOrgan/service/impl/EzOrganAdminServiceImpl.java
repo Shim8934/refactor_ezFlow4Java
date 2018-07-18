@@ -909,6 +909,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	        ezOrganAdminDao.deleteCompany_D17(map);
 	        ezOrganAdminDao.deleteCompany_D18(map);
 	        ezOrganAdminDao.deleteCompany_D19(map);
+	        ezOrganAdminDao.deleteCompany_D20(map);
+	        ezOrganAdminDao.deleteCompanyInfo_IKMS7(map);
 	        
 		    /**
 		     * Active Directory

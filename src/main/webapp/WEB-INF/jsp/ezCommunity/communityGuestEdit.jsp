@@ -20,7 +20,7 @@
 		</c:if>
 		
 		<script type="text/javascript">
-			var content = "<c:out value='${item.content}' />";
+			var content = '${item.content}';
 		
 			function sendit() {
 				if (document.getElementById("memo").value == "") {
@@ -30,9 +30,10 @@
 					return;
 				}
 				
-				//2018-07-02 김보미 - 개행문자 -> <br>태그로 변경
-				var memo = $("#memo").val();
-				memo = memo.replace(/(?:\r\n|\r|\n)/g, "<br>");
+				//2018-07-16 김보미 - 특수문자, 개행처리
+				var memoTemp = $("#memo").val();
+				memoTemp = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(memoTemp, "&", "&amp;"), "&lt;", "<"), "&gt;", ">"), "&quot;", "'"),"&dquot;", '"');
+				memo = memoTemp.split("\n");
 				
 				$.ajax({
 		        	type : "POST",
@@ -42,7 +43,8 @@
 		        			name : $("#name").val(),
 		        			code : $("#code").val(),
 		        			mode : $("#mode").val(),
-		        			memo : encodeURIComponent(memo.trim())
+// 		        			memo : encodeURIComponent(memo.trim())
+		        			memo : JSON.stringify(memo)
 		        			},
 		        	success : function(result) {
 		        		goPage(1);
@@ -63,9 +65,19 @@
 			}
 			
 			$(function(){
-				//2018-07-02 김보미 - 방명록 내용 특수문자 처리
-				content = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(content, "&amp;", "&"), "&lt;", "<"), "&gt;", ">"), "&quot;", "'"),"&dquot;", '"'), "<br>", "\n");
-				$("#memo").val(content);
+				//2018-07-16 김보미 - 방명록 내용 특수문자 처리
+				content = ReplaceText(ReplaceText(content, "&quot;", "\""), "&amp;", "&");
+	        	var contentArr = JSON.parse(content);
+	        	var contentStr = "";
+	        	
+	        	for (var k = 0; k < contentArr.length; k++) {
+	        		contentStr += ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(contentArr[k], "&lt;", "<"), "&gt;", ">"), "&quot;", "'"),"&dquot;", '"'), "&amp;", "&");
+	        		if (k != contentArr.length - 1) { //마지막에는 개행을 붙이지 않는다
+		        		contentStr += "\n";
+	        		}
+	        	}
+	        	
+	        	$("#memo").val(contentStr);
 			})
 				
 			

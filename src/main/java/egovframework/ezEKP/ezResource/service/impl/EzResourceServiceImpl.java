@@ -1751,7 +1751,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				accessLvl = xmlDom.getElementsByTagName("ACCESSLVL").item(i).getTextContent().trim();
 			}
 		}
-	
+		
 		if(accessLvl.trim().equals("1")) {
 			return "Y";
 		} else if(accessLvl.trim().equals("2")) {

@@ -7,7 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>warning</title>
 		<style type="text/css">
-			.warningbox01 { width:540px; margin-top:200px; margin-left:110px; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
+			.warningbox01 { width:540px; margin-top:200px; margin-left:110px; border:1px solid #cccaca; background:#e8e8e8;}
 			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
 			.warnintxt01 { position:relative ;padding-bottom:10px;}
 			.warningimg { position:absolute; top:0px; left:0px;}

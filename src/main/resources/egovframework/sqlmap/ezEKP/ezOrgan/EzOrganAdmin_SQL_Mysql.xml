@@ -2398,7 +2398,7 @@
                    ('004',7,'보존기간',55,'TBL_CABINETCLASS','TBL_CABINETCLASS.KeepingPeriod','KeepingPeriod','dtKeepPeriod','기록물철 생상현황보고',null,'KEEPING PERIOD','保存期間','年龄',#tenantID#, #companyID#),
                    ('004',8,'보존방법',160,'TBL_CABINETCLASS','TBL_CABINETCLASS.KeepingMethod','KeepingMethod','dtKeepMethod','기록물철 생상현황보고',null,'CONSERVATION METHOD','保存方法','如何保存',#tenantID#, #companyID#),
                    ('004',9,'보존장소',80,'TBL_CABINETCLASS','TBL_CABINETCLASS.KeepingPlace','KeepingPlace','dtKeepPlace','기록물철 생상현황보고',null,'보존장소E','保存場所','保护区',#tenantID#, #companyID#),
-                   ('004',10,'등록일',70,'TBL_CABINET','TBL_CABINET.CreateDate','CreateDate','dtDate','기록물철 생상현황보고',null,'RegisterDate','登録日','注册',0, #companyID#)
+                   ('004',10,'등록일',70,'TBL_CABINET','TBL_CABINET.CreateDate','CreateDate','dtDate','기록물철 생상현황보고',null,'RegisterDate','登録日','注册',#tenantID#, #companyID#)
       ]]>
     </insert>
     
@@ -3605,6 +3605,26 @@
             ACCESSID = #v_CN#
         AND 
             TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D20" parameterClass="Map">
+        DELETE FROM 
+        	TBL_ATTITUDE_CONF
+ 		WHERE  
+            COMPANY_ID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompanyInfo_IKMS7" parameterClass="Map">
+        DELETE FROM
+            TBL_BOARD_MYBOARDS    
+        WHERE  
+            COMPANYID = #v_CN#
+		AND
+			TENANT_ID = #v_TENANT_ID#
+		AND
+			BOARDID = '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'
      </delete>
  
  	 <select id="EzOrganAdminDAO.userList" parameterClass="map" resultClass="OrganUserVO">
