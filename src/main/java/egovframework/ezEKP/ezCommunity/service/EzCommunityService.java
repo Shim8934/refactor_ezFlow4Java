@@ -280,7 +280,8 @@ public interface EzCommunityService {
 
 	public int adminOuterListGet1(String code, int tenantID) throws Exception;
 	
-	public int adminMemberListGet1(String code, int tenantID) throws Exception;
+	/* 2018-07-18 홍승비 - 회원탈퇴/마스터이취임 화면 회원 검색 시 카운트 변하도록 수정, primary 추가 */
+	public int adminMemberListGet1(String code, String flag, String ser, String primary, int tenantID) throws Exception;
 
 	public int adminMemberListOkGetE(String code, String cID, int tenantID) throws Exception;	
 

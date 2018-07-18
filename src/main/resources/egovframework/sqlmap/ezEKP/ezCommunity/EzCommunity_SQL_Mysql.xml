@@ -4801,18 +4801,70 @@
 <!-- 		{CALL EZSP_ADMIN_MEMBERLIST_GET1(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.adminMemberListGet1"				parameterClass="Map"		resultClass="Integer">
-		<![CDATA[
-			SELECT
-				IFNULL(COUNT(c_clubno), 0)  
-			FROM
-				TBL_C_CLUBUSER
-			WHERE
-				RTRIM(c_clubno) = #v_CODE#
-			AND
-				permit <> 0
-			AND
-				tenant_id = #tenantID#
-		]]>
+		<isEqual property="v_FLAG" compareValue="ID">
+			<![CDATA[
+				SELECT
+					IFNULL(COUNT(c_clubno), 0)  
+				FROM
+					TBL_C_CLUBUSER A
+				INNER JOIN
+					TBL_C_MEMBERINFO B
+				ON
+					RTRIM(A.c_id) = RTRIM(B.userid)
+				AND
+					A.tenant_id = B.tenant_id
+				AND
+					A.companyid = B.companyid
+				WHERE
+					RTRIM(c_clubno) = #v_CODE#
+				AND
+					permit <> 0
+				AND
+					A.c_id LIKE CONCAT('%', #v_SER#, '%')
+				AND
+					A.tenant_id = #tenantID#
+			]]>	
+		</isEqual>
+		<isNotEqual property="v_FLAG" compareValue="ID">
+			<isEqual property="v_FLAG" compareValue="NAME">
+				<![CDATA[
+					SELECT
+						IFNULL(COUNT(c_clubno), 0)  
+					FROM
+						TBL_C_CLUBUSER A
+					INNER JOIN
+						TBL_C_MEMBERINFO B
+					ON
+						RTRIM(A.c_id) = RTRIM(B.userid)
+					AND
+						A.tenant_id = B.tenant_id
+					AND
+						A.companyid = B.companyid
+					WHERE
+						RTRIM(c_clubno) = #v_CODE#
+					AND
+						permit <> 0
+					AND
+						CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END LIKE CONCAT('%', #v_SER#, '%')
+					AND
+						A.tenant_id = #tenantID#
+				]]>
+			</isEqual>
+		<isNotEqual property="v_FLAG" compareValue="NAME">
+			<![CDATA[
+				SELECT
+					IFNULL(COUNT(c_clubno), 0)  
+				FROM
+					TBL_C_CLUBUSER
+				WHERE
+					RTRIM(c_clubno) = #v_CODE#
+				AND
+					permit <> 0
+				AND
+					tenant_id = #tenantID#
+				]]>
+			</isNotEqual>
+		</isNotEqual>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.getBoardTreeSet"				parameterClass="Map"> -->

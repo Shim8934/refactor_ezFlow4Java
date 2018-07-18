@@ -1692,7 +1692,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("code : " + code + ", strSysopID : " + strSysopID + ", keyword : " + keyword + ", sRadio : " + sRadio);
 		
 		StringBuilder sb = new StringBuilder();
-		String primary = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+		/* 2018-07-18 홍승비 - primary 설정 변경 */
+		String primary = userInfo.getPrimary();
 		
 		// 여기서 회원리스트를 받아온다. CommunityCClubUserVO에 deptID, deptName 필드를 추가했다.
 		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, primary, keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId());
@@ -2010,7 +2011,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("adminMemberList started.");
 		
 		/* 2018-06-22 홍승비 - 커뮤니티 팝업홈 회원탈퇴/마스터이취임 리스트 companyID 조건 추가*/
-		List<CommunityCClubUserVO> list = adminMemberListGet3(code, flag.toUpperCase(), userInfo.getPrimary(), ser, userInfo.getCompanyID(), userInfo.getTenantId());
+		List<CommunityCClubUserVO> list = adminMemberListGet3(code, flag, userInfo.getPrimary(), ser, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		int iCount = 1;
 		StringBuilder sb = new StringBuilder();
@@ -4822,11 +4823,14 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	}
 
 	@Override
-	public int adminMemberListGet1(String code, int tenantID) throws Exception {
+	public int adminMemberListGet1(String code, String flag, String ser, String primary, int tenantID) throws Exception {
 		logger.debug("adminMemberListGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_FLAG", flag);
+		map.put("v_SER", ser);
 		map.put("v_CODE", code);
+		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 		
 		int result = ezCommunityDAO.adminMemberListGet1(map);
@@ -5266,20 +5270,17 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		// TBL_C_MEMBERINFO에서 승인대기자를 받아올 때, 모든 겸직을 같이 받아와서 레코드 중복이 발생한다. 관리자의 현재 companyID로 조건을 걸어 distinct로 받아오자.
 		// deptID도 받아오도록 한다.
 		List<CommunityCClubUserVO> userList = ezCommunityDAO.adminMemPermitGet2(map);
-
+		
 		for (CommunityCClubUserVO user : userList) {
 			sb.append("<tr>");
 			sb.append("<td height=\"23\" align=\"center\">" + iCount + "</td>");
 			sb.append("<td>");
             
-            logger.debug("lang = " + userInfo.getPrimary() + " || userID = " + user.getC_ID() + " || companyID = " + user.getCompanyID() + " || userName = " + user.getUserName() + " || userName2 = " + user.getUserName2());
+            logger.debug("lang = " + userInfo.getPrimary() + " || userID = " + user.getC_ID() + " || companyID = " + user.getCompanyID() + " || userName = " + user.getUserName());
             
             // 승인대기자의 정보를 표출할 때 해당 겸직부서(또는 원부서) 값을 같이 넘긴다.
-            if (userInfo.getPrimary().equals("2")) {
-            	sb.append("<a href=\"javascript:openinfo( '" + code + "', '" + user.getC_ID().trim() + "', '" + user.getCompanyID().trim() + "','" + user.getDeptID() + "' )\">" + user.getUserName2().trim() + "</a>");
-            }else {
-            	sb.append("<a href=\"javascript:openinfo( '" + code + "', '" + user.getC_ID().trim() + "', '" + user.getCompanyID().trim() + "','" + user.getDeptID() + "' )\">" + user.getUserName().trim() + "</a>");
-            }
+            // userName을 알아서 분기태워 가져오므로(primary로 case 작업), userName2를 사용하지는 않는다.
+            sb.append("<a href=\"javascript:openinfo( '" + code + "', '" + user.getC_ID().trim() + "', '" + user.getCompanyID().trim() + "','" + user.getDeptID() + "' )\">" + user.getUserName().trim() + "</a>");
             
             sb.append("</td>");
             sb.append("<td>" + commonUtil.cleanValue(user.getC_ID()) + "</td>");
