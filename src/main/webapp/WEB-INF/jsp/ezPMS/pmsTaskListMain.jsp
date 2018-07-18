@@ -86,7 +86,7 @@
 			groupId : groupId,
 			currentPage : currentPage,
 			totalCount : totalCount,
-			listNumber : 10,
+			listNumber : 15,
 			//내용 header 정렬
 			orderWhat : orderWhat,
 			orderHow : orderHow,
