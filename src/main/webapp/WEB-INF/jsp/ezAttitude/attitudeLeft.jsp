@@ -474,8 +474,8 @@
 			</c:if>
 			<li><span id="" onclick="functionFlag(3)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.t166'/></span></li>
 		</ul>
-		<c:if test="${attitudeAdminCheck == true}"> 
-			<h3><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block">&nbsp;<spring:message code='ezAttitude.t73'/></span></h3>
+		<c:if test="${attitudeAdminCheck == true}">
+			<h3><span id="" onclick="functionFlag(5)" style="width:100%;display:inline-block"><spring:message code='ezAttitude.t73'/></span></h3>
 		</c:if>
 	</div>
 </body>

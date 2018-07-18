@@ -492,7 +492,7 @@
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li><span onClick="email_onclick()"><spring:message code='ezOrgan.t00010' /></span></li>
 		            
-		            <span style="float: left; font-weight: normal; color: black; clear:inherit;margin-left:1px">
+		            <span style="float: right; font-weight: normal; color: black; clear:inherit;margin-left:1px">
 		            	<select id="searchType" style="width:80px;">
 							<option selected="" value="displayname"><spring:message code='ezOrgan.t67' /></option>
 							<option value="cn"><spring:message code='ezOrgan.t218' /></option>

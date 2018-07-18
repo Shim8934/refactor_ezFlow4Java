@@ -357,7 +357,7 @@
 	<body class="mainbody">
 		<h1><spring:message code="ezEmail.lsd01" /><span id="listInfo"></span></h1>
 		<div style="width:100%; padding-bottom:5px;">
-		<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #ddd;">
+		<table style="width: 100%; background-color: #f8f8fa; border: 1px solid #ddd;">
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
 					<span id="topmenu" style="width: 500px"><spring:message code="ezStatistics.t1062"></spring:message>&nbsp; <!-- 검색조건 -->

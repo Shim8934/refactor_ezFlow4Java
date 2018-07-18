@@ -160,7 +160,7 @@
 	<body class="mainbody" style="height: 95%;">
 	    <h1><spring:message code='main.t374'/><span></span></h1>
 		    <span><b><spring:message code = 'ezApprovalG.t1566' /></b>&nbsp;
-			    <select id="ListCompany" onchange="selectCompanyID()">
+			    <select id="ListCompany" onchange="selectCompanyID()" style="height:29px">
 		        	<c:forEach var="item" items="${list}">
 		        		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
