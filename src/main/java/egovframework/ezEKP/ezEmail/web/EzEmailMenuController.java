@@ -201,7 +201,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 
 				rootFolderXML.append(" href='" + folder.getFullName() + "'"); //수정
 				
-				if (folder.list().length > 0) {
+				if (folder.listSubscribed().length > 0) {
 					rootFolderXML.append(" hassub='1'");
 				}
 				

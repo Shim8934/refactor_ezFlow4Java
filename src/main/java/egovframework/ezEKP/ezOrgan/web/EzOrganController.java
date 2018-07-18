@@ -1,7 +1,5 @@
 package egovframework.ezEKP.ezOrgan.web;
 
-import java.util.ArrayList;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,9 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import antlr.collections.List;
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -173,12 +169,13 @@ public class EzOrganController {
                 Element Nodetip = doc.createElement("TOOLTIP");
 
                 if (!doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().equals("")) {
-                    String[] arry = doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().split(":");
+                	//2018-07-12 이효진 미사용 소스 주석처리
+                    /*String[] arry = doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().split(":");
                     tooltip = arry[3].replace("/", ":") + " ~ " + arry[4].replace("/", ":");
                     
                     if (arry.length > 5) {
                         tooltip += " " + messageSource.getMessage(arry[5], userInfo.getLocale());
-                    }
+                    }*/
                     
                     /* 
                      * 2016-03-29 장진혁과장 날짜비교 작업 필요

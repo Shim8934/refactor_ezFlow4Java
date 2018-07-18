@@ -987,7 +987,7 @@
 				<td style="WIDTH: 100%;HEIGHT: 100%;vertical-align:top">
 					<%-- 2018-04-24 김민성 - 업무명, 메모 길이 조절  --%>
 					<!-- 2018-05-24 구해안 - 업무구분,완료율,시작일,종료일 사이간격 띄우기 -->
-					<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed;">
+					<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed; min-width:800px;">
 						<col style ="width:30px;">
 						<col style ="width:50px;">
 						<col style ="width:20px;">
