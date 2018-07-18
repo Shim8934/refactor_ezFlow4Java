@@ -111,7 +111,7 @@
 			  	</tr>
 			</table>
 			<br/>
-			<h2><spring:message code="ezBoard.t129" /></h2>
+			<h2 style="font-weight: normal">▒ <spring:message code="ezBoard.t129" /></h2>
 		</c:if>
 		<c:if test="${hasSubBoard != '1'}">
 			<h1><spring:message code="ezBoard.t65" /></h1>
@@ -122,7 +122,7 @@
 			  	</tr>
 			</table>
 			<br/>
-			<h2><spring:message code="ezBoard.t130" /></h2>
+			<h2 style="font-weight: normal">▒ <spring:message code="ezBoard.t130" /></h2>
 			<table class="content">
 				<tr>
 			    	<th><spring:message code="ezBoard.t131" /></th>
@@ -140,12 +140,11 @@
 			</script>
 			<table border="1" cellpadding="3" cellspacing="0" bordercolor="b6b6b6" class="mwidth" style="border-collapse:collapse">
 				<tr>
-			    	<th ><spring:message code="ezBoard.t133" /></th>
-			    	<td ID="pSelectBoardName" width="100%" style="height:27px;padding-left:3px"></td>
+			    	<th style="font-weight: normal"><spring:message code="ezBoard.t133" /></th>
+			    	<td id="pSelectBoardName" width="100%" style="height:27px;padding-left:3px;"></td>
 			  	</tr>
 			</table>
-			<br/>
-			<div id=MoveCheck style=display:none  class="btnposition">
+			<div id=MoveCheck style=display:none  class="btnpositionJsp">
 			    <a class="imgbtn" name="cmdOk" ><span onClick="Move()" onkeydown="onkey_down()"><spring:message code="ezBoard.t134" /></span></a>
 			</div>
 		</c:if>
