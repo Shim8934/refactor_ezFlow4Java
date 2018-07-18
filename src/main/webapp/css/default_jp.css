@@ -1825,7 +1825,7 @@ form{display:inline;margin:0}
 
 .tabpartMycommunity{}
 .tabpartMycommunity .tabpartMycommunityTitle{padding:10px 5px 5px 5px; margin:0; margin-top:20px; overflow:hidden; border-top:1px solid #e9e9ea; height:25px; background-color: #f9f9fa;}
-.tabpartMycommunity .tabpartMycommunityTitle dt{float:left; width:75%; height:20px; line-height:20px; background:url(../images/ezCommunity/comm_title1.png) no-repeat 2px 50%; padding:0px 0px 0px 32px; font-size:13px; font-weight:bold; color:black; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.tabpartMycommunity .tabpartMycommunityTitle dt{float:left; width:65%; height:20px; line-height:20px; background:url(../images/ezCommunity/comm_title1.png) no-repeat 2px 50%; padding:0px 0px 0px 32px; font-size:13px; font-weight:bold; color:black; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .tabpartMycommunity .tabpartMycommunityTitle dd{float:right; font-size:11px; color:#666; margin:-2px 0 0 0; padding:0; height:20px; line-height:2;}
 .tabpartMycommunity .tabpartMycommunityTitle dd .icon_community01{display:inline-block; padding:0px 0px 0px 24px; background:url(../images/kr/community/icon_Community01.png) no-repeat left 0px; font-weight:bold; font-size:11px;}
 .tabpartMycommunity .tabpartMycommunityTitle dd .icon_community02{display:inline-block; padding:0px 0px 0px 24px; background:url(../images/kr/community/icon_Community02.png) no-repeat left 0px; font-weight:bold; font-size:11px;}
