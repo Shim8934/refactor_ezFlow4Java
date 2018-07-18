@@ -1120,7 +1120,7 @@
 								<!-- <div style="height: 40px; width: 40px; line-height:40px; border: 1px solid #dddddd; text-align: center; border-radius: 25px; float: left; margin-left: 3px; margin-right:15px; background-color: white">
 									<span id="amount">0</span>
 								</div> -->
-								<div id="slider-range-min" style="width: 200px; top: 13px; float:left; margin-right:84px; margin-left: 15px;">
+								<div id="slider-range-min" style="width: 200px; top: 13px; float:left; margin-right:70px; margin-left: 15px;">
 									<div id="custom-handle" class="ui-slider-handle"></div>
 								</div>
 								<input name="lineCnt" style="display: none;" />
