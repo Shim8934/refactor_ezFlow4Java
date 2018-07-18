@@ -186,19 +186,14 @@
 		
 		        hasOpinion = CheckOpinionInfo();
 		        if (hasOpinion) {
-		        	opinionFlag = "showOpinion";
 		            var pInformationContent = "<spring:message code='ezApprovalG.t9'/>" + "<br>" +"<spring:message code='ezApprovalG.t170'/>";
-		            OpenInformationUI(opinionFlag, pInformationContent, btnOpinion_onclick_Complete);
+		            OpenInformationUI(pInformationContent, btnOpinion_onclick_Complete);
 		        }
 		    }
 	
 		    function btnOpinion_onclick_Complete(Ans) {
 		        if (Ans) {
-		        	if(opinionFlag == "showOpinion") {
-		            	btnOpinion_onclick();
-		        	}  else {
-		        		includeOpinion = true;
-		        	}
+		            btnOpinion_onclick();
 		        }
 		        else {
 		            DivPopUpHidden();
@@ -213,7 +208,7 @@
 		        window.close();
 		    }
 		    var ezapropinion_cross_dialogArguments = new Array();
-		    function OpenInformationUI(flag, pInformationContent, CompleteFunction) {
+		    function OpenInformationUI(pInformationContent, CompleteFunction) {
 		        var parameter = pInformationContent;
 		        var url = "/ezApprovalG/ezAprOpinion.do";
 		        if (CrossYN()) {
