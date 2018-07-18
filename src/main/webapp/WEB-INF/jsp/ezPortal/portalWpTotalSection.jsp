@@ -21,7 +21,7 @@
     				<dl class="info_txt">
     					<dt>
     						<c:if test="${fn:length(companyList) gt 1 }">
-								<select id="selectCompany" onchange="changeCompany();">
+								<select id="selectCompany" style="width: 190px;" onchange="changeCompany();">
 									<c:forEach items="${companyList }" var="company">
 										<option value="${company.deptID }" <c:if test="${userInfo.deptID eq company.deptID }">selected="selected"</c:if> companyID="${company.companyID }">
 											${company.companyName }(${company.deptName }) - ${company.apprCount }
