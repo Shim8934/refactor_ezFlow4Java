@@ -1,7 +1,9 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,11 +62,12 @@ public interface EzCabinetRestService {
 	
 	//User get cabinet items
 	public JSONObject getCabinetItems(HttpServletRequest request, String userId, String cabinetId, String title, String summary, String recursive, String creatorName, String startDate, String endDate, String column, String order, String srchMode, String srchOption, String listCntSize, String currentPage) throws Exception;
-	public JSONObject getCabinetFiles(HttpServletRequest request, String id, String cabinetId) throws Exception;
-	public JSONObject getFilesBySearching(HttpServletRequest request, String id, String itemTitle) throws Exception;
+	public JSONObject getCabinetFiles(HttpServletRequest request, String id, String cabinetId, String currentPage) throws Exception;
+	public JSONObject getFilesBySearching(HttpServletRequest request, String id, String itemTitle, String currentPage) throws Exception;
 	
 	//User cabinet items move/delete
 	public JSONObject deleteItems(HttpServletRequest request, String userId, List<String> itemList) throws Exception;
 	public JSONObject moveItems(HttpServletRequest request, String userId, String cabinetId, String mode, List<String> itemList) throws Exception;
+	public JSONObject SaveRelatedItem(HttpServletRequest request, String id, String cabinetId, String title, String author, String normalScreen);
 	
 }

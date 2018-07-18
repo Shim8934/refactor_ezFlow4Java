@@ -11,7 +11,7 @@ public class CabinetRelationVO {
 	public CabinetRelationVO() {}
 	
 	public CabinetRelationVO(int relationId, int itemId, int relatedId, String companyId, int tenantId) {
-		this.relationId    = relatedId;
+		this.relationId    = relationId;
 		this.itemId        = itemId;
 		this.relatedItemId = relatedId;
 		this.companyId     = companyId;

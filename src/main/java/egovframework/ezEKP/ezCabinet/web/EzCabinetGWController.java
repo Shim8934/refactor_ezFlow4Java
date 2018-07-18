@@ -1318,13 +1318,14 @@ public class EzCabinetGWController {
 	
 	@RequestMapping(value="/rest/ezcabinet/relate-item/id/{cabinetid}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFiles(@PathVariable(value="cabinetid") String cabinetId, Locale locale, HttpServletRequest request) throws Exception {
-		String serverName    = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
-		String userId        = request.getParameter("userId") != null ? request.getParameter("userId") : "";
-		JSONObject result    = new JSONObject();
+		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
+		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
+		int currentPage   = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : -1;
+		JSONObject result = new JSONObject();
 		
-		logger.debug("CabinetId: " + cabinetId + " || Server name: " + serverName + " User Id: " + userId);
+		logger.debug("CabinetId: " + cabinetId + " || Server name: " + serverName + " User Id: " + userId + " || Current page: " + currentPage);
 		
-		if (serverName.equals("") || cabinetId.equals("") || userId.equals("")) {
+		if (serverName.equals("") || cabinetId.equals("") || userId.equals("") || currentPage == -1) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1343,9 +1344,15 @@ public class EzCabinetGWController {
 				return result;
 			}
 			
-			List<CabinetItemSimpleVO> itemList = cabinetService.getCabinetFiles(cabinetId, userInfo.getTenantId());
+			int startPoint                     = (currentPage - 1) * 50;
+			int totalItems                     = cabinetService.getTotalFiles(cabinetId, userInfo.getTenantId());
+			int totalPages                     = (totalItems + 49) / 50;
+			List<CabinetItemSimpleVO> itemList = cabinetService.getCabinetFiles(cabinetId, startPoint, 50, userInfo.getTenantId());
 			
-			result.put("itemList", itemList);
+			result.put("totalPages",  totalPages);
+			result.put("totalRows",   totalItems);
+			result.put("currentPage", currentPage);
+			result.put("itemList",    itemList);
 			result.put("status", "ok");
 			result.put("code", 0);
 		}
@@ -1360,14 +1367,15 @@ public class EzCabinetGWController {
 	
 	@RequestMapping(value="/rest/ezcabinet/relate-item/search", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFilesBySearching(Locale locale, HttpServletRequest request) throws Exception {
-		String serverName    = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
-		String userId        = request.getParameter("userId") != null ? request.getParameter("userId") : "";
-		String itemTitle     = request.getParameter("title")  != null ? request.getParameter("title")  : "";
+		String serverName    = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
+		String userId        = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
+		String itemTitle     = request.getParameter("title")       != null ? request.getParameter("title")                         : "";
+		int currentPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : -1;
 		JSONObject result    = new JSONObject();
 		
-		logger.debug("itemTitle: " + itemTitle + " || Server name: " + serverName + " User Id: " + userId);
+		logger.debug("itemTitle: " + itemTitle + " || Server name: " + serverName + " User Id: " + userId + " || Current page: " + currentPage);
 		
-		if (serverName.equals("") || userId.equals("")) {
+		if (serverName.equals("") || userId.equals("") || currentPage == -1) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1376,8 +1384,14 @@ public class EzCabinetGWController {
 		
 		try {
 			LoginVO userInfo                   = commonUtil.getUserForGw(userId, serverName);
-			List<CabinetItemSimpleVO> itemList = cabinetService.getFilesByTitle(itemTitle, userInfo.getId(), userInfo.getTenantId());
+			int startPoint                     = (currentPage - 1) * 50;
+			int totalItems                     = cabinetService.getTotalFilesByTitle(itemTitle, userInfo.getId(), userInfo.getTenantId());
+			int totalPages                     = (totalItems + 49) / 50;
+			List<CabinetItemSimpleVO> itemList = cabinetService.getFilesByTitle(itemTitle, startPoint, 50, userInfo.getId(), userInfo.getTenantId());
 			
+			result.put("totalPages",  totalPages);
+			result.put("totalRows",   totalItems);
+			result.put("currentPage", currentPage);
 			result.put("itemList", itemList);
 			result.put("status", "ok");
 			result.put("code", 0);

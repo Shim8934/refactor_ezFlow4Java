@@ -672,12 +672,12 @@
 	
 	<select id="EzCabinetDAO.getCabinetFiles" resultMap="cabinetItemSimpleVO">
 		<include refid="selectSimpleItem"/>
-		<![CDATA[where cabinet_id = #cabinetId# and tenant_id = #tenantId# and use_status = 1]]>
+		<![CDATA[where cabinet_id = #cabinetId# and tenant_id = #tenantId# and use_status = 1 order by update_date desc, item_id desc limit #startPoint#, #listCount#]]>
 	</select>
 	
 	<select id="EzCabinetDAO.getFilesByTitle" resultMap="cabinetItemSimpleVO">
 		<include refid="selectSimpleItem"/>
-		<![CDATA[where creator_id = #userId# and tenant_id = #tenantId# and use_status = 1 and title like concat('%', concat(#title#, '%'))]]>
+		<![CDATA[where creator_id = #userId# and tenant_id = #tenantId# and use_status = 1 and title like concat('%', concat(#title#, '%')) order by update_date desc, item_id desc limit #startPoint#, #listCount#]]>
 	</select>
 	
 	<select id="EzCabinetDAO.getItemsFromIdList" resultMap="cabinetItemVO">
@@ -706,6 +706,14 @@
 		<![CDATA[select count(item_id) from tbl_cb_item i where]]>
 		<include refid="cabinetItemList"/>
 			and i.cabinet_id = #cabinetId#
+	</select>
+	
+	<select id="EzCabinetDAO.getTotalFiles" resultClass="Integer">
+		<![CDATA[select count(item_id) from tbl_cb_item where cabinet_id = #cabinetId# and use_status = 1 and tenant_id = #tenantId#]]>
+	</select>
+	
+	<select id="EzCabinetDAO.getTotalFilesByTitle" resultClass="Integer">
+		<![CDATA[select count(item_id) from tbl_cb_item where creator_id = #userId# and tenant_id = #tenantId# and use_status = 1 and title like concat('%', concat(#title#, '%'))]]>
 	</select>
 	
 	<select id="EzCabinetDAO.getItemsRecursive" resultMap="cabinetItemVO2" parameterClass="CabinetItemSearchVO">

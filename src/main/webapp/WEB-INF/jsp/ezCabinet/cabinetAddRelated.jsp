@@ -36,6 +36,8 @@
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript">
 			(function() {
+				var rlWindow    = null;
+				var cabinetId   = null;
 				var myCabinetTree = new CabinetTree();
 				initEvents();
 				
@@ -87,21 +89,64 @@
 				function closeWindow() {window.close();}
 				
 				function addRelatedCabinet() {
+					var msgToGot = window.opener.document.getElementById("MsgToGot");
+					var mailSubject = window.opener.document.getElementById("mailSubject");
 					var messageFrame = window.opener.document.getElementById("message");
 					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
-					console.log(contentWd.document.body.innerHTML);
+					var normalScreen = contentWd.document.getElementById("normalScreen");
+					var ifrmPreViewRayer = contentWd.document.getElementById("ifrmPreViewRayer");
+					//console.log(contentWd.document.body.innerHTML);
 					
 					if(document.getElementById("1").checked){
-						var tblCabinetList = document.getElementById("tblCabinetList");
-						var normalScreen = contentWd.document.getElementById("normalScreen");
 						console.log(normalScreen);
-						console.log(tblCabinetList);
+						//console.log(msgToGot);
+						//console.log(mailSubject);
+						//console.log(ifrmPreViewRayer);
+						
+						var title = mailSubject;
+						var author = msgToGot;
+						
+					    $.ajax({
+							type: "POST",
+							url: "/ezCabinet/saveRelatedItem.do",
+							data: {
+								"cabinetId"   : cabinetId,
+								"title"       : title,
+								"author"      : author,
+								"normalScreen": normalScreen
+							},
+							dataType: "JSON",
+							async: false,
+							success : function(data) {
+								var code = data.code;
+								
+								switch(code) {
+									case 0 : afterSaveSuccessfully()            ; break;
+									case 1 : alert(CabinetMessages.strParamErr) ; break;
+									case 2 : alert(CabinetMessages.strError)    ; break;
+									case 3 : alert(CabinetMessages.strPerm)     ; break;
+									case 4 : alert(CabinetMessages.strError)    ; break;
+									default: alert(CabinetMessages.strError)    ; return;
+								}
+							},
+							error : function(error) {
+								alert(CabinetMessages.strError + error);
+							}
+						}); 
+						
 						
 					}else if(document.getElementById("2").checked){
 						
 					}
 					
+					function afterSaveSuccessfully() {
+						alert(CabinetMessages.strSave);
+						var parentWd    = window.opener;
+						if (parentWd && parentWd.CabinetItem) {parentWd.CabinetItem.reload();}
+						closeWindow();
+					}
 				}
+				
 				
 			})();
 		</script>
