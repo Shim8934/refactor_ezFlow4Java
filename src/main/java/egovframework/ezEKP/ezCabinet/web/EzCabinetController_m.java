@@ -61,4 +61,11 @@ public class EzCabinetController_m {
 		logger.debug("Save relatedItem finishes!");
 		return resultObj.toString();
 	}
+	
+	@RequestMapping(value="/ezCabinet/cabinetRelatedFileDetail.do")
+	public String jspGetCabinetRelatedFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+		logger.debug("jspGetCabinetFileDetail started");
+		logger.debug("jspGetCabinetFileDetail ended");
+		return "ezCabinet/cabinetFileDetail";
+	}
 }

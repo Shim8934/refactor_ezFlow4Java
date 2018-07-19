@@ -91,6 +91,10 @@ var CabinetItem = function() {
 	
 	function keyPress(e) {if (e.which == 27) {if (document.getElementById("searchPanel").className == "cabSearchPanel") {toggleSearchPanel();}}}
 	
+	function ondblclick(e){
+		window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 690));
+	}
+	
 	function preProcessing() {
 		var divList           = document.getElementById("cabWraperDiv");
 		var divChild          = divList.querySelector("div[class='tableDataDiv']");
@@ -132,6 +136,7 @@ var CabinetItem = function() {
 		
 		window.addEventListener("resize", function(e) {windowResize();}, false);
 		window.addEventListener("keydown", function(e) {keyPress(e);}, false);
+		
 		cabinetId              = cabId;
 		document.onselectstart = function() {return false;};
 		var sSearchInputElmt   = document.getElementById("ssInput");
@@ -384,6 +389,7 @@ var CabinetItem = function() {
 				trElmt.setAttribute("class", unselectClass);
 				trElmt.setAttribute("role",  itemList[i]["itemId"]);
 				trElmt.onclick = function(event) {clickRowFunct(event);};
+				trElmt.ondblclick = function(event) {ondblclick(event);};
 				
 				var inputElmt  = document.createElement("input");
 				inputElmt.setAttribute("type", "checkbox");
