@@ -62,11 +62,11 @@
 				<input type="hidden" value="<c:out value = '${code}' />" name="code">
 		  		<tr> 
 			  		<th><spring:message code='ezCommunity.t210' /></th>
-	      			<td><input type="text" name="subject" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" id=subject></td>
+	      			<td><input type="text" name="subject" id="subject" style="width:100%;height:23px; box-sizing:border-box;-moz-box-sizing:border-box;" autocomplete="off"></td>
 				</tr>
 				<tr> 
 					<th><spring:message code='ezCommunity.t557' /></th>
-					<td style="padding:3px"><textarea name=memo id=memo style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;height:250px;resize:none;"></textarea></td>
+					<td style="padding:3px"><textarea name=memo id=memo style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;height:250px;resize:none;overflow: auto;"></textarea></td>
 				</tr>
 			</form>
 		</table>

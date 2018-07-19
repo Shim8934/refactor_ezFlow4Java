@@ -750,9 +750,10 @@ public class EzPollServiceImpl implements EzPollService{
 		String subject = egovMessageSource.getMessage("ezPoll.hdp03", userInfo.getLocale());
 		StringBuilder bodyContent = new StringBuilder("");
 		
+		/* 2018-07-19 홍승비 - 투표 팝업창 표시 시 가로스크롤 발생하지 않도록 width 수정 */
 		//메일 본문 작성.
 		bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
-		bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('../ezPoll/pollVote.do?qstId=" + qstId + "&params=&search=&searchN=', '', 'width=820, height=900, scrollbars=yes, resizable=yes')\">" + commonUtil.cleanValue(title) + "</span></br>");
+		bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('../ezPoll/pollVote.do?qstId=" + qstId + "&params=&search=&searchN=', '', 'width=835, height=900, scrollbars=yes, resizable=yes')\">" + commonUtil.cleanValue(title) + "</span></br>");
 		bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + userInfo.getDisplayName() + "</br>");
 		bodyContent.append(" " + egovMessageSource.getMessage("ezAddress.t288", userInfo.getLocale()) + " : " + pollQuestion.getCreateDate());
 		bodyContent.append("</div>");

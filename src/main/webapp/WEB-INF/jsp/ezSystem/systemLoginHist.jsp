@@ -19,7 +19,7 @@
 		select {
 			height: auto;
 		}
-		table, td {
+		table td {
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -481,7 +481,7 @@
 			    </select><br /><br />
 		    </span>
 		</div>
-		<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2;">
+		<table style="width: 100%; background-color: #f8f8f8; border-top: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8;">
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
 					<span id="topmenu" style="width: 500px"><spring:message code='ezSystem.x0032'/> : &nbsp; 
@@ -518,7 +518,7 @@
 		</table>
 		<table style="margin: 10px 0px;">
 			<tr>
-				<td width="98%" style="font-weight: bold; color: gray;">※ ${mailLogKeepPeriodMessage} ※</td>
+				<td width="98%" style="color: #333;">▒ ${mailLogKeepPeriodMessage}</td>
 			</tr>
 		</table>	
 		<table class="mainlist" style="width:100%;">

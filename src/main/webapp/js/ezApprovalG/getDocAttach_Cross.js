@@ -130,7 +130,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 //strAttach = strAttach + "<a href='/myoffice/Common/downloadattach.aspx?filename=" + filename + "&filepath=" + filepath + "' " + strTarget + "' onclick='AttachProcess()'>";
 
                 strAttach = strAttach + "<IMG SRC='" + fileImage + "' border='0'>";
-                strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
+                strAttach = strAttach + MakeXMLString(getNodeText(GetChildNodes(xmlRtn[i])[1])) + "</a> &nbsp; ";
             }
             else {
                 var FilePath = trim_Cross(SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA1"));

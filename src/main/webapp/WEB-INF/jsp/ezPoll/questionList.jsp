@@ -100,7 +100,7 @@
 		    function menu_Search() {
 		    	var checkSeeAll = 0;
 		    	var search_str = "";
-		    	var mode = $("input[name=searchCheck]:checked").val();
+		    	var mode = document.getElementById("selectType").value;
 		    	var pollType = $("input[name=processCheck]:checked").val(); //2017-12-22
 		    	//if ($("input[name=searchCheck]:checked").val() == ) {}
 		    	
@@ -196,7 +196,7 @@
 		    function getParameters() {
 		    	var checkSeeAll = 0;
 		    	var _searchPrm = document.getElementById("searchInput").value;
-		    	var mode1 = $("input[name=searchCheck]:checked").val();
+		    	var mode1 = document.getElementById("selectType").value;
 		    	var pollType = $("input[name=processCheck]:checked").val(); //2017-12-22
 				
 		    	/* if (document.getElementById("seeAll").checked) {
@@ -269,14 +269,14 @@
 		    			qstId : pReceve
 		    			
 		    		},
-		    		success: function(data) {		    			
+		    		success: function(data) {	
 						var result = JSON.parse(data).result;					
 						
 						if (result == "Normal") {
 							var list_params = "";
 							var checkSeeAll = 0;
 					    	var _searchPrm = document.getElementById("searchInput").value;
-					    	var mode1 = $("input[name=searchCheck]:checked").val();
+					    	var mode1 = document.getElementById("selectType").value;
 					    	var pollType = $("input[name=processCheck]:checked").val(); //2017-12-22
 					    	
 /* 					    	if (document.getElementById("seeAll").checked) {
@@ -462,17 +462,19 @@
 		<h1><spring:message code="ezPoll.t103"/>
 			<span id="mailBoxInfo"></span>
 			<span style="float: right; font-weight:normal;color:black;">
-				<c:if test="${mode1 != 'wri'}">
-					<input name="searchCheck" id="radio1" type="radio" value="sub" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"> <span><spring:message code="ezPoll.t106"/></span>
-					<input name="searchCheck" id="radio2" type="radio" value="wri" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"> <span><spring:message code="ezPoll.t107"/></span>
-				</c:if>
-				<c:if test="${mode1 == 'wri'}">
-					<input name="searchCheck" id="radio1" type="radio" value="sub" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"> <span><spring:message code="ezPoll.t106"/></span>
-					<input name="searchCheck" id="radio2" type="radio" value="wri" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"> <span><spring:message code="ezPoll.t107"/></span>
-				</c:if>
+				<select id="selectType">
+					<c:if test="${mode1 != 'wri'}">
+						<option name="searchCheck" id="radio1" value="sub" selected> <span><spring:message code="ezPoll.t106"/></span>
+						<option name="searchCheck" id="radio2" value="wri" > <span><spring:message code="ezPoll.t107"/></span>
+					</c:if>
+					<c:if test="${mode1 == 'wri'}">
+						<option name="searchCheck" id="radio1" value="sub" > <span><spring:message code="ezPoll.t106"/></span>
+						<option name="searchCheck" id="radio2" value="wri" selected> <span><spring:message code="ezPoll.t107"/></span>
+					</c:if>
+				</select>
 					<!-- <input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0;" > -->					
 					<%-- <a class="pollImgbtn" onClick="menu_Search()" ><span style="height: 23px;"><spring:message code="ezPoll.t227"/></span></a> --%>
-					<input type="text" name="searchInput" id="searchInput" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="check_key(event);" value="<c:out value='${strSearch1}'/>">
+					<input type="text" name="searchInput" id="searchInput" onkeypress="check_key(event);" value="<c:out value='${strSearch1}'/>">
 					<a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onclick="menu_Search()"></a>
 			</span>
 		</h1>
@@ -488,19 +490,19 @@
 				<li><a onClick="menu_Show()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204"/></span></a></li>				
 				<li><input id="seeAll" type="checkbox" style="float:left; margin:6px 4px 0px 5px;"><spring:message code="ezPoll.t205" /></li> --%>
 				<li style="float:right; font-weight:normal; color:black; padding-right: 20px;">
-					<input id="btnRadio1" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle; padding-right: 20px;" onclick="selectCheck()" value="3" ${pollType == '3'? 'checked' : ''} >
+					<input id="btnRadio1" type="radio" name="processCheck" style="vertical-align:middle; padding-right: 20px;" onclick="selectCheck()" value="3" ${pollType == '3'? 'checked' : ''} >
 					<label for="btnRadio1"><spring:message code='ezPoll.t145' /></label>					
 				</li>
 				<li style="float:right; font-weight:normal; color:black;">
-					<input id="btnRadio2" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle;" onclick="selectCheck()" value="2" ${pollType == '2'? 'checked' : ''}>
+					<input id="btnRadio2" type="radio" name="processCheck" style="vertical-align:middle;" onclick="selectCheck()" value="2" ${pollType == '2'? 'checked' : ''}>
 					<label for="btnRadio2"><spring:message code='ezPoll.t146' /></label>					
 				</li>
 				<li style="float:right; font-weight:normal; color:black;">
-					<input id="btnRadio4" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle;" onclick="selectCheck()" value="4" ${pollType == '4'? 'checked' : ''}>
+					<input id="btnRadio4" type="radio" name="processCheck" style="vertical-align:middle;" onclick="selectCheck()" value="4" ${pollType == '4'? 'checked' : ''}>
 					<label for="btnRadio4"><spring:message code='ezPoll.t251' /></label>		
 				</li>
 				<li style="float:right; font-weight:normal; color:black;">
-					<input id="btnRadio3" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle;" onclick="selectCheck()" value="1" ${pollType == '1'? 'checked' : ''}>
+					<input id="btnRadio3" type="radio" name="processCheck" style="vertical-align:middle;" onclick="selectCheck()" value="1" ${pollType == '1'? 'checked' : ''}>
 					<label for="btnRadio3"><spring:message code='ezPoll.t237' /></label>		
 				</li>
 				

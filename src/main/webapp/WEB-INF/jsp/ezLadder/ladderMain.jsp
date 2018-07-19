@@ -76,7 +76,7 @@
 		
 		</script>
 		<style type="text/css">
-			.effect {width:30px; height:30px;}
+			.effect {width:30px; height:30px; vertical-align: middle}
 			#mainmenu li {border-color: #ddd; border-radius:0px; }
 			.mainlist th {cursor: pointer;}
 			#mainmenu li a:HOVER span{color:#0072c6;border-color:#0072c6;}

@@ -890,7 +890,7 @@ function getOpinionInfo(docid, Flag) {
             txtRtn = txtRtn + "<td style='BORDER-BOTTOM: black 1px solid; BORDER-RIGHT: black 1px solid;padding-left:10px;padding-right:10px'>" + getNodeText(GetChildNodes(GetChildNodes(NodeList[i])[0])[7]) + "</td>";
             txtRtn = txtRtn + "<td style='BORDER-BOTTOM: black 1px solid; BORDER-RIGHT: black 1px solid;padding-left:10px;padding-right:10px'>" + getNodeText(GetChildNodes(GetChildNodes(NodeList[i])[0])[11])  + "</td>";
             txtRtn = txtRtn + "<td style='BORDER-BOTTOM: black 1px solid; BORDER-RIGHT: black 1px solid;padding-left:10px;padding-right:10px'>" + getNodeText(GetChildNodes(GetChildNodes(NodeList[i])[0])[0])  + "</td>";
-            txtRtn = txtRtn + "<td style='BORDER-BOTTOM: black 1px solid;  BORDER-RIGHT: black 1px solid;padding-left:10px;padding-right:10px' align='left'>" + getNodeText(GetChildNodes(GetChildNodes(NodeList[i])[0])[3])  + "</td>";
+            txtRtn = txtRtn + "<td style='BORDER-BOTTOM: black 1px solid;  BORDER-RIGHT: black 1px solid;padding-left:10px;padding-right:10px' align='left'>" + MakeXMLString(getNodeText(GetChildNodes(GetChildNodes(NodeList[i])[0])[3]))  + "</td>";
             txtRtn = txtRtn + "</tr>";
         }
     }
