@@ -541,7 +541,7 @@
 		    		if (adminFlag != "true") {
 		    			$('#AttList tbody').append('<tr><td colspan="8" align="center"  bgcolor="#FFFFFF"><spring:message code="ezAttitude.t96"/></td></tr>');
 		    		} else {
-		    			$('#AttList tbody').append('<tr><td colspan="10" align="center"  bgcolor="#FFFFFF"><spring:message code="ezAttitude.t96"/></td></tr>');	
+		    			$('#AttList tbody').append('<tr><td colspan="11" align="center"  bgcolor="#FFFFFF"><spring:message code="ezAttitude.t96"/></td></tr>');	
 		    		}
 		    	}
 	    	}
