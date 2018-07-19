@@ -22,7 +22,7 @@
 	        var pBoardID = "<c:out value='${boardID}'/>";
 	        var pParentBoardID = "<c:out value='${parentBoardID}'/>";
 	        var strList = "${strList}";
-	        var userLang = "<c:out value='${strUserLang}'/>";
+	        var primary = "${primary}";  // 값을 넘기지 않던(""으로 전달하고 있었음) userLang 대신 primary로 다국어 데이터 표시
 	        var pBoardName = "<c:out value='${pBoardName}'/>";
 	        var pType = "<c:out value='${pType}'/>";
 	        var pParentNeed = "<c:out value='${pParentNeed}'/>";
@@ -42,6 +42,7 @@
 	            FillAccessList();
 	        }
 	
+	        /* 2018-07-19 홍승비 - 권한설정 정보 리스트로 표출하는 분기 스크립트 오류 수정 */
 	        function FillAccessList() {
 	            var xmldom = loadXMLString(strList);
 	            var listTR, listTD, listTDText;
@@ -52,36 +53,40 @@
 	            listview.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
 	            listview.DataBind("AccessList");
 	            var xmldomNode = SelectNodes(xmldom, "DATA/ROW")
-
-	            if (userLang == "2") {
+	            
+	            /* 다국어 설정인 경우, 4번째부터 값을 가져온다. */
+	            if (primary != "1") {
 	                for (i = 0; i < xmldomNode.length; i++) {
 	                    listTR = listview.AddRow(listview.GetRowCount());
 	                    for (j = 4; j < SelectNodes(xmldom, "DATA/ROW")[i].childNodes.length; j++) {
 	                        listTD = document.createElement("TD");
-	                        if (getNodeText(xmldomNode[i].childNodes[j]) == "true") {
-	                            listTDText = document.createTextNode("●");
-	                        } else if (getNodeText(xmldomNode[i].childNodes[j]) == "false") {
-	                            listTDText = document.createTextNode("");
-	                        }else if (getNodeText(xmldomNode[i].childNodes[j]) == "" || getNodeText(xmldomNode[i].childNodes[j]) == null) {
-	                            listTDText = document.createTextNode("");
-	                        } else {
-	                            if (getNodeText(xmldomNode[i].childNodes[j]) == "1") {
-	                                listTDText = document.createTextNode("●");
-	                            } else if (getNodeText(xmldomNode[i].childNodes[j]) == "0") {
-	                                listTDText = document.createTextNode("");
-	                            } else {
-	                                listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
-	                            }
-	                        }
-	                        if (j == 7)
+	                        
+	                       /* 동그라미로 플래그를 그린다.(13~20) */
+	                       if (j >=13) {
+		                        if (getNodeText(xmldomNode[i].childNodes[j]) == "true" || getNodeText(xmldomNode[i].childNodes[j]) == "1") {
+		                            listTDText = document.createTextNode("●");
+		                        } else if (getNodeText(xmldomNode[i].childNodes[j]) == "false" || getNodeText(xmldomNode[i].childNodes[j]) == "0") {
+		                            listTDText = document.createTextNode("");
+		                        }else if (getNodeText(xmldomNode[i].childNodes[j]) == "" || getNodeText(xmldomNode[i].childNodes[j]) == null) {
+		                            listTDText = document.createTextNode("");
+		                        }
+	                       }  
+	                       /* 회사(4), 부서(5), 이름(6), 직위직책(7) 부분은 값이 1이더라도 동그라미를 찍지 않도록 한다. */
+	                       else {
+	                    	   listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
+	                       }
+	                        if (j == 7) {
 	                            j = 12;
-	                        if (j >= 13)
-	                            listTD.setAttribute("style", "text-align:center;color:#268fff;");
+	                        }
+	                        if (j >= 13) {
+								listTD.setAttribute("style", "text-align:center;color:#268fff;");
+	                        }
 	                        listTD.appendChild(listTDText);
 	                        listTR.appendChild(listTD);
 	                        listTD = null;
 	                        listTDText = null;
 	                    }
+	                    
 	                    listTR.setAttribute("DATA", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME"));
 	                    listTR.setAttribute("DATA2", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
 	                    listTR.setAttribute("DATA1", SelectSingleNodeValue(xmldomNode[i], "ACCESSID"));
@@ -94,32 +99,20 @@
 	                    listTR = listview.AddRow(listview.GetRowCount());
 	                    for (j = 0; j < SelectNodes(xmldom, "DATA/ROW")[i].childNodes.length; j++) {
 	                        listTD = document.createElement("TD");
-
-	                        if (getNodeText(xmldomNode[i].childNodes[j]) == "true") {
-	                            listTDText = document.createTextNode("●");
-	                        } else if (getNodeText(xmldomNode[i].childNodes[j]) == "false") {
-	                            listTDText = document.createTextNode("");
-	                        } else if (getNodeText(xmldomNode[i].childNodes[j]) == "" || getNodeText(xmldomNode[i].childNodes[j]) == null) {
-	                            listTDText = document.createTextNode("");
-	                        } else {
-	                            if (getNodeText(xmldomNode[i].childNodes[j]) == "1") {
-	                                listTDText = document.createTextNode("●");
-	                            } else if (getNodeText(xmldomNode[i].childNodes[j]) == "0") {
-	                                listTDText = document.createTextNode("");
-	                            } else {
-	                            	if (j == 2) {
-	    	                        	if (SelectSingleNodeValue(xmldomNode[i], "BOARDGROUPACL") == "Y") {
-// 			                                listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]) + "(하위부서)");
-			                                listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
-	    	                        	} else {
-			                                listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
-	    	                        	}
-	    	                        } else {
-	    	                        	listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
-	    	                        }
-	                            }
-	                        }
 	                        
+	                        if (j >= 13) {
+		                        if (getNodeText(xmldomNode[i].childNodes[j]) == "true" || getNodeText(xmldomNode[i].childNodes[j]) == "1") {
+		                            listTDText = document.createTextNode("●");
+		                        } else if (getNodeText(xmldomNode[i].childNodes[j]) == "false" || getNodeText(xmldomNode[i].childNodes[j]) == "0") {
+		                            listTDText = document.createTextNode("");
+		                        } else if (getNodeText(xmldomNode[i].childNodes[j]) == "" || getNodeText(xmldomNode[i].childNodes[j]) == null) {
+		                            listTDText = document.createTextNode("");
+		                        }
+	                        }
+	                        /* 회사(0), 부서(1), 이름(2), 직위직책(3) 부분은 값이 1이더라도 동그라미를 찍지 않도록 한다. */
+	                        else {
+								listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
+	                        }
 	                        if (j == 3) {
 	                            j = 12;
 	                        }
@@ -131,6 +124,7 @@
 	                        listTD = null;
 	                        listTDText = null;
 	                    }
+	                    
 	                    listTR.setAttribute("DATA", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME"));
 	                    listTR.setAttribute("DATA2", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
 	                    listTR.setAttribute("DATA1", SelectSingleNodeValue(xmldomNode[i], "ACCESSID"));

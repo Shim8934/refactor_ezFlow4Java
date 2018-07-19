@@ -36,7 +36,8 @@ public interface EzBoardAdminService {
 	
 	public List<BoardBackgroundVO> getBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;	
 	
-	public List<BoardPropertyVO> getBoardAccessList(String boardID, int tenantID) throws Exception;
+	/* 2018-07-19 홍승비 - 게시판 권한 표출 시 companyID 조건 추가 */
+	public List<BoardPropertyVO> getBoardAccessList(String boardID, String companyID, int tenantID) throws Exception;
 	
 	public List<BoardPropertyVO> getUnderBoardID(String boardID, String type, int tenantID) throws Exception;
 	

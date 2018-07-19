@@ -435,7 +435,7 @@
 	
 	<select id="EzBoardAdminDAO.getBoardAccessList" parameterClass="Map" resultMap="boardAccessList">
 		<![CDATA[
-			SELECT
+			(SELECT
 				T2.COMPANY ,
 	            T2.DESCRIPTION ,
 	            T2.DISPLAYNAME ,
@@ -459,20 +459,74 @@
 	            T1.POSTNOTICE 
         	FROM 
         		TBL_Board_BoardManage T1
-        	JOIN 
-        		TBL_USERMASTER T2   
-        	ON 
-        		T1.TENANT_ID = T2.TENANT_ID
-        	AND
-        		T1.ACCESSID = T2.CN
+        	INNER JOIN
+			   ((SELECT
+					D.CN,
+                    D.COMPANY,
+                    D.DESCRIPTION,
+                    D.DISPLAYNAME,
+                    D.TITLE,
+                    D.COMPANY2,
+                    D.DESCRIPTION2,
+                    D.DISPLAYNAME2,
+                    D.TITLE2,
+                    D.DEPARTMENT as DEPTID,
+					D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+					D.TENANT_ID
+				FROM
+					TBL_USERMASTER D
+				WHERE
+					D.TENANT_ID = #v_TENANTID#
+				AND
+					D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#)
+					
+				UNION ALL
+				
+				(SELECT
+					B.CN,
+                    C.EXTENSIONATTRIBUTE3 as COMPANY,
+                    C.DISPLAYNAME as DESCRIPTION,
+                    B.DISPLAYNAME,
+                    A2.TITLE,
+                    C.COMPNM2 as COMPANY2,
+                    C.DISPLAYNAME2 as DESCRIPTION2,
+                    B.DISPLAYNAME2,
+                    A2.TITLE2,
+					A2.DEPTID,
+					C.EXTENSIONATTRIBUTE2 as COMPANYID,
+					A2.TENANT_ID
+				FROM
+					TBL_USERMASTER B
+				INNER JOIN
+					TBL_ADDJOBMASTER A2
+				ON
+					A2.CN = B.CN
+				AND
+					A2.TENANT_ID = B.TENANT_ID
+				RIGHT JOIN
+					TBL_DEPTMASTER C
+				ON
+					A2.DEPTID = C.CN
+				AND
+					B.TENANT_ID = C.TENANT_ID
+				AND
+					C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#)) T2
+			ON
+				T1.ACCESSID = T2.CN
+			AND
+				T1.TENANT_ID = T2.TENANT_ID
         	WHERE 
         		T1.TENANT_ID = #v_TENANTID#
+			AND
+				T2.COMPANYID = #v_COMPANYID#
         	AND
         		BOARDID = #v_PBOARDID#
+			GROUP BY
+				T1.ACCESSID)
         		
       		UNION
       		 
-      		SELECT 
+      		(SELECT 
       			NULL COMPNAY ,
              	NULL DESCRIPTION  ,
 	            DISPLAYNAME ,
@@ -505,7 +559,7 @@
        		WHERE
        			T1.TENANT_ID = #v_TENANTID#
        		AND  
-       			BOARDID = #v_PBOARDID#
+       			BOARDID = #v_PBOARDID#)
 		]]>
 	</select>
 	

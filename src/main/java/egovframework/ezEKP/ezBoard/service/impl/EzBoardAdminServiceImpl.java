@@ -383,13 +383,14 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}	
 
 	@Override
-	public List<BoardPropertyVO> getBoardAccessList(String boardID, int tenantID) throws Exception {
+	public List<BoardPropertyVO> getBoardAccessList(String boardID, String companyID, int tenantID) throws Exception {
 		logger.debug("getBoardAccessList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PBOARDID", boardID);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_COMPANYID", companyID);
 
 		logger.debug("getBoardAccessList ended");
 		return ezBoardAdminDAO.getBoardAccessList(map);

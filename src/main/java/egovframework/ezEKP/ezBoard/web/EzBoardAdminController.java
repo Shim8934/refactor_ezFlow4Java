@@ -876,14 +876,13 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String pType = request.getParameter("boardType");
 		String pParentNeed = request.getParameter("parentNeed");
 		String pAccessLevel = request.getParameter("accessLevel");
-		String strUserLang = "";
+		String primary = userInfo.getPrimary(); // 사용하지 않는 userLang 변수 제거, primary로 대체
 		
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		String boardName = boardProperty.getBoardName();
 		
-		/* 겸직한 사람이면 해당 회사 겸직한 정보를 보여주는게 나을까? 일단 권한은 무조건 게시판 당 그 사람에게 하나만 저장된다.(겸직 여러개라도 동일인에게 설정됨) */
-		// deptID가 필요한건 아니다. 겸직했다면 그 회사와 부서, 직위를 가져오면 된다.
-		List<BoardPropertyVO> list = ezBoardAdminService.getBoardAccessList(boardID, userInfo.getTenantId());
+		/* 게시판 권한설정 시 companyID 조건 추가, 겸직한 사원의 경우 해당 겸직정보를 표출함 + 다국어 대응하도록 정보 가져옴 */
+		List<BoardPropertyVO> list = ezBoardAdminService.getBoardAccessList(boardID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
@@ -923,7 +922,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("parentBoardID", parentBoardID);
-		model.addAttribute("strUserLang", strUserLang);
+		model.addAttribute("primary", primary);
 		model.addAttribute("pBoardName", pBoardName);
 		model.addAttribute("pType", pType);
 		model.addAttribute("pParentNeed", pParentNeed);
