@@ -205,6 +205,7 @@
 		            DefaultView = 0            
        
 				if (receivecount != "0") {
+					parent.frames["left"].document.body.style.overflow = "hidden";
 		            schedule_receive_attendant_cross_dialogArguments[0] = this;
 		            schedule_receive_attendant_cross_dialogArguments[1] = windowonload_Complete;
 		           
@@ -239,6 +240,7 @@
 		    	}
 		        
 		    	if (groupcount != "0") {
+		    		parent.frames["left"].document.body.style.overflow = "hidden";
 		            schedule_receive_member_dialogArguments[0] = this;
 		            schedule_receive_member_dialogArguments[1] = windowonload_Complete2;
 		            

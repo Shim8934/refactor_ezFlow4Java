@@ -911,7 +911,7 @@
 		
 		            pzFormProc.ShowToolbar("1");
 		
-		            btnEdit.childNodes(0).innerText = "<spring:message code='ezApprovalG.t42'/>";
+		            btnEdit.childNodes(0).innerText = "<spring:message code='ezApprovalG.t1767'/>";
 		
 		            var FormProc = pzFormProc.object;
 		            var fields = FormProc.Fields;
