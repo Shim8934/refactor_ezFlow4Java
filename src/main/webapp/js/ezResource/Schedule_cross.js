@@ -1330,8 +1330,8 @@ function onbeforeprint() {
             setNodeText(document.getElementById("printDate"),$("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val());
         }
     }
-
-    setNodeText(document.getElementById("printTitle"),title.value + " ");		// 제목 인쇄하는 부분
+    // 2018-07-19 김민성 - 자원예약 중 인쇄시 undefind로 뜨던 문제 수정
+    setNodeText(document.getElementById("printTitle"),$("#title").val());		// 제목 인쇄하는 부분
     
     setNodeText(document.getElementById("printItem"),getNodeText(document.getElementById("itemList")));		// 자원명을 인쇄하는 부분
 
