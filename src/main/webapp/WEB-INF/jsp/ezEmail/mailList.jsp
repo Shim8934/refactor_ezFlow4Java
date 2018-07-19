@@ -96,7 +96,6 @@
 		    var useMailNewWindow = "${useMailNewWindow}";
 		    var useReceivingChk = false;
 		    var noReadMsg = "<spring:message code='ezPoll.t137'/>"; // 읽지 않음
-		    var sentDateChk = false; // 전달 및 회신시 보낸시각
 		    
 		    function defineHost(protocol){
 	    		var host = "";
