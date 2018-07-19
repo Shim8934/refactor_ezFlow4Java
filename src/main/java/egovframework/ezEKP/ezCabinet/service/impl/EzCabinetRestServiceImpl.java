@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -30,6 +32,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 
 @Service
@@ -474,5 +477,12 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		param.put("currentPage", currentPage);
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
+	}
+
+	@Override
+	public JSONObject SaveRelatedItem(HttpServletRequest request, String id,
+			String title, String author, JSONArray normalScreen) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
