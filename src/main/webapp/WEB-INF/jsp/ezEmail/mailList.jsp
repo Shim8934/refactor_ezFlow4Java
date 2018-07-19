@@ -160,7 +160,7 @@
 		            case "receiveChk":
 		            	p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile5.xml";
 		            	g_foldertype = "sent";
-		            	g_moveUrl = "<spring:message code='ezEmail.t645'/>";
+		            	g_moveUrl = "${sentFolderId}";
 		            	break;
 		        }
 		        
