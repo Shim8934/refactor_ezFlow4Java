@@ -368,9 +368,9 @@ function setDefaultGroup(){
 	var curTask = parent.ge ? parent.ge.currentTask : "";
 	var curTreeGroup = parent.$(".jstree-clicked");
 	
-	if(!(curTask && curTask.getParent()) && !curTreeGroup){
+	if(!(curTask && curTask.getParent()) && !curTreeGroup.attr("id")){
 		return;
-	} else if (curTreeGroup){ //업무 목록에서 업무 추가 했을 경우
+	} else if (curTreeGroup.attr("id")){ //업무 목록에서 업무 추가 했을 경우
 		groupId = curTreeGroup.attr("id").match(/\d+/)[0];
 		groupName = parent.groupDetail.groupName;
 	} else { // 간트차트에서 업무 추가했을 경우
