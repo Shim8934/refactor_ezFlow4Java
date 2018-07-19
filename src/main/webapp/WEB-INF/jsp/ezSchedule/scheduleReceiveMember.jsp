@@ -83,10 +83,12 @@
 			    	ReturnFunction("success");
 			        window.close();
 			    }
+					parent.parent.frames["left"].document.body.removeAttribute('style');
 			}
 			
 			function closePopup(){
 				if(ReturnFunction != null) {
+					parent.parent.frames["left"].document.body.removeAttribute('style');
 					ReturnFunction("cancel");
 					window.close();
 				}
