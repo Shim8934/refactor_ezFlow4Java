@@ -843,7 +843,7 @@
 				</tr>
 			</thead>
 			<tbody id="DocCompleteListBody" style="overflow: auto;">
-			<tr><td colspan="11" style="text-align: center; font-size: 15px;"><spring:message code="ezApprovalG.t1126"/></td></tr></tbody> 
+			<tr><td colspan="11" style="text-align: center; font-size: 12px;"><spring:message code="ezApprovalG.t1126"/></td></tr></tbody> 
 		</table>
 		<div id="tblPageRayer" style="padding-top: 10px;"></div>
 </html>
