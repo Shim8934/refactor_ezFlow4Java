@@ -1492,7 +1492,7 @@
 		            var contentEditable = message.DocumentBodyGetAttribute("contentEditable");
 		            if (contentEditable)
 		                message.DocumentBodySetAttribute("contentEditable", "inherit");
-		            btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t42'/>";
+		            btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t1767'/>";
 		        }
 		        else {
 		            var pInformationContent = "<spring:message code='ezApprovalG.t43'/>";

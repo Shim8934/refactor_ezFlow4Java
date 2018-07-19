@@ -292,7 +292,6 @@
 	     	// 전달, 회신 시 보낸 시간
 	        function sentDateView(msg) {
 				$(".previewmail_info", parent.document).find(".sentDateStr").remove();
-     			parent.sentDateChk = false;
 
 	     		if (sentDateMsg != "") {
 	     			$(".previewmail_info", parent.document).prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
@@ -309,11 +308,9 @@
 			    		"font-size" : "12px",
 			    		"color" : "#333"
 			    	});
-
-	     			parent.sentDateChk = true;
 			    }
 	     		
-		    	parent.mailPrevSentDateChk();
+		    	parent.mailPrevIframeSize();
 	     	}
 	    </script> 
 	</head>
