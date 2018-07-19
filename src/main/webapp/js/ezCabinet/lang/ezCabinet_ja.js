@@ -56,5 +56,6 @@ var CabinetMessages = {
 	strRead      : "읽기",
 	strWrite     : "쓰기",
 	strNoSub     : "추가 안함",
-	strSub       : "추가"
+	strSub       : "추가",
+	strEmployee  : "직원을 먼저 선택해주세요."
 }
