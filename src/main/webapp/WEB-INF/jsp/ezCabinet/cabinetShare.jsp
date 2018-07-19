@@ -53,8 +53,8 @@
 												</td>
 												<td>
 													<div>
-														<a class="imgbtn"><span>부서선택</span></a>
-														<a class="imgbtn"><span>직원정보보기</span></a>
+														<a class="imgbtn"><span><spring:message code='ezCabinet.t128'/></span></a>
+														<a class="imgbtn"><span><spring:message code='ezCabinet.t129'/></span></a>
 													</div>
 												</td>
 											</tr>
@@ -87,9 +87,9 @@
 											<div id="txtlist_Layer" class="cabOrganTextListDiv">
 												<table id="shareTable" class="organCabTbl">
  													<tr class="trCabTxt">
-														<td>이름</td>
-														<td>직위</td>
-														<td>사내전화</td>
+														<td><spring:message code="ezCabinet.t18" /></td>
+														<td><spring:message code="ezCabinet.t97" /></td>
+														<td><spring:message code="ezCabinet.t98" /></td>
 													</tr>
 												</table>
 											</div>
@@ -108,7 +108,7 @@
 							<!-- right -->
 							<td>
 								<h2 class="receiver_tltype01">
-									<span style="min-width: 45px;">공유자</span>
+									<span style="min-width: 45px;"><spring:message code="ezCabinet.t130" /></span>
 								</h2>
 								
 								<div class="cabShareSearPanel">
@@ -129,8 +129,8 @@
 															<option          value="mail"                     ><spring:message code="ezCabinet.t102"/></option>
 															<option          value="streetAddress"            ><spring:message code="ezCabinet.t107"/></option>
 														</select>
-														<input type="text">
-														<a class="imgbtn"><span><spring:message code='ezCabinet.t49'/></span></a>
+														<input type="text" id="keyword2">
+														<a class="imgbtn" id="searchBtn2"><span><spring:message code='ezCabinet.t49'/></span></a>
 													</div>
 												</td>
 											</tr>
@@ -171,12 +171,14 @@
 			var cabinetId = "<c:out value='${cabinetId}'/>";
 			
 			(function() {
-				var companyTree = new CabinetTree();
-				var searchOpt   = "";
-				var searchValue = "";
-				var deptId      = "";
-				var searchMode  = "normal";
-				var cabinetNavi = null;
+				var companyTree  = new CabinetTree();
+				var searchOpt    = "";
+				var searchValue  = "";
+				var deptId       = "";
+				var searchMode   = "normal";
+				var cabinetNavi  = null;
+				var searchOpt2   = "";
+				var searchValue2 = "";
 				
 				var userTable   = new CabinetTable({
 					normal   : "bnkCabNormal2",
@@ -509,7 +511,9 @@
 						type: "POST",
 						url: "/ezCabinet/getShareUserList.do",
 						data: {
-							"cabinetId": cabinetId
+							"cabinetId"    : cabinetId,
+							"searchOpt2"   : searchOpt2,
+							"searchValue2" : searchValue2
 						},
 						dataType: "JSON",
 						async: false,
