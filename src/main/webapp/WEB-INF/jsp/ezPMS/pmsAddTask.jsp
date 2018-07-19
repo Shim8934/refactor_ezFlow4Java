@@ -367,7 +367,7 @@ function formatDate(date) {
 function setDefaultGroup(){
 	var curTask = parent.ge.currentTask;
 	
-	if(!parent.ge.currentTask){
+	if(!(curTask && curTask.getParent())){
 		return;
 	}
 	
