@@ -469,7 +469,7 @@ function makeOpinionList(OpinionXML) {
 			{
 				if (firstFlag)
 				{
-					strOpinion = "[" + strLang717;
+					strOpinion = "[" + strLang27;
 					firstFlag = false;
 				}
 			
