@@ -52,5 +52,9 @@ var CabinetMessages = {
 	strMoveItem  : "파일을 이동에 성공하셨습니다.",
 	strCopyItem  : "파일을 복사에 성공하셨습니다.",
 	strExist     : "이미 추가되어 있습니다.",
-	strResult    : "검색결과"
+	strResult    : "검색결과",
+	strRead      : "읽기",
+	strWrite     : "쓰기",
+	strNoSub     : "추가 안함",
+	strSub       : "추가"
 }

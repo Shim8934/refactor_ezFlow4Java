@@ -77,52 +77,20 @@
 															<img src="/images/OrganTree_cross/ic-open.gif"><span id="searchResult"></span><span id="memberCount"></span>
 														</span>
 														<span>
-															<span id="txtSpanView" role="${listType == 'TXT' ? 'on' : 'off'}"><img src="${listType == 'TXT' ? '/images/kr/cm/btn_onlist.gif'    : '/images/kr/cm/btn_list.gif'   }" class="icon_btn" id="txtlist"></span>
-															<span id="imgSpanView" role="${listType == 'TXT' ? 'on' : 'off'}"><img src="${listType == 'IMG' ? '/images/kr/cm/btn_onimglist.gif' : '/images/kr/cm/btn_imglist.gif'}" class="icon_btn" id="imglist"></span>
+															<span id="txtSpanView"><img ${listType == 'TXT' ? "src='/images/kr/cm/btn_onlist.gif' role='on'"    : "src='/images/kr/cm/btn_list.gif' role='off'"   } class="icon_btn" id="txtlist"></span>
+															<span id="imgSpanView"><img ${listType == 'IMG' ? "src='/images/kr/cm/btn_onimglist.gif' role='on'" : "src='/images/kr/cm/btn_imglist.gif' role='off'"} class="icon_btn" id="imglist"></span>
 														</span>
 													</th>
 												</tr>	
 											</table>
-											<!-- 조직도 텍스트 리스트  --> <!-- class="organCabTbl" --> 
+											
 											<div id="txtlist_Layer" class="cabOrganTextListDiv">
-												<table id="txtlist_table" class="mainlist">
+												<table id="shareTable" class="organCabTbl">
  													<tr class="trCabTxt">
 														<td>이름</td>
 														<td>직위</td>
 														<td>사내전화</td>
 													</tr>
-													<!-- <tr>
-														<td style="background-color: rgb(240, 246, 255);">지정석</td>
-														<td style="background-color: rgb(240, 246, 255);">대리</td>
-														<td style="background-color: rgb(240, 246, 255);">02-1234-555</td>
-													</tr> -->
-													<!-- <tr>
-														<td class="imgCabTd">
-															<div style="display: flex; height: 99px; border: 1px solid #ddd; margin-top: 5px;">
-																<div style="height: 99px; width: 99px; display: flex; align-items: center; min-width: 99px; justify-content: center;"><div class="pic"></div></div>
-																<div style="display: flex; align-items: center;">
-																	<table class="organinfo">
-																		<tr>
-																			<td class="name" style="text-align: left;">hyo1[사원]</td>
-																		</tr>
-																		<tr>
-																			<td style="text-align: left;">테스트부서</td>
-																		</tr>
-																		<tr>
-																			<td style="text-align: left;"><img class="icon" src="/images/OrganTree/icon_hp.gif"> -</td>
-																		</tr>
-																		<tr>
-																			<td style="text-align: left;"><img class="icon" src="/images/OrganTree/icon_mail.gif">hyo1@svn.opensol2014.com</td>
-																		</tr>
-																	</table>
-																</div>
-															</div>
-														</td>
-														<td class="txtCabTd">지정석</td>
-														<td class="txtCabTd">대리</td>
-														<td class="txtCabTd">02-1234-555</td>
-													</tr> -->
-													
 												</table>
 											</div>
 											<div id="tblPageRayer" class="cabOrganPageDiv"></div>
@@ -133,8 +101,8 @@
 								
 							<!-- shareBttn -->
 							<td class="cabShareBttn">
-								<img src="/images/kr/cm/arr_right.gif">
-								<img src="/images/kr/cm/arr_left.gif">
+								<img id="addBttn"    src="/images/kr/cm/arr_right.gif">
+								<img id="removeBttn" src="/images/kr/cm/arr_left.gif" >
 							</td>
 							
 							<!-- right -->
@@ -172,44 +140,12 @@
 									
 								<div class="cabShareListDiv">
 									<div>
-										<table id="txtlist_table" class="mainlist">
+										<table id="sharedTable" class="mainlist">
 											<tr>
 												<td><spring:message code='ezCabinet.t103'/></td>
 												<td><spring:message code='ezCabinet.t104'/></td>
 												<td><spring:message code='ezCabinet.t105'/></td>
 												<td><spring:message code='ezCabinet.t106'/></td>
-											</tr>
-											<tr>
-												<td>솔루션 3팀</td>
-												<td>강민수</td>
-												<td>
-													<select width="65%">
-														<option>읽기</option>
-														<option>쓰기</option>
-													</select>
-												</td>
-												<td>
-													<select width="80%">
-														<option>추가 안함</option>
-														<option>추가</option>
-													</select>
-												</td>
-											</tr>
-											<tr>
-												<td>솔루션 3팀</td>
-												<td>응웬바오</td>
-												<td>
-													<select width="65%">
-														<option>읽기</option>
-														<option>쓰기</option>
-													</select>
-												</td>
-												<td>
-													<select width="80%">
-														<option>추가 안함</option>
-														<option>추가</option>
-													</select>
-												</td>
 											</tr>
 										</table>
 									</div>
@@ -230,6 +166,7 @@
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTree.js"           ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetNavi.js"           ></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetTable.js"          ></script>
 		<script type="text/javascript">
 			var cabinetId = "<c:out value='${cabinetId}'/>";
 			
@@ -240,6 +177,21 @@
 				var deptId      = "";
 				var searchMode  = "normal";
 				var cabinetNavi = null;
+				
+				var userTable   = new CabinetTable({
+					normal   : "bnkCabNormal2",
+					selected : "bnkCabSelect2",
+					mode     : "normal",
+					render   : processUserList
+				});
+				
+				var selectedFiles = new CabinetTable({
+					normal   : "bnkCabNormal",
+					selected : "bnkCabSelect",
+					mode     : "received",
+					dblclick : removeUser
+				});
+				
 				initEvents();
 				
 				function initEvents() {
@@ -266,6 +218,8 @@
 					listBttns[1].onclick    = function(e) {closeWindow();};
 					document.getElementById("txtSpanView").addEventListener("click", function(e) {changeListView('TXT');}, false);
 					document.getElementById("imgSpanView").addEventListener("click", function(e) {changeListView('IMG');}, false);
+					document.getElementById("addBttn").onclick    = function(e) {addUsers();};
+					document.getElementById("removeBttn").onclick = function(e) {removeUsers();};
 					
 					//Set Company Tree
 					companyTree.setTreeInfo({
@@ -278,192 +232,281 @@
 						dblClick   : null,
 						companyId  : ""
 					});
-
+					
 					companyTree.makeTree();
+					
+					//Set file tables 
+					userTable.setTableType("files");
+					userTable.setTableElement("shareTable", "id");
+					
+					//Set selected tables 
+					selectedFiles.setTableElement("sharedTable", "id");
+					
 					getShareList();
+				}
+				
+				function getSelectedList(node) {
+					deptId     = node.getAttribute("role");
+					document.getElementById("searchResult").textContent = node.textContent;
+					searchMode = "normal";
+					getUsers("1");
+				}
+				
+				function getUsers(page) {
+					var url  = "";
+					var data = {};
 					
-					function getSelectedList(node) {
-						deptId     = node.getAttribute("role");
-						document.getElementById("searchResult").textContent = node.textContent;
-						searchMode = "normal";
-						getUsers("1");
+					switch(searchMode) {
+						case "normal" : url = "/ezCabinet/getDeptMembers.do";
+									data = {deptId : deptId, currentPage : page};
+									break;
+						case "search" : url = "";
+									data = {srchOption : searchOpt, srchValue : searchValue, currentPage : page};
+									break;
 					}
 					
-					function getUsers(page) {
-						var url  = "";
-						var data = {};
-						
-						switch(searchMode) {
-							case "normal" : url = "/ezCabinet/getDeptMembers.do";
-										data = {deptId : deptId, currentPage : page};
-										break;
-							case "search" : url = "";
-										data = {srchOption : searchOpt, srchValue : searchValue, currentPage : page};
-										break;
+					$.ajax({
+						type: "POST",
+						url: url,
+						data: data,
+						dataType: "JSON",
+						async: true,
+						success : function(data) {
+							var result = data.memberList;
+							cabinetNavi.init(data.currentPage, data.memberCount, data.totalPages);
+							document.getElementById("memberCount").innerHTML = " - [" + "<span class='cabColor'>" + data.memberCount + "명" + "</span>" + "]";
+							userTable.setDataSource(result);
+							userTable.renderTable();
+						},
+						error : function(error) {
 						}
-						
-						$.ajax({
-							type: "POST",
-							url: url,
-							data: data,
-							dataType: "JSON",
-							async: true,
-							success : function(data) {
-								console.log(data);
-								var result = data.memberList;
-								cabinetNavi.init(data.currentPage, data.memberCount, data.totalPages);
-								document.getElementById("memberCount").innerHTML = " - [" + "<span class='cabColor'>" + data.memberCount + "명" + "</span>" + "]";
-								processUserList(result);
-							},
-							error : function(error) {
-							}
-						});
-					}
+					});
+				}
+				
+				function processUserList(result, unselectClass, tableList, clickRow) {
+					var txtSpanView     = document.getElementById("txtlist").getAttribute("role");
+					tableList.className = txtSpanView == "on" ? "mainlist" : "organCabTbl";
 					
-					function processUserList(result) {
-						var tableList       = document.getElementById("txtlist_table");
-						var txtSpanView     = document.getElementById("txtSpanView").getAttribute("role");
-						tableList.className = txtSpanView == "on" ? "mainlist" : "organCabTbl";
+					if(result == null || result.length == 0) {
+						var trElmt = document.createElement("tr");
+						var tdElmt = document.createElement("td");
 						
-						while (tableList.rows.length > 1) {
-							tableList.deleteRow(1);
-						}
-						
-						if(result == null || result.length == 0) {
-							var trElmt = document.createElement("tr");
-							var tdElmt = document.createElement("td");
+						trElmt.appendChild(tdElmt);
+						tableList.appendChild(trElmt);
+					}
+					else {
+						for(var i = 0, len = result.length; i < len ; i++) {
+							var trElmt  = document.createElement("tr");
+							var tdElmt1 = document.createElement("td");
+							var tdElmt2 = document.createElement("td");
+							var tdElmt3 = document.createElement("td");
+							var tdElmt4 = document.createElement("td");
 							
-							trElmt.appendChild(tdElmt);
+							tdElmt1.textContent = result[i]["userName"];
+							tdElmt2.textContent = result[i]["position"];
+							tdElmt3.textContent = result[i]["telNumber"];
+							
+							tdElmt1.className   = "txtCabTd";
+							tdElmt2.className   = "txtCabTd";
+							tdElmt3.className   = "txtCabTd";
+							
+							//Process td4
+							var divElemt  = document.createElement("div");
+							var divChild1 = document.createElement("div");
+							var divChild2 = document.createElement("div");
+							
+							//Process divChild1
+							var divInner = document.createElement("div");
+							divInner.className = "pic";
+							if (result[i]["userImg"]) {
+								var imgElmt = document.createElement("img");
+								imgElmt.src = result[i]["userImg"];
+								divInner.appendChild(imgElmt);
+							}
+							
+							divChild1.appendChild(divInner);
+							
+							//Process DivChild2
+							var innerTable = document.createElement("table");
+							innerTable.className = "organinfo";
+							var innderTr1  = document.createElement("tr");
+							var innderTr2  = document.createElement("tr");
+							var innderTr3  = document.createElement("tr");
+							var innderTr4  = document.createElement("tr");
+							
+							var innerTd1   = document.createElement("td");
+							var innerTd2   = document.createElement("td");
+							var innerTd3   = document.createElement("td");
+							var innerTd4   = document.createElement("td");
+							
+							innerTd1.className = "name cUserInfor";
+							innerTd2.className = "cUserInfor";
+							innerTd3.className = "cUserInfor";
+							innerTd4.className = "cUserInfor";
+							
+							innerTd1.textContent = result[i]["position"] ? result[i]["userName"] +  "[" + result[i]["position"] + "]" : result[i]["userName"];
+							innerTd2.textContent = result[i]["deptName"];
+							innerTd3.innerHTML   = "<img class='icon' src='/images/OrganTree/icon_hp.gif'>"   + result[i]["telNumber"];
+							innerTd4.innerHTML   = "<img class='icon' src='/images/OrganTree/icon_mail.gif'>" + result[i]["mail"];
+							
+							innderTr1.appendChild(innerTd1);
+							innderTr2.appendChild(innerTd2);
+							innderTr3.appendChild(innerTd3);
+							innderTr4.appendChild(innerTd4);
+							innerTable.appendChild(innderTr1);
+							innerTable.appendChild(innderTr2);
+							innerTable.appendChild(innderTr3);
+							innerTable.appendChild(innderTr4);
+							divChild2.appendChild(innerTable);
+							
+							divElemt.appendChild(divChild1);
+							divElemt.appendChild(divChild2);
+							
+							divElemt.className = "imgCabDivMain";
+							tdElmt4.className  = "imgCabTd";
+							tdElmt4.appendChild(divElemt);
+							
+							trElmt.appendChild(tdElmt1);
+							trElmt.appendChild(tdElmt2);
+							trElmt.appendChild(tdElmt3);
+							trElmt.appendChild(tdElmt4);
+							trElmt.className = unselectClass;
+							trElmt.setAttribute("role", result[i]["userId"]);
+							trElmt.setAttribute("deptName", result[i]["deptName"]);
+							trElmt.setAttribute("userName", result[i]["userName"]);
+							trElmt.addEventListener("click", function(e) {clickRow(e);}, false);
+							trElmt.addEventListener("dblclick", function(e) {addUser(this, "one")}, false);
+							
 							tableList.appendChild(trElmt);
 						}
-						else {
-							for(var i = 0, len = result.length; i < len ; i++) {
-								var trElmt  = document.createElement("tr");
-								var tdElmt1 = document.createElement("td");
-								var tdElmt2 = document.createElement("td");
-								var tdElmt3 = document.createElement("td");
-								var tdElmt4 = document.createElement("td");
-								
-								tdElmt1.textContent = result[i]["userName"];
-								tdElmt2.textContent = result[i]["position"];
-								tdElmt3.textContent = result[i]["telNumber"];
-								
-								tdElmt1.className   = "txtCabTd";
-								tdElmt2.className   = "txtCabTd";
-								tdElmt3.className   = "txtCabTd";
-								
-								//Process td4
-								var divElemt  = document.createElement("div");
-								var divChild1 = document.createElement("div");
-								var divChild2 = document.createElement("div");
-								
-								//Process divChild1
-								var divInner = document.createElement("div");
-								divInner.className = "pic";
-								if (result[i]["userImg"]) {
-									var imgElmt = document.createElement("img");
-									imgElmt.src = result[i]["userImg"];
-									divInner.appendChild(imgElmt);
-								}
-								
-								divChild1.appendChild(divInner);
-								
-								//Process DivChild2
-								var innerTable = document.createElement("table");
-								innerTable.className = "organinfo";
-								var innderTr1  = document.createElement("tr");
-								var innderTr2  = document.createElement("tr");
-								var innderTr3  = document.createElement("tr");
-								var innderTr4  = document.createElement("tr");
-								
-								var innerTd1   = document.createElement("td");
-								var innerTd2   = document.createElement("td");
-								var innerTd3   = document.createElement("td");
-								var innerTd4   = document.createElement("td");
-								
-								innerTd1.className = "name cUserInfor";
-								innerTd2.className = "cUserInfor";
-								innerTd3.className = "cUserInfor";
-								innerTd4.className = "cUserInfor";
-								
-								innerTd1.textContent = result[i]["userName"] + "[" + result[i]["position"] + "]";
-								innerTd2.textContent = result[i]["deptName"];
-								innerTd3.innerHTML   = "<img class='icon' src='/images/OrganTree/icon_hp.gif'>"   + result[i]["telNumber"];
-								innerTd4.innerHTML   = "<img class='icon' src='/images/OrganTree/icon_mail.gif'>" + result[i]["mail"];
-								
-								innderTr1.appendChild(innerTd1);
-								innderTr2.appendChild(innerTd2);
-								innderTr3.appendChild(innerTd3);
-								innderTr4.appendChild(innerTd4);
-								innerTable.appendChild(innderTr1);
-								innerTable.appendChild(innderTr2);
-								innerTable.appendChild(innderTr3);
-								innerTable.appendChild(innderTr4);
-								divChild2.appendChild(innerTable);
-								
-								divElemt.appendChild(divChild1);
-								divElemt.appendChild(divChild2);
-								
-								divElemt.className = "imgCabDivMain";
-								tdElmt4.className  = "imgCabTd";
-								tdElmt4.appendChild(divElemt);
-								
-								trElmt.appendChild(tdElmt1);
-								trElmt.appendChild(tdElmt2);
-								trElmt.appendChild(tdElmt3);
-								trElmt.appendChild(tdElmt4);
-								
-								tableList.appendChild(trElmt);
-							}
-						}
 					}
+				}
+				
+				function changeListView(flag) {
+					setOrganListType(flag);
+					var txtImgElmt = document.getElementById("txtlist");
+					var imgImgElmt = document.getElementById("imglist");
+					var tableList  = document.getElementById("shareTable");
 					
-					function changeListView(flag) {
-						console.log("Flag: " + flag);
-						setOrganListType(flag);
-						var txtImgElmt = document.getElementById("txtlist");
-						var imgImgElmt = document.getElementById("imglist");
-						var tableList  = document.getElementById("txtlist_table");
-						
-						if (flag == 'TXT') {
-							txtImgElmt.src      = "/images/kr/cm/btn_onlist.gif";
-							imgImgElmt.src      = "/images/kr/cm/btn_imglist.gif";
-							tableList.className = "mainlist";
-						}
-						else {
-							txtImgElmt.src      = "/images/kr/cm/btn_list.gif";
-							imgImgElmt.src      = "/images/kr/cm/btn_onimglist.gif";
-							tableList.className = "organCabTbl";
-						}
+					if (flag == 'TXT') {
+						txtImgElmt.setAttribute("role", "on");
+						imgImgElmt.setAttribute("role", "off");
+						txtImgElmt.src      = "/images/kr/cm/btn_onlist.gif";
+						imgImgElmt.src      = "/images/kr/cm/btn_imglist.gif";
+						tableList.className = "mainlist";
 					}
+					else {
+						txtImgElmt.setAttribute("role", "off");
+						imgImgElmt.setAttribute("role", "on");
+						txtImgElmt.src      = "/images/kr/cm/btn_list.gif";
+						imgImgElmt.src      = "/images/kr/cm/btn_onimglist.gif";
+						tableList.className = "organCabTbl";
+					}
+				}
+				
+				function addUser(trElmt, mode) {
+					var selectedTable = document.getElementById("sharedTable");
+					var userId        = trElmt.getAttribute("role");
+					var checkElmt     = selectedTable.querySelector("tr[role='" + userId + "']");
 					
-					function setOrganListType(pListType) {
-						$.ajax({
-							type: "POST",
-							dataType: "text",
-							url: "/ezOrgan/setListType.do",
-							async: false,
-							data: {listType : pListType},
-							success: function(result) {
-							}
-						});
-					}
+					if (checkElmt) {if(mode) {alert(CabinetMessages.strExist);}; return;}
 					
-					function getShareList() {
-						$.ajax({
-							type: "POST",
-							url: "/ezCabinet/getShareUserList.do",
-							data: {
-								"cabinetId": cabinetId
-							},
-							dataType: "JSON",
-							async: false,
-							success: function(data) {
-							},
-							error: function(error) {
-							}
-						});
+					var userName        = trElmt.getAttribute("userName");
+					var deptName        = trElmt.getAttribute("deptName");
+					
+					var newTrElmt       = document.createElement("tr");
+					var newTdElmt1      = document.createElement("td");
+					var newTdElmt2      = document.createElement("td");
+					var newTdElmt3      = document.createElement("td");
+					var newTdElmt4      = document.createElement("td");
+					
+					var selectPerm      = document.createElement("select");
+					var selectSub       = document.createElement("select");
+					var optionPerm1     = document.createElement("option");
+					var optionPerm2     = document.createElement("option");
+					var optionSub1      = document.createElement("option");
+					var optionSub2      = document.createElement("option");
+					
+					optionPerm1.textContent = CabinetMessages.strRead;
+					optionPerm2.textContent = CabinetMessages.strWrite;
+					optionSub1.textContent  = CabinetMessages.strNoSub;
+					optionSub2.textContent  = CabinetMessages.strSub;
+					
+					selectPerm.appendChild(optionPerm1);
+					selectPerm.appendChild(optionPerm2);
+					selectSub.appendChild(optionSub1);
+					selectSub.appendChild(optionSub2);
+					
+					newTdElmt1.textContent = deptName;
+					newTdElmt1.setAttribute("title", deptName);
+					newTdElmt2.textContent = userName;
+					newTdElmt2.setAttribute("title", userName);
+					newTdElmt3.appendChild(selectPerm);
+					newTdElmt4.appendChild(selectSub);
+					
+					newTrElmt.appendChild(newTdElmt1);
+					newTrElmt.appendChild(newTdElmt2);
+					newTrElmt.appendChild(newTdElmt3);
+					newTrElmt.appendChild(newTdElmt4);
+					
+					newTrElmt.className = "bnkCabNormal";
+					newTrElmt.setAttribute("role", userId);
+					newTrElmt.setAttribute("deptName", deptName);
+					newTrElmt.setAttribute("userName", userName);
+					
+					selectedTable.appendChild(newTrElmt);
+					selectedFiles.resetEvents();
+				}
+				
+				function addUsers() {
+					var listTableElmt  = document.getElementById("shareTable");
+					var selectedTrList = listTableElmt.querySelectorAll("tr[class='bnkCabSelect2']");
+					
+					for (var i = 0, len = selectedTrList.length; i < len; i++) {
+						addUser(selectedTrList[i]);
 					}
+				}
+				
+				function removeUser(trElmt) {
+					var selectedTable = document.getElementById("sharedTable");
+					selectedTable.removeChild(trElmt);
+				}
+				
+				function removeUsers() {
+					var selectedTblElmt = document.getElementById("sharedTable");
+					var selectedTrList  = selectedTblElmt.querySelectorAll("tr[class='bnkCabSelect']");
+					
+					for (var i = 0, len = selectedTrList.length; i < len; i++) {
+						removeUser(selectedTrList[i]);
+					}
+				}
+				
+				function setOrganListType(pListType) {
+					$.ajax({
+						type: "POST",
+						dataType: "text",
+						url: "/ezOrgan/setListType.do",
+						async: false,
+						data: {listType : pListType},
+						success: function(result) {
+						}
+					});
+				}
+				
+				function getShareList() {
+					$.ajax({
+						type: "POST",
+						url: "/ezCabinet/getShareUserList.do",
+						data: {
+							"cabinetId": cabinetId
+						},
+						dataType: "JSON",
+						async: false,
+						success: function(data) {
+						},
+						error: function(error) {
+						}
+					});
 				}
 				
 				function closeWindow() {window.close();}
@@ -471,6 +514,8 @@
 				function saveShareUsers() {
 					//*Note add function here
 				}
+				
+				
 			})();
 			
 		</script>

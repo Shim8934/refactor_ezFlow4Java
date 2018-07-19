@@ -3,14 +3,10 @@ package egovframework.ezEKP.ezCabinet.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
 import egovframework.ezEKP.ezCabinet.vo.CabinetShareVO;
@@ -46,7 +42,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 		
 		return ezCabinetDAO_h.getShareUserList(map);
 	}
-
+	
 	@Override
 	public int getTotalDeptMembers(String deptId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();

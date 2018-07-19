@@ -12,6 +12,10 @@
 .bnkCabSelect {background-color: #e9f1ff; cursor: pointer;}
 .bnkCabNormal:hover {background-color: #f4f5f5; cursor: pointer;}
 
+.bnkCabSelect2, .bnkCabNormal2 {cursor: pointer;}
+.bnkCabSelect2 .imgCabDivMain, .bnkCabSelect2 .txtCabTd {background-color: #e9f1ff;}
+.bnkCabNormal2:hover .imgCabDivMain {background-color: #f4f5f5;}
+
 .adminPanel {width:100%; padding:9px 16px 15px; font-weight: bold;}
 .adminPanel img {vertical-align: middle; margin-top: -2px; width: 20px;}
 .adminPanel span {margin-left: 10px; font-size: 18px; padding-top: 3px; color: #333; font-family: Malgun Gothic, Meiryo UI;}
@@ -207,6 +211,7 @@
 /* cabinet share */
 .cabShareInf {padding: 15px;}
 .cabShareInf tr th {width: 20px;}
+.cabShareInf tr td {padding-left: 10px;}
 .cabShareSearPanel {background-color: #f8f8fa; margin-top: 15px; border: 1px solid #eaeaea; margin: 10px 0px 0px 0px; padding: 0px; clear: both; overflow: hidden; z-index: 1;}
 .cabShareSearPanelSub {border-bottom: 0px; height:26px; list-style: none; margin: 0px; padding: 0px;}
 .cabOrganTextListDiv, .cabOrganImgListDiv {vertical-align: top; height: 440px; overflow: auto; width: 440px;}
