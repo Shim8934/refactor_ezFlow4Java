@@ -676,13 +676,13 @@
         					<td style="padding-left:10px"> <div id="printOwner"></div></td> 
       					</tr> 
       					<tr style="height:25px"> 
-	        				<th style="padding-left:10px"><spring:message code="ezResource.t213"/></th> 
-        					<td style="padding-left:10px"> <div id="printImportance"></div></td> 
-      					</tr> 
-      					<tr style="height:25px"> 
 	        				<th style="padding-left:10px"><spring:message code="ezResource.t197"/></th> 
         					<td style="padding-left:10px"> <div id="printDate"></div></td> 
       					</tr>
+      					<tr style="height:25px"> 
+	        				<th style="padding-left:10px"><spring:message code="ezResource.t213"/></th> 
+        					<td style="padding-left:10px"> <div id="printImportance"></div></td> 
+      					</tr> 
       					<tr>
 		            		<th style="padding-left:10px"><spring:message code='ezResource.t374' /></th>
 		            		<td style="padding-left:10px;"> <div id="printItem"></div></td>

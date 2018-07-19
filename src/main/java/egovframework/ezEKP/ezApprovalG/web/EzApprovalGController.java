@@ -1145,7 +1145,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String ezAprOpinion(){
 		return "ezApprovalG/apprGezAprOpinion";
 	}
-
+	
+	/**
+	 * 전자결재G 메일발송 선택 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/ezAprOpinionSend.do")
+	public String ezAprOpinionSend(){
+		return "ezApprovalG/apprGezAprOpinionSend";
+	}
 	/**
 	 * 전자결재G 결재라인저장 표출 Method
 	 */
