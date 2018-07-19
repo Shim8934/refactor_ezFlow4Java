@@ -18,6 +18,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/whokyulSign_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/html2canvas.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/sendMail_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/aprmanage_Cross.js"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var pDocID = '${docID}';
@@ -63,6 +64,8 @@
 		    var docState = "${docState}";
 		    var WhoKyulCNT = "${whoKyulCount}";
 		    var checkPwdFlag = "${checkPwdFlag}";
+		    var opinionFlag;
+		    var includeOpinion = false;
 		    
 		    $(function () {
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && abtnReusedmin != 'Y') {
@@ -151,6 +154,7 @@
 		        else
 		            return false;
 		    }
+		    var hasOpinion = "false"; // 의견 존재 여부
 		    function FieldsAvailable() {
 		        CheckSignImg();
 		        //없이 테스트
@@ -180,13 +184,13 @@
 		        else
 		            setAttachInfo(pDocID, "END", lstAttachLink);
 		
-		        var Rtnval = CheckOpinionInfo();
-		        if (Rtnval) {
+		        hasOpinion = CheckOpinionInfo();
+		        if (hasOpinion) {
 		            var pInformationContent = "<spring:message code='ezApprovalG.t9'/>" + "<br>" +"<spring:message code='ezApprovalG.t170'/>";
 		            OpenInformationUI(pInformationContent, btnOpinion_onclick_Complete);
 		        }
 		    }
-		
+	
 		    function btnOpinion_onclick_Complete(Ans) {
 		        if (Ans) {
 		            btnOpinion_onclick();
@@ -298,33 +302,16 @@
 //                         }
 //                     });
 // 		    }
-		
-		    function btnMail_onclick() {
-		    	var imgUrl="";
-		    html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content"), {
-		    	background:'#fff',onrendered: function(canvas) {
-				    $.ajax({
-                        type:"POST",
-                        dataType:"text",
-                        data : {
-                        	imgUrl : canvas.toDataURL("image/png"),
-                        	docID: pDocID
-                        },
-                        url: "/ezApprovalG/createMailImg.do",
-                        success: function (data) {
-                        }
-                    });
-		    		  }
-		    		});
-		    	  var pheight = window.screen.availHeight;
-			        var conHeight = pheight * 0.8;
-			        var pwidth = window.screen.availWidth;
-			        var pTop = (pheight - conHeight) / 2;
-			        var pLeft = (pwidth - 890) / 2;
-			        var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + pDocID + "&docHref=" + encodeURIComponent(pDocHref);
-//						var pURL = "/ezEmail/mailWrite.do?docHref=" + encodeURIComponent(pDocHref) + "&cmd=docsend&docID=" + pDocID + "&imageCnt=&target=APPROVALG";
-			        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-			        newwin.focus();
+			
+
+			// 2018-07-10 황윤호
+		    function btnMail_onclick() {	   
+		    	if(hasOpinion) {
+		    		SendMailClick("Cross", pDocID, "END");
+		    	} else {
+		    		attachAppr();
+		    	}
+		     	return; 
 		    }
 		 
 		    var writeboardselect_modal_dialogArguments = new Array();
@@ -366,7 +353,7 @@
 		
 		        DivPopUpShow(740, 450, "/ezApprovalG/ezAprHistory.do?docID=" + pDocID);
 		    }
-		   
+		      
 		    function btnhistory_onclick_Complete() {
 		        DivPopUpHidden();
 		    }
