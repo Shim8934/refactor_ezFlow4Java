@@ -154,7 +154,7 @@
   			</tr>
 		</table>
 		<br>
-		<div class="txt"><h2><spring:message code='ezResource.t82' /></h2> (<spring:message code='ezResource.t83' /></div>
+		<div class="txt"><h2><spring:message code='ezResource.t82' /></h2>▒ (<spring:message code='ezResource.t83' /></div>
 			<table class="content">
   				<tr>
     				<th> <spring:message code='ezResource.t84' /></th>

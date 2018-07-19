@@ -699,7 +699,8 @@ function ListView() {
                 var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
                 var strClass = SelectSingleNodeValue(oCells[j], "CLASSNAME");
 
-                var oText = document.createTextNode(strValue.replace("&amp;", "&").replace("&lt","<").replace("&gt;", ">"));
+                //var oText = document.createTextNode(strValue.replace("&amp;", "&").replace("&lt","<").replace("&gt;", ">"));
+                var oText = document.createTextNode(strValue);
                 var objTd = document.createElement("TD");
                 
                 if (strStyle != "") {
