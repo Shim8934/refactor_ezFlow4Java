@@ -311,8 +311,6 @@ var strLangKYJ03 = "공백은 입력할 수 없습니다.";
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리 일본어 번역X*/
 var strLangHSB01 = "이 게시물은 ";
 var strLangHSB02 = "에서 조회 할 수 있습니다.";
-/* 2018-07-05 홍승비 - 삭제된 게시물 링크에 접근 시 alert 작동 */
-var strLangHSB03 = "게시물이 없습니다.";
 
 function GetLocalTime(Offset , pDateTime)
 {

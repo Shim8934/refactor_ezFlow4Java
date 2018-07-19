@@ -311,8 +311,6 @@ var strLangKYJ03 = "スペースは入力できません。";
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "この掲示は";
 var strLangHSB02 = "で照会できます。";
-/* 2018-07-05 홍승비 - 삭제된 게시물 링크에 접근 시 alert 작동 */
-var strLangHSB03 = "掲示がありません。";
 
 function GetLocalTime(Offset , pDateTime)
 {
