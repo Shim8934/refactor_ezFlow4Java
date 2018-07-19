@@ -203,3 +203,6 @@ img.voteUserMailImg{float: right; margin-right: 10px; cursor: pointer;}
 .qstSetting{height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;}
 
 .voteCmtCnt{color: #c64200;}
+
+#selectType{width:80px;height:27px;border-color:#c8c8c8;}
+#searchInput{height: 27px;border: 1px solid #cbcbcb; border-right:0px;}

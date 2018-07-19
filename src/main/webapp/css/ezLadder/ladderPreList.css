@@ -25,18 +25,18 @@ body{margin:0px; padding:0px;}
 
 .ladderPreList_right{float:left; width:894px; height:668px; background:#FFF; border:1px solid #ddd; overflow-y:auto; overflow-x: hidden;}
 /* .ladderPreList_right h2{width:100%; height:72px; margin:0px; padding:0px; background:#fafafb; border-bottom:1px solid #dcdcdc;} */
-.ladderPreList_right h2{height:50px; margin:0px; padding:0px; background:#f9f9fa; border-bottom:1px solid #ddd;}
-.ladderGame_title{float:left; min-width: 200px; height: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin:0px; padding:0px 18px; line-height:48px; font-size:16px; font-weight:bold; color:#333; font-family:Malgun Gothic, Meiryo UI;}
+.ladderPreList_right h2{height:46px; margin:0px; padding:0px; background:#f9f9fa; border-bottom:1px solid #ddd;}
+.ladderGame_title{float:left; min-width: 200px; height: 46px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin:0px; padding:0px 18px; line-height:45px; font-size:16px; font-weight:bold; color:#333; font-family:Malgun Gothic, Meiryo UI;}
 
 .ladderGame_info{padding-top:7px}
-.ladderGame_info .attribute{float:left; overflow:hidden; list-style:none; margin:0px 6px; padding:0px 6px; border-right:1px solid #DDD;}
+.ladderGame_info .attribute{float:left; overflow:hidden; list-style:none; margin-right:10px;/* margin:0px 6px; padding:0px 6px; border-right:1px solid #DDD; */}
 .ladderGame_info .attribute li{float:left; margin:0px 10px 0px 0px; border: 1px solid #DDD; border-radius: 15px; background: #FFF; width: 45px; height: 45px;}
 .ladderGame_info .pic{float:left; margin:15px 10px; padding:0px; border: 2px solid #DDD; border-radius: 30px; overflow: hidden; width: 56px; height: 56px;}
 .ladderGame_info .txt{float:left; margin: 18px 45px 18px 5px; padding:0px; color:#333; font-size:12px; font-weight:normal; clear: none;}
 .ladderGame_info .txt span{display:block; line-height:18px;}
 .ladderGame_info .txt span.name{font-size: 14px; font-weight: bold; color: #2568b3;}
 .ladderGame_info .txt span.date{color: #777;}
-.ladderGame_info .edit{float:left; list-style:none; margin:0px 8px; padding:0px;}
+.ladderGame_info .edit{float:left; list-style:none; margin:0px 0px; padding:0px;}
 .ladderGame_info .edit li{float:left; margin:0px 10px 0px 0px; border: 1px solid #DDD; border-radius: 15px; background: #FFF; width: 45px; height: 45px; overflow: hidden;}
 
 .ladderGame_view{clear:both; width:796px; height:100%;}
