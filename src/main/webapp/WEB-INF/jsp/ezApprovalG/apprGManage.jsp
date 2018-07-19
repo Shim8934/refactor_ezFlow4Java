@@ -1749,7 +1749,10 @@
 				<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		
 				<li id="tbtncallback" style="DISPLAY:none"><span id="btncallback" onclick="return btncallback_onclick('CALLBACK')" ><spring:message code='ezApprovalG.t66'/></span></li>
 		        
-		        	<li id="tbtnforcecallback" style="display:none"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
+	        	<li id="tbtnforcecallback" style="display:none"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
+				<li id="btnAssign" style="DISPLAY:none"><span onclick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t1430'/></span></li>
+				<li id="btnDistribute" style="DISPLAY:none"><span onclick="return btnDistribute_onclick()"><spring:message code='ezApprovalG.t1432'/></span></li>
+				<li id="btnDistributeALL" style="DISPLAY:none"><span onclick="return btnDistributeALL_onclick()"><spring:message code='ezApprovalG.pjj40'/></span></li>
 				
 				<li id="tbtnRemoveDoc" style="DISPLAY:none"><span id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
 				<li id="tbtnViewDoc" style="DISPLAY:none"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
