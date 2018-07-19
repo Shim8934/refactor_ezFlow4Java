@@ -127,6 +127,8 @@ var projectStatus = "${projectStatus}";
 		  };
 		  
 		  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		  
+		  setDefaultGroup();
  
  });
  
@@ -360,6 +362,20 @@ function formatDate(date) {
 	}
 	
 	return [year, month, day].join('-'); 
+}
+
+function setDefaultGroup(){
+	var curTask = parent.ge.currentTask;
+	
+	if(!parent.ge.currentTask){
+		return;
+	}
+	
+	groupId = curTask.getParent().id.match(/g(\d+)/) ? curTask.getParent().match(/g(\d+)/)[1] : parent.projectGroupId;
+	groupName = curTask.getParent().name;
+	
+	setUpperGroup();
+	
 }
 
 </script>
