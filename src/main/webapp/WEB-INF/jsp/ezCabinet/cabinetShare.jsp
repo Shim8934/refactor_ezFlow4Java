@@ -181,7 +181,7 @@
 				var searchValue2 = "";
 				var userPopup    = null;
 				
-				var userTable   = new CabinetTable({
+				var userTable = new CabinetTable({
 					normal   : "bnkCabNormal2",
 					selected : "bnkCabSelect2",
 					mode     : "normal",
@@ -199,6 +199,7 @@
 				
 				function initEvents() {
 					document.onselectstart  = function () { return false;};
+					window.addEventListener("beforeunload", function(e) {closeAllPopUp();}, false);
 					
 					//Cabinet navigation
 					var naviMessages = {
@@ -542,7 +543,7 @@
 					
 					if (!selectUsers || selectUsers.length == 0) {alert(CabinetMessages.strEmployee); return;}
 					
-					if (userPopup) {userPopup.close();}
+					closeAllPopUp();
 					
 					var selectedTr   = selectUsers[selectUsers.length - 1];
 					var width        = 420;
@@ -570,6 +571,8 @@
 					
 					addUserToShareList(deptId, deptName, userType, deptName);
 				}
+				
+				function closeAllPopUp() {if (userPopup) {userPopup.close();}}
 				
 				function closeWindow() {window.close();}
 				
