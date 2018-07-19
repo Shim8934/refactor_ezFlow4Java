@@ -49,6 +49,8 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezLadder/EzLadder_SQL_Mysql.xml"/>
     <!-- 케비닛 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinet_SQL_Mysql.xml"/>
+    <!-- 케비닛 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinet_SQL_Mysql_h.xml"/>
     
     <!-- 2.관리자 모듈관리 SQL쿼리 XML -->
     

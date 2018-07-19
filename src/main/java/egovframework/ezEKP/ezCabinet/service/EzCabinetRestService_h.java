@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 
 public interface EzCabinetRestService_h {
 
-	public JSONObject getUserInfo(HttpServletRequest request, String userId) throws Exception;
-
+	JSONObject getDeptMembers(HttpServletRequest request, String userId, String deptId, String srchOption, String srchValue) throws Exception;
+	
+	JSONObject getShareUserList(HttpServletRequest request, String userId, String cabinetId) throws Exception;
 }

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="EzCabinet_h">
+	<typeAlias alias="CabinetSimpleUserVO"           type="egovframework.ezEKP.ezCabinet.vo.SimpleUserVO"  />
+	<typeAlias alias="CabinetShareVO"                type="egovframework.ezEKP.ezCabinet.vo.CabinetShareVO"/>
+	
+	<!-- OrganDeptVO resultMap -->
+	<resultMap id="deptMemberInfo" class="CabinetSimpleUserVO">
+		<result property="userId"           column="cn"                     columnIndex="1"/>
+		<result property="position"         column="position"               columnIndex="2"/>
+		<result property="userName"         column="displayName"            columnIndex="3"/>
+		<result property="deptId"           column="department"             columnIndex="4"/>
+		<result property="deptName"         column="departmentName"         columnIndex="5"/>
+		<result property="telNumber"        column="telephoneNumber"        columnIndex="6"/>
+		<result property="mail"             column="mail"                   columnIndex="7"/>
+		<result property="userImg"          column="userImage"              columnIndex="8"/>
+	</resultMap>
+	
+	<!-- Cabinet Share resultMap -->
+	<resultMap id="cabinetShareVO" class="CabinetShareVO">
+		<result property="shareId"          column="share_id"             columnIndex="1" />
+		<result property="cabinetId"        column="cabinet_id"           columnIndex="2" />
+		<result property="sharerId"         column="sharer_id"            columnIndex="3" />
+		<result property="sharerName1"      column="sharer_name1"         columnIndex="4" />
+		<result property="sharerName2"      column="sharer_name2"         columnIndex="5" />
+		<result property="sharedId"         column="shared_id"            columnIndex="6" />
+		<result property="sharedType"       column="shared_type"          columnIndex="7" />
+		<result property="permission"       column="permission"           columnIndex="8" />
+		<result property="shareDate"        column="share_date"           columnIndex="9" />
+		<result property="childPermission"  column="child_permission"     columnIndex="10" />
+		<result property="useStatus"        column="use_status"           columnIndex="11" />
+		<result property="companyId"        column="company_id"           columnIndex="12" />
+		<result property="tenantId"         column="tenant_id"            columnIndex="13" />
+	</resultMap>
+	
+	<!--***********************************************************************************
+	**                             OrganDept process                                     **
+	************************************************************************************-->
+	
+	<select id="EzCabinetDAO_h.getDeptMemberList" resultMap="deptMemberInfo">
+		<![CDATA[
+		SELECT
+			AA.CN                  AS CN,
+			AA.POSITION            AS POSITION,
+			AA.DISPLAYNAME         AS DISPLAYNAME,
+			AA.DEPARTMENT          AS DEPARTMENT,
+			AA.DEPARTMENTNAME      AS DEPARTMENTNAME,
+			AA.TELEPHONENUMBER     AS TELEPHONENUMBER,
+			AA.MAIL                AS MAIL, 
+			AA.EXTENSIONATTRIBUTE2 AS USERIMAGE
+		FROM (
+			SELECT
+				CN                                                                                                                           AS CN,
+				CASE WHEN #primary# = '1'THEN TITLE ELSE TITLE2 END                                                                          AS POSITION,
+				CASE WHEN #primary# = '1'THEN DISPLAYNAME ELSE DISPLAYNAME2 END                                                              AS DISPLAYNAME,
+				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
+				DEPARTMENT                                                                                                                   AS DEPARTMENT,
+				CASE WHEN #primary# = '1'THEN DESCRIPTION ELSE DESCRIPTION2 END                                                              AS DEPARTMENTNAME,
+				TELEPHONENUMBER                                                                                                              AS TELEPHONENUMBER,
+				MAIL                                                                                                                         AS MAIL,
+				EXTENSIONATTRIBUTE2                                                                                                          AS EXTENSIONATTRIBUTE2
+			FROM
+				TBL_USERMASTER 
+			WHERE
+				DEPARTMENT = #deptId#
+			AND
+				CN != 'masteradmin'
+			AND
+				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			AND
+				TENANT_ID = #tenantId#
+				
+			UNION ALL
+			
+			SELECT
+				A.CN                                                                                                                         AS CN,
+				CASE WHEN #primary# = '1'THEN A.TITLE ELSE A.TITLE2 END                                                                      AS POSITION,
+				CASE WHEN #primary# = '1'THEN A.DISPLAYNAME ELSE A.DISPLAYNAME2 END                                                          AS DISPLAYNAME,
+				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
+				A.DEPARTMENT                                                                                                                 AS DEPARTMENT,
+				CASE WHEN #primary# = '1'THEN A.DESCRIPTION ELSE A.DESCRIPTION2 END                                                          AS DEPARTMENTNAME,
+				A.TELEPHONENUMBER                                                                                                            AS TELEPHONENUMBER,
+				A.MAIL                                                                                                                       AS MAIL,
+				A.EXTENSIONATTRIBUTE2                                                                                                        AS EXTENSIONATTRIBUTE2
+			FROM
+				TBL_ADDJOBMASTER B
+			JOIN
+				TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+			WHERE
+				B.DEPTID = #deptId#
+			AND
+				B.TENANT_ID = #tenantId#
+		) AA
+		ORDER BY
+			EXTENSIONATTRIBUTE15 ASC,
+			DISPLAYNAME ASC
+		]]>
+	</select>
+	
+	<!--***********************************************************************************
+	**                             Cabinet share process                                   **
+	************************************************************************************-->
+	
+	<select id="EzCabinetDAO_h.getShareUserList" parameterClass="Map" resultMap="cabinetShareVO">
+		<![CDATA[
+		select * from tbl_cb_share where cabinet_id = #cabinetId# and sharer_id = #userId# and tenant_id = #tenant_id# and use_status = 1
+		]]>
+	</select>
+	
+	
+</sqlMap>

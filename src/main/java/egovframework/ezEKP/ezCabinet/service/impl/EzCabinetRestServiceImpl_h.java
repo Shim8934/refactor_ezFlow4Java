@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCabinet.service.impl;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -24,15 +25,30 @@ import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
 @Service
 public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 	
+	private static final Logger logger = LoggerFactory.getLogger(EzCabinetRestServiceImpl_h.class);
+	
 	@Autowired
 	private Properties config;
 	
-	private static final Logger logger = LoggerFactory.getLogger(EzCabinetRestServiceImpl_h.class);
+	@Override
+	public JSONObject getDeptMembers(HttpServletRequest request, String userId, String deptId, String srchOption, String srchValue) throws Exception {
+		String url                = "/rest/ezCabinet/dept-member/" + deptId;
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		param.put("srchOption", srchOption);
+		param.put("srchValue", srchValue);
+		
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
 	
 	@Override
-	public JSONObject getUserInfo(HttpServletRequest request, String userId) throws Exception {
-		String url                = "/rest/ezcabinet/userinfo/" + userId;
-		JSONObject resultBody     = getJsonResult(url, null, request, "get", null);
+	public JSONObject getShareUserList(HttpServletRequest request, String userId, String cabinetId) throws Exception {
+		String url                = "/rest/ezCabinet/share/cabinetId/" + cabinetId + "/get";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
 	
@@ -77,5 +93,4 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		
 		return resultBody;
 	}
-
 }
