@@ -17,8 +17,8 @@ public class EzCabinetDAO_h extends EgovAbstractDAO {
 		return (List<SimpleUserVO>)list("EzCabinetDAO_h.getDeptMemberList", map);
 	}
 	
-	public List<CabinetShareVO> getShareUserList(Map<String, Object> map) {
-		return (List<CabinetShareVO>) list("EzCabinetDAO_h.getShareUserList", map);
+	public List<SimpleUserVO> getShareUserList(Map<String, Object> map) {
+		return (List<SimpleUserVO>)list("EzCabinetDAO_h.getShareUserList", map);
 	}
 
 	public int getTotalDeptMembers(Map<String, Object> map) {

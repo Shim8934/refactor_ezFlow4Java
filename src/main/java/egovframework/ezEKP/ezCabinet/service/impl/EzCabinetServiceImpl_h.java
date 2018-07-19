@@ -52,7 +52,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 	}
 	
 	@Override
-	public List<CabinetShareVO> getShareUserList(String cabinetId, String userId, String sqlQuery, String searchValue, String primary, int tenantId) throws Exception {
+	public List<SimpleUserVO> getShareUserList(String cabinetId, String userId, String sqlQuery, String searchValue, String primary, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("cabinetId",   cabinetId);
 		map.put("userId",      userId);

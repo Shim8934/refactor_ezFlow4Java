@@ -34,6 +34,16 @@
 		<result property="tenantId"         column="tenant_id"            columnIndex="13" />
 	</resultMap>
 	
+	<!-- OrganDeptVO resultMap -->
+	<resultMap id="shareMemberInfo" class="CabinetSimpleUserVO">
+		<result property="userId"           column="cn"                     columnIndex="1"/>
+		<result property="userType"         column="shared_type"            columnIndex="2"/>
+		<result property="userName"         column="display_name"           columnIndex="3"/>
+		<result property="deptName"         column="department_name"        columnIndex="4"/>
+		<result property="permission"       column="permission"             columnIndex="5"/>
+		<result property="subPermission"    column="child_permission"       columnIndex="6"/>
+	</resultMap>
+	
 	<!--***********************************************************************************
 	**                             OrganDept process                                     **
 	************************************************************************************-->
@@ -193,12 +203,21 @@
 	**                             Cabinet share process                                   **
 	************************************************************************************-->
 	
-	<select id="EzCabinetDAO_h.getShareUserList" parameterClass="Map" resultMap="cabinetShareVO">
-		<![CDATA[select s.* from tbl_cb_share s ]]>
-		<isNotEmpty property="searchValue"> join TBL_USERMASTER u on s.shared_id = u.cn and s.tenant_id = u.tenant_id</isNotEmpty>
-		<![CDATA[where s.cabinet_id = #cabinetId# and s.sharer_id = #userId# and s.tenant_id = #tenant_id# and s.use_status = 1]]>
+	<select id="EzCabinetDAO_h.getShareUserList" resultMap="shareMemberInfo">
+		<![CDATA[
+			select
+				u.cn                                                                 as cn,
+				s.shared_type                                                        as shared_type,
+				case when #primary# = '1' then u.displayname else u.displayname2 end as display_name,
+				case when #primary# = '1' then u.description else u.description2 end as department_name,
+				s.permission                                                         as permission,
+				s.child_permission                                                   as child_permission
+			from
+			tbl_cb_share s join tbl_usermaster u on s.shared_id = u.cn and s.tenant_id = u.tenant_id
+				where s.cabinet_id = #cabinetId# and s.sharer_id = #userId# and s.tenant_id = #tenantId# and s.use_status = 1
+		]]>
 		<isNotEmpty property="searchValue" prepend="and">
-			$srchOption$ LIKE CONCAT('%', #srchValue#, '%')
+			$sqlQuery$ LIKE CONCAT('%', #srchValue#, '%')
 		</isNotEmpty>
 		order by s.share_date desc
 	</select>
@@ -208,14 +227,7 @@
 			tbl_cb_share 
 		set
 			use_status = 0
-		where
-			cabinet_id = #cabinetId#
-		and
-			sharer_id = #userId# 
-		and
-			tenant_id = #tenant_id# 
-		and
-			use_status = 1
+		where cabinet_id = #cabinetId# and sharer_id = #userId# and tenant_id  = #tenantId# and use_status = 1
 	</update>
 	
 	<select id="EzCabinetDAO_h.getMaximumShareId" resultClass="Integer">
@@ -242,17 +254,19 @@
 				update
 					tbl_cb_share 
 				set
-					use_status = 1
+					use_status       = 1,
+					permission       = #permission#,
+					child_permission = #childPermission#
 				where
-					cabinet_id = #cabinetId#
+					cabinet_id  = #cabinetId#
 				and
-					sharer_id = #userId#
+					sharer_id   = #userId#
 				and
-					shared_id = #sharedId#
+					shared_id   = #sharedId#
 				and 
 					shared_type = #shareType#
 				and
-					tenant_id = #tenant_id#
+					tenant_id   = #tenantId#
 			]]>
 		</isNotEqual>
 	</insert>

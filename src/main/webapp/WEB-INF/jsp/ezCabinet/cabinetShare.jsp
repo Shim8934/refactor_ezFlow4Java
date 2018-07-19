@@ -424,7 +424,7 @@
 					
 					var userName      = trElmt.getAttribute("userName");
 					var deptName      = trElmt.getAttribute("deptName");
-					addUserToShareList(userId, userName, "user", deptName);
+					addUserToShareList(userId, userName, "user", deptName, 0, 0);
 				}
 				
 				function addUsers() {
@@ -450,7 +450,7 @@
 					}
 				}
 				
-				function addUserToShareList(userId, userName, userType, deptName) {
+				function addUserToShareList(userId, userName, userType, deptName, permission, subPermission) {
 					var selectedTable       = document.getElementById("sharedTable");
 					var newTrElmt           = document.createElement("tr");
 					var newTdElmt1          = document.createElement("td");
@@ -471,7 +471,21 @@
 					optionPerm1.setAttribute("value", "0");
 					optionPerm2.setAttribute("value", "1");
 					optionSub1.setAttribute("value",  "0");
-					optionSub1.setAttribute("value",  "1");
+					optionSub2.setAttribute("value",  "1");
+					
+					if (permission == 0) {
+						optionPerm1.selected = 'selected';
+					}
+					else {
+						optionPerm2.selected = 'selected';
+					}
+					
+					if (subPermission == 0) {
+						optionSub1.selected = 'selected';
+					}
+					else {
+						optionSub2.selected = 'selected';
+					}
 					
 					selectPerm.appendChild(optionPerm1);
 					selectPerm.appendChild(optionPerm2);
@@ -536,12 +550,44 @@
 						dataType: "JSON",
 						async: false,
 						success: function(data) {
-							console.log(data);
-							var shareList = data.shareList;
+							var code = data.code;
+							switch(code) {
+								case 0 : getDataSuccessfully(data)          ; break;
+								case 1 : alert(CabinetMessages.strParamErr) ; break;
+								case 2 : alert(CabinetMessages.strError)    ; break;
+								case 3 : alert(CabinetMessages.strPerm)     ; break;
+								default: alert(CabinetMessages.strError)    ; return;
+							}
 						},
 						error: function(error) {
 						}
 					});
+				}
+				
+				function getDataSuccessfully(data) {
+					var listUser = data.shareList;
+					if (!listUser || listUser.length == 0) {return;}
+					
+					for (var i = 0, len = listUser.length; i < len; i++) {
+						var userId   = listUser[i]["userId"];
+						var userName = listUser[i]["userName"];
+						var deptName = listUser[i]["deptName"];
+						var userType = listUser[i]["userType"];
+						var permiss  = listUser[i]["permission"];
+						var subPerm  = listUser[i]["subPermission"];
+						var type     = "";
+						
+						console.log("Permission: " + permiss);
+						console.log("SubPermission: " + subPerm);
+						
+						switch(userType) {
+							case 0 : type = "comp"; break;
+							case 1 : type = "dept"; break;
+							case 2 : type = "user"; break;
+						}
+						
+						addUserToShareList(userId, userName, type, deptName, permiss, subPerm);
+					}
 				}
 				
 				function viewUserInfo() {
@@ -576,7 +622,7 @@
 					var checkElmt     = selectedTable.querySelector("tr[role='" + deptId + "'][userType='"+ userType + "']");
 					if (checkElmt) {alert(CabinetMessages.strExist); return;}
 					
-					addUserToShareList(deptId, deptName, userType, deptName);
+					addUserToShareList(deptId, deptName, userType, deptName, 0, 0);
 				}
 				
 				function closeAllPopUp() {if (userPopup) {userPopup.close();}}
@@ -628,7 +674,6 @@
 					alert(CabinetMessages.strSave);
 					closeWindow();
 				}
-				
 			})();
 			
 		</script>

@@ -16,11 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
-import egovframework.ezEKP.ezCabinet.vo.CabinetShareVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.let.user.login.service.LoginService;
@@ -124,7 +122,7 @@ public class EzCabinetGWController_h {
 			}
 			
 			
-			List<CabinetShareVO> list = cabinetService_h.getShareUserList(cabinetId, userId, sqlQuery, searchValue, primary, userInfo.getTenantId());
+			List<SimpleUserVO> list = cabinetService_h.getShareUserList(cabinetId, userId, sqlQuery, searchValue, primary, userInfo.getTenantId());
 			
 			result.put("shareList", list);
 			result.put("status", "ok");

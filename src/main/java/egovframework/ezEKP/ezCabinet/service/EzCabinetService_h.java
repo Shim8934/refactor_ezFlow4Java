@@ -11,7 +11,7 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCabinetService_h {
 
-	List<CabinetShareVO> getShareUserList(String cabinetId, String userId, String primary, String sqlQuery, String searchValue, int tenantId) throws Exception;
+	List<SimpleUserVO> getShareUserList(String cabinetId, String userId, String primary, String sqlQuery, String searchValue, int tenantId) throws Exception;
 
 	List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int startPoint, int listCount, int tenantId) throws Exception;
 
