@@ -38,6 +38,11 @@
 			background-color: #fcfcfc;
 		}
 		#searchTable td {padding: 8px 5px;}
+		<%-- 2018-07-19 홍승비 - 관리자 > 근태관리 헤더 겹치는 부분 수정 --%>
+		#headerList th {
+			overflow:hidden;
+			text-overflow:ellipsis;
+		}
 		</style>
 		<script type="text/javascript">
 		var pCompanyId = ""; //현재 선택된 회사의 아이디
@@ -1147,7 +1152,7 @@
 		</table>
 		<div id="contentlist" name="contentlist" style="border:0px solid blue;height:600px;width:100%;overflow-y:auto;" onblur>
 			<table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
-				<tr>
+				<tr id="headerList">
 					<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
 						<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/>
 					</th>
