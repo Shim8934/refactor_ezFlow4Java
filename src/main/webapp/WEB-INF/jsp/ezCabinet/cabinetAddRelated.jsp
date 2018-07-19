@@ -89,11 +89,11 @@
 				function closeWindow() {window.close();}
 				
 				function addRelatedCabinet() {
-					var msgToGot = window.opener.document.getElementById("MsgToGot");
-					var mailSubject = window.opener.document.getElementById("mailSubject");
+					var msgToGot = window.opener.document.getElementById("MsgToGot").value;
+					var mailSubject = window.opener.document.getElementById("mailSubject").value;
 					var messageFrame = window.opener.document.getElementById("message");
 					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
-					var normalScreen = contentWd.document.getElementById("normalScreen");
+					var normalScreen = contentWd.document.getElementById("normalScreen").innerHTML;
 					var ifrmPreViewRayer = contentWd.document.getElementById("ifrmPreViewRayer");
 					//console.log(contentWd.document.body.innerHTML);
 					
@@ -113,7 +113,7 @@
 								"cabinetId"   : cabinetId,
 								"title"       : title,
 								"author"      : author,
-								"normalScreen": normalScreen
+								"normalScreen": JSON.stringify(normalScreen)
 							},
 							dataType: "JSON",
 							async: false,

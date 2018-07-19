@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -56,7 +54,13 @@ public class EzCabinetController_h {
 		logger.debug("jspGetShareCabinetPage started");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String cabinetId     = request.getParameter("cabId");
-			
+		
+		JSONObject result    = cabinetRestService_h.getUserListType(request, user.getId());
+		if (result.get("status").toString().equals("ok")) {
+			String listType = (String)result.get("listType");
+			model.addAttribute("listType", listType);
+		}
+		
 		model.addAttribute("cabinetId", cabinetId);
 		
 		logger.debug("jspGetShareCabinetPage ended");
@@ -67,22 +71,21 @@ public class EzCabinetController_h {
 	@ResponseBody
 	public String jsonGetDeptMembers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jsonGetDeptMembers started");
-		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String deptId     = request.getParameter("deptId")       != null ? request.getParameter("deptId")           : "";
-		String srchOption = request.getParameter("srchOption")   != null ? request.getParameter("srchOption")       : "";
-		String srchValue  = request.getParameter("srchValue")    != null ? request.getParameter("srchValue")        : "";
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String deptId      = request.getParameter("deptId")      != null ? request.getParameter("deptId")      : "";
+		String currentPage = request.getParameter("currentPage") != null ? request.getParameter("currentPage") : "";
 		
-		logger.debug("deptId: " + deptId + " || srchOption: " + srchOption + " || srchValue: " + srchValue);
+		logger.debug("deptId: " + deptId + " || currentPage: " + currentPage);
 		
 		JSONObject resultObj = new JSONObject();
 		
-		if (deptId.equals("")) {
+		if (deptId.equals("") || currentPage.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService_h.getDeptMembers(request, user.getId(), deptId, srchOption, srchValue);
+		resultObj = cabinetRestService_h.getDeptMembers(request, user.getId(), deptId, currentPage);
 		
 		logger.debug("jsonGetDeptMembers ended");
 		logger.debug(resultObj.toString());
@@ -112,5 +115,23 @@ public class EzCabinetController_h {
 		return resultObj.toString();
 	}
 	
-	
+	@RequestMapping(value="/ezCabinet/saveListType.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String jsonSaveUserListType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("jsonSaveUserListType started");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String listType      = request.getParameter("listType") != null ? request.getParameter("listType") : "";
+		JSONObject resultObj = new JSONObject();
+		
+		if (listType.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService_h.saveUserListType(request, user.getId(), listType);
+		
+		logger.debug("jsonSaveUserListType ended");
+		return resultObj.toString();
+	}
 }

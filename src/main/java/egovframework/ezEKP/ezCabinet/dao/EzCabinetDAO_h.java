@@ -21,4 +21,8 @@ public class EzCabinetDAO_h extends EgovAbstractDAO {
 		return (List<CabinetShareVO>) list("EzCabinetDAO_h.getShareUserList", map);
 	}
 
+	public int getTotalDeptMembers(Map<String, Object> map) {
+		return (int)select("EzCabinetDAO_h.getTotalDeptMembers", map);
+	}
+
 }

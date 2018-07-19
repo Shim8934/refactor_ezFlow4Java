@@ -9,6 +9,8 @@ public interface EzCabinetService_h {
 
 	List<CabinetShareVO> getShareUserList(String cabinetId, String userId, String primary, int tenantId) throws Exception;
 
-	List<SimpleUserVO> getDeptMemberList(String deptId, String primary, String srchOption, String srchValue, int tenantId) throws Exception;
+	List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int startPoint, int listCount, int tenantId) throws Exception;
+
+	int getTotalDeptMembers(String deptId, int tenantId) throws Exception;
 	
 }

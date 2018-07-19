@@ -475,4 +475,9 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
+
+	@Override
+	public JSONObject saveRelatedItem(HttpServletRequest request, String id, String cabinetId, String title, String author, String normalScreen) {
+		return null;
+	}
 }

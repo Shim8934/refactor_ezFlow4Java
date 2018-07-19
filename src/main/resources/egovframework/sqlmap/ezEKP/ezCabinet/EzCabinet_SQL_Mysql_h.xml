@@ -95,8 +95,43 @@
 		ORDER BY
 			EXTENSIONATTRIBUTE15 ASC,
 			DISPLAYNAME ASC
+		LIMIT #startPoint#, #listCount#
 		]]>
+		
 	</select>
+	
+	<select id="EzCabinetDAO_h.getTotalDeptMembers" resultClass="Integer">
+		SELECT
+			COUNT(AA.CN)
+		FROM (
+			SELECT
+				CN
+			FROM
+				TBL_USERMASTER 
+			WHERE
+				DEPARTMENT = #deptId#
+			AND
+				CN != 'masteradmin'
+			AND
+				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			AND
+				TENANT_ID = #tenantId#
+				
+			UNION ALL
+			
+			SELECT
+				A.CN
+			FROM
+				TBL_ADDJOBMASTER B
+			JOIN
+				TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+			WHERE
+				B.DEPTID = #deptId#
+			AND
+				B.TENANT_ID = #tenantId#
+		) AA
+	</select>
+	
 	
 	<!--***********************************************************************************
 	**                             Cabinet share process                                   **

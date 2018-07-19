@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.google.gson.JsonObject;
+
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
 
 @Service
@@ -31,12 +33,11 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 	private Properties config;
 	
 	@Override
-	public JSONObject getDeptMembers(HttpServletRequest request, String userId, String deptId, String srchOption, String srchValue) throws Exception {
+	public JSONObject getDeptMembers(HttpServletRequest request, String userId, String deptId, String currentPage) throws Exception {
 		String url                = "/rest/ezCabinet/dept-member/" + deptId;
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userId", userId);
-		param.put("srchOption", srchOption);
-		param.put("srchValue", srchValue);
+		param.put("userId",      userId);
+		param.put("currentPage", currentPage);
 		
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
@@ -91,6 +92,22 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 			e.printStackTrace();
 		}
 		
+		return resultBody;
+	}
+
+	@Override
+	public JSONObject getUserListType(HttpServletRequest request, String userId) throws Exception {
+		String url                = "/rest/ezCabinet/list-type/userid/" + userId + "/get";
+		JSONObject resultBody     = getJsonResult(url, null, request, "get", null);
+		return resultBody;
+	}
+
+	@Override
+	public JSONObject saveUserListType(HttpServletRequest request, String userId, String listType) throws Exception {
+		String url                = "/rest/ezCabinet/list-type/userid/" + userId + "/save";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("listType", listType);
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
 }

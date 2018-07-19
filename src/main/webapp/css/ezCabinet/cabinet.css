@@ -137,13 +137,14 @@
 .cabShareSearTbl tr td:nth-child(2) >div {float: right; margin-right: 5px; position: relative;}
 .cabOrganTbl {margin-top: 3px;}
 .cabOrganTbl tr td:first-child {border-right: 0px;}
-.cabOrganTbl tr td:first-child >div {width: 220px; height: 500px; overflow-x: auto; overflow-y: auto;}
+.bnkOrgTree {width: 220px; height: 500px; overflow-x: auto; overflow-y: auto;}
 .cabOrganDeptTbl {table-layout: fixed; width: 100%;  border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0; border-collapse: collapse;}
 .cabOrganDeptTbl tr th{text-align: left; border: 0px; text-decoration: none; color: #777; font-size: 12px; line-height: 19px; padding: 4px 4px 0px; white-space: normal; background-color: white; border-top: 1px solid #ddd; border-bottom: 1px solid #eaeaea;}
 .cabOrganDeptTbl tr th >span:nth-child(1) {font-weight: normal; margin-top: 2px; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;}
 .cabOrganDeptTbl tr th >span:nth-child(1) >img {vertical-align: middle; margin-right: 3px;}
-.cabOrganDeptTbl tr th >span:nth-child(1) >span {color: #017BEC;}
+/* .cabOrganDeptTbl tr th >span:nth-child(1) >span {color: #017BEC;} */
 .cabOrganDeptTbl tr th >span:nth-child(2) {float: right; position: relative;}
+.cabColor {color: #017BEC !important;}
 
 /* cabinet item */
 .topSearchSpan {float: right; font-weight: normal; color: black;}
@@ -216,7 +217,7 @@
 .cabOrganTextListDiv .mainlist tr:not(first-child) td:nth-child(1) {overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 150px;}
 .cabOrganTextListDiv .mainlist tr:not(first-child) td:nth-child(2) {width: 80px;}
 .cabOrganImgListDiv {text-align: center;}
-.cabOrganPageDiv {text-align: center; height: 32px;}
+.cabOrganPageDiv {text-align: center; height: 32px; display: flex;}
 .cabShareBttn {width: 30px; text-align: center;}
 .cabShareBttn >img {width: 16px; height: 16px; margin: 2px 0px; border: 0px; cursor: pointer;}
 .cabShareListDiv {border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; margin-top: 3px;}
@@ -224,6 +225,13 @@
 .cabShareListDiv .mainlist {width: 100%;}
 .cabShareListDiv .mainlist tr:first-child td {color: #333; background-color: #f8f8fa;}
 .cabShareListDiv .mainlist tr:not(first-child) td:first-child {overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+
+.imgCabDivMain {display: flex; height: 99px; border: 1px solid #ddd; margin-top: 5px;}
+.imgCabDivMain >div:first-child {height: 99px; width: 99px; display: flex; align-items: center; min-width: 99px; justify-content: center;}
+.imgCabDivMain >div:last-child  {display: flex; align-items: center;}
+
+.selectDeptNm span {color: #666;}
+.selectDeptNm {}
 
 .cabFogPanel {width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; z-index: 1000; background: none rgba(0,0,0,0.5);}
 .popup .cabBttnDiv {text-align: center; margin: 10px auto;}
@@ -310,3 +318,14 @@
 .spanDown, .spanUp {cursor:pointer; border-radius: 50%; border: 1px solid #aeaeae; text-align: center; line-height: 14px; margin-top: -1px; position: relative; width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-left: 2px; box-sizing: border-box;}
 .spanDown:before   {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 5px 4px 0px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}
 .spanUp:before     {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 0px 4px 5px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}
+
+
+/* Cabinet share */
+.organCabTbl {margin-top: 5px !important; margin-right: auto !important; margin-left: auto !important; border: none !important; font-size: 12px; table-layout: fixed; width: 400px;}
+.organCabTbl td {border: 0px !important; padding: 0px;}
+.organCabTbl .pic {width: 90px; height: 90px; border: 1px solid #cfcfcf!important; overflow: hidden; background: url(/images/noperson.png) center; background-repeat: no-repeat;}
+.organCabTbl .trCabTxt, .organCabTbl .txtCabTd, .mainlist .imgCabTd {display: none;}
+
+.organCabTbl .pic img {border: none !important;}
+.organCabTbl .pic img {width: 90px; height: 90px;}
+.cUserInfor {text-align: left;}

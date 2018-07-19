@@ -19,6 +19,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
 import egovframework.ezEKP.ezCabinet.vo.CabinetShareVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -36,6 +37,9 @@ public class EzCabinetGWController_h {
 	private EzCabinetService cabinetService;
 	
 	@Autowired
+	private EzOrganService ezOrganService;
+	
+	@Autowired
 	private EzCabinetService_h cabinetService_h;
 	
 	@Resource(name="egovMessageSource")
@@ -46,16 +50,15 @@ public class EzCabinetGWController_h {
 	
 	@RequestMapping(value="/rest/ezCabinet/dept-member/{deptid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getDeptMembers(@PathVariable(value="deptid") String deptId, Locale locale, HttpServletRequest request) {
-		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")      : "";
-		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")      : "";
-		String srchOption = request.getParameter("srchOption") != null ? request.getParameter("srchOption")  : "";
-		String srchValue  = request.getParameter("srchValue")  != null ? request.getParameter("srchOption")  : "";
+		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
+		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
+		int currentPage   = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : -1;
 		
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " || UserId: " + userId + "|| SrchOption: " + srchOption + "|| srchValue: " + srchValue);
+		logger.debug("ServerName: " + serverName + " || UserId: " + userId + "|| currentPage: " + currentPage);
 		
-		if (serverName.equals("") || userId.equals("")) {
+		if (serverName.equals("") || userId.equals("") || currentPage == -1) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -66,10 +69,16 @@ public class EzCabinetGWController_h {
 			LoginVO userInfo               = commonUtil.getUserForGw(userId, serverName);
 			int tenantId                   = userInfo.getTenantId();
 			String primary                 = userInfo.getPrimary();
-			List<SimpleUserVO> memberList = cabinetService_h.getDeptMemberList(deptId, primary, srchOption, srchValue, tenantId);
+			int startPoint                 = (currentPage - 1) * 50;
+			int totalUsers                 = cabinetService_h.getTotalDeptMembers(deptId, tenantId);
+			int totalPages                 = (totalUsers + 49) / 50;
 			
-			result.put("memberList", memberList);
-			result.put("memberCount", memberList.size());
+			List<SimpleUserVO> memberList = cabinetService_h.getDeptMemberList(deptId, primary, startPoint, 50, tenantId);
+			
+			result.put("currentPage", currentPage);
+			result.put("totalPages",  totalPages);
+			result.put("memberList",  memberList);
+			result.put("memberCount", totalUsers);
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 
@@ -100,12 +109,71 @@ public class EzCabinetGWController_h {
 		
 		try {
 			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
-			int tenantId     = userInfo.getTenantId();
-			String primary   = userInfo.getPrimary();
-			
-			List<CabinetShareVO> list = cabinetService_h.getShareUserList(cabinetId, userId, userInfo.getPrimary(), tenantId);
+			List<CabinetShareVO> list = cabinetService_h.getShareUserList(cabinetId, userId, userInfo.getPrimary(), userInfo.getTenantId());
 			
 			result.put("data", list);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezCabinet/list-type/userid/{userid}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getUserListType(@PathVariable(value="userid") String userId, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || UserId: " + userId);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String listType  = ezOrganService.getListType(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+			
+			result.put("listType", listType);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezCabinet/list-type/userid/{userid}/save", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveUserListType(@PathVariable(value="userid") String userId, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
+		String listType   = request.getParameter("listType") != null ? request.getParameter("listType") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || UserId: " + userId + " || listType: " + listType);
+		
+		if (serverName.equals("") || userId.equals("") || listType.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			ezOrganService.setListType(listType, userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 

@@ -25,13 +25,13 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 	private EzCabinetDAO_h ezCabinetDAO_h;
 	
 	@Override
-	public List<SimpleUserVO> getDeptMemberList(String deptId, String primary, String srchOption, String srchValue,int tenantId) throws Exception {
+	public List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int startPoint, int listCount, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("deptId", deptId);
-		map.put("srchOption", srchOption);
-		map.put("srchValue", srchValue);
-		map.put("primary", primary);
-		map.put("tenantId", tenantId);
+		map.put("deptId",     deptId);
+		map.put("startPoint", startPoint);
+		map.put("listCount",  listCount);
+		map.put("primary",    primary);
+		map.put("tenantId",   tenantId);
 		
 		return ezCabinetDAO_h.getDeptMemberList(map);
 	}
@@ -45,6 +45,15 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 		map.put("tenantId", tenantId);
 		
 		return ezCabinetDAO_h.getShareUserList(map);
+	}
+
+	@Override
+	public int getTotalDeptMembers(String deptId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deptId",   deptId);
+		map.put("tenantId", tenantId);
+		
+		return ezCabinetDAO_h.getTotalDeptMembers(map);
 	}
 	
 	
