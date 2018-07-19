@@ -242,11 +242,14 @@
 		            poofstate = "enabled";
 				
 		        if (poofstate == "scheduled") {
-		        	if (dateStart >= dateEnd || dateStart <= now) {
+		        	if (dateStart.toString() == dateEnd.toString()) {
+		        		alert("<spring:message code='ezPersonal.pjj1' />");
+			            return;
+		        	} else if (dateStart < now) {
 			            alert("<spring:message code='ezEmail.t99000036' />");
 			            return;
 			        }
-			        else if (dateStart >= dateEnd || dateEnd <= now) {
+			        else if (dateStart > dateEnd || dateEnd < now) {
 			            alert("<spring:message code='ezEmail.t99000037' />");
 			            return;
 			        }

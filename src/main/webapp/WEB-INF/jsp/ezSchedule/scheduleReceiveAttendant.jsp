@@ -74,6 +74,7 @@
 							if (checks.item(i).checked == true)
 								checks.item(i).parentElement.parentElement.parentElement.removeChild(checks.item(i).parentElement.parentElement);
 						}
+						
 					},
 					error: function() {
 						if (status == "1")
@@ -87,10 +88,18 @@
 					ReturnFunction("success");
 					window.close();
 				}
+				if(parent.parent.frames["right"].groupcount == "0") {
+					parent.parent.frames["left"].document.body.removeAttribute('style');
+				}
 			}
 	
 			function closePopup(){
 				if(ReturnFunction != null) {
+					
+					if(parent.parent.frames["right"].groupcount == "0") {
+						parent.parent.frames["left"].document.body.removeAttribute('style');
+					}
+					
 					ReturnFunction("cancel");
 					window.close();
 				}
