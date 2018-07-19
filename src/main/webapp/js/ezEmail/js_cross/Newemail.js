@@ -1595,13 +1595,10 @@ function event_toggle_flag_end() {
             alert("ERROR");
         }
         else {
-            if (flagXmlHttp.responseText == "NEW")
-                alert(strLang139);
-            else if (flagXmlHttp.responseText == "DEL")
-                alert(strLang140);
-            else
-                alert("ERROR");
-
+        	if (flagXmlHttp.responseText != "NEW" && flagXmlHttp.responseText != "DEL") {
+        		alert("ERROR");
+        	}
+        	
             MailListRefresh();
         }
     }
