@@ -882,6 +882,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardName = boardProperty.getBoardName();
 		
 		/* 겸직한 사람이면 해당 회사 겸직한 정보를 보여주는게 나을까? 일단 권한은 무조건 게시판 당 그 사람에게 하나만 저장된다.(겸직 여러개라도 동일인에게 설정됨) */
+		// deptID가 필요한건 아니다. 겸직했다면 그 회사와 부서, 직위를 가져오면 된다.
 		List<BoardPropertyVO> list = ezBoardAdminService.getBoardAccessList(boardID, userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
