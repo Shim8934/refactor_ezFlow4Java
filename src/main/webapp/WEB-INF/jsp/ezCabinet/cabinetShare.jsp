@@ -24,7 +24,7 @@
 								<table class="cabShareInf">
 									<tr>
 										<th><spring:message code="ezCabinet.t95"/></th>
-										<td>그룹웨어 업무</td>
+										<td><c:out value='${cabinet.cabinetName}'/></td>
 									</tr>
 								</table>
 								
@@ -168,7 +168,7 @@
 		<script type="text/javascript" src="/js/ezCabinet/cabinetNavi.js"           ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTable.js"          ></script>
 		<script type="text/javascript">
-			var cabinetId = "<c:out value='${cabinetId}'/>";
+			var cabinetId  = "<c:out value='${cabinetId}'/>";
 			
 			(function() {
 				var companyTree  = new CabinetTree();
@@ -468,6 +468,11 @@
 					optionSub1.textContent  = CabinetMessages.strNoSub;
 					optionSub2.textContent  = CabinetMessages.strSub;
 					
+					optionPerm1.setAttribute("value", "0");
+					optionPerm2.setAttribute("value", "1");
+					optionSub1.setAttribute("value",  "0");
+					optionSub1.setAttribute("value",  "1");
+					
 					selectPerm.appendChild(optionPerm1);
 					selectPerm.appendChild(optionPerm2);
 					selectSub.appendChild(optionSub1);
@@ -524,13 +529,15 @@
 						type: "POST",
 						url: "/ezCabinet/getShareUserList.do",
 						data: {
-							"cabinetId"    : cabinetId,
-							"searchOpt2"   : searchOpt2,
-							"searchValue2" : searchValue2
+							"cabinetId"   : cabinetId,
+							"searchOpt"   : searchOpt2,
+							"searchValue" : searchValue2
 						},
 						dataType: "JSON",
 						async: false,
 						success: function(data) {
+							console.log(data);
+							var shareList = data.shareList;
 						},
 						error: function(error) {
 						}
@@ -577,9 +584,50 @@
 				function closeWindow() {window.close();}
 				
 				function saveShareUsers() {
-					//*Note add function here
+					//*Note add function hee
+					var selectedUsers = document.getElementById("sharedTable");
+					var listTr        = selectedUsers.rows;
+					var userList      = [];
+					
+					for (var i = 1, len = listTr.length; i < len; i++) {
+						var userId   = listTr[i].getAttribute("role");
+						var userType = listTr[i].getAttribute("userType");
+						var perSlBox = listTr[i].children[2].firstElementChild;
+						var subSlBox = listTr[i].children[3].firstElementChild;
+						var permiss  = perSlBox.options[perSlBox.selectedIndex].value;
+						var subPerm  = subSlBox.options[subSlBox.selectedIndex].value;
+						userList.push({userId: userId, userType : userType, permis: permiss, subPerm: subPerm});
+					}
+					
+					$.ajax({
+						type: "POST",
+						url: "/ezCabinet/saveShareUserList.do",
+						data: {
+							"cabinetId" : cabinetId,
+							"userList"  : JSON.stringify(userList)
+						},
+						dataType: "JSON",
+						async: false,
+						success: function(data) {
+							var code = data.code;
+							switch(code) {
+								case 0 : saveSuccessfully()                 ; break;
+								case 1 : alert(CabinetMessages.strParamErr) ; break;
+								case 2 : alert(CabinetMessages.strError)    ; break;
+								case 3 : alert(CabinetMessages.strPerm)     ; break;
+								case 4 : alert(CabinetMessages.strShareErr1); break;
+								default: alert(CabinetMessages.strError)    ; return;
+							}
+						},
+						error: function(error) {
+						}
+					});
 				}
 				
+				function saveSuccessfully() {
+					alert(CabinetMessages.strSave);
+					closeWindow();
+				}
 				
 			})();
 			

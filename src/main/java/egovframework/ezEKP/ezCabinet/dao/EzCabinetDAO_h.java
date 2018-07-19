@@ -33,4 +33,16 @@ public class EzCabinetDAO_h extends EgovAbstractDAO {
 		return (int)select("EzCabinetDAO_h.getTotalSearchMembers", map);
 	}
 
+	public void saveShareUserList(Map<String, Object> map) {
+		insert("EzCabinetDAO_h.saveShareUserList", map);
+	}
+
+	public void updateShareList(Map<String, Object> map) {
+		update("EzCabinetDAO_h.updateShareList", map);
+	}
+
+	public int getMaximumShareId(Map<String, Object> map) {
+		return (int)select("EzCabinetDAO_h.getMaximumShareId", map);
+	}
+
 }

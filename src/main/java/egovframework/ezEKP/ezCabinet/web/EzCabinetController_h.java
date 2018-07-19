@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -24,6 +27,9 @@ public class EzCabinetController_h {
 	
 	@Autowired
 	private EzCabinetRestService_h cabinetRestService_h;
+	
+	@Autowired
+	private EzCabinetRestService cabinetRestService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetController_h.class);
 	
@@ -61,7 +67,14 @@ public class EzCabinetController_h {
 			model.addAttribute("listType", listType);
 		}
 		
-		model.addAttribute("cabinetId", cabinetId);
+		JSONObject resultObj = cabinetRestService.getCabinetInfo(request, user.getId(), cabinetId);
+		
+		if (resultObj.get("status").toString().equals("ok")) {
+			JSONObject cabinet = (JSONObject) resultObj.get("cabinet");
+			model.addAttribute("cabinet", cabinet);
+		}
+		
+		model.addAttribute("cabinetId",   cabinetId);
 		
 		logger.debug("jspGetShareCabinetPage ended");
 		return "ezCabinet/cabinetShare";
@@ -96,10 +109,12 @@ public class EzCabinetController_h {
 	@ResponseBody
 	public String jsonGetShareUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jsonGetShareUserList started");
-		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String cabinetId     = request.getParameter("cabinetId")   != null ? request.getParameter("cabinetId")   : "";
+		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId    = request.getParameter("cabinetId")  != null ? request.getParameter("cabinetId")   : "";
+		String searchOpt    = request.getParameter("searchOpt")  != null ? request.getParameter("searchOpt")   : "";
+		String searchValue  = request.getParameter("searchValue")!= null ? request.getParameter("searchValue") : "";
 		
-		logger.debug("CabinetId: " + cabinetId);
+		logger.debug("CabinetId: " + cabinetId + " || searchOpt: " + searchOpt + " || searchValue" + searchValue);
 		
 		JSONObject resultObj = new JSONObject();
 		
@@ -109,7 +124,7 @@ public class EzCabinetController_h {
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService_h.getShareUserList(request, user.getId(), cabinetId);
+		resultObj = cabinetRestService_h.getShareUserList(request, user.getId(), cabinetId, searchOpt, searchValue);
 		
 		logger.debug("jsonGetShareUserList ended");
 		return resultObj.toString();
@@ -160,4 +175,29 @@ public class EzCabinetController_h {
 		logger.debug(resultObj.toString());
 		return resultObj.toString();
 	}
+	
+	@RequestMapping(value="/ezCabinet/saveShareUserList.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String jsonSaveShareUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("jsonSaveShareUserList started");
+		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId    = request.getParameter("cabinetId")  != null ? request.getParameter("cabinetId")   : "";
+		String userList     = request.getParameter("userList")   != null ? request.getParameter("userList")    : "";
+		
+		logger.debug("CabinetId: " + cabinetId + " || userList" + userList);
+		
+		JSONObject resultObj = new JSONObject();
+		
+		if (cabinetId.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService_h.saveShareUserList(request, user.getId(), cabinetId, userList);
+		
+		logger.debug("jsonSaveShareUserList ended");
+		return resultObj.toString();
+	}
+	
 }

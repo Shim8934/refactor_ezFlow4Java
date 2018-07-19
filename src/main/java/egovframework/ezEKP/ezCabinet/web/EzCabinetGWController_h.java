@@ -6,7 +6,9 @@ import java.util.Locale;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,13 +94,16 @@ public class EzCabinetGWController_h {
 		
 	}
 	
-	@RequestMapping(value="/rest/ezCabinet/share/cabinetId/{cabinetId}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezCabinet/shared-member/cabinetId/{cabinetId}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getShareUserList(@PathVariable(value="cabinetId") String cabinetId,   HttpServletRequest request) throws Exception {
-		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")     : "";
-		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")     : "";
+		String serverName     = request.getHeader("host-name")       != null ? request.getHeader("host-name")            : "";
+		String userId         = request.getParameter("userId")       != null ? request.getParameter("userId")            : "";
+		String searchOpt      = request.getParameter("searchOpt")    != null ? request.getParameter("searchOpt")         : "";
+		String searchValue    = request.getParameter("searchValue")  != null ? request.getParameter("searchValue")       : "";
+		
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " || UserId: " + userId);
+		logger.debug("ServerName: " + serverName + " || UserId: " + userId + " || searchOpt: " + searchOpt + " || searchValue: " + searchValue);
 		
 		if (serverName.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
@@ -109,9 +114,19 @@ public class EzCabinetGWController_h {
 		
 		try {
 			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
-			List<CabinetShareVO> list = cabinetService_h.getShareUserList(cabinetId, userId, userInfo.getPrimary(), userInfo.getTenantId());
+			String primary = userInfo.getPrimary();
+			String sqlQuery                = "";
 			
-			result.put("data", list);
+			switch(searchOpt) {
+				case "displayname": sqlQuery = primary.equals("1") ? searchOpt : "displayname2" ; break;
+				case "description": sqlQuery = primary.equals("1") ? searchOpt : "description2" ; break;
+				default: sqlQuery = searchOpt;
+			}
+			
+			
+			List<CabinetShareVO> list = cabinetService_h.getShareUserList(cabinetId, userId, sqlQuery, searchValue, primary, userInfo.getTenantId());
+			
+			result.put("shareList", list);
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 
@@ -237,5 +252,36 @@ public class EzCabinetGWController_h {
 		
 		return result;
 		
+	}
+	
+	@RequestMapping(value="/rest/ezCabinet/shared-member/cabinetId/{cabinetId}/save", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveShareUserList(@PathVariable(value="cabinetId") String cabinetId,   HttpServletRequest request) throws Exception {
+		String serverName     = request.getHeader("host-name")       != null ? request.getHeader("host-name")            : "";
+		String userId         = request.getParameter("userId")       != null ? request.getParameter("userId")            : "";
+		String userList       = request.getParameter("userList")     != null ? request.getParameter("userList")          : "";
+		JSONParser jp         = new JSONParser();
+		JSONObject result     = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || UserId: " + userId + " || userList" + userList);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
+			JSONArray listUsers       = (JSONArray)jp.parse(userList);
+			result                    = cabinetService_h.saveShareUserList(listUsers, cabinetId, userInfo);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
 	}
 }

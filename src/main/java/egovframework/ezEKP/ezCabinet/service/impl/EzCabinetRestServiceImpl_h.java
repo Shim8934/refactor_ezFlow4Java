@@ -3,7 +3,9 @@ package egovframework.ezEKP.ezCabinet.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -40,10 +42,12 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 	}
 	
 	@Override
-	public JSONObject getShareUserList(HttpServletRequest request, String userId, String cabinetId) throws Exception {
-		String url                = "/rest/ezCabinet/share/cabinetId/" + cabinetId + "/get";
+	public JSONObject getShareUserList(HttpServletRequest request, String userId, String cabinetId, String searchOpt, String searchValue) throws Exception {
+		String url                = "/rest/ezCabinet/shared-member/cabinetId/" + cabinetId + "/get";
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userId", userId);
+		param.put("userId",      userId);
+		param.put("searchOpt",   searchOpt);
+		param.put("searchValue", searchValue);
 		
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
@@ -117,6 +121,17 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		param.put("currentPage", currentPage);
 		
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+
+	@Override
+	public JSONObject saveShareUserList(HttpServletRequest request, String userId, String cabinetId, String userList) throws Exception {
+		String url                = "/rest/ezCabinet/shared-member/cabinetId/" + cabinetId + "/save";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",      userId);
+		param.put("userList",    userList);
+		
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
 }

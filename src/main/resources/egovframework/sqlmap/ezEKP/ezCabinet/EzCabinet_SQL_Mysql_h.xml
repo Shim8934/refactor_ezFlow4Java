@@ -194,10 +194,66 @@
 	************************************************************************************-->
 	
 	<select id="EzCabinetDAO_h.getShareUserList" parameterClass="Map" resultMap="cabinetShareVO">
-		<![CDATA[
-		select * from tbl_cb_share where cabinet_id = #cabinetId# and sharer_id = #userId# and tenant_id = #tenant_id# and use_status = 1
-		]]>
+		<![CDATA[select s.* from tbl_cb_share s ]]>
+		<isNotEmpty property="searchValue"> join TBL_USERMASTER u on s.shared_id = u.cn and s.tenant_id = u.tenant_id</isNotEmpty>
+		<![CDATA[where s.cabinet_id = #cabinetId# and s.sharer_id = #userId# and s.tenant_id = #tenant_id# and s.use_status = 1]]>
+		<isNotEmpty property="searchValue" prepend="and">
+			$srchOption$ LIKE CONCAT('%', #srchValue#, '%')
+		</isNotEmpty>
+		order by s.share_date desc
 	</select>
 	
+	<update id="EzCabinetDAO_h.updateShareList">
+		update
+			tbl_cb_share 
+		set
+			use_status = 0
+		where
+			cabinet_id = #cabinetId#
+		and
+			sharer_id = #userId# 
+		and
+			tenant_id = #tenant_id# 
+		and
+			use_status = 1
+	</update>
 	
+	<select id="EzCabinetDAO_h.getMaximumShareId" resultClass="Integer">
+		<![CDATA[select ifnull(max(share_id), 0) from tbl_cb_share where tenant_id = #tenantId#]]>
+	</select>
+	
+	<insert id="EzCabinetDAO_h.saveShareUserList">
+		<selectKey keyProperty="temp" resultClass="Integer">
+			<![CDATA[ select 1 from dual where not exists (select share_id, cabinet_id from tbl_cb_share where cabinet_id = #cabinetId# and sharer_id = #userId# and shared_id = #sharedId# and shared_type = #shareType# and tenant_id = #tenantId#) ]]>
+		</selectKey>
+		<isEqual property="temp" compareValue="1">
+			<![CDATA[insert into tbl_cb_share (
+					share_id,   cabinet_id,  sharer_id,        sharer_name1, sharer_name2, shared_id,  shared_type, 
+					permission, share_date,  child_permission, use_status,   company_id,   tenant_id
+				)
+				values (
+					#shareId#,    #cabinetId#, #userId#,          #userName1#, #userName2#, #sharedId#, #shareType#,
+					#permission#, #shareDate#, #childPermission#, 1,           #company#,   #tenantId#
+				)
+			]]>
+		</isEqual>
+		<isNotEqual property="temp" compareValue="1">
+			<![CDATA[
+				update
+					tbl_cb_share 
+				set
+					use_status = 1
+				where
+					cabinet_id = #cabinetId#
+				and
+					sharer_id = #userId#
+				and
+					shared_id = #sharedId#
+				and 
+					shared_type = #shareType#
+				and
+					tenant_id = #tenant_id#
+			]]>
+		</isNotEqual>
+	</insert>
 </sqlMap>
