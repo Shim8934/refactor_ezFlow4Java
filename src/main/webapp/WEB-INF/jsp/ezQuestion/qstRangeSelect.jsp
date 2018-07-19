@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code='ezQuestion.t7' /></title>
 		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezQuestion/ListView_list.js"></script>
@@ -406,8 +406,8 @@
     	            var rgParams = new Array();
         	        rgParams["addrBook"] = xmlDOM;
             	    rgParams["deptid"] = "";
-                	var feature = GetShowModalPosition(600, 320);
-                	window.showModalDialog("/admin/ezBoard/checkName.do", rgParams, "dialogHeight:352px; dialogWidth:609px; status:no;scroll:no; help:no; edge:sunken" + feature);
+                	var feature = GetShowModalPosition(700, 415);
+                	window.showModalDialog("/admin/ezBoard/checkName.do", rgParams, "dialogHeight:415px; dialogWidth:700px; status:no;scroll:no; help:no; edge:sunken" + feature);
                 	if (rgParams["deptid"] != "") {
 	                    bSearch = true;
     	                xmlHttp_Depttree = null;
@@ -423,7 +423,7 @@
         	        rgParams["deptid"] = "";
             	    checkname2_cross_dialogArguments[0] = rgParams;
                 	checkname2_cross_dialogArguments[1] = cnsearch_click_Complete;
-                	var checkName2_Cross = window.open("/admin/ezBoard/checkName.do", "checkName2_Cross", GetOpenWindowfeature(609, 352));
+                	var checkName2_Cross = window.open("/admin/ezBoard/checkName.do", "checkName2_Cross", GetOpenWindowfeature(700, 415));
                 	try { checkName2_Cross.focus(); } catch (e) {
                 	}
             	}

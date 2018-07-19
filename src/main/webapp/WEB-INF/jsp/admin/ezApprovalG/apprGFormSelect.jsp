@@ -7,7 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezApprovalG.t25000'/></title>
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
@@ -217,7 +217,9 @@
 			</tr>
 			<tr>
 				<td style="padding-left: 5px; padding-right: 5px; padding-top: 5px; vertical-align: top; text-align: center">
-					<a class="imgbtn"><span onclick="return Move_onclick()"><spring:message code = 'ezApprovalG.t948' /></span></a>
+					<div class="btnpositionNew">
+						<a class="imgbtn"><span onclick="return Move_onclick()"><spring:message code = 'ezApprovalG.t948' /></span></a>
+					</div>	
 				</td>
 			</tr>
 		</table>

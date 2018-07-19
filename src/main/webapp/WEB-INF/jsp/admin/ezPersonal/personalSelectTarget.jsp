@@ -8,7 +8,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<script type="text/javascript" src="/js/ezBoard/ListView_list_admin.js"></script>
 		<script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>		
@@ -806,7 +806,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition" style="float: center">
+	    <div class="btnpositionNew" style="float: center">
 	        <a class="imgbtn"><span onclick="confirm_onClick()"><spring:message code = 'ezPersonal.t12' /></span></a>
 	    </div>
 	</body>

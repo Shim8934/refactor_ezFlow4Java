@@ -177,8 +177,8 @@
                 <li><span onclick="bt_Close_onclick()"></span></li>
             </ul>
         </div>
-		<div id="TreeView" valign="top" style="height:300px;width:100%;overflow-x:auto;overflow-y:auto;BORDER:#ddd 1px solid; BACKGROUND-COLOR:#ffffff; vertical-align:top"></div>
-		<div class="btnposition">
+		<div id="TreeView" valign="top" style="height:330px;width:100%;overflow-x:auto;overflow-y:auto;BORDER:#ddd 1px solid; BACKGROUND-COLOR:#ffffff; vertical-align:top"></div>
+		<div class="btnpositionNew">
       		<a class="imgbtn"><span onclick="bt_Ok_onclick()" ><spring:message code="ezResource.t15" /></span></a>
 		</div>
 	</body>

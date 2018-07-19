@@ -113,9 +113,10 @@
 					<td><input id="deleteunread" type="checkbox" name="checkbox"></td>
 				</tr>
 			</table>
-			<br>
 			<div style="width:750px;text-align:center;">
-				<a class="imgbtn imgbck" name="Submit" onClick="add_condition()"><span><spring:message code='ezEmail.t124' /></span></a>
+				<div class="btnpositionJsp">
+					<a class="imgbtn" name="Submit" onClick="add_condition()"><span><spring:message code='ezEmail.t124' /></span></a>
+				</div>	
 			</div>
 			<br>
 			<table class="popuplist" style="width:750px;">

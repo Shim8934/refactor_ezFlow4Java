@@ -628,8 +628,11 @@ public class EzJournalAdminController {
 		param.put("value", request.getParameter("value"));
 		param.put("userId", userInfo.getId());
 		param.put("companyId", request.getParameter("companyId"));
+		param.put("curPage", request.getParameter("curPage"));
+
 		logger.debug("key : " + request.getParameter("key"));
 		logger.debug("value : " + request.getParameter("value"));
+		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/users", param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		if (status.equals("ok")) {		
@@ -653,6 +656,8 @@ public class EzJournalAdminController {
 			model.addAttribute("keyword",keyword);
 			model.addAttribute("userCount",userCount);
 			model.addAttribute("key", key);
+			model.addAttribute("totalCount", resultBody.get("totalCount"));
+			model.addAttribute("totalCount2", resultBody.get("totalCount2"));
 		}
 		
 		logger.debug("userList ended");

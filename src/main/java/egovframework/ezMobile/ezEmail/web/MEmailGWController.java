@@ -654,6 +654,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String mailAttachLimit = ezCommonService.getTenantConfig("MailAttachLimit", info.getTenantId());
+			String mUseMailAddrAutoComplete = ezCommonService.getTenantConfig("mobileUseMailAddrAutoComplete", info.getTenantId());
 			OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, info.getPrimary(), info.getTenantId());
 			
 			String userEmail = info.getUserId() + "@" + domainName;
@@ -1199,6 +1200,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			data.put("useFromAddress", useFromAddress);
 			data.put("fromAddressHtml", fromAddressHtml);
 			data.put("mailAttachLimit", mailAttachLimit);
+			data.put("mUseMailAddrAutoComplete", mUseMailAddrAutoComplete); //20180712 조진호 - 모바일에서 수신자 자동완성기능 사용여부
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -1927,6 +1929,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String cmd = "";
 			String mailcmd = "";
 			String replyReadTime = "1";
+			List<Map<String, Object>> addressCheck = null;
 			
 			if (jsonObject.get("subject") != null) {
 				subject = (String) jsonObject.get("subject");
@@ -2134,6 +2137,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					LOGGER.debug("to=" + to);
 					
 					m = r.matcher(to);
+					addressCheck = new ArrayList<Map<String, Object>>();
 					
 					while (m.find()) {
 						name = m.group(1);
@@ -2141,6 +2145,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						internetAddress.setPersonal(name, "UTF-8");
 						internetAddress.setAddress(address);
 						message.addRecipient(RecipientType.TO, internetAddress);
+						
+						Map<String, Object> autoAddress = new HashMap<String, Object>();
+						autoAddress.put("name", name);
+						autoAddress.put("address", address);
+						addressCheck.add(autoAddress);
 					}
 					
 					// Cc
@@ -2154,6 +2163,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						internetAddress.setPersonal(name, "UTF-8");
 						internetAddress.setAddress(address);
 						message.addRecipient(RecipientType.CC, internetAddress);
+						
+						Map<String, Object> autoAddress = new HashMap<String, Object>();
+						autoAddress.put("name", name);
+						autoAddress.put("address", address);
+						addressCheck.add(autoAddress);
 					}
 					
 					// Bcc
@@ -2167,6 +2181,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						internetAddress.setPersonal(name, "UTF-8");
 						internetAddress.setAddress(address);
 						message.addRecipient(RecipientType.BCC, internetAddress);
+						
+						Map<String, Object> autoAddress = new HashMap<String, Object>();
+						autoAddress.put("name", name);
+						autoAddress.put("address", address);
+						addressCheck.add(autoAddress);
 					}				
 					
 					// 메일 제목
@@ -2691,6 +2710,19 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		    }
 				    		    
 			LOGGER.debug("mailInterSend ended. pResult=" + pResult);
+			
+			// useAutoSaveMailAddress가 YES일 경우, 외부수신자의 메일주소를 개인주소록에 자동 저장 (코린도)
+			String autoSaveAddress = ezCommonService.getTenantConfig("useAutoSaveMailAddress", info.getTenantId());
+			
+			if (autoSaveAddress.equals("YES")) {
+				try {
+					ezEmailUtil.outerMailInsertAddress(addressCheck,userId,info.getTenantId(),
+							userEmail,info.getUserName(),info.getUserName2());
+				} catch (Exception e) {
+					LOGGER.debug("AutoEmailUtil insert fail.");
+					e.printStackTrace();
+				}
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -4599,6 +4631,87 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
         return returnValue;
     }
 	
+	/**
+	 * 주소록 정보 호출 함수 (addressType로 호출)
+	 */
+	private String getFilterAddressSearch(String searchTarget, String filterName, String filterValue, MCommonVO userInfo,
+					int start, int count, int[] searchCount, String folderID, String addressType) {
+		LOGGER.debug("getFilterAddressSearch started");
+		LOGGER.debug("getFilterAddressSearch searchTarget=" + searchTarget + ",filterName=" + filterName
+				+ ",filterValue=" + filterValue + ",start=" + start + ",count=" + count + ",folderID=" + folderID
+				+ ",addressType=" + addressType);
+		
+        String returnValue = "";
+       
+        try {
+        	
+        	String[] ownerIds = null;
+        	List<String> ownerIdList = new ArrayList<>();
+        	
+        	if (searchTarget.equalsIgnoreCase("all")) {
+                ownerIds = new String[]{userInfo.getCompanyId(), userInfo.getDeptId(), userInfo.getUserId()};        		
+        	} else {
+	        	if (searchTarget.contains("company")) {
+	        		ownerIdList.add(userInfo.getCompanyId());
+	        	}
+	        	
+	        	if (searchTarget.contains("department")) {
+	        		ownerIdList.add(userInfo.getDeptId());
+	        	}
+	        	
+	        	if (searchTarget.contains("personal")) {
+	        		ownerIdList.add(userInfo.getUserId());
+	        	}
+	        	
+	        	ownerIds = ownerIdList.toArray(new String[0]);
+        	}
+            
+        	for (String ownerId : ownerIds) {
+        		LOGGER.debug("getAddressSearch ownerId=" + ownerId);
+        	}
+        	
+            String pFilter = filterName + "," + filterValue;
+                        
+            searchCount[0] = ezAddressService.getFilterAddressSearchCount(userInfo.getTenantId(), folderID, ownerIds, filterName + ",", addressType);
+            searchCount[1] = ezAddressService.getFilterAddressSearchCount(userInfo.getTenantId(), folderID, ownerIds, pFilter, addressType);            
+            
+            // start와 end(getAddressSearch를 호출 하는 곳에서 +1을 해주어 count값은 1로 넘어온다)값이 각각 0으로 넘어오는 경우 전체리스트를 출력하기 위해 count에 searchCount 대입 
+            if(start == 0 && count == 1){
+            	count = searchCount[1];
+            }
+            // 끝
+            
+            List<AddressVO> addressInfoList = ezAddressService.getFilterAddressSearchList(userInfo.getTenantId(), folderID, ownerIds, "", pFilter, count, start, addressType);
+            
+            StringBuilder sb = new StringBuilder();
+            sb.append("<LISTVIEWDATA><ROWS>");
+            for (AddressVO addressInfo : addressInfoList) {
+            	sb.append("<ROW>");
+            	sb.append("<STYPE>" + (addressInfo.getsType() == null ? "" : addressInfo.getsType()) + "</STYPE>");
+            	sb.append("<ADDRESSID>" + (addressInfo.getAddressId() == null ? "" : addressInfo.getAddressId()) + "</ADDRESSID>");
+            	sb.append("<SNAME>" + (addressInfo.getsName() == null ? "" : commonUtil.cleanValue(addressInfo.getsName())) + "</SNAME>");
+            	sb.append("<FOLDERTYPE>DB</FOLDERTYPE>");
+            	sb.append("<SEMAIL>" + (addressInfo.getsEmail() == null ? "" : commonUtil.cleanValue(addressInfo.getsEmail())) + "</SEMAIL>");
+            	sb.append("<SCOMPANY>" + (addressInfo.getsCompany() == null ? "" : commonUtil.cleanValue(addressInfo.getsCompany())) + "</SCOMPANY>");
+            	sb.append("<SDEPT>" + (addressInfo.getsDept() == null ? "" : commonUtil.cleanValue(addressInfo.getsDept())) + "</SDEPT>");
+            	sb.append("<STITLE>" + (addressInfo.getsTitle() == null ? "" : commonUtil.cleanValue(addressInfo.getsTitle())) + "</STITLE>");
+            	sb.append("<SCOMPANYPHONE>" + (addressInfo.getsCompanyPhone() == null ? "" : commonUtil.cleanValue(addressInfo.getsCompanyPhone())) + "</SCOMPANYPHONE>");
+            	sb.append("<SMOBILE>" + (addressInfo.getsMobile() == null ? "" : commonUtil.cleanValue(addressInfo.getsMobile())) + "</SMOBILE>");
+            	sb.append("</ROW>");
+            }
+            sb.append("</ROWS></LISTVIEWDATA>");
+            returnValue = sb.toString();
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	
+        	returnValue = "EXCEPTION";
+        }
+        
+        LOGGER.debug("getFilterAddressSearch ended");
+        
+        return returnValue;
+    }
+	
 	private String convertDownloadInlineImageURLtoCid(String htmlStr, String downloadInlineUri) {
 		downloadInlineUri = downloadInlineUri.replace(".", "\\.");
 		String regex = "src=\"" + downloadInlineUri + ".*?contentId=%3C(.*?)%3E\"";				
@@ -5086,6 +5199,185 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		}
         
 		LOGGER.debug("MOBILE G/W MAIL subAddressbook ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 주소록 해당 폴더의 리스트 호출
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/filterAddressbook", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
+	public Object filterAddressbook(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonObject) {		
+		LOGGER.debug("MOBILE G/W MAIL filterAddressbook started.");
+		LOGGER.debug("userId=" + userId + ",jsonObject=" + jsonObject);
+		
+        String addressXML = "";
+		
+        JSONObject data = new JSONObject();
+        JSONObject result = new JSONObject();
+		
+        try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+									
+			String searchTarget = "";
+			String filterName = "";
+			String filterValue = "";
+			String folderID = "";
+			String addressType = "";
+			int start = 0;
+			int end = 99;
+			
+			if (jsonObject.get("searchTarget") != null) {
+				searchTarget = (String)jsonObject.get("searchTarget");
+			}
+			
+			if (jsonObject.get("filterName") != null) {
+				filterName = (String)jsonObject.get("filterName");
+			}
+
+			if (jsonObject.get("filterValue") != null) {
+				filterValue = (String)jsonObject.get("filterValue");
+			}
+			
+			if (jsonObject.get("folderID") != null) {
+				folderID =  (String)jsonObject.get("folderID");
+			}
+			
+			if (jsonObject.get("start") != null) {
+				start =  ((Integer)jsonObject.get("start")).intValue();
+			}
+
+			if (jsonObject.get("end") != null) {
+				end =  ((Integer)jsonObject.get("end")).intValue();
+			}
+			
+			if (jsonObject.get("addressType") != null) {
+				addressType =  (String)jsonObject.get("addressType");
+			}
+			
+			int[] searchCount = {0, 0};
+			
+			if (!filterName.isEmpty()) {
+				addressXML = getFilterAddressSearch(searchTarget, filterName, filterValue, info,
+						start, end - start + 1, searchCount, folderID, addressType);	
+			}
+			
+	        data.put("addressXML", addressXML);
+	        data.put("fullCount", searchCount[0]);	        
+	        data.put("optionCount", searchCount[1]);
+	        
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "fail");			
+		}
+        
+		LOGGER.debug("MOBILE G/W MAIL filterAddressbook ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 수신자 자동완성 기능
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezemail/autoCompleteList/users/{userId:.+}", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
+	public Object autoCompleteList(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject requestJsonObject) {		
+		LOGGER.debug("MOBILE G/W MAIL autoCompleteList started.");
+		LOGGER.debug("userId=" + userId + ",jsonObject=" + requestJsonObject);
+
+        JSONObject data = new JSONObject();
+        JSONObject result = new JSONObject();
+        String searchValue = (String)requestJsonObject.get("searchValue");
+        String pOrganSearchList = "displayname::" + searchValue + ";;mail::" + searchValue;
+		String pOrganCellList = "displayname";
+		String pOrganPropList = "company;description;title;mail;extensionAttribute3;displayName2";
+		String pOrganListType = "all";
+		String pDLSearchList = "displayname::" + searchValue;
+		String pAddressFilter = searchValue;
+        try {
+        	String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+			
+        	Document organXML = commonUtil.convertStringToDocument(
+					getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, info));
+			Document dlXML = commonUtil.convertStringToDocument(getOrganDLSearch(pDLSearchList, info));
+			Document addressXML = commonUtil.convertStringToDocument(getAddressSearchInfo(pAddressFilter, info));
+
+			HashMap<String, Object> jsonObject = null;
+			List<Object> jsonList = new ArrayList<Object>();
+
+			NodeList organRow = organXML.getElementsByTagName("ROW");
+			for (int i = 0; i < organRow.getLength(); i++) {
+				Element row = (Element) organRow.item(i);
+				NodeList organList = row.getElementsByTagName("CELL");
+				Element organCell = (Element) organList.item(0);
+				if(organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim() != "" || organCell.getElementsByTagName("DATA6").item(0).getTextContent().trim() != null){
+					jsonObject = new HashMap<String, Object>();
+					jsonObject.put("name", organCell.getElementsByTagName("VALUE").item(0).getTextContent());
+					jsonObject.put("title", organCell.getElementsByTagName("DATA5").item(0).getTextContent());
+					jsonObject.put("description", organCell.getElementsByTagName("DATA4").item(0).getTextContent());
+					jsonObject.put("mail", organCell.getElementsByTagName("DATA6").item(0).getTextContent());
+					jsonObject.put("type", "");
+					jsonObject.put("href", "");
+					jsonList.add(jsonObject);
+				}
+			}
+
+			NodeList dlRow = dlXML.getElementsByTagName("ROW");
+			for (int i = 0; i < dlRow.getLength(); i++) {
+				Element row = (Element) dlRow.item(i);
+				NodeList dlList = row.getElementsByTagName("CELL");
+				Element dlCell = (Element) dlList.item(0);
+				if(dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim() != "" || dlCell.getElementsByTagName("DATA3").item(0).getTextContent().trim() != null){
+					jsonObject = new HashMap<String, Object>();
+					jsonObject.put("name", dlCell.getElementsByTagName("VALUE").item(0).getTextContent());
+					jsonObject.put("title", "");
+					jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t593", locale));
+					jsonObject.put("mail", dlCell.getElementsByTagName("DATA3").item(0).getTextContent());
+					jsonObject.put("type", "");
+					jsonObject.put("href", "");
+					jsonList.add(jsonObject);
+				}
+			}
+
+			NodeList addressRow = addressXML.getElementsByTagName("ROW");
+			for (int i = 0; i < addressRow.getLength(); i++) {
+				Element row = (Element) addressRow.item(i);
+				if(row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim() != "" || row.getElementsByTagName("SEMAIL").item(0).getTextContent().trim() != null){
+					jsonObject = new HashMap<String, Object>();
+					jsonObject.put("name", row.getElementsByTagName("SNAME").item(0).getTextContent());
+					jsonObject.put("title", "");
+					jsonObject.put("description", egovMessageSource.getMessage("ezEmail.t99000041", locale));
+					jsonObject.put("mail", row.getElementsByTagName("SEMAIL").item(0).getTextContent());
+					jsonObject.put("type", row.getElementsByTagName("STYPE").item(0).getTextContent());
+					jsonObject.put("href", row.getElementsByTagName("ADDRESSID").item(0).getTextContent() + "|!|" + row.getElementsByTagName("STYPE").item(0).getTextContent());
+					jsonList.add(jsonObject);
+				}
+			}
+	        data.put("susinList", jsonList);
+	        
+	        result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "fail");			
+		}
+        
+		LOGGER.debug("MOBILE G/W MAIL autoCompleteList ended.");
 		
 		return result;
 	}

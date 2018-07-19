@@ -203,11 +203,11 @@
 				</td>
 			</tr>
 			<tr>
-				<th style="text-aline:center;">
+				<th style="text-align:center;">
 					<spring:message code="ezResource.t47" />
 				</th>
-				<td style="height: 300px;">
-					<textarea id="Brd_Explain" style="font-size:9pt ; width:98%; height:98%; margin-left:1px; margin-top: 1px;" rows="3"><c:out value="${upExp}" /></textarea>
+				<td>
+					<textarea id="Brd_Explain" style="resize:none; font-size:9pt ; width:98%; height:300px; margin-top: 2px; margin-bottom:2px; overflow: auto;"><c:out value="${upExp}" /></textarea>
 				</td>
 			</tr>
 			<tr style="display:none">
@@ -218,7 +218,7 @@
 					<textarea id="Brd_Access" style="width: 98%" rows="3"><spring:message code="ezResource.t58" /></textarea></td>
 			</tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionJsp">
         	 <a class="imgbtn"><span onclick="cmdOK_onclick()" ><spring:message code="ezResource.t59" /></span></a>
 		</div>
 		<form name="brds">

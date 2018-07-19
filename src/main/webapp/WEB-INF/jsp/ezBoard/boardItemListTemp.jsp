@@ -550,6 +550,13 @@
 		            else{
                     	window.open("/ezBoard/boardNewItem.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
 		            }
+		            
+		            /* 2018-07-09 홍승비 - 승인게시판 게시물 읽기 시 즉각적으로 폰트 변화하도록 수정 */
+		            for (var i = 0; i < obj.childNodes.length; i++) {
+				        if (obj.childNodes[i].style.fontWeight == "bold") {
+				            obj.childNodes[i].style.fontWeight = "normal";
+						}
+			        }	            
 		        }
 		
 		        function CheckIfHasReplies() {
@@ -790,16 +797,16 @@
 		        var TYPE = "";
 		        var DATA = "";
 		        if (document.getElementById("txt_keyword").value != "") {
-		            var radiosearch = document.getElementsByName('searchCheck');
-		            if (radiosearch.item(0).checked) {
-		                TYPE += "TITLE;";
-		                DATA += "<TITLE>" + document.getElementById("txt_keyword").value + "</TITLE>";
-		            }
-		            else if (radiosearch.item(1).checked) {
-		                TYPE += "WRITERNAME;";
-		                DATA += "<WRITERNAME>" + document.getElementById("txt_keyword").value + "</WRITERNAME>";
-		            }
-		        }
+		        	 var selectSearch = document.getElementById('selectType');
+	                if (selectSearch.item(0).selected) {
+	                    TYPE += "TITLE;";
+	                    DATA += "<TITLE>" + document.getElementById("txt_keyword").value + "</TITLE>";
+	                }
+	                else if (selectSearch.item(1).selected) {
+	                    TYPE += "WRITERNAME;";
+	                    DATA += "<WRITERNAME>" + document.getElementById("txt_keyword").value + "</WRITERNAME>";
+	                }
+	            }
 		        else {
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
 		            {
@@ -899,9 +906,10 @@
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 	    <h1><spring:message code='ezBoard.t10030'/><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
-	          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code='ezBoard.t208'/></label>
-			  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code='ezBoard.t223'/></label>
-			  &nbsp;
+	         	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+					<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
+		    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
+		    	</select>
 			  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
 	        </span>
@@ -1024,7 +1032,7 @@
 	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
 		<div id="srarchpopup" class="popupwrap1 modal" style="margin-bottom: 70px; left: 297.5px; display: inline-block;">
 			<div class="popupJQLayer">
-				<div class="title"><spring:message code='ezBoard.t0006' /><spring:message code='ezJournal.t43' /></div>
+				<div class="title"><spring:message code='ezBoard.t188' /></div>
 				<div id="close">
 		            <ul>
 		                <li><a rel="modal:close"><span onclick="BoardSearchOptionHidden()"></span></a></li>
@@ -1033,11 +1041,11 @@
 				<table class="content">
 			        <tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
-			            <td><input type="text" id="txtTitle" style="width:98%" value=""></td>
+			            <td><input type="text" id="txtTitle" style="width:100%" value=""></td>
 			        </tr>  
 			         <tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
-			            <td><input type="text" id="txtAbstract" style="width:98%" value=""></td>
+			            <td><input type="text" id="txtAbstract" style="width:100%" value=""></td>
 			        </tr>    
 			       <tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>

@@ -325,7 +325,7 @@
 	    }
 	    
 	    function att_search(r) {
-			if (r == "refresh") {
+			if (r == "refresh") { //새로고침
 				$("#writer_search").val("");
 				if (checkAdmin != 'true' && adminFlag == true) {
 										
@@ -339,7 +339,7 @@
 //     			$(Radio2).prop("checked", true);
     			type_set();
 			}
-			else if (r == "deptChange") {
+			else if (r == "deptChange") { //부서변경
 				$("#writer_search").val("");
 				if (checkAdmin == 'true') {
 	    			$("#writerDept_search").val("");
@@ -350,6 +350,12 @@
     			}
     			$("input[name=searchCheck][value=" + type + "]").prop("checked", true);
     			type_set();
+			}
+			else if (r == "search") { //검색시
+				if ($("#writer_search").val() == "" && $("#appr_search").val() == "" && $("#usepostdate").prop("checked") == false ) {
+					alert("<spring:message code='ezAttitude.t229'/>");
+					return;
+				}
 			}
 			
 			//정렬 초기화
@@ -651,7 +657,7 @@
 	        var curevent = (typeof event == 'undefined' ? evt : event)
 
 			if (curevent.keyCode == "13") {
-	        	att_search();
+	        	att_search('search');
 	        }
 		}
 	    
@@ -1115,92 +1121,8 @@
 	    }
 	    
 	    function getHistory(t) {
-			
-			var obj = new Object();
-	    	
-		    obj.attModId = $(t).parent().parent().find('td input').attr("value");
-			
-			$.ajax({
-				type : 'get',
-			    url : '/ezAttitude/getAttHistory.do',
-			    data : obj,
-			    dataType : "json",
-			    error: function(xhr, status, error){
-			    	ajaxRunning = false;
-			    },
-			    success : function(json){
-			    	$('#addpopup_list tbody').children('tr').not(":first").remove();
-			    	
-			    	if (json.length == 0) {
-			    		var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:440px;'></td>").text("<spring:message code='ezAttitude.t142'/>"));
-			    		
-			    		$("#addpopup_list tbody").append(objTr);
-			    	}
-			    	
-			    	for(var i = 0; i < json.length; i++) {
-						if (json.length == 1 && json[i].apprStatus == 0) {
-							var objTr = $("<tr></tr>").append($("<td colspan='6' style='text-align:center; width:440px;'></td>").text("<spring:message code='ezAttitude.t142'/>"));
-				    		
-				    		$("#addpopup_list tbody").append(objTr);
-			    		} else {
-			    			var name = json[i].apprUserName;
-			    			
-			    			if (json[i].apprStatus == 1) {
-				    			json[i].apprStatus = "<spring:message code='ezAttitude.t210'/>";
-				    		} else if (json[i].apprStatus == 2){
-				    			json[i].apprStatus = "<spring:message code='ezAttitude.t211'/>";
-				    		} else {
-				    			json[i].apprStatus = "<spring:message code='ezAttitude.t209'/>";
-				    		}
-				    		
-			    			if (json[i].apprDate != null) {
-			    				json[i].apprDate = json[i].apprDate.substring(0,16);
-			    			}
-			    			
-			    			if (json[i].apprDate == null) {
-			    				json[i].apprDate = "";
-			    			}
-			    			
-			    			if (json[i].apprUserName == null) {
-			    				json[i].description = "";
-			    				json[i].apprUserName = "";
-			    				json[i].title = "";
-			    				name = "";
-			    			}
-			    			
-			    			//"\u00a0"
-				    		var objTr = $("<tr></tr>").append($("<td style='width:35%'></td>").append($("<div style='width:89px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].originDate.substring(0,11))));
-				    		objTr.append($("<td style='width:5%'></td>").append($("<div style='width:64px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].originDate.substring(11,16))));
-				    		objTr.append($("<td style='width:5%'></td>").append($("<div style='width:64px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].changeDate.substring(11,16))));
-				    		objTr.append($("<td style='width:5%' title='" + json[i].description + " " + json[i].apprUserName + " " + json[i].title + "'></td>").append($("<div style='width:48px; padding-left: 5px;padding-right: 5px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(name)));
-				    		objTr.append($("<td style='width:45%'></td>").append($("<div style='width:118px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].apprDate)));
-				    		objTr.append($("<td style='width:5%'></td>").append($("<div style='width:64px; text-align:center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(json[i].apprStatus)));
-				    		
-				    		$("#addpopup_list tbody").append(objTr);
-				    		
-				  			//<th style="width:120px;height:30px">수정신청일시</th>
-				    		//<th style="width:30px; height:30px">기존시간</th>
-				    		//<th style="width:30px; height:30px">신청시간</th>
-				    		//<th style="width:120px;height:30px">승인일시</th>
-				  			//<th style="height:30px">승인자</th>
-				  			//<th style="height:30px">승인상태</th>
-			    		}
-			    	}
-			    },
-			    complete : function() {
-			    	try {
-			    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].layerHidden()'></div>").appendTo(parent.frames["left"].document.body);	
-			    	} catch(e) {
-			    		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"attitude_main\"].layerHidden()'></div>").appendTo(parent.frames["attitude_menu"].document.body);
-			    	}
-		        	
-		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-		        	
-		        	$("#popup").css("left", popupX);
-		        	
-					$("#popup").modal();
-			    }
-		    });
+		    attModId = $(t).parent().parent().find('td input').attr("value");
+		    window.open("/ezAttitude/attitudeModHistory.do?attModId=" + attModId, "history", GetOpenWindowfeature(550, 260));
 	    }
 	    
 	    function layerHidden() {
@@ -1340,7 +1262,7 @@
 					</table>
 	             	<div class="btnpositionLayer">
 				        <a class="imgbtn" id="mailInBtn" onclick="date_reset()"><span><spring:message code='ezAttitude.t106'/></span></a>
-				        <a class="imgbtn" id="cancelBtn" onclick="att_search()"><span><spring:message code='ezAttitude.t121'/></span></a>
+				        <a class="imgbtn" id="cancelBtn" onclick="att_search('search')"><span><spring:message code='ezAttitude.t121'/></span></a>
 			     	</div>
 	            </div>
 	        </div>
@@ -1359,18 +1281,15 @@
 					<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/>
 				</th>
 				<th width="60px" colname="NO">NO.</th>
-				<th style="cursor:pointer" colname="START_DATE"><spring:message code='ezAttitude.t107'/></th>
-				
-				<c:if test="${adminFlag == true}">
-					<th style="cursor:pointer" colname="WRITER_NAME"><spring:message code='ezAttitude.t147'/></th>
-					<th style="cursor:pointer" colname="WRITER_DEPT_NAME"><spring:message code='ezAttitude.t148'/></th>
-				</c:if>
-				<th width="125px" style="cursor:pointer" colname="ORIGIN_TIME"><spring:message code='ezAttitude.t206'/></th>
-				<th width="125px" style="cursor:pointer" colname="NO"><spring:message code='ezAttitude.t207'/></th>
-				<th width="80px" style="cursor:pointer" colname="APPR_STATUS" ><spring:message code='ezAttitude.t208'/></th>
-				<th width="100px" style="cursor:pointer" colname="APPR_USER_NAME"><spring:message code='ezAttitude.t104'/></th>
-				<th width="130px" style="cursor:pointer" colname="APPL_DATE"><spring:message code='ezAttitude.t108'/></th>
-				<th width="100px" style="cursor:pointer" colname="NO"><spring:message code='ezAttitude.t97'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer;width: 16%;" colname="START_DATE"><spring:message code='ezAttitude.t107'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer;width: 16%;" colname="WRITER_NAME"><spring:message code='ezAttitude.t147'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer;width: 16%;" colname="WRITER_DEPT_NAME"><spring:message code='ezAttitude.t148'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:7%;" colname="ORIGIN_TIME"><spring:message code='ezAttitude.t206'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:7%;" colname="NO"><spring:message code='ezAttitude.t207'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:5%;" colname="APPR_STATUS" ><spring:message code='ezAttitude.t208'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:7%;" colname="APPR_USER_NAME"><spring:message code='ezAttitude.t104'/></th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:9%;" colname="APPL_DATE"><spring:message code='ezAttitude.t108'/></th>
+				<th width="100px" style="cursor:pointer;" colname="NO"><spring:message code='ezAttitude.t97'/></th>
 			</tr>
 		    
 		    <c:if test="${list.size() == 0}"> 

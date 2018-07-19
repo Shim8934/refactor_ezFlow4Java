@@ -489,6 +489,10 @@
 	                }
 	            }
 	            
+	            if (MaxNum == 0) {
+	            	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+	            }
+	            
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                    strtext = "";
@@ -875,7 +879,7 @@
                     dd = document.createElement("DD");
                     var span5 = document.createElement("SPAN");
                     span5.className = "btn_community01";
-
+					span5.style.background = "#e8e8e8"
                     span5.setAttribute("code", clubVO.c_ClubNo.trim());
                     span5.setAttribute("type", clubVO.c_ClubConfirmType);
                     span5.onclick = function () { move_cop(this); };
@@ -1402,7 +1406,7 @@
 			                                    </select>
 			                                    
 			                                    <input id="keyword" name="keyword" onkeydown ="key_down(event)" style="height:22px"/>
-			                                    <a class="imgbtn"><span onclick ="copsearch()"><spring:message code = 'ezCommunity.t31' /></span></a>
+			                                    <a class="imgbtn imgbck"><span onclick ="copsearch()"><spring:message code = 'ezCommunity.t31' /></span></a>
 			                                </p>
 			                            </div>			                            
 			                            <div id ="categorylist"></div>

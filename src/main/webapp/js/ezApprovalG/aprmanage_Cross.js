@@ -744,7 +744,7 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
         pArgument[7] = "";
     }
   
-    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {
+    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
     	openLocation = "/ezApprovalG/draftui.do?formURL=";
         openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
         openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
@@ -919,7 +919,6 @@ function openForm_Complete(ret) {
     getformcont_Cross_OpenWin.close();
     formURL = ret[0];
     formDocType = ret[1];
-    formExt = ret[2];
     if (formURL != "cancel") {
         openDraftUI("DRAFT", "");
     }
@@ -1754,7 +1753,7 @@ function selbeforeBlock_one() {
         return;
 }
 function selafterBlock() {
-    var pageNum = currentpage;
+	var pageNum = currentpage;
     pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
     goToPageByNum(pageNum);
 }
@@ -2342,7 +2341,7 @@ function doCancel(pDocID, tempListType) {
 		type : "POST",
 		dataType : "text",
 		async : false,
-		url : "/ezApprovalG/doCancelForce.do",
+		url : "/ezApprovalG/doCancel.do",
 		data : {
 			docID : pDocID,
 			userID : pUserID
@@ -2355,16 +2354,17 @@ function doCancel(pDocID, tempListType) {
 		}
 	});
 	
+	//2018-07-10 배현상, OpenAlertUI에서 브라우저 alert으로 수정
     var RtnVal = getNodeText(loadXMLString(result).documentElement);
 
     if (RtnVal == "TRUE") {
         if (tempListType == "3") {
-            var pAlertContent = strLang891 + "<br> " + strLang892;
-            OpenAlertUI(pAlertContent, "", "OPEN");
+            var pAlertContent = strLang891 + "\n" + strLang892;
+            alert(pAlertContent);
         }
         else {
-            var pAlertContent = strLang893 + "<br> " + strLang894;
-            OpenAlertUI(pAlertContent, "", "OPEN");
+            var pAlertContent = strLang893 + "\n" + strLang894;
+            alert(pAlertContent);
         }
         SendMailToCancel(pDocID); 
         openergetDocInfo();
@@ -2376,18 +2376,18 @@ function doCancel(pDocID, tempListType) {
     }
     else if (RtnVal == "ERR01") {
         var pAlertContent = strLang895;
-        OpenAlertUI(pAlertContent, "", "OPEN");
+        alert(pAlertContent);
     }
     else if (RtnVal == "ERR02") {
         var pAlertContent = strLang896;
-        OpenAlertUI(pAlertContent, "", "OPEN");
+        alert(pAlertContent);
     }
     else if (RtnVal == "ERR03") {
         var pAlertContent = strLang897;
-        OpenAlertUI(pAlertContent, "", "OPEN");
+        alert(pAlertContent);
     } else {
     	var pAlertContent = strLang898;
-        OpenAlertUI(pAlertContent);
+        alert(pAlertContent);
     }
 }
 
@@ -2727,7 +2727,7 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     //우선 만들고 tmpDocID를 넘겨주어야 한다.	
     var openLocation = "";
     
-    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {
+    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
     	openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
     	openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
     	openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);

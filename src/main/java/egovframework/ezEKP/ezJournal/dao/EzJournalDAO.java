@@ -161,6 +161,10 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	public List<JournalAuthorVO> getDeptUserList(Map<String, Object> map){
 		return (List<JournalAuthorVO>) list("selectUserList",map);
 	}
+	
+	public int getDeptUserListCount(Map<String, Object> map) {
+		return (int) select("getDeptUserListCount", map);
+	}
 
 	/**
 	 * 양식 상세정보 가져오기

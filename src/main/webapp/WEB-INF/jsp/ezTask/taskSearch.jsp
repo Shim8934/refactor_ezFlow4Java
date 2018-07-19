@@ -24,6 +24,9 @@
 				font:bold;
 				color:#017bec;
 			}
+			.h2_dot {
+				background: url(/images/kr/left/left_dot02.gif) no-repeat 0px 70%;
+			}
 		</STYLE>
 		<script type="text/javascript">
 			var startdate = "_startdate";
@@ -318,6 +321,8 @@
 						tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
 			            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")));
 			        }
+			        tr.cells[4].style.overflow = "hidden";
+		            tr.cells[4].style.textOverflow = "ellipsis";
 
 			        if (useTodoMemo == "YES") {
 				        setNodeText(tr.cells[6], SelectSingleNodeValue(node, "MEMO"));
@@ -542,7 +547,7 @@
 			<span class="point"></span><span id="resultCount"></span></h2>
 		</div>
 		
-		<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed;">
+		<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed; min-width:800px;">
 			<col style ="width:30px;">
 			<col style ="width:50px;">
 			<col style ="width:20px;">

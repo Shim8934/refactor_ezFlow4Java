@@ -11,6 +11,8 @@
 		<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link href="/css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
+		<link href="/css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
+		<link href="<spring:message code='ezOrgan.e3'/>" type="text/css" rel="stylesheet" />
 	    <style type="text/css">
 	        .instance.sbHolder{
 	            width: 100%;
@@ -30,7 +32,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery.selectbox-0.2.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
@@ -133,6 +135,16 @@
 		            treeView.SetNodeClick("UserContNodeClick");
 		            treeView.DataSource(xmlDom2);
 		            treeView.DataBind("divUserContTree");
+
+		            //title3[0].setAttribute("TITLE", title3[0].innerHTML); 
+ 		            $(".node_normal").css("width", "135px");
+ 		            
+					var node = $(".node_normal");
+					
+					for(var i=0; i<node.length; i++) {
+						node[i].setAttribute("TITLE", node[i].innerHTML);
+					} 
+
 		        } 
 			        if (parseInt(pListTypeValue) < 10) {
 			            window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
@@ -195,7 +207,22 @@
 
 	            var treeView = new TreeView();
 	            treeView.LoadFromID(pTreeID);
-	            treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID)
+	            treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID);
+	            
+	            var node = document.getElementById(pNodeID);
+		        var title2 = node.getElementsByClassName("node_div");
+		        var nodeLevel = title2[0].getAttribute("nodelevel");
+		        
+		        if(nodeLevel > 9) {
+		        	nodeLevel = 9;
+		        }
+		        for(var i=0; i<title2.length; i++) {
+		        	var title3 = title2[i].getElementsByClassName("node_normal");
+		        	title3[0].setAttribute("TITLE", title3[0].innerHTML); 
+		        	title3[0].style.width = 135 - 16*(nodeLevel-1) +'px';
+		        	title3[0].style.textOverflow = 'ellipsis';
+		        	title3[0].style.overflow = 'hidden';
+		        }		        
 	        }
 		    
 		    function Tree_setconfig() {
@@ -237,7 +264,7 @@
 	        function MngUserOnclick_Complete(RtnVal) {
 	            TreeViewRefresh();
 	        }
-	        
+
 	        function TreeViewRefresh() {
 	            var xmlHTTP = createXMLHttpRequest();
 	            var strQuery = "<DATA><USERID>" + pUserID + "</USERID><ParentContID>ROOT</ParentContID><NAME></NAME></DATA>";
@@ -255,6 +282,14 @@
 	            treeView.SetNodeClick("UserContNodeClick");
 	            treeView.DataSource(xmlDomRet);
 	            treeView.DataBind("divUserContTree");
+	            
+	            $(".node_normal").css("width", "135px");
+ 		          
+				var node = $(".node_normal");
+					
+				for(var i=0; i<node.length; i++) {
+					node[i].setAttribute("TITLE", node[i].innerHTML);
+				} 
 	        }
 	        
 		    function Open_Func(pthis) {

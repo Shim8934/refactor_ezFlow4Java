@@ -74,6 +74,56 @@
 	            previewSubTreeCall();
 	        }
 	        
+	        /**
+	        	메일함 ellipsis 추가.
+	        	박종균
+	        */
+	        function applyEllipsisMailTree() {
+	        	/**
+	        		1. 왼쪽 메뉴에 존재하는 트리 node를 전부 가져온다.
+	        		2. 그 안에서 들여쓰기가 된 img 갯수를 가져온다.
+	        		3. 이미지 갯수를 통해 list가 표현될 width를 재설정한다.
+	        	*/
+	        	$("[id^='PostTreeView_node']").each(function(index, element){
+	        		
+	        		var imgCnt = $(element).parent().find('img').length - 2;
+	        		var title = $(element)[0].innerHTML;
+	        		
+	        		if (imgCnt > 0) {
+	        			// 최초값 164, 한 블럭의 값 18
+	        			var customWidth = 140 - (18 * imgCnt);
+	        			$(element).css("width", customWidth+"px");
+	        			$(element).attr("title", title);	
+	        		}
+							
+	        	});
+	        }
+	        
+	        /**
+	        	주소록 ellipsis 추가.
+	        	박종균
+	        */
+	        function applyEllipsisAddressTree() {
+	        	/**
+	        		1. 왼쪽 메뉴에 존재하는 트리 node를 전부 가져온다.
+	        		2. 그 안에서 들여쓰기가 된 img 갯수를 가져온다.
+	        		3. 이미지 갯수를 통해 list가 표현될 width를 재설정한다.
+	        	*/
+	        	$($("[id^='AddressTreeView_node']")).each(function(index, element){
+	        		
+	        		var imgCnt = $(element).parent().find('img').length - 2;
+	        		var title = $(element)[0].innerHTML;
+	        		
+	        		if (imgCnt > 0) {
+	        			// 최초값 164, 한 블럭의 값 18
+	        			var customWidth = 140 - (18 * imgCnt);
+	        			$(element).css("width", customWidth+"px");
+	        			$(element).attr("title", title);	
+	        		}
+							
+	        	});
+	        }	        
+	        
 	        
 	        // 수정 수아 재은
 	        function detailView() {
@@ -233,6 +283,11 @@
 	            }
 	            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true, false);
 	            PostTreeView.putchildxml(nodeIdx, childxml);
+	            
+	            /**
+	            	ellipsis 적용을 위해 함수 호출
+	            */
+	            applyEllipsisMailTree();
 	        }
 	        
 	        function selectnode(event) {
@@ -252,7 +307,7 @@
 		            else
 		                window.open(url, "right");
 		            get_unreadcount();
-	        	}
+	        	}        	
 	        }
 	        
 	        function email_dragdrop(event) {
@@ -333,6 +388,7 @@
 	                }
 	            }
 	            xmlHTTP_Unread = null;
+	            applyEllipsisMailTree();
 	        }
 	        function get_unreadcount() {
 	            return get_unreadcount_2010();
@@ -544,6 +600,8 @@
 	                AddressTreeView.select(1);
 	            else
 	                selectnode_address();
+	            
+	            applyEllipsisAddressTree();
 	        }
 	        var AddressTreeView = null;
 	        function LoadAddressTree() {
@@ -592,6 +650,11 @@
 	
 	            var childxml = get_Address_childXML(AddressTreeView.getvalue(nodeIdx, "folderid"), AddressTreeView.getvalue(nodeIdx, "ownerid"), AddressTreeView.getvalue(nodeIdx, "type"))
 	            AddressTreeView.putchildxml(nodeIdx, childxml);
+	            
+	            /**
+	            	주소록 ellipsis 추가
+	            */
+	            applyEllipsisAddressTree();
 	        }
 	        function selectnode_address() {
 	            var nodeIdx = AddressTreeView.selectedIndex();
@@ -954,6 +1017,18 @@
 			  height: 7px;				  
 			  background-color: #4faaff;
 			}
+			.node_normal{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		white-space: nowrap;
+	    	}
+			.node_selected{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		white-space: nowrap;
+	    	}	    	
 		</style>
 	</head>
 	<body class="leftbody" style="overflow: auto; height: 100%;">

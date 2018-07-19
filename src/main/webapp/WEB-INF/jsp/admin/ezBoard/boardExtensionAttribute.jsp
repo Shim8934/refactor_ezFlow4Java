@@ -17,7 +17,7 @@
 		    var ChangedHeader = false;
 		    var RetValue;
 	    
-			$(document).ready(function(){			
+			$(document).ready(function(){
 				try {
 		            RetValue = parent.BoardExtension_dialogArguments[0];
 		        } catch (e) {
@@ -39,6 +39,11 @@
 		            document.getElementById("divListHeader").style.display = "none";
 		            document.getElementById("btn_AddHeader").style.display = "none";
 		        }
+		        
+		        /* 2018-07-17 홍승비 - 확장컬럼 설정창 스크롤 발생 수정 */
+		       if (navigator.userAgent.toLowerCase().indexOf("chrome") == -1) {
+	    	    	document.getElementById("outerDiv").style.height = "667px";
+	    	    }
 			});
 			
 			if(new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -739,6 +744,9 @@
 		        }
 		    }
 	    </script>
+	    <style>
+	    	.mainlist_free tr th { border-top:0px }
+	    </style>
 	</head>
 	<body class="popup" style="overflow-x:hidden;">		
 		<xml id="ExtensionList" style="display:none">
@@ -791,86 +799,90 @@
                 <li><span id="btncancel" onclick="return btncancel_onclick()"></span></li>
             </ul>
         </div>
-		<span style="font-weight:bold"><spring:message code='ezBoard.t999030'/></span>
-		<table class="content" style="width:100%"> 
-			<tr>
-				<th style="width:15%"><spring:message code='ezBoard.t999031'/></th>
-		        <td style="width:25%"><input id="txtNameKor" style="width:97%" maxlength="20"/></td>
-		        <th style="width:15%"><spring:message code='ezBoard.t999032'/></th>
-		        <td style="width:25%"><input id="txtNameEng"  style="width:97%" maxlength="20"/></td>
-				<th style="width:10%"><spring:message code='ezBoard.t999033'/></th>
-		        <td style="width:10%"><input id="chkRequired" type="checkbox" /></td>
-		    </tr>
-		    <tr>
-		        <th style="width:15%"><spring:message code='ezBoard.t999034'/></th>
-		        <td style="width:25%">
-		            <select id="Type" onchange="radioType_onClick(this.value)" style="width:99%">
-		                <option value=""><spring:message code='ezBoard.t74'/></option>
-		                <option value="text"><spring:message code='ezBoard.hyj06'/></option>
-		                <option value="radio"><spring:message code='ezBoard.hyj07'/></option>
-		                <option value="check"><spring:message code='ezBoard.hyj08'/></option>
-		            </select>
-		        </td>
-		        <td colspan="4">
-		            <table>
-		            	<tr>
-		            		<td id="Gubun"></td>
-		            	</tr>
-		            </table>
-				    <table style="width:400px;display:none;" id="AddDel">
-		   		        <tr>
-	                        <td style="width:100%">
-	                            <input type="button" onclick="javascript: add_row()" value="<spring:message code='ezBoard.t602'/>" />&nbsp;
-	                            <input type="button" onclick="javascript: del_row()" value="<spring:message code='ezBoard.t89'/>" />
-	                            <input type="hidden" id="cnt" name="cnt" value="1" />
-	                        </td>
-	                    </tr>
-			        </table>
-		        </td>
-		    </tr>
-		</table>
-		<table style="width:100%;margin-top:10px">
-			<tr>
-				<td style="width:100%;text-align:right">
-		            <a class="imgbtn" onClick ="return btn_Init()" id="btn_Init"><span><spring:message code='ezBoard.t999035'/></span></a>
-		            <a class="imgbtn" onClick ="return btn_add()" id="btn_add"><span><spring:message code='ezBoard.t602'/></span></a>
-		            <a class="imgbtn" onClick ="return btn_Update()" id="btn_Update"><span><spring:message code='ezBoard.t316'/></span></a>
-		            <a class="imgbtn" onClick ="return btn_Delete()" id="btn_Delete"><span><spring:message code='ezBoard.t89'/></span></a>
-		            <a class="imgbtn" onClick ="return btn_AddHeader()" id="btn_AddHeader"><span><spring:message code='ezBoard.t999036'/></span></a>
-				</td>
-			</tr>
-		</table>
-		<div class="listview">
-		    <div id="SelectList" style="border: 0px solid #ddd; Width: 99%; Height: 150px; overflow: hidden; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
-		</div>		
-		<div id="divListHeader" style="padding-top:10px">
-			<span style="font-weight:bold"><spring:message code='ezBoard.t999040'/></span>
-			<table style="width:100%;margin-top:10px">
-				<tr>
-			        <td style="width:45%">
-			        <table class="content" style="width:100%"> 
-				        <tr>
-					        <th style="width:25%"><spring:message code='ezBoard.t999031'/></th>
-			                <td style="width:25%" id="HeadName"></td>
-					        <th style="width:25%"><spring:message code='ezBoard.t5002'/></th>
-			                <td style="width:25%"><input id="HeadWidth" style="width:99%" /></td>
-				        </tr>
-			        </table>
-			        </td>
-					<td style="width:55%;text-align:right">
-			            <a class="imgbtn" onClick ="return btn_EditWidth()" id="btn_EditWidth"><span><spring:message code='ezBoard.t999041'/></span></a>
-			            <a class="imgbtn" onClick ="return btn_InitHeader()" id="btn_InitHeader"><span><spring:message code='ezBoard.t999042'/></span></a>
-			            <a class="imgbtn" onClick ="return btn_Remove()" id="btn_Remove"><span><spring:message code='ezBoard.t999043'/></span></a>
-			            <a class="imgbtn" onClick ="return btn_MoveUp()" id="btn_MoveUp"><span><spring:message code='ezBoard.t493'/></span></a>
-			            <a class="imgbtn" onClick ="return btn_MoveDown()" id="btn_MoveDown"><span><spring:message code='ezBoard.t494'/></span></a>
-					</td>
-				</tr>
-			</table>
-			<div class="listview">
-			    <div id="HeaderList" style="border: 0px solid #ddd; Width: 99%; Height: 300px; overflow: hidden; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+ 		<div id="outerDiv" style="height:663px; overflow-y:auto;margin-top:-13px;margin-right:-10px;">
+	 		<div id="innerDiv" style="padding-right:10px; padding-top:8px; padding-bottom:8px; overflow:hidden;" >
+				<span style="font-weight:bold"><spring:message code='ezBoard.t999030'/></span>
+				<table class="content" style="width:100%;margin-top:5px">
+					<tr>
+						<th style="width:15%"><spring:message code='ezBoard.t999031'/></th>
+				        <td style="width:25%"><input id="txtNameKor" style="width:97%" maxlength="20"/></td>
+				        <th style="width:15%"><spring:message code='ezBoard.t999032'/></th>
+				        <td style="width:25%"><input id="txtNameEng"  style="width:97%" maxlength="20"/></td>
+						<th style="width:10%"><spring:message code='ezBoard.t999033'/></th>
+				        <td style="width:10%"><input id="chkRequired" type="checkbox" /></td>
+				    </tr>
+				    <tr>
+				        <th style="width:15%"><spring:message code='ezBoard.t999034'/></th>
+				        <td style="width:25%">
+				            <select id="Type" onchange="radioType_onClick(this.value)" style="width:99%">
+				                <option value=""><spring:message code='ezBoard.t74'/></option>
+				                <option value="text"><spring:message code='ezBoard.hyj06'/></option>
+				                <option value="radio"><spring:message code='ezBoard.hyj07'/></option>
+				                <option value="check"><spring:message code='ezBoard.hyj08'/></option>
+				            </select>
+				        </td>
+				        <td colspan="4">
+				            <table>
+				            	<tr>
+				            		<td id="Gubun"></td>
+				            	</tr>
+				            </table>
+						    <table style="width:400px;display:none;" id="AddDel">
+				   		        <tr>
+			                        <td style="width:100%">
+			                            <input type="button" onclick="javascript: add_row()" value="<spring:message code='ezBoard.t602'/>" />&nbsp;
+			                            <input type="button" onclick="javascript: del_row()" value="<spring:message code='ezBoard.t89'/>" />
+			                            <input type="hidden" id="cnt" name="cnt" value="1" />
+			                        </td>
+			                    </tr>
+					        </table>
+				        </td>
+				    </tr>
+				</table>
+				<table style="width:100%;margin-top:10px">
+					<tr>
+						<td style="width:100%;text-align:right">
+				            <a class="imgbtn imgbck" onClick ="return btn_Init()" id="btn_Init"><span><spring:message code='ezBoard.t999035'/></span></a>
+				            <a class="imgbtn imgbck" onClick ="return btn_add()" id="btn_add"><span><spring:message code='ezBoard.t602'/></span></a>
+				            <a class="imgbtn imgbck" onClick ="return btn_Update()" id="btn_Update"><span><spring:message code='ezBoard.t316'/></span></a>
+				            <a class="imgbtn imgbck" onClick ="return btn_Delete()" id="btn_Delete"><span><spring:message code='ezBoard.t89'/></span></a>
+				            <a class="imgbtn imgbck" onClick ="return btn_AddHeader()" id="btn_AddHeader"><span><spring:message code='ezBoard.t999036'/></span></a>
+						</td>
+					</tr>
+				</table>
+				<div class="listview">
+				    <div id="SelectList" style="border: 0px solid #ddd; Width: 100%; Height: 150px; overflow: hidden; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+				</div>
+				<div id="divListHeader" style="padding-top:10px">
+					<span style="font-weight:bold"><spring:message code='ezBoard.t999040'/></span>
+					<table style="width:100%;margin-top:10px">
+						<tr>
+					        <td style="width:45%">
+					        <table class="content" style="width:100%"> 
+						        <tr>
+							        <th style="width:25%"><spring:message code='ezBoard.t999031'/></th>
+					                <td style="width:25%" id="HeadName"></td>
+							        <th style="width:25%"><spring:message code='ezBoard.t5002'/></th>
+					                <td style="width:25%"><input id="HeadWidth" style="width:99%" /></td>
+						        </tr>
+					        </table>
+					        </td>
+							<td style="width:55%;text-align:right">
+					            <a class="imgbtn imgbck" onClick ="return btn_EditWidth()" id="btn_EditWidth"><span><spring:message code='ezBoard.t999041'/></span></a>
+					            <a class="imgbtn imgbck" onClick ="return btn_InitHeader()" id="btn_InitHeader"><span><spring:message code='ezBoard.t999042'/></span></a>
+					            <a class="imgbtn imgbck" onClick ="return btn_Remove()" id="btn_Remove"><span><spring:message code='ezBoard.t999043'/></span></a>
+					            <a class="imgbtn imgbck" onClick ="return btn_MoveUp()" id="btn_MoveUp"><span><spring:message code='ezBoard.t493'/></span></a>
+					            <a class="imgbtn imgbck" onClick ="return btn_MoveDown()" id="btn_MoveDown"><span><spring:message code='ezBoard.t494'/></span></a>
+							</td>
+						</tr>
+					</table>
+					<div class="listview">
+					    <div id="HeaderList" style="border: 0px solid #ddd; Width: 100%; Height: 300px; overflow: hidden; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+					</div>
+				</div>
 			</div>
-		</div>		
-		<div class="btnposition">
+		</div>
+		<div class="btnpositionNew">
 		    <a class="imgbtn" onClick ="return btnOK_onclick()" id="btnOK"><span><spring:message code='ezBoard.t98'/></span></a>
 		</div>
 	</body>

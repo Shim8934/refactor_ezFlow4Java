@@ -11,9 +11,6 @@
 		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<link href="/css/default_kr.css" rel="stylesheet" type="text/css">
-		<style>
-		</style>
 		<script language="JavaScript" type="text/javascript" ID="clientEventHandlersJS">
 		  	var pBrdID = "${pBrdID}";
 		   	var pItemNo = "${itemNo}";

@@ -67,7 +67,7 @@
 		    }
 		    
 		    window.onresize = function () {   	
-                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 185 + "PX";
+                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 235 + "PX";
 		    }
 		    
 		    function modify() {
@@ -227,27 +227,6 @@
 	                        	<ul id="menuTable">	
 	                                <li class="sel"><h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t227'/></h1></li>
 	                            </ul>
-	                            <ul style="float:right;margin-right:50px">
-	                                <li id="menuTable" style="background: none; border: none;">	
-										<!-- 회사가 수정신청을 허용으로 했을때만 -->
-		                            	<c:if test="${attitudeConfigVO.attitudeModAppl == 1}">
-			                            	<c:if test="${authFlag == 'M' && adminFlag == 'true' && data.apprStatus == 0 && deptFlag == 'true'}">
-				                            	<span onclick="modApprove()"><spring:message code='ezAttitude.t210'/></span>
-				                                <span onclick="modReturn()"><spring:message code='ezAttitude.t211'/></span>
-			                            	</c:if>
-											<!-- 본인의 수정신청일 경우에만 수정 삭제. 관리자 권환과는 무관 -->
-			                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
-			                            		<span onclick="modify()"><spring:message code='ezAttitude.t163'/></span>
-			                            	</c:if>
-			                            	<c:if test="${userId == data.writerId && data.apprStatus != 0 && (deptFlag != 'true' && pageInfo == 'viewCalendar')}">
-			                            		<span onclick="reMod()"><spring:message code='ezAttitude.t92'/></span>
-			                            	</c:if>
-		                            	</c:if>
-		                            	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
-		                            		<span onclick="del()"><spring:message code='ezAttitude.t164'/></span>
-		                            	</c:if>
-									</li>
-								</ul>
 	                        </div>
 	                        <div id="close">
 	                            <ul>
@@ -306,10 +285,27 @@
 	                </tr>
 	                <tr>
 		                <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
-		                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 365px; background-color: white"></iframe>	                    
+		                    <iframe id="message" style="border: #ddd 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 315px; background-color: white"></iframe>	                    
 		                </td>
 	            	</tr>
 	            </table>
+	            <div class="btnpositionNew" id="menuTable">
+	            	<c:if test="${attitudeConfigVO.attitudeModAppl == 1}">
+                    	<c:if test="${authFlag == 'M' && adminFlag == 'true' && data.apprStatus == 0 && deptFlag == 'true'}">
+                     		<a class="imgbtn"><span onclick="modApprove()"><spring:message code='ezAttitude.t210'/></span></a>
+                         	<a class="imgbtn"><span onclick="modReturn()"><spring:message code='ezAttitude.t211'/></span></a>
+                    	</c:if>
+                    	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
+                    		<a class="imgbtn"><span onclick="modify()"><spring:message code='ezAttitude.t163'/></span></a>
+                    	</c:if>
+                    	<c:if test="${userId == data.writerId && data.apprStatus != 0 && (deptFlag != 'true' && pageInfo == 'viewCalendar')}">
+                    		<a class="imgbtn"><span onclick="reMod()"><spring:message code='ezAttitude.t92'/></span></a>
+                    	</c:if>
+                   	</c:if>
+                   	<c:if test="${userId == data.writerId && data.apprStatus == 0 && (deptFlag != 'true')}">
+                   		<a class="imgbtn"><span onclick="del()"><spring:message code='ezAttitude.t164'/></span></a>
+                   	</c:if>
+	            </div>
 	        </div>
 	    </form>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>

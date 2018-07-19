@@ -3032,4 +3032,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGRecordTempVO> selectSpecialInfoNonElecRec(Map<String, Object> map) throws Exception {
 		return (List<ApprGRecordTempVO>) list("EzApprovalG.selectSpecialInfoNonElecRec", map);
 	}
+	public int getLinkedAttachFileCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getLinkedAttachFileCount", map);
+	}
 }

@@ -494,10 +494,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String susinAdmin = "";
         String SignCheck = "N";
         String pass = "";
-		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+        
+        userInfo = commonUtil.aprUserInfo(loginCookie);
+
+        String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
         String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";

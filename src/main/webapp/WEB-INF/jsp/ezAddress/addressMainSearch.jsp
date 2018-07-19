@@ -373,7 +373,7 @@
 	            <li><span onclick="delete_address()"><spring:message code='ezAddress.t175' /></span></li>
 	            <li><span onclick="window.location.reload(false)"><spring:message code='ezAddress.t240' /></span></li>
 	            <li style="background:none;float:right">
-	                <select style="margin-top: -3px;" id="ListViewType" onchange="View_Change();">
+	                <select id="ListViewType" onchange="View_Change();">
 	                    <option value="card" <c:if test="${pListType == 'card'}"> selected</c:if>><spring:message code='ezAddress.t2000' /></option>
 	                    <option value="list" <c:if test="${pListType == 'list'}"> selected</c:if>><spring:message code='ezAddress.t2001' /></option>
 	                </select>
@@ -387,10 +387,10 @@
 	        <tr>
 	            <th><spring:message code='ezAddress.t314' /></th>
 	            <td>
-	                <input type="checkbox" name="chkType" id="CheckUser" /><span onclick="check_click('CheckUser')" style="cursor: pointer;"><spring:message code='ezAddress.t145' /></span>
-	                <input type="checkbox" name="chkType" id="CheckDept" /><span onclick="check_click('CheckDept')" style="cursor: pointer;"><spring:message code='ezAddress.t146' /></span>
-	                <input type="checkbox" name="chkType" id="CheckCompany" /><span onclick="check_click('CheckCompany')" style="cursor: pointer;"><spring:message code='ezAddress.t147' /></span>&nbsp;
-	                <select name="search_case" id="search_case" style="height:22px">
+	                <input type="checkbox" name="chkType" id="CheckUser" /><span onclick="check_click('CheckUser')" style="cursor: pointer; vertical-align:middle;"><spring:message code='ezAddress.t145' /></span>
+	                <input type="checkbox" name="chkType" id="CheckDept" /><span onclick="check_click('CheckDept')" style="cursor: pointer; vertical-align:middle;"><spring:message code='ezAddress.t146' /></span>
+	                <input type="checkbox" name="chkType" id="CheckCompany" /><span onclick="check_click('CheckCompany')" style="cursor: pointer; vertical-align:middle;"><spring:message code='ezAddress.t147' /></span>&nbsp;
+	                <select name="search_case" id="search_case" style="height:22px; vertical-align:middle;">
 	                    <option value="S_NAME"><spring:message code='ezAddress.t124' /></option>
 	                    <option value="S_COMPANY"><spring:message code='ezAddress.t51' /></option>
 	                    <option value="S_DEPT"><spring:message code='ezAddress.t54' /></option>
@@ -405,7 +405,7 @@
 	                    <option value="S_HOMEPAGE"><spring:message code='ezAddress.t293' /></option>
 	                </select>
 	                <input type="text" name="search_text" id="search_text" class="textarea" onkeypress="return search_keypress()" onmousedown="Search_Clear();" style="height:22px;">
-	                <a href="#" class="imgbtn" style="vertical-align: middle;margin-top:2px"><span onclick="search_start()"><spring:message code='ezAddress.t142' /></span></a></td>
+	                <a href="#" class="imgbtn imgbck" style="vertical-align: middle;margin-top:2px"><span onclick="search_start()"><spring:message code='ezAddress.t142' /></span></a></td>
 	        </tr>
 	    </table>
 	    <br>	    

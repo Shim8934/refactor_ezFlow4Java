@@ -1550,11 +1550,11 @@ public class EzQuestionController extends EgovFileMngUtil {
         pAnsNo = request.getParameter("ansNo");
         pAttID = request.getParameter("attID");
         
-        if(request.getParameter("fileName") != null && !request.getParameter("fileName").equals("")){
+        if (request.getParameter("fileName") != null && !request.getParameter("fileName").equals("")) {
         	pFileName = request.getParameter("fileName");
         }
         
-        if(pType.equals("QUESTION")){
+        if (pType.equals("QUESTION")) {
             if (pFileName != null && !pFileName.equals("")) {
             	pFilePath = commonUtil.getUploadPath("upload_board.UPLOADQUESTION", userInfo.getTenantId())+commonUtil.separator+pFileName;
             } else {
@@ -1565,10 +1565,12 @@ public class EzQuestionController extends EgovFileMngUtil {
             
             pFileName = URLDecoder.decode(pFileName, "utf-8");
             
-            if (pFilePath != null && !pFilePath.equals("")){
+            if (pFilePath != null && !pFilePath.equals("")) {
             	pFilePath = pFilePath.split(",")[0];
-            	if(request.getParameter("trName")!=null && !request.getParameter("trName").equals("")){
-            	pFileName = request.getParameter("trName")+"."+pFilePath.split("\\.")[1];
+            	if (request.getParameter("trName")!=null && !request.getParameter("trName").equals("")) {
+            		pFileName = request.getParameter("trName")+"."+pFilePath.split("\\.")[1];
+            		//2018-07-13 김보미 - 파일명 깨지는 버그 수정
+            		pFileName = URLDecoder.decode(pFileName, "utf-8");
             	}
                 ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
             }
@@ -2183,7 +2185,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		rNodes.appendChild(rNode);
 		
 		Node node = resultXML.createElement("STYLE");
-		CDATASection CDATASection = resultXML.createCDATASection("background-color:#C4D4EB;");
+		CDATASection CDATASection = resultXML.createCDATASection("background-color:#f2f2f2;");
 		rNode.appendChild(CDATASection);
 		
 		node = resultXML.createElement("CELL");
@@ -2322,7 +2324,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2338,7 +2340,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2354,7 +2356,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2506,7 +2508,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		Node node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2522,7 +2524,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2538,7 +2540,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2688,7 +2690,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		Node node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2704,7 +2706,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2720,7 +2722,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2870,7 +2872,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		Node node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2886,7 +2888,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2902,7 +2904,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");

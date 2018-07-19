@@ -13,6 +13,10 @@
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
 	    	}
+	    	
+	    	.mainlist_free tr td {
+			    height: 0px;
+			}
 	    </style>
 	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -251,9 +255,6 @@
                   start : function(event, elem) { 
                       $(".receiver_borderbox tr").removeClass("multiple-sortable-selected");
                       $(".receiver_borderbox tr").removeClass("ui-sortable-helper");
-                      
-                      divListArry = [];
-                     
                   },
                   click : function() {
                 	  
@@ -270,11 +271,11 @@
                   stop : function(event, elem) {
                 	  
                 	  //드랍되었을때 selected랑 색 변경해주기
-                	  var noSelectedList = $("#" + event.target.id + " tbody tr");
+                	  var noSelectedList = divListArry; //$("#" + event.target.id + " tbody tr");
                 	  
                 	  for (var i = 0; i < noSelectedList.length; i++) {
                 		  noSelectedList[i].style.backgroundColor = m_strColorDefault;
-                		  noSelectedList[i].selected = false;
+                		  noSelectedList[i].setAttribute("selected", "false");
                 	  }
                 	  
                 	  // thead에 들어가는 현상 수정 
@@ -297,10 +298,11 @@
                 			  elemParent.nextSibling.appendChild(childArry[i]); // tbody에 추가
                 		  }
                 	  }
+                	  
+                	  divListArry = [];
                   }
                });
-	         
-	            $(".receiver_borderbox tr").attr("restart", "true");
+	            
 	            ChangeListView_onClick(getOrganListType());
 	        }
 	        
@@ -805,7 +807,7 @@
 	        }
 	        function InsertReceiver(pListView) {
 	            try {
-	                if (inputTabButton.getAttribute("class") == "on") {
+	                if (inputTabButton.children[0].getAttribute("class") == "tabon") {
 	                    inputAddress();
 	                    return;
 	                }
@@ -815,6 +817,7 @@
 	                var pListViewDL = new ListView();
 	                pListViewDL.LoadFromID("Address");
 	                var arrRows = pListViewDL.GetSelectedRows();
+	                var _tdlength = 0;
 	                if (arrRows.length > 0) {
 	                    var pparsingXML = "";
 	                    var pparsingXML2 = "";
@@ -894,7 +897,7 @@
 	                            listview.AddDataRow(objTr, Resultxml);
 	
 	                            document.getElementById(listid).className = "receiver_list";
-	                            var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+	                            _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
 	                            for (var y = 0; y < _tdlength; y++) {
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
@@ -902,9 +905,18 @@
 	                        }
 	                    }
 	                }
+	                
+		            for (var i = 0; i < arrRows.length; i++) {
+		            	for (var j = 0; j < 3; j++) {
+		            		arrRows[i].style.backgroundColor = m_strColorDefault;
+		            		arrRows[i].setAttribute("selected", "false");
+		            	}
+		            }
+		            
 	            }
 	            else if (m_selectedTree == ListViewDL) {
 	                var pListViewDL = new ListView();
+	                var _tdlength = 0;
 	                pListViewDL.LoadFromID("pListViewDL");
 	                var arrRows = pListViewDL.GetSelectedRows();
 	                if (arrRows.length > 0) {
@@ -966,7 +978,7 @@
 	                            listview.AddDataRow(objTr, Resultxml);
 	
 	                            document.getElementById(listid).className = "receiver_list";
-	                            var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+	                            _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
 	                            for (var y = 0; y < _tdlength; y++) {
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
@@ -974,11 +986,18 @@
 	                        }
 	                    }
 	                }
+	                
+		            for (var i = 0; i < arrRows.length; i++) {
+	            		arrRows[i].style.backgroundColor = m_strColorDefault;
+	            		arrRows[i].setAttribute("selected", "false");
+		            }
+	                
 	            }
 	            else if (m_selectedTree == orglistView) {
 	                var pparsingXML = "";
 	                var pparsingXML2 = "";
 	                var pAddFlag = false;
+	                var _tdlength = 0;
 	                if (p_ListOrderObject == null || p_ListOrderObject == "") {
 	                    var organTree = new TreeView();
 	                    organTree.LoadFromID("FromTreeView");
@@ -1040,7 +1059,7 @@
 	                        listview.AddDataRow(objTr, Resultxml);
 	
 	                        document.getElementById(listid).className = "receiver_list";
-	                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+	                        _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
 	                        for (var y = 0; y < _tdlength; y++) {
 	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                            document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
@@ -1102,7 +1121,7 @@
 	                                listview.AddDataRow(objTr, Resultxml);
 	
 	                                document.getElementById(listid).className = "receiver_list";
-	                                var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+	                                _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
 	                                for (var y = 0; y < _tdlength; y++) {
 	                                    document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                                    document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
@@ -1169,7 +1188,7 @@
 	                            listview.AddDataRow(objTr, Resultxml);
 	
 	                            document.getElementById(listid).className = "receiver_list";
-	                            var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
+	                            _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
 	                            for (var y = 0; y < _tdlength; y++) {
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                                document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
@@ -1180,6 +1199,25 @@
 	                }
 	
 	            }
+	            
+	            var _td = document.getElementById("txtlist_table").childNodes[1].childNodes[0].childNodes;
+	            _tdlength = 0;
+	            
+	            for (var i = 0; i < _td.length; i++) {
+	            	if (_td[i].nodeName == "TD") {
+	            		_tdlength++;
+	            	}
+	            }
+	            
+	            
+	            for (var i = 0; i < listContentArry.length; i++) {
+	            	for (var j = 0; j < 3; j++) {
+	            		document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+	            	}
+	            }
+	            listContentArry = [];
+	            
+	            
 	            var listid = "";
 	            if (pListView.id == "ListViewMsgTo" || pListView == "MsgToList") {
 	                listid = "MsgToList";
@@ -1570,7 +1608,12 @@
 		        
 		        var UserListHTML = "";
 		        if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) != null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
-		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+		            if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+	        		} else {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang300 + "</span>]";
+	        		}
+		            
 		            SelectDeptNM.setAttribute("countinfo", "1")
 		        }
 		        if (pListType == "IMG") {
@@ -2833,6 +2876,9 @@
                         PagingHTML += "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
                     }
                 }
+                if (MaxNum == 0) {
+                	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+                }
                 if (totalPage > BlockSize) {
                     if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
                         PagingHTML += "<span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\"></span>";
@@ -3137,6 +3183,9 @@
                         strtext2 = "<span onclick='goToPageByNum2(" + i + ")'>" + i + "</span>";
                         PagingHTML2 += strtext2;
                     }
+                }
+                if (MaxNum2 == 0) {
+                	PagingHTML2 += "<span class=\"on\">" + 1 + "</span>";
                 }
                 if (totalPage2 > BlockSize2) {
                     if (totalPage2 >= parseInt(((parseInt((pageNum2 - 1) / BlockSize2) + 1) * BlockSize2) + 1)) {

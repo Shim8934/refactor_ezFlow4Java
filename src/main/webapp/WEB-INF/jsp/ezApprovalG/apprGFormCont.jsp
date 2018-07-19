@@ -6,7 +6,7 @@
 		<title><spring:message code='ezApprovalG.t152'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css"   type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>"   type="text/css">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -482,7 +482,7 @@
 	                    <option value="1"><spring:message code='ezApprovalG.t442'/></option>
 	                    <option value="2"><spring:message code='ezApprovalG.t598'/></option>
 	                </select>
-	                <input id="forminfo" onkeypress="search_press(event)" type="text" style="margin-top:1px" />
+	                <input id="forminfo" onkeypress="search_press(event)" type="text" style="margin-top:-3px; vertical-align:unset;" />
 	                <a class="imgbtn imgbck" onclick="searchform()" style="margin-top:1px"><span><spring:message code='ezApprovalG.t111'/></span></a>
 	                <a class="imgbtn imgbck" onclick="reset()" style="margin-top:1px"><span><spring:message code='ezApprovalG.t1301'/></span></a>
 	            </td>

@@ -96,6 +96,7 @@
 		    var useMailNewWindow = "${useMailNewWindow}";
 		    var useReceivingChk = false;
 		    var noReadMsg = "<spring:message code='ezPoll.t137'/>"; // 읽지 않음
+		    var sentDateChk = false; // 전달 및 회신시 보낸시각
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -464,20 +465,10 @@
 		            return;
 		        }
 		        
-		        SearchKeyword = MakeSQL(inputkeyword.value);
-		        goToPageByNum("1");
-		
-		    }
-		    
-		    function MakeSQL(key) {
-		        var radiosearch = document.getElementsByName('searchCheck');
+		        var searchField = document.getElementById("searchCheck");
+		        SearchKeyword = searchField.value + "=" + inputkeyword.value;
 		        
-		        if (radiosearch.item(0).checked)
-		            return radiosearch.item(0).value + "=" + key;
-		        else if (radiosearch.item(1).checked)
-		            return radiosearch.item(1).value + "=" + key;
-		        else if (radiosearch.item(2).checked)
-		            return radiosearch.item(2).value + "=" + key;
+		        goToPageByNum("1");
 		    }
 		    
 		    function reloadReadContent(url) {
@@ -801,17 +792,19 @@
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		<h1>${folderName}<span id="mailBoxInfo"></span>
 	      <span style="float:right;font-weight:normal;color:black;">
-	          <input name="searchCheck" id="Radio1" type="radio" value="SUBJECT" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code="ezEmail.t98" /></label>
-	          <c:if test="${isSentItems == true}">
-	          <input name="searchCheck" id="Radio2" type="radio" value="RECEIVE" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code="ezEmail.t66" /></label>
-	          </c:if>
-	          <c:if test="${isSentItems != true}">
-			  <input name="searchCheck" id="Radio3" type="radio" value="FROM" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio3">&nbsp;<spring:message code="ezEmail.t161" /></label>
-			  </c:if>
-			  <c:if test="${useSearchContent == 'YES'}">
-			  <input name="searchCheck" id="Radio4" type="radio" value="CONTENT" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio4">&nbsp;<spring:message code="ezEmail.t649" /></label>
-			  </c:if>
-			  &nbsp;
+              <select name="searchCheck" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
+                  <option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option>
+                  <c:if test="${isSentItems != true}">
+                  <option value="FROM"><spring:message code="ezEmail.t161" /></option>
+                  </c:if>
+                  <c:if test="${isSentItems == true}">
+                  <option value="RECEIVE"><spring:message code="ezEmail.t651" /></option>
+                  </c:if>
+                  <c:if test="${useSearchContent == 'YES'}">
+                  <option value="CONTENT"><spring:message code="ezEmail.t649" /></option>
+                  </c:if>
+              </select>
+			  
 			  <input name="keyword" class="Mail_Input" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
 	          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="start_search()"></a>
 	      </span>

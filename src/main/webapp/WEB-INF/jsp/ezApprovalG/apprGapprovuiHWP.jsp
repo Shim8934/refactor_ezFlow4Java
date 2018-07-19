@@ -518,6 +518,40 @@
 			}
 	
 			function btnApprove_onclick() {
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getExtTotalAttachSize.do",
+		    		data : {
+		    			docID : pDocID
+		    		},
+		    		success: function(text){
+		    			result = text;
+		    		}        			
+		    	});
+		    	
+		    	var strClone = HwpCtrl.GetCloneData("", "HWPML2X");
+		    	var strBytes = parseInt(getByteLength(strClone));
+		    	
+                var rtnAttachXML = new ActiveXObject("Microsoft.XMLDOM");
+                rtnAttachXML.loadXML(result);
+                
+                var attachTotalSize = getNodeText(rtnAttachXML.getElementsByTagName("TOTALSIZE").item(0));
+                
+                
+                if (getNodeText(rtnAttachXML.getElementsByTagName("FLAG").item(0)) == "Y") {
+                    OpenAlertUI("외부발송문서 총 첨부용량은 최대 6MB 입니다" + "<br>" + "첨부용량을 줄여주시기 바랍니다.");
+                    return;
+                    
+                }
+
+                // 본문과 첨부파일의 총합이 7.4mb가 초과시 알러트 결재라인 수정시에도 2018-07-19 강민수92
+                if (getNodeText(rtnAttachXML.getElementsByTagName("EXTFLAG").item(0)) == "Y" && strBytes + parseInt(attachTotalSize) > 7400000) {
+                	OpenAlertUI("외부발송문서 총 용량은 최대 7.4MB 입니다" + "<br>" + "첨부파일이나 본문용량을 줄여주시기 바랍니다.");
+                    return;
+                }
+				
 			    setMenuDisable("btnApprove", true);
 			
 			    var parameter = new Array();
@@ -1225,6 +1259,15 @@
 			        if (!rtnVal) {
 			        }
 			    }
+			    
+		    	function getByteLength(s){
+		    		var bytes;
+		    		var i;
+		    		var c;
+		    		
+		    	    for(bytes=i=0; c=s.charCodeAt(i++); bytes += c >> 11? 3 : c >> 7 ? 2 : 1);
+		    	    return bytes;
+		    	}
 	    </script>
 	</head>
 	<body class="popup" onbeforeunload="return window_onbeforeunload()" onload="javascript:window_onload()">

@@ -941,6 +941,7 @@ function Save_onClick_Complete(ReturnValue) {
                         MailSend_Show_Progress();                        
                     }
 
+                    g_saveHttp.timeout = 20000;
                     g_saveHttp.onreadystatechange = event_SaveonClick;
                     g_saveHttp.send(xmlDoc);
                 }
@@ -998,11 +999,14 @@ function event_SaveonClick() {
     	
         var xmlResult = loadXMLString(g_saveHttp.responseText);
         var pRtnMessage = "";
-        if (!CrossYN()) {
-            pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).text;
-        }
-        else if (CrossYN()) {
-        	pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).textContent;
+        
+        try {
+            if (!CrossYN()) {
+                pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).text;
+            } else if (CrossYN()) {
+                pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).textContent;
+            }
+        } catch (e) {
         }
         
         //메일 발송인 경우
@@ -2047,7 +2051,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
         for (var i = 0; i < AttachRows.length; i++) {
             var filepath = SelectSingleNodeValue(AttachRows[i], "FilePath");
             var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
-            var filename = MakeXMLString(filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length));
+            var filename = filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length);
             var filesize = SelectSingleNodeValue(AttachRows[i], "FileSize2");
 
             pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";

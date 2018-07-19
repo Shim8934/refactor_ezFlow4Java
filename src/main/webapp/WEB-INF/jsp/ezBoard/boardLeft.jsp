@@ -5,7 +5,7 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	   	<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	   	<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <style>
 	    	.tree { min-height : 100px; }
@@ -75,7 +75,7 @@
 		                MyBoard();
 		            }
 		            else if (subFunc == "2") {
-		                /* ReservationItem_onclick(); */
+		                ReservationItem_onclick();
 		            }
 		            else {
 		                if (RedirectBoardID != "") {
@@ -231,7 +231,7 @@
 		        for(var i=0; i<title2.length; i++) {
 		        	title3 = title2[i].getElementsByClassName("node_normal");
 		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
-		        	title3[0].style.width = 156 - 16*nodeLevel +'px';
+		        	title3[0].style.width = 152 - 18*nodeLevel +'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
 		        }
@@ -326,7 +326,7 @@
 		        for(var i=0; i<title2.length; i++) {
 		        	title3 = title2[i].getElementsByClassName("node_normal");
 		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
-		        	title3[0].style.width = 156 - 16*nodeLevel +'px';
+		        	title3[0].style.width = 152 - 18*nodeLevel +'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
 		        }
@@ -388,7 +388,7 @@
 				var node = $(".node_normal");
 				for(var i=0; i<node.length; i++) {
 					node[i].setAttribute("TITLE", node[i].parentElement.getAttribute("DATA2"));
-					node[i].style.width = '156px';
+					node[i].style.width = '152px';
 					node[i].style.textOverflow = 'ellipsis';
 					node[i].style.overflow = 'hidden';
 				} 
@@ -456,7 +456,7 @@
 					var node = $(".node_normal");
 					for(var i=0; i<node.length; i++) {
 						node[i].setAttribute("TITLE", node[i].parentElement.getAttribute("DATA2"));
-						node[i].style.width = '156px';
+						node[i].style.width = '152px';
 						node[i].style.textOverflow = 'ellipsis';
 						node[i].style.overflow = 'hidden';
 					} 

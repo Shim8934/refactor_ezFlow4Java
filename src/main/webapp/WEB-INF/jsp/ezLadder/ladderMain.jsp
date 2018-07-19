@@ -76,7 +76,7 @@
 		
 		</script>
 		<style type="text/css">
-			.effect {width:30px; height:30px;}
+			.effect {width:30px; height:30px; vertical-align: middle}
 			#mainmenu li {border-color: #ddd; border-radius:0px; }
 			.mainlist th {cursor: pointer;}
 			#mainmenu li a:HOVER span{color:#0072c6;border-color:#0072c6;}
@@ -84,6 +84,7 @@
 			label {position:relative; top: -3px;}
 			.participantBtn:HOVER, label:HOVER {cursor: pointer;}
 			.mainlist tr td {padding-top:0px;padding-bottom:0px;}
+			input[type=radio] {border: 0;}
 		</style>
 	</head>
 	<body class="mainbody" style="overflow: hidden;">

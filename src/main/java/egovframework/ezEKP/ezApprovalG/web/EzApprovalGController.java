@@ -2161,15 +2161,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String attachSN = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
 		String fileName = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
-		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String realPath = commonUtil.getRealPath(request);
+		String uploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
-		String upd = dirPath + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator;
 		String fileAttachFormatSN = "00000" + attachSN;
 		fileAttachFormatSN = fileAttachFormatSN.substring(fileAttachFormatSN.length() - 4);
 		
-		String fileSpec = upd + docID + fileAttachFormatSN + fileName;
+		String attachHref = uploadPath + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + fileAttachFormatSN + fileName;
+		String fileSpec = realPath + attachHref;
 		
-		if (new File(fileSpec).exists()) {
+		if (ezApprovalGService.isLinkedAttachFile(attachHref)) {
+			rtnVal = "TRUE";
+			logger.debug("is linked attach file: {}", attachHref);
+		} else if (new File(fileSpec).exists()) {
 			deleteFile(fileSpec);
 			rtnVal = "TRUE";
 		} else {

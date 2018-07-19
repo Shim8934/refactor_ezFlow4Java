@@ -834,11 +834,13 @@
 		        	alert("<spring:message code='ezTask.t990' />");
 		            return;
 		        }
+		        
+		        chkValue = $("#formId option:selected").val();
 
-		        for (var i = 0; i < document.getElementsByName("searchCheck").length; i++) {
+		       /*  for (var i = 0; i < document.getElementsByName("searchCheck").length; i++) {
 		            if (document.getElementsByName("searchCheck")[i].checked == true)
 		                chkValue = document.getElementsByName("searchCheck")[i].value;
-		        }
+		        } */
 
 		        filter = document.getElementById("txt_keyword").value;
 
@@ -917,6 +919,7 @@
 					$(".row_body").css("background", "");
 				}
 		    }
+		  
 		</script>
 	</head>
 	<body class="mainbody">
@@ -927,11 +930,15 @@
 	
 		<h1><spring:message code='ezTask.t84' /><span id="mailBoxInfo"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
-		          <input name="searchCheck" id="Radio2" type="radio" value="title" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio2" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t118' /></label>
-		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t2005' /></label>
-				  &nbsp;
+		    <!-- 2018-07-17 구해안 라디오박스 검색창 select box로 변경 및 스타일 다른 모듈과 같도록 수정-->
+		    <select id="formId" name="searchCheck" style="width:80px; height:27px; border-color: #c8c8c8;">
+		    	<option id="Radio2" value="title"><spring:message code='ezTask.t118' /></option>
+		    	<option id="Radio1" value="personName"><spring:message code='ezTask.t2005' /></option>
+		    </select>
+		         <%--  <input name="searchCheck" id="Radio2" type="radio" value="title" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio2" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t118' /></label>
+		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t2005' /></label> --%>				  
 				  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		          <a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
+		          <a href="#" style="float:right;"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
 		    </span>
 		</h1>
 		
@@ -980,7 +987,7 @@
 				<td style="WIDTH: 100%;HEIGHT: 100%;vertical-align:top">
 					<%-- 2018-04-24 김민성 - 업무명, 메모 길이 조절  --%>
 					<!-- 2018-05-24 구해안 - 업무구분,완료율,시작일,종료일 사이간격 띄우기 -->
-					<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed;">
+					<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed; min-width:800px;">
 						<col style ="width:30px;">
 						<col style ="width:50px;">
 						<col style ="width:20px;">

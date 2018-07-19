@@ -170,7 +170,7 @@
 		    });
 		    
 		    /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
-		    $(window).on("resize", function(){
+		    /* $(window).on("resize", function(){
 		    	if (parent.frames["FBoard_ifrm"]) {
 		    		var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;
 		    		$("#srarchpopup").css("left", popupX).css("bottom", "66px");
@@ -179,9 +179,22 @@
 					$("#srarchpopup").css("left", popupX);
 		    	}
 				
-	        	/* $("#addpopup").css("left", popupX); */
+	        	
 	        	$("#srarchpopup").css("left", popupX);	        
-		     });
+		    }); */
+		    
+		    $(window).on("resize", function(){
+		    	if (parent.frames['left'] == undefined && parent.frames["BoardEnv_ifrm"] == undefined) {
+		    		var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;
+		    		$("#srarchpopup").css("left", popupX).css("bottom", "66px");
+		    	} else if (parent.frames["BoardEnv_ifrm"] != undefined) {
+		    		var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;
+		    		$("#srarchpopup").css("left", popupX).css("bottom", "26px");
+		    	} else {
+					var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+					$("#srarchpopup").css("left", popupX);
+		    	}					        	
+	        });
 		
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
@@ -356,15 +369,15 @@
 		        }
 		
 		        if (document.getElementById("txt_keyword").value != "") {
-		            var radiosearch = document.getElementsByName('searchCheck');
-		            if (radiosearch.item(0).checked) {
-		                TYPE += "TITLE;";
-		                DATA += "<TITLE>" + document.getElementById("txt_keyword").value + "</TITLE>";
-		            }
-		            else if (radiosearch.item(1).checked) {
-		                TYPE += "WRITERNAME;";
-		                DATA += "<WRITERNAME>" + document.getElementById("txt_keyword").value + "</WRITERNAME>";
-		            }
+		        	var selectSearch = document.getElementById('selectType');
+	                if (selectSearch.item(0).selected) {
+	                    TYPE += "TITLE;";
+	                    DATA += "<TITLE>" + document.getElementById("txt_keyword").value + "</TITLE>";
+	                }
+	                else if (selectSearch.item(1).selected) {
+	                    TYPE += "WRITERNAME;";
+	                    DATA += "<WRITERNAME>" + document.getElementById("txt_keyword").value + "</WRITERNAME>";
+	                }
 		        }
 		        else {
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
@@ -502,11 +515,17 @@
 	    	    	var height = 785;
 	    	    }
 		
-		        if (document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight == "bold") {
+	    	    /* 2018-07-09 홍승비 - 게시물 클릭 시 spn_content의 아이디를 사용해 폰트를 변경하도록 수정함 */
+	    	    if (document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight == "bold") {
 		            document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
-		       // document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
+					document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal";
 		        }
-		
+	    	    for (var i = 0; i < obj.childNodes.length; i++) {
+			        if (obj.childNodes[i].style.fontWeight == "bold") {
+			            obj.childNodes[i].style.fontWeight = "normal";
+					}
+		        }
+	    	    
 		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		
@@ -912,17 +931,18 @@
 		
 		
 		    /* 2018-06-12 김민성 - 게시판 검색 레이어팝업 변경 */ 
-		    function doLayerPopup(obj) {
-		    	if (window.parent.frames['left'] == undefined) {	// 2018-06-15 김민성 - 즐겨찾기 내 게시판일때 기존 팝업으로 변경
-		    		$("<div id='blockLeft' class='blockLeft' onclick='parent.frames[\"right\"].frames[\"FBoard_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["left"].document.body);
+		    function doLayerPopup(obj) {    	 									// 즐겨찾기 검색
+		    	if (window.parent.frames['left'] == undefined && parent.frames["BoardEnv_ifrm"] == undefined) {	// 2018-06-15 김민성 - 즐겨찾기 내 게시판일때 기존 팝업으로 변경
+		    		$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].frames[\"FBoard_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["left"].document.body);
 		    		$("<div id='blockTop' class='blockTop' onclick='parent.frames[\"right\"].frames[\"FBoard_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["right"].document.body);
 		    		
-		    		parent.parent.frames["left"].document.body.style.overflow = "hidden";
-		    		
+		    		parent.parent.frames["left"].document.body.style.overflow = "hidden";		    		
+		    				    		
 			    	var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;			    	
 
 			    	$("#srarchpopup").css("left", popupX).css("bottom", "66px");
-			    	$("#srarchpopup").modal();	
+			    	$("#srarchpopup").modal();
+			    	
 		        	/* btn_PostDate_Clear();
 			        document.getElementById("chkSearchSub").checked = false;
 			        document.getElementById("txtTitle").value = "";
@@ -942,7 +962,18 @@
 			            BoardSearchOptionHidden();
 			        } */
 		    	}
-		    	else {
+		    	else if (parent.frames["BoardEnv_ifrm"] != undefined) {			// 관리자 모드 검색
+		    		$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"board_main\"].frames[\"BoardEnv_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["board_menu"].document.body);
+		    		$("<div id='blockTop' class='blockTop' onclick='parent.frames[\"board_main\"].frames[\"BoardEnv_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["board_main"].document.body);
+		    		
+		    		parent.parent.frames["board_menu"].document.body.style.overflow = "hidden";		    		
+		    				    		
+			    	var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;			    	
+
+			    	$("#srarchpopup").css("left", popupX).css("bottom", "26px");
+			    	$("#srarchpopup").modal();
+		    	}
+		    	else {																				// 일반 게시판 검색
 			    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
 			    	parent.frames["left"].document.body.style.overflow = "hidden";
 			    	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
@@ -1073,32 +1104,35 @@
 	<c:if test="${boardInfo.listView_FG != 'true'}">
 		<div style="margin-top:100px;text-align:center"><spring:message code='ezBoard.t272'/></div>
 	</c:if>
-	<c:choose>
-		<c:when test="${adminType != 'y'}">
-			<h1>${boardName}<span id="mailBoxInfo"></span>
-			     <span style="float:right;font-weight:normal;color:black;">
-			          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code='ezBoard.t208'/></label>
-					  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code='ezBoard.t223'/></label>
-					  &nbsp;
-					  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-			          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
+	<c:if test="${boardInfo.listView_FG == true}">
+		<c:choose>
+			<c:when test="${adminType != 'y'}">
+				<h1>${boardName}<span id="mailBoxInfo"></span>
+				     <span style="float:right;font-weight:normal;color:black;">
+						<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+				    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
+				    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
+				    	</select>
+						<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+				        <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
+					</span>
+				</h1>
+			</c:when>
+			<c:otherwise>
+			    <script type="text/javascript">
+			        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}"+"<span id='mailBoxInfo'></span>";
+			    </script>
+			    <br />
+			    <span style="display:none; float:right;font-weight:normal;color:black;">
+			          <select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+			    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
+			    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
+			    	</select>
+					<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+					<a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
 			        </span>
-			</h1>
-		</c:when>
-		<c:otherwise>
-		    <script type="text/javascript">
-		        parent.document.getElementsByTagName("h1")[0].innerHTML = "${boardName}"+"<span id='mailBoxInfo'></span>";
-		    </script>
-		    <br />
-		    <span style="display:none; float:right;font-weight:normal;color:black;">
-		          <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin:0px;padding:0px;width:13px;height:13px; ">&nbsp;<spring:message code='ezBoard.t208'/>
-				  <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin:0px;padding:0px;width:13px;height:13px; ">&nbsp;<spring:message code='ezBoard.t223'/>
-				  &nbsp;
-				  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
-		        </span>
-		</c:otherwise>
-	</c:choose>
+			</c:otherwise>
+		</c:choose>
 	<c:if test="${buttonHidden == 'N'}">
 		<div id="mainmenu">
 		  <ul>
@@ -1234,7 +1268,7 @@
 	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
 		<div id="srarchpopup" class="popupwrap1 modal" style="margin-bottom: 70px; left: 297.5px; display: inline-block;">
 			<div class="popupJQLayer">
-				<div class="title"><spring:message code='ezBoard.t0006' /><spring:message code='ezJournal.t43' /></div>
+				<div class="title"><spring:message code='ezBoard.t188' /></div>
 				<div id="close">
 		            <ul>
 		                <li><a rel="modal:close"><span onclick="BoardSearchOptionHidden()"></span></a></li>
@@ -1251,11 +1285,11 @@
 					</tr>
 					<tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t223' /></th>
-			            <td><input type="text" id="txtWriterName" style="width:98%" value=""></td>
+			            <td><input type="text" id="txtWriterName" style="width:100%" value=""></td>
 			        </tr>
 			        <tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
-			            <td><input type="text" id="txtTitle" style="width:98%" value=""></td>
+			            <td><input type="text" id="txtTitle" style="width:100%" value=""></td>
 			        </tr>  
 			        <%--  <tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>
@@ -1334,5 +1368,6 @@
 	        </div> 
 	   </c:otherwise>
 		</c:choose>    --%>  
+		</c:if>
 	</body>
 </html>

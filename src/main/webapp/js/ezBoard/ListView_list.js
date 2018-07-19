@@ -741,7 +741,12 @@ function ListView() {
                     objTd.style.color = "RED";
                 }
 
-                objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
+                /* 2018-07-16 홍승비 - 체크박스를 사용하지 않는 게시판검색 기능 분기 위치 수정 */
+                if (SelectSingleNodeValue(oHeaders[j], "WIDTH") == 0) {
+                	continue;
+                } else {
+                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
+                }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TITLE") {
                     objTd.style.margin = "0";
@@ -765,9 +770,9 @@ function ListView() {
                     if (getNodeText(oDatas[6]) == "Y") {
                         titleImage = titleImage + "<img src='/images/i_new.gif'>&nbsp;";                        
                     }
-                    if (getNodeText(oDatas[4]) == "0") 
+                    if (getNodeText(oDatas[4]) == "0") {
                         objTd.style.fontWeight = "BOLD";
-
+                    }
                     if (getNodeText(oDatas[10]) != "0" && Use_OneLineCount == "YES")
                         titleOneLineCnt = "<span style='color:#c64200'>[" + getNodeText(oDatas[10]) + "]</span>";
                     
@@ -792,6 +797,10 @@ function ListView() {
                 	objTd.style.overflow = "hidden";
                 	objTd.style.whiteSpace = "nowrap";
                 	objTd.style.textOverflow = "ellipsis";
+                }
+                /* 2018-07-09 홍승비 - 읽지 않은 일반&그룹&익명&QNA&포토게시판의 게시물 리스트 폰트를 bold로 수정 */
+                if (getNodeText(oDatas[4]) == "0") {
+                    objTd.style.fontWeight = "BOLD";
                 }
 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ATTACHMENTS") {
@@ -822,6 +831,7 @@ function ListView() {
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "READCOUNT") {
                     objTd.style.textAlign = "center";
                 }
+                
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ITEMID") {
                     var _TDCheckBox_Sub = document.createElement("INPUT");
                     _TDCheckBox_Sub.type = "checkbox";

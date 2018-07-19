@@ -21,6 +21,11 @@
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
 		<!-- time picker-->
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<style>
+			.h2_dot {
+				background: url(/images/kr/left/left_dot02.gif) no-repeat 0px 70%;
+			}
+		</style>
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		
 		<script type="text/javascript">
@@ -333,15 +338,22 @@
 
 			}
 			
-			function chk_onselect(obj) {
-			    if (obj.checked) {
-			        strListInfo += obj.id;
-			    } else {
-			        strListInfo = ReplaceText(strListInfo, obj.id, "");
+			/* 2018-07-16 홍승비 - 체크박스를 사용하지 않는 게시판검색 전용 선택해제 함수 */
+			function tr_unselectedAll(pTableID) {
+			    var oList = document.getElementById(pTableID);
+			    if (!oList) {
+			        return;
 			    }
-			
-			    listEventCheckbox = true;
+		        var SelList = new ListView();
+		        SelList.LoadFromID("BoardListDiv");
+		
+		        for (var i = 0; i < SelList.GetRowCount() ; i++) {
+		            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false; 
+		            SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
+		            strListInfo = "";
+		        }
 			}
+			
 			var BlockSize = 10;
 			function td_Create1(strtext) {
 			    document.getElementById("tblPageRayer").innerHTML = strtext;
@@ -453,7 +465,7 @@
 		<tr>
 			<th style="text-align: center"><spring:message code='ezBoard.t185' /></th>
 			<td style="text-align: left" colspan="3">
-			<a class="imgbtn" style="vertical-align:middle"><span onClick="selectBoard()"><spring:message code='ezBoard.khj2' /></span></a>
+			<a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="selectBoard()"><spring:message code='ezBoard.khj2' /></span></a>
 			<span id="selectedBoardName" style="height: 100%; vertical-align: middle; overflow: hidden; display: inline-block; line-height: 27px"></span> 
 			<input type ="text" id="selectedBoard" style="display:none;" value="">
 			<input type ="text" id="selectedBoardParentBoardID" style="display:none;" value="">

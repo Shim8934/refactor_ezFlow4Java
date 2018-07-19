@@ -1066,7 +1066,7 @@
 				font-weight: normal;
 			}
 			.typeOpbtnCover {
-				background: #f8f8fa;
+				background: #f8f8f8;
 				width: 35px;
 				height: 35px;
 				position: absolute;
@@ -1103,7 +1103,7 @@
 				</tr>
 				<tr>
 					<td>
-						<div style="height: 50px; margin-bottom: 10px;padding:5px;background-color: #f8f8fa;border:1px solid #e8e8ea;position: relative;">
+						<div style="height: 50px; margin-bottom: 10px;padding:5px;background-color: #f8f8f8;border:1px solid #e8e8ea;position: relative;">
 							<div style="float: left;">
 								<c:forEach begin="0" end="3" var="typenum">
 									<div class="ladderType" _num="${typenum}">
@@ -1120,7 +1120,7 @@
 								<!-- <div style="height: 40px; width: 40px; line-height:40px; border: 1px solid #dddddd; text-align: center; border-radius: 25px; float: left; margin-left: 3px; margin-right:15px; background-color: white">
 									<span id="amount">0</span>
 								</div> -->
-								<div id="slider-range-min" style="width: 200px; top: 13px; float:left; margin-right:84px; margin-left: 15px;">
+								<div id="slider-range-min" style="width: 200px; top: 13px; float:left; margin-right:70px; margin-left: 15px;">
 									<div id="custom-handle" class="ui-slider-handle"></div>
 								</div>
 								<input name="lineCnt" style="display: none;" />
@@ -1172,9 +1172,9 @@
 				</tr>
 			</table>
 			
-			<div class="wrap" style="min-width: 1000px;">
-				<input type="button" class="ladderBtn" id="makeLad" value="<spring:message code="ezLadder.t018"/>">
-				<input type="button" id="backToList" style="background: #efefef; color: #000000;" value="<spring:message code="ezLadder.t083"/>" />
+			<div class="btnpositionJsp">
+				<a class="imgbtn" id="makeLad"><span><spring:message code="ezLadder.t018"/></span></a>
+				<a class="imgbtn" id="backToList"><span><spring:message code='ezLadder.t083' /></span></a>
 			</div>
 		</form>
 		<div style="width: 100%; height: 100%; overflow: auto; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">

@@ -16,7 +16,7 @@
 			    empty-cells: show;
 			    padding:0;margin:0;
 			    font-size:12px;
-			    font-family: 'Gulim', 'arial', 'verdana';
+			    font-family: Gulim, Meiryo UI;
 		    }
 		    .printcontent th{
 			    white-space: nowrap;
@@ -114,7 +114,7 @@
 	          	<tr>
 	            	<th><spring:message code='ezSchedule.t311' /></th>
 	              	<td colspan="3">
-	                	<div id="printAttendant">${printAttendant}</div>
+	                	<div id="printAttendant" style="padding:2px 0px;">${printAttendant}</div>
 	              	</td>
 	          	</tr>
 	          	</c:if>

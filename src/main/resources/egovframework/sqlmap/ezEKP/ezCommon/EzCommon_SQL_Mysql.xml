@@ -116,7 +116,7 @@
 			AND 	
 					USER_ID = #user_id#
 			AND		
-					UPPER(PROPERTY_NAME) = #property_name#
+					PROPERTY_NAME = #property_name#
 		]]>
 	</select>
 	

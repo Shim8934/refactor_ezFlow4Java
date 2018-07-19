@@ -142,15 +142,15 @@
     <tr>
       <th ><spring:message code='ezOrgan.t177' /></th>
       <td><input id="CheckQuota2" type="checkbox" name="CheckQuota2" <c:if test="${userWarn != null}">checked="checked"</c:if> onclick="check_change(document.getElementById('CheckQuota2'), document.getElementById('TextQuota2'));" />
-        <input name="TextQuota2" type="text" value="<c:if test="${userWarn != null}">${userWarn}</c:if>" id="TextQuota2" />GB </td>
+        <input name="TextQuota2" type="text" value="<c:if test="${userWarn != null}">${userWarn}</c:if>" id="TextQuota2" /> GB </td>
     </tr>
     <tr>
       <th ><spring:message code='ezStatistics.t1024' /></th>
       <td><input id="CheckQuota3" type="checkbox" name="CheckQuota3" <c:if test="${userQuota != null}">checked="checked"</c:if> onclick="check_change(document.getElementById('CheckQuota3'), document.getElementById('TextQuota3'));" />
-        <input name="TextQuota3" type="text" value="<c:if test="${userQuota != null}">${userQuota}</c:if>" id="TextQuota3" />GB </td>
+        <input name="TextQuota3" type="text" value="<c:if test="${userQuota != null}">${userQuota}</c:if>" id="TextQuota3" /> GB </td>
     </tr>
   </table>
-  <div class="btnposition">
+  <div class="btnpositionNew">
        <a class="imgbtn"><span onClick="return OK_Click()"><spring:message code='ezOrgan.t124' /></span></a>
   </div>
 </form>

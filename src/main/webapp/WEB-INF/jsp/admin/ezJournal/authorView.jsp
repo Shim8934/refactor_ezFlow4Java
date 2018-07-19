@@ -123,19 +123,19 @@
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t141' /></th>
 	            <td>
-	                <input id="txtuser" value="" type="text" style="width:80%" onfocus="this.blur();" readonly="readonly" />
-	                <a href="#" class="imgbtn" style="margin-left: 20px;"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	                <input id="txtuser" value="" type="text" style="width:368px" onfocus="this.blur();" readonly="readonly" />
+	                <a href="#" class="imgbtn imgbck"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezJournal.t142' /></th>
 	            <td>
-	                <textarea rows="3" id="txtdept" style="margin-top:2px; margin-bottom:2px; width:77%; resize: none;" onfocus="this.blur();" readonly="readonly" ></textarea>
-	                <a href="#" class="imgbtn" style="margin-left: 20px; margin-top:15px;"><span onclick="selectDept()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	                <textarea rows="3" id="txtdept" style="margin-top:2px; margin-bottom:2px; width:356px; resize: none;" onfocus="this.blur();" readonly="readonly" ></textarea>
+	                <a href="#" class="imgbtn imgbck" style="margin-top:15px;"><span onclick="selectDept()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnpositionNew">
 	        <a class="imgbtn"><span onclick="insertAuthDept();" ><spring:message code='ezSchedule.t157' /></span></a>
 	    </div>
 	</body>

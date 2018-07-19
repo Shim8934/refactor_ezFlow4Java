@@ -64,12 +64,22 @@
 				if ($("#divCross p a").length > 0) {
 					$("#divCross p a").attr("target", "_blank")
 				}
+				
+				//2018-07-10 김보미 - 제목이 2줄이상일 경우 공백 추가
+				titleSpace();
+				//2018-07-16 김보미 - 제목이길어질때 내용부분 높이 조정
+				titleHeight();
 	        });
 			
 			window.onresize = function () {
 				var contentHeight;
 				document.getElementById("divCross").style.height = window.innerHeight - 340 + "px";
 // 				document.getElementById("divCross").style.width = window.innerWidth - 40 + "px";
+
+				//2018-07-10 김보미 - 제목 공백 조절
+				titleSpace();
+				//2018-07-16 김보미 - 제목이길어질때 내용부분 높이 조정
+				titleHeight();
 			};
 			
 			/* 18-05-25 김민성 - 회람판 > 회람 상세정보 회람확인 시 창 새로고침 되도록 수정 */
@@ -307,10 +317,10 @@
             				
             				if (vo.status == 1) {
             					//확인 이미지
-            					printCircularUserList += "<img src='/images/ImgIcon/circular_read.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            					printCircularUserList += "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
             				} else {
             					//미확인 이미지
-            					printCircularUserList += "<img src='/images/ImgIcon/circular_unread.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            					printCircularUserList += "<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
             				}
             				
             				printCircularUserList += "</th>";
@@ -461,6 +471,38 @@
 		        	});	
 				}
 			}
+			
+			//2018-07-10 김보미 - title부분 길이를 비교해 2줄 이상이면 공백을 더 준다.
+			function titleSpace() {
+				var text = $("#titleTd").text();
+				var res;
+				var cont = $('<div>' + text + '</div>').css("display", "table")
+								.css("z-index", "-1").css("position", "absolute")
+								.css("font-family", $("#titleTd").css("font-family"))
+								.css("font-size", $("#titleTd").css("font-size"))
+								.css("font-weight", $("#titleTd").css("font-weight")).appendTo('body');
+				res = (cont.width() > $("#titleTd").width());
+				cont.remove();
+				
+				if (res) {
+					$("#titleTd").css("padding","6px 4px 6px 6px");
+				} else {
+					$("#titleTd").css("padding","");
+					$("#titleTd").css("padding-left","4px");
+				}
+			}
+			
+			//2018-07-16 김보미 - 타이틀 높이에 따라 content부분 높이 조절
+			function titleHeight() {
+				var titleHeight = $("#titleTd").height();
+				var tdHeight = 26; //한줄일때의 td 높이
+				
+				var res = (titleHeight - tdHeight);
+				res = ($("#divCross").css("height").replace(/[^-\d\.]/g, '') - res) + "px";
+				
+				$("#divCross").css("height", res);
+			}
+			
 		</script>
 	</head>
 	<style>
@@ -525,7 +567,8 @@
 					<table class="content" style="width:100%;">
 	                    <tr>
     	                    <th style="width: 10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t32' /></th>
-        	                <td colspan="3" style="padding-left: 4px;"><c:out value = '${result.title}' /></td>
+    	                    <!-- 2018-07-10 김보미 - td에 id값 추가 -->
+        	                <td colspan="3" id="titleTd" style="padding-left: 4px;"><c:out value = '${result.title}' /></td>
                     	</tr>
                     	<tr>
 							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t122' /></th>
@@ -743,7 +786,7 @@
 						</tr>
 						<tr style="height:25px"> 
  							<th style="padding-left:10px"><spring:message code='ezCircular.t86' /></th>
-		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
+		            		<td class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
 		            			<c:choose>
 		            				<c:when test="${result.confirmStatus == '0'}">
 		            					<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />
@@ -753,6 +796,10 @@
 		            					<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />
 		            				</c:when>
 		            			</c:choose>
+		            		</td>
+		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezPoll.t161' /></th>
+		            		<td>
+		            			<div id="status" style="padding-left: 4px;">${fn:substring(result.endDate,0,16) }</div>
 		            		</td>
 						</tr>
 					</table>

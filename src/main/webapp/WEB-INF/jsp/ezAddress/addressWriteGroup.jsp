@@ -322,6 +322,9 @@
 	                    PagingHTML += "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
 	                }
 	            }
+	            if (MaxNum == 0) {
+                	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+                }
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 	                    PagingHTML += "<span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\" ></span>";
@@ -1039,7 +1042,12 @@
 	            var UserListHTML = "";
 	            /* if (SelectDeptNM.getAttribute("countinfo") != "1") { */
 	            if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) != null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {	            	
-	                SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang91001 + "</span>]";
+	                if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang91001 + "</span>]";
+	        		} else {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang91001 + "</span>]";
+	        		}
+	                
 	                SelectDeptNM.setAttribute("countinfo", "1")
 	            }
 	            if (pListType == "IMG") {
@@ -1648,6 +1656,9 @@
 	                    PagingHTML2 += strtext2;
 	                }
 	            }
+	            if (MaxNum2 == 0) {
+                	PagingHTML2 += "<span class=\"on\">" + 1 + "</span>";
+                }
 	            if (totalPage2 > BlockSize2) {
 	                if (totalPage2 >= parseInt(((parseInt((pageNum2 - 1) / BlockSize2) + 1) * BlockSize2) + 1)) {
 	                    strtext2 = "";
@@ -1958,9 +1969,11 @@
 	                                </td>
 	                            </tr>
 	                        </table>
-	                        <br>
-	
-	                        <div style="text-align: center"><a href="#" class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a></div>
+	                        <div style="text-align: center">
+	                        	<div class="btnpositionJsp">
+	                        		<a href="#" class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a>
+	                        	</div>	
+	                        </div>
 	                    </div>
 	                    <div id="TreeViewPane" style="DISPLAY: none;">
 				            <div class="portlet_tabpart03_top" id="tab1" style="background-color: #f8f8fa; border: 1px solid #eaeaea; ">

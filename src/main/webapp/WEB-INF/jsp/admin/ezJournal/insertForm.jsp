@@ -333,7 +333,7 @@
 				<tr id="setUseDeptList">
 					<td style="width: 48%;">
 						<div class="box"> 
-						<div style="width: 100%; height: 450px; overflow-x: auto; overflow-y: auto;" id="deptTreeView"></div>
+						<div style="width: 100%; height: 520px; overflow-x: auto; overflow-y: auto;" id="deptTreeView"></div>
 						</div>
 					</td>
 					<td style="width: 30px; text-align: center;">                            
@@ -342,7 +342,7 @@
                     </td>
                     <td style="width: 48%; vertical-align: top;">
                        	<div class="listview">
-                           	<div ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 100%; Height: 450px; overflow-x: auto; overflow-y: auto;" >
+                           	<div ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 100%; Height: 523px; overflow-x: auto; overflow-y: auto;" >
                            		<table id="useFormDept" style="width: 100%; border: 0; padding: 0;" class="mainlist"></table>
                            	</div>
                        	</div>
@@ -359,12 +359,12 @@
                    			<tr>
                     			<th style="width: 12%;"><spring:message code='ezJournal.t32'/></th>
                     			<td style="vertical-align: middle; border-right: none;">
-					            	<a class="imgbtn"><span id="info_0" value="journalWriterDept" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t33' /></span></a>
-					            	<a class="imgbtn"><span id="info_1" value="journalWriterName" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t34' /></span></a>
-					            	<a class="imgbtn"><span id="info_2" value="journalWriteDate" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t35' /></span></a>
+					            	<a class="imgbtn imgbck"><span id="info_0" value="journalWriterDept" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t33' /></span></a>
+					            	<a class="imgbtn imgbck"><span id="info_1" value="journalWriterName" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t34' /></span></a>
+					            	<a class="imgbtn imgbck"><span id="info_2" value="journalWriteDate" onclick="clickFormInfo(this)"><spring:message code='ezJournal.t35' /></span></a>
                     			</td>
                     			<td style="width: 8%; text-align: right; border-left: none; padding-right: 3px;" >
-		            				<a class="imgbtn"><span onclick="btnCancel()"><spring:message code='ezJournal.t16' /></span></a>
+		            				<a class="imgbtn imgbck"><span onclick="btnCancel()"><spring:message code='ezJournal.t16' /></span></a>
                     			</td>
                    			</tr>
                    		</tbody>

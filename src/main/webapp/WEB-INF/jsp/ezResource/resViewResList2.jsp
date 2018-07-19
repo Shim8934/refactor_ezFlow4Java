@@ -30,7 +30,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<style type="text/css">
-			.warningbox01 { width:540px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
+			.warningbox01 { width:540px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;}
 			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}
 			.warnintxt01 { position:relative; margin-bottom:10px;margin-top:20px}
 			.warningimg { position:absolute; top:0px; left:0px;}
@@ -320,7 +320,8 @@
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:hidden; padding-right: 6px;">
-		<h1 style="text-overflow:ellipsis;overflow:hidden;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
+		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
+		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
 		<div id="mainmenu" onload = "makePageSelPage()">
   			<ul>
     			<c:if test="${adminFg eq 'Y'}">
@@ -401,9 +402,10 @@
         	</div>
         </div>
         <!-- layer 팝업 -->
+        <!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
         <div id="ResourceInfo" style="display: none">
         	<div class="popupJQLayer" style="padding-top:6px">
-				<div class="title" id="brdNm"></div>
+				<div class="title" id="brdNm" style="overflow:hidden; text-overflow:ellipsis; width:450px;"></div>
 				<div id="close">
 		            <ul>
 		                <li><a rel="modal:close"><span></span></a></li>

@@ -24666,6 +24666,7 @@
 		AND
 			COMPANYID = #companyID#	
 	</select>
+	
 	<delete id="EzApprovalG.deleteInitReceiptPonit" parameterClass="Map">
         DELETE
         	TBL_RECEIPTPOINTINFO
@@ -24934,4 +24935,12 @@
 		AND
 			TENANT_ID = #tenantID#
    </select>
+	<select id="EzApprovalG.getLinkedAttachFileCount" parameterClass="Map" resultClass="int">
+		SELECT
+			COUNT(ATTACHFILEHREF)
+		FROM
+			TBL_ENDATTACHINFO
+		WHERE
+			ATTACHFILEHREF = #href#
+	</select>
 </sqlMap>

@@ -73,6 +73,10 @@
 	    	var msgRtn = "";
 	    	var SdateNow = ""; 
 	    	var EdateNow = ""; 
+	    	var title = "${title}";
+	    	
+	    	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
+	    	var onloadflag = false;
 	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -97,7 +101,9 @@
 	        	}
 	            
 	        	if (cmd == "mod") {
+	        		/* 2018-07-10 김민성 - 자원 수정시 특수문자 처리 */
 	            	document.getElementById("importance1").value = "${importance}";
+	            	document.getElementById("title").value = title;
 	        	}
 	        	if (document.getElementById("AllDay").checked) {
 		            document.getElementById("Stimepicker").style.display = "none";
@@ -111,7 +117,7 @@
 	    	    } else {
 	        	document.title = "<spring:message code="ezResource.t179"/>";
 		        }
-	            
+	        	
 		        var resultXML;
 	    	    var xmlHttp = createXMLHttpRequest();
 	        	var xmlpara = createXmlDom();
@@ -161,6 +167,8 @@
 	            	if (result != "FALSE") {
 	                	msgRtn = result;
 	            	}
+	            	
+	            	onloadflag = true;
 	        	}
 
 	        	if (m_Arguments != undefined) {
@@ -292,9 +300,7 @@
 	        	}
 
 	        	if (cmd == "add") {
-		            if (msgRtn != "") {
-		                message.SetEditorContent(msgRtn);
-	    	        }
+	                message.SetEditorContent(msgRtn);
 		        }
 	    	}
 
@@ -591,7 +597,7 @@
 						</tr>
 						<tr>
 	         				<th> <spring:message code="ezResource.t224"/></th>
-	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="25" value="${title}" style="width: 98%" />          </td>
+	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="100"  style="width: 100%" />          </td>		<!-- 2018-07-13 김민성 - 자원예약 이름 글자수 제한 25->100자로 변경 -->
 	       				</tr>
       				</table>
       			</td>

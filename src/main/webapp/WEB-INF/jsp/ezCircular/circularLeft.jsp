@@ -24,6 +24,19 @@
 				font-weight:normal;
 				color:#9b9b9b;
 			}
+			/* ellipisis 추가 */
+			.node_normal{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		width:146px;
+	    	}
+	    	.node_selected{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		width:146px;
+	    	}	    	
 		</style>
 	    <script type="text/javascript">
 	        document.onselectstart = function () { return false; };
@@ -58,6 +71,17 @@
 	            $("#newCircular").click();
 	            
 	            getNewCircularCount();
+	            
+	           	applyEllipsis();
+	        }
+	        
+	        /** ellipsis 추가 */
+	        function applyEllipsis() {
+	        	$("[id^=PostTreeView_node]").each(function (index, element) {
+	        		var title = $(element)[0].innerHTML;
+	        		$(element).attr("title", title);
+	        	} );
+	        	
 	        }
 	        
 	        function LoadEmailTree() {	
@@ -242,6 +266,38 @@
 					}
 				});
 	        } */
+	        
+	        //2018-07-17 김보미 - 프로그레스바
+	        function HiddenMailProgressNew() {
+				var CurrentHeight = parent.frames["right"].document.CurrentHeight;
+				var CurrenWidth = parent.frames["right"].document.CurrenWidth;
+				
+			   parent.frames["right"].document.getElementById("mailPanel").style.display = "none";
+			   parent.frames["right"].document.getElementById("mailPanel").style.backgroundColor = "";
+			   parent.frames["right"].document.getElementById("MailProgress").style.display = "none";
+			   hideProgress();
+			   
+			   if (useBottomFrameOnly == "NO") {
+					parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
+				} 
+			}
+		   
+			function ShowMailProgressNew() {
+				var CurrentHeight = parent.frames["right"].document.CurrentHeight;
+				var CurrenWidth = parent.frames["right"].document.CurrenWidth;
+				
+				parent.frames["right"].document.getElementById("mailPanel").style.display = "block";
+				parent.frames["right"].document.getElementById("mailPanel").style.opacity = 0.5;
+				parent.frames["right"].document.getElementById("mailPanel").style.background = "rgba(0,0,0,0.7)";
+				parent.frames["right"].document.getElementById("MailProgress").style.top = (CurrentHeight / 2) + "px";
+				parent.frames["right"].document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+				parent.frames["right"].document.getElementById("MailProgress").style.display = "";
+			    showProgress();
+			    
+			    if (useBottomFrameOnly == "NO") {
+					parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
+				}
+			}
 	    </script>
 	</head>
 	<body class="leftbody">
@@ -271,5 +327,7 @@
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");
 	    </script>
 	    <xml id="RootFolderXML" style="display: none;"></xml>
+	    <!-- 2018-07-17 김보미 - 프로그레스바 -->
+	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 	</body>
 </html>
