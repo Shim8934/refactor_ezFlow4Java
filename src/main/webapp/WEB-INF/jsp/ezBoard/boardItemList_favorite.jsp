@@ -27,45 +27,73 @@
 	    <script type="text/javascript">
 	        var userLang = "${userInfo.primary}";
 	        var xmlhttp = createXMLHttpRequest();
-	        var delta = 300;
 	        var timer = null;
+	        
 			window.onresize = function () {
+				var delay = 100;
+				/**
+					onresize의 경우 완료되는 경우 한 번에 실행되는 것이 아니라. 유저가 화면을 만질때마다 계속 발생.
+					setTimeout을 이용해서 resize 작업이 끝날 경우에만 동작하도록 처리.
+				*/
 				clearTimeout(timer);
-				timer = setTimeout(resizeMenuTab, delta);
+				timer = setTimeout(resizeMenuTab, delay);
 			}
+			
 	        window.onload = function () {
 	            GetMyBoardItem();
 	        };
 	        
+	        /**
+	        	브라우저 리사이즈 대비 tab 동적 변경
+	        */
 	        function resizeMenuTab() {
-				var doNotRefresh = true;
-				var isOpenUL;                 // 추가 탭이 열리있는지 확인
-				var isResize = true;          // 리사이즈 중인지 확인.
+				var doNotRefresh = true;      // 화면을 리프레시 하는지 여부.
+				var isOpenUL;                 // '...' 탭이 열리있는지 확인
+				//var isResize = true;          // 리사이즈 중인지 확인.
 				
+				// '...'탭이 열려있는 경우를 판단
 				if(document.getElementById("tabpart01UL") === null || document.getElementById("tabpart01UL").style.display == "none") {
 					isOpenUL = false;
 				} else {
 					isOpenUL = true;	
 				}
 				
-				var selectedNode = document.getElementsByClassName("tabon")[0];
-				
-				if(selectedNode !== undefined) {
-					selectedNode = selectedNode.id;	
-				}
+				var selectedNode = document.getElementById("curBoardID").value;
 				
 				document.getElementById("tab1").innerHTML = "";
 				widthCheck = false;
 				
-				GetMyBoardItem_evnet(doNotRefresh, isResize);
+				GetMyBoardItem_evnet(doNotRefresh);
+
+				if(document.querySelectorAll('[data1="'+selectedNode+'"]')[0].tagName === "LI"){
+					selectedNode = "overSpan";
+				}				
 				
-				if(isOpenUL) {
+				// GetMyBoardItem_event를 끝내고 '...'탭의 display상태를 유지
+				if(isOpenUL && document.getElementById("tabpart01UL") !== null ) {
 					document.getElementById("tabpart01UL").style.display = "";	
 				}
+				
 				// 기존에 선택되는 0번탭 해제 후 재설정.
 				document.getElementById("1tab0").className = "";
-                document.getElementById(selectedNode).className = "tabon";
-                Tab1_SelectID = selectedNode;
+				
+				// 선택된 탭이 리사이징으로 인해 '...' 탭으로 가게되는 경우
+				if (document.getElementById(selectedNode) !== null) {
+					document.getElementById(selectedNode).className = "tabon";
+					Tab1_SelectID = selectedNode;
+				} else {
+					// '...' 탭에서 보통 탭으로 나올 경우
+					selectedNode = document.querySelectorAll('[data1="'+selectedNode+'"]')[0].id;	
+					if (selectedNode != "") {
+						document.getElementById(selectedNode).className = "tabon";
+						Tab1_SelectID = selectedNode;					
+						document.getElementById("overSpan").className = "";
+					} else {					
+						document.getElementById("overSpan").className = "tabon";
+						Tab1_SelectID = "overSpan";
+					}
+					document.getElementById("tabpart01UL").style.display = "none";	
+				}
 	        }
 	        function GetMyBoardItem() {
 	            xmlhttp.open("POST", "/ezBoard/get_favoriteList.do?mode=USE", true);
@@ -75,10 +103,8 @@
 	        var overCnt = 0;
 	        var widthCheck = false;
 	        var overCntText = '...';
-	        function GetMyBoardItem_evnet(doNotRefresh, isResize) {
-	        	if(isResize === undefined) {
-	            	if (xmlhttp == null || xmlhttp.readyState != 4) return;
-	        	}
+	        function GetMyBoardItem_evnet(doNotRefresh) {
+            	if (xmlhttp == null || xmlhttp.readyState != 4) return;
 	            try {
 	                var xmlnode = SelectNodes(xmlhttp.responseXML, "ROOT/DATA/ROW");
 	                if (xmlnode.length != 0) {
@@ -93,6 +119,7 @@
 	                        var _span = document.createElement("SPAN");
 	                        _span.id = "1tab" + i;
 	                        _span.setAttribute("divname", "FBoard_div" + i);
+	                        _span.setAttribute("name", "FBoard_div");
 	                        _span.setAttribute("DATA1", BoardId);
 	                        
 	                        if (BoardId == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
@@ -125,14 +152,15 @@
 	                                _p2.id = "tabpartMore";
 	                                //_p2.onclick = function () { Tab1_MouseClick_more(document.getElementById("overSpan"), false) }
 	
-	
 	                                var _span2 = document.createElement("SPAN");
 	                                _span2.id = "overSpan";
-	                                if (document.getElementById("tabpart01UL") != null)
+	                                if (document.getElementById("tabpart01UL") != null) {
 	                                    _span2.textContent = document.getElementById("tabpart01UL").getElementsByTagName("li").length;
-	                                else
+	                                }
+	                                else {
 	                                    //_span2.textContent = overCnt;
-	                                _span2.textContent = overCntText;
+	                                	_span2.textContent = overCntText;
+	                                }
 	
 	                                var _ul = document.createElement("UL");
 	                                _ul.className = "tabpart01UL";
@@ -172,7 +200,6 @@
 	                                    //document.getElementById("overSpan").textContent = overCnt;
 	                                	document.getElementById("overSpan").textContent = overCntText;
 	                                }
-	                                
 	
 	                                insertOption = "LAST";
 	                            }
@@ -184,13 +211,12 @@
 	                    if (xmlnode.length > 0) {
 	                        Tab1_NewTabIni("tab1");
 	                    }    
-
+						
+	                    // 화면을 리사이징 할때는 현재 리스트는 그대로 유지
 	                    if(doNotRefresh !== true) {
-	                    	if(isResize === undefined || isResize === false) {
-	                    		document.getElementById("1tab0").setAttribute("class", "tabon");
-	                    		Tab1_SelectID = "1tab0";	                    	
-	                    		ChangeTab(document.getElementById("1tab0"));	
-	                    	}
+                    		document.getElementById("1tab0").setAttribute("class", "tabon");
+                    		Tab1_SelectID = "1tab0";	                    	
+                    		ChangeTab(document.getElementById("1tab0"));	
 	                    }
 	                }
 	                else {
@@ -216,12 +242,11 @@
 	                       	Tab1_NewTabIni("tab1");
 	                    }	 	                    
 	                    
+	                    // 화면을 리사이징 할때는 현재 리스트는 그대로 유지
 	                    if(doNotRefresh !== true) {
-	                    	if(isResize === undefined || isResize === false) {
-	                    		document.getElementById("1tab0").setAttribute("class", "tabon");
-	                    		Tab1_SelectID = "1tab0";	                    	
-	                    		ChangeTab(document.getElementById("1tab0"));
-	                    	}
+                    		document.getElementById("1tab0").setAttribute("class", "tabon");
+                    		Tab1_SelectID = "1tab0";	                    	
+                    		ChangeTab(document.getElementById("1tab0"));
 	                    }
 	                }
 	
@@ -280,6 +305,8 @@
 	                else
 	                    document.getElementById("FBoard_ifrm").src = "/ezBoard/boardItemList.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardType=" + chkPhotoBrd + "&adminType=y&buttonHidden=N";
 	            }
+	            
+	            document.getElementById("curBoardID").value = SelectedBoardID;
 	        }
 	
 	        var Tab1_SelectID = "";
@@ -305,6 +332,8 @@
 	        }
 	        function Tab1_MouseClick2(obj) {
 	            ChangeTab(obj);
+	            /* overSpan의 게시판을 선택하면 overSpan display:none처리*/
+	            document.getElementById("tabpart01UL").style.display = "none";	            
 	        }
 	
 	        function Tab1_NewTabIni(pTabNodeID) {
@@ -340,4 +369,5 @@
 		</div>    
 	    <iframe id="FBoard_ifrm" style="width: 100%; height: 100%;" frameborder="0"></iframe>
 	</body>
+	<input type="hidden" id="curBoardID" namd="curBoardID" value=""/>
 </html>
