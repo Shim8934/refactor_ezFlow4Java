@@ -368,16 +368,20 @@ function setDefaultGroup(){
 	var curTask = parent.ge ? parent.ge.currentTask : "";
 	var curTreeGroup = parent.$(".jstree-clicked");
 	
-	if(!(curTask && curTask.getParent()) && !curTreeGroup.attr("id")){
+	if(!curTask && !curTreeGroup.attr("id")){
 		return;
 	} else if (curTreeGroup.attr("id")){ //업무 목록에서 업무 추가 했을 경우
-		groupId = curTreeGroup.attr("id").match(/\d+/)[0];
+		groupId = parent.groupDetail.groupId;
 		groupName = parent.groupDetail.groupName;
 	} else { // 간트차트에서 업무 추가했을 경우
-		groupId = curTask.getParent().id.match(/g(\d+)/) ? curTask.getParent().match(/g(\d+)/)[1] : parent.projectGroupId;
-		groupName = curTask.getParent().name;
+		if(curTask.id.indexOf("_t") != -1){ //업무를 선택했을 경우
+			groupId = curTask.getParent().id.match(/g(\d+)/) ? curTask.getParent().id.match(/g(\d+)/)[1] : parent.projectGroupId;
+			groupName = curTask.getParent().name;
+		} else { // 그룹이나 프로젝트를 선택했을 경우
+			groupId = curTask.id.match(/g(\d+)/) ? curTask.id.match(/g(\d+)/)[1] : parent.projectGroupId;
+			groupName = curTask.name;
+		}
 	}
-	
 	
 	setUpperGroup();
 	
