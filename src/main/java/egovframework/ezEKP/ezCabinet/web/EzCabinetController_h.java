@@ -134,4 +134,30 @@ public class EzCabinetController_h {
 		logger.debug("jsonSaveUserListType ended");
 		return resultObj.toString();
 	}
+	
+	@RequestMapping(value="/ezCabinet/getSearchMember.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String jsonGetSearchMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("jsonGetSearchMember started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String srchOption  = request.getParameter("srchOption") != null  ? request.getParameter("srchOption")  : "";
+		String srchValue   = request.getParameter("srchValue") != null   ? request.getParameter("srchValue")   : "";
+		String currentPage = request.getParameter("currentPage") != null ? request.getParameter("currentPage") : "";
+		
+		logger.debug("srchOption: " + srchOption + " || srchValue: " + srchValue + " || currentPage: " + currentPage);
+		
+		JSONObject resultObj = new JSONObject();
+		
+		if (srchOption.equals("") || srchValue.equals("") || currentPage.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService_h.getSearchMember(request, user.getId(), srchOption, srchValue, currentPage);
+		
+		logger.debug("jsonGetSearchMember ended");
+		logger.debug(resultObj.toString());
+		return resultObj.toString();
+	}
 }

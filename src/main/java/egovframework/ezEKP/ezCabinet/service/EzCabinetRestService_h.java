@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONObject;
 
 public interface EzCabinetRestService_h {
@@ -11,4 +12,6 @@ public interface EzCabinetRestService_h {
 	//Get/Save user list type
 	JSONObject getUserListType(HttpServletRequest request, String userId) throws Exception;
 	JSONObject saveUserListType(HttpServletRequest request, String id, String listType) throws Exception;
+
+	JSONObject getSearchMember(HttpServletRequest request, String userId, String srchOption, String srchValue, String currentPage) throws Exception;
 }

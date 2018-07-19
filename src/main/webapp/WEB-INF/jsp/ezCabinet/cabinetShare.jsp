@@ -36,19 +36,19 @@
 												<td>
 													<div>
 														<select id="searchType">
-															<option selected value="name"     ><spring:message code="ezCabinet.t18" /></option>
-															<option          value="userId"   ><spring:message code="ezCabinet.t96" /></option>
-															<option          value="dept"     ><spring:message code="ezCabinet.t19" /></option>
-															<option          value="title"    ><spring:message code="ezCabinet.t97" /></option>
-															<option          value="telNumber"><spring:message code="ezCabinet.t98" /></option>
-															<option          value="mobile"   ><spring:message code="ezCabinet.t99" /></option>
-															<option          value="homePhone"><spring:message code="ezCabinet.t100"/></option>
-															<option          value="faxNumber"><spring:message code="ezCabinet.t101"/></option>
-															<option          value="mail"     ><spring:message code="ezCabinet.t102"/></option>
-															<option          value="address"  ><spring:message code="ezCabinet.t107"/></option>
+															<option selected value="displayname"              ><spring:message code="ezCabinet.t18" /></option>
+															<option          value="cn"                       ><spring:message code="ezCabinet.t96" /></option>
+															<option          value="description"              ><spring:message code="ezCabinet.t19" /></option>
+															<option          value="title"                    ><spring:message code="ezCabinet.t97" /></option>
+															<option          value="telephonenumber"          ><spring:message code="ezCabinet.t98" /></option>
+															<option          value="mobile"                   ><spring:message code="ezCabinet.t99" /></option>
+															<option          value="homePhone"                ><spring:message code="ezCabinet.t100"/></option>
+															<option          value="facsimileTelephoneNumber" ><spring:message code="ezCabinet.t101"/></option>
+															<option          value="mail"                     ><spring:message code="ezCabinet.t102"/></option>
+															<option          value="streetAddress"            ><spring:message code="ezCabinet.t107"/></option>
 														</select>
-														<input type="text">
-														<a class="imgbtn"><span><spring:message code='ezCabinet.t49'/></span></a>
+														<input type="text" id="keyword">
+														<a class="imgbtn" id="searchBtn"><span><spring:message code='ezCabinet.t49'/></span></a>
 													</div>
 												</td>
 												<td>
@@ -117,17 +117,17 @@
 											<tr>
 												<td>
 													<div>
-														<select id="searchType">
-															<option selected value="name"     ><spring:message code="ezCabinet.t18" /></option>
-															<option          value="userId"   ><spring:message code="ezCabinet.t96" /></option>
-															<option          value="dept"     ><spring:message code="ezCabinet.t19" /></option>
-															<option          value="title"    ><spring:message code="ezCabinet.t97" /></option>
-															<option          value="telNumber"><spring:message code="ezCabinet.t98" /></option>
-															<option          value="mobile"   ><spring:message code="ezCabinet.t99" /></option>
-															<option          value="homePhone"><spring:message code="ezCabinet.t100"/></option>
-															<option          value="faxNumber"><spring:message code="ezCabinet.t101"/></option>
-															<option          value="mail"     ><spring:message code="ezCabinet.t102"/></option>
-															<option          value="address"  ><spring:message code="ezCabinet.t107"/></option>
+														<select id="searchType2">
+															<option selected value="displayname"              ><spring:message code="ezCabinet.t18" /></option>
+															<option          value="cn"                       ><spring:message code="ezCabinet.t96" /></option>
+															<option          value="description"              ><spring:message code="ezCabinet.t19" /></option>
+															<option          value="title"                    ><spring:message code="ezCabinet.t97" /></option>
+															<option          value="telephonenumber"          ><spring:message code="ezCabinet.t98" /></option>
+															<option          value="mobile"                   ><spring:message code="ezCabinet.t99" /></option>
+															<option          value="homePhone"                ><spring:message code="ezCabinet.t100"/></option>
+															<option          value="facsimileTelephoneNumber" ><spring:message code="ezCabinet.t101"/></option>
+															<option          value="mail"                     ><spring:message code="ezCabinet.t102"/></option>
+															<option          value="streetAddress"            ><spring:message code="ezCabinet.t107"/></option>
 														</select>
 														<input type="text">
 														<a class="imgbtn"><span><spring:message code='ezCabinet.t49'/></span></a>
@@ -220,6 +220,7 @@
 					document.getElementById("imgSpanView").addEventListener("click", function(e) {changeListView('IMG');}, false);
 					document.getElementById("addBttn").onclick    = function(e) {addUsers();};
 					document.getElementById("removeBttn").onclick = function(e) {removeUsers();};
+					document.getElementById("searchBtn").addEventListener("click", function(e) {searchUserList();}, false);
 					
 					//Set Company Tree
 					companyTree.setTreeInfo({
@@ -260,7 +261,7 @@
 						case "normal" : url = "/ezCabinet/getDeptMembers.do";
 									data = {deptId : deptId, currentPage : page};
 									break;
-						case "search" : url = "";
+						case "search" : url = "/ezCabinet/getSearchMember.do";
 									data = {srchOption : searchOpt, srchValue : searchValue, currentPage : page};
 									break;
 					}
@@ -272,6 +273,7 @@
 						dataType: "JSON",
 						async: true,
 						success : function(data) {
+							console.log(data);
 							var result = data.memberList;
 							cabinetNavi.init(data.currentPage, data.memberCount, data.totalPages);
 							document.getElementById("memberCount").innerHTML = " - [" + "<span class='cabColor'>" + data.memberCount + "명" + "</span>" + "]";
@@ -481,7 +483,16 @@
 					}
 				}
 				
-				function setOrganListType(pListType) {
+				function searchUserList() {
+					//document.getElementById("searchResult").textContent = "검색결과";
+					searchMode = "search";
+					
+					searchOpt = document.getElementById("searchType").value;
+					searchValue = document.getElementById("keyword").value;
+					getUsers("1");
+				}
+				
+				function setUserListType(pListType) {
 					$.ajax({
 						type: "POST",
 						dataType: "text",

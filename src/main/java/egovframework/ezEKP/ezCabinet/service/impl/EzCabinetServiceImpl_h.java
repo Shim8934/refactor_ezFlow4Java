@@ -3,10 +3,13 @@ package egovframework.ezEKP.ezCabinet.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
 import egovframework.ezEKP.ezCabinet.vo.CabinetShareVO;
@@ -51,6 +54,27 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 		
 		return ezCabinetDAO_h.getTotalDeptMembers(map);
 	}
-	
-	
+
+	@Override
+	public List<SimpleUserVO> getSearchMemberList(String primary, int startPoint, int listCount, String srchOption, String srchValue, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("startPoint", startPoint);
+		map.put("listCount",  listCount);
+		map.put("srchOption", srchOption);
+		map.put("srchValue",  srchValue);
+		map.put("primary",    primary);
+		map.put("tenantId",   tenantId);
+		
+		return ezCabinetDAO_h.getSearchMemberList(map);
+	}
+
+	@Override
+	public int getTotalSearchMembers(String sqlQuery, String srchValue, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("srchOption", sqlQuery);
+		map.put("srchValue",  srchValue);
+		map.put("tenantId",   tenantId);
+		
+		return ezCabinetDAO_h.getTotalSearchMembers(map);
+	}
 }

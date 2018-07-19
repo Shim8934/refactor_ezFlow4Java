@@ -185,4 +185,57 @@ public class EzCabinetGWController_h {
 		
 		return result;
 	}
+	
+	@RequestMapping(value="/rest/ezCabinet/search-member", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getSearchMember(Locale locale, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name")      != null ? request.getHeader("host-name")                        : "";
+		String userId     = request.getParameter("userId")      != null ? request.getParameter("userId")                        : "";
+		String srchOption = request.getParameter("srchOption")  != null ? request.getParameter("srchOption")                    : "";
+		String srchValue  = request.getParameter("srchValue")   != null ? request.getParameter("srchValue")                     : "";
+		int currentPage   = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : -1;
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || UserId: " + userId + " || srchOption : " + srchOption + "|| srchValue" + srchValue + "|| currentPage: " + currentPage);
+		
+		if (serverName.equals("") || userId.equals("") || srchOption.equals("") || srchValue.equals("") || currentPage == -1) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo               = commonUtil.getUserForGw(userId, serverName);
+			int tenantId                   = userInfo.getTenantId();
+			String primary                 = userInfo.getPrimary();
+			String sqlQuery                = "";
+			
+			switch(srchOption) {
+				case "displayname": sqlQuery = primary.equals("1") ? srchOption : "displayname2" ; break;
+				case "description": sqlQuery = primary.equals("1") ? srchOption : "description2" ; break;
+				default: sqlQuery = srchOption;
+			}
+			
+			int startPoint                 = (currentPage - 1) * 50;
+			int totalUsers                 = cabinetService_h.getTotalSearchMembers(sqlQuery, srchValue, tenantId);
+			int totalPages                 = (totalUsers + 49) / 50;
+			List<SimpleUserVO> memberList  = cabinetService_h.getSearchMemberList(primary, startPoint, 50, sqlQuery, srchValue, tenantId);
+			
+			result.put("currentPage", currentPage);
+			result.put("totalPages",  totalPages);
+			result.put("memberList",  memberList);
+			result.put("memberCount", totalUsers);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+		}
+		
+		return result;
+		
+	}
 }

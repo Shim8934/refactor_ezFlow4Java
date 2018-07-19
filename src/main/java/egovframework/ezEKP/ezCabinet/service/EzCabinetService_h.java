@@ -12,5 +12,9 @@ public interface EzCabinetService_h {
 	List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int startPoint, int listCount, int tenantId) throws Exception;
 
 	int getTotalDeptMembers(String deptId, int tenantId) throws Exception;
+
+	List<SimpleUserVO> getSearchMemberList(String primary, int startPoint, int i, String srchOption, String srchValue, int tenantId) throws Exception;
+
+	int getTotalSearchMembers(String sqlQuery, String srchValue, int tenantId) throws Exception;
 	
 }

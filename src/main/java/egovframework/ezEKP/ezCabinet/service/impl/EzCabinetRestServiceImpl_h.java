@@ -106,4 +106,17 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
+
+	@Override
+	public JSONObject getSearchMember(HttpServletRequest request, String userId, String srchOption, String srchValue, String currentPage) throws Exception {
+		String url                = "/rest/ezCabinet/search-member";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",      userId);
+		param.put("srchOption",  srchOption);
+		param.put("srchValue",   srchValue);
+		param.put("currentPage", currentPage);
+		
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
 }
