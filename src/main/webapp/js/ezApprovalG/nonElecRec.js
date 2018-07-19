@@ -97,11 +97,11 @@ function selRegisterType_onchange() {
 		   trOriginSN.style.display = "none";
 		   trAprMemberTitle.style.display = "";
 	   } else if (val == "2" || val == "4") {
-		   trDeliveryNo.style.display = "";
+		   //trDeliveryNo.style.display = ""; //2018-07-19 천성준 - 문서과배부번호 안보이게 주석처리
 		   trOriginSN.style.display = "";
 		   trAprMemberTitle.style.display = "none";
 	   } else {
-	       trDeliveryNo.style.display = "";
+	       //trDeliveryNo.style.display = ""; //2018-07-19 천성준 - 문서과배부번호 안보이게 주석처리
 		   trOriginSN.style.display = "";
 		   trAprMemberTitle.style.display = "";
 	   }

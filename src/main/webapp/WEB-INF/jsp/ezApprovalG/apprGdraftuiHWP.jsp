@@ -197,6 +197,8 @@
 	                	document.getElementById("btnhistory").style.display = "none"; <%-- 변경내역 --%>
 	                	document.getElementById("btnSave").style.display = "none"; <%-- 저장 --%>
 	                	document.getElementById("btnOpinion").style.display = "none"; <%-- 의견 --%>
+	                	document.getElementById("btnAprDocAttach").style.display = "none"; <%-- 문서첨부 --%>
+	                	document.getElementById("btnPrint").style.display = "none"; <%-- 인쇄 --%>
 	                	HwpCtrl.SetFieldText("docnumber","");
 	                }
 	            } catch (e) {
@@ -727,6 +729,7 @@
 	                            }
 	
 	                            UpdateLineHistory();
+	                            
 	                            pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
 	                            OpenAlertUI(pAlertContent);
 	                            draftFlag = true;
@@ -810,8 +813,13 @@
 	                        }
 	
 	                        UpdateLineHistory();
-	
-	                        pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
+	                        
+	                        if (nonElecRec == "Y") {
+                            	pAlertContent = "문서를 [등록]하였습니다.";
+                            } else {
+		                        pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
+                            }
+	                        
 	                        OpenAlertUI(pAlertContent);
 	                        draftFlag = true;
 	
