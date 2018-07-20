@@ -711,27 +711,36 @@
 
             var _imgsrc;
             var _foldername = GetAttribute(childNode, 'href') != null ? GetAttribute(childNode, 'fullcaption') : null;
+            var _tempStatus;
+            
             switch (_foldername) {
                 case '_INBOX':
                     _imgsrc = '/images/ImgIcon/inbox.gif';
+                    _tempStatus = "Y";
                     break;
                 case '_SENT':
                     _imgsrc = '/images/ImgIcon/outbox.gif';
+                    _tempStatus = "Y";
                     break;
                 case '_DRAFT':
                     _imgsrc = '/images/ImgIcon/drafts.gif';
+                    _tempStatus = "Y";
                     break;
                 case '_JUNK':
                     _imgsrc = '/images/ImgIcon/junkemail.gif';
+                    _tempStatus = "Y";
                     break;
                 case '_DELETE':
                     _imgsrc = '/images/ImgIcon/deleted.gif';
+                    _tempStatus = "Y";
                     break;
                 case '_PERSONAL':
                     _imgsrc = '/images/ImgIcon/sentitems.gif';
+                    _tempStatus = "Y";
                     break;
                 default:
                     _imgsrc = '/images/ImgIcon/fldr.gif';
+                	_tempStatus = "N";
                     break;
             }
 
@@ -739,8 +748,14 @@
             IMG_TAG.setAttribute("id", g_imageid + g_nodeCount);
             IMG_TAG.setAttribute("name", g_imageid + g_nodeCount);
             IMG_TAG.setAttribute("src", _imgsrc);
-            IMG_TAG.setAttribute("width", g_imageWidth);
-            IMG_TAG.setAttribute("height", g_imageHeight);
+            
+            if (_tempStatus == "Y") {
+            	IMG_TAG.setAttribute("width", "16");
+            	IMG_TAG.setAttribute("height", "16");
+            } else {
+            	IMG_TAG.setAttribute("width", g_imageWidth);
+            	IMG_TAG.setAttribute("height", g_imageHeight);
+            }
 
             SPAN3.appendChild(IMG_TAG);
             IMG_TAG = null;
