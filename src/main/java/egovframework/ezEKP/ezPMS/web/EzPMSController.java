@@ -1724,40 +1724,40 @@ public class EzPMSController {
 		return "ezPMS/pmsStatusColor";
 	}
 	
-	/**
-	 * 간트차트에서의 날짜 변경
-	 */
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/ezPMS/updateTaskDate.do")
-	@ResponseBody
-	public JSONObject updateTaskDate(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS updateTaskDate started");
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String userId = userInfo.getId();
-		
-		String url = "/rest/ezPMS/tasks/" + param.get("taskId") + "/users/" + userId + "/status";
-		
-		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", null);
-		String status = result.get("status").toString();
-		JSONObject json = new JSONObject();
-		
-		if (status.equals("ok")) {
-			JSONObject data = (JSONObject) result.get("data");
-			String roleCheck = data.get("roleCheck").toString();
-			String endDate = data.get("endDate").toString();
-			
-			json.put("roleCheck", roleCheck);
-			json.put("endDate", endDate);
-			
-			LOGGER.debug("[result] roleCheck : " + roleCheck);
-		}
-		
-		LOGGER.debug("ezPMS updateTaskDate ended");
-		return json;
-	}
+//	/**
+//	 * 간트차트에서의 날짜 변경
+//	 */
+//	@SuppressWarnings("unchecked")
+//	@RequestMapping(value="/ezPMS/updateTaskDate.do")
+//	@ResponseBody
+//	public JSONObject updateTaskDate(@RequestBody Map<String, Object> param, HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+//		LOGGER.debug("ezPMS updateTaskDate started");
+//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+//		String userId = userInfo.getId();
+//		
+//		String url = "/rest/ezPMS/tasks/" + param.get("taskId") + "/users/" + userId + "/status";
+//		
+//		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", null);
+//		String status = result.get("status").toString();
+//		JSONObject json = new JSONObject();
+//		
+//		if (status.equals("ok")) {
+//			JSONObject data = (JSONObject) result.get("data");
+//			String roleCheck = data.get("roleCheck").toString();
+//			String endDate = data.get("endDate").toString();
+//			
+//			json.put("roleCheck", roleCheck);
+//			json.put("endDate", endDate);
+//			
+//			LOGGER.debug("[result] roleCheck : " + roleCheck);
+//		}
+//		
+//		LOGGER.debug("ezPMS updateTaskDate ended");
+//		return json;
+//	}
 	
 	/**
-	 * 간트차트에서의 상태 변경
+	 * 간트차트에서의 선행작업 지정
 	 */
 	@RequestMapping(value="/ezPMS/addPreTaskRel.do")
 	@ResponseBody
@@ -3647,7 +3647,6 @@ public class EzPMSController {
 		
 		Map<String, Object> param = null;
 		
-		jsonParam.put("tenantId", userInfo.getTenantId());
 		jsonParam.put("updateDate", today);
 		jsonParam.put("writerId", userInfo.getId());
 		jsonParam.put("writeDate", today);
@@ -3825,25 +3824,25 @@ public class EzPMSController {
 	 * @param loginCookie
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezPMS/checkIfExistPreTaskRel.do")
-	public String checkIfExistPreTaskRel(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) {
-		LOGGER.debug("ezPMS checkIfExistPreTaskRel started");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		jsonParam.put("userId", userInfo.getId());
-		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/checkIfExistPreTaskRel/" + jsonParam.get("pretaskId"), null, request, "post", jsonParam);
-		String status = resultBody.get("status").toString();
-		
-		if(status.equals("ok")) {
-			boolean ifExistPreTaskRel = (boolean) resultBody.get("data");
-			model.addAttribute("data", ifExistPreTaskRel);
-		}
-		
-		LOGGER.debug("ezPMS checkIfExistPreTaskRel ended");
-		return "json";
-	}
+//	@SuppressWarnings("unchecked")
+//	@RequestMapping(value = "/ezPMS/checkIfExistPreTaskRel.do")
+//	public String checkIfExistPreTaskRel(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) {
+//		LOGGER.debug("ezPMS checkIfExistPreTaskRel started");
+//		
+//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+//		jsonParam.put("userId", userInfo.getId());
+//		
+//		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/checkIfExistPreTaskRel/" + jsonParam.get("pretaskId"), null, request, "post", jsonParam);
+//		String status = resultBody.get("status").toString();
+//		
+//		if(status.equals("ok")) {
+//			boolean ifExistPreTaskRel = (boolean) resultBody.get("data");
+//			model.addAttribute("data", ifExistPreTaskRel);
+//		}
+//		
+//		LOGGER.debug("ezPMS checkIfExistPreTaskRel ended");
+//		return "json";
+//	}
 	
 	/**
 	 * 선행작업 삭제 관련 함수

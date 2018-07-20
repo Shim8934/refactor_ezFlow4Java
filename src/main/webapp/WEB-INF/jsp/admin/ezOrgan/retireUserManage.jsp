@@ -17,6 +17,8 @@
 		<script type="text/javascript" language="javascript">
 			var CurPage = "<c:out value='${pPage}'/>";
 			var totalPage = "<c:out value='${totalPage}'/>";
+			var totalCount = "<c:out value = '${totalCount}' />";
+			var BlockSize = "<c:out value = '${pPageRow}' />";
 			var useBizmekaSpambox = "${useBizmekaSpambox}";
 			var strListInfo = "";
 			var CheckBoxArr = new Array();
@@ -29,6 +31,7 @@
 				}
 			};
 	        
+			/* 페이지네이션 변경으로 인한 주석처리
 			function prevPage_onclick()	{
 				newPage = parseInt(CurPage) - 1;
 				if (newPage > 0) {
@@ -43,14 +46,14 @@
 				}
 			}
 			
-			function moveToPage() {
+			 function moveToPage() {
 				if (window.event.keyCode == 13) {
 					var newPage = txt_PageInputNum.value;	
 					if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
 						window.location.href = "/admin/ezOrgan/retireUserManage.do?page=" + parseInt(newPage);
 					}
 				}
-			}
+			} */
 	       
 			function showProgress() {
 			    document.getElementById("progressPanel").style.display = "";
@@ -255,10 +258,142 @@
 			function ShowUserInfo(UserID) {
 			    window.open("/admin/ezOrgan/retireUserInfo.do?id=" + UserID, "", "height=800px,width=530px,status=no,toolbar=no,menubar=no,location=no,resizable=0"+GetOpenPosition(530, 800));
 			}
+			
+			//2018-07-20 천성준 - 페이지 네이션 변경 
+			function td_Create1(strtext) {
+                document.getElementById("tblPageRayer").innerHTML = strtext; //document.all.tblPageNum1.innerHTML + strtext;
+            }
+            
+            function makePageSelPage() {
+                var strtext;
+                var PagingHTML = "";
+                
+                document.getElementById("tblPageRayer").innerHTML = "";
+                document.getElementById("TitleInfo").innerHTML = " &nbsp;[" + strLang23 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang24 + "]";
+                strtext = "<div class='pagenavi'>";
+                PagingHTML += strtext;
+                var pageNum = CurPage;
+                
+                if (totalPage > 1 && pageNum != 1) {
+                    strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
+                    PagingHTML += strtext;
+                } else {
+                    strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+                    PagingHTML += strtext;
+                }
+                
+                if (totalPage > BlockSize) {
+                    if (pageNum > BlockSize) {
+                        strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+                        PagingHTML += strtext;
+                    } else {
+                        strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+                        PagingHTML += strtext;
+                    }
+                } else {
+                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+                    PagingHTML += strtext;
+                }
+                
+                var MaxNum;
+                var i;
+                var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+                
+                if (totalPage >= (startNum + parseInt(BlockSize))) {
+                    MaxNum = (startNum + parseInt(BlockSize)) - 1;
+                } else {
+                    MaxNum = totalPage;
+                }
+                
+                for (i = startNum; i <= MaxNum; i++) {
+                    if (i == pageNum) {
+                        strtext = "<span class='on'>" + i + "</span>";
+                        PagingHTML += strtext;
+                    } else {
+                        strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+                        PagingHTML += strtext;
+                    }
+                }
+
+                if (MaxNum == 0) {
+	            	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+	            }
+                
+                if (totalPage > BlockSize) {
+                    if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+                        strtext = "";
+                        strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif'></span>";
+                        PagingHTML += strtext;
+                    } else {
+                        strtext = "";
+                        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+                        PagingHTML += strtext;
+                    }
+                } else {
+                    strtext = "";
+                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+                    PagingHTML += strtext;
+                }
+                
+                if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+                    strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+                    PagingHTML += strtext;
+                } else {
+                    strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
+                    PagingHTML += strtext;
+                }
+                
+                PagingHTML += "</div>";
+                td_Create1(PagingHTML);
+            }
+            
+            function goToPageByNum(Value) {
+                sCurPage = Value;
+                makePageSelPage();
+				moveToPage(sCurPage);
+            }
+            
+            function selbeforeBlock() {
+                var pageNum = parseInt(sCurPage);
+                pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+                goToPageByNum(pageNum);    
+            }
+            
+            function selbeforeBlock_one() {
+                var pageNum = parseInt(sCurPage);
+                
+                if (parseInt(pageNum - 1) > 0) {
+                    goToPageByNum(parseInt(pageNum - 1));
+                } else {
+                    return;
+                }
+            }
+            
+            function selafterBlock() {
+                var pageNum = parseInt(sCurPage);
+                pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+                goToPageByNum(pageNum);
+            }
+            
+            function selafterBlock_one() {
+                var pageNum = parseInt(sCurPage);
+                
+                if( parseInt(pageNum + 1) <= sTotalPage) {
+                    goToPageByNum(parseInt(pageNum + 1));
+                } else {
+                    return;
+                }
+            }
+            
+            function moveToPage(sCurPage) {
+				if (parseInt(sCurPage) > 0 && parseInt(sCurPage) <= parseInt(totalPage)) {
+					window.location.href = "/admin/ezOrgan/retireUserManage.do?page=" + parseInt(sCurPage);
+				}
+			}
 	    </script>
 	</head>
-	<body class="mainbody">
-		<h1><spring:message code='ezOrgan.t311'/></h1>
+	<body class="mainbody" onload="makePageSelPage()">
+		<h1><spring:message code='ezOrgan.t311'/><span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
 		<div id="mainmenu">
 			<ul>
 				<c:if test="${dotNetIntegration != 'YES'}">
@@ -270,11 +405,14 @@
                 </c:if>
 		  	</ul>
 		</div>
-		<div class="page">
+		<script type="text/javascript">
+			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+		</script>
+		<%-- <div class="page"> 페이지 네이션 변경으로 인한 주석처리
 			<img src="/images/page_previous.gif" align="absmiddle" id=td_Previous onClick="prevPage_onclick()"/> <spring:message code='ezOrgan.t314'/>: <c:out value='${totalPage}'/>&nbsp;&nbsp; -
 		  	<input name="txt_PageInputNum" type="text" value="<c:out value='${pPage}'/>" onKeyDown="moveToPage()"/>
 		  	<img src="/images/page_next.gif" align="absmiddle" id="Img1" style="cursor:pointer;" onClick="nextPage_onclick()"/>
-		</div>
+		</div> --%>
 		<div style="width:100%; border-right:1px solid #eaeaea;border-left:1px solid #eaeaea;">
 		<table class="mainlist" style="width:100%"> 
 			<!-- <form name="frmOutbox" action="BoardItemList.aspx" method="post"></form> -->
@@ -309,10 +447,9 @@
 				</c:forEach>	   
 		</table>		
 		</div>
-		<script type="text/javascript">
-			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-		</script>
      <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
      <span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>    
+     <br/>
+		<div id="tblPageRayer"></div>
 	</body>
 </html>

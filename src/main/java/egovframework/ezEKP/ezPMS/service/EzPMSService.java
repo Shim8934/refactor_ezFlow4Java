@@ -240,7 +240,7 @@ public interface EzPMSService {
 	
 	public int checkIfHasPreTaskRel(Map<String, Object> map);
 	
-	public boolean checkIfPreTaskRelExist(Map<String, Object> map);
+//	public boolean checkIfPreTaskRelExist(Map<String, Object> map);
 	
 	public void deletePreTaskRelInTask(Map<String, Object> map);
 

@@ -3059,7 +3059,7 @@
 	]]>
 	</select>
 	
-	<select id="EzPMSDAO.checkIfPreTaskRelExist" parameterClass="map" resultClass="Integer">
+	<!-- <select id="EzPMSDAO.checkIfPreTaskRelExist" parameterClass="map" resultClass="Integer">
 	<![CDATA[
 		SELECT 
 			COUNT(*)
@@ -3077,7 +3077,7 @@
 		AND 
 			tenant_id = #tenantId#		
 	]]>
-	</select>
+	</select> -->
 	
 	<!-- <select id="EzPMSDAO.getLaggingAncestorGroupIds" parameterClass="map" resultClass="String">
 	<![CDATA[

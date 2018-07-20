@@ -212,6 +212,10 @@
 	   			} else {
 	   				alert("<spring:message code='ezPMS.t164' />");
 	   			}
+	   			
+				setMemberCNT();
+  				
+				scrollToBottom(authName);
 	   		}
 	   		
 	   		// 선택된 수신자배열에서 특정 사원 삭제
@@ -253,6 +257,7 @@
 			     	drawReceiverList(authName);
 	   			}
 		     	
+	   			setMemberCNT();
 		    }
 	   		
 	   		// 선택된 수신자 배열을 토대로 화면에 그리는 곳
@@ -363,6 +368,8 @@
 		   				SelectReceiverWindow(viewer, viewerList);
 		   			}
 	   			});
+	   			
+	   			setMemberCNT();
    			});
 	   		
 	   		var Tab1_SelectID = "1tab1";
@@ -416,6 +423,34 @@
 	   		
 	   		function deptSelect() {
 	   			setAuthorViewUser(type, false);
+	   		}
+	   		
+	   		// 담당자, 참여자, 조회자 인원을 표시
+	   		function setMemberCNT() {
+	   			$("#managerCNT").text(managerArray.length + "<spring:message code='ezPMS.t44'/>");
+	   			$("#participantCNT").text(participantArray.length + "<spring:message code='ezPMS.t44'/>");
+	   			$("#viewerCNT").text(viewerArray.length + "<spring:message code='ezPMS.t44'/>");
+	   		}
+	   		
+	   		// 담당자, 참여자, 조회자 추가 시 스크롤바를 밑으로 내려줌
+	   		function scrollToBottom(authName) {
+	   			switch (authName) {
+				case "manager":
+					$("#managerList").animate({
+	  					scrollTop : $("#managerList").prop("scrollHeight")
+	  				});
+					break;
+				case "participant":
+					$("#participantList").animate({
+	  					scrollTop : $("#participantList").prop("scrollHeight")
+	  				});
+					break;
+				case "viewer":
+					$("#viewerList").animate({
+	  					scrollTop : $("#viewerList").prop("scrollHeight")
+	  				});
+					break;
+	   			}
 	   		}
 		</script>
 		<style>
@@ -515,7 +550,9 @@
 	                        <td style="vertical-align: top;">
 	                        	<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
 		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
-										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="manager" onclick="SelectReceiverWindow(manager,managerList)"><spring:message code='ezPMS.t63' /> </span>
+										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="manager" onclick="SelectReceiverWindow(manager,managerList)">
+											<spring:message code='ezPMS.t63' /> (<span id="managerCNT" style="padding: 0px; color: #017BEC;"></span>)
+										</span>
 									</h2>
 								</div>
 								<div class="receiver_borderbox">
@@ -524,7 +561,9 @@
 								
 								<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
 		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
-										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="participant" onclick="SelectReceiverWindow(participant,participantList)"><spring:message code='ezPMS.t64' /> </span>
+										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="participant" onclick="SelectReceiverWindow(participant,participantList)">
+											<spring:message code='ezPMS.t64' /> (<span id="participantCNT" style="padding: 0px; color: #017BEC;"></span>)
+										</span>
 									</h2>
 								</div>
 								<div class="receiver_borderbox">
@@ -533,7 +572,9 @@
 								
 								<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
 		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
-										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="viewer" onclick="SelectReceiverWindow(viewer,viewerList)"><spring:message code='ezPMS.t65' /> </span>
+										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="viewer" onclick="SelectReceiverWindow(viewer,viewerList)">
+											<spring:message code='ezPMS.t65' /> (<span id="viewerCNT" style="padding: 0px; color: #017BEC;"></span>)
+										</span>
 									</h2>
 								</div>
 								<div class="receiver_borderbox">

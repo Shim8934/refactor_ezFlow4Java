@@ -1,7 +1,7 @@
 package egovframework.ezEKP.ezPMS.vo;
 
 public class CommentVO {
-		// 게시물 아이디
+		// 의견 아이디
 		private int commentId;
 		
 		// 테넌트 아이디

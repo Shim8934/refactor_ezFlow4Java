@@ -11,7 +11,7 @@ public class ProjectGroupMemberVO {
     // 멤버 역할 아이디 
     private int memberRoleId;
 
-    // 사용자 아이디 
+    // 그룹 아이디 
     private Long groupId;
     
     // 사용자 아이디 
