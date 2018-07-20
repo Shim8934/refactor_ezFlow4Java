@@ -263,11 +263,19 @@ var groupId = "${groupId}";
 	 var today = new Date();
 	 var todayComp = new Date(today.getFullYear(), today.getMonth()-1, today.getDay());
 	 
-	//1. 시작일 > 종료일은 불가능
+	//시작일 > 종료일은 불가능
 	 if (startDateComp.getTime() > endDateComp.getTime()) {
 		  alert("<spring:message code='ezPMS.t49' />");
 		  return;
 	  }
+	
+	//알람 메일 일자 지정 시 프로젝트 시작일 보다 긴 일자를 넣을 수 없음
+	var betweenDate = (endDateComp.getTime() - startDateComp.getTime())/1000/60/60/24;
+	
+	if (endAlamStatus > betweenDate) {
+		alert("<spring:message code='ezPMS.t325' />");
+		return;
+	}
 	
 	var data = {
 			mode : mode,
