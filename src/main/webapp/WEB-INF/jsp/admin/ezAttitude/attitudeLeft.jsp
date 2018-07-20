@@ -48,7 +48,7 @@
 	</head>
 	<body class="leftbody">
 		<div id="left">
-			<div class="left_admin" title="attitude"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code='ezAttitude.t1'/></div>
+			<div class="left_admin" title="attitude"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code='ezAttitude.t1'/></div>
 			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(1)"><spring:message code = 'ezAttitude.t2' /></span><ul></ul></h2>
 			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(2)"><spring:message code = 'ezAttitude.t3' /></span><ul></ul></h2>
 			<h2><span style="display:inline-block; width:100%;" onClick="moveToPage(3)"><spring:message code = 'ezAttitude.t4' /></span><ul></ul></h2>
