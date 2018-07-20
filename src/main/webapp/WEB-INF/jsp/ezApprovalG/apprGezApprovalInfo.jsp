@@ -389,8 +389,8 @@
 	            vAprSecurity = RetValue[38];
 	            SummaryFlag = RetValue[39];
 	            vPublicFlag2 = RetValue[45];
-	
-	            if (pSuSinFlag == "N") {
+	            
+	            if (pSuSinFlag == "N" || pDocType == "002") {
 	                document.getElementById("showReceptinfo").style.display = "none";//.innerHTML = "";
 	            }
 	            
@@ -876,7 +876,7 @@
 		                listview.LoadFromID("lvRECEPTLIST");
 		                var receptRow = listview.GetDataRows();
 		
-		                if (receptRow.length > 0 && receptRow[0].id.indexOf("noItems") == -1) {
+		                if (receptRow.length > 0 && receptRow[0].id.indexOf("noItems") == -1 && pDocType != "002") {
 		                    ret[2] = AprDeptListXML(); //수신자 저장 XML
 		                    ret[3] = MakertnVal(); //문서 매핑 XML
 		                }
