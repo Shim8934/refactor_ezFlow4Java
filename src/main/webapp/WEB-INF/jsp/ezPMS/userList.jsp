@@ -33,7 +33,7 @@
 			<tbody>
 				<tr>
 			    	<th style="white-space:normal">
-			    		<span id="selectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;">${keyword }-[<span style="color:#017BEC;">${userCount }<spring:message code='ezPMS.t44' /></span></span>
+			    		<span id="selectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;">${keyword }-[<span style="color:#017BEC;">${userCount }<spring:message code='ezPMS.t44' /></span>]</span>
 			    		<span style="float:right;">
                            <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_onlist.gif" class="icon_btn" id="txtlist"></span>
                            <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
