@@ -107,7 +107,7 @@
             </ul>
         </div>
 	    <div id="TreeView" style="border: 1px solid #ddd; height: 370px; width: 100%; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF;" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)"></div>
-	    <div class="btnposition">
+	    <div class="btnpositionNew">
 	        <a class="imgbtn" onclick="bt_Ok_onclick()"><span><spring:message code='ezApproval.t84'/></span></a>
 	    </div>
 	</body>

@@ -1374,9 +1374,9 @@
 		                    }
 		                    
 		                    IsSkipDrafter = "FALSE";
-		                }
-
-		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "string") {
+		                }    
+		                
+		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "string" && pDocType != "002") {
 		                	$.ajax({
 	                    		type : "POST",
 	                    		dataType : "text",
@@ -1394,8 +1394,7 @@
 
 		                    btnReceivLineEnable = false;
 		                    setRecevInfo(ret[3]);
-		                }
-		                else if (pSuSinFlag == "Y" && ret[2] == "") {
+		                } else if (pSuSinFlag == "Y" && ret[2] == "" && pDocType != "002") {
 		                    DeleteDeptInfo();
 		                    setRecevInfo("");
 		                }
