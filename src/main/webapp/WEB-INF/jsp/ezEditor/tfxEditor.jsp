@@ -142,7 +142,7 @@
 			window.onresize = function () {
 	            try {
 	                xfe.setWidth("100%");
-	                xfe.setHeight(document.documentElement.clientHeight + "px");
+	                xfe.setHeight((document.documentElement.clientHeight - 1) + "px");
 	            } catch (e) { }
 	        }
 		</script> 
@@ -174,7 +174,6 @@
 		    		break;
 	    	}
 	    	
-	    	
 	    	var initFontFamilyMenu = "<spring:message code='main.t0620' />".split(";");
 
 	    	var uploadFilePath = "/ezEditor/tfxUpload.do?type=" + type;
@@ -194,7 +193,7 @@
 	        	lang : lang,
 	            basePath : "/js/ezEditor/tfxEditor",
 	            width : "100%",
-	            height : (document.documentElement.clientHeight) + "px",
+	            height : (document.documentElement.clientHeight - 1) + "px",
 	            initFontFamilyMenu : initFontFamilyMenu,
 	            initFontFamily : defaultFontFamily,
 	            initFontSize : defaultFontSize,

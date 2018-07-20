@@ -2311,6 +2311,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
    		model.addAttribute("list", list);
    		model.addAttribute("pPage", pPage);
    		model.addAttribute("totalPage", totalPage);
+   		model.addAttribute("totalCount", totalCount);
+   		model.addAttribute("pPageRow", pPageRow);
 		
    		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
    		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);

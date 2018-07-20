@@ -37,6 +37,8 @@
 			.password_reset .passwordForm li .formInput{ display:inline-block; float:right; font-size:13px;}
 			.password_reset .passwordForm li .formInput input{font-size:13px; width:199px; height:35px; line-height:35px; border:1px solid #d9d9d9; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px; padding:0px 0px 0px 5px;}
 			.password_reset .passwordForm li.grayText{ color:#8e8e8e; font-size:12px; margin:0px; padding:0px}
+			#exDiv3 dl{margin-top: 20px;}
+			#layerTitle{margin-bottom: 20px;}
 		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -121,7 +123,10 @@
 			    	$("#exDiv2").modal();
 			    }
 			    else if (message != "") {
-			        alert(message);
+// 			        alert(message);
+					$("#layerTitle").text(message);
+					$("#imgMnt2").html("<img src='/images/warning2.png'>");
+			        $("#exDiv3").modal();
 			    }
 			    getid(document.loginForm);
 			    
@@ -326,6 +331,23 @@
 			    <a class="imgbtn" rel="modal:close"><span><spring:message code='ezSchedule.t4' /></span></a>
 			</div>	 --%>
 		</div>
-		
+
+<!-- 		2018-07-20 강민석 존재하지 않는 ID를 입력했을 경우 alert -> layer 팝업으로 변경 -->
+		<div id="exDiv3" style="display:none;max-width:620px;height:190px;padding-top:27px;margin-bottom:100px">
+			<div id="close">
+	            <ul>
+	                <li><a rel="modal:close"><span></span></a></li>
+	            </ul>
+	        </div>
+			<div class="warning_wrap" style="padding-left:20px">
+				<p style="border:0px" id="imgMnt2"></p>
+		        <dl>
+					<dt id="layerTitle">${message1}</dt>
+		            <dd><spring:message code='fail.common.login.warning1'/></dd>
+		            <dd><spring:message code='fail.common.login.warning6'/></dd>
+		        </dl>
+		    </div>
+		</div>
+
 	</body>
 </html>

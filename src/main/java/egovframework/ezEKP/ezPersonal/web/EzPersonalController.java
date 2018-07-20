@@ -347,8 +347,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 				proxyUserID = xmlDom.getElementsByTagName("PROXYUSERID").item(0).getTextContent();
 				proxyDeptID = xmlDom.getElementsByTagName("PROXYUSERDEPTID").item(0).getTextContent();
 				proxyUserName = xmlDom.getElementsByTagName("PROXYUSERNAME").item(0).getTextContent();
-				startDate = xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent();
-				endDate = xmlDom.getElementsByTagName("ENDDATE").item(0).getTextContent();
+				startDate = commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent().substring(0, 16), userInfo.getOffset(), false);
+				endDate = commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("ENDDATE").item(0).getTextContent().substring(0, 16), userInfo.getOffset(), false);
 				
 				startDate = startDate.substring(0, startDate.length()-2);
 				endDate = endDate.substring(0, endDate.length()-2);
