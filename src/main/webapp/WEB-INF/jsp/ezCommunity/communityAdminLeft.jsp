@@ -22,7 +22,10 @@
 				width:190px;
 				padding-left:20px;
 				margin-left:-40px;
+			}
+			.node_div {
 				overflow:hidden;
+				text-overflow:ellipsis;
 			}
 		</style>
 		<script type="text/javascript" src="/js/ezCommunity/TreeView.js"></script>
