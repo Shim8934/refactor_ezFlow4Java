@@ -32,6 +32,7 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezCabinet.vo.SimpleUserVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -744,6 +745,75 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
+	@RequestMapping(value="/rest/ezcabinet/sharedcabinet/id/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getSharedCabinetTree(@PathVariable(value="userid") String userId, HttpServletRequest request, Locale locale) {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo              = commonUtil.getUserForGw(userId, serverName);
+			List<SimpleUserVO> sharedList = cabinetService.getSharedUserList(userInfo);
+			
+			if (sharedList.size() == 0) {
+				result.put("status", "error");
+				result.put("code", 5);
+				return result;
+			}
+			
+			result.put("tree", sharedList);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/sharedcabinet/shareid/{shareid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getUserSharedCabinet(@PathVariable(value="shareid") String shareId, HttpServletRequest request, Locale locale) {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("UserId: " + userId + " || serverName: " + serverName + " || Share Id: " + shareId);
+		
+		if (serverName.equals("") || userId.equals("") || shareId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo                 = commonUtil.getUserForGw(userId, serverName);
+			List<CabinetSimpleVO> sharedList = cabinetService.getUserSharedCabinet(shareId, userInfo);
+			
+			result.put("subNodes", sharedList);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
 	@RequestMapping(value="/rest/ezcabinet/cabinet/add", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject addCabinet(HttpServletRequest request) {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")                     : "";
@@ -768,7 +838,7 @@ public class EzCabinetGWController {
 			
 			//Add checking permission here
 			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(parentId));
-			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), 1, userInfo);
 			
 			if ((int)permission.get("code") == 1) {
 				result.put("status", "error");
@@ -814,7 +884,7 @@ public class EzCabinetGWController {
 			
 			//Add checking permission here
 			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(cabinetId));
-			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), 1, userInfo);
 			
 			if ((int)permission.get("code") == 1) {
 				result.put("status", "error");
@@ -855,7 +925,7 @@ public class EzCabinetGWController {
 			
 			//Add checking permission here
 			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(cabinetId));
-			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), 1, userInfo);
 			
 			if ((int)permission.get("code") == 1) {
 				result.put("status", "error");
@@ -897,7 +967,7 @@ public class EzCabinetGWController {
 			
 			//Add checking permission here
 			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(cabinetId, parentId));
-			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			JSONObject permission = cabinetService.checkPermission(cabinetList, new ArrayList<>(), 1, userInfo);
 			
 			if ((int)permission.get("code") == 1) {
 				result.put("status", "error");
@@ -1041,7 +1111,7 @@ public class EzCabinetGWController {
 			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
 			//Add checking permission here
 			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(Integer.parseInt(cabinetId)));
-			JSONObject permission     = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			JSONObject permission     = cabinetService.checkPermission(cabinetList, new ArrayList<>(), 1, userInfo);
 			
 			if ((int)permission.get("code") == 1) {
 				result.put("status", "error");
@@ -1112,7 +1182,7 @@ public class EzCabinetGWController {
 			List<Integer> itemIdList  = itemList.stream().map(Integer::parseInt).collect(Collectors.toList());
 			
 			//Add checking permission here
-			JSONObject permission     = cabinetService.checkPermission(new ArrayList<>(), itemIdList, userInfo);
+			JSONObject permission     = cabinetService.checkPermission(new ArrayList<>(), itemIdList, 1, userInfo);
 			
 			if ((int)permission.get("code") == 1) {
 				result.put("status", "error");
@@ -1157,7 +1227,7 @@ public class EzCabinetGWController {
 			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(cabinetId));
 			
 			//Add checking permission here
-			JSONObject permission     = cabinetService.checkPermission(cabinetList, itemIdList, userInfo);
+			JSONObject permission     = cabinetService.checkPermission(cabinetList, itemIdList, 1, userInfo);
 			
 			if ((int)permission.get("code") == 1) {
 				result.put("status", "error");
@@ -1209,7 +1279,7 @@ public class EzCabinetGWController {
 			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
 			//Add checking permission here
 			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(Integer.parseInt(cabinetId)));
-			JSONObject permission     = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			JSONObject permission     = cabinetService.checkPermission(cabinetList, new ArrayList<>(), 0, userInfo);
 			
 			if ((int)permission.get("code") == 1) {
 				result.put("status", "error");
@@ -1292,7 +1362,7 @@ public class EzCabinetGWController {
 			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
 			//Add checking permission here
 			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(Integer.parseInt(cabinetId)));
-			JSONObject permission     = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			JSONObject permission     = cabinetService.checkPermission(cabinetList, new ArrayList<>(), 0, userInfo);
 			
 			if ((int)permission.get("code") == 1) {
 				result.put("status", "error");
@@ -1336,7 +1406,7 @@ public class EzCabinetGWController {
 			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
 			//Add checking permission here
 			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(Integer.parseInt(cabinetId)));
-			JSONObject permission     = cabinetService.checkPermission(cabinetList, new ArrayList<>(), userInfo);
+			JSONObject permission     = cabinetService.checkPermission(cabinetList, new ArrayList<>(), 1, userInfo);
 			
 			if ((int)permission.get("code") == 1) {
 				result.put("status", "error");

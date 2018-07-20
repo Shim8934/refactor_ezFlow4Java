@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetRelationVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezCabinet.vo.SimpleUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @SuppressWarnings("unchecked")
@@ -197,12 +198,20 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 	public List<CabinetItemSimpleVO> getFilesByTitle(Map<String, Object> map) {
 		return (List<CabinetItemSimpleVO>)list("EzCabinetDAO.getFilesByTitle", map);
 	}
-
+	
 	public int getTotalFiles(Map<String, Object> map) {
 		return (int)select("EzCabinetDAO.getTotalFiles", map);
 	}
-
+	
 	public int getTotalFilesByTitle(Map<String, Object> map) {
 		return (int)select("EzCabinetDAO.getTotalFilesByTitle", map);
+	}
+	
+	public List<SimpleUserVO> getSharedUserList(Map<String, Object> map) {
+		return (List<SimpleUserVO>)list("EzCabinetDAO.getSharedUserList", map);
+	}
+
+	public List<CabinetSimpleVO> getUserSharedCabinet(Map<String, Object> map) {
+		return (List<CabinetSimpleVO>)list("EzCabinetDAO.getUserSharedCabinet", map);
 	}
 }

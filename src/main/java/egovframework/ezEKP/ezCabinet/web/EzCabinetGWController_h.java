@@ -2,10 +2,8 @@ package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.List;
 import java.util.Locale;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

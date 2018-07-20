@@ -1,9 +1,7 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +41,8 @@ public interface EzCabinetRestService {
 	public JSONObject getAllCabinetTree(HttpServletRequest request, String currentNode, String userId) throws Exception;
 	public JSONObject getCabinetSubNodes(HttpServletRequest request, String userId, String nodeId) throws Exception;
 	public JSONObject getRelatedCabinetTree(HttpServletRequest request, String userId, String currentNode) throws Exception;
+	public JSONObject getSharedCabinetTree(HttpServletRequest request, String userId) throws Exception;
+	public JSONObject getUserSharedCabinet(HttpServletRequest request, String id, String shareId) throws Exception;
 	
 	//User cabinet management
 	public JSONObject addCabinet(HttpServletRequest request, String userId, String parentId, String cabinetName1, String cabinetName2) throws Exception;

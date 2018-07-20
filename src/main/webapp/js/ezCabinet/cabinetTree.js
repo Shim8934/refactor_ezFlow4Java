@@ -7,6 +7,7 @@ function CabinetTree() {
 	var _companyId    = null;
 	var _initialUrl   = null;
 	var _getSubUrl    = null;
+	var _shareUrl     = null;
 	var _clickHandle  = null;
 	var _dblClickHdl  = null;
 	var _treeType     = null;
@@ -21,6 +22,7 @@ function CabinetTree() {
 	var _minusImg     = null;
 	var _name1        = null;
 	var _name2        = null;
+	var _userIcon     = null;
 	
 	//set public functions
 	this.makeTree     = getInitalData;
@@ -32,6 +34,7 @@ function CabinetTree() {
 		_treeType    = data["treeType"];
 		_initialUrl  = data["initialUrl"];
 		_getSubUrl   = data["extendUrl"];
+		_shareUrl    = data["shareUrl"];
 		_clickHandle = data["click"];
 		_dblClickHdl = data["dblClick"];
 		_companyId   = data["companyId"];
@@ -39,6 +42,7 @@ function CabinetTree() {
 		_transImg    = data["transImg"] ? data["transImg"] : "/images/OrganTree_cross/dot_continue.gif";
 		_plusImg     = data["plus"]     ? data["plus"]     : "/images/OrganTree_cross/plus.gif";
 		_minusImg    = data["minus"]    ? data["minus"]    : "/images/OrganTree_cross/minus.gif";
+		_userIcon    = "/images/OrganTree_cross/ic-open.gif";
 		
 		switch(_treeType) {
 			case "organ": 
@@ -76,11 +80,11 @@ function CabinetTree() {
 		
 		var code = data.code;
 		switch(code) {
-			case 1 : alert(CabinetMessages.strParamErr); return;
-			case 2 : alert(CabinetMessages.strError)   ; return;
+			case 1 : alert(CabinetMessages.strParamErr) ; return;
+			case 2 : alert(CabinetMessages.strError)    ; return;
 			case 4 : while (divTree.hasChildNodes()) {divTree.removeChild(divTree.lastChild);}
-					 alert(CabinetMessages.strTreeErr2);
-					 return;
+					 alert(CabinetMessages.strTreeErr2) ; return;
+			case 5 : alert(CabinetMessages.strShareErr2); return;
 		}
 		
 		var nodesTree   = data.tree;
@@ -100,7 +104,14 @@ function CabinetTree() {
 					var divChildNode  = document.createElement("div");
 					generateSubTree(divTree, divChildNode, nodesTree[i]);
 				}
-				
+				break;
+			case "share":
+				console.log(data);
+				var userLen = nodesTree.length;
+				for (var i = 0; i < userLen; i++) {
+					var userDivNode  = document.createElement("div");
+					generateShareList(divTree, userDivNode, nodesTree[i]);
+				}
 				break;
 		}
 		
@@ -108,7 +119,16 @@ function CabinetTree() {
 	}
 	
 	function generateSubTree(divTree, divElmt, list) {
-		var level = list[_levelName];
+		var level         = -1;
+		var divId = divTree.getAttribute("id");
+		if (divId == _treeElmtId) {
+			level = 0;
+		}
+		else {
+			var parentElmt = divTree.parentElement;
+			var listOfImgElmt = [].filter.call(parentElmt.querySelectorAll("img"), function(element){return element.parentNode == parentElmt;});
+			level = (!listOfImgElmt || listOfImgElmt.length == 0) ? 1 : listOfImgElmt.length - 1;
+		}
 		
 		if (level > 0) {
 			for (var j = 0; j < level; j++) {
@@ -173,6 +193,57 @@ function CabinetTree() {
 		}
 	}
 	
+	function generateShareList(divTree, divElmt, list) {
+		var imgElmt       = document.createElement("img");
+		imgElmt.src       = _plusImg;
+		imgElmt.className = "cabinetPlus";
+		imgElmt.setAttribute("role", list["userId"]);
+		imgElmt.onclick = function() {getUserSharedCabinet(this);};
+		
+		var imgElmt2       = document.createElement("img");
+		imgElmt2.className = "cabinetImg";
+		imgElmt2.src       = _userIcon;
+		
+		var spanDeptName         = document.createElement("span");
+		spanDeptName.textContent = list["userName"] + "[" + list["deptName"] + "]";
+		spanDeptName.className   = "spanName";
+		spanDeptName.setAttribute("role", list["userId"]);
+		spanDeptName.addEventListener("click", function(e) {getUserSelected(this);}, false);
+		
+		divElmt.appendChild(imgElmt);
+		divElmt.appendChild(imgElmt2);
+		divElmt.appendChild(spanDeptName);
+		divTree.appendChild(divElmt);
+	}
+	
+	function getUserSharedCabinet(obj) {
+		var parentDiv   = obj.parentElement;
+		var divChildren = parentDiv.getElementsByTagName("div").length;
+		
+		if (divChildren > 0) {
+			var childElmt = parentDiv.lastElementChild;
+			
+			if (obj.className == "cabinetMinus") {
+				obj.src                 = _plusImg;
+				obj.className           = "cabinetPlus";
+				childElmt.style.display = "none";
+			}
+			else {
+				obj.src                 = _minusImg;
+				obj.className           = "cabinetMinus";
+				childElmt.style.display = "";
+			}
+		}
+		else {
+			obj.src       = _minusImg;
+			obj.className = "cabinetMinus";
+			var userId    = obj.getAttribute("role");
+			var dataInf   = {"shareId" : userId};
+			
+			makeAjaxCall(dataInf, "GET", _shareUrl, makeSubTree, null, true, parentDiv);
+		}
+	}
+	
 	function getSubNodes(obj) {
 		var parentDiv   = obj.parentElement;
 		var divChildren = parentDiv.getElementsByTagName("div").length;
@@ -180,7 +251,7 @@ function CabinetTree() {
 		var level       = obj.getAttribute("level");
 		
 		if (divChildren > 0) {
-			var childElmt = obj.parentElement.lastElementChild;
+			var childElmt = parentDiv.lastElementChild;
 			
 			if (obj.className == "cabinetMinus") {
 				obj.src                 = _plusImg;
@@ -198,7 +269,7 @@ function CabinetTree() {
 			obj.className = "cabinetMinus";
 			var deptData  = {"nodeId" : nodeId, "level" : level};
 			
-			makeAjaxCall(deptData, "GET", _getSubUrl, makeSubTree, null, true, obj.parentElement);
+			makeAjaxCall(deptData, "GET", _getSubUrl, makeSubTree, null, true, parentDiv);
 		}
 	}
 	

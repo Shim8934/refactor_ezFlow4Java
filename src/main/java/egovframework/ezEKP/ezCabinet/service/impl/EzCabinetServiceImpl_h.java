@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
-import egovframework.ezEKP.ezCabinet.vo.CabinetShareVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;

@@ -59,5 +59,6 @@ var CabinetMessages = {
 	strSub       : "추가",
 	strEmployee  : "직원을 먼저 선택해주세요.",
 	strShareErr1 : "정상적인 공유자가 아닙니다.",
-	strSelect2   : "공유자 선택하세요"
+	strSelect2   : "공유자 선택하세요",
+	strShareErr2 : "공유받은 캐비넷 없습니다."
 }

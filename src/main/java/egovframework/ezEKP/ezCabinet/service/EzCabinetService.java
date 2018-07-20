@@ -11,12 +11,13 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezCabinet.vo.SimpleUserVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCabinetService {
 	//Check user permission
-	JSONObject checkPermission(List<Integer> cabinetList, List<Integer> itemList, LoginVO userInfo) throws Exception;
+	JSONObject checkPermission(List<Integer> cabinetList, List<Integer> itemList, int mode, LoginVO userInfo) throws Exception;
 	
 	//Company Tree process functions
 	List<SimpleDeptVO> getAllSubDepts(String companyId, int level, String primary, int tenantId) throws Exception;
@@ -37,6 +38,8 @@ public interface EzCabinetService {
 	CabinetSimpleVO getMyCabinetTreeDetail(String cabinetId, LoginVO userInfo) throws Exception;
 	List<CabinetSimpleVO> getCabinetSubTree(String cabinetId, LoginVO userInfo) throws Exception;
 	List<CabinetSimpleVO> getRelatedCabinetListForUser(LoginVO userInfo) throws Exception;
+	List<CabinetSimpleVO> getUserSharedCabinet(String shareId, LoginVO userInfo) throws Exception;
+	List<SimpleUserVO> getSharedUserList(LoginVO userInfo) throws Exception;
 	
 	//User cabinet management functions
 	void addCabinet(int parentId, String cabName1, String cabName2, LoginVO userInfo) throws Exception;
