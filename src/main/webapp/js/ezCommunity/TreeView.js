@@ -92,12 +92,6 @@ function TreeNode() {
 
         }
         
-        /* 2018-06-20 홍승비 - 커뮤니티 관리메뉴 > 게시판 트리노드 말줄임표 적용 */
-        //treeDiv.style.height = "21px";
-        //treeDiv.style.whiteSpace = "nowrap";
-        //treeDiv.style.overflow = "hidden";
-        //treeDiv.style.textOverflow = "ellipsis";
-        
         //확장하는 노드인지 체크
         var bExpanded = false;
 
