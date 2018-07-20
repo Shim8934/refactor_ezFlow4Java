@@ -1162,7 +1162,24 @@
 		            /* 2018-06-20 홍승비 - 승인게시물 반려 후 제작성 .do 경로 수정 */
 		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&location=", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        }
-		        
+		    	
+		    	/* 2018-07-20 홍승비 - 포토/썸네일게시물의 이미지 클릭 시 원본 이미지 팝업 */
+		    	function viewOriginImage(imgSrc) {
+		    		var pheight = window.screen.availHeight;
+		            var pwidth = window.screen.availWidth;
+		            var pTop = (pheight - 768) / 2;
+		            var pLeft = (pwidth - 1024) / 2;
+		            var htmlString = "";				
+		            var imageWin = window.open("" , "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=768,width=1024,top=" + pTop + ",left=" + pLeft, "");
+		            
+					htmlString = "<html><head><title><spring:message code='ezPortal.t49'/></title></head>";
+					htmlString += "<body style='margin:0px;text-align:center;' onClick='window.close()'>";
+					htmlString += "<div style='height:768px;width:1024px;vertical-align:middle;display:table-cell;'><img style='cursor:pointer;' src=" + imgSrc.src + "/>";
+					htmlString += "</body></html>";
+					
+					imageWin.document.write(htmlString);
+					imageWin.document.close();
+		    	}	    	 
 		</script>
 	</head>
 	<body class="popup">
@@ -1265,7 +1282,7 @@
 		                <table id="imagetable" style="text-align:center; border:0px;">
 		                    <tr>  
 		                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center">
-		                            <img id="mainimages" style="background-color:#ffffff;" src=""/>            
+		                            <img id="mainimages" style="background-color:#ffffff;cursor:pointer;" src="" onClick="viewOriginImage(this);"/>            
 		                        </td>
 		                    </tr>
 		           	    </table>
