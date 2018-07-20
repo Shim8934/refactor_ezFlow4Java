@@ -3122,19 +3122,19 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return ezPMSDAO.checkIfHasPreTaskRel(map);
 	}
 
-	@Override
-	public boolean checkIfPreTaskRelExist(Map<String, Object> map) {
-		LOGGER.debug("[SERVICE] checkIfExistPreTaskRel started.");
-		boolean result = false;
-		
-		if(ezPMSDAO.checkIfPreTaskRelExist(map) > 0) {
-			result = true;
-		} 
-		
-		LOGGER.debug("[SERVICE] checkIfExistPreTaskRel ended.");
-	
-		return result;
-	}
+//	@Override
+//	public boolean checkIfPreTaskRelExist(Map<String, Object> map) {
+//		LOGGER.debug("[SERVICE] checkIfExistPreTaskRel started.");
+//		boolean result = false;
+//		
+//		if(ezPMSDAO.checkIfPreTaskRelExist(map) > 0) {
+//			result = true;
+//		} 
+//		
+//		LOGGER.debug("[SERVICE] checkIfExistPreTaskRel ended.");
+//	
+//		return result;
+//	}
 	
 //	@Override
 //	public List<Integer> getLaggingGroupIds(Map<String, Object> map) {

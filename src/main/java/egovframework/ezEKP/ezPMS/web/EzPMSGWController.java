@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -3188,99 +3189,99 @@ public class EzPMSGWController {
 					}
 				}
 				
-				if (request.getParameter("endTime") != null) {
-					long endTime = Long.parseLong(request.getParameter("endTime"));
-					int rowIndex = Integer.parseInt(request.getParameter("rowIndex"));
-
-					data.put("endDate", endTime);
-
-					List<Long> preTaskList = ezPMSService.getPreTaskRel(rowIndex, tenantId, projectId);
-
-					if (preTaskList != null && preTaskList.size() != 0) {
-						Date postTaskEndTime = new Date(endTime);
-						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-						for (int i = 0; i < preTaskList.size(); i++) {
-							ProjectTaskVO postTask = ezPMSService.getTaskDetails(preTaskList.get(i), tenantId, lang);
-							Date postPlanStartDate = dateFormat.parse(postTask.getPlanStartDate());
-							Date postPlanEndDate = dateFormat.parse(postTask.getPlanEndDate());
-							
-							long diff = postPlanEndDate.getTime() - postPlanStartDate.getTime();
-							int diffDays = (int) diff / (24 * 60 * 60 * 1000);
-
-							Calendar cal = Calendar.getInstance();
-							cal.setTime(postTaskEndTime);
-							cal.add(Calendar.DATE, 1); // 다음날 지정
-
-							int dayNum = cal.get(Calendar.DAY_OF_WEEK);
-
-							if (dayNum == 7) {
-								cal.add(Calendar.DATE, 2);
-							} else if (dayNum == 1) {
-								cal.add(Calendar.DATE, 1);
-							}
-
-							Calendar cal2 = Calendar.getInstance();
-							cal2.setTime(cal.getTime());
-							cal2.add(Calendar.DATE, diffDays);
-							int dayNum2 = cal2.get(Calendar.DAY_OF_WEEK);
-
-							if (dayNum2 == 7) {
-								cal2.add(Calendar.DATE, -1);
-							} else if (dayNum2 == 1) {
-								cal2.add(Calendar.DATE, -2);
-							}
-
-							String calStartStr = dateFormat.format(cal.getTime());
-							String calEndStr = dateFormat.format(cal2.getTime());
-							Date calStart = new SimpleDateFormat("yyyy-MM-dd").parse(calStartStr);
-							Date calEnd = new SimpleDateFormat("yyyy-MM-dd").parse(calEndStr);
-
-							int workingdayPT = ezPMSService.getWorkingDays(calStart, calEnd, companyId, tenantId);
-
-							LOGGER.debug("workingdayPT : " + workingdayPT);
-
-							postTask.setPlanStartDate(calStartStr);
-							postTask.setPlanEndDate(calEndStr);
-							postTask.setWorkingday(workingdayPT);
-							ezPMSService.updateTaskStatus(postTask, companyId, tenantId);
-							
-							// taskId로 해당 date 삭제 후, 추가
-							ezPMSService.deleteMemberSchedule(null, projectId, tenantId, null, preTaskList.get(i));
-							List<TaskMemberVO> postTaskMemberList = ezPMSService.getTaskMemberList(tenantId, preTaskList.get(i), lang);
-							
-							Date postStartDate = sdf.parse(calStartStr);
-							Date postEndDate = sdf.parse(calEndStr);
-
-							Calendar postStartCal = Calendar.getInstance();
-							Calendar postEndCal = Calendar.getInstance();
-
-							postStartCal.setTime(postStartDate);
-							postEndCal.setTime(postEndDate);
-
-							List<String> postDateList = new ArrayList<String>();
-
-							while (postStartCal.compareTo(postEndCal) != 1) {
-								if (postStartCal.get(Calendar.DAY_OF_WEEK) == 1 || postStartCal.get(Calendar.DAY_OF_WEEK) == 7) {
-									postStartCal.add(Calendar.DATE, 1);
-								} else {
-									postDateList.add(sdf.format(postStartCal.getTime()));
-									postStartCal.add(Calendar.DATE, 1);
-								}
-							}
-
-							for (int k = 0; k < postTaskMemberList.size(); k++) {
-								String memberId = postTaskMemberList.get(k).getUserId();
-								LOGGER.debug(memberId);
-								for (int j = 0; j < postDateList.size(); j++) {
-									ezPMSService.addMemberSchedule(memberId, tenantId, postDateList.get(j), projectId, preTaskList.get(i));
-								}
-							}
-						}
-
-					}
-
-				}
+//				if (request.getParameter("endTime") != null) {
+//					long endTime = Long.parseLong(request.getParameter("endTime"));
+//					int rowIndex = Integer.parseInt(request.getParameter("rowIndex"));
+//
+//					data.put("endDate", endTime);
+//
+//					List<Long> preTaskList = ezPMSService.getPreTaskRel(rowIndex, tenantId, projectId);
+//
+//					if (preTaskList != null && preTaskList.size() != 0) {
+//						Date postTaskEndTime = new Date(endTime);
+//						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//
+//						for (int i = 0; i < preTaskList.size(); i++) {
+//							ProjectTaskVO postTask = ezPMSService.getTaskDetails(preTaskList.get(i), tenantId, lang);
+//							Date postPlanStartDate = dateFormat.parse(postTask.getPlanStartDate());
+//							Date postPlanEndDate = dateFormat.parse(postTask.getPlanEndDate());
+//							
+//							long diff = postPlanEndDate.getTime() - postPlanStartDate.getTime();
+//							int diffDays = (int) diff / (24 * 60 * 60 * 1000);
+//
+//							Calendar cal = Calendar.getInstance();
+//							cal.setTime(postTaskEndTime);
+//							cal.add(Calendar.DATE, 1); // 다음날 지정
+//
+//							int dayNum = cal.get(Calendar.DAY_OF_WEEK);
+//
+//							if (dayNum == 7) {
+//								cal.add(Calendar.DATE, 2);
+//							} else if (dayNum == 1) {
+//								cal.add(Calendar.DATE, 1);
+//							}
+//
+//							Calendar cal2 = Calendar.getInstance();
+//							cal2.setTime(cal.getTime());
+//							cal2.add(Calendar.DATE, diffDays);
+//							int dayNum2 = cal2.get(Calendar.DAY_OF_WEEK);
+//
+//							if (dayNum2 == 7) {
+//								cal2.add(Calendar.DATE, -1);
+//							} else if (dayNum2 == 1) {
+//								cal2.add(Calendar.DATE, -2);
+//							}
+//
+//							String calStartStr = dateFormat.format(cal.getTime());
+//							String calEndStr = dateFormat.format(cal2.getTime());
+//							Date calStart = new SimpleDateFormat("yyyy-MM-dd").parse(calStartStr);
+//							Date calEnd = new SimpleDateFormat("yyyy-MM-dd").parse(calEndStr);
+//
+//							int workingdayPT = ezPMSService.getWorkingDays(calStart, calEnd, companyId, tenantId);
+//
+//							LOGGER.debug("workingdayPT : " + workingdayPT);
+//
+//							postTask.setPlanStartDate(calStartStr);
+//							postTask.setPlanEndDate(calEndStr);
+//							postTask.setWorkingday(workingdayPT);
+//							ezPMSService.updateTaskStatus(postTask, companyId, tenantId);
+//							
+//							// taskId로 해당 date 삭제 후, 추가
+//							ezPMSService.deleteMemberSchedule(null, projectId, tenantId, null, preTaskList.get(i));
+//							List<TaskMemberVO> postTaskMemberList = ezPMSService.getTaskMemberList(tenantId, preTaskList.get(i), lang);
+//							
+//							Date postStartDate = sdf.parse(calStartStr);
+//							Date postEndDate = sdf.parse(calEndStr);
+//
+//							Calendar postStartCal = Calendar.getInstance();
+//							Calendar postEndCal = Calendar.getInstance();
+//
+//							postStartCal.setTime(postStartDate);
+//							postEndCal.setTime(postEndDate);
+//
+//							List<String> postDateList = new ArrayList<String>();
+//
+//							while (postStartCal.compareTo(postEndCal) != 1) {
+//								if (postStartCal.get(Calendar.DAY_OF_WEEK) == 1 || postStartCal.get(Calendar.DAY_OF_WEEK) == 7) {
+//									postStartCal.add(Calendar.DATE, 1);
+//								} else {
+//									postDateList.add(sdf.format(postStartCal.getTime()));
+//									postStartCal.add(Calendar.DATE, 1);
+//								}
+//							}
+//
+//							for (int k = 0; k < postTaskMemberList.size(); k++) {
+//								String memberId = postTaskMemberList.get(k).getUserId();
+//								LOGGER.debug(memberId);
+//								for (int j = 0; j < postDateList.size(); j++) {
+//									ezPMSService.addMemberSchedule(memberId, tenantId, postDateList.get(j), projectId, preTaskList.get(i));
+//								}
+//							}
+//						}
+//
+//					}
+//
+//				}
 			}
 
 			result.put("status", "ok");
@@ -3710,6 +3711,13 @@ public class EzPMSGWController {
 			String searchByContent = request.getParameter("searchByContent");
 			String searchOrNot = request.getParameter("searchOrNot");
 
+//			Enumeration<String> parameterNames = request.getParameterNames();
+//
+//			while (parameterNames.hasMoreElements()) {
+//				String parameterName = parameterNames.nextElement();
+//				LOGGER.debug(parameterName + " : " + request.getParameter(parameterName));
+//			}
+			
 			if (searchByTaskName != null && !searchByTaskName.equals("")) {
 				searchByTaskName = searchByTaskName.replace("\\", "\\\\");
 				searchByTaskName = searchByTaskName.replace("%", "\\%");
@@ -4100,7 +4108,7 @@ public class EzPMSGWController {
 			String filePath = request.getParameter("filePath");
 			String fileList = request.getParameter("fileList");
 
-			LOGGER.debug("pDirPath : " + pDirPath + " | fileList : " + fileList);
+			LOGGER.debug("pDirPath : " + pDirPath + " | filePath : " + filePath + " | fileList : " + fileList);
 
 			if (fileList.length() != 0) {
 				String[] data = fileList.split("/");
@@ -4213,14 +4221,14 @@ public class EzPMSGWController {
 
 			param.put("itemId", itemId);
 			param.put("lang", lang);
-
+			
 			Enumeration<String> parameterNames = request.getParameterNames();
-
+			
 			while (parameterNames.hasMoreElements()) {
 				String parameterName = parameterNames.nextElement();
 				param.put(parameterName, request.getParameter(parameterName));
 			}
-
+			
 			ProjectBoardVO boardVO = ezPMSService.getBoardDetail(info.getTenantId(), param);
 
 			int authority = ezPMSService.getUserProjectRole(userId, info.getTenantId(), projectId,
@@ -4357,6 +4365,7 @@ public class EzPMSGWController {
 			while (parameterNames.hasMoreElements()) {
 				String parameterName = parameterNames.nextElement();
 				param.put(parameterName, request.getParameter(parameterName));
+//				LOGGER.debug(parameterName + " : " + request.getParameter(parameterName));
 			}
 
 			List<BoardViewerVO> viewerList = ezPMSService.getBoardViewerList(info.getTenantId(), param);
@@ -4403,14 +4412,16 @@ public class EzPMSGWController {
 
 			param.put("lang", lang);
 			param.put("tenantId", tenantId);
-
+			param.put("projectId", projectId);
+			
 			Enumeration<String> parameterNames = request.getParameterNames();
 
 			while (parameterNames.hasMoreElements()) {
 				String parameterName = parameterNames.nextElement();
 				param.put(parameterName, request.getParameter(parameterName));
+//				LOGGER.debug(parameterName + " : " + request.getParameter(parameterName));
 			}
-
+			
 			if (searchByUser != null && !searchByUser.equals("")) {
 				searchByUser = searchByUser.replace("\\", "\\\\");
 				searchByUser = searchByUser.replace("%", "\\%");
@@ -4492,6 +4503,7 @@ public class EzPMSGWController {
 			while (parameterNames.hasMoreElements()) {
 				String parameterName = parameterNames.nextElement();
 				param.put(parameterName, request.getParameter(parameterName));
+//				LOGGER.debug(parameterName + " : " + request.getParameter(parameterName));
 			}
 
 			if (searchByUser != null && !searchByUser.equals("")) {
@@ -4540,8 +4552,15 @@ public class EzPMSGWController {
 		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/comments] started");
 
 		JSONObject result = new JSONObject();
-
+		
+//		Stream keyStream = jsonParam.keySet().stream().sorted();
+//		keyStream.forEach(key -> LOGGER.debug(key + " : " + jsonParam.get(key)));
+		
 		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String)jsonParam.get("writerId"));
+			jsonParam.put("tenantId", info.getTenantId());
+			
 			ezPMSService.addComment(jsonParam);
 
 			result.put("status", "ok");
@@ -4572,6 +4591,9 @@ public class EzPMSGWController {
 
 		JSONObject result = new JSONObject();
 
+//		Stream keyStream = jsonParam.keySet().stream().sorted();
+//		keyStream.forEach(key -> LOGGER.debug(key + " : " + jsonParam.get(key)));
+		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.get("userId"));
@@ -4605,6 +4627,9 @@ public class EzPMSGWController {
 
 		JSONObject result = new JSONObject();
 
+//		Stream keyStream = jsonParam.keySet().stream().sorted();
+//		keyStream.forEach(key -> LOGGER.debug(key + " : " + jsonParam.get(key)));
+		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.get("userId"));
@@ -4638,7 +4663,7 @@ public class EzPMSGWController {
 		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/sysParams/" + userId + "] started");
 
 		JSONObject result = new JSONObject();
-
+		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
@@ -4674,6 +4699,9 @@ public class EzPMSGWController {
 
 		JSONObject result = new JSONObject();
 
+//		Stream keyStream = jsonParam.keySet().stream().sorted();
+//		keyStream.forEach(key -> LOGGER.debug(key + " : " + jsonParam.get(key)));
+		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.remove("userId"));
@@ -4703,34 +4731,34 @@ public class EzPMSGWController {
 	 * @param pretaskId
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/tasks/checkIfExistPreTaskRel/{pretaskId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject checkIfPreTaskRelExist(HttpServletRequest request, @RequestBody JSONObject jsonParam,
-			@PathVariable int pretaskId) {
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/tasks/checkIfExistPreTaskRel/" + pretaskId + "] started");
-
-		JSONObject result = new JSONObject();
-
-		try {
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.remove("userId"));
-			jsonParam.put("tenantId", info.getTenantId());
-
-			boolean ifExistPreTaskRel = ezPMSService.checkIfPreTaskRelExist(jsonParam);
-
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", ifExistPreTaskRel);
-		} catch (Exception e) {
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-			e.printStackTrace();
-		}
-
-		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/tasks/checkIfExistPreTaskRel/" + pretaskId + "] ended");
-		return result;
-	}
+//	@SuppressWarnings("unchecked")
+//	@RequestMapping(value = "/rest/ezPMS/tasks/checkIfExistPreTaskRel/{pretaskId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+//	public JSONObject checkIfPreTaskRelExist(HttpServletRequest request, @RequestBody JSONObject jsonParam,
+//			@PathVariable int pretaskId) {
+//		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/tasks/checkIfExistPreTaskRel/" + pretaskId + "] started");
+//
+//		JSONObject result = new JSONObject();
+//
+//		try {
+//			String serverName = request.getHeader("x-user-host");
+//			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.remove("userId"));
+//			jsonParam.put("tenantId", info.getTenantId());
+//
+//			boolean ifExistPreTaskRel = ezPMSService.checkIfPreTaskRelExist(jsonParam);
+//
+//			result.put("status", "ok");
+//			result.put("code", 0);
+//			result.put("data", ifExistPreTaskRel);
+//		} catch (Exception e) {
+//			result.put("status", "error");
+//			result.put("code", 1);
+//			result.put("data", "");
+//			e.printStackTrace();
+//		}
+//
+//		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/tasks/checkIfExistPreTaskRel/" + pretaskId + "] ended");
+//		return result;
+//	}
 
 	/**
 	 * 업무 선행작업 삭제
@@ -4742,13 +4770,16 @@ public class EzPMSGWController {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/preTasks/{preTaskId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
-	public JSONObject deletePreTaskRel(@PathVariable long taskId, @PathVariable int preTaskId,
+	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/preTasks/{pretaskId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deletePreTaskRel(@PathVariable long taskId, @PathVariable int pretaskId,
 			@RequestBody JSONObject jsonParam, HttpServletRequest request) {
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId + "/pretasks/" + preTaskId + "] started");
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId + "/pretasks/" + pretaskId + "] started");
 
 		JSONObject result = new JSONObject();
 
+//		Stream keyStream = jsonParam.keySet().stream().sorted();
+//		keyStream.forEach(key -> LOGGER.debug(key + " : " + jsonParam.get(key)));
+		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			String userId = (String) jsonParam.remove("userId");
@@ -4759,7 +4790,9 @@ public class EzPMSGWController {
 			String roleCheck = "";
 
 			jsonParam.put("tenantId", tenantId);
-
+			jsonParam.put("pretaskId", pretaskId);
+			jsonParam.put("taskId", taskId);
+			
 			// 권한 체크
 			// 1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
 			int userProjectRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
@@ -4768,7 +4801,7 @@ public class EzPMSGWController {
 			} else {
 				roleCheck = "rejected";
 			}
-
+			
 			if (roleCheck.equals("permitted")) {
 				ezPMSService.deletePreTaskRelInTask(jsonParam);
 			}
@@ -4783,12 +4816,12 @@ public class EzPMSGWController {
 			e.printStackTrace();
 		}
 
-		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId + "/pretasks/" + preTaskId + "] ended");
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/tasks/" + taskId + "/pretasks/" + pretaskId + "] ended");
 		return result;
 	}
 
 	/**
-	 * 간트차트 모든 업무 업데이트
+	 * 간트차트 모든 그룹/업무 일정 업데이트
 	 * 
 	 * @param userId
 	 * @param jsonParam
@@ -4802,6 +4835,9 @@ public class EzPMSGWController {
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/allSchedules/users/" + userId + "] started");
 
 		JSONObject result = new JSONObject();
+		
+//		Stream keyStream = jsonParam.keySet().stream().sorted();
+//		keyStream.forEach(key -> LOGGER.debug(key + " : " + jsonParam.get(key)));
 
 		try {
 			String serverName = request.getHeader("x-user-host");
@@ -4853,7 +4889,7 @@ public class EzPMSGWController {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/member-list/" + projectId + "/groupId/" + groupId + "] started");
 
 		JSONObject result = new JSONObject();
-
+	
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
