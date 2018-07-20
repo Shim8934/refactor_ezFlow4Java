@@ -130,7 +130,7 @@
 /* vote popup css */
 
 #menu1{width: 100%}
-#menu1 h1{overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 85%;}
+#menu1 h1{overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 78%;}
 
 /* vote icon img */
 .voteIconDiv{float:right; margin-right:2px;}

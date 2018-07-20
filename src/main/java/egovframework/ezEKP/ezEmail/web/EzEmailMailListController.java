@@ -188,6 +188,7 @@ public class EzEmailMailListController {
 		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 수정 (useMailWriteSenderClick 추가)
 		model.addAttribute("useSearchContent", useSearchContent);
 		model.addAttribute("useMailNewWindow", useMailNewWindow); 
+		model.addAttribute("sentFolderId", ezEmailUtil.getSentFolderId(locale));
 
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
