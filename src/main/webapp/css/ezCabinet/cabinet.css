@@ -225,11 +225,13 @@
 .cabOrganPageDiv {text-align: center; height: 32px; display: flex;}
 .cabShareBttn {width: 30px; text-align: center;}
 .cabShareBttn >img {width: 16px; height: 16px; margin: 2px 0px; border: 0px; cursor: pointer;}
-.cabShareListDiv {border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; margin-top: 3px;}
-.cabShareListDiv >div {width: 410px; height: 505px; overflow-x: auto; overflow-y: auto;}
-.cabShareListDiv .mainlist {width: 100%;}
-.cabShareListDiv .mainlist tr:first-child td {color: #333; background-color: #f8f8fa;}
-.cabShareListDiv .mainlist tr:not(first-child) td:first-child {overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.cabShareListDiv, .cabShareListDiv2 {border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; margin-top: 3px;}
+.cabShareListDiv >div, .cabShareListDiv2 >div {width: 410px; overflow-x: auto; overflow-y: auto;}
+.cabShareListDiv >div {height: 505px;}
+.cabShareListDiv2 >div {height: 340px;}
+.cabShareListDiv .mainlist, .cabShareListDiv2 .mainlist {width: 100%;}
+.cabShareListDiv .mainlist tr:first-child td, .cabShareListDiv2 .mainlist tr:first-child td {color: #333; background-color: #f8f8fa;}
+.cabShareListDiv .mainlist tr:not(first-child) td:first-child, .cabShareListDiv2 .mainlist tr:not(first-child) td:first-child {overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 
 .imgCabDivMain {display: flex; height: 99px; border: 1px solid #ddd; margin-top: 5px;}
 .imgCabDivMain >div:first-child {height: 99px; width: 99px; display: flex; align-items: center; min-width: 99px; justify-content: center;}

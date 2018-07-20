@@ -121,7 +121,6 @@ public class EzCabinetGWController_h {
 				default: sqlQuery = searchOpt;
 			}
 			
-			
 			List<SimpleUserVO> list = cabinetService_h.getShareUserList(cabinetId, userId, sqlQuery, searchValue, primary, userInfo.getTenantId());
 			
 			result.put("shareList", list);

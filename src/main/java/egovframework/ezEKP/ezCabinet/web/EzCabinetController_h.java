@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezCabinet.web;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
+import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -78,6 +81,27 @@ public class EzCabinetController_h {
 		
 		logger.debug("jspGetShareCabinetPage ended");
 		return "ezCabinet/cabinetShare";
+	}
+	
+	@RequestMapping(value="/ezCabinet/getSearchShareList.do")
+	public String jspGetShareUsers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetShareUsers started");
+		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId    = request.getParameter("cabinetId")  != null ? request.getParameter("cabinetId")   : "";
+		String searchOpt    = request.getParameter("searchOpt")  != null ? request.getParameter("searchOpt")   : "";
+		String searchValue  = request.getParameter("searchValue")!= null ? request.getParameter("searchValue") : "";
+		
+		logger.debug("CabinetId: " + cabinetId + " || searchOpt: " + searchOpt + " || searchValue" + searchValue);
+		
+		JSONObject resultObj = cabinetRestService_h.getShareUserList(request, user.getId(), cabinetId, searchOpt, searchValue);
+		
+		if (resultObj.get("status").toString().equals("ok")) {
+			List<SimpleUserVO> listUsers = (List<SimpleUserVO>)resultObj.get("shareList");
+			model.addAttribute("listUsers", listUsers);
+		}
+		
+		logger.debug("jspGetShareUsers ended");
+		return "ezCabinet/cabinetSearchShare";
 	}
 	
 	@RequestMapping(value="/ezCabinet/getDeptMembers.do", method=RequestMethod.POST)

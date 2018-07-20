@@ -118,16 +118,9 @@
 												<td>
 													<div>
 														<select id="searchType2">
-															<option selected value="displayname"              ><spring:message code="ezCabinet.t18" /></option>
-															<option          value="cn"                       ><spring:message code="ezCabinet.t96" /></option>
-															<option          value="description"              ><spring:message code="ezCabinet.t19" /></option>
-															<option          value="title"                    ><spring:message code="ezCabinet.t97" /></option>
-															<option          value="telephonenumber"          ><spring:message code="ezCabinet.t98" /></option>
-															<option          value="mobile"                   ><spring:message code="ezCabinet.t99" /></option>
-															<option          value="homePhone"                ><spring:message code="ezCabinet.t100"/></option>
-															<option          value="facsimileTelephoneNumber" ><spring:message code="ezCabinet.t101"/></option>
-															<option          value="mail"                     ><spring:message code="ezCabinet.t102"/></option>
-															<option          value="streetAddress"            ><spring:message code="ezCabinet.t107"/></option>
+															<option selected value="displayname"><spring:message code="ezCabinet.t18" /></option>
+															<option          value="cn"         ><spring:message code="ezCabinet.t137"/></option>
+															<option          value="description"><spring:message code="ezCabinet.t19" /></option>
 														</select>
 														<input type="text" id="keyword2">
 														<a class="imgbtn" id="searchBtn2"><span><spring:message code='ezCabinet.t49'/></span></a>
@@ -170,16 +163,15 @@
 		<script type="text/javascript">
 			var cabinetId  = "<c:out value='${cabinetId}'/>";
 			
-			(function() {
+			var CabinetShareItem = function() {
 				var companyTree  = new CabinetTree();
 				var searchOpt    = "";
 				var searchValue  = "";
 				var deptId       = "";
 				var searchMode   = "normal";
 				var cabinetNavi  = null;
-				var searchOpt2   = "";
-				var searchValue2 = "";
 				var userPopup    = null;
+				var sharePopup   = null;
 				
 				var userTable = new CabinetTable({
 					normal   : "bnkCabNormal2",
@@ -225,12 +217,16 @@
 					document.getElementById("addBttn").addEventListener("click", function(e) {addUsers();}, false);
 					document.getElementById("removeBttn").addEventListener("click", function(e) {removeUsers();}, false);
 					document.getElementById("searchBtn").addEventListener("click", function(e) {searchUserList();}, false);
+					document.getElementById("searchBtn2").addEventListener("click", function(e) {searchShareList();}, false);
 					document.getElementById("addDeptBttn").addEventListener("click", function(e) {addDeptToShareList();}, false);
 					document.getElementById("userInfBttn").addEventListener("click", function(e) {viewUserInfo();}, false);
 					
 					var sSearchInputElmt   = document.getElementById("keyword");
 					sSearchInputElmt.addEventListener("keypress", function(e) {onStartSimpleSearch(e);}, false);
 					sSearchInputElmt.addEventListener("mousedown", function(e) {clearKeyword(this);}, false);
+					var sSearchInputElmt2  = document.getElementById("keyword2");
+					sSearchInputElmt2.addEventListener("keypress", function(e) {onStartShareSearch(e);}, false);
+					sSearchInputElmt2.addEventListener("mousedown", function(e) {clearKeyword(this);}, false);
 					
 					//Set Company Tree
 					companyTree.setTreeInfo({
@@ -473,19 +469,8 @@
 					optionSub1.setAttribute("value",  "0");
 					optionSub2.setAttribute("value",  "1");
 					
-					if (permission == 0) {
-						optionPerm1.selected = 'selected';
-					}
-					else {
-						optionPerm2.selected = 'selected';
-					}
-					
-					if (subPermission == 0) {
-						optionSub1.selected = 'selected';
-					}
-					else {
-						optionSub2.selected = 'selected';
-					}
+					if (permission == 0)    {optionPerm1.selected = 'selected';} else {optionPerm2.selected = 'selected';}
+					if (subPermission == 0) {optionSub1.selected = 'selected'; } else {optionSub2.selected = 'selected';}
 					
 					selectPerm.appendChild(optionPerm1);
 					selectPerm.appendChild(optionPerm2);
@@ -515,6 +500,7 @@
 				}
 				
 				function onStartSimpleSearch(event) {if(event.keyCode == "13") {searchUserList();}}
+				function onStartShareSearch(event) {if(event.keyCode == "13") {searchShareList();}}
 				function clearKeyword(inputElmt) {inputElmt.value = "";}
 				function searchUserList() {
 					searchValue = document.getElementById("keyword").value;
@@ -524,6 +510,22 @@
 					searchMode = "search";
 					document.getElementById("searchResult").textContent = CabinetMessages.strResult;
 					getUsers("1");
+				}
+				
+				function searchShareList() {
+					var searchValue2 = document.getElementById("keyword2").value;
+					if (!searchValue2.replace(/\s/g,'')) {alert(CabinetMessages.strNoInput); return;}
+					var searchOpt2 = document.getElementById("searchType2").value;
+					
+					if (sharePopup) {sharePopup.close();}
+					
+					var width        = 433;
+					var height       = 450;
+					var leftPosition = (window.screen.width / 2) - ((width / 2) + 10);
+					var topPosition  = (window.screen.height / 2) - ((height / 2) + 50);
+					var option       = "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1";
+					
+					sharePopup = window.open("/ezCabinet/getSearchShareList.do?cabinetId=" + cabinetId + "&searchOpt=" + searchOpt2 + "&searchValue=" + searchValue2, "", option);
 				}
 				
 				function setUserListType(pListType) {
@@ -542,11 +544,7 @@
 					$.ajax({
 						type: "POST",
 						url: "/ezCabinet/getShareUserList.do",
-						data: {
-							"cabinetId"   : cabinetId,
-							"searchOpt"   : searchOpt2,
-							"searchValue" : searchValue2
-						},
+						data: {"cabinetId" : cabinetId},
 						dataType: "JSON",
 						async: false,
 						success: function(data) {
@@ -572,21 +570,11 @@
 						var userId   = listUser[i]["userId"];
 						var userName = listUser[i]["userName"];
 						var deptName = listUser[i]["deptName"];
-						var userType = listUser[i]["userType"];
+						var userType = convertUserType(listUser[i]["userType"]);
 						var permiss  = listUser[i]["permission"];
 						var subPerm  = listUser[i]["subPermission"];
-						var type     = "";
 						
-						console.log("Permission: " + permiss);
-						console.log("SubPermission: " + subPerm);
-						
-						switch(userType) {
-							case 0 : type = "comp"; break;
-							case 1 : type = "dept"; break;
-							case 2 : type = "user"; break;
-						}
-						
-						addUserToShareList(userId, userName, type, deptName, permiss, subPerm);
+						addUserToShareList(userId, userName, userType, deptName, permiss, subPerm);
 					}
 				}
 				
@@ -596,7 +584,7 @@
 					
 					if (!selectUsers || selectUsers.length == 0) {alert(CabinetMessages.strEmployee); return;}
 					
-					closeAllPopUp();
+					if (userPopup) {userPopup.close();}
 					
 					var selectedTr   = selectUsers[selectUsers.length - 1];
 					var width        = 420;
@@ -625,12 +613,14 @@
 					addUserToShareList(deptId, deptName, userType, deptName, 0, 0);
 				}
 				
-				function closeAllPopUp() {if (userPopup) {userPopup.close();}}
+				function closeAllPopUp() {
+					if (userPopup) {userPopup.close();}
+					if (sharePopup) {sharePopup.close();}
+				}
 				
 				function closeWindow() {window.close();}
 				
 				function saveShareUsers() {
-					//*Note add function hee
 					var selectedUsers = document.getElementById("sharedTable");
 					var listTr        = selectedUsers.rows;
 					var userList      = [];
@@ -674,8 +664,53 @@
 					alert(CabinetMessages.strSave);
 					closeWindow();
 				}
-			})();
-			
+				
+				function deleteUsers(userList) {
+					var selectedTable = document.getElementById("sharedTable");
+					
+					for (var i = 0, len = userList.length; i < len; i++) {
+						var userId   = userList[i]["userId"];
+						var userType = convertUserType(userList[i]["userType"]);
+						var trElmt   = selectedTable.querySelector("tr[role='" + userId + "'][usertype='" + userType + "']");
+						if (trElmt) {selectedTable.removeChild(trElmt);}
+					}
+				}
+				
+				function changeUsers(userList) {
+					var selectedTable = document.getElementById("sharedTable");
+					for (var i = 0, len = userList.length; i < len; i++) {
+						var userId   = userList[i]["userId"];
+						var userType = convertUserType(userList[i]["userType"]);
+						var permiss  = userList[i]["permis"];
+						var subPerm  = userList[i]["subPerm"];
+						
+						var trElmt   = selectedTable.querySelector("tr[role='" + userId + "'][usertype='" + userType + "']");
+						if (trElmt) {
+							var perSlBox = trElmt.children[2].firstElementChild;
+							var subSlBox = trElmt.children[3].firstElementChild;
+							if (permiss == 0) {perSlBox.selectedIndex = 0;} else {perSlBox.selectedIndex = 1;}
+							if (subPerm == 0) {subSlBox.selectedIndex = 0;} else {subSlBox.selectedIndex = 1;}
+						}
+					}
+				}
+				
+				function convertUserType(userType) {
+					var type = "";
+					
+					switch(parseInt(userType)) {
+						case 0 : type = "comp"; break;
+						case 1 : type = "dept"; break;
+						case 2 : type = "user"; break;
+					}
+					
+					return type;
+				}
+				
+				return {
+					deleteUsers : deleteUsers,
+					changeUsers : changeUsers
+				};
+			}();
 		</script>
 	</body>
 </html>
