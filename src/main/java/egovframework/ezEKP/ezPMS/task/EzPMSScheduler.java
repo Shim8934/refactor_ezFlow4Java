@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import com.ibm.icu.text.SimpleDateFormat;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
@@ -51,6 +52,9 @@ public class EzPMSScheduler {
 	
 	@Autowired
 	private EzCommonService ezCommonService;
+
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 	
 	@Resource(name = "jspw")
     private String jspw;
@@ -143,11 +147,17 @@ public class EzPMSScheduler {
 						toArr[j] = toArrList.get(j);
 					}
 					
-					String subject = "[" + projectList.get(i).getProjectName() + "] 프로젝트가 " + projectList.get(i).getAlamMailStatus() + "일 남았습니다.";
+					String subject = "[" + projectList.get(i).getProjectName() + egovMessageSource.getMessage("ezPMS.t326") + projectList.get(i).getAlamMailStatus() + egovMessageSource.getMessage("ezPMS.t327");
 						
-					String content = "<p>" + "[" + projectList.get(i).getProjectName() + "] 프로젝트가 " + projectList.get(i).getAlamMailStatus() + "일 남았습니다." + "</p>";
+					String content = "<p>" + "[" + projectList.get(i).getProjectName() + egovMessageSource.getMessage("ezPMS.t326") + projectList.get(i).getAlamMailStatus() + egovMessageSource.getMessage("ezPMS.t327") + "</p>";
 					content += "<p></p>";
-					content += "<a href='#' target='' onclick='goProjectDetails(\"" + projectList.get(i).getProjectId() + "\")'>[" + projectList.get(i).getProjectName() + "] 프로젝트로 이동</a>";
+					content += "<a href='#' target='' onclick='goProjectDetails(\"" + projectList.get(i).getProjectId() + "\")'>[" + projectList.get(i).getProjectName() + egovMessageSource.getMessage("ezPMS.t201") + "</a><br/><br/>";
+					content += "===================================================================<br/>";
+					content += "<p style='font-size:14px'><strong>[" + projectList.get(i).getProjectName() + "]</strong></p>";
+					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t250") + " : " + projectList.get(i).getProgress() + "</p>";
+					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t61") + " : " + projectList.get(i).getPlanStartDate() + "</p>";
+					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t62") + " : " + projectList.get(i).getPlanEndDate() + "</p>";
+					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t66") + " : " + projectList.get(i).getOverview() + "</p>";
 					
 					
 					ProjectMainSettingVO headManager = ezPMSService.getProjectMainSetting(projectList.get(i).getHeadManagerId(), projectList.get(i).getTenantId(), "user");

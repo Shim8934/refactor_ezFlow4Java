@@ -1206,13 +1206,40 @@ public class EzPMSController {
 				toArr[i] = toArrList.get(i);
 			}
 			
+			//프로젝트 정보 가져오기
+			String url = "/rest/ezPMS/projects/" + projectId + "/userId/" + userInfo.getId();
+			param.put("mode", "");
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+			String status = resultBody.get("status").toString();
+			
+			String planStartDate = "";
+			String planEndDate = "";
+			String overview = "";
+			float progress = 0;
+			
+			if (status.equals("ok")) {
+				 JSONObject data = (JSONObject) resultBody.get("data");
+				 JSONObject projectDetails = (JSONObject)data.get("project");
+				 planStartDate = projectDetails.get("planStartDate").toString();
+				 planEndDate = projectDetails.get("planEndDate").toString();
+				 overview = projectDetails.get("overview").toString();
+				 progress = Float.parseFloat(projectDetails.get("progress").toString());
+			}
+			
+			
 			//메일 제목
 			String subject = "[" + projectName + "] " + egovMessageSource.getMessage("ezPMS.t13", userInfo.getLocale()) + " " + authName + egovMessageSource.getMessage("ezPMS.t200", userInfo.getLocale());				
 			
 			//메일 내용
 			String content = "<p>" + "[" + projectName + "] " + egovMessageSource.getMessage("ezPMS.t13", userInfo.getLocale()) + " " + authName + egovMessageSource.getMessage("ezPMS.t200", userInfo.getLocale()) + "</p>";
 			content += "<p></p>";
-			content += "<a href='#' target='' onclick='goProjectDetails(\"" + projectId + "\")'>[" + projectName + egovMessageSource.getMessage("ezPMS.t201", userInfo.getLocale()) + "</a>";
+			content += "<a href='#' target='' onclick='goProjectDetails(\"" + projectId + "\")'>[" + projectName + egovMessageSource.getMessage("ezPMS.t201", userInfo.getLocale()) + "</a><br/><br/>";
+			content += "===================================================================<br/>";
+			content += "<p style='font-size:14px'><strong>[" + projectName + "]</strong></p>";
+			content += "<p> - " + egovMessageSource.getMessage("ezPMS.t250", userInfo.getLocale()) + " : " + progress + "</p>";
+			content += "<p> - " + egovMessageSource.getMessage("ezPMS.t61", userInfo.getLocale()) + " : " + planStartDate + "</p>";
+			content += "<p> - " + egovMessageSource.getMessage("ezPMS.t62", userInfo.getLocale()) + " : " + planEndDate + "</p>";
+			content += "<p> - " + egovMessageSource.getMessage("ezPMS.t66", userInfo.getLocale()) + " : " + overview + "</p>";
 			
 			InternetAddress from;
 			from = new InternetAddress(userInfo.getEmail());
@@ -1223,6 +1250,7 @@ public class EzPMSController {
 			LOGGER.debug("ezPMS getToArrMailList ended");
 			return toArr;
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOGGER.debug("ezPMS getToArrMailList ERROR : " + e.getMessage());
 			return null;
 		}
