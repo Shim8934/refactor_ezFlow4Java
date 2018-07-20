@@ -44,7 +44,7 @@
 			strHTML += "<td style='border-right:none; width:100%'>";
 			strHTML += "<img src='" + memberList[i].userImage + "' style='display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;' onclick='menuQst_DetailUserInfo(" + memberList[i].userId + ")'>";
 			strHTML += "<a style='cursor:pointer; display:inline-block; padding:0px 10px; float:left; line-height:41px; overflow:hidden;";
-			strHTML += "text-overflow:ellipsis; max-width:120px; white-space:nowrap;' onclick='menuQst_DetailUserInfo(" + memberList[i].userId + ")'>"
+			strHTML += "text-overflow:ellipsis; max-width:120px; white-space:nowrap;' onclick='menuQst_DetailUserInfo(\"" + memberList[i].userId + "\")'>";
 			strHTML += memberList[i].userName;
 			strHTML += "(" + memberList[i].userDeptname + ")";
 			strHTML += "</a>";
@@ -59,7 +59,7 @@
  
  function menuQst_DetailUserInfo(pUserID) {
 	var feature = GetOpenPosition(420, 438);
-    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID.id, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+    window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 }
  
  function popupClose() {

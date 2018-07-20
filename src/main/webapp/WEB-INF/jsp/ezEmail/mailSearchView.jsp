@@ -519,25 +519,28 @@
 		
 				var strItemID = "";
 		
-		        for(i=0; i < count; i++)
-		        {
-		            strItemID += selcheck[i].getAttribute("itemid") + ",";
-			    }
-				var xmlHTTP = createXMLHttpRequest();
-		        var xmlDOM = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlDOM, objNode, "DATA");
-		        createNodeAndInsertText(xmlDOM, objNode, "UNIQUEID",strItemID );
-				xmlHTTP.open("POST", "/ezEmail/mailDeleteS.do?cmd=BDELETE", false);
-				xmlHTTP.send(xmlDOM);
-				
-				if (xmlHTTP.status < 200 || xmlHTTP.status > 300)
-				    alert('<spring:message code="ezEmail.t638" />');
-				else {
-				    alert('<spring:message code="ezEmail.t604" />');
-				    listContentArry = new Array();
-				    start_search();
+				if (confirm(strLang58)) {
+					for(i=0; i < count; i++)
+			        {
+			            strItemID += selcheck[i].getAttribute("itemid") + ",";
+				    }
+					var xmlHTTP = createXMLHttpRequest();
+			        var xmlDOM = createXmlDom();
+			        var objNode;
+			        createNodeInsert(xmlDOM, objNode, "DATA");
+			        createNodeAndInsertText(xmlDOM, objNode, "UNIQUEID",strItemID );
+					xmlHTTP.open("POST", "/ezEmail/mailDeleteS.do?cmd=BDELETE", false);
+					xmlHTTP.send(xmlDOM);
+					
+					if (xmlHTTP.status < 200 || xmlHTTP.status > 300)
+					    alert('<spring:message code="ezEmail.t638" />');
+					else {
+					    alert('<spring:message code="ezEmail.t604" />');
+					    listContentArry = new Array();
+					    start_search();
+					}
 				}
+		        
 			}
 			
 			var selcheck = new Array();

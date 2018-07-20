@@ -32,7 +32,7 @@
 	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
 		<div id="left">
 			
-			<div class="left_admin" title="<spring:message code="ezPMS.t8"/>"><img src="/images/admin/first.png" width="16px" height="16px"/>&nbsp;<spring:message code="ezPMS.t8" /></div>
+			<div class="left_admin" title="<spring:message code="ezPMS.t8"/>"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code="ezPMS.t8" /></div>
 			
 				<h2><span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code="ezPMS.t235" /></span><ul></ul></h2>	
 		</div>

@@ -1338,7 +1338,7 @@
 	        curevent = (typeof event == 'undefined' ? e : event);
 	        var minSize = parseInt(200);
 	        var maxSize = parseInt(document.documentElement.clientWidth - 200);
-	        if (curevent.clientX < minSize || curevent.clientX > maxSize) {
+	        if (curevent.clientX > maxSize || curevent.clientX < minSize) {
 	        	journalPreviewEnd(e);
 	        } else {
 	            var newPos_H = curevent.clientX;
@@ -1361,7 +1361,7 @@
 	        var minSize = parseInt(100);
 	        var maxSize = parseInt(document.documentElement.clientHeight - 100);
 
-	        if (curevent.clientY < minSize || curevent.clientY > maxSize) {
+	        if (curevent.clientY > maxSize || curevent.clientY < minSize) {
 	        	journalPreviewEnd(e);
 	        } else {
 	            var newPos_W = curevent.clientY;

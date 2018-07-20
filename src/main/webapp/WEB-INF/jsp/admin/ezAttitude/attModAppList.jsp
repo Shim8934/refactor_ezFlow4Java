@@ -38,6 +38,18 @@
 			background-color: #fcfcfc;
 		}
 		#searchTable td {padding: 8px 5px;}
+		<%-- 2018-07-19 홍승비 - 관리자 > 근태관리 헤더 겹치는 부분 수정, datePicker 스타일 추가 --%>
+		#headerList th {
+			overflow:hidden;
+			text-overflow:ellipsis;
+		}
+		#sDateSpan, #eDateSpan {
+			display:inline-block;
+			vertical-align:middle;
+		}
+		#sDateSpan img {
+			margin-top:3px;
+		}
 		</style>
 		<script type="text/javascript">
 		var pCompanyId = ""; //현재 선택된 회사의 아이디
@@ -143,6 +155,12 @@
 	    		$("#Edatepicker").val("${endDate}");
 	    		usepostDate = true;
 			}
+			
+			// ie인 경우, 달력 이미지 위치 수정
+			if (navigator.userAgent.toLowerCase().indexOf("chrome") == -1) {
+				$('#sDateSpan').children('img.ui-datepicker-trigger').first().attr("style", "margin-top:2px;");
+				$('#eDateSpan').children('img.ui-datepicker-trigger').first().attr("style", "margin-bottom:2px;");
+    	    }
 	    });
 	    
 	    $(function () {
@@ -523,7 +541,7 @@
 		    		if (adminFlag != "true") {
 		    			$('#AttList tbody').append('<tr><td colspan="8" align="center"  bgcolor="#FFFFFF"><spring:message code="ezAttitude.t96"/></td></tr>');
 		    		} else {
-		    			$('#AttList tbody').append('<tr><td colspan="10" align="center"  bgcolor="#FFFFFF"><spring:message code="ezAttitude.t96"/></td></tr>');	
+		    			$('#AttList tbody').append('<tr><td colspan="11" align="center"  bgcolor="#FFFFFF"><spring:message code="ezAttitude.t96"/></td></tr>');	
 		    		}
 		    	}
 	    	}
@@ -1133,7 +1151,7 @@
 					<td style="width: 12%;"><input type="text" id="appr_search" style="width: 90%;" maxlength="50" onkeyup="search_keypress(event);"></td>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t137'/></td>
 					<td style="width: 9%;">
-                    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left"/> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
+                    	<span id="sDateSpan"><input type="text" id="Sdatepicker" style="width:80px;text-align:center; float:left"/></span> <span style="vertical-align:middle;">~</span> <span id="eDateSpan"><input type="text" id="Edatepicker" style="width:80px;text-align:center;"/></span>
 					</td>
 					<td colspan="2">
 						<a class="imgbtn" id="cancelBtn" onclick="att_search()" style="margin-top:3px;"><span><spring:message code='ezAttitude.t121'/></span></a>
@@ -1147,7 +1165,7 @@
 		</table>
 		<div id="contentlist" name="contentlist" style="border:0px solid blue;height:600px;width:100%;overflow-y:auto;" onblur>
 			<table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
-				<tr>
+				<tr id="headerList">
 					<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
 						<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/>
 					</th>
