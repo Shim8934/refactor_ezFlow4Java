@@ -147,7 +147,7 @@ public class EzEmailMailListController {
 			folderName = dispname;
 		}
 		
-		if (folderName.equals(egovMessageSource.getMessage("ezEmail.t645", locale))) {
+		if (folderName.equals(egovMessageSource.getMessage("ezEmail.t645", locale)) || folderName.equals(egovMessageSource.getMessage("ezJournal.t113", locale))) {
 			folderType = "sent";
 			isSentItems = true;
 		}
@@ -188,6 +188,7 @@ public class EzEmailMailListController {
 		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 수정 (useMailWriteSenderClick 추가)
 		model.addAttribute("useSearchContent", useSearchContent);
 		model.addAttribute("useMailNewWindow", useMailNewWindow); 
+		model.addAttribute("sentFolderId", ezEmailUtil.getSentFolderId(locale));
 
 		logger.debug("folderName=" + folderName + ",url=" + url + ",folderType=" + folderType + ",isSentItems=" + isSentItems
 				 + ",userLang=" + userInfo.getLang() + ",userId=" + userInfo.getId() + ",domainName=" + domainName + ",useEditor=" + useEditor
@@ -405,9 +406,12 @@ public class EzEmailMailListController {
 				
 				//get aliasAddressList from recipients
 				List<String> addressList = new ArrayList<String>();
-				for (Address address : addresses1) {
-					if (((InternetAddress)address).getAddress() != null) {
-						addressList.add(((InternetAddress)address).getAddress());
+				
+				if (addresses1 != null) {
+					for (Address address : addresses1) {
+						if (((InternetAddress)address).getAddress() != null) {
+							addressList.add(((InternetAddress)address).getAddress());
+						}
 					}
 				}
 				
@@ -416,43 +420,57 @@ public class EzEmailMailListController {
 				readDate = "UNREAD";
 				readCount = 0;
 				
-				for (Address address : addresses1) {
-					String email = ((InternetAddress)address).getAddress();
-					if (email != null) {
-						for (MailReadVO vo : readList) {
-							if (vo.getReaderEmail().equals(email)) {
-								readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), userInfo.getOffset(), false);
-								readCount++;
-								//break;
+				if (addresses1 != null) {
+					for (Address address : addresses1) {
+						String email = ((InternetAddress)address).getAddress();
+						if (email != null) {
+							for (MailReadVO vo : readList) {
+								if (vo.getReaderEmail().equals(email)) {
+									readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), userInfo.getOffset(), false);
+									readCount++;
+									//break;
+								}
 							}
+							
+							tempMailList.add(email);
+							msgto += email + ";";
 						}
-						
-						tempMailList.add(email);
-						msgto += email + ";";
 					}
-				}
-				
-				
-				
-				String returnValue1 = Integer.toString(tempMailList.size());
-				if (tempMailList.size() == 1) {
-					returnValue1 += ";" + readDate;
-				} else {
-					//다수일때 unreadCount도 리턴해주기
-					returnValue1 += ";" + readCount;
-				}
 					
-				nameLength = Integer.parseInt(returnValue1.split(";")[0]);
-				
-				if (nameLength > 1) {
-					if (nameLength - readCount == nameLength) {
-						name = String.format(egovMessageSource.getMessage("ezEmail.jje02", locale), Integer.toString(nameLength));
+					
+					
+					String returnValue1 = Integer.toString(tempMailList.size());
+					if (tempMailList.size() == 1) {
+						returnValue1 += ";" + readDate;
 					} else {
-						name = String.format(egovMessageSource.getMessage("ezEmail.jje03", locale), Integer.toString(nameLength), returnValue1.split(";")[1]);
+						//다수일때 unreadCount도 리턴해주기
+						returnValue1 += ";" + readCount;
 					}
+						
+					nameLength = Integer.parseInt(returnValue1.split(";")[0]);
+					
+					if (nameLength > 1) {
+						if (nameLength - readCount == nameLength) {
+							name = String.format(egovMessageSource.getMessage("ezEmail.jje02", locale), Integer.toString(nameLength));
+						} else {
+							name = String.format(egovMessageSource.getMessage("ezEmail.jje03", locale), Integer.toString(nameLength), returnValue1.split(";")[1]);
+						}
+						readDate = "";
+					} else {
+						readDate = returnValue1.split(";")[1];
+					}
+				}
+				
+				if (name == null || name.equals("")) {
+					name = "";
+				}
+				
+				if (readDate == null || readDate.equals("")) {
 					readDate = "";
-				} else {
-					readDate = returnValue1.split(";")[1];
+				}
+				
+				if (msgto == null || msgto.equals("")) {
+					msgto = "";
 				}
 				
 				sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
