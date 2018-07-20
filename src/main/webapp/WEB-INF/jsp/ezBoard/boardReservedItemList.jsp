@@ -8,6 +8,17 @@
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+		<style>
+			#chk, #HeaderAllCheckBox {
+				margin: 0px;
+				padding: 0px;
+				width: 13px;
+				height: 13px;
+			}
+			#chk {
+				vertical-align:middle;
+			}
+		</style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -295,67 +306,67 @@
 		</c:otherwise>
 	</c:choose>
 	 <div style="width:100%; overflow:AUTO;" id="divList">
-	<table class="mainlist" style ="width:100%">
+	<table class="mainlist" style ="width:100%; min-width: 640px;">
 	  <form name="frmOutbox" action="/ezBoard/boardReservedItemList.do" method="post">
 	    <tr>
-	      <th width="31" align="center" style="padding:0"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></th>
+	      <th width="20px"><input type='checkbox' id="HeaderAllCheckBox" name="checkbox" onclick='checkBox_checkAll()'></th>
 	      <c:choose>
-	      	<c:when test="${sortBy == 'B.BoardName'}">
-		      <th style="cursor:pointer" width="112" onClick="SortPage('B.BoardName desc')"><spring:message code='ezBoard.t185'/><img src="/images/etc/view-sortup.gif" ></th>
+	      	<c:when test="${sortBy == 'A.Attachments'}">
+		      <th style="cursor:pointer;text-align:center;" width="20px" onClick="SortPage('A.Attachments desc')"><img src="/images/newAttach.gif"><img src="/images/etc/view-sortup.gif" ></th>
 	      	</c:when>
-	      	<c:when test="${sortBy == 'B.BoardName desc'}">
-		      <th style="cursor:pointer" width="112" onClick="SortPage('B.BoardName')"><spring:message code='ezBoard.t185'/><img src="/images/etc/view-sortdown.gif" ></th>
+	      	<c:when test="${sortBy == 'A.Attachments desc'}">
+		      <th style="cursor:pointer;text-align:center;" width="20px" onClick="SortPage('A.Attachments')"><img src="/images/newAttach.gif"><img src="/images/etc/view-sortdown.gif" ></th>
 	      	</c:when>
 	      	<c:otherwise>
-		      <th style="cursor:pointer" width="112" onClick="SortPage('B.BoardName')"><spring:message code='ezBoard.t185'/></th>
+		      <th style="cursor:pointer;text-align:center;" width="20px" onClick="SortPage('A.Attachments')"><img src="/images/newAttach.gif"></th>
+	      	</c:otherwise>
+	      </c:choose>
+	      <c:choose>
+	      	<c:when test="${sortBy == 'B.BoardName'}">
+		      <th style="cursor:pointer" width="100px" onClick="SortPage('B.BoardName desc')"><spring:message code='ezBoard.t142'/><img src="/images/etc/view-sortup.gif" ></th>
+	      	</c:when>
+	      	<c:when test="${sortBy == 'B.BoardName desc'}">
+		      <th style="cursor:pointer" width="100px" onClick="SortPage('B.BoardName')"><spring:message code='ezBoard.t142'/><img src="/images/etc/view-sortdown.gif" ></th>
+	      	</c:when>
+	      	<c:otherwise>
+		      <th style="cursor:pointer" width="100px" onClick="SortPage('B.BoardName')"><spring:message code='ezBoard.t142'/></th>
 	      	</c:otherwise>
 	      </c:choose>    
 	      <c:choose>
 	      	<c:when test="${sortBy == 'A.Title'}">
-		      <th style="cursor:pointer" onClick="SortPage('A.Title desc')"><spring:message code='ezBoard.t208'/><img src="/images/etc/view-sortup.gif" ></th>
+		      <th style="cursor:pointer;width:50%;" onClick="SortPage('A.Title desc')"><spring:message code='ezBoard.t208'/><img src="/images/etc/view-sortup.gif" ></th>
 	      	</c:when>
 	      	<c:when test="${sortBy == 'A.Title desc'}">
-		      <th style="cursor:pointer" onClick="SortPage('A.Title')"><spring:message code='ezBoard.t208'/><img src="/images/etc/view-sortdown.gif" ></th>
+		      <th style="cursor:pointer;width:50%;" onClick="SortPage('A.Title')"><spring:message code='ezBoard.t208'/><img src="/images/etc/view-sortdown.gif" ></th>
 	      	</c:when>
 	      	<c:otherwise>
-		      <th style="cursor:pointer" onClick="SortPage('A.Title')"><spring:message code='ezBoard.t208'/></th>
+		      <th style="cursor:pointer;width:50%;" onClick="SortPage('A.Title')"><spring:message code='ezBoard.t208'/></th>
 	      	</c:otherwise>
 	      </c:choose>    
 	      <c:choose>
 	      	<c:when test="${sortBy == 'A.StartDate'}">
-		      <th style="cursor:pointer" width="120" onClick="SortPage('A.StartDate desc')"><spring:message code='ezBoard.t342'/>
+		      <th style="cursor:pointer" width="120px" onClick="SortPage('A.StartDate desc')"><spring:message code='ezBoard.t342'/>
 		        <spring:message code='ezBoard.t343'/><img src="/images/etc/view-sortup.gif" ></th>
 	      	</c:when>
 	      	<c:when test="${sortBy == 'A.StartDate desc'}">
-		      <th style="cursor:pointer" width="120" onClick="SortPage('A.StartDate')"><spring:message code='ezBoard.t344'/><img src="/images/etc/view-sortdown.gif" ></th>
+		      <th style="cursor:pointer" width="120px" onClick="SortPage('A.StartDate')"><spring:message code='ezBoard.t344'/><img src="/images/etc/view-sortdown.gif" ></th>
 	      	</c:when>
 	      	<c:otherwise>
-		      <th style="cursor:pointer" width="120" onClick="SortPage('A.StartDate')"><spring:message code='ezBoard.t344'/></th>
+		      <th style="cursor:pointer" width="120px" onClick="SortPage('A.StartDate')"><spring:message code='ezBoard.t344'/></th>
 	      	</c:otherwise>
 	      </c:choose>    
 	      <c:choose>
 	      	<c:when test="${sortBy == 'A.EndDate'}">
-		      <th style="cursor:pointer" width="80" onClick="SortPage('A.EndDate desc')"><spring:message code='ezBoard.t342'/>
+		      <th style="cursor:pointer" width="80px" onClick="SortPage('A.EndDate desc')"><spring:message code='ezBoard.t342'/>
 		        <spring:message code='ezBoard.t345'/><img src="/images/etc/view-sortup.gif" ></th>
 	      	</c:when>
 	      	<c:when test="${sortBy == 'A.EndDate desc'}">
-		      <th style="cursor:pointer" width="80" onClick="SortPage('A.EndDate')"><spring:message code='ezBoard.t346'/><img src="/images/etc/view-sortdown.gif" ></th>
+		      <th style="cursor:pointer" width="80px" onClick="SortPage('A.EndDate')"><spring:message code='ezBoard.t346'/><img src="/images/etc/view-sortdown.gif" ></th>
 	      	</c:when>
 	      	<c:otherwise>
-		      <th style="cursor:pointer" width="80" onClick="SortPage('A.EndDate')"><spring:message code='ezBoard.t346'/></th>
+		      <th style="cursor:pointer" width="80px" onClick="SortPage('A.EndDate')"><spring:message code='ezBoard.t346'/></th>
 	      	</c:otherwise>
-	      </c:choose>    
-	      <c:choose>
-	      	<c:when test="${sortBy == 'A.Attachments'}">
-		      <th style="cursor:pointer" width="80" onClick="SortPage('A.Attachments desc')"><spring:message code='ezBoard.t225'/><img src="/images/etc/view-sortup.gif" ></th>
-	      	</c:when>
-	      	<c:when test="${sortBy == 'A.Attachments desc'}">
-		      <th style="cursor:pointer" width="80" onClick="SortPage('A.Attachments')"><spring:message code='ezBoard.t225'/><img src="/images/etc/view-sortdown.gif" ></th>
-	      	</c:when>
-	      	<c:otherwise>
-		      <th style="cursor:pointer" width="80" onClick="SortPage('A.Attachments')"><spring:message code='ezBoard.t225'/></th>
-	      	</c:otherwise>
-	      </c:choose>    
+	      </c:choose>
 	    </tr>
 	    <c:set var="count" value="${totalCount}" />
 	    <c:if test="${count eq 0 }" >
@@ -366,11 +377,19 @@
 	    </tr>
 	    </c:if>
 	    <c:set var="ListInfo"/>
-	    <c:forEach var="reservedList" items="${reservedList}">
+	    <c:forEach var="reservedList" items="${reservedList}" varStatus="status">
 	    	<tr>
-		    	<td style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked("${reservedList.boardID}", "${reservedList.itemID}", event)'></td>
+		    	<td <c:if test="${status.first}">style="height:23px;"</c:if>><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked("${reservedList.boardID}", "${reservedList.itemID}", event)'></td>
+		    	<c:choose>
+		    		<c:when test="${reservedList.attachments != '0'}">
+		    			<td style="text-align:center;"><img src='/images/i_save01.gif'></td>
+		    		</c:when>
+		    		<c:otherwise>
+		    			<td></td>
+		    		</c:otherwise>
+		    	</c:choose>
 		    	<td>${reservedList.boardName}</td>
-		    	<td title="${fn:replace(reservedList.ABSTRACT, '\'', '`') }" style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' ondblclick="ItemRead_onclick('${reservedList.boardID}', '${reservedList.boardName}', '${reservedList.itemID}')"><nobr>${reservedList.title}</nobr></td>
+		    	<td title="${fn:replace(reservedList.ABSTRACT, '\'', '`') }" style='cursor:pointer;white-space: nowrap; text-overflow:ellipsis; overflow:hidden' ondblclick="ItemRead_onclick('${reservedList.boardID}', '${reservedList.boardName}', '${reservedList.itemID}')">${reservedList.title}</td>
 		    	<td>${fn:substring(reservedList.startDate, 0, 16)}</td>
 		    	<c:choose> 
 		    		<c:when test="${fn:substring(reservedList.endDate, 0, 4) == '9999'}">
@@ -379,14 +398,6 @@
 		    		<c:otherwise>
 		    			<td>${fn:split(reservedList.endDate , ' ')[0]}</td>
 		    		</c:otherwise>
-		    	</c:choose>
-		    	<c:choose>
-	    		<c:when test="${reservedList.attachments != '0'}">
-	    			<td><img src='/images/i_save01.gif'></td>
-	    		</c:when>
-	    		<c:otherwise>
-	    			<td></td>
-	    		</c:otherwise>
 		    	</c:choose>
 	    	</tr>
 <%-- 	    	<c:set target="${ListInfo}">${ListInfo} + ${reservedList.itemID} + "," + ${userInfo.id} + ";"}</c:set> --%>
