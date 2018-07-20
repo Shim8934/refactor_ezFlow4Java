@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
+import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.let.user.login.service.LoginService;
@@ -270,6 +272,80 @@ public class EzCabinetGWController_h {
 			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
 			JSONArray listUsers       = (JSONArray)jp.parse(userList);
 			result                    = cabinetService_h.saveShareUserList(listUsers, cabinetId, userInfo);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezCabinet/check-creator/itemId/{itemId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject checkFileCreator(@PathVariable(value="itemId") String itemId,   HttpServletRequest request) throws Exception {
+		String serverName     = request.getHeader("host-name")       != null ? request.getHeader("host-name")            : "";
+		String userId         = request.getParameter("userId")       != null ? request.getParameter("userId")            : "";
+
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || UserId: " + userId );
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int check    = cabinetService_h.isFileCreator(itemId, userInfo.getId(), userInfo.getTenantId());
+			
+			if (check == 1) {
+				result.put("result", "true");
+				result.put("status", "ok");
+				result.put("code", 0);
+			}else{
+				result.put("result", "false");
+				result.put("status", "error");
+				result.put("code", 3);
+			}
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezCabinet/file-detail/itemId/{itemId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getFileDetail(@PathVariable(value="itemId") String itemId,   HttpServletRequest request) throws Exception {
+		String serverName     = request.getHeader("host-name")       != null ? request.getHeader("host-name")            : "";
+		String userId         = request.getParameter("userId")       != null ? request.getParameter("userId")            : "";
+
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || UserId: " + userId );
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			CabinetItemVO CabinetItem  = cabinetService_h.getFileDetail(itemId, userInfo.getId(), userInfo.getPrimary(),userInfo.getTenantId());
+			
+			result.put("fileDetail", CabinetItem);
+			result.put("status", "ok");
+			result.put("code", 0);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();

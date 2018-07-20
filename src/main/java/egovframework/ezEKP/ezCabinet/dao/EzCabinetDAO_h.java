@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -43,6 +44,14 @@ public class EzCabinetDAO_h extends EgovAbstractDAO {
 
 	public int getMaximumShareId(Map<String, Object> map) {
 		return (int)select("EzCabinetDAO_h.getMaximumShareId", map);
+	}
+
+	public int isFileCreator(Map<String, Object> map) {
+		return (int)select("EzCabinetDAO_h.isFileCreator", map);
+	}
+
+	public CabinetItemVO getFileDetail(Map<String, Object> map) {
+		return (CabinetItemVO)select("EzCabinetDAO_h.getFileDetail", map);
 	}
 
 }

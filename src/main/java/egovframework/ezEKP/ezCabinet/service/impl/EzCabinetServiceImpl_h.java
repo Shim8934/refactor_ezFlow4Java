@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
+import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
@@ -183,7 +184,25 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 		result.put("code", 0);
 		return result;
 	}
-	
-	
-	
+
+	@Override
+	public int isFileCreator(String itemId, String userId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("itemId",   itemId);
+		map.put("userId",   userId);
+		map.put("tenantId", tenantId);
+		
+		return ezCabinetDAO_h.isFileCreator(map);
+	}
+
+	@Override
+	public CabinetItemVO getFileDetail(String itemId, String userId, String primary, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("itemId",   itemId);
+		map.put("userId",   userId);
+		map.put("primary",  primary);
+		map.put("tenantId", tenantId);
+		
+		return ezCabinetDAO_h.getFileDetail(map);
+	}
 }

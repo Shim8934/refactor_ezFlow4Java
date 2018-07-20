@@ -16,5 +16,10 @@ public interface EzCabinetRestService_h {
 	JSONObject getSearchMember(HttpServletRequest request, String userId, String srchOption, String srchValue, String currentPage) throws Exception;
 
 	JSONObject saveShareUserList(HttpServletRequest request, String userId, String cabinetId, String userList) throws Exception;
+
+	//check file creator
+	JSONObject checkFileCreator(HttpServletRequest request, String userId, String itemId) throws Exception;
+
+	JSONObject getFileDetail(HttpServletRequest request, String userId, String itemId) throws Exception;
 	
 }

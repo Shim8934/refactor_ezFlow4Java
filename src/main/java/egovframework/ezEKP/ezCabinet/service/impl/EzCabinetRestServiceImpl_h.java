@@ -134,4 +134,24 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
+
+	@Override
+	public JSONObject checkFileCreator(HttpServletRequest request, String userId, String itemId) throws Exception {
+		String url                = "/rest/ezCabinet/check-creator/itemId/" + itemId;
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",      userId);
+		
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+
+	@Override
+	public JSONObject getFileDetail(HttpServletRequest request, String userId, String itemId) throws Exception {
+		String url                = "/rest/ezCabinet/file-detail/itemId/" + itemId;
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",      userId);
+		
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
 }

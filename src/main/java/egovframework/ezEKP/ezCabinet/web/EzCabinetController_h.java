@@ -42,10 +42,23 @@ public class EzCabinetController_h {
 	 * @param request
 	 * @param model
 	 * @return
+	 * @throws Exception 
 	 */
 	@RequestMapping(value="/ezCabinet/cabinetFileDetail.do")
-	public String jspGetCabinetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+	public String jspGetCabinetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetCabinetFileDetail started");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String itemId       = request.getParameter("itemId");
+		
+		JSONObject result    = cabinetRestService_h.checkFileCreator(request, user.getId(), itemId);
+		
+		if (result.get("status").toString().equals("ok")) {
+			String checkFileCreator = (String)result.get("result");
+			model.addAttribute("checkFileCreator", checkFileCreator);
+		}
+		
+		model.addAttribute("itemId",   itemId);
+		
 		logger.debug("jspGetCabinetFileDetail ended");
 		return "ezCabinet/cabinetFileDetail";
 	}
@@ -221,6 +234,30 @@ public class EzCabinetController_h {
 		resultObj = cabinetRestService_h.saveShareUserList(request, user.getId(), cabinetId, userList);
 		
 		logger.debug("jsonSaveShareUserList ended");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/getFileDetail.do", method=RequestMethod.POST)
+	@ResponseBody
+	public String jsonGetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("jsonGetFileDetail started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String itemId  = request.getParameter("itemId") != null  ? request.getParameter("itemId")  : "";
+		
+		logger.debug("itemId: " + itemId);
+		
+		JSONObject resultObj = new JSONObject();
+		
+		if (itemId.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService_h.getFileDetail(request, user.getId(), itemId);
+		
+		logger.debug("jsonGetFileDetail ended");
+		logger.debug(resultObj.toString());
 		return resultObj.toString();
 	}
 	
