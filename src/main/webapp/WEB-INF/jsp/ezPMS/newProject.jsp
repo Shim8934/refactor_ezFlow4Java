@@ -270,7 +270,7 @@ var groupId = "${groupId}";
 	  }
 	
 	//알람 메일 일자 지정 시 프로젝트 시작일 보다 긴 일자를 넣을 수 없음
-	var betweenDate = (endDateComp.getTime() - startDateComp.getTime())/1000/60/60/24;
+	var betweenDate = (endDateComp.getTime() - startDateComp.getTime()) / 1000 / 60 / 60 / 24;
 	
 	if (endAlamStatus > betweenDate) {
 		alert("<spring:message code='ezPMS.t325' />");
