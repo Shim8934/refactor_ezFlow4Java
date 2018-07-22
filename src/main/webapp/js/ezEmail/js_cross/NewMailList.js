@@ -1,4 +1,4 @@
-﻿﻿var XmlHeader;
+﻿﻿﻿var XmlHeader;
 var XmlHeader_SUB;
 var BlockSize = 10;
 var p_ListOrderObject = null;
@@ -237,6 +237,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_IsDraft = SelectSingleNodeValue(XmlRows[Cnt], "isdraft");
                 var p_SecureMail = SelectSingleNodeValue(XmlRows[Cnt], "securemail");
                 var p_Readdt = SelectSingleNodeValue(XmlRows[Cnt], "readdt");
+                var p_Group = SelectSingleNodeValue(XmlRows[Cnt], "group");
                 var recipients = [];
             	var recipientsLen = 1;
                 
@@ -291,7 +292,7 @@ function MakeListInfoHTML(ConentObject) {
                             break;
                         case "receiveInfo":
                         	_TDColum.style.width = "18px";
-                        	if (recipientsLen > 2) {
+                        	if (recipientsLen > 2 || p_Group == "yes") {
                         		_TDColum.innerHTML = "<span style='cursor: pointer'><IMG src='/images/receivedCheck_closed.gif'></span>";
                         		_TDColum.setAttribute("viewSelect", "false");
                         		_TDColum.onclick = function () { viewReceivers(this); };
@@ -398,17 +399,30 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.onselectstart = function () { return false; };
                             break;
                         case "readdt":
-                        	
-                        	if (p_Readdt == "UNREAD") {
-                        		p_Readdt = noReadMsg;
-                        	}
-                        	_TDColum.style.textAlign = "center";
+                            _TDColum.style.textAlign = "center";
                             _TDColum.style.width = "150px";
                             _TDColum.style.overflow = "hidden";
                             _TDColum.style.textOverflow = "ellipsis";
                             _TDColum.style.whiteSpace = "nowrap";
                             _TDColum.style.minWidth = "70px";
-                            _TDColum.innerHTML = p_Readdt;
+                        	
+                        	if (p_Readdt == "UNREAD") {                                
+                                var TD_ATag = document.createElement("A");
+                                TD_ATag.className = "imgbtn";
+                                
+                                var TD_Span = document.createElement("SPAN");
+                                TD_Span.innerHTML = reSendMsg;
+                                TD_Span.onclick = function () {
+                                    var msgHref = this.parentElement.parentElement.parentElement.getAttribute("_href");
+                                    
+                                    ReSendWithURLOnly(msgHref);
+                                };
+                                TD_ATag.appendChild(TD_Span);
+                                
+                                _TDColum.appendChild(TD_ATag);                        		
+                        	} else {
+                        	    _TDColum.innerHTML = p_Readdt;
+                        	}
                         	
                         	break;
                     }
@@ -587,10 +601,23 @@ function makeReceiverList(parentId) {
         TD6.style.minWidth = "70px";
         
         if (readDate == 'UNREAD') {
-        	readDate = noReadMsg;
+            var msgHref = $("#" + parentId)[0].getAttribute("_href");
+        	
+            var TD6_ATag = document.createElement("A");
+            TD6_ATag.className = "imgbtn";
+            
+            var TD6_Span = document.createElement("SPAN");
+            TD6_Span.innerHTML = reSendMsg;
+            TD6_Span.setAttribute("EMAIL", readerEmail);
+            TD6_Span.onclick = function () {
+                ReSend(msgHref, this.getAttribute("EMAIL"));
+            };
+            TD6_ATag.appendChild(TD6_Span);
+            
+            TD6.appendChild(TD6_ATag);
+        } else {        
+            TD6.innerHTML = readDate;
         }
-        
-        TD6.innerHTML = readDate;
         
         TR.appendChild(TD1);
         TR.appendChild(TD2);
