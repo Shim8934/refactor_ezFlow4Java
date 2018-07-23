@@ -107,6 +107,9 @@ import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
 import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
 import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositonShapeIdPair;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape;
 import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
 import kr.dogfoot.hwplib.reader.HWPReader;
 import kr.dogfoot.hwplib.writer.HWPWriter;
@@ -5678,10 +5681,58 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		logger.debug("setHwpSign ended");
 	}
+	
+	/**
+	 * @param fieldName ex) sign1, sign2
+	 * @param signText 
+	 * @param hwpFile
+	 * @throws Exception
+	 * 한글파일에 사인기입하기
+	 */
+	private void setHwpText(HWPFile hwpFile, String fieldName, String... signTextArray) throws Exception {
+		logger.debug("setHwpSign started");
+
+		for (Section s : hwpFile.getBodyText().getSectionList()) {
+			for (Paragraph p : s) {
+				for (Control c : p.getControlList()) {
+					if (c.getType() == ControlType.Table) {
+						ControlTable ct = (ControlTable) c;
+						
+						for (Row row : ct.getRowList()) {
+							for (Cell cell : row.getCellList()) {
+								if (cell.getListHeader().getFieldName() != null && cell.getListHeader().getFieldName().equals(fieldName)) {
+									ParagraphList paragraphList = cell.getParagraphList();
+									
+									Paragraph newParagraph = paragraphList.addNewParagraph();
+									
+									newParagraph.createText();
+									newParagraph.createCharShape();
+									
+									ParaCharShape pcs = paragraphList.getParagraph(0).getCharShape();
+									pcs.getPositonShapeIdPairList();
+									
+									//글자모양 복사해주기
+									for (CharPositonShapeIdPair charPositonShapeIdPair : pcs.getPositonShapeIdPairList()) {
+										newParagraph.getCharShape().addParaCharShape(charPositonShapeIdPair.getPositon(), charPositonShapeIdPair.getShapeId());
+									}
+									
+									newParagraph.getText().addString(signTextArray[1]);
+									
+									paragraphList.getParagraph(0).createText();
+									paragraphList.getParagraph(0).getText().addString(signTextArray[0]);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		logger.debug("setHwpSign ended");
+	}
 
 	private String createHwpFile(String formID, String userID, String signNum, String docID, String aprState, String aprType, String result, String orgUID, String strLang,
 			String companyID, HttpServletRequest request, LoginVO userInfo, String mode) throws Exception {
-		// TODO Auto-generated method stub
 		logger.debug("createHwpFile started");
 		
 		String proxySign = "";
@@ -5977,14 +6028,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (aprType.equals("016")) { // 대결
 					int tmps = signCnt - refResult;
 					String tempSign = signAdd + "sign" + tmps;
+					String[] signAry = {messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), proxySign + displayName};
 					
-					setHwpText(tempSign, messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName, hwpFile);
+					setHwpText(hwpFile, tempSign, signAry);
 					
 					int jeonKyul = getDocInfoJeonKyul(docID, orgUID, aprState, companyID, userInfo.getTenantId());
 					
 					if (jeonKyul > 0) {
 						strSign = "sign" + (tmps + 1);
-						setHwpText(strSign, messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), hwpFile);
+						signAry[1] = displayName;
+						
+						setHwpText(hwpFile, strSign, signAry);
 					}
 					
 					signText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
@@ -5995,17 +6049,26 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						lastCnt = tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10);
 					}
 					
+					String[] signAry = {lastCnt, proxySign + displayName};
+					
 					if (refResult > 0) {
 						int tmps = signCnt - refResult;
 						strSign = signAdd + "sign" + tmps;
 						
-						setHwpText(strSign, lastCnt + proxySign + displayName, hwpFile);
+						if (lastCnt.equals("")) {
+							setHwpText(strSign, proxySign + displayName, hwpFile);
+						} else {
+							setHwpText(hwpFile, strSign, signAry);
+						}
 					} else {
 						int tmps = signCnt - refResult;
 						strSign = signAdd + "sign" + tmps;
-						strSeumyungDate = signAdd + "seumyungdate" + tmps;
 						
-						setHwpText(strSign, lastCnt + proxySign + displayName, hwpFile);
+						if (lastCnt.equals("")) {
+							setHwpText(strSign, proxySign + displayName, hwpFile);
+						} else {
+							setHwpText(hwpFile, strSign, signAry);
+						}
 					}
 					
 					signText = lastCnt + proxySign + displayName;
@@ -6016,13 +6079,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					signText = proxySign + displayName;
 					
-					setHwpText(habSign, signText, hwpFile);
-					setHwpText(habSem, tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), hwpFile);
+					String[] signAry = {tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), signText};
+					
+					setHwpText(hwpFile, habSign, signAry);
+					setHwpText(habSem, tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
 				} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
 					int tmps = signCnt - refResult;
 					String tempSign = signAdd + "sign" + tmps;
+					String[] signAry = {messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), proxySign + displayName};
 					
-					setHwpText(tempSign, messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName, hwpFile);
+					setHwpText(hwpFile, tempSign, signAry);
 					
 					signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
 				} else if (aprType.equals("015")) { // 후열
@@ -6716,10 +6782,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					signText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + "<BR/><P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>";
 				} else if (aprType.equals("001") || aprType.equals("019")) { // 결재 || 검토
 					String lastCnt = "";
-
-					// 2018-06-18 황윤호. G버전 > 일괄결재 > 날짜 (월/일 -> 월.일)로 변경
-					lastCnt = tempDate.substring(5, 7) + "." + tempDate.substring(8, 10);
+					String lastCnt2 = tempDate.substring(5, 7) + "." + tempDate.substring(8, 10);
 					
+					if (totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("001")) {
+						lastCnt = tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10);
+					}
+
 					// 참조
 					if (refResult > 0) {
 						int tmps = signCnt - refResult;
@@ -6728,12 +6796,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						// 2018-06-18 황윤호. G버전 > 일괄결재 > 날짜 날인(sign필드 -> seumyungdate필드로) 이동
 						strSeumyungDate = signAdd + "seumyungdate" + tmps;
 						
-						doc.getElementById(strSign).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
+						doc.getElementById(strSign).html(lastCnt + "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
 						
 						// 2018-06-19 황윤호. G버전 > 일괄결재 > 시행문, 협조문은 서명 필드 제외
 						if (doc.getElementById(strSeumyungDate) != null) {	
 							// 2018-06-18 황윤호. G버전 > 일괄결재 > 날짜 날인(sign필드 -> seumyungdate필드로) 이동
-							doc.getElementById(strSeumyungDate).html(lastCnt);
+							doc.getElementById(strSeumyungDate).html(lastCnt2);
 						}
 					} else {
 						int tmps = signCnt - refResult;
@@ -6742,11 +6810,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						// 2018-06-18 황윤호. G버전 > 일괄결재 > 날짜 날인(sign필드 -> seumyungdate필드로) 이동
 						strSeumyungDate = signAdd + "seumyungdate" + tmps;
 						
-						doc.getElementById(strSign).html("<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
+						doc.getElementById(strSign).html(lastCnt + "<P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>");
 						// 2018-06-19 황윤호. G버전 > 일괄결재 > 시행문, 협조문은 서명 필드 제외
 						if (doc.getElementById(strSeumyungDate) != null) {	
 							// 2018-06-18 황윤호. G버전 > 일괄결재 > 날짜 날인(sign필드 -> seumyungdate필드로) 이동
-							doc.getElementById(strSeumyungDate).html(lastCnt);
+							doc.getElementById(strSeumyungDate).html(lastCnt2);
 						}
 					}
 					
