@@ -238,7 +238,18 @@
 		}
 		
 		function filePrint() {
+			var relatedFileList = document.getElementById("fileListDiv");
+			var clientHeight    = relatedFileList.clientHeight;
+			var scrollHeight    = relatedFileList.scrollHeight;
 			
+			if (scrollHeight > clientHeight) {
+				var tdElmt = relatedFileList.parentElement.parentElement;
+				tdElmt.setAttribute("style", "vertical-align: top; height: " + (scrollHeight) + "px;");
+			}
+			
+			window.print();
+			
+			tdElmt.removeAttribute("style");
 		}
 		
 		function closeWindow() {window.close();}
