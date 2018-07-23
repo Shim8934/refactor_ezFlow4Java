@@ -212,6 +212,7 @@ var groupId = "${groupId}";
 	 planEndDate = $("#Edatepicker").val();
 	 overview = convertString($("#overview").val().trim());
 	 
+	 //parent.userRole은 프로젝트 수정 때 사용.
 	 if (mode == "edit" && parent.userRole != 1) {
 		alert("<spring:message code='ezPMS.t9'/>");
 		return;
@@ -313,7 +314,7 @@ var groupId = "${groupId}";
 					var logContent = "[" + projectName + "<spring:message code='ezPMS.t51' />"
 					addTaskLog(result.projectId, 1, result.groupId, null, logContent);
 					alert("<spring:message code='ezPMS.t53' />");
-					parent.setProjectList(); 
+					parent.opener.setProjectList(); 
 				}
 				popupClose();
 			

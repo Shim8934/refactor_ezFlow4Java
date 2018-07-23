@@ -62,7 +62,10 @@ function goProjectDetails(elem) {
 }
 
 function addNewProject() { 
-	addProjectPopup(10, 20, 845, 555, "/ezPMS/newProject.do?mode=" + "new");
+	var feature = GetOpenPosition(845, 555);
+	
+	window.open("/ezPMS/newProject.do?mode=" + "new", "", "width=845, height=555, resizable=no, scrollbars=no, status=no" + feature);
+// 	addProjectPopup(10, 20, 845, 555, "/ezPMS/newProject.do?mode=" + "new");
 }
 
 $(document).ready(function() {
