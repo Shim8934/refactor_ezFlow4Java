@@ -96,7 +96,7 @@
 		]]>
 	</select>
 	
-	<select id="EzOrganDAO.getPropertyValue_S2" parameterClass="Map" resultClass="String" resultMap="userInfo">
+	<select id="EzOrganDAO.getPropertyValue_S2" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
 				1
