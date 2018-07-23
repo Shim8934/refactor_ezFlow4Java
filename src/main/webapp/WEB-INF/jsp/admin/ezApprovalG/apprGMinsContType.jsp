@@ -7,6 +7,9 @@
 		<title><spring:message code='ezApprovalG.t1653'/></title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<style>
+			.mainlist tr th { border-top:0px }
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
@@ -101,7 +104,7 @@
 				</td>
 			</tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn"><span onClick="return save_onclick()"><spring:message code='ezApprovalG.t59'/></span></a>
 		</div>
 	</body>
