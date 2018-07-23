@@ -96,7 +96,7 @@
 		]]>
 	</select>
 	
-	<select id="EzOrganDAO.getPropertyValue_S2" parameterClass="Map" resultClass="String" resultMap="userInfo">
+	<select id="EzOrganDAO.getPropertyValue_S2" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
 				1
@@ -111,9 +111,9 @@
                          AND
                          	TENANT_ID = #v_TENANT_ID#	
                          AND
-                         	StartDate < #nowDate#
+                         	StartDate < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
                          AND
-                         	EndDate > #nowDate# ) > 0
+                         	EndDate > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') ) > 0
 		]]>
 	</select>
 	
