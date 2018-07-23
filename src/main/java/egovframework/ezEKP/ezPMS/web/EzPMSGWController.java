@@ -206,6 +206,7 @@ public class EzPMSGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 
@@ -226,6 +227,7 @@ public class EzPMSGWController {
 			project.put("creatorDeptname2", info.getDeptName2());
 			project.put("createDate", request.getParameter("createDate"));
 			project.put("tenantId", info.getTenantId());
+			project.put("lang", lang);
 
 			// 최상위 그룹 생성을 위한 파라미터
 			project.put("treeDepth", 0);
@@ -248,13 +250,13 @@ public class EzPMSGWController {
 
 			// 이슈리스트 그룹 생성
 			project.put("groupName", "이슈 리스트");
-			ezPMSService.addGroup(project, "Y", companyId, tenantId);
+			ezPMSService.addGroup(project, "Y", companyId, tenantId, lang);
 
 			// 그룹 생성
 			project.put("sortOrder", 0);
 			project.put("groupName",
 					request.getParameter("projectName").replaceAll("\"", "&quot;").replaceAll("\'", "&#39;"));
-			long groupId = ezPMSService.addGroup(project, "N", companyId, tenantId);
+			long groupId = ezPMSService.addGroup(project, "N", companyId, tenantId, lang);
 			LOGGER.debug("addNewProject groupId : " + groupId);
 
 			data.put("projectId", projectId);
@@ -506,14 +508,14 @@ public class EzPMSGWController {
 
 					if (nowStatus.equals("W") && status.equals("P")) {
 						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(),
-								changeDate, status, planEndDate, companyId);
+								changeDate, status, planEndDate, companyId, lang);
 					}
 
 					if (status.equals("C")) {
 						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(),
-								changeDate, status, planEndDate, companyId);
+								changeDate, status, planEndDate, companyId, lang);
 						ezPMSService.completeAllTasks(Long.parseLong(projectIdList[i]), info.getTenantId(), changeDate,
-								planEndDate, companyId);
+								planEndDate, companyId, lang);
 					}
 				}
 			}
@@ -625,6 +627,7 @@ public class EzPMSGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
 
@@ -639,7 +642,7 @@ public class EzPMSGWController {
 			project.setHeadManagerId(request.getParameter("headManagerId"));
 			project.setCreateDate(request.getParameter("createDate"));
 
-			ezPMSService.updateProject(project, tenantId, companyId);
+			ezPMSService.updateProject(project, tenantId, companyId, lang);
 
 			// 멤버 삭제 후 다시 넣기
 			ezPMSService.deleteProjectMember(projectId, tenantId);
@@ -673,7 +676,7 @@ public class EzPMSGWController {
 			groupInfo.setPlanStartDate(request.getParameter("planStartDate"));
 			groupInfo.setPlanEndDate(request.getParameter("planEndDate"));
 
-			ezPMSService.updateGroup(groupInfo);
+			ezPMSService.updateGroup(groupInfo, lang);
 
 			JSONObject data = new JSONObject();
 			data.put("projectId", projectId);
@@ -1579,7 +1582,7 @@ public class EzPMSGWController {
 			if (roleCheck.equals("permitted")) {
 				for (int i = 0; i < taskIdList.length; i++) {
 					// 삭제
-					ezPMSService.deleteTask(Long.parseLong(taskIdList[i]), projectId, tenantId, companyId);
+					ezPMSService.deleteTask(Long.parseLong(taskIdList[i]), projectId, tenantId, companyId, lang);
 
 					// 해당 task관련 삭제
 					ezPMSService.deleteMemberSchedule(null, projectId, tenantId, null, Long.parseLong(taskIdList[i]));
@@ -1756,6 +1759,7 @@ public class EzPMSGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int tenantId = info.getTenantId();
 			String roleCheck = "permitted";
 
@@ -1781,7 +1785,7 @@ public class EzPMSGWController {
 					long targetTaskId = Long.parseLong(request.getParameter("targetTaskId"));
 					int treeDepth = Integer.parseInt(request.getParameter("treeDepth"));
 					ezPMSService.updateTaskGroupId(projectId, targetTaskId, toGroupId, fromGroupId, tenantId,
-							treeDepth);
+							treeDepth, lang);
 				}
 
 				// 그룹 순서 변경
@@ -2044,9 +2048,9 @@ public class EzPMSGWController {
 				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
 
-				int restDueday = ezPMSService.getWorkingDays(now, endDate, companyId, tenantId);
+				int restDueday = ezPMSService.getWorkingDays(now, endDate, companyId, tenantId, lang);
 				taskList.get(i).setRestDueday(restDueday);
-				taskList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate, companyId, tenantId));
+				taskList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate, companyId, tenantId, lang));
 				taskList.get(i).setTaskMember(
 						ezPMSService.getTaskMemberList(info.getTenantId(), taskList.get(i).getTaskId(), lang));
 			}
@@ -2151,7 +2155,7 @@ public class EzPMSGWController {
 			projectTaskVO.setWriterDeptname2(request.getParameter("writerDeptname2"));
 			projectTaskVO.setTreeDepth(Integer.parseInt(request.getParameter("treeDepth")));
 
-			long taskId = ezPMSService.addTask(projectTaskVO, taskMemberList2, companyId, tenantId);
+			long taskId = ezPMSService.addTask(projectTaskVO, taskMemberList2, companyId, tenantId, lang);
 
 //			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 //			Date startDate = dateFormat.parse(planStartDate);
@@ -2198,7 +2202,7 @@ public class EzPMSGWController {
 						tenantId, null, lang, info.getDeptId(), info.getCompanyId());
 				ezPMSService.updateProjectStatus(Long.parseLong(projectId), projectStatus, tenantId, projectPlanEndDate,
 						projectChangeDate);
-				ezPMSService.updateProject(project, tenantId, companyId);
+				ezPMSService.updateProject(project, tenantId, companyId, lang);
 				ezPMSService.updateProjectGroupEndDate(Long.parseLong(projectId), projectChangeDate, tenantId,
 						projectDetails.getGroupId());
 
@@ -2241,7 +2245,7 @@ public class EzPMSGWController {
 
 			taskVO.setTaskMember(ezPMSService.getTaskMemberList(info.getTenantId(), Long.parseLong(taskId), lang));
 			taskVO.setPlanProgress(
-					ezPMSService.getPlanProgress(startDate, endDate, info.getCompanyId(), info.getTenantId()));
+					ezPMSService.getPlanProgress(startDate, endDate, info.getCompanyId(), info.getTenantId(), lang));
 
 			long groupId = taskVO.getGroupId();
 			int roleId = 0;
@@ -2306,6 +2310,7 @@ public class EzPMSGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
 			Long groupId = Long.parseLong(request.getParameter("groupId"));
@@ -2462,7 +2467,7 @@ public class EzPMSGWController {
 					projectTaskVO.setUpperTreeDepth(Integer.parseInt(request.getParameter("treeDepth")));
 				}
 				
-				ezPMSService.updateTaskInfo(projectTaskVO, companyId, tenantId);
+				ezPMSService.updateTaskInfo(projectTaskVO, companyId, tenantId, lang);
 
 				// taskId로 해당 date 삭제 후, 추가
 				ezPMSService.deleteMemberSchedule(null, Long.parseLong(projectId), tenantId, null,
@@ -2586,6 +2591,7 @@ public class EzPMSGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = info.getCompanyId();
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int tenantId = info.getTenantId();
 
 			Map<String, Object> project = new HashMap<String, Object>();
@@ -2630,7 +2636,7 @@ public class EzPMSGWController {
 			// 그룹 생성
 			project.put("groupName",
 					request.getParameter("groupName").replaceAll("\"", "&quot;").replaceAll("\'", "&#39;"));
-			Long groupId = ezPMSService.addGroup(project, "N", companyId, tenantId);
+			Long groupId = ezPMSService.addGroup(project, "N", companyId, tenantId, lang);
 
 			// 프로젝트 멤버 테이블에 추가
 			HashMap<String, Object> managerMap = new HashMap<String, Object>();
@@ -2753,6 +2759,7 @@ public class EzPMSGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
 
@@ -2867,7 +2874,7 @@ public class EzPMSGWController {
 					LOGGER.debug("oldGroupStartDate : " + sdf.format(oldGroupStartDate) + ", newGroupStartDate : "
 							+ sdf.format(newGroupStartDate));
 
-					int offset = ezPMSService.getWorkingDays(oldGroupStartDate, newGroupStartDate, companyId, tenantId)
+					int offset = ezPMSService.getWorkingDays(oldGroupStartDate, newGroupStartDate, companyId, tenantId, lang)
 							- 1;
 					LOGGER.debug("offset : " + offset);
 
@@ -2893,9 +2900,9 @@ public class EzPMSGWController {
 						taskVO.setPlanEndDate(newEndDate);
 						taskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
 
-						ezPMSService.updateTaskStatus(taskVO, companyId, tenantId);
+						ezPMSService.updateTaskStatus(taskVO, companyId, tenantId, lang);
 
-						ezPMSService.updateGroupDate(groupId, tenantId, companyId);
+						ezPMSService.updateGroupDate(groupId, tenantId, companyId, lang);
 					}
 				}
 
@@ -2909,7 +2916,7 @@ public class EzPMSGWController {
 				groupInfo.setUpperGroupId(Long.parseLong(request.getParameter("upperGroupId")));
 				groupInfo.setHeadManagerId(request.getParameter("headManagerId"));
 
-				ezPMSService.updateGroup(groupInfo);
+				ezPMSService.updateGroup(groupInfo, lang);
 			}
 
 			result.put("status", "ok");
@@ -3076,6 +3083,7 @@ public class EzPMSGWController {
 			
 			HashSet<String> holidayList = ezPMSService.getHolidayList(project.getPlanStartDate(), project.getPlanEndDate(), info.getTenantId(), info.getCompanyId(), lang);
 			
+			LOGGER.debug("holidayList : " + holidayList);
 			JSONObject data = new JSONObject();
 			data.put("project", project);
 			data.put("holidayList", holidayList);
@@ -3155,10 +3163,10 @@ public class EzPMSGWController {
 				projectTaskVO.setStatus(request.getParameter("status"));
 				projectTaskVO.setGroupId(Long.parseLong(request.getParameter("groupId")));
 
-				int workingday = ezPMSService.getWorkingDays(start, end, companyId, tenantId);
+				int workingday = ezPMSService.getWorkingDays(start, end, companyId, tenantId, lang);
 				projectTaskVO.setWorkingday(workingday);
 
-				ezPMSService.updateTaskStatus(projectTaskVO, companyId, tenantId);
+				ezPMSService.updateTaskStatus(projectTaskVO, companyId, tenantId, lang);
 				
 				// taskId로 해당 date 삭제 후, 추가
 				ezPMSService.deleteMemberSchedule(null, projectId, tenantId, null,taskId);
@@ -3313,7 +3321,7 @@ public class EzPMSGWController {
 				"ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/groups/users/" + userId + "/gantt] started.");
 
 		JSONObject result = new JSONObject();
-
+		
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
@@ -3373,7 +3381,7 @@ public class EzPMSGWController {
 				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
 
-				int restDueday = ezPMSService.getWorkingDays(now, endDate, companyId, tenantId);
+				int restDueday = ezPMSService.getWorkingDays(now, endDate, companyId, tenantId, lang);
 				groupList.get(i).setRestDueday(restDueday);
 				// groupList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate,
 				// endDate, companyId, tenantId));
