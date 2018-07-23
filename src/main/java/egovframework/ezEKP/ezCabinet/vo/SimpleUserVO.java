@@ -9,6 +9,9 @@ public class SimpleUserVO {
 	private String telNumber;
 	private String mail;
 	private String userImg;
+	private int    userType;
+	private int    permission;
+	private int    subPermission;
 	
 	public String getUserId() {
 		return userId;
@@ -57,6 +60,7 @@ public class SimpleUserVO {
 	public void setTelNumber(String telNumber) {
 		this.telNumber = telNumber;
 	}
+	
 	public String getMail() {
 		return mail;
 	}
@@ -71,5 +75,29 @@ public class SimpleUserVO {
 	
 	public void setUserImg(String userImg) {
 		this.userImg = userImg;
+	}
+	
+	public int getPermission() {
+		return permission;
+	}
+	
+	public void setPermission(int permission) {
+		this.permission = permission;
+	}
+	
+	public int getSubPermission() {
+		return subPermission;
+	}
+	
+	public void setSubPermission(int subPermission) {
+		this.subPermission = subPermission;
+	}
+	
+	public int getUserType() {
+		return userType;
+	}
+	
+	public void setUserType(int userType) {
+		this.userType = userType;
 	}
 }

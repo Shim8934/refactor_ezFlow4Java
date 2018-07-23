@@ -249,6 +249,22 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	}
 	
 	@Override
+	public JSONObject getSharedCabinetTree(HttpServletRequest request, String userId) throws Exception {
+		String url                = "/rest/ezcabinet/sharedcabinet/id/" + userId;
+		JSONObject resultBody     = getJsonResult(url, null, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject getUserSharedCabinet(HttpServletRequest request, String userId, String shareId) throws Exception {
+		String url                = "/rest/ezcabinet/sharedcabinet/shareid/" + shareId;
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
 	public JSONObject getCabinetSubNodes(HttpServletRequest request, String userId, String nodeId) throws Exception {
 		String url                = "/rest/ezcabinet/cabinet/id/" + nodeId + "/sub-node";
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -457,7 +473,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 			return contentLength == null || contentLength < 0 ? null : contentLength;
 		}
 	}
-
+	
 	@Override
 	public JSONObject getCabinetFiles(HttpServletRequest request, String userId, String cabinetId, String currentPage) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/id/" + cabinetId + "/get";
@@ -467,7 +483,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject getFilesBySearching(HttpServletRequest request, String userId, String itemTitle, String currentPage) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/search";
@@ -480,9 +496,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	}
 
 	@Override
-	public JSONObject SaveRelatedItem(HttpServletRequest request, String id,
-			String title, String author, JSONArray normalScreen) {
-		// TODO Auto-generated method stub
+	public JSONObject saveRelatedItem(HttpServletRequest request, String id, String title, String author, JSONArray normalScr) {
 		return null;
 	}
 }

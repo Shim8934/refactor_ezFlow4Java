@@ -89,8 +89,8 @@
 				function closeWindow() {window.close();}
 				
 				function addRelatedCabinet() {
-					var msgToGot = window.opener.document.getElementById("MsgToGot").innerText;
-					var mailSubject = window.opener.document.getElementById("mailSubject").innerText;
+					var msgToGot = window.opener.document.getElementById("MsgToGot").value;
+					var mailSubject = window.opener.document.getElementById("mailSubject").value;
 					var messageFrame = window.opener.document.getElementById("message");
 					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
 					var normalScreen = contentWd.document.getElementById("normalScreen").innerHTML;
@@ -108,6 +108,7 @@
 							data: {
 								"title"       : mailSubject,
 								"author"      : msgToGot,
+								"cabinetId"   : cabinetId,
 								"normalScreen": JSON.stringify(normalScreen)
 							},
 							dataType: "JSON",

@@ -178,7 +178,7 @@ var CabinetItem = function() {
 		libttns[5].firstElementChild.onclick = function(e) {searchCallBack();};
 		libttns[6].firstElementChild.onclick = function(e) {toggleSearchPanel();};
 		libttns[8].firstElementChild.onclick = function(e) {openSharePopup();};
-		libttns[9].firstElementChild.onclick = function(e) {getFileDetail();};
+		
 		
 		$("#Sdatepicker").datepicker({
 			changeMonth: true,
@@ -667,7 +667,7 @@ var CabinetItem = function() {
 		var sharePopup = window.open("/ezCabinet/shareCabinet.do?cabId=" + cabinetId, "shareFile", getOpenWindowfeature(1125, 700));
 	}
 	
-	function getFileDetail() {window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 690));}
+	function getFileDetail(itemId) {window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(600, 530));}
 	
 	function getSelectedItems() {
 		var result        = [];
@@ -687,6 +687,7 @@ var CabinetItem = function() {
 		
 		if (crrClass == "bnkCabSelect") {
 			//Add preview code here
+			getFileDetail(itemId);
 		}
 	}
 	

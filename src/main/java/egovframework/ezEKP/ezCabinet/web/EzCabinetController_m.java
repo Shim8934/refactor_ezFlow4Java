@@ -56,7 +56,7 @@ public class EzCabinetController_m {
 		JSONParser jp        = new JSONParser();
 		JSONArray normalScr  = (JSONArray) jp.parse(normalScreen);
 		
-		resultObj = cabinetRestService.SaveRelatedItem(request, userInfo.getId(), title, author, normalScr);
+		resultObj = cabinetRestService.saveRelatedItem(request, userInfo.getId(), title, author, normalScr);
 		
 		logger.debug("Save relatedItem finishes!");
 		return resultObj.toString();

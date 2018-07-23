@@ -87,7 +87,6 @@
 					normal   : "bnkCabNormal",
 					selected : "bnkCabSelect",
 					mode     : "received",
-					click    : null,
 					dblclick : removeFile
 				});
 				

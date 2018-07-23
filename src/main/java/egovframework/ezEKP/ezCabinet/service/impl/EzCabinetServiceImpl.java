@@ -37,6 +37,7 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetRelationVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezCabinet.vo.SimpleUserVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -423,7 +424,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject checkPermission(List<Integer> cabinetList, List<Integer> itemList, LoginVO userInfo) throws Exception {
+	public JSONObject checkPermission(List<Integer> cabinetList, List<Integer> itemList, int mode, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		String userId          = userInfo.getId();
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -448,6 +449,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		List<String> userDeptList = ezCabinetDAO.getUserDepartmentIdList(map);
 		map.put("deptList",    userDeptList);
 		map.put("others",      otherUserList);
+		map.put("permMode",    mode);
 		
 		List<CabinetVO> listReceivedCabinet = ezCabinetDAO.getReceivedCabinetListForPermission(map);
 		List<String> cabinetPathList        = listReceivedCabinet.stream().filter(i -> i.getSubPermission() == 1).map(CabinetVO::getCabinetPath).collect(Collectors.toList());
@@ -683,7 +685,8 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		if (itemList != null && itemList.size() > 0) {
 			int newItemId = ezCabinetDAO.getMaxItem(map) + 1;
 			for (CabinetItemVO item : itemList) {
-				int itemId = item.getItemId();
+				int itemId     = item.getItemId();
+				String ownerId = item.getCreatorId();
 				//Save new Item
 				item.setItemId(newItemId);
 				item.setCabinetId(newCabinetId);
@@ -730,16 +733,19 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 					}
 				}
 				
-				List<CabinetRelationVO> listRelatedFile = ezCabinetDAO.getAllRelatedFilesOfItem(map);
-				
-				if (listRelatedFile != null && listRelatedFile.size() > 0) {
-					int relationId = ezCabinetDAO.getMaxRelationId(map) + 1;
-					for (CabinetRelationVO relatedFile : listRelatedFile) {
-						relatedFile.setItemId(newItemId);
-						relatedFile.setRelationId(relationId);
-						
-						ezCabinetDAO.saveRelationFile(relatedFile);
-						relationId ++;
+				//Check owner privilege
+				if (ownerId.equals(userId)) {
+					List<CabinetRelationVO> listRelatedFile = ezCabinetDAO.getAllRelatedFilesOfItem(map);
+					
+					if (listRelatedFile != null && listRelatedFile.size() > 0) {
+						int relationId = ezCabinetDAO.getMaxRelationId(map) + 1;
+						for (CabinetRelationVO relatedFile : listRelatedFile) {
+							relatedFile.setItemId(newItemId);
+							relatedFile.setRelationId(relationId);
+							
+							ezCabinetDAO.saveRelationFile(relatedFile);
+							relationId ++;
+						}
 					}
 				}
 				
@@ -1077,5 +1083,36 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("tenantId", tenantId);
 		
 		return ezCabinetDAO.getTotalFilesByTitle(map);
+	}
+
+	@Override
+	public List<SimpleUserVO> getSharedUserList(LoginVO userInfo) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",    userInfo.getId());
+		map.put("tenantId",  userInfo.getTenantId());
+		map.put("primary",   userInfo.getPrimary());
+		map.put("deptId",    userInfo.getDeptID());
+		map.put("companyId", userInfo.getCompanyID());
+		
+		List<String> userDeptList = ezCabinetDAO.getUserDepartmentIdList(map);
+		map.put("deptList",  userDeptList);
+		
+		return ezCabinetDAO.getSharedUserList(map);
+	}
+
+	@Override
+	public List<CabinetSimpleVO> getUserSharedCabinet(String shareId, LoginVO userInfo) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",    userInfo.getId());
+		map.put("tenantId",  userInfo.getTenantId());
+		map.put("primary",   userInfo.getPrimary());
+		map.put("deptId",    userInfo.getDeptID());
+		map.put("companyId", userInfo.getCompanyID());
+		
+		List<String> userDeptList = ezCabinetDAO.getUserDepartmentIdList(map);
+		map.put("deptList",  userDeptList);
+		map.put("shareId",   shareId);
+		
+		return ezCabinetDAO.getUserSharedCabinet(map);
 	}
 }

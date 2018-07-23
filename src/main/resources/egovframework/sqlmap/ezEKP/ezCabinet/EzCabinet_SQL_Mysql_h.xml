@@ -4,6 +4,7 @@
 <sqlMap namespace="EzCabinet_h">
 	<typeAlias alias="CabinetSimpleUserVO"           type="egovframework.ezEKP.ezCabinet.vo.SimpleUserVO"  />
 	<typeAlias alias="CabinetShareVO"                type="egovframework.ezEKP.ezCabinet.vo.CabinetShareVO"/>
+	<typeAlias alias="cabinetItemVO"                 type="egovframework.ezEKP.ezCabinet.vo.CabinetItemVO"/>
 	
 	<!-- OrganDeptVO resultMap -->
 	<resultMap id="deptMemberInfo" class="CabinetSimpleUserVO">
@@ -33,6 +34,39 @@
 		<result property="companyId"        column="company_id"           columnIndex="12" />
 		<result property="tenantId"         column="tenant_id"            columnIndex="13" />
 	</resultMap>
+	
+	<!-- OrganDeptVO resultMap -->
+	<resultMap id="shareMemberInfo" class="CabinetSimpleUserVO">
+		<result property="userId"           column="cn"                     columnIndex="1"/>
+		<result property="userType"         column="shared_type"            columnIndex="2"/>
+		<result property="userName"         column="display_name"           columnIndex="3"/>
+		<result property="deptName"         column="department_name"        columnIndex="4"/>
+		<result property="permission"       column="permission"             columnIndex="5"/>
+		<result property="subPermission"    column="child_permission"       columnIndex="6"/>
+	</resultMap>
+	
+	<!-- CabinetItemVO resultMap -->
+	<resultMap id="cabinetItemVO"  class="CabinetItemVO">
+		<result property="itemId"           column="item_id"             columnIndex="1" />
+		<result property="cabinetId"        column="cabinet_id"          columnIndex="2" />
+		<result property="itemType"         column="item_type"           columnIndex="3" />
+		<result property="title"            column="title"               columnIndex="4" />
+		<result property="summary"          column="summary"             columnIndex="5" />
+		<result property="creatorId"        column="creator_id"          columnIndex="6" />
+		<result property="creatorName1"     column="creator_name1"       columnIndex="7" />
+		<result property="creatorName2"     column="creator_name2"       columnIndex="8" />
+		<result property="departmentId"     column="department_id"       columnIndex="9" />
+		<result property="departmentName1"  column="department_name1"    columnIndex="10"/>
+		<result property="departmentName2"  column="department_name2"    columnIndex="11"/>
+		<result property="conentPath"       column="content_path"        columnIndex="12"/>
+		<result property="createdDate"      column="create_date"         columnIndex="13"/>
+		<result property="updatedDate"      column="update_date"         columnIndex="14"/>
+		<result property="useStatus"        column="use_status"          columnIndex="15"/>
+		<result property="updateId"         column="update_id"           columnIndex="16"/>
+		<result property="deleterId"        column="delete_id"           columnIndex="17"/>
+		<result property="companyId"        column="company_id"          columnIndex="18"/>
+		<result property="tenantId"         column="tenant_id"           columnIndex="19"/>
+	</resultMap>	
 	
 	<!--***********************************************************************************
 	**                             OrganDept process                                     **
@@ -95,18 +129,220 @@
 		ORDER BY
 			EXTENSIONATTRIBUTE15 ASC,
 			DISPLAYNAME ASC
+		LIMIT #startPoint#, #listCount#
 		]]>
+		
+	</select>
+	
+	<select id="EzCabinetDAO_h.getTotalDeptMembers" resultClass="Integer">
+		SELECT
+			COUNT(AA.CN)
+		FROM (
+			SELECT
+				CN
+			FROM
+				TBL_USERMASTER 
+			WHERE
+				DEPARTMENT = #deptId#
+			AND
+				CN != 'masteradmin'
+			AND
+				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			AND
+				TENANT_ID = #tenantId#
+				
+			UNION ALL
+			
+			SELECT
+				A.CN
+			FROM
+				TBL_ADDJOBMASTER B
+			JOIN
+				TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+			WHERE
+				B.DEPTID = #deptId#
+			AND
+				B.TENANT_ID = #tenantId#
+		) AA
+	</select>
+	
+	<select id="EzCabinetDAO_h.getSearchMemberList" resultMap="deptMemberInfo">
+	SELECT
+			AA.CN                  AS CN,
+			AA.POSITION            AS POSITION,
+			AA.DISPLAYNAME         AS DISPLAYNAME,
+			AA.DEPARTMENT          AS DEPARTMENT,
+			AA.DEPARTMENTNAME      AS DEPARTMENTNAME,
+			AA.TELEPHONENUMBER     AS TELEPHONENUMBER,
+			AA.MAIL                AS MAIL, 
+			AA.EXTENSIONATTRIBUTE2 AS USERIMAGE
+		FROM (
+			SELECT
+				CN                                                                                                                           AS CN,
+				CASE WHEN #primary# = '1'THEN TITLE ELSE TITLE2 END                                                                          AS POSITION,
+				CASE WHEN #primary# = '1'THEN DISPLAYNAME ELSE DISPLAYNAME2 END                                                              AS DISPLAYNAME,
+				CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
+				DEPARTMENT                                                                                                                   AS DEPARTMENT,
+				CASE WHEN #primary# = '1'THEN DESCRIPTION ELSE DESCRIPTION2 END                                                              AS DEPARTMENTNAME,
+				TELEPHONENUMBER                                                                                                              AS TELEPHONENUMBER,
+				MAIL                                                                                                                         AS MAIL,
+				EXTENSIONATTRIBUTE2                                                                                                          AS EXTENSIONATTRIBUTE2
+			FROM
+				TBL_USERMASTER 
+			WHERE
+				CN != 'masteradmin'
+			AND
+				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				$srchOption$ LIKE CONCAT('%', #srchValue#, '%')
+		) AA
+		ORDER BY
+			EXTENSIONATTRIBUTE15 ASC,
+			DISPLAYNAME ASC
+		LIMIT #startPoint#, #listCount#
+	</select>
+	
+	<select id="EzCabinetDAO_h.getTotalSearchMembers" resultClass="Integer">
+		SELECT
+			COUNT(AA.CN)
+		FROM (
+			SELECT
+				CN
+			FROM
+				TBL_USERMASTER 
+			WHERE
+				CN != 'masteradmin'
+			AND
+				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			AND
+				TENANT_ID = #tenantId#
+			AND 
+				$srchOption$ LIKE CONCAT('%', #srchValue#, '%')
+		) AA
 	</select>
 	
 	<!--***********************************************************************************
 	**                             Cabinet share process                                   **
 	************************************************************************************-->
 	
-	<select id="EzCabinetDAO_h.getShareUserList" parameterClass="Map" resultMap="cabinetShareVO">
+	<select id="EzCabinetDAO_h.getShareUserList" resultMap="shareMemberInfo">
 		<![CDATA[
-		select * from tbl_cb_share where cabinet_id = #cabinetId# and sharer_id = #userId# and tenant_id = #tenant_id# and use_status = 1
+			select
+				s2.cn,
+				s2.shared_type,
+				s2.display_name,
+				s2.department_name,
+				s2.permission,
+				s2.child_permission
+			from
+			(
+				select
+					u.cn                                                                 as cn,
+					s.shared_type                                                        as shared_type,
+					case when #primary# = '1' then u.displayname else u.displayname2 end as display_name,
+					case when #primary# = '1' then u.description else u.description2 end as department_name,
+					s.permission                                                         as permission,
+					s.child_permission                                                   as child_permission,
+					s.share_date                                                         as share_date
+				from
+					tbl_cb_share s join tbl_usermaster u on s.shared_id = u.cn and s.tenant_id = u.tenant_id and s.shared_type = 2
+				where s.cabinet_id = #cabinetId# and s.sharer_id = #userId# and s.tenant_id = #tenantId# and s.use_status = 1
 		]]>
+		<isNotEmpty property="searchValue" prepend="and">
+			$sqlQuery$ LIKE CONCAT('%', #searchValue#, '%')
+		</isNotEmpty>
+		<![CDATA[
+				union
+				
+				select
+					d.cn                                                                 as cn,
+					s1.shared_type                                                       as shared_type,
+					case when #primary# = '1' then d.displayname else d.displayname2 end as display_name,
+					case when #primary# = '1' then d.displayname else d.displayname2 end as department_name,
+					s1.permission                                                        as permission,
+					s1.child_permission                                                  as child_permission,
+					s1.share_date                                                        as share_date
+				from
+					tbl_cb_share s1 join tbl_deptmaster d on s1.shared_id = d.cn and s1.tenant_id = d.tenant_id and (s1.shared_type = 0 or s1.shared_type = 1)
+				where s1.cabinet_id = #cabinetId# and s1.sharer_id = #userId# and s1.tenant_id = #tenantId# and s1.use_status = 1
+		]]>
+		<isNotEmpty property="searchValue" prepend="and">
+			$sqlQuery$ LIKE CONCAT('%', #searchValue#, '%')
+		</isNotEmpty>
+		<![CDATA[
+			) s2
+		]]>
+		order by s2.share_date asc
 	</select>
 	
+	<update id="EzCabinetDAO_h.updateShareList">
+		update
+			tbl_cb_share 
+		set
+			use_status = 0
+		where cabinet_id = #cabinetId# and sharer_id = #userId# and tenant_id  = #tenantId# and use_status = 1
+	</update>
 	
+	<select id="EzCabinetDAO_h.getMaximumShareId" resultClass="Integer">
+		<![CDATA[select ifnull(max(share_id), 0) from tbl_cb_share where tenant_id = #tenantId#]]>
+	</select>
+	
+	<insert id="EzCabinetDAO_h.saveShareUserList">
+		<selectKey keyProperty="temp" resultClass="Integer">
+			<![CDATA[ select 1 from dual where not exists (select share_id, cabinet_id from tbl_cb_share where cabinet_id = #cabinetId# and sharer_id = #userId# and shared_id = #sharedId# and shared_type = #shareType# and tenant_id = #tenantId#) ]]>
+		</selectKey>
+		<isEqual property="temp" compareValue="1">
+			<![CDATA[insert into tbl_cb_share (
+					share_id,   cabinet_id,  sharer_id,        sharer_name1, sharer_name2, shared_id,  shared_type, 
+					permission, share_date,  child_permission, use_status,   company_id,   tenant_id
+				)
+				values (
+					#shareId#,    #cabinetId#, #userId#,          #userName1#, #userName2#, #sharedId#, #shareType#,
+					#permission#, #shareDate#, #childPermission#, 1,           #company#,   #tenantId#
+				)
+			]]>
+		</isEqual>
+		<isNotEqual property="temp" compareValue="1">
+			<![CDATA[
+				update
+					tbl_cb_share 
+				set
+					use_status       = 1,
+					permission       = #permission#,
+					child_permission = #childPermission#
+				where
+					cabinet_id  = #cabinetId#
+				and
+					sharer_id   = #userId#
+				and
+					shared_id   = #sharedId#
+				and 
+					shared_type = #shareType#
+				and
+					tenant_id   = #tenantId#
+			]]>
+		</isNotEqual>
+	</insert>
+	
+	<select id="EzCabinetDAO_h.isFileCreator" resultClass="Integer">
+		<![CDATA[ select 1 from dual where exists(select item_id from tbl_cb_item where item_id = #itemId# and creator_id = #userId# and tenant_id = #tenantId#) ]]>
+	</select>
+	
+	<select id="EzCabinetDAO_h.getFileDetail" resultClass="CabinetItemVO">
+		<![CDATA[
+			select
+				item_type   as itemType,
+				title       as title,
+				summary     as summary,
+				create_date as createdDate
+			from
+				tbl_cb_item
+			where
+				item_id = #itemId#
+			and
+				tenant_id = #tenantId#
+		]]>
+	</select>
 </sqlMap>

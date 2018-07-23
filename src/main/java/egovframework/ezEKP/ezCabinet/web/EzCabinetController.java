@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
@@ -362,6 +361,39 @@ public class EzCabinetController {
 		resultObj            = cabinetRestService.getRelatedCabinetTree(request, user.getId(), currentNode);
 		
 		logger.debug("jsonRelatedCabinetTree end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/getSharedCabinetTree.do")
+	@ResponseBody
+	public String jsonSharedCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSharedCabinetTree start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		JSONObject resultObj = new JSONObject();
+		
+		resultObj            = cabinetRestService.getSharedCabinetTree(request, user.getId());
+		
+		logger.debug("jsonSharedCabinetTree end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/getSharedCabinetsByUser.do")
+	@ResponseBody
+	public String jsonGetUserSharedCabinet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonGetUserSharedCabinet start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String shareId       = request.getParameter("shareId") != null ? request.getParameter("shareId") : "";
+		JSONObject resultObj = new JSONObject();
+		
+		if (shareId.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj            = cabinetRestService.getUserSharedCabinet(request, user.getId(), shareId);
+		
+		logger.debug("jsonGetUserSharedCabinet end");
 		return resultObj.toString();
 	}
 	

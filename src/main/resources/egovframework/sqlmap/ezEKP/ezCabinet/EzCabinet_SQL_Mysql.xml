@@ -12,6 +12,7 @@
 	<typeAlias alias="CabinetItemVO"        type="egovframework.ezEKP.ezCabinet.vo.CabinetItemVO"      />
 	<typeAlias alias="CabinetItemSearchVO"  type="egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO"/>
 	<typeAlias alias="CabinetItemSimpleVO"  type="egovframework.ezEKP.ezCabinet.vo.CabinetItemSimpleVO"/>
+	<typeAlias alias="CabinetSimpleUserVO"  type="egovframework.ezEKP.ezCabinet.vo.SimpleUserVO"       />
 	
 	<!-- SimpleDept resultMap -->
 	<resultMap id="simpleDeptVO" class="cabinetSimpleDeptVO">
@@ -206,6 +207,18 @@
 		<result property="relatedItemId"    column="relate_item_id"      columnIndex="3"/>
 		<result property="companyId"        column="company_id"          columnIndex="4"/>
 		<result property="tenantId"         column="tenant_id"           columnIndex="5"/>
+	</resultMap>
+	
+	<!-- OrganDeptVO resultMap -->
+	<resultMap id="deptMemberInfo" class="CabinetSimpleUserVO">
+		<result property="userId"           column="cn"                     columnIndex="1"/>
+		<result property="position"         column="position"               columnIndex="2"/>
+		<result property="userName"         column="display_name"           columnIndex="3"/>
+		<result property="deptId"           column="department"             columnIndex="4"/>
+		<result property="deptName"         column="department_name"        columnIndex="5"/>
+		<result property="telNumber"        column="telephone_number"       columnIndex="6"/>
+		<result property="mail"             column="mail"                   columnIndex="7"/>
+		<result property="userImg"          column="user_image"             columnIndex="8"/>
 	</resultMap>
 	
 	<sql id="cabinetTreeSelect">
@@ -568,6 +581,52 @@
 		</iterate>
 	</select>
 	
+	<select id="EzCabinetDAO.getSharedUserList" resultMap="deptMemberInfo">
+		select
+			u.cn                                                                 as cn,
+			case when #primary# = '1' then u.title else u.title2 end             as position,
+			case when #primary# = '1' then u.displayname else u.displayname2 end as display_name,
+			u.department                                                         as department,
+			case when #primary# = '1' then u.description else u.description2 end as department_name,
+			u.telephonenumber                                                    as telephone_number,
+			u.mail                                                               as mail, 
+			u.extensionattribute2                                                as user_image
+		from
+			tbl_usermaster u join tbl_cb_share s on s.sharer_id = u.cn and s.tenant_id = u.tenant_id
+		where
+			(
+				(s.shared_id = #userId# and s.shared_type = 2) or (s.shared_id in 
+					<iterate property="deptList" open="(" close=")" conjunction=",">
+						#deptList[]#
+					</iterate> and (s.shared_type = 0 or s.shared_type = 1)
+				)
+			)
+			and s.use_status = 1 and u.tenant_id = #tenantId#
+		order by display_name desc
+	</select>
+	
+	<select id="EzCabinetDAO.getUserSharedCabinet" resultMap="cabinetSimpleVO2">
+		select
+			c1.cabinet_id                                                                                as cabinet_id,
+			case when #primary# = '1' then c1.cabinet_name1 else c1.cabinet_name2 end                    as cabinet_name,
+			c1.cabinet_name1                                                                             as cabinet_name1,
+			c1.cabinet_name2                                                                             as cabinet_name2,
+			c1.cabinet_level                                                                             as cabinet_level,
+			c1.cabinet_order                                                                             as cabinet_step,
+			case when (s.child_permission = 1 and (select count(c2.cabinet_id) from tbl_cb_cabinet c2
+				where c2.use_status = 1 and c1.cabinet_id = c2.parent_id and c1.tenant_id = c2.tenant_id) > 0) then 1 else 0 end as has_sub
+		from
+			tbl_cb_cabinet c1 join tbl_cb_share s on c1.cabinet_id = s.cabinet_id and s.sharer_id = #shareId# and s.tenant_id = c1.tenant_id and s.use_status = 1
+		where
+			(
+				(s.shared_id = #userId# and s.shared_type = 2) or (s.shared_id in
+					<iterate property="deptList" open="(" close=")" conjunction=",">
+						#deptList[]#
+					</iterate> and (s.shared_type = 0 or s.shared_type = 1)
+				)
+			) and c1.creator_id = #shareId# and c1.tenant_id = #tenantId# and c1.use_status = 1
+	</select>
+	
 	<!--***********************************************************************************
 	**                             Check permission process                              **
 	************************************************************************************-->
@@ -630,7 +689,11 @@
 					</iterate> and (s.shared_type = 0 or s.shared_type = 1)
 					)
 				)
-				and s.permission = 1 and s.use_status = 1
+				and s.use_status = 1
+				<isNotEmpty property="permMode">
+					<isEqual property="permMode" compareValue="1">and s.permission = 1</isEqual>
+				</isNotEmpty>
+				
 			) c3
 	</select>
 	
@@ -762,16 +825,14 @@
 	</update>
 	
 	<update id="EzCabinetDAO.moveItemsForUser" parameterClass="Map">
-		<![CDATA[
-			update
-				tbl_cb_item
-			set
-				cabinet_id  = #cabinetId#,
-				update_date = #updateTime#,
-				update_id   = #userId#
-			where
-				tenant_id   = #tenantId# and use_status = 1 and item_id in
-		]]>
+		update
+			tbl_cb_item
+		set
+			cabinet_id  = #cabinetId#,
+			update_date = #updateTime#,
+			update_id   = #userId#
+		where
+			tenant_id   = #tenantId# and use_status = 1 and item_id in
 		<iterate property="itemList" open="(" close=")" conjunction=",">
 			#itemList[]#
 		</iterate>
