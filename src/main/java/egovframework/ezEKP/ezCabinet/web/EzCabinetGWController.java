@@ -769,6 +769,8 @@ public class EzCabinetGWController {
 				return result;
 			}
 			
+			List<CabinetSimpleVO> cabinetList = cabinetService.getUserSharedCabinet(sharedList.get(0).getUserId(), userInfo);
+			sharedList.get(0).setSharedCabinet(cabinetList);
 			result.put("tree", sharedList);
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1372,10 +1374,47 @@ public class EzCabinetGWController {
 			
 			CabinetVO cabinet = cabinetService.getCabinetById(cabinetId, userInfo.getTenantId());
 			cabinet.setCabinetName(userInfo.getPrimary().equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2());
+			cabinet.setPermission(2);
 			
 			result.put("cabinet", cabinet);
 			result.put("status", "ok");
 			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/share-cabinet/id/{cabinetid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getShareCabinetInfo(@PathVariable(value="cabinetid") String cabinetId, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
+		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
+		JSONObject result = new JSONObject();
+		
+		if (serverName.equals("") || userId.equals("") || cabinetId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
+			//Add checking permission here
+			List<Integer> cabinetList = new ArrayList<>(Arrays.asList(Integer.parseInt(cabinetId)));
+			JSONObject permission     = cabinetService.checkPermission(cabinetList, new ArrayList<>(), 0, userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
+			result = cabinetService.getSharedCabinetInfo(cabinetId, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

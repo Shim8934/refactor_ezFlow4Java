@@ -153,6 +153,31 @@ public class EzCabinetController {
 		return "ezCabinet/cabinetItem";
 	}
 	
+	@RequestMapping(value="/ezCabinet/getShareCabinet.do")
+	public String jspGetShareCabinetPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetShareCabinetPage started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId   = request.getParameter("cabinetId");
+		
+		JSONObject shareObj = cabinetRestService.getShareCabinetInfo(request, user.getId(), cabinetId);
+		
+		if (shareObj.get("status").toString().equals("ok")) {
+			JSONObject cabinet = (JSONObject) shareObj.get("cabinet");
+			model.addAttribute("cabinet", cabinet);
+		}
+		
+		JSONObject configObj = cabinetRestService.getUserPreviewConfig(request, user.getId());
+		
+		if (configObj.get("status").toString().equals("ok")) {
+			JSONObject userConfig = (JSONObject)configObj.get("config");
+			model.addAttribute("config", userConfig);
+		}
+		
+		model.addAttribute("cabinetId", cabinetId);
+		logger.debug("jspGetShareCabinetPage ended");
+		return "ezCabinet/cabinetItem";
+	}
+	
 	@RequestMapping(value="/ezCabinet/addCabinetFile.do")
 	public String jspGetAddCabinetFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetAddCabinetFile started");

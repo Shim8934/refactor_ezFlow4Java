@@ -10,6 +10,7 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetItemSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetShareVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
@@ -213,5 +214,9 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 
 	public List<CabinetSimpleVO> getUserSharedCabinet(Map<String, Object> map) {
 		return (List<CabinetSimpleVO>)list("EzCabinetDAO.getUserSharedCabinet", map);
+	}
+
+	public List<CabinetShareVO> getSharedCabinetListById(Map<String, Object> map) {
+		return (List<CabinetShareVO>)list("EzCabinetDAO.getSharedCabinetListById", map);
 	}
 }

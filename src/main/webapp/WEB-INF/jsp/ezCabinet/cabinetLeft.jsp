@@ -105,6 +105,11 @@
 					window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do?cabinetId=" + cabinetId;
 				}
 				
+				function getShareCabinet(obj) {
+					var cabinetId = obj.getAttribute("role");
+					window.parent.frames["right"].location.href = "/ezCabinet/getShareCabinet.do?cabinetId=" + cabinetId;
+				}
+				
 				function getMyCabinet()  {
 					var cabinetTreeElmt = document.getElementById("cabinetTree");
 					var spanElmt        = cabinetTreeElmt.querySelector("span[level='0']");
@@ -132,7 +137,7 @@
 						type       : "list",
 						initialUrl : "/ezCabinet/getRelatedCabinetTree.do",
 						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
-						click      : getCabinet,
+						click      : getShareCabinet,
 						dblClick   : null
 					});
 					

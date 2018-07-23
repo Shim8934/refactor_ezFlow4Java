@@ -24,6 +24,7 @@ public class CabinetVO {
 	private int    cabinetStep;
 	private int    cabinetLevel;
 	private int    subPermission;
+	private int    permission;
 	private int    tenantId;
 	
 	public int getCabinetId() {
@@ -216,5 +217,13 @@ public class CabinetVO {
 	
 	public void setDepartmentName2(String departmentName2) {
 		this.departmentName2 = departmentName2;
+	}
+	
+	public int getPermission() {
+		return permission;
+	}
+	
+	public void setPermission(int permission) {
+		this.permission = permission;
 	}
 }

@@ -404,6 +404,15 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	}
 	
 	@Override
+	public JSONObject getShareCabinetInfo(HttpServletRequest request, String userId, String cabinetId) throws Exception {
+		String url                = "/rest/ezcabinet/share-cabinet/id/" + cabinetId;
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
 	public JSONObject deleteItems(HttpServletRequest request, String userId, List<String> itemList) throws Exception {
 		String url                = "/rest/ezcabinet/item/delete";
 		Map<String, Object> param = new HashMap<String, Object>();

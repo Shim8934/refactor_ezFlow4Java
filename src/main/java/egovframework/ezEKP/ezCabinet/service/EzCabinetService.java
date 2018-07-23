@@ -56,6 +56,7 @@ public interface EzCabinetService {
 	
 	//User get cabinet infor function
 	CabinetVO getCabinetById(String cabinetId, int tenantId) throws Exception;
+	JSONObject getSharedCabinetInfo(String cabinetId, LoginVO userInfo);
 	
 	//User get cabinet item list function
 	List<CabinetItemVO> getItems(CabinetItemSearchVO searchVO) throws Exception;

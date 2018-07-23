@@ -13,6 +13,7 @@
 	<typeAlias alias="CabinetItemSearchVO"  type="egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO"/>
 	<typeAlias alias="CabinetItemSimpleVO"  type="egovframework.ezEKP.ezCabinet.vo.CabinetItemSimpleVO"/>
 	<typeAlias alias="CabinetSimpleUserVO"  type="egovframework.ezEKP.ezCabinet.vo.SimpleUserVO"       />
+	<typeAlias alias="CabinetShareVO"       type="egovframework.ezEKP.ezCabinet.vo.CabinetShareVO"     />
 	
 	<!-- SimpleDept resultMap -->
 	<resultMap id="simpleDeptVO" class="cabinetSimpleDeptVO">
@@ -76,7 +77,7 @@
 	</resultMap>
 	
 	<!-- Cabinet Share resultMap -->
-	<resultMap id="cabinetShareVO" class="CabinetVO">
+	<resultMap id="shareCabinetVO" class="CabinetVO">
 		<result property="cabinetId"         column="cabinet_id"             columnIndex="1" />
 		<result property="cabinetName1"      column="cabinet_name1"          columnIndex="2" />
 		<result property="cabinetName2"      column="cabinet_name2"          columnIndex="3" />
@@ -99,6 +100,22 @@
 		<result property="companyId"         column="company_id"             columnIndex="20"/>
 		<result property="tenantId"          column="tenant_id"              columnIndex="21"/>
 		<result property="subPermission"     column="child_permission"       columnIndex="22"/>
+	</resultMap>
+	
+	<resultMap id="cabinetShareVO" class="CabinetShareVO">
+		<result property="shareId"          column="share_id"             columnIndex="1" />
+		<result property="cabinetId"        column="cabinet_id"           columnIndex="2" />
+		<result property="sharerId"         column="sharer_id"            columnIndex="3" />
+		<result property="sharerName1"      column="sharer_name1"         columnIndex="4" />
+		<result property="sharerName2"      column="sharer_name2"         columnIndex="5" />
+		<result property="sharedId"         column="shared_id"            columnIndex="6" />
+		<result property="sharedType"       column="shared_type"          columnIndex="7" />
+		<result property="permission"       column="permission"           columnIndex="8" />
+		<result property="shareDate"        column="share_date"           columnIndex="9" />
+		<result property="childPermission"  column="child_permission"     columnIndex="10"/>
+		<result property="useStatus"        column="use_status"           columnIndex="11"/>
+		<result property="companyId"        column="company_id"           columnIndex="12"/>
+		<result property="tenantId"         column="tenant_id"            columnIndex="13"/>
 	</resultMap>
 	
 	<!-- CabinetSimpleSubVO resultMap -->
@@ -671,7 +688,7 @@
 			) d4
 	</select>
 	
-	<select id="EzCabinetDAO.getReceivedCabinetListForPermission" resultMap="cabinetShareVO">
+	<select id="EzCabinetDAO.getReceivedCabinetListForPermission" resultMap="shareCabinetVO">
 		select
 			c3.*
 		from
@@ -891,5 +908,30 @@
 	
 	<select id="EzCabinetDAO.getAllRelatedFilesOfItem" resultMap="cabinetRelationVO">
 		<![CDATA[select * from tbl_cb_relation where item_id = #itemId# and tenant_id = #tenantId#]]>
+	</select>
+	
+	<!--***********************************************************************************
+	**                                  Cabinet share process                            **
+	************************************************************************************-->
+	<select id="getSharedCabinetListById" resultMap="cabinetShareVO">
+		select
+			s.*
+		from
+			tbl_cb_share s
+			where
+				s.use_status = 1 and s.tenant_id = #tenantId# and
+				(
+					<isNotEmpty>
+						(
+							s.cabinet_id in
+							<iterate property="listNodes" open="(" close=")" conjunction=",">
+								#listNodes[]#
+							</iterate>
+							and s.child_permission = 1
+						)
+						or
+					</isNotEmpty>
+					(s.cabinet_id = #cabinetId#)
+				)
 	</select>
 </sqlMap>

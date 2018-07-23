@@ -34,6 +34,7 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetItemSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetShareVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
@@ -1114,5 +1115,44 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("shareId",   shareId);
 		
 		return ezCabinetDAO.getUserSharedCabinet(map);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject getSharedCabinetInfo(String cabinetId, LoginVO userInfo) {
+		JSONObject result      = new JSONObject();
+		int tenantId           = userInfo.getTenantId();
+		int writePermission    = 0;
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("cabinetId", cabinetId);
+		map.put("tenantId",  tenantId);
+		
+		CabinetVO cabinet     = ezCabinetDAO.getCabinetById(map);
+		String cabinetPath    = cabinet.getCabinetPath();
+		cabinetPath           = cabinetPath.substring(1, cabinetPath.length() - 1);
+		List<Integer> nodeIds = Arrays.asList(cabinetPath.split("\\|")).stream().map(Integer::parseInt).collect(Collectors.toList());
+		nodeIds.remove(nodeIds.size() - 1);
+		map.put("listNodes", nodeIds);
+		List<CabinetShareVO> listShared = ezCabinetDAO.getSharedCabinetListById(map);
+		
+		if (listShared == null || listShared.size() == 0) {
+			result.put("status", "error");
+			result.put("code", 2);
+			return result;
+		}
+		
+		for (CabinetShareVO share : listShared) {
+			if (share.getPermission() == 1) {
+				writePermission = 1;
+				break;
+			}
+		}
+		
+		cabinet.setCabinetName(userInfo.getPrimary().equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2());
+		cabinet.setPermission(writePermission);
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
 	}
 }

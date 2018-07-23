@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezCabinet.vo;
 
+import java.util.List;
+
 public class SimpleUserVO {
 	private String userId;
 	private String userName;
@@ -12,6 +14,7 @@ public class SimpleUserVO {
 	private int    userType;
 	private int    permission;
 	private int    subPermission;
+	private List<CabinetSimpleVO> sharedCabinet;
 	
 	public String getUserId() {
 		return userId;
@@ -99,5 +102,13 @@ public class SimpleUserVO {
 	
 	public void setUserType(int userType) {
 		this.userType = userType;
+	}
+	
+	public List<CabinetSimpleVO> getSharedCabinet() {
+		return sharedCabinet;
+	}
+	
+	public void setSharedCabinet(List<CabinetSimpleVO> sharedCabinet) {
+		this.sharedCabinet = sharedCabinet;
 	}
 }

@@ -171,14 +171,12 @@ var CabinetItem = function() {
 		movlistBttns[1].onclick = function(e) {moveFile("copy");};
 		movlistBttns[2].onclick = function(e) {toggleMovePopup();};
 		
-		var libttns = document.getElementById("mainmenu").firstElementChild.children;
-		libttns[0].firstElementChild.onclick = function(e) {addFile();};
-		libttns[2].firstElementChild.onclick = function(e) {deleteFileConfirm();};
-		libttns[3].firstElementChild.onclick = function(e) {moveFileConfirm();};
-		libttns[5].firstElementChild.onclick = function(e) {searchCallBack();};
-		libttns[6].firstElementChild.onclick = function(e) {toggleSearchPanel();};
-		libttns[8].firstElementChild.onclick = function(e) {openSharePopup();};
-		
+		document.getElementById("addBttn").firstElementChild.onclick = function(e) {addFile();};
+		document.getElementById("delBttn").firstElementChild.onclick = function(e) {deleteFileConfirm();};
+		document.getElementById("movBttn").firstElementChild.onclick = function(e) {moveFileConfirm();};
+		document.getElementById("refBttn").firstElementChild.onclick = function(e) {searchCallBack();};
+		document.getElementById("schBttn").firstElementChild.onclick = function(e) {toggleSearchPanel();};
+		document.getElementById("shaBttn").firstElementChild.onclick = function(e) {openSharePopup();};
 		
 		$("#Sdatepicker").datepicker({
 			changeMonth: true,

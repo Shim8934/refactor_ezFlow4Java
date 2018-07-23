@@ -106,12 +106,19 @@ function CabinetTree() {
 				}
 				break;
 			case "share":
-				console.log(data);
-				var userLen = nodesTree.length;
+				var userLen  = nodesTree.length;
+				
 				for (var i = 0; i < userLen; i++) {
 					var userDivNode  = document.createElement("div");
 					generateShareList(divTree, userDivNode, nodesTree[i]);
 				}
+				
+				var listElmts = divTree.firstElementChild.lastElementChild.firstElementChild.children;
+				
+				for (var i = 0, len = listElmts.length; i < len; i++) {
+					if (listElmts[i].tagName.toLowerCase() == "span") {listElmts[i].click(); break;}
+				}
+				
 				break;
 		}
 		
@@ -195,7 +202,6 @@ function CabinetTree() {
 	
 	function generateShareList(divTree, divElmt, list) {
 		var imgElmt       = document.createElement("img");
-		imgElmt.src       = _plusImg;
 		imgElmt.className = "cabinetPlus";
 		imgElmt.setAttribute("role", list["userId"]);
 		imgElmt.onclick = function() {getUserSharedCabinet(this);};
@@ -214,6 +220,22 @@ function CabinetTree() {
 		divElmt.appendChild(imgElmt2);
 		divElmt.appendChild(spanDeptName);
 		divTree.appendChild(divElmt);
+		
+		if (list["sharedCabinet"] && list["sharedCabinet"].length > 0) {
+			imgElmt.className = "cabinetMinus";
+			imgElmt.src       = _minusImg;
+			var newDivElmt    = document.createElement("div");
+			divElmt.appendChild(newDivElmt);
+			
+			for (var j = 0, len = list["sharedCabinet"].length; j < len; j++) {
+				var subDiv = document.createElement("div");
+				generateSubTree(newDivElmt, subDiv, list["sharedCabinet"][j]);
+			}
+		}
+		else {
+			imgElmt.className = "cabinetPlus";
+			imgElmt.src       = _plusImg;
+		}
 	}
 	
 	function getUserSharedCabinet(obj) {
@@ -242,6 +264,11 @@ function CabinetTree() {
 			
 			makeAjaxCall(dataInf, "GET", _shareUrl, makeSubTree, null, true, parentDiv);
 		}
+	}
+	
+	function getUserSelected(spanObj) {
+		var imgElmt = spanObj.parentElement.firstElementChild;
+		imgElmt.click();
 	}
 	
 	function getSubNodes(obj) {
