@@ -2,13 +2,15 @@ package egovframework.ezEKP.ezCabinet.service.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,12 +24,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -507,5 +512,41 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	@Override
 	public JSONObject saveRelatedItem(HttpServletRequest request, String id, String title, String author, JSONArray normalScr) {
 		return null;
+	}
+
+	@Override
+	public void downloadAttachFile(HttpServletRequest request, HttpServletResponse response, String userId, String filePath, String fileName) throws Exception {
+		String gwServerUrl = config.getProperty("config.cabinetGwServerURL");
+		String url         = gwServerUrl + "/rest/ezcabinet/attachfile/file-download";
+		
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userAgent", request.getHeader("User-Agent"))
+				.queryParam("userId",    userId)
+				.queryParam("fileName",  fileName)
+				.queryParam("filePath",  filePath);
+		
+		RestTemplate rest = new RestTemplate();
+		RequestCallback requestCallback = new RequestCallback() {
+			@Override
+			public void doWithRequest(ClientHttpRequest req) throws IOException {
+				req.getHeaders().setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
+				req.getHeaders().set("host-name", request.getServerName());
+			}
+		};
+		
+		// Streams the response instead of loading it all in memory
+		ResponseExtractor<Void> responseExtractor = res -> {
+			response.setHeader("Content-Type", "application/zip");
+			response.setHeader("Content-Disposition", res.getHeaders().get("Content-Disposition").get(0));
+			
+			IOUtils.copy(res.getBody(), response.getOutputStream());
+			
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+			
+			return null;
+		};
+		
+		rest.execute(builder.build().encode().toUri(), HttpMethod.GET, requestCallback, responseExtractor);
 	}
 }

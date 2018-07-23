@@ -8,12 +8,15 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,9 +27,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
-import egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemSimpleVO;
-import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
@@ -1055,6 +1056,31 @@ public class EzCabinetGWController {
 		}
 		
 		return result;
+	}
+	
+	@RequestMapping(value = "/rest/ezcabinet/attachfile/file-download", method=RequestMethod.GET, produces = { MediaType.APPLICATION_OCTET_STREAM_VALUE})
+	public void getFileDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String filePath   = request.getParameter("filePath")   != null ? request.getParameter("filePath")  : "";
+		String fileName   = request.getParameter("fileName")   != null ? request.getParameter("fileName")  : "";
+		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")    : "";
+		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")    : "";
+		String userAgent  = request.getParameter("userAgent")  != null ? request.getParameter("userAgent") : "";
+		
+		logger.debug("serverName: " + serverName + " ||  filePath: " + filePath + " || UserId: " + userId + " || File Name: " + fileName);
+		
+		if (filePath.equals("") || fileName.equals("") || serverName.equals("") || userId.equals("")) {
+			logger.debug("Invalid arguments!!!!!!");
+			return;
+		}
+		
+		//Get absolute path of the application
+		String realPath  = request.getServletContext().getRealPath("");
+		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+		
+		cabinetService.getDownloadedFile(fileName, filePath, realPath, userInfo, userAgent, request, response);
+		
+		logger.debug("File Download Finish!");
+		return;
 	}
 	
 	@RequestMapping(value="/rest/ezcabinet/attachfile/file-delete", method= RequestMethod.DELETE, produces="application/json;charset=utf-8")

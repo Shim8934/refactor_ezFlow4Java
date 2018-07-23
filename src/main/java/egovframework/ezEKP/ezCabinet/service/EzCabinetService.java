@@ -1,6 +1,10 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,9 +51,10 @@ public interface EzCabinetService {
 	JSONObject deleteCabinet(int cabinetId, LoginVO userInfo) throws Exception;
 	JSONObject moveCabinet(int cabinetId, int parentId, String mode, String realPath, LoginVO userInfo) throws Exception;
 	
-	//User upload attach file functions
+	//User upload/download/delete attach file functions
 	String saveUploadFile(List<MultipartFile> multiFileLists, JSONArray nameArray, String realPath, int tenantId) throws Exception;
 	void deleteAttachFile(String filePath, String realPath, int tenantId) throws Exception;
+	void getDownloadedFile(String fileName, String filePath, String realPath, LoginVO userInfo, String userAgent, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	
 	//User item functions
 	JSONObject getItemsBySearching(String cabinetId, int currentPage, int listCntSize, String title, String summary, String creatorName, String startDate, String endDate, String sqlQuery, String srchMode, String srchOption, String order, String column, String recursive, LoginVO userInfo) throws Exception;

@@ -1,6 +1,9 @@
 package egovframework.ezEKP.ezCabinet.service.impl;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,6 +17,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -1240,5 +1247,51 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		result.put("code", 0);
 		
 		return result;
+	}
+
+	@Override
+	public void getDownloadedFile(String fileName, String filePath, String realPath, LoginVO userInfo, String userAgent, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String _fileName = fileName;
+		_fileName        = CommonUtil.getEncodedFileNameForDownload(userAgent, _fileName);
+		File file        = new File(realPath + filePath);
+		
+		if (!file.exists()) {
+			throw new FileNotFoundException(fileName);
+		}
+		
+		if (!file.isFile()) {
+			throw new FileNotFoundException(fileName);
+		}
+		
+		BufferedInputStream in = null;
+		
+		try {
+			in                 = new BufferedInputStream(new FileInputStream(file));
+			String mimetype    = "application/octet-stream";
+			
+			response.setBufferSize(BUFF_SIZE);
+			response.setContentType(mimetype);
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + _fileName + "\"");
+			response.setContentLength((int)file.length());
+			
+			FileCopyUtils.copy(in, response.getOutputStream());
+		}
+		catch (Exception e) {
+			throw e;
+		}
+		finally {
+			if (in != null) {
+				try {
+					in.close();
+				}
+				catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+					throw ignore;
+				}
+			}
+		}
+		
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
 	}
 }

@@ -264,6 +264,23 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
+	@RequestMapping(value="/ezCabinet/downloadAttachFile", produces="application/zip")
+	public void responeDownloadFile(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("responeDownloadFile is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String filePath        = request.getParameter("filePath") != null ? request.getParameter("filePath") : "";
+		String fileName        = request.getParameter("fileName") != null ? request.getParameter("fileName") : "";
+		
+		if (filePath.equals("") || fileName.equals("")) {
+			logger.debug("Invalid arguments!!!");
+			return;
+		}
+		
+		cabinetRestService.downloadAttachFile(request, response, userInfo.getId(), filePath, fileName);
+		
+		logger.debug("responeDownloadFile finishes!");
+	}
+	
 	@RequestMapping(value="/ezCabinet/saveItem.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String jsonSaveItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {

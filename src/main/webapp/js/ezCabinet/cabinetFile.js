@@ -139,7 +139,8 @@ var CabinetFile = function() {
 		var checkImageFile = isImage(filename);
 		var delImg         = document.createElement("img");
 		delImg.src         = "/images/cabinet/file_del.gif";
-		delImg.addEventListener("click", function(e) {deleteImage(e);}, false);
+		delImg.addEventListener("click", function(e) {deleteFile(e);}, false);
+		liElmt.addEventListener("click", function(e) {downloadFile(e, filename);}, false);
 		liElmt.appendChild(delImg);
 		liElmt.setAttribute("path", filePath);
 		
@@ -152,7 +153,16 @@ var CabinetFile = function() {
 		divChildElmt1.appendChild(imgElmt);
 	}
 	
-	function deleteImage(event) {
+	function downloadFile(event, name) {
+		event.stopPropagation();
+		var liElmt      = event.currentTarget;
+		var filePath    = liElmt.getAttribute("path");
+		var downloadUrl = "/ezCabinet/downloadAttachFile?filePath=" + filePath + "&fileName=" + name;
+		var attachFrame = document.getElementById("attachFrame");
+		attachFrame.src = downloadUrl;
+	}
+	
+	function deleteFile(event) {
 		event.stopPropagation();
 		var imgObj   = event.currentTarget;
 		var liElmt   = imgObj.parentElement;
