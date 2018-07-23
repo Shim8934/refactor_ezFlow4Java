@@ -147,19 +147,6 @@ public class EzPMSScheduler {
 						toArr[j] = toArrList.get(j);
 					}
 					
-					String subject = "[" + projectList.get(i).getProjectName() + egovMessageSource.getMessage("ezPMS.t326") + projectList.get(i).getAlamMailStatus() + egovMessageSource.getMessage("ezPMS.t327");
-						
-					String content = "<p>" + "[" + projectList.get(i).getProjectName() + egovMessageSource.getMessage("ezPMS.t326") + projectList.get(i).getAlamMailStatus() + egovMessageSource.getMessage("ezPMS.t327") + "</p>";
-					content += "<p></p>";
-					content += "<a href='#' target='' onclick='goProjectDetails(\"" + projectList.get(i).getProjectId() + "\")'>[" + projectList.get(i).getProjectName() + egovMessageSource.getMessage("ezPMS.t201") + "</a><br/><br/>";
-					content += "===================================================================<br/>";
-					content += "<p style='font-size:14px'><strong>[" + projectList.get(i).getProjectName() + "]</strong></p>";
-					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t250") + " : " + projectList.get(i).getProgress() + "</p>";
-					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t61") + " : " + projectList.get(i).getPlanStartDate() + "</p>";
-					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t62") + " : " + projectList.get(i).getPlanEndDate() + "</p>";
-					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t66") + " : " + projectList.get(i).getOverview() + "</p>";
-					
-					
 					ProjectMainSettingVO headManager = ezPMSService.getProjectMainSetting(projectList.get(i).getHeadManagerId(), projectList.get(i).getTenantId(), "user");
 					
 					String userAccount = headManager.getUserMail();
@@ -172,6 +159,18 @@ public class EzPMSScheduler {
 					String lang = ezCommonService.selectUserGetLang(userId, tenantId);
 					Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
 					LOGGER.debug("userAccount : " + userAccount + ", locale=" + locale);
+					
+					String subject = "[" + projectList.get(i).getProjectName() + egovMessageSource.getMessage("ezPMS.t326", locale) + projectList.get(i).getAlamMailStatus() + egovMessageSource.getMessage("ezPMS.t327", locale);
+					
+					String content = "<p>" + "[" + projectList.get(i).getProjectName() + egovMessageSource.getMessage("ezPMS.t326", locale) + projectList.get(i).getAlamMailStatus() + egovMessageSource.getMessage("ezPMS.t327", locale) + "</p>";
+					content += "<p></p>";
+					content += "<a href='#' target='' onclick='goProjectDetails(\"" + projectList.get(i).getProjectId() + "\")'>[" + projectList.get(i).getProjectName() + egovMessageSource.getMessage("ezPMS.t201", locale) + "</a><br/><br/>";
+					content += "===================================================================<br/>";
+					content += "<p style='font-size:14px'><strong>[" + projectList.get(i).getProjectName() + "]</strong></p>";
+					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t250", locale) + " : " + projectList.get(i).getProgress() + "</p>";
+					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t61", locale) + " : " + projectList.get(i).getPlanStartDate() + "</p>";
+					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t62", locale) + " : " + projectList.get(i).getPlanEndDate() + "</p>";
+					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t66", locale) + " : " + projectList.get(i).getOverview() + "</p>";
 					
 					InternetAddress from;
 					from = new InternetAddress(headManager.getUserMail());

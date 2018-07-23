@@ -1005,8 +1005,16 @@
 				A.DEL_STATUS = 0
 		<isNotEqual property="listProjectStatus" compareValue="F">
 			<isNotEqual property="listProjectStatus" compareValue="A">
+				<isNotEqual property="listProjectStatus" compareValue="P">
 				AND  
 					A.STATUS = #listProjectStatus#
+				</isNotEqual>
+				<isEqual property="listProjectStatus" compareValue="P">
+				AND  
+					(A.STATUS = #listProjectStatus#
+						OR
+					A.STATUS = 'L')
+				</isEqual>
 			</isNotEqual> 
 		</isNotEqual>
 		<isNotEmpty property="searchByName">
@@ -1213,8 +1221,16 @@
 				A.DEL_STATUS = 0
 		<isNotEqual property="status" compareValue="F">
 			<isNotEqual property="status" compareValue="A">
+				<isNotEqual property="status" compareValue="P">
 				AND  
 					A.STATUS = #status#
+				</isNotEqual>
+				<isEqual property="status" compareValue="P">
+				AND  
+					(A.STATUS = #status#
+						OR
+					A.STATUS = 'L')
+				</isEqual>
 			</isNotEqual> 
 		</isNotEqual>
 		<isNotEmpty property="position">
