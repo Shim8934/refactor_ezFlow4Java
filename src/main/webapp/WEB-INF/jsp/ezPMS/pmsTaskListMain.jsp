@@ -50,11 +50,10 @@
 	var searchByOverview = "";
 	
 	function goAddTask() {
-		var top = ($(window).height() - $(this).outerHeight()) / 2;
-		var left = ($(window).width() - $(this).outerWidth()) / 2;
-		var feature = GetOpenPosition(top, left);
-
-		DivPopUpShow(845, 482, "/ezPMS/goAddTask.do?projectId=" + projectId);
+		var feature = GetOpenPosition(845, 482);
+		window.open("/ezPMS/goAddTask.do?projectId=" + projectId, "", "width=845, height=482, resizable=no, scrollbars=no, status=no" + feature);
+		
+// 		DivPopUpShow(845, 482, "/ezPMS/goAddTask.do?projectId=" + projectId);
 	};
 
 	$(function() {

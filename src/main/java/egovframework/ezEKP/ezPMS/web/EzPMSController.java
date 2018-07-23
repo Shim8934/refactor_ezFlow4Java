@@ -603,8 +603,23 @@ public class EzPMSController {
 		String countUrl = "/rest/ezPMS/projects/" + projectId + "/tasks/count";
 		JSONObject json = new JSONObject();
 		
+		LOGGER.debug("kanbanOrder : " + kanbanOrder);
+		
 		if (!kanbanOrder.equals("") || kanbanOrder != null) {
 			String[] kanbanStatus = kanbanOrder.split(",");
+			
+			// 전체 업무의 개수를 구함
+			param.put("isMyTask", "A");
+			param.put("userId", userId);
+			param.put("status", "A");
+			
+			JSONObject totalCountResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
+			String totalCountStatus = totalCountResult.get("status").toString();
+			
+			if (totalCountStatus.equals("ok")) {
+				long totalCount = (Long) totalCountResult.get("data");
+				json.put("totalTaskCNT", totalCount);
+			}
 			
 			for (int i = 0; i < kanbanStatus.length; i++) {
 				//나의 업무만 불러올지 전체 업무를 불러올지 결정
@@ -615,7 +630,6 @@ public class EzPMSController {
 					param.put("isMyTask", "A");
 				}
 				
-				param.put("userId", userId);
 				param.put("status", kanbanStatus[i]);
 				
 				//칸반에 게시판이 포함되는 경우

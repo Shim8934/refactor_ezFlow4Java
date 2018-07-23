@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html style="height: 99%;">
@@ -140,11 +141,29 @@ function deleteFavorite(projectId) {
 	}	
 }
 </script>
+<style>
+	#pjName {
+		font-size: 15px;
+		font-weight: bold;
+		padding-left: 5px;
+		left: 7px;
+		color: #333;
+		height: 25px;
+		line-height: 25px;
+		max-width: 700px;
+		overflow: hidden;
+		white-space:nowrap;
+		text-overflow:ellipsis;
+		display: block;
+		float: left;
+	}
+	
+</style>
 </head>
 <body class="mainbody" style="height: 95%; overflow: hidden; margin-left:0px; margin-right: 0px;" marginwidth="0" marginheight="0" >
 	<div id="test" style="padding-left:10px">
 	<h1 id="projectName">
-		<c:out value="${project.projectName }" />
+		<span id="pjName" style=""><c:out value="${project.projectName}"/></span> 
 		<c:choose>
 			<c:when test="${project.isFavorite eq 0}">
 				<img class="star" style="cursor: pointer; width:17px; vertical-align:text-top;" draggable="false" src="/images/ImgIcon/view-flag.gif"
@@ -155,6 +174,7 @@ function deleteFavorite(projectId) {
 					onclick="deleteFavorite(${project.projectId })">
 			</c:otherwise>
 		</c:choose>
+		(<fmt:formatNumber value="${project.progress}" pattern="0.0"/>%, D-<c:out value="${project.restDueday}"/>, <c:out value="${project.planStartDate}"/> ~ <c:out value="${project.planEndDate}"/>)
 	</h1>
 	<div class="portlet_tabpart01">
 	   <div class="portlet_tabpart01_top" id="tab1">
