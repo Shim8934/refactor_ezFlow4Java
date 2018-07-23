@@ -280,7 +280,7 @@ public class EzJournalAdminController {
 		if (status.equals("ok")) {
 			JSONArray typeList = (JSONArray) result.get("data");
 			model.addAttribute("typeList", typeList);
-			System.out.println(typeList);
+			/*System.out.println(typeList);*/
 		}
 		
 		model.addAttribute("companyId", companyId);
@@ -458,7 +458,7 @@ public class EzJournalAdminController {
 			model.addAttribute("compList", compList);
 		}
 		
-		System.out.println("companyId = "+companyId);
+		/*System.out.println("companyId = "+companyId);*/
 		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/authors", param, request, "get", null);
 		status = resultBody.get("status").toString();
 		
