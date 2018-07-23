@@ -689,6 +689,12 @@ var CabinetItem = function() {
 		
 		if (crrClass == "bnkCabSelect") {
 			//Add preview code here
+			//var itemArr = getSelectedItems();
+			var url  = "/ezCabinet/getCabinetShowDetail.do";
+			var data = {
+				cabinetId : cabinetId
+				//itemList  : itemArr.toString()
+			};
 			//openFileDetail(itemId);
 		}
 	}

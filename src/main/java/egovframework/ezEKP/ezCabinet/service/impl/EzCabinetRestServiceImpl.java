@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -548,5 +549,15 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		};
 		
 		rest.execute(builder.build().encode().toUri(), HttpMethod.GET, requestCallback, responseExtractor);
+	}
+
+	@Override
+	public JSONObject cabinetShowDetail(HttpServletRequest request, String cabinetId) throws Exception{
+		// TODO Auto-generated method stub
+		String url                = "/rest/ezcabinet/item/id/" + cabinetId + "/get";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("cabinetId", cabinetId);
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		return resultBody;
 	}
 }
