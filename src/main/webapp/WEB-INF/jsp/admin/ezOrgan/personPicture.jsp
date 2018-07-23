@@ -195,9 +195,9 @@
                 <li><span onclick="close_Click()"></span></li>
             </ul>
         </div>
-		<table class="content"> 
+		<table class="content" style="height: 140px;"> 
 			<tr>
-		    	<th width="119" height="128"><img <spring:message code='ezOrgan.i6' />></th>
+		    	<th style="min-width:119px; height:128px;"><img <spring:message code='ezOrgan.i6' />></th>
 		    	<td style="padding:5px">
 		    	<c:if test="${!isCrossBrowser}">
 		    	 	   <SCRIPT type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
@@ -213,14 +213,14 @@
 			<tr>
 		    	<th><spring:message code='ezOrgan.t245' /></th>
 		    	<td width="100%">		    
-		    		<input id=imagefile name=imagefile style=" WIDTH: 210px" readonly="readonly" />
+		    		<input id=imagefile name=imagefile style=" WIDTH: 253px" readonly="readonly" />
 		    		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		    		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" >
-		  				<input type="file" name="file1" id="file1" style="width: 1px; height: 1px;" onchange="imgtemp_onclick()" multiple="false"/>
+		  				<input type="file" name="file1" id="file1" style="width: 1px; height: 1px; display:none;" onchange="imgtemp_onclick()" multiple="false"/>
 		    			<input type="hidden" name="mode" id="mode" />
 		    			<input type="hidden" name="tempFilePath" id="tempFilePath" />
 		    		</form>
-					<a class="imgbtn imgbck"><span id="btnimagefile" onClick="btnimagefile_onclick()" style="width:25px"><spring:message code='ezOrgan.t101' /></span></a>
+					<a class="imgbtn imgbck" style="height: 22px; margin-bottom: 0px;"><span id="btnimagefile" onClick="btnimagefile_onclick()" style="width:25px; line-height: 23px;"><spring:message code='ezOrgan.t101' /></span></a>
 				</td>
 		  	</tr>
 		</table>
