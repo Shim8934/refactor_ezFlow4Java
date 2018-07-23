@@ -173,6 +173,11 @@
 	    var ezPMSProjectId = "${ezPMSProjectId}";
 	    // ezPMS 게시판 아이디
 	    var ezPMSBoardId = "${ezPMSBoardId}";
+	    var ezPMSRoleId = "${pmsRoleId}";
+	    var ezPMSType = "${pmsType}";
+	    var ezPMSToUserId = "${pmsToUserId}";
+	    var ezPMSUserIdType = "${pmsUserIdType}";
+	    var ezPMSTaskId = "${pmsTaskId}";
 	    
 	    window.onload = function () {
 	        if (!CrossYN()) {
@@ -215,6 +220,8 @@
 	        
 	        if (moduleType == "attitudeAbsented") {
 	        	getAttitudeAbsentedList("distinct");
+	        } else if (moduleType == "ezPMS") {
+	        	getPMSMemberList(ezPMSType);
 	        }
 	        
 	        if (xmpTo.innerHTML != "") {
@@ -222,6 +229,8 @@
 
 	        	if (moduleType == "attitudeAbsented") {
 		        	getAttitudeAbsentedList("distinct");
+		        } else if (moduleType == "ezPMS") {
+		        	getPMSMemberList(ezPMSType);
 		        }
 	        	
 	        	if (moduleType && moduleType == "poll") {
@@ -959,6 +968,10 @@
 	            	getEzPMSBoardToMail();
 	            	return;
 	            }
+	            else if (Org_cmd == "ezPMS") {
+	            	getPMSMemberList(ezPMSType);
+	            	return;
+	            }
 	            else if (Org_cmd == "attitude") {
 	            	getAttitudeToMail();
 	            	return;
@@ -1688,6 +1701,46 @@
 					}
 				}
 			});
+	    }
+	    
+	    function getPMSMemberList(type) {
+	    	var data = {
+				projectId : ezPMSProjectId,
+				roleId : ezPMSRoleId,
+				type : ezPMSType,
+				toUserId : ezPMSToUserId,
+				userIdType : ezPMSUserIdType,
+				taskId : ezPMSTaskId
+	    	}
+	    	
+	    	$.ajax ({
+	    		type : "post",
+				dastaType : "json",
+   				contentType: "application/json; charset=UTF-8",
+				async : false,
+				url : "/ezPMS/sendMail.do",
+				data : JSON.stringify(data),
+				success : function(result) {
+					$("#eSubject").val("[" + result.project.projectName + "]");
+
+					var resultHtml = "";
+					
+					if (ezPMSType == "group") {
+						result.list.forEach(function(vo, index) {
+				    		resultHtml += "\"" + vo.userName + "\"";
+				    		resultHtml += " <" + vo.userMail + ">, ";
+				    	});
+						
+						resultHtml = resultHtml.slice(0, -2);
+					} else if (ezPMSType == "one") {
+						resultHtml += "\"" + result.list.userName + "\"";
+						resultHtml += " <" + result.list.userMail + ">";
+					}
+					
+					console.log(resultHtml);
+					xmpTo.innerHTML = resultHtml;
+				}
+	    	});
 	    }
 	    
 	    function getAttitudeToMail() {

@@ -24,6 +24,8 @@ public class TaskMemberVO {
 	
 	private String planEndDate;
 	
+	private String userMail;
+	
 	public long getTaskMemberId() {
 		return taskMemberId;
 	}
@@ -110,5 +112,13 @@ public class TaskMemberVO {
 
 	public void setPlanEndDate(String planEndDate) {
 		this.planEndDate = planEndDate;
+	}
+
+	public String getUserMail() {
+		return userMail;
+	}
+
+	public void setUserMail(String userMail) {
+		this.userMail = userMail;
 	}
 }

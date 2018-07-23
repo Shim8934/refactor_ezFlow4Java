@@ -216,6 +216,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		// ezPMS 프로젝트 아이디
 		String ezPMSProjectId = "";
+		String ezPMSRoleId = "";
 		// ezPMS 게시판 아이디
 		String ezPMSBoardId = "";
 		
@@ -233,7 +234,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		if (!(tempStr.equals("") || tempStr.equals("REPLY") || tempStr.equals("REPLYALL") || tempStr.equals("FORWARD") || tempStr.equals("READ") 
 				|| tempStr.equals("EDIT") || tempStr.equals("NEW") || tempStr.equals("BOARD") || tempStr.equals("COMMUNITY") || tempStr.equals("DOCSEND")
 				|| tempStr.equals("RESEND") || tempStr.equals("BOARDDOTNET") || tempStr.equals("DOCSENDDOTNET")
-				|| tempStr.equals("COMMUNITYDOTNET")|| tempStr.equals("JOURNAL") || tempStr.equals("EZPMSBOARD") || tempStr.equals("ATTITUDE") || tempStr.equals("ATTITUDEABSENTED")
+				|| tempStr.equals("COMMUNITYDOTNET")|| tempStr.equals("JOURNAL") || tempStr.equals("EZPMSBOARD") || tempStr.equals("EZPMS") || tempStr.equals("ATTITUDE") || tempStr.equals("ATTITUDEABSENTED")
 				/* 아직 이 값으로는 받는 부분 없음
 				|| tempStr.equals("DOCSENDDOC") || tempStr.equals("ACCESSNO") || tempStr.equals("REPORT") */
 			)) {
@@ -1021,10 +1022,20 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         else if(_cmd.equals("journal")){
         	journalId = request.getParameter("journalId");
         }
-        // ezPMS이면 작동
+        // ezPMS 게시판이면 작동
         else if(_cmd.equals("ezPMSBoard")){
         	ezPMSProjectId = request.getParameter("ezPMSProjectId");
         	ezPMSBoardId = request.getParameter("ezPMSBoardId");
+        } 
+        // ezPMS
+        else if(_cmd.equals("ezPMS")) {
+        	ezPMSProjectId = request.getParameter("projectId");
+        	model.addAttribute("pmsRoleId", request.getParameter("roleId"));
+        	model.addAttribute("pmsType", request.getParameter("type"));
+        	model.addAttribute("moduleType", "ezPMS");
+        	model.addAttribute("pmsToUserId", request.getParameter("toUserId"));
+        	model.addAttribute("pmsUserIdType", request.getParameter("userIdType"));
+        	model.addAttribute("pmsTaskId", request.getParameter("taskId"));
         }
         //근태관리
         else if(_cmd.equals("attitude")) {

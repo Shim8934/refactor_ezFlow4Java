@@ -366,7 +366,13 @@ public class EzPMSGWController {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			MCommonVO info = new MCommonVO();
+			
+			if (request.getParameter("userId") == null || request.getParameter("userId").equals("")) {
+				info = mOptionService.commonInfoWeb(serverName, userId);
+			} else {
+				info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			}
 
 			String userIdType = request.getParameter("userIdType");
 			int tenantId = info.getTenantId();

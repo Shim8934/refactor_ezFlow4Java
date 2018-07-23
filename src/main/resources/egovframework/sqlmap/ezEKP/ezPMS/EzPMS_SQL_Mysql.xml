@@ -142,6 +142,7 @@
     	<result property="memberRoleId"						column="MEMBER_ROLE_ID"				columnIndex="5"/>
     	<result property="userIdType"						column="USER_ID_TYPE"				columnIndex="6"/>
     	<result property="tenantId"							column="TENANT_ID"					columnIndex="7"/>
+    	<result property="userMail"							column="USER_MAIL"					columnIndex="8"/>
     </resultMap>
     
     <resultMap id="projectTaskVOForDetail" class="ProjectTaskVO">
@@ -228,6 +229,7 @@
     	<result property="userName"							column="USER_NAME"					columnIndex="5"/>
     	<result property="userDeptname"						column="USER_DEPTNAME"				columnIndex="6"/>
     	<result property="pctinput"							column="PCTINPUT"					columnIndex="7"/>
+    	<result property="userMail"							column="USER_MAIL"					columnIndex="8"/>
     </resultMap>
     
     <resultMap id="projectTaskMemberVOForSchedule" class="ProjectTaskMemberVO">
@@ -607,29 +609,42 @@
 	<select id="EzPMSDAO.getProjectMember" parameterClass="Map" resultMap="projectMemberVO" remapResults="true">
 		<isNotEqual property="roleId" compareValue="5">
 			SELECT
-				USER_ID AS USER_ID,
-				USER_NAME$lang$ AS USER_NAME,
-				USER_DEPTNAME$lang$ AS USER_DEPTNAME,
-				USER_POSITION$lang$ AS USER_POSITION,
-				MEMBER_ROLE_ID,
-				USER_ID_TYPE,
-				TENANT_ID
+				M.USER_ID AS USER_ID,
+				M.USER_NAME$lang$ AS USER_NAME,
+				M.USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+				M.USER_POSITION$lang$ AS USER_POSITION,
+				M.MEMBER_ROLE_ID,
+				M.USER_ID_TYPE,
+				M.TENANT_ID,
+				IFNULL(U.MAIL, D.MAIL) AS USER_MAIL
 			FROM 
-				TBL_PMS_MEMBER
+				TBL_PMS_MEMBER M
+			LEFT JOIN
+				TBL_USERMASTER U
+			ON
+				U.CN = M.USER_ID
+			AND
+				U.TENANT_ID = M.TENANT_ID
+			LEFT JOIN
+				TBL_DEPTMASTER D
+			ON
+				D.CN = M.USER_ID
+			AND
+				D.TENANT_ID = M.TENANT_ID
 			WHERE
-				PROJECT_ID = #projectId#
+				M.PROJECT_ID = #projectId#
 			AND
 			<isNotEqual property="roleId" compareValue="4">
-				MEMBER_ROLE_ID = #roleId#
+				M.MEMBER_ROLE_ID = #roleId#
 			</isNotEqual>
 			<isEqual property="roleId" compareValue="4">
-				MEMBER_ROLE_ID IN (1,2,3)
+				M.MEMBER_ROLE_ID IN (1,2,3)
 			</isEqual>
 			AND
-				TENANT_ID = #tenantId#
+				M.TENANT_ID = #tenantId#
 			<isEqual property="isGantt" compareValue="0">
 			AND
-				USER_ID_TYPE = 'user'
+				M.USER_ID_TYPE = 'user'
 			UNION
 				SELECT 
 					CN AS USER_ID,
@@ -638,13 +653,16 @@
 					TITLE AS USER_POSITION,
 					C.MEMBER_ROLE_ID AS MEMBER_ROLE_ID,
 					C.USER_ID_TYPE AS USER_ID_TYPE,
-					C.TENANT_ID AS TENANT_ID
-				FROM TBL_USERMASTER D JOIN
+					C.TENANT_ID AS TENANT_ID,
+					D.MAIL AS USER_MAIL
+				FROM TBL_USERMASTER D 
+				JOIN
 				(SELECT DISTINCT 
 					B.CN AS DEPARTMENT,
 					A.MEMBER_ROLE_ID AS MEMBER_ROLE_ID,
 					A.USER_ID_TYPE AS USER_ID_TYPE,
-					A.TENANT_ID AS TENANT_ID
+					A.TENANT_ID AS TENANT_ID,
+					B.MAIL AS USER_MAIL
 				FROM
 					TBL_PMS_MEMBER A JOIN TBL_DEPTMASTER B
 				ON
@@ -672,29 +690,42 @@
 		</isNotEqual>
 		<isEqual property="roleId" compareValue="5">
 			SELECT
-				USER_ID AS USER_ID,
-				USER_NAME$lang$ AS USER_NAME,
-				USER_DEPTNAME$lang$ AS USER_DEPTNAME,
-				USER_POSITION$lang$ AS USER_POSITION,
+				M.USER_ID AS USER_ID,
+				M.USER_NAME$lang$ AS USER_NAME,
+				M.USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+				M.USER_POSITION$lang$ AS USER_POSITION,
 				0 AS MEMBER_ROLE_ID,
 				"" AS USER_ID_TYPE,
-				TENANT_ID
+				M.TENANT_ID,
+				IFNULL(U.MAIL, D.MAIL) AS USER_MAIL
 			FROM 
-				TBL_PMS_MEMBER
+				TBL_PMS_MEMBER M
+			LEFT JOIN
+				TBL_USERMASTER U
+			ON
+				U.CN = M.USER_ID
+			AND
+				U.TENANT_ID = M.TENANT_ID
+			LEFT JOIN
+				TBL_DEPTMASTER D
+			ON
+				D.CN = M.USER_ID
+			AND
+				D.TENANT_ID = M.TENANT_ID
 			WHERE
-				PROJECT_ID = #projectId#
+				M.PROJECT_ID = #projectId#
 			AND
 			<isNotEqual property="roleId" compareValue="4">
-				MEMBER_ROLE_ID IN (1,2)
+				M.MEMBER_ROLE_ID IN (1,2)
 			</isNotEqual>
 			<isEqual property="roleId" compareValue="4">
-				MEMBER_ROLE_ID IN (1,2,3)
+				M.MEMBER_ROLE_ID IN (1,2,3)
 			</isEqual>
 			AND
-				TENANT_ID = #tenantId#
+				M.TENANT_ID = #tenantId#
 			<isEqual property="isGantt" compareValue="0">
 			AND
-				USER_ID_TYPE = 'user'
+				M.USER_ID_TYPE = 'user'
 			UNION
 				SELECT 
 					CN AS USER_ID,
@@ -703,7 +734,8 @@
 					TITLE AS USER_POSITION,
 					0 AS MEMBER_ROLE_ID,
 					"" AS USER_ID_TYPE,
-					C.TENANT_ID AS TENANT_ID
+					C.TENANT_ID AS TENANT_ID,
+					D.MAIL AS USER_MAIL
 				FROM TBL_USERMASTER D JOIN
 				(SELECT DISTINCT 
 					B.CN AS DEPARTMENT,
@@ -1613,17 +1645,24 @@
 	<select id="EzPMSDAO.getTaskMemberList" parameterClass="map" resultMap="projectTaskMemberVO">
 		<![CDATA[
 			SELECT 
-				TASK_MEMBER_ID,
-				TENANT_ID,
-				TASK_ID,
-				USER_ID,
-				USER_NAME$lang$ AS USER_NAME,
-				USER_DEPTNAME$lang$ AS USER_DEPTNAME,
-				PCTINPUT
+				T.TASK_MEMBER_ID,
+				T.TENANT_ID,
+				T.TASK_ID,
+				T.USER_ID,
+				T.USER_NAME$lang$ AS USER_NAME,
+				T.USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+				T.PCTINPUT,
+				U.MAIL AS USER_MAIL
 			FROM	
-				tbl_pms_taskmember	
+				tbl_pms_taskmember T
+			LEFT JOIN
+				TBL_USERMASTER U
+			ON
+				U.CN = T.USER_ID
+			AND
+				U.TENANT_ID = T.TENANT_ID
 			WHERE	
-				TENANT_ID = #tenantId#
+				T.TENANT_ID = #tenantId#
 		]]>
 		<isNotEmpty property="taskId">
 			AND
@@ -3890,9 +3929,16 @@
 			tm.USER_ID,
 			tm.USER_NAME$lang$ AS USER_NAME,
 			tm.USER_DEPTNAME$lang$ AS USER_DEPTNAME,
-			tm.PCTINPUT
+			tm.PCTINPUT,
+			U.MAIL AS USER_MAIL
 		FROM
 			TBL_PMS_TASKMEMBER tm
+		LEFT JOIN
+			TBL_USERMASTER U
+		ON
+			U.CN = tm.USER_ID
+		AND
+			U.TENANT_ID = tm.TENANT_ID
 		JOIN
 			TBL_PMS_TASK t
 		ON
