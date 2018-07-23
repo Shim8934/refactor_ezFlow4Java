@@ -132,32 +132,56 @@
 	            	tempDeptID = DeptID;
 		        }
 
-	        	 $.ajax({
-	  					url : '/ezOrgan/getDeptMemberList.do',
-	  					method : 'POST',
-	  					dataType : "text",
-	  					data : {
-	  						deptID : tempDeptID ,
-	  						cell : "company;description;displayName;title;telephoneNumber",
-	  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
-	  						page : CurPage ,
-	  						type : "user"
-	  					} ,
-	      				success : function(xml) {
-	 		                event_displayUserList(loadXMLString(xml));
-	 		                
-	 		                //2016-10-17 자바스크립트 실행순서때문에 자꾸 getDeptMemberList.do리스트가 나중에 나와서 window.onload 밑에있던부분 이쪽으로 위치 이동
-	 		               	if (strSearch != "") {
-	 			            	document.getElementById('keyword').value = strSearch;
-	 							search_click("search"); 
-	 							strSearch = "";
-	 		              	}
-	  					},
-	  					error : function(jqXHR, textStatus, errorThrown) {
-	  						alert(error);
-	  					}
-	  				});   
-	        	 
+	        	$.ajax({
+	  				url : '/ezOrgan/getDeptMemberList.do',
+	  				method : 'POST',
+	  				dataType : "text",
+	  				data : {
+	  					deptID : tempDeptID ,
+	  					cell : "company;description;displayName;title;telephoneNumber",
+	  					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+	  					page : CurPage ,
+	  					type : "user"
+	  				} ,
+	      			success : function(xml) {
+						event_displayUserList(loadXMLString(xml));
+	 		               
+	 		            //2016-10-17 자바스크립트 실행순서때문에 자꾸 getDeptMemberList.do리스트가 나중에 나와서 window.onload 밑에있던부분 이쪽으로 위치 이동
+	 		            if (strSearch != "") {
+	 			           	document.getElementById('keyword').value = strSearch;
+	 						search_click("search"); 
+	 						strSearch = "";
+	 		            }
+	  				},
+	  				error : function(jqXHR, textStatus, errorThrown) {
+	  					alert(error);
+	  				}
+	  			});
+	        	
+				$.ajax({
+					url : "/ezOrgan/getDeptMemberListCount.do",
+					method : "POST",
+					dataType : "json",
+					data : {
+						deptID : tempDeptID
+					},
+					success : function(result) {
+						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
+						
+						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
+			        		if (result.totalCount == result.totalCount2) {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]";
+			        		} else {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang1 + "</span>]";
+			        		}
+			            	
+			            	SelectDeptNM.setAttribute("countinfo","1")
+			        	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(error);
+					}
+				});
 	    	}
 	    	
 	     	function event_displayUserList(xml) {
@@ -235,7 +259,7 @@
 	        	}
 	        	var UserListHTML = "";
 	        	
-	        	if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
+	        	/* if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
 	        		if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
 	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
 	        		} else {
@@ -243,7 +267,7 @@
 	        		}
 	            	
 	            	SelectDeptNM.setAttribute("countinfo","1")
-	        	}
+	        	} */
 	        	
 	        	if (pListType == "IMG") {
 	            	document.getElementById("DeptUserImgList").style.display = "";
