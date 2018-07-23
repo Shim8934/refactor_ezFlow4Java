@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title></title>
+		<title><spring:message code='ezCabinet.t138'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css">
 		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">
@@ -16,36 +16,44 @@
 			<table class="tblFileInf">
 				<tr>
 					<th><spring:message code='ezCabinet.t109'/></th>
-					<td>응웬바오</td>
+					<td id="creator"></td>
 				<tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t110'/></th>
-					<td>2018-06-26 12:00</td>
+					<td id="createdDate"></td>
 				<tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
-					<td id ="title">전자결재버그 수정 관련</td></tr>
+					<td id ="title"></td>
 				<tr>
 					<th><spring:message code='ezCabinet.t52'/></th>
-					<td>전자결재 버그 수정 관련 파일 첨부</td>
+					<td id="summary"></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t94'/></th>
-					<td>메신저 관련 전자결재, 메신저 관련 메일</td>
+					<td>
+						<div class="rlFileDiv">
+							<div id="fileListDiv" class="rlDocDiv"></div>
+						</div>
+					</td>
 				</tr>
 			</table>
 		</div>
 		
 		<!-- <div class="htmlDiv">
-			<div class="divInform">
-				<span>연동된 모듈 html의 태그</span>
-			</div>
 		</div> -->
 		
-		<div class="fileDetailDiv">
-			<div class="divInform">
-				<span>첨부 파일 영역</span>
+		<div class="fileDetailDiv" id="fileDiv">
+			<div class="fileList">
+				<ul class="ulFiles"></ul>
 			</div>
+			
+			<div class="divInform">
+			</div>
+		</div>
+		
+		<div>
+			<span id="">총용량 : 100KB</span>
 		</div>
 		
 		<div class="cabBttnDiv" id="fileDivBttn">
@@ -66,7 +74,6 @@
 		function initEvents() {
 			document.onselectstart  = function () { return false;}
 			
-			//getFileDetail();
 			var cabBttnElmt         = document.getElementById("fileDivBttn");
 			var listBttns           = cabBttnElmt.children;
 			listBttns[0].onclick    = function(e) {fileModify();};
@@ -84,19 +91,102 @@
 				url: "/ezCabinet/getFileDetail.do",
 				data: {"itemId" : itemId},
 				dataType: "JSON",
-				async: true,
+				async: false,
 				success : function(data) {
 					console.log(data);
-					var result = data.fileDetail;
-					processFileDetail(result);
+					processFileDetail(data);
 				},
 				error : function(error) {
 				}
 			});
 		}
 		
-		function processFileDetail(result) {
+		function processFileDetail(fileItem) {
 			
+			//파일상세내용
+			var result      = fileItem.fileDetail;
+			var attachFile  = fileItem.attachFileList;
+			var relatedFile = fileItem.relatedFileList;
+			
+			var creator     = document.getElementById("creator");
+			var createdDate = document.getElementById("createdDate");
+			var title       = document.getElementById("title");
+			var summary     = document.getElementById("summary");
+			
+			creator.textContent     = result["creatorName"];
+			createdDate.textContent = result["createdDate"].substring(0, 19);
+			title.textContent       = result["title"];
+			summary.textContent     = result["summary"];
+			
+			//첨부파일리스트
+			var fileDivElmt     = document.getElementById("fileDiv");
+			var divInformElmt   = fileDivElmt.querySelector("div[class='divInform']");
+			
+			if(attachFile == null || attachFile.length == 0) {
+				var spanElmt      = document.createElement("span");
+				spanElmt.textContent = "<spring:message code='ezCabinet.t139'/>";
+				divInformElmt.appendChild(spanElmt);
+			}else{
+				if (divInformElmt) {fileDivElmt.removeChild(divInformElmt);}
+				
+				var divfileListElmt = fileDivElmt.firstElementChild;
+				var ulElmt          = divfileListElmt.firstElementChild;
+				
+				for (var i = 0, len = attachFile.length; i < len; i++) {
+					var liElmt        = document.createElement("li");
+					var divMainElmt   = document.createElement("div");
+					var divChildElmt1 = document.createElement("div");
+					var divChildElmt2 = document.createElement("div");
+					var spanChild1    = document.createElement("span");
+					var spanChild2    = document.createElement("span");
+					var imgElmt       = document.createElement("img");
+					
+					divChildElmt1.className = "cabImgAva";
+					imgElmt.setAttribute("src", attachFile[i]["filePath"]);
+					divChildElmt1.appendChild(imgElmt);
+					
+					spanChild1.textContent  = attachFile[i]["fileName"];
+					spanChild2.textContent  = getFileSize(attachFile[i]["fileSize"]);
+					divChildElmt2.className = "cabFileInf";
+					divChildElmt2.appendChild(spanChild1);
+					divChildElmt2.appendChild(spanChild2);
+					
+					divMainElmt.className = "cabDivFile";
+					divMainElmt.appendChild(divChildElmt1);
+					divMainElmt.appendChild(divChildElmt2);
+					liElmt.appendChild(divMainElmt);
+					ulElmt.appendChild(liElmt);
+				}	
+			}
+			
+			//연관문서
+			var divElmt = document.getElementById("fileListDiv");
+			
+			for (var i = 0, len = relatedFile.length; i < len; i++) {
+				var spanElmt = document.createElement("span");
+				spanElmt.setAttribute("role", relatedFile[i]["relatedItemId"]);
+				spanElmt.textContent = relatedFile[i]["title"];
+				spanElmt.className   = "rlSpanBnk";
+				spanElmt.addEventListener("click", function(e) {readRelatedItem(this);}, false);
+				divElmt.appendChild(spanElmt);
+			}
+			
+			function readRelatedItem() {
+				var itemId = spanElmt.getAttribute("role");
+					//Add read item here
+				console.log(itemId);
+			}
+		}
+		
+		function getFileSize(fileSize) {
+			var result = fileSize + "B";
+			
+			switch(true) {
+				case fileSize > 1073741824 : result = parseFloat(fileSize / 1073741824).toFixed(2) + "GB"; break;
+				case fileSize > 1048576    : result = parseFloat(fileSize / 1048576).toFixed(2) + "MB"   ; break;
+				case fileSize > 1024       : result = parseFloat(fileSize / 1024).toFixed(2) + "KB"      ; break;
+			}
+			return result;
 		}
 		
 		function fileModify() {

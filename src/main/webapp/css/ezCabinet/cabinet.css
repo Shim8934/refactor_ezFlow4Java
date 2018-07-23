@@ -247,7 +247,7 @@
 .tblFileInf, .cabShareInf {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse;}
 .tblFileInf tr td, .tblFileInf tr th, .cabShareInf tr td, .cabShareInf tr th {border: 1px solid #ddd;}
 .tblFileInf tr th {width: 120px;}
-.tblFileInf tr td, .cabShareInf {padding: 0px 2px; background: #fff; height: 29px; word-break: break-all;}
+.tblFileInf tr td, .cabShareInf {padding: 0px 5px; background: #fff; height: 29px; word-break: break-all;}
 .tblFileInf tr td >input[type='text'] {width: 100%; border: 0px; padding: 5px; outline: none;}
 .rlFileDiv {display: flex; align-items: center;}
 .rlDocDiv {flex-grow: 1; border: none; margin-right: 8px; outline: none; padding: 0px 5px; max-height: 30px; height: 20px; overflow-y: auto;}

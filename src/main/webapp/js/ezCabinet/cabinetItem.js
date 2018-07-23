@@ -390,8 +390,8 @@ var CabinetItem = function() {
 				
 				trElmt.setAttribute("class", unselectClass);
 				trElmt.setAttribute("role",  itemList[i]["itemId"]);
-				trElmt.onclick = function(event) {clickRowFunct(event);};
-				trElmt.ondblclick = function(event) {ondblclick(event);};
+				trElmt.onclick    = function(event) {clickRowFunct(event);};
+				trElmt.ondblclick = function(event) {itemDblClickHandler(this);};
 				
 				var inputElmt  = document.createElement("input");
 				inputElmt.setAttribute("type", "checkbox");
@@ -669,7 +669,7 @@ var CabinetItem = function() {
 		var sharePopup = window.open("/ezCabinet/shareCabinet.do?cabId=" + cabinetId, "shareFile", getOpenWindowfeature(1125, 700));
 	}
 	
-	function getFileDetail(itemId) {window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(600, 530));}
+	function openFileDetail(itemId) {window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(600, 565));}
 	
 	function getSelectedItems() {
 		var result        = [];
@@ -689,7 +689,17 @@ var CabinetItem = function() {
 		
 		if (crrClass == "bnkCabSelect") {
 			//Add preview code here
-			getFileDetail(itemId);
+			//openFileDetail(itemId);
+		}
+	}
+	
+	function itemDblClickHandler(trObj) {
+		var itemId   = trObj.getAttribute("role");
+		var crrClass = trObj.className;
+		
+		if (crrClass == "bnkCabSelect") {
+			//Add preview code here
+			openFileDetail(itemId);
 		}
 	}
 	

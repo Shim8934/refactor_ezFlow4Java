@@ -2,9 +2,10 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
 
 <sqlMap namespace="EzCabinet_h">
-	<typeAlias alias="CabinetSimpleUserVO"           type="egovframework.ezEKP.ezCabinet.vo.SimpleUserVO"  />
-	<typeAlias alias="CabinetShareVO"                type="egovframework.ezEKP.ezCabinet.vo.CabinetShareVO"/>
-	<typeAlias alias="cabinetItemVO"                 type="egovframework.ezEKP.ezCabinet.vo.CabinetItemVO"/>
+	<typeAlias alias="CabinetSimpleUserVO"           type="egovframework.ezEKP.ezCabinet.vo.SimpleUserVO"         />
+	<typeAlias alias="CabinetShareVO"                type="egovframework.ezEKP.ezCabinet.vo.CabinetShareVO"       />
+	<typeAlias alias="cabinetItemVO"                 type="egovframework.ezEKP.ezCabinet.vo.CabinetItemVO"        />
+	<typeAlias alias="CabinetRelationItemVO"         type="egovframework.ezEKP.ezCabinet.vo.CabinetRelationItemVO"/>
 	
 	<!-- OrganDeptVO resultMap -->
 	<resultMap id="deptMemberInfo" class="CabinetSimpleUserVO">
@@ -66,7 +67,53 @@
 		<result property="deleterId"        column="delete_id"           columnIndex="17"/>
 		<result property="companyId"        column="company_id"          columnIndex="18"/>
 		<result property="tenantId"         column="tenant_id"           columnIndex="19"/>
-	</resultMap>	
+	</resultMap>
+	
+	<resultMap id="cabinetItemVO2"  class="CabinetItemVO">
+		<result property="itemId"           column="item_id"             columnIndex="1" />
+		<result property="cabinetId"        column="cabinet_id"          columnIndex="2" />
+		<result property="itemType"         column="item_type"           columnIndex="3" />
+		<result property="title"            column="title"               columnIndex="4" />
+		<result property="summary"          column="summary"             columnIndex="5" />
+		<result property="creatorId"        column="creator_id"          columnIndex="6" />
+		<result property="creatorName1"     column="creator_name1"       columnIndex="7" />
+		<result property="creatorName2"     column="creator_name2"       columnIndex="8" />
+		<result property="departmentId"     column="department_id"       columnIndex="9" />
+		<result property="departmentName1"  column="department_name1"    columnIndex="10"/>
+		<result property="departmentName2"  column="department_name2"    columnIndex="11"/>
+		<result property="conentPath"       column="content_path"        columnIndex="12"/>
+		<result property="createdDate"      column="create_date"         columnIndex="13"/>
+		<result property="updatedDate"      column="update_date"         columnIndex="14"/>
+		<result property="useStatus"        column="use_status"          columnIndex="15"/>
+		<result property="updateId"         column="update_id"           columnIndex="16"/>
+		<result property="deleterId"        column="delete_id"           columnIndex="17"/>
+		<result property="companyId"        column="company_id"          columnIndex="18"/>
+		<result property="tenantId"         column="tenant_id"           columnIndex="19"/>
+		<result property="creatorName"      column="creator_name"        columnIndex="20"/>
+		<result property="itemSize"         column="item_size"           columnIndex="21"/>
+	</resultMap>
+	
+	<!-- cabinet attach file resultMap -->
+	<resultMap id="cabinetAttachFileVO"  class="CabinetAttachFileVO">
+		<result property="attachId"         column="attach_id"           columnIndex="1"/>
+		<result property="itemId"           column="item_id"             columnIndex="2"/>
+		<result property="filePath"         column="file_path"           columnIndex="3"/>
+		<result property="fileName"         column="file_name"           columnIndex="4"/>
+		<result property="fileSize"         column="file_size"           columnIndex="5"/>
+		<result property="companyId"        column="company_id"          columnIndex="6"/>
+		<result property="tenantId"         column="tenant_id"           columnIndex="7"/>
+	</resultMap>
+	
+	<!-- cabinet relation file resultMap -->
+	<resultMap id="CabinetRelationItemVO"   class="CabinetRelationItemVO">
+		<result property="relationId"       column="relation_id"         columnIndex="1"/>
+		<result property="itemId"           column="item_id"             columnIndex="2"/>
+		<result property="relatedItemId"    column="relate_item_id"      columnIndex="3"/>
+		<result property="title"            column="title"               columnIndex="4"/>
+		<result property="useStatus"        column="use_status"          columnIndex="5"/>
+		<result property="companyId"        column="company_id"          columnIndex="6"/>
+		<result property="tenantId"         column="tenant_id"           columnIndex="7"/>
+	</resultMap>
 	
 	<!--***********************************************************************************
 	**                             OrganDept process                                     **
@@ -330,19 +377,67 @@
 		<![CDATA[ select 1 from dual where exists(select item_id from tbl_cb_item where item_id = #itemId# and creator_id = #userId# and tenant_id = #tenantId#) ]]>
 	</select>
 	
-	<select id="EzCabinetDAO_h.getFileDetail" resultClass="CabinetItemVO">
+	<!--***********************************************************************************
+	**                             Cabinet item process                                   **
+	************************************************************************************-->
+	
+	<select id="EzCabinetDAO_h.getFileDetail" resultMap="cabinetItemVO2">
 		<![CDATA[
 			select
-				item_type   as itemType,
-				title       as title,
-				summary     as summary,
-				create_date as createdDate
+				i.item_id                                                               as item_id,
+				i.cabinet_id                                                            as cabinet_id,
+				i.item_type                                                             as item_type,
+				i.title                                                                 as title,
+				i.summary                                                               as summary,
+				i.creator_id                                                            as creator_id,
+				i.creator_name1                                                         as creator_name1,
+				i.creator_name2                                                         as creator_name2,
+				i.department_id                                                         as department_id,
+				i.department_name1                                                      as department_name1,
+				i.department_name2                                                      as department_name2,
+				i.content_path                                                          as content_path,
+				date_add(i.create_date, interval #offset# minute)                       as create_date,
+				date_add(i.update_date, interval #offset# minute)                       as update_date,
+				i.create_date                                                           as create_date,
+				i.update_date                                                           as update_date,
+				i.use_status                                                            as use_status,
+				i.update_id                                                             as update_id,
+				i.delete_id                                                             as delete_id,
+				i.company_id                                                            as company_id,
+				i.tenant_id                                                             as tenant_id,
+				case when #primary# = '1' then i.creator_name1 else i.creator_name2 end as creator_name,
+				ifnull ((select sum(f.file_size) from tbl_cb_attach_file f where f.item_id = i.item_id and f.tenant_id = i.tenant_id), 0) as item_size
 			from
-				tbl_cb_item
+				tbl_cb_item i
 			where
-				item_id = #itemId#
+				i.item_id = #itemId#
 			and
-				tenant_id = #tenantId#
+				i.tenant_id = #tenantId#
 		]]>
 	</select>
+	
+	<select id="EzCabinetDAO_h.getRelatedFileList" resultMap="CabinetRelationItemVO">
+		<![CDATA[
+			select
+				r.relation_id as relation_id,
+				r.item_id as item_id,
+				r.relate_item_id as relate_item_id,
+				i.title as title,
+				i.use_status as use_status,
+				r.company_id as company_id,
+				r.tenant_id as tenant_id
+			from
+				tbl_cb_relation r
+			inner join
+				tbl_cb_item i
+			on
+				r.relate_item_id = i.item_id and r.tenant_id = i.tenant_id
+			where
+				r.item_id = #itemId#
+			and
+				r.tenant_id = #tenantId#
+		]]>
+	</select>
+	
+	
 </sqlMap>

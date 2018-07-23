@@ -147,7 +147,7 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 
 	@Override
 	public JSONObject getFileDetail(HttpServletRequest request, String userId, String itemId) throws Exception {
-		String url                = "/rest/ezCabinet/file-detail/itemId/" + itemId;
+		String url                = "/rest/ezCabinet/file-detail/itemId/" + itemId + "/get";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId",      userId);
 		

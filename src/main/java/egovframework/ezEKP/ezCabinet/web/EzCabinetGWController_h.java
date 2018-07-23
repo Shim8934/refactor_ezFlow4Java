@@ -2,8 +2,10 @@ package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.List;
 import java.util.Locale;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,7 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
+import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetRelationItemVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetRelationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.let.user.login.service.LoginService;
@@ -322,7 +327,7 @@ public class EzCabinetGWController_h {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezCabinet/file-detail/itemId/{itemId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezCabinet/file-detail/itemId/{itemId}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFileDetail(@PathVariable(value="itemId") String itemId,   HttpServletRequest request) throws Exception {
 		String serverName     = request.getHeader("host-name")       != null ? request.getHeader("host-name")            : "";
 		String userId         = request.getParameter("userId")       != null ? request.getParameter("userId")            : "";
@@ -341,9 +346,17 @@ public class EzCabinetGWController_h {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			CabinetItemVO CabinetItem  = cabinetService_h.getFileDetail(itemId, userInfo.getId(), userInfo.getPrimary(),userInfo.getTenantId());
+			String primary   = userInfo.getPrimary();
+			int tenantId     = userInfo.getTenantId();
+			String offset    = commonUtil.getMinuteUTC(userInfo.getOffset());
 			
-			result.put("fileDetail", CabinetItem);
+			CabinetItemVO fileDetail                    = cabinetService_h.getFileDetail(itemId, primary, offset, tenantId);
+			List<CabinetAttachFileVO> attachFileList    = cabinetService_h.getAttachFileList(itemId, tenantId);
+			List<CabinetRelationItemVO> relatedFileList = cabinetService_h.getRelatedFileList(itemId, tenantId);
+			
+			result.put("fileDetail", fileDetail);
+			result.put("attachFileList", attachFileList);
+			result.put("relatedFileList", relatedFileList);
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 

@@ -12,9 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
+import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetRelationItemVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetRelationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
@@ -27,6 +31,9 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetServiceImpl_h.class);
 
+	@Resource(name = "EzCabinetDAO")
+	private EzCabinetDAO ezCabinetDAO;
+	
 	@Resource(name = "EzCabinetDAO_h")
 	private EzCabinetDAO_h ezCabinetDAO_h;
 	
@@ -196,13 +203,32 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 	}
 
 	@Override
-	public CabinetItemVO getFileDetail(String itemId, String userId, String primary, int tenantId) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
+	public CabinetItemVO getFileDetail(String itemId, String primary, String offset,int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("itemId",   itemId);
-		map.put("userId",   userId);
+		map.put("offset",   offset);
 		map.put("primary",  primary);
 		map.put("tenantId", tenantId);
 		
 		return ezCabinetDAO_h.getFileDetail(map);
 	}
+
+	@Override
+	public List<CabinetAttachFileVO> getAttachFileList(String itemId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemId",   itemId);
+		map.put("tenantId", tenantId);
+		
+		return ezCabinetDAO.getAllAttachFilesOfItem(map);
+	}
+
+	@Override
+	public List<CabinetRelationItemVO> getRelatedFileList(String itemId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemId",   itemId);
+		map.put("tenantId", tenantId);
+		
+		return ezCabinetDAO_h.getRelatedFileList(map);
+	}
+
 }
