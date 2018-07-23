@@ -872,8 +872,8 @@
                         <input type="text" id="tbItemCode" name="tbItemCode" style="WIDTH: 80px" readonly>
                         <input type="text" id="tbItemName" name="tbItemName" style="WIDTH: 100px" readonly>
                         <input type="hidden" id="tbItemName2" name="tbItemName2">
-                        <a class="imgbtn"><span onclick="return btnItemCode_onclick()"><spring:message code='ezApproval.t321'/></span></a>
-                        <a class="imgbtn"><span onclick="DeleteItemCode()"><spring:message code='ezApprovalG.t266'/></span></a>
+                        <a class="imgbtn imgbck"><span onclick="return btnItemCode_onclick()"><spring:message code='ezApproval.t321'/></span></a>
+                        <a class="imgbtn imgbck"><span onclick="DeleteItemCode()"><spring:message code='ezApprovalG.t266'/></span></a>
                     </td>
                     <th style="width:10%; text-align:center"><spring:message code='ezApprovalG.t118'/></th>
                     <td style="width:100px; text-align:center">

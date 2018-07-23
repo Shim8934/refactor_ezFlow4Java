@@ -495,7 +495,7 @@ function initPreTask() {
 						</td>
 					</tr>
 					<tr>
-						<th><a class="imgbtn" onclick="openMemberList()"><span><spring:message code='ezPMS.t63' /></span></a></th>
+						<th><a class="imgbtn" onclick="openMemberList('managers')"><span><spring:message code='ezPMS.t63' /></span></a></th>
 						<td id="managers"></td>
 					</tr>
 					<tr>

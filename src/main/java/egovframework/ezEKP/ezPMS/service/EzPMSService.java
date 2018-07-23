@@ -41,7 +41,7 @@ public interface EzPMSService {
 	
 	public ProjectInfoVO getProjectDetails(Long projectId, String userId, int tenantId, String mode, String lang, String deptId, String comapnyId);
 	
-	public void updateProject(ProjectInfoVO project, int tenantId, String companyId);
+	public void updateProject(ProjectInfoVO project, int tenantId, String companyId, String lang);
 	
 	public List<ProjectMemberVO> getProjectMember(Long projectId, int roleId, String lang);
 
@@ -71,25 +71,25 @@ public interface EzPMSService {
 	
 	public List<ProjectGroupVO> getGroupList(SearchVO search, String orderWhat, String orderHow, int startRow, int limit, String lang, String location);
 	
-	public int addTask(ProjectTaskVO taskVO, List<TaskMemberVO> taskMemberList, String companyId, int tenantId);
+	public int addTask(ProjectTaskVO taskVO, List<TaskMemberVO> taskMemberList, String companyId, int tenantId, String lang);
 	
 	public List<ProjectMemberScheduleVO> getMemberScheduleList(Long projectId, String startDate, String endDate);
 	
 	public ProjectTaskVO getTaskDetails(Long taskId, int tenantId, String lang);
 	
-	public int updateTask(ProjectTaskVO task, String companyId, int tenantId);
+//	public int updateTask(ProjectTaskVO task, String companyId, int tenantId, String lang);
 	
-	public void deleteTask(Long taskId, long projectId, int tenantId, String companyId) throws Exception;
+	public void deleteTask(Long taskId, long projectId, int tenantId, String companyId, String lang) throws Exception;
 
-	public void updateTaskInfo(ProjectTaskVO task, String companyId, int tenantId);
+	public void updateTaskInfo(ProjectTaskVO task, String companyId, int tenantId, String lang);
 
-	public void updateTaskStatus(ProjectTaskVO task, String companyId, int tenantId);
+	public void updateTaskStatus(ProjectTaskVO task, String companyId, int tenantId, String lang);
 	
-	public Long addGroup(Map<String, Object> map, String isIssue, String companyId, int tenantId);
+	public Long addGroup(Map<String, Object> map, String isIssue, String companyId, int tenantId, String lang);
 	
 	public ProjectGroupVO getGroupDetails(long groupId, int tenantId, long projectId) throws Exception;
 	
-	public void updateGroup(ProjectGroupVO group);
+	public void updateGroup(ProjectGroupVO group, String lang);
 	
 	public void deleteGroup(long projectId, long groupId, int tenantId);
 	
@@ -121,11 +121,11 @@ public interface EzPMSService {
 	
 	public void deleteTaskMember(Long taskId, int tenantId);
 
-	public void updateProjectRealDate(Long projectId, int tenantId, String realStartDate, String status, String planEndDate, String companyId);
+	public void updateProjectRealDate(Long projectId, int tenantId, String realStartDate, String status, String planEndDate, String companyId, String lang);
 
 	public void addKanbanOrder(Long projectId, String userId, String orderStatus, int tenantId);
 
-	public void completeAllTasks(long projectId, int tenantId, String realEndDate, String planEndDate, String companyId);
+	public void completeAllTasks(long projectId, int tenantId, String realEndDate, String planEndDate, String companyId, String lang);
 
 	public void addBoard(JSONObject jsonParam, String realPath) throws Exception;
 	
@@ -196,17 +196,17 @@ public interface EzPMSService {
 
 	void updateTaskWDNW(ProjectTaskVO taskVO, float taskWorkingday);
 
-	public void updateTaskGroupId(long projectId, long targetTaskId, long toGroupId, long fromGroupId, int tenantId, int treeDepth) throws Exception;
+	public void updateTaskGroupId(long projectId, long targetTaskId, long toGroupId, long fromGroupId, int tenantId, int treeDepth, String lang) throws Exception;
 
 	public Float getProjectWeight(Long projectId, int tenantId) throws Exception;
 	
-	public int getWorkingDays(Date start, Date end, String companyId, int tenantId) throws Exception;
+	public int getWorkingDays(Date start, Date end, String companyId, int tenantId, String lang) throws Exception;
 	
-	public float getPlanProgress(Date start, Date end, String companyId, int tenantId) throws Exception;
+	public float getPlanProgress(Date start, Date end, String companyId, int tenantId, String lang) throws Exception;
 	
 	public void updateGroupProgress(long projectId, long groupId, int tenantId) throws Exception;
 	
-	public void updateGroupDate(long groupId, int tenantId, String companyId) throws Exception;
+	public void updateGroupDate(long groupId, int tenantId, String companyId, String lang) throws Exception;
 	
 	public ProjectGroupVO getGroupBoundaryDate(long groupId, int tenantId) throws Exception;
 	
@@ -214,13 +214,13 @@ public interface EzPMSService {
 	
 	public String getAncesterGroup(Long groupId, int tenantId) throws Exception;
 	
-	public void updateProjectDate(long projectId, int tenantId, String companyId) throws Exception;
+//	public void updateProjectDate(long projectId, int tenantId, String companyId, String lang) throws Exception;
 	
 	public ProjectInfoVO getProjectBoundaryDate(long projectId, int tenantId) throws Exception;
 
 	public List<ProjectMemberScheduleVO> getMemberSchedule(long projectId, int tenantId, String lang, String companyId, String planStartDate, String planEndDate) throws Exception;
 
-	public void addMemberSchedule(String memberId, int tenantId, String assignedDate, long projectId, long taskId);
+//	public void addMemberSchedule(String memberId, int tenantId, String assignedDate, long projectId, long taskId);
 	
 	public List<ProjectTaskVO> getTaskListByGroupId(int tenantId, long groupId);
 	
@@ -262,9 +262,9 @@ public interface EzPMSService {
 
 	public int getDateTaskCount(String date, long projectId, int tenantId, String memberId);
 
-	public void deleteMemberSchedule(String date, long projectId, int tenantId, String memberId, long taskId);
+//	public void deleteMemberSchedule(String date, long projectId, int tenantId, String memberId, long taskId);
 	
-	public void updateGroupLatestInfo(long projectId, long groupId, int tenantId) throws Exception;
+	public void updateGroupLatestInfo(long projectId, long groupId, int tenantId, String lang) throws Exception;
 	
 	public List<String> getDateList(String startDate, String EndDate) throws Exception;
 	

@@ -102,9 +102,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 						int restDueday = 0;
 						
 						if (startDate.before(now)) {
-							restDueday = getWorkingDays(now, endDate, companyId, tenantId);
+							restDueday = getWorkingDays(now, endDate, companyId, tenantId, lang);
 						} else {
-							restDueday = getWorkingDays(startDate, endDate, companyId, tenantId);
+							restDueday = getWorkingDays(startDate, endDate, companyId, tenantId, lang);
 						}
 						
 						projectList.get(i).setRestDueday(restDueday);
@@ -158,7 +158,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			// 날짜 차이 계산
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("planStartDate").toString());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(map.get("planEndDate").toString());
-			int workingDays = getWorkingDays(startDate, endDate, map.get("companyId").toString(), Integer.parseInt(map.get("tenantId").toString()));
+			int workingDays = getWorkingDays(startDate, endDate, map.get("companyId").toString(), Integer.parseInt(map.get("tenantId").toString()), (String)map.get("lang"));
 
 			map.put("workingDay", workingDays);
 			// map.put("workingDay", 0);
@@ -298,7 +298,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
 
-				int restDueday = getWorkingDays(now, endDate, companyId, tenantId);
+				int restDueday = getWorkingDays(now, endDate, companyId, tenantId, lang);
 				project.setRestDueday(restDueday);
 			}
 
@@ -312,7 +312,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void updateProject(ProjectInfoVO project, int tenantId, String companyId) {
+	public void updateProject(ProjectInfoVO project, int tenantId, String companyId, String lang) {
 		LOGGER.debug("Service updateProject Started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -332,9 +332,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getPlanEndDate());
 			Date nowDate = new SimpleDateFormat("yyyy-MM-dd").parse(project.getCreateDate());
 
-			int workingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
+			int workingDays = getWorkingDays(startDate, endDate, companyId, tenantId, lang);
 
-			int restDueday = getWorkingDays(nowDate, endDate, companyId, tenantId);
+			int restDueday = getWorkingDays(nowDate, endDate, companyId, tenantId, lang);
 			map.put("workingday", workingDays);
 			map.put("restDueday", restDueday);
 
@@ -632,7 +632,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int addTask(ProjectTaskVO taskVO, List<TaskMemberVO> taskMemberList, String companyId, int tenantId) {
+	public int addTask(ProjectTaskVO taskVO, List<TaskMemberVO> taskMemberList, String companyId, int tenantId, String lang) {
 		LOGGER.debug("[SERVICE] addTask started.");
 		Long taskId = (long) 0;
 
@@ -655,7 +655,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanEndDate());
 			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getWriteDate());
 			
-			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
+			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId, lang);
 
 			int createAndEndDateComp = createDate.compareTo(endDate);
 
@@ -700,7 +700,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				String[] ancGroupArr = ancesterGroup.split(",");
 
 				for (int i = 0; i < ancGroupArr.length; i++) {
-					updateGroupDate(Long.parseLong(ancGroupArr[i]), taskVO.getTenantId(), companyId);
+					updateGroupDate(Long.parseLong(ancGroupArr[i]), taskVO.getTenantId(), companyId, lang);
 				}
 			}
 
@@ -730,7 +730,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				Date projectEndDate = new SimpleDateFormat("yyyy-MM-dd").parse(projectDetails.getPlanEndDate());
 				if(endDate.compareTo(projectEndDate) > 0){
 					Map<String, Object> map = new HashMap<String, Object>();
-					int workingday = getWorkingDays(projectStartDate, endDate, companyId, tenantId);
+					int workingday = getWorkingDays(projectStartDate, endDate, companyId, tenantId, lang);
 
 					map.put("workingday", workingday);
 					map.put("planStartDate", projectStartDate);
@@ -836,102 +836,102 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return taskDetails;
 	}
 
+//	@Override
+//	public int updateTask(ProjectTaskVO task, String companyId, int tenantId, String lang) {
+//		LOGGER.debug("[SERVICE] updateTask started.");
+//		////////////////////현재 호출하는 부분 없는 듯 2018-07-02 홍대표/////////////////////////////////////////////
+//		Long taskId = (long) 0;
+//
+//		try {
+//			List<TaskMemberVO> taskMemberList = task.getTaskMember();
+//
+//			String projectId = task.getProjectId() + "";
+//
+//			// 정렬 순서 구하기
+//			int sortOrder = ezPMSDAO.getSortOrder(task.getGroupId() + "");
+//			task.setSortOrder(sortOrder);
+//
+//			// 투입률 총합
+//			float sumPctinput = 0;
+//
+//			task.setRealProgress((float) 0);
+//			task.setMemberCount(taskMemberList.size());
+//
+//			// workingday 계산
+//			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanStartDate());
+//			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanEndDate());
+//			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getWriteDate());
+//
+//			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId, lang);
+//
+//			int createAndEndDateComp = createDate.compareTo(endDate);
+//
+//			if (createAndEndDateComp > 0) {
+//				task.setStatus("L");
+//			} else {
+//				task.setStatus("W");
+//			}
+//
+//			// 업무 총괄담당자 정보 불러오기
+//			ProjectMemberVO headManagerInfo = getUserInfo(task.getHeadManagerId(), task.getTenantId(), "user");
+//			task.setHeadManagerName(headManagerInfo.getUserName());
+//			task.setHeadManagerName2(headManagerInfo.getUserName2());
+//			task.setHeadManagerDeptname(headManagerInfo.getUserDeptname());
+//			task.setHeadManagerDeptname2(headManagerInfo.getUserDeptname2());
+//
+//			taskId = ezPMSDAO.addTask(task);
+//
+//			for (int i = 0; i < taskMemberList.size(); i++) {
+//				TaskMemberVO taskMemberVO = taskMemberList.get(i);
+//				taskMemberList.get(i).setTaskId(taskId);
+//				sumPctinput += taskMemberVO.getPctinput();
+//			}
+//			ezPMSDAO.addTaskMember(taskMemberList);
+//
+//			float taskWorkingday = calWorkingDays * (sumPctinput / 100);
+//
+//			HashMap<String, Object> map1 = new HashMap<String, Object>();
+//			map1.put("projectId", projectId);
+//			map1.put("workingday", taskWorkingday);
+//			map1.put("tenantId", tenantId);
+//			map1.put("realWorkingday", calWorkingDays);
+//			
+//			//task
+//			map1.put("taskId", taskId);
+//			map1.put("roleId", 3);
+//
+//			ProjectTaskVO taskVO = ezPMSDAO.getTaskDetails(map1);
+//			map1.replace("realWorkingday", taskVO.getRealWorkingday() - calWorkingDays);
+//			//업무수정하면서 워킹데이합계 재계산
+//			ezPMSDAO.updateProjectWorkingdaySum(map1);
+//
+//			// 가중치 계산
+//			updateTaskWDNW(task, taskWorkingday);
+//
+//			// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 일정을 업데이트 해준다.
+//			if (!task.getGroupId().equals(0L)) {
+//				String ancesterGroup = getAncesterGroup(task.getGroupId(), task.getTenantId());
+//				String[] ancGroupArr = ancesterGroup.split(",");
+//
+//				for (int i = 0; i < ancGroupArr.length; i++) {
+//					updateGroupDate(Long.parseLong(ancGroupArr[i]), task.getTenantId(), companyId);
+//				}
+//			}
+//
+//			// 업무가 속한 프로젝트 날짜 업데이트
+//			// updateProjectDate(task.getProjectId(), task.getTenantId(),
+//			// companyId);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		LOGGER.debug("[SERVICE] updateTask ended.");
+//
+//		return taskId.intValue();
+//	}
+
 	@Override
-	public int updateTask(ProjectTaskVO task, String companyId, int tenantId) {
-		LOGGER.debug("[SERVICE] updateTask started.");
-		////////////////////현재 호출하는 부분 없는 듯 2018-07-02 홍대표/////////////////////////////////////////////
-		Long taskId = (long) 0;
-
-		try {
-			List<TaskMemberVO> taskMemberList = task.getTaskMember();
-
-			String projectId = task.getProjectId() + "";
-
-			// 정렬 순서 구하기
-			int sortOrder = ezPMSDAO.getSortOrder(task.getGroupId() + "");
-			task.setSortOrder(sortOrder);
-
-			// 투입률 총합
-			float sumPctinput = 0;
-
-			task.setRealProgress((float) 0);
-			task.setMemberCount(taskMemberList.size());
-
-			// workingday 계산
-			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanStartDate());
-			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanEndDate());
-			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getWriteDate());
-
-			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
-
-			int createAndEndDateComp = createDate.compareTo(endDate);
-
-			if (createAndEndDateComp > 0) {
-				task.setStatus("L");
-			} else {
-				task.setStatus("W");
-			}
-
-			// 업무 총괄담당자 정보 불러오기
-			ProjectMemberVO headManagerInfo = getUserInfo(task.getHeadManagerId(), task.getTenantId(), "user");
-			task.setHeadManagerName(headManagerInfo.getUserName());
-			task.setHeadManagerName2(headManagerInfo.getUserName2());
-			task.setHeadManagerDeptname(headManagerInfo.getUserDeptname());
-			task.setHeadManagerDeptname2(headManagerInfo.getUserDeptname2());
-
-			taskId = ezPMSDAO.addTask(task);
-
-			for (int i = 0; i < taskMemberList.size(); i++) {
-				TaskMemberVO taskMemberVO = taskMemberList.get(i);
-				taskMemberList.get(i).setTaskId(taskId);
-				sumPctinput += taskMemberVO.getPctinput();
-			}
-			ezPMSDAO.addTaskMember(taskMemberList);
-
-			float taskWorkingday = calWorkingDays * (sumPctinput / 100);
-
-			HashMap<String, Object> map1 = new HashMap<String, Object>();
-			map1.put("projectId", projectId);
-			map1.put("workingday", taskWorkingday);
-			map1.put("tenantId", tenantId);
-			map1.put("realWorkingday", calWorkingDays);
-			
-			//task
-			map1.put("taskId", taskId);
-			map1.put("roleId", 3);
-
-			ProjectTaskVO taskVO = ezPMSDAO.getTaskDetails(map1);
-			map1.replace("realWorkingday", taskVO.getRealWorkingday() - calWorkingDays);
-			//업무수정하면서 워킹데이합계 재계산
-			ezPMSDAO.updateProjectWorkingdaySum(map1);
-
-			// 가중치 계산
-			updateTaskWDNW(task, taskWorkingday);
-
-			// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 일정을 업데이트 해준다.
-			if (!task.getGroupId().equals(0L)) {
-				String ancesterGroup = getAncesterGroup(task.getGroupId(), task.getTenantId());
-				String[] ancGroupArr = ancesterGroup.split(",");
-
-				for (int i = 0; i < ancGroupArr.length; i++) {
-					updateGroupDate(Long.parseLong(ancGroupArr[i]), task.getTenantId(), companyId);
-				}
-			}
-
-			// 업무가 속한 프로젝트 날짜 업데이트
-			// updateProjectDate(task.getProjectId(), task.getTenantId(),
-			// companyId);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		LOGGER.debug("[SERVICE] updateTask ended.");
-
-		return taskId.intValue();
-	}
-
-	@Override
-	public void deleteTask(Long taskId, long projectId, int tenantId, String companyId) throws Exception {
+	public void deleteTask(Long taskId, long projectId, int tenantId, String companyId, String lang) throws Exception {
 		LOGGER.debug("[SERVICE] deleteTask started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -960,7 +960,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 					if(i == 0){
 						
 					}
-					updateGroupDate(Long.parseLong(ancGroupArr[i]), taskVO.getTenantId(), companyId);
+					updateGroupDate(Long.parseLong(ancGroupArr[i]), taskVO.getTenantId(), companyId, lang);
 				}
 			}
 			
@@ -1017,7 +1017,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				ezPMSDAO.updateProjectStatus(map);
 				Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(projectDetails.getPlanStartDate());
 				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-				int workingday = getWorkingDays(startDate, endDate, companyId, tenantId);
+				int workingday = getWorkingDays(startDate, endDate, companyId, tenantId, lang);
 
 				map.put("restDueday", workingday);
 				map.put("progress", projectProgress);
@@ -1031,7 +1031,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public Long addGroup(Map<String, Object> map, String isIssue, String companyId, int tenantId) {
+	public Long addGroup(Map<String, Object> map, String isIssue, String companyId, int tenantId, String lang) {
 		LOGGER.debug("[SERVICE] addGroup started.");
 		map.put("delStatus", 0);
 
@@ -1045,9 +1045,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			int workingDays = 0;
 
 			if (createAndStartDateComp <= 0) {
-				workingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
+				workingDays = getWorkingDays(startDate, endDate, companyId, tenantId, lang);
 			} else {
-				workingDays = getWorkingDays(createDate, endDate, companyId, tenantId);
+				workingDays = getWorkingDays(createDate, endDate, companyId, tenantId, lang);
 			}
 
 			map.put("workingDay", workingDays);
@@ -1113,7 +1113,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void updateGroup(ProjectGroupVO group) {
+	public void updateGroup(ProjectGroupVO group, String lang) {
 		LOGGER.debug("[SERVICE] updateGroup started.");
 		
 		try {
@@ -1132,7 +1132,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(group.getPlanStartDate());
 				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(group.getPlanEndDate());
 				
-				int workingDay = getWorkingDays(startDate, endDate, "", group.getTenantId());
+				int workingDay = getWorkingDays(startDate, endDate, "", group.getTenantId(), lang);
 				
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("planStartDate", group.getPlanStartDate());
@@ -1343,7 +1343,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int getWorkingDays(Date start, Date end, String companyId, int tenantId) {
+	public int getWorkingDays(Date start, Date end, String companyId, int tenantId, String lang) {
 		LOGGER.debug("[SERVICE]getWorkingDays started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
@@ -1384,7 +1384,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		int noRepeatHolidayCount = 0;
 		
 		//고정공휴일 & 사용자 정의 공휴일 불러오기
-		map.put("lang", ""); //parameter추가
+		map.put("lang", lang); //parameter추가
+		if (lang.equals("3")) {
+			map.put("country", "jap");
+		} else {
+			map.put("country", "kor");
+		}
+		
 		List<ProjectHolidayVO> holidayList = ezPMSDAO.getCustomHoliday(map);
 		
 		for (int i = 0; i < holidayList.size(); i++) {
@@ -1644,7 +1650,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public void updateProjectRealDate(Long projectId, int tenantId, String changeDate, String status,
-			String planEndDate, String companyId) {
+			String planEndDate, String companyId, String lang) {
 		LOGGER.debug("[SERVICE] updateProjectRealDate Started");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
@@ -1658,7 +1664,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date today = new Date();
 			String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 			Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
-			int restDueday = getWorkingDays(now, endDate, companyId, tenantId);
+			int restDueday = getWorkingDays(now, endDate, companyId, tenantId, lang);
 
 			map.put("restDueday", restDueday);
 		} catch (ParseException e) {
@@ -1672,7 +1678,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public void completeAllTasks(long projectId, int tenantId, String realEndDate, String planEndDate,
-			String companyId) {
+			String companyId, String lang) {
 		LOGGER.debug("[SERVICE] completeAllTasks Started");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
@@ -1686,7 +1692,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date today = new Date();
 			String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 			Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
-			int restDueday = getWorkingDays(now, endDate, companyId, tenantId);
+			int restDueday = getWorkingDays(now, endDate, companyId, tenantId, lang);
 
 			map.put("restDueday", restDueday);
 		} catch (ParseException e) {
@@ -2177,7 +2183,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return fileList;
 	}
 
-	public void updateTaskInfo(ProjectTaskVO task, String companyId, int tenantId) {
+	public void updateTaskInfo(ProjectTaskVO task, String companyId, int tenantId, String lang) {
 		LOGGER.debug("[SERVICE] updateTaskInfo started.");
 		Long taskId = (long) 0;
 
@@ -2198,7 +2204,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanEndDate());
 			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getWriteDate());
 
-			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
+			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId, lang);
 
 			int createAndEndDateComp = createDate.compareTo(endDate);
 
@@ -2280,7 +2286,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return groupCount;
 	}
 
-	public void updateTaskStatus(ProjectTaskVO task, String companyId, int tenantId) {
+	public void updateTaskStatus(ProjectTaskVO task, String companyId, int tenantId, String lang) {
 		LOGGER.debug("[SERVICE] updateTaskStatus started.");
 		
 		HashMap<String, Object> map = new HashMap<String, Object>();
@@ -2295,7 +2301,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanStartDate());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(task.getPlanEndDate());
 
-			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId);
+			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId, lang);
 			task.setRealWorkingday(calWorkingDays);
 
 			if (task.getStatus() != null) {
@@ -2319,7 +2325,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				String[] ancGroupArr = ancesterGroup.split(",");
 
 				for (int i = 0; i < ancGroupArr.length; i++) {
-					updateGroupDate(Long.parseLong(ancGroupArr[i]), task.getTenantId(), companyId);
+					updateGroupDate(Long.parseLong(ancGroupArr[i]), task.getTenantId(), companyId, lang);
 				}
 			}
 			
@@ -2737,7 +2743,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void updateTaskGroupId(long projectId, long targetTaskId, long toGroupId, long fromGroupId, int tenantId, int treeDepth) throws Exception {
+	public void updateTaskGroupId(long projectId, long targetTaskId, long toGroupId, long fromGroupId, int tenantId, int treeDepth, String lang) throws Exception {
 		LOGGER.debug("[SERVICE] updateTaskGroupId started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
@@ -2747,8 +2753,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("treeDepth", treeDepth);
 
 		ezPMSDAO.updateTaskGroupId(map);
-		updateGroupLatestInfo(projectId, toGroupId, tenantId);
-		updateGroupLatestInfo(projectId, fromGroupId, tenantId);
+		updateGroupLatestInfo(projectId, toGroupId, tenantId, lang);
+		updateGroupLatestInfo(projectId, fromGroupId, tenantId, lang);
 		
 		LOGGER.debug("[SERVICE] updateTaskGroupId ended.");
 	}
@@ -2765,7 +2771,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public float getPlanProgress(Date start, Date end, String companyId, int tenantId) throws Exception {
+	public float getPlanProgress(Date start, Date end, String companyId, int tenantId, String lang) throws Exception {
 		Date today = new Date();
 		String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 		Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
@@ -2777,8 +2783,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		String simpTomorrow = new SimpleDateFormat("yyyy-MM-dd").format(tomorrow);
 		Date tomorrowDate = new SimpleDateFormat("yyyy-MM-dd").parse(simpTomorrow);
 
-		int totalWorkingdays = getWorkingDays(start, end, companyId, tenantId);
-		int restDueday = getWorkingDays(tomorrowDate, end, companyId, tenantId);
+		int totalWorkingdays = getWorkingDays(start, end, companyId, tenantId, lang);
+		int restDueday = getWorkingDays(tomorrowDate, end, companyId, tenantId, lang);
 		float planProgress = 0;
 		
 		//시작일이 오늘날짜보다 늦으면(대기 상태)이면 계획진행률을 0으로 리턴
@@ -2809,7 +2815,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public void updateGroupDate(long groupId, int tenantId, String companyId) throws Exception {
+	public void updateGroupDate(long groupId, int tenantId, String companyId, String lang) throws Exception {
 		LOGGER.debug("[SERVICE] updateGroupDate started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("groupId", groupId);
@@ -2828,7 +2834,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		Date endDay = new SimpleDateFormat("yyyy-MM-dd").parse(groupVO.getPlanEndDate());
 
 		// 위에서 얻어 온 시작일, 종료일을 기준으로 워킹데이를 구함.
-		int workingday = getWorkingDays(startDay, endDay, companyId, tenantId);
+		int workingday = getWorkingDays(startDay, endDay, companyId, tenantId, lang);
 
 		map.put("workingday", workingday);
 		map.put("planStartDate", startDay);
@@ -2899,30 +2905,30 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return ezPMSDAO.getAncesterGroup(map);
 	}
 
-	@Override
-	public void updateProjectDate(long projectId, int tenantId, String companyId) throws Exception {
-		LOGGER.debug("[SERVICE] updateProjectDate started.");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("projectId", projectId);
-		map.put("tenantId", tenantId);
-
-		ProjectInfoVO projectVO = new ProjectInfoVO();
-		// 프로젝트에 속한 업무들 중 가장 빠른 계획 시작일과 가장 늦은 계획 종료일을 얻어옴.
-		projectVO = getProjectBoundaryDate(projectId, tenantId);
-
-		Date startDay = new SimpleDateFormat("yyyy-MM-dd").parse(projectVO.getPlanStartDate());
-		Date endDay = new SimpleDateFormat("yyyy-MM-dd").parse(projectVO.getPlanEndDate());
-
-		// 위에서 얻어 온 시작일, 종료일을 기준으로 워킹데이를 구함.
-		int workingday = getWorkingDays(startDay, endDay, companyId, tenantId);
-
-		map.put("workingday", workingday);
-		map.put("planStartDate", startDay);
-		map.put("planEndDate", endDay);
-
-		ezPMSDAO.updateProjectDate(map);
-		LOGGER.debug("[SERVICE] updateProjectDate ended.");
-	}
+//	@Override
+//	public void updateProjectDate(long projectId, int tenantId, String companyId, String lang) throws Exception {
+//		LOGGER.debug("[SERVICE] updateProjectDate started.");
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("projectId", projectId);
+//		map.put("tenantId", tenantId);
+//
+//		ProjectInfoVO projectVO = new ProjectInfoVO();
+//		// 프로젝트에 속한 업무들 중 가장 빠른 계획 시작일과 가장 늦은 계획 종료일을 얻어옴.
+//		projectVO = getProjectBoundaryDate(projectId, tenantId);
+//
+//		Date startDay = new SimpleDateFormat("yyyy-MM-dd").parse(projectVO.getPlanStartDate());
+//		Date endDay = new SimpleDateFormat("yyyy-MM-dd").parse(projectVO.getPlanEndDate());
+//
+//		// 위에서 얻어 온 시작일, 종료일을 기준으로 워킹데이를 구함.
+//		int workingday = getWorkingDays(startDay, endDay, companyId, tenantId, lang);
+//
+//		map.put("workingday", workingday);
+//		map.put("planStartDate", startDay);
+//		map.put("planEndDate", endDay);
+//
+//		ezPMSDAO.updateProjectDate(map);
+//		LOGGER.debug("[SERVICE] updateProjectDate ended.");
+//	}
 
 	@Override
 	public ProjectInfoVO getProjectBoundaryDate(long projectId, int tenantId) throws Exception {
@@ -2994,19 +3000,19 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return memberScheduleVOs;
 	}
 
-	@Override
-	public void addMemberSchedule(String memberId, int tenantId, String assignedDate, long projectId, long taskId) {
-		LOGGER.debug("[SERVICE] addMemberSchedule started.");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("projectId", projectId);
-		map.put("tenantId", tenantId);
-		map.put("memberId", memberId);
-		map.put("assignedDate", assignedDate);
-		map.put("taskId", taskId);
-		
-		ezPMSDAO.addMemberSchedule(map);
-		LOGGER.debug("[SERVICE] addMemberSchedule ended.");
-	}
+//	@Override
+//	public void addMemberSchedule(String memberId, int tenantId, String assignedDate, long projectId, long taskId) {
+//		LOGGER.debug("[SERVICE] addMemberSchedule started.");
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("projectId", projectId);
+//		map.put("tenantId", tenantId);
+//		map.put("memberId", memberId);
+//		map.put("assignedDate", assignedDate);
+//		map.put("taskId", taskId);
+//		
+//		ezPMSDAO.addMemberSchedule(map);
+//		LOGGER.debug("[SERVICE] addMemberSchedule ended.");
+//	}
 
 	@Override
 	public List<ProjectTaskVO> getTaskListByGroupId(int tenantId, long groupId) {
@@ -3265,21 +3271,21 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		return ezPMSDAO.getDateTaskCount(map);
 	}
 
-	@Override
-	public void deleteMemberSchedule(String date, long projectId, int tenantId, String memberId, long taskId) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("searchDate", date);
-		map.put("projectId", projectId);
-		map.put("tenantId", tenantId);
-		map.put("memberId", memberId);
-		map.put("taskId", taskId);
-		
-		ezPMSDAO.deleteMemberSchedule(map);
-		
-	}
+//	@Override
+//	public void deleteMemberSchedule(String date, long projectId, int tenantId, String memberId, long taskId) {
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("searchDate", date);
+//		map.put("projectId", projectId);
+//		map.put("tenantId", tenantId);
+//		map.put("memberId", memberId);
+//		map.put("taskId", taskId);
+//		
+//		ezPMSDAO.deleteMemberSchedule(map);
+//		
+//	}
 
 	@Override
-	public void updateGroupLatestInfo(long projectId, long groupId, int tenantId) throws Exception {
+	public void updateGroupLatestInfo(long projectId, long groupId, int tenantId, String lang) throws Exception {
 		String ancesterGroup = getAncesterGroup(groupId, tenantId);
 		String[] ancGroupArr = ancesterGroup.split(",");
 		
@@ -3288,7 +3294,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		//해당 그룹과 상위그룹 일정 업데이트
 		for (int i = 0; i < ancGroupArr.length; i++) {
-			updateGroupDate(Long.parseLong(ancGroupArr[i]), tenantId, "companyid");
+			updateGroupDate(Long.parseLong(ancGroupArr[i]), tenantId, "companyid", lang);
 		}
 		
 		//해당 그룹과 상위그룹 진행률 업데이트

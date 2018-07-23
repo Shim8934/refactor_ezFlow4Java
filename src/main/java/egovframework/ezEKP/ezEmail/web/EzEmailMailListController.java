@@ -415,6 +415,8 @@ public class EzEmailMailListController {
 					}
 				}
 				
+				Map<String, String> aliasAddressList = ezEmailService.getAliasAddressMap(addressList, userInfo.getTenantId());
+				
 				List<String> tempMailList = new ArrayList<String>();
 				
 				readDate = "UNREAD";
@@ -423,7 +425,14 @@ public class EzEmailMailListController {
 				if (addresses1 != null) {
 					for (Address address : addresses1) {
 						String email = ((InternetAddress)address).getAddress();
+						
 						if (email != null) {
+							msgto += email + ";";
+							
+							if (aliasAddressList.containsKey(email)) { //Alias주소인 경우
+								email = aliasAddressList.get(email);
+							}
+							
 							for (MailReadVO vo : readList) {
 								if (vo.getReaderEmail().equals(email)) {
 									readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), userInfo.getOffset(), false);
@@ -433,12 +442,9 @@ public class EzEmailMailListController {
 							}
 							
 							tempMailList.add(email);
-							msgto += email + ";";
 						}
 					}
-					
-					
-					
+										
 					String returnValue1 = Integer.toString(tempMailList.size());
 					if (tempMailList.size() == 1) {
 						returnValue1 += ";" + readDate;
@@ -450,11 +456,12 @@ public class EzEmailMailListController {
 					nameLength = Integer.parseInt(returnValue1.split(";")[0]);
 					
 					if (nameLength > 1) {
-						if (nameLength - readCount == nameLength) {
-							name = String.format(egovMessageSource.getMessage("ezEmail.jje02", locale), Integer.toString(nameLength));
-						} else {
-							name = String.format(egovMessageSource.getMessage("ezEmail.jje03", locale), Integer.toString(nameLength), returnValue1.split(";")[1]);
-						}
+//						if (readCount == 0) {
+//							name = String.format(egovMessageSource.getMessage("ezEmail.jje02", locale), Integer.toString(nameLength));
+//						} else {
+//							name = String.format(egovMessageSource.getMessage("ezEmail.jje03", locale), Integer.toString(nameLength), returnValue1.split(";")[1]);
+//						}
+						
 						readDate = "";
 					} else {
 						readDate = returnValue1.split(";")[1];
@@ -471,6 +478,15 @@ public class EzEmailMailListController {
 				
 				if (msgto == null || msgto.equals("")) {
 					msgto = "";
+				}
+				
+				// 수신확인 항목이 존재하나 readCount가 0인 경우는 메일의 수신인 주소와 일치하는
+				// 수신확인 읽은 사람 주소가 없는 경우이며 부서 혹은 공용배포그룹과 같은 경우에 발생할 수 있다.
+				if (readCount == 0 && readList.size() > 0) {
+					sb.append(String.format("<group><![CDATA[yes]]></group>"));
+					readDate = "";
+				} else {
+					sb.append(String.format("<group><![CDATA[no]]></group>"));
 				}
 				
 				sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
