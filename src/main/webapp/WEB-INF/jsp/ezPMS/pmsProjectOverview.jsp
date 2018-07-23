@@ -222,34 +222,38 @@ function initKanbanList() {
 		data :JSON.stringify(data),
 		success : function(result) {
 			var kanbanOrderArr = kanbanOrder.split(",");
-
-			$("#kanban1").find(".point_blue").append(result.kanbanTaskCount1);
-			$("#kanban2").find(".point_blue").append(result.kanbanTaskCount2);
-			$("#kanban3").find(".point_blue").append(result.kanbanTaskCount3);
-			$("#kanban4").find(".point_blue").append(result.kanbanTaskCount4);
+			var totalTaskCNT = result.totalTaskCNT;
 			
 			if (kanbanOrderArr[0] != "B") {
 				setTasksIntoKanban(result.kanbanTask1, "kanban1", result.kanbanTaskCount1, "new", false);
+				$("#kanban1").find(".point_blue").append(result.kanbanTaskCount1 + " / " + totalTaskCNT);
 			} else {
 				setTasksIntoKanban(result.kanbanTask1, "kanban1", result.kanbanTaskCount1, "new", true);
+				$("#kanban1").find(".point_blue").append(result.kanbanTaskCount1);
 			}
 			
 			if (kanbanOrderArr[1] != "B") {
 				setTasksIntoKanban(result.kanbanTask2, "kanban2", result.kanbanTaskCount2, "new", false);
+				$("#kanban2").find(".point_blue").append(result.kanbanTaskCount2 + " / " + totalTaskCNT);
 			} else {
 				setTasksIntoKanban(result.kanbanTask2, "kanban2", result.kanbanTaskCount2, "new", true);
+				$("#kanban2").find(".point_blue").append(result.kanbanTaskCount2);
 			}
 			
 			if (kanbanOrderArr[2] != "B") {
 				setTasksIntoKanban(result.kanbanTask3, "kanban3", result.kanbanTaskCount3, "new", false);
+				$("#kanban3").find(".point_blue").append(result.kanbanTaskCount3 + " / " + totalTaskCNT);
 			} else {
 				setTasksIntoKanban(result.kanbanTask3, "kanban3", result.kanbanTaskCount3, "new", true);
+				$("#kanban3").find(".point_blue").append(result.kanbanTaskCount3);
 			}
 			
 			if (kanbanOrderArr[3] != "B") {
 				setTasksIntoKanban(result.kanbanTask4, "kanban4", result.kanbanTaskCount4, "new", false);
+				$("#kanban4").find(".point_blue").append(result.kanbanTaskCount4 + " / " + totalTaskCNT);
 			} else {
 				setTasksIntoKanban(result.kanbanTask4, "kanban4", result.kanbanTaskCount4, "new", true);
+				$("#kanban4").find(".point_blue").append(result.kanbanTaskCount4);
 			}
 			
 /* 			for (var i = 0; i < kanbanOrderArr.length; i++) {
@@ -611,7 +615,8 @@ function moreTaskList(targetStatus, targetPosition, startRow, taskType) {
 				$("#" + targetPosition).find(".overview_section_listDL").html("<dt>" + title + "&nbsp;<span class='point_blue'></span></dt>");
 			}
 			
-			$("#" + targetPosition).find(".point_blue").append(result.kanbanTaskCount1);
+			var totalTaskCNT = result.totalTaskCNT;
+			$("#" + targetPosition).find(".point_blue").append(result.kanbanTaskCount1 + " / " + totalTaskCNT);
 			
 			updateOrderStatus();	
 		},
