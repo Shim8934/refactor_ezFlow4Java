@@ -8,6 +8,7 @@
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 		<style>
 			.layerpopup {
 				-webkit-border-top-left-radius: 5px;
@@ -24,22 +25,11 @@
 	 			padding:2px 2px;
 	 			border:1px solid #ffffff;
 			}
-			 #open-memo {
-			 	width:50px;
-			 	height:50px;
-			    position: absolute;
-			    /* top: 600px;
-			    left: 650px; */
-			    z-index: 1000;
-			    border: solid 1px black;
-			    cursor: pointer;
-			}
-			#layer-popup{
-				float:right;
-				width:500px; height:600px; background:gray;
-  				position:absolute; /* top:60px; left:940px; */ text-align:center; 
-  				border:1px solid black;
-			}
+			#open-memo { width:50px; height:50px; position: absolute; top: 676px; left: 1371px; z-index: 1000; border: solid 1px black;cursor: pointer; background-color: gray; text-align: center;}
+			#layer-popup{ float:right; width:500px; height:600px; background:white; position:absolute; text-align:center; border:1px solid black;}
+			.individual-memo { width:200px; height:200px; background:white; text-align:center; border:1px solid black; cursor: pointer;}
+			#selected-memo { position:absolute; width:400px; height:500px; background:white; z-index:9001; top:48px; left:36px;}
+			#maskDiv { absolute; width:500px; height:600px; background:white; z-index:9001; top:0px; left:0px;opacity:0.6; z-index:9000; background:rgb(59, 60, 60);}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -60,30 +50,41 @@
 		    function chagePosition() {
 		    	var winHeight = window.innerHeight;
 				var winWidth = window.innerWidth;
-		    	$( "#open-memo" ).css("top", winHeight - 100);
-		    	$( "#open-memo" ).css("left", winWidth - 100);
 		    	
 		    	$("#layer-popup").css("top", winHeight - 700);
 		    	$("#layer-popup").css("left", winWidth - 600);
+		    	
+		    	$("#selected-memo").css("top", 50);
+		    	$("#selected-memo").css("left", 50);
 		    }
 
-
-		    $(window).resize(function () {
-		    	chagePosition();
-		    });
-		    
 		    $(function() {
 			    
 		    	chagePosition();
+		    	
+		        $('#open-memo').draggable();
+		        $('#layer-popup').draggable();
 				
 		        $( "#open-memo" ).click(function() {
-					$("#layer-popup").css("display", "");
+		        	if ("none" == ($("#layer-popup").css("display"))) {
+						$("#layer-popup").css("display", "");
+		        	} else {
+						$("#layer-popup").css("display", "none");
+		        	}
 		        });
 		        
 		        $("#close-button").click(function() {
 		        	$("#layer-popup").css("display", "none")
 		        })
 		        
+		        $("#memo-1").click(function() {
+		        	$("#maskDiv").css("display", "");
+		        	$("#selected-memo").css("display", "");
+		        });
+		        $("#maskDiv").click(function() {
+		        	$("#maskDiv").css("display", "none");
+		        	$("#selected-memo").css("display", "none");
+		        })
 		      });
 		</script>
 	</head>
@@ -96,18 +97,31 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
     		<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		<div id="layer-popup" >
+		
+		<div id="layer-popup" style="display: none">
+		
+			<div id="maskDiv" style="display: none"></div>
+			
 			<div>
-				<span>
-					<button id="close-button" style="float: right">닫기 X</button>
-				</span>
+				<button id="close-button" style="float:right" >닫기 X</button>
+				<div>메모 레이어 팝업</div>
+				
+				<!-- 메모 리스트 -->
+				<table id="memo-1" class="individual-memo" style="cursor: pointer;">
+					<tbody><tr><td>내용</td></tr></tbody>
+				</table>
+				<table id="memo-2" class="individual-memo">
+					<tbody><tr><td>내용</td></tr></tbody>
+				</table>
 			</div>
-			<div>메모 레이어 팝업</div>
+			
+			<!-- 하나 클릭 -->
+			<div id="selected-memo" style="display: none">내용 </div>
 		</div>
+		
+		<div id="open-memo">메모</div>
+		
 		<!-- test -->
-		<div>
-			<button id="open-memo">메모 버튼</button>
-		</div>
 	</body>
 	<script type="text/javascript">
     	var Main_DialogArguments = new Array();
