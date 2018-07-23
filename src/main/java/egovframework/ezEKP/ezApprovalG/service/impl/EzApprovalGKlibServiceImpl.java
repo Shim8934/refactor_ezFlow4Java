@@ -1,13 +1,9 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +11,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,40 +39,6 @@ import egovframework.let.utl.fcc.service.KlibUtil;
  * */
 @Service("EzApprovalGKlibService")
 public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService {
-	// 폴더 자체를 복사하기 위한 FileVisitor
-	private class CopyDirectoryVisitor extends SimpleFileVisitor<Path> {
-
-		// 목적지 폴더
-		private Path destDirectory;
-		// 복사 대상 폴더
-		private Path sourceDirectory;
-
-		private CopyDirectoryVisitor(Path sourceDir, Path destDir) {
-			this.sourceDirectory = sourceDir;
-			this.destDirectory = destDir;
-		}
-
-		@Override
-		public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-			// sourceDirectory 내의 폴더를 destDirectory 의 상대 경로로 변경
-			dir = destDirectory.resolve(sourceDirectory.relativize(dir));
-
-			// 복사할 위치에 폴더가 존재하지 않는다면 생성
-			if (!Files.exists(dir)) {
-				Files.createDirectories(dir);
-			}
-
-			return FileVisitResult.CONTINUE;
-		}
-
-		@Override
-		public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-			// destDirectory 의 위치로 파일 복사
-			Files.copy(file, destDirectory.resolve(sourceDirectory.relativize(file)), StandardCopyOption.REPLACE_EXISTING);
-
-			return FileVisitResult.CONTINUE;
-		}
-	}
 
 	private interface EncryptSuccessCallback {
 		void onSuccess();
@@ -101,14 +64,11 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 	@Resource(name = "EzApprovalGKlibDAO")
 	private EzApprovalGKlibDAO ezApprovalGKlibDAO;
 
-	// getRealPath 를 위함, (전자결재에서 자주 쓰이는 dirPath)
-	private ServletContext servletContext;
-
+	// REAL_PATH 의 final 키워드를 유지하기 위해서는
+	// 생성자에서 ServletContext 인스턴스를 AutoWired 하여 파라미터로 받은 후에, REAL_PATH 를 설정해야한다.
 	@Autowired
 	public EzApprovalGKlibServiceImpl(ServletContext servletContext) throws IOException {
-		this.servletContext = servletContext;
 		REAL_PATH = servletContext.getRealPath("");
-
 		LOGGER.debug("REAL_PATH: {}", REAL_PATH);
 	}
 
@@ -144,15 +104,13 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		LOGGER.debug("backupAllFiles started.");
 
 		try {
-			// 이게 낫나? 멤버 변수로 픽스해서 쓰는게 낫나.. 한번 실행되면 불변일 것 같지만 일단 이렇게 씀
-			String realPath = servletContext.getRealPath("");
 			String docDirPath = ezApprovalGService.getDocDir(docId);
 			String oldYear = ezApprovalGService.getDocHrefYear(docId, companyId, tenantId);
-			LOGGER.debug(String.format("realPath: %s", realPath));
+			LOGGER.debug(String.format("realPath: %s", REAL_PATH));
 
 			// 전자결재업로드 폴더, ex)
 			// ezFlow절대경로/fileroot/0/files/upload_approvalG/company 폴더
-			Path uploadApprovalDir = Paths.get(realPath, commonUtil.separator, commonUtil.getUploadPath("upload_approvalG.ROOT", tenantId), companyId);
+			Path uploadApprovalDir = Paths.get(REAL_PATH, commonUtil.separator, commonUtil.getUploadPath("upload_approvalG.ROOT", tenantId), companyId);
 			// 절대경로 존재 여부 검증
 			uploadApprovalDir.toRealPath();
 			LOGGER.debug(String.format("uploadApprovalDir: %s", uploadApprovalDir));
@@ -184,16 +142,22 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 			// 첨부파일 히스토리 폴더 (절대경로)
 			Path realAttachmentHistoryDir = uploadApprovalDir.resolve(relativeAttachmentHistoryDir);
 			LOGGER.debug(String.format("realAttachmentDir: %s", realAttachmentDir));
-			LOGGER.debug(String.format("realAttachmentHistoryDir: %s", realAttachmentDir));
+			LOGGER.debug(String.format("realAttachmentHistoryDir: %s", realAttachmentHistoryDir));
 
 			// 결재완료문서 백업
-			copy(realDocumentFile, backupDir.resolve(relativeDocumentFile));
+			FileUtils.copyDirectory(realDocumentFile.toFile(), backupDir.resolve(relativeDocumentFile).toFile());
 			// 결재문서 히스토리 폴더 백업
-			copy(realDocumentHistoryDir, backupDir.resolve(relativeDocumentHistoryDir));
+			if (Files.exists(realDocumentHistoryDir)) {
+				FileUtils.copyDirectory(realDocumentHistoryDir.toFile(), backupDir.resolve(relativeDocumentHistoryDir).toFile());
+			}
 			// 첨부파일 폴더 백업
-			copy(realAttachmentDir, backupDir.resolve(relativeAttachmentDir));
+			if (Files.exists(realAttachmentDir)) {
+				FileUtils.copyDirectory(realAttachmentDir.toFile(), backupDir.resolve(relativeAttachmentDir).toFile());
+			}
 			// 첨부파일 히스토리 폴더 백업
-			copy(realAttachmentHistoryDir, backupDir.resolve(realAttachmentHistoryDir));
+			if (Files.exists(realAttachmentHistoryDir)) {
+				FileUtils.copyDirectory(realAttachmentHistoryDir.toFile(), backupDir.resolve(relativeAttachmentHistoryDir).toFile());
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			LOGGER.debug("backupAllFiles error.");
@@ -214,6 +178,8 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		String docHref = ezApprovalGKlibDAO.getEndDocHref(parameterMap);
 		// 결재완료문서 파일
 		Path docFile = Paths.get(REAL_PATH, docHref);
+
+		LOGGER.debug("file: {}", docHref);
 
 		// 암호화 성공시 TBL_ENDAPRDOCINFO 테이블의 HREF 컬럼 업데이트
 		encryptForApprovalFile(docFile, () -> {
@@ -239,6 +205,8 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 			// 첨부파일 경로
 			String attachHref = attachInfo.getAttachFileHref();
 			Path attachFile = Paths.get(REAL_PATH, attachHref);
+
+			LOGGER.debug("file: {}", attachHref);
 
 			// 암호화 성공시 TBL_ENDATTACHINFO 테이블의 HREF 컬럼 업데이트
 			encryptForApprovalFile(attachFile, () -> {
@@ -273,6 +241,8 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 			String historyDocUrl = hisotryDoc.getUrl();
 			Path historyDocFile = Paths.get(REAL_PATH, historyDocUrl);
 
+			LOGGER.debug("file: {}", historyDocUrl);
+
 			// 암호화 성공시 TBL_HISTORYDOCINFO 테이블의 URL 컬럼 업데이트
 			encryptForApprovalFile(historyDocFile, () -> {
 				parameterMap.put("changeSN", hisotryDoc.getChangeSN());
@@ -301,6 +271,8 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 			String historyAttachHref = hisotryAttach.getAttachFileHref();
 			Path historyAttachFile = Paths.get(REAL_PATH, historyAttachHref);
 
+			LOGGER.debug("file: {}", historyAttachHref);
+
 			// 암호화 성공시 TBL_HISTORYATTACHINFO 테이블의 HREF 컬럼 업데이트
 			encryptForApprovalFile(historyAttachFile, () -> {
 				parameterMap.put("attachFileSN", hisotryAttach.getAttachFileSN());
@@ -312,37 +284,6 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		}
 
 		LOGGER.debug("encryptHistoryAttachFiles ended.");
-	}
-
-	/**
-	 * 파일/폴더 복사
-	 * 
-	 * @deprecated FileUtils.copy로 대체 예정
-	 * 
-	 * @param source
-	 *            복사 대상 (파일 또는 폴더)
-	 * @param destDir
-	 *            복사할 위치의 폴더
-	 * 
-	 */
-	@Deprecated
-	private void copy(Path source, Path destDir) throws IOException {
-		if (!Files.exists(source)) {
-			return;
-		}
-
-		// 폴더라면 폴더 복사, 아니면 파일 복사
-		if (Files.isDirectory(source)) {
-			Files.walkFileTree(source, new CopyDirectoryVisitor(source, destDir));
-		} else {
-			// 백업 대상 폴더가 존재하지 않으면 만듦
-			if (!Files.exists(destDir)) {
-				Files.createDirectories(destDir);
-			}
-
-			// 파일 복사
-			Files.copy(source, destDir.resolve(source.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-		}
 	}
 
 	/**
@@ -359,40 +300,45 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 	private void encryptForApprovalFile(Path file, EncryptSuccessCallback successCallback) {
 		try {
 			// 이미 암호화된 파일이라면 리턴
-			if (file.toString().endsWith("." + ENCRYPTED_FILE_EXT)) {
-				// 성공 콜백 함수 호출 안 함
+			if (file == null || file.toString().endsWith("." + ENCRYPTED_FILE_EXT)) {
 				return;
 			}
-
-			// 암호화 후 ezd 확장자로 저장될 경로
-			String encryptedFileHref = file.toString() + "." + ENCRYPTED_FILE_EXT;
-			// 암호화 후 ezd 확장자로 저장될 파일
-			Path encryptedFile = Paths.get(encryptedFileHref);
 
 			// 파일의 바이트를 읽음
 			byte[] fileBytes = Files.readAllBytes(file);
 			byte[] encryptedBytes;
 
-			// 바이트를 암호화
+			// 바이트 암호화, 암호화 실패 시 다시 시도
 			try {
 				encryptedBytes = klibUtil.encrypt(fileBytes);
-			} catch (Exception firstTryException) {
-				firstTryException.printStackTrace();
-				try {
-					encryptedBytes = klibUtil.encrypt(fileBytes);
-				} catch (Exception secondTryException) {
-					throw secondTryException;
-				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				// 상위 try-catch 로 넘김
+				encryptedBytes = klibUtil.encrypt(fileBytes);
 			}
+
+			// 사이즈가 0 이라면 다시 시도
+			if (encryptedBytes.length == 0) {
+				// 상위 try-catch 로 넘김
+				encryptedBytes = klibUtil.encrypt(fileBytes);
+			}
+
+			// .ezd 확장자로 저장될 경로
+			String encryptedFileHref = file.toString() + "." + ENCRYPTED_FILE_EXT;
+			Path encryptedFile = Paths.get(encryptedFileHref);
 
 			// 암호화한 바이트를 .ezd 파일로 저장 및 원본 삭제
 			Files.write(encryptedFile, encryptedBytes);
 			Files.delete(file);
 
 			// 성공시 콜백 함수 호출
-			successCallback.onSuccess();
-		} catch (Exception e) {
-			e.printStackTrace();
+			if (successCallback != null) {
+				successCallback.onSuccess();
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} catch (UnsatisfiedLinkError linkErr) {
+			LOGGER.error(linkErr.getMessage());
 		}
 	}
 }

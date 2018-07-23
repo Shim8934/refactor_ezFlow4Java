@@ -3,17 +3,15 @@ package egovframework.ezEKP.ezApprovalG.service;
 /**
  * KLIB 암/복호화 관련으로 전자결재에서 쓰이는 서비스 클래스
  * 
- * @author jwseo99
- * 
  * @NOTE 결재완료된 문서를 암호화 하기 위해서 쓰는데, 파일 처리 로직이나 내부 클래스 구현으로 인해서 소스코드가 복잡해져 KLIB
  *       관련으로 따로 서비스를 만들었습니다.<br>
  *       <i>혹여나 파일을 나눌 필요 없이 기존의 서비스에 넣는다거나, 개선 사항이 있다면 수정해주시길 바랍니다.</i><br>
  * */
 public interface EzApprovalGKlibService {
 	/** 암호화된 파일을 구분하기 위한 확장자명 */
-	final String ENCRYPTED_FILE_EXT = "ezd";
+	String ENCRYPTED_FILE_EXT = "ezd";
 	/** 원본 파일 백업 폴더 이름 */
-	final String BACKUP_DIR_NAME = "klib_backup";
+	String BACKUP_DIR_NAME = "klib_backup";
 
 	/**
 	 * 결재완료문서를 암호화 처리하는 API.<br>

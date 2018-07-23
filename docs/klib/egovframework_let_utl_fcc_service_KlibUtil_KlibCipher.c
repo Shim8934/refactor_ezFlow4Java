@@ -153,18 +153,21 @@ JNIEXPORT jbyteArray JNICALL Java_egovframework_let_utl_fcc_service_KlibUtil_000
 	return javaBytes;
 
 err:	;
-	jbyteArray rtnJavaBytes;
-	char errStr[] = "ERR:";
+	char errStr[] = "KLIB ERR:";
 	char *errMessage = K_GetErrorMsg(ret);
 	const char *rtnStr = strcat(errStr, errMessage);
-	int rtnStrLen = strlen(rtnStr);
-	rtnJavaBytes = (*env)->NewByteArray(env, rtnStrLen);
-	(*env)->SetByteArrayRegion(env, rtnJavaBytes, 0, rtnStrLen, (jbyte *)rtnStr);
 	
 	free(EncDataBuf);
-
 	
-	return rtnJavaBytes;
+	jclass cls = (*env)->FindClass(env, "java/lang/Exception");
+	
+	if (cls != NULL) {
+		(*env)->ThrowNew(env, cls, rtnStr);
+	}
+	
+	(*env)->DeleteLocalRef(env, cls);
+	
+	return NULL;
 }
 
 JNIEXPORT jbyteArray JNICALL Java_egovframework_let_utl_fcc_service_KlibUtil_00024KlibCipher_decrypt(JNIEnv *env, jobject obj, jbyteArray fileBytes){
@@ -300,18 +303,19 @@ JNIEXPORT jbyteArray JNICALL Java_egovframework_let_utl_fcc_service_KlibUtil_000
        return javaBytes;
         
 err:	;
-	jbyteArray rtnJavaBytes;
-    char errStr[] = "ERR:";
+	char errStr[] = "KLIB ERR:";
 	char *errMessage = K_GetErrorMsg(ret);
 	const char *rtnStr = strcat(errStr, errMessage);
-	int rtnStrLen = strlen(rtnStr);
-    rtnJavaBytes = (*env)->NewByteArray(env, rtnStrLen);
-    (*env)->SetByteArrayRegion(env, rtnJavaBytes, 0, rtnStrLen, (jbyte *)rtnStr);
 	
 	free(DecDataBuf);
-
-
-    return rtnJavaBytes;
+	
+	jclass cls = (*env)->FindClass(env, "java/lang/Exception");
+	
+	if (cls != NULL) {
+		(*env)->ThrowNew(env, cls, rtnStr);
+	}
+	
+	(*env)->DeleteLocalRef(env, cls);
+	
+	return NULL;
 }
-        
-

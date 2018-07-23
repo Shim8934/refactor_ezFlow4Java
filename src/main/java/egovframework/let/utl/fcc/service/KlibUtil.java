@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import javax.xml.bind.DatatypeConverter;
 
+//import org.bouncycastle.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class KlibUtil {
-	// only linux & aix
+	// only aix, 2018.07.23
 	private static final String LIBRARY_PATH = "lib/libezKlib.so";
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(KlibUtil.class);
@@ -51,6 +52,8 @@ public class KlibUtil {
 		}
 
 		CIPHER = loadSuccess ? new KlibCipher() : new NonKlibCipher();
+		// TEST CODE
+		// CIPHER = loadSuccess ? new KlibCipher() : new LocalTestCipher();
 
 		// KLIB 테스트
 		try {
@@ -69,9 +72,9 @@ public class KlibUtil {
 	}
 
 	private interface Cipher {
-		byte[] encrypt(byte[] originBytes) throws Exception;
+		byte[] encrypt(byte[] originBytes) throws Exception, UnsatisfiedLinkError;
 
-		byte[] decrypt(byte[] encryptedBytes) throws Exception;
+		byte[] decrypt(byte[] encryptedBytes) throws Exception, UnsatisfiedLinkError;
 	}
 
 	private static class KlibCipher implements Cipher {
@@ -84,17 +87,28 @@ public class KlibUtil {
 
 	private static class NonKlibCipher implements Cipher {
 		@Override
+		public byte[] encrypt(byte[] originBytes) throws UnsatisfiedLinkError {
+			throw new UnsatisfiedLinkError("KLIB is not loaded.");
+		}
+
+		@Override
+		public byte[] decrypt(byte[] encryptedBytes) throws UnsatisfiedLinkError {
+			throw new UnsatisfiedLinkError("KLIB is not loaded.");
+		}
+	}
+
+	// TEST CODE
+	/* private static class LocalTestCipher implements Cipher {
+		@Override
 		public byte[] encrypt(byte[] originBytes) {
-			LOGGER.debug("NonKlibCipher encrypt running..");
-			return originBytes;
+			return Arrays.reverse(originBytes);
 		}
 
 		@Override
 		public byte[] decrypt(byte[] encryptedBytes) {
-			LOGGER.debug("NonKlibCipher decrypt running..");
-			return encryptedBytes;
+			return Arrays.reverse(encryptedBytes);
 		}
-	}
+	} */
 
 	/**
 	 * KLIB를 이용하여 바이트를 암호화
@@ -132,8 +146,8 @@ public class KlibUtil {
 
 	private void debugBytes(String byteArrayName, byte[] bytes) {
 		boolean isGreaterThanEllipsis = bytes.length > DEBUG_BYTE_SIZE;
-
 		byte[] ellipsisBytes = new byte[DEBUG_BYTE_SIZE];
+
 		System.arraycopy(bytes, 0, ellipsisBytes, 0, DEBUG_BYTE_SIZE);
 
 		LOGGER.debug(isGreaterThanEllipsis ? "{}: {}…, to string: {}…" : "{}: {}, to string: {}", byteArrayName, DatatypeConverter.printHexBinary(ellipsisBytes), new String(ellipsisBytes));
