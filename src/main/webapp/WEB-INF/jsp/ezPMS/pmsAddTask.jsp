@@ -145,11 +145,11 @@ function openMemberList() {
 	// 상위그룹으로 최상위 그룹인 프로젝트 자체를 선택했을 때는 groupId를 넘기지 않는다
 	if(treeDepth == '0') {
 		DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.85, 
-				 "/ezPMS/goProjectMemberList.do?projectId=" + projectId, "",
+				 "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&type=" + 'managers', "",
 				 "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 	} else {
 		DivPopUpShow($('body').prop('scrollWidth') * 0.9, $('body').prop('scrollHeight') * 0.85, 
-				 "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&groupId=" + groupId, "",
+				 "/ezPMS/goProjectMemberList.do?projectId=" + projectId + "&groupId=" + groupId + "&type=" + 'managers', "",
 				 "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 	}
 	

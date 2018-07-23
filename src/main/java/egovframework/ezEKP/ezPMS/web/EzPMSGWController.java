@@ -3505,8 +3505,7 @@ public class EzPMSGWController {
 	@RequestMapping(value = "/rest/ezPMS/tasks/member-list/group/{groupId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getTaskMemberListInGroup(@PathVariable Long groupId, @PathVariable String userId,
 			HttpServletRequest request) throws Exception {
-		LOGGER.debug(
-				"ezPMS G/W [GET /rest/ezPMS/tasks/member-list/group/" + groupId + "/users/" + userId + "] started.");
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/tasks/member-list/group/" + groupId + "/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 
