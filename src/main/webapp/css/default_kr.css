@@ -20,6 +20,10 @@ input {
 	border:1px solid #dedede;
 }
 
+input[type=checkbox], input[type=radio] {
+	border:0 !important;
+}
+
 input[type=text] {
 	height:24px;
 }
