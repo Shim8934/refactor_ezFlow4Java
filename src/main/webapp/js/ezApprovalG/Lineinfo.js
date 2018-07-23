@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 //#############################################################################################################################################사용자리스트 원클릭 이벤트 list2_onSel_Click()
 function list2_onSel_Click() {
 }
@@ -3692,7 +3692,7 @@ function Checkline() {
         var receptRow = listview.GetDataRows();
 
         var CurListLen = receptRow.length;
-        if (CurListLen == 0 || (CurListLen == 1 && receptRow[0].id == "lvRECEPTLIST_TR_noItems")) {
+        if (CurListLen == 0 || (CurListLen == 1 && receptRow[0].id == "lvRECEPTLIST_TR_noItems") && pDocType != "002") {
             OpenAlertUI(linealt14);
             var tabshow = document.getElementById("1tab2");
             Tab1_MouseClick(tabshow);
