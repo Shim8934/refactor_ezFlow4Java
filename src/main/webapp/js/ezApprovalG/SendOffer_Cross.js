@@ -317,6 +317,9 @@ function SendOfferCheck(pDocID, pUserID)
 			OpenAlertUI(pAlertContent)
 			return false;
 		}
+		else if (rtnVal == "TOKIAN") {
+			sendOfferToKian();
+		}
 		else
 		{
 			var pAlertContent = strLang200;
@@ -330,6 +333,53 @@ function SendOfferCheck(pDocID, pUserID)
 		OpenAlertUI(pAlertContent)
 		return false;
 	}
+}
+
+function sendOfferToKian(){
+	var rtnVal = new Array("");
+	rtnVal[0] = "OK";
+    rtnVal[1] = arr_userinfo[1];	// ID
+    rtnVal[2] = arr_userinfo[2];  // NAME
+    rtnVal[3] = arr_userinfo[3];  // JobTitle
+    rtnVal[4] = arr_userinfo[4];		// DeptID
+    rtnVal[5] = arr_userinfo[5];	// DeptName
+    //2010.08.16 다국어 추가
+    rtnVal[6] = arr_userinfo[12]; //username2
+    rtnVal[7] = arr_userinfo[16]; //deptname2
+    rtnVal[8] = arr_userinfo[14]; //jobtitle2
+	
+	
+	var DocList = new ListView();
+    DocList.LoadFromID("DocList");
+    var tr = DocList.GetSelectedRows();
+    var pDocID = tr[0].getAttribute("DATA1");
+    var pHref = tr[0].getAttribute("DATA2");
+
+    var newDocID = CreateNewDoc(pDocID, temppUserID );
+    if (newDocID == "") {
+        UndoUpdateProcessYN(pDocID);
+
+        var pAlertContent = strLang196;
+        OpenAlertUI(pAlertContent)
+        return;
+    }
+
+    var rvalue = UpdateReceiptOffer(newDocID, pDocID)
+    if (!rvalue) {
+        UndoCreateDoc(newDocID);
+
+        UndoUpdateProcessYN(pDocID);
+
+        var pAlertContent = strLang196;
+        OpenAlertUI(pAlertContent)
+        return;
+    }
+    var rvalue2 = doSendOffer(newDocID, pDocID, rtnVal, pHref);
+    if (!rvalue2) {
+        UndoCreateDoc(newDocID);
+
+        UndoUpdateProcessYN(pDocID);
+    }
 }
 
 function SendOfferCheck_OpenUI(Ans) {
@@ -406,14 +456,20 @@ function OpenSelectReceipts_Complete(ret) {
     if (ret[0] == "cancel")
         return false;
 
+    var uPYNResult = "";
     MDeptList = ret;
 
     if (MDeptList[0] == "OK") {
         for (var i = 0 ; i < MDeptList[1].length ; i++) {
-            UpdateProcessYN(temppDocID, MDeptList[1][i], "T", MDeptList[2][i], MDeptList[4][i]);
+        	uPYNResult = UpdateProcessYN(temppDocID, MDeptList[1][i], "T", MDeptList[2][i], MDeptList[4][i]);
         }
     }
-    OpenSendOfferUI();
+    
+    if (uPYNResult == "TOKIAN") {
+    	sendOfferToKian();
+	} else {
+		OpenSendOfferUI();
+	}
 }
 
 function UpdateProcessYN(pDocID, tempDeptID, tempProcessYN, tempDeptName, tempDeptName2)
@@ -441,7 +497,7 @@ function UpdateProcessYN(pDocID, tempDeptID, tempProcessYN, tempDeptName, tempDe
 		
 		if (xmlhttp.statusText == "OK") {
 			var dataNodes = GetChildNodes(xmlhttp.responseXML); 
-	    	return getNodeText(dataNodes[0]);
+			return getNodeText(dataNodes[0]);
 		} else {
 			alert(strLang223);
 			return "";

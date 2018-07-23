@@ -744,7 +744,7 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
         pArgument[7] = "";
     }
   
-    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {
+    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
     	openLocation = "/ezApprovalG/draftui.do?formURL=";
         openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
         openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
@@ -919,7 +919,6 @@ function openForm_Complete(ret) {
     getformcont_Cross_OpenWin.close();
     formURL = ret[0];
     formDocType = ret[1];
-    formExt = ret[2];
     if (formURL != "cancel") {
         openDraftUI("DRAFT", "");
     }
@@ -2714,7 +2713,7 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     //우선 만들고 tmpDocID를 넘겨주어야 한다.	
     var openLocation = "";
     
-    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {
+    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
     	openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
     	openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
     	openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);

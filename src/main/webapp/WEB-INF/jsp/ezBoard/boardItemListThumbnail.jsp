@@ -170,7 +170,7 @@
 		    });
 		    
 		    /* 2018-06-14 김민성 - 게시판 검색 레이어 팝업 리사이징 설정 추가 */
-		    $(window).on("resize", function(){
+		    /* $(window).on("resize", function(){
 		    	if (parent.frames["FBoard_ifrm"]) {
 		    		var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;
 		    		$("#srarchpopup").css("left", popupX).css("bottom", "66px");
@@ -179,9 +179,22 @@
 					$("#srarchpopup").css("left", popupX);
 		    	}
 				
-	        	/* $("#addpopup").css("left", popupX); */
+	        	
 	        	$("#srarchpopup").css("left", popupX);	        
-		     });
+		    }); */
+		    
+		    $(window).on("resize", function(){
+		    	if (parent.frames['left'] == undefined && parent.frames["BoardEnv_ifrm"] == undefined) {
+		    		var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;
+		    		$("#srarchpopup").css("left", popupX).css("bottom", "66px");
+		    	} else if (parent.frames["BoardEnv_ifrm"] != undefined) {
+		    		var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;
+		    		$("#srarchpopup").css("left", popupX).css("bottom", "26px");
+		    	} else {
+					var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+					$("#srarchpopup").css("left", popupX);
+		    	}					        	
+	        });
 		
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
@@ -918,17 +931,18 @@
 		
 		
 		    /* 2018-06-12 김민성 - 게시판 검색 레이어팝업 변경 */ 
-		    function doLayerPopup(obj) {
-		    	if (window.parent.frames['left'] == undefined) {	// 2018-06-15 김민성 - 즐겨찾기 내 게시판일때 기존 팝업으로 변경
-		    		$("<div id='blockLeft' class='blockLeft' onclick='parent.frames[\"right\"].frames[\"FBoard_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["left"].document.body);
+		    function doLayerPopup(obj) {    	 									// 즐겨찾기 검색
+		    	if (window.parent.frames['left'] == undefined && parent.frames["BoardEnv_ifrm"] == undefined) {	// 2018-06-15 김민성 - 즐겨찾기 내 게시판일때 기존 팝업으로 변경
+		    		$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].frames[\"FBoard_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["left"].document.body);
 		    		$("<div id='blockTop' class='blockTop' onclick='parent.frames[\"right\"].frames[\"FBoard_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["right"].document.body);
 		    		
-		    		parent.parent.frames["left"].document.body.style.overflow = "hidden";
-		    		
+		    		parent.parent.frames["left"].document.body.style.overflow = "hidden";		    		
+		    				    		
 			    	var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;			    	
 
 			    	$("#srarchpopup").css("left", popupX).css("bottom", "66px");
-			    	$("#srarchpopup").modal();	
+			    	$("#srarchpopup").modal();
+			    	
 		        	/* btn_PostDate_Clear();
 			        document.getElementById("chkSearchSub").checked = false;
 			        document.getElementById("txtTitle").value = "";
@@ -948,7 +962,18 @@
 			            BoardSearchOptionHidden();
 			        } */
 		    	}
-		    	else {
+		    	else if (parent.frames["BoardEnv_ifrm"] != undefined) {			// 관리자 모드 검색
+		    		$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"board_main\"].frames[\"BoardEnv_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["board_menu"].document.body);
+		    		$("<div id='blockTop' class='blockTop' onclick='parent.frames[\"board_main\"].frames[\"BoardEnv_ifrm\"].BoardSearchOptionHidden()'></div>").appendTo(parent.parent.frames["board_main"].document.body);
+		    		
+		    		parent.parent.frames["board_menu"].document.body.style.overflow = "hidden";		    		
+		    				    		
+			    	var popupX = parent.parent.document.body.clientWidth/2 - (500/2) - 220;			    	
+
+			    	$("#srarchpopup").css("left", popupX).css("bottom", "26px");
+			    	$("#srarchpopup").modal();
+		    	}
+		    	else {																				// 일반 게시판 검색
 			    	$("<div id='blockLeft' class='blockLeft' style='position:fixed; width:100%;height:100%; overflow:hidden;' onclick='parent.frames[\"right\"].BoardSearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);
 			    	parent.frames["left"].document.body.style.overflow = "hidden";
 			    	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
@@ -1260,11 +1285,11 @@
 					</tr>
 					<tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t223' /></th>
-			            <td><input type="text" id="txtWriterName" style="width:98%" value=""></td>
+			            <td><input type="text" id="txtWriterName" style="width:100%" value=""></td>
 			        </tr>
 			        <tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t208' /></th>
-			            <td><input type="text" id="txtTitle" style="width:98%" value=""></td>
+			            <td><input type="text" id="txtTitle" style="width:100%" value=""></td>
 			        </tr>  
 			        <%--  <tr>
 			            <th style="text-align:center"><spring:message code='ezBoard.t209' /></th>

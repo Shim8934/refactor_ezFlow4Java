@@ -114,7 +114,12 @@
       }
       
       if (parent.parent.frames["left"]) {
-	      if (parent.parent.frames["left"].document.getElementById("blockLeft")) {  		  
+    	  if (parent.parent.frames["board_menu"]) {  		  
+			  $(parent.parent.frames["board_menu"].document.body).css("overflow", "");
+			  $(parent.parent.frames["board_menu"].document.getElementById("blockLeft")).remove();
+			  $(parent.parent.frames["board_main"].document.getElementById("blockTop")).remove();
+		  }
+    	  else if (parent.parent.frames["left"].document.getElementById("blockLeft")) {  		  
 			  $(parent.parent.frames["left"].document.body).css("overflow", "");
 			  $(parent.parent.frames["left"].document.getElementById("blockLeft")).remove();
 			  $(parent.parent.frames["right"].document.getElementById("blockTop")).remove();

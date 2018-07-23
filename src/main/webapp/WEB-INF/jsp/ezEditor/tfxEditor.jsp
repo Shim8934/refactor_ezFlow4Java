@@ -15,7 +15,12 @@
 			
 			function SetEditorContent(Data) {
 	            try {
-	                xfe.setHtmlValue(Data);
+	            	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
+	            	if (parent.onloadflag || typeof parent.onloadflag === "undefined") {
+		                xfe.setHtmlValue(Data);
+	            	} else {
+	            		setTimeout(parent.Editor_Complete, 10);
+	            	}
 	            } catch (e) { }
 	        }
 		
@@ -137,7 +142,7 @@
 			window.onresize = function () {
 	            try {
 	                xfe.setWidth("100%");
-	                xfe.setHeight(document.documentElement.clientHeight + "px");
+	                xfe.setHeight((document.documentElement.clientHeight - 1) + "px");
 	            } catch (e) { }
 	        }
 		</script> 
@@ -169,7 +174,6 @@
 		    		break;
 	    	}
 	    	
-	    	
 	    	var initFontFamilyMenu = "<spring:message code='main.t0620' />".split(";");
 
 	    	var uploadFilePath = "/ezEditor/tfxUpload.do?type=" + type;
@@ -189,7 +193,7 @@
 	        	lang : lang,
 	            basePath : "/js/ezEditor/tfxEditor",
 	            width : "100%",
-	            height : (document.documentElement.clientHeight) + "px",
+	            height : (document.documentElement.clientHeight - 1) + "px",
 	            initFontFamilyMenu : initFontFamilyMenu,
 	            initFontFamily : defaultFontFamily,
 	            initFontSize : defaultFontSize,

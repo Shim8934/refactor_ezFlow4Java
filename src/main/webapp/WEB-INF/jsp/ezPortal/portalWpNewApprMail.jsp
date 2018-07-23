@@ -290,7 +290,7 @@
 		                            openLocation = "/myoffice/ezApproval/ezViewWord/ezDeptRecevUI_word.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
 		                        }
 		                        else if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
-		                            openLocation = "/myoffice/ezApproval/ezViewHWP/ezDeptRecevUI_HWP.aspx?DocID=" + escape(pDocID) + "&DraftFlag=" + escape(pDraftFlag);
+		                            openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag);
 		                        }
 		                    } else if (pDocState == strDocState11) {
 		                        if (arr_userinfo[4] != pAprMemberDeptID) {
@@ -415,25 +415,20 @@
 		        pArgument[6] = AprState;
 		        pArgument[7] = "";
 	
-		        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht" || formExt == "MHT") {
+		        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
 		        	if (pDocState == "011" && pFunctionType == "004" && pDraftFlag == "REDRAFT") {
-						if (CrossYN()) {
-			                openLocation = "/ezApprovalG/recevGSusin.do?docID=";
-			            } else {
-			            	openLocation = "/ezApprovalG/recevGSusin.do?docID=";
-			            }
+		            	openLocation = "/ezApprovalG/recevGSusin.do?docID=";
 						openLocation = openLocation + pDocID + "&uOrgID=" + "&isReDraft=Y" + "&draftFlag=" + pDraftFlag;
 		        	} else {
-						if (CrossYN()) {
-			                openLocation = "/ezApprovalG/draftui.do?formURL=";
-			            } else {
-			            	openLocation = "/ezApprovalG/draftui.do?formURL=";
-			            }
+		            	openLocation = "/ezApprovalG/draftui.do?formURL=";
 			            openLocation = openLocation + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
 			            openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1&aprState=" + escape(pArgument[6]);
 			            openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
 		        	}
-	
+		        } else {
+	                openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+	                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1&aprState=" + escape(pArgument[6]);
+	                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
 		        }
 	
 		        openwindow(openLocation, "", 890, 560);
@@ -446,7 +441,7 @@
 		            openLocation = "/ezApprovalG/recev.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag);
 		        }
 		        else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-		            openLocation = "/ezApprovalG/recev.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag);
+		            openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag);
 		        }
 		        else {
 		            if (CrossYN()) {
@@ -478,8 +473,8 @@
 	            } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
 	            	if (isIE()) {
 		                openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + escape(pArgument[0]);
-		                openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
-		                openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0" + "&docState=" + escape(pDocState);
+		                openLocation = openLocation + "&id=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]);
+		                openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=0" + "&docState=" + escape(pDocState);
 	            	} else {
 	            		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
 	                    alert(pAlertContent);
@@ -627,7 +622,7 @@
 		                    _SubjectColumSpan.innerText = SUBJECT;
 		                    SUBJECT = _SubjectColumSpan.innerHTML;
 	
-		                    listHTML += "<li onclick=\"open_mail('" + HREF + "')\">" + SUBJECT + "</span> <span class='date'>" + DATE + "</span> <span class='name'>" + SENDER + "</span></li>";
+		                    listHTML += "<li onclick=\"open_mail('" + HREF + "')\"> <span class='txt'>" + SUBJECT + "</span> <span class='date'>" + DATE + "</span> <span class='name'>" + SENDER + "</span></li>";
 		                }
 	
 		                listHTML += "</ul>";

@@ -5,10 +5,17 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	   	<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	   	<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <style>
-	    	.tree { min-height : 100px; }
+	    	.tree {
+	    		min-height : 100px;
+	    	}
+	    	.groupBoard {
+				width:158px;
+				overflow:hidden;
+				text-overflow:ellipsis;
+			}
 	    </style>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -75,7 +82,7 @@
 		                MyBoard();
 		            }
 		            else if (subFunc == "2") {
-		                /* ReservationItem_onclick(); */
+		                ReservationItem_onclick();
 		            }
 		            else {
 		                if (RedirectBoardID != "") {
@@ -690,8 +697,8 @@
         			var i = 0;
         			$(xmlDoc).find("NODE").each(function(){
        			        document.write("<h2>");
-           				document.write("<div id='TreeCtr" + i + "' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
-           					+ "\")' style='overflow-x:hidden; text-overflow:ellipsis; width:158px;'>" + $(this).find("DATA2").text() + "</div>"); 
+           				document.write("<div id='TreeCtr" + i + "' class='groupBoard' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
+           					+ "\")'>" + $(this).find("DATA2").text() + "</div>"); 
            				document.write("</h2>\n");
            				document.write("<ul>\n");
            				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 100%; padding-bottom: 20px; padding-left: 10px; overflow-x: auto; overflow-y: auto;'></div>\n");

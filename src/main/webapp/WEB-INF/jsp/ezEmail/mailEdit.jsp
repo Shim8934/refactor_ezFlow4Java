@@ -775,7 +775,7 @@
 		              <li><span onClick="Option_onClick('M')" id="Span1"><spring:message code='ezEmail.t353' /></span></li>
 		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
 		                 <img src="/images/pbar.gif" align="absmiddle"></li> 
-					<li id="menuTable" class="sel" style="background:none; border:none;padding:4px 0 2px 0; margin:0; vertical-align:top;">
+					<li id="menuTable" class="sel" style="background:none; border:none; margin:0; vertical-align:top;">
 		              <select name="importantSelect" id="importantSelect" onChange="important_change()">
 		                <option><spring:message code='ezEmail.t360' /></option>
 		                <option selected="selected"><spring:message code='ezEmail.t361' /></option>
@@ -786,7 +786,7 @@
 		            <li class="bar" style="background:none; border:0;padding-left:0;padding-right:0;cursor:default; display:none;"><img src="/images/pbar.gif" align="absmiddle"></li>                        
 		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
                         <img src="/images/pbar.gif"></li> 
-                    <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
+                    <li class="sel" style="background:none; border:none; padding:0px;">
                         <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">
                         	<option value="0">HTML</option>
                         	<option value="1">PlainText</option>
@@ -922,7 +922,7 @@
                 <c:if test="${isCrossBrowser == true}">          
 		        <tr>
 		            <td style="padding-top: 10px;height:20px;vertical-align:middle;">
-		                <span style="color:#3a76c3;font-weight:bold;height:15px;display:inline-block;"><img src="/images/i_urgency.gif" />&nbsp;${pAttachWarning}</span>
+		                <img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px" /><span style="color:#3a76c3;height:18px;display:inline-block;margin-left:5px">${pAttachWarning}</span>
 		                <iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" frameborder="0" src="/ezEmail/dragAndDrop.do"></iframe>
 		            </td>
 		        </tr>

@@ -7,7 +7,7 @@
 		<title>${title}</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<style type="text/css">
 		#selDept {
 			background : none;
@@ -365,10 +365,6 @@
 						if (document.getElementById("rdTotal").checked) {
 				    		InsFContTotal();
 						} else {
-							if ($('#tbManage').val() == "") {
-								alert(strLanggarm01);
-								return;
-							}
 				    		InsFContGroup();
 						}
 						
@@ -397,10 +393,6 @@
 						if (document.getElementById("rdTotal").checked) {
 				    		UpFcontTotal();
 						} else {
-							if ($('#tbManage').val() == "") {
-								alert(strLanggarm01);
-								return;
-							}
 				    		UpFContGroup();
 						}
 						
@@ -497,7 +489,8 @@
 	    <table style="margin-top: 10px; width:100%">
 	        <tr>
 	            <td valign="top" style="width:43%; max-width: 336px;">
-	                <div id="TreeView" style="border: #ddd 1px solid;width: 100%; height: 430px; background-color: #ffffff;overflow:auto"></div>
+	            	<div><h2 class="h2_dot"><span style="min-width: 45px;"><spring:message code = 'main.t8' /></span></h2></div>
+	                <div id="TreeView" style="border: #ddd 1px solid;width: 100%; height: 404px; background-color: #ffffff;overflow:auto"></div>
 	            </td>
 	            <td class = 'approvalG' align="center" style="width:5%">
 	            	<img id="btnManage" style="cursor:pointer; display:none" src="../../images/kr/cm/arr_right.gif" width="16" height="16" onclick="btnManage_onclick()"><br><br>

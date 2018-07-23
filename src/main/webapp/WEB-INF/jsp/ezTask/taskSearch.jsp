@@ -63,6 +63,11 @@
 
 		        $("#Sdatepicker").datepicker('disable');
 		        $("#Edatepicker").datepicker('disable');
+		        
+		        /* 2018-07-20 홍승비 - 업무검색(to-do) > 검색결과 좌측네모 IE에서 높이조절 */
+		        if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
+					document.getElementsByClassName("h2_dot")[0].style.background = "url(/images/kr/left/left_dot02.gif) no-repeat 0px 67%";
+		        }
 		    }
 
 		    function select_row(elem) {
@@ -321,6 +326,8 @@
 						tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
 			            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")));
 			        }
+			        tr.cells[4].style.overflow = "hidden";
+		            tr.cells[4].style.textOverflow = "ellipsis";
 
 			        if (useTodoMemo == "YES") {
 				        setNodeText(tr.cells[6], SelectSingleNodeValue(node, "MEMO"));
@@ -545,7 +552,7 @@
 			<span class="point"></span><span id="resultCount"></span></h2>
 		</div>
 		
-		<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed;">
+		<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed; min-width:800px;">
 			<col style ="width:30px;">
 			<col style ="width:50px;">
 			<col style ="width:20px;">

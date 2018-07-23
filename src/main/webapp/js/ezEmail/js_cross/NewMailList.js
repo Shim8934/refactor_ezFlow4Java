@@ -13,6 +13,7 @@ var GetListInfo_ContentObject;
 var m_strColorSelect = "#edf4fd";
 var m_strColorOver = "#f4f5f5";
 var m_strColorDefault = "#ffffff";
+var m_strColorOpened = "#fafafa";
 var GroupplusImg ="/images/ImgIcon/groupplus.gif";
 var GroupminImg ="/images/ImgIcon/groupmin.gif";
 var GroupSenderImg ="/images/ImgIcon/groupsender.gif";
@@ -540,6 +541,8 @@ function makeReceiverList(parentId) {
         
         if ($("#" + parentId)[0].childNodes[0].childNodes[0].checked == true) {
         	TR.style.backgroundColor = m_strColorSelect;
+        } else {
+        	TR.style.backgroundColor = m_strColorOpened;
         }
         
         var TD1 = document.createElement("TD");
@@ -1628,7 +1631,8 @@ function event_listCheckboxclick(obj) {
         
         for (var i = 0;i < allChild.length; i++) {
         	if (allChild[i].id.indexOf(obj.parentNode.parentNode.id + "_") != -1) {
-        		allChild[i].style.backgroundColor = m_strColorDefault;
+        		/*allChild[i].style.backgroundColor = m_strColorDefault;*/
+        		allChild[i].style.backgroundColor = m_strColorOpened;
         	}
         }
         

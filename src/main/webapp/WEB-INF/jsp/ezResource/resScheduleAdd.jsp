@@ -75,6 +75,9 @@
 	    	var EdateNow = ""; 
 	    	var title = "${title}";
 	    	
+	    	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
+	    	var onloadflag = false;
+	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
@@ -164,6 +167,8 @@
 	            	if (result != "FALSE") {
 	                	msgRtn = result;
 	            	}
+	            	
+	            	onloadflag = true;
 	        	}
 
 	        	if (m_Arguments != undefined) {
@@ -295,9 +300,7 @@
 	        	}
 
 	        	if (cmd == "add") {
-		            if (msgRtn != "") {
-		                message.SetEditorContent(msgRtn);
-	    	        }
+	                message.SetEditorContent(msgRtn);
 		        }
 	    	}
 
@@ -673,13 +676,13 @@
         					<td style="padding-left:10px"> <div id="printOwner"></div></td> 
       					</tr> 
       					<tr style="height:25px"> 
-	        				<th style="padding-left:10px"><spring:message code="ezResource.t213"/></th> 
-        					<td style="padding-left:10px"> <div id="printImportance"></div></td> 
-      					</tr> 
-      					<tr style="height:25px"> 
 	        				<th style="padding-left:10px"><spring:message code="ezResource.t197"/></th> 
         					<td style="padding-left:10px"> <div id="printDate"></div></td> 
       					</tr>
+      					<tr style="height:25px"> 
+	        				<th style="padding-left:10px"><spring:message code="ezResource.t213"/></th> 
+        					<td style="padding-left:10px"> <div id="printImportance"></div></td> 
+      					</tr> 
       					<tr>
 		            		<th style="padding-left:10px"><spring:message code='ezResource.t374' /></th>
 		            		<td style="padding-left:10px;"> <div id="printItem"></div></td>

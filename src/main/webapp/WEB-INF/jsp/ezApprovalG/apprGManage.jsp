@@ -58,7 +58,6 @@
 		    var proxyInfo = "${proxyInfo}";
 		    var formURL = "";
 		    var formDocType = "";
-		    var formExt = "";
 		    var pDocInfoValue = "1";
 		    var pListTypeValue = "${listType}";
 		    var pListTypeName = "LISTTYPE";

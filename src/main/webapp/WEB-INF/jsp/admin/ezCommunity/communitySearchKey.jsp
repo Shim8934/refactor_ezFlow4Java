@@ -16,9 +16,10 @@
 			padding-left: 10px;
 		}
 		</style>
+		<script type="text/javascript" src="<spring:message code = 'ezCommunity.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
-		<script type="text/javascript" src="<spring:message code = 'ezCommunity.e1' />"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		
 		<script type="text/javascript">
 			var sCurPage = "<c:out value = '${curPage}' />";
@@ -88,11 +89,11 @@
 				window.location.href = "/admin/ezCommunity/searchKey.do?select=" + encodeURIComponent(strSelect) + "&query=" + encodeURIComponent(strQuery);
 			}
 			
+			/* 2018-07-18 홍승비 - 팝업창 위치, 스크립트 오류 수정(.js import) */
 			function openinfo_userinfo(pCN) {
-				window.open("/ezCommon/showPersonInfo.do?id=" + pCN, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-			    var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=440";
-			    feature = feature + GetOpenPosition(420, 440);
-			    rts60 = window.open("/ezCommon/showPersonInfo.do?id=" + pCN, "", feature);
+			    var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=438";
+			    feature = feature + GetOpenPosition(420, 438);
+			    window.open("/ezCommon/showPersonInfo.do?id=" + pCN, "", feature);
 			}
 			
 			//########################################페이지네이션 변경 ##############################################

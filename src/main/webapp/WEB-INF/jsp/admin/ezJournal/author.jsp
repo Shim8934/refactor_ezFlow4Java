@@ -24,7 +24,7 @@
 				var url = "/admin/ezJournal/authorView.do";
 				var companyId = document.getElementById("companyId").value;
 				url+="?companyId="+companyId;
-				window.open(url, "authorView", GetOpenWindowfeature(500, 200));
+				window.open(url, "authorView", GetOpenWindowfeature(520, 200));
 			}
 			
 			function updateAuth() {			

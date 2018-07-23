@@ -1929,6 +1929,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String cmd = "";
 			String mailcmd = "";
 			String replyReadTime = "1";
+			List<Map<String, Object>> addressCheck = null;
 			
 			if (jsonObject.get("subject") != null) {
 				subject = (String) jsonObject.get("subject");
@@ -2136,6 +2137,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					LOGGER.debug("to=" + to);
 					
 					m = r.matcher(to);
+					addressCheck = new ArrayList<Map<String, Object>>();
 					
 					while (m.find()) {
 						name = m.group(1);
@@ -2143,6 +2145,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						internetAddress.setPersonal(name, "UTF-8");
 						internetAddress.setAddress(address);
 						message.addRecipient(RecipientType.TO, internetAddress);
+						
+						Map<String, Object> autoAddress = new HashMap<String, Object>();
+						autoAddress.put("name", name);
+						autoAddress.put("address", address);
+						addressCheck.add(autoAddress);
 					}
 					
 					// Cc
@@ -2156,6 +2163,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						internetAddress.setPersonal(name, "UTF-8");
 						internetAddress.setAddress(address);
 						message.addRecipient(RecipientType.CC, internetAddress);
+						
+						Map<String, Object> autoAddress = new HashMap<String, Object>();
+						autoAddress.put("name", name);
+						autoAddress.put("address", address);
+						addressCheck.add(autoAddress);
 					}
 					
 					// Bcc
@@ -2169,6 +2181,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						internetAddress.setPersonal(name, "UTF-8");
 						internetAddress.setAddress(address);
 						message.addRecipient(RecipientType.BCC, internetAddress);
+						
+						Map<String, Object> autoAddress = new HashMap<String, Object>();
+						autoAddress.put("name", name);
+						autoAddress.put("address", address);
+						addressCheck.add(autoAddress);
 					}				
 					
 					// 메일 제목
@@ -2566,7 +2583,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
 		    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
 		    		        }
-		    		        
+
+		    		        // 전달, 회신
+	    		        	ezEmailUtil.setSentDateFlag(orgMessage, true);
+	    		        	
 		    		        orgMsgFolder.close(true);
 			            }
 				        
@@ -2693,6 +2713,19 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		    }
 				    		    
 			LOGGER.debug("mailInterSend ended. pResult=" + pResult);
+			
+			// useAutoSaveMailAddress가 YES일 경우, 외부수신자의 메일주소를 개인주소록에 자동 저장 (코린도)
+			String autoSaveAddress = ezCommonService.getTenantConfig("useAutoSaveMailAddress", info.getTenantId());
+			
+			if (autoSaveAddress.equals("YES")) {
+				try {
+					ezEmailUtil.outerMailInsertAddress(addressCheck,userId,info.getTenantId(),
+							userEmail,info.getUserName(),info.getUserName2());
+				} catch (Exception e) {
+					LOGGER.debug("AutoEmailUtil insert fail.");
+					e.printStackTrace();
+				}
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

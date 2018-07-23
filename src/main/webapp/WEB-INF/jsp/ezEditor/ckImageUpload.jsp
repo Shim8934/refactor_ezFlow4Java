@@ -168,7 +168,7 @@
 	                    </tr>
 	                    <tr>
 	                        <td colspan="4" style="border:1px solid rgb(182, 182, 182);">
-	                            <div class="btnposition btnpositionNew">
+	                            <div class="btnposition btnpositionNew" style="position:static;margin:0px 0px 0px 0px;">
 	                                <a href="#" class="imgbtn" onclick ="filesearch()"><span><spring:message code='main.t4004'/></span></a>
 	                                <a href="#" class="imgbtn"><span onclick="fileupload()"><spring:message code='main.t4005'/></span></a>
 	                            </div>

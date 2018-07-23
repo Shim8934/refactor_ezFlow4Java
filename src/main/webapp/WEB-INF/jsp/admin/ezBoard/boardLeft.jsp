@@ -6,10 +6,17 @@
 	<head>
 		<title><spring:message code="ezBoard.t52" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	   	<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">	   	
+	   	<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">	   	
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <style>
-	    	.tree { min-height : 100px; }
+	    	.tree {
+	    		min-height : 100px;
+	    	}
+	    	.groupBoard {
+				width:158px;
+				overflow:hidden;
+				text-overflow:ellipsis;
+			}
 	    </style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/TreeView.js"></script>
@@ -322,7 +329,7 @@
 				success: function(result){
 					$.each(result, function(idx, item){	        					
 						$.each(item, function(idx, i){
-							strHTML += "<h2><div AccessLevel='1' id='TreeCtr" + idx + "' value='" + i.boardId;
+							strHTML += "<h2><div AccessLevel='1' class='groupBoard' id='TreeCtr" + idx + "' value='" + i.boardId;
 	                        strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + idx + "','" + i.boardId + "')\">";
 	                        strHTML += i.boardName + "</div></h2>";
 	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj' style='width: auto; overflow: auto; padding-left: 10px; padding-bottom: 20px;'>";

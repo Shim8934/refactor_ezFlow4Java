@@ -807,7 +807,7 @@
 	        }
 	        function InsertReceiver(pListView) {
 	            try {
-	                if (inputTabButton.getAttribute("class") == "on") {
+	                if (inputTabButton.children[0].getAttribute("class") == "tabon") {
 	                    inputAddress();
 	                    return;
 	                }
@@ -1608,7 +1608,12 @@
 		        
 		        var UserListHTML = "";
 		        if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) != null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
-		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+		            if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang300 + "</span>]";
+	        		} else {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang300 + "</span>]";
+	        		}
+		            
 		            SelectDeptNM.setAttribute("countinfo", "1")
 		        }
 		        if (pListType == "IMG") {

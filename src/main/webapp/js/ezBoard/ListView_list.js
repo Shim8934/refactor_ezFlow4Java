@@ -741,7 +741,12 @@ function ListView() {
                     objTd.style.color = "RED";
                 }
 
-                objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
+                /* 2018-07-16 홍승비 - 체크박스를 사용하지 않는 게시판검색 기능 분기 위치 수정 */
+                if (SelectSingleNodeValue(oHeaders[j], "WIDTH") == 0) {
+                	continue;
+                } else {
+                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
+                }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TITLE") {
                     objTd.style.margin = "0";
@@ -826,6 +831,7 @@ function ListView() {
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "READCOUNT") {
                     objTd.style.textAlign = "center";
                 }
+                
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ITEMID") {
                     var _TDCheckBox_Sub = document.createElement("INPUT");
                     _TDCheckBox_Sub.type = "checkbox";

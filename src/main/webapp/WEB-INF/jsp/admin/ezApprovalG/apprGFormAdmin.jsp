@@ -7,7 +7,7 @@
 		<title><spring:message code = 'ezApprovalG.t607' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<style>
 			.mainlist_free tr th {
 				border-top:0px;
@@ -684,7 +684,7 @@
 						<option value="1"><spring:message code = 'ezApprovalG.t442' /></option>
 						<option value="2"><spring:message code = 'ezApprovalG.t598' /></option>
 					</select>
-					<input id="forminfo" onkeypress="search_press(event)" type="text" style="height:22px; margin-top: -2px; vertical-align:unset;" />
+					<input id="forminfo" onkeypress="search_press(event)" type="text" style="height:22px; margin-top: 1px; vertical-align:unset;" />
 					<a class="imgbtn imgbck" onclick="searchform()" style="margin-top: 3px;"><span><spring:message code = 'ezApprovalG.t111' /></span></a>
 					<a class="imgbtn imgbck" onclick="reset()" style="margin-top: 3px;"><span><spring:message code = 'ezApprovalG.t1301' /></span></a>
 				</td>

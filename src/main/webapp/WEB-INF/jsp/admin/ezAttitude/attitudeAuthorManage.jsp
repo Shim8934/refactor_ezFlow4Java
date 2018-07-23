@@ -94,7 +94,7 @@
 				var url = "/admin/ezAttitude/saveAttitudeAuth.do?companyId=" + encodeURIComponent($("#ListCompany").val()) + "&userId=" + userId + "&userName=" + selectedUserName;
 				
 				if (userId) {
-					window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 420));
+					window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 435));
 				} else {
 					alert("<spring:message code = 'ezAttitude.t191' />");
 				}
@@ -132,7 +132,7 @@
 	        //권한추가
 	        function author_add() {
 	        	var url = "/admin/ezAttitude/saveAttitudeAuth.do?companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 420));
+				window.open(url, "saveAttitudeAuth", GetOpenWindowfeature(500, 435));
 	        }
 
 		</script>
