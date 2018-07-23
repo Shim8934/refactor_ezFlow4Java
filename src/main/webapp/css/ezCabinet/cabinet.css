@@ -238,7 +238,8 @@
 .imgCabDivMain >div:last-child  {display: flex; align-items: center;}
 
 .selectDeptNm span {color: #666;}
-.selectDeptNm {}
+.storageDiv {min-height: 20px; position: relative;}
+.storageDiv span {float: right; line-height: 20px;}
 
 .cabFogPanel {width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; z-index: 1000; background: none rgba(0,0,0,0.5);}
 .popup .cabBttnDiv {text-align: center; margin: 10px auto;}
@@ -259,7 +260,6 @@
 .fileUploadDiv {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 260px; height: 260px; overflow: auto; cursor: pointer;}
 .htmlDiv {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 300px; height: 300px; overflow: auto; cursor: pointer;}
 .fileDetailDiv  {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 260px; height: 260px; overflow: auto; cursor: pointer;}
-.fileCapacityDiv {text-align : right}
 .divInform {width: 100%; height: 100%; display: flex; flex-flow: column; justify-content: center; align-items: center;}
 .divInform span + span {margin-top: 5px;}
 .fileList {width: 100%; height: auto;}

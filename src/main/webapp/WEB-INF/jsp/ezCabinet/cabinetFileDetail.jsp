@@ -40,9 +40,6 @@
 			</table>
 		</div>
 		
-		<!-- <div class="htmlDiv">
-		</div> -->
-		
 		<div class="fileDetailDiv" id="fileDiv">
 			<div class="fileList">
 				<ul class="ulFiles"></ul>
@@ -52,7 +49,7 @@
 			</div>
 		</div>
 		
-		<div class="fileCapacityDiv" id="fileCapacityDiv"></div>
+		<div class="storageDiv" id="fileCapacityDiv"></div>
 		
 		<div class="cabBttnDiv" id="fileDivBttn">
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
