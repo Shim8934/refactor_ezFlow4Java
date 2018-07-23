@@ -137,7 +137,7 @@
 						type       : "list",
 						initialUrl : "/ezCabinet/getRelatedCabinetTree.do",
 						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
-						click      : getShareCabinet,
+						click      : getCabinet,
 						dblClick   : null
 					});
 					
@@ -152,7 +152,7 @@
 						initialUrl : "/ezCabinet/getSharedCabinetTree.do",
 						shareUrl   : "/ezCabinet/getSharedCabinetsByUser.do",
 						extendUrl  : "/ezCabinet/getSubCabinetNodes.do",
-						click      : getCabinet,
+						click      : getShareCabinet,
 						dblClick   : null
 					});
 					

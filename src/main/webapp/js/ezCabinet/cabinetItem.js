@@ -171,12 +171,16 @@ var CabinetItem = function() {
 		movlistBttns[1].onclick = function(e) {moveFile("copy");};
 		movlistBttns[2].onclick = function(e) {toggleMovePopup();};
 		
-		document.getElementById("addBttn").firstElementChild.onclick = function(e) {addFile();};
-		document.getElementById("delBttn").firstElementChild.onclick = function(e) {deleteFileConfirm();};
-		document.getElementById("movBttn").firstElementChild.onclick = function(e) {moveFileConfirm();};
+		var addBttn = document.getElementById("addBttn");
+		var delBttn = document.getElementById("delBttn");
+		var movBttn = document.getElementById("movBttn");
+		var shaBttn = document.getElementById("shaBttn");
+		if (addBttn) {addBttn.firstElementChild.onclick = function(e) {addFile();};}
+		if (delBttn) {delBttn.firstElementChild.onclick = function(e) {deleteFileConfirm();};}
+		if (movBttn) {movBttn.firstElementChild.onclick = function(e) {moveFileConfirm();};}
+		if (shaBttn) {shaBttn.firstElementChild.onclick = function(e) {openSharePopup();};}
 		document.getElementById("refBttn").firstElementChild.onclick = function(e) {searchCallBack();};
 		document.getElementById("schBttn").firstElementChild.onclick = function(e) {toggleSearchPanel();};
-		document.getElementById("shaBttn").firstElementChild.onclick = function(e) {openSharePopup();};
 		
 		$("#Sdatepicker").datepicker({
 			changeMonth: true,
