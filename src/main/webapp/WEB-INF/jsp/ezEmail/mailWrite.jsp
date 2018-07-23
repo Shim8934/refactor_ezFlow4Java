@@ -47,7 +47,7 @@
 			#menu > ul:nth-child(2) > li {
 				margin: 0 2px !important;
 			}
-			.ui-autocomplete { height: 200px; max-height: 200px; overflow-y: auto; overflow-x: hidden;}
+			.ui-autocomplete { height: 200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding : 0px}
 			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
 		</style>
 		
@@ -1700,8 +1700,8 @@
 				var self = this;
 				ul.append("<li id='theadTr' onkeydown='keyEventNone(event)' style='background-color:#e9e9e9; border-bottom:1px solid #d1d1d1; height:22px; pointer-events: none;'><a><table class='width100percent' width='100%' height='100%' style='display:inline-table'><thead><tr>"
 				+ "<td style='width:20%; border:none; align:left'><spring:message code='ezAddress.t124' /></td>"
-				+ "<td style='width:15%; border:none; align:left'><spring:message code='ezApproval.t171' /></td>"
-				+ "<td style='width:20%; border:none; align:left'><spring:message code='ezPortal.t34' /></td>"
+				+ "<td style='width:20%; border:none; align:left'><spring:message code='ezApproval.t171' /></td>"
+				+ "<td style='width:15%; border:none; align:left'><spring:message code='ezPortal.t34' /></td>"
 				+ "<td style='max-width:45%; border:none; align:left'><spring:message code='ezEmail.t713' /></td>"
 				+ "</tr></thead></table></li></a>");
 				$.each( items, function( index, item ) {
@@ -1713,8 +1713,8 @@
 				var self = this;
 				ul.append("<li id='theadTr' onkeydown='keyEventNone(event)' style='background-color:#e9e9e9; border-bottom:1px solid #d1d1d1; height:22px; pointer-events: none;'><a><table class='width100percent' width='100%' height='100%' style='display:inline-table'><thead><tr>"
 				+ "<td style='width:20%; border:none; align:left'><spring:message code='ezAddress.t124' /></td>"
-				+ "<td style='width:15%; border:none; align:left'><spring:message code='ezApproval.t171' /></td>"
-				+ "<td style='width:20%; border:none; align:left'><spring:message code='ezPortal.t34' /></td>"
+				+ "<td style='width:20%; border:none; align:left'><spring:message code='ezApproval.t171' /></td>"
+				+ "<td style='width:15%; border:none; align:left'><spring:message code='ezPortal.t34' /></td>"
 				+ "<td style='max-width:45%; border:none; align:left'><spring:message code='ezEmail.t713' /></td>"
 				+ "</tr></thead></table></li></a>");
 				$.each( items, function( index, item ) {
@@ -1726,8 +1726,8 @@
 				var self = this;
 				ul.append("<li id='theadTr' onkeydown='keyEventNone(event)' style='background-color:#e9e9e9; border-bottom:1px solid #d1d1d1; height:22px; pointer-events: none;'><a><table class='width100percent' width='100%' height='100%' style='display:inline-table'><thead><tr>"
 				+ "<td style='width:20%; border:none; align:left'><spring:message code='ezAddress.t124' /></td>"
-				+ "<td style='width:15%; border:none; align:left'><spring:message code='ezApproval.t171' /></td>"
-				+ "<td style='width:20%; border:none; align:left'><spring:message code='ezPortal.t34' /></td>"
+				+ "<td style='width:20%; border:none; align:left'><spring:message code='ezApproval.t171' /></td>"
+				+ "<td style='width:15%; border:none; align:left'><spring:message code='ezPortal.t34' /></td>"
 				+ "<td style='max-width:45%; border:none; align:left'><spring:message code='ezEmail.t713' /></td>"
 				+ "</tr></thead></table></li></a>");
 				$.each( items, function( index, item ) {
@@ -1796,9 +1796,9 @@
 								"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 										+ item.value
 										+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
-										+ item.title
-										+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 										+ item.dept
+										+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+										+ item.title
 										+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 										+ item.email + "</td></tr></table></a>")
 						.appendTo(ul);
@@ -1859,9 +1859,9 @@
 						"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 								+ item.value
 								+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
-								+ item.title
-								+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 								+ item.dept
+								+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+								+ item.title
 								+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 								+ item.email + "</td></tr></table></a>")
 				.appendTo(ul);
@@ -1922,9 +1922,9 @@
 						"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 								+ item.value
 								+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
-								+ item.title
-								+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 								+ item.dept
+								+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+								+ item.title
 								+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
 								+ item.email + "</td></tr></table></a>")
 				.appendTo(ul);
