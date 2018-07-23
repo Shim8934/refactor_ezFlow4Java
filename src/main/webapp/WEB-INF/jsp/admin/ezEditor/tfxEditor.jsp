@@ -405,8 +405,8 @@
 	    	}
 	    	
 	    	var initFontFamilyMenu = "<spring:message code='main.t0620' />".split(";");
-	    	var uploadFilePath = "/ezEditor/tfxUpload.do";
-	    	var uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do";
+	    	var uploadFilePath = "/ezEditor/tfxUpload.do?type=";
+	    	var uploadPasteContentsPath = "/ezEditor/tfxSimpleUpload.do?type=";
 	    	
 	        xfe = new XFE({
 	        	lang : lang,
