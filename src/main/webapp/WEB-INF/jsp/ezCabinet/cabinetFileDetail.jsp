@@ -40,9 +40,6 @@
 			</table>
 		</div>
 		
-		<!-- <div class="htmlDiv">
-		</div> -->
-		
 		<div class="fileDetailDiv" id="fileDiv">
 			<div class="fileList">
 				<ul class="ulFiles"></ul>
@@ -52,7 +49,7 @@
 			</div>
 		</div>
 		
-		<div>
+		<div class="storageDiv">
 			<span id="">총용량 : 100KB</span>
 		</div>
 		
