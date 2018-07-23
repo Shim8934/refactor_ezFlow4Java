@@ -715,7 +715,7 @@
 					method : "POST",
 					dataType : "json",
 					data : {
-						deptID : DeptID
+						deptID : tempDeptID
 					},
 					success : function(result) {
 						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
