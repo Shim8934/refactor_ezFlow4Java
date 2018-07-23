@@ -2553,6 +2553,10 @@ public class EzPMSGWController {
 
 			List<ProjectGroupVO> groupList = ezPMSService.getGroupList(search, orderWhat, orderHow, startRow, limit,
 					lang, location);
+			
+			for(ProjectGroupVO vo : groupList) {
+				vo.setGroupMember(ezPMSService.getGroupMemberList(vo.getProjectId(), info.getTenantId(), vo.getGroupId()));
+			}
 
 			result.put("status", "ok");
 			result.put("code", 0);
