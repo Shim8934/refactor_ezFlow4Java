@@ -320,7 +320,7 @@
 		    		 <c:if test="${!isCrossBrowser}">
 		    	 	   <SCRIPT type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
 		    	 	 </c:if>
-		    		<select id="signlist" size="10" style="width:150px;height:150px;border:0px" onChange="sign_change()"> </select>
+		    		<select id="signlist" size="10" style="width:150px;height:150px;border:0px;background:none;" onChange="sign_change()"> </select>
 		    	</td> 
 		    	<td id="signimage" style="width:150px;height:150px;text-align:center" class="point"><spring:message code='ezOrgan.t191' /></td> 
 		  	</tr> 
