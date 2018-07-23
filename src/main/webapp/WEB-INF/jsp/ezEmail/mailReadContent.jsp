@@ -334,17 +334,19 @@
 		     		if (parent.sentDateMsg != "") {
 		     			sendDateStrApp.prepend("<div class='sentDateStr'>" + parent.sentDateMsg + "</div>");
 		     			sendDateStrApp.find(".sentDateStr").css({
-				    		"height" : "37px",
-				        	"box-sizing" : "border-box",
-				        	"background" : "#fdfec1",
-			        		"border-top" : "1px solid #e9ea94",
-				        	"line-height" : "37px",
-				    		"width" : "100%",
-				        	"padding" : "0px 0px 0px 10px",
-				    		"margin" : "0px",
-				    		"font-family" : "Gulim",
-				    		"font-size" : "12px",
-				    		"color" : "#333"
+		     				"height" : "27px",
+			     		    "box-sizing" : "border-box",
+			     		    "background" : "#fdfec1",
+			     		    "border-top" : "1px solid #e9ea94",
+			     			"border-left" : "1px solid #e9ea94",
+			     			"border-right" : "1px solid #e9ea94",
+			     		    "line-height" : "27px",
+			     			"width" : "100%",
+			     		    "padding" : "0px 0px 0px 10px",
+			     			"margin" : "0px",
+			     			"font-family" : "Gulim",
+			     			"font-size" : "12px",
+			     			"color" : "#333"
 				    	});
 
 				    }
