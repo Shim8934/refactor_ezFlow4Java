@@ -52,6 +52,7 @@ public interface EzCabinetService {
 	void deleteAttachFile(String filePath, String realPath, int tenantId) throws Exception;
 	
 	//User item functions
+	JSONObject getItemsBySearching(String cabinetId, int currentPage, int listCntSize, String title, String summary, String creatorName, String startDate, String endDate, String sqlQuery, String srchMode, String srchOption, String order, String column, String recursive, LoginVO userInfo) throws Exception;
 	void saveItem(int cabinetId, JSONArray attacheFiles, JSONArray relatedFiles, String title, String summary, String realPath, LoginVO userInfo) throws Exception;
 	
 	//User get cabinet infor function
@@ -71,5 +72,6 @@ public interface EzCabinetService {
 	//User delete/move items function
 	void deleteItems(List<Integer> itemIdList, LoginVO userInfo) throws Exception;
 	JSONObject moveItems(String realPath, int cabinetId, String mode, List<Integer> itemIdList, LoginVO userInfo) throws Exception;
+	
 	
 }

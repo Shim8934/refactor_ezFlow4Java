@@ -913,7 +913,7 @@
 	<!--***********************************************************************************
 	**                                  Cabinet share process                            **
 	************************************************************************************-->
-	<select id="getSharedCabinetListById" resultMap="cabinetShareVO">
+	<select id="EzCabinetDAO.getSharedCabinetListById" resultMap="cabinetShareVO">
 		select
 			s.*
 		from
@@ -921,7 +921,7 @@
 			where
 				s.use_status = 1 and s.tenant_id = #tenantId# and
 				(
-					<isNotEmpty>
+					<isNotEmpty property="listNodes">
 						(
 							s.cabinet_id in
 							<iterate property="listNodes" open="(" close=")" conjunction=",">
@@ -932,6 +932,28 @@
 						or
 					</isNotEmpty>
 					(s.cabinet_id = #cabinetId#)
+				)
+	</select>
+	
+	<select id="EzCabinetDAO.checkSubPermission" resultMap="cabinetShareVO">
+		select
+			s.*
+		from
+			tbl_cb_share s
+			where
+				s.use_status = 1 and s.tenant_id = #tenantId# and s.sharer_id = #sharerId# and s.shared_id = #sharedId# and
+				(
+					<isNotEmpty property="listNodes">
+						(
+							s.cabinet_id in
+							<iterate property="listNodes" open="(" close=")" conjunction=",">
+								#listNodes[]#
+							</iterate>
+							and s.child_permission = 1
+						)
+						or
+					</isNotEmpty>
+					(s.cabinet_id = #cabinetId# and s.child_permission = 1)
 				)
 	</select>
 </sqlMap>

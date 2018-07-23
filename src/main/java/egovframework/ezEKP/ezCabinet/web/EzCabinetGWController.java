@@ -1289,54 +1289,7 @@ public class EzCabinetGWController {
 				return result;
 			}
 			
-			int tenantId     = userInfo.getTenantId();
-			String primary   = userInfo.getPrimary();
-			String offset    = commonUtil.getMinuteUTC(userInfo.getOffset());
-			int startPoint   = 0;
-			int totalItems   = 0;
-			int totalPages   = 0;
-			
-			if (!column.equals("") && !order.equals("")) {
-				switch(column) {
-					case "it": sqlQuery = "item_type "   + order; break;
-					case "tt": sqlQuery = "title "       + order; break;
-					case "un": sqlQuery = primary.equals("1") ? "creator_name1 " + order : "creator_name2 " + order; break;
-					case "cd": sqlQuery = "create_date " + order; break;
-					case "is": sqlQuery = "item_size "   + order; break;
-					default  : sqlQuery = "item_type "   + order; break;
-				}
-			}
-			
-			CabinetItemSearchVO searchVO = new CabinetItemSearchVO(Integer.parseInt(cabinetId), listCntSize, tenantId, userId, primary, offset, title, summary, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption);
-			List<CabinetItemVO> itemList = new ArrayList<>();
-			
-			if (srchMode.equals("2") && recursive.equals("1")) {
-				CabinetVO cabinet = cabinetService.getCabinetById(cabinetId, userInfo.getTenantId());
-				searchVO.setCabinetPath(cabinet.getCabinetPath());
-				totalItems  = cabinetService.getTotalItemsRecursive(searchVO);
-				totalPages  = (totalItems + listCntSize - 1) / listCntSize;
-				currentPage = currentPage > totalPages ? totalPages : currentPage;
-				currentPage = currentPage == 0         ? 1          : currentPage;
-				startPoint  = (currentPage - 1) * listCntSize;
-				searchVO.setStartPoint(startPoint);
-				itemList    = cabinetService.getItemsRecursive(searchVO);
-			}
-			else {
-				totalItems  = cabinetService.getTotalItems(searchVO);
-				totalPages  = (totalItems + listCntSize - 1) / listCntSize;
-				currentPage = currentPage > totalPages ? totalPages : currentPage;
-				currentPage = currentPage == 0         ? 1          : currentPage;
-				startPoint  = (currentPage - 1) * listCntSize;
-				searchVO.setStartPoint(startPoint);
-				itemList    = cabinetService.getItems(searchVO);
-			}
-			
-			result.put("itemList",    itemList);
-			result.put("totalPages",  totalPages);
-			result.put("totalRows",   totalItems);
-			result.put("currentPage", currentPage);
-			result.put("status", "ok");
-			result.put("code", 0);
+			result = cabinetService.getItemsBySearching(cabinetId, currentPage, listCntSize, title, summary, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption, order, column, recursive, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

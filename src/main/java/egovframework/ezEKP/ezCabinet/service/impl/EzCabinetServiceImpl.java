@@ -1133,6 +1133,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		List<Integer> nodeIds = Arrays.asList(cabinetPath.split("\\|")).stream().map(Integer::parseInt).collect(Collectors.toList());
 		nodeIds.remove(nodeIds.size() - 1);
 		map.put("listNodes", nodeIds);
+		
 		List<CabinetShareVO> listShared = ezCabinetDAO.getSharedCabinetListById(map);
 		
 		if (listShared == null || listShared.size() == 0) {
@@ -1151,8 +1152,93 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		cabinet.setCabinetName(userInfo.getPrimary().equals("1") ? cabinet.getCabinetName1() : cabinet.getCabinetName2());
 		cabinet.setPermission(writePermission);
 		
+		result.put("cabinet", cabinet);
 		result.put("status", "ok");
 		result.put("code", 0);
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject getItemsBySearching(String cabinetId, int currentPage, int listCntSize, String title, String summary, String creatorName, String startDate, String endDate, String sqlQuery, String srchMode, String srchOption, String order, String column, String recursive, LoginVO userInfo) throws Exception {
+		JSONObject result            = new JSONObject();
+		String userId                = userInfo.getId();
+		int tenantId                 = userInfo.getTenantId();
+		String primary               = userInfo.getPrimary();
+		String offset                = commonUtil.getMinuteUTC(userInfo.getOffset());
+		int startPoint               = 0;
+		int totalItems               = 0;
+		int totalPages               = 0;
+		boolean subSearchflag        = false;
+		
+		if (!column.equals("") && !order.equals("")) {
+			switch(column) {
+				case "it": sqlQuery = "item_type "   + order; break;
+				case "tt": sqlQuery = "title "       + order; break;
+				case "un": sqlQuery = primary.equals("1") ? "creator_name1 " + order : "creator_name2 " + order; break;
+				case "cd": sqlQuery = "create_date " + order; break;
+				case "is": sqlQuery = "item_size "   + order; break;
+				default  : sqlQuery = "item_type "   + order; break;
+			}
+		}
+		
+		CabinetItemSearchVO searchVO = new CabinetItemSearchVO(Integer.parseInt(cabinetId), listCntSize, tenantId, userId, primary, offset, title, summary, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption);
+		List<CabinetItemVO> itemList = new ArrayList<>();
+		
+		if (srchMode.equals("2") && recursive.equals("1")) {
+			CabinetVO cabinet = getCabinetById(cabinetId, userInfo.getTenantId());
+			
+			if (!cabinet.getCreatorId().equals(userId)) {
+				String cabinetPath    = cabinet.getCabinetPath();
+				cabinetPath           = cabinetPath.substring(1, cabinetPath.length() - 1);
+				List<Integer> nodeIds = Arrays.asList(cabinetPath.split("\\|")).stream().map(Integer::parseInt).collect(Collectors.toList());
+				nodeIds.remove(nodeIds.size() - 1);
+				Map<String,Object> map = new HashMap<String, Object>();
+				map.put("cabinetId", cabinetId);
+				map.put("tenantId",  tenantId);
+				map.put("sharerId",  cabinet.getCreatorId());
+				map.put("sharedId",  userId);
+				map.put("listNodes", nodeIds);
+				
+				List<CabinetShareVO> listShared = ezCabinetDAO.checkSubPermission(map);
+				
+				if (listShared != null && listShared.size() > 0) {
+					searchVO.setCabinetPath(cabinet.getCabinetPath());
+					subSearchflag = true;
+				}
+			}
+			else {
+				searchVO.setCabinetPath(cabinet.getCabinetPath());
+				subSearchflag = true;
+			}
+		}
+		
+		if (subSearchflag == true) {
+			totalItems  = getTotalItemsRecursive(searchVO);
+			totalPages  = (totalItems + listCntSize - 1) / listCntSize;
+			currentPage = currentPage > totalPages ? totalPages : currentPage;
+			currentPage = currentPage == 0         ? 1          : currentPage;
+			startPoint  = (currentPage - 1) * listCntSize;
+			searchVO.setStartPoint(startPoint);
+			itemList    = getItemsRecursive(searchVO);
+		}
+		else {
+			totalItems  = getTotalItems(searchVO);
+			totalPages  = (totalItems + listCntSize - 1) / listCntSize;
+			currentPage = currentPage > totalPages ? totalPages : currentPage;
+			currentPage = currentPage == 0         ? 1          : currentPage;
+			startPoint  = (currentPage - 1) * listCntSize;
+			searchVO.setStartPoint(startPoint);
+			itemList    = getItems(searchVO);
+		}
+		
+		result.put("itemList",    itemList);
+		result.put("totalPages",  totalPages);
+		result.put("totalRows",   totalItems);
+		result.put("currentPage", currentPage);
+		result.put("status", "ok");
+		result.put("code", 0);
+		
 		return result;
 	}
 }

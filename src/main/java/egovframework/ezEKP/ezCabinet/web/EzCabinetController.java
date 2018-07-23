@@ -159,6 +159,8 @@ public class EzCabinetController {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String cabinetId   = request.getParameter("cabinetId");
 		
+		logger.debug("Cabinet Id: " + cabinetId);
+		
 		JSONObject shareObj = cabinetRestService.getShareCabinetInfo(request, user.getId(), cabinetId);
 		
 		if (shareObj.get("status").toString().equals("ok")) {

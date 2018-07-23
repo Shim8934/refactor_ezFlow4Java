@@ -219,4 +219,8 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 	public List<CabinetShareVO> getSharedCabinetListById(Map<String, Object> map) {
 		return (List<CabinetShareVO>)list("EzCabinetDAO.getSharedCabinetListById", map);
 	}
+
+	public List<CabinetShareVO> checkSubPermission(Map<String, Object> map) {
+		return (List<CabinetShareVO>)list("EzCabinetDAO.checkSubPermission", map);
+	}
 }
