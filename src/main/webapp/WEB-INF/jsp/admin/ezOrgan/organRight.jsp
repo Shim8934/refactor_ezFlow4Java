@@ -981,9 +981,9 @@
 		        	 //크롬일때 alert창 크기때문에 크롬일때 구별
 		            var agent = navigator.userAgent.toLowerCase();
 		            if (agent.indexOf("chrome") != -1) {
-		            	window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=315px,width=449px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(449, 315));	
+		            	window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=305px,width=460px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(449, 315));	
 		            } else {
-		            	window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=310px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 310));
+		            	window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=300px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 310));
 		            }
 		        /* }else{
 		            window.open("ConfigSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=297px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 297));
