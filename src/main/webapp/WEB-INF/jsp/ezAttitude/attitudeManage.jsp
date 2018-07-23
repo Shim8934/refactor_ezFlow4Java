@@ -69,6 +69,7 @@
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var selectedDeptID = "${selectedDeptID}";
 	    	var listSize = 15;
+	    	var today = "${searchEndDate}"; //오늘날짜 
 
 	        $(function () {
 	            //datepicker
@@ -777,6 +778,14 @@
 	    		searchUserName = $("#searchUserName").val();
 	    		searchTitle = $("#searchTitle").val();
 	    		searchAttitudeType = $("#searchAttitudeType").val();
+	    		
+	    		if (Tab1_SelectID == "absent") {
+	    			//오늘 이후 날짜가 포함되어 있으면 검색이 안되게끔.
+	    			if (searchEndDate > today) {
+	    				alert("<spring:message code='ezAttitude.t226'/>");
+	    				return;
+	    			}
+	    		}
 	    		
 	        	goToPageByNum(1);
 	        	//getList();

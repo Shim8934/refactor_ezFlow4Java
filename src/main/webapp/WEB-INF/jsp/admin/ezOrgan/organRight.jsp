@@ -958,7 +958,13 @@
 		            return;
 		        }
 		        
-		        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=210px,width=480px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(480, 210));
+		        var agent = navigator.userAgent.toLowerCase();
+	            if (agent.indexOf("chrome") != -1) {
+			        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=210px,width=480px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(480, 210));
+	            } else {
+			        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=210px,width=300px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(480, 210));
+	            }
+		        
 		    }
 		    
 		    function mod_sign() {
