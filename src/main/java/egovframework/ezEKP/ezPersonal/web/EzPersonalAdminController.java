@@ -857,6 +857,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("itemSeq", itemSeq);
 		model.addAttribute("title", title);
 		model.addAttribute("content", content);
+		model.addAttribute("user", userInfo.getId());
 		
 		logger.debug("showPopup ended");
 		return "admin/ezPersonal/personalShowPopup";

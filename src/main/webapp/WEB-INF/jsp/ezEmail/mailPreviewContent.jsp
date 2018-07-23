@@ -291,16 +291,17 @@
 	        
 	     	// 전달, 회신 시 보낸 시간
 	        function sentDateView(msg) {
-				$(".previewmail_info", parent.document).find(".sentDateStr").remove();
+	     		var preViewInfoParent = $(".previewmail_info", parent.document).parent();
+	     		preViewInfoParent.find(".sentDateStr").remove();
 
 	     		if (sentDateMsg != "") {
-	     			$(".previewmail_info", parent.document).prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
-			    	$(".previewmail_info", parent.document).find(".sentDateStr").css({
-			    		"height" : "37px",
+	     			preViewInfoParent.prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
+	     			preViewInfoParent.find(".sentDateStr").css({
+			    		"height" : "27px",
 			        	"box-sizing" : "border-box",
 			        	"background" : "#fdfec1",
 		        		"border-top" : "1px solid #e9ea94",
-			        	"line-height" : "37px",
+			        	"line-height" : "27px",
 			    		"width" : "100%",
 			        	"padding" : "0px 0px 0px 10px",
 			    		"margin" : "0px",

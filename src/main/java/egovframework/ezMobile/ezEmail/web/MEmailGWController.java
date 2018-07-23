@@ -2583,7 +2583,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
 		    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
 		    		        }
-		    		        
+
+		    		        // 전달, 회신
+	    		        	ezEmailUtil.setSentDateFlag(orgMessage, true);
+	    		        	
 		    		        orgMsgFolder.close(true);
 			            }
 				        

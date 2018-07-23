@@ -8,12 +8,10 @@
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 	    <style>
-	    .mainlist tr th {
-	    	border-top:0px;
-	    }
+	    
 	    table, td {
 			white-space: nowrap;
-			overflow: hidden;
+			/* overflow-x: hidden; */
 			text-overflow: ellipsis;
 		}
 		td {
@@ -740,16 +738,18 @@
 	
 	<body class="mainbody" onLoad="javascript:window_onload()">
 		<h1><spring:message code='ezApprovalG.t1678'/><span id="listInfo"></span></h1>
-		<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-		    <select id="ListCompany" onChange="return changeCompID">
-	        	<c:forEach var="item" items="${list}">
-            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-            	</c:forEach>
-		    </select><br /><br />
-		</span>
+		<div id="mainmenu">	
+			<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
+			    <select id="ListCompany" onChange="return changeCompID">
+		        	<c:forEach var="item" items="${list}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+			    </select><br /><br />
+			</span>
+		</div>
 		<table style="width:100%;">		
 			<tr>
-				<table id = "t1" style="width:100%;">
+				<table id = "t1" style="width:100%;border-top:1px solid #e8e8e8">
 					<tr>
 						<td style="width:60px;">
 							<spring:message code='ezApprovalG.kes04'/>  

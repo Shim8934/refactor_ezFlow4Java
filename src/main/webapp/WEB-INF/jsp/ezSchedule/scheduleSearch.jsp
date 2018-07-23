@@ -51,6 +51,11 @@
 			        usedate = false;
 		        }
 				//////////////////
+				
+				/* 2018-07-20 홍승비 - 일정검색 > 검색결과 좌측네모 IE에서 높이조절 */
+		        if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
+					document.getElementsByClassName("h2_dot")[0].style.background = "url(/images/kr/left/left_dot02.gif) no-repeat 0px 67%";
+		        }
 		    }
 			
 		    $(function () {

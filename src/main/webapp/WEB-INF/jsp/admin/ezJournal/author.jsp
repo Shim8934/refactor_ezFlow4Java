@@ -34,7 +34,7 @@
 				url+="?companyId="+companyId;
 				if (userId) {
 					url+="&userId="+userId+"&userName="+selectedUserName;
-					window.open(url, "authorView", GetOpenWindowfeature(500, 200));
+					window.open(url, "authorView", GetOpenWindowfeature(520, 200));
 				} else {
 					alert("<spring:message code='ezPortal.t85' />");
 				}

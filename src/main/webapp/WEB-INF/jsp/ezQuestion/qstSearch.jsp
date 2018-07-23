@@ -236,7 +236,7 @@
        				</td>
     			</tr>
   		</table>
-  		<div class="btnposition">
+  		<div class="btnpositionJsp">
   			<a class="imgbtn">
   				<span onclick="menu_Search()"><spring:message code='ezQuestion.t34' /></span>
   			</a>

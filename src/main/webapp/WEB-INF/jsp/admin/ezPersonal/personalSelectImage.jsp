@@ -310,7 +310,7 @@
 	    </div>
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	     <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="width:1px;height:1px">
-	        <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="false" />
+	        <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="display: none;" multiple="false" />
 	        <input type="hidden" name="boardid" id="boardid" />
 	        <input type="hidden" name="maxsize" id="maxsize" />
 	        <input type="hidden" name="mode" id="mode" value="SLIDERIMAGE"/>
