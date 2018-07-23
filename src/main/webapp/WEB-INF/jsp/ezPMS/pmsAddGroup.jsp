@@ -40,7 +40,7 @@ th a.imgbtn {
 
 </style>
 <script>
-var projectId = parent.projectId;
+var projectId = parent.opener.projectId;
 var projectName = "";
 var weight = null;
 var managerList = [];
@@ -83,6 +83,7 @@ function openMemberList(type) {
 function openGroupTree() {
 	var win;
  	var feature = GetOpenPosition(760, 700);
+ 	
  	DivPopUpShow(338, 335, "/ezPMS/goGroupTree.do?projectId=" + projectId, "",
 		 	"height = 335px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 }
@@ -92,7 +93,11 @@ function open() {
 }
 
  function popupClose() {
-	parent.DivPopUpHidden();
+	if(window.opener){
+		window.close();
+	} else {
+		parent.DivPopUpHidden();
+	}
  }
  
  function applyList() {
@@ -135,11 +140,11 @@ function setUpperGroup() {
 function addGroup() {
 	 var newGroupName = document.getElementById("groupName").value.trim();
 	 overview = convertString(document.getElementById("overview").value.trim());
-	 var project = parent.projectDetails;
+	 var project = parent.opener.projectDetails;
 	 var planStartDate = project.planStartDate;
 	 var planEndDate = project.planEndDate;
 	 //sort Order setting
-	 var sortOrder = parent.$(".group").length + 1;
+	 var sortOrder = parent.opener.$(".group").length + 1;
 	 
 	 //업무 이름 길이 제한
 	 if (newGroupName.length == 0) {
@@ -191,7 +196,7 @@ function addGroup() {
 			var logContent = "[" + upperGroupName + "<spring:message code='ezPMS.t127'/>" + newGroupName + "<spring:message code='ezPMS.t316'/>"; 
 			addTaskLog(projectId, 1, groupId, null, logContent);
 			
-			parent.location.reload();
+			parent.opener.location.reload();
 			popupClose();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {

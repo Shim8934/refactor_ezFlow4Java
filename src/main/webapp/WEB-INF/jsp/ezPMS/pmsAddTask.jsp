@@ -163,7 +163,11 @@ function openGroupTree() {
 }
 
 function popupClose() {
-	parent.DivPopUpHidden();
+	if(window.opener){
+		window.close();
+	} else {
+		parent.DivPopUpHidden();
+	}
 }
  
 function applyList() {
@@ -338,7 +342,7 @@ function addTask() {
 			var logContent = "[" + upperGroupName + "<spring:message code='ezPMS.t127'/>" + taskName + "<spring:message code='ezPMS.t315'/>"; 
 			addTaskLog(projectId, 1, groupId, null, logContent);
 			
-			parent.location.reload();
+			parent.opener.location.reload();
 			popupClose();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
@@ -365,20 +369,20 @@ function formatDate(date) {
 }
 
 function setDefaultGroup(){
-	var curTask = parent.ge ? parent.ge.currentTask : "";
-	var curTreeGroup = parent.$(".jstree-clicked");
+	var curTask = parent.opener.ge ? parent.opener.ge.currentTask : "";
+	var curTreeGroup = parent.opener.$(".jstree-clicked");
 	
 	if(!curTask && !curTreeGroup.attr("id")){
 		return;
 	} else if (curTreeGroup.attr("id")){ //업무 목록에서 업무 추가 했을 경우
-		groupId = parent.groupDetail.groupId;
-		groupName = parent.groupDetail.groupName;
+		groupId = parent.opener.groupDetail.groupId;
+		groupName = parent.opener.groupDetail.groupName;
 	} else { // 간트차트에서 업무 추가했을 경우
 		if(curTask.id.indexOf("_t") != -1){ //업무를 선택했을 경우
-			groupId = curTask.getParent().id.match(/g(\d+)/) ? curTask.getParent().id.match(/g(\d+)/)[1] : parent.projectGroupId;
+			groupId = curTask.getParent().id.match(/g(\d+)/) ? curTask.getParent().id.match(/g(\d+)/)[1] : parent.opener.projectGroupId;
 			groupName = curTask.getParent().name;
 		} else { // 그룹이나 프로젝트를 선택했을 경우
-			groupId = curTask.id.match(/g(\d+)/) ? curTask.id.match(/g(\d+)/)[1] : parent.projectGroupId;
+			groupId = curTask.id.match(/g(\d+)/) ? curTask.id.match(/g(\d+)/)[1] : parent.opener.projectGroupId;
 			groupName = curTask.name;
 		}
 	}

@@ -1377,7 +1377,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			endWeek = Calendar.MONDAY;
 		}
 
-		int workingDays = (int) (daysWithoutSunday - startWeek + endWeek);
+		int workingDays = (int) (daysWithoutSunday - startWeek + endWeek + 1);
 		
 		HashSet<String> solarHolidayMap = new HashSet<String>();
 		HashSet<String> lunarHolidayMap = new HashSet<String>();
