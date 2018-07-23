@@ -545,22 +545,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		
 		if (fSize > 0) {
 		    byte[] encryptedBytes = Files.readAllBytes(file.toPath());
-		    byte[] decryptedBytes;
-		    
-		    // KLIB 복호화 시도 두번, 최종 실패시 downFile 메소드로 리턴
-		    try {
-		    	decryptedBytes = klibUtil.decrypt(encryptedBytes);
-		    } catch (Exception ex) {
-		    	ex.printStackTrace();
-		    	try {
-		    		decryptedBytes = klibUtil.decrypt(encryptedBytes);		    		
-		    	} catch (Exception ex2) {
-		    		ex2.printStackTrace();
-		    		// 원본 파일의 파이트로 다운로드 처리하기 위함
-		    		decryptedBytes = encryptedBytes;
-		    		LOGGER.debug("failed to decryption file: {}", downFileName);
-		    	}
-		    }
+		    byte[] decryptedBytes = klibUtil.decrypt(encryptedBytes);
 		    
 		    try (ByteArrayInputStream in = new ByteArrayInputStream(decryptedBytes)) {
 	    	    String mimetype = "application/octet-stream";

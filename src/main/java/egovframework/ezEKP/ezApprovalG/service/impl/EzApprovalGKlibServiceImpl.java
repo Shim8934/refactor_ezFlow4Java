@@ -289,7 +289,6 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 	/**
 	 * 파일을 암호화하여 저장하는 API<br>
 	 * <br>
-	 * 실패시 다시 한번 시도하여 총 두번 시도하고 최종 실패시 예외를 던진다.<br>
 	 * 암호화에 성공하면 .ezd 확장자를 붙여 저장하고 원본 파일은 삭제한다.
 	 * 
 	 * @param file
@@ -306,22 +305,8 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 
 			// 파일의 바이트를 읽음
 			byte[] fileBytes = Files.readAllBytes(file);
-			byte[] encryptedBytes;
-
-			// 바이트 암호화, 암호화 실패 시 다시 시도
-			try {
-				encryptedBytes = klibUtil.encrypt(fileBytes);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				// 상위 try-catch 로 넘김
-				encryptedBytes = klibUtil.encrypt(fileBytes);
-			}
-
-			// 사이즈가 0 이라면 다시 시도
-			if (encryptedBytes.length == 0) {
-				// 상위 try-catch 로 넘김
-				encryptedBytes = klibUtil.encrypt(fileBytes);
-			}
+			// 바이트 암호화
+			byte[] encryptedBytes = klibUtil.encrypt(fileBytes);
 
 			// .ezd 확장자로 저장될 경로
 			String encryptedFileHref = file.toString() + "." + ENCRYPTED_FILE_EXT;
