@@ -530,9 +530,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (List<TaskMemberVO>) list("EzPMSDAO.getMemberSchedule", map);
 	}
 
-	public void addMemberSchedule(Map<String, Object> map) {
-		insert ("EzPMSDAO.addMemberSchedule", map);
-	}
+//	public void addMemberSchedule(Map<String, Object> map) {
+//		insert ("EzPMSDAO.addMemberSchedule", map);
+//	}
 
 	@SuppressWarnings("unchecked")
 	public List<ProjectTaskVO> getTaskListByGroupId(Map<String, Object> map) {
@@ -630,10 +630,10 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (int) select ("EzPMSDAO.getDateTaskCount", map);
 	}
 
-	public void deleteMemberSchedule(Map<String, Object> map) {
-		delete ("EzPMSDAO.deleteMemberSchedule", map);
-		
-	}
+//	public void deleteMemberSchedule(Map<String, Object> map) {
+//		delete ("EzPMSDAO.deleteMemberSchedule", map);
+//		
+//	}
 
 	@SuppressWarnings("unchecked")
 	public List<ProjectHolidayVO> getCustomHoliday(Map<String, Object> map) {

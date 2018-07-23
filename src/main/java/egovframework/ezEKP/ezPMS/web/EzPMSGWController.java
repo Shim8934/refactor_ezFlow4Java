@@ -1585,7 +1585,7 @@ public class EzPMSGWController {
 					ezPMSService.deleteTask(Long.parseLong(taskIdList[i]), projectId, tenantId, companyId, lang);
 
 					// 해당 task관련 삭제
-					ezPMSService.deleteMemberSchedule(null, projectId, tenantId, null, Long.parseLong(taskIdList[i]));
+//					ezPMSService.deleteMemberSchedule(null, projectId, tenantId, null, Long.parseLong(taskIdList[i]));
 				}
 			}
 
@@ -2179,14 +2179,14 @@ public class EzPMSGWController {
 //			}
 			List<String> dateList = ezPMSService.getDateList(planStartDate, planEndDate);
 
-			for (int i = 0; i < taskMemberList2.size(); i++) {
-				String memberId = taskMemberList2.get(i).getUserId();
-				LOGGER.debug(memberId);
-				for (int j = 0; j < dateList.size(); j++) {
-					ezPMSService.addMemberSchedule(memberId, tenantId, dateList.get(j), Long.parseLong(projectId),
-							taskId);
-				}
-			}
+//			for (int i = 0; i < taskMemberList2.size(); i++) {
+//				String memberId = taskMemberList2.get(i).getUserId();
+//				LOGGER.debug(memberId);
+//				for (int j = 0; j < dateList.size(); j++) {
+//					ezPMSService.addMemberSchedule(memberId, tenantId, dateList.get(j), Long.parseLong(projectId),
+//							taskId);
+//				}
+//			}
 
 			// 프로젝트 완료시 추가된 업무가 있으면 프로젝트 상태 수정
 			if (!request.getParameter("projectChangeDate").equals("")) {
@@ -2470,8 +2470,8 @@ public class EzPMSGWController {
 				ezPMSService.updateTaskInfo(projectTaskVO, companyId, tenantId, lang);
 
 				// taskId로 해당 date 삭제 후, 추가
-				ezPMSService.deleteMemberSchedule(null, Long.parseLong(projectId), tenantId, null,
-						Long.parseLong(taskId));
+//				ezPMSService.deleteMemberSchedule(null, Long.parseLong(projectId), tenantId, null,
+//						Long.parseLong(taskId));
 
 				Date startDate = sdf.parse(planStartDate);
 				Date endDate = sdf.parse(planEndDate);
@@ -2493,14 +2493,14 @@ public class EzPMSGWController {
 					}
 				}
 
-				for (int i = 0; i < taskMemberList2.size(); i++) {
-					String memberId = taskMemberList2.get(i).getUserId();
-					LOGGER.debug(memberId);
-					for (int j = 0; j < dateList.size(); j++) {
-						ezPMSService.addMemberSchedule(memberId, tenantId, dateList.get(j), Long.parseLong(projectId),
-								Long.parseLong(taskId));
-					}
-				}
+//				for (int i = 0; i < taskMemberList2.size(); i++) {
+//					String memberId = taskMemberList2.get(i).getUserId();
+//					LOGGER.debug(memberId);
+//					for (int j = 0; j < dateList.size(); j++) {
+//						ezPMSService.addMemberSchedule(memberId, tenantId, dateList.get(j), Long.parseLong(projectId),
+//								Long.parseLong(taskId));
+//					}
+//				}
 
 			}
 
@@ -3169,7 +3169,7 @@ public class EzPMSGWController {
 				ezPMSService.updateTaskStatus(projectTaskVO, companyId, tenantId, lang);
 				
 				// taskId로 해당 date 삭제 후, 추가
-				ezPMSService.deleteMemberSchedule(null, projectId, tenantId, null,taskId);
+//				ezPMSService.deleteMemberSchedule(null, projectId, tenantId, null,taskId);
 				List<TaskMemberVO> taskMemberList = ezPMSService.getTaskMemberList(tenantId, taskId, lang);
 				
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -3193,13 +3193,13 @@ public class EzPMSGWController {
 					}
 				}
 
-				for (int i = 0; i < taskMemberList.size(); i++) {
-					String memberId = taskMemberList.get(i).getUserId();
-					LOGGER.debug(memberId);
-					for (int j = 0; j < dateList.size(); j++) {
-						ezPMSService.addMemberSchedule(memberId, tenantId, dateList.get(j), projectId, taskId);
-					}
-				}
+//				for (int i = 0; i < taskMemberList.size(); i++) {
+//					String memberId = taskMemberList.get(i).getUserId();
+//					LOGGER.debug(memberId);
+//					for (int j = 0; j < dateList.size(); j++) {
+//						ezPMSService.addMemberSchedule(memberId, tenantId, dateList.get(j), projectId, taskId);
+//					}
+//				}
 				
 //				if (request.getParameter("endTime") != null) {
 //					long endTime = Long.parseLong(request.getParameter("endTime"));

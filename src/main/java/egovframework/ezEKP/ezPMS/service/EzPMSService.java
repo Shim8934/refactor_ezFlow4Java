@@ -220,7 +220,7 @@ public interface EzPMSService {
 
 	public List<ProjectMemberScheduleVO> getMemberSchedule(long projectId, int tenantId, String lang, String companyId, String planStartDate, String planEndDate) throws Exception;
 
-	public void addMemberSchedule(String memberId, int tenantId, String assignedDate, long projectId, long taskId);
+//	public void addMemberSchedule(String memberId, int tenantId, String assignedDate, long projectId, long taskId);
 	
 	public List<ProjectTaskVO> getTaskListByGroupId(int tenantId, long groupId);
 	
@@ -262,7 +262,7 @@ public interface EzPMSService {
 
 	public int getDateTaskCount(String date, long projectId, int tenantId, String memberId);
 
-	public void deleteMemberSchedule(String date, long projectId, int tenantId, String memberId, long taskId);
+//	public void deleteMemberSchedule(String date, long projectId, int tenantId, String memberId, long taskId);
 	
 	public void updateGroupLatestInfo(long projectId, long groupId, int tenantId, String lang) throws Exception;
 	
