@@ -3942,4 +3942,46 @@ public class EzPMSController {
 		LOGGER.debug("ezPMS getAllGanttItems ended");
 		return "json";
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezPMS/mailWrite.do")
+	public JSONObject mailWrite(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS mailWrite started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		Long projectId = Long.parseLong(request.getParameter("projectId"));
+		int roleId = Integer.parseInt(request.getParameter("roleId"));
+		String type = request.getParameter("type");
+		String toUserId = request.getParameter("toUserId");
+		
+		JSONObject result = new JSONObject();
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		if (type.equals("group")) {
+			String url = "/rest/ezPMS/projects/" + projectId + "/roles/" + roleId;
+			param.put("isGantt", 0);
+			param.put("userId", userId);
+			param.put("roleId", roleId);
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+			String status = resultBody.get("status").toString();
+			
+			if (status.equals("ok")) {
+				result.put("list", resultBody.get("data"));
+			}
+		} else {
+			String url = "/rest/ezPMS/users/" + toUserId + "/setting";
+			param.put("userIdType", "user");
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+			String status = resultBody.get("status").toString();
+			
+			if (status.equals("ok")) {
+				result.put("list", resultBody.get("data"));
+			}
+		}
+		
+		LOGGER.debug("ezPMS mailWrite ended");
+		return result;
+	}
 }
