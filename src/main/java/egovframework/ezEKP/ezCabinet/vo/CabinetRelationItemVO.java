@@ -4,6 +4,7 @@ public class CabinetRelationItemVO {
 	private int    relationId;
 	private int    itemId;
 	private int    relatedItemId;
+	private int    itemType;
 	private String title;
 	private int    useStatus;
 	private String companyId;
@@ -31,6 +32,14 @@ public class CabinetRelationItemVO {
 	
 	public void setRelatedItemId(int relatedItemId) {
 		this.relatedItemId = relatedItemId;
+	}
+	
+	public int getItemType() {
+		return itemType;
+	}
+	
+	public void setItemType(int itemType) {
+		this.itemType = itemType;
 	}
 	
 	public String getTitle() {
@@ -64,5 +73,4 @@ public class CabinetRelationItemVO {
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
 	}
-	
 }

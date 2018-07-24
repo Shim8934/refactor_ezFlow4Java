@@ -154,6 +154,7 @@
 					var parentWd    = window.opener;
 					var selectedArr = null;
 					if (parentWd && parentWd.CabinetAddFile) {selectedArr = parentWd.CabinetAddFile.get();}
+					if (parentWd && parentWd.CabinetItemDetail) {selectedArr = parentWd.CabinetItemDetail.get();}
 					
 					if (selectedArr != null && selectedArr.length != 0) {
 						var tableElmt = document.getElementById("selectedTable");

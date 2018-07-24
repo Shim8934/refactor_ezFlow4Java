@@ -109,10 +109,11 @@
 		<result property="relationId"       column="relation_id"         columnIndex="1"/>
 		<result property="itemId"           column="item_id"             columnIndex="2"/>
 		<result property="relatedItemId"    column="relate_item_id"      columnIndex="3"/>
-		<result property="title"            column="title"               columnIndex="4"/>
-		<result property="useStatus"        column="use_status"          columnIndex="5"/>
-		<result property="companyId"        column="company_id"          columnIndex="6"/>
-		<result property="tenantId"         column="tenant_id"           columnIndex="7"/>
+		<result property="itemType"         column="item_type"           columnIndex="4"/>
+		<result property="title"            column="title"               columnIndex="5"/>
+		<result property="useStatus"        column="use_status"          columnIndex="6"/>
+		<result property="companyId"        column="company_id"          columnIndex="7"/>
+		<result property="tenantId"         column="tenant_id"           columnIndex="8"/>
 	</resultMap>
 	
 	<!--***********************************************************************************
@@ -418,6 +419,7 @@
 				r.relation_id as relation_id,
 				r.item_id as item_id,
 				r.relate_item_id as relate_item_id,
+				i.item_type as item_type,
 				i.title as title,
 				i.use_status as use_status,
 				r.company_id as company_id,

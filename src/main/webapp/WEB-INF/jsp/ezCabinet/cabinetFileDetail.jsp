@@ -34,6 +34,7 @@
 					<td>
 						<div class="rlFileDiv">
 							<div id="fileListDiv" class="rlDocDiv"></div>
+							<a id="rlBttnA" style="display: none;"><span id="rlBttn"><spring:message code='ezCabinet.t93'/></span></a>
 						</div>
 					</td>
 				</tr>
@@ -58,15 +59,22 @@
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a>
 		</div>
 		
+		<div class="cabBttnDiv" id="fileModifyDivBttn" style="display: none;">
+			<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
+			<a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a>
+		</div>
+		
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript">
 			var CabinetItemDetail = function() {
+				var rlWindow    = null;
 				var itemId      = null;
 				var lastScrollY = 0;
 				var scrolled    = true;
+				var relatedArr  = [];
 				
 				function initEvents(itemID) {
 					itemId                  = itemID;
@@ -98,11 +106,11 @@
 				}
 				
 				function processFileDetail(fileItem) {
-					//파일상세내용
 					var result              = fileItem.fileDetail;
 					var attachFile          = fileItem.attachFileList;
 					var relatedFile         = fileItem.relatedFileList;
 					
+					//파일상세
 					var creator             = document.getElementById("creator");
 					var createdDate         = document.getElementById("createdDate");
 					var title               = document.getElementById("title");
@@ -186,6 +194,12 @@
 							divideEm.textContent = ";";
 							divElmt.appendChild(divideEm);
 						}
+						
+						relatedArr.push({
+							itemType  : relatedFile[i]["itemType"],
+							itemId    : relatedFile[i]["itemId"],
+							itemTitle : relatedFile[i]["title"]
+						})
 					}
 				}
 				
@@ -196,6 +210,10 @@
 						divElmt.scrollTop = lastScrollY + distance;
 						setTimeout(function () {scrolled = true; lastScrollY = divElmt.scrollTop;}, 500);
 					}
+				}
+				
+				function getRelatedFiles() {
+					return relatedArr;
 				}
 				
 				function readRelatedItem(spanElmt) {
@@ -259,21 +277,84 @@
 				}
 				
 				function fileModify() {
+					//Set button
+					var fileDivBttn = document.getElementById("fileDivBttn");
+					fileDivBttn.style.display = "none";
+					
+					var fileModifyDivBttn = document.getElementById("fileModifyDivBttn");
+					fileModifyDivBttn.style.display = "";
+					
+					var cabBttnElmt         = document.getElementById("fileModifyDivBttn");
+					var listBttns           = cabBttnElmt.children;
+					listBttns[0].onclick    = function(e) {saveItem();};
+					listBttns[1].onclick    = function(e) {closeWindow();};
+					
+					//Set inputBox
 					var titleTdElmt   = document.getElementById("title");
 					var summaryTdElmt = document.getElementById("summary");
 					
 					var inputElmt1 = document.createElement("input"); 
 					var inputElmt2 = document.createElement("input");
 					
-					//inputElmt1.setAttribute("value", "");
-					//inputElmt2.setAttribute("value", "");
+					inputElmt1.value = titleTdElmt.textContent;
+					inputElmt2.value = summaryTdElmt.textContent;
 					
-					titleTdElmt.innerHTML = "";
+					inputElmt1.className = "tblFileInput";
+					inputElmt2.className = "tblFileInput";
+					
+					titleTdElmt.innerHTML   = "";
 					summaryTdElmt.innerHTML = "";
 					
 					titleTdElmt.appendChild(inputElmt1);
 					summaryTdElmt.appendChild(inputElmt2);
 					
+					//Set attachButton
+					var fileDivElmt    = document.getElementById("fileDiv");
+					var ulElmt         = fileDivElmt.querySelector("ul[class='ulFiles']");
+					var liElmt         = ulElmt.querySelectorAll("li");
+					
+					if(liElmt.length == 0) {
+						fileDivElmt.addEventListener("click"    , function(e) {startUpload();}           , false);
+						fileDivElmt.addEventListener("dragenter", function(e) {CabinetFile.dragEnter(e);}, false);
+						fileDivElmt.addEventListener("dragover" , function(e) {CabinetFile.dragOver(e);} , false);
+						fileDivElmt.addEventListener("drop"     , function(e) {CabinetFile.upload(e);}   , false);
+					}else{
+						for (var i = 0; i < liElmt.length; i++) { //수정해야함
+							var delImg         = document.createElement("img");
+							delImg.src         = "/images/cabinet/file_del.gif";
+							delImg.addEventListener("click", function(e) {deleteFile(e);}, false);
+							
+							liElmt[i].appendChild(delImg);
+						}	
+					}
+					
+					//Set relatedBttn
+					var relatedBttn         = document.getElementById("rlBttnA");
+					relatedBttn.style.display = "";
+					relatedBttn.onclick     = function(e) {getRelatedFile();};
+				}
+				
+				function getRelatedFile() {
+					closeRelatedPopup();
+					rlWindow = window.open("/ezCabinet/getRelatedFile.do", "relatedWd", getOpenWindowfeature(800, 600));
+				}
+				
+				function closeRelatedPopup() {if (rlWindow) {rlWindow.close();}}
+				
+				function getOpenWindowfeature(popUpW, popUpH) {
+					var heigth   = window.screen.availHeight;
+					var width    = window.screen.availWidth;
+					var left     = 0;
+					var top      = 0;
+					var pleftpos = parseInt(width) - popUpW;
+					heigth       = parseInt(heigth) - popUpH;
+					left         = pleftpos / 2;
+					top          = heigth / 2;
+					var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+					return feature;
+				}
+				
+				function saveItem() {
 					
 				}
 				
@@ -327,7 +408,10 @@
 				
 				function closeWindow() {window.close();}
 				
-				return {init : initEvents};
+				return {
+					init : initEvents,
+					get  : getRelatedFiles
+				};
 			}();
 		</script>
 		<script type="text/javascript">CabinetItemDetail.init("<c:out value='${itemId}'/>");</script>
