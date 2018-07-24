@@ -292,6 +292,7 @@ public class EzPMSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userName = userInfo.getDisplayName1();
 		String userId = userInfo.getId();
+		String userDeptname = userInfo.getDeptName1();
 		String mode = request.getParameter("mode");
 		
 		String planStartDate = "";
@@ -330,6 +331,7 @@ public class EzPMSController {
 		
 		model.addAttribute("mode", mode);
 		model.addAttribute("userName", userName);
+		model.addAttribute("userDeptname", userDeptname);
 		model.addAttribute("planStartDate", planStartDate);
 		model.addAttribute("planEndDate", planEndDate);
 		

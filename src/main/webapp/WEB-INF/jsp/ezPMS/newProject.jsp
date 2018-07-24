@@ -29,6 +29,7 @@
 <script>
 var projectName = "<c:out value='${project.projectName}'/>";
 var writerName = "${userName}";
+var writerDeptname = "${userDeptname}";
 var weightInput = "${project.weightInput}";
 var planStartDate = "${project.planStartDate}";
 var planEndDate = "${project.planEndDate}";
@@ -119,8 +120,12 @@ var headManagerObj = {};
 				
 		}
 		applyList();
-		applyHeadManager();
+	} else {
+		headManagerObj.userId = parent.opener.userId;
+		headManagerObj.userName = writerName;
+   		headManagerObj.userDept = writerDeptname;
 	}
+	applyHeadManager();
  
  });
 
