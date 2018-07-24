@@ -41,6 +41,9 @@ public class ProjectMemberVO {
     // 사용자 사진
     private String userImage;
     
+    //사용자 이메일
+    private String userMail;
+    
     public Long getMemberId() {
         return memberId;
     }
@@ -143,5 +146,13 @@ public class ProjectMemberVO {
 
 	public void setUserImage(String userImage) {
 		this.userImage = userImage;
+	}
+
+	public String getUserMail() {
+		return userMail;
+	}
+
+	public void setUserMail(String userMail) {
+		this.userMail = userMail;
 	}
 }

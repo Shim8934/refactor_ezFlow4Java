@@ -14,9 +14,11 @@
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript">
+var projectId = parent.projectId;
+var roleId = "${roleId}";
+
  $(function(){
 	 var memberList = JSON.parse('${memberList}');
-	 var roleId = "${roleId}";
 	 var roleName = "";
 	 var memberCount = "${memberCount}";
 	 
@@ -39,15 +41,19 @@
 		 strHTML += "<spring:message code='ezPMS.t157' /> " + roleName + "<spring:message code='ezPMS.t158' />";
 		 strHTML += "</td></tr>";
 	 } else {
+		 $("#menu1").append("<img style='cursor: pointer; float: right; margin-top: 3px;;' src='/images/poll/sendMail01.png' onclick='sendMailAll()'>");
+		 
 		 for (var i = 0; i < memberList.length; i++) {
-			strHTML += "<tr id='" + memberList[i].userId + "' class='white' style='border:1px solid #ddd'>";
-			strHTML += "<td style='border-right:none; width:100%'>";
+			strHTML += "<tr id='" + memberList[i].userId + "' class='white' style='border:1px solid #ddd; width: 100%'>";
+			strHTML += "<td style='border-right:none;'>";
 			strHTML += "<img src='" + memberList[i].userImage + "' style='display:inline-block;float:left; height:40px; width:40px; padding:5px 0px 5px 8px; cursor: pointer;' onclick='menuQst_DetailUserInfo(" + memberList[i].userId + ")'>";
 			strHTML += "<a style='cursor:pointer; display:inline-block; padding:0px 10px; float:left; line-height:41px; overflow:hidden;";
 			strHTML += "text-overflow:ellipsis; max-width:120px; white-space:nowrap;' onclick='menuQst_DetailUserInfo(\"" + memberList[i].userId + "\")'>";
 			strHTML += memberList[i].userName;
 			strHTML += "(" + memberList[i].userDeptname + ")";
 			strHTML += "</a>";
+			strHTML += "</td><td style='border: none; width: 60px;'>";
+			strHTML += "<img class='voteUserMailImg' style='padding-left: 10px; cursor: pointer;' src='/images/poll/sendMail.png' onclick='sendMail(\"" + memberList[i].userId + "\", \"" + memberList[i].userIdType + "\")'>";
 			strHTML += "</td></tr>";
 		 } 
 	 }
@@ -65,12 +71,34 @@
  function popupClose() {
 	parent.DivPopUpHidden();
  }
+ 
+ function sendMail(userId, userIdType) {
+	var pheight = window.screen.availHeight;
+	var conHeight = pheight * 0.8;
+	var pwidth = window.screen.availWidth;
+	var pTop = (pheight - conHeight) / 2;
+	var pLeft = (pwidth - 890) / 2;
+	var url = "/ezEmail/mailWrite.do?cmd=ezPMS&type=one&projectId=" + projectId + "&roleId=" + roleId + "&toUserId=" + userId + "&userIdType=" + userIdType;
+
+	window.open(url, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height=" + conHeight + "px, width=890px, status=no, toolbar=no, menubar=no, location=no, resizable=1");
+ }
+ 
+ function sendMailAll() {
+	var pheight = window.screen.availHeight;
+	var conHeight = pheight * 0.8;
+	var pwidth = window.screen.availWidth;
+	var pTop = (pheight - conHeight) / 2;
+	var pLeft = (pwidth - 890) / 2;
+	var url = "/ezEmail/mailWrite.do?cmd=ezPMS&type=group&projectId=" + projectId + "&roleId=" + roleId;
+	
+	window.open(url, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height=" + conHeight + "px, width=890px, status=no, toolbar=no, menubar=no, location=no, resizable=1");
+}
 </script>
 </head>
 <body class="popup" id="mainbody" style="overflow:hidden;">
 <form method="POST">
 	<div id="normalScreen" style="overflow: hidden;">
-		<div id="menu1" style="float: left; display: block; width:100%; text-align:left; padding-left:5px;">
+		<div id="menu1" style="float: left; display: block; width:98%; text-align:left; padding-left:5px;">
 			<h1 style="display: inline-block;"></h1>
 		</div>					
 	</div>

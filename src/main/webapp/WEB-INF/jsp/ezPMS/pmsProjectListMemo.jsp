@@ -39,6 +39,7 @@ $(function(){
 		json.completeTaskCount = "${project.completeTaskCount}";
 		json.lateTaskCount = "${project.lateTaskCount}";
 		json.status = "${project.status}";
+		json.restDueday = "${project.restDueday}";
 		projectList.push(json);
 	</c:forEach>
 	
@@ -48,11 +49,15 @@ $(function(){
 		if (projectList[i].status == "P") {
 			htmlStr = "<span class='situation_progress' style='background-color:" + progressColor + ";'><spring:message code='ezPMS.t15' /></span>";
 		} else if (projectList[i].status == "C") {
-			htmlStr = "<span class='situation_complete' style='background-color:" + completeColor + ";'><spring:message code='ezPMS.t17' /></span>";
+//			if (projectList[i].restDueday >= 0) {
+				htmlStr = "<span class='situation_complete' style='background-color:" + completeColor + ";'><spring:message code='ezPMS.t17' /></span>";
+/* 			} else if (projectList[i].restDueday < 0) {
+				htmlStr = "<span class='situation_complete' style='background-color:" + completeColor + ";'><spring:message code='ezPMS.t17' /></span><span class='situation_delay' style='background-color:" + overdueColor + ";'><spring:message code='ezPMS.t18' /></span>";
+			} */
 		} else if (projectList[i].status == "S") {
 			htmlStr = "<span class='situation_hold' style='background-color:" + holdColor + ";'><spring:message code='ezPMS.t19' /></span>";
 		} else if (projectList[i].status == "L") {
-			htmlStr = "<span class='situation_delay' style='background-color:" + overdueColor + ";'><spring:message code='ezPMS.t18' /></span>";
+			htmlStr = "<span class='situation_progress' style='background-color:" + progressColor + ";'><spring:message code='ezPMS.t15' /></span><span class='situation_delay' style='background-color:" + overdueColor + ";'><spring:message code='ezPMS.t18' /></span>";
 		} else if (projectList[i].status == "W") {
 			htmlStr = "<span class='situation_standby' style='background-color:" + waitColor + ";'><spring:message code='ezPMS.t16' /></span>";
 		} else if (projectList[i].status == "D") {

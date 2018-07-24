@@ -86,19 +86,27 @@ $(function(){
 	
 	function setProgressBar() {
 		for(var j = 0; j < 10 && i < projectList.length; j++, i++) {
+			var htmlStr = "";
+			
 			if (projectList[i].status == "P") {
-			 	$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", progressColor);
+				htmlStr = "<span class='situation_progress' style='background-color:" + progressColor + ";'><spring:message code='ezPMS.t15' /></span>";
 			} else if (projectList[i].status == "C") {
-				$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", completeColor);
+//				if (projectList[i].restDueday >= 0) {
+					htmlStr = "<span class='situation_complete' style='background-color:" + completeColor + ";'><spring:message code='ezPMS.t17' /></span>";
+	/* 			} else if (projectList[i].restDueday < 0) {
+					htmlStr = "<span class='situation_complete' style='background-color:" + completeColor + ";'><spring:message code='ezPMS.t17' /></span><span class='situation_delay' style='background-color:" + overdueColor + ";'><spring:message code='ezPMS.t18' /></span>";
+				} */
 			} else if (projectList[i].status == "S") {
-				$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", holdColor);
+				htmlStr = "<span class='situation_hold' style='background-color:" + holdColor + ";'><spring:message code='ezPMS.t19' /></span>";
 			} else if (projectList[i].status == "L") {
-				$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", overdueColor);
+				htmlStr = "<span class='situation_progress' style='background-color:" + progressColor + ";'><spring:message code='ezPMS.t15' /></span><span class='situation_delay' style='background-color:" + overdueColor + ";'><spring:message code='ezPMS.t18' /></span>";
 			} else if (projectList[i].status == "W") {
-				$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", waitColor);
+				htmlStr = "<span class='situation_standby' style='background-color:" + waitColor + ";'><spring:message code='ezPMS.t16' /></span>";
 			} else if (projectList[i].status == "D") {
-				$("#" + projectList[i].projectId).find(".statusSpan").css("background-color", deleteColor);
+				htmlStr = "<span class='situation_delet' style='background-color:" + deleteColor + ";'><spring:message code='ezPMS.t11' /></span>";
 			}
+			
+			$("tr[id='" + projectList[i].projectId + "']").find(".projectStatus").html(htmlStr);
 			
 			var completeTaskPercent = (projectList[i].completeTaskCount / projectList[i].totalTaskCount) * 100;
 			var lateTaskPercent = (projectList[i].lateTaskCount / projectList[i].totalTaskCount) * 100;
@@ -181,7 +189,7 @@ $(function(){
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 210px;"
 								class="h5_center"><spring:message code='ezPMS.t37' /></th>
 							<th id="BoardList_TH_8" onclick="setListOrder(this)" order="STATUS"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 50px;"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 100px;"
 								class="h5_center"><spring:message code='ezPMS.t38' /></th>
 							</tr>
 							</thead>
@@ -241,17 +249,9 @@ $(function(){
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 210px"><c:out
 												value="${project.planStartDate }" /> ~ <c:out
 												value="${project.planEndDate }" /></td>
-										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 50px">
-											<c:choose>
-												<c:when test="${project.status eq 'P' }"><span class="statusSpan situation_progress"><spring:message code='ezPMS.t15' /></span></c:when>
-												<c:when test="${project.status eq 'W' }"><span calss="statusSpan situation_stanby"><spring:message code='ezPMS.t16' /></span></c:when>
-												<c:when test="${project.status eq 'C' }"><span calss="statusSpan situation_complete"><spring:message code='ezPMS.t17' /></span></c:when>
-												<c:when test="${project.status eq 'L' }"><span calss="statusSpan situation_delay"><spring:message code='ezPMS.t18' /></span></c:when>
-												<c:when test="${project.status eq 'D' }"><span calss="statusSpan situation_delet"><spring:message code='ezPMS.t11' /></span></c:when>
-												<c:when test="${project.status eq 'S' }"><span calss="statusSpan situation_hold"><spring:message code='ezPMS.t19' /></span></c:when>
-											</c:choose>
-											</td>
+										<td class="projectStatus" onclick="selectedTR(this);"
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100px">
+										</td>
 									</tr>
 								</c:forEach>
 									</c:otherwise>

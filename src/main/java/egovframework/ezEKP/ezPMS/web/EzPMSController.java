@@ -3956,4 +3956,74 @@ public class EzPMSController {
 		LOGGER.debug("ezPMS getAllGanttItems ended");
 		return "json";
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/ezPMS/sendMail.do")
+	@ResponseBody
+	public JSONObject mailWrite(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS mailWrite started"); 
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		Long projectId = Long.parseLong(param.get("projectId").toString());
+		String roleId = param.get("roleId").toString();
+		String type = param.get("type").toString();
+		String toUserId = param.get("toUserId").toString();
+		String taskId = param.get("taskId").toString();
+		
+		JSONObject result = new JSONObject();
+		param.put("userId", userId);
+		
+		//프로젝트 정보 불러오기
+		String projectUrl = "/rest/ezPMS/projects/" + projectId + "/userId/" + userId;
+		JSONObject projectResult = commonUtil.getJsonFromRestApi(projectUrl, null, request, "get", null);
+		String projectStatus = projectResult.get("status").toString();
+		
+		if (projectStatus.equals("ok")) {
+			JSONObject json = (JSONObject) projectResult.get("data");
+			JSONObject project = (JSONObject) json.get("project");
+			
+			//프로젝트 정보 호출
+			result.put("project", project);
+		}
+		
+		if (taskId == null || taskId.equals("")) {
+			if (type.equals("group")) {
+				String url = "/rest/ezPMS/projects/" + projectId + "/roles/" + Integer.parseInt(roleId);
+				param.put("isGantt", 1);
+				param.put("roleId", roleId);
+				
+				JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+				String status = resultBody.get("status").toString();
+				
+				if (status.equals("ok")) {
+					result.put("list", resultBody.get("data"));
+				}
+			} else {
+				String url = "/rest/ezPMS/users/" + toUserId + "/setting";
+				param.put("userIdType", param.get("userIdType"));
+				
+				JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+				String status = resultBody.get("status").toString();
+				
+				if (status.equals("ok")) {
+					result.put("list", resultBody.get("data"));
+				}
+			}
+		} else {
+			String url = "/rest/ezPMS/tasks/" + Long.parseLong(taskId) + "/users/" + userId;
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+			String status = resultBody.get("status").toString();
+			
+			if (status.equals("ok")) {
+				JSONObject data = (JSONObject) resultBody.get("data");
+				JSONObject taskDetails = (JSONObject) data.get("taskDetails");
+				
+				result.put("list", taskDetails.get("taskMember"));
+			}
+		}
+		
+		
+		LOGGER.debug("ezPMS mailWrite ended");
+		return result;
+	}
 }

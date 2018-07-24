@@ -38,7 +38,18 @@
 		}
 	});
 	
-	
+	function sendMail() {
+		var taskId = taskDetails.taskId;
+		var projectId = taskDetails.projectId;
+		var pheight = window.screen.availHeight;
+		var conHeight = pheight * 0.8;
+		var pwidth = window.screen.availWidth;
+		var pTop = (pheight - conHeight) / 2;
+		var pLeft = (pwidth - 890) / 2;
+		var url = "/ezEmail/mailWrite.do?cmd=ezPMS&type=group&projectId=" + projectId + "&taskId=" + taskId;
+		
+		window.open(url, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height=" + conHeight + "px, width=890px, status=no, toolbar=no, menubar=no, location=no, resizable=1");
+	}
 </script>
 <style type="text/css">
 	.tg    {border-collapse:collapse;border-spacing:0;width:100%;}
@@ -96,51 +107,54 @@
 	<c:when test="${target eq 'task' }">
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t57' /></th>
-	    <td class="">${taskDetails.writerName}</td>
+	    <td class="" colspan="2">${taskDetails.writerName}</td>
 	  </tr>
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t131' /></th>
-	    <td class="">${taskDetails.writeDate}</td>
+	    <td class="" colspan="2">${taskDetails.writeDate}</td>
 	  </tr>
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t63' /></th>
-	    <td class="memberTd">
+	    <td class="memberTd" style="border-right: none;">
 	    	<div class="managers">
 	    		<c:forEach items="${taskDetails.taskMember}" var="member" varStatus="status">
 	    			<c:out value="${status.last ? member.userName : member.userName += ','}"></c:out>
 	    		</c:forEach>
 	    	</div>
 	    </td>
+	    <td style="width: 50px; border-left: none;">
+	    	<img class="voteUserMailImg" style="padding-left: 10px; cursor: pointer;" src="/images/poll/sendMail.png" onclick="sendMail()">
+	    </td>
 	  </tr>
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t42' /></th>
-	    <td class="">${taskDetails.groupName == null ? "-" : taskDetails.groupName}</td>
+	    <td class="" colspan="2">${taskDetails.groupName == null ? "-" : taskDetails.groupName}</td>
 	  </tr>
 	</c:when>
 	<c:otherwise>
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t57' /></th>
-	    <td class="">${taskDetails.creatorName}</td>
+	    <td class="" colspan="2">${taskDetails.creatorName}</td>
 	  </tr>
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t131' /></th>
-	    <td class="">${taskDetails.createDate}</td>
+	    <td class="" colspan="2">${taskDetails.createDate}</td>
 	  </tr>
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t63' /></th>
-	    <td class="memberTd">
+	    <td class="memberTd" colspan="2">
 	    	<div class="managers"></div>
 	    </td>
 	  </tr>
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t64' /></th>
-	    <td class="memberTd">
+	    <td class="memberTd" colspan="2">
 	    	<div class="participants"></div>
 	    </td>
 	  </tr>
 	   <tr>
-	    <th class=""><spring:message code='ezPMS.t42' /></th>
-	    <td class="">${taskDetails.upperGroupName == null ? "-" : taskDetails.upperGroupName}</td>
+	    <th class="" ><spring:message code='ezPMS.t42' /></th>
+	    <td class="" colspan="2">${taskDetails.upperGroupName == null ? "-" : taskDetails.upperGroupName}</td>
 	  </tr>
 	</c:otherwise>
 	</c:choose>
@@ -148,7 +162,7 @@
 	  <c:if test="${target eq 'task' }">
 	   <tr>
 	    <th class=""><spring:message code='ezPMS.t181' /></th>
-	    <td id="pretaskNames">
+	    <td id="pretaskNames" colspan="2">
 	    	<c:choose>
 	    		<c:when test="${taskDetails.pretaskNames ne null}">
 	    			<c:forEach items="${taskDetails.pretaskNames}" var="pretaskName" varStatus="status">
@@ -176,11 +190,11 @@
 	 
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t267' /></th>
-	    <td class=""><fmt:formatNumber value="${taskDetails.weight == null ? 0 : taskDetails.weight}" pattern="0.0" />%</td>
+	    <td class="" colspan="2"><fmt:formatNumber value="${taskDetails.weight == null ? 0 : taskDetails.weight}" pattern="0.0" />%</td>
 	  </tr>
 	  <tr>
 	    <th class="overviewTh"><spring:message code='ezPMS.t328' /></th>
-	    <td class="overviewTd"><div class="overviewDiv">${taskDetails.overview == null ? "-" : taskDetails.overview}</div></td>
+	    <td class="overviewTd" colspan="2"><div class="overviewDiv">${taskDetails.overview == null ? "-" : taskDetails.overview}</div></td>
 	  </tr>
 	</table>
 </body>
