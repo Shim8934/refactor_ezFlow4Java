@@ -154,6 +154,8 @@
 		   			$("#viewerList tr").removeClass("selectTR");
 	   			} else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
 		   			$("#txtlist_Layer tr").removeClass("selectTR");
+	   			} else if (document.getElementById("DeptUserImgList")){
+	   				$("#DeptUserImgList tr").removeClass("selectTR");
 	   			}
 	   			
 	   			$(elem).addClass("selectTR");

@@ -391,14 +391,14 @@ button.PHBtn {
     margin-top: 5px;
 }
 
-.detailsTable{border-collapse:collapse;border-spacing:0;width:652px;height:167px;table-layout:fixed;}
+.detailsTable{border-collapse:collapse;border-spacing:0;width:652px;height:170px;table-layout:fixed;}
 .detailsTable td{padding:5px 5px;border:1px solid #ccc;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .detailsTable th{border:1px solid #ccc;overflow:hidden;}
 .detailsTable .detailsTable-th{background-color:#f8f8fa;}
 .detailsTable .dateTd{width:180px}
 .mainBodyTop{margin-top:8px;width:818px;}
 .mainBodyMid{height:510px;}
-.statusDivBrd{width:165px;height:165px;float:left;border: 1px solid #ccc;border-right:0px;}
+.statusDivBrd{width:165px;height:168px;float:left;border: 1px solid #ccc;border-right:0px;}
 .statusChgBtn{float:left;margin:3px 25px;border:1px solid #ddd;border-radius:5px; padding:0px 7px; cursor:pointer;}
 .taskUpdateBtn{display:inline-block;width:100px;height:16px;float:right;margin-top:6px;position:relative;font-size:12px;text-align:center;border:1px solid #ddd;border-radius:6px;cursor:pointer;z-index:101;}
 </style>

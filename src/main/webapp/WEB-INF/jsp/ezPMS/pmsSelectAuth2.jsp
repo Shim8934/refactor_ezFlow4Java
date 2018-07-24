@@ -126,6 +126,8 @@
 	   				$("#List_TBODY2 tr").removeClass("selectTR");
 	   			} else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
 		   			$("#txtlist_Layer tr").removeClass("selectTR");
+	   			} else if (document.getElementById("DeptUserImgList")){
+	   				$("#DeptUserImgList tr").removeClass("selectTR");
 	   			}
 	   			
 	   			$(elem).addClass("selectTR");
@@ -209,19 +211,21 @@
 	            ChangeTab(document.getElementById("1tab1"));
 		   		setDeptList();
 		   		
-	   			if ($(opener.managerList).length > 0 || $(opener.participantList).length > 0 ||  $(opener.viewerList).length > 0) {
-		   			managerArray = opener.managerList;
-		   			participantArray = opener.participantList;
-		   			viewerArray = opener.viewerList;
+// 	   			if ($(opener.managerList).length > 0 || $(opener.participantList).length > 0 ||  $(opener.viewerList).length > 0) {
+// 		   			managerArray = opener.managerList;
+// 		   			participantArray = opener.participantList;
+// 		   			viewerArray = opener.viewerList;
 		   			
-		   			authList = authList.concat(managerArray);
-		   			authList = authList.concat(participantArray);
-		   			authList = authList.concat(viewerArray);
+// 		   			authList = authList.concat(managerArray);
+// 		   			authList = authList.concat(participantArray);
+// 		   			authList = authList.concat(viewerArray);
 		   			
-	   			} else {
-		   			authList.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept)});
-		   			managerArray.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept), "userIdType" : "user"});
-	   			}
+// 	   			} else {
+// 		   			authList.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept)});
+// 		   			managerArray.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept), "userIdType" : "user"});
+// 	   			}
+	   			authList.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept)});
+	   			managerArray.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept), "userIdType" : "user"});
 		   		
 	   			$(function () {
 		   			$(document).on({
@@ -258,16 +262,18 @@
 		    }
 	   		
 	   		function ok_Click() {
-	   			if (managerArray.length == 0) {
-	   				alert("<spring:message code='ezPMS.t169'/>");
+	   			if (!(selUserId  || parent.opener.headManagerId)) {
+	   				alert("<spring:message code='ezPMS.t333'/>");
 	   				return;
 	   			}
 	   			
-	   			parent.opener.headManagerId = selUserId;
-	   			parent.opener.headManagerObj.userId = selUserId;
-	   			parent.opener.headManagerObj.userName = selUserName;
-	   			parent.opener.headManagerObj.userDept = selUserDept;
-	   			parent.opener.applyHeadManager();
+	   			if(parent.opener.headManagerObj && selUserId){
+		   			parent.opener.headManagerId = selUserId;
+		   			parent.opener.headManagerObj.userId = selUserId;
+		   			parent.opener.headManagerObj.userName = selUserName;
+		   			parent.opener.headManagerObj.userDept = selUserDept;
+		   			parent.opener.applyHeadManager();
+	   			}
 	   			
 	   			window.close();
 	   		}

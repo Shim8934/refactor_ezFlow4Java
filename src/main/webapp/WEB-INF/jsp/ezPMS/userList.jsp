@@ -61,7 +61,7 @@
 		<div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 100%;" id="DeptUserImgList">
 			<c:forEach items="${userList}" var="user">
 				<table class="organwrap" cellspacing="0" cellpadding="0" style="margin-top: 5px; margin-left: auto; margin-right: auto;">
-			        <tr id="${user.userId }" name="${user.userName }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser(type);" style="cursor: pointer;" class="hover">
+			        <tr id="${user.userId }" name="${user.userName }" dept="${user.deptName }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser(type);" style="cursor: pointer;" class="hover">
 						<td class="pictd"><div class="pic">
 						<c:if test="${not empty user.userImg }">
 						<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${user.userImg }" width="90px" height="90px">
