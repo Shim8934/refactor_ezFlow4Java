@@ -702,7 +702,7 @@
 	            <td><input type="text" id="tbList3" name="tbList3" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="50"></td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnpositionNew">
 	        <a class="imgbtn"><span onclick="return btnOk_onclick()"><spring:message code = 'ezApprovalG.t413' /></span></a>
 	    </div>
 	</body>

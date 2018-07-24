@@ -17,18 +17,18 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"> </script>
 		<style type="text/css">
-		<!-- datepicker 월 나타내는 selectbox안의 글자가 자꾸 밑으로 내려가는 현상때문에 스타일 줌. -->
-		select {
-			height: auto;
-		}
-		table, td {
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-		td {
-			padding: 8px 5px;
-		}
+			<!-- datepicker 월 나타내는 selectbox안의 글자가 자꾸 밑으로 내려가는 현상때문에 스타일 줌. -->
+			select {
+				height: auto;
+			}
+			table, td {
+				white-space: nowrap;
+				/* overflow: hidden; */
+				text-overflow: ellipsis;
+			}
+			td {
+				padding: 8px 5px;
+			}
 		</style>
 		<SCRIPT type="text/javascript" ID="clientEventHandlersJS" >
 		    var Check = false, PeriodDocList;
@@ -884,13 +884,15 @@
 	
 	<body class="mainbody" onLoad="javascript:window_onload()">
 		<h1><spring:message code='ezApprovalG.t1569'/><span id="listInfo"></span></h1>
-		<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-		    <select id="ListCompany" onChange="return changeCompID()">
-	        	<c:forEach var="item" items="${list}">
-            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-            	</c:forEach>
-		    </select><br /><br/>
-		</span>
+		<div id="mainmenu">	
+			<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
+			    <select id="ListCompany" onChange="return changeCompID()">
+		        	<c:forEach var="item" items="${list}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+			    </select><br /><br/>
+			</span>
+		</div>	
 		<div class="portlet_tabpart01" style="margin-top:3px;text-align:right;">
 		    <div class="portlet_tabpart01_top" id="tab1">
 		        <p><span id="1tab1" divname="completedoclist"><spring:message code='ezApprovalG.kes01' /></span></p>

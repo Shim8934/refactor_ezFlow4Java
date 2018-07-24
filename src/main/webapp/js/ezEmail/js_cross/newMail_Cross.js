@@ -1092,6 +1092,10 @@ function event_SaveonClick() {
                 	/* 2018-05-07 이소담 - 왼쪽 메뉴의 '메일쓰기'로 '내게쓰기'로 메일을 발신했을때 메일 목록 자동으로 새로고침되도록 개선*/
                 	if (window.opener.name == "left") {
                 		window.opener.parent.frames["right"].MailListRefreshByTimeout();
+                	} 
+                	/* 2018-07-23 정재은 - 미리보기에서 전달, 회신, 전체회신 후 메일 목록 자동으로 새로고침되도록 개선*/
+                	else if (window.opener.name == "ifrmPreViewH" || window.opener.name == "ifrmPreViewW") {
+                		window.opener.parent.parent.frames["right"].MailListRefreshByTimeout();
                 	} else {
                 		window.opener.MailListRefreshByTimeout();
                 	}
