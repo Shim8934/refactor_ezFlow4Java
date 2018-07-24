@@ -236,12 +236,7 @@ $(function(){
 												<c:out value="${project.lateTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
 											</div></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px">D<c:choose>
-												
-											<c:when test="${project.restDueday gt 0 }">- <c:out value="${project.restDueday - 1 }" /></c:when>
-											<c:when test="${project.restDueday eq 0 }">+ <c:out value="${project.restDueday + 1 }" /></c:when>
-											<c:otherwise>+ <c:out value="${-project.restDueday - 1 }" /></c:otherwise>
-											</c:choose>
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px">D<c:out value="${project.restDueday - 1 < 0 ? '+ '.concat(-(project.restDueday - 1)) : '- '.concat(project.restDueday - 1) }"/>
 										</td>
 										<td onclick="selectedTR(this);"
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 210px"><c:out
