@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONObject;
 
 public interface EzCabinetRestService_h {
@@ -18,7 +17,7 @@ public interface EzCabinetRestService_h {
 	JSONObject saveShareUserList(HttpServletRequest request, String userId, String cabinetId, String userList) throws Exception;
 
 	//check file creator
-	JSONObject checkFileCreator(HttpServletRequest request, String userId, String itemId) throws Exception;
+	JSONObject checkPermission(HttpServletRequest request, String userId, String itemId, String cabinetId, int permission) throws Exception;
 
 	JSONObject getFileDetail(HttpServletRequest request, String userId, String itemId) throws Exception;
 	

@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezCabinet.web;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -287,17 +289,18 @@ public class EzCabinetGWController_h {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezCabinet/check-creator/itemId/{itemId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject checkFileCreator(@PathVariable(value="itemId") String itemId,   HttpServletRequest request) throws Exception {
-		String serverName     = request.getHeader("host-name")       != null ? request.getHeader("host-name")            : "";
-		String userId         = request.getParameter("userId")       != null ? request.getParameter("userId")            : "";
-
-		
+	@RequestMapping(value="/rest/ezCabinet/check-permission", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject checkFileCreator(HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")       != null ? request.getHeader("host-name")                       : "";
+		String userId     = request.getParameter("userId")       != null ? request.getParameter("userId")                       : "";
+		String cabinetId  = request.getParameter("cabinetId")    != null ? request.getParameter("cabinetId")                    : "";
+		String itemId     = request.getParameter("itemId")       != null ? request.getParameter("itemId")                       : "";
+		int permission    = request.getParameter("permission")   != null ? Integer.parseInt(request.getParameter("permission")) : -1;
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " || UserId: " + userId );
+		logger.debug("ServerName: " + serverName + " || UserId: " + userId + " || Item Id: " + itemId + " || Cabinet Id: " + cabinetId + " || Permission: " + permission);
 		
-		if (serverName.equals("") || userId.equals("")) {
+		if (serverName.equals("") || userId.equals("") || (itemId.equals("") && cabinetId.equals("")) || permission == -1) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -305,19 +308,20 @@ public class EzCabinetGWController_h {
 		}
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			int check    = cabinetService_h.isFileCreator(itemId, userInfo.getId(), userInfo.getTenantId());
+			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
+			List<Integer> itemList    = new ArrayList<>();
+			List<Integer> cabinetList = new ArrayList<>();
 			
-			if (check == 1) {
-				result.put("result", "true");
-				result.put("status", "ok");
-				result.put("code", 0);
-			}else{
-				result.put("result", "false");
-				result.put("status", "error");
-				result.put("code", 3);
+			if (!itemId.equals("")) {
+				itemList.add(Integer.parseInt(itemId));
 			}
-		} 
+			
+			if (!cabinetId.equals("")) {
+				cabinetList.add(Integer.parseInt(cabinetId));
+			}
+			
+			result = cabinetService.checkPermission(new ArrayList<>(), itemList, permission, userInfo);
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
