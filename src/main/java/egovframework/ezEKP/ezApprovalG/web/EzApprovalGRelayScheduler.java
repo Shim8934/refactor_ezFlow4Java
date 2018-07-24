@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -141,11 +142,11 @@ public class EzApprovalGRelayScheduler {
         							 //receiveerr 폴더의 XML 파일명
         							 receiveerrFileInfo[0] = errorfilename;
         							 //송신기관명
-        							 receiveerrFileInfo[1] = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("send-name").item(0).getTextContent()));
+        							 receiveerrFileInfo[1] = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("send-name").item(0).getTextContent()), "euc-kr");
         							 //수신기관코드
         							 receiveerrFileInfo[2] = xmlDoc.getElementsByTagName("receive-id").item(0).getTextContent();
         							 //문서제목
-        							 receiveerrFileInfo[3] = MakeDNString(new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("title").item(0).getTextContent())));
+        							 receiveerrFileInfo[3] = MakeDNString(new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("title").item(0).getTextContent()), "euc-kr"));
         							 //송신일자
         							 receiveerrFileInfo[4] = xmlDoc.getElementsByTagName("date").item(0).getTextContent();
         							 
@@ -254,7 +255,8 @@ public class EzApprovalGRelayScheduler {
         				 logger.debug("#수신부서코드=" + strReceiveID);
         				 
         				 if (!objXML.getElementsByTagName("title").item(0).getTextContent().equals("")) {
-        					 strTitle = new String(Base64.decodeBase64(objXML.getElementsByTagName("title").item(0).getTextContent().getBytes("euc-kr")));
+        					 strTitle = new String(Base64.decodeBase64(objXML.getElementsByTagName("title").item(0).getTextContent().getBytes("UTF-8")), "euc-kr");
+
         					 if (strTitle.length() > 125) {
         						 strTitle = strTitle.substring(1, 125);
         					 }
@@ -264,9 +266,9 @@ public class EzApprovalGRelayScheduler {
         				 logger.debug("#문서고유번호=" + strXDocID);
         				 strDocType = objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("type").getTextContent();
         				 logger.debug("#문서종류=" + strDocType);
-        				 strSendName = new String(Base64.decodeBase64(objXML.getElementsByTagName("send-name").item(0).getTextContent()));
+        				 strSendName = new String(Base64.decodeBase64(objXML.getElementsByTagName("send-name").item(0).getTextContent()), "euc-kr");
         				 logger.debug("#송신기관명=" + strSendName);
-        				 strXGW = new String(Base64.decodeBase64(objXML.getElementsByTagName("send-gw").item(0).getTextContent()));
+        				 strXGW = new String(Base64.decodeBase64(objXML.getElementsByTagName("send-gw").item(0).getTextContent()), "euc-kr");
         				 logger.debug("#송신그룹웨어명=" + strXGW);
         				 strXDTDVersion = objXML.getElementsByTagName("dtd-version").item(0).getTextContent().toString();
         				 logger.debug("#DTD버전=" + strXDTDVersion);
@@ -314,7 +316,7 @@ public class EzApprovalGRelayScheduler {
         						 
         						 FileOutputStream fop = new FileOutputStream(gpkFile);
         						 // get the content in bytes
-        						 fop.write(commonUtil.convertDocumentToString(objXML).getBytes("euc-kr"));
+        						 fop.write(commonUtil.convertDocumentToString(objXML).getBytes("UTF-8"));
         						 fop.flush();
         						 fop.close();
         						 
@@ -335,7 +337,7 @@ public class EzApprovalGRelayScheduler {
         						 
         						 FileOutputStream fop = new FileOutputStream(recFile);
         						 // get the content in bytes
-        						 fop.write(commonUtil.convertDocumentToString(objXML).getBytes("euc-kr"));
+        						 fop.write(commonUtil.convertDocumentToString(objXML).getBytes("UTF-8"));
         						 fop.flush();
         						 fop.close();
         						 
@@ -347,7 +349,7 @@ public class EzApprovalGRelayScheduler {
         						 for (int count = 0; count < objXML.getElementsByTagName("content").getLength(); count++) {
         							 strCont_Role = objXML.getElementsByTagName("content").item(count).getAttributes().getNamedItem("content-role").getTextContent();
         							 strCont = objXML.getElementsByTagName("content").item(count).getTextContent();
-        							 strCont_Name = new String(Base64.decodeBase64(objXML.getElementsByTagName("content").item(count).getAttributes().getNamedItem("filename").getTextContent()));
+        							 strCont_Name = new String(Base64.decodeBase64(objXML.getElementsByTagName("content").item(count).getAttributes().getNamedItem("filename").getTextContent()), "euc-kr");
         							 strCont = strCont.replace("\r", "").replace("\n", "").replace("\t", "");
         							 
         							 switch (strCont_Role) {
@@ -420,7 +422,7 @@ public class EzApprovalGRelayScheduler {
         					 break;
         					 // 발송 실패에 따른 메시지 Update
         				 case "fail":
-        					 String Message = new String(Base64.decodeBase64(objXML.getElementsByTagName("content").item(0).getTextContent()));
+        					 String Message = new String(Base64.decodeBase64(objXML.getElementsByTagName("content").item(0).getTextContent()), "euc-kr");
         					 boolean UpdateSendDoc_Fail = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, "", strCompanyID, tenantID);
         					 boolean InsMessage = ezApprovalGService.insFailMessage(strXDocID, strSendID, strSendName, Message, strCompanyID, tenantID);
         					 logger.debug("#발송실패오류=" + Message, "");
@@ -436,7 +438,7 @@ public class EzApprovalGRelayScheduler {
         					 break;
         					 // 접수 - 수신기관에서 문서를 정상적으로 최초 확인
         				 case "accept":
-        					 String strAcceptName = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent())) + "(" + Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()).toString() + ")";
+        					 String strAcceptName = new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr") + "(" + new String(Base64.decodeBase64(objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()), "euc-kr") + ")";
         					 boolean UpdateSendDoc_Accept = ezApprovalGService.updateRelaySusinState(strXDocID, strRecDate, strDocType, strSendID, strAcceptName, strCompanyID, tenantID);
         					 logger.debug("#발송문서정보갱신=" + UpdateSendDoc_Accept);
         					 
@@ -487,14 +489,14 @@ public class EzApprovalGRelayScheduler {
                      //receiveerr 폴더의 XML 파일명
                      senderrInfo[0] = errorfilename;
                      //송신기관명
-                     senderrInfo[1] = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("send-name").item(0).getTextContent()));
+                     senderrInfo[1] = new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("send-name").item(0).getTextContent()), "euc-kr");
                      //수신기관코드
                      senderrInfo[2] = xmlDoc.getElementsByTagName("receive-id").item(0).getTextContent();
                      //문서제목
-                     senderrInfo[3] = MakeDNString(new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("title").item(0).getTextContent())));
+                     senderrInfo[3] = MakeDNString(new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("title").item(0).getTextContent()), "euc-kr"));
                      
-                     senderrInfo[4] = MakeDNString(new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent())));
-                     senderrInfo[5] = MakeDNString(new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent())));
+                     senderrInfo[4] = MakeDNString(new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getTextContent()), "euc-kr"));
+                     senderrInfo[5] = MakeDNString(new String(Base64.decodeBase64(xmlDoc.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getTextContent()), "euc-kr"));
                      //송신일자
                      senderrInfo[6] = xmlDoc.getElementsByTagName("date").item(0).getTextContent();
                      
@@ -715,7 +717,7 @@ public class EzApprovalGRelayScheduler {
 	private boolean ReplaceFileText(String strFilePath, String pTargetText,	String pNewText, boolean pUseRegex, String pRegexPattern) throws Exception {
 
 		FileInputStream fis = new FileInputStream(new File(strFilePath)); 
-		InputStreamReader isr = new InputStreamReader(fis,"euc-kr"); 
+		InputStreamReader isr = new InputStreamReader(fis,"UTF-8"); 
 		BufferedReader br = new BufferedReader(isr);	
 		String text = "";
 		
@@ -737,7 +739,7 @@ public class EzApprovalGRelayScheduler {
 			File file = new File(strFilePath);
 			FileOutputStream fop = new FileOutputStream(file);
 			// get the content in bytes
-			fop.write(text.getBytes("euc-kr"));
+			fop.write(text.getBytes("UTF-8"));
 			fop.flush();
 			fop.close();
 			
@@ -749,10 +751,10 @@ public class EzApprovalGRelayScheduler {
 		
 	}
 
-	private boolean WriteXMLFileFromBase64(String strCont, String pFilePath, String fileName) {
+	private boolean WriteXMLFileFromBase64(String strCont, String pFilePath, String fileName) throws UnsupportedEncodingException {
 		boolean result = false;
 		
-		String content = new String(Base64.decodeBase64(strCont));
+		String content = new String(Base64.decodeBase64(strCont), "euc-kr");
 		try {
 			content = content.replace("xml:stylesheet", "xml-stylesheet");
 			String replaceStr = content.substring(content.indexOf("<title"), content.indexOf("</title>") + "</title>".length());
