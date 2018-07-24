@@ -531,6 +531,7 @@ public class EzPMSController {
 			model.addAttribute("kanbanOrder", kanbanOrder);
 			model.addAttribute("userRole", userRole);
 			model.addAttribute("mainSetting", mainSetting);
+			model.addAttribute("userId", userId);
 			LOGGER.debug("[result] kanbanOrder : " + kanbanOrder + ", userRole : " + userRole);
 		}
 		

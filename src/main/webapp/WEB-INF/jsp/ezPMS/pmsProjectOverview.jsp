@@ -755,7 +755,7 @@ function getTaskDetails(elem) {
 		<div class="project_overview_right" style="height:740px;">
 			<div class="overview_graphinfoBox">
 				<ul class="overview_btnBox">
-					<c:if test="${userRole eq 1 }">
+					<c:if test="${userId eq project.headManagerId}">
 					<li onclick="editProjectInfo()" id="editProject"><img src="/images/ezPMS/icon_project_modify.png" alt="<c:out value='ezPMS.t110'/>" /></li>
 					</c:if>
 					<li onclick="kanbanSetting()" id="kanbanSetting"><img src="/images/ezPMS/icon_project_setting.png" alt="<c:out value='ezPMS.t144'/>" /></li>
