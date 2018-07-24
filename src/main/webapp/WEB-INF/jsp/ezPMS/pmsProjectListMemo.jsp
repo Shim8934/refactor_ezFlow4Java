@@ -162,9 +162,7 @@ $(function(){
 					<div class="listBox" onclick="selectedMemoTR(this);">
                     <ul class="contentlayout">
                         <li class="contentlayout_left">
-                        	<p class="project_Dday">D <span class="point_red"><c:choose>
-								<c:when test="${project.restDueday ge 0 }">- <c:out value="${project.restDueday }" /></c:when> <c:otherwise>+ <c:out value="${-project.restDueday }" /></c:otherwise>
-								</c:choose></span>
+                        	<p class="project_Dday">D <span class="point_red"><c:out value="${project.restDueday - 1 < 0 ? '+ '.concat(-(project.restDueday - 1)) : '- '.concat(project.restDueday - 1) }"/></span>
 							</p>
 						</li>
                         <li class="contentlayout_none date">

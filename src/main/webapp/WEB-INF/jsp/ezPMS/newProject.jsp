@@ -47,6 +47,7 @@ var beforeManagerList = [];
 var beforeParticipantList = [];
 var beforeViewerList = [];
 var groupId = "${groupId}";
+var mailRepeat = "${project.mailRepeat}";
 var headManagerObj = {};
 
  $(function() {	
@@ -54,6 +55,7 @@ var headManagerObj = {};
 	 
 	$("#daysBeforeAlam").change(function() {
 		var state = $("#daysBeforeAlam option:selected").val();
+		
 		if(state == "write") {
 			$("#daysBeforeAlam").css("display", "none");
 			$("#write").css("display", "");
@@ -95,7 +97,8 @@ var headManagerObj = {};
 		
 		//newProject에 value넣어주기
 		$("#projectName").val(replaceString(projectName));
-		$("input[name=weightInput][value="+calcType+"]").prop("checked", true);
+		$("input[name=weightInput][value=" + calcType + "]").prop("checked", true);
+		$("#mailRepeat").val(mailRepeat).attr("seleced", "selected");
 		$("#Sdatepicker").val(planStartDate);
 		$("#Edatepicker").val(planEndDate);
 		
@@ -216,6 +219,7 @@ var headManagerObj = {};
 	 planStartDate = $("#Sdatepicker").val();
 	 planEndDate = $("#Edatepicker").val();
 	 overview = convertString($("#overview").val().trim());
+	 mailRepeat = $("#mailRepeat option:selected").val();
 	 
 	 //parent.userRole은 프로젝트 수정 때 사용.
 	 if (mode == "edit" && parent.userRole != 1) {
@@ -296,7 +300,8 @@ var headManagerObj = {};
 			managerList : managerList,
 			participantList : participantList,
 			viewerList : viewerList,
-			groupId : groupId
+			groupId : groupId,
+			mailRepeat : mailRepeat
 	}
 	
 	$.ajax({
@@ -469,6 +474,10 @@ var headManagerObj = {};
 						<option value="10">10</option>
 						<option value="write"><spring:message code='ezPMS.t60' /></option>
 					</select><input type="text" id="write" style="display:none; width:80px;"> <spring:message code='ezPMS.t70' />
+					<select name="mailRepeat" id="mailRepeat" style="margin-left:10px;">
+						<option value="0"><spring:message code='ezPMS.t331' /></option>
+						<option value="1"><spring:message code='ezPMS.t332' /></option>
+					</select>
 				</td>
 			</tr>
 		</table>
