@@ -250,13 +250,13 @@
 	</head>
 	<body class="mainbody">
 	    <h1><spring:message code = 'ezApprovalG.t1297' /></h1>
-	    <div style="margin-bottom: 5px">
+	    <div id="mainmenu">	
 	        <b><spring:message code = 'ezApprovalG.t1276' /></b>
    			<select id="SCompID" name="SCompID" onChange="selectCompanyID()">
 				<c:forEach var="item" items="${list}">
 	            	<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 				</c:forEach>
-			</select><br /><br />
+			</select><br />
 	    </div>
 	    
 	    <table class="content" style="margin-bottom: 10px; width: 770px;">
@@ -271,8 +271,8 @@
 	                <spring:message code = 'ezApprovalG.t456' />
 	                <input type="text" class="text" style="Width: 30px;" maxlength="2" id="EMonth" name="EMonth">
 	                <spring:message code = 'ezApprovalG.t1300' />
-	                    <a class="imgbtn"><span onclick="return btnOK_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></a>
-	                    <a class="imgbtn"><span onclick="return btnInit_onclick()"><spring:message code = 'ezApprovalG.t1301' /></span></a>
+	                    <a class="imgbtn imgbck"><span onclick="return btnOK_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></a>
+	                    <a class="imgbtn imgbck"><span onclick="return btnInit_onclick()"><spring:message code = 'ezApprovalG.t1301' /></span></a>
 	            </td>
 	        </tr>
 	        <tr>
@@ -317,9 +317,9 @@
 	        <tr>
 	            <th><input type="radio" id="condition" name="condition" value="2" onclick="return condition_Init('2')"><spring:message code = 'ezApprovalG.t1307' /></th>
 	            <td>
-	                <input type="radio" id="Dept" name="Dept" value="1" onclick="return UserFlag_Init()"><spring:message code = 'ezApprovalG.t214' />
-	                <input type="radio" id="Dept" name="Dept" value="2" onclick="return UserFlag_Init()"><spring:message code = 'ezApprovalG.t1308' />
-	                <input type="radio" id="Dept" name="Dept" value="3" onclick="return UserFlag_Init()"><spring:message code = 'ezApprovalG.t1309' />
+	                <input type="radio" id="Dept" name="Dept" value="1" onclick="return UserFlag_Init()">&nbsp;<spring:message code = 'ezApprovalG.t214' />
+	                <input type="radio" id="Dept" name="Dept" value="2" onclick="return UserFlag_Init()">&nbsp;<spring:message code = 'ezApprovalG.t1308' />
+	                <input type="radio" id="Dept" name="Dept" value="3" onclick="return UserFlag_Init()">&nbsp;<spring:message code = 'ezApprovalG.t1309' />
 	            </td>
 	        </tr>
 	    </table>
@@ -332,7 +332,7 @@
 			<div id="lvSDoc" style="border: 0; width: 770px; height: 320px;"></div>
 		</div>
 	    
-	    <div class="btnposition" style="width: 800px;">
+	    <div class="btnpositionJsp" style="width: 765px;">
 	        <a class="imgbtn" onclick="btnSave_onclick()"><span>CSV <spring:message code='ezApprovalG.t59'/></span></a>
 	    </div>
 	
