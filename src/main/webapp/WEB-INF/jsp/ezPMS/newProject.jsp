@@ -124,6 +124,7 @@ var headManagerObj = {};
 		headManagerObj.userId = parent.opener.userId;
 		headManagerObj.userName = writerName;
    		headManagerObj.userDept = writerDeptname;
+   		headManagerId = parent.opener.userId;
 	}
 	applyHeadManager();
  
