@@ -61,10 +61,10 @@ var projectStatus = "${projectStatus}";
 					//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
 				})
 			},
-			beforeShowDay : function (date) {
+			/* beforeShowDay : function (date) {
 				var day = date.getDay();
 				return [(day != 0 && day != 6)];
-			}
+			} */
 		});
 
 		$("#Edatepicker").datepicker({
@@ -80,10 +80,10 @@ var projectStatus = "${projectStatus}";
 					//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
   			})
 			},
-			beforeShowDay : function (date) {
+			/* beforeShowDay : function (date) {
 				var day = date.getDay();
 				return [(day != 0 && day != 6)];
-			}
+			} */
 		});
 		
 		var SDate = new Date(planStartDate);
