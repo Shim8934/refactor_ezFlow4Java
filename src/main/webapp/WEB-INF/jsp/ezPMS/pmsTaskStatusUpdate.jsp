@@ -361,10 +361,10 @@
 					//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
 				})
 			},
-			beforeShowDay : function (date) {
+			/* beforeShowDay : function (date) {
 				var day = date.getDay();
 				return [(day != 0 && day != 6)];
-			}
+			} */
 		});
 		
 		$("#PEDatepicker").datepicker({
@@ -380,10 +380,10 @@
 					//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
   			})
 			},
-			beforeShowDay : function (date) {
+			/* beforeShowDay : function (date) {
 				var day = date.getDay();
 				return [(day != 0 && day != 6)];
-			}
+			} */
 		});
 		
 		var PSDate = new Date(planStartDate);
