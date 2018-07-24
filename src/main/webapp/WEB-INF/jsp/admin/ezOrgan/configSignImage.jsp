@@ -316,7 +316,7 @@
 		    	<th><h2><spring:message code='ezOrgan.t140' /></h2></th> 
 		  	</tr> 
 		  	<tr> 
-		    	<td style="padding:3px"> 
+		    	<td style="padding:3px; width: 50%;"> 
 		    		 <c:if test="${!isCrossBrowser}">
 		    	 	   <SCRIPT type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
 		    	 	 </c:if>
