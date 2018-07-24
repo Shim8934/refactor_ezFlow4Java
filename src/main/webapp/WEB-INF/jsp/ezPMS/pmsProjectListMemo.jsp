@@ -163,7 +163,9 @@ $(function(){
                     <ul class="contentlayout">
                         <li class="contentlayout_left">
                         	<p class="project_Dday">D <span class="point_red"><c:choose>
-								<c:when test="${project.restDueday ge 0 }">- <c:out value="${project.restDueday }" /></c:when> <c:otherwise>+ <c:out value="${-project.restDueday }" /></c:otherwise>
+								<c:when test="${project.restDueday gt 0 }">- <c:out value="${project.restDueday - 1 }" /></c:when>
+								<c:when test="${project.restDueday eq 0 }">+ <c:out value="${project.restDueday + 1 }" /></c:when>
+								<c:otherwise>+ <c:out value="${-project.restDueday - 1 }" /></c:otherwise>
 								</c:choose></span>
 							</p>
 						</li>

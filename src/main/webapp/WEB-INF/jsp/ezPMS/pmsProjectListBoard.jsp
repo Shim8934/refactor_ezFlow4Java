@@ -237,12 +237,10 @@ $(function(){
 											</div></td>
 										<td onclick="selectedTR(this);"
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px">D<c:choose>
-												<c:when test="${project.restDueday ge 0 }">- <c:out
-														value="${project.restDueday }" />
-												</c:when>
-												<c:otherwise>+ <c:out
-														value="${-project.restDueday }" />
-												</c:otherwise>
+												
+											<c:when test="${project.restDueday gt 0 }">- <c:out value="${project.restDueday - 1 }" /></c:when>
+											<c:when test="${project.restDueday eq 0 }">+ <c:out value="${project.restDueday + 1 }" /></c:when>
+											<c:otherwise>+ <c:out value="${-project.restDueday - 1 }" /></c:otherwise>
 											</c:choose>
 										</td>
 										<td onclick="selectedTR(this);"

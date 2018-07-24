@@ -764,7 +764,9 @@ function getTaskDetails(elem) {
 					<li class="contentlayout_left overview_graph_canvas" id="circleProgress"><strong></strong></li>
 					<li class="contentlayout_none date">
 						<p class="project_Dday">D <span class="point_red"><c:choose>
-							<c:when test="${project.restDueday ge 0 }">- <c:out value="${project.restDueday }" /></c:when> <c:otherwise>+ <c:out value="${-project.restDueday }" /></c:otherwise>
+								<c:when test="${project.restDueday gt 0 }">- <c:out value="${project.restDueday - 1 }" /></c:when>
+								<c:when test="${project.restDueday eq 0 }">+ <c:out value="${project.restDueday + 1 }" /></c:when>
+								<c:otherwise>+ <c:out value="${-project.restDueday - 1 }" /></c:otherwise>
 							</c:choose></span>
 						</p>
 						<p><span class="startBox">START</span>${project.planStartDate }</p>

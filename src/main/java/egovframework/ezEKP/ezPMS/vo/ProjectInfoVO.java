@@ -105,6 +105,9 @@ public class ProjectInfoVO {
 	    // 계획 진행률 
 	    private Float planProgress;
 	    
+	    //종료 알람 메일 반복 여부
+	    private int mailRepeat;
+	    
 	    public int getTotalTaskCount() {
 			return totalTaskCount;
 		}
@@ -367,6 +370,14 @@ public class ProjectInfoVO {
 
 		public void setPlanProgress(Float planProgress) {
 			this.planProgress = planProgress;
+		}
+
+		public int getMailRepeat() {
+			return mailRepeat;
+		}
+
+		public void setMailRepeat(int mailRepeat) {
+			this.mailRepeat = mailRepeat;
 		}
 
 }
