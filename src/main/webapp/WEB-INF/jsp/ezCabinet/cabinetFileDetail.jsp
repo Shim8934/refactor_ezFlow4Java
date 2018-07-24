@@ -87,7 +87,7 @@
 				
 				function getFileDetail() {
 					$.ajax({
-						type: "POST",
+						type: "GET",
 						url: "/ezCabinet/getFileDetail.do",
 						data: {"itemId" : itemId},
 						dataType: "JSON",

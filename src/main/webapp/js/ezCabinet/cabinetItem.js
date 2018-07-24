@@ -688,8 +688,9 @@ var CabinetItem = function() {
 		var crrClass = trObj.className;
 		
 		if (crrClass == "bnkCabSelect") {
-			//Add preview code here
-			//openFileDetail(itemId);
+			var url  = "/ezCabinet/getFileDetail.do";
+			var data = {itemId : itemId};
+			makeAjaxCall(data, "GET", url, afterGetItemInfo, null, true, null);
 		}
 	}
 	
@@ -701,6 +702,15 @@ var CabinetItem = function() {
 			//Add preview code here
 			openFileDetail(itemId);
 		}
+	}
+	
+	function afterGetItemInfo(data) {
+		console.log(data);
+		var result      = data.fileDetail;
+		var attachFile  = data.attachFileList;
+		var relatedFile = data.relatedFileList;
+		
+		
 	}
 	
 	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {
