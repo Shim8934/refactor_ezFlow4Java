@@ -688,6 +688,8 @@ var CabinetItem = function() {
 		var crrClass = trObj.className;
 		
 		if (crrClass == "bnkCabSelect") {
+			if (crrPreMode == "off") {return;}
+			
 			var url  = "/ezCabinet/getFileDetail.do";
 			var data = {itemId : itemId};
 			makeAjaxCall(data, "GET", url, afterGetItemInfo, null, true, null);
@@ -706,11 +708,122 @@ var CabinetItem = function() {
 	
 	function afterGetItemInfo(data) {
 		console.log(data);
-		var result      = data.fileDetail;
+		var itemInfo    = data.fileDetail;
 		var attachFile  = data.attachFileList;
 		var relatedFile = data.relatedFileList;
+		var columns     = data.columns;
+		var itemType    = itemInfo["itemType"];
+		var divPrevId   = crrPreMode == "w" ? "previewHeaderW" : "previewHeaderH";
+		var divElmt     = document.getElementById(divPrevId);
+		var noDataSpan  = divElmt.querySelector("span[class='notSelected']");
 		
+		if (noDataSpan) {divElmt.removeChild(noDataSpan); generatePreviewElmt(divElmt);}
 		
+		var spanSubject = divElmt.querySelector("span[class='cabTitleTxt']");
+		var spanDate    = divElmt.querySelector("span[class='cabPreDate']");
+		var dlElmt      = divElmt.querySelector("dl[class='cabPrevItem']");
+		
+		spanSubject.textContent = itemInfo["title"];
+		spanDate.textContent    = itemInfo["createdDate"].substring(0, 19);
+		
+		while(dlElmt.firstElementChild) {dlElmt.removeChild(dlElmt.firstElementChild);}
+		
+		if (itemType != 0) {
+			//연동 review here
+			
+		}
+		else {
+			//Process title dl
+			var dtElmt       = document.createElement("dt");
+			var ddElmt       = document.createElement("dd");
+			dtElmt.textContent = CabinetMessages.strCreator + ": ";
+			ddElmt.textContent = itemInfo["creatorName"];
+			dlElmt.appendChild(dtElmt);
+			dlElmt.appendChild(ddElmt);
+			
+			if(relatedFile || relatedFile.length > 0) {
+				var totalCnt = relatedFile.length;
+				var dtElmt2  = document.createElement("dt");
+				var ddElmt2  = document.createElement("dd");
+				dtElmt2.textContent = CabinetMessages.strRelated + ": ";
+				
+				if (totalCnt == 1) {
+					var spanElmt = document.createElement("span");
+					spanElmt.textContent = relatedFile[0]["title"];
+					spanElmt.setAttribute("role", relatedFile[0]["itemId"]);
+					spanElmt.className   = "txtSpan";
+					ddElmt2.appenChild(spanElmt);
+				}
+				else {
+					var spanElmt1 = document.createElement("span");
+					var spanElmt2 = document.createElement("span");
+					var spanElmt3 = document.createElement("span");
+					
+					spanElmt1.textContent = relatedFile[0]["title"];
+					spanElmt1.className   = "txtSpan";
+					spanElmt2.textContent = "(" + "총 " + totalCnt + "개" + ")";
+					spanElmt3.className   = "icDown";
+					ddElmt2.appendChild(spanElmt1);
+					ddElmt2.appendChild(spanElmt2);
+					ddElmt2.appendChild(spanElmt3);
+				}
+				
+				dlElmt.appendChild(dtElmt2);
+				dlElmt.appendChild(ddElmt2);
+				/*<dd>
+	            	<span id="PreH_MailReceiver" style="display:inline-block"><span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);" title="esya@kaoni.com" onclick="show_personinfo(&quot;esya@kaoni.com&quot;)">"이소영"</span></span>
+	            	<span id="PreH_MailReceiver_sub">(총 4명)</span>
+	            	<span class="icon_graydown" onclick="ReceiverDetail_view(this);" id="PreH_ReceiverDetail" style=""></span>
+	            	<p class="hidden_area" id="PreH_MailReceiverDetail_Rayer" style="display: none;"><span id="PreH_MailReceiverDetail"><span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);" title="esya@kaoni.com" onclick="show_personinfo(&quot;esya@kaoni.com&quot;)">"이소영"</span>&nbsp;,&nbsp;<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);" title="cocomos@kaoni.com" onclick="show_personinfo(&quot;cocomos@kaoni.com&quot;)">"정수연"</span>&nbsp;,&nbsp;<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);" title="skyblue0o0@kaoni.com" onclick="show_personinfo(&quot;skyblue0o0@kaoni.com&quot;)">"이효민"</span>&nbsp;,&nbsp;<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor:pointer" title="designteam@kaoni.com" onclick="show_personinfo(&quot;designteam@kaoni.com&quot;)">"UI/UX팀"</span></span></p>
+	            </dd>*/
+			}
+			
+			generalItemContent(attachFile);
+		}
+		
+	}
+	
+	function generalItemContent() {
+		
+	}
+	
+	function generatePreviewElmt(divElmt) {
+		var parentDiv  = divElmt.parentElement;
+		var prevDiv    = document.createElement("div");
+		var prevChild  = document.createElement("div");
+		var imgElmt1   = document.createElement("img");
+		var imgElmt2   = document.createElement("img");
+		var prevCont   = document.createElement("div");
+		var divChild   = document.createElement("div");
+		var pElmt      = document.createElement("p");
+		var spanElmt   = document.createElement("span");
+		var dlElmt     = document.createElement("dl");
+		var pSpanElmt1 = document.createElement("span");
+		var pSpanElmt2 = document.createElement("span");
+		
+		pElmt.className      = "cabPrevTitle";
+		spanElmt.className   = "cabPreDate";
+		dlElmt.className     = "cabPrevItem";
+		pSpanElmt1.className = "cabPrevIcon";
+		pSpanElmt2.className = "cabTitleTxt";
+		var preDivId         = crrPreMode == "w" ? "itemPreviewDivW" : "itemPreviewDivH";
+		var preContId        = crrPreMode == "w" ? "itemContentW"    : "itemContentH";
+		prevChild.className  = "zoomDiv";
+		imgElmt1.src         = "/images/minus.png";
+		imgElmt2.src         = "/images/plus.png";
+		
+		pElmt.appendChild(pSpanElmt1);
+		pElmt.appendChild(pSpanElmt2);
+		divChild.appendChild(pElmt);
+		divChild.appendChild(spanElmt);
+		divChild.appendChild(dlElmt);
+		divElmt.appendChild(divChild);
+		prevDiv.setAttribute("id",  preDivId);
+		prevCont.setAttribute("id", preContId);
+		prevChild.appendChild(imgElmt1);
+		prevChild.appendChild(imgElmt2);
+		parentDiv.appendChild(prevChild);
+		parentDiv.appendChild(prevCont);
 	}
 	
 	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {

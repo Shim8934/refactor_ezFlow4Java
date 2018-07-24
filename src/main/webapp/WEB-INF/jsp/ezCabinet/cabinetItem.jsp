@@ -150,44 +150,19 @@
 			<div id="previewCabH" class="cabDivPrevH" style="display: none;">
 				<div id="preContentH" class="cabMainPrevH">
 					<div>
-						<div class="prevHeaderCabH">
-							<div id="preview_HeaderH">
-								<p class="cabPrevTitle">
-									<span class="cabPrevIcon"></span>
-									<span id="PreH_subject" class="cabTitleTxt">회신: [부고] 솔루션1팀 이효민 대리 외조부상</span>
-								</p>
-								<span class="cabPreDate">2018-06-22 09:50</span>
-								<dl class="cabPrevItem">
-									<dt><spring:message code='ezCabinet.t53'/>:<span id="PreH_MailReceiver">응웬바오</span></dt>
-								</dl>
-							</div>
+						<div class="prevHeaderCabH" id="previewHeaderH">
+							<span class="notSelected"><spring:message code='ezCabinet.t141'/></span>
 						</div>
-						
-						<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="" class="cabIfrmPreview" style="width: 100%; height: 0px;"></iframe>
 					</div>
 				</div>
 			</div>
 			
 			<div id="previewCabW" class="cabDivPrevW" style="display: none;">
 				<div id="preContentW" class="cabMainPrevW">
-					<div style="width: 100%;">
-						<div class="prevHeaderCabW">
-							<div id="previewHeaderW">
-								<p class="cabPrevTitle">
-									<span class="cabPrevIcon"></span>
-									<span id="PreW_subject" class="cabTitleTxt">회신: [부고] 솔루션1팀 이효민 대리 외조부상</span>
-								</p>
-								<span class="cabPreDate">2018-06-22 09:50</span>
-								<dl class="cabPrevItem">
-									<dt>
-										<spring:message code='ezBoard.t223'/>:
-										<span id="PreW_MailReceiver"></span>
-									</dt>
-								</dl>
-							</div>
+					<div>
+						<div class="prevHeaderCabW" id="previewHeaderW">
+							<span class="notSelected"><spring:message code='ezCabinet.t141'/></span>
 						</div>
-						
-						<iframe id="ifrmPreViewW" name="ifrmPreViewW" src="" class="cabIfrmPreview" style="width: 100%; height: 0px;"></iframe>
 					</div>
 				</div>
 			 </div>
