@@ -1376,7 +1376,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 		
-		String inputParams = "&domainName=" + URLEncoder.encode(domain, "UTF-8") 
+		String inputParams = "domainName=" + URLEncoder.encode(domain, "UTF-8") 
 				+"&groupName=" + URLEncoder.encode(groupName, "UTF-8");
 		
 		logger.debug("inputParams=" + inputParams);
