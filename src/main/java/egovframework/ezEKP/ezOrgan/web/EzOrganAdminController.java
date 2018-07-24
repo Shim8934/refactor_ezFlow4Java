@@ -2483,7 +2483,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		List<String[]> aliasAddressList = ezEmailService.getAliasAddress(userId, tenantID);
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append("<select size='4' name='ListEmail' id='ListEmail' style='height:175px;width:100%;'>");
+		sb.append("<select size='4' name='ListEmail' id='ListEmail' style='height:175px;width:100%;background:none;'>");
 		
 		for (String[] aliasAddress : aliasAddressList) {
 			if (aliasAddress[0].equals(userVO.getMail())) {

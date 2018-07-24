@@ -232,6 +232,31 @@
 		        		alert("<spring:message code='ezOrgan.t9' />" + error);
 		        	}
 		        });
+		        
+		        $.ajax({
+					url : "/ezOrgan/getDeptMemberListCount.do",
+					method : "POST",
+					dataType : "json",
+					data : {
+						deptID : DeptID
+					},
+					success : function(result) {
+						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
+						
+						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
+			        		if (result.totalCount == result.totalCount2) {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang24 + "</span>]";
+			        		} else {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang24 + "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang24 + "</span>]";
+			        		}
+			            	
+			            	SelectDeptNM.setAttribute("countinfo","1")
+			        	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(error);
+					}
+				});
 		    }
 		    
 		    pSeach = false;
@@ -250,7 +275,7 @@
 		        }
 		        
 		        var UserListHTML = "";
-		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
+		        /* if (SelectDeptNM.getAttribute("countinfo") != "1") {
 		            //SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang24 + "</span>]";
 		            if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
 	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang24 + "</span>]";
@@ -259,7 +284,7 @@
 	        		}
 		            
 		            SelectDeptNM.setAttribute("countinfo", "1")
-		        }
+		        } */
 		        
 		        if (pListType == "IMG") {
 		            document.getElementById("DeptUserImgList").style.display = "";
