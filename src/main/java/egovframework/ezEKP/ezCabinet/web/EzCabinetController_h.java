@@ -46,6 +46,7 @@ public class EzCabinetController_h {
 		logger.debug("jspGetCabinetFileDetail started");
 		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
 		String itemId         = request.getParameter("itemId");
+		String jspPageName    = "";
 		
 		JSONObject permission = cabinetRestService_h.checkPermission(request, user.getId(), itemId, "", 0);
 		
@@ -53,10 +54,22 @@ public class EzCabinetController_h {
 			return "cmm/error/accessDenied";
 		}
 		
+		JSONObject Iteminfo = cabinetRestService_h.cabinetItemInfo(request, user.getId(), itemId);
+		
+		if (Iteminfo.get("status").toString().equals("ok")) {
+			int itemType = ((Long)Iteminfo.get("itemType")).intValue();
+			
+			switch(itemType) {
+				case 0  : jspPageName = "ezCabinet/cabinetFileDetail"; break;
+				default : break;
+			}
+			
+		}
+		
 		model.addAttribute("itemId", itemId);
 		
 		logger.debug("jspGetCabinetFileDetail ended");
-		return "ezCabinet/cabinetFileDetail";
+		return jspPageName;
 	}
 	
 	/**

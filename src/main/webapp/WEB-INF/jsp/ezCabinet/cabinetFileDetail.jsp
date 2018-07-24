@@ -142,7 +142,6 @@
 							var spanChild2    = document.createElement("span");
 							var imgElmt       = document.createElement("img");
 							
-							//체크
 							var fileName = attachFile[i]["fileName"];
 							var filePath = attachFile[i]["filePath"];
 							var fileSize = attachFile[i]["fileSize"];
@@ -171,7 +170,7 @@
 						}	
 					}
 					
-					//연관문서
+					//연관문서리스트
 					var divElmt = document.getElementById("fileListDiv");
 					
 					for (var i = 0, len = relatedFile.length; i < len; i++) {
@@ -260,9 +259,22 @@
 				}
 				
 				function fileModify() {
-					var cabId    = "";
-					window.location.href = "/ezCabinet/addCabinetFile.do?cabId=" + cabId;
-					window.resizeTo(600, 540);
+					var titleTdElmt   = document.getElementById("title");
+					var summaryTdElmt = document.getElementById("summary");
+					
+					var inputElmt1 = document.createElement("input"); 
+					var inputElmt2 = document.createElement("input");
+					
+					//inputElmt1.setAttribute("value", "");
+					//inputElmt2.setAttribute("value", "");
+					
+					titleTdElmt.innerHTML = "";
+					summaryTdElmt.innerHTML = "";
+					
+					titleTdElmt.appendChild(inputElmt1);
+					summaryTdElmt.appendChild(inputElmt2);
+					
+					
 				}
 				
 				function fileDelete() {

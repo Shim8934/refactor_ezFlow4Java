@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONObject;
 
 public interface EzCabinetRestService_h {
@@ -20,5 +21,7 @@ public interface EzCabinetRestService_h {
 	JSONObject checkPermission(HttpServletRequest request, String userId, String itemId, String cabinetId, int permission) throws Exception;
 
 	JSONObject getFileDetail(HttpServletRequest request, String userId, String itemId) throws Exception;
+
+	JSONObject cabinetItemInfo(HttpServletRequest request, String userId, String itemId) throws Exception;
 	
 }

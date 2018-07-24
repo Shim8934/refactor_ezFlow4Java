@@ -373,4 +373,41 @@ public class EzCabinetGWController_h {
 		
 		return result;
 	}
+	
+	@RequestMapping(value="/rest/ezCabinet/file-info/itemId/{itemId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject cabinetItemInfo(@PathVariable(value="itemId") String itemId,   HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || UserId: " + userId );
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String primary   = userInfo.getPrimary();
+			int tenantId     = userInfo.getTenantId();
+			String offset    = commonUtil.getMinuteUTC(userInfo.getOffset());
+			
+			CabinetItemVO fileDetail                    = cabinetService_h.getFileDetail(itemId, primary, offset, tenantId);
+			
+			result.put("itemType", fileDetail.getItemType());
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
 }
