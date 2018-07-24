@@ -48,7 +48,8 @@
     	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="20"/>
     	<result property="alamMailStatus"					column="ALAM_MAIL_STATUS"			columnIndex="21"/>
     	<result property="isFavorite"						column="ISFAVORITE"					columnIndex="22"/>
-    	<result property="groupId"							column="GROUP_ID"					columnIndex="23"/>    	
+    	<result property="groupId"							column="GROUP_ID"					columnIndex="23"/>
+    	<result property="mailRepeat"						column="MAIL_REPEAT"				columnIndex="24"/>
     </resultMap>
     
     <resultMap id="projectGroupVO" class="ProjectGroupVO">
@@ -543,14 +544,14 @@
     			head_manager_id, 		head_manager_name,		head_manager_name2, 		head_manager_deptname, 	head_manager_deptname2, 
     			status, 				progress, 				overview, 					weight_input, 			creator_id, 
     			creator_name, 			creator_name2, 			creator_deptname, 			creator_deptname2, 		workingday, 
-    			rest_dueday, 			alam_mail_status,		create_date
+    			rest_dueday, 			alam_mail_status,		create_date,				mail_repeat
     		) 
     		VALUES ( 
     			#tenantId#,				#projectName#,			#planStartDate#,			#planEndDate#,
     			#headManagerId#,		#headManagerName#,		#headManagerName2#,			#headManagerDeptname#,	#headManagerDeptname2#,	
     			#status#,				#progress#,				#overview#,					#weightInput#,			#creatorId#, 
     			#creatorName#,			#creatorName2#,			#creatorDeptname#,			#creatorDeptname2#,		#workingDay#,
-    			#restDueday#,			#endAlamStatus#,        #createDate#
+    			#restDueday#,			#endAlamStatus#,        #createDate#,				#mailRepeat#
     		)
     	]]>
     	<selectKey keyProperty="id" resultClass="Long">
@@ -979,7 +980,8 @@
 				A.REST_DUEDAY AS REST_DUEDAY, 
 				A.ALAM_MAIL_STATUS AS ALAM_MAIL_STATUS,
 				IFNULL(F.FAVORITE_ID, 0) AS ISFAVORITE,
-				IFNULL(G.GROUP_ID, 0) AS GROUP_ID
+				IFNULL(G.GROUP_ID, 0) AS GROUP_ID,
+				A.MAIL_REPEAT AS MAIL_REPEAT
 			FROM 
 				tbl_pms_project A
 			JOIN 
@@ -1354,7 +1356,8 @@
 			A.REST_DUEDAY, 
 			A.ALAM_MAIL_STATUS,
 			IFNULL(F.FAVORITE_ID, 0) AS ISFAVORITE,
-			IFNULL(G.GROUP_ID, 0) AS GROUP_ID
+			IFNULL(G.GROUP_ID, 0) AS GROUP_ID,
+			A.MAIL_REPEAT AS MAIL_REPEAT
 		FROM 
 			tbl_pms_project	A
 		JOIN 
@@ -1731,6 +1734,9 @@
 		</isNotEmpty>
 		<isNotEmpty property="headManagerName2">
 				HEAD_MANAGER_NAME2 = #headManagerName2#,
+		</isNotEmpty>
+		<isNotEmpty property="mailRepeat">
+				MAIL_REPEAT = #mailRepeat#,
 		</isNotEmpty>
 		<isNotEmpty property="planEndDate">
 				PLAN_END_DATE = #planEndDate#
@@ -2754,7 +2760,8 @@
 			REST_DUEDAY, 
 			ALAM_MAIL_STATUS,
 			0 AS ISFAVORITE,
-			0 AS GROUP_ID 
+			0 AS GROUP_ID,
+			MAIL_REPEAT
 		FROM
 			TBL_PMS_PROJECT
 		WHERE

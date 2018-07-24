@@ -325,6 +325,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("alamMailStatus", project.getAlamMailStatus());
 		map.put("headManagerId", project.getHeadManagerId());
 		map.put("tenantId", tenantId);
+		map.put("mailRepeat", project.getMailRepeat());
 
 		try {
 			// 날짜 차이 계산

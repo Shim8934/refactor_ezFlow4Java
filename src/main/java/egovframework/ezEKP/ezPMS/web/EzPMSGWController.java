@@ -228,6 +228,7 @@ public class EzPMSGWController {
 			project.put("createDate", request.getParameter("createDate"));
 			project.put("tenantId", info.getTenantId());
 			project.put("lang", lang);
+			project.put("mailRepeat", request.getParameter("mailRepeat"));
 
 			// 최상위 그룹 생성을 위한 파라미터
 			project.put("treeDepth", 0);
@@ -647,6 +648,7 @@ public class EzPMSGWController {
 			project.setAlamMailStatus(Integer.parseInt(request.getParameter("endAlamStatus")));
 			project.setHeadManagerId(request.getParameter("headManagerId"));
 			project.setCreateDate(request.getParameter("createDate"));
+			project.setMailRepeat(Integer.parseInt(request.getParameter("mailRepeat")));
 
 			ezPMSService.updateProject(project, tenantId, companyId, lang);
 

@@ -755,17 +755,15 @@ function getTaskDetails(elem) {
 		<div class="project_overview_right" style="height:740px;">
 			<div class="overview_graphinfoBox">
 				<ul class="overview_btnBox">
-					<c:if test="${userRole eq 1 }">
-					<li onclick="editProjectInfo()" id="editProject"><img src="/images/ezPMS/icon_project_modify.png" alt="<c:out value='ezPMS.t110'/>" /></li>
+					<c:if test="${userId eq project.headManagerId}">
+					<li onclick="editProjectInfo()" id="editProject"><img src="/images/ezPMS/icon_project_modify.png" alt="<spring:message code='ezPMS.t110'/>" /></li>
 					</c:if>
-					<li onclick="kanbanSetting()" id="kanbanSetting"><img src="/images/ezPMS/icon_project_setting.png" alt="<c:out value='ezPMS.t144'/>" /></li>
+					<li onclick="kanbanSetting()" id="kanbanSetting"><img src="/images/ezPMS/icon_project_setting.png" alt="<spring:message code='ezPMS.t144'/>" /></li>
 				</ul>
 				<ul class="contentlayout overview_graphinfo">
 					<li class="contentlayout_left overview_graph_canvas" id="circleProgress"><strong></strong></li>
 					<li class="contentlayout_none date">
-						<p class="project_Dday">D <span class="point_red"><c:choose>
-							<c:when test="${project.restDueday ge 0 }">- <c:out value="${project.restDueday }" /></c:when> <c:otherwise>+ <c:out value="${-project.restDueday }" /></c:otherwise>
-							</c:choose></span>
+						<p class="project_Dday">D <span class="point_red"><c:out value="${project.restDueday - 1 < 0 ? '+ '.concat(-(project.restDueday - 1)) : '- '.concat(project.restDueday - 1) }"/></span>
 						</p>
 						<p><span class="startBox">START</span>${project.planStartDate }</p>
 						<p><span class="endBox">END</span>${project.planEndDate }</p>

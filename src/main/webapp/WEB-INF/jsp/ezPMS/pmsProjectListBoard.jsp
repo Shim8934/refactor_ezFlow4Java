@@ -172,7 +172,7 @@ $(function(){
 								text-overflow: ellipsis; cursor: pointer;;" class="h5_center"><spring:message code='ezPMS.t31' /></th>
 							<th id="BoardList_TH_2" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px;"
-								class="h5_center"><spring:message code='ezPMS.t32' /></th>
+								class="h5_center"><spring:message code='ezPMS.t330' /></th>
 							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PROGRESS"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 250px"
 								class="h5_center"><spring:message code='ezPMS.t33' /></th>
@@ -236,14 +236,7 @@ $(function(){
 												<c:out value="${project.lateTaskCount }" /> / <c:out value="${project.totalTaskCount }"/>
 											</div></td>
 										<td onclick="selectedTR(this);"
-											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px">D<c:choose>
-												<c:when test="${project.restDueday ge 0 }">- <c:out
-														value="${project.restDueday }" />
-												</c:when>
-												<c:otherwise>+ <c:out
-														value="${-project.restDueday }" />
-												</c:otherwise>
-											</c:choose>
+											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 70px">D<c:out value="${project.restDueday - 1 < 0 ? '+ '.concat(-(project.restDueday - 1)) : '- '.concat(project.restDueday - 1) }"/>
 										</td>
 										<td onclick="selectedTR(this);"
 											style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 210px"><c:out

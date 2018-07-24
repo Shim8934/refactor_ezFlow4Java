@@ -878,7 +878,7 @@
 	   			  
 	   			  var headManagerId = this.headManager;
 // 	   			  var res = this.master.getResource(headManagerId);
-	   			  var res = this.master.getResource(this.assigs[0].id);
+	   			  var res = this.master.getResource(this.assigs.length > 0 ? this.assigs[0].id : "");
 	   			  
 	   			  if (res) {
 	   			  	ret = res.name;
