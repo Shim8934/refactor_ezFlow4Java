@@ -125,6 +125,8 @@ var headManagerObj = {};
 		headManagerObj.userName = writerName;
    		headManagerObj.userDept = writerDeptname;
    		headManagerId = parent.opener.userId;
+   		headManagerDept = writerDeptname;
+   		headManagerName = writerName;
 	}
 	applyHeadManager();
  
@@ -292,6 +294,8 @@ var headManagerObj = {};
 		alert("<spring:message code='ezPMS.t325' />");
 		return;
 	}
+	
+	managerList.push({"userName" : headManagerName, "userId" : headManagerId, "memberRoleId" : 1, "userDeptname" : replaceString(headManagerDept), "userIdType" : "user"});
 	
 	var data = {
 			mode : mode,

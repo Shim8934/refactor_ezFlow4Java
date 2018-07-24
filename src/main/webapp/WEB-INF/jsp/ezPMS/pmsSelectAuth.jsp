@@ -188,6 +188,12 @@
 			   			userIdType = "user";
 		   			}
 		   			
+		   			
+		   			var headManagerId = parent.opener.headManagerId;
+		   			if(receiverId === headManagerId){
+		   				chkFlag = false;
+		   			}
+		   			
 		   			for(var i = 0; i < authList.length; i++) {
 		   				if (authList[i].userId == receiverId) {
 		   					chkFlag = false;

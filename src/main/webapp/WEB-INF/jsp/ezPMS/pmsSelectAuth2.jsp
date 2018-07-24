@@ -179,7 +179,7 @@
 // 		   			managerArray.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept), "userIdType" : "user"});
 // 	   			}
 	   			authList.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept)});
-	   			managerArray.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept), "userIdType" : "user"});
+// 	   			managerArray.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept), "userIdType" : "user"});
 		   		
 	   			$(function () {
 		   			$(document).on({
@@ -216,6 +216,11 @@
 		    }
 	   		
 	   		function ok_Click() {
+	   			if(!validChkFunc()){
+	   				alert("<spring:message code='ezPMS.t163' />");
+	   				return;
+	   			}
+	   			
 	   			if (!(selUserId  || parent.opener.headManagerId)) {
 	   				alert("<spring:message code='ezPMS.t333'/>");
 	   				return;
@@ -223,13 +228,32 @@
 	   			
 	   			if(parent.opener.headManagerObj && selUserId){
 		   			parent.opener.headManagerId = selUserId;
+		   			parent.opener.headManagerName = selUserName;
+		   			parent.opener.headManagerDept = selUserDept;
+		   			
 		   			parent.opener.headManagerObj.userId = selUserId;
 		   			parent.opener.headManagerObj.userName = selUserName;
 		   			parent.opener.headManagerObj.userDept = selUserDept;
+		   			
 		   			parent.opener.applyHeadManager();
 	   			}
 	   			
 	   			window.close();
+	   		}
+	   		
+	   		function validChkFunc(){
+	   			var ml = parent.opener.managerList;
+	   			var pl = parent.opener.participantList;
+	   			var vl = parent.opener.viewerList;
+	   			var flag = true;
+	   			
+	   			Array.prototype.concat(ml, pl, vl).forEach(function(elem){
+	   				if(elem.userId === selUserId){
+	   					flag = false;
+	   				}
+	   			});
+	   			
+	   			return flag;
 	   		}
 	   		
 		</script>
