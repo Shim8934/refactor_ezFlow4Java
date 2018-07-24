@@ -49,9 +49,7 @@
 			</div>
 		</div>
 		
-		<div class="storageDiv">
-			<span id="">총용량 : 100KB</span>
-		</div>
+		<div class="storageDiv" id="fileCapacityDiv"></div>
 		
 		<div class="cabBttnDiv" id="fileDivBttn">
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
@@ -105,19 +103,25 @@
 			var attachFile  = fileItem.attachFileList;
 			var relatedFile = fileItem.relatedFileList;
 			
-			var creator     = document.getElementById("creator");
-			var createdDate = document.getElementById("createdDate");
-			var title       = document.getElementById("title");
-			var summary     = document.getElementById("summary");
+			var creator             = document.getElementById("creator");
+			var createdDate         = document.getElementById("createdDate");
+			var title               = document.getElementById("title");
+			var summary             = document.getElementById("summary");
+			var fileCapacityDivElmt = document.getElementById("fileCapacityDiv");
 			
 			creator.textContent     = result["creatorName"];
 			createdDate.textContent = result["createdDate"].substring(0, 19);
 			title.textContent       = result["title"];
 			summary.textContent     = result["summary"];
 			
+			var spanElmt            = document.createElement("span");
+			spanElmt.textContent    = "<spring:message code='ezCabinet.t140'/>" + getFileSize(result["itemSize"]);
+			
+			fileCapacityDivElmt.appendChild(spanElmt);
+			
 			//첨부파일리스트
-			var fileDivElmt     = document.getElementById("fileDiv");
-			var divInformElmt   = fileDivElmt.querySelector("div[class='divInform']");
+			var fileDivElmt         = document.getElementById("fileDiv");
+			var divInformElmt       = fileDivElmt.querySelector("div[class='divInform']");
 			
 			if(attachFile == null || attachFile.length == 0) {
 				var spanElmt      = document.createElement("span");
@@ -138,8 +142,11 @@
 					var spanChild2    = document.createElement("span");
 					var imgElmt       = document.createElement("img");
 					
+					//체크
+					var checkImageFile = isImage(attachFile[i]["fileName"]);
+					imgElmt.src        = checkImageFile.isImage == true ? attachFile[i]["filePath"] : checkImageFile.urlImage;
+					
 					divChildElmt1.className = "cabImgAva";
-					imgElmt.setAttribute("src", attachFile[i]["filePath"]);
 					divChildElmt1.appendChild(imgElmt);
 					
 					spanChild1.textContent  = attachFile[i]["fileName"];
@@ -186,6 +193,40 @@
 			return result;
 		}
 		
+		function isImage(fileName) {
+			var fileExt  = (/[.]/.exec(fileName)) ? /[^.]+$/.exec(fileName) : "";
+			var imgCheck = false;
+			var urlImg   = "";
+			
+			switch (fileExt.toString().toLowerCase()) {
+				case "jpg"  :
+				case "gif"  :
+				case "bmp"  :
+				case "png"  :
+				case "jpeg" : imgCheck = true                               ; break;
+				case "pdf"  : urlImg   = "/images/cabinet/pdf.png"          ; break;
+				case "ppt"  : urlImg   = "/images/cabinet/msPowerpoint.png" ; break;
+				case "pptx" : urlImg   = "/images/cabinet/pptx.png"         ; break;
+				case "doc"  : urlImg   = "/images/cabinet/msWord.png"       ; break;
+				case "docx" : urlImg   = "/images/cabinet/docx.png"         ; break;
+				case "xls"  : urlImg   = "/images/cabinet/msExcel.png"      ; break;
+				case "xlsx" : urlImg   = "/images/cabinet/xlsx.png"         ; break;
+				case "hwp"  : urlImg   = "/images/cabinet/hwp.png"          ; break;
+				case "txt"  : urlImg   = "/images/cabinet/txt.png"          ; break;
+				case "mp4"  : urlImg   = "/images/cabinet/mp4.png"          ; break;
+				case "flv"  : urlImg   = "/images/cabinet/flv.png"          ; break;
+				case "mkv"  : urlImg   = "/images/cabinet/mkv.png"          ; break;
+				case "iso"  : urlImg   = "/images/cabinet/iso.png"          ; break;
+				case "rar"  : urlImg   = "/images/cabinet/rar.png"          ; break;
+				default     : urlImg   = "/images/cabinet/unknown.png"      ; break;
+			}
+			
+			return {
+				isImage  : imgCheck,
+				urlImage : urlImg
+			};
+		}
+		
 		function fileModify() {
 			var cabId    = "";
 			window.location.href = "/ezCabinet/addCabinetFile.do?cabId=" + cabId;
@@ -197,7 +238,18 @@
 		}
 		
 		function filePrint() {
+			var relatedFileList = document.getElementById("fileListDiv");
+			var clientHeight    = relatedFileList.clientHeight;
+			var scrollHeight    = relatedFileList.scrollHeight;
 			
+			if (scrollHeight > clientHeight) {
+				var tdElmt = relatedFileList.parentElement.parentElement;
+				tdElmt.setAttribute("style", "vertical-align: top; height: " + (scrollHeight) + "px;");
+			}
+			
+			window.print();
+			
+			tdElmt.removeAttribute("style");
 		}
 		
 		function closeWindow() {window.close();}
