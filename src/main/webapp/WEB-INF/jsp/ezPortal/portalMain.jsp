@@ -26,10 +26,10 @@
 	 			border:1px solid #ffffff;
 			}
 			#open-memo { width:50px; height:50px; position: absolute; top: 676px; left: 1371px; z-index: 1000; border: solid 1px black;cursor: pointer; background-color: gray; text-align: center;}
-			#layer-popup{ float:right; width:500px; height:600px; background:white; position:absolute; text-align:center; border:1px solid black;}
+			#layer-popup{ float:right; width:500px; height:600px; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001;}
 			.individual-memo { width:200px; height:200px; background:white; text-align:center; border:1px solid black; cursor: pointer;}
 			#selected-memo { position:absolute; width:400px; height:500px; background:white; z-index:9001; top:48px; left:36px;}
-			#maskDiv { absolute; width:500px; height:600px; background:white; z-index:9001; top:0px; left:0px;opacity:0.6; z-index:9000; background:rgb(59, 60, 60);}
+			#maskDiv { position:absolute; width:500px; height:600px; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -41,7 +41,8 @@
 		 	window.onresize = function () {
 		        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
 		        document.getElementById("mainFrame").style.height = MainHeight + "px";
-		    }
+		        chagePosition();
+		 	}
 		 	
 		    function Div_Close() {
 		        document.getElementById("popup_layer").style.display = "none";
@@ -58,6 +59,9 @@
 		    	$("#selected-memo").css("left", 50);
 		    }
 
+		    window.onload = function() {
+		    	$("#open-memo").css("display", "");
+		    }
 		    $(function() {
 			    
 		    	chagePosition();
@@ -84,7 +88,8 @@
 		        $("#maskDiv").click(function() {
 		        	$("#maskDiv").css("display", "none");
 		        	$("#selected-memo").css("display", "none");
-		        })
+		        });
+		        
 		      });
 		</script>
 	</head>
@@ -99,11 +104,13 @@
 		</div>
 		
 		<div id="layer-popup" style="display: none">
-		
 			<div id="maskDiv" style="display: none"></div>
-			
+		
 			<div>
-				<button id="close-button" style="float:right" >닫기 X</button>
+				<div style="text-align: right">
+					<button id="new-memo">추가</button>
+					<button id="close-button">닫기 X</button>
+				</div>
 				<div>메모 레이어 팝업</div>
 				
 				<!-- 메모 리스트 -->
@@ -116,10 +123,17 @@
 			</div>
 			
 			<!-- 하나 클릭 -->
-			<div id="selected-memo" style="display: none">내용 </div>
+			<div id="selected-memo" style="display: none">
+				<div id="memo-btn" style="text-align: right">
+					<button>저장</button> <button>휴지통</button>
+				</div>
+				<div>
+					<p>내용</p>
+				</div>
+			</div>
 		</div>
 		
-		<div id="open-memo">메모</div>
+		<div id="open-memo" style="display: none;">메모</div>
 		
 		<!-- test -->
 	</body>
