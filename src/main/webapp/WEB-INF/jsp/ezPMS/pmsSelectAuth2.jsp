@@ -139,53 +139,7 @@
 	   		
 	   		// 선택한 사람을 권한 추가
 	   		function setAuthorViewUser(authName, isUser) {
-	   			if ((selUserId != "" && selUserId != undefined) || isUser == false) {
-	   				var chkFlag = true;
-	   				
-		   			if (isUser == false) {
-		   				var deptId = $(".jstree-clicked").attr('id');
-		   				var regExp2 = deptId.lastIndexOf("_");
-		   				deptId = deptId.substring(0,regExp2);
-		   				receiverId = deptId;
-		   				
-			   			var str = $(".jstree-clicked").text();
-		   				userDept = str;
-		   				userName = str;
-		   				
-		   				userIdType = "dept";
-		   			} else {
-		   				var receiverId = selUserId;
-			   			userName = selUserName;
-			   			userDept = selUserDept;
-			   			userIdType = "user";
-		   			}
-		   			
-		   			for(var i = 0; i < authList.length; i++) {
-		   				if (authList[i].userId == receiverId) {
-		   					chkFlag = false;
-		   				}
-		   			}
-		   			
-		   			if (chkFlag) {
-		   				if (authName == "manager") {
-		   					managerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 1, "userDeptname" : userDept, "userIdType" : userIdType});
-		   					authList.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 1, "userDeptname" : userDept});
-		   				} else if (authName == "participant") {
-		   					participantArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 2, "userDeptname" : userDept, "userIdType" : userIdType});
-		   					authList.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 2, "userDeptname" : userDept});
-		   				} else {
-		   					viewerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 3, "userDeptname" : userDept, "userIdType" : userIdType});
-		   					authList.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 3, "userDeptname" : userDept});
-		   				}
-		   			} else {
-		   				alert("<spring:message code='ezPMS.t163' />");
-		   			}
-		   			
-		   			selMainListUserId = "";
-	   			} else {
-	   				alert("<spring:message code='ezPMS.t164' />");
-	   			}
-	   			
+	   			ok_Click();
 	   		}
 	   		
 	   		function applyReceiver(authName) {
