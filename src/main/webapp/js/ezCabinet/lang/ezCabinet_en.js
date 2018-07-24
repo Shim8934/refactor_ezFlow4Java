@@ -60,5 +60,8 @@ var CabinetMessages = {
 	strEmployee  : "직원을 먼저 선택해주세요.",
 	strShareErr1 : "정상적인 공유자가 아닙니다.",
 	strSelect2   : "공유자 선택하세요",
-	strShareErr2 : "공유받은 캐비넷 없습니다."
+	strShareErr2 : "공유받은 캐비넷 없습니다.",
+	strDelete    : "파일을 삭제하시겠습니까?",
+	strStorage   : "총용량 :",
+	strAttach    : "첨부파일이 없습니다."
 }
