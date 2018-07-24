@@ -1,9 +1,7 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
@@ -49,6 +46,7 @@ public class EzCabinetController_h {
 		logger.debug("jspGetCabinetFileDetail started");
 		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
 		String itemId         = request.getParameter("itemId");
+		String jspPageName    = "";
 		
 		JSONObject permission = cabinetRestService_h.checkPermission(request, user.getId(), itemId, "", 0);
 		
@@ -56,10 +54,22 @@ public class EzCabinetController_h {
 			return "cmm/error/accessDenied";
 		}
 		
+		JSONObject Iteminfo = cabinetRestService_h.cabinetItemInfo(request, user.getId(), itemId);
+		
+		if (Iteminfo.get("status").toString().equals("ok")) {
+			int itemType = ((Long)Iteminfo.get("itemType")).intValue();
+			
+			switch(itemType) {
+				case 0  : jspPageName = "ezCabinet/cabinetFileDetail"; break;
+				default : break;
+			}
+			
+		}
+		
 		model.addAttribute("itemId", itemId);
 		
 		logger.debug("jspGetCabinetFileDetail ended");
-		return "ezCabinet/cabinetFileDetail";
+		return jspPageName;
 	}
 	
 	/**
@@ -242,12 +252,12 @@ public class EzCabinetController_h {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getFileDetail.do", method=RequestMethod.POST)
+	@RequestMapping(value="/ezCabinet/getFileDetail.do", method=RequestMethod.GET)
 	@ResponseBody
 	public String jsonGetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jsonGetFileDetail started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String itemId  = request.getParameter("itemId") != null  ? request.getParameter("itemId")  : "";
+		String itemId      = request.getParameter("itemId") != null  ? request.getParameter("itemId")  : "";
 		
 		logger.debug("itemId: " + itemId);
 		

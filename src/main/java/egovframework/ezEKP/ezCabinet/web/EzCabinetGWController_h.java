@@ -1,13 +1,10 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,14 +15,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetColumnVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationItemVO;
-import egovframework.ezEKP.ezCabinet.vo.CabinetRelationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.let.user.login.service.LoginService;
@@ -320,7 +316,7 @@ public class EzCabinetGWController_h {
 				cabinetList.add(Integer.parseInt(cabinetId));
 			}
 			
-			result = cabinetService.checkPermission(new ArrayList<>(), itemList, permission, userInfo);
+			result = cabinetService.checkPermission(cabinetList, itemList, permission, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -333,9 +329,55 @@ public class EzCabinetGWController_h {
 	
 	@RequestMapping(value="/rest/ezCabinet/file-detail/itemId/{itemId}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getFileDetail(@PathVariable(value="itemId") String itemId,   HttpServletRequest request) throws Exception {
-		String serverName     = request.getHeader("host-name")       != null ? request.getHeader("host-name")            : "";
-		String userId         = request.getParameter("userId")       != null ? request.getParameter("userId")            : "";
-
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || UserId: " + userId );
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			String primary   = userInfo.getPrimary();
+			int tenantId     = userInfo.getTenantId();
+			String offset    = commonUtil.getMinuteUTC(userInfo.getOffset());
+			CabinetItemVO fileDetail                    = cabinetService_h.getFileDetail(itemId, primary, offset, tenantId);
+			
+			if(fileDetail.getItemType() != 0) {
+				//Get related columns
+				List<CabinetColumnVO> columnList = new ArrayList<>(); // replace by real function
+				result.put("columns", columnList);
+			}
+			
+			List<CabinetAttachFileVO> attachFileList    = cabinetService_h.getAttachFileList(itemId, tenantId);
+			List<CabinetRelationItemVO> relatedFileList = cabinetService_h.getRelatedFileList(itemId, tenantId);
+			
+			result.put("fileDetail", fileDetail);
+			result.put("attachFileList", attachFileList);
+			result.put("relatedFileList", relatedFileList);
+			result.put("status", "ok");
+			result.put("code", 0);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezCabinet/file-info/itemId/{itemId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject cabinetItemInfo(@PathVariable(value="itemId") String itemId,   HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
 		
 		JSONObject result = new JSONObject();
 		
@@ -355,12 +397,8 @@ public class EzCabinetGWController_h {
 			String offset    = commonUtil.getMinuteUTC(userInfo.getOffset());
 			
 			CabinetItemVO fileDetail                    = cabinetService_h.getFileDetail(itemId, primary, offset, tenantId);
-			List<CabinetAttachFileVO> attachFileList    = cabinetService_h.getAttachFileList(itemId, tenantId);
-			List<CabinetRelationItemVO> relatedFileList = cabinetService_h.getRelatedFileList(itemId, tenantId);
 			
-			result.put("fileDetail", fileDetail);
-			result.put("attachFileList", attachFileList);
-			result.put("relatedFileList", relatedFileList);
+			result.put("itemType", fileDetail.getItemType());
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 
