@@ -2517,9 +2517,6 @@
 				  var ymd = "#" + date.getFullYear() + "_" + pad(date.getMonth() + 1) + "_" + pad(date.getDate()) + "#";
 				  var day = date.getDay();
 				  
-				  console.log('holidays : ' +  holidays);
-				  console.log('ymd : ' + ymd);
-				  
 				  return  (day == 5 && friIsHoly) || (day == 6 && satIsHoly) || (day == 0 && sunIsHoly) || holidays.indexOf(ymd) > -1;
 			  }
 			  
