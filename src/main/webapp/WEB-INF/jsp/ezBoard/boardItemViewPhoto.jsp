@@ -1260,7 +1260,7 @@
 			    		
 			    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
 			    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
-			    		imgPopup.css({"left": "", "zoom": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});	
+			    		imgPopup.css({"left": "", "zoom": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
 		    		}
 		    		
 		    		$("#thumbMagnifyBtn").removeClass("fa fa-minus-square").addClass("fa fa-plus-square");
@@ -1313,10 +1313,6 @@
 		    		}
 			  	}
 			  	
-			  // 두 창에서 레이어팝업으로 이미지 띄우는 경우, 이미지가 어긋나는 경우가 잦다.(레이어팝업을 켜고 나서 끈 다음에도 발생)
-			  //	-> 투표 모듈에서도 왕왕 발생하기는 한다...
-			  // 창을 닫기 전에 thumbnailImgMouseOver가 작동해야 하는가? -> 그냥 새 창을 켜고 미리보기에서 레이어팝업 작동시켜도 이미지가 어긋난다.
-			  	//썸네일 이미지 팝업박스를 토글해준다.
 			  	function toggleImgPopupBox(e){
 			  		var imgPopupBox = $("#imgPopupBox");
 			  		var imgPopupDiv = $("#imgPopupDiv");
