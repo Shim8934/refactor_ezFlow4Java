@@ -337,3 +337,5 @@
 .organCabTbl .pic img {border: none !important;}
 .organCabTbl .pic img {width: 90px; height: 90px;}
 .cUserInfor {text-align: left;}
+
+@media print {.cabBttnDiv {display: none;} .fileDetailDiv {height: auto; overflow: visible;} .rlDocDiv {overflow: visible;}}
