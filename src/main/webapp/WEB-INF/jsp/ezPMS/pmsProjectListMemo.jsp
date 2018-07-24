@@ -171,7 +171,7 @@ $(function(){
                         </li>
                     </ul>
                     <dl class="listBox_graph">
-                    	<dt><spring:message code='ezPMS.t32' /></dt>
+                    	<dt><spring:message code='ezPMS.t330' /></dt>
                     	<dd><c:out value="${project.headManagerName }" /></dd>
                     	<dt><spring:message code='ezPMS.t33' /></dt>
                     	<dd><div name="${project.projectId }"></div>

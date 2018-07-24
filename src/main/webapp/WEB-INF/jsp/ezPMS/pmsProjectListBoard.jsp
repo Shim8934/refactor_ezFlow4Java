@@ -172,7 +172,7 @@ $(function(){
 								text-overflow: ellipsis; cursor: pointer;;" class="h5_center"><spring:message code='ezPMS.t31' /></th>
 							<th id="BoardList_TH_2" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px;"
-								class="h5_center"><spring:message code='ezPMS.t32' /></th>
+								class="h5_center"><spring:message code='ezPMS.t330' /></th>
 							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PROGRESS"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 250px"
 								class="h5_center"><spring:message code='ezPMS.t33' /></th>
