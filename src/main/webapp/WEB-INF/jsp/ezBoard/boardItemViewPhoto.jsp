@@ -1232,6 +1232,7 @@
 			  //썸네일에 마우스 오버할 때 처리.
 			  	function thumbnailImgMouseOver(e){
 		    		$("#imgPopupDiv, #imgPopupBox, #imgPopup").attr("style","");
+		    		$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","none");
 			  		var iPBInnerDivH = $(".iPBInnerDiv").height();
 			  		var imgPopupBox = $("#imgPopupBox");
 			  		var imgPopupDiv = $("#imgPopupDiv");
@@ -1245,6 +1246,8 @@
 		    		// src에 부여된 height값 읽어오지 못한 경우(창 두개에서 동시에 레이어팝업 조작할 경우)
 		    		if (imgPopup.height() == 0){
 			    		imgPopup.load (function() {
+			    			$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","");
+			    			
 		    				var imgPB_LeftOffset = (window.innerWidth-imgPopupBox.width()) / 2;
 				    		var imgPB_TopOffset = (window.innerHeight-imgPopupBox.height()) / 2 + window.pageYOffset;
 				    		var imgP_LeftOffset = (imgPopup.parent().width()-imgPopup.width()) / 2;
@@ -1254,6 +1257,8 @@
 				    		imgPopup.css({"left": "", "zoom": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
 			    		});
 		    		} else {
+		    			$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","");
+		    			
 		    			var imgPB_LeftOffset = (window.innerWidth-imgPopupBox.width()) / 2;
 			    		var imgPB_TopOffset = (window.innerHeight-imgPopupBox.height()) / 2 + window.pageYOffset;
 			    		var imgP_LeftOffset = (imgPopup.parent().width()-imgPopup.width()) / 2;
