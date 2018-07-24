@@ -1442,7 +1442,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 								OrganDeptVO deptVO = ezOrganService.getDeptInfo(vo.getParentCn(), userInfo.getPrimary(), tenantID);//user의 부서 정보
 								companyId = deptVO.getExtensionAttribute2();//회사 ID
 								
-								if (!jobTile.equals("")) {
+								if (jobTile != null && !jobTile.equals("")) {
 									String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile);
 									jobTile2 = String.valueOf(UUID.randomUUID()).substring(0,8);
 									logger.debug("jobTitle UUID=" + jobTile2);
@@ -1455,7 +1455,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 									 
 								}
 									
-								if (!jobPostion.equals("")) {
+								if (jobPostion != null && !jobPostion.equals("")) {
 									String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobPostion);
 									jobPostion2 = String.valueOf(UUID.randomUUID()).substring(0,8);
 									logger.debug("jobPostion2 UUID=" + jobPostion2);
@@ -1487,6 +1487,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							
 							result = "OK";
 						} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+							e.printStackTrace();
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 							ezEmailUserAdminService.removeUser(mailAddr);
 							ezOrganAdminService.mailDelDistributionList(tenantID, vo.getTitle()); //직위 공용 배포 그룹 삭제
