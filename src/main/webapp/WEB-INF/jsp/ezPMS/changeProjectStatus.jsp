@@ -75,8 +75,21 @@ $(function(){
 function changeStatus() {
 	var status = $("input[name='status']:checked").val();
 	var response = true;
+	var isHeadManager = true;
 	
 	var checkedPrjInfo = parent.getCheckedProjectInfo();
+	
+	checkedPrjInfo.forEach(function(elem, idx) {
+	    if (elem.headManagerId !== parent.userId) {
+	    	isHeadManager = false;
+	    }
+	});
+	
+	if(!isHeadManager){
+		alert("<spring:message code='ezPMS.t9' />");
+		popupClose();
+		return;
+	}
 	
 	if (status == "C") {
 		response = confirm("<spring:message code='ezPMS.t159' />");

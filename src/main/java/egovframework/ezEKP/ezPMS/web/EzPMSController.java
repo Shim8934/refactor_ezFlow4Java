@@ -128,6 +128,7 @@ public class EzPMSController {
 		if(settingStatus.equals("ok")) {
 			JSONObject listSetting = (JSONObject) settingResult.get("data");
 			model.addAttribute("listSetting", listSetting);
+			model.addAttribute("userId", userId);
 		}
 		
 		LOGGER.debug("ezPMS projectList ended");

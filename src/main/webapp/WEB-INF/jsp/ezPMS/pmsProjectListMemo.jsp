@@ -138,7 +138,7 @@ $(function(){
 		<div class="project_mainlist">
 		<ul class="project_mainlistUL">
 		<c:forEach items="${projectList }" var="project">
-			<li id="${project.projectId }" data-groupId="${project.groupId}" ondblclick="goProjectDetails(this)">
+			<li id="${project.projectId }" data-groupId="${project.groupId}" data-headmanagerid="${project.headManagerId}" ondblclick="goProjectDetails(this)">
 				<div class="project_list" >
 					<table>
 						<tr>
