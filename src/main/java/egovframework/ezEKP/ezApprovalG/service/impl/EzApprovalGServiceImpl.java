@@ -1869,8 +1869,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				rtnXML.append("<DATA3>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent())) + "</DATA3>");
 				rtnXML.append("<DATA4>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("FORMCONTPARENTS").item(k).getTextContent())) + "</DATA4>");
 				rtnXML.append("<DATA5>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("FORMCONTDESCRIPTION").item(k).getTextContent())) + "</DATA5>");
-				
-                if (docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().equals("ALL")) {
+
+				// 2018-07-24 양식등록 > 그룹사용 관리부서 없는 양식함 표시하기위해 none일때 추가  강민수92
+                if (docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().equals("ALL") || docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().equals("none")) {
                 	rtnXML.append("<DATA6>ALL</DATA6>");
                 } else {
                 	if (approvalFlag.equals("S")) {
