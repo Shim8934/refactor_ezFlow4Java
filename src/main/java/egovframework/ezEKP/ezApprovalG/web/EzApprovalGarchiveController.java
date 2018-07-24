@@ -2262,7 +2262,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			File file = new File(realPath + savePath);
 			FileOutputStream fop = new FileOutputStream(file);
 			// get the content in bytes
-			fop.write(saveXML.toString().getBytes("utf-8"));
+			fop.write(saveXML.toString().getBytes("euc-kr"));
 			fop.flush();
 			fop.close();
 

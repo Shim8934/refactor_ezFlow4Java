@@ -25196,7 +25196,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
  			FileOutputStream fop = new FileOutputStream(FI);
  			// get the content in bytes
- 			fop.write(strRtnXML.replace("\n", "").replace("\t", "").getBytes("utf-8"));
+ 			fop.write(strRtnXML.replace("\n", "").replace("\t", "").getBytes("euc-kr"));
  			fop.flush();
  			fop.close();
  		} catch (Exception e) {
@@ -25241,7 +25241,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		    
 			FileOutputStream fop = new FileOutputStream(fos);
 			// get the content in bytes
-			fop.write(strXML.getBytes("utf-8"));
+			fop.write(strXML.getBytes("euc-kr"));
 			fop.flush();
 			fop.close();
 			
@@ -25589,7 +25589,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              strTimeStamp = strTimeStamp.replace(" ", "");
              strTimeStamp = strTimeStamp.replace(":", "");
              
-             strSamplePath = config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator +"files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator + "sample.xml";
+             strSamplePath = config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator + "dtd" + commonUtil.separator + "sample.xml";
              strSendOrgCode = strCompanyID;
              strSendName = ezOrganService.getPropertyValue(strCompanyID, "displayName", tenantID);
 
@@ -25600,18 +25600,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
              objXML.getElementsByTagName("send-orgcode").item(0).setTextContent(strSendOrgCode);
              objXML.getElementsByTagName("send-id").item(0).setTextContent(strSendID);
-             objXML.getElementsByTagName("send-name").item(0).setTextContent(Base64.encodeBase64String(strSendName.getBytes("UTF-8")));
+             objXML.getElementsByTagName("send-name").item(0).setTextContent(Base64.encodeBase64String(strSendName.getBytes("euc-kr")));
              objXML.getElementsByTagName("receive-id").item(0).setTextContent(strReceiveID);
              objXML.getElementsByTagName("date").item(0).setTextContent(strTime);
-             objXML.getElementsByTagName("title").item(0).setTextContent(Base64.encodeBase64String(strTitle.getBytes("UTF-8")));
+             objXML.getElementsByTagName("title").item(0).setTextContent(Base64.encodeBase64String(strTitle.getBytes("euc-kr")));
              objXML.getElementsByTagName("doc-id").item(0).setTextContent(strDocID);
              
              objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("type").setTextContent(strDocType);
-             objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").setTextContent(Base64.encodeBase64String(strDocTypeName.getBytes("UTF-8")));
-             objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").setTextContent(Base64.encodeBase64String(strDocTypeDept.getBytes("UTF-8")));
+             objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").setTextContent(Base64.encodeBase64String(strDocTypeName.getBytes("euc-kr")));
+             objXML.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").setTextContent(Base64.encodeBase64String(strDocTypeDept.getBytes("euc-kr")));
 
              // 수정(2006.06.26) : 그룹웨어명을 한글명에서 영문명으로 변경 - 한글인 경우 행자부에서 디코딩이 안되는 문제 발생
-             objXML.getElementsByTagName("send-gw").item(0).setTextContent(Base64.encodeBase64String("ezFlow2000/G".getBytes("UTF-8")));
+             objXML.getElementsByTagName("send-gw").item(0).setTextContent(Base64.encodeBase64String("ezFlow6.0/G".getBytes("euc-kr")));
 
              objXML.getElementsByTagName("dtd-version").item(0).setTextContent("2.0");
              objXML.getElementsByTagName("xsl-version").item(0).setTextContent("2.0");
@@ -25624,7 +25624,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                  objXML.createElement("content").setAttribute("content-transfer-encoding", "base64");
                  objXML.createElement("content").setAttribute("content-type", "text/xml");
                  objXML.createElement("content").setAttribute("charset", "");
-                 objXML.getElementsByTagName("content").item(0).setTextContent(Base64.encodeBase64String(strErrMsg.getBytes("UTF-8")));
+                 objXML.getElementsByTagName("content").item(0).setTextContent(Base64.encodeBase64String(strErrMsg.getBytes("euc-kr")));
              }
 
              strTemp = objXML.getDocumentElement().toString();
@@ -25639,7 +25639,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              
 			FileOutputStream fop = new FileOutputStream(ackFile);
 			// get the content in bytes
-			fop.write(strResult.getBytes("utf-8"));
+			fop.write(strResult.getBytes("euc-kr"));
 			fop.flush();
 			fop.close();
 

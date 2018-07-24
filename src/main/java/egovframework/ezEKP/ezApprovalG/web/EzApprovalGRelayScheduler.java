@@ -254,7 +254,7 @@ public class EzApprovalGRelayScheduler {
         				 logger.debug("#수신부서코드=" + strReceiveID);
         				 
         				 if (!objXML.getElementsByTagName("title").item(0).getTextContent().equals("")) {
-        					 strTitle = new String(Base64.decodeBase64(objXML.getElementsByTagName("title").item(0).getTextContent().getBytes("UTF-8")));
+        					 strTitle = new String(Base64.decodeBase64(objXML.getElementsByTagName("title").item(0).getTextContent().getBytes("euc-kr")));
         					 if (strTitle.length() > 125) {
         						 strTitle = strTitle.substring(1, 125);
         					 }
@@ -314,7 +314,7 @@ public class EzApprovalGRelayScheduler {
         						 
         						 FileOutputStream fop = new FileOutputStream(gpkFile);
         						 // get the content in bytes
-        						 fop.write(commonUtil.convertDocumentToString(objXML).getBytes("UTF-8"));
+        						 fop.write(commonUtil.convertDocumentToString(objXML).getBytes("euc-kr"));
         						 fop.flush();
         						 fop.close();
         						 
@@ -335,7 +335,7 @@ public class EzApprovalGRelayScheduler {
         						 
         						 FileOutputStream fop = new FileOutputStream(recFile);
         						 // get the content in bytes
-        						 fop.write(commonUtil.convertDocumentToString(objXML).getBytes("UTF-8"));
+        						 fop.write(commonUtil.convertDocumentToString(objXML).getBytes("euc-kr"));
         						 fop.flush();
         						 fop.close();
         						 
@@ -715,7 +715,7 @@ public class EzApprovalGRelayScheduler {
 	private boolean ReplaceFileText(String strFilePath, String pTargetText,	String pNewText, boolean pUseRegex, String pRegexPattern) throws Exception {
 
 		FileInputStream fis = new FileInputStream(new File(strFilePath)); 
-		InputStreamReader isr = new InputStreamReader(fis,"UTF-8"); 
+		InputStreamReader isr = new InputStreamReader(fis,"euc-kr"); 
 		BufferedReader br = new BufferedReader(isr);	
 		String text = "";
 		
@@ -737,7 +737,7 @@ public class EzApprovalGRelayScheduler {
 			File file = new File(strFilePath);
 			FileOutputStream fop = new FileOutputStream(file);
 			// get the content in bytes
-			fop.write(text.getBytes("UTF-8"));
+			fop.write(text.getBytes("euc-kr"));
 			fop.flush();
 			fop.close();
 			
