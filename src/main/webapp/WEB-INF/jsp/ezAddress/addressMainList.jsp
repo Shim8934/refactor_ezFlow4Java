@@ -533,7 +533,7 @@
 	            }
 	            else {
 	            	$.modal.close();
-	            	window.location.href = window.location.href;	            	
+	            	Get_AddressList();
 	            }	            
 	        }
 	        function address_inout(which) {
