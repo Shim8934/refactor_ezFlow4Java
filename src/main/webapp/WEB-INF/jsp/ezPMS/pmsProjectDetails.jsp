@@ -174,7 +174,9 @@ function deleteFavorite(projectId) {
 					onclick="deleteFavorite(${project.projectId })">
 			</c:otherwise>
 		</c:choose>
-		(<fmt:formatNumber value="${project.progress}" pattern="0.0"/>%, D-<c:out value="${project.restDueday}"/>, <c:out value="${project.planStartDate}"/> ~ <c:out value="${project.planEndDate}"/>)
+		(<fmt:formatNumber value="${project.progress}" pattern="0.0"/>%, 
+		D<c:out value="${project.restDueday - 1 < 0 ? '+'.concat(-(project.restDueday - 1)) : '-'.concat(project.restDueday - 1) }"/>, 
+		<c:out value="${project.planStartDate}"/> ~ <c:out value="${project.planEndDate}"/>)
 	</h1>
 	<div class="portlet_tabpart01">
 	   <div class="portlet_tabpart01_top" id="tab1">
