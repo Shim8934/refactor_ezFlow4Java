@@ -320,7 +320,7 @@ public class EzCabinetGWController_h {
 				cabinetList.add(Integer.parseInt(cabinetId));
 			}
 			
-			result = cabinetService.checkPermission(new ArrayList<>(), itemList, permission, userInfo);
+			result = cabinetService.checkPermission(cabinetList, itemList, permission, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

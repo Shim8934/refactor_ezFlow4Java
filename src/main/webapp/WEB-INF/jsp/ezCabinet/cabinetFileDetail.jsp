@@ -58,11 +58,13 @@
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a>
 		</div>
 		
+		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
+		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
 		<script type="text/javascript">
 		var itemId = "<c:out value='${itemId}'/>";
-		var checkFileCreator  = "<c:out value='${checkFileCreator}'/>";
-		console.log(checkFileCreator);
+		var lastScrollY = 0;
+		var scrolled    = true;
 		
 		initEvents();
 		
@@ -143,14 +145,18 @@
 					var imgElmt       = document.createElement("img");
 					
 					//체크
-					var checkImageFile = isImage(attachFile[i]["fileName"]);
-					imgElmt.src        = checkImageFile.isImage == true ? attachFile[i]["filePath"] : checkImageFile.urlImage;
+					var fileName = attachFile[i]["fileName"];
+					var filePath = attachFile[i]["filePath"];
+					var fileSize = attachFile[i]["fileSize"];
+					
+					var checkImageFile = isImage(fileName);
+					imgElmt.src        = checkImageFile.isImage == true ? filePath : checkImageFile.urlImage;
 					
 					divChildElmt1.className = "cabImgAva";
 					divChildElmt1.appendChild(imgElmt);
 					
-					spanChild1.textContent  = attachFile[i]["fileName"];
-					spanChild2.textContent  = getFileSize(attachFile[i]["fileSize"]);
+					spanChild1.textContent  = fileName;
+					spanChild2.textContent  = getFileSize(fileSize);
 					divChildElmt2.className = "cabFileInf";
 					divChildElmt2.appendChild(spanChild1);
 					divChildElmt2.appendChild(spanChild2);
@@ -158,13 +164,27 @@
 					divMainElmt.className = "cabDivFile";
 					divMainElmt.appendChild(divChildElmt1);
 					divMainElmt.appendChild(divChildElmt2);
+					
+					liElmt.addEventListener("click", function(e) {downloadFile(e, fileName);}, false);
+					liElmt.setAttribute("path", filePath);
+					
 					liElmt.appendChild(divMainElmt);
 					ulElmt.appendChild(liElmt);
 				}	
 			}
 			
+			function downloadFile(event, name) {
+				var liElmt      = event.currentTarget;
+				console.log(liElmt);
+				var filePath    = liElmt.getAttribute("path");
+				var downloadUrl = "/ezCabinet/downloadAttachFile?filePath=" + filePath + "&fileName=" + name;
+				var attachFrame = document.getElementById("attachFrame");
+				attachFrame.src = downloadUrl;
+			}
+			
 			//연관문서
 			var divElmt = document.getElementById("fileListDiv");
+			divElmt.onscroll = function(e) {scrollListOfItem(this);}
 			
 			for (var i = 0, len = relatedFile.length; i < len; i++) {
 				var spanElmt = document.createElement("span");
@@ -173,6 +193,12 @@
 				spanElmt.className   = "rlSpanBnk";
 				spanElmt.addEventListener("click", function(e) {readRelatedItem(this);}, false);
 				divElmt.appendChild(spanElmt);
+				
+				if (i != len - 1) {
+					var divideEm         = document.createElement("em");
+					divideEm.textContent = ";";
+					divElmt.appendChild(divideEm);
+				}
 			}
 			
 			function readRelatedItem() {
@@ -227,6 +253,15 @@
 			};
 		}
 		
+		function scrollListOfItem(divElmt) {
+			if (scrolled) {
+				scrolled = false;
+				var distance      = divElmt.scrollTop < lastScrollY ? -20 : 20;
+				divElmt.scrollTop = lastScrollY + distance;
+				setTimeout(function () {scrolled = true; lastScrollY = divElmt.scrollTop;}, 500);
+			}
+		}
+		
 		function fileModify() {
 			var cabId    = "";
 			window.location.href = "/ezCabinet/addCabinetFile.do?cabId=" + cabId;
@@ -234,9 +269,12 @@
 		}
 		
 		function fileDelete() {
+			var url  = "/ezCabinet/deleteItems.do";
+			var data = itemId;
+			
 			
 		}
-		
+			
 		function filePrint() {
 			var relatedFileList = document.getElementById("fileListDiv");
 			var clientHeight    = relatedFileList.clientHeight;
