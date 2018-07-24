@@ -141,7 +141,7 @@ function ableToChangeStatus() {
 }
 
 function editProjectInfo() {
-	addProjectPopup(5, 20, 845, 480, "/ezPMS/newProject.do?mode=" + "edit" + "&projectId=" + projectId + "&groupId=" + groupId);
+	addProjectPopup(5, 20, 845, 536, "/ezPMS/newProject.do?mode=" + "edit" + "&projectId=" + projectId + "&groupId=" + groupId);
 }
 
 function kanbanSetting() {

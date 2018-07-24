@@ -398,7 +398,7 @@ button.PHBtn {
 .detailsTable .dateTd{width:180px}
 .mainBodyTop{margin-top:8px;width:818px;}
 .mainBodyMid{height:510px;}
-.statusDivBrd{width:165px;height:168px;float:left;border: 1px solid #ccc;border-right:0px;}
+.statusDivBrd{width:165px;height:165px;float:left;border: 1px solid #ccc;border-right:0px;}
 .statusChgBtn{float:left;margin:3px 25px;border:1px solid #ddd;border-radius:5px; padding:0px 7px; cursor:pointer;}
 .taskUpdateBtn{display:inline-block;width:100px;height:16px;float:right;margin-top:6px;position:relative;font-size:12px;text-align:center;border:1px solid #ddd;border-radius:6px;cursor:pointer;z-index:101;}
 </style>
@@ -439,10 +439,10 @@ button.PHBtn {
 			  </c:otherwise>
 			  </c:choose>
 			  </tr>
-			  <tr>
-			    <th class="detailsTable-th"><spring:message code='ezPMS.t32' /></th>
-			    <td class="detailsTable-td" colspan="4"><c:out value="${taskDetails.headManagerName}"/></td>
-			  </tr>
+<!-- 			  <tr> -->
+<%-- 			    <th class="detailsTable-th"><spring:message code='ezPMS.t32' /></th> --%>
+<%-- 			    <td class="detailsTable-td" colspan="4"><c:out value="${taskDetails.headManagerName}"/></td> --%>
+<!-- 			  </tr> -->
 			  <tr>
 			    <th class="detailsTable-th"><spring:message code='ezPMS.t38' /></th>
 			    <td class="detailsTable-td" name="statusTd" colspan="4"></td>

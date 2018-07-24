@@ -38,6 +38,8 @@ var viewerList = [];
 var overview = "<c:out value='${project.overview}'/>";
 var endAlamStatus = "${project.alamMailStatus}";
 var headManagerId = "${project.headManagerId}";
+var headManagerName = "${project.headManagerName}";
+var headManagerDept = "${project.headManagerDeptname}";
 var mode = "${mode}"
 var projectId = "${project.projectId}";
 //비교하여 새로 추가된 사용자에게 메일 보냄
@@ -45,6 +47,7 @@ var beforeManagerList = [];
 var beforeParticipantList = [];
 var beforeViewerList = [];
 var groupId = "${groupId}";
+var headManagerObj = {};
 
  $(function() {	
 	getDatePicker();
@@ -113,6 +116,7 @@ var groupId = "${groupId}";
 				
 		}
 		applyList();
+		applyHeadManager();
 	}
  
  });
@@ -202,7 +206,8 @@ var groupId = "${groupId}";
  function openOrganTree(type) {
 	 var url = "/ezPMS/pmsSelectAuth.do?type=" + type.id;
 	 //	url += "?companyId=" + companyId;
-	 GetOpenWindow(url, "pmsSelectAuth", 980, 630);
+	 var width = type.id === "headManager" ? 700 : 980;
+	 GetOpenWindow(url, "pmsSelectAuth", width, 630);
  }
  
  function addNewProject() {
@@ -342,15 +347,8 @@ var groupId = "${groupId}";
 	 }
 	 
 	 for (var i = 0; i < managerList.length; i++) {
-		if(headManagerId == managerList[i].userId) {
-			managerNameList += "<b>"
-			managerNameList += managerList[i].userName;
-			managerNameList += "(" + managerList[i].userDeptname + ")</b>, ";
-		} else {
-			managerNameList += managerList[i].userName;
-			managerNameList += "(" + managerList[i].userDeptname + "), ";
-		}
-		
+		managerNameList += managerList[i].userName;
+		managerNameList += "(" + managerList[i].userDeptname + "), ";
 	 }
 	 
 	 for (var i = 0; i < participantList.length; i++) {
@@ -370,6 +368,15 @@ var groupId = "${groupId}";
 	 $("#managers").html(managerNameList);
 	 $("#participants").html(participantNameList);
 	 $("#viewers").html(viewerNameList);
+ }
+ 
+ function applyHeadManager(){
+	 var headManagerStr = headManagerObj.userName + "(" + headManagerObj.userDept + ")";
+	 if(!headManagerObj.userName){
+		 headManagerStr = headManagerName + "(" + headManagerDept + ")";
+	 }
+	 
+	 $("#headManager").html(headManagerStr);
  }
  
  function sendNotiMail(projectId, projectName) {
@@ -434,6 +441,10 @@ var groupId = "${groupId}";
 				<th><spring:message code='ezPMS.t62' /></th>
 				<td><input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"></td>
 			</tr>
+			<tr>
+				<th><a class="imgbtn" onclick="openOrganTree(headManager)"><span><spring:message code='ezPMS.t330' /></span></a></th>
+				<td class="nameList" colspan="3" style="height:70px;"><div style="overflow-y:auto; max-height:100%; width:100%" id="headManager"></div></td>
+			<tr>
 			<tr>
 				<th><a class="imgbtn" onclick="openOrganTree(managers)"><span><spring:message code='ezPMS.t63' /></span></a></th>
 				<td class="nameList" colspan="3" style="height:70px;"><div style="overflow-y:auto; max-height:100%; width:100%" id="managers"></div></td>

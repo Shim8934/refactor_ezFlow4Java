@@ -158,6 +158,7 @@
 		   				assig.resourceId = pd.projectMember[i].userId;
 		   				assig.id = pd.projectMember[i].userId;
 		   				assig.roleId = pd.projectMember[i].memberRoleId;
+		   				assig.name = pd.projectMember[i].userName;
 		   				assig.effort = "";
 		   				
 		   				tempTask.assigs.push(assig);
@@ -349,6 +350,7 @@
 			   				assig.id = tl[i].taskMember[j].userId;
 			   				assig.roleId = 1;
 			   				assig.effort = "";
+			   				assig.name = tl[i].taskMember[j].userName;
 			   				
 			   				tempTask.assigs.push(assig);
 			   				
@@ -875,7 +877,8 @@
 	   			  var ret = "";
 	   			  
 	   			  var headManagerId = this.headManager;
-	   			  var res = this.master.getResource(headManagerId);
+// 	   			  var res = this.master.getResource(headManagerId);
+	   			  var res = this.master.getResource(this.assigs[0].id);
 	   			  
 	   			  if (res) {
 	   			  	ret = res.name;

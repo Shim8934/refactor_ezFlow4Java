@@ -104,15 +104,8 @@ function open() {
 	 var managerNameList = "";
 	 
 	 for (var i = 0; i < managerList.length; i++) {
-		if(headManagerId == managerList[i].userId) {
-			managerNameList += "<b>"
-			managerNameList += managerList[i].userName;
-			managerNameList += "(" + managerList[i].userDeptname + ")</b>, ";
-		} else {
-			managerNameList += managerList[i].userName;
-			managerNameList += "(" + managerList[i].userDeptname + "), ";
-		}
-		
+		managerNameList += managerList[i].userName;
+		managerNameList += "(" + managerList[i].userDeptname + "), ";
 	 }
 	 
 	 managerNameList = managerNameList.substr(0, managerNameList.length - 2);

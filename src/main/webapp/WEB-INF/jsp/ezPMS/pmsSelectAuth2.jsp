@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezPMS.t162' /></title>
+		<title><spring:message code='ezPMS.t330' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
@@ -120,38 +120,10 @@
    				type = title.id;
 	   		}
 	   		
-	   		
-	   		//오른쪽 리스트에서 클릭이벤트 적용
-	   		function setMainListUserAuthorDept(elem) {
-	   			if ($(elem).parent().attr("id") === "List_TBODY2") {
-	   				$("#List_TBODY2 tr").removeClass("selectTR");
-	   			} else if ($(elem).parent().parent().parent().attr("id") === "managerList"){
-		   			$("#managerList tr").removeClass("selectTR");
-	   			} else if ($(elem).parent().parent().parent().attr("id") === "participantList"){
-		   			$("#participantList tr").removeClass("selectTR");
-	   			} else if ($(elem).parent().parent().parent().attr("id") === "viewerList"){
-		   			$("#viewerList tr").removeClass("selectTR");
-	   			} else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
-		   			$("#txtlist_Layer tr").removeClass("selectTR");
-	   			}
-	   			
-	   			$(elem).addClass("selectTR");
-	   			selMainListUserId = $(elem).attr("id");
-	   			selMainListUserName = $(elem).attr("name");
-	   			selUserDept = $(elem).attr("dept");
-	   			// console.log("selMainListUserId : " + selMainListUserId)
-	   		}
-	   		
 	   		// 리스트에서 클릭이벤트 적용
 	   		function setUserAuthorDept(elem) {
 	   			if ($(elem).parent().attr("id") === "List_TBODY2") {
 	   				$("#List_TBODY2 tr").removeClass("selectTR");
-	   			} else if ($(elem).parent().parent().parent().attr("id") === "managerList"){
-		   			$("#managerList tr").removeClass("selectTR");
-	   			} else if ($(elem).parent().parent().parent().attr("id") === "participantList"){
-		   			$("#participantList tr").removeClass("selectTR");
-	   			} else if ($(elem).parent().parent().parent().attr("id") === "viewerList"){
-		   			$("#viewerList tr").removeClass("selectTR");
 	   			} else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
 		   			$("#txtlist_Layer tr").removeClass("selectTR");
 	   			}
@@ -207,105 +179,12 @@
 		   				alert("<spring:message code='ezPMS.t163' />");
 		   			}
 		   			
-		   			drawReceiverList(authName);
 		   			selMainListUserId = "";
 	   			} else {
 	   				alert("<spring:message code='ezPMS.t164' />");
 	   			}
 	   			
-				setMemberCNT();
-  				
-				scrollToBottom(authName);
 	   		}
-	   		
-	   		// 선택된 수신자배열에서 특정 사원 삭제
-		    function deleteReceiver(typeName) {
-	   			var authName = typeName.id;
-	   			
-	   			for (var i = 0; i < authList.length; i++) {
-			    	if (authList[i].userId === selMainListUserId) {
-			    		authList.splice(i, 1);
-			    	}
-	   			}
-	   			
-	   			if (authName == "manager") {
-	   				for(var j = 0; j < managerArray.length; j++) {
-			    		if (managerArray[j].userId === selMainListUserId) {
-			    			managerArray.splice(j, 1);
-			    			selMainListUserId = "";
-			    		}
-			    	}
-	   				
-			     	drawReceiverList(authName);
-	   			} else if (authName == "participant") {
-	   				for(var j = 0; j < participantArray.length; j++) {
-			    		if (participantArray[j].userId === selMainListUserId) {
-			    			participantArray.splice(j, 1);
-			    			selMainListUserId = "";
-			    		}
-			    	} 
-			     	
-	   				drawReceiverList(authName);
-	   			} else {
-	   				for(var j = 0; j < viewerArray.length; j++) {
-			    		if (viewerArray[j].userId === selMainListUserId) {
-			    			viewerArray.splice(j, 1);
-			    			selMainListUserId = "";
-			    		}
-			    	
-	   				} 
-			     	drawReceiverList(authName);
-	   			}
-		     	
-	   			setMemberCNT();
-		    }
-	   		
-	   		// 선택된 수신자 배열을 토대로 화면에 그리는 곳
-	   		function drawReceiverList(authName) {
-		    	var strHTML = "";
-		    	
-		    	if (authName == "manager") {
-		    		for (var i = 0; i < managerArray.length; i++) {
-			    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
-			    		strHTML += "<tr style='cursor:pointer;' id=" + managerArray[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver(manager)'>";
-			    		strHTML += "<td>";
-			    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
-			    		strHTML += managerArray[i].userName;
-			    		strHTML += "(" + managerArray[i].userDeptname + ")";
-			    		strHTML += "</td>";
-			    		strHTML += "</tr>";
-			    		strHTML += "</table>";
-			    	}
-		    		$("#managerList").html(strHTML);
-		    	} else if (authName == "participant") {
-		    		for (var i = 0; i < participantArray.length; i++) {
-			    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
-			    		strHTML += "<tr style='cursor:pointer;' id=" + participantArray[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver(participant)'>";
-			    		strHTML += "<td>";
-			    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
-			    		strHTML += participantArray[i].userName;
-			    		strHTML += "(" + participantArray[i].userDeptname + ")";
-			    		strHTML += "</td>";
-			    		strHTML += "</tr>";
-			    		strHTML += "</table>";
-			    	}
-			    	$("#participantList").html(strHTML);
-		    	} else {
-		    		for (var i = 0; i < viewerArray.length; i++) {
-			    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
-			    		strHTML += "<tr style='cursor:pointer;' id=" + viewerArray[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver(viewer)'>";
-			    		strHTML += "<td>";
-			    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
-			    		strHTML += viewerArray[i].userName;
-			    		strHTML += "(" + viewerArray[i].userDeptname + ")";
-			    		strHTML += "</td>";
-			    		strHTML += "</tr>";
-			    		strHTML += "</table>";
-			    	}
-			    	$("#viewerList").html(strHTML);
-		    	}
-		    	
-		    }
 	   		
 	   		function applyReceiver(authName) {
   				setAuthorViewUser(authName.id, true);
@@ -339,14 +218,10 @@
 		   			authList = authList.concat(participantArray);
 		   			authList = authList.concat(viewerArray);
 		   			
-	   				drawReceiverList("manager");
-	   				drawReceiverList("participant");
-	   				drawReceiverList("viewer");
-	   			} /* else {
+	   			} else {
 		   			authList.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept)});
 		   			managerArray.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept), "userIdType" : "user"});
-		   			drawReceiverList("manager");
-	   			} */
+	   			}
 		   		
 	   			$(function () {
 		   			$(document).on({
@@ -360,16 +235,7 @@
 		   				}
 	   				},"#lplistView tr");
 		   			
-		   			if (type == "managers") {
-		   				SelectReceiverWindow(manager, managerList);
-		   			} else if (type == "participants") {
-		   				SelectReceiverWindow(participant, participantList);
-		   			} else {
-		   				SelectReceiverWindow(viewer, viewerList);
-		   			}
 	   			});
-	   			
-	   			setMemberCNT();
    			});
 	   		
 	   		var Tab1_SelectID = "1tab1";
@@ -391,74 +257,21 @@
 				selUserId = "";
 		    }
 	   		
-	   		function Tab1_MouseClick(obj) {
-	            obj.className = "tabon";
-	            
-	            if (obj.id != Tab1_SelectID) {
-	                if (Tab1_SelectID != "" && document.getElementById(Tab1_SelectID) != null)
-	                    document.getElementById(Tab1_SelectID).className = "";
-
-	                obj.className = "tabon";
-	                Tab1_SelectID = obj.id;
-	                ChangeTab(obj);
-	            }
-	        }
-	   		
 	   		function ok_Click() {
 	   			if (managerArray.length == 0) {
 	   				alert("<spring:message code='ezPMS.t169'/>");
 	   				return;
 	   			}
 	   			
-	   			parent.opener.managerList = JSON.stringify(managerArray);
-		   		parent.opener.participantList = JSON.stringify(participantArray);
-		   		parent.opener.viewerList = JSON.stringify(viewerArray);
-		   		parent.opener.applyList();
-		   		
-		   		window.close();
+	   			parent.opener.headManagerId = selUserId;
+	   			parent.opener.headManagerObj.userId = selUserId;
+	   			parent.opener.headManagerObj.userName = selUserName;
+	   			parent.opener.headManagerObj.userDept = selUserDept;
+	   			parent.opener.applyHeadManager();
 	   			
-// 	   			selectHeadManager();
-	   			//opener.selReceiver = JSON.stringify(receiverList);
-	   			//opener.showReceiver();
-	   			//window.close();
+	   			window.close();
 	   		}
 	   		
-// 	   		function selectHeadManager() {
-// 	   			var feature = GetOpenPosition(150, 150);
-// 	   			DivPopUpShow(400, 300, "/ezPMS/selectHeadManager.do");
-// 	   		}
-	   		
-	   		function deptSelect() {
-	   			setAuthorViewUser(type, false);
-	   		}
-	   		
-	   		// 담당자, 참여자, 조회자 인원을 표시
-	   		function setMemberCNT() {
-	   			$("#managerCNT").text(managerArray.length + "<spring:message code='ezPMS.t44'/>");
-	   			$("#participantCNT").text(participantArray.length + "<spring:message code='ezPMS.t44'/>");
-	   			$("#viewerCNT").text(viewerArray.length + "<spring:message code='ezPMS.t44'/>");
-	   		}
-	   		
-	   		// 담당자, 참여자, 조회자 추가 시 스크롤바를 밑으로 내려줌
-	   		function scrollToBottom(authName) {
-	   			switch (authName) {
-				case "manager":
-					$("#managerList").animate({
-	  					scrollTop : $("#managerList").prop("scrollHeight")
-	  				});
-					break;
-				case "participant":
-					$("#participantList").animate({
-	  					scrollTop : $("#participantList").prop("scrollHeight")
-	  				});
-					break;
-				case "viewer":
-					$("#viewerList").animate({
-	  					scrollTop : $("#viewerList").prop("scrollHeight")
-	  				});
-					break;
-	   			}
-	   		}
 		</script>
 		<style>
 			tr.hover:not(.selectTR):hover{background:#eee; color:#fff;}
@@ -475,7 +288,7 @@
 		</style>
 	</head>
 	<body class="popup" style="overflow: hidden;"> 
-        <h1 style="height: 20px;"><spring:message code='ezPMS.t162' /></h1>
+        <h1 style="height: 20px;"><spring:message code='ezPMS.t330' /></h1>
 	    <div id="close">
 	        <ul>
 	            <li><span onclick="close_Click()"></span></li>
@@ -491,7 +304,7 @@
 					 	<tr>
 			                <div class="portlet_tabpart01">
 			                	<div class="portlet_tabpart01_top" id="tab1">
-					            	<p><span id="1tab1" tdname="journalOrgan" style="min-width: 45px; cursor:pointer" onclick="Tab1_MouseClick(this)"><spring:message code='ezPMS.t165' /></span></p>
+					            	<p><span id="1tab1" tdname="journalOrgan" style="min-width: 45px; cursor:pointer"><spring:message code='ezPMS.t165' /></span></p>
 					        	</div>
 					        </div>
 				        	<td id="journalOrgan_content" style="display: none;">
@@ -517,11 +330,6 @@
 				                                        <a class="imgbtn"><span onclick="search_click()"><spring:message code='ezOrgan.t101'/></span></a>
 				                                    </div>
 				                                </td>
-				                                <td>
-				                                    <div style="float: right; margin-right: 5px; position: relative;">
-				                                       <a class="imgbtn"><span onclick="deptSelect()"><spring:message code='ezPMS.t166' /></span></a>
-				                                    </div>
-				                                </td> 
 				                                <td></td>   
 				                            </tr>
 				                        </table>
@@ -538,56 +346,6 @@
 						            </tr>
 						        </table>
 		                  	</td>   
-		                  	
-	                        <td style="width: 30px; text-align: center;">
-	                        	<div>
-	                            	<img src="/images/arr_r.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;" onclick="applyReceiver(manager)"><br>
-	                            	<img src="/images/arr_l.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver(manager)">
-	                        	</div>                            
-	                            <div style="margin-top:100px;">
-	                            	<img src="/images/arr_r.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;" onclick="applyReceiver(participant)"><br>
-	                            	<img src="/images/arr_l.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver(participant)">
-	                        	</div>
-	                        	<div style="margin-top:100px;">
-	                            	<img src="/images/arr_r.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer; margin-top: 10px;" onclick="applyReceiver(viewer)"><br>
-	                            	<img src="/images/arr_l.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="deleteReceiver(viewer)">
-	                        	</div>
-	                        </td>
-	                        
-	                        <td style="vertical-align: top;">
-	                        	<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
-		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
-										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="manager" onclick="SelectReceiverWindow(manager,managerList)">
-											<spring:message code='ezPMS.t63' /> (<span id="managerCNT" style="padding: 0px; color: #017BEC;"></span>)
-										</span>
-									</h2>
-								</div>
-								<div class="receiver_borderbox">
-									<div id="managerList" style="width: 250px; Height: 134px; overflow-x: auto; overflow-y: auto; background-color: rgb(246, 246, 246); cursor: pointer;" onclick="SelectReceiverWindow(manager,managerList)"></div>
-								</div>
-								
-								<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
-		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
-										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="participant" onclick="SelectReceiverWindow(participant,participantList)">
-											<spring:message code='ezPMS.t64' /> (<span id="participantCNT" style="padding: 0px; color: #017BEC;"></span>)
-										</span>
-									</h2>
-								</div>
-								<div class="receiver_borderbox">
-									<div id="participantList" style="width: 250px; Height: 134px; overflow-x: auto; overflow-y: auto; background-color: rgb(246, 246, 246); cursor: pointer;" onclick="SelectReceiverWindow(participant,participantList)"></div>
-								</div>
-								
-								<div style="display: inline-flex; border-bottom: 1px solid #565b66; width: 100%;">
-		                            <h2 class="receiver_tltype01" style="margin-top:4px;">
-										<span style="min-width: 45px; font-weight: normal; cursor: pointer;" id="viewer" onclick="SelectReceiverWindow(viewer,viewerList)">
-											<spring:message code='ezPMS.t65' /> (<span id="viewerCNT" style="padding: 0px; color: #017BEC;"></span>)
-										</span>
-									</h2>
-								</div>
-								<div class="receiver_borderbox">
-									<div id="viewerList" style="width: 250px; Height: 134px; overflow-x: auto; overflow-y: auto; background-color: rgb(246, 246, 246); cursor: pointer;" onclick="SelectReceiverWindow(viewer,viewerList)"></div>
-								</div>
-	                        </td>
 	                    </tr>
 	                </table>
 	      		</td> 
