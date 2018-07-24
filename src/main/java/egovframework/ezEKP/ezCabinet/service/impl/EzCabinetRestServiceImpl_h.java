@@ -136,10 +136,13 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 	}
 
 	@Override
-	public JSONObject checkFileCreator(HttpServletRequest request, String userId, String itemId) throws Exception {
-		String url                = "/rest/ezCabinet/check-creator/itemId/" + itemId;
+	public JSONObject checkPermission(HttpServletRequest request, String userId, String itemId, String cabinetId, int permission) throws Exception {
+		String url                = "/rest/ezCabinet/check-permission";
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userId",      userId);
+		param.put("userId",     userId);
+		param.put("itemId",     itemId);
+		param.put("cabinetId",  cabinetId);
+		param.put("permission", permission);
 		
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;

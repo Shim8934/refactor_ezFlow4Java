@@ -1,10 +1,8 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import java.util.List;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationItemVO;
@@ -18,7 +16,6 @@ public interface EzCabinetService_h {
 	List<SimpleUserVO> getSearchMemberList(String primary, int startPoint, int i, String srchOption, String srchValue, int tenantId) throws Exception;
 	int getTotalSearchMembers(String sqlQuery, String srchValue, int tenantId) throws Exception;
 	JSONObject saveShareUserList(JSONArray listUsers, String cabinetId, LoginVO userInfo) throws Exception;
-	int isFileCreator(String itemId, String userId, int tenantId) throws Exception;
 	CabinetItemVO getFileDetail(String itemId, String primary, String offset, int tenantId) throws Exception;
 	List<CabinetAttachFileVO> getAttachFileList(String itemId, int tenantId) throws Exception;
 	List<CabinetRelationItemVO> getRelatedFileList(String itemId, int tenantId) throws Exception;

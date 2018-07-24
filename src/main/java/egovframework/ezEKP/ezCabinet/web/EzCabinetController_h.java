@@ -47,17 +47,16 @@ public class EzCabinetController_h {
 	@RequestMapping(value="/ezCabinet/cabinetFileDetail.do")
 	public String jspGetCabinetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetCabinetFileDetail started");
-		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String itemId       = request.getParameter("itemId");
+		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
+		String itemId         = request.getParameter("itemId");
 		
-		JSONObject result    = cabinetRestService_h.checkFileCreator(request, user.getId(), itemId);
+		JSONObject permission = cabinetRestService_h.checkPermission(request, user.getId(), itemId, "", 0);
 		
-		if (result.get("status").toString().equals("ok")) {
-			String checkFileCreator = (String)result.get("result");
-			model.addAttribute("checkFileCreator", checkFileCreator);
+		if ((long)permission.get("code") == 1) {
+			return "cmm/error/accessDenied";
 		}
 		
-		model.addAttribute("itemId",   itemId);
+		model.addAttribute("itemId", itemId);
 		
 		logger.debug("jspGetCabinetFileDetail ended");
 		return "ezCabinet/cabinetFileDetail";
@@ -76,6 +75,12 @@ public class EzCabinetController_h {
 		logger.debug("jspGetShareCabinetPage started");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String cabinetId     = request.getParameter("cabId");
+		
+		JSONObject permission = cabinetRestService_h.checkPermission(request, user.getId(), "", cabinetId, 1);
+		
+		if ((long)permission.get("code") == 1) {
+			return "cmm/error/accessDenied";
+		}
 		
 		JSONObject result    = cabinetRestService_h.getUserListType(request, user.getId());
 		if (result.get("status").toString().equals("ok")) {

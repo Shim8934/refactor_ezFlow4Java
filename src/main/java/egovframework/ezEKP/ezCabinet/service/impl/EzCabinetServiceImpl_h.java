@@ -191,17 +191,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 		result.put("code", 0);
 		return result;
 	}
-
-	@Override
-	public int isFileCreator(String itemId, String userId, int tenantId) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("itemId",   itemId);
-		map.put("userId",   userId);
-		map.put("tenantId", tenantId);
-		
-		return ezCabinetDAO_h.isFileCreator(map);
-	}
-
+	
 	@Override
 	public CabinetItemVO getFileDetail(String itemId, String primary, String offset,int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();

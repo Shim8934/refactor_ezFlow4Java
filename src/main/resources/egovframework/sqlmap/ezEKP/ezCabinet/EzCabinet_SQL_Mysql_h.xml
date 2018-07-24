@@ -373,10 +373,6 @@
 		</isNotEqual>
 	</insert>
 	
-	<select id="EzCabinetDAO_h.isFileCreator" resultClass="Integer">
-		<![CDATA[ select 1 from dual where exists(select item_id from tbl_cb_item where item_id = #itemId# and creator_id = #userId# and tenant_id = #tenantId#) ]]>
-	</select>
-	
 	<!--***********************************************************************************
 	**                             Cabinet item process                                   **
 	************************************************************************************-->
