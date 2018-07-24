@@ -19,11 +19,44 @@ var memberList = '${memberList}';
 var memberScheduleList = JSON.parse('${memberScheduleList}');
 var planStartDate = '${planStartDate}';
 var planEndDate = '${planEndDate}';
-var dateList = [];
+var dateList = JSON.parse('${dateList}');
 
 $(function() {
-	setMemberSchedule();
+	setDateList();
 });
+
+function setDateList() {
+	var dayOfWeeks = "<spring:message code='ezPMS.t244'/>".split(";");
+	
+	for(var i = 0; i < dateList.length; i++) {
+		var dayOfMonth = dateList[i].date.charAt(8) == '0' ? dateList[i].date.substring(9) : dateList[i].date.substring(8);
+		
+		if(dateList[i].holidayOrNot == true) {
+			$("#dateListHeader").append('<th style="background-color: rgba(236, 195, 176, 0.40); width: 800px;">' + dayOfMonth + '(' + dayOfWeeks[dateList[i].dayOfWeek - 1] + ')</th>');
+			$(".dateList").append('<td date="' + dateList[i].date + '" style="text-align:center; background-color: #FFFAF2;">&nbsp;</td>');
+		} else {
+			$("#dateListHeader").append('<th style="width: 800px;">' + dayOfMonth + '(' + dayOfWeeks[dateList[i].dayOfWeek - 1] + ')</th>');
+			$(".dateList").append('<td date="' + dateList[i].date + '" style="text-align:center;">&nbsp;</td>');
+		}	
+	}
+	
+	// 멤버 스케쥴을 테이블에 반영
+	setMemberSchedule();
+	
+	$("#workSchedule").append("<tr id='memberCNT'></tr>")
+	
+	// 일자별 업무 할당 인원 수 반영
+	for(var i = 0; i < dateList.length; i++) {
+		var memberCNT = $(".dateList").find("td[date='" + dateList[i].date + "']").find(".circle").length;
+		memberCNT = memberCNT == 0 ? "" : memberCNT;
+		
+		if(dateList[i].holidayOrNot == true) {
+			$("#memberCNT").append('<td style="text-align:center; background-color: #FFFAF2;">' + memberCNT + '</td>');
+		} else {
+			$("#memberCNT").append('<td style="text-align:center;">' + memberCNT + '</td>');
+		}
+	}
+}
 
 function setMemberSchedule() {
 	for (var i = 0; i < memberScheduleList.length; i++) {
@@ -172,12 +205,15 @@ window.onload = function() {
 		<td>${member.userDeptname }</td>
 	</tr>
 	</c:forEach>
+	<tr>
+		<td colspan="2">일자 별 업무 할당 인원 수</td>
+	</tr>
 	</table>
 	</div>
 	<div id="calendar">
 	<table id="workSchedule" class="content">
-	<tr>
-	<c:forEach items="${dateList }" var="dateVO">
+	<tr id="dateListHeader">
+	<%-- <c:forEach items="${dateList }" var="dateVO">
 		<c:choose>
 			<c:when test="${dateVO.holidayOrNot eq true}">
 				<th style="background-color: rgba(236, 195, 176, 0.40);">${dateVO.date}</th>
@@ -186,11 +222,11 @@ window.onload = function() {
 				<th>${dateVO.date}</th>
 			</c:otherwise>
 		</c:choose>
-	</c:forEach>
+	</c:forEach> --%>
 	</tr>
 	<c:forEach items="${memberList}" var="member">
-	<tr userId="${member.userId }">
-	<c:forEach items="${dateList}" var="dateVO">
+	<tr userId="${member.userId }" class="dateList">
+	<%-- <c:forEach items="${dateList}" var="dateVO">
 		<c:choose>
 			<c:when test="${dateVO.holidayOrNot eq true}">
 				<td date="${dateVO.date}" style="text-align:center; background-color: #FFFAF2;">&nbsp;</td>
@@ -200,7 +236,7 @@ window.onload = function() {
 			</c:otherwise>
 		</c:choose>
 		
-	</c:forEach>
+	</c:forEach> --%>
 	</tr>
 	</c:forEach>
 	</table>

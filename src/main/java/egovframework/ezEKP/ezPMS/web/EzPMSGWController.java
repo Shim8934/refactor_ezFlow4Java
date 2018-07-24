@@ -1875,6 +1875,7 @@ public class EzPMSGWController {
 			Calendar endCal = Calendar.getInstance();
 
 			startCal.setTime(startDate);
+			startCal.set(Calendar.DATE, 1);
 			endCal.setTime(endDate);
 			
 			// 공휴일 리스트를 가져와서 Calendar클래스로 변환
@@ -1896,7 +1897,7 @@ public class EzPMSGWController {
 			while (startCal.compareTo(endCal) < 1) {
 				DateVO date = new DateVO();
 				date.setDate(dateFormat.format(startCal.getTime()));
-				
+				date.setDayOfWeek(startCal.get(Calendar.DAY_OF_WEEK));
 				// 휴일 여부를 판단
 				if(startCal.get(Calendar.DAY_OF_WEEK) != 1 && startCal.get(Calendar.DAY_OF_WEEK) != 7 && !holidaySet.contains(startCal)) {
 					date.setHolidayOrNot(false);
