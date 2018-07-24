@@ -24,6 +24,8 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<!-- time picker-->		
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+		<!-- month picker-->		
+		<script type="text/javascript" src="/js/jquery/dateControls/monthpicker.js"></script>
 		<style>
 			#attiStatis table td {
 				color : #777;
@@ -206,6 +208,20 @@
 			.dateDiv {
 				text-align: left;
 				padding-left: 10px;
+			}
+			/* month picker */
+			.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-year{ 
+	 			margin: 0 auto; 
+	 		}  
+					
+	 		.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-month { 
+	 		  display: none; 
+	 		} 
+	 		
+			.ui-monthpicker td span {
+			  padding: 5px;
+			  cursor: pointer;
+			  text-align: center;
 			}
 		</style>
 		<script>
@@ -1171,6 +1187,11 @@
 			function popup_close() {
 		    	$.modal.close();
 		    }
+			
+			//month picker
+		    $('.ui-datepicker-trigger').click(function(){
+		    	$('.ui-datepicker-month').css('display','none');
+		    });			
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto; margin-bottom:0px;" marginwidth="0" marginheight="0">
