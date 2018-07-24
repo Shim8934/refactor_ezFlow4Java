@@ -61,10 +61,10 @@ var projectStatus = "${projectStatus}";
 					//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
 				})
 			},
-			beforeShowDay : function (date) {
+			/* beforeShowDay : function (date) {
 				var day = date.getDay();
 				return [(day != 0 && day != 6)];
-			}
+			} */
 		});
 
 		$("#Edatepicker").datepicker({
@@ -80,10 +80,10 @@ var projectStatus = "${projectStatus}";
 					//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
   			})
 			},
-			beforeShowDay : function (date) {
+			/* beforeShowDay : function (date) {
 				var day = date.getDay();
 				return [(day != 0 && day != 6)];
-			}
+			} */
 		});
 		
 		var SDate = new Date(planStartDate);
@@ -174,16 +174,8 @@ function applyList() {
 	var managerNameList = "";
  
 	for (var i = 0; i < managerList.length; i++) {
-		
-		if(headManagerId == managerList[i].userId) {
-			managerNameList += "<b>"
-			managerNameList += managerList[i].userName;
-			managerNameList += "(" + managerList[i].userDeptname + ")</b>, ";
-		} else {
-			managerNameList += managerList[i].userName;
-			managerNameList += "(" + managerList[i].userDeptname + "), ";
-		}
-		
+		managerNameList += managerList[i].userName;
+		managerNameList += "(" + managerList[i].userDeptname + "), ";
 	}
 	 
 	managerNameList = managerNameList.substr(0, managerNameList.length - 2);

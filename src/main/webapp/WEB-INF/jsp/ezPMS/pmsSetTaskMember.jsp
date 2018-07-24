@@ -234,7 +234,7 @@
 	   				
 	   				parent.participantList = managerArray;
 	   				parent.applyParticipantList();
-	   				parent.DivPopUpHidden();
+	   				
 	   			} else {
 		   			if (managerArray.length == 0) {
 		   				alert("<spring:message code='ezPMS.t169' />");
@@ -245,19 +245,20 @@
 		   				managerArray[i].pctinput = $("input[name='"+managerArray[i].userId+"']").val();
 		   			}
 		   			
-		   			selectHeadManager();
+		   			parent.managerList = managerArray;
+		   			parent.headManagerId = managerArray[0].userId;
+		   			parent.applyList();
 	   			}
 	   			
-	   			//opener.selReceiver = JSON.stringify(receiverList);
-	   			//opener.showReceiver();
-	   			//window.close();
+	   			parent.DivPopUpHidden();
+	   			
 	   		}
 	   		
-	   		function selectHeadManager() {
-	   			var feature = GetOpenPosition(150, 150);
+// 	   		function selectHeadManager() {
+// 	   			var feature = GetOpenPosition(150, 150);
 	   		 
-	   			DivPopUpShow(400, 300, "/ezPMS/selectHeadManager.do");
-	   		};
+// 	   			DivPopUpShow(400, 300, "/ezPMS/selectHeadManager.do");
+// 	   		};
 	   		
 	   		function authListInitData(){
 	   			//중복 추가 방지를 위해 기존 managerList와 participantList에 등록된 사람을 authList에 추가해준다.

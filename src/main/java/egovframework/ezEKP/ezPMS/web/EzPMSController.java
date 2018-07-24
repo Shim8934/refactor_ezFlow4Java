@@ -940,6 +940,7 @@ public class EzPMSController {
 		
 		JSONObject result = commonUtil.getJsonFromRestApi("/rest/ezPMS/depts", param, request, "get", null);
 		String status = result.get("status").toString();
+		String type = request.getParameter("type");
 		
 		if (status.equals("ok")) {
 			JSONArray deptList = (JSONArray) result.get("data");
@@ -961,14 +962,22 @@ public class EzPMSController {
 				}
 			}
 			
-			model.addAttribute("type", request.getParameter("type"));
+			model.addAttribute("type", type);
 			model.addAttribute("deptList", deptList);
 			model.addAttribute("userId", userInfo.getId());
 			model.addAttribute("userName", userInfo.getDisplayName1());
 			model.addAttribute("userDept", userInfo.getDeptName1());
 		}		
+		
+		String rtnStr = "";
+		if(type.equals("headManager")){
+			rtnStr = "/ezPMS/pmsSelectAuth2";
+		} else {
+			rtnStr = "/ezPMS/pmsSelectAuth";
+		}
+		
 		LOGGER.debug("ezPMS selectAuth ended");
-		return "/ezPMS/pmsSelectAuth";
+		return rtnStr;
 	}
 	
 	/**

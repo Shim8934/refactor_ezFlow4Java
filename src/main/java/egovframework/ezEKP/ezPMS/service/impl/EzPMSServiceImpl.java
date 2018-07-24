@@ -1143,11 +1143,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				map.put("tenantId", group.getTenantId());
 				
 				ezPMSDAO.updateGroupDate(map);
+			} else {
+				//그룹 멤버 삭제 후 추가
+				deleteGroupMember(group.getProjectId(), group.getGroupId(), group.getTenantId());
+				addGroupMember(group.getGroupMember());
 			}
 			
-			//그룹 멤버 삭제 후 추가
-			deleteGroupMember(group.getProjectId(), group.getGroupId(), group.getTenantId());
-			addGroupMember(group.getGroupMember());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
