@@ -1799,10 +1799,10 @@ public class EzPMSGWController {
 			if (roleCheck.equals("permitted")) {
 				// 순서 변경된 taskId의 groupId변경 (groupId가 -1이면 변경 X)
 				long toGroupId = Long.parseLong(request.getParameter("toGroupId"));
-				long fromGroupId = Long.parseLong(request.getParameter("fromGroupId"));
-
-				if (toGroupId != -1) {
-					long targetTaskId = Long.parseLong(request.getParameter("targetTaskId"));
+				long targetTaskId = Long.parseLong(request.getParameter("targetTaskId"));
+				
+				if (toGroupId != -1 && targetTaskId != -1) {
+					long fromGroupId = Long.parseLong(request.getParameter("fromGroupId"));
 					int treeDepth = Integer.parseInt(request.getParameter("treeDepth"));
 					ezPMSService.updateTaskGroupId(projectId, targetTaskId, toGroupId, fromGroupId, tenantId,
 							treeDepth, lang);

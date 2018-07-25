@@ -1124,13 +1124,14 @@
 		   		document.getElementById("pmsGanttDelGroup").onclick = delGroup;
 
 		   		$(".gdfTable tbody").sortable({
-		   			items : 'tr:not(.isParent)',
+		   			items : 'tr:not(.project)',
 		   			activate : function(event, ui) {
 		   				preTaskIndex = $("#" + ui.item[0].id).find(".taskRowIndex").text();
 		   				selectedPreTask = ui.item[0].id;
 		   			},
 		   			update : function(event, ui) {
 		   				var upperTaskId = $("#" + ui.item[0].id).prev("tr").attr("taskId");
+		   				// var upperTaskLevel = $("#" + ui.item[0].id).prev("tr").attr("level");
 		   				var groupId = -1;
 		   				
 		   				if (upperTaskId.indexOf("_t") != -1) {
@@ -1142,9 +1143,13 @@
 						var selectedTaskId = ui.item[0].id.substring(ui.item[0].id.lastIndexOf("_"));
 						var selectedGroupId = ui.item[0].id.substring(4, ui.item[0].id.lastIndexOf("_"));
 						
-						var targetTaskId = ui.item[0].id.match(/t(\d+)/)[1];
+						var targetTaskId = -1;
 						var toGroupId = -1;
-
+						
+						if(ui.item[0].id.indexOf("_t") != -1) {
+							targetTaskId = ui.item[0].id.match(/t(\d+)/)[1];
+						} 
+						
 						if (groupId != selectedGroupId) {
 							if (groupId.indexOf("_g") != -1) {
 								toGroupId = groupId.match(/g(\d+)/)[1];
@@ -1153,12 +1158,21 @@
 							}
 						}
 		   				
-						$("#" + ui.item[0].id).attr("taskid", "" + groupId + selectedTaskId);
-						$("#" + ui.item[0].id).attr("id", "tid_" + groupId + selectedTaskId);
+						/* if(ui.item[0].id.indexOf("_t") != -1) {
+							$("#" + ui.item[0].id).attr("taskid", "" + groupId + selectedTaskId);
+							$("#" + ui.item[0].id).attr("id", "tid_" + groupId + selectedTaskId);
+							$("#" + ui.item[0].id).attr("level", upperTaskLevel + 1);
+						} else {
+							$("#" + ui.item[0].id).attr("level", upperTaskLevel + 1);
+						}  */
+						
+						console.log("targetTaskId : " + targetTaskId);
+						console.log("toGroupId : " + toGroupId);
+						console.log("selectedGroupId : " + selectedGroupId);
 						
 		   				var isPermitted = changeGanttOrder(targetTaskId, toGroupId, selectedGroupId);
 		   				
-		   				if (isPermitted == "false") {
+		   				/* if (isPermitted == "false") {
 		   					$(this).sortable("cancel");
 		   					
 			   				var revertUpperTaskId = $("#" + ui.item[0].id).prev("tr").attr("taskId");
@@ -1174,7 +1188,7 @@
 							$("#" + ui.item[0].id).attr("id", "tid_" + revertGroupId + selectedTaskId);
 		   				} else {
 			   				ge.taskIsChanged();
-		   				}
+		   				} */
 		   			}
 		   		}).disableSelection();
 		   		
@@ -1230,7 +1244,7 @@
 	   			if (toGroupId != -1) {
 		   			var groupMember = $("#tid_p" + projectId + "_g" + toGroupId).find(".taskAssigs").attr("title");
 // 		   			var targetGroupId = $(".taskEditRow[taskid$='t" + targetTaskId + "']").attr("taskid");
-		   			fromGroupId = fromGroupId.match(/g(\d+)/) ? fromGroupId.match(/g(\d+)/)[1] : projectGroupId;
+		   			fromGroupId = fromGroupId.match(/g(\d+)/) != null ? fromGroupId.match(/g(\d+)/)[1] : projectGroupId;
 		   			var groupTreeDepth = $("#tid_p" + projectId + "_g" + toGroupId).attr("level");
 		   			
 		   			if (fromGroupId.indexOf(toGroupId) != -1) {

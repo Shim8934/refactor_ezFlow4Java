@@ -264,7 +264,7 @@ window.onload = function() {
 }
 
 #calendar {
-	width : 84%;
+	max-width : 84%;
 	display : inline-block;
 	height : 100%;
 	overflow-x : scroll;
