@@ -13,6 +13,13 @@
 <script type="text/javascript" src="/js/dist/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 		<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
+<!-- time picker-->
+<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
+<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 <title><spring:message code='ezPMS.t290' /></title>
 <script type="text/javascript">
 var memberList = '${memberList}';
@@ -22,35 +29,71 @@ var planEndDate = '${planEndDate}';
 var dateList = JSON.parse('${dateList}');
 
 $(function() {
-	setDateList();
+	getDatePicker();
+	setMemberScheduleList();
 });
 
-function setDateList() {
+function setMemberScheduleList() {
 	var dayOfWeeks = "<spring:message code='ezPMS.t244'/>".split(";");
+	var filteredDateList = [];
+	var sDate = $("#Sdatepicker").val() != "" ? $("#Sdatepicker").val() : planStartDate;
+	var eDate = $("#Edatepicker").val() != "" ? $("#Edatepicker").val() : planEndDate;
+	
+	$("#dateListHeader1").empty();
+	$("#dateListHeader2").empty();
+	$(".dateList").empty();
+	$("#memberCNT").empty();
 	
 	for(var i = 0; i < dateList.length; i++) {
-		var dayOfMonth = dateList[i].date.charAt(8) == '0' ? dateList[i].date.substring(9) : dateList[i].date.substring(8);
 		
-		if(dateList[i].holidayOrNot == true) {
-			$("#dateListHeader").append('<th style="background-color: rgba(236, 195, 176, 0.40); width: 800px;">' + dayOfMonth + '(' + dayOfWeeks[dateList[i].dayOfWeek - 1] + ')</th>');
-			$(".dateList").append('<td date="' + dateList[i].date + '" style="text-align:center; background-color: #FFFAF2;">&nbsp;</td>');
-		} else {
-			$("#dateListHeader").append('<th style="width: 800px;">' + dayOfMonth + '(' + dayOfWeeks[dateList[i].dayOfWeek - 1] + ')</th>');
-			$(".dateList").append('<td date="' + dateList[i].date + '" style="text-align:center;">&nbsp;</td>');
-		}	
+		if(Date.parse(dateList[i].date) >= Date.parse(sDate)) {
+			
+			do {
+				if(dateList[i] == null) break;
+				
+				filteredDateList.push(dateList[i]);
+			} while(Date.parse(dateList[i++].date) < Date.parse(eDate));
+			
+			break;
+		}
 	}
+	
+	var tmp = filteredDateList[0].date.substring(0, 7);
+	var monthCount = 0;
+	
+	for(var i = 0; i < filteredDateList.length; i++) {
+		var yearMonth  = filteredDateList[i].date.substring(0, 7);
+		var dayOfMonth = filteredDateList[i].date.charAt(8) == '0' ? filteredDateList[i].date.substring(9) : filteredDateList[i].date.substring(8);
+		
+		if(yearMonth == tmp) {
+			monthCount++;
+		} else {
+			$("#dateListHeader1").append('<th style="paddding: 2px 4px; height: 20px;" colspan=' + monthCount + '>' + tmp + '</th>');
+			monthCount = 1;
+		}
+		
+		if(filteredDateList[i].holidayOrNot == true) {
+			$("#dateListHeader2").append('<th date"' + filteredDateList[i].date + '" style="text-align:center; background-color: rgba(236, 195, 176, 0.40); padding: 2px 2px; height: 20px; width: 25px;">' + dayOfMonth + '</th>');
+			$(".dateList").append('<td date="' + filteredDateList[i].date + '" style="text-align:center; background-color: #FFFAF2;">&nbsp;</td>');
+		} else {
+			$("#dateListHeader2").append('<th date"' + filteredDateList[i].date + '" style="text-align:center; padding: 2px 2px; height: 20px; width: 25px;">' + dayOfMonth + '</th>');
+			$(".dateList").append('<td date="' + filteredDateList[i].date + '" style="text-align:center;">&nbsp;</td>');
+		}
+		
+		tmp = yearMonth;
+	}
+	
+	$("#dateListHeader1").append('<th style="paddding: 2px 4px; height: 20px;" colspan=' + monthCount + '>' + tmp + '</th>');
 	
 	// 멤버 스케쥴을 테이블에 반영
 	setMemberSchedule();
-	
-	$("#workSchedule").append("<tr id='memberCNT'></tr>")
-	
+		
 	// 일자별 업무 할당 인원 수 반영
-	for(var i = 0; i < dateList.length; i++) {
-		var memberCNT = $(".dateList").find("td[date='" + dateList[i].date + "']").find(".circle").length;
+	for(var i = 0; i < filteredDateList.length; i++) {
+		var memberCNT = $(".dateList").find("td[date='" + filteredDateList[i].date + "']").find(".circle").length;
 		memberCNT = memberCNT == 0 ? "" : memberCNT;
 		
-		if(dateList[i].holidayOrNot == true) {
+		if(filteredDateList[i].holidayOrNot == true) {
 			$("#memberCNT").append('<td style="text-align:center; background-color: #FFFAF2;">' + memberCNT + '</td>');
 		} else {
 			$("#memberCNT").append('<td style="text-align:center;">' + memberCNT + '</td>');
@@ -100,6 +143,80 @@ function getTaskNameList(elem) {
 	
 }
 
+function getDatePicker() {
+	$("#Sdatepicker").datepicker({
+		changeMonth: true,
+		changeYear: true,
+		autoSize: true,
+		showOn: "both",
+		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		buttonImageOnly: true,
+		beforeShow: function (input) {
+			var i_offset = $(input).offset();
+			setTimeout(function () {
+				//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+			})
+		}
+	});
+
+	$("#Edatepicker").datepicker({
+		changeMonth: true,
+		changeYear: true,
+		autoSize: true,
+		showOn: "both",
+		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		buttonImageOnly: true,
+		beforeShow: function (input) {
+			var i_offset = $(input).offset();
+			setTimeout(function () {
+				//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+			})
+		}
+	});
+	
+	var SDate = new Date();
+	var EDate = new Date();
+
+	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	$("#Sdatepicker").datepicker('setDate', "");
+	
+	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	$("#Edatepicker").datepicker('setDate', "");
+	
+	$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+			closeText: "<spring:message code='main.t3' />",
+			prevText: "<spring:message code='main.t0604' />",
+			nextText: "<spring:message code='main.t0605' />",
+			currentText: "<spring:message code='main.t0606' />",
+			monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+			             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+			             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+			             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+			monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+			                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+			                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+			                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+			dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+			           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+			           "<spring:message code='main.t0627' />"],
+			dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+			                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+			                "<spring:message code='main.t0627' />"],
+			dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+			              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+			              "<spring:message code='main.t0627' />"],
+			weekHeader: "Wk",
+			dateFormat: "yy-mm-dd",
+			firstDay: 0,
+			isRTL: false,
+			duration: 200,
+			showAnim: "show",
+			showMonthAfterYear: true
+	  };
+	  
+	  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+}
+
 window.onload = function() {
 	//툴팁 위치 지정
 	var positionTooltip = function(event) {
@@ -145,6 +262,7 @@ window.onload = function() {
 	width : 84%;
 	display : inline-block;
 	height : 100%;
+	overflow-x : scroll;
 }
 
 #mainmenu {
@@ -184,6 +302,11 @@ window.onload = function() {
 </style>
 </head>
 <body>
+<div>
+	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+	<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a>
+	<a class="imgbtn" onclick="setMemberScheduleList()" style="margin-left:3px;"><span><spring:message code='ezPMS.t1' /></span></a>
+</div>
 <div id="close" style="float:right">
 	<ul>
 		<li>
@@ -195,7 +318,7 @@ window.onload = function() {
 <div>
 	<div>
 	<table id="memberList" class="content">
-	<tr>
+	<tr style="height: 50px;">
 		<th><spring:message code='ezPMS.t137' /> <spring:message code='ezPMS.t63' /></th>
 		<th><spring:message code='ezPMS.t115' /></th>
 	</tr>
@@ -206,13 +329,14 @@ window.onload = function() {
 	</tr>
 	</c:forEach>
 	<tr>
-		<td colspan="2">일자 별 업무 할당 인원 수</td>
+		<td colspan="2"><spring:message code='ezPMS.t336'/></td>
 	</tr>
 	</table>
 	</div>
 	<div id="calendar">
 	<table id="workSchedule" class="content">
-	<tr id="dateListHeader">
+	<tr id="dateListHeader1" height="25px"></tr>
+	<tr id="dateListHeader2" height="25px">
 	<%-- <c:forEach items="${dateList }" var="dateVO">
 		<c:choose>
 			<c:when test="${dateVO.holidayOrNot eq true}">
@@ -239,6 +363,7 @@ window.onload = function() {
 	</c:forEach> --%>
 	</tr>
 	</c:forEach>
+	<tr id='memberCNT'></tr>
 	</table>
 	</div>
 </div>

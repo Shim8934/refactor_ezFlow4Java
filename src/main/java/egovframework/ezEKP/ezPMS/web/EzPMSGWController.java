@@ -1877,7 +1877,6 @@ public class EzPMSGWController {
 			Calendar endCal = Calendar.getInstance();
 
 			startCal.setTime(startDate);
-			startCal.set(Calendar.DATE, 1);
 			endCal.setTime(endDate);
 			
 			// 공휴일 리스트를 가져와서 Calendar클래스로 변환
@@ -1886,7 +1885,7 @@ public class EzPMSGWController {
 			
 			holidayList.forEach(holiday -> {
 				try {
-					Calendar cal = new GregorianCalendar();
+					Calendar cal = GregorianCalendar.getInstance();
 					cal.setTime(dateFormat.parse(holiday));
 					holidaySet.add(cal);
 				} catch (Exception e) {
