@@ -1697,6 +1697,13 @@
 	   		        document.getElementById("iFrameLayer").src = "/blank.htm";
 	   		    } catch (e) {}
 	   		}
+	   		
+	   		//엑셀 저장
+	   		function exportExcel() {
+		    	exportExcelframe.location.href = "/ezPMS/exportGanttExcel.do?projectId=" + projectId;
+		    	exportExcelframe.target = "_blank";
+			}
+	   		
 		</script>
 		<style>
 		/* 		  달력 깨지지 않게 하기위함. */
@@ -1803,6 +1810,7 @@
 		        <li id="pmsGanttRowDelBtn" class="pmsGanttMenuLi" style="display:none;"><span><spring:message code='ezPMS.t287' /></span></li>
 		        <li id="pmsGanttDelGroup" class="pmsGanttMenuLi" style="display:none;"><span><spring:message code='ezPMS.t288' /></span></li>
 		        <li><span onclick="getMemberSchedule()"><spring:message code='ezPMS.t290' /></span></li>
+		        <li onclick="exportExcel()"><span><spring:message code='ezPMS.t349' /></span></li>
 		        <div style="float:right">
 		        <li id="pmsGanttViewBtn" class="pmsGanttZoomBtn">
 					<select>
@@ -2570,5 +2578,6 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>
 	</body>
 </html>
