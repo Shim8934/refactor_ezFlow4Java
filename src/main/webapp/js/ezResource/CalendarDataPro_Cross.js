@@ -1697,10 +1697,11 @@ function showTooltip_MouseOver(nextTo, e, pTime, pSubject, pApproveFlag) {
     //예약자
     var sTr = document.createElement("TR");
     var sTd = document.createElement("TD");
+    sTd.style.height = '16px';
     var sSpan = document.createElement("SPAN");
     //sSpan.className = "width_16";
     sTd.appendChild(sSpan);
-    sTd.innerHTML += "[" + strLang571 + "]<br />" + GetAttribute(nextTo,"titletext");
+    sTd.innerHTML += "<span>[" + strLang571 + "]</span><br /><span style='margin-top:2px;display:block;'>" + GetAttribute(nextTo,"titletext") + "</span>";
     sTr.appendChild(sTd);
     sTable.appendChild(sTr);
     tTd.appendChild(sTable);

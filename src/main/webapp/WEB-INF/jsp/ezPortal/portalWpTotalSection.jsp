@@ -174,12 +174,10 @@
 				             <div id="timeinput" style=" margin-left:10px ;width:104px; height:25px; border:0px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px;"></div>             
 	       			</c:when>
 	       			<c:otherwise>
-		    			<div id="clock" class="light">
-							<div class="display">
-								<p id="todayTime" class="title" style="margin-left:0px"></p>
-								<div class="digits" style="padding-top:7px;padding-left:5px;height:52px;"></div>
-							</div>
-						</div>
+						<div id="timeinput" style="font-weight:bold; color: black; text-align:center; width:122px;">
+							<p id="todayTime" class="title" style="margin-left:0px"></p>
+			            	<div id="timeFlow" style='margin:13px 0 15px 0; font-size:28px; letter-spacing:1px; font-family:Arial, Helvetica, sans-serif;'><p></p></div>
+			            </div>
 		    			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:122px">
 <%-- 		    				<p id="inAttiClock" style="margin-top:2px;margin-left:11px;font-size:12px;text-align: left; padding-left:20px"><spring:message code='ezAttitude.t64'/> : <spring:message code='ezAttitude.t71'/></p> --%>
 <%-- 							<p id="outAttiClock" style="margin-top:5px;margin-left:11px;margin-bottom:16px;font-size:12px;text-align: left; padding-left:20px"><spring:message code='ezAttitude.t65'/> : <spring:message code='ezAttitude.t72'/></p> --%>
@@ -294,8 +292,6 @@
 			var overTime = "";
 			var isUseAttMenuItem = "${isUseAttMenuItem}";
 			
-		 	//$("#todayTime").html(year + "년 " + mon + "월 " + day + "일");
-
 		    function window_onload_total() {
 			    if (navigator.userAgent.indexOf('Firefox') != -1) {
 			        document.body.style.MozUserSelect = 'none';
@@ -311,6 +307,8 @@
 				    draw_clock();
 				    yourClock();
 			    } else {
+			    	parseDate();
+			    	attiClock();
 					setAttiBtnHover();
 					getAttitudeList();
 					getHolidayList();
@@ -1153,95 +1151,43 @@
 		    	})
 		    }
 		    
-		    $(function(){
-		    	parseDate();
-		    	
-		    	var clock = $('#clock');
-		    	
-		    	var digit_to_name = 'zero one two three four five six seven eight nine'.split(' ');
-
-		    	// This object will hold the digit elements
-		    	var digits = {};
-
-		    	// Positions for the hours, minutes, and seconds
-		    	//'h1', 'h2', ':', 'm1', 'm2', ':', 's1', 's2'
-		    	var positions = [
-		    		'h1', 'h2', ':', 'm1', 'm2'
-		    	];
-
-		    	// Generate the digits with the needed markup,
-		    	// and add them to the clock
-
-		    	var digit_holder = clock.find('.digits');
-
-		    	$.each(positions, function(){
-
-		    		if(this == ':'){
-		    			digit_holder.append('<div class="dots">');
-		    		}
-		    		else{
-
-		    			var pos = $('<div>');
-
-		    			for(var i=1; i<8; i++){
-		    				pos.append('<span class="d' + i + '">');
-		    			}
-
-		    			// Set the digits as key:value pairs in the digits object
-		    			digits[this] = pos;
-
-		    			// Add the digit elements to the page
-		    			digit_holder.append(pos);
-		    		}
-
-		    	});
-
-		    	(function update_time(){
-		    		var now = format();
-
-		    		digits.h1.attr('class', digit_to_name[now[0]]);
-		    		digits.h2.attr('class', digit_to_name[now[1]]);
-		    		digits.m1.attr('class', digit_to_name[now[2]]);
-		    		digits.m2.attr('class', digit_to_name[now[3]]);
-
-		    		// Mark the active day of the week
-		    		setTimeout(update_time, 1000);
-
-		    	})();
-
-		    	function format(type){
-			        nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
-			        
-			        var s =
-			        	leadingZeros(nowAttiTime.getHours(), 2)+
-			            leadingZeros(nowAttiTime.getMinutes(), 2)+
-			            leadingZeros(nowAttiTime.getSeconds(), 2);
-			        return s;
-		    	}    	
-		    	
-		    	function parseDate() {
-		    		var _strDate = "";
-		    		nowAttiTime = new Date(serverTime);
-		    		
-		    		if (nowAttiTime.toString() == 'Invalid Date') {
-		    		    var _parts = serverTime.split(' ');
-		    		
-		    		    var _dateParts = _parts[0];
-		    		    nowAttiTime = new Date(_dateParts);
-		    		
-		    		    if (_parts.length > 1) {
-		    		        var _timeParts = _parts[1].split(':');
-		    		        nowAttiTime.setHours(_timeParts[0]);
-		    		        nowAttiTime.setMinutes(_timeParts[1]);
-		    		        if (_timeParts.length > 2) {
-		    		        	nowAttiTime.setSeconds(_timeParts[2]);
-		    		        }
-		    		    }
-		    		}
-		    	}
-		    	
-		    	$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
-		    });
+		    function parseDate() {
+	    		var _strDate = "";
+	    		nowAttiTime = new Date(serverTime);
+	    		
+	    		if (nowAttiTime.toString() == 'Invalid Date') {
+	    		    var _parts = serverTime.split(' ');
+	    		
+	    		    var _dateParts = _parts[0];
+	    		    nowAttiTime = new Date(_dateParts);
+	    		
+	    		    if (_parts.length > 1) {
+	    		        var _timeParts = _parts[1].split(':');
+	    		        nowAttiTime.setHours(_timeParts[0]);
+	    		        nowAttiTime.setMinutes(_timeParts[1]);
+	    		        if (_timeParts.length > 2) {
+	    		        	nowAttiTime.setSeconds(_timeParts[2]);
+	    		        }
+	    		    }
+	    		}
+	    		
+	    		$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
+	    	}
+		    
+		    function attiClock() {
+		        var h, m;
+		        var s;
+		        var time = " ";
+		        
+		        nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
+		        time = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2) + ':' + leadingZeros(nowAttiTime.getSeconds(), 2);
+		        document.getElementById("timeFlow").innerHTML = time;
+		        if (time == "00:00:00") {
+		        	$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
+		        }
+		        gizmo = setTimeout("attiClock()", 1000);
+		        
+		    }
 		    
 		    window_onload_total();
 		</script>
