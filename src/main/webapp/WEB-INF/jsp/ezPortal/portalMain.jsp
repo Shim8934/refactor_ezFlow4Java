@@ -29,10 +29,11 @@
 			#open-memo { width:50px; height:50px; position: absolute; z-index: 1000; border: solid 1px black;cursor: pointer; background-color: gray; text-align: center;}
 			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: gray;}
 			.individual-memo { width:200px; height:200px; background:white; text-align:center; border:1px solid black; cursor: pointer;}
-			#selected-memo { position:absolute; background:white; z-index:9001; top:48px; left:36px;}
+			#selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;}
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
 			#maskDiv { position:absolute; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);}
-
+			.selected-memoWrapper {display:table-cell;vertical-align:middle;}
+			#memo-btn{text-align:right;margin:0 auto;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -138,6 +139,9 @@
 		    function newMemo() {
 		        $("#maskDiv").css("display", "");
 		        $("#selected-memo").css("display", "");
+		        var textareaW = $(textarea).css("width");
+		        
+		        $("#memo-btn").css("width", textareaW);
 		    }
 		    
 		    function save() {
@@ -183,9 +187,9 @@
 				<div style="text-align: center">
 					
 					<div style="text-align: right">
-						<button id="change-mode">모드변경</button>
+						<button id="change-mode">모드</button>
 						<button id="new-memo" onclick="newMemo()">추가</button>
-						<button id="close-button">닫기 X</button>
+						<button id="close-button">닫기</button>
 					</div>
 					
 					<div>메모 레이어 팝업</div>
@@ -197,13 +201,11 @@
 				
 				<!-- 하나 클릭 -->
 				<div id="selected-memo" style="display: none">
-				
-					<div id="memo-btn" style="text-align: right">
-						<button onclick="save()">저장</button> 
-						<button onclick="closeMemo()">닫기 X</button>
-					</div>
-					<br>
-					<div>
+					<div class="selected-memoWrapper">
+						<div id="memo-btn">
+							<button onclick="save()">저장</button> 
+							<button onclick="closeMemo()">닫기</button>
+						</div>
 						<textarea id="textarea" cols="50" rows="28"></textarea>
 					</div>
 				</div>
