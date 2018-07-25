@@ -63,8 +63,11 @@ function setFolderName() {
 		},
 		dataType: "text",
 		success: function(data) {
-			if (mode == "modify" && mode == "rejected") {
+			if (mode == "modify" && data == "rejected") {
 				alert("<spring:message code='ezPMS.t343'/>");
+				popupClose();
+			} else if (mode == "new" && data == "rejected") {
+				alert("<spring:message code='ezPMS.t348'/>");
 				popupClose();
 			} else {
 				parent.folderId = 0;

@@ -40,6 +40,7 @@
 	var orderHow = "";
 	var limit = 15;
 	var folderId = 0;
+	var userRole = "${userRole}";
 	
 	//검색을 위한 variables
 	var searchByUser = "";
@@ -54,7 +55,13 @@
 		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		
 		viewSetting();
-		$("#taskTreeArea").css("height", CurrentHeight - 60 + "px");
+		
+		if (userRole == 1) {
+			$("#taskTreeArea").css("height", CurrentHeight - 60 + "px");
+		} else {
+			$("#taskTreeArea").css("height", CurrentHeight + "px");
+			$("#folderSettingArea").css("display", "none");
+		}
 		
 		treeData = ${data};
 		treeData = JSON.parse(JSON.stringify(treeData));
@@ -122,7 +129,14 @@
 			success : function(contentList) {
 				$("#contentList").html(contentList);
 				viewSetting();
-				$("#taskTreeArea").css("height", CurrentHeight - 60 + "px");
+				
+				if (userRole == 1) {
+					$("#taskTreeArea").css("height", CurrentHeight - 60 + "px");
+				} else {
+					$("#taskTreeArea").css("height", CurrentHeight + "px");
+					$("#folderSettingArea").css("display", "none");
+				}
+				
 				setInitOrder();
 			}	
 		});
