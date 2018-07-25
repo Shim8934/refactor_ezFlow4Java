@@ -88,7 +88,7 @@
 			    gManageID = Para[3];
 			    companyID = Para[7];
 			    
-			    if (Para[3] != "ALL") {
+			    if (Para[3] != "ALL" && Para[3] != "none") {
 			    	document.getElementById("rdGroup").checked = true;
 			        rdGroup_onclick();
 			        document.getElementById("tbManage").value = Para[6];
