@@ -1131,7 +1131,7 @@
 		   			},
 		   			update : function(event, ui) {
 		   				var upperTaskId = $("#" + ui.item[0].id).prev("tr").attr("taskId");
-		   				// var upperTaskLevel = $("#" + ui.item[0].id).prev("tr").attr("level");
+		   				var upperTaskLevel = $("#" + ui.item[0].id).prev("tr").attr("level");
 		   				var groupId = -1;
 		   				
 		   				if (upperTaskId.indexOf("_t") != -1) {
@@ -1158,21 +1158,21 @@
 							}
 						}
 		   				
-						/* if(ui.item[0].id.indexOf("_t") != -1) {
+						if(ui.item[0].id.indexOf("_t") != -1) {
 							$("#" + ui.item[0].id).attr("taskid", "" + groupId + selectedTaskId);
 							$("#" + ui.item[0].id).attr("id", "tid_" + groupId + selectedTaskId);
 							$("#" + ui.item[0].id).attr("level", upperTaskLevel + 1);
 						} else {
 							$("#" + ui.item[0].id).attr("level", upperTaskLevel + 1);
-						}  */
+						}
 						
-						console.log("targetTaskId : " + targetTaskId);
-						console.log("toGroupId : " + toGroupId);
-						console.log("selectedGroupId : " + selectedGroupId);
+						// console.log("targetTaskId : " + targetTaskId);
+						// console.log("toGroupId : " + toGroupId);
+						// console.log("selectedGroupId : " + selectedGroupId);
 						
 		   				var isPermitted = changeGanttOrder(targetTaskId, toGroupId, selectedGroupId);
 		   				
-		   				/* if (isPermitted == "false") {
+		   				if (isPermitted == "false") {
 		   					$(this).sortable("cancel");
 		   					
 			   				var revertUpperTaskId = $("#" + ui.item[0].id).prev("tr").attr("taskId");
@@ -1188,7 +1188,7 @@
 							$("#" + ui.item[0].id).attr("id", "tid_" + revertGroupId + selectedTaskId);
 		   				} else {
 			   				ge.taskIsChanged();
-		   				} */
+		   				}
 		   			}
 		   		}).disableSelection();
 		   		
@@ -1211,11 +1211,11 @@
 	   				if (index != 0) {
 	   					$(".taskEditRow[id^='" + element.id + "_t']").each(function(idx, elem) {
 	   						if ($("#" + elem.id).find("input[name='depends']").val() == preTaskIndex) {
-	   							var newPreTask = $("#" + selectedPreTask).index() + 1;
-	   							
+	   							var newPreTask = $("#" + selectedPreTask).index() + 1;		
 	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : newPreTask});
 	   						} else {
 	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : -1});
+	   							console.log('index : ' + index + ', idx : ' + idx + ', id : ' + elem.id);
 	   						}
 		   				});
 	   				} else if (index == 0) {

@@ -44,18 +44,13 @@ function setMemberScheduleList() {
 	$(".dateList").empty();
 	$("#memberCNT").empty();
 	
+	var sDateParsed = Date.parse(sDate);
+	var eDateParsed = Date.parse(eDate);
 	// 사용자가 설정한 기간으로 dateList를 필터링
 	for(var i = 0; i < dateList.length; i++) {
 		
-		if(Date.parse(dateList[i].date) >= Date.parse(sDate)) {
-			
-			do {
-				if(dateList[i] == null) break;
-				
-				filteredDateList.push(dateList[i]);
-			} while(Date.parse(dateList[i++].date) < Date.parse(eDate));
-			
-			break;
+		if(Date.parse(dateList[i].date) >= sDateParsed && Date.parse(dateList[i].date) <= eDateParsed) {
+			filteredDateList.push(dateList[i]);
 		}
 	}
 	
