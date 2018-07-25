@@ -26,7 +26,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/html2canvas.js"></script>
-		
+		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var pWriterDeptID;
 		    var pDocID = '${docID}';
@@ -90,6 +90,7 @@
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    var pCompanyID = "${userInfo.companyID}";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "", pLimitRange = "", pPageNum = "1";
 		    var cabinetID = "";
 		    var TaskCode = "";
@@ -120,6 +121,8 @@
 		    var curDocNum = "";
 		    var isReceived = "${isReceived}";
 		    var ext = "mht";
+		    var nonElecRec = "${isNonElecRec}";
+		    var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -133,6 +136,10 @@
 				if (isReceived != 0) {
 					alert("<spring:message code='ezApprovalG.pjg04'/>");
 					window.close();
+				}
+				
+				if (nonElecRec == "Y") {
+					document.getElementById("btnAddSepAttach").style.display = "none";
 				}
 			});
 		    
@@ -306,6 +313,11 @@
 		            IsSkipDrafter = "FALSE";
 		            SetBtnStateTrue();
 		            getReceiveDocInfo();
+		            
+		            if (nonElecRec == "Y") {
+			            getNonElecInfoSusinInit();
+		            }
+		            
 		            if (pSusinDocURL != "") {
 		                message.Set_EditorContentURL(pSusinDocURL);
 		            }
@@ -429,9 +441,13 @@
 		    }
 		
 		    function TaskCode_Check() {
-		        if (cabinetID == "")
-		            btnSetTaskCode_onclick();
-		        else {
+		        if (cabinetID == "") {
+		        	if (!nonElecRec == "Y") {
+			            btnSetTaskCode_onclick();
+		        	} else {
+			            TaskCode_Save();
+		        	}
+		        } else {
 		            TaskCode_Save();
 		        }
 		    }
@@ -1275,6 +1291,19 @@
 		        parameter[38] = tempSecurityDate;
 		        parameter[39] = SummaryFlag;
 		        parameter[45] = pPublicityYN;
+		        parameter[46] = nonElecRec;
+		        
+		        if (nonElecRec == "Y") {
+		        	if (pGubun == "11") {
+			        	parameter[47] = cabinetID;
+		        	} else {
+			        	parameter[47] = "nonElecRecTempCabinet";
+		        	}
+			        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
+			        parameter[49] = nonSepAttachLVXml; // 분첨
+			        parameter[50] = g_szSCListXml; // 특수목록
+			        parameter[51] = sepAttachCheckYN; // 특수목록
+		        }
 		        
 		        if (approvalFlag == "S") {
 		            parameter[19] = "ING";
@@ -1374,7 +1403,17 @@
 			                
 			                /*2018-04-05 김은석 수정 건설공사 공개여부*/
 // 			                setPublicFlag();
-			                setPublicFlag2();
+			                if (isIE()){
+				                setPublicFlag2();
+			                }
+			                
+			                if (nonElecRec == "Y") {
+				            	nonElecRecInfoXml = ret[23];
+				            	nonSepAttachLVXml = ret[24];
+				            	g_szSCListXml = ret[25];
+				            	sepAttachCheckYN = ret[26];
+				            	setNonElecRecInfo(nonElecRecInfoXml);
+				            }
 		                } else {
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];

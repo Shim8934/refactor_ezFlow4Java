@@ -346,7 +346,7 @@
                 if (CrossYN())
                     //window.resizeTo(1030, 710);
 
-                trDeliveryNo.style.display = "";
+                //trDeliveryNo.style.display = ""; //2018-07-19 천성준 - 문서과배부번호 안보이게 주석처리
                 trOriginSN.style.display = "";
                 trAprMemberTitle.style.display = "none";
             }
@@ -354,7 +354,7 @@
                 if (CrossYN())
                     //window.resizeTo(1030, 750);
 
-                trDeliveryNo.style.display = "";
+                //trDeliveryNo.style.display = ""; //2018-07-19 천성준 - 문서과배부번호 안보이게 주석처리
                 trOriginSN.style.display = "";
                 trAprMemberTitle.style.display = "";
             }

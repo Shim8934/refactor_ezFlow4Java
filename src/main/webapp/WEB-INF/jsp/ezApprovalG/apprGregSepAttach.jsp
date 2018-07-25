@@ -32,6 +32,7 @@
 		    var UserLang = "${userInfo.lang}";
 		    var RetValue;
 		    var ReturnFunction;
+		    var nonElecRec = "";
 		    window.onload = function () {
 		        try {
 		            RetValue = parent.regsepattach_cross_dialogArguments[0];
@@ -51,6 +52,7 @@
 		            g_CabinetID = RetValue[2];
 		            g_SepAttachXml = RetValue[3];
 		            g_OrgCabinetID = RetValue[4];
+		            nonElecRec = RetValue[5];
 		        }
 		        InitCode();
 		        if (g_SepAttachXml != "") { // 즉, [변경] 버튼을 선택한 경우
@@ -66,7 +68,14 @@
 		            	InitOrgCabinetInfo(GetCabinetClassInfo(g_OrgCabinetID));
 		            }
 		        }
-		        InitRegisterType(); // '분리첨부 정보입력' 부분 설정
+		        if (nonElecRec != "Y") {
+			        InitRegisterType(); // '분리첨부 정보입력' 부분 설정
+		        } else {
+		        	document.getElementById("CabinetInfoView").style.display = "none";
+		        	document.getElementById("selRegisterType").selectedIndex = 1; // 일반문서 접수로 고정
+		            document.getElementById("selRegisterType").disabled = "disabled"; // 변경불가능
+		        	selRegisterType_onchange();
+		        }
 		        rtnVal[0] = "FALSE";
 		    };
 		    /**
@@ -277,11 +286,13 @@
 		            alert("<spring:message code='ezApprovalG.t1080'/>");
 		            return "";
 		        }
-		
-		        if (g_CabinetID == "") {
-		            alert("<spring:message code='ezApprovalG.t1081'/>");
-		            return;
-		        }
+		        
+				if (nonElecRec != "Y") {
+			        if (g_CabinetID == "") {
+			            alert("<spring:message code='ezApprovalG.t1081'/>");
+			            return;
+			        }
+				}
 		
 		        if (g_VisualAudioFlag == "1") {
 		            if (txtSummary.value == "") {
@@ -365,6 +376,10 @@
 		            g_RecTypeCode = "4";
 		        else if (g_RegType == "7" || g_RegType == "8")
 		            g_RecTypeCode = "5";
+		        
+		        if (nonElecRec == "Y") {
+		        	document.getElementById("selRegisterType").selectedIndex = SelectSingleNodeValueNew(InfoXml, "PARAMETERS/REGTYPE") - 1;
+		        }
 		    }
 		    /**
 		    * [분리첨부] -> [추가] -> [확인]
@@ -407,7 +422,12 @@
 		        else {
 		            createNodeAndInsertText(xmlpara, objNode, "AVTYPEDESC", "");
 		        }
-		        createNodeAndInsertText(xmlpara, objNode, "CABINETNAME", tdCabinetName.innerHTML);
+		        
+		        if (nonElecRec == "Y") {
+			        createNodeAndInsertText(xmlpara, objNode, "CABINETNAME", "");
+		        } else {
+			        createNodeAndInsertText(xmlpara, objNode, "CABINETNAME", tdCabinetName.innerHTML);
+		        }
 		
 		        return getXmlString(xmlpara);
 		    }
@@ -562,26 +582,28 @@
                 <li><span id="btnClose" onclick="return btnClose_onclick()"></span></li>
             </ul>
         </div>
-		<h2 style="font-weight: normal;">▒ <spring:message code='ezApprovalG.t1018'/></h2>
-		<table class="content" style="width:100%">
-		  <tr>
-		    <th style="width:15%;"><spring:message code='ezApprovalG.t1063'/></th>
-		    <td><table style="width:100%">
-		        <tr>
-		          <td id="tdCabinetName">&nbsp;</td>
-		          <td style="width:70px"><a class="imgbtn imgbck" style="margin-bottom:0px;"><span onclick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a></td>
-		        </tr>
-		      </table></td>
-		  </tr>
-		  <tr>
-		    <th><spring:message code='ezApprovalG.t1088'/></th>
-		    <td id="tdCabinetType"  >&nbsp;</td>
-		  </tr>
-		  <tr>
-		    <th><spring:message code='ezApprovalG.t573'/></th>
-		    <td id="tdCabinetVolNo"  >&nbsp;</td>
-		  </tr>
-		</table>
+        <div id="CabinetInfoView">
+			<h2 style="font-weight: normal;">▒ <spring:message code='ezApprovalG.t1018'/></h2>
+			<table class="content" style="width:100%">
+			  <tr>
+			    <th style="width:15%;"><spring:message code='ezApprovalG.t1063'/></th>
+			    <td><table style="width:100%">
+			        <tr>
+			          <td id="tdCabinetName">&nbsp;</td>
+			          <td style="width:70px"><a class="imgbtn imgbck" style="margin-bottom:0px;"><span onclick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a></td>
+			        </tr>
+			      </table></td>
+			  </tr>
+			  <tr>
+			    <th><spring:message code='ezApprovalG.t1088'/></th>
+			    <td id="tdCabinetType"  >&nbsp;</td>
+			  </tr>
+			  <tr>
+			    <th><spring:message code='ezApprovalG.t573'/></th>
+			    <td id="tdCabinetVolNo"  >&nbsp;</td>
+			  </tr>
+			</table>
+        </div>
 		<h2 style="font-weight: normal; margin-top: 10px;">▒ <spring:message code='ezApprovalG.t1089'/></h2>
 		<table class="content" style="width:100%">
 		  <tr>

@@ -26,6 +26,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 		<script type="text/javascript" src="/js/showModalDialog.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ezDraft_HWP.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
 	    <script type="text/javascript">
 	        var FormHref = "${formURL}";
 	        var DraftFlag = "${draftFlag}";
@@ -147,6 +148,8 @@
 	        var isHWP = "${isHWP}";
 	        var isUsed = "";
 	        var ext = "hwp";
+	        var nonElecRec = "${nonElecRec}";
+	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "";
 	        
 	        window.onload = function () {
 	            try {
@@ -182,6 +185,22 @@
 	
 	                HwpCtrl.SetFieldFocus("doctitle");
 	                HwpCtrl.ezSetScrollPosInfo(0);
+	                
+	                /* 
+	                * 비전자문서 구분 값, 사용불가한 버튼들 가리기
+	                */
+	                if (nonElecRec == "Y") {
+	                	document.getElementById("btnSelForm").style.display = "none"; <%-- 양식선택 --%>
+	                	document.getElementById("btnAddSepAttach").style.display = "none"; <%-- 분리첨부 --%>
+	                	document.getElementById("btnSaveServer").style.display = "none"; <%-- 임시저장 --%>
+	                	document.getElementById("btnHelper").style.display = "none"; <%-- 연동 --%>
+	                	document.getElementById("btnhistory").style.display = "none"; <%-- 변경내역 --%>
+	                	document.getElementById("btnSave").style.display = "none"; <%-- 저장 --%>
+	                	document.getElementById("btnOpinion").style.display = "none"; <%-- 의견 --%>
+	                	document.getElementById("btnAprDocAttach").style.display = "none"; <%-- 문서첨부 --%>
+	                	document.getElementById("btnPrint").style.display = "none"; <%-- 인쇄 --%>
+	                	HwpCtrl.SetFieldText("docnumber","");
+	                }
 	            } catch (e) {
 	                alert("ezdraftui_hwp.window.onload::" + e.description);
 	                hideProgress();
@@ -550,6 +569,13 @@
 	                    OpenAlertUI(pAlertContent);
 	                    return;
 	                }
+	                
+	                if (nonElecRec == "Y" && nonElecRecInfoXml == "") {
+	                	var pAlertContent = "기록물 정보를 입력해 주세요.";
+	                    OpenAlertUI(pAlertContent);
+	                    btnApprovalInfo(1);
+	                    return;
+	                }
 	
 	                if (btnSendDraftEnable == "false") {
 	                    var pAlertContent = "<spring:message code='ezApprovalG.t1398'/>" + "<br>" + "<spring:message code='ezApprovalG.t1399'/>";
@@ -591,19 +617,20 @@
 	                if (pDraftFlag == "REDRAFT")
 	                    delOpinionInfo();
 	
-	                if (LastSignSN == 1 || DraftLastFlag) {
-	                    var pInformationContent = "<spring:message code='ezApprovalG.t143'/><br> <spring:message code='ezApprovalG.t144'/>";
-	                    var Ans = OpenInformationUI(pInformationContent);
-	
-	                    if (!Ans) return;
-	
-	                    if (pDraftFlag == "HABYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
-	                        getLastOpinon();
-	                    }
-	
-	                    if (HwpCtrl.CheckFieldExist("lastdraftdate"))
-	                        HwpCtrl.SetFieldText("lastdraftdate", getGyulJeDate());
-	                }
+	                if (nonElecRec != "Y") {
+		                if (LastSignSN == 1 || DraftLastFlag) {
+		                    var pInformationContent = "<spring:message code='ezApprovalG.t143'/><br> <spring:message code='ezApprovalG.t144'/>";
+		                    var Ans = OpenInformationUI(pInformationContent);
+		
+		                    if (!Ans) return;
+		
+		                    if (pDraftFlag == "HABYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
+		                        getLastOpinon();
+		                    }
+		
+		                    if (HwpCtrl.CheckFieldExist("lastdraftdate"))
+		                        HwpCtrl.SetFieldText("lastdraftdate", getGyulJeDate());
+		                }
 	
 	                if ("${approvalPWD}" != "N") {
 	                    var chkpass = chk_Passwd();
@@ -619,17 +646,19 @@
 	                }
 	
 	                if (IsSkipDrafter == "FALSE") {
-	                    var ret;
-	                    var parameter = new Array();
-	
-	                    parameter[0] = pDocID;
-	                    ret = openSignUI(parameter);
-	
-	                    if (ret == "cancel") {
-	                        var pAlertContent = "<spring:message code='ezApprovalG.t145'/>";
-	                        OpenAlertUI(pAlertContent);
-	                        return;
-	                    }
+	                	if (nonElecRec != "Y") {
+		                    var ret;
+		                    var parameter = new Array();
+		
+		                    parameter[0] = pDocID;
+		                    ret = openSignUI(parameter);
+		
+		                    if (ret == "cancel") {
+		                        var pAlertContent = "<spring:message code='ezApprovalG.t145'/>";
+		                        OpenAlertUI(pAlertContent);
+		                        return;
+		                    }
+	                	}
 	
 	                    pOrgHtml = HwpCtrl.GetCloneData("", "HWP");
 	
@@ -699,6 +728,7 @@
 	                            }
 	
 	                            UpdateLineHistory();
+	                            
 	                            pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
 	                            OpenAlertUI(pAlertContent);
 	                            draftFlag = true;
@@ -782,13 +812,22 @@
 	                        }
 	
 	                        UpdateLineHistory();
-	
-	                        pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
+	                        
+	                        if (nonElecRec == "Y") {
+                            	pAlertContent = "문서를 [등록]하였습니다.";
+                            } else {
+		                        pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
+                            }
+	                        
 	                        OpenAlertUI(pAlertContent);
 	                        draftFlag = true;
 	
 	                        if (ListType == "21" && DraftFlag == "REDRAFT") {
 	                            RemoveTmpDoc(DocSN);
+	                        }
+	                        
+	                        if (nonElecRec == "Y") {
+	                        	RemoveEndNonElecRecDoc(pDocID);
 	                        }
 	
 	                        window.close();
@@ -1099,6 +1138,14 @@
 			        parameter[41] = tempItemName;
 			        parameter[42] = tempItemName2;
 			        parameter[45] = pPublicityYN;
+			        parameter[46] = nonElecRec;
+			        
+			        if (nonElecRec == "Y") {
+			        	parameter[2] = "1";
+				        parameter[47] = "nonElecRecTempCabinet";
+				        parameter[48] = nonElecRecInfoXml;
+				        parameter[49] = nonSepAttachLVXml;
+			        }
 			        
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;
@@ -1170,6 +1217,13 @@
 		                }
 			            setPublicFlag();
 			            SummaryFlag = true;
+			            
+			            if (nonElecRec == "Y") {
+			            	nonElecRecInfoXml = ret[23];
+			            	nonSepAttachLVXml = ret[24];
+			            	
+			            	setNonElecRecInfo(nonElecRecInfoXml);
+			            }
 			        }
 			    } catch (e) {
 			        alert("ezdraftui_hwp.GetSepAttParamXml()::" + e.description);
@@ -1297,7 +1351,14 @@
 	                        <li id="btnSelForm"><span onclick="return btnSelForm_onclick()"><spring:message code='ezApprovalG.t152'/></span></li>
 	                        <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()"><spring:message code='ezApprovalG.t1742'/></span></li>
 	                        <li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li>
-	                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
+							<c:choose>
+								<c:when test="${nonElecRec eq 'Y'}">
+			                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()">등록</span></li>
+								</c:when>
+								<c:otherwise>
+			                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
+								</c:otherwise>
+							</c:choose>
 	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 	                        <li id="btnFileAttach"><span onclick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
 	                        <li id="btnAprDocAttach"><span onclick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t57'/></span></li>

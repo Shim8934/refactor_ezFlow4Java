@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
 	    <script type="text/javascript">
 	        var OrgAprUserID = "${orgAprUserID}";
 	        var OrgAprUserName = "${orgAprUserName}";
@@ -104,7 +105,6 @@
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
-	
 	        var pCompanyID = "${userInfo.companyID}";
 	        var KuyjeType = "002";
 	        var signDateFormat = "${optSignDateFormat}";
@@ -132,6 +132,8 @@
 	        var approvalFlag = "${approvalFlag}";
 	        var ext = "hwp";
 	        var docState = "${docState}";
+	        var nonElecRec = "${nonElecRec}";
+	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
 	        
 		    function getNextDocList() {
 		        NextDocID = "";
@@ -315,6 +317,11 @@
 		                getDocInfo();
 		                setAttachInfo(pDocID, "APR", lstAttachLink);
 		                GetExchInfo();
+		                
+		                if (nonElecRec == "Y") {
+					        getNonElecInfoSusinInit();
+					        document.getElementById("btnAddSepAttach").style.display = "none";
+				        }
 		
 		                if (pDocHref != "") {
 		                    showProgress("<spring:message code='ezApprovalG.t368'/>");
@@ -1131,6 +1138,19 @@
 			        parameter[39] = SummaryFlag;
 			        parameter[40] = "";
 			        parameter[45] = pPublicityYN;
+			        parameter[46] = nonElecRec;
+				    
+				    if (nonElecRec == "Y") {
+				    	if (pGubun != "1") {
+				        	parameter[47] = cabinetID;
+			        	} else {
+				        	parameter[47] = "nonElecRecTempCabinet";
+			        	}
+				        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
+				        parameter[49] = nonSepAttachLVXml; // 분첨
+				        parameter[50] = g_szSCListXml;
+				        parameter[51] = sepAttachCheckYN; // 분첨
+			        }
 			        
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;
@@ -1209,6 +1229,16 @@
 			                // 문서 공개 범위 설정 (대민 공개 여부)
 			                // setPublicFlag2();
 			                setPublicFlag();
+			                
+			                if (nonElecRec == "Y") {
+				            	nonElecRecInfoXml = ret[23];
+				            	nonSepAttachLVXml = ret[24];
+				            	g_szSCListXml = ret[25];
+						        sepAttachCheckYN = ret[26];
+				            	if (ext == "hwp") {
+					            	setNonElecRecInfo(nonElecRecInfoXml);
+				            	}
+				            }
 			                
 			                SummaryFlag = true;
 			                savexmlhttp = null;

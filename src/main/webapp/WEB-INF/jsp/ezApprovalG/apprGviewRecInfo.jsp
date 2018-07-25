@@ -170,7 +170,7 @@
 		<tr> 
 			<td id="tdSCInfo">
 			<div class="listview" style="width:610px;overflow-x : auto">
-            <div id="SCList" style="BEHAVIOR:url('#behave1#ListView');border:0; width:950px; height:230px;" onclick ="" OnSelChanged="" onRowDblClick=""></div></div></td>
+            <div id="SCList" style="BEHAVIOR:url('#behave1#ListView');border:0; /* width:950px; */ width:100%; height:230px;" onclick ="" OnSelChanged="" onRowDblClick=""></div></div></td>
 
 		</tr>
 	</table>
