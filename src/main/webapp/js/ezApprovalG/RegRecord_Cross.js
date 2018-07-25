@@ -296,7 +296,7 @@ function InitAVTypeTD(nodeXml, objTD1, objTD2) {
     var szHtm1 = "";
     var szHtm2 = "";
     var i;
-    szHtm1 = "<div style=\"width:98%;height:130px;overflow:auto;padding: 3px 0px 0px 2px;\">";
+    szHtm1 = "<div style=\"width:99%;height:130px;padding: 3px 0px 0px 2px;\">";
 
     for (i = 0; i < nodeXml.length; i++) {
         if (i % 2 == 0) {

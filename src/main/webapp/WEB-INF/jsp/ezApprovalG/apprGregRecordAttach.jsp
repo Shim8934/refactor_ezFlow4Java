@@ -11,6 +11,11 @@
 </style>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+<style type="text/css">
+	.mainlist tr th {
+		border-top :0px;
+	}
+</style>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
@@ -491,6 +496,9 @@
             alert(filename + "<spring:message code='ezApprovalG.t276'/>" + "\n\n" + result);
         }
     }
+    function btn_AttachAdd() {
+    	document.getElementById("file1").click();
+	}
 </script>
 </HEAD>
 <body class="popup">	
@@ -503,7 +511,7 @@
 <table>
   <tr>
     <td style="width:285px;text-align:center"><div class="listview">
-		<div id="ATTACH" style="overflow:auto; WIDTH: 550px;HEIGHT: 130px;margin:1px 1px 1px 1px"></div>
+		<div id="ATTACH" style="overflow:auto; WIDTH: 548px;HEIGHT: 173px;"></div>
       </div></td>
   </tr>
 </table>  
@@ -512,8 +520,8 @@
 <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/upload.do" target="ifrm">
   <div class="btnposition btnpositionNew">       
         <a class="imgbtn">
-          <input id="file1" name="file1" type="file" onchange="btn_AttachAdd_onclick()" style="opacity:0;position:absolute;width:53px;left:202px"/> 
-		  <span for="file" id="btn_AttachAdd" ><spring:message code='ezApprovalG.t268'/></span>
+          <input id="file1" name="file1" type="file" onchange="btn_AttachAdd_onclick()" style="opacity:0;position:absolute;width:53px;left:202px;display: none;"/> 
+		  <span for="file" id="btn_AttachAdd" onclick="btn_AttachAdd()"><spring:message code='ezApprovalG.t268'/></span>
         </a>
         <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
         <a class="imgbtn"><span id="btn_AttachSaveSure" onclick="return btn_AttachSaveSure_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>

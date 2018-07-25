@@ -159,7 +159,7 @@
 <!-- 		<OBJECT classid=clsid:F8E93A35-2D04-4E2C-A04D-87947594C674  -->
 <!-- 				id=behavelist1 style="HEIGHT: 0px; WIDTH: 0px;display:none;"> -->
 <!-- 		</OBJECT>  -->
-		<h1><spring:message code='ezApprovalG.t996'/></h1>
+		<h1 style="margin-bottom: 4px;"><spring:message code='ezApprovalG.t996'/></h1>
 		<div id="close">
             <ul>
                 <li><span id="btnCancel" onclick="return cmdCancel_onclick()"></span></li>
@@ -183,11 +183,11 @@
 		  </tr>
 		  <tr> 
 		    <th ><spring:message code='ezApprovalG.t826'/></th>
-		    <td><Select id="selRecTypeCode" style="width:100%"></Select></td>
+		    <td><Select id="selRecTypeCode" style="width:100%; height: 25px;"></Select></td>
 		  </tr>
 		  <tr> 
 		    <th ><spring:message code='ezApprovalG.t117'/></th>
-		    <td><select id="selKeepPeriod" style="width:100px;"></Select></td>
+		    <td><select id="selKeepPeriod" style="width:100px; height: 25px;"></Select></td>
 		  </tr>
 		  <tr> 
 		    <th ><spring:message code='ezApprovalG.t599'/></th>
@@ -218,7 +218,7 @@
 		      <table style="border:0;border-collapse:collapse; border-spacing:0;padding:0px;width:100%;">
 		        <tr> 
 		          <td id="tdDisplayFlag" >&nbsp;</td> 
-		          <td style="width:70px;"><a  class="imgbtn"  name="btnDisplayInfo" id="btnDisplayInfo" style="vertical-align:middle;margin:auto;"><span onClick="return btnDisplayInfo_onclick()"><spring:message code='ezApprovalG.t1042'/></span></a></td>
+		          <td style="width:70px;"><a  class="imgbtn imgbck"  name="btnDisplayInfo" id="btnDisplayInfo" style="vertical-align:middle;margin:auto;"><span onClick="return btnDisplayInfo_onclick()"><spring:message code='ezApprovalG.t1042'/></span></a></td>
 		        </tr>
 		      </table>    </td>
 		  </tr>
