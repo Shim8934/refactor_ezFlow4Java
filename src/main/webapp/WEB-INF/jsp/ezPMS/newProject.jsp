@@ -362,8 +362,10 @@ var headManagerObj = {};
 	 }
 	 
 	 for (var i = 0; i < managerList.length; i++) {
-		managerNameList += managerList[i].userName;
-		managerNameList += "(" + managerList[i].userDeptname + "), ";
+		if(managerList[i].userId !== headManagerId){
+			managerNameList += managerList[i].userName;
+			managerNameList += "(" + managerList[i].userDeptname + "), ";
+		}
 	 }
 	 
 	 for (var i = 0; i < participantList.length; i++) {

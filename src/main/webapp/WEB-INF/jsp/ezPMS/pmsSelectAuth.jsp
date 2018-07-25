@@ -274,15 +274,17 @@
 		    	
 		    	if (authName == "manager") {
 		    		for (var i = 0; i < managerArray.length; i++) {
-			    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
-			    		strHTML += "<tr style='cursor:pointer;' id=" + managerArray[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver(manager)'>";
-			    		strHTML += "<td>";
-			    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
-			    		strHTML += managerArray[i].userName;
-			    		strHTML += "(" + managerArray[i].userDeptname + ")";
-			    		strHTML += "</td>";
-			    		strHTML += "</tr>";
-			    		strHTML += "</table>";
+		    			if(managerArray[i].userId != parent.opener.headManagerId){
+				    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
+				    		strHTML += "<tr style='cursor:pointer;' id=" + managerArray[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver(manager)'>";
+				    		strHTML += "<td>";
+				    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+				    		strHTML += managerArray[i].userName;
+				    		strHTML += "(" + managerArray[i].userDeptname + ")";
+				    		strHTML += "</td>";
+				    		strHTML += "</tr>";
+				    		strHTML += "</table>";
+		    			}
 			    	}
 		    		$("#managerList").html(strHTML);
 		    	} else if (authName == "participant") {
@@ -442,7 +444,7 @@
 	   		
 	   		// 담당자, 참여자, 조회자 인원을 표시
 	   		function setMemberCNT() {
-	   			$("#managerCNT").text(managerArray.length + "<spring:message code='ezPMS.t44'/>");
+	   			$("#managerCNT").text(managerArray.length - 1 + "<spring:message code='ezPMS.t44'/>");
 	   			$("#participantCNT").text(participantArray.length + "<spring:message code='ezPMS.t44'/>");
 	   			$("#viewerCNT").text(viewerArray.length + "<spring:message code='ezPMS.t44'/>");
 	   		}
