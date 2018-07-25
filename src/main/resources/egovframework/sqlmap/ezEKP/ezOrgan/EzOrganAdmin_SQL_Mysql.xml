@@ -2134,8 +2134,8 @@
 		    			('A12', #companyID#, #tenantID#, '오전반차', 'morning off', '1', 'refresh', 'A05', 4),
 		    			('A13', #companyID#, #tenantID#, '오후반차', 'afternoon off', '1', 'refresh', 'A05', 4),
 		    			('A14', #companyID#, #tenantID#, '공가', 'official leave', '1', 'refresh', 'A05', 9),
-		    			('A15', #companyID#, #tenantID#, '오전공가', 'morning official leave', '1', 'refresh', 'A05', 9),
-		    			('A16', #companyID#, #tenantID#, '오후공가', 'after official leave', '1', 'refresh', 'A05', 9),
+		    			('A15', #companyID#, #tenantID#, '오전공가', 'morning official leave', '1', 'refresh', 'A05', 4),
+		    			('A16', #companyID#, #tenantID#, '오후공가', 'after official leave', '1', 'refresh', 'A05', 4),
 		    			('A18', #companyID#, #tenantID#, '산휴', 'maternity leave', '1', 'refresh', 'A05', 9),
 		    			('A19', #companyID#, #tenantID#, '경조', 'congratulation and condolence leave', '1', 'refresh', 'A05', 9),
 		    			('A20', #companyID#, #tenantID#, '병가', 'sick leave', '1', 'refresh', 'A05', 9)
