@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 import javax.xml.bind.DatatypeConverter;
 
-//import org.bouncycastle.util.Arrays;
+import org.bouncycastle.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 /**
  * KLIB 네이티브 라이브러리를 사용하여 암/복호화 하는 유틸
  * 
- * @author jwseo99
  * @since 2018.06.07
  * 
  */
@@ -34,17 +33,18 @@ public class KlibUtil {
 		boolean loadSuccess = false;
 
 		try {
-			// KLIB 파일 위치
-			// WEB-INF
+			// WEB-INF/classes
 			Path classPath = Paths.get(KlibUtil.class.getClassLoader().getResource("").toURI());
+			// WEB-INF
 			Path parentPath = classPath.getParent();
+			// WEB-INF/lib/libezKlib.so
 			Path libraryPath = parentPath.resolve(LIBRARY_PATH).toRealPath();
 
 			LOGGER.debug(String.format("class path: %s", classPath.toAbsolutePath().toString()));
 			LOGGER.debug(String.format("parent path: %s", parentPath.toAbsolutePath().toString()));
 			LOGGER.debug(String.format("library path: %s", libraryPath.toString()));
 
-			// native load
+			// native library load
 			System.load(libraryPath.toString());
 			loadSuccess = true;
 		} catch (Throwable ex) {
@@ -52,11 +52,12 @@ public class KlibUtil {
 			Stream.of(ex.getStackTrace()).filter(obj -> obj.getClassName().contains(KlibUtil.class.getName())).map(Object::toString).forEach(LOGGER::debug);
 		}
 
+		// CIPHER 의 final 키워드를 유지하려면 try-catch 에서 초기화하면 안 됨
+		// 때문에 성공 플래그 값으로 판단하여 초기화 해야함
 		CIPHER = loadSuccess ? new KlibCipher() : new NonKlibCipher();
-		// TEST CODE
 		// CIPHER = loadSuccess ? new KlibCipher() : new LocalTestCipher();
 
-		// KLIB 테스트
+		// KLIB test
 		try {
 			String testString = "Hello klib!";
 
@@ -99,7 +100,11 @@ public class KlibUtil {
 	}
 
 	// TEST CODE
-	/* private static class LocalTestCipher implements Cipher {
+	/**
+	 * @deprecated 로컬에서 테스트할 때 쓰는 용도
+	 * */
+	@SuppressWarnings("unused")
+	private static class LocalTestCipher implements Cipher {
 		@Override
 		public byte[] encrypt(byte[] originBytes) {
 			return Arrays.reverse(originBytes);
@@ -133,13 +138,21 @@ public class KlibUtil {
 	/**
 	 * KLIB를 이용하여 암호화된 바이트 배열을 복호화
 	 * 
+	 * @NOTE 암호화와 다르게 복호화에 실패하면 원본 바이트를 반환한다.
+	 * 
 	 * @param encryptedBytes
 	 *            복호화할 바이트 배열
 	 * */
 	public byte[] decrypt(byte[] encryptedBytes) throws Exception, UnsatisfiedLinkError {
 		LOGGER.debug("decrypt started.");
+		byte[] result;
 
-		byte[] result = tryTransformationPolicy(encryptedBytes, CIPHER::decrypt);
+		try {
+			result = tryTransformationPolicy(encryptedBytes, CIPHER::decrypt);
+		} catch (Exception ex) {
+			LOGGER.debug("Failed to decrypt, returns the source bytes.");
+			result = encryptedBytes;
+		}
 
 		debugBytes("encrypted bytes", encryptedBytes);
 		debugBytes("decrypted bytes", result);
@@ -160,26 +173,31 @@ public class KlibUtil {
 	private byte[] tryTransformationPolicy(byte[] source, Function<byte[], byte[]> transformationFunction) throws Exception, UnsatisfiedLinkError {
 		byte[] dest;
 
+		// 첫 번째 시도
 		try {
 			dest = transformationFunction.apply(source);
 		} catch (Exception ex) {
+			// 실패시 두 번째 시도
 			LOGGER.debug("An exception occurred in the first attempt. {}", ex);
 
 			try {
 				dest = transformationFunction.apply(source);
 			} catch (Exception twoEx) {
-				LOGGER.debug("An exception occurred in the second attempt. {}: {}", twoEx);
+				// 두 번째 시도에서 실패시 예외를 던짐
+				LOGGER.debug("An exception occurred in the second attempt. {}", twoEx);
 
 				throw twoEx;
 			}
 		}
 
+		// 만약 결과 값의 사이즈가 0 이라면 재시도
 		if (dest.length == 0 && source.length != 0) {
 			LOGGER.debug("The result size is zero. try again");
 
 			try {
 				dest = transformationFunction.apply(source);
 			} catch (Exception ex) {
+				// 재시도 실패시 예외를 던짐
 				LOGGER.debug("An error occurred on retried: {}", ex);
 
 				throw ex;

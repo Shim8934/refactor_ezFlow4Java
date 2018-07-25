@@ -6521,7 +6521,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String[] fileLocations = new String[cnt];
 		String[] types = new String[cnt];
 		String[] uploadSN = new String[cnt];
-		// jwseo99 추가, 사이드이펙트 가능성 다분함
+		// 2018.07.05 추가, 사이드이펙트 가능성 다분함
 		String[] uploadLocations = new String[cnt];
 		
 		for (int k = 0; k < cnt; k++) {
@@ -6557,7 +6557,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boolean isEncryptedForKlib;
 		
 		for (int k = 0; k < cnt; k++) {
-			// 2018.07.04 jwseo99 KLIB 암호화된 .ezd 확장자 파일일때 처리
+			// 2018.07.04 - KLIB 암호화된 .ezd 확장자 파일일때 처리
 			fileLocation = fileLocations[k];
 			
 			extIndex = fileLocation.lastIndexOf(".");

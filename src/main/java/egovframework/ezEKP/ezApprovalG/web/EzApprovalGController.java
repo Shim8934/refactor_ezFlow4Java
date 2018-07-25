@@ -4038,7 +4038,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			if (fileTypes[k].equals("ATT")) {
 				targetPath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + fileName;
 			} else if (fileTypes[k].equals("ATTDOC")) {
-				// 2018.06.20 jwseo99 - 전자결재 KLIB 암/복호화
+				// 2018.06.20 - 전자결재 KLIB 암/복호화
 				String fileExt = sourcePath.substring(sourcePath.lastIndexOf(".") + 1);
 				
 				if (fileExt.equals(EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
@@ -4048,7 +4048,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				
 				targetPath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + fileName + "." + fileExt; 
 			} else {
-				// 2018.06.20 jwseo99 - 전자결재 KLIB 암/복호화
+				// 2018.06.20 - 전자결재 KLIB 암/복호화
 				// 중복소스코드 일단 제거 안 함 (코드가 추가될 가능성이 있고 사이드이펙트 우려)
 				String fileExt = sourcePath.substring(sourcePath.lastIndexOf(".") + 1);
 				
@@ -4089,7 +4089,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			String fileName = fileNames[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
 	                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
 
-			// 2018.06.20 jwseo99 - 전자결재 KLIB 암/복호화
+			// 2018.06.20 - 전자결재 KLIB 암/복호화
 			String fileExt = filePaths[k].substring(filePaths[k].lastIndexOf(".") + 1);
 			// ezd 확장자로 암호화된 파일이라면 원래 확장자를 반환한다.
 			if (fileExt.equals(EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {

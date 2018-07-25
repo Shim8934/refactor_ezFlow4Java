@@ -2582,7 +2582,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 				        File f = new File(pDirTempPath + commonUtil.separator + path);
 				        
-				        // 2018.07.05 jwseo99 KLIB - ezd 파일은 복호화하여 넣는다.
+				        // 2018.07.05 - ezd 파일은 복호화하여 넣는다. (KLIB)
 				        if (f.toString().endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
 				        	byte[] fileBytes = Files.readAllBytes(f.toPath());
 				        	byte[] decryptedBytes = klibUtil.decrypt(fileBytes);

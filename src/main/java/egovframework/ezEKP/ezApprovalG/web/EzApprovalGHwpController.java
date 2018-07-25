@@ -330,7 +330,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         String copyPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
         pDirPath = realPath + pDirPath;
         
-		// 2018.07.05 jwseo99 KLIB - ezd 확장자로 변경
+		// 2018.07.05 - KLIB - ezd 확장자로 변경
 		if (sFileHref.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
 			newfilename += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
 		}
@@ -623,7 +623,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 				File orgFile = new File(orgDocFile);
 				InputStream orgFileInputStream;
 
-				// 2018.06.21 jwseo99 KLIB으로 암호화된 파일일 때는 복호화 하여 저장
+				// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
 					byte[] encryptedBytes = Files.readAllBytes(orgFile.toPath());
 					orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));

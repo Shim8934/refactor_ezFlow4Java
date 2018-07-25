@@ -2177,7 +2177,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
 		
 		if (!rtnVal.equals("FALSE")) {
-			// 2018.06.26 jwseo99 - 대장등록 성공시 파일 KLIB 암호화
+			// 2018.06.26 - 대장등록 성공시 파일 KLIB 암호화
 			if ("hwp".equals(extFileName) && "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useApprovalKlib", tenantID))) {
 				ezApprovalGKlibService.encryptCompleteApproveFiles(newDocID, companyID, tenantID);
 			}
@@ -15123,7 +15123,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					ezApprovalGDAO.insertApprovExpEndAprDocInfo(map);
 					ezApprovalGDAO.insertApprovExpEndAprLine(map);
 					
-					// 2018.06.20 jwseo99 - mht 문서는 KLIB 암호화 제공 안 함 (추후에 개발)
+					// 2018.06.20 - mht 문서는 KLIB 암호화 제공 안 함 (추후에 개발)
 					if ("hwp".equals(extFileName) && "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useApprovalKlib", tenantID)) && "G".equals(ezCommonService.getTenantConfig("ApprovalFlag", tenantID))) {
 						ezApprovalGKlibService.encryptCompleteApproveFiles(docID, companyID, tenantID);
 					}
@@ -17574,7 +17574,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					File file = new File(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID));
 					
-					// 2018.06.27 jwseo99 KLIB 암호화 파일이면 .ezd 확장자 제거
+					// 2018.06.27 - KLIB 암호화 파일이면 .ezd 확장자 제거
 					boolean isEncryptedForKlib = fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT);
 					
 					if (isEncryptedForKlib) {
@@ -17582,7 +17582,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 					
 					if (!file.exists()) {
-						// 2018.06.29 jwseo99 KLIB 암호화 파일이면 복호화하여 복사, 아니라면 원본 파일 복사
+						// 2018.06.29 - KLIB 암호화 파일이면 복호화하여 복사, 아니라면 원본 파일 복사
 						if (isEncryptedForKlib) {
 							copyDecryptFileForKlib(fileURL, dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName,
 									dirPath + orgCompanyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID));

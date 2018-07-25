@@ -3047,7 +3047,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				
 				fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
 				
-				// 2018.07.05 jwseo99 KLIB - ezd 확장자 없애기
+				// 2018.07.05 - KLIB - ezd 확장자 없애기
 				if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
 					fileName = fileName.substring(0, fileName.lastIndexOf("."));
 				}
