@@ -145,6 +145,8 @@
 						<p>내용</p>
 					</div>
 				</div>
+			
+			</div>
 			<div id="open-memo" style="display: none;">메모</div>
 		</div>
 		
