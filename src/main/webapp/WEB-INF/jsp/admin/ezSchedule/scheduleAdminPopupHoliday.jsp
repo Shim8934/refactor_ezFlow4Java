@@ -94,7 +94,7 @@
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });
 		
-		    function save_holiday(type) {
+		    /* function save_holiday(type) {
 		    	var holidayName2;
 		    	
 		    	if (specialChk(document.getElementById("holidayname").value) || specialChk(document.getElementById("holidayname2").value)) {
@@ -120,6 +120,42 @@
 		    		url : "/admin/ezSchedule/scheduleSaveHoliday.do",
 		    		data : {
 		    			holidayName  : MakeXMLString(document.getElementById("holidayname").value),	
+		    			holidayName2 : holidayName2,
+		    			isSolar : (document.getElementsByName("date")[0].checked ? "1" : "0"),
+		    			holidayDate : $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val(),
+		    			isRepeat : (document.getElementById("repeat").checked ? "1" : "0"),
+		    			isRest : (document.getElementById("rest").checked ? "1" : "0"),
+		    			type : (type == 1 ? "0" : "1"),
+		    			holidayID : (type == 1 ? "0" : holidayid),	
+    					companyID : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value		    			
+		    		},
+		    		success: function(text) {
+		    			alert("<spring:message code='ezSchedule.t4012' />");
+				        window.opener.schedule_get_holiday();				        
+						window.close();
+		    		}	    		
+		        });
+		    } */
+		    <%-- 2018-07-24 천성준 저장/수정시, 특수문자 입력 가능하게 --%>
+		    function save_holiday(type) {
+		    	var holidayName = document.getElementById("holidayname").value.trim();
+		    	var holidayName2 = document.getElementById("holidayname2").value.trim();
+		    	
+		        if (holidayName == "") {
+		            alert("<spring:message code='ezSchedule.t9990004' />");
+		            return;
+		        }        
+		        		
+		        if (holidayName2 == "")
+		        	holidayName2 = holidayName;		            
+		        
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/admin/ezSchedule/scheduleSaveHoliday.do",
+		    		data : {
+		    			holidayName  : holidayName,	
 		    			holidayName2 : holidayName2,
 		    			isSolar : (document.getElementsByName("date")[0].checked ? "1" : "0"),
 		    			holidayDate : $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val(),
