@@ -199,6 +199,7 @@
 					
 					var parentWd = window.opener;
 					if (parentWd && parentWd.CabinetAddFile) {parentWd.CabinetAddFile.save(data);}
+					if (parentWd && parentWd.CabinetItemDetail) {parentWd.CabinetItemDetail.save(data);}
 					
 					closeWindow();
 				}
