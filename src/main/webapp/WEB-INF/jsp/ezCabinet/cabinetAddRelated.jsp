@@ -11,7 +11,7 @@
 	<body class="popup cabAddRelated" style="overflow: hidden;">
 		<h1 id="cabMagHeader" role='<c:out value="${node}"></c:out>'><spring:message code="ezCabinet.t125"/></h1>
 		
-		<div class = "addRelatedConfig" id = "addRelated">
+		<div class = "addRelatedConfig" id = "addRelated" style= "margin: 1px 3px;">
 			<a class = "cabRadio"><input type="radio" name = "checkCabinet" id = "1"/><label for = "1">
 			<span><spring:message code="ezCabinet.t126"/></span></label><br></a>
 			<a class = "cabRadio"><input type="radio" name = "checkCabinet" id = "2" checked = "checked"/><label for = "2">
@@ -19,7 +19,7 @@
 		</div>
 		
 		
-		<div class="cabMgTree" id = "cabMgTreeId" style="position: relative;">
+		<div class="cabMgTree" id = "cabMgTreeId" style="position: relative; overflow: hidden; margin: 10px 5px; min-height: 200px; height: 200px;">
 			<div id="cabinetMgTree" style="width: 100%; height: 100%; position: absolute; z-index: 1; "></div>
 			<div id="fogPanel" style="width: 100%; height: 100%; z-index: 2; background-color: transparent; position: absolute; display: none; top: 0px; left: 0px;"></div>
 		</div>
