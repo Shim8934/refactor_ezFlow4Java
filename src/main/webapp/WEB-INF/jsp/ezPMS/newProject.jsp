@@ -29,6 +29,7 @@
 <script>
 var projectName = "<c:out value='${project.projectName}'/>";
 var writerName = "${userName}";
+var writerDeptname = "${userDeptname}";
 var weightInput = "${project.weightInput}";
 var planStartDate = "${project.planStartDate}";
 var planEndDate = "${project.planEndDate}";
@@ -119,8 +120,15 @@ var headManagerObj = {};
 				
 		}
 		applyList();
-		applyHeadManager();
+	} else {
+		headManagerObj.userId = parent.opener.userId;
+		headManagerObj.userName = writerName;
+   		headManagerObj.userDept = writerDeptname;
+   		headManagerId = parent.opener.userId;
+   		headManagerDept = writerDeptname;
+   		headManagerName = writerName;
 	}
+	applyHeadManager();
  
  });
 
@@ -287,6 +295,8 @@ var headManagerObj = {};
 		return;
 	}
 	
+	managerList.push({"userName" : headManagerName, "userId" : headManagerId, "memberRoleId" : 1, "userDeptname" : replaceString(headManagerDept), "userIdType" : "user"});
+	
 	var data = {
 			mode : mode,
 			projectId : projectId,
@@ -352,8 +362,10 @@ var headManagerObj = {};
 	 }
 	 
 	 for (var i = 0; i < managerList.length; i++) {
-		managerNameList += managerList[i].userName;
-		managerNameList += "(" + managerList[i].userDeptname + "), ";
+		if(managerList[i].userId !== headManagerId){
+			managerNameList += managerList[i].userName;
+			managerNameList += "(" + managerList[i].userDeptname + "), ";
+		}
 	 }
 	 
 	 for (var i = 0; i < participantList.length; i++) {

@@ -229,10 +229,11 @@ function getCheckedProjectInfo() {
 	
 	var result = [];
 	
-	function ProjectInfo(projectName, projectId, groupId) {
+	function ProjectInfo(projectName, projectId, groupId, headManagerId) {
 		this.projectName = projectName;
 		this.projectId = projectId;
 		this.groupId = groupId;
+		this.headManagerId = headManagerId;
 	}
 	
 	$("input[type='checkbox']:checked:not('#HeaderAllCheckBox')").each(function() {	
@@ -241,14 +242,16 @@ function getCheckedProjectInfo() {
 			var projectName = $(this).parent().siblings(".projectName").text();
 			var projectId 	= $(this).parents("tr:eq(0)").attr("id");
 			var groupId		= $(this).parents("tr:eq(0)").attr("data-groupid");
+			var headManagerId	= $(this).parents("tr:eq(0)").attr("data-headmanagerid");
 		} else {
 			var projectName = $(this).parent().siblings(".projectNameArea").children(".projectName").text();
 			projectName = projectName.substring(2);
 			var projectId 	= $(this).parents("li:eq(0)").attr("id");
 			var groupId		= $(this).parents("li:eq(0)").attr("data-groupid");
+			var headManagerId	= $(this).parents("li:eq(0)").attr("data-headmanagerid");
 		}
 		
-		result.push(new ProjectInfo(projectName, projectId, groupId));
+		result.push(new ProjectInfo(projectName, projectId, groupId, headManagerId));
 	});
 	
 	return result;

@@ -206,7 +206,7 @@ $(function(){
 									</c:when>
 									<c:otherwise>
 										<c:forEach items="${projectList }" var="project">
-									<tr style="cursor: pointer;" id="${project.projectId }" data-groupId="${project.groupId}" class="listRow" ondblclick="goProjectDetails(this)">
+									<tr style="cursor: pointer;" id="${project.projectId }" data-groupId="${project.groupId}" data-headmanagerid="${project.headManagerId}" class="listRow" ondblclick="goProjectDetails(this)">
 										<td style="width: 20px; cursor: default; text-align: center"><input
 											type="checkbox" onchange="checkedCheckbox(this);"
 											name="boardCheckbox"
