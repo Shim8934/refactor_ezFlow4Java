@@ -751,6 +751,7 @@ var CabinetItem = function() {
 					var spanElmt = document.createElement("span");
 					spanElmt.textContent = relatedFile[0]["title"];
 					spanElmt.setAttribute("role", relatedFile[0]["itemId"]);
+					spanElmt.setAttribute("title", relatedFile[0]["title"]);
 					spanElmt.className   = "txtSpan";
 					ddElmt2.appenChild(spanElmt);
 				}
@@ -758,14 +759,34 @@ var CabinetItem = function() {
 					var spanElmt1 = document.createElement("span");
 					var spanElmt2 = document.createElement("span");
 					var spanElmt3 = document.createElement("span");
+					var pElmt     = document.createElement("p");
 					
+					spanElmt1.setAttribute("title", relatedFile[0]["title"]);
 					spanElmt1.textContent = relatedFile[0]["title"];
 					spanElmt1.className   = "txtSpan";
-					spanElmt2.textContent = "(" + "총 " + totalCnt + "개" + ")";
+					spanElmt2.textContent = " (" + "총 " + totalCnt + "개" + ")";
 					spanElmt3.className   = "icDown";
+					spanElmt3.addEventListener("click", function(e) {showRelatedList(this);}, false);
+					pElmt.className       = "relateList hide";
+					
+					for (var i = 0; i < totalCnt; i++) {
+						var spanChild = document.createElement("span");
+						spanChild.className   = "txtSpan";
+						spanChild.textContent = relatedFile[i]["title"];
+						spanChild.setAttribute("title", relatedFile[i]["title"]);
+						pElmt.appendChild(spanChild);
+						
+						if (i != totalCnt - 1) {
+							var divideEm         = document.createElement("em");
+							divideEm.textContent = "; ";
+							pElmt.appendChild(divideEm);
+						}
+					}
+					
 					ddElmt2.appendChild(spanElmt1);
 					ddElmt2.appendChild(spanElmt2);
 					ddElmt2.appendChild(spanElmt3);
+					ddElmt2.appendChild(pElmt);
 				}
 				
 				dlElmt.appendChild(dtElmt2);
@@ -774,7 +795,14 @@ var CabinetItem = function() {
 	            	<span id="PreH_MailReceiver" style="display:inline-block"><span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);" title="esya@kaoni.com" onclick="show_personinfo(&quot;esya@kaoni.com&quot;)">"이소영"</span></span>
 	            	<span id="PreH_MailReceiver_sub">(총 4명)</span>
 	            	<span class="icon_graydown" onclick="ReceiverDetail_view(this);" id="PreH_ReceiverDetail" style=""></span>
-	            	<p class="hidden_area" id="PreH_MailReceiverDetail_Rayer" style="display: none;"><span id="PreH_MailReceiverDetail"><span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);" title="esya@kaoni.com" onclick="show_personinfo(&quot;esya@kaoni.com&quot;)">"이소영"</span>&nbsp;,&nbsp;<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);" title="cocomos@kaoni.com" onclick="show_personinfo(&quot;cocomos@kaoni.com&quot;)">"정수연"</span>&nbsp;,&nbsp;<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);" title="skyblue0o0@kaoni.com" onclick="show_personinfo(&quot;skyblue0o0@kaoni.com&quot;)">"이효민"</span>&nbsp;,&nbsp;<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor:pointer" title="designteam@kaoni.com" onclick="show_personinfo(&quot;designteam@kaoni.com&quot;)">"UI/UX팀"</span></span></p>
+	            	<p class="hidden_area" id="PreH_MailReceiverDetail_Rayer" style="display: none;">
+	            		<span id="PreH_MailReceiverDetail">
+		            		<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);" title="esya@kaoni.com" onclick="show_personinfo(&quot;esya@kaoni.com&quot;)">"이소영"</span>&nbsp;,&nbsp;
+		            		<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);" title="cocomos@kaoni.com" onclick="show_personinfo(&quot;cocomos@kaoni.com&quot;)">"정수연"</span>&nbsp;,&nbsp;
+		            		<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);" title="skyblue0o0@kaoni.com" onclick="show_personinfo(&quot;skyblue0o0@kaoni.com&quot;)">"이효민"</span>&nbsp;,&nbsp;
+		            		<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor:pointer" title="designteam@kaoni.com" onclick="show_personinfo(&quot;designteam@kaoni.com&quot;)">"UI/UX팀"</span>
+	            		</span>
+	            	</p>
 	            </dd>*/
 			}
 			
@@ -785,6 +813,19 @@ var CabinetItem = function() {
 	
 	function generalItemContent() {
 		
+	}
+	
+	function showRelatedList(spanElmt) {
+		var currentClass = spanElmt.className;
+		var pElmt        = spanElmt.nextElementSibling;
+		if (currentClass == "icDown") {
+			spanElmt.className = "icUp";
+			pElmt.className    = "relateList";
+		}
+		else {
+			spanElmt.className = "icDown";
+			pElmt.className    = "relateList hide";
+		}
 	}
 	
 	function generatePreviewElmt(divElmt) {

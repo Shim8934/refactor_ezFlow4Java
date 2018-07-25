@@ -24,10 +24,10 @@
 				<tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
-					<td id ="title"></td>
+					<td id ="title" class="overfl"></td>
 				<tr>
 					<th><spring:message code='ezCabinet.t52'/></th>
-					<td id="summary"></td>
+					<td id="summary" class="overfl"></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t94'/></th>
@@ -121,6 +121,8 @@
 					createdDate.textContent = result["createdDate"].substring(0, 19);
 					title.textContent       = result["title"];
 					summary.textContent     = result["summary"];
+					title.setAttribute("title", result["title"]);
+					summary.setAttribute("title", result["summary"]);
 					var spanElmt            = document.createElement("span");
 					spanElmt.textContent    = CabinetMessages.strStorage + getFileSize(result["itemSize"]);
 					
