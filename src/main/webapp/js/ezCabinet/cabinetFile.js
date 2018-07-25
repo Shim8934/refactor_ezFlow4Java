@@ -232,8 +232,9 @@ var CabinetFile = function() {
 	}
 	
 	return {
-		upload    : onStartUpload,
-		dragEnter : onDragEnter,
-		dragOver  : onDragOver
+		upload     : onStartUpload,
+		dragEnter  : onDragEnter,
+		dragOver   : onDragOver,
+		deleteFile : deleteFile
 	};
 }();

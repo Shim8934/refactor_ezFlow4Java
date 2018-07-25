@@ -2,7 +2,9 @@ package egovframework.ezEKP.ezCabinet.dao;
 
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.stereotype.Repository;
+
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationItemVO;
@@ -56,5 +58,8 @@ public class EzCabinetDAO_h extends EgovAbstractDAO {
 	public List<CabinetRelationItemVO> getRelatedFileList(Map<String, Object> map) {
 		return (List<CabinetRelationItemVO>)list("EzCabinetDAO_h.getRelatedFileList", map);
 	}
-
+	
+	public void modifyItem(CabinetItemVO itemVO) {
+		update ("EzCabinetDAO_h.modifyItem", itemVO);
+	}
 }

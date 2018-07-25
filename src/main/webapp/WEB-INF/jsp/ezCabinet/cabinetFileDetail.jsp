@@ -32,9 +32,8 @@
 				<tr>
 					<th><spring:message code='ezCabinet.t94'/></th>
 					<td>
-						<div class="rlFileDiv">
+						<div id="rlWrapDiv" class="rlFileDiv">
 							<div id="fileListDiv" class="rlDocDiv"></div>
-							<a id="rlBttnA" style="display: none;"><span id="rlBttn"><spring:message code='ezCabinet.t93'/></span></a>
 						</div>
 					</td>
 				</tr>
@@ -86,8 +85,13 @@
 					listBttns[2].onclick    = function(e) {filePrint();}
 					listBttns[3].onclick    = function(e) {closeWindow();};
 					
-					var divElmt             = document.getElementById("fileListDiv");
-					divElmt.onscroll        = function(e) {scrollListOfItem(this);}
+					document.getElementById("fileListDiv").onscroll = function(e) {scrollListOfItem(this);}
+					document.getElementById("fileBttn").onchange    = function(e) {CabinetFile.upload();};
+					
+					var cabBttnElmt         = document.getElementById("fileModifyDivBttn");
+					var listBttns           = cabBttnElmt.children;
+					listBttns[0].onclick    = function(e) {saveItem();};
+					listBttns[1].onclick    = function(e) {cancelChanges()};
 					
 					getFileDetail();
 				}
@@ -121,10 +125,11 @@
 					title.textContent       = result["title"];
 					summary.textContent     = result["summary"];
 					title.setAttribute("title", result["title"]);
-					summary.setAttribute("title", result["summary"]);
-					var spanElmt            = document.createElement("span");
-					spanElmt.textContent    = CabinetMessages.strStorage + getFileSize(result["itemSize"]);
+					summary.setAttribute("summary", result["summary"]);
 					
+					var spanElmt                  = document.createElement("span");
+					spanElmt.textContent          = CabinetMessages.strStorage + getFileSize(result["itemSize"]);
+					fileCapacityDivElmt.innerHTML = "";
 					fileCapacityDivElmt.appendChild(spanElmt);
 					
 					//첨부파일리스트
@@ -133,7 +138,7 @@
 					
 					if(attachFile == null || attachFile.length == 0) {
 						var spanElmt         = document.createElement("span");
-						spanElmt.textContent = CabinetMessages.strAttach;
+						spanElmt.textContent = CabinetMessages.strNoAttach;
 						divInformElmt.appendChild(spanElmt);
 					}
 					else {
@@ -141,6 +146,7 @@
 						
 						var divfileListElmt = fileDivElmt.firstElementChild;
 						var ulElmt          = divfileListElmt.firstElementChild;
+						ulElmt.innerHTML    = "";
 						
 						for (var i = 0, len = attachFile.length; i < len; i++) {
 							var liElmt        = document.createElement("li");
@@ -156,11 +162,13 @@
 							var fileSize = attachFile[i]["fileSize"];
 							var checkImageFile = isImage(fileName);
 							imgElmt.src        = checkImageFile.isImage == true ? filePath : checkImageFile.urlImage;
+							imgElmt.addEventListener("click", function(e) {downloadFile(e);}, false);
 							
 							divChildElmt1.className = "cabImgAva";
 							divChildElmt1.appendChild(imgElmt);
 							
 							spanChild1.textContent  = fileName;
+							spanChild1.setAttribute("title", fileName);
 							spanChild2.textContent  = getFileSize(fileSize);
 							divChildElmt2.className = "cabFileInf";
 							divChildElmt2.appendChild(spanChild1);
@@ -170,7 +178,6 @@
 							divMainElmt.appendChild(divChildElmt1);
 							divMainElmt.appendChild(divChildElmt2);
 							
-							liElmt.addEventListener("click", function(e) {downloadFile(e);}, false);
 							liElmt.setAttribute("path",  filePath);
 							liElmt.setAttribute("fname", fileName);
 							
@@ -185,6 +192,7 @@
 					for (var i = 0, len = relatedFile.length; i < len; i++) {
 						var spanElmt = document.createElement("span");
 						spanElmt.setAttribute("role", relatedFile[i]["relatedItemId"]);
+						spanElmt.setAttribute("status", relatedFile[i]["useStatus"]);
 						spanElmt.textContent = relatedFile[i]["title"];
 						spanElmt.className   = "rlSpanBnk";
 						spanElmt.addEventListener("click", function(e) {readRelatedItem(this);}, false);
@@ -216,13 +224,19 @@
 				function getRelatedFiles() {return relatedArr;}
 				
 				function readRelatedItem(spanElmt) {
-					var itemId = spanElmt.getAttribute("role");
+					var itemId    = spanElmt.getAttribute("role");
+					var useStatus = spanElmt.getAttribute("status");
+					
+					if(useStatus == 0) {alert(CabinetMessages.strNoRelated); return;}
+					
 					if(itemPopup) {itemPopup.close();}
 					itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "itemDetail", getOpenWindowfeature(600, 565));
 				}
 				
 				function downloadFile(event) {
-					var liElmt      = event.currentTarget;
+					event.stopPropagation();
+					var imgElmt     = event.currentTarget;
+					var liElmt      = imgElmt.parentElement.parentElement;
 					var fileName    = liElmt.getAttribute("fname");
 					var filePath    = liElmt.getAttribute("path");
 					var downloadUrl = "/ezCabinet/downloadAttachFile?filePath=" + filePath + "&fileName=" + fileName;
@@ -283,11 +297,6 @@
 					var fileModifyDivBttn = document.getElementById("fileModifyDivBttn");
 					fileModifyDivBttn.style.display = "";
 					
-					var cabBttnElmt         = document.getElementById("fileModifyDivBttn");
-					var listBttns           = cabBttnElmt.children;
-					listBttns[0].onclick    = function(e) {saveItem();};
-					listBttns[1].onclick    = function(e) {};
-					
 					//Set inputBox
 					var titleTdElmt   = document.getElementById("title");
 					var summaryTdElmt = document.getElementById("summary");
@@ -321,21 +330,43 @@
 					fileDivElmt.addEventListener("drop"     , function(e) {CabinetFile.upload(e);}   , false);
 					
 					if(liElmt.length == 0) {
+						var fileDivElmt         = document.getElementById("fileDiv");
+						var divInformElmt       = fileDivElmt.querySelector("div[class='divInform']");
+						divInformElmt.removeChild(divInformElmt.firstElementChild);
 						
-					}else{
+						var spanElmt1           = document.createElement("span");
+						var spanElmt2           = document.createElement("span");
+						spanElmt1.textContent   = CabinetMessages.strAttach1;
+						spanElmt2.textContent   = CabinetMessages.strAttach2;
+						
+						divInformElmt.appendChild(spanElmt1);
+						divInformElmt.appendChild(spanElmt2);
+					}
+					else {
 						for (var i = 0; i < liElmt.length; i++) {
 							var delImg         = document.createElement("img");
 							delImg.src         = "/images/cabinet/file_del.gif";
-							delImg.addEventListener("click", function(e) {CabinetFile.deleteFile(e);}, false);
-							
+							delImg.addEventListener("click", function(e) {deleteAttach(e);}, false);
 							liElmt[i].appendChild(delImg);
 						}	
 					}
 					
 					//Set relatedBttn
-					var relatedBttn         = document.getElementById("rlBttnA");
-					relatedBttn.style.display = "";
-					relatedBttn.onclick     = function(e) {getRelatedFile();};
+					var relDocDivElmt         = document.getElementById("rlWrapDiv");
+					var relatedBttn           = document.createElement("a");
+					var relSpanElmt           = document.createElement("span");
+					relSpanElmt.textContent   = CabinetMessages.strSlTxt;
+					relatedBttn.appendChild(relSpanElmt);
+					relatedBttn.onclick       = function(e) {getRelatedFile();};
+					relDocDivElmt.appendChild(relatedBttn);
+				}
+				
+				function deleteAttach(event) {
+					event.stopPropagation();
+					var imgObj   = event.currentTarget;
+					var liElmt   = imgObj.parentElement;
+					var ulElmt   = liElmt.parentElement;
+					ulElmt.removeChild(liElmt);
 				}
 				
 				function startUpload() {document.getElementById("fileBttn").click();}
@@ -387,10 +418,6 @@
 					}
 				}
 				
-				function deleteFile() {
-					
-				}
-				
 				function saveItem() {
 					var title   = document.getElementById("itemTtl").value;
 					var summary = document.getElementById("itemSum").value;
@@ -416,11 +443,11 @@
 						}
 					}
 					
-					/* $.ajax({
+					$.ajax({
 						type: "POST",
 						url: "/ezCabinet/modifyItem.do",
 						data: {
-							"cabinetId"   : cabinetId,
+							"itemId"      : itemId,
 							"title"       : title,
 							"summary"     : summary,
 							"relatedList" : JSON.stringify(relatedArr),
@@ -429,10 +456,33 @@
 						dataType: "JSON",
 						async: false,
 						success : function(data) {
+							var code = data.code;
+							switch(code) {
+								case 0 : afterChangeSuccessfully()         ; break;
+								case 1 : alert(CabinetMessages.strParamErr); break;
+								case 2 : alert(CabinetMessages.strError)   ; break;
+								case 3 : alert(CabinetMessages.strPerm)    ; break;
+								default: alert(CabinetMessages.strError)   ; return; 
+							}
 						},
 						error : function(error) {
+							alert(CabinetMessages.strError);
 						}
-					}); */
+					});
+				}
+				
+				function afterChangeSuccessfully() {
+					alert(CabinetMessages.strModify);
+					closeWindow();
+				}
+				
+				function cancelChanges() {
+					document.getElementById("fileDivBttn").style.display       = "";
+					document.getElementById("fileModifyDivBttn").style.display = "none";
+					var relDocDivElmt = document.getElementById("rlWrapDiv");
+					if (relDocDivElmt.childElementCount > 1) {relDocDivElmt.removeChild(relDocDivElmt.lastElementChild);}
+					
+					getFileDetail();
 				}
 				
 				function fileDelete() {

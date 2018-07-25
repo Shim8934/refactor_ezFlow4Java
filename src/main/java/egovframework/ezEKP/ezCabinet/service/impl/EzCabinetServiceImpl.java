@@ -16,6 +16,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
@@ -442,6 +444,12 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("tenantId",    userInfo.getTenantId());
 		
 		List<CabinetVO> listCabinet  = ezCabinetDAO.getCabinetListForPermission(map);
+		
+		if (listCabinet == null || listCabinet.size() == 0) {
+			result.put("code", 1);
+			return result;
+		}
+		
 		List<CabinetVO> otherCabinet = listCabinet.stream().filter(i -> !i.getCreatorId().equals(userId)).collect(Collectors.toList());
 		
 		if (otherCabinet.size() == 0) {
@@ -1032,7 +1040,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		return ezCabinetDAO.getItemsFromIdList(map);
 	}
 	
-	private long getTotalItemsSize(List<Integer> itemIdList, LoginVO userInfo) {
+	public long getTotalItemsSize(List<Integer> itemIdList, LoginVO userInfo) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("tenantId", userInfo.getTenantId());
 		map.put("itemList", itemIdList);

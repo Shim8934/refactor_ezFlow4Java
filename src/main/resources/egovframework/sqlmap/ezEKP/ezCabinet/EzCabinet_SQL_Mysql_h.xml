@@ -437,5 +437,19 @@
 		]]>
 	</select>
 	
-	
+	<update id="EzCabinetDAO_h.modifyItem" parameterClass="CabinetItemVO">
+		<![CDATA[
+			update
+				tbl_cb_item
+			set
+				title       = #title#,
+				summary     = #summary#,
+				update_date = #updatedDate#,
+				update_id   = #updateId#
+			where
+				item_id   = #itemId#
+			and
+				tenant_id = #tenantId#
+		]]>
+	</update>
 </sqlMap>

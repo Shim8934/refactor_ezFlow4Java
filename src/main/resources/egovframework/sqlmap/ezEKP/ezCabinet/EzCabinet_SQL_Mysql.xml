@@ -767,6 +767,10 @@
 		</iterate>
 	</select>
 	
+	<select id="EzCabinetDAO.getItemById" resultMap="cabinetItemVO">
+		<![CDATA[select * from tbl_cb_item where tenant_id = #tenantId# and use_status = 1 and item_id = #itemId#]]>
+	</select>
+	
 	<select id="EzCabinetDAO.getMaxItem" resultClass="Integer">
 		<![CDATA[select ifnull(max(item_id), 0) from tbl_cb_item where tenant_id = #tenantId#]]>
 	</select>
@@ -889,6 +893,13 @@
 		<![CDATA[select * from tbl_cb_attach_file where item_id = #itemId# and tenant_id = #tenantId#]]>
 	</select>
 	
+	<delete id="EzCabinetDAO.deleteAttachFiles">
+		<![CDATA[delete from tbl_cb_attach_file where tenant_id = #tenantId# and item_id = #itemId# and attach_id in]]>
+		<iterate property="attachIds" open="(" close=")" conjunction=",">
+			#attachIds[]#
+		</iterate>
+	</delete>
+	
 	<!--***********************************************************************************
 	**                              Cabinet relation file process                        **
 	************************************************************************************-->
@@ -909,6 +920,13 @@
 	<select id="EzCabinetDAO.getAllRelatedFilesOfItem" resultMap="cabinetRelationVO">
 		<![CDATA[select * from tbl_cb_relation where item_id = #itemId# and tenant_id = #tenantId#]]>
 	</select>
+	
+	<delete id="EzCabinetDAO.deleteRelatedFiles">
+		<![CDATA[delete from tbl_cb_relation where item_id = #itemId# and tenant_id = #tenantId# and relate_item_id in]]>
+		<iterate property="relatedIds" open="(" close=")" conjunction=",">
+			#relatedIds[]#
+		</iterate>
+	</delete>
 	
 	<!--***********************************************************************************
 	**                                  Cabinet share process                            **
