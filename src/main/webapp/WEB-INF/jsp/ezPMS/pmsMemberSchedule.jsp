@@ -44,6 +44,7 @@ function setMemberScheduleList() {
 	$(".dateList").empty();
 	$("#memberCNT").empty();
 	
+	// 사용자가 설정한 기간으로 dateList를 필터링
 	for(var i = 0; i < dateList.length; i++) {
 		
 		if(Date.parse(dateList[i].date) >= Date.parse(sDate)) {
@@ -68,22 +69,26 @@ function setMemberScheduleList() {
 		if(yearMonth == tmp) {
 			monthCount++;
 		} else {
-			$("#dateListHeader1").append('<th colspan=' + monthCount + '>' + tmp + '</th>');
+			var month = tmp.charAt(5) == '0' ? tmp.substring(6) : tmp.substring(5);
+			var year  = tmp.substring(0, 4);
+			$("#dateListHeader1").append('<th colspan=' + monthCount + '>' + '<spring:message code="ezPMS.t341" arguments="' + month + '"/> ' + year + '</th>');
 			monthCount = 1;
 		}
 		
 		if(filteredDateList[i].holidayOrNot == true) {
-			$("#dateListHeader2").append('<th class="holyday" date"' + filteredDateList[i].date + '">' + dayOfMonth + '</th>');
+			$("#dateListHeader2").append('<th class="holyday" date="' + filteredDateList[i].date + '">' + dayOfMonth + '</th>');
 			$(".dateList").append('<td class="holyday" date="' + filteredDateList[i].date + '">&nbsp;</td>');
 		} else {
-			$("#dateListHeader2").append('<th date"' + filteredDateList[i].date + '" >' + dayOfMonth + '</th>');
+			$("#dateListHeader2").append('<th date="' + filteredDateList[i].date + '" >' + dayOfMonth + '</th>');
 			$(".dateList").append('<td date="' + filteredDateList[i].date + '">&nbsp;</td>');
 		}
 		
 		tmp = yearMonth;
 	}
 	
-	$("#dateListHeader1").append('<th colspan=' + monthCount + '>' + tmp + '</th>');
+	var month = tmp.charAt(5) == '0' ? tmp.substring(6) : tmp.substring(5);
+	var year  = tmp.substring(0, 4);
+	$("#dateListHeader1").append('<th colspan=' + monthCount + '>' + '<spring:message code="ezPMS.t341" arguments="' + month + '"/> ' + year + '</th>');
 	
 	// 멤버 스케쥴을 테이블에 반영
 	setMemberSchedule();
@@ -250,7 +255,7 @@ window.onload = function() {
 }
 #memberTable {
 	margin-left : 15px;
-	margin-top : 50px;
+	margin-top : 15px;
 	display : inline-block;
 	width : 98%;
 	overflow : auto;
@@ -302,26 +307,27 @@ window.onload = function() {
 
 #dateListHeader2 .holyday{background-color: rgba(236, 195, 176, 0.40);}
 #dateListHeader2{text-align:center; height: 20px; padding: 2px 2px; }
-#dateListHeader2 th{height: 20px; width:20px; padding: 2px 0px;}
+#dateListHeader2 th{height: 20px; min-width:25px; padding: 2px 0px;}
 #dateListHeader1{padding: 2px 4px; height: 20px;}
 #dateListHeader1 th{height: 20px;}
 .dateList td.holyday{text-align:center; background-color: #FFFAF2;}
-.dateList td, #dateListHeader2 th{text-align:center;}
-#workSchedule{table-layout: fixed; width: 100%}
+.dateList td, #dateListHeader1 th, #dateListHeader2 th{text-align:center;}
 </style>
 </head>
-<body>
-<div>
+<body class="popup">
+	<h1><spring:message code='ezPMS.t290' />
+		<div id="close" style="float:right">
+		<ul>
+			<li>
+				<span id="cancel" onclick="parent.DivMemberSchedulePopUpHidden()"></span>
+			</li>
+		</ul>
+		</div>
+	</h1>
+<div style="text-align: center;">
 	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
 	<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a>
 	<a class="imgbtn" onclick="setMemberScheduleList()" style="margin-left:3px;"><span><spring:message code='ezPMS.t1' /></span></a>
-</div>
-<div id="close" style="float:right">
-	<ul>
-		<li>
-			<span id="cancel" onclick="parent.DivMemberSchedulePopUpHidden()"></span>
-		</li>
-	</ul>
 </div>
 <div id="memberTable">
 <div>
