@@ -2162,8 +2162,6 @@
 				B.tenant_id = #tenantId#
 			AND 
 				B.del_status = 0
-			AND	
-				F.PROJECT_ID = #projectId#
 		]]>	
 	</select>
 	
