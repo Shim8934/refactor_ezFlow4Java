@@ -65,5 +65,6 @@ var CabinetMessages = {
 	strStorage   : "총용량: ",
 	strAttach    : "첨부파일이 없습니다.",
 	strCreator   : "게시자",
-	strRelated   : "연관문서"
+	strRelated   : "연관문서",
+	strSummary   : "요약"
 }

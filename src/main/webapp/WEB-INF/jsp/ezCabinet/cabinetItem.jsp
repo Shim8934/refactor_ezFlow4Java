@@ -167,6 +167,7 @@
 				</div>
 			 </div>
 		</div>
+		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 		
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"                     ></script>

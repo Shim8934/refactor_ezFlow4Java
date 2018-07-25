@@ -75,7 +75,7 @@
 .cabPreviewMode {width: 100px;}
 .cabDivPrevW {height: 100%; overflow: hidden; vertical-align: top; flex: 1;}
 .cabMainPrevW {height: 100%; position: relative; padding-left: 5px;}
-.cabMainPrevW div {width: 100%;}
+.cabMainPrevW >div {width: 100%;}
 .cabPrevTitle {width: 100%; color: #333; font-weight: bold; font-size: 12px; margin: 0px; clear: both; padding: 0px; background: #fcfcfc; border-bottom: 1px solid #ddd; height: 36px; line-height: 36px;}
 .cabPrevTitle .cabPrevIcon {background-image: url('/images/kr/cm/btn_newpopup.gif'); background-repeat: no-repeat; background-position: center left; margin-left: 14px; display: inline-block; float: left; cursor: pointer; height: 100%; width: 27px;}
 .prevHeaderCabW {border-top: 1px solid #ddd;}
@@ -96,6 +96,7 @@
 .relateList {padding: 0px; margin: 3px 0px 0px 0px; line-height: 18px;}
 .relateList.hide {display: none;}
 .relateList em {font-style: normal;}
+.cabWrapFile {padding: 8px;}
 
 .cabDivPrevH {width: 100%; overflow: hidden; flex: 1;}
 .cabMainPrevH {width: 100%; position: relative; padding-top: 5px;}

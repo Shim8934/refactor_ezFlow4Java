@@ -699,16 +699,10 @@ var CabinetItem = function() {
 	
 	function itemDblClickHandler(trObj) {
 		var itemId   = trObj.getAttribute("role");
-		var crrClass = trObj.className;
-		
-		if (crrClass == "bnkCabSelect") {
-			//Add preview code here
-			openFileDetail(itemId);
-		}
+		openFileDetail(itemId);
 	}
 	
 	function afterGetItemInfo(data) {
-		console.log(data);
 		var itemInfo    = data.fileDetail;
 		var attachList  = data.attachFileList;
 		var relatedList = data.relatedFileList;
@@ -734,12 +728,12 @@ var CabinetItem = function() {
 			
 		}
 		else {
-			generalItemTitle(relatedList, itemInfo["creatorName"], dlElmt);
-			generalItemContent(attachList);
+			generalItemTitle(relatedList,  itemInfo["creatorName"], itemInfo["summary"], dlElmt);
+			generalItemContent(attachList, itemInfo["itemSize"]);
 		}
 	}
 	
-	function generalItemTitle(relatedList, creatorName, dlElmt) {
+	function generalItemTitle(relatedList, creatorName, summary, dlElmt) {
 		var dtElmt       = document.createElement("dt");
 		var ddElmt       = document.createElement("dd");
 		dtElmt.textContent = CabinetMessages.strCreator + ": ";
@@ -747,7 +741,16 @@ var CabinetItem = function() {
 		dlElmt.appendChild(dtElmt);
 		dlElmt.appendChild(ddElmt);
 		
-		if(relatedList || relatedList.length > 0) {
+		if (summary.replace(/\s/g,'')) {
+			var sDtElmt         = document.createElement("dt");
+			var sDdElmt         = document.createElement("dd");
+			sDtElmt.textContent = CabinetMessages.strSummary + ": ";
+			sDdElmt.textContent = summary;
+			dlElmt.appendChild(sDtElmt);
+			dlElmt.appendChild(sDdElmt);
+		}
+		
+		if(relatedList && relatedList.length > 0) {
 			var totalCnt = relatedList.length;
 			var dtElmt2  = document.createElement("dt");
 			var ddElmt2  = document.createElement("dd");
@@ -756,7 +759,7 @@ var CabinetItem = function() {
 			if (totalCnt == 1) {
 				var spanElmt = document.createElement("span");
 				spanElmt.textContent = relatedList[0]["title"];
-				spanElmt.setAttribute("role", relatedList[0]["itemId"]);
+				spanElmt.setAttribute("role", relatedList[0]["relatedItemId"]);
 				spanElmt.setAttribute("title", relatedList[0]["title"]);
 				spanElmt.className   = "txtSpan";
 				spanElmt.addEventListener("click", function(e) {readRelatedItem(this);}, false);
@@ -770,7 +773,7 @@ var CabinetItem = function() {
 				
 				spanElmt1.addEventListener("click", function(e) {readRelatedItem(this);}, false);
 				spanElmt1.setAttribute("title", relatedList[0]["title"]);
-				spanElmt1.setAttribute("role", relatedList[0]["itemId"]);
+				spanElmt1.setAttribute("role", relatedList[0]["relatedItemId"]);
 				spanElmt1.textContent = relatedList[0]["title"];
 				spanElmt1.className   = "txtSpan";
 				spanElmt2.textContent = " (" + CabinetMessages.strTotal + " " + totalCnt + CabinetMessages.strItem + ")";
@@ -783,7 +786,7 @@ var CabinetItem = function() {
 					spanChild.className   = "txtSpan";
 					spanChild.textContent = relatedList[i]["title"];
 					spanChild.setAttribute("title", relatedList[i]["title"]);
-					spanChild.setAttribute("role", relatedList[i]["itemId"]);
+					spanChild.setAttribute("role", relatedList[i]["relatedItemId"]);
 					spanChild.addEventListener("click", function(e) {readRelatedItem(this);}, false);
 					pElmt.appendChild(spanChild);
 					
@@ -805,8 +808,86 @@ var CabinetItem = function() {
 		}
 	}
 	
-	function generalItemContent(attachList) {
+	function generalItemContent(attachList, itemSize) {
+		var fileDivId      = crrPreMode == "w" ? "itemContentW" : "itemContentH";
+		var fileDivElmt    = document.getElementById(fileDivId);
 		
+		while (fileDivElmt.firstElementChild) {fileDivElmt.removeChild(fileDivElmt.firstElementChild);}
+		
+		var fileWrap       = document.createElement("div");
+		fileWrap.className = "cabWrapFile";
+		var fileList       = document.createElement("div");
+		fileList.className = "fileDetailDiv";
+		fileDivElmt.appendChild(fileWrap);
+		fileWrap.appendChild(fileList);
+		
+		if(attachList == null || attachList.length == 0) {
+			var divInform        = document.createElement("div");
+			divInform.className  = "divInform";
+			var spanElmt         = document.createElement("span");
+			spanElmt.textContent = CabinetMessages.strAttach;
+			divInform.appendChild(spanElmt);
+			fileList.appendChild(divInform);
+		}
+		else {
+			var divfileListElmt       = document.createElement("div");
+			divfileListElmt.className = "fileList";
+			var ulElmt                = document.createElement("ul");
+			ulElmt.className          = "ulFiles";
+			fileList.appendChild(divfileListElmt);
+			divfileListElmt.appendChild(ulElmt);
+			
+			for (var i = 0, len = attachList.length; i < len; i++) {
+				var liElmt         = document.createElement("li");
+				var divMainElmt    = document.createElement("div");
+				var divChildElmt1  = document.createElement("div");
+				var divChildElmt2  = document.createElement("div");
+				var spanChild1     = document.createElement("span");
+				var spanChild2     = document.createElement("span");
+				var imgElmt        = document.createElement("img");
+				var fileName       = attachList[i]["fileName"];
+				var filePath       = attachList[i]["filePath"];
+				var fileSize       = attachList[i]["fileSize"];
+				var checkImageFile = isImage(fileName);
+				imgElmt.src        = checkImageFile.isImage == true ? filePath : checkImageFile.urlImage;
+				
+				divChildElmt1.className = "cabImgAva";
+				divChildElmt1.appendChild(imgElmt);
+				
+				spanChild1.textContent  = fileName;
+				spanChild2.textContent  = getFileSize(fileSize);
+				divChildElmt2.className = "cabFileInf";
+				divChildElmt2.appendChild(spanChild1);
+				divChildElmt2.appendChild(spanChild2);
+				
+				divMainElmt.className   = "cabDivFile";
+				divMainElmt.appendChild(divChildElmt1);
+				divMainElmt.appendChild(divChildElmt2);
+				
+				liElmt.addEventListener("click", function(e) {downloadFile(e);}, false);
+				liElmt.setAttribute("path",  filePath);
+				liElmt.setAttribute("fname", fileName);
+				
+				liElmt.appendChild(divMainElmt);
+				ulElmt.appendChild(liElmt);
+			}	
+		}
+		
+		var storageDiv          = document.createElement("div");
+		storageDiv.className    = "storageDiv";
+		var storageSpan         = document.createElement("span");
+		storageSpan.textContent = CabinetMessages.strStorage + getFileSize(itemSize);
+		storageDiv.appendChild(storageSpan);
+		fileWrap.appendChild(storageDiv);
+	}
+	
+	function downloadFile(event) {
+		var liElmt      = event.currentTarget;
+		var fileName    = liElmt.getAttribute("fname");
+		var filePath    = liElmt.getAttribute("path");
+		var downloadUrl = "/ezCabinet/downloadAttachFile?filePath=" + filePath + "&fileName=" + fileName;
+		var attachFrame = document.getElementById("attachFrame");
+		attachFrame.src = downloadUrl;
 	}
 	
 	function showRelatedList(spanElmt) {
@@ -864,6 +945,51 @@ var CabinetItem = function() {
 		prevChild.appendChild(imgElmt2);
 		parentDiv.appendChild(prevChild);
 		parentDiv.appendChild(prevCont);
+	}
+	
+	function isImage(fileName) {
+		var fileExt  = (/[.]/.exec(fileName)) ? /[^.]+$/.exec(fileName) : "";
+		var imgCheck = false;
+		var urlImg   = "";
+		
+		switch (fileExt.toString().toLowerCase()) {
+			case "jpg"  :
+			case "gif"  :
+			case "bmp"  :
+			case "png"  :
+			case "jpeg" : imgCheck = true                               ; break;
+			case "pdf"  : urlImg   = "/images/cabinet/pdf.png"          ; break;
+			case "ppt"  : urlImg   = "/images/cabinet/msPowerpoint.png" ; break;
+			case "pptx" : urlImg   = "/images/cabinet/pptx.png"         ; break;
+			case "doc"  : urlImg   = "/images/cabinet/msWord.png"       ; break;
+			case "docx" : urlImg   = "/images/cabinet/docx.png"         ; break;
+			case "xls"  : urlImg   = "/images/cabinet/msExcel.png"      ; break;
+			case "xlsx" : urlImg   = "/images/cabinet/xlsx.png"         ; break;
+			case "hwp"  : urlImg   = "/images/cabinet/hwp.png"          ; break;
+			case "txt"  : urlImg   = "/images/cabinet/txt.png"          ; break;
+			case "mp4"  : urlImg   = "/images/cabinet/mp4.png"          ; break;
+			case "flv"  : urlImg   = "/images/cabinet/flv.png"          ; break;
+			case "mkv"  : urlImg   = "/images/cabinet/mkv.png"          ; break;
+			case "iso"  : urlImg   = "/images/cabinet/iso.png"          ; break;
+			case "rar"  : urlImg   = "/images/cabinet/rar.png"          ; break;
+			default     : urlImg   = "/images/cabinet/unknown.png"      ; break;
+		}
+		
+		return {
+			isImage  : imgCheck,
+			urlImage : urlImg
+		};
+	}
+	
+	function getFileSize(fileSize) {
+		var result = fileSize + "B";
+		
+		switch(true) {
+			case fileSize > 1073741824 : result = parseFloat(fileSize / 1073741824).toFixed(2) + "GB"; break;
+			case fileSize > 1048576    : result = parseFloat(fileSize / 1048576).toFixed(2) + "MB"   ; break;
+			case fileSize > 1024       : result = parseFloat(fileSize / 1024).toFixed(2) + "KB"      ; break;
+		}
+		return result;
 	}
 	
 	function closeAllPopups() {

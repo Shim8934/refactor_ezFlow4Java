@@ -42,12 +42,8 @@
 		</div>
 		
 		<div class="fileDetailDiv" id="fileDiv">
-			<div class="fileList">
-				<ul class="ulFiles"></ul>
-			</div>
-			
-			<div class="divInform">
-			</div>
+			<div class="fileList"><ul class="ulFiles"></ul></div>
+			<div class="divInform"></div>
 		</div>
 		
 		<div class="storageDiv" id="fileCapacityDiv"></div>
@@ -202,7 +198,7 @@
 						
 						relatedArr.push({
 							itemType  : relatedFile[i]["itemType"],
-							itemId    : relatedFile[i]["itemId"],
+							itemId    : relatedFile[i]["relatedItemId"],
 							itemTitle : relatedFile[i]["title"]
 						})
 					}
@@ -217,9 +213,7 @@
 					}
 				}
 				
-				function getRelatedFiles() {
-					return relatedArr;
-				}
+				function getRelatedFiles() {return relatedArr;}
 				
 				function readRelatedItem(spanElmt) {
 					var itemId = spanElmt.getAttribute("role");
