@@ -1029,10 +1029,9 @@
 	   				async : false,
 	   				success : function(result) {
 	   					if (result == "permitted") {
-	   						<%-- toastPopupShow(<spring:message code='ezPMS.t777' />);
-	   						addTaskLog(projectId, 1, groupId, taskIdParam, <spring:message code='ezPMS.t777' /> ); --%>
-	   						toastPopupShow("[" + preTaskRowName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t241' />");
-	   						addTaskLog(projectId, 1, groupId, taskIdParam, "[" + preTaskRowName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t241' />");
+	   						var logContent = "<spring:message code='ezPMS.t241' arguments='" + preTaskRowName + "," + taskName + "'/>";
+	   						toastPopupShow(logContent);
+	   						addTaskLog(projectId, 1, groupId, taskIdParam, logContent);
 	   						returnVal = true;
 	   					} else {
 	   						alert("<spring:message code='ezPMS.t321' />");
