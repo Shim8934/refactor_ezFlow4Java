@@ -823,9 +823,49 @@
 				boardid, 	sn, 	name1, 		name2,	 	name3, 		name4, 		colname, 		width,		view_fg, tenant_id
 			)
 			VALUES(
-				#boardID#, 	#sn#, 	#name1#, 	#name2#,	#name3#, 	#name4#, 	#colName#, 		#width#,	#name#,  #tenantID#
-			)		
-		]]>		
+				#boardID#, 	#sn#, 	#name1#, 	#name2#,
+		]]>
+		<isEqual property="isInitHeader" compareValue="YES">
+			<isEqual property="colName" compareValue="ATTACHMENTS">
+				<![CDATA[
+					'添付', '附加', 
+				]]>
+			</isEqual>
+			<isEqual property="colName" compareValue="TITLE">
+				<![CDATA[
+					'件名', '标题', 
+				]]>
+			</isEqual>
+			<isEqual property="colName" compareValue="WRITERDEPTNAME">
+				<![CDATA[
+					'部署', '部门', 
+				]]>
+			</isEqual>
+			<isEqual property="colName" compareValue="WRITERNAME">
+				<![CDATA[
+					'作成者', '写作者', 
+				]]>
+			</isEqual>
+			<isEqual property="colName" compareValue="WRITEDATE">
+				<![CDATA[
+					'掲示日', '发布日期', 
+				]]>
+			</isEqual>
+			<isEqual property="colName" compareValue="READCOUNT">
+				<![CDATA[
+					'ヒット数', '查询数', 
+				]]>
+			</isEqual>
+		</isEqual>
+		<isNotEqual property="isInitHeader" compareValue="YES">
+			<![CDATA[
+				#name3#, 	#name4#, 
+			]]>
+		</isNotEqual>
+		<![CDATA[
+				#colName#, #width#, #name#, #tenantID#
+			)
+		]]>
 	</insert>
 		
 	<insert id="EzBoardAdminDAO.saveACL_I" parameterClass="Map">
