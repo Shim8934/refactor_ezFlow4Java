@@ -5,14 +5,29 @@
 	<head>
 		<title><spring:message code="ezBoard.t293"/></title>
 		<link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
+		<link rel="stylesheet" href="/css/font-awesome-5.0.10/css/fontawesome-all.css">
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<STYLE title="ezform_style_1">
-		P {
-				MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm
-		  }
+			P {
+					MARGIN-TOP: 0mm;
+					MARGIN-BOTTOM: 0mm;
+			  }
+		  	<%-- 2018-07-24 홍승비 - 썸네일/포토게시물 미리보기 이미지 클릭 시 레이어팝업 추가 --%>
+			.imgPopup{position: relative; float: left; max-width: 400px; max-height: 400px; zoom: 1; cursor:pointer;}
+			.imgPopupMagnify{position: relative; float: left; cursor: pointer;}
+			.imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px;}
+			.imgPopupBoxMagnify{width: 685px;height: 636px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px; z-index: 5;}
+			.imgPopupDivMagnify{width: 655px; max-width:655px; height:558px; overflow:auto; margin:0px auto;}
+			.imgPopupDiv{width:400px; height:400px; margin:0px auto;}
+			.imgPopupBoxOff, .imgPopupOff{display: none;}
+			.imgNotAttached{vertical-align: middle; margin: 0px auto; display: block; border: 1px dotted #cfcfcf; width: 33px; padding: 5px 2px 2px 5px;}
+			.iPBInnerDiv_Top{display:inline-block; float:right; width:40px; margin-top: 15px;}
+			.iPBInnerDiv_Top i{font-size:25px; color:black; cursor:pointer;}
+			.iPBInnerDiv_TopOff{display:none; float:right; width:40px;}
+			.iPBInnerDiv{height:50px; padding-right: 15px}
 		</STYLE>
 		<script type="text/javascript">
 		    window.offscreenBuffering = true;
@@ -63,9 +78,14 @@
 		        pageimageout();
 		        AddLinkTarget();
 		
-		        if (g_progresswin) g_progresswin.close();
+		        if (g_progresswin) {
+		        	g_progresswin.close();
+		        }
 		
 		        window_resize();
+		        
+		        /* 2018-07-24 홍승비 - 투표 모듈의 이미지 레이어팝업 포토+썸넬게시물 미리보기에도 적용 */
+	            addThumbnailEvent();
 		    }
 		    function window_resize() {
 		        CurrentHeight = document.documentElement.clientHeight;
@@ -624,6 +644,270 @@
 	            document.getElementById("SmallImagePrev").style.display = "none";
 	            document.getElementById("SmallImageNext").style.display = "none";
 	        }
+	        
+	        /* 2018-07-24 홍승비 - 미리보기 이미지 클릭 시 투표 모듈에서 가져온 레이어팝업 동작 */
+		    var tempTimer;
+		    function addThumbnailEvent(){
+		  		$(document)
+		    	.on("click", ".thumbCloseBtn", function(e){
+					toggleImgPopupBox(e);
+				}).on("click", ".thumbnail", function(e){
+					toggleImgPopupBox(e);
+				}).on("click", "#thumbMagnifyBtn", function(e){
+					magnifyThumbnailSize();
+				}).on("click", "#thumbZoomInBtn", function(e){
+					zoomInImgPopup();
+				}).on("mousedown", "#thumbZoomInBtn", function(e){
+					e.target.style.color = "#0470e4";
+					tempTimer = setInterval(zoomInImgPopup, 150);
+				}).on("mouseup mouseleave", "#thumbZoomInBtn", function(e){
+					e.target.style.color = "";
+					if(tempTimer){
+						clearInterval(tempTimer);
+					}
+				}).on("click", "#thumbZoomOutBtn", function(e){
+					zoomOutImgPopup();
+				}).on("mousedown", "#thumbZoomOutBtn", function(e){
+					e.target.style.color = "#0470e4";
+					tempTimer = setInterval(zoomOutImgPopup, 150);
+				}).on("mouseup mouseleave", "#thumbZoomOutBtn", function(e){
+					e.target.style.color = "";
+					if(tempTimer){
+						clearInterval(tempTimer);
+					}
+				}).on("click", "#imgPopup", function(e){
+					var pheight = window.screen.availHeight;
+		            var pwidth = window.screen.availWidth;
+		            var htmlString = "";				
+		            var imgPopupWindow = window.open("" , "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height="+ pheight + ",width="+ pwidth + ",top=0,left=0", "");
+		            
+					htmlString = "<html><head><title><spring:message code='ezPortal.t49'/></title></head>";
+					htmlString += "<body style='margin:0px;text-align:center;' onClick='window.close()'>";
+					htmlString += "<div style='height:" + pheight + "px;width:" + pwidth + "px;vertical-align:middle;display:table-cell;'><img style='cursor:pointer;' src=" + e.target.src + "/></div>";
+					htmlString += "</body></html>";
+					
+					imgPopupWindow.document.write(htmlString);
+					imgPopupWindow.document.close();
+				});
+		    }
+		    
+		  //썸네일에 마우스 오버할 때 처리.
+		  	function thumbnailImgMouseOver(e){
+	    		$("#imgPopupDiv, #imgPopupBox, #imgPopup").attr("style","");
+	    		$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","none");
+		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
+		  		var imgPopupBox = $("#imgPopupBox");
+		  		var imgPopupDiv = $("#imgPopupDiv");
+		  		var imgPopup = $("#imgPopup");
+		  		
+		  		imgPopupBox.removeClass("imgPopupBoxOff imgPopupBoxMagnify").addClass("imgPopupBox");
+	    		imgPopupDiv.removeClass("imgPopupDivMagnify").addClass("imgPopupDiv");
+	    		imgPopup.removeClass("imgPopupOff imgPopupMagnify").addClass("imgPopup");
+	    		imgPopup.attr("src", e.target.src);
+	    		
+	    		// src에 부여된 height값 읽어오지 못한 경우(창 두개에서 동시에 레이어팝업 조작할 경우)
+	    		if (imgPopup.height() == 0){
+		    		imgPopup.load (function() {
+		    			$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","");
+		    			
+	    				var imgPB_LeftOffset = (window.innerWidth - imgPopupBox.width()) / 2;
+	    	    		var imgPB_TopOffset = ((window.innerHeight - 100) - imgPopupBox.height()) / 2  + window.pageYOffset;
+	    	    		var imgP_LeftOffset = (imgPopup.parent().width() - imgPopup.width()) / 2;
+	    	    		
+	    	    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
+	    	    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
+	    	    		imgPopup.css({"left": "", "zoom": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+	    	    		
+		    		});
+	    		} else {
+	    			$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","");
+	    			
+	    			var imgPB_LeftOffset = (window.innerWidth - imgPopupBox.width()) / 2;
+    	    		var imgPB_TopOffset = ((window.innerHeight - 100) - imgPopupBox.height()) / 2  + window.pageYOffset;
+    	    		var imgP_LeftOffset = (imgPopup.parent().width() - imgPopup.width()) / 2;
+    	    		
+    	    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
+    	    		imgPopupDiv.css({"width": imgPopup.prop("offsetWidth")});
+    	    		imgPopup.css({"left": "", "zoom": "", "top": ((imgPopupBox.height() - imgPopup.height()) / 2) - iPBInnerDivH});
+	    		}
+	    		
+	    		$("#thumbMagnifyBtn").removeClass("fa fa-minus-square").addClass("fa fa-plus-square");
+	    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().removeClass("iPBInnerDiv_Top").addClass("iPBInnerDiv_TopOff");
+		  	}
+		  
+		  //썸네일 원본 크기로 보기 기능.
+		  	function magnifyThumbnailSize(){
+		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
+		  		var imgPopupDiv = document.getElementById("imgPopupDiv");
+	    		var imgPopup = document.getElementById("imgPopup");
+	    		var $imgPopupBox = $("#imgPopupBox");
+		  		var $imgPopupDiv = $("#imgPopupDiv");
+		  		var $imgPopup = $("#imgPopup");
+	    		
+		  		if($("#thumbMagnifyBtn").attr("class").indexOf("plus") != -1){
+		  			$("#thumbMagnifyBtn").attr("class","fa fa-minus-square");
+		  		}
+		  		else{
+		  			$("#thumbMagnifyBtn").attr("class","fa fa-plus-square");
+		  			$imgPopup.css("zoom","");
+		  		}
+	    		
+	    		$("#thumbZoomInBtn, #thumbZoomOutBtn").parent().toggleClass("iPBInnerDiv_TopOff iPBInnerDiv_Top");
+				$imgPopupBox.toggleClass("imgPopupBox imgPopupBoxMagnify");
+	    		$imgPopupDiv.toggleClass("imgPopupDiv imgPopupDivMagnify");
+	    		$imgPopup.toggleClass("imgPopup imgPopupMagnify");
+	    		
+	    		//imgPopupBox frame 가운데로 위치 조정.
+	    		$imgPopupBox.css("left",(window.innerWidth - $imgPopupBox.width()) / 2);
+	    		var iPBTopOffset = ((window.innerHeight - 100) - $imgPopupBox.height()) / 2 + window.pageYOffset;
+	    		
+	    		if(iPBTopOffset < 0){
+	    			$imgPopupBox.css("top", 0);
+	    		}
+	    		else{
+		    		$imgPopupBox.css("top", iPBTopOffset);
+	    		}
+	    		$imgPopupDiv.width(imgPopup.offsetWidth);
+	    		
+	    		var imgPopupDivSH = imgPopupDiv.scrollHeight;
+	    		var imgPopupDivCH = imgPopupDiv.clientHeight;
+	    		var imgPopupCH = imgPopup.clientHeight;
+	    		
+	    		//imgPopup 세로 위치 조정.
+	    		if( imgPopupCH > imgPopupDivCH && imgPopup.naturalHeight > 700 ){
+	    			$imgPopup.css("top", 0);
+	    		}else{
+	    			$imgPopup.css("top",(($imgPopupBox.height() - $imgPopup.height()) / 2) - iPBInnerDivH);
+	    		}
+		  	}
+		  	
+		  	//썸네일 이미지 팝업박스를 토글해준다.
+		  	function toggleImgPopupBox(e){
+		  		var imgPopupBox = $("#imgPopupBox");
+		  		var imgPopupDiv = $("#imgPopupDiv");
+		  		var imgPopup = $("#imgPopup");
+		  		
+		  		$("#imgPopupDiv, #imgPopupBox, #imgPopup").attr("style","");
+		  		
+		  		//마우스 오버 이벤트 없애는 작업과 함께 이미지 뷰어가 보이는 상태에서 다른 그림 선택했을 때 처리하기 위해 수정. 2018-06-19 홍대표
+		  		if(e.target.id != "thumbCloseBtn"){
+		  			thumbnailImgMouseOver(e);
+		  			return;
+		  		}
+		  		
+		  		if(imgPopup.attr("src")){
+			  		imgPopupBox.removeClass("imgPopupBox").addClass("imgPopupBoxOff");
+			  		imgPopupDiv.removeClass("imgPopupDivMagnify").addClass("imgPopupDiv");
+			  		imgPopup.removeClass("imgPopup").addClass("imgPopupOff");
+			  		imgPopup.removeAttr("src");
+		  		}
+		  		else if(e.target.getAttribute("class") === "thumbnail"){
+		  			thumbnailImgMouseOver(e);
+		  		}
+		  	}
+		  	
+		  	//줌인버튼 기능.
+		  	function zoomInImgPopup(){
+		  		var zoom = 1;
+		  		var zoomOffset = 0.1;
+		  		var $imgPopupBox = $("#imgPopupBox");
+		  		var $imgPopupDiv = $("#imgPopupDiv");
+		  		var $imgPopup = $("#imgPopup");
+		  		
+		  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
+		  		if($imgPopup.css("zoom").indexOf("%") != -1){
+		  			zoom = parseFloat($imgPopup.css("zoom").replace("%", "") / 100) + zoomOffset;
+		  		}
+		  		else if($imgPopup.css("zoom").indexOf("normal") != -1){
+		  			zoom = 1 + zoomOffset;
+		  		}
+		  		else{
+			  		zoom = parseFloat($imgPopup.css("zoom")) + zoomOffset;
+		  		}
+		  		$imgPopup.css("zoom", zoom);
+		  		
+		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
+		  		var thumbImgH = $imgPopup.prop("naturalHeight") * zoom;
+		  		var imgPopupDiv = document.getElementById("imgPopupDiv");
+	    		var imgPopup = document.getElementById("imgPopup");
+		  		var imgPopupDivCH = imgPopupDiv.clientHeight;
+		  		$imgPopupDiv.width(imgPopup.offsetWidth * zoom);
+		  		
+		  		//imgPopup 세로 위치 조정.
+		  		if(thumbImgH < (imgPopupDivCH - 100)){
+		  			var agent = navigator.userAgent.toLowerCase();
+		  			var topOffset = "";
+		  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
+			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
+	  				}
+	  				else {
+			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
+	  				}
+		  			$imgPopup.css("top", topOffset);
+		  			$imgPopupDiv.css("overflow", "hidden");
+		  		}
+		  		else if(thumbImgH > (imgPopupDivCH - 100)){
+		  			$imgPopup.css("top", 0);
+		  			$imgPopupDiv.css("overflow", "auto");
+		  		}		
+		  	}
+		  	
+		  	//줌아웃 버튼 기능.
+		  	function zoomOutImgPopup(){
+		  		var zoom = 1;
+		  		var zoomOffset = 0.1;
+		  		var $imgPopupBox = $("#imgPopupBox");
+		  		var $imgPopupDiv = $("#imgPopupDiv");
+		  		var $imgPopup = $("#imgPopup");
+		  		
+		  		//zoom이 숫자가 아닌 다른 형태로 넘어올 때 처리.
+		  		if($imgPopup.css("zoom").indexOf("%") != -1){
+		  			zoom = parseFloat($imgPopup.css("zoom").replace("%", "") / 100) - zoomOffset;
+		  		}
+		  		else if($imgPopup.css("zoom").indexOf("normal") != -1){
+		  			zoom = 1 - zoomOffset;
+		  		}
+		  		else{
+			  		zoom = parseFloat($imgPopup.css("zoom")) - zoomOffset;
+		  		}
+		  		
+		  		if( zoom > 0 ){
+			  		$imgPopup.css("zoom", zoom);
+		  		}else{
+		  			return;
+		  		}
+		  		
+		  		var thumbImgW = $imgPopup.prop("naturalWidth") * zoom;
+		  		var thumbImgH = $imgPopup.prop("naturalHeight") * zoom;
+		  		var iPBInnerDivH = $(".iPBInnerDiv").height();
+		  		var imgPopupDiv = document.getElementById("imgPopupDiv");
+	    		var imgPopup = document.getElementById("imgPopup");
+		  		var imgPopupDivCW = imgPopupDiv.clientWidth;
+	    		var imgPopupDivCH = imgPopupDiv.clientHeight;
+	    		$imgPopupDiv.width(imgPopup.offsetWidth * zoom);
+	    		
+		  		if(thumbImgW > (imgPopupDivCW - 100)){
+		  			$imgPopup.css("left","");
+		  		}
+		  		
+		  		//imgPopup 세로 위치 조정
+		  		if(thumbImgH < (imgPopupDivCH - 100)){
+		  			var agent = navigator.userAgent.toLowerCase();
+		  			var topOffset = "";
+		  			if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ) {
+			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH);
+	  				}
+	  				else {
+			  			topOffset = ((($imgPopupBox.height() - thumbImgH) / 2) - iPBInnerDivH) / zoom;
+	  				}
+		  			$imgPopup.css("top", topOffset);
+		  			$imgPopupDiv.css("overflow", "hidden");
+		  		}
+		  		else if(thumbImgH > (imgPopupDivCH - 100)){
+		  			$imgPopup.css("top", 0);
+		  			$imgPopupDiv.css("overflow", "auto");
+		  		}
+		  	}
 			</script>
 		</head>
 		<body>
@@ -643,7 +927,7 @@
 			                <table id="imagetable" style="text-align:center; border:0px;">
 			                    <tr>  
 			                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center" id="imageTD">
-			                            <img id="mainimages" onclick="window.open(this.src)" style="background-color:#ffffff;cursor:pointer;" src=""/>            
+			                            <img id="mainimages" class="thumbnail" style="background-color:#ffffff;cursor:pointer;" src=""/>            
 			                        </td>
 			                    </tr>
 			                    
@@ -686,5 +970,26 @@
 		        </td>
 		    </tr>
 		</table>
+		
+		  <%-- 2018-07-20 홍승비 - 이미지 클릭 시 레이어팝업 표출 --%>
+	    <div id="imgPopupBox" class="imgPopupBoxOff">
+			<div style="height:50px;" class="iPBInnerDiv">
+    			<div class="iPBInnerDiv_Top">
+    				<i id="thumbCloseBtn" class="fa fa-times-circle thumbCloseBtn"></i>
+    			</div>
+    			<div class="iPBInnerDiv_Top">
+    				<i id="thumbMagnifyBtn" class="fa fa-plus-square thumbMagnifyBtn"></i>
+    			</div>
+    			<div class="iPBInnerDiv_TopOff">
+    				<i id="thumbZoomInBtn" class="fa fa-search-plus"></i>
+   				</div>
+   				<div class="iPBInnerDiv_TopOff">
+    				<i id="thumbZoomOutBtn" class="fa fa-search-minus"></i>
+   				</div>
+   			</div>
+   			<div id="imgPopupDiv" class="imgPopupDiv">
+				<img id="imgPopup" class="imgPopup">
+   			</div>
+   		</div>
 	</body>
 </html>

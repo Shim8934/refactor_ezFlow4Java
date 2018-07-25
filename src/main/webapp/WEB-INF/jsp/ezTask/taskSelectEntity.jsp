@@ -168,24 +168,50 @@
 	    	}
 	    	
 	    	$.ajax({
-					url : '/ezOrgan/getDeptMemberList.do',
-					method : 'POST',
-					dataType : "text",
-					data : {
-						deptID : tempDeptID ,
-						cell : "company;description;displayName;title;telephoneNumber",
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
-						page : CurPage ,
-						type : "user"
-					} ,
+				url : '/ezOrgan/getDeptMemberList.do',
+				method : 'POST',
+				dataType : "text",
+				data : {
+					deptID : tempDeptID ,
+					cell : "company;description;displayName;title;telephoneNumber",
+					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+					page : CurPage ,
+					type : "user"
+				} ,
   				success : function(xml) {
   					event_displayUserList(loadXMLString(xml));
-					},
-					error : function(jqXHR, textStatus, errorThrown) {
-						alert("spring:message code='ezTask.t193' />");
-					}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					alert("spring:message code='ezTask.t193' />");
+				}
   			});
+	    	
+	    	$.ajax({
+				url : "/ezOrgan/getDeptMemberListCount.do",
+				method : "POST",
+				dataType : "json",
+				data : {
+					deptID : tempDeptID
+				},
+				success : function(result) {
+					var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
+					
+					if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
+		        		if (result.totalCount == result.totalCount2) {
+		        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang43 + "</span>]";
+		        		} else {
+		        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang43+ "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang43 + "</span>]";
+		        		}
+		            	
+		            	SelectDeptNM.setAttribute("countinfo","1")
+		        	}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					alert(error);
+				}
+			});
 	    }
+	    
 	    function search_press(evt) {
 	        if (window.event) {
 	            if (window.event.keyCode == 13) {
@@ -447,10 +473,7 @@
 	        }
 	        
 	        var UserListHTML = "";
-	        /* if (SelectDeptNM.getAttribute("countinfo") != "1") { */
-	        if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) != null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
-	            //SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang43 + "</span>]";
-	            
+	        /* if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) != null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
 	            if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
 	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang43 + "</span>]";
 	        		} else {
@@ -458,7 +481,7 @@
 	        		}
 	            
 	            SelectDeptNM.setAttribute("countinfo", "1")
-	        }
+	        } */
 	        
 	        if (pListType == "IMG") {
 	            document.getElementById("DeptUserImgList").style.display = "";

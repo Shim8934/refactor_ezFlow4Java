@@ -1870,8 +1870,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				rtnXML.append("<DATA3>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent())) + "</DATA3>");
 				rtnXML.append("<DATA4>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("FORMCONTPARENTS").item(k).getTextContent())) + "</DATA4>");
 				rtnXML.append("<DATA5>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("FORMCONTDESCRIPTION").item(k).getTextContent())) + "</DATA5>");
-				
-                if (docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().equals("ALL")) {
+
+				// 2018-07-24 양식등록 > 그룹사용 관리부서 없는 양식함 표시하기위해 none일때 추가  강민수92
+                if (docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().equals("ALL") || docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().equals("none")) {
                 	rtnXML.append("<DATA6>ALL</DATA6>");
                 } else {
                 	if (approvalFlag.equals("S")) {
@@ -17427,8 +17428,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String docState, int querySize, int querySize2, int querySize3, String orderOption1, String orderOption2, String alFlag, String langType, String approvUser, String companyID, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception {
 		logger.debug("getSearchDocList started");
 		
-		System.out.println("시간 : " + tmpEndDate1);
-		System.out.println("시간 : " + tmpEndDate2);
+/*		System.out.println("시간 : " + tmpEndDate1);
+		System.out.println("시간 : " + tmpEndDate2);*/
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -23788,8 +23789,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			//strong 태그를 b태그로 변경
 			return strRtnContent;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			System.out.println(e.getStackTrace());
+/*			System.out.println(e.getMessage());
+			System.out.println(e.getStackTrace());*/
 			strErrorMsg = "Content 전처리 진행중 오류가 발생했습니다.";
 			return ReturnErrorContent(strErrorMsg);
 		}
@@ -24683,7 +24684,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			return true;
 		} catch (Exception e) {
-			System.out.println(e.getStackTrace());
+			/*System.out.println(e.getStackTrace());*/
 			map.put("NEWID", strNewID);
 			map.put("XDOCID", strXDocID);
 			map.put("XTOCODE", strXToCode);

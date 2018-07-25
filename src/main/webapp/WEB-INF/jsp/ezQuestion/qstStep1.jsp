@@ -414,13 +414,23 @@
 	                </td> 
 	            </tr> 
 	            <tr>     <!----------- 설문 응답자 범위(전체/선정) --------------> 
-	                <th><spring:message code="ezQuestion.t441" /></th> 
+	                <th><spring:message code="ezQuestion.t441" /></th>
+	                <!-- 2018-07-24 김보미 - 버튼 가운데 정렬 -->
+<!-- 	                <td> -->
+<!-- 	                    <select name="setTarget" id="set_Target" onchange="return set_Target_onchange()">  -->
+<%-- 	                        <option value="0" selected="selected"><spring:message code="ezQuestion.t251" /></option>  --%>
+<%-- 	                        <option value="1"><spring:message code="ezQuestion.t252" /></option>  --%>
+<!-- 	                    </select>  -->
+<%-- 	                    <a class="imgbtn imgbck"><span onclick="menu_SelectRange();"><spring:message code="ezQuestion.t253" /></span></a> --%>
+<!-- 	                </td>  -->
 	                <td>
-	                    <select name="setTarget" id="set_Target" onchange="return set_Target_onchange()"> 
-	                        <option value="0" selected="selected"><spring:message code="ezQuestion.t251" /></option> 
-	                        <option value="1"><spring:message code="ezQuestion.t252" /></option> 
-	                    </select> 
-	                    <a class="imgbtn imgbck"><span onclick="menu_SelectRange();"><spring:message code="ezQuestion.t253" /></span></a>
+	                	<div style="vertical-align: middle;height: 74%;width: 100%;">
+		                    <select name="setTarget" id="set_Target" onchange="return set_Target_onchange()"> 
+		                        <option value="0" selected="selected"><spring:message code="ezQuestion.t251" /></option> 
+		                        <option value="1"><spring:message code="ezQuestion.t252" /></option> 
+		                    </select> 
+		                    <a class="imgbtn imgbck"><span onclick="menu_SelectRange();"><spring:message code="ezQuestion.t253" /></span></a>
+	                    </div>
 	                </td> 
 	            </tr> 
 	            <tr> <!----------- 설문제목 -------------> 

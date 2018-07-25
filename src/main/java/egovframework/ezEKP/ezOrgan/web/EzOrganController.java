@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -203,6 +204,28 @@ public class EzOrganController {
 		logger.debug("getDeptMemberList ended");
 		
 		return result;
+	}
+	
+	@RequestMapping(value = "/ezOrgan/getDeptMemberListCount.do")
+	public String getDeptMemberListCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getDeptMemberList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String deptID = request.getParameter("deptID");
+		
+		String primary = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
+		int totalCount = 0, totalCount2 = 0;
+		
+		totalCount = ezOrganService.getDeptMemberListCount(deptID, false, primary, tenantID);
+		totalCount2 = ezOrganService.getDeptMemberListCount(deptID, true, primary, tenantID);
+		
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("totalCount2", totalCount2);
+
+		logger.debug("getDeptMemberList ended.");
+		
+		return "json";
 	}
 	
 	/**

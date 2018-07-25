@@ -567,7 +567,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				Cookie[] cookies = req.getCookies();
 				if (cookies != null) {
 					for (int j=0; j<cookies.length; j++) {
-						if (cookies[j].getName().equals("POPUP_"+itemSeq)) {
+						if (cookies[j].getName().equals("POPUP_"+itemSeq+"_"+userInfo.getId())) {
 							cookieValue = cookies[j].getValue();
 						}
 					}

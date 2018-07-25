@@ -39,7 +39,7 @@
 			}
 	
 			function closepopup() {
-				setCookie("POPUP_${itemSeq}", "1", 1); 
+				setCookie("POPUP_${itemSeq}_${user}", "1", 1); 
 				window.close();
 			}
 		</script>

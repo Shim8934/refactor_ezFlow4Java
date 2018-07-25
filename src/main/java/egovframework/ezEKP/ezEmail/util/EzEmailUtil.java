@@ -2622,10 +2622,20 @@ public class EzEmailUtil {
 	public void setSentDateFlag(Message message, boolean isSet) throws MessagingException {
 		logger.debug("setSentDateFlag");
 		
+		String[] flags = message.getFlags().getUserFlags();
+		
+		for (String flag : flags) {
+			if (flag.indexOf("$SentDate-") != -1) {
+				Flags test = new Flags(flag);
+				
+				message.setFlags(test, false);
+			}
+		}
+		
 		String nowMillisTime = Long.toString(System.currentTimeMillis());
 		Flags sentDateFlag = new Flags("$SentDate-" + nowMillisTime);
 		
-		logger.debug(nowMillisTime);
+		logger.debug("nowMillisTime : " + nowMillisTime);
 		
 		message.setFlags(sentDateFlag, isSet);
 	}

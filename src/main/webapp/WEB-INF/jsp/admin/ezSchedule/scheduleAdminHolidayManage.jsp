@@ -59,8 +59,8 @@
 		                    for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
 		                        var _Value;
 		                        _html += "<tr style='cursor:pointer' id = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYID")[0].textContent
-		                              + "'holidayname = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent
-		                              + "'holidayname2 = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent
+		                              + "'holidayname = '" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent)
+		                              + "'holidayname2 = '" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent)
 		                              + "'date = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0,10)
 		                              + "'issolar = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent
 		                              + "'isrepeat = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent
@@ -74,9 +74,9 @@
 		                            _html += "<td style='width:5%;padding-left:5px;'><input type='checkbox' onclick='event_statuschange(this);'></td>";
 	
 		                        if (userlang == "1")
-		                            _html += "<td style='width:30%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent + "</td>";
+		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent) + "</td>";
 		                        else
-		                            _html += "<td style='width:30%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent + "</td>";
+		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent) + "</td>";
 	
 		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
 		                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
@@ -115,8 +115,8 @@
 		                    for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
 		                        var _Value;
 		                        _html += "<tr style='cursor:pointer' id = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYID")[0].text
-		                              + "'holidayname = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].text
-		                              + "'holidayname2 = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].text
+		                              + "'holidayname = '" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].text)
+		                              + "'holidayname2 = '" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].text)
 		                              + "'date = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].text.substring(0, 10)
 		                              + "'issolar = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].text
 		                              + "'isrepeat = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].text
@@ -130,9 +130,9 @@
 		                            _html += "<td style='width:5%;padding-left:5px;'><input type='checkbox' onclick='event_statuschange(this);'></td>";
 	
 		                        if (userlang == "1")
-		                            _html += "<td style='width:30%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].text + "</td>";
+		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].text) + "</td>";
 		                        else
-		                            _html += "<td style='width:30%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].text + "</td>";
+		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].text) + "</td>";
 	
 		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].text == "1")
 		                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
@@ -255,23 +255,26 @@
 		        	alert("<spring:message code='ezSchedule.t4001' />");
 		            return;
 		        }
-		        
-		        $.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/admin/ezSchedule/scheduleDelHoliday.do",
-		    		data : {
-		    			holidayID  : _RowObject.id		    			
-		    		},
-		    		success: function() {
-		    			alert("<spring:message code='ezSchedule.t4002' />");
-			            schedule_get_holiday();
-		    		},
-		    		error: function(err) {
-		    			alert(strLang86);
-		    		}
-		        });
+		        // 2018-07-24 천성준 - 삭제 시, 한번더 체크할수 있게
+		        var holidayName = _RowObject.getAttribute("holidayname");
+		        if (confirm(holidayName + " <spring:message code='ezBoard.t117' />")) {
+			        $.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/admin/ezSchedule/scheduleDelHoliday.do",
+			    		data : {
+			    			holidayID  : _RowObject.id		    			
+			    		},
+			    		success: function() {
+			    			alert("<spring:message code='ezSchedule.t4002' />");
+				            schedule_get_holiday();
+			    		},
+			    		error: function(err) {
+			    			alert(strLang86);
+			    		}
+			        });
+		        }
 		    }
 	
 		    function event_statuschange(obj) {

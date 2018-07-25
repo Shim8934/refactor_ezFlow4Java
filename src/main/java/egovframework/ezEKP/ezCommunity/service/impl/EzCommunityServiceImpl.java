@@ -3738,7 +3738,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	        	sb.append("<USERNAME2>" + commonUtil.cleanValue(item.getUserName2()) + "</USERNAME2>");
 	        	sb.append("<COMPANYID>" + commonUtil.cleanValue(item.getCompanyID()) + "</COMPANYID>");
 	        	sb.append("<TITLE>" + commonUtil.cleanValue(item.getTitle()) + "</TITLE>");
-	        	sb.append("<CONTENT>" + commonUtil.cleanValue(item.getContent().trim()) + "</CONTENT>");
+	        	sb.append("<CONTENT><![CDATA[" + commonUtil.cleanValue(item.getContent()).replaceAll("\n", "<br>") + "]]>" + "</CONTENT>");
 	        	sb.append("<CONTENTURL>" + commonUtil.cleanValue(item.getContentURL()) + "</CONTENTURL>");
 	        	sb.append("<READNUM>" + item.getReadNum() + "</READNUM>");
 	        	sb.append("<WRITEDAY>" + commonUtil.getDateStringInUTC(item.getWriteDay().substring(0, item.getWriteDay().lastIndexOf(".")), userInfo.getOffset(), false) + "</WRITEDAY>");

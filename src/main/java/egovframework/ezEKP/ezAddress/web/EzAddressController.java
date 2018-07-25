@@ -402,6 +402,7 @@ public class EzAddressController{
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
+		model.addAttribute("userLang", userInfo.getLang());
 		
 		logger.debug("addressWrite ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId

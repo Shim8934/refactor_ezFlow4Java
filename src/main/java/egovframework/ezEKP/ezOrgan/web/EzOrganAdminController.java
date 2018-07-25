@@ -1321,12 +1321,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         			String jobTile = vo.getTitle() == null ? "" : vo.getTitle(); 
 					String jobPostion = vo.getExtensionAttribute10() == null ? "" : vo.getExtensionAttribute10();
 					useRankMailUser = ezOrganAdminService.getUserInfo(cn, userInfo.getPrimary(), tenantID);
-					OrganDeptVO deptVO = ezOrganService.getDeptInfo(vo.getParentCn(), userInfo.getPrimary(), tenantID);//user의 부서 정보
+					OrganDeptVO deptVO = ezOrganService.getDeptInfo(useRankMailUser.getDepartment(), userInfo.getPrimary(), tenantID);//user의 부서 정보
 					companyId = deptVO.getExtensionAttribute2();//회사 ID
 					String beforeTitle = useRankMailUser.getTitle();//이전의 직위
 					String beforePosition = useRankMailUser.getExtensionAttribute10(); //이전의 직책
 					
-					if (!jobTile.equals("")) {
+					if (jobTile != null && !jobTile.equals("")) {
 						String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile);
 						jobTile2 = String.valueOf(UUID.randomUUID()).substring(0,8);
 
@@ -1345,7 +1345,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							 }
 						}
 						
-					if (!jobPostion.equals("")) {
+					if (jobPostion != null && !jobTile.equals("")) {
 						String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobPostion);
 						jobPostion2 = String.valueOf(UUID.randomUUID()).substring(0,8);
 						
@@ -1367,6 +1367,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         		ezOrganAdminService.updateDBData_user(vo);
         		result = "OK";
         	} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+        		e.printStackTrace();
         		ezOrganAdminService.deleteTargetAddressUser(tenantID, jobTile2, vo.getCn(), companyId);//직위 공용배포 그룹에서 user 삭제
         		ezOrganAdminService.deleteTargetAddressUser(tenantID, jobPostion2, vo.getCn(), companyId);//직책 공용배포 그룹에서 user 삭제
         		String userNameTitle = ezOrganAdminService.getDistributionUserName(tenantID, vo.getTitle());//user의 기존 직위 공용 배포 그룹 이름 가져오기
@@ -1451,7 +1452,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 								OrganDeptVO deptVO = ezOrganService.getDeptInfo(vo.getParentCn(), userInfo.getPrimary(), tenantID);//user의 부서 정보
 								companyId = deptVO.getExtensionAttribute2();//회사 ID
 								
-								if (!jobTile.equals("")) {
+								if (jobTile != null && !jobTile.equals("")) {
 									String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile);
 									jobTile2 = String.valueOf(UUID.randomUUID()).substring(0,8);
 									logger.debug("jobTitle UUID=" + jobTile2);
@@ -1464,7 +1465,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 									 
 								}
 									
-								if (!jobPostion.equals("")) {
+								if (jobPostion != null && !jobPostion.equals("")) {
 									String userName = ezOrganAdminService.getDistributionUserName(tenantID, jobPostion);
 									jobPostion2 = String.valueOf(UUID.randomUUID()).substring(0,8);
 									logger.debug("jobPostion2 UUID=" + jobPostion2);
@@ -1496,6 +1497,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							
 							result = "OK";
 						} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
+							e.printStackTrace();
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 							ezEmailUserAdminService.removeUser(mailAddr);
 							ezOrganAdminService.mailDelDistributionList(tenantID, vo.getTitle()); //직위 공용 배포 그룹 삭제
@@ -2346,8 +2348,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
    		model.addAttribute("list", list);
    		model.addAttribute("pPage", pPage);
    		model.addAttribute("totalPage", totalPage);
-		model.addAttribute("companylist", resultList);
-		model.addAttribute("companyId", companyId);
+   		model.addAttribute("totalCount", totalCount);
+   		model.addAttribute("pPageRow", pPageRow);
+   		model.addAttribute("companylist", resultList);
+   		model.addAttribute("companyId", companyId);
 		
    		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
    		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
@@ -2518,7 +2522,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		List<String[]> aliasAddressList = ezEmailService.getAliasAddress(userId, tenantID);
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append("<select size='4' name='ListEmail' id='ListEmail' style='height:175px;width:100%;'>");
+		sb.append("<select size='4' name='ListEmail' id='ListEmail' style='height:175px;width:100%;background:none;'>");
 		
 		for (String[] aliasAddress : aliasAddressList) {
 			if (aliasAddress[0].equals(userVO.getMail())) {

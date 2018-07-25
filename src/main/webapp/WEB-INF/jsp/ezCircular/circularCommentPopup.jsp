@@ -149,7 +149,7 @@
 				<li><span onclick="closePopup();"></span></li>
 			</ul>
 		</div>
-		<div id="menu" class="extraMenu" style="position:absolute;left:137px;">
+		<div id="menu" style="position:absolute;right:12px;top:60px">
 			<ul>				
 				<li><span onclick="commentSendMail();" style="border:1px solid #d2d2d2"><spring:message code='ezCircular.t83'/></span></li>
 			</ul>

@@ -2583,7 +2583,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
 		    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
 		    		        }
-		    		        
+
+		    		        // 전달, 회신
+	    		        	ezEmailUtil.setSentDateFlag(orgMessage, true);
+	    		        	
 		    		        orgMsgFolder.close(true);
 			            }
 				        
@@ -4591,8 +4594,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
         	
             String pFilter = filterName + "," + filterValue;
                         
-            searchCount[0] = ezAddressService.getAddressSearchCount(userInfo.getTenantId(), folderID, ownerIds, filterName + ",");
-            searchCount[1] = ezAddressService.getAddressSearchCount(userInfo.getTenantId(), folderID, ownerIds, pFilter);            
+            searchCount[0] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, filterName + ",");
+            searchCount[1] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, pFilter);            
             
             // start와 end(getAddressSearch를 호출 하는 곳에서 +1을 해주어 count값은 1로 넘어온다)값이 각각 0으로 넘어오는 경우 전체리스트를 출력하기 위해 count에 searchCount 대입 
             if(start == 0 && count == 1){
@@ -4600,7 +4603,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
             }
             // 끝
             
-            List<AddressVO> addressInfoList = ezAddressService.getAddressSearchList(userInfo.getTenantId(), folderID, ownerIds, "", pFilter, count, start);
+            List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, count, start);
             
             StringBuilder sb = new StringBuilder();
             sb.append("<LISTVIEWDATA><ROWS>");
