@@ -461,10 +461,19 @@ public class EzBoardController extends EgovFileMngUtil{
 			endTime = boardPollConfigVO.getDefaultEndTime();
 			
 			//Process target
-	        String[] departIdList = boardPollConfigVO.getTargetDepts().split(",");
-	        String[] userIdList = boardPollConfigVO.getTargetUsers().split(",");
+	        String[] departIdList = null;
+	        String targetDepts = boardPollConfigVO.getTargetDepts();
+	        if(targetDepts != null){
+	        	departIdList = targetDepts.split(",");
+	        }
 	        
-	        if (departIdList.length > 0 && !departIdList[0].equals("")) {
+	        String[] userIdList = null;
+	        String targetUsers = boardPollConfigVO.getTargetUsers();
+	        if(targetUsers != null){
+	        	userIdList = targetUsers.split(",");
+	        }
+	        
+	        if (targetDepts != null && !departIdList[0].equals("")) {
 	        	strXMLRange.append("<DEPT>"); 
 	        	
 		        for (String deptID : departIdList) {
@@ -484,7 +493,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		        strXMLRange.append("</DEPT>"); 
 	        }
 	        
-	        if (userIdList.length > 0 && !userIdList[0].equals("")) {
+	        if (targetUsers != null && !userIdList[0].equals("")) {
 	        	strXMLRange.append("<MEMBER>"); 
 	        	
 	        	for (String userID : userIdList) {
