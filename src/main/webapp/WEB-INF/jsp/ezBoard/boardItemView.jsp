@@ -567,9 +567,9 @@
 		    }
 		    
 		    function addRelatedCabinet() {
-	    		//* blank 2018.07.13
+	    		//* moon 2018.07.25
 	    		//* var cabId  = document.getElementById("cabInfo").getAttribute("role");
-		    	window.open("/ezCabinet/cabinetAddRelated.do", "addRelated", getOpenWindowfeature(600, 690));
+		    	window.open("/ezCabinet/cabinetAddRelated.do", "addRelated", getOpenWindowfeature(400, 370));
 	    	}
 		    
 		    function getOpenWindowfeature(popUpW, popUpH) {

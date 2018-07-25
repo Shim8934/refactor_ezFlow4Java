@@ -18,9 +18,14 @@ var CabinetItem = function() {
 	var sharePopup     = null;
 	var addPopup       = null;
 	var itemPopup      = null;
+	var currentZoom    = 100;
+	var maxZoom        = 200;
+	var minZoom        = 80;
+	var mozCrrZoom     = 1;
+	var mozMaxZoom     = 2;
+	var mozMinZoom     = 0.8;
 	
 	/* Preview option */
-	//setData(50, 50, 30, 70, 20, 80);
 	function setData(height, width, prevMode) {
 		var cabinetGeneral = {
 			height    : height,
@@ -714,10 +719,12 @@ var CabinetItem = function() {
 		
 		if (noDataSpan) {divElmt.removeChild(noDataSpan); generatePreviewElmt(divElmt);}
 		
+		var spanIcon    = divElmt.querySelector("span[class='cabPrevIcon']");
 		var spanSubject = divElmt.querySelector("span[class='cabTitleTxt']");
 		var spanDate    = divElmt.querySelector("span[class='cabPreDate']");
 		var dlElmt      = divElmt.querySelector("dl[class='cabPrevItem']");
 		
+		spanIcon.onclick        = function(e) {openFileDetail(itemInfo["itemId"]);};
 		spanSubject.textContent = itemInfo["title"];
 		spanDate.textContent    = itemInfo["createdDate"].substring(0, 19);
 		
@@ -945,6 +952,30 @@ var CabinetItem = function() {
 		prevChild.appendChild(imgElmt2);
 		parentDiv.appendChild(prevChild);
 		parentDiv.appendChild(prevCont);
+	}
+	
+	function zoomIn() {
+		if (navigator.userAgent.indexOf('Firefox') != -1) {
+			if (mozCrrZoom < mozMaxZoom) {mozCrrZoom += 0.1;} else {return;}
+			document.getElementById("txtField").style.MozTransform = "scale(" + mozCrrZoom + ")";
+			document.getElementById("txtField").style.MozTransformOrigin = "0 0";
+		}
+		else {
+			if (currentZoom < maxZoom) {currentZoom += 10;} else {return;}
+			document.getElementById("txtField").style.zoom = currentZoom + "%";
+		}
+	}
+	
+	function zoomOut() {
+		if (navigator.userAgent.indexOf('Firefox') != -1) {
+			if (mozCrrZoom > mozMinZoom) {mozCrrZoom -= 0.1;} else {return;}
+			document.getElementById("txtField").style.MozTransform = "scale(" + mozCrrZoom + ")";
+			document.getElementById("txtField").style.MozTransformOrigin = "0 0";
+		}
+		else {
+			if (currentZoom > minZoom) {currentZoom -= 10;} else {return;}
+			document.getElementById("txtField").style.zoom = currentZoom + "%";
+		}
 	}
 	
 	function isImage(fileName) {
