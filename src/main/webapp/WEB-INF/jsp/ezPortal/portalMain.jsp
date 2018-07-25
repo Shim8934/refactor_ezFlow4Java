@@ -25,8 +25,9 @@
 	 			padding:2px 2px;
 	 			border:1px solid #ffffff;
 			}
-			#open-memo { width:50px; height:50px; position: absolute; top: 676px; left: 1371px; z-index: 1000; border: solid 1px black;cursor: pointer; background-color: gray; text-align: center;}
-			#layer-popup{ float:right; width:500px; height:600px; background:white; position:absolute; text-align:center; border:1px solid black;z-index:1001;}
+
+			#open-memo { width:50px; height:50px; position: absolute; z-index: 1000; border: solid 1px black;cursor: pointer; background-color: gray; text-align: center;}
+			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001;}
 			.individual-memo { width:200px; height:200px; background:white; text-align:center; border:1px solid black; cursor: pointer;}
 			#selected-memo { position:absolute; width:400px; height:500px; background:white; z-index:9001; top:48px; left:36px;}
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
@@ -50,20 +51,35 @@
 		        document.getElementById("popup_layer").style.display = "none";
 		    }
 
-		    function chagePosition() {
-		    	var winHeight = window.innerHeight;
-				var winWidth = window.innerWidth;
-		    	
-		    	$("#layer-popup").css("top", winHeight - 700);
-		    	$("#layer-popup").css("left", winWidth - 600);
-		    	
-		    	$("#selected-memo").css("top", 50);
-		    	$("#selected-memo").css("left", 50);
-		    }
-
 		    window.onload = function() {
 		    	$("#open-memo").css("display", "");
 		    }
+		    
+	    	var winHeight = window.innerHeight;
+			var winWidth = window.innerWidth;
+			
+		    function chagePosition() {
+		    	
+				
+				var memoBtn = $("#open-memo");
+				var opendMemo = $("#selected-memo");
+				
+				var topHeight = $("#top").css("height");
+				
+				memoBtn.css({"top" : winHeight - 80, "left" : winWidth - 100});
+				opendMemo.css({"top": 50, "left": 50});
+				
+				changSizeOfLayer();
+		    }
+		    
+		    function changSizeOfLayer() {
+				var layerHalf = $(".layer-half");
+				var layerWhole = $(".layer-whole");
+		    	
+				layerHalf.css({"top":65, "left": winWidth/2, "right" : 0, "width" : winWidth/2 - 10, "height":702 - 20});
+				layerWhole.css({"top":65, "left": 10, "right" : 10, "width" : winWidth - 20, "height":702 - 20});
+		    }
+		    
 		    $(function() {
 			    
 		    	chagePosition();
@@ -106,7 +122,21 @@
 		        	$("#selected-memo").css("display", "none");
 		        });
 
+		        $("#change-mode").click(function() {
+		        	
+		        	var className = $("#layer-popup").attr("class");
+
+		        	if (className.indexOf("layer-half") != -1) {
+		        		$("#layer-popup").removeClass().addClass("layer-whole");
+		        	} else if (className.indexOf("layer-whole") != -1) {
+		        		$("#layer-popup").removeClass().addClass("layer-half");
+		        	}
+		        	changSizeOfLayer();
+		        });
 		     });
+
+		        
+
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
@@ -121,32 +151,36 @@
 		
 		<!-- memo note -->
 		<div class="noteBlock">
-			<div id="layer-popup" style="display: none">
+			<div id="layer-popup" style="display: none" class="layer-half">
 				<div id="maskDiv" style="display: none"></div>
 				<div>
-					<button id="close-button" style="float:right" >닫기 X</button>
-					<div>메모 레이어 팝업</div>
-					
-					<!-- 메모 리스트 -->
-					<table id="memo-1" class="individual-memo" style="cursor: pointer;">
-						<tbody><tr><td>내용</td></tr></tbody>
-					</table>
-					<table id="memo-2" class="individual-memo">
-						<tbody><tr><td>내용</td></tr></tbody>
-					</table>
+					<div style="text-align: right">
+						<button id="change-mode">모드변경</button>
+						<button id="new-memo">추가</button>
+						<button id="close-button">닫기 X</button>
+					</div>
 				</div>
-
-			<!-- 하나 클릭 -->
+				<div>메모 레이어 팝업</div>
+				
+				<!-- 메모 리스트 -->
+				<table id="memo-1" class="individual-memo" style="cursor: pointer;">
+					<tbody><tr><td>내용</td></tr></tbody>
+				</table>
+				<table id="memo-2" class="individual-memo">
+					<tbody><tr><td>내용</td></tr></tbody>
+				</table>
+				
+				<!-- 하나 클릭 -->
 				<div id="selected-memo" style="display: none">
 					<div id="memo-btn" style="text-align: right">
 						<button>저장</button> <button>휴지통</button>
 					</div>
-					<div>
-						<p>내용</p>
+					<div id="contents">
+						<!-- <p>내용</p> -->
 					</div>
 				</div>
-			
 			</div>
+			
 			<div id="open-memo" style="display: none;">메모</div>
 		</div>
 		
