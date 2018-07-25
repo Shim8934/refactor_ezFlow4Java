@@ -441,15 +441,23 @@
 	                liniReceptOuter();
 	            }
 	            else if (pIniGubun == "5") { //수신자, 결재정보
-	                document.getElementById("showAprLine").style.display = "none";
-	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("showNonElecRecInfo").style.display = "none";
-	                document.getElementById("NonElecRecInfo").style.display = "none";
-	                document.getElementById("Lineinfo").style.display = "none";
-	                document.getElementById("Cabinetinfo").style.display = "none";
-	                document.getElementById("1tab2").onclick();
-	                ChangeTab(document.getElementById("1tab2"));
-	                liniReceptOuter();
+	            	//기안문일경우 수신자탭 안뜨게 하기위해 if문 추가 2018-07-25 강민수92
+	            	if (pDocType == "002") {
+		                document.getElementById("showAprLine").style.display = "none";
+		                document.getElementById("showCabinetinfo").style.display = "none";
+		                document.getElementById("Lineinfo").style.display = "none";
+		                document.getElementById("Cabinetinfo").style.display = "none";
+		                document.getElementById("1tab4").onclick();
+	                	ChangeTab(document.getElementById("1tab4"));
+	            	} else {
+		                document.getElementById("showAprLine").style.display = "none";
+		                document.getElementById("showCabinetinfo").style.display = "none";
+		                document.getElementById("Lineinfo").style.display = "none";
+		                document.getElementById("Cabinetinfo").style.display = "none";
+		                document.getElementById("1tab2").onclick();
+		                ChangeTab(document.getElementById("1tab2"));
+		                liniReceptOuter();
+	            	}
 	            }
 	            else if (pIniGubun == "6") { //결재선, 결재정보
 	                document.getElementById("showReceptinfo").style.display = "none";
