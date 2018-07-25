@@ -27,11 +27,11 @@
 			}
 
 			#open-memo { width:50px; height:50px; position: absolute; z-index: 1000; border: solid 1px black;cursor: pointer; background-color: gray; text-align: center;}
-			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001;}
+			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: gray;}
 			.individual-memo { width:200px; height:200px; background:white; text-align:center; border:1px solid black; cursor: pointer;}
-			#selected-memo { position:absolute; width:400px; height:500px; background:white; z-index:9001; top:48px; left:36px;}
+			#selected-memo { position:absolute; background:white; z-index:9001; top:48px; left:36px;}
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
-			#maskDiv { position:absolute; width:500px; height:600px; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);}
+			#maskDiv { position:absolute; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);}
 
     	</style>
 		<script type="text/javascript">
@@ -57,17 +57,14 @@
 		    
 	    	var winHeight = window.innerHeight;
 			var winWidth = window.innerWidth;
-			
+		
 		    function chagePosition() {
 		    	
-				
 				var memoBtn = $("#open-memo");
 				var opendMemo = $("#selected-memo");
 				
-				var topHeight = $("#top").css("height");
-				
 				memoBtn.css({"top" : winHeight - 80, "left" : winWidth - 100});
-				opendMemo.css({"top": 50, "left": 50});
+				//opendMemo.css({"top": 50, "left": 50});
 				
 				changSizeOfLayer();
 		    }
@@ -75,9 +72,22 @@
 		    function changSizeOfLayer() {
 				var layerHalf = $(".layer-half");
 				var layerWhole = $(".layer-whole");
-		    	
-				layerHalf.css({"top":65, "left": winWidth/2, "right" : 0, "width" : winWidth/2 - 10, "height":702 - 20});
-				layerWhole.css({"top":65, "left": 10, "right" : 10, "width" : winWidth - 20, "height":702 - 20});
+		    	var maskDiv = $("#maskDiv");
+				var className = $("#layer-popup").attr("class");
+	        	var opendMemo = $("#selected-memo");
+	        	
+	        	layerWhole.css({"top":65, "left": winWidth/2, "right" : 10, "width" : winWidth/2 - 20, "height":winHeight - 56 - 30});
+	        	layerHalf.css({"top":65, "left": 10, "right" : 20, "width" : winWidth - 30, "height":winHeight - 56 - 30});
+
+				if (className.indexOf("layer-half") != -1) {
+	        		$("#layer-popup").removeClass().addClass("layer-whole");
+	        		maskDiv.css({"top":0, "left": 0, "width" : winWidth - 30, "height":winHeight - 56 - 30});
+	        		opendMemo.css({"top":20, "left": 20, "width" : winWidth - 90, "height":winHeight - 56 - 90})
+	        	} else if (className.indexOf("layer-whole") != -1) {
+	        		$("#layer-popup").removeClass().addClass("layer-half");
+	        		maskDiv.css({"top":0, "left":0, "width" : winWidth/2 - 20, "height":winHeight - 56 - 30});
+	        		opendMemo.css({"top":10, "left":10, "width" : winWidth/2 - 50, "height":winHeight - 56 - 50})
+	        	}
 		    }
 		    
 		    $(function() {
@@ -108,7 +118,6 @@
 		       	}).draggable();
 				
 		     
-		        
 		        $("#close-button").click(function() {
 		        	$("#layer-popup").css("display", "none")
 		        })
@@ -117,20 +126,15 @@
 		        	$("#maskDiv").css("display", "none");
 		        	$("#selected-memo").css("display", "none");
 		        });
-
+/////////////////////////////////
 		        $("#change-mode").click(function() {
 		        	
-		        	var className = $("#layer-popup").attr("class");
-
-		        	if (className.indexOf("layer-half") != -1) {
-		        		$("#layer-popup").removeClass().addClass("layer-whole");
-		        	} else if (className.indexOf("layer-whole") != -1) {
-		        		$("#layer-popup").removeClass().addClass("layer-half");
-		        	}
 		        	changSizeOfLayer();
 		        });
+		        
+		        $("#memoList").sortable();
 		     });
-
+//////////////////////////////
 		    function newMemo() {
 		        $("#maskDiv").css("display", "");
 		        $("#selected-memo").css("display", "");
@@ -139,8 +143,8 @@
 		    function save() {
 		    	var text = $("#textarea").val();
 		    	alert('저장 되었습니다.');
-		    	$("#memoList").append("<table class='individual-memo'><tbody><tr><td>" + text + "</td></tr></tbody></table>");
-		    	$("#memoList > table:last").attr("onclick", "read('" + text + "')");
+		    	$("#memoList").append("<div class='individual-memo' style='float: left; margin: 10px'>" + text + "</div>");
+		    	$("#memoList > div").attr("onclick", "read('" + text + "')");
 		    	$("#textarea").val('');
 		    	$("#maskDiv").css("display", "none");
 		    	$("#selected-memo").css("display", "none");
@@ -174,31 +178,33 @@
 		<div class="noteBlock">
 			<div id="layer-popup" style="display: none" class="layer-half">
 				<div id="maskDiv" style="display: none"></div>
-				<div id="memoList" style="height: 100%; overflow:scroll;">
+
+				<!-- 메모 리스트 -->
+				<div style="text-align: center">
+					
 					<div style="text-align: right">
 						<button id="change-mode">모드변경</button>
 						<button id="new-memo" onclick="newMemo()">추가</button>
 						<button id="close-button">닫기 X</button>
 					</div>
+					
+					<div>메모 레이어 팝업</div>
+					
+					<div id="memoList" style="height: 100%; overflow:auto; margin: 10px">
+					</div>
+					
 				</div>
-				<div>메모 레이어 팝업</div>
-				
-				<!-- 메모 리스트 -->
-				<!-- <table id="memo-1" class="individual-memo" style="cursor: pointer;">
-					<tbody><tr><td>내용</td></tr></tbody>
-				</table>
-				<table id="memo-2" class="individual-memo">
-					<tbody><tr><td>내용</td></tr></tbody>
-				</table> -->
 				
 				<!-- 하나 클릭 -->
 				<div id="selected-memo" style="display: none">
+				
 					<div id="memo-btn" style="text-align: right">
 						<button onclick="save()">저장</button> 
 						<button onclick="closeMemo()">닫기 X</button>
 					</div>
 					<br>
-					<textarea id="textarea" cols="50" rows="28"></textarea>
+					<div>
+						<textarea id="textarea" cols="50" rows="28"></textarea>
 					</div>
 				</div>
 			</div>
