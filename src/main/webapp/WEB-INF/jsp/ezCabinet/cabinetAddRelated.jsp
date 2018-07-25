@@ -8,7 +8,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css">
 		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">
 	</head>
-	<body class="popup cabAddRelated">
+	<body class="popup cabAddRelated" style="overflow: hidden;">
 		<h1 id="cabMagHeader" role='<c:out value="${node}"></c:out>'><spring:message code="ezCabinet.t125"/></h1>
 		
 		<div class = "addRelatedConfig" id = "addRelated">
@@ -109,6 +109,7 @@
 								"title"       : mailSubject,
 								"author"      : msgToGot,
 								"cabinetId"   : cabinetId,
+								
 								"normalScreen": JSON.stringify(normalScreen)
 							},
 							dataType: "JSON",
