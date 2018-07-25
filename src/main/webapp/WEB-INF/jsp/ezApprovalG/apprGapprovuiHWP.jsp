@@ -560,28 +560,25 @@
 			
 			    if (!isjunkyul) {
 			        if ("${approvalPWD}" != "N") {
-				            var chkpass = chk_Passwd(pingUserID);
-				            if (chkpass == "False") {
-				                var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
-				                OpenAlertUI(pAlertContent);
-			
-			
-				                setMenuDisable("btnApprove", false);
-			
-				                return;
-				            }
-				            else if (chkpass == "cancel") {
-				                var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
-				                    OpenAlertUI(pAlertContent);
-			
-			
-				                    setMenuDisable("btnApprove", false);
-			
-				                    return;
-				                }
-			            }
-			        }
-			        else isjunkyul = false;
+			            var chkpass = chk_Passwd(pingUserID);
+			            if (chkpass == "False") {
+			                var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
+			                OpenAlertUI(pAlertContent);
+			                setMenuDisable("btnApprove", false);
+		
+			                return;
+			                
+			            } else if (chkpass == "cancel" || chkpass == undefined) {
+		                	var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
+		                    OpenAlertUI(pAlertContent);
+		                    setMenuDisable("btnApprove", false);
+	
+		                    return;
+		                }
+		            }
+			    } else {
+			    	isjunkyul = false;
+			    } 
 			
 			        var ret = "NAME";
 			
@@ -789,7 +786,7 @@
 				            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
 					        OpenAlertUI(pAlertContent);
 					        return;
-					    } else if (chkpass == "cancel") {
+				        } else if (chkpass == "cancel" || chkpass == undefined) {
 					        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
 						    OpenAlertUI(pAlertContent);
 						    return;
@@ -845,7 +842,7 @@
 				            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
 					        OpenAlertUI(pAlertContent);
 					        return;
-					    } else if (chkpass == "cancel") {
+				        } else if (chkpass == "cancel" || chkpass == undefined) {
 					        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
 					        OpenAlertUI(pAlertContent);
 					        return;
@@ -877,8 +874,7 @@
 				            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
 					        OpenAlertUI(pAlertContent);
 					        return;
-					    }
-					    else if (chkpass == "cancel") {
+				        } else if (checkpass == "cancel" || checkpass == undefined) {
 					        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
 				            OpenAlertUI(pAlertContent);
 				            return;
