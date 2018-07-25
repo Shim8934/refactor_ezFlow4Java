@@ -233,8 +233,9 @@
 			</c:if>
 		  	<c:if test="${flag != 'N'}">
 				<div id="DivPassType">
-					<h2>▒&nbsp;<spring:message code='ezPersonal.t948'/>
-						<div style="margin-top:10px;">						
+					<h2>▒&nbsp;<spring:message code='ezPersonal.t948'/>&nbsp;
+							<!-- 2018-07-25 김보미 - div주석 -->
+<!-- 						<div style="margin-top:10px;">						 -->
 							<select id="pwdType" onchange="ChangeType()">
 								<c:choose>
 									<c:when test="${pwdType == 'L' || pwdType == '' }">
@@ -261,7 +262,7 @@
 									</c:otherwise>
 								</c:choose>
 							</select>
-						</div>
+<!-- 						</div> -->
 					</h2>
 			</c:if>
 			<br />
