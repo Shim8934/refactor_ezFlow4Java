@@ -934,6 +934,8 @@
 		    <select id="formId" name="searchCheck" style="width:80px; height:27px; border-color: #c8c8c8;">
 		    	<option id="Radio2" value="title"><spring:message code='ezTask.t118' /></option>
 		    	<option id="Radio1" value="personName"><spring:message code='ezTask.t2005' /></option>
+		    	<option id="Radio3" value="creatorname"><spring:message code='ezTask.t162' /></option>
+		    	<option id="Radio4" value="memo"><spring:message code='ezTask.t170' /></option>
 		    </select>
 		         <%--  <input name="searchCheck" id="Radio2" type="radio" value="title" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio2" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t118' /></label>
 		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t2005' /></label> --%>				  
