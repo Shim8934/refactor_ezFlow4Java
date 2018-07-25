@@ -1215,7 +1215,6 @@
 	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : newPreTask});
 	   						} else {
 	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : -1});
-	   							console.log('index : ' + index + ', idx : ' + idx + ', id : ' + elem.id);
 	   						}
 		   				});
 	   				} else if (index == 0) {

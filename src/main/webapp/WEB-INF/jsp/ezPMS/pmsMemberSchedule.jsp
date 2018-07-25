@@ -263,6 +263,7 @@ window.onload = function() {
 	display : inline-block;
 	height : 100%;
 	overflow-x : scroll;
+	overflow: auto;
 }
 
 #mainmenu {
