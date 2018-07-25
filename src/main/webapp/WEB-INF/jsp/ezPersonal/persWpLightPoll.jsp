@@ -46,8 +46,8 @@
 			var g_UsePortal = "${usePortal}";
 
 			window.onload = function () {
-		    	var userlnag = ${userInfo.lang};
-		    	if(userlnag == 1){
+		    	/* var userlnag = ${userInfo.lang}; */
+		    	/* if(userlnag == 1){
 			        document.getElementById("btnpoll").src ="/images/main/btn_vote.gif";
 		        	document.getElementById("btnview").src = "/images/main/btn_vote_view.gif"
 		        	document.getElementById("btnresult").src = "/images/main/btn_result.gif";
@@ -67,7 +67,7 @@
 		        	document.getElementById("btnpoll").src ="/images/main/btn_vote.gif";
 		        	document.getElementById("btnview").src = "/images/main/btn_vote_view.gif"
 		        	document.getElementById("btnresult").src = "/images/main/btn_result.gif";
-		    	}
+		    	} */
 			}
 			var PollResult_Cross_dialogArguments = new Array();
 			function vote_poll(poll_answer) {
