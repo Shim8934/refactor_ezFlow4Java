@@ -1347,6 +1347,7 @@ function SaveDraftDocInfo_ilban(pState)
 
 	createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", pSpecialRecordCode);
 	createNodeAndInsertText(xmlpara, objNode, "PUBLICITYCODE", pPublicityCode);
+	createNodeAndInsertText(xmlpara, objNode, "PUBLICITYYN", tempPublic);
 	createNodeAndInsertText(xmlpara, objNode, "LIMITRANGE", pLimitRange);
 	createNodeAndInsertText(xmlpara, objNode, "PAGENUM", pPageNum);
 	createNodeAndInsertText(xmlpara, objNode, "CABINETID", cabinetID);
