@@ -269,7 +269,7 @@ public class EzPollController extends EgovFileMngUtil {
 			        strXMLRange.append("</DEPT>"); 
 		        }
 		        
-		        if (userIdList.length > 0 && !userIdList[0].equals("")) {
+		        if (targetUsers != null && !userIdList[0].equals("")) {
 		        	strXMLRange.append("<MEMBER>"); 
 		        	
 		        	for (String userID : userIdList) {
