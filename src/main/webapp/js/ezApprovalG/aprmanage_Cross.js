@@ -980,7 +980,7 @@ function openViewDocInfo(type) {
         openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(formURL) + "&formID=&orgDocID=";
     }
     else {
-    	// 2018.07.06 jwseo99 KLIB - ezd 확장자 처리
+    	// 2018.07.06 (KLIB) - ezd 확장자 처리
     	var formUrlExt = formURL.substr(formURL.length - 3, formURL.length).toLowerCase();
     	
         if (formUrlExt === "hwp" || formUrlExt === "ezd") {

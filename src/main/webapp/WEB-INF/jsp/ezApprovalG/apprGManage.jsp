@@ -1084,7 +1084,7 @@
 		        var pHref = tr.getAttribute("DATA3");
 		        var openLocation;
 		        
-		        // 2018.07.06 jwseo99 KLIB - ezd 확장자 처리
+		        // 2018.07.06 (KLIB) - ezd 확장자 처리
 		        var pHrefExt = pHref.substr(pHref.length - 3, pHref.length).toLowerCase();
 		        
 		        if (pHrefExt === "hwp" || pHrefExt === "ezd") {

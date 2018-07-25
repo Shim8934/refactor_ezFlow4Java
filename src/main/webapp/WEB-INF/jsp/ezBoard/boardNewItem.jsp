@@ -1254,7 +1254,7 @@
 		                var strRet = "";
 		                for (i = 0; i < nodes.length; i++) {
 		                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
-		                    // 2018.07.05 jwseo99 KLIB - ezd 확장자 붙이기
+		                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
 		                    if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
 		                    	filepath = filepath + ".ezd";
 		                    }
@@ -1288,7 +1288,7 @@
 			                var strRet = "";
 			                for (i = 0; i < nodes.length; i++) {
 			                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
-			                    // 2018.07.05 jwseo99 KLIB - ezd 확장자 붙이기
+			                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
 			                    if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
 			                    	filepath = filepath + ".ezd";
 			                    }

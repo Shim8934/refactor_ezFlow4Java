@@ -1760,7 +1760,7 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
     } else {
 	   	 var fileext = DocHref.toLowerCase().substr(DocHref.length - 4);
 	   	 
-	   	 // 2018.07.03 jwseo99 KLIB 암호화된 파일 확장자 처리 (ezd 확장자라면 원래 확장자로 변경해줌)
+	   	 // 2018.07.03 (KLIB) 암호화된 파일 확장자 처리 (ezd 확장자라면 원래 확장자로 변경해줌)
 	   	 if (fileext === ".ezd") {
 	   		// 최소 8글자 이상이 보장됨
 	   		fileext = DocHref.toLowerCase().substr(DocHref.length - 8, 4);
@@ -1928,7 +1928,7 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 	                fileName = ReplaceText(fileName, "\\|", "");
 	
 	                var tmpExt = fileHref.substr(fileHref.length - 3, 3);
-	                // 2018.07.04 jwseo99 KLIB 으로 암호화된 ezd 확장자 파일일 경우 원래 확장자로 처리
+	                // 2018.07.04 (KLIB) 암호화된 ezd 확장자 파일일 경우 원래 확장자로 처리
 	                if (tmpExt === 'ezd') {
 	                	tmpExt = fileHref.substr(fileHref.length - 7, 3);
 	                }
