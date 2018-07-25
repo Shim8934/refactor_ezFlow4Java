@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -43,6 +44,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
@@ -50,6 +52,7 @@ import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
 import egovframework.ezEKP.ezPMS.vo.CommentVO;
 import egovframework.ezEKP.ezPMS.vo.DateVO;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectBoardFolderVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupMemberVO;
@@ -95,6 +98,9 @@ public class EzPMSGWController {
 
 	@Autowired
 	private EzOrganService ezOrganService;
+	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
 
 	/**
 	 * 프로젝트 리스트 호출
@@ -249,9 +255,15 @@ public class EzPMSGWController {
 			project.put("projectId", projectId);
 			project.put("memberCount", projectMemberList.size());
 
-			// 이슈리스트 그룹 생성
-			project.put("groupName", "이슈 리스트");
-			ezPMSService.addGroup(project, "Y", companyId, tenantId, lang);
+			// 기본 게시판 생성
+			String projectName = request.getParameter("projectName").replaceAll("\"", "&quot;").replaceAll("\'", "&#39;");
+			ezPMSService.addBoardFolder(tenantId, projectName, projectName, projectId, userId, 0);
+
+			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
+			String issueList = egovMessageSource.getMessage("ezPMS.t203", locale);
+			ezPMSService.addBoardFolder(tenantId, issueList, issueList, projectId, userId, 1);
+			//project.put("groupName", "이슈 리스트");
+			//ezPMSService.addGroup(project, "Y", companyId, tenantId, lang);
 
 			// 그룹 생성
 			project.put("sortOrder", 0);
@@ -3704,18 +3716,7 @@ public class EzPMSGWController {
 			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 			String uploadPathName = "uploadFile";
 
-			Long groupId = 0L;
-			Long taskId = 0L;
-
-			if (request.getParameter("groupId") != null && !request.getParameter("groupId").equals("")) {
-				groupId = Long.parseLong(request.getParameter("groupId"));
-			}
-
-			if (request.getParameter("taskId") != null && !request.getParameter("taskId").equals("")
-					&& !request.getParameter("taskId").equals("null")) {
-				taskId = Long.parseLong(request.getParameter("taskId"));
-			}
-
+			Long folderId = Long.parseLong(request.getParameter("folderId"));
 			int startRow = Integer.parseInt(request.getParameter("startRow"));
 			int listCnt = Integer.parseInt(request.getParameter("limit"));
 			String position = request.getParameter("position");
@@ -3767,18 +3768,18 @@ public class EzPMSGWController {
 				searchByContent = searchByContent.replace("_", "\\_");
 			}
 
-			int noticeCNT = ezPMSService.getBoardNoticeListCount(tenantId, Long.parseLong(projectId), groupId, taskId);
+			int noticeCNT = ezPMSService.getBoardNoticeListCount(tenantId, Long.parseLong(projectId), folderId);
 			List<ProjectBoardVO> boardList = null;
 
 			// 프로젝트 개요/게시판 검색 시에는 공지사항을 제외한 게시물만 출력
 			if ((position != null && position.equals("overview")) || searchOrNot.equals("true")) {
-				boardList = ezPMSService.getBoardList(tenantId, Long.parseLong(projectId), groupId, taskId, userId,
+				boardList = ezPMSService.getBoardList(tenantId, Long.parseLong(projectId), folderId, userId,
 						startRow, listCnt, lang, position, orderWhat, orderHow, searchByTaskName, searchByUser,
 						searchByStartDate, searchByEndDate, searchByTitle, searchByOverview, searchByContent);
 			} else if (position != null && (position.equals("tab") || position.equals("boardMain"))) {
 
 				if (noticeCNT > startRow) {
-					boardList = ezPMSService.getBoardNoticeList(tenantId, Long.parseLong(projectId), groupId, taskId,
+					boardList = ezPMSService.getBoardNoticeList(tenantId, Long.parseLong(projectId), folderId,
 							startRow, listCnt, lang);
 
 					boardList.forEach(boardVO -> boardVO.setNotice(true));
@@ -3786,14 +3787,14 @@ public class EzPMSGWController {
 					if (noticeCNT < startRow + listCnt) {
 						listCnt = (startRow + listCnt) - noticeCNT;
 						startRow = 0;
-						boardList.addAll(ezPMSService.getBoardList(tenantId, Long.parseLong(projectId), groupId, taskId,
+						boardList.addAll(ezPMSService.getBoardList(tenantId, Long.parseLong(projectId), folderId,
 								userId, startRow, listCnt, lang, position, orderWhat, orderHow, searchByTaskName,
 								searchByUser, searchByStartDate, searchByEndDate, searchByTitle, searchByOverview,
 								searchByContent));
 					}
 				} else {
 					startRow = startRow - noticeCNT;
-					boardList = ezPMSService.getBoardList(tenantId, Long.parseLong(projectId), groupId, taskId, userId,
+					boardList = ezPMSService.getBoardList(tenantId, Long.parseLong(projectId), folderId, userId,
 							startRow, listCnt, lang, position, orderWhat, orderHow, searchByTaskName, searchByUser,
 							searchByStartDate, searchByEndDate, searchByTitle, searchByOverview, searchByContent);
 				}
@@ -3827,22 +3828,19 @@ public class EzPMSGWController {
 				}
 			}
 
-			String taskName = "";
-
-			if (taskId != 0) {
-				ProjectTaskVO taskVO = ezPMSService.getTaskDetails(taskId, tenantId, lang);
-				taskName = taskVO.getTaskName();
-			} else if (groupId != 0) {
-				ProjectGroupVO groupVO = ezPMSService.getGroupDetails(groupId, tenantId, Long.parseLong(projectId));
-				taskName = groupVO.getGroupName();
+			String folderName = "";
+			
+			if (folderId != 0) {
+				ProjectBoardFolderVO folder = ezPMSService.getBoardFolder(Long.parseLong(projectId), tenantId, lang, folderId);
+				folderName = folder.getText();
 			}
-
-			LOGGER.debug("taskName : " + taskName);
+			
+			LOGGER.debug("folderName : " + folderName);
 
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", boardList);
-			result.put("taskName", taskName);
+			result.put("folderName", folderName);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -3875,16 +3873,7 @@ public class EzPMSGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 
-			Long groupId = 0L;
-			Long taskId = 0L;
-
-			if (request.getParameter("groupId") != null && !request.getParameter("groupId").equals("")) {
-				groupId = Long.parseLong(request.getParameter("groupId"));
-			}
-
-			if (request.getParameter("taskId") != null && !request.getParameter("taskId").equals("")) {
-				taskId = Long.parseLong(request.getParameter("taskId"));
-			}
+			Long folderId = Long.parseLong(request.getParameter("folderId"));
 
 			String searchByTaskName = request.getParameter("searchByTaskName");
 			String searchByUser = request.getParameter("searchByUser");
@@ -3924,9 +3913,8 @@ public class EzPMSGWController {
 				searchByContent = searchByContent.replace("_", "\\_");
 			}
 
-			int noticeCount = ezPMSService.getBoardNoticeListCount(tenantId, Long.parseLong(projectId), groupId,
-					taskId);
-			int boardCount = ezPMSService.getBoardListCount(tenantId, Long.parseLong(projectId), groupId, taskId,
+			int noticeCount = ezPMSService.getBoardNoticeListCount(tenantId, Long.parseLong(projectId), folderId);
+			int boardCount = ezPMSService.getBoardListCount(tenantId, Long.parseLong(projectId), folderId,
 					searchByTaskName, searchByUser, searchByStartDate, searchByEndDate, searchByTitle, searchByOverview,
 					searchByContent);
 			int totalCount = noticeCount + boardCount;
@@ -4929,6 +4917,245 @@ public class EzPMSGWController {
 		}
 
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/member-list/" + projectId + "/groupId/" + groupId + "] ended");
+		return result;
+	}
+	
+	/**
+	 * 게시판 폴더 리스트 출력
+	 * 
+	 * @param projectId
+	 * @param groupId
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/board/folders", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getFolderList(@PathVariable Long projectId,
+			HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/board/folders] started");
+
+		JSONObject result = new JSONObject();
+	
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+
+			int tenantId = info.getTenantId();
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
+			
+			List<ProjectBoardFolderVO> folderList = ezPMSService.getBoardFolderList(projectId, tenantId, lang);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", folderList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/board/folders] ended");
+		return result;
+	}
+	
+	/**
+	 * 게시판 폴더 리스트 생성
+	 * 
+	 * @param projectId
+	 * @param groupId
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/board/folders", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject addFolderList(@PathVariable Long projectId, HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/projects/" + projectId + "/board/folders] started");
+
+		JSONObject result = new JSONObject();
+	
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			int folderOrder = Integer.parseInt(request.getParameter("order"));
+			String folderName1 = request.getParameter("folderName1");
+			String folderName2 = request.getParameter("folderName2");
+			
+			ezPMSService.addBoardFolder(tenantId, folderName1, folderName2, projectId, userId, folderOrder);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "permitted");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+
+		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/projects/" + projectId + "/board/folders] ended");
+		return result;
+	}
+	
+	/**
+	 * 게시판 폴더 정보 불러오기
+	 * 
+	 * @param projectId
+	 * @param groupId
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/board/folders/{folderId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getBoardFolder(@PathVariable Long projectId, @PathVariable Long folderId, HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/board/folders/" + folderId + "] started");
+
+		JSONObject result = new JSONObject();
+	
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
+			
+			ProjectBoardFolderVO folder = ezPMSService.getBoardFolder(projectId, tenantId, lang, folderId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", folder);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/board/folders/" + folderId + "] started");
+		return result;
+	}
+	
+	/**
+	 * 게시판 폴더 리스트 수정
+	 * 
+	 * @param projectId
+	 * @param groupId
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/board/folders/{folderId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject updateFolder(@PathVariable Long projectId, @PathVariable Long folderId, HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/board/folders/" + folderId + "] started");
+
+		JSONObject result = new JSONObject();
+	
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
+			String folderName1 = request.getParameter("folderName1");
+			String folderName2 = request.getParameter("folderName2");
+			String roleCheck = "";
+			
+			//수정은 프로젝트 관리자나 생성자만 가능함
+			ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, tenantId, "", lang, info.getDeptId(), info.getCompanyId());
+			
+			if (!project.getHeadManagerId().equals(userId)) {
+				roleCheck = "rejected";
+			} else {
+				roleCheck = "";
+			}
+			
+			ProjectBoardFolderVO folder = ezPMSService.getBoardFolder(projectId, tenantId, lang, folderId);
+			
+			if (!folder.getCreatorId().equals(userId)) {
+				roleCheck = "rejected";
+			} else {
+				roleCheck = "";
+			}
+			
+			if (roleCheck.equals("")) {
+				ezPMSService.updateBoardFolder(folderName1, folderName2, projectId, folderId, tenantId);
+				roleCheck = "permitted";
+			}
+			
+			LOGGER.debug("roleCheck : " + roleCheck);
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", roleCheck);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/projects/" + projectId + "/board/folders/" + folderId + "] started");
+		return result;
+	}
+	
+	/**
+	 * 게시판 폴더 리스트 삭제
+	 * 
+	 * @param projectId
+	 * @param groupId
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/board/folders/{folderId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deleteFolder(@PathVariable Long projectId, @PathVariable Long folderId, HttpServletRequest request) {
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId + "/board/folders/" + folderId + "] started");
+
+		JSONObject result = new JSONObject();
+	
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId = info.getTenantId();
+			String roleCheck = "";
+			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
+			
+			//삭제는 프로젝트 관리자나 생성자만 가능함
+			ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, tenantId, "", lang, info.getDeptId(), info.getCompanyId());
+			
+			if (!project.getHeadManagerId().equals(userId)) {
+				roleCheck = "rejected";
+			} else {
+				roleCheck = "";
+			}
+			
+			ProjectBoardFolderVO folder = ezPMSService.getBoardFolder(projectId, tenantId, lang, folderId);
+			
+			if (!folder.getCreatorId().equals(userId)) {
+				roleCheck = "rejected";
+			} else {
+				roleCheck = "";
+			}
+			
+			if (roleCheck.equals("")) {
+				ezPMSService.deleteBoardFolder(projectId, folderId, tenantId);
+				roleCheck = "permitted";
+			}
+			
+			LOGGER.debug("roleCheck : " + roleCheck);
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", roleCheck);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+
+		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId + "/board/folders/" + folderId + "] ended");
 		return result;
 	}
 }

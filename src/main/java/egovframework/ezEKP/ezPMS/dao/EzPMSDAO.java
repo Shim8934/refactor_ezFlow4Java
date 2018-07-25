@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
 import egovframework.ezEKP.ezPMS.vo.CommentVO;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
 import egovframework.ezEKP.ezPMS.vo.FileVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectBoardFolderVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupMemberVO;
@@ -639,4 +640,26 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public List<ProjectHolidayVO> getCustomHoliday(Map<String, Object> map) {
 		return (List<ProjectHolidayVO>) list("EzPMSDAO.getCustomHoliday", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ProjectBoardFolderVO> getBoardFolderList(Map<String, Object> map) {
+		return (List<ProjectBoardFolderVO>) list("EzPMSDAO.getBoardFolderList", map);
+	}
+	
+	public void addBoardFolder(Map<String, Object> map) {
+		insert ("EzPMSDAO.addBoardFolder", map);
+	}
+	
+	public void updateBoardFolder(Map<String, Object> map) {
+		update ("EzPMSDAO.updateBoardFolder", map);
+	}
+	
+	public void deleteBoardFolder(Map<String, Object> map) {
+		update ("EzPMSDAO.deleteBoardFolder", map);
+	}
+
+	public ProjectBoardFolderVO getBoardFolder(Map<String, Object> map) {
+		return (ProjectBoardFolderVO) select ("EzPMSDAO.getBoardFolder", map);
+	}
+	
 } 

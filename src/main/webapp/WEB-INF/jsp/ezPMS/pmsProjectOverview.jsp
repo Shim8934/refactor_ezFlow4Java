@@ -211,7 +211,8 @@ function initKanbanList() {
 			startRow : 0,
 			position : position,
 			groupId : 0,
-			taskId : 0
+			taskId : 0,
+			folderId : 0
 	}
 			
 	$.ajax({

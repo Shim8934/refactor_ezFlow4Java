@@ -15,10 +15,11 @@
 	var CurrentHeight = document.documentElement.clientHeight - 100;
 	
 	var contentCount = '<c:out value="${boardCount}"/>';
-	taskName = '<c:out value="${taskName}"/>';
+	taskName = '<c:out value="${folderName}"/>';
 	
 	$(function() {
 		viewSetting();
+		$("#taskTreeArea").css("height", CurrentHeight - 60 + "px");
 		
 		$(".mainlist tbody tr td:not(.checkbox)").on("click", function(evt) {
 			var checkbox = $(this).parent().children("td:eq(0)").children();
@@ -194,7 +195,7 @@
 				<th onclick="setListOrder(this)" data-order='ITEM_ID' width="5%"><spring:message code='ezPMS.t268' /></th>
 				<th onclick="setListOrder(this)" data-order='FILE' width="3%"><img src="/images/newAttach.gif"></th>
 				<th onclick="setListOrder(this)" data-order='TITLE'><spring:message code='ezPMS.t118' /></th>
-				<th style="cursor: default;" width="10%"><spring:message code='ezPMS.t98' /></th>
+				<!--  <th style="cursor: default;" width="10%"><spring:message code='ezPMS.t98' /></th>-->
 				<%-- <th onclick="setListOrder(this)" data-order='TASK_NAME' width="10%"><spring:message code='ezPMS.t98' /></th> --%>
 				<th onclick="setListOrder(this)" data-order='DEPT_NAME' width="7%"><spring:message code='ezPMS.t115' /></th>
 				<th onclick="setListOrder(this)" data-order='WRITER_NAME' width="7%"><spring:message code='ezPMS.t114' /></th>
@@ -206,7 +207,7 @@
 			<c:choose>
 				<c:when test="${empty data}">
 					<tr>
-						<td colspan="9" style="text-align : center"> <spring:message code='ezPMS.t30' /> </td>
+						<td colspan="8" style="text-align : center"> <spring:message code='ezPMS.t30' /> </td>
 					</tr>
 				</c:when>
 				<c:otherwise>
@@ -236,7 +237,7 @@
 									<c:if test="${projectBoardVO.writeDate > yesterday}"><img src="/images/i_new.gif"/></c:if>
 									<c:out value="${projectBoardVO.title}"/> 
 								</td>
-							<c:choose>
+							<%-- <c:choose>
 								<c:when test="${projectBoardVO.taskName eq null}">
 									<td class="taskName">
 										<c:out value="${projectBoardVO.groupName}"/>
@@ -247,7 +248,7 @@
 										<c:out value="${projectBoardVO.taskName}"/>
 									</td>
 								</c:otherwise>
-							</c:choose>
+							</c:choose> --%>
 							<td>
 								<c:out value="${projectBoardVO.writerDeptName}"/>
 							</td>

@@ -32,6 +32,7 @@
 	
 	var writeOverview = '${board.writeOverview}';
 	var writeType = "${board.writeType}";
+	var folderId = "${folderId}";
 	var writeContent = '${writeContent.trim()}';
 	var mode = "${mode}";
 	var taskName;
@@ -39,18 +40,6 @@
 	// 답변 달 때만 넘어오는 파라미터
 	var rootItemId = "${rootItemId}";
 	var itemLevel = "${itemLevel}";
-	
-	var groupId = "${groupId}";
-	
-	if(groupId == "") {
-		groupId = "${board.groupId}";
-	}
-	
-	var taskId = "${taskId}";
-	
-	if(taskId == "") {
-		taskId = ("${board.taskId}" != "") ? "${board.taskId}" : null;
-	}
 	
 	// 수정 및 답변 달 때 넘어오는 파라미터
 	var itemId = "${param.itemId}";
@@ -223,8 +212,7 @@
 			title : title,
 			writeContent : writeContent,
 			writeType : writeType,
-			groupId : groupId,
-			taskId : taskId,
+			folderId : folderId,
 			writeOverview : writeOverview,
 			fileList : fileList,
 			mode : mode,
@@ -247,13 +235,6 @@
 					doubleSubmitFlag = false;
 					
 					if (result.data == 'new' || result.data == 'reply') {
-						
-						if (taskId == "null") {
-							taskId = null;
-						}
-						
-						opener.taskId  = taskId;
-						opener.groupId = groupId;
 						opener.currentPage = 1;
 						
 						// 검색 후 새 글을 등록했을 때 검색 조건을 초기화한다.
@@ -265,9 +246,9 @@
 						opener.searchByOverview = "";
 						opener.searchByContent = "";
 						
-						addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t127' />" + title.trim() + "<spring:message code='ezPMS.t204' />");
+						//addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t127' />" + title.trim() + "<spring:message code='ezPMS.t204' />");
 					} else {
-						addTaskLog(projectId, 2, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> [" + title.trim() + "<spring:message code='ezPMS.t205' />");
+						//addTaskLog(projectId, 2, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> [" + title.trim() + "<spring:message code='ezPMS.t205' />");
 					}
 					
 					if(typeof opener.getBoardList == 'function') {
@@ -359,14 +340,7 @@
 					<tr>
 						<th><spring:message code='ezPMS.t31' /></th>
 						<td>
-							<c:choose>
-								<c:when test="${projectName eq null}">
-									<c:out value="${board.projectName}"/> 
-								</c:when>
-								<c:otherwise>
-									<c:out value="${projectName}"/> 
-								</c:otherwise>
-							</c:choose>		
+							<c:out value="${projectName }"/>	
 						</td>
 						<th><spring:message code='ezPMS.t77' /></th>
 						<td><input type="checkbox" id="emergency"/> <spring:message code='ezPMS.t78' /> <input type="checkbox" id="notice"/> <spring:message code='ezPMS.t79' /></td>
@@ -376,31 +350,17 @@
 							<c:choose>
 								<%-- 답변/수정 작성 시에는 작업을 변경할 수 없다. --%>
 								<c:when test="${mode eq 'reply' || mode eq 'modify'}">
-									<spring:message code='ezPMS.t98' />
+									<spring:message code='ezPMS.t340' />
 								</c:when>
 								<c:otherwise>
 									<a class="imgbtn" id="taskSelection" onclick="getTaskSelectionTree()" style="margin-top: 2px;">
-										<span><spring:message code='ezPMS.t98' /></span>
+										<span><spring:message code='ezPMS.t340' /></span>
 									</a>
 								</c:otherwise>
 							</c:choose>	
 						</th>
-						<td id="taskName">
-							<c:choose>
-								<c:when test="${taskName eq null}">
-									<c:choose>
-										<c:when test="${board.taskName ne null}">
-											<c:out value="${board.taskName}"/> 
-										</c:when>
-										<c:otherwise>
-											<c:out value="${board.groupName}"/> 
-										</c:otherwise>
-									</c:choose>
-								</c:when>
-								<c:otherwise>
-									<c:out value="${taskName}"/> 
-								</c:otherwise>
-							</c:choose>		
+						<td id="folderName">
+							<c:out value="${folderName }"/>
 						</td>
 						<th><spring:message code='ezPMS.t114' /></th>
 						<td><c:out value="${writerName}(${writerDeptName})"/></td>

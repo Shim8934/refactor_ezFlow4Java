@@ -166,6 +166,7 @@ public class EzPMSScheduler {
 					String lang = ezCommonService.selectUserGetLang(userId, tenantId);
 					Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
 					LOGGER.debug("userAccount : " + userAccount + ", locale=" + locale);
+					
 					String subject = "";
 					String content = "";
 					
