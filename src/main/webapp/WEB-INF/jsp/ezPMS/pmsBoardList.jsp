@@ -19,7 +19,13 @@
 	
 	$(function() {
 		viewSetting();
-		$("#taskTreeArea").css("height", CurrentHeight - 60 + "px");
+		
+		if (userRole == 1) {
+			$("#taskTreeArea").css("height", CurrentHeight - 60 + "px");
+		} else {
+			$("#taskTreeArea").css("height", CurrentHeight + "px");
+			$("#folderSettingArea").css("display", "none");
+		}
 		
 		$(".mainlist tbody tr td:not(.checkbox)").on("click", function(evt) {
 			var checkbox = $(this).parent().children("td:eq(0)").children();

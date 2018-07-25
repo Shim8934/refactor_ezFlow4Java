@@ -4969,7 +4969,7 @@ public class EzPMSGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/projects/{projectId}/board/folders", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public JSONObject addFolderList(@PathVariable Long projectId, HttpServletRequest request) {
+	public JSONObject addBoardFolder(@PathVariable Long projectId, HttpServletRequest request) {
 		LOGGER.debug("ezPMS G/W [POST /rest/ezPMS/projects/" + projectId + "/board/folders] started");
 
 		JSONObject result = new JSONObject();
@@ -4983,11 +4983,21 @@ public class EzPMSGWController {
 			String folderName1 = request.getParameter("folderName1");
 			String folderName2 = request.getParameter("folderName2");
 			
-			ezPMSService.addBoardFolder(tenantId, folderName1, folderName2, projectId, userId, folderOrder);
+			//현재 사용자가 담당자인지 확인
+			int userRole = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());			
+			String roleCheck = "";
+					
+			if (userRole == 1) {
+				ezPMSService.addBoardFolder(tenantId, folderName1, folderName2, projectId, userId, folderOrder);
+				roleCheck = "permitted";
+			}  else {
+				roleCheck = "rejected";
+			}
+			
 			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", "permitted");
+			result.put("data", roleCheck);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
