@@ -1548,7 +1548,7 @@ function showTooltip_MouseOver(obj, e) {
     var sSpan = document.createElement("SPAN");
     //sSpan.className = "width_16";
     sTd.appendChild(sSpan);
-    sTd.innerHTML += "[" + strLang571 + "]<br />" + GetAttribute(obj,"owner_nm");
+    sTd.innerHTML += "<span>[" + strLang571 + "]</span><br /><span style='margin-top:2px;display:block;'>" + GetAttribute(obj,"owner_nm") +"</span>";
     sTr.appendChild(sTd);
     sTable.appendChild(sTr);
     tTd.appendChild(sTable);

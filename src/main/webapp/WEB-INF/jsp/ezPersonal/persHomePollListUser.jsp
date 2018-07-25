@@ -164,9 +164,9 @@
           					</tr> 
            					
             				<c:if test="${isPollEmpty != true}">
-            					<c:forEach var="item"  items="${list}" >
+            					<c:forEach var="item"  items="${list}" varStatus="status" >
 	            					<tr> 
-                						<td style="text-align:center">${item.itemSeq}</td> 
+                						<td style="text-align:center">${totalCount - (pageSize * (currentPage-1)+status.index)}</td> 
                 						<td style="white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;cursor:pointer"  onClick="open_poll('${item.itemSeq}')"><span> ${item.pollTitle} </span></td> 
                 						<td> ${item.startDate} </td> 
                 						<td> ${item.endDate} </td> 
