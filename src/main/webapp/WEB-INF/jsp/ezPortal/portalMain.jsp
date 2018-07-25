@@ -134,7 +134,9 @@
 		        	changSizeOfLayer();
 		        });
 		        
-		        $("#memoList").sortable();
+		        $("#memoList").sortable({
+		        	 containment: '#layer-popup'
+		        }
 		     });
 //////////////////////////////
 		    function newMemo() {
