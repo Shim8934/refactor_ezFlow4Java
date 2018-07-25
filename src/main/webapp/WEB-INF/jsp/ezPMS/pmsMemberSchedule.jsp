@@ -68,22 +68,22 @@ function setMemberScheduleList() {
 		if(yearMonth == tmp) {
 			monthCount++;
 		} else {
-			$("#dateListHeader1").append('<th style="paddding: 2px 4px; height: 20px;" colspan=' + monthCount + '>' + tmp + '</th>');
+			$("#dateListHeader1").append('<th colspan=' + monthCount + '>' + tmp + '</th>');
 			monthCount = 1;
 		}
 		
 		if(filteredDateList[i].holidayOrNot == true) {
-			$("#dateListHeader2").append('<th date"' + filteredDateList[i].date + '" style="text-align:center; background-color: rgba(236, 195, 176, 0.40); padding: 2px 2px; height: 20px; width: 25px;" width="25">' + dayOfMonth + '</th>');
-			$(".dateList").append('<td date="' + filteredDateList[i].date + '" style="text-align:center; background-color: #FFFAF2;">&nbsp;</td>');
+			$("#dateListHeader2").append('<th class="holyday" date"' + filteredDateList[i].date + '">' + dayOfMonth + '</th>');
+			$(".dateList").append('<td class="holyday" date="' + filteredDateList[i].date + '">&nbsp;</td>');
 		} else {
-			$("#dateListHeader2").append('<th date"' + filteredDateList[i].date + '" style="text-align:center; padding: 2px 2px; height: 20px; width: 25px;" width="25">' + dayOfMonth + '</th>');
-			$(".dateList").append('<td date="' + filteredDateList[i].date + '" style="text-align:center;">&nbsp;</td>');
+			$("#dateListHeader2").append('<th date"' + filteredDateList[i].date + '" >' + dayOfMonth + '</th>');
+			$(".dateList").append('<td date="' + filteredDateList[i].date + '">&nbsp;</td>');
 		}
 		
 		tmp = yearMonth;
 	}
 	
-	$("#dateListHeader1").append('<th style="paddding: 2px 4px; height: 20px;" colspan=' + monthCount + '>' + tmp + '</th>');
+	$("#dateListHeader1").append('<th colspan=' + monthCount + '>' + tmp + '</th>');
 	
 	// 멤버 스케쥴을 테이블에 반영
 	setMemberSchedule();
@@ -299,6 +299,15 @@ window.onload = function() {
 	font-size:12px; 
 	line-height:22px;
 }
+
+#dateListHeader2 .holyday{background-color: rgba(236, 195, 176, 0.40);}
+#dateListHeader2{text-align:center; height: 20px; padding: 2px 2px; }
+#dateListHeader2 th{height: 20px; width:20px; padding: 2px 0px;}
+#dateListHeader1{padding: 2px 4px; height: 20px;}
+#dateListHeader1 th{height: 20px;}
+.dateList td.holyday{text-align:center; background-color: #FFFAF2;}
+.dateList td, #dateListHeader2 th{text-align:center;}
+#workSchedule{table-layout: fixed; width: 100%}
 </style>
 </head>
 <body class="popup">
@@ -337,8 +346,8 @@ window.onload = function() {
 	</div>
 	<div id="calendar">
 	<table id="workSchedule" class="content">
-	<tr id="dateListHeader1" height="25px"></tr>
-	<tr id="dateListHeader2" height="25px">
+	<tr id="dateListHeader1"></tr>
+	<tr id="dateListHeader2">
 	<%-- <c:forEach items="${dateList }" var="dateVO">
 		<c:choose>
 			<c:when test="${dateVO.holidayOrNot eq true}">
