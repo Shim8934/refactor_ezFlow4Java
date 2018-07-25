@@ -1513,7 +1513,7 @@
            ('SA03','016','대결','Deputy','代決','待决','0','대결',#companyID#, #tenantID# ),
            ('SA03','018','기안','Draft','起案','起草','0','기안',#companyID#, #tenantID# ),
            ('SA03','019','검토','Examination','検討','评论','0','검토',#companyID#, #tenantID# ),
-           ('SA03','040','후결','후결','후결','후결','0','후결',#companyID#, #tenantID# ),
+           ('SA03','040','후결','After-approval','後決','후결','0','후결',#companyID#, #tenantID# ),
 			('SA05', '0  ', '사인종류', '사인종류', '사인종류', '사인종류', '1', '사인종류', #companyID#, #tenantID#),
 			('SA05', '001', 'PIC', 'PIC', 'PIC', 'PIC', '1', '일반결재', #companyID#, #tenantID#),
 			('SA05', '002', 'PIC', 'PIC', 'PIC', 'PIC', '1', '개인순차협조', #companyID#, #tenantID#),

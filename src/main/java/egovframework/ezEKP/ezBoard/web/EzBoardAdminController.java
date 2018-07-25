@@ -853,7 +853,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
-		String rtnValue = ezBoardAdminService.saveHeader(doc, userInfo, boardListHeaderVO);;
+		String rtnValue = ezBoardAdminService.saveHeader(doc, userInfo, boardListHeaderVO);
 
 		logger.debug("saveHeader ended");
 

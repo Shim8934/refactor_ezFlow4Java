@@ -262,6 +262,25 @@
 		        	]]>
         		</isEqual>
         	</isEqual>
+        	
+        	<isEqual property="chkValue" compareValue="creatorname">
+	        	<isEqual property="primary" compareValue="1">
+		        	<![CDATA[
+	        			creatorname LIKE CONCAT(CONCAT('%', #filter#), '%')
+		        	]]>
+        		</isEqual>
+	        	<isEqual property="primary" compareValue="2">
+		        	<![CDATA[
+	        			creatorname2 LIKE CONCAT(CONCAT('%', #filter#), '%')
+		        	]]>
+        		</isEqual>
+        	</isEqual>
+        	
+        	<isEqual property="chkValue" compareValue="memo">
+	        	<![CDATA[
+        			memo LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        	]]>
+        	</isEqual>
         </isNotEqual>
         
        	<isEqual property="searchClass" compareValue="1" prepend="AND">

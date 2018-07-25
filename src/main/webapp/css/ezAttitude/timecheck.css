@@ -2,7 +2,7 @@
 /* CSS Document */
 
 /* main_time  */
-.main_time{ margin:0 auto; padding:10px 0px 0px 0px; width:120px; overflow:hidden;}
+.main_time{ margin:0 auto; padding:6px 0px 0px 0px; width:120px; overflow:hidden;}
 .main_time dl{ margin:0px; padding:0px 0px; text-align:center;}
 .main_time dl dt{ margin:0px 0px 5px 0px; padding:0px 0px 0px 0px; font-size:12px; font-weight:bold; font-family:Gulim, Meiryo UI}
 .main_time dl dd{ margin:0px; padding:0px; width:58px; height:58px; text-align:center; line-height:55px; cursor:pointer;}
