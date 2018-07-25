@@ -113,10 +113,6 @@
 		        	$("#layer-popup").css("display", "none")
 		        })
 		        
-		        $("#memo-1").click(function() {
-		        	$("#maskDiv").css("display", "");
-		        	$("#selected-memo").css("display", "");
-		        });
 		        $("#maskDiv").click(function() {
 		        	$("#maskDiv").css("display", "none");
 		        	$("#selected-memo").css("display", "none");
@@ -135,7 +131,32 @@
 		        });
 		     });
 
-		        
+		    function newMemo() {
+		        $("#maskDiv").css("display", "");
+		        $("#selected-memo").css("display", "");
+		    }
+		    
+		    function save() {
+		    	var text = $("#textarea").val();
+		    	alert('저장 되었습니다.');
+		    	$("#memoList").append("<table class='individual-memo'><tbody><tr><td>" + text + "</td></tr></tbody></table>");
+		    	$("#memoList > table:last").attr("onclick", "read('" + text + "')");
+		    	$("#textarea").val('');
+		    	$("#maskDiv").css("display", "none");
+		    	$("#selected-memo").css("display", "none");
+		    }
+		    
+		    function read(text) {
+		        $("#maskDiv").css("display", "");
+		        $("#selected-memo").css("display", "");
+		        $("#textarea").val(text);
+		    }
+		    
+		    function closeMemo() {
+		    	$("#textarea").val('');
+		    	$("#maskDiv").css("display", "none");
+		    	$("#selected-memo").css("display", "none");
+		    }
 
 		</script>
 	</head>
@@ -153,30 +174,31 @@
 		<div class="noteBlock">
 			<div id="layer-popup" style="display: none" class="layer-half">
 				<div id="maskDiv" style="display: none"></div>
-				<div>
+				<div id="memoList" style="height: 100%; overflow:scroll;">
 					<div style="text-align: right">
 						<button id="change-mode">모드변경</button>
-						<button id="new-memo">추가</button>
+						<button id="new-memo" onclick="newMemo()">추가</button>
 						<button id="close-button">닫기 X</button>
 					</div>
 				</div>
 				<div>메모 레이어 팝업</div>
 				
 				<!-- 메모 리스트 -->
-				<table id="memo-1" class="individual-memo" style="cursor: pointer;">
+				<!-- <table id="memo-1" class="individual-memo" style="cursor: pointer;">
 					<tbody><tr><td>내용</td></tr></tbody>
 				</table>
 				<table id="memo-2" class="individual-memo">
 					<tbody><tr><td>내용</td></tr></tbody>
-				</table>
+				</table> -->
 				
 				<!-- 하나 클릭 -->
 				<div id="selected-memo" style="display: none">
 					<div id="memo-btn" style="text-align: right">
-						<button>저장</button> <button>휴지통</button>
+						<button onclick="save()">저장</button> 
+						<button onclick="closeMemo()">닫기 X</button>
 					</div>
-					<div id="contents">
-						<!-- <p>내용</p> -->
+					<br>
+					<textarea id="textarea" cols="50" rows="28"></textarea>
 					</div>
 				</div>
 			</div>
