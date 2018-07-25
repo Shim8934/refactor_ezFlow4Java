@@ -2,7 +2,9 @@ package egovframework.ezEKP.ezCabinet.dao;
 
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.stereotype.Repository;
+
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO;
@@ -222,5 +224,17 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 
 	public List<CabinetShareVO> checkSubPermission(Map<String, Object> map) {
 		return (List<CabinetShareVO>)list("EzCabinetDAO.checkSubPermission", map);
+	}
+
+	public CabinetItemVO getItemById(Map<String, Object> map) {
+		return (CabinetItemVO)select("EzCabinetDAO.getItemById", map);
+	}
+
+	public void deleteAttachFiles(Map<String, Object> map) {
+		delete("EzCabinetDAO.deleteAttachFiles", map);
+	}
+
+	public void deleteRelatedFiles(Map<String, Object> map) {
+		delete("EzCabinetDAO.deleteRelatedFiles", map);
 	}
 }

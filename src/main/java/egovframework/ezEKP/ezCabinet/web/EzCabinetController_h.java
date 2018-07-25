@@ -275,6 +275,8 @@ public class EzCabinetController_h {
 		String relatedList     = request.getParameter("relatedList") != null ? request.getParameter("relatedList") : "";
 		JSONObject resultObj   = new JSONObject();
 		
+		logger.debug("itemId : " + itemId + " || title : " + title + " || summary: " + summary + " || fileList: " + fileList + " || relatedList: " + relatedList);
+		
 		if (itemId.equals("") || title.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");

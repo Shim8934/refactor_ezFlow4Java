@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
@@ -429,9 +432,9 @@ public class EzCabinetGWController_h {
 		JSONObject result = new JSONObject();
 		JSONParser jp     = new JSONParser();
 		
-		logger.debug("ServerName: " + serverName + " ||  title: " + title + " ||  summary: " + summary + " ||  userId: " + userId + " || fileArray: " + fileArray + " || relatedArr: " + relatedArr);
+		logger.debug("ServerName: " + serverName + " || Item Id: " + itemId + " || title: " + title + " ||  summary: " + summary + " ||  userId: " + userId + " || fileArray: " + fileArray + " || relatedArr: " + relatedArr);
 		
-		if (serverName.equals("") || title.equals("") || userId.equals("")) {
+		if (serverName.equals("") || title.equals("") || userId.equals("") || itemId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -449,6 +452,7 @@ public class EzCabinetGWController_h {
 			if (capacity.getCapacityType() == 1) {
 				//Check save condition
 				long totalAttachSize = 0;
+				long itemSize        = cabinetService.getTotalItemsSize(new ArrayList<Integer>(Arrays.asList(Integer.parseInt(itemId))), userInfo);
 				
 				if (attacheFiles.size() > 0) {
 					for (int i = 0; i < attacheFiles.size(); i++) {
@@ -462,7 +466,7 @@ public class EzCabinetGWController_h {
 				long totalUsed = Long.parseLong(capacity.getTotalUsed());
 				long totalCap  = capacity.getTotalCapacity() * 1048576;
 				
-				if (totalAttachSize > (totalCap - totalUsed)) {
+				if (totalAttachSize > (totalCap - totalUsed + itemSize)) {
 					logger.debug("Not enough storage to upload these files!");
 					result.put("status", "error");
 					result.put("code", 4);

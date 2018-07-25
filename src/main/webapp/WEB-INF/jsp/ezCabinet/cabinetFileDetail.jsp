@@ -456,10 +456,24 @@
 						dataType: "JSON",
 						async: false,
 						success : function(data) {
+							var code = data.code;
+							switch(code) {
+								case 0 : afterChangeSuccessfully()         ; break;
+								case 1 : alert(CabinetMessages.strParamErr); break;
+								case 2 : alert(CabinetMessages.strError)   ; break;
+								case 3 : alert(CabinetMessages.strPerm)    ; break;
+								default: alert(CabinetMessages.strError)   ; return; 
+							}
 						},
 						error : function(error) {
+							alert(CabinetMessages.strError);
 						}
 					});
+				}
+				
+				function afterChangeSuccessfully() {
+					alert(CabinetMessages.strModify);
+					closeWindow();
 				}
 				
 				function cancelChanges() {

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
@@ -46,6 +48,9 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 	
 	@Autowired
 	private EzOrganService ezOrganService;
+	
+	@Autowired
+	private EzCabinetService cabinetService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -227,6 +232,87 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 
 	@Override
 	public synchronized void modifyItem(int itemId, JSONArray attacheFiles, JSONArray relatedFiles, String title, String summary, String realPath, LoginVO userInfo) throws Exception {
+		String companyId           = userInfo.getCompanyID();
+		String userId              = userInfo.getId();
+		int tenantId               = userInfo.getTenantId();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+		Map<String,Object> map     = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("itemId",   itemId);
 		
+		CabinetItemVO itemVO = ezCabinetDAO.getItemById(map);
+		itemVO.setTitle(title);
+		itemVO.setSummary(summary);
+		itemVO.setUpdatedDate(timeUTC);
+		itemVO.setUpdateId(userId);
+		
+		ezCabinetDAO_h.modifyItem(itemVO);
+		
+		int attachSize  = attacheFiles.size();
+		int relatedSize = relatedFiles.size();
+		
+		//Modify attach files
+		List<CabinetAttachFileVO> AttachFileList = ezCabinetDAO.getAllAttachFilesOfItem(map);
+		List<String> attachPath                  = AttachFileList.stream().map(CabinetAttachFileVO::getFilePath).collect(Collectors.toList());
+		
+		if (attachSize > 0) {
+			int attachId = ezCabinetDAO.getMaxAttachId(map) + 1;
+			for (int i = 0; i < attachSize; i++, attachId++) {
+				JSONObject fileObj = (JSONObject)attacheFiles.get(i);
+				String filePath    = (String)fileObj.get("path");
+				
+				if (attachPath.contains(filePath)) {
+					attachPath.remove(filePath);
+					continue;
+				}
+				
+				String fileName    = (String)fileObj.get("name");
+				
+				File file          = new File(realPath + filePath);
+				long fileSize      = file.length();
+				
+				CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, filePath, fileName, fileSize, companyId, tenantId);
+				ezCabinetDAO.saveAttachFile(attachFile);
+			}
+		}
+		
+		//delete attach files
+		if (attachPath.size() > 0) {
+			List<Integer> attachIds = AttachFileList.stream().filter(i -> attachPath.contains(i.getFilePath())).map(CabinetAttachFileVO::getAttachId).collect(Collectors.toList());
+			map.put("attachIds", attachIds);
+			ezCabinetDAO.deleteAttachFiles(map);
+			
+			for (String filePath : attachPath) {
+				cabinetService.deleteAttachFile(filePath, realPath, tenantId);
+			}
+		}
+		
+		//Modify related files
+		List<CabinetRelationItemVO> RelatedFileList = ezCabinetDAO_h.getRelatedFileList(map);
+		List<Integer> relatedId                     = RelatedFileList.stream().map(CabinetRelationItemVO::getRelatedItemId).collect(Collectors.toList());
+		
+		if (relatedSize > 0) {
+			int relationId = ezCabinetDAO.getMaxRelationId(map) + 1;
+			
+			for (int i = 0; i < relatedSize; i++, relationId++) {
+				JSONObject relationObj = (JSONObject)relatedFiles.get(i);
+				int relatedItemId = Integer.parseInt((String)relationObj.get("itemId"));
+				
+				if (relatedId.contains(relatedItemId)) {
+					relatedId.removeIf(id -> id.intValue() == relatedItemId);
+					continue;
+				}
+				
+				CabinetRelationVO relationFile = new CabinetRelationVO(relationId, itemId, relatedItemId, companyId, tenantId);
+				ezCabinetDAO.saveRelationFile(relationFile);
+			}
+		}
+		
+		if(relatedId.size() > 0) {
+			map.put("relatedIds", relatedId);
+			ezCabinetDAO.deleteRelatedFiles(map);
+		}
 	}
 }
