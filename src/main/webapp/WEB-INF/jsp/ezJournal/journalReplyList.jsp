@@ -90,6 +90,7 @@
 							} catch (e) { }
 							location.reload();
 							parent.addReplyCount();
+							replyContent = MakeXMLString(replyContent);
 							sendJournalReplyMail(replyContent,journalId,result,journalTitle);
 						}
 					});
