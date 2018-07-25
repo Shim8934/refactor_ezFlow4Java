@@ -90,6 +90,7 @@
 	        		maskDiv.css({"top":0, "left":0, "width" : winWidth/2 - 20, "height":winHeight - 56 - 30});
 	        		opendMemo.css({"top":10, "left":10, "width" : winWidth/2 - 50, "height":winHeight - 56 - 50})
 	        	}
+				$(".memoListBox").css("height",winHeight - 56 - 90);
 		    }
 		    
 		    $(function() {
@@ -197,7 +198,8 @@
 					
 					<div>메모 레이어 팝업</div>
 					
-					<div id="memoList" style="height: 100%; overflow:auto; margin: 10px">
+					<div class="memoListBox">
+						<div id="memoList" style="height: 100%; overflow:auto; margin: 10px"></div>
 					</div>
 					
 				</div>
