@@ -17,8 +17,6 @@
 			<a class = "cabRadio"><input type="radio" name = "checkCabinet" id = "2" checked = "checked"/><label for = "2">
 			<span><spring:message code="ezCabinet.t127"/></span></label></a>
 		</div>
-		
-		
 		<div class="cabMgTree" id = "cabMgTreeId" style="position: relative; overflow: hidden; margin: 10px 5px; min-height: 200px; height: 200px;">
 			<div id="cabinetMgTree" style="width: 100%; height: 100%; position: absolute; z-index: 1; "></div>
 			<div id="fogPanel" style="width: 100%; height: 100%; z-index: 2; background-color: transparent; position: absolute; display: none; top: 0px; left: 0px;"></div>
@@ -34,6 +32,7 @@
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTree.js"           ></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetModule.js"         ></script>
 		<script type="text/javascript">
 			(function() {
 				var rlWindow    = null;
@@ -84,6 +83,7 @@
 					var cabinetMainDiv = document.getElementById("cabMgTreeId");
 					cabinetMainDiv.style.backgroundColor = "#fff";
 					fogPanel.style.display = "none";
+					console.log("${module}");
 				}
 				
 				function closeWindow() {window.close();}

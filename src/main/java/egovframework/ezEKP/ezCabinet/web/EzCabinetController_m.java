@@ -68,22 +68,4 @@ public class EzCabinetController_m {
 		logger.debug("jspGetCabinetFileDetail ended");
 		return "ezCabinet/cabinetFileDetail";
 	}
-	
-	@RequestMapping(value="/ezCabinet/getCabinetShowDetail.do")
-	public String jspGetgetCabinetShowDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("jspGetCabinetShowDetail started");
-		logger.debug("jspGetCabinetShowDetailDetail ended");
-		String cabinetId           = request.getParameter("cabinetId")     != null ? request.getParameter("cabinetId")       : "";
-		JSONObject resultObj   = new JSONObject();
-		
-		if (cabinetId.equals("")) {
-			resultObj.put("code", 1);
-			resultObj.put("status", "error");
-			return resultObj.toString();
-		}
-		
-		resultObj = cabinetRestService.cabinetShowDetail(request, cabinetId);
-		
-		return "/ezCabinet/getCabinetShowDetail.do";
-	}
 }
