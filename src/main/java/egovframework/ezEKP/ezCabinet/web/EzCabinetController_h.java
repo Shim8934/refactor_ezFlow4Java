@@ -2,7 +2,10 @@ package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +36,6 @@ public class EzCabinetController_h {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetController_h.class);
 	
-	/**
-	 * 캐비넷파일 상세페이지
-	 * @param loginCookie
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception 
-	 */
 	@RequestMapping(value="/ezCabinet/cabinetFileDetail.do")
 	public String jspGetCabinetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetCabinetFileDetail started");
@@ -72,14 +67,6 @@ public class EzCabinetController_h {
 		return jspPageName;
 	}
 	
-	/**
-	 * 캐비넷 공유페이지 
-	 * @param loginCookie
-	 * @param request
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
 	@RequestMapping(value="/ezCabinet/shareCabinet.do")
 	public String jspGetShareCabinetPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetShareCabinetPage started");
@@ -276,4 +263,31 @@ public class EzCabinetController_h {
 		return resultObj.toString();
 	}
 	
+	@RequestMapping(value="/ezCabinet/modifyItem.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonModifyItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("Modify item is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String itemId          = request.getParameter("itemId")      != null ? request.getParameter("itemId")      : "";
+		String title           = request.getParameter("title")       != null ? request.getParameter("title")       : "";
+		String summary         = request.getParameter("summary")     != null ? request.getParameter("summary")     : "";
+		String fileList        = request.getParameter("listFile")    != null ? request.getParameter("listFile")    : "";
+		String relatedList     = request.getParameter("relatedList") != null ? request.getParameter("relatedList") : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		if (itemId.equals("") || title.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		JSONParser jp        = new JSONParser();
+		JSONArray fileArray  = (JSONArray) jp.parse(fileList);
+		JSONArray relatedArr = (JSONArray) jp.parse(relatedList);
+		
+		resultObj = cabinetRestService_h.modifyItem(request, userInfo.getId(), itemId, title, summary, fileArray, relatedArr);
+		
+		logger.debug("Modify item finishes!");
+		return resultObj.toString();
+	}
 }

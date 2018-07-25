@@ -1,17 +1,21 @@
 package egovframework.ezEKP.ezCabinet.service.impl;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
@@ -221,4 +225,8 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 		return ezCabinetDAO_h.getRelatedFileList(map);
 	}
 
+	@Override
+	public synchronized void modifyItem(int itemId, JSONArray attacheFiles, JSONArray relatedFiles, String title, String summary, String realPath, LoginVO userInfo) throws Exception {
+		
+	}
 }

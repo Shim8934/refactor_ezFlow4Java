@@ -1,8 +1,10 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import java.util.List;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationItemVO;
@@ -19,4 +21,5 @@ public interface EzCabinetService_h {
 	CabinetItemVO getFileDetail(String itemId, String primary, String offset, int tenantId) throws Exception;
 	List<CabinetAttachFileVO> getAttachFileList(String itemId, int tenantId) throws Exception;
 	List<CabinetRelationItemVO> getRelatedFileList(String itemId, int tenantId) throws Exception;
+	void modifyItem(int itemId, JSONArray attacheFiles, JSONArray relatedFiles, String title, String summary, String realPath, LoginVO userInfo) throws Exception;
 }

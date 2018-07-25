@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezCabinet.web;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import javax.annotation.Resource;
@@ -16,12 +18,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetColumnVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationItemVO;
+import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
 import egovframework.let.user.login.service.LoginService;
@@ -38,6 +42,9 @@ public class EzCabinetGWController_h {
 	
 	@Autowired
 	private EzCabinetService cabinetService;
+	
+	@Autowired
+	private EzCabinetAdminService cabinetAdminService;
 	
 	@Autowired
 	private EzOrganService ezOrganService;
@@ -402,6 +409,72 @@ public class EzCabinetGWController_h {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/item/id/{itemId}/modify", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject modifyItem(@PathVariable(value="itemId") String itemId, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
+		String title      = request.getParameter("title")      != null ? request.getParameter("title")      : "";
+		String summary    = request.getParameter("summary")    != null ? request.getParameter("summary")    : "";
+		String fileArray  = request.getParameter("fileArray")  != null ? request.getParameter("fileArray")  : "";
+		String relatedArr = request.getParameter("relatedArr") != null ? request.getParameter("relatedArr") : "";
+		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
+		JSONObject result = new JSONObject();
+		JSONParser jp     = new JSONParser();
+		
+		logger.debug("ServerName: " + serverName + " ||  title: " + title + " ||  summary: " + summary + " ||  userId: " + userId + " || fileArray: " + fileArray + " || relatedArr: " + relatedArr);
+		
+		if (serverName.equals("") || title.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
+			
+			JSONArray attacheFiles  = (JSONArray) jp.parse(fileArray);
+			JSONArray relatedFiles  = (JSONArray) jp.parse(relatedArr);
+			String realPath         = request.getServletContext().getRealPath("");
+			UserCapacityVO capacity = cabinetAdminService.getUserCapacity(userId, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
+			
+			if (capacity.getCapacityType() == 1) {
+				//Check save condition
+				long totalAttachSize = 0;
+				
+				if (attacheFiles.size() > 0) {
+					for (int i = 0; i < attacheFiles.size(); i++) {
+						JSONObject fileObj = (JSONObject)attacheFiles.get(i);
+						String filePath    = (String)fileObj.get("path");
+						File file          = new File(realPath + filePath);
+						totalAttachSize    = totalAttachSize + file.length();
+					}
+				}
+				
+				long totalUsed = Long.parseLong(capacity.getTotalUsed());
+				long totalCap  = capacity.getTotalCapacity() * 1048576;
+				
+				if (totalAttachSize > (totalCap - totalUsed)) {
+					logger.debug("Not enough storage to upload these files!");
+					result.put("status", "error");
+					result.put("code", 4);
+					return result;
+				}
+			}
+			
+			cabinetService_h.modifyItem(Integer.parseInt(itemId), attacheFiles, relatedFiles, title, summary, realPath, userInfo);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
 		catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");

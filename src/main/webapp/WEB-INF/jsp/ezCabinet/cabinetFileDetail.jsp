@@ -121,7 +121,7 @@
 					title.textContent       = result["title"];
 					summary.textContent     = result["summary"];
 					title.setAttribute("title", result["title"]);
-					summary.setAttribute("title", result["summary"]);
+					summary.setAttribute("summary", result["summary"]);
 					var spanElmt            = document.createElement("span");
 					spanElmt.textContent    = CabinetMessages.strStorage + getFileSize(result["itemSize"]);
 					
@@ -133,7 +133,7 @@
 					
 					if(attachFile == null || attachFile.length == 0) {
 						var spanElmt         = document.createElement("span");
-						spanElmt.textContent = CabinetMessages.strAttach;
+						spanElmt.textContent = CabinetMessages.strNoAttach;
 						divInformElmt.appendChild(spanElmt);
 					}
 					else {
@@ -185,6 +185,7 @@
 					for (var i = 0, len = relatedFile.length; i < len; i++) {
 						var spanElmt = document.createElement("span");
 						spanElmt.setAttribute("role", relatedFile[i]["relatedItemId"]);
+						spanElmt.setAttribute("status", relatedFile[i]["useStatus"]);
 						spanElmt.textContent = relatedFile[i]["title"];
 						spanElmt.className   = "rlSpanBnk";
 						spanElmt.addEventListener("click", function(e) {readRelatedItem(this);}, false);
@@ -216,9 +217,15 @@
 				function getRelatedFiles() {return relatedArr;}
 				
 				function readRelatedItem(spanElmt) {
-					var itemId = spanElmt.getAttribute("role");
+					var itemId    = spanElmt.getAttribute("role");
+					var useStatus = spanElmt.getAttribute("status");
+					
 					if(itemPopup) {itemPopup.close();}
-					itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "itemDetail", getOpenWindowfeature(600, 565));
+					if(useStatus == 0) {
+						alert(CabinetMessages.strNoRelated);
+					}else{
+						itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "itemDetail", getOpenWindowfeature(600, 565));	
+					}
 				}
 				
 				function downloadFile(event) {
@@ -321,13 +328,22 @@
 					fileDivElmt.addEventListener("drop"     , function(e) {CabinetFile.upload(e);}   , false);
 					
 					if(liElmt.length == 0) {
+						var fileDivElmt         = document.getElementById("fileDiv");
+						var divInformElmt       = fileDivElmt.querySelector("div[class='divInform']");
+						divInformElmt.removeChild(divInformElmt.firstElementChild);
 						
+						var spanElmt1           = document.createElement("span");
+						var spanElmt2           = document.createElement("span");
+						spanElmt1.textContent   = CabinetMessages.strAttach1;
+						spanElmt2.textContent   = CabinetMessages.strAttach2;
+						
+						divInformElmt.appendChild(spanElmt1);
+						divInformElmt.appendChild(spanElmt2);
 					}else{
 						for (var i = 0; i < liElmt.length; i++) {
 							var delImg         = document.createElement("img");
 							delImg.src         = "/images/cabinet/file_del.gif";
 							delImg.addEventListener("click", function(e) {CabinetFile.deleteFile(e);}, false);
-							
 							liElmt[i].appendChild(delImg);
 						}	
 					}
@@ -339,6 +355,8 @@
 				}
 				
 				function startUpload() {document.getElementById("fileBttn").click();}
+				var fileUploadBttn      = document.getElementById("fileBttn");
+				fileUploadBttn.onchange = function(e) {CabinetFile.upload();};
 				
 				function getRelatedFile() {
 					if (rlWindow) {rlWindow.close();}
@@ -387,10 +405,6 @@
 					}
 				}
 				
-				function deleteFile() {
-					
-				}
-				
 				function saveItem() {
 					var title   = document.getElementById("itemTtl").value;
 					var summary = document.getElementById("itemSum").value;
@@ -416,11 +430,11 @@
 						}
 					}
 					
-					/* $.ajax({
+					$.ajax({
 						type: "POST",
 						url: "/ezCabinet/modifyItem.do",
 						data: {
-							"cabinetId"   : cabinetId,
+							"itemId"      : itemId,
 							"title"       : title,
 							"summary"     : summary,
 							"relatedList" : JSON.stringify(relatedArr),
@@ -432,7 +446,7 @@
 						},
 						error : function(error) {
 						}
-					}); */
+					});
 				}
 				
 				function fileDelete() {

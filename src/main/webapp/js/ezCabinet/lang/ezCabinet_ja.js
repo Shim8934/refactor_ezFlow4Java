@@ -63,8 +63,11 @@ var CabinetMessages = {
 	strShareErr2 : "공유받은 캐비넷 없습니다.",
 	strDelete    : "파일을 삭제하시겠습니까?",
 	strStorage   : "총용량: ",
-	strAttach    : "첨부파일이 없습니다.",
+	strNoAttach  : "첨부파일이 없습니다.",
 	strCreator   : "게시자",
 	strRelated   : "연관문서",
-	strSummary   : "요약"
+	strSummary   : "요약",
+	strAttach1   : "파일을 드래그앤드랍하거나",
+	strAttach2   : "이곳을 클릭하여 파일을 첨부하세요.",
+	strNoRelated : "삭제된 연관문서입니다."
 }

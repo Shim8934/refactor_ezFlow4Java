@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -165,6 +166,19 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		param.put("userId",      userId);
 		
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+
+	@Override
+	public JSONObject modifyItem(HttpServletRequest request, String userId, String itemId, String title, String summary, JSONArray fileArray, JSONArray relatedArr) throws Exception {
+		String url                = "/rest/ezcabinet/item/id/" + itemId + "/modify";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("title",      title);
+		param.put("summary",    summary);
+		param.put("fileArray",  fileArray);
+		param.put("relatedArr", relatedArr);
+		param.put("userId",     userId);
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
 }
