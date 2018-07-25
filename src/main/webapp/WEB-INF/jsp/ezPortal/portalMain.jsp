@@ -148,7 +148,7 @@
 		    	var text = $("#textarea").val();
 		    	alert('저장 되었습니다.');
 		    	$("#memoList").append("<div class='individual-memo' style='float: left; margin: 10px'>" + text + "</div>");
-		    	$("#memoList > div").attr("onclick", "read('" + text + "')");
+		    	$("#memoList > div:last").attr("onclick", "read('" + text + "')");
 		    	$("#textarea").val('');
 		    	$("#maskDiv").css("display", "none");
 		    	$("#selected-memo").css("display", "none");
