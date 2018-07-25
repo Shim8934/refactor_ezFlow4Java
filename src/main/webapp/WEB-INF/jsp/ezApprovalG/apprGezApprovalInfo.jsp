@@ -2681,7 +2681,7 @@
             						</td>
 	        					</tr>
 	       						<tr>
-									<th ><spring:message code='ezApprovalG.t864'/></th><!-- 수신자(발신자) -->
+									<th >발신기관명</th><!--발신기관명-->
 									<td>
 							        	<input type="text" name="txtReceiptMember" id="txtReceiptMember" class="text" style="Width:100%;">
 							        </td>
@@ -2693,7 +2693,7 @@
 								    </td>
 								</tr>
 								<tr id="trOriginSN" style="display: none;">
-								    <th><spring:message code='ezApprovalG.t866'/></th><!-- 생산기관등록번호 -->
+								    <th>문서번호</th><!-- 문서번호 -->
 									<td>
 							        	<input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="9">
 								    </td>

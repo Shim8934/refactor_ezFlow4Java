@@ -281,19 +281,24 @@ function setNonElecRecInfo(ret) {
 		
 		if (HwpCtrl.CheckFieldExist("doctitle"))
 			HwpCtrl.SetFieldText("doctitle", "");
-
-		if (HwpCtrl.CheckFieldExist("docnumber"))
-			HwpCtrl.SetFieldText("docnumber", "");
+		
+		if (HwpCtrl.CheckFieldExist("nonElecRec_docnumber"))
+			HwpCtrl.SetFieldText("nonElecRec_docnumber", "");
+		
+		if (HwpCtrl.CheckFieldExist("nonElecRec_sendingDept"))
+			HwpCtrl.SetFieldText("nonElecRec_sendingDept", "");
 			
 		objNodes = xmldom.selectNodes("NONELECRECINFO/NONELECREC");
 		
-		HwpCtrl.SetFieldText("nonElecRec_Title", getNodeText(objNodes.item(0).childNodes(6)));
-		HwpCtrl.SetFieldText("nonElecRec_RegDate", getNodeText(objNodes.item(0).childNodes(4)));
-		HwpCtrl.SetFieldText("nonElecRec_ExeDate", getNodeText(objNodes.item(0).childNodes(11)));
-		HwpCtrl.SetFieldText("nonElecRec_RegType", regTypePicker(getNodeText(objNodes.item(0).childNodes(3))));
-		HwpCtrl.SetFieldText("doctitle", getNodeText(objNodes.item(0).childNodes(6)) + " " + title);
-		HwpCtrl.SetFieldText("docnumber", getNodeText(objNodes.item(0).childNodes(16)));
+		HwpCtrl.SetFieldText("nonElecRec_Title", getNodeText(objNodes.item(0).childNodes(6)));				//기록물제목
+		HwpCtrl.SetFieldText("nonElecRec_RegDate", getNodeText(objNodes.item(0).childNodes(4)));			//등록일자
+		HwpCtrl.SetFieldText("nonElecRec_ExeDate", getNodeText(objNodes.item(0).childNodes(11)));			//시행일자
+		HwpCtrl.SetFieldText("nonElecRec_RegType", regTypePicker(getNodeText(objNodes.item(0).childNodes(3)))); //등록구분
+		HwpCtrl.SetFieldText("doctitle", getNodeText(objNodes.item(0).childNodes(6)) + " " + title);		//문서제목
+		HwpCtrl.SetFieldText("nonElecRec_docnumber", getNodeText(objNodes.item(0).childNodes(16)));			//문서번호
+		HwpCtrl.SetFieldText("nonElecRec_sendingDept", getNodeText(objNodes.item(0).childNodes(12)));		//발신기관
 		
+		//분리첨부 건수
 		objNodes = xmldom.selectNodes("NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW");
 		count = objNodes.length;
 		if (count > 0) {
