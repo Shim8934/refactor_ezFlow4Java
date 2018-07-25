@@ -50,6 +50,8 @@
 		    var strLang4 = "<spring:message code='ezCommunity.t2009' />"; 
 		    var strLang5 = "<spring:message code='ezCommunity.t1102' />"; 
 		    var strLang6 =  "<spring:message code='ezCommunity.t431' />";
+		    //2018-07-24 김보미
+		    var strLang7 =  "<spring:message code='ezCommunity.kbm01' />";
 		    
 		    $(function () {
 		        $.ajax({
@@ -543,7 +545,7 @@
 		                    
 		                    break;
 		                case "btn_MemberJoinIng":
-		                    alert(strLang5);
+		                    alert(strLang7);
 		                    break;
 		                case "btn_Manager_home1": open_admin_home(code, "2");
 		                    break;
@@ -667,7 +669,7 @@
 		                    
 		                    break;
 		                case "btn_MemberJoinIng":
-		                    alert(strLang5);
+		                    alert(strLang7);
 		                    break;
 		                default: document.getElementById("rightfrm").src = "/ezCommunity/commHome/commHome.do?code=" + code + "&userLevel=" + userLevel, "right";
 		                    tempboard.className = "off";
