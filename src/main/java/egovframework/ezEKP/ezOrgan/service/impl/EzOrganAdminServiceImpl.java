@@ -591,6 +591,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 					map1.put("portalItemUID"+i, UUID.randomUUID().toString());
 				}
 				
+				for (int i = 0; i < 44; i++) {
+					map1.put("menuItemSUID"+i, UUID.randomUUID().toString());
+				}
+				
 				ezOrganAdminDao.insertCompanyInfo_I1(map1);
 				ezOrganAdminDao.insertCompanyInfo_I2(map1);
 				ezOrganAdminDao.insertCompanyInfo_I3(map1);
@@ -623,6 +627,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_I20(map1);
 				map1.put("lang", userInfo.getLang());
 				ezOrganAdminDao.insertCompanyInfo_I21(map1);
+				
+				//회사 생성시 서브 메뉴 아이템 insert
+				ezOrganAdminDao.insertCompanyInfo_I22(map1);
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
                 e.printStackTrace();

@@ -2550,6 +2550,57 @@
 		    ]]>
     	</isEqual>
     </insert>
+  	
+  	<insert id="EzOrganAdminDAO.insertCompanyInfo_I22" parameterClass="Map">
+	    INSERT INTO 
+	    	TBL_MENUITEM_ITEMS_MENUITEMS_S 
+	    		(UID_,PARENTMENUID,OWNERPAGEID,DISPLAYNAME,DISPLAYNAME2,COLUMNPOS,IMAGEUID,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) 
+	    VALUES 
+	    		(#menuItemSUID0#, #menuItemUUID3#,#topMenuJaUUID#,'承認・決裁待ち','承認・決裁待ち',1,' ','/ezApprovalG/apprGMain.do','main',' ',#tenantID#),
+				(#menuItemSUID1#, #menuItemUUID14#,#topMenuEnUUID#,'Address','Address',2,' ','/ezEmail/mailMain.do?funCode=2','main',' ',#tenantID#),
+				(#menuItemSUID2#, #menuItemUUID17#,#topMenuJaUUID#,'起案した文書','起案した文書',3,' ','/ezApproval/apprMain.do?listType=2','main',' ',#tenantID#),
+				(#menuItemSUID3#, #menuItemUUID61#,#topMenuJaUUID#,'私の掲示','私の掲示',2,' ','/ezBoard/boardMain.do?subFunc=1','main',' ',#tenantID#),
+				(#menuItemSUID4#, #menuItemUUID3#,#topMenuJaUUID#,'起案した文書','起案した文書',3,' ','/ezApprovalG/apprGMain.do?listType=2','main',' ',#tenantID#),
+				(#menuItemSUID5#, #menuItemUUID3#,#topMenuJaUUID#,'部署受信文書','部署受信文書',4,' ','/ezApprovalG/apprGMain.do?listType=4','main',' ',#tenantID#),
+				(#menuItemSUID6#, #menuItemUUID17#,#topMenuJaUUID#,'決裁進捗文書','決裁進捗文書',2,' ','/ezApproval/apprMain.do?listType=3','main',' ',#tenantID#),
+				(#menuItemSUID7#, #menuItemUUID87#,#topMenuKoUUID#,'결재할문서','결재할문서_en',1,' ','/ezApprovalG/apprGMain.do','main',' ',#tenantID#),
+				(#menuItemSUID8#, #menuItemUUID23#,#topMenuKoUUID#,'주소록','ezAddress',2,' ','/ezEmail/mailMain.do?funCode=2','main',' ',#tenantID#),
+				(#menuItemSUID9#, #menuItemUUID3#,#topMenuJaUUID#,'決裁進行中文書',' 決裁進行中文書',2,' ','/ezApprovalG/apprGMain.do?listType=3','main',' ',#tenantID#),
+				(#menuItemSUID10#,#menuItemUUID34#,#topMenuEnUUID#,'Reserved post','Reserved post',3,' ','/ezBoard/boardMain.do?subFunc=2','main',' ',#tenantID#),
+				(#menuItemSUID11#,#menuItemUUID14#,#topMenuEnUUID#,'E-mail','E-mail',1,' ','/ezEmail/mailMain.do?funCode=1','main',' ',#tenantID#),
+				(#menuItemSUID12#,#menuItemUUID93#,#topMenuEnUUID#,'Proposed','Proposed',4,' ','/ezApprovalG/apprGMain.do?listType=2','main',' ',#tenantID#),
+				(#menuItemSUID13#,#menuItemUUID31#,#topMenuKoUUID#,'즐겨찾기','즐겨찾기_en',2,' ','/ezBoard/boardMain.do?subFunc=1','main',' ',#tenantID#),
+				(#menuItemSUID14#,#menuItemUUID17#,#topMenuEnUUID#,'Proposed','Proposed',3,' ','/ezApproval/apprMain.do?listType=2','main',' ',#tenantID#),
+				(#menuItemSUID15#,#menuItemUUID17#,#topMenuJaUUID#,'部署受信箱','部署受信箱',4,' ','/ezApproval/apprMain.do?listType=4','main',' ',#tenantID#),
+				(#menuItemSUID16#,#menuItemUUID31#,#topMenuKoUUID#,'예약게시물','예약게시물_en',3,' ','/ezBoard/boardMain.do?subFunc=2','main',' ',#tenantID#),
+				(#menuItemSUID17#,#menuItemUUID17#,#topMenuEnUUID#,'Dept.receipt folder','Dept.receipt folder',4,' ','/ezApproval/apprMain.do?listType=4','main',' ',#tenantID#),
+				(#menuItemSUID18#,#menuItemUUID31#,#topMenuKoUUID#,'전자설문','ezQuestion',4,' ','/ezBoard/boardMain.do?func=1','main',' ',#tenantID#),
+				(#menuItemSUID19#,#menuItemUUID31#,#topMenuKoUUID#,'투표','ezPoll',5,' ','/ezBoard/boardMain.do?func=3','main',' ',#tenantID#),
+				(#menuItemSUID20#,#menuItemUUID31#,#topMenuKoUUID#,'사다리게임','ezLadder',7,' ','/ezBoard/boardMain.do?func=4','main',' ',#tenantID#),
+				(#menuItemSUID21#,#menuItemUUID93#,#topMenuEnUUID#,'To be process','To be process',1,' ','/ezApprovalG/apprGMain.do','main',' ',#tenantID#),
+				(#menuItemSUID22#,#menuItemUUID20#,#topMenuJaUUID#,'アドレス帳','アドレス帳',2,' ','/ezEmail/mailMain.do?funCode=2','main',' ',#tenantID#),
+				(#menuItemSUID23#,#menuItemUUID93#,#topMenuEnUUID#,'In process','In process',2,' ','/ezApprovalG/apprGMain.do?listType=3','main',' ',#tenantID#),
+				(#menuItemSUID24#,#menuItemUUID31#,#topMenuKoUUID#,'즐겨찾기','즐겨찾기_en',1,' ','/ezBoard/boardMain.do','main',' ',#tenantID#),
+				(#menuItemSUID25#,#menuItemUUID34#,#topMenuEnUUID#,'My Posts','My Posts',2,' ','/ezBoard/boardMain.do?subFunc=1','main',' ',#tenantID#),
+				(#menuItemSUID26#,#menuItemUUID17#,#topMenuEnUUID#,'To be process','To be process',1,' ','/ezApproval/apprMain.do','main',' ',#tenantID#),
+				(#menuItemSUID27#,#menuItemUUID34#,#topMenuEnUUID#,'Favorites','Favorites',1,' ','/ezBoard/boardMain.do','main',' ',#tenantID#),
+				(#menuItemSUID28#,#menuItemUUID61#,#topMenuJaUUID#,'電子アンケート','電子アンケート',4,' ','/ezBoard/boardMain.do?func=1','main',' ',#tenantID#),
+				(#menuItemSUID29#,#menuItemUUID61#,#topMenuJaUUID#,'投票','投票',5,' ','/ezBoard/boardMain.do?func=3','main',' ',#tenantID#),
+				(#menuItemSUID30#,#menuItemUUID34#,#topMenuEnUUID#,'Question','Question',4,' ','/ezBoard/boardMain.do?func=1','main',' ',#tenantID#),
+				(#menuItemSUID31#,#menuItemUUID34#,#topMenuEnUUID#,'Vote','Vote',5,' ','/ezBoard/boardMain.do?func=3','main',' ',#tenantID#),
+				(#menuItemSUID32#,#menuItemUUID23#,#topMenuKoUUID#,'메일','mail',1,' ','/ezEmail/mailMain.do?funCode=1','main',' ',#tenantID#),
+				(#menuItemSUID33#,#menuItemUUID87#,#topMenuKoUUID#,'결재진행문서','결재진행문서_en',2,' ','/ezApprovalG/apprGMain.do?listType=3','main',' ',#tenantID#),
+				(#menuItemSUID34#,#menuItemUUID17#,#topMenuJaUUID#,'決裁待ちの文書','決裁待ちの文書',1,' ','/ezApproval/apprMain.do','main',' ',#tenantID#),
+				(#menuItemSUID35#,#menuItemUUID87#,#topMenuKoUUID#,'회람수신함','회람수신함_en',4,' ','/ezApprovalG/apprGMain.do?listType=99','main',' ',#tenantID#),
+				(#menuItemSUID36#,#menuItemUUID87#,#topMenuKoUUID#,'부서수신함','부서수신함_en',5,' ','/ezApprovalG/apprGMain.do?listType=4','main',' ',#tenantID#),
+				(#menuItemSUID37#,#menuItemUUID20#,#topMenuJaUUID#,'メール','メール',1,' ','/ezEmail/mailMain.do?funCode=1','main',' ',#tenantID#),
+				(#menuItemSUID38#,#menuItemUUID87#,#topMenuKoUUID#,'기안한문서','기안한문서_en',3,' ','/ezApprovalG/apprGMain.do?listType=2','main',' ',#tenantID#),
+				(#menuItemSUID39#,#menuItemUUID61#,#topMenuJaUUID#,'お気に入り','お気に入り',1,' ','/ezBoard/boardMain.do','main',' ',#tenantID#),
+				(#menuItemSUID40#,#menuItemUUID17#,#topMenuEnUUID#,'In process','In process',2,' ','/ezApproval/apprMain.do?listType=3','main',' ',#tenantID#),
+				(#menuItemSUID41#,#menuItemUUID93#,#topMenuEnUUID#,'Dept.receipt folder','Dept.receipt folder',3,' ','/ezApprovalG/apprGMain.do?listType=4','main',' ',#tenantID#),
+				(#menuItemSUID42#,#menuItemUUID61#,#topMenuJaUUID#,'予約掲示','予約掲示',3,' ','/ezBoard/boardMain.do?subFunc=2','main',' ',#tenantID#),
+				(#menuItemSUID43#,#menuItemUUID82#,#topMenuKoUUID#,'업무관리','ToDo',1,' ','/ezSchedule/scheduleIndex.do?funCode=3','main',' ',#tenantID#);
+    </insert>
   
 	<delete id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[
