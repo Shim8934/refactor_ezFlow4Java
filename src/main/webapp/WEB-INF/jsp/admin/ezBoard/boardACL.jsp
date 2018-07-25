@@ -7,6 +7,13 @@
 		<title><spring:message code="ezBoard.t75" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
+	    <style>
+	    <%-- 2018-07-19 홍승비 - 관리자 > 게시판 권한설정 헤더 겹치는 부분 수정 --%>
+	    	#AccessListView_TH th{
+	    		overflow: hidden;
+    			text-overflow: ellipsis;
+	    	} 
+	    </style>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>    

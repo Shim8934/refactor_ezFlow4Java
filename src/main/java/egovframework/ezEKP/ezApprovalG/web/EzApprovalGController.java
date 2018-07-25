@@ -1164,7 +1164,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String ezAprOpinion(){
 		return "ezApprovalG/apprGezAprOpinion";
 	}
-
+	
+	/**
+	 * 전자결재G 메일발송 선택 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/ezAprOpinionSend.do")
+	public String ezAprOpinionSend(){
+		return "ezApprovalG/apprGezAprOpinionSend";
+	}
 	/**
 	 * 전자결재G 결재라인저장 표출 Method
 	 */
@@ -6468,6 +6475,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 							rtnVal = ezApprovalGService.mobileSrvConn(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo,mode);
 						}
 					} else {
+						logger.debug("type = HWP");
 						rtnVal = ezApprovalGService.mobileSrvConn_HWP(userID, "A", formID, "", xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), orgUID, langType, companyID, request, userInfo, mode);
 					}
 				} else {

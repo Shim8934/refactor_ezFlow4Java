@@ -15,7 +15,7 @@
 				background-color:#2a2d32;
 				color:#fff;
 				border-color:#000;
-				border-width:3px 1px 0 0; 
+				border-width:0px 1px 0 0; 
 				border-style:solid;
 				font-weight:bold;}
 			.normal{padding-left:15px; padding-right:15px;color:#ffffff; border-right:1px solid #000;font-weight:bold;word-break:keep-all}
@@ -136,9 +136,11 @@
 		<body style="background-color:#606671">
 			<c:choose>
 				<c:when test="${userInfo.lang != '3'}">
-					<div>
+					<div style="float:left">
 			    		<img src="/images/help/help.gif" width="135">
 					</div>
+					<div style="float:right;font-size:17px;font-family: Malgun Gothic; font-weight: bold; padding:10px;color:white" >ezFlow v6.3.1</div>
+					<div style="clear:both"></div>
 				<table onstalled="width:100%;" border="0" style="background:url(/images/help/topmenu_bg.gif) repeat-x; height:26px;">
 			  <tr>
 			  	  <c:choose>

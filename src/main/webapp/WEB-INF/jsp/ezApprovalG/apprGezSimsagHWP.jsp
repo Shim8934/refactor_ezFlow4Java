@@ -252,7 +252,7 @@
         }
 
         function btnSend_onclick() {
-//             try {
+            try {
                 if (!stampFlag && !NostampFlag) {
                     var pAlertContent = "<spring:message code='ezApprovalG.t216'/>";
                     OpenAlertUI(pAlertContent);
@@ -301,9 +301,9 @@
                     var pAlertContent = "<spring:message code='ezApprovalG.t217'/>";
                     OpenAlertUI(pAlertContent);
                 }
-//             } catch (e) {
-//                 alert("ezsimsag_hwp.aspx.btnSend_onclick()" + e.description);
-//         	}
+            } catch (e) {
+                alert("ezsimsag_hwp.btnSend_onclick()" + e.description);
+        	}
         }
 
         function DeleteLocalFiles() {

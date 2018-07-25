@@ -95,8 +95,8 @@
 		    var useSearchContent = "${useSearchContent}";
 		    var useMailNewWindow = "${useMailNewWindow}";
 		    var useReceivingChk = false;
+		    var reSendMsg = "<spring:message code='ezEmail.t569' />";
 		    var noReadMsg = "<spring:message code='ezPoll.t137'/>"; // 읽지 않음
-		    var sentDateChk = false; // 전달 및 회신시 보낸시각
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -161,7 +161,7 @@
 		            case "receiveChk":
 		            	p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile5.xml";
 		            	g_foldertype = "sent";
-		            	g_moveUrl = "<spring:message code='ezEmail.t645'/>";
+		            	g_moveUrl = "${sentFolderId}";
 		            	break;
 		        }
 		        
@@ -395,6 +395,20 @@
 		                refreshTimeoutTimerId = 0;
 		            }
 		        }
+		    }
+		    
+		    function ReSendWithURLOnly(pURL) {
+		        var pheight = window.screen.availHeight;
+		        var conHeight = pheight * 0.8;
+		        var pwidth = window.screen.availWidth;
+		        var conWidth = pwidth * 0.8;
+		        if (conWidth > 890)
+		            conWidth = 890;
+		        var pTop = (pheight - conHeight) / 2;
+		        var pLeft = (pwidth - 890) / 2;
+		        var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px,width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+		        
+		        window.open("/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND", "", feature);
 		    }
 		    
 		    function mailGeneralSave() {

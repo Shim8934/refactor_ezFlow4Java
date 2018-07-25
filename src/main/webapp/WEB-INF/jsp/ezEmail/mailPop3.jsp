@@ -489,7 +489,7 @@
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t243' /></th> 
 		    <td colspan="3"> <input type="text" name="popServer2" id="popServer2" class="textarea" style="width:200px" disabled /> 
-		      <select name="popSelect2" id="popSelect2" class="select" onChange="popChange(2)" style="vertical-align:middle;width:200px;"> 
+		      <select name="popSelect2" id="popSelect2" onChange="popChange(2)" style="vertical-align:middle;width:200px;"> 
 		        <OPTION VALUE=""><spring:message code='ezEmail.t731' /></option>
 			    <c:choose>
 			    	<c:when test="${primaryLang == '1'}">

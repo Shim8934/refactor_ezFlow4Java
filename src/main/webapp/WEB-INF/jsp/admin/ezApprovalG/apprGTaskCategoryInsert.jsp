@@ -319,7 +319,7 @@
             </ul>
         </div>
 		<span style="color:red"><spring:message code = 'ezApprovalG.t00011' /></span>
-		<table class="content">
+		<table class="content" style="margin-top:5px">
 			<tbody>
 				<c:choose>
 					<c:when test="${approvalFlag == 'S' }">
@@ -382,7 +382,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionNew">
 		    <a class="imgbtn"><span onClick="return btnOk_onclick()"><spring:message code = 'ezApprovalG.t413' /></span></a>
 		</div>
 	</body>

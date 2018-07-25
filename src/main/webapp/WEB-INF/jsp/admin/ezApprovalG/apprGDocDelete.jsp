@@ -17,18 +17,18 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"> </script>
 		<style type="text/css">
-		<!-- datepicker 월 나타내는 selectbox안의 글자가 자꾸 밑으로 내려가는 현상때문에 스타일 줌. -->
-		select {
-			height: auto;
-		}
-		table, td {
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-		td {
-			padding: 8px 5px;
-		}
+			<!-- datepicker 월 나타내는 selectbox안의 글자가 자꾸 밑으로 내려가는 현상때문에 스타일 줌. -->
+			select {
+				height: auto;
+			}
+			table, td {
+				white-space: nowrap;
+				/* overflow: hidden; */
+				text-overflow: ellipsis;
+			}
+			td {
+				padding: 8px 5px;
+			}
 		</style>
 		<SCRIPT type="text/javascript" ID="clientEventHandlersJS" >
 		    var Check = false, PeriodDocList;
@@ -884,13 +884,15 @@
 	
 	<body class="mainbody" onLoad="javascript:window_onload()">
 		<h1><spring:message code='ezApprovalG.t1569'/><span id="listInfo"></span></h1>
-		<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-		    <select id="ListCompany" onChange="return changeCompID()">
-	        	<c:forEach var="item" items="${list}">
-            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-            	</c:forEach>
-		    </select><br /><br/>
-		</span>
+		<div id="mainmenu">	
+			<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
+			    <select id="ListCompany" onChange="return changeCompID()">
+		        	<c:forEach var="item" items="${list}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+			    </select><br /><br/>
+			</span>
+		</div>	
 		<div class="portlet_tabpart01" style="margin-top:3px;text-align:right;">
 		    <div class="portlet_tabpart01_top" id="tab1">
 		        <p><span id="1tab1" divname="completedoclist"><spring:message code='ezApprovalG.kes01' /></span></p>
@@ -901,23 +903,23 @@
 			<tr>
 				<table style="width:100%; background-color: #fcfcfc; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8;">
 					<tr>
-						<td style="width:5%; ">
+						<td style="width:60px;">
 							<spring:message code='ezApproval.t434'/> 
 						</td>
-						<td style="width:11%;">
-							<input type="text" id="DocNumber" name="DocNumber" style="width:97%;" maxlength="50" onkeypress="return search_keypress(event)" />
+						<td style="width:80px;">
+							<input type="text" id="DocNumber" name="DocNumber" style="width:110px; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)" />
 						</td>
-						<td style="width:5%;">
+						<td style="width:50px;">
 							<spring:message code='ezApproval.t435'/> 
 						</td>
-						<td style="width:11%;">
-							<input type="text" id="DocTitle" name="DocTitle" style="width:90%;" maxlength="50" onkeypress="return search_keypress(event)"/>
+						<td style="width:80px;">
+							<input type="text" id="DocTitle" name="DocTitle" style="width:110px; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>
 						</td>
-						<td style="width:25%; margin-bottom: 10px;  ">
+						<td style="width:250px; margin-bottom: 10px;">
 							<span id="topmenu" style="width: 500px">
 								<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/></label>&nbsp;
-								<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 25%; text-align: center" readonly="readonly" />&nbsp; ~ &nbsp;
-								<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 25%; text-align: center" readonly="readonly" />
+								<input type="text" id="startDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />&nbsp; ~ &nbsp;
+								<input type="text" id="endDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />
 							</span>
 						</td>
 						<td style="width:*;"></td>
@@ -927,21 +929,20 @@
 			<tr>
 				<table style="width:100%; background-color: #fcfcfc; border-left: 1px solid #e8e8e8;border-right: 1px solid #e8e8e8;">
 					<tr>
-						<td style="width:5%;">
+						<td style="width:60px;">
 							 <spring:message code='ezApproval.t437'/>
 						</td>
-						<td style="width:11%;">
-							<input type="text" id="drafterdept" name="drafterdept" style="width: 65%;" maxlength="50" readonly="readonly"/>
+						<td style="width:170px;">
+							<input type="text" id="drafterdept" name="drafterdept" style="width:110px; height: 23px;" maxlength="50" readonly="readonly"/>
 							<a class="imgbtn" name="TDeptSelect"><span id = "spandept" onclick="bt_TDeptSelect_onclick()"><spring:message code='ezApprovalG.t105'/></span></a>
 						</td>
-						<td style="width:5%;">
+						<td style="width:40px;">
 						    <spring:message code='ezApproval.t436'/> 
 						</td>
-						<td style="width:11%;">
-							<input type="text" id="drafter" name="drafter" style="width: 90%;" maxlength="50" onkeypress="return search_keypress(event)"/>&nbsp;
+						<td style="width:80px;">
+							<input type="text" id="drafter" name="drafter" style="width:110px; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>&nbsp;
 						</td>
 						<td style="width:*; margin-bottom: 10px;">
-							 
 							<a class="imgbtn" >
 								<span onclick="javascript:search(1);"><spring:message code="ezApproval.t236"></spring:message></span>
 							</a>&nbsp; 

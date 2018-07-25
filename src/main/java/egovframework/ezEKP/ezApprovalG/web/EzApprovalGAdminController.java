@@ -3241,7 +3241,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			pageNum = "1";
 		}
 		int totalcnt = 0;
-		int maxItemPerPage = 20; 
+		int maxItemPerPage = 15; 
 		int currentPage = Integer.parseInt(pageNum);
 		int startRow = (Integer.parseInt(pageNum) - 1) * maxItemPerPage;
 		if (pageNum.equals("-1")) {

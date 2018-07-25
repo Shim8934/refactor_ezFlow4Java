@@ -2311,6 +2311,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
    		model.addAttribute("list", list);
    		model.addAttribute("pPage", pPage);
    		model.addAttribute("totalPage", totalPage);
+   		model.addAttribute("totalCount", totalCount);
+   		model.addAttribute("pPageRow", pPageRow);
 		
    		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
    		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
@@ -2481,7 +2483,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		List<String[]> aliasAddressList = ezEmailService.getAliasAddress(userId, tenantID);
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append("<select size='4' name='ListEmail' id='ListEmail' style='height:175px;width:100%;'>");
+		sb.append("<select size='4' name='ListEmail' id='ListEmail' style='height:175px;width:100%;background:none;'>");
 		
 		for (String[] aliasAddress : aliasAddressList) {
 			if (aliasAddress[0].equals(userVO.getMail())) {
