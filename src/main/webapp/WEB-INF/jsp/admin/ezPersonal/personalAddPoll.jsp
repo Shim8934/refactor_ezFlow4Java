@@ -160,18 +160,18 @@
                 <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
-		<table class="content">
+		<table class="content" style="margin-top:3px">
 			<tr>
 		    	<th><spring:message code = 'ezPersonal.t221' /></th>
 		    	<td style="padding:0">
 			    	<table width="100%">
 			        	<tr class="primary">
 			          		<th><c:out value = '${langPrimary}' /></th>
-			          		<td><input type="text" name="Input" id=Title style="WIDTH:97%"></td>
+			          		<td><input type="text" name="Input" id=Title style="WIDTH:100%"></td>
 			        	</tr>
 			        	<tr class="secondary">
 			          		<th><c:out value = '${langSecondary}' /></th>
-			          		<td><input type="text" id=Title2 style="WIDTH:97%"></td>
+			          		<td><input type="text" id=Title2 style="WIDTH:100%"></td>
 			        	</tr>
 			    	</table>
 		    	</td>
@@ -194,46 +194,46 @@
 			</tr> 
 			<tr> 
 		    	<th><spring:message code = 'ezPersonal.t224' /></th> 
-		  		<td><input type="text" id=answer1 style="WIDTH: 97%"></td>
+		  		<td><input type="text" id=answer1 style="WIDTH: 100%"></td>
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code = 'ezPersonal.t225' /></th> 
-		  		<td><input type="text" id=answer2 style="WIDTH: 97%"></td>
+		  		<td><input type="text" id=answer2 style="WIDTH: 100%"></td>
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code = 'ezPersonal.t226' /></th> 
-		  		<td><input type="text" id=answer3 style="WIDTH: 97%"></td>
+		  		<td><input type="text" id=answer3 style="WIDTH: 100%"></td>
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code = 'ezPersonal.t227' /></th> 
-		  		<td><input type="text" id=answer4 style="WIDTH: 97%"></td>
+		  		<td><input type="text" id=answer4 style="WIDTH: 100%"></td>
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code = 'ezPersonal.t228' /></th> 
-		  		<td><input type="text" id=answer5 style="WIDTH: 97%"></td>
+		  		<td><input type="text" id=answer5 style="WIDTH: 100%"></td>
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code = 'ezPersonal.t229' /></th> 
-		  		<td><input type="text" id=answer6 style="WIDTH: 97%"></td>
+		  		<td><input type="text" id=answer6 style="WIDTH: 100%"></td>
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code = 'ezPersonal.t230' /></th> 
-		  		<td><input type="text" id=answer7 style="WIDTH: 97%"></td>
+		  		<td><input type="text" id=answer7 style="WIDTH: 100%"></td>
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code = 'ezPersonal.t231' /></th> 
-		  		<td><input type="text" id=answer8 style="WIDTH: 97%"></td>
+		  		<td><input type="text" id=answer8 style="WIDTH: 100%"></td>
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code = 'ezPersonal.t232' /></th> 
-		  		<td><input type="text" id=answer9 style="WIDTH: 97%"></td>
+		  		<td><input type="text" id=answer9 style="WIDTH: 100%"></td>
 		   	</tr> 
 		  	<tr> 
 			    <th><spring:message code = 'ezPersonal.t233' /></th> 
-		  		<td><input type="text" id=answer10 style="WIDTH: 97%"></td>
+		  		<td><input type="text" id=answer10 style="WIDTH: 100%"></td>
 		  	</tr> 
 		</table> 
-		<div class="btnposition"> 
+		<div class="btnpositionNew"> 
 		    <a class="imgbtn"><span onclick="OK_Click()"><spring:message code = 'ezPersonal.t12' /></span></a>
 	    </div>
 	</body>
