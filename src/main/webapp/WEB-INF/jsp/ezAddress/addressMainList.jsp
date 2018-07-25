@@ -533,7 +533,7 @@
 	            }
 	            else {
 	            	$.modal.close();
-	            	window.location.href = window.location.href;	            	
+	            	Get_AddressList();
 	            }	            
 	        }
 	        function address_inout(which) {
@@ -792,7 +792,7 @@
 					<li style="width:40px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
 				</c:when>
 				<c:when test="${userInfo.lang eq '3'}">
-					<li style="width:60px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
+					<li style="width:68px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
 				</c:when>
 				<c:otherwise>
 					<li style="width:40px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>

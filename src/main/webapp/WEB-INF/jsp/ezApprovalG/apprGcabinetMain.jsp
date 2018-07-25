@@ -922,12 +922,12 @@
 		
 		                if ("${userInfo.lang}" == "1") { 
 			                wWeight = 1015;
-			                wHeight = 625;
+			                wHeight = 670;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
 		                } else { 
 			                wWeight = 1015;
-			                wHeight = 625;
+			                wHeight = 670;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
 		                } 
@@ -994,7 +994,7 @@
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = CabinetSelect_onclick_Complete;
 		
-		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(1105, 500));
+		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(980, 620));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		

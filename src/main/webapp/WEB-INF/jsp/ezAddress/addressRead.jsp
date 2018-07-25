@@ -35,7 +35,11 @@
 				else if (whoto == 1)
 					userid = modifierid;
 		
-				window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+				// 2018.07.24  - 팝업을 창 가운데 띄우도록 개선 (재은 수정)
+				var popupX = Math.ceil((window.screen.width - 500)/2);
+				var popupY = Math.ceil((window.screen.height - 500)/2);
+
+				window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + popupX + ",top=" + popupY);
 			}
 			function open_homepage()
 			{
