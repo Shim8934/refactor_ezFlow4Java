@@ -562,14 +562,14 @@
                 <li><span id="btnClose" onclick="return btnClose_onclick()"></span></li>
             </ul>
         </div>
-		<h2><spring:message code='ezApprovalG.t1018'/></h2>
-		<table class="content">
+		<h2 style="font-weight: normal;">▒ <spring:message code='ezApprovalG.t1018'/></h2>
+		<table class="content" style="width:100%">
 		  <tr>
-		    <th ><spring:message code='ezApprovalG.t1063'/></th>
+		    <th style="width:15%;"><spring:message code='ezApprovalG.t1063'/></th>
 		    <td><table style="width:100%">
 		        <tr>
 		          <td id="tdCabinetName">&nbsp;</td>
-		          <td style="width:70px"><a class="imgbtn"><span onclick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a></td>
+		          <td style="width:70px"><a class="imgbtn imgbck" style="margin-bottom:0px;"><span onclick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a></td>
 		        </tr>
 		      </table></td>
 		  </tr>
@@ -582,16 +582,16 @@
 		    <td id="tdCabinetVolNo"  >&nbsp;</td>
 		  </tr>
 		</table>
-		<h2 style="margin-top:10px" ><spring:message code='ezApprovalG.t1089'/></h2>
-		<table class="content">
+		<h2 style="font-weight: normal; margin-top: 10px;">▒ <spring:message code='ezApprovalG.t1089'/></h2>
+		<table class="content" style="width:100%">
 		  <tr>
-		    <th><spring:message code='ezApprovalG.t859'/></th>
-		    <td><Select id="selRegisterType" style="width:100%" onChange="return selRegisterType_onchange()"></Select>
+		    <th style="width:15%;"><spring:message code='ezApprovalG.t859'/></th>
+		    <td><Select id="selRegisterType" style="width:100%; height: 25px;" onChange="return selRegisterType_onchange()"></Select>
 		    </td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code='ezApprovalG.t106'/></th>
-		    <td><input type="text" class="text" style="Width:98%;" name="txtTitle" id="txtTitle">
+		    <td><input type="text" class="text" style="Width:100%;" name="txtTitle" id="txtTitle">
 		    </td>
 		  </tr>
 		  <tr>
@@ -607,11 +607,11 @@
 		</table>
 		
 		<Div id="divAudioVisual">
-		  <h2 style="margin-top:10px" ><spring:message code='ezApprovalG.t1074'/></h2>
-		  <table class="content" >
+		  <h2 style="font-weight: normal; margin-top: 10px;">▒ <spring:message code='ezApprovalG.t1074'/></h2>
+		  <table class="content" style="width:100%">
 		    <tr>
-		      <th><spring:message code='ezApprovalG.t1075'/></th>
-		      <td><TextArea style="width:97%; height:70px; resize:none;" id=txtSummary name=txtSummary></TextArea>
+		      <th style="width:15%;"><spring:message code='ezApprovalG.t1075'/></th>
+		      <td><TextArea style="width:98%; height:70px; resize:none; margin-top:2px;" id=txtSummary name=txtSummary></TextArea>
 		      </td>
 		    </tr>
 		    <tr >

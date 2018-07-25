@@ -308,6 +308,7 @@ var strLangKMS08 = "폴더는 업로드 할 수 없습니다."
 var strLangKYJ01 = "선택된 메일이 없습니다.";
 var strLangKYJ02 = "재작성할 메일을 하나만 선택해주세요.";
 var strLangKYJ03 = "공백은 입력할 수 없습니다.";
+var strLangLSD02 = "구성원이 없는 부서입니다.";
 
 
 function GetLocalTime(Offset , pDateTime)

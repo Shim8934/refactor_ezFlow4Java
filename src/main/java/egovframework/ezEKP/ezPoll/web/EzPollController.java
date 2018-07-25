@@ -237,10 +237,19 @@ public class EzPollController extends EgovFileMngUtil {
 				endTime = boardPollConfigVO.getDefaultEndTime();
 				
 				//Process target
-		        String[] departIdList = boardPollConfigVO.getTargetDepts().split(",");
-		        String[] userIdList = boardPollConfigVO.getTargetUsers().split(",");
+		        String[] departIdList = null;
+		        String targetDepts = boardPollConfigVO.getTargetDepts();
+		        if(targetDepts != null){
+		        	departIdList = targetDepts.split(",");
+		        }
 		        
-		        if (departIdList.length > 0 && !departIdList[0].equals("")) {
+		        String[] userIdList = null;
+		        String targetUsers = boardPollConfigVO.getTargetUsers();
+		        if(targetUsers != null){
+		        	userIdList = targetUsers.split(",");
+		        }
+		        
+		        if (targetDepts != null && !departIdList[0].equals("")) {
 		        	strXMLRange.append("<DEPT>"); 
 		        	
 			        for (String deptID : departIdList) {

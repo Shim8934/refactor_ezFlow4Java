@@ -472,12 +472,7 @@
 <table style="width: 100%;">
 	<tr>
 		<td colspan="2">
-			<h2 style="font-weight: normal; margin-top: 4px;">
-				▒ <spring:message code='ezApprovalG.t1018'/>
-				<a class="imgbtn imgbck" style="margin: -3px 0px 0px 5px;">
-					<span onClick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span>
-				</a>
-			</h2>
+			<h2 style="font-weight: normal; margin-top: 4px;">▒ <spring:message code='ezApprovalG.t1018'/></h2>
 		</td>
 	</tr>
 	<tr>
@@ -485,7 +480,10 @@
 			<table style="width:100%; border-bottom: 0px; border-right: 0px;" class="content">
 				<tr>
 					<th style="width: 21%; border-bottom: 0px;"><spring:message code='ezApprovalG.t1063'/></th>
-       				<td style="border-bottom: 0px; border-right: 0px;" id="tdCabinetName" >&nbsp;</td>
+       				<td style="border-bottom: 0px; border-right: 0px;">
+       				<span id="tdCabinetName">&nbsp;</span>
+       				<a class="imgbtn imgbck" style="position: absolute; top: 77px; left: 441px;"><span onClick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a>
+       				</td>
 				</tr>
 			</table>
 		</td>

@@ -82,10 +82,11 @@
 		window.onload = function(){
 			closedDay = closedDay.split(",");
 			
+			parseDate();
+			attiClock();
 			setAttiBtnHover();
 			getAttitudeList();
 			getHolidayList();
-		    //yourClock();
 		    select_memorialDays(uselang);
 		    
 		    document.getElementById('userAttitude').onclick();
@@ -296,17 +297,7 @@
 	    			break;
 	    	}
 	    }
-	    
-    	function format(type){
-	        nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
-	        
-	        var s =
-	        	leadingZeros(nowAttiTime.getHours(), 2)+
-	            leadingZeros(nowAttiTime.getMinutes(), 2)+
-	            leadingZeros(nowAttiTime.getSeconds(), 2);
-	        return s;
-    	}
-    	
+	        	
     	function parseDate() {
     		var _strDate = "";
     		nowAttiTime = new Date(serverTime);
@@ -328,66 +319,17 @@
     		}
     	}
     	
-	    $(function(){
-	    	parseDate();
-	    	
-	    	var clock = $('#clock');
-	    	
-	    	var digit_to_name = 'zero one two three four five six seven eight nine'.split(' ');
-
-	    	// This object will hold the digit elements
-	    	var digits = {};
-
-	    	// Positions for the hours, minutes, and seconds
-	    	//'h1', 'h2', ':', 'm1', 'm2', ':', 's1', 's2'
-	    	var positions = [
-				'h1', 'h2', ':', 'm1', 'm2', ':', 's1', 's2'
-	    	];
-
-	    	// Generate the digits with the needed markup,
-	    	// and add them to the clock
-
-	    	var digit_holder = clock.find('.digits');
-
-	    	$.each(positions, function(){
-
-	    		if(this == ':'){
-	    			digit_holder.append('<div class="dots">');
-	    		}
-	    		else{
-
-	    			var pos = $('<div>');
-
-	    			for(var i=1; i<8; i++){
-	    				pos.append('<span class="d' + i + '">');
-	    			}
-
-	    			// Set the digits as key:value pairs in the digits object
-	    			digits[this] = pos;
-
-	    			// Add the digit elements to the page
-	    			digit_holder.append(pos);
-	    		}
-
-	    	});
-
-	    	(function update_time(){
-	    		var now = format();
-
-	    		digits.h1.attr('class', digit_to_name[now[0]]);
-	    		digits.h2.attr('class', digit_to_name[now[1]]);
-	    		digits.m1.attr('class', digit_to_name[now[2]]);
-	    		digits.m2.attr('class', digit_to_name[now[3]]);
-	    		digits.s1.attr('class', digit_to_name[now[4]]);
-	    		digits.s2.attr('class', digit_to_name[now[5]]);
-
-	    		// Mark the active day of the week
-	    		setTimeout(update_time, 1000);
-
-	    	})();
-	    	
-	    });
-		
+    	function attiClock() {
+	        var h, m;
+	        var s;
+	        var time = " ";
+	        
+	        nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
+	        time = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2) + ':' + leadingZeros(nowAttiTime.getSeconds(), 2);
+	        document.getElementById("timeFlow").innerHTML = time;
+	        gizmo = setTimeout("attiClock()", 1000);
+	    }
+    			
     	//카운트 refresh
     	function leftCount() {
 	    	$.ajax({
@@ -418,11 +360,9 @@
 	<div id="left" style="border-top:1px solid #dedede">
 		<div style="display: block;">
 			<article class="time">
-				<div id="clock" class="light">
-					<div class="display">
-						<div class="digits" style="padding:18px 5px 0px 5px; width:186px; margin:16px; margin-left:10px; height:130px"></div>
-					</div>
-				</div>
+	            <div id="timeinput" style="margin-bottom:15px; border:0px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; text-align:center; line-height:25px;">
+	            	<div id="timeFlow" style='width:175px; margin:20px 0 20px 23px; font-size:30px; font-family:Arial, Helvetica, sans-serif;'><p></p></div>
+	            </div>
 				<div id="atti_area" style="text-align:center; width:219px; margin-bottom: 12px">
 					<div class="sub_time">
     					<dl class="timeCheckIn">
