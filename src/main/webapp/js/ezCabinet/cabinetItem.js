@@ -15,6 +15,9 @@ var CabinetItem = function() {
 	var maxWPercent    = 70;
 	var minHPercent    = 20;
 	var maxHPercent    = 80;
+	var sharePopup     = null;
+	var addPopup       = null;
+	var itemPopup      = null;
 	
 	/* Preview option */
 	//setData(50, 50, 30, 70, 20, 80);
@@ -91,10 +94,6 @@ var CabinetItem = function() {
 	
 	function keyPress(e) {if (e.which == 27) {if (document.getElementById("searchPanel").className == "cabSearchPanel") {toggleSearchPanel();}}}
 	
-	function ondblclick(e){
-		window.open("/ezCabinet/cabinetFileDetail.do", "fileDetail", getOpenWindowfeature(600, 690));
-	}
-	
 	function preProcessing() {
 		var divList           = document.getElementById("cabWraperDiv");
 		var divChild          = divList.querySelector("div[class='tableDataDiv']");
@@ -123,10 +122,7 @@ var CabinetItem = function() {
 		});
 		
 		//Initial table
-		cabinetTable = new CabinetTable({
-			normal   : "bnkCabNormal",
-			selected : "bnkCabSelect"
-		});
+		cabinetTable = new CabinetTable({normal : "bnkCabNormal", selected : "bnkCabSelect"});
 		
 		cabinetTable.setTableType("cabinet");
 		cabinetTable.setTableElement("tblCabinetList", "id");
@@ -136,6 +132,7 @@ var CabinetItem = function() {
 		
 		window.addEventListener("resize", function(e) {windowResize();}, false);
 		window.addEventListener("keydown", function(e) {keyPress(e);}, false);
+		window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 		
 		cabinetId              = cabId;
 		document.onselectstart = function() {return false;};
@@ -529,12 +526,12 @@ var CabinetItem = function() {
 	
 	function addFile() {
 		if (!cabinetId) {alert(CabinetMessages.strError); return;}
-		var addPopup = window.open("/ezCabinet/addCabinetFile.do?cabId=" + cabinetId, "addFile", getOpenWindowfeature(600, 470));
+		if (addPopup) {addPopup.close();}
+		addPopup = window.open("/ezCabinet/addCabinetFile.do?cabId=" + cabinetId, "addFile", getOpenWindowfeature(600, 470));
 	}
 	
 	function deleteFileConfirm() {
 		if (getSelectedItems().length == 0) {alert(CabinetMessages.strItemErr); return;}
-		
 		toggleDeletePopup();
 	}
 	
@@ -666,10 +663,14 @@ var CabinetItem = function() {
 	
 	function openSharePopup() {
 		if (!cabinetId) {alert(CabinetMessages.strError); return;}
-		var sharePopup = window.open("/ezCabinet/shareCabinet.do?cabId=" + cabinetId, "shareFile", getOpenWindowfeature(1125, 700));
+		if (sharePopup) {sharePopup.close();}
+		sharePopup = window.open("/ezCabinet/shareCabinet.do?cabId=" + cabinetId, "shareFile", getOpenWindowfeature(1125, 700));
 	}
 	
-	function openFileDetail(itemId) {window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(600, 565));}
+	function openFileDetail(itemId) {
+		if(itemPopup) {itemPopup.close();}
+		itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(600, 565));
+	}
 	
 	function getSelectedItems() {
 		var result        = [];
@@ -709,8 +710,8 @@ var CabinetItem = function() {
 	function afterGetItemInfo(data) {
 		console.log(data);
 		var itemInfo    = data.fileDetail;
-		var attachFile  = data.attachFileList;
-		var relatedFile = data.relatedFileList;
+		var attachList  = data.attachFileList;
+		var relatedList = data.relatedFileList;
 		var columns     = data.columns;
 		var itemType    = itemInfo["itemType"];
 		var divPrevId   = crrPreMode == "w" ? "previewHeaderW" : "previewHeaderH";
@@ -733,85 +734,78 @@ var CabinetItem = function() {
 			
 		}
 		else {
-			//Process title dl
-			var dtElmt       = document.createElement("dt");
-			var ddElmt       = document.createElement("dd");
-			dtElmt.textContent = CabinetMessages.strCreator + ": ";
-			ddElmt.textContent = itemInfo["creatorName"];
-			dlElmt.appendChild(dtElmt);
-			dlElmt.appendChild(ddElmt);
-			
-			if(relatedFile || relatedFile.length > 0) {
-				var totalCnt = relatedFile.length;
-				var dtElmt2  = document.createElement("dt");
-				var ddElmt2  = document.createElement("dd");
-				dtElmt2.textContent = CabinetMessages.strRelated + ": ";
-				
-				if (totalCnt == 1) {
-					var spanElmt = document.createElement("span");
-					spanElmt.textContent = relatedFile[0]["title"];
-					spanElmt.setAttribute("role", relatedFile[0]["itemId"]);
-					spanElmt.setAttribute("title", relatedFile[0]["title"]);
-					spanElmt.className   = "txtSpan";
-					ddElmt2.appenChild(spanElmt);
-				}
-				else {
-					var spanElmt1 = document.createElement("span");
-					var spanElmt2 = document.createElement("span");
-					var spanElmt3 = document.createElement("span");
-					var pElmt     = document.createElement("p");
-					
-					spanElmt1.setAttribute("title", relatedFile[0]["title"]);
-					spanElmt1.textContent = relatedFile[0]["title"];
-					spanElmt1.className   = "txtSpan";
-					spanElmt2.textContent = " (" + "총 " + totalCnt + "개" + ")";
-					spanElmt3.className   = "icDown";
-					spanElmt3.addEventListener("click", function(e) {showRelatedList(this);}, false);
-					pElmt.className       = "relateList hide";
-					
-					for (var i = 0; i < totalCnt; i++) {
-						var spanChild = document.createElement("span");
-						spanChild.className   = "txtSpan";
-						spanChild.textContent = relatedFile[i]["title"];
-						spanChild.setAttribute("title", relatedFile[i]["title"]);
-						pElmt.appendChild(spanChild);
-						
-						if (i != totalCnt - 1) {
-							var divideEm         = document.createElement("em");
-							divideEm.textContent = "; ";
-							pElmt.appendChild(divideEm);
-						}
-					}
-					
-					ddElmt2.appendChild(spanElmt1);
-					ddElmt2.appendChild(spanElmt2);
-					ddElmt2.appendChild(spanElmt3);
-					ddElmt2.appendChild(pElmt);
-				}
-				
-				dlElmt.appendChild(dtElmt2);
-				dlElmt.appendChild(ddElmt2);
-				/*<dd>
-	            	<span id="PreH_MailReceiver" style="display:inline-block"><span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);" title="esya@kaoni.com" onclick="show_personinfo(&quot;esya@kaoni.com&quot;)">"이소영"</span></span>
-	            	<span id="PreH_MailReceiver_sub">(총 4명)</span>
-	            	<span class="icon_graydown" onclick="ReceiverDetail_view(this);" id="PreH_ReceiverDetail" style=""></span>
-	            	<p class="hidden_area" id="PreH_MailReceiverDetail_Rayer" style="display: none;">
-	            		<span id="PreH_MailReceiverDetail">
-		            		<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);" title="esya@kaoni.com" onclick="show_personinfo(&quot;esya@kaoni.com&quot;)">"이소영"</span>&nbsp;,&nbsp;
-		            		<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);" title="cocomos@kaoni.com" onclick="show_personinfo(&quot;cocomos@kaoni.com&quot;)">"정수연"</span>&nbsp;,&nbsp;
-		            		<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor: pointer; color: rgb(102, 102, 102);" title="skyblue0o0@kaoni.com" onclick="show_personinfo(&quot;skyblue0o0@kaoni.com&quot;)">"이효민"</span>&nbsp;,&nbsp;
-		            		<span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor:pointer" title="designteam@kaoni.com" onclick="show_personinfo(&quot;designteam@kaoni.com&quot;)">"UI/UX팀"</span>
-	            		</span>
-	            	</p>
-	            </dd>*/
-			}
-			
-			generalItemContent(attachFile);
+			generalItemTitle(relatedList, itemInfo["creatorName"], dlElmt);
+			generalItemContent(attachList);
 		}
-		
 	}
 	
-	function generalItemContent() {
+	function generalItemTitle(relatedList, creatorName, dlElmt) {
+		var dtElmt       = document.createElement("dt");
+		var ddElmt       = document.createElement("dd");
+		dtElmt.textContent = CabinetMessages.strCreator + ": ";
+		ddElmt.textContent = creatorName;
+		dlElmt.appendChild(dtElmt);
+		dlElmt.appendChild(ddElmt);
+		
+		if(relatedList || relatedList.length > 0) {
+			var totalCnt = relatedList.length;
+			var dtElmt2  = document.createElement("dt");
+			var ddElmt2  = document.createElement("dd");
+			dtElmt2.textContent = CabinetMessages.strRelated + ": ";
+			
+			if (totalCnt == 1) {
+				var spanElmt = document.createElement("span");
+				spanElmt.textContent = relatedList[0]["title"];
+				spanElmt.setAttribute("role", relatedList[0]["itemId"]);
+				spanElmt.setAttribute("title", relatedList[0]["title"]);
+				spanElmt.className   = "txtSpan";
+				spanElmt.addEventListener("click", function(e) {readRelatedItem(this);}, false);
+				ddElmt2.appenChild(spanElmt);
+			}
+			else {
+				var spanElmt1 = document.createElement("span");
+				var spanElmt2 = document.createElement("span");
+				var spanElmt3 = document.createElement("span");
+				var pElmt     = document.createElement("p");
+				
+				spanElmt1.addEventListener("click", function(e) {readRelatedItem(this);}, false);
+				spanElmt1.setAttribute("title", relatedList[0]["title"]);
+				spanElmt1.setAttribute("role", relatedList[0]["itemId"]);
+				spanElmt1.textContent = relatedList[0]["title"];
+				spanElmt1.className   = "txtSpan";
+				spanElmt2.textContent = " (" + CabinetMessages.strTotal + " " + totalCnt + CabinetMessages.strItem + ")";
+				spanElmt3.className   = "icDown";
+				spanElmt3.addEventListener("click", function(e) {showRelatedList(this);}, false);
+				pElmt.className       = "relateList hide";
+				
+				for (var i = 0; i < totalCnt; i++) {
+					var spanChild = document.createElement("span");
+					spanChild.className   = "txtSpan";
+					spanChild.textContent = relatedList[i]["title"];
+					spanChild.setAttribute("title", relatedList[i]["title"]);
+					spanChild.setAttribute("role", relatedList[i]["itemId"]);
+					spanChild.addEventListener("click", function(e) {readRelatedItem(this);}, false);
+					pElmt.appendChild(spanChild);
+					
+					if (i != totalCnt - 1) {
+						var divideEm         = document.createElement("em");
+						divideEm.textContent = "; ";
+						pElmt.appendChild(divideEm);
+					}
+				}
+				
+				ddElmt2.appendChild(spanElmt1);
+				ddElmt2.appendChild(spanElmt2);
+				ddElmt2.appendChild(spanElmt3);
+				ddElmt2.appendChild(pElmt);
+			}
+			
+			dlElmt.appendChild(dtElmt2);
+			dlElmt.appendChild(ddElmt2);
+		}
+	}
+	
+	function generalItemContent(attachList) {
 		
 	}
 	
@@ -826,6 +820,11 @@ var CabinetItem = function() {
 			spanElmt.className = "icDown";
 			pElmt.className    = "relateList hide";
 		}
+	}
+	
+	function readRelatedItem(spanElmt) {
+		var itemId = spanElmt.getAttribute("role");
+		openFileDetail(itemId);
 	}
 	
 	function generatePreviewElmt(divElmt) {
@@ -865,6 +864,12 @@ var CabinetItem = function() {
 		prevChild.appendChild(imgElmt2);
 		parentDiv.appendChild(prevChild);
 		parentDiv.appendChild(prevCont);
+	}
+	
+	function closeAllPopups() {
+		if(itemPopup)  {itemPopup.close();}
+		if(sharePopup) {sharePopup.close();}
+		if(addPopup)   {addPopup.close();}
 	}
 	
 	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {

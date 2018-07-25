@@ -54,12 +54,13 @@
 				var cabinetId   = null;
 				var lastScrollY = 0;
 				var scrolled    = true;
+				var itemPopup   = null;
 				var relatedArr  = [];
 				
 				function initEvents(cabId) {
 					cabinetId               = cabId;
 					document.onselectstart  = function () { return false;};
-					window.addEventListener("beforeunload", function(e) {closeRelatedPopup();}, false);
+					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 					var closeBttn           = document.getElementById("cabAddClose").firstElementChild.firstElementChild.firstElementChild;
 					closeBttn.onclick       = function(e) {closeWindow();};
 					var cabdivBttnElmt      = document.getElementById("cabAddBttn");
@@ -83,11 +84,14 @@
 				}
 				
 				function getRelatedFile() {
-					closeRelatedPopup();
+					if (rlWindow) {rlWindow.close();}
 					rlWindow = window.open("/ezCabinet/getRelatedFile.do", "relatedWd", getOpenWindowfeature(800, 600));
 				}
 				
-				function closeRelatedPopup() {if (rlWindow) {rlWindow.close();}}
+				function closeAllPopups() {
+					if (rlWindow) {rlWindow.close();}
+					if(itemPopup) {itemPopup.close();}
+				}
 				
 				function saveItem() {
 					var title   = document.getElementById("itemTtl").value;
@@ -171,7 +175,8 @@
 				
 				function readRelatedItem(spanElmt) {
 					var itemId = spanElmt.getAttribute("role");
-					//Add read item here
+					if(itemPopup) {itemPopup.close();}
+					itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(600, 565));
 				}
 				
 				function saveRelatedFiles(relatedFile) {relatedArr = JSON.parse(JSON.stringify(relatedFile)); showRelatedFiles();}

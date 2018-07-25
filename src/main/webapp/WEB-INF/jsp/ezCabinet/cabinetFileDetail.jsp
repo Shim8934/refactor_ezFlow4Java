@@ -71,6 +71,7 @@
 		<script type="text/javascript">
 			var CabinetItemDetail = function() {
 				var rlWindow    = null;
+				var itemPopup   = null;
 				var itemId      = null;
 				var lastScrollY = 0;
 				var scrolled    = true;
@@ -79,7 +80,7 @@
 				function initEvents(itemID) {
 					itemId                  = itemID;
 					document.onselectstart  = function () { return false;}
-					
+					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 					var cabBttnElmt         = document.getElementById("fileDivBttn");
 					var listBttns           = cabBttnElmt.children;
 					listBttns[0].onclick    = function(e) {fileModify();};
@@ -220,8 +221,8 @@
 				
 				function readRelatedItem(spanElmt) {
 					var itemId = spanElmt.getAttribute("role");
-						//Add read item here
-					console.log(itemId);
+					if(itemPopup) {itemPopup.close();}
+					itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "itemDetail", getOpenWindowfeature(600, 565));
 				}
 				
 				function downloadFile(event) {
@@ -320,7 +321,8 @@
 						fileDivElmt.addEventListener("dragenter", function(e) {CabinetFile.dragEnter(e);}, false);
 						fileDivElmt.addEventListener("dragover" , function(e) {CabinetFile.dragOver(e);} , false);
 						fileDivElmt.addEventListener("drop"     , function(e) {CabinetFile.upload(e);}   , false);
-					}else{
+					}
+					else {
 						for (var i = 0; i < liElmt.length; i++) { //수정해야함
 							var delImg         = document.createElement("img");
 							delImg.src         = "/images/cabinet/file_del.gif";
@@ -337,11 +339,14 @@
 				}
 				
 				function getRelatedFile() {
-					closeRelatedPopup();
+					if (rlWindow) {rlWindow.close();}
 					rlWindow = window.open("/ezCabinet/getRelatedFile.do", "relatedWd", getOpenWindowfeature(800, 600));
 				}
 				
-				function closeRelatedPopup() {if (rlWindow) {rlWindow.close();}}
+				function closeAllPopups() {
+					if (rlWindow) {rlWindow.close();}
+					if(itemPopup) {itemPopup.close();}
+				}
 				
 				function getOpenWindowfeature(popUpW, popUpH) {
 					var heigth   = window.screen.availHeight;
