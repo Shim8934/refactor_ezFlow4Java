@@ -15,7 +15,7 @@
             	margin-top:0px;
             	height:60px;
             	word-break:break-all;
-				border:1px solid #b8b6b6;
+				border:1px solid #ddd;
 	        }
 			.question p { 
 				margin:0px;
@@ -31,7 +31,7 @@
             	word-break:break-all;
             	font-size:12px;
 				line-height:20px;
-				border:1px solid #d7d4d5;
+				border:1px solid #ddd;
 				border-top:0px ;
         	}
 	        .btn_vote, .btn_vote_view, .btn_result {
@@ -40,6 +40,7 @@
 	            cursor: pointer;
             	margin: 1px;
         	}
+        	input[type=radio] { vertical-align: middle }
     	</style>
 		<script type="text/javascript">
 			var g_UsePortal = "${usePortal}";
@@ -124,6 +125,11 @@
 	<body style="overflow:hidden;height:100%">
 		<div class="popup">
   			<h1><spring:message code='ezPersonal.t380' /></h1>
+  			<div id="close">
+	            <ul>
+	                <li><span onclick="window.close()"></span></li>
+	            </ul>
+	        </div>
     		<div style="overflow:auto;height:325px;width:auto">
   				<div class="question" style="width:223px;overflow-y:auto">
 					<p><spring:message code='ezPersonal.t2000' />:</p>
@@ -132,10 +138,14 @@
   				<div class="qlist" style="width: 268px;height:179px;padding:10px 0px 0px 10px;overflow:auto">
     				${literalAnswer}
   				</div>
-  				<div style="text-align:center;padding-top:10px">
+  				<div class="btnpositionNew">
+  					<a class="imgbtn"><span onclick="vote_poll('1')"><spring:message code='ezPersonal.jjh1' /> </span></a>
+  					<a class="imgbtn"><span onclick="vote_poll('')"><spring:message code='ezPersonal.jjh2' /> </span></a>
+  					<!-- <a class="imgbtn"><span onclick="open_polllist()"><spring:message code='ezEmail.t38' /> </span></a> --%>
+  					
     				<img class="btn_vote" id="btnpoll" onclick="vote_poll('1')" />
     				<img class="btn_vote_view" id="btnview" onclick="vote_poll('')" />
-    				<img class="btn_result" id="btnresult" onclick="open_polllist()" />
+    				<!-- <img class="btn_result" id="btnresult" onclick="open_polllist()" /> -->
   				</div>
 			</div>
     	</div>
