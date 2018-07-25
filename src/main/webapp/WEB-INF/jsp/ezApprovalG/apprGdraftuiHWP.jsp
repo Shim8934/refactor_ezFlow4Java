@@ -631,6 +631,7 @@
 		                    if (HwpCtrl.CheckFieldExist("lastdraftdate"))
 		                        HwpCtrl.SetFieldText("lastdraftdate", getGyulJeDate());
 		                }
+	                }
 	
 	                if ("${approvalPWD}" != "N") {
 	                    var chkpass = chk_Passwd();

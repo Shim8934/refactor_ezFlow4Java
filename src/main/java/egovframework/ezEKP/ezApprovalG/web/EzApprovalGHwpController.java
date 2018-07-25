@@ -570,6 +570,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("pass", pass);
 		
 		LOGGER.debug("ezViewEnd_HWP ended");
+		
 		return "ezApprovalG/apprGviewEndHWP";
 	}
 	
