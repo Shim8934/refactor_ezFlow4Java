@@ -24,10 +24,10 @@
 				<tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
-					<td id ="title"></td>
+					<td id ="title" class="overfl"></td>
 				<tr>
 					<th><spring:message code='ezCabinet.t52'/></th>
-					<td id="summary"></td>
+					<td id="summary" class="overfl"></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t94'/></th>
@@ -73,6 +73,7 @@
 		<script type="text/javascript">
 			var CabinetItemDetail = function() {
 				var rlWindow    = null;
+				var itemPopup   = null;
 				var itemId      = null;
 				var lastScrollY = 0;
 				var scrolled    = true;
@@ -81,7 +82,7 @@
 				function initEvents(itemID) {
 					itemId                  = itemID;
 					document.onselectstart  = function () { return false;}
-					
+					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 					var cabBttnElmt         = document.getElementById("fileDivBttn");
 					var listBttns           = cabBttnElmt.children;
 					listBttns[0].onclick    = function(e) {fileModify();};
@@ -123,6 +124,8 @@
 					createdDate.textContent = result["createdDate"].substring(0, 19);
 					title.textContent       = result["title"];
 					summary.textContent     = result["summary"];
+					title.setAttribute("title", result["title"]);
+					summary.setAttribute("title", result["summary"]);
 					var spanElmt            = document.createElement("span");
 					spanElmt.textContent    = CabinetMessages.strStorage + getFileSize(result["itemSize"]);
 					
@@ -220,8 +223,8 @@
 				
 				function readRelatedItem(spanElmt) {
 					var itemId = spanElmt.getAttribute("role");
-						//Add read item here
-					console.log(itemId);
+					if(itemPopup) {itemPopup.close();}
+					itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "itemDetail", getOpenWindowfeature(600, 565));
 				}
 				
 				function downloadFile(event) {
@@ -323,10 +326,9 @@
 					fileDivElmt.addEventListener("dragover" , function(e) {CabinetFile.dragOver(e);} , false);
 					fileDivElmt.addEventListener("drop"     , function(e) {CabinetFile.upload(e);}   , false);
 					
-					if(liElmt.length != 0) {
+					if(liElmt.length == 0) {
 						
 					}else{
-						
 						for (var i = 0; i < liElmt.length; i++) {
 							var delImg         = document.createElement("img");
 							delImg.src         = "/images/cabinet/file_del.gif";
@@ -345,11 +347,14 @@
 				function startUpload() {document.getElementById("fileBttn").click();}
 				
 				function getRelatedFile() {
-					closeRelatedPopup();
+					if (rlWindow) {rlWindow.close();}
 					rlWindow = window.open("/ezCabinet/getRelatedFile.do", "relatedWd", getOpenWindowfeature(800, 600));
 				}
 				
-				function closeRelatedPopup() {if (rlWindow) {rlWindow.close();}}
+				function closeAllPopups() {
+					if (rlWindow) {rlWindow.close();}
+					if(itemPopup) {itemPopup.close();}
+				}
 				
 				function getOpenWindowfeature(popUpW, popUpH) {
 					var heigth   = window.screen.availHeight;

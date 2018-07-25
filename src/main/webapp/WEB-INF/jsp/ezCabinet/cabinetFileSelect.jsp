@@ -168,6 +168,7 @@
 							tdElmt1.appendChild(imgElmt);
 							tdElmt2.textContent = item["itemTitle"];
 							tdElmt2.setAttribute("title", item["itemTitle"]);
+							tdElmt2.className   = "tdLeft";
 							trElmt.setAttribute("role", item["itemId"]);
 							trElmt.setAttribute("type", item["itemType"]);
 							trElmt.className = "bnkCabNormal";
@@ -266,6 +267,7 @@
 							tdElmt1.appendChild(imgElmt);
 							tdElmt2.textContent = itemList[i]["title"];
 							tdElmt2.setAttribute("title", itemList[i]["title"]);
+							tdElmt2.className   = "tdLeft";
 							trElmt.setAttribute("role", itemList[i]["itemId"]);
 							trElmt.setAttribute("type", itemList[i]["itemType"]);
 							trElmt.className = unselectClass;
