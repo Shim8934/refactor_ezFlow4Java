@@ -6,6 +6,7 @@
 <html>
 	<head>
 		<title>::: ezEKP Java :::</title>
+		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
@@ -26,7 +27,7 @@
 	 			border:1px solid #ffffff;
 			}
 
-			#open-memo { width:50px; height:50px; position: absolute; z-index: 1000; border: solid 1px black;cursor: pointer; background-color: gray; text-align: center;}
+			#open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;}
 			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: gray;}
 			.individual-memo { width:200px; height:200px; background:white; text-align:center; border:1px solid black; cursor: pointer;}
 			#selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;}
@@ -211,7 +212,7 @@
 				</div>
 			</div>
 			
-			<div id="open-memo" style="display: none;">메모</div>
+			<div id="open-memo" style="display: none;"><img src="/images/cmtFile.png" width="60px"></div>
 		</div>
 		
 	</body>
