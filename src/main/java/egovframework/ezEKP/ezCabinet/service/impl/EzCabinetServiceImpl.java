@@ -442,6 +442,12 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("tenantId",    userInfo.getTenantId());
 		
 		List<CabinetVO> listCabinet  = ezCabinetDAO.getCabinetListForPermission(map);
+		
+		if (listCabinet == null || listCabinet.size() == 0) {
+			result.put("code", 1);
+			return result;
+		}
+		
 		List<CabinetVO> otherCabinet = listCabinet.stream().filter(i -> !i.getCreatorId().equals(userId)).collect(Collectors.toList());
 		
 		if (otherCabinet.size() == 0) {

@@ -766,8 +766,9 @@ var CabinetItem = function() {
 			if (totalCnt == 1) {
 				var spanElmt = document.createElement("span");
 				spanElmt.textContent = relatedList[0]["title"];
-				spanElmt.setAttribute("role", relatedList[0]["relatedItemId"]);
-				spanElmt.setAttribute("title", relatedList[0]["title"]);
+				spanElmt.setAttribute("role",   relatedList[0]["relatedItemId"]);
+				spanElmt.setAttribute("title",  relatedList[0]["title"]);
+				spanElmt.setAttribute("status", relatedList[0]["useStatus"]);
 				spanElmt.className   = "txtSpan";
 				spanElmt.addEventListener("click", function(e) {readRelatedItem(this);}, false);
 				ddElmt2.appenChild(spanElmt);
@@ -779,8 +780,9 @@ var CabinetItem = function() {
 				var pElmt     = document.createElement("p");
 				
 				spanElmt1.addEventListener("click", function(e) {readRelatedItem(this);}, false);
-				spanElmt1.setAttribute("title", relatedList[0]["title"]);
-				spanElmt1.setAttribute("role", relatedList[0]["relatedItemId"]);
+				spanElmt1.setAttribute("title",  relatedList[0]["title"]);
+				spanElmt1.setAttribute("role",   relatedList[0]["relatedItemId"]);
+				spanElmt1.setAttribute("status", relatedList[0]["useStatus"]);
 				spanElmt1.textContent = relatedList[0]["title"];
 				spanElmt1.className   = "txtSpan";
 				spanElmt2.textContent = " (" + CabinetMessages.strTotal + " " + totalCnt + CabinetMessages.strItem + ")";
@@ -792,8 +794,9 @@ var CabinetItem = function() {
 					var spanChild = document.createElement("span");
 					spanChild.className   = "txtSpan";
 					spanChild.textContent = relatedList[i]["title"];
-					spanChild.setAttribute("title", relatedList[i]["title"]);
-					spanChild.setAttribute("role", relatedList[i]["relatedItemId"]);
+					spanChild.setAttribute("title",  relatedList[i]["title"]);
+					spanChild.setAttribute("role",   relatedList[i]["relatedItemId"]);
+					spanChild.setAttribute("status", relatedList[i]["useStatus"]);
 					spanChild.addEventListener("click", function(e) {readRelatedItem(this);}, false);
 					pElmt.appendChild(spanChild);
 					
@@ -911,7 +914,9 @@ var CabinetItem = function() {
 	}
 	
 	function readRelatedItem(spanElmt) {
-		var itemId = spanElmt.getAttribute("role");
+		var itemId    = spanElmt.getAttribute("role");
+		var useStatus = spanElmt.getAttribute("status");
+		if(useStatus == 0) {alert(CabinetMessages.strNoRelated); return;}
 		openFileDetail(itemId);
 	}
 	

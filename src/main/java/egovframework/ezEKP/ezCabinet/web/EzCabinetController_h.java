@@ -46,7 +46,7 @@ public class EzCabinetController_h {
 		JSONObject permission = cabinetRestService_h.checkPermission(request, user.getId(), itemId, "", 0);
 		
 		if ((long)permission.get("code") == 1) {
-			return "cmm/error/accessDenied";
+			return "ezCabinet/cabinetAccessDenied";
 		}
 		
 		JSONObject Iteminfo = cabinetRestService_h.cabinetItemInfo(request, user.getId(), itemId);
@@ -76,7 +76,7 @@ public class EzCabinetController_h {
 		JSONObject permission = cabinetRestService_h.checkPermission(request, user.getId(), "", cabinetId, 1);
 		
 		if ((long)permission.get("code") == 1) {
-			return "cmm/error/accessDenied";
+			return "ezCabinet/cabinetAccessDenied";
 		}
 		
 		JSONObject result    = cabinetRestService_h.getUserListType(request, user.getId());

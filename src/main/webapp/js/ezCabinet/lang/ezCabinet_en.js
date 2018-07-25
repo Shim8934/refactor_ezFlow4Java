@@ -69,5 +69,6 @@ var CabinetMessages = {
 	strSummary   : "요약",
 	strAttach1   : "파일을 드래그앤드랍하거나",
 	strAttach2   : "이곳을 클릭하여 파일을 첨부하세요.",
-	strNoRelated : "삭제된 연관문서입니다."
+	strNoRelated : "삭제된 연관문서입니다.",
+	strSlTxt     : "선택"
 }
