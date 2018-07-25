@@ -39,9 +39,9 @@
 	var orderWhat = "";
 	var orderHow = "";
 	var limit = 15;
+	var folderId = 0;
 	
 	//검색을 위한 variables
-	var searchByTaskName = "";
 	var searchByUser = "";
 	var searchByStartDate = "";
 	var searchByEndDate = "";
@@ -54,25 +54,19 @@
 		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		
 		viewSetting();
+		$("#taskTreeArea").css("height", CurrentHeight - 60 + "px");
 		
 		treeData = ${data};
 		treeData = JSON.parse(JSON.stringify(treeData));
 		
-		getProjectTaskTree("taskTree", treeData, false);
+		getProjectTaskTree("taskTreeArea", treeData, "board");
 		getDatePicker();
 		
-		$("#taskTree").on("click", ".jstree-anchor", function() {			
-			if($(this).parent().attr("id").charAt(0) == 't') { 
-				groupId = $(this).parents("li").eq(1).attr("id");
-				taskId = $(this).parent().attr("id").substr(1);
-			} else {
-				groupId = $(this).parent().attr("id");
-				taskId = null;
-			}
+		$("#taskTreeArea").on("click", ".jstree-anchor", function() {		
+			folderId = $(this).parent().attr("id");
 			currentPage = 1;
 			
 			// 트리 클릭 시, 검색 조건 초기 화
-			searchByTaskName = "";
 			searchByUser = "";
 			searchByStartDate = ""; 
 			searchByEndDate = "";
@@ -85,19 +79,16 @@
 		});
 		
 		// 트리가 모두 로드된 다음 실행
-	 	$("#taskTree").on("ready.jstree", function() {
-			var project = $("li[role='treeitem'][aria-level='1']").last();
-			
-			groupId = project.attr("id");
+	 	$("#taskTreeArea").on("ready.jstree", function() {
+			var project = $("li[role='treeitem'][aria-level='1']").first();
 			project.children("a").click();
-			
-			taskName = projectName;
+			folderId = project.attr("id");
 		});
 	});
 	
 	function goAddBoard() {
 		var feature = GetOpenPosition(790, 800);
-		window.open("/ezPMS/goAddBoard.do?projectId=" + projectId + "&groupId=" + groupId + "&taskId=" + taskId + "&mode=new", 
+		window.open("/ezPMS/goAddBoard.do?projectId=" + projectId + "&folderId=" + folderId + "&mode=new", 
 					"", "width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
 	}
 	
@@ -105,8 +96,7 @@
 		var data = {
 			//기본 setting
 			projectId : projectId,
-			groupId : groupId,
-			taskId : taskId,
+			folderId : folderId,
 			currentPage : currentPage,
 			limit : limit,
 			position : "boardMain",
@@ -114,7 +104,6 @@
 			orderWhat : orderWhat,
 			orderHow : orderHow,
 			//검색
-			searchByTaskName : searchByTaskName,
 			searchByUser : searchByUser,
 			searchByStartDate : searchByStartDate,
 			searchByEndDate : searchByEndDate,
@@ -133,6 +122,7 @@
 			success : function(contentList) {
 				$("#contentList").html(contentList);
 				viewSetting();
+				$("#taskTreeArea").css("height", CurrentHeight - 60 + "px");
 				setInitOrder();
 			}	
 		});
@@ -341,16 +331,29 @@
 		  
 		  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 	}
+	
+	function folderSetting() {
+    	var OpenWin = window.open("/ezPMS/folderSetting.do", "", GetOpenWindowfeature(400, 500));
+    	
+        try { 
+        	OpenWin.focus(); 
+        } catch (e) { }
+	}
 </script>
 
 <style>
 	#taskTree {
 		margin-right : 5px;
 		width : 276px;
-		overflow-y : auto;
-		overflow-x : hidden;
+		overflow : hidden;
 		border : 1px solid #d1d1d1;
 		float : left;
+		position : relative;
+	}
+	
+	#taskTreeArea {
+		overflow-x : hidden;
+		overflow-y : auto;
 	}
 	
 	.jstree-node > a {
@@ -391,11 +394,28 @@
 	#taskNameArea {
 		display : inline-block;
 	}
+	
+	#folderSettingArea {
+		position: absolute;
+   		bottom: 15px;
+  		border-top: 1px solid #d1d1d1;
+  		width: 100%;
+	}
+	
+	#folderSetting {
+		width: 80%;
+		margin-left: 20px;
+		margin-top: 15px;
+		text-align: center;
+	}
 </style>
 
 </head>
 <body style="margin:10px 10px 0px 10px;">
-	<div id="taskTree"></div>
+	<div id="taskTree">
+		<div id="taskTreeArea"></div>
+		<div id="folderSettingArea"><a id="folderSetting" onclick="folderSetting()" class="imgbtn imgbck"><span><spring:message code='ezPMS.t334' /></span></a></div>
+	</div>
 	<div id="projectArea" class="projectAreaStyle">
 		<div id="projectContent">
 			<div id="iconLine" class="mainbody" style="margin:0px; height:auto;">
@@ -429,10 +449,6 @@
 			</div>
 	<table class="content" style="width:100%;">
 		<tbody>
-			<tr>
-				<th><spring:message code='ezPMS.t98' /> </th>
-				<td><input type="text" id="searchByTaskName" style="width:100%; margin-right:5px;"></td>
-			</tr>
 			<tr>
 				<th><spring:message code='ezPMS.t114' /></th>
 	 			<td><input type="text" style="width:100%" id="searchByUser"></td>

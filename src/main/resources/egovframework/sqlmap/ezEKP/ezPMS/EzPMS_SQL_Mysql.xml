@@ -24,6 +24,7 @@
 	<typeAlias 	alias="BoardViewerVO" 						type="egovframework.ezEKP.ezPMS.vo.BoardViewerVO"/>
 	<typeAlias 	alias="CommentVO" 							type="egovframework.ezEKP.ezPMS.vo.CommentVO"/>
 	<typeAlias 	alias="ProjectHolidayVO" 					type="egovframework.ezEKP.ezPMS.vo.ProjectHolidayVO"/>
+	<typeAlias	alias="ProjectBoardFolderVO"					type="egovframework.ezEKP.ezPMS.vo.ProjectBoardFolderVO"/>
 	
     <resultMap id="projectInfoVO" class="ProjectInfoVO">
     	<result property="projectId"						column="PROJECT_ID"					columnIndex="1"/>
@@ -337,15 +338,12 @@
 		<result property="writerName" 				column="writer_name"/>
 		<result property="writerDeptName" 			column="writer_deptname"/>
 		<result property="writerPosition" 			column="writer_position"/>
-		<result property="taskName" 				column="task_name"/>
-		<result property="groupName"				column="group_name"/>
 		<result property="mobileNumber" 			column="mobile"/>
-		<result property="taskId"					column="task_id"/>
-		<result property="groupId"					column="group_id"/>
-		<result property="projectId"				column="project_id"/>
-		<result property="projectName"				column="project_name"/>
 		<result property="rootItemId"				column="root_item_id"/>
 		<result property="itemLevel"				column="item_level"/>
+		<result property="folderId"					column="FOLDER_ID"/>
+		<result property="folderName"				column="FOLDER_NAME"/>
+		<result property="projectId"				column="PROJECT_ID"/>
 	</resultMap>
 	
 	<resultMap class="ProjectBoardVO" id="projectBoardVOForList">
@@ -358,15 +356,13 @@
 		<result property="readCount" 				column="read_count"/>
 		<result property="writerName" 				column="writer_name"/>
 		<result property="writerDeptName" 			column="writer_deptname"/>
-		<result property="taskName" 				column="task_name"/>
-		<result property="groupName"				column="group_name"/>
 		<result property="fileCNT"					column="file_cnt"/>
 		<result property="writeContent"				column="WRITE_CONTENT"/>
-		<result property="taskId"					column="task_id"/>
-		<result property="groupId"					column="group_id"/>
 		<result property="rootItemId"				column="root_item_id"/>
 		<result property="itemLevel"				column="item_level"/>
 		<result property="docNo"					column="doc_no"/>
+		<result property="folderId"					column="FOLDER_ID"/>
+		<result property="folderName"				column="FOLDER_NAME"/>
 	</resultMap>
 	
 	<resultMap class="FileVO" id="fileVO">
@@ -426,6 +422,17 @@
     	<result property="isSolar"							column="ISSOLAR"/>
     	<result property="isRepeat"							column="ISREPEAT"/>
     </resultMap>
+    
+    <resultMap class="ProjectBoardFolderVO" id="projectBoardFolderVO">
+    	<result property="id"						column="FOLDER_ID"/>
+    	<result property="text"						column="FOLDER_NAME"/>
+    	<result property="text2"					column="FOLDER_NAME2"/>
+    	<result property="sort"						column="FOLDER_ORDER"/>
+    	<result property="projectId"				column="PROJECT_ID"/>
+    	<result property="creatorId"				column="CREATOR_ID"/>
+    	<result property="projectName"				column="PROJECT_NAME"/>
+    </resultMap>
+    
     <!-- 조직도 만들기 위한 쿼리 -->
 	<select id="EzPMSDAO.selectDeptList" parameterClass="map" resultMap="projectDeptViewMap">
 		select 
@@ -1833,14 +1840,14 @@
 		<![CDATA[
 			INSERT INTO tbl_pms_item_list (
 				tenant_id,			writer_id,			title,				write_overview,			write_type,
-				write_content,		write_date,			write_update_date,	read_count,				task_id,
-				group_id,			writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
+				write_content,		write_date,			write_update_date,	read_count,				folder_id,
+				writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
 				writer_position,	writer_position2,	doc_no
 			)
 			VALUES (
-				#tenantId#,			#writerId#,			#title#,			#writeOverview#,		#writeType#,
-				#writeContent#,		#writeDate#,		#writeUpdateDate#,	#readCount#,			#taskId#,
-				#groupId#,			#writerName#,		#writerName2#,		#writerDeptName#,		#writerDeptName2#,
+				#tenantId#,			#writerId#,			#title#,				#writeOverview#,		#writeType#,
+				#writeContent#,		#writeDate#,		#writeUpdateDate#,		#readCount#,			#folderId#,
+				#writerName#,		#writerName2#,		#writerDeptName#,		#writerDeptName2#,
 				#writerPosition#,	#writerPosition2#,	#docNo#
 			)
 		]]>
@@ -1851,11 +1858,16 @@
 	
 	<select id="EzPMSDAO.getMaxDocNo" parameterClass="map" resultClass="Integer">
 		<![CDATA[
-			SELECT IFNULL(max(doc_no), 0) FROM tbl_pms_item_list B
-			JOIN tbl_pms_group G
-			ON B.group_id = G.group_id
+			SELECT 
+				IFNULL(max(B.doc_no), 0) 
+			FROM 
+				tbl_pms_item_list B
+			JOIN 
+				TBL_PMS_BOARD_FOLDER F
+			ON 
+				F.FOLDER_ID = B.FOLDER_ID
 			WHERE 
-				project_id = #projectId#
+				B.FOLDER_ID = #folderId#
 			AND
 				B.tenant_id = #tenantId#
 		]]>
@@ -1873,15 +1885,15 @@
 		<![CDATA[
 			INSERT INTO tbl_pms_item_list (
 				tenant_id,			writer_id,			title,				write_overview,			write_type,
-				write_content,		write_date,			write_update_date,	read_count,				task_id,
-				group_id,			writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
+				write_content,		write_date,			write_update_date,	read_count,				folder_id,
+				writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
 				writer_position,	writer_position2,	root_item_id,		item_level,				doc_no,
 				upper_item_id
 			)
 			VALUES (
 				#tenantId#,			#writerId#,			#title#,			#writeOverview#,		#writeType#,
-				#writeContent#,		#writeDate#,		#writeUpdateDate#,	#readCount#,			#taskId#,
-				#groupId#,			#writerName#,		#writerName2#,		#writerDeptName#,		#writerDeptName2#,
+				#writeContent#,		#writeDate#,		#writeUpdateDate#,	#readCount#,			#folderId#,
+				#writerName#,		#writerName2#,		#writerDeptName#,	#writerDeptName2#,
 				#writerPosition#,	#writerPosition2#,	#rootItemId#,		#itemLevel#,			#docNo#,
 				#upperItemId#
 			)
@@ -1896,8 +1908,7 @@
 			UPDATE tbl_pms_item_list 
 			SET 
 				title = #title#, 					write_overview = #writeOverview#, 					write_type = #writeType#, 
-				write_content = #writeContent#,		write_update_date = #writeUpdateDate#,				task_id = #taskId#,
-				group_id = #groupId#
+				write_content = #writeContent#,		write_update_date = #writeUpdateDate#,				folder_id = #folderId#
 			WHERE 
 				item_id = #itemId#
 			AND
@@ -1921,7 +1932,7 @@
 		<![CDATA[
 			UPDATE tbl_pms_item_list 
 			SET 
-				task_id = #taskId#,			group_id = #groupId#
+				folder_id = #folderId#
 			WHERE 
 				item_id = #itemId#
 			AND
@@ -1978,38 +1989,31 @@
 			SELECT 
 				B.item_id, 			B.title,					B.write_overview,		B.write_type,		
 				B.write_date,		B.write_update_date,		B.read_count,			B.writer_name$lang$ AS writer_name,		
-				B.writer_deptname$lang$ AS writer_deptname,		T.task_name,  			G.group_name,		
-				IFNULL(F.file_cnt, 0) AS FILE_CNT,				B.write_content,		B.task_id,
-				B.group_id,			B.root_item_id,				B.item_level,			B.doc_no
-			FROM tbl_pms_item_list B
-			JOIN tbl_pms_group G
-			ON B.group_id = G.group_id
-			LEFT JOIN tbl_pms_task T
-			ON B.task_id = T.task_id
-			LEFT JOIN (SELECT count(file_id) AS file_cnt, item_id 
-					   FROM tbl_pms_item_attachment 
-					   GROUP BY item_id) F
-			ON B.item_id = F.item_id
+				B.writer_deptname$lang$ AS writer_deptname,				
+				IFNULL(A.file_cnt, 0) AS FILE_CNT,				B.write_content,		B.folder_id,
+				B.root_item_id,		B.item_level,				B.doc_no,				F.FOLDER_NAME$lang$
+			FROM 
+				tbl_pms_item_list B
+			JOIN 
+				tbl_pms_board_folder F
+			ON 
+				B.folder_id = F.folder_id
+			LEFT JOIN 
+				(SELECT count(file_id) AS file_cnt, item_id 
+					FROM tbl_pms_item_attachment 
+					GROUP BY item_id) A
+			ON B.item_id = A.item_id
 			WHERE
+			 	F.PROJECT_ID = #projectId#
+			AND 
+				B.tenant_id = #tenantId#
+			AND 
+				B.del_status = 0
 		]]>	
-		<isEqual property="groupId" compareValue="0">	
-			G.project_id = #projectId#
-		</isEqual>
-		<isNotEqual property="groupId" compareValue="0">
-			<isEqual property="taskId" compareValue="0">
-				(B.group_id = #groupId# 
-				OR G.upper_group_id = #groupId#
-				OR G.upper_group_id IN (select group_id from tbl_pms_group where upper_group_id = #groupId#))
-			</isEqual>
-			<isNotEqual property="taskId" compareValue="0">
-				B.task_id = #taskId#
-			</isNotEqual>
+		<isNotEqual property="folderId" compareValue="0">
+			AND
+				F.FOLDER_ID = #folderId#
 		</isNotEqual>
-			AND B.tenant_id = #tenantId#
-			AND B.del_status = 0
-		<isNotEmpty property="searchByTaskName">
-			AND IFNULL(T.task_name, G.group_name) LIKE CONCAT('%',#searchByTaskName#,'%') 
-		</isNotEmpty>
 		<isNotEmpty property="searchByUser">
 			AND B.writer_name$lang$ LIKE CONCAT('%',#searchByUser#,'%')
 		</isNotEmpty>
@@ -2049,69 +2053,52 @@
 			SELECT 
 				B.item_id, 			B.title,					B.write_overview,		B.write_type,		
 				B.write_date,		B.write_update_date,		B.read_count,			B.writer_name$lang$ AS writer_name,		
-				B.writer_deptname$lang$ AS writer_deptname,		T.task_name,  			G.group_name,		
-				IFNULL(F.file_cnt, 0) AS FILE_CNT,				B.write_content,		B.task_id,
-				B.group_id,			B.root_item_id,				B.item_level,			B.doc_no
-			FROM tbl_pms_item_list B
-			JOIN tbl_pms_group G
-			ON B.group_id = G.group_id
-			LEFT JOIN tbl_pms_task T
-			ON B.task_id = T.task_id
+				B.writer_deptname$lang$ AS writer_deptname,	
+				IFNULL(A.file_cnt, 0) AS FILE_CNT,				B.write_content,		B.folder_id,
+				B.root_item_id,				B.item_level,			B.doc_no,			F.FOLDER_NAME$lang$
+			FROM 
+				tbl_pms_item_list B
+			JOIN 
+				tbl_pms_board_folder F
+			ON 
+				B.folder_id = F.folder_id
 			LEFT JOIN (SELECT count(file_id) AS file_cnt, item_id 
 					   FROM tbl_pms_item_attachment 
-					   GROUP BY item_id) F
-			ON B.item_id = F.item_id
+					   GROUP BY item_id) A
+			ON B.item_id = A.item_id
 			WHERE
-		]]>	
-		<isEqual property="groupId" compareValue="0">	
-			G.project_id = #projectId#
-		</isEqual>
-		<isNotEqual property="groupId" compareValue="0">
-			<isEqual property="taskId" compareValue="0">
-				(B.group_id = #groupId# 
-				OR G.upper_group_id = #groupId#
-				OR G.upper_group_id IN (select group_id from tbl_pms_group where upper_group_id = #groupId#))
-			</isEqual>
-			<isNotEqual property="taskId" compareValue="0">
-				B.task_id = #taskId#
-			</isNotEqual>
-		</isNotEqual>
-			AND B.tenant_id = #tenantId#
-			AND B.del_status = 0
-			AND B.write_type in (1, 2)
-			ORDER BY B.item_id DESC
+				F.PROJECT_ID = #projectId#
+			AND 
+				B.tenant_id = #tenantId#
+			AND 
+				B.del_status = 0
+			AND 
+				B.write_type in (1, 2)
+			ORDER BY 
+				B.item_id DESC
 		
 			LIMIT #startRow#, #listCnt#
+		]]>
 	</select>
 	
 	<select id="EzPMSDAO.getBoardListCount" parameterClass="map" resultClass="Integer">
 		<![CDATA[
 			SELECT COUNT(item_id)
-			FROM tbl_pms_item_list B
-			JOIN tbl_pms_group G
-			ON B.group_id = G.group_id
-			LEFT JOIN tbl_pms_task T
-			ON B.task_id = T.task_id
+			FROM 
+				tbl_pms_item_list B
+			JOIN 
+				tbl_pms_board_folder F
+			ON 
+				B.folder_id = F.folder_id
 			WHERE
+				F.PROJECT_ID = #projectId#
 		]]>
-		<isEqual property="groupId" compareValue="0">	
-			G.project_id = #projectId#
-		</isEqual>
-		<isNotEqual property="groupId" compareValue="0">
-			<isEqual property="taskId" compareValue="0">
-				(B.group_id = #groupId# 
-				OR G.upper_group_id = #groupId#
-				OR G.upper_group_id IN (select group_id from tbl_pms_group where upper_group_id = #groupId#))
-			</isEqual>
-			<isNotEqual property="taskId" compareValue="0">
-				B.task_id = #taskId#
-			</isNotEqual>
-		</isNotEqual>
 			AND B.tenant_id = #tenantId#
 			AND B.del_status = 0
-		<isNotEmpty property="searchByTaskName">
-			AND IFNULL(T.task_name, G.group_name) LIKE CONCAT('%',#searchByTaskName#,'%') 
-		</isNotEmpty>
+		<isNotEqual property="folderId" compareValue="0">
+			AND
+				F.FOLDER_ID = #folderId#
+		</isNotEqual>
 		<isNotEmpty property="searchByUser">
 			AND B.writer_name LIKE CONCAT('%',#searchByUser#,'%')
 		</isNotEmpty>
@@ -2140,25 +2127,11 @@
 		<![CDATA[
 			SELECT COUNT(item_id)
 			FROM tbl_pms_item_list B
-			JOIN tbl_pms_group G
-			ON B.group_id = G.group_id
-			LEFT JOIN tbl_pms_task T
-			ON B.task_id = T.task_id
+			JOIN tbl_pms_board_folder F
+			ON B.folder_id = F.folder_id
 			WHERE
+				F.PROJECT_ID = #projectId#
 		]]>
-		<isEqual property="groupId" compareValue="0">	
-			G.project_id = #projectId#
-		</isEqual>
-		<isNotEqual property="groupId" compareValue="0">
-			<isEqual property="taskId" compareValue="0">
-				(B.group_id = #groupId# 
-				OR G.upper_group_id = #groupId#
-				OR G.upper_group_id IN (select group_id from tbl_pms_group where upper_group_id = #groupId#))
-			</isEqual>
-			<isNotEqual property="taskId" compareValue="0">
-				B.task_id = #taskId#
-			</isNotEqual>
-		</isNotEqual>
 			AND B.tenant_id = #tenantId#
 			AND B.del_status = 0
 			AND B.write_type in (1, 2)
@@ -2170,29 +2143,38 @@
 				B.item_id,				B.writer_id, 			B.title,				B.write_overview,		B.write_type,		
 				B.write_content,		B.write_date,			B.write_update_date,	B.read_count,		
 				B.writer_name$lang$ AS writer_name,				B.writer_deptname$lang$ AS writer_deptname,		
-				B.writer_position$lang$ AS writer_position,		T.task_name,  			G.group_name,			M.mobile,
-				B.group_id,				B.task_id,				P.project_id,			P.project_name,			B.root_item_id,
-				B.item_level
-			FROM tbl_pms_item_list B
-			JOIN tbl_pms_group G
-			ON B.group_id = G.group_id
-			LEFT JOIN tbl_pms_task T
-			ON B.task_id = T.task_id
-			LEFT JOIN tbl_usermaster M
-			on B.writer_id = M.cn and B.tenant_id = M.tenant_id
-			JOIN tbl_pms_project P
-			ON G.project_id = P.project_id
-			WHERE B.item_id = #itemId#
-			AND B.tenant_id = #tenantId#
-			AND B.del_status = 0	
+				B.writer_position$lang$ AS writer_position,		M.mobile,
+				B.folder_id,			B.root_item_id,
+				B.item_level,			F.FOLDER_NAME$lang$,	F.PROJECT_ID
+			FROM 
+				tbl_pms_item_list B
+			JOIN 
+				tbl_pms_board_folder F
+			ON 
+				B.folder_id = F.folder_id
+			LEFT JOIN 
+				tbl_usermaster M
+			on 
+				B.writer_id = M.cn and B.tenant_id = M.tenant_id
+			WHERE 
+				B.item_id = #itemId#
+			AND 
+				B.tenant_id = #tenantId#
+			AND 
+				B.del_status = 0
+			AND	
+				F.PROJECT_ID = #projectId#
 		]]>	
 	</select>
 	
 	<update id="EzPMSDAO.updateBoardReadCount" parameterClass="Integer">
 		<![CDATA[
-			UPDATE tbl_pms_item_list
-			SET read_count = read_count + 1
-			WHERE item_id = #itemId#
+			UPDATE 
+				tbl_pms_item_list
+			SET 
+				read_count = read_count + 1
+			WHERE 
+				item_id = #itemId#
 		]]>
 	</update>
 	
@@ -4197,4 +4179,91 @@
 					COUNTRY = #country#
 		]]>
 	</select>
+	
+	<select id="EzPMSDAO.getBoardFolderList" parameterClass="map" resultMap="projectBoardFolderVO">
+		SELECT
+			F.FOLDER_ID,
+			F.FOLDER_NAME$lang$ AS FOLDER_NAME,
+			F.FOLDER_NAME$lang$ AS FOLDER_NAME2,
+			F.FOLDER_ORDER,
+			F.PROJECT_ID,
+			F.CREATOR_ID,
+			P.PROJECT_NAME$lang$ AS PROJECT_NAME
+		FROM
+			TBL_PMS_BOARD_FOLDER F
+		JOIN 
+			TBL_PMS_PROJECT P
+		ON
+			F.PROJECT_ID = P.PROJECT_ID
+		AND
+			F.TENANT_ID = P.TENANT_ID
+		WHERE
+			F.TENANT_ID = #tenantId#
+		AND
+			F.PROJECT_ID = #projectId#
+		AND
+			F.DEL_STATUS = 0
+	</select>
+	
+	<select id="EzPMSDAO.getBoardFolder" parameterClass="map" resultMap="projectBoardFolderVO">
+		SELECT
+			F.FOLDER_ID,
+			F.FOLDER_NAME$lang$ AS FOLDER_NAME,
+			F.FOLDER_NAME$lang$ AS FOLDER_NAME2,
+			F.FOLDER_ORDER,
+			F.PROJECT_ID,
+			F.CREATOR_ID,
+			P.PROJECT_NAME$lang$ AS PROJECT_NAME
+		FROM
+			TBL_PMS_BOARD_FOLDER F
+		JOIN 
+			TBL_PMS_PROJECT P
+		ON
+			F.PROJECT_ID = P.PROJECT_ID
+		AND
+			F.TENANT_ID = P.TENANT_ID
+		WHERE
+			F.TENANT_ID = #tenantId#
+		AND
+			F.PROJECT_ID = #projectId#
+		AND
+			F.FOLDER_ID = #folderId#
+	</select>
+	
+	<insert id="EzPMSDAO.addBoardFolder" parameterClass="map">
+		INSERT INTO TBL_PMS_BOARD_FOLDER (
+			TENANT_ID,		FOLDER_NAME,		FOLDER_NAME2,		PROJECT_ID,
+			CREATOR_ID,		FOLDER_ORDER
+		) VALUES (
+			#tenantId#,		#folderName#,		#folderName2#,		#projectId#,
+			#creatorId#,	#folderOrder#
+		)
+	</insert>
+	
+	<update id="EzPMSDAO.updateBoardFolder" parameterClass="map">
+		UPDATE 
+			TBL_PMS_BOARD_FOLDER
+		SET
+			FOLDER_NAME = #folderName#,
+			FOLDER_NAME2 = #folderName2#
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			FOLDER_ID = #folderId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
+	
+	<update id="EzPMSDAO.deleteBoardFolder" parameterClass="map">
+		UPDATE 
+			TBL_PMS_BOARD_FOLDER
+		SET
+			DEL_STATUS = 1
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			FOLDER_ID = #folderId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
 </sqlMap>

@@ -23,9 +23,8 @@
 		var writerId = '${board.writerId}';
 		var authority = '${authority}'
 		var projectId = '${board.projectId}';	
-		var groupId = '${board.groupId}';	
-		var taskId = '${board.taskId}';	
 		var title = '${board.title}';
+		var folderId = '${board.folderId}';
 		var taskName;
 		var projectName = '<c:out value = "${board.projectName}"/>';
 		var itemIds = new Array(itemId); // 메인화면에서 여러개의 게시물을 한 번에 이동하는 함수를 재사용하기 위함
@@ -108,7 +107,7 @@
 				data : JSON.stringify(data),
 				success : function(result) {
 					if(result.data == 'success') {
-						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + title.trim() + "<spring:message code='ezPMS.t207' />");
+						//addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + title.trim() + "<spring:message code='ezPMS.t207' />");
 						window.close();
 						opener.getBoardList();
 					} else {
@@ -123,7 +122,7 @@
 		
 		function modifyBoard() {
 			window.location.href = '/ezPMS/goAddBoard.do?itemId=' + itemId + '&projectId=' + projectId + '&mode=modify'
-								+ '&groupId=' + groupId + "&taskId=" + taskId;
+								+ '&folderId=' + folderId;
 		}
 		
 		function goMoveBoard() {
@@ -185,7 +184,7 @@
 		
 		function goAddBoardReply() {
 			window.location.href = '/ezPMS/goAddBoard.do?itemId=' + itemId + '&projectId=' + projectId + '&mode=reply' + '&rootItemId=' + rootItemId 
-								 + '&itemLevel=' + itemLevel + '&groupId=' + groupId + "&taskId=" + taskId;
+								 + '&itemLevel=' + itemLevel + '&folderId=' + folderId;
 		}
 		
 	 	var nowZoom = 100;
@@ -310,9 +309,9 @@
 						<td><c:out value="${board.mobileNumber}"/></td>
 					</tr>
 					<tr>
-						<th><spring:message code='ezPMS.t98' /></th>
-						<td id="taskName">
-							<c:out value="${board.taskName ne null ? board.taskName : board.groupName}"></c:out>
+						<th><spring:message code='ezPMS.t340' /></th>
+						<td id="folderName">
+							<c:out value="${board.folderName}"></c:out>
 						</td>
 						<th><spring:message code='ezPMS.t119' /></th>
 						<td><c:out value="${fn:substring(board.writeDate, 0, 19)}"/></td>

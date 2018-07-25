@@ -13,7 +13,12 @@ function getProjectTaskTree(containerId, data, location) {
 				//'stripes' : false
 			}
 		},
-		'plugins' : [ 'sort', "wholerow" ],
+		'plugins' : [ 'sort', "wholerow", "types"],
+		"types": {
+			"default": {
+				"icon": "/images/OrganTree_cross/fldr.gif"
+			}
+		},
 		'sort' : function(a, b) {
 			var a1 = this.get_node(a);
 			var b1 = this.get_node(b);
@@ -39,16 +44,10 @@ function getProjectTaskTree(containerId, data, location) {
 		$(this).jstree("open_all");
 		var firstNode = $(this).find(".jstree-anchor");
 		
-		if (location == "taskList") {
-			$("#" + firstNode[0].id).addClass("jstree-clicked");
-			$("#" + firstNode[0].id).prev().prev().addClass("jstree-wholerow-clicked");
-			var firstNodeId = firstNode[0].id;
-		} else {
-			$("#" + firstNode[1].id).addClass("jstree-clicked");
-			$("#" + firstNode[1].id).prev().prev().addClass("jstree-wholerow-clicked");
-			var firstNodeId = firstNode[1].id;
-		}
+		$("#" + firstNode[0].id).addClass("jstree-clicked");
+		$("#" + firstNode[0].id).prev().prev().addClass("jstree-wholerow-clicked");
 		
+		var firstNodeId = firstNode[0].id;
 		
 		firstNodeId = firstNodeId.substring(0, firstNodeId.indexOf("_"));
 		

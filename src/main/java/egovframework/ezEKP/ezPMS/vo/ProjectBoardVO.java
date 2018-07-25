@@ -99,6 +99,12 @@ public class ProjectBoardVO {
 	
 	// 공지사항 여부
 	private boolean notice;
+	
+	//폴더 아이디
+	private long folderId;
+	
+	//폴더 명
+	private String folderName;
 
 	public int getRootItemId() {
 		return rootItemId;
@@ -354,5 +360,21 @@ public class ProjectBoardVO {
 
 	public void setNotice(boolean notice) {
 		this.notice = notice;
+	}
+
+	public long getFolderId() {
+		return folderId;
+	}
+
+	public void setFolderId(long folderId) {
+		this.folderId = folderId;
+	}
+
+	public String getFolderName() {
+		return folderName;
+	}
+
+	public void setFolderName(String folderName) {
+		this.folderName = folderName;
 	}
 }	

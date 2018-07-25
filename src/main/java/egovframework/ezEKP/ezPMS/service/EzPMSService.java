@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
 import egovframework.ezEKP.ezPMS.vo.CommentVO;
 import egovframework.ezEKP.ezPMS.vo.DeptViewVO;
+import egovframework.ezEKP.ezPMS.vo.ProjectBoardFolderVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupMemberVO;
@@ -135,18 +136,18 @@ public interface EzPMSService {
 	
 	public void deleteBoard(int tenantId, JSONObject jsonParam) throws Exception;
 	
-	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long groupId, Long taskId, String userId, int startRow, int listCnt, 
+	public List<ProjectBoardVO> getBoardList(int tenantId, Long projectId, Long folderId, String userId, int startRow, int listCnt, 
 											String lang, String position, String orderWhat, String orderHow, String searchByTaskName, 
 											String searchByUser, String searchByStartDate, String searchByEndDate, String searchByTitle, 
 											String searchByOverview, String searchByContent);
 	
-	public int getBoardListCount(int tenantId, Long projectId, Long groupId, Long taskId, String searchByTaskName, String searchByUser, 
+	public int getBoardListCount(int tenantId, Long projectId, Long folderId, String searchByTaskName, String searchByUser, 
 								String searchByStartDate, String searchByEndDate, String searchByTitle, String searchByOverview, 
 								String searchByContent);
 	
-	public List<ProjectBoardVO> getBoardNoticeList(int tenantId, Long projectId, Long groupId, Long taskId, int startRow, int listCnt, String lang);
+	public List<ProjectBoardVO> getBoardNoticeList(int tenantId, Long projectId, Long folderId, int startRow, int listCnt, String lang);
 	
-	public int getBoardNoticeListCount(int tenantId, Long projectId, Long groupId, Long taskId);
+	public int getBoardNoticeListCount(int tenantId, Long projectId, Long folderId);
 	
 	public ProjectBoardVO getBoardDetail(int tenantId, Map<String, Object> param);
 
@@ -271,4 +272,14 @@ public interface EzPMSService {
 	public void updateMemberSchedules(Map<String, Object> map) throws Exception;
 
 	public HashSet<String> getHolidayList(String planStartDate, String planEndDate, int tenantId, String companyId, String lang);
+	
+	public List<ProjectBoardFolderVO> getBoardFolderList (long projectId, int tenantId, String lang);
+	
+	public ProjectBoardFolderVO getBoardFolder (long projectId, int tenantId, String lang, long folderId);
+	
+	public void addBoardFolder (int tenantId, String folderName, String folderName2, long projectId, String creatorId, int folderOrder);
+	
+	public void updateBoardFolder (String folderName, String folderName2, long projectId, long folderId, int tenantId);
+	
+	public void deleteBoardFolder (long projectId, long folderId, int tenantId);
 }

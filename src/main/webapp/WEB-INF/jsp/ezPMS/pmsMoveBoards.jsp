@@ -29,29 +29,19 @@
 	});
 	
 	function moveBoards() {
-		var groupId = 0;
-		var taskId = 0;
-		var chosenTask = $("a.jstree-clicked");	
+		var chosenTask = $(".jstree-clicked");	
 		var taskName = chosenTask.text();
+		var folderId = chosenTask.parent().attr("id");
 		
 		// 작업명 옆에 게시판 갯수가 표시되었을 때 그것을 잘라냄
 		if (taskName.indexOf('(') != -1) {
 			taskName = taskName.substring(0, taskName.indexOf('('));
 		}
 		
-		if (chosenTask.parent().attr("id").charAt(0) == 't') { 
-			groupId = chosenTask.parents("li").eq(1).attr("id");
-			taskId  = chosenTask.parent().attr("id").substr(1);		
-		} else {
-			groupId = chosenTask.parent().attr("id");
-			taskId  = null;
-		}
-		
 		var data = {
 			itemIds : parent.itemIds,
 			projectId : parent.projectId,
-			groupId : groupId,
-			taskId  : taskId
+			folderId : folderId
 		}
 		
 		$.ajax({
@@ -67,7 +57,7 @@
 					
 					if(typeof parent.getBoardList == 'function') {
 						
-						for(i in parent.itemIds) {
+						/* for(i in parent.itemIds) {
 							var deletedTR = parent.$("tr[data-itemid = " + parent.itemIds[i] + "]");
 							var title = deletedTR.children("td.boardTitle").text();
 							var beforeTaskName = deletedTR.children("td.taskName").text();
@@ -75,12 +65,12 @@
 							var beforeTaskId = deletedTR.attr("data-taskId");
 							
 							addTaskLog(parent.projectId, 2, groupId, taskId, "[" + beforeTaskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + title.trim() + "<spring:message code='ezPMS.t233' />" + taskName.trim() +  "<spring:message code='ezPMS.t234' />");
-						}
+						} */
 						
 						parent.getBoardList();
 					} else {
 						var beforeTaskName = parent.taskName;
-						addTaskLog(parent.projectId, 2, groupId, taskId, "[" + beforeTaskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + parent.title.trim() + "<spring:message code='ezPMS.t233' />" + taskName.trim() +  "<spring:message code='ezPMS.t234' />");
+						/* addTaskLog(parent.projectId, 2, groupId, taskId, "[" + beforeTaskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + parent.title.trim() + "<spring:message code='ezPMS.t233' />" + taskName.trim() +  "<spring:message code='ezPMS.t234' />"); */
 						parent.location.reload();
 					}
 					

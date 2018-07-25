@@ -46,6 +46,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.microsoft.aad.adal4j.UserInfo;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -2737,17 +2739,17 @@ public class EzPMSController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = request.getParameter("projectId");
-		String onlyGroup = request.getParameter("onlyGroup");
+		String userId = userInfo.getId();
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		
-		param.put("onlyGroup", onlyGroup);
 		param.put("location", "board");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tree/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		String url = "/rest/ezPMS/projects/" + projectId + "/board/folders";
+		param.put("userId", userId);
 		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
 		String status = resultBody.get("status").toString();
-		
+
 		if (status.equals("ok")) {
 			JSONArray treeData = (JSONArray) resultBody.get("data");
 			model.addAttribute("data", treeData);
@@ -2787,8 +2789,7 @@ public class EzPMSController {
 		String writerDeptName = userInfo.getDeptName();
 		String mode = request.getParameter("mode");
 		String projectId = request.getParameter("projectId");
-		String groupId   = request.getParameter("groupId");
-		String taskId 	 = request.getParameter("taskId");
+		String folderId   = request.getParameter("folderId");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
@@ -2809,29 +2810,17 @@ public class EzPMSController {
 		
 		param.put("userId", userId);
 		param.put("projectId", projectId);
+		param.put("folderId", folderId);
 		
-		if (!taskId.equals("null") && taskId != null && !taskId.equals("")) {
-			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userId, param, request, "get", null);
+		//폴더 정보 불러오기
+		resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/board/folders/" + folderId, param, request, "get", null);
 			
-			if (status.equals("ok")) {
-				JSONObject taskDetail = (JSONObject) resultBody.get("data");
-				JSONObject taskVO = (JSONObject) taskDetail.get("taskDetails");
-				model.addAttribute("taskName", taskVO.get("taskName"));
-				model.addAttribute("projectName", taskVO.get("projectName"));
-				
-				LOGGER.debug("taskName : " + taskVO.get("taskName"));
-			}
-		} else {
-			resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/groups/" + groupId + "/users/" + userId, param, request, "get", null);
-			
-			if (status.equals("ok")) {
-				JSONObject groupDetails = (JSONObject) resultBody.get("data");
-				JSONObject groupVO = (JSONObject) groupDetails.get("groupDetails");
-				model.addAttribute("taskName", groupVO.get("groupName"));
-				model.addAttribute("projectName", groupVO.get("projectName"));
-				
-				LOGGER.debug("taskName : " + groupVO.get("groupName"));
-			}
+		if (status.equals("ok")) {
+			JSONObject folderDetails = (JSONObject) resultBody.get("data");
+			model.addAttribute("folderName", folderDetails.get("text"));
+			model.addAttribute("projectName", folderDetails.get("projectName"));
+			model.addAttribute("folderId", folderDetails.get("id"));
+			LOGGER.debug("folderName : " + folderDetails.get("folderName"));
 		}
 		
 				
@@ -2910,7 +2899,7 @@ public class EzPMSController {
 	@RequestMapping(value="/ezPMS/addBoard.do")
 	public String addBoard(HttpServletRequest request, Model model, @RequestBody JSONObject jsonParam, @CookieValue("loginCookie") String loginCookie) throws Exception {		
 		LOGGER.debug("ezPMS addBoard started");
-		LOGGER.debug("groupId : " + jsonParam.get("groupId") + ", taskId : " + jsonParam.get("taskId"));
+		LOGGER.debug("folderId : " + jsonParam.get("folderId"));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
@@ -2918,7 +2907,9 @@ public class EzPMSController {
 		
 		jsonParam.put("userId", userInfo.getId());
 		
-		Map<String, Object> param = null;
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("folderId", jsonParam.get("folderId"));
+		
 		JSONObject resultBody = null;
 		
 		if (mode.equals("modify")) {
@@ -2960,14 +2951,12 @@ public class EzPMSController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = request.getParameter("projectId");
-		String onlyGroup = request.getParameter("onlyGroup");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
-		
-		param.put("onlyGroup", onlyGroup);
 		param.put("location", "board");
+		param.put("userId", userInfo.getId());
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tree/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/board/folders", param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
@@ -3056,14 +3045,13 @@ public class EzPMSController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String projectId = request.getParameter("projectId");
-		String onlyGroup = request.getParameter("onlyGroup");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
-		param.put("onlyGroup", onlyGroup);
 		param.put("location", "board");
+		param.put("userId", userInfo.getId());
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tree/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/board/folders", param, request, "get", null);
 		String status = resultBody.get("status").toString();
 		
 		if(status.equals("ok")) {
@@ -3144,11 +3132,11 @@ public class EzPMSController {
 		
 		if(status.equals("ok")) {
 			JSONArray boardList = (JSONArray) resultBody.get("data");
-			String taskName = (String) resultBody.get("taskName");
+			String folderName = (String) resultBody.get("folderName");
 			model.addAttribute("data", boardList);
-			model.addAttribute("taskName", taskName);
+			model.addAttribute("folderName", folderName);
 			
-			LOGGER.debug("[result] taskName : " + taskName);
+			LOGGER.debug("[result] folderName : " + folderName);
 		} 
 		
 		
@@ -4034,5 +4022,158 @@ public class EzPMSController {
 		
 		LOGGER.debug("ezPMS mailWrite ended");
 		return result;
+	}
+	
+	/**
+	 * 프로젝트관리 폴더관리 화면 호출 함수
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/folderSetting.do")
+	public String getFolderSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+		LOGGER.debug("ezPMS getFolderSetting started");
+		LOGGER.debug("ezPMS getFolderSetting ended");
+		return "ezPMS/folderSetting";
+	}
+	
+	/**
+	 * 프로젝트관리 폴더리스트 호출
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/getFolderList.do")
+	@ResponseBody
+	public JSONArray getFolderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+		LOGGER.debug("ezPMS getFolderList started");
+		JSONArray data = new JSONArray();
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		Long projectId = Long.parseLong(request.getParameter("projectId"));
+		
+		String url = "/rest/ezPMS/projects/" + projectId + "/board/folders";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			data = (JSONArray) resultBody.get("data");
+		}
+		
+		LOGGER.debug("ezPMS getFolderList ended");
+		return data;
+	}
+	
+	/**
+	 * 프로젝트관리 폴더 삭제 실행
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/deleteFolder.do")
+	@ResponseBody
+	public String deleteFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+		LOGGER.debug("ezPMS getFolderList started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		Long projectId = Long.parseLong(request.getParameter("projectId"));
+		Long folderId = Long.parseLong(request.getParameter("folderId"));
+		String url = "/rest/ezPMS/projects/" + projectId + "/board/folders/" + folderId;
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		
+		String roleCheck = "";
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "delete", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			roleCheck = resultBody.get("data").toString();
+		}
+		
+		LOGGER.debug("ezPMS getFolderList ended");
+		return roleCheck;
+	}
+	
+	/**
+	 * 프로젝트관리 폴더 이름 추가/수정 화면 호출
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/inputFolderName.do")
+	public String inputFolderName(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+		LOGGER.debug("ezPMS inputFolderName started");
+		model.addAttribute("mode", request.getParameter("mode"));
+		
+		String mode = request.getParameter("mode");
+		
+		if (mode.equals("modify")) {
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			String userId = userInfo.getId();
+			Long projectId = Long.parseLong(request.getParameter("projectId"));
+			Long folderId = Long.parseLong(request.getParameter("folderId"));
+			String url = "/rest/ezPMS/projects/" + projectId + "/board/folders/" + folderId;
+			
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("userId", userId);
+			
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+			String status = resultBody.get("status").toString();
+			
+			if (status.equals("ok")) {
+				model.addAttribute("folderDetails", resultBody.get("data"));
+			}
+		} else {
+			model.addAttribute("folderDetails", "{}");
+		}
+		
+		LOGGER.debug("ezPMS inputFolderName ended");
+		return "ezPMS/pmsSetFolderName";
+	}
+	
+	/**
+	 * 프로젝트관리 폴더 이름 추가/수정 함수 실행
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/setFolderName.do")
+	@ResponseBody
+	public String setFolderName(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
+		LOGGER.debug("ezPMS setFolderName started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		Map<String, Object> param = new HashMap<String, Object>();
+
+		String roleCheck = "";
+		String userId = userInfo.getId();
+		Long projectId = Long.parseLong(request.getParameter("projectId"));
+		String mode = request.getParameter("mode");
+		String url = "/rest/ezPMS/projects/" + projectId + "/board/folders";
+		
+		param.put("userId", userId);
+		param.put("order", request.getParameter("order"));
+		param.put("folderName1", request.getParameter("folderName1"));
+		param.put("folderName2", request.getParameter("folderName2"));
+		
+		if (mode.equals("new")) {
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "post", null);
+			String status = resultBody.get("status").toString();
+			
+			if (status.equals("ok")) {
+				roleCheck = resultBody.get("data").toString();
+			}
+		} else if (mode.equals("modify")) {
+			String modifUrl = url + "/" + Long.parseLong(request.getParameter("folderId"));
+			
+			JSONObject resultBody = commonUtil.getJsonFromRestApi(modifUrl, param, request, "put", null);
+			String status = resultBody.get("status").toString();
+			
+			if (status.equals("ok")) {
+				roleCheck = resultBody.get("data").toString();
+			}
+		}
+		
+		LOGGER.debug("ezPMS setFolderName ended");
+		return roleCheck;
 	}
 }
