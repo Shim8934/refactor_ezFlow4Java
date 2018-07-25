@@ -500,7 +500,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		int currentPage;
-		int pageSize = 10;
+		int pageSize = 15;
 		boolean isPollEmpty = false;
 		String votePoll = "";
 		
@@ -549,6 +549,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("pageCount", pageCount);
 		model.addAttribute("totalCount", totalCount);
 		model.addAttribute("isPollEmpty", isPollEmpty);
+		model.addAttribute("pageSize", pageSize);
 
 		logger.debug("homePollListUser ended");
 		return "ezPersonal/persHomePollListUser";
