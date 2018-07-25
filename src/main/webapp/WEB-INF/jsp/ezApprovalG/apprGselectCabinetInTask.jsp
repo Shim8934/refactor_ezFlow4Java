@@ -6,6 +6,11 @@
 		<title><spring:message code='ezApprovalG.t711'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<style type="text/css">
+			.mainlist tr th {
+				border-top :0px;
+			}
+		</style>
     	<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
     	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -536,49 +541,41 @@
                 <li><span id="btnCancel" onclick="return cmdCancel_onclick()"></span></li>
             </ul>
         </div>
-		<table style="width:445px">
-		  <tr>			
-		    <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t711'/></h2>
-		      <table>
-		        <%-- <tr id="trCreateCab"> <!-- 528~533 으로 이동 -->
-		          <th>
-			          <a class="imgbtn" style="vertical-align:middle; margin-top:1.5px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
-					  <a class="imgbtn" style="vertical-align:middle; margin-top:1.5px; display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a>
-				  </th>
-		        </tr> --%>
-		        <tr id="trCreateCabDummy" style="display:none"> 
-		        </tr>
-		        <tr> 
-		          <td>
-			        <div class="listview">
-	                    <div id="CabinetList" style="border:0;HEIGHT: 280px; WIDTH: 380px;overflow:auto;"></div>
-	                </div>
-		          </td>
-		        </tr>
-		      </table>
-		    </td>
-		    <td style="width:45px;text-align:center; padding: 3px;"> 
-		      <table border="0" style="border-collapse:collapse; border-spacing:0;padding:2px;">
-			      <tr>
-			      	<td>
-			      		<img id="RecvAdd" src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" onClick="return AddCabList_onclick()" style="cursor: pointer; padding-bottom: 2px;">
-			      	</td>
-			      </tr>
-			      <tr>
-			      	<td>
-			      		<img id="RecvDel" src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" onClick="return DelCabList_onclick()" style="cursor: pointer; padding-top: 2px;">
-			      	</td>
-			      </tr>
-		      </table>
-		    </td>
-		    <td style="width:200px;vertical-align:top">
-			<h2><spring:message code='ezApprovalG.t1120'/></h2>
-		      <div class="listview">
-			    <div id="SelCabinetList" style="border:0; HEIGHT: 280px; WIDTH: 250px;overflow:auto;" ></div>
-		      </div>
-		    </td>
-		  </tr>
-		</table>
+        <table>
+        	<tr>
+        		<td>
+        			<h2 style="font-weight: normal">
+        				▒ <spring:message code='ezApprovalG.t711'/>
+        				<span id="trCreateCab">
+	        				<a class="imgbtn imgbck" style="margin:-4px 0px 0px 5px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
+					  		<a class="imgbtn imgbck" style="display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a>
+        				</span>
+        			</h2>
+        		</td>
+        		<td></td>
+        		<td><h2 style="font-weight: normal">▒ <spring:message code='ezApprovalG.t1120'/></h2></td>
+        	</tr>
+        	<tr>
+        		<td>
+					<div class="listview">
+						<div id="CabinetList" style="border:0;HEIGHT: 310px; WIDTH: 380px;overflow:auto;"></div>
+					</div>
+        		</td>
+        		<td>
+					<a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image93','','/images/arr_right.gif',1)" style="margin-left: 4px; cursor: pointer;"> 
+						<img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" onClick="return AddCabList_onclick()">
+					</a><br>
+					<a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image103','','/images/arr_left.gif',1)" style="margin-left: 4px; cursor: pointer;"> 
+						<img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16"onClick="return DelCabList_onclick()">
+					</a>
+        		</td>
+        		<td>
+					<div class="listview">
+						<div id="SelCabinetList" style="border:0; HEIGHT: 310px; WIDTH: 247px;overflow:auto;"></div>
+					</div>
+        		</td>
+        	</tr>
+        </table>
 		<div class="btnposition btnpositionNew">
 			<a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 		</div>

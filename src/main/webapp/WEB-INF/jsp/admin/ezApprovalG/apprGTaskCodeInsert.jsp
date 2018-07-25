@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+
 		<script type="text/javascript">
 			var labelcolor = "gray";
 	        var xmlhttp = createXMLHttpRequest();
@@ -40,6 +40,10 @@
 	                KeEventControl(document.getElementById("tbList3"));
 	                KeEventControl(document.getElementById("tbTaskDesc"));
 	                KeEventControl(document.getElementById("tbKPReason"));
+	            }
+	            //2018-07-25 김보미 - 하단 공백 사이즈 크롬/ie 상이한것 조정
+	            else if (ua.indexOf("Chrome") > 0) {
+	                $(".popup h1").css("margin-bottom","2px");
 	            }
 
 	            try {

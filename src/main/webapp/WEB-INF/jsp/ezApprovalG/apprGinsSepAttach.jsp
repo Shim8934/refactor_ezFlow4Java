@@ -112,7 +112,7 @@
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t106'/>");
-		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "200");
+		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "150");
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t874'/>");
@@ -132,7 +132,7 @@
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t1029'/>");
-		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "200");
+		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "220");
 		
 		        Rows = createNodeAndAppandNode(oList, ListViewData, Rows, "ROWS");
 		
@@ -563,7 +563,7 @@
             </ul>
         </div>
 		
-		<h2><spring:message code='ezApprovalG.t1034'/></h2>
+		<h2 style="font-weight: normal;">▒ <spring:message code='ezApprovalG.t1034'/></h2>
 		<div id="listviewdiv" class="listview" style="Width:100%; Height:225px;">
 		    <div id= "lvList" style="overflow:auto;border:0;Width:100%; Height:225px; font-size:9pt;"></div>
 		</div>

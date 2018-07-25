@@ -17,7 +17,7 @@
             	margin-top: 0px;
             	height: 60px;
             	word-break: break-all;
-            	border: 1px solid #b8b6b6;
+            	border: 1px solid #ddd;
         	}
         	.question p {
 	            margin: 0px;
@@ -55,7 +55,7 @@
         	</tr>
         	<tr style="height:100%">
             	<td>
-                	<div id="receivelist" style="OVERFLOW-X: hidden; padding:10px;overflow-y:auto;height:225px;width:410px" class="box"> 
+                	<div id="receivelist" style="OVERFLOW-X: hidden; padding:10px;overflow-y:auto;height:225px;width:410px;border-top:0px" class="box"> 
 						${strHtml}                    	
                 	</div>
             	</td>

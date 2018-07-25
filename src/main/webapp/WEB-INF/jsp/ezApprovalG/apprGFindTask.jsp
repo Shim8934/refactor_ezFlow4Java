@@ -81,16 +81,16 @@
                 <li><span id="btnClose" onClick="return btnClose_onclick()"></span></li>
             </ul>
         </div>
-		<h2><spring:message code='ezApprovalG.t648'/></h2>
+		<h2 style="font-weight: normal;">▒ <spring:message code='ezApprovalG.t648'/></h2>
 		<table class="content">
 		  <tr>
 		    <th><spring:message code='ezApprovalG.t649'/></th>
-		    <td><input type="text" class="text" style="Width:98%; " name="txtTitle" id="txtTitle">
+		    <td><input type="text" class="text" style="Width:100%; " name="txtTitle" id="txtTitle">
 		    </td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code='ezApprovalG.t1024'/></th>
-		    <td><input type="text" class="text" style="Width:98%; " name="txtCode" id="txtCode">
+		    <td><input type="text" class="text" style="Width:100%; " name="txtCode" id="txtCode">
 		    </td>
 		  </tr>
 		</table>
