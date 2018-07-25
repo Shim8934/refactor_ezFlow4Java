@@ -26,18 +26,12 @@
 	 			border:1px solid #ffffff;
 			}
 			#open-memo { width:50px; height:50px; position: absolute; top: 676px; left: 1371px; z-index: 1000; border: solid 1px black;cursor: pointer; background-color: gray; text-align: center;}
-<<<<<<< HEAD
 			#layer-popup{ float:right; width:500px; height:600px; background:white; position:absolute; text-align:center; border:1px solid black;z-index:1001;}
 			.individual-memo { width:200px; height:200px; background:white; text-align:center; border:1px solid black; cursor: pointer;}
 			#selected-memo { position:absolute; width:400px; height:500px; background:white; z-index:9001; top:48px; left:36px;}
-			#maskDiv { absolute; width:500px; height:600px; background:white; z-index:9001; top:0px; left:0px;opacity:0.6; z-index:9000; background:rgb(59, 60, 60);}
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
-=======
-			#layer-popup{ float:right; width:500px; height:600px; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001;}
-			.individual-memo { width:200px; height:200px; background:white; text-align:center; border:1px solid black; cursor: pointer;}
-			#selected-memo { position:absolute; width:400px; height:500px; background:white; z-index:9001; top:48px; left:36px;}
 			#maskDiv { position:absolute; width:500px; height:600px; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);}
->>>>>>> 0913bcadaeebb7e5634d4e51fbde203a74534a54
+
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
