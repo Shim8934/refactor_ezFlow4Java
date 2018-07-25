@@ -154,7 +154,7 @@
 			<div id="close"><ul><li><span onClick="window.close()"></span></li></ul></div>
   			<table> 
     			<tr> 
-      				<td class="mainbody" style="padding:3px 10px;vertical-align:top;background:none">
+      				<td class="mainbody" style="height:500px; padding:3px 10px;vertical-align:top;background:none">
         				<table class="mainlist" style="width:100%;"> 
           					<tr> 
             					<th style="width:40px;text-align:center"><spring:message code='ezPersonal.t166' /></th> 
