@@ -9,17 +9,16 @@
 		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">
 	</head>
 	<body class="popup cabAddRelated" style="overflow: hidden;">
-		<h1 id="cabMagHeader" role='<c:out value="${node}"></c:out>'><spring:message code="ezCabinet.t125"/></h1>
-		
-		<div class = "addRelatedConfig" id = "addRelated" style= "margin: 1px 3px;">
-			<a class = "cabRadio"><input type="radio" name = "checkCabinet" id = "1"/><label for = "1">
+		<h1 id="cabMagHeader"><spring:message code="ezCabinet.t125"/></h1>
+		<div class="addRelatedConfig" id="addRelated">
+			<a class="cabRadio"><input type="radio" name="checkCabinet" id="1"/><label for="1">
 			<span><spring:message code="ezCabinet.t126"/></span></label><br></a>
-			<a class = "cabRadio"><input type="radio" name = "checkCabinet" id = "2" checked = "checked"/><label for = "2">
+			<a class="cabRadio"><input type="radio" name="checkCabinet" id="2" checked="checked"/><label for="2">
 			<span><spring:message code="ezCabinet.t127"/></span></label></a>
 		</div>
-		<div class="cabMgTree" id = "cabMgTreeId" style="position: relative; overflow: hidden; margin: 10px 5px; min-height: 200px; height: 200px;">
-			<div id="cabinetMgTree" style="width: 100%; height: 100%; position: absolute; z-index: 1; "></div>
-			<div id="fogPanel" style="width: 100%; height: 100%; z-index: 2; background-color: transparent; position: absolute; display: none; top: 0px; left: 0px;"></div>
+		<div id="cabMgTreeId" class="cabMgRelTree">
+			<div id="cabinetMgTree" class="mdlRelTree"></div>
+			<div id="fogPanel"      class="mdlFog"    ></div>
 		</div>
 		
 		<div class="cabdivBttn" id="cabMgDivBttn">
@@ -28,11 +27,8 @@
 		</div>
 		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/ezCabinet/cabinetTree.js"           ></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
-		<script type="text/javascript" src="/js/ezCabinet/cabinetModule.js"         ></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetTree.js"           ></script>
 		<script type="text/javascript">
 			(function() {
 				var rlWindow    = null;
