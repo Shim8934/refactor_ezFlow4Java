@@ -116,11 +116,11 @@
 							<th class="cabTitle"><spring:message code='ezCabinet.t92'/></th>
 							<td> 
 								<select id="listcount">
-									<option value="10" ${cabinetGeneral.listCount == '10' ? 'selected' : ''}>10</option>
-									<option value="20" ${cabinetGeneral.listCount == '20' ? 'selected' : ''}>20</option>
-									<option value="30" ${cabinetGeneral.listCount == '30' ? 'selected' : ''}>30</option>
-									<option value="40" ${cabinetGeneral.listCount == '40' ? 'selected' : ''}>40</option>
-									<option value="50" ${cabinetGeneral.listCount == '50' ? 'selected' : ''}>50</option>
+									<option value="10" ${config.listCount == '10' ? 'selected' : ''}>10</option>
+									<option value="20" ${config.listCount == '20' ? 'selected' : ''}>20</option>
+									<option value="30" ${config.listCount == '30' ? 'selected' : ''}>30</option>
+									<option value="40" ${config.listCount == '40' ? 'selected' : ''}>40</option>
+									<option value="50" ${config.listCount == '50' ? 'selected' : ''}>50</option>
 								</select>
 							</td>
 						</tr>
