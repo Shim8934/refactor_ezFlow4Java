@@ -557,18 +557,10 @@ public interface EzApprovalGService {
 	 * */
 	public boolean isLinkedAttachFile(String attachHref) throws Exception;
 	
-	public void setNonElecRecSusinInit(String docID, String deptID, String deptName, String deptName2, String companyID, int tenantID) throws Exception;
-	
-	public String checkNonElecRec(String orgDocID, String companyID, int tenantID) throws Exception;
-	
-	public String getNonElecInfoSusinInit(String orgDocID, String companyID, int tenantID) throws Exception;
-	
-	public void setNonElecRecCabID(String docID, String orgDocID, String cabinetID, String companyID, int tenantID) throws Exception;
-
-	public void updateApprovConn(String docID, String companyID, int tenantID) throws Exception;
+/*	public void updateApprovConn(String docID, String companyID, int tenantID) throws Exception;
 
 	public void insertApprovConnSusin(String orgDocID, String formID, String companyID, int tenantID) throws Exception;
-	
+*/	
 	public void setNonElecRecDocDelFlag(String docID, String companyID, int tenantID) throws Exception;
 	
 	public String susinNonElecRecDocDel(String docID, String companyID, int tenantID) throws Exception;
