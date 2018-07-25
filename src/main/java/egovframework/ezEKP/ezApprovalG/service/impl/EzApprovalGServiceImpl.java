@@ -888,6 +888,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
 		map.put("v_USERID", userID);
+		map.put("approvalFlag", approvalFlag);
 		boolean rtnVal = true;
 
 		mode = mode.trim().toUpperCase();
@@ -899,6 +900,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String publicityCode = "1";
 		String publicityFlag = "ALL";
 		
+		//공개/비공개 권한 체크
 		if (mode.substring(0, 1).equals("Y")) {
 			map.put("v_FLAG", "001");
 			logger.debug("getAccessYNG Param : v_DOCID =" + docID + "v_TENANTID =" + tenantID + "v_USERID=" + userID +" companyID = " + companyID +  "v_FLAG=" +  "001");
@@ -907,10 +909,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			logger.debug("getAccessYNG Value : publicityCode =" + publicityCode);
 
 			if (approvalFlag.equals("G")) {
-				if (publicityCode.length() <= 0 || publicityCode.equals(" ")) {
+				if (publicityCode.length() <= 0 || publicityCode.equals(" ") || publicityCode.equals("Y")) {
 					publicityCode = "1";
 				} else {
-					publicityCode = publicityCode.substring(0, 1);
+					publicityCode = "3";
 				}
 			} else {
 				if (publicityCode.equals("Y")) {
@@ -988,6 +990,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
+		//보안등급으로 권한 체크(사용자정보에 있는 등급으로 권한 체크함)
 		if (publicityFlag.equals("ALL") && mode.substring(1, 2).equals("Y")) {
 			String userSecurityCode = ezOrganService.getPropertyValue(userID, "extensionAttribute6", tenantID);
 			
@@ -1023,6 +1026,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
+		//열람권한으로 권한 체크
 		if (!rtnVal && mode.substring(2).equals("Y")) {
 			map.put("v_FLAG", "006");
 			logger.debug("getAccessYNG Param : v_DOCID =" + docID + " v_TENANTID =" + tenantID + " v_USERID=" + userID + " v_FLAG=" +  "006");
