@@ -130,6 +130,7 @@ public class EzPMSController {
 		if(settingStatus.equals("ok")) {
 			JSONObject listSetting = (JSONObject) settingResult.get("data");
 			model.addAttribute("listSetting", listSetting);
+			model.addAttribute("userId", userId);
 		}
 		
 		LOGGER.debug("ezPMS projectList ended");
@@ -293,6 +294,7 @@ public class EzPMSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userName = userInfo.getDisplayName1();
 		String userId = userInfo.getId();
+		String userDeptname = userInfo.getDeptName1();
 		String mode = request.getParameter("mode");
 		
 		String planStartDate = "";
@@ -331,6 +333,7 @@ public class EzPMSController {
 		
 		model.addAttribute("mode", mode);
 		model.addAttribute("userName", userName);
+		model.addAttribute("userDeptname", userDeptname);
 		model.addAttribute("planStartDate", planStartDate);
 		model.addAttribute("planEndDate", planEndDate);
 		
@@ -533,6 +536,7 @@ public class EzPMSController {
 			model.addAttribute("kanbanOrder", kanbanOrder);
 			model.addAttribute("userRole", userRole);
 			model.addAttribute("mainSetting", mainSetting);
+			model.addAttribute("userId", userId);
 			LOGGER.debug("[result] kanbanOrder : " + kanbanOrder + ", userRole : " + userRole);
 		}
 		

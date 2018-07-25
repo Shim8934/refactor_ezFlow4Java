@@ -139,53 +139,7 @@
 	   		
 	   		// 선택한 사람을 권한 추가
 	   		function setAuthorViewUser(authName, isUser) {
-	   			if ((selUserId != "" && selUserId != undefined) || isUser == false) {
-	   				var chkFlag = true;
-	   				
-		   			if (isUser == false) {
-		   				var deptId = $(".jstree-clicked").attr('id');
-		   				var regExp2 = deptId.lastIndexOf("_");
-		   				deptId = deptId.substring(0,regExp2);
-		   				receiverId = deptId;
-		   				
-			   			var str = $(".jstree-clicked").text();
-		   				userDept = str;
-		   				userName = str;
-		   				
-		   				userIdType = "dept";
-		   			} else {
-		   				var receiverId = selUserId;
-			   			userName = selUserName;
-			   			userDept = selUserDept;
-			   			userIdType = "user";
-		   			}
-		   			
-		   			for(var i = 0; i < authList.length; i++) {
-		   				if (authList[i].userId == receiverId) {
-		   					chkFlag = false;
-		   				}
-		   			}
-		   			
-		   			if (chkFlag) {
-		   				if (authName == "manager") {
-		   					managerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 1, "userDeptname" : userDept, "userIdType" : userIdType});
-		   					authList.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 1, "userDeptname" : userDept});
-		   				} else if (authName == "participant") {
-		   					participantArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 2, "userDeptname" : userDept, "userIdType" : userIdType});
-		   					authList.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 2, "userDeptname" : userDept});
-		   				} else {
-		   					viewerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 3, "userDeptname" : userDept, "userIdType" : userIdType});
-		   					authList.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : 3, "userDeptname" : userDept});
-		   				}
-		   			} else {
-		   				alert("<spring:message code='ezPMS.t163' />");
-		   			}
-		   			
-		   			selMainListUserId = "";
-	   			} else {
-	   				alert("<spring:message code='ezPMS.t164' />");
-	   			}
-	   			
+	   			ok_Click();
 	   		}
 	   		
 	   		function applyReceiver(authName) {
@@ -225,7 +179,7 @@
 // 		   			managerArray.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept), "userIdType" : "user"});
 // 	   			}
 	   			authList.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept)});
-	   			managerArray.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept), "userIdType" : "user"});
+// 	   			managerArray.push({"userName" : userName, "userId" : userId, "memberRoleId" : 1, "userDeptname" : replaceString(userDept), "userIdType" : "user"});
 		   		
 	   			$(function () {
 		   			$(document).on({
@@ -262,6 +216,11 @@
 		    }
 	   		
 	   		function ok_Click() {
+	   			if(!validChkFunc()){
+	   				alert("<spring:message code='ezPMS.t163' />");
+	   				return;
+	   			}
+	   			
 	   			if (!(selUserId  || parent.opener.headManagerId)) {
 	   				alert("<spring:message code='ezPMS.t333'/>");
 	   				return;
@@ -269,13 +228,32 @@
 	   			
 	   			if(parent.opener.headManagerObj && selUserId){
 		   			parent.opener.headManagerId = selUserId;
+		   			parent.opener.headManagerName = selUserName;
+		   			parent.opener.headManagerDept = selUserDept;
+		   			
 		   			parent.opener.headManagerObj.userId = selUserId;
 		   			parent.opener.headManagerObj.userName = selUserName;
 		   			parent.opener.headManagerObj.userDept = selUserDept;
+		   			
 		   			parent.opener.applyHeadManager();
 	   			}
 	   			
 	   			window.close();
+	   		}
+	   		
+	   		function validChkFunc(){
+	   			var ml = parent.opener.managerList;
+	   			var pl = parent.opener.participantList;
+	   			var vl = parent.opener.viewerList;
+	   			var flag = true;
+	   			
+	   			Array.prototype.concat(ml, pl, vl).forEach(function(elem){
+	   				if(elem.userId === selUserId){
+	   					flag = false;
+	   				}
+	   			});
+	   			
+	   			return flag;
 	   		}
 	   		
 		</script>

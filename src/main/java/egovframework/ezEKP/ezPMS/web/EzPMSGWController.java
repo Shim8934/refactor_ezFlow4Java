@@ -1897,7 +1897,7 @@ public class EzPMSGWController {
 			
 			holidayList.forEach(holiday -> {
 				try {
-					Calendar cal = new GregorianCalendar();
+					Calendar cal = GregorianCalendar.getInstance();
 					cal.setTime(dateFormat.parse(holiday));
 					holidaySet.add(cal);
 				} catch (Exception e) {
@@ -1910,7 +1910,7 @@ public class EzPMSGWController {
 			while (startCal.compareTo(endCal) < 1) {
 				DateVO date = new DateVO();
 				date.setDate(dateFormat.format(startCal.getTime()));
-				
+				date.setDayOfWeek(startCal.get(Calendar.DAY_OF_WEEK));
 				// 휴일 여부를 판단
 				if(startCal.get(Calendar.DAY_OF_WEEK) != 1 && startCal.get(Calendar.DAY_OF_WEEK) != 7 && !holidaySet.contains(startCal)) {
 					date.setHolidayOrNot(false);

@@ -138,7 +138,7 @@ $(function(){
 		<div class="project_mainlist">
 		<ul class="project_mainlistUL">
 		<c:forEach items="${projectList }" var="project">
-			<li id="${project.projectId }" data-groupId="${project.groupId}" ondblclick="goProjectDetails(this)">
+			<li id="${project.projectId }" data-groupId="${project.groupId}" data-headmanagerid="${project.headManagerId}" ondblclick="goProjectDetails(this)">
 				<div class="project_list" >
 					<table>
 						<tr>
@@ -171,7 +171,7 @@ $(function(){
                         </li>
                     </ul>
                     <dl class="listBox_graph">
-                    	<dt><spring:message code='ezPMS.t32' /></dt>
+                    	<dt><spring:message code='ezPMS.t330' /></dt>
                     	<dd><c:out value="${project.headManagerName }" /></dd>
                     	<dt><spring:message code='ezPMS.t33' /></dt>
                     	<dd><div name="${project.projectId }"></div>

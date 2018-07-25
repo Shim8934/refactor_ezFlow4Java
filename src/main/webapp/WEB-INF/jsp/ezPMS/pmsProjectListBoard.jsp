@@ -172,7 +172,7 @@ $(function(){
 								text-overflow: ellipsis; cursor: pointer;;" class="h5_center"><spring:message code='ezPMS.t31' /></th>
 							<th id="BoardList_TH_2" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px;"
-								class="h5_center"><spring:message code='ezPMS.t32' /></th>
+								class="h5_center"><spring:message code='ezPMS.t330' /></th>
 							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PROGRESS"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 250px"
 								class="h5_center"><spring:message code='ezPMS.t33' /></th>
@@ -206,7 +206,7 @@ $(function(){
 									</c:when>
 									<c:otherwise>
 										<c:forEach items="${projectList }" var="project">
-									<tr style="cursor: pointer;" id="${project.projectId }" data-groupId="${project.groupId}" class="listRow" ondblclick="goProjectDetails(this)">
+									<tr style="cursor: pointer;" id="${project.projectId }" data-groupId="${project.groupId}" data-headmanagerid="${project.headManagerId}" class="listRow" ondblclick="goProjectDetails(this)">
 										<td style="width: 20px; cursor: default; text-align: center"><input
 											type="checkbox" onchange="checkedCheckbox(this);"
 											name="boardCheckbox"

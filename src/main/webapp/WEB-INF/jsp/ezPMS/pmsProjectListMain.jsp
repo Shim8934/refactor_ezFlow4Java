@@ -48,6 +48,7 @@ var CurrentHeight = document.documentElement.clientHeight - 110;
 var projectTotalCount = 0;
 var checkedVal = "";
 var startRow = 0;
+var userId = "${userId}";
 
 //검색을 위한 변수
 var searchByProjectName = "";
@@ -639,8 +640,21 @@ function viewListByStatus(status) {
 function deleteProject() {
 	var result = getCheckedVal();
 	var response;
+	var isHeadManager = true;
 	
 	var checkedPrjInfo = getCheckedProjectInfo();
+	
+	checkedPrjInfo.forEach(function(elem, idx) {
+	    if (elem.headManagerId !== userId) {
+	    	isHeadManager = false;
+	    }
+	});
+	
+	if(!isHeadManager){
+		alert("<spring:message code='ezPMS.t9' />");
+		popupClose();
+		return;
+	}
 	
 	if (listProjectStatus != "D") {
 		if (result == 1) {

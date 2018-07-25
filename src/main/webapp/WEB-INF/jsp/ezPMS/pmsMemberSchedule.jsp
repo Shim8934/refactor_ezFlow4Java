@@ -13,17 +13,93 @@
 <script type="text/javascript" src="/js/dist/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 		<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
+<!-- time picker-->
+<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
+<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 <title><spring:message code='ezPMS.t290' /></title>
 <script type="text/javascript">
 var memberList = '${memberList}';
 var memberScheduleList = JSON.parse('${memberScheduleList}');
 var planStartDate = '${planStartDate}';
 var planEndDate = '${planEndDate}';
-var dateList = [];
+var dateList = JSON.parse('${dateList}');
 
 $(function() {
-	setMemberSchedule();
+	getDatePicker();
+	setMemberScheduleList();
 });
+
+function setMemberScheduleList() {
+	var dayOfWeeks = "<spring:message code='ezPMS.t244'/>".split(";");
+	var filteredDateList = [];
+	var sDate = $("#Sdatepicker").val() != "" ? $("#Sdatepicker").val() : planStartDate;
+	var eDate = $("#Edatepicker").val() != "" ? $("#Edatepicker").val() : planEndDate;
+	
+	$("#dateListHeader1").empty();
+	$("#dateListHeader2").empty();
+	$(".dateList").empty();
+	$("#memberCNT").empty();
+	
+	for(var i = 0; i < dateList.length; i++) {
+		
+		if(Date.parse(dateList[i].date) >= Date.parse(sDate)) {
+			
+			do {
+				if(dateList[i] == null) break;
+				
+				filteredDateList.push(dateList[i]);
+			} while(Date.parse(dateList[i++].date) < Date.parse(eDate));
+			
+			break;
+		}
+	}
+	
+	var tmp = filteredDateList[0].date.substring(0, 7);
+	var monthCount = 0;
+	
+	for(var i = 0; i < filteredDateList.length; i++) {
+		var yearMonth  = filteredDateList[i].date.substring(0, 7);
+		var dayOfMonth = filteredDateList[i].date.charAt(8) == '0' ? filteredDateList[i].date.substring(9) : filteredDateList[i].date.substring(8);
+		
+		if(yearMonth == tmp) {
+			monthCount++;
+		} else {
+			$("#dateListHeader1").append('<th colspan=' + monthCount + '>' + tmp + '</th>');
+			monthCount = 1;
+		}
+		
+		if(filteredDateList[i].holidayOrNot == true) {
+			$("#dateListHeader2").append('<th class="holyday" date"' + filteredDateList[i].date + '">' + dayOfMonth + '</th>');
+			$(".dateList").append('<td class="holyday" date="' + filteredDateList[i].date + '">&nbsp;</td>');
+		} else {
+			$("#dateListHeader2").append('<th date"' + filteredDateList[i].date + '" >' + dayOfMonth + '</th>');
+			$(".dateList").append('<td date="' + filteredDateList[i].date + '">&nbsp;</td>');
+		}
+		
+		tmp = yearMonth;
+	}
+	
+	$("#dateListHeader1").append('<th colspan=' + monthCount + '>' + tmp + '</th>');
+	
+	// 멤버 스케쥴을 테이블에 반영
+	setMemberSchedule();
+		
+	// 일자별 업무 할당 인원 수 반영
+	for(var i = 0; i < filteredDateList.length; i++) {
+		var memberCNT = $(".dateList").find("td[date='" + filteredDateList[i].date + "']").find(".circle").length;
+		memberCNT = memberCNT == 0 ? "" : memberCNT;
+		
+		if(filteredDateList[i].holidayOrNot == true) {
+			$("#memberCNT").append('<td style="text-align:center; background-color: #FFFAF2;">' + memberCNT + '</td>');
+		} else {
+			$("#memberCNT").append('<td style="text-align:center;">' + memberCNT + '</td>');
+		}
+	}
+}
 
 function setMemberSchedule() {
 	for (var i = 0; i < memberScheduleList.length; i++) {
@@ -65,6 +141,80 @@ function getTaskNameList(elem) {
 		}
 	});
 	
+}
+
+function getDatePicker() {
+	$("#Sdatepicker").datepicker({
+		changeMonth: true,
+		changeYear: true,
+		autoSize: true,
+		showOn: "both",
+		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		buttonImageOnly: true,
+		beforeShow: function (input) {
+			var i_offset = $(input).offset();
+			setTimeout(function () {
+				//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+			})
+		}
+	});
+
+	$("#Edatepicker").datepicker({
+		changeMonth: true,
+		changeYear: true,
+		autoSize: true,
+		showOn: "both",
+		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		buttonImageOnly: true,
+		beforeShow: function (input) {
+			var i_offset = $(input).offset();
+			setTimeout(function () {
+				//$('#ui-datepicker-div').css({ 'top': i_offset.top, 'bottom': '', 'top': '0px' });
+			})
+		}
+	});
+	
+	var SDate = new Date();
+	var EDate = new Date();
+
+	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	$("#Sdatepicker").datepicker('setDate', "");
+	
+	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	$("#Edatepicker").datepicker('setDate', "");
+	
+	$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+			closeText: "<spring:message code='main.t3' />",
+			prevText: "<spring:message code='main.t0604' />",
+			nextText: "<spring:message code='main.t0605' />",
+			currentText: "<spring:message code='main.t0606' />",
+			monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+			             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+			             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+			             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+			monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+			                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+			                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+			                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+			dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+			           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+			           "<spring:message code='main.t0627' />"],
+			dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+			                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+			                "<spring:message code='main.t0627' />"],
+			dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+			              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+			              "<spring:message code='main.t0627' />"],
+			weekHeader: "Wk",
+			dateFormat: "yy-mm-dd",
+			firstDay: 0,
+			isRTL: false,
+			duration: 200,
+			showAnim: "show",
+			showMonthAfterYear: true
+	  };
+	  
+	  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 }
 
 window.onload = function() {
@@ -112,6 +262,7 @@ window.onload = function() {
 	width : 84%;
 	display : inline-block;
 	height : 100%;
+	overflow-x : scroll;
 }
 
 #mainmenu {
@@ -148,9 +299,23 @@ window.onload = function() {
 	font-size:12px; 
 	line-height:22px;
 }
+
+#dateListHeader2 .holyday{background-color: rgba(236, 195, 176, 0.40);}
+#dateListHeader2{text-align:center; height: 20px; padding: 2px 2px; }
+#dateListHeader2 th{height: 20px; width:20px; padding: 2px 0px;}
+#dateListHeader1{padding: 2px 4px; height: 20px;}
+#dateListHeader1 th{height: 20px;}
+.dateList td.holyday{text-align:center; background-color: #FFFAF2;}
+.dateList td, #dateListHeader2 th{text-align:center;}
+#workSchedule{table-layout: fixed; width: 100%}
 </style>
 </head>
 <body>
+<div>
+	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+	<a class="imgbtn" onclick="emptyDate(this)" style="margin-left:3px;"><span><spring:message code='ezPMS.t124' /></span></a>
+	<a class="imgbtn" onclick="setMemberScheduleList()" style="margin-left:3px;"><span><spring:message code='ezPMS.t1' /></span></a>
+</div>
 <div id="close" style="float:right">
 	<ul>
 		<li>
@@ -162,7 +327,7 @@ window.onload = function() {
 <div>
 	<div>
 	<table id="memberList" class="content">
-	<tr>
+	<tr style="height: 50px;">
 		<th><spring:message code='ezPMS.t137' /> <spring:message code='ezPMS.t63' /></th>
 		<th><spring:message code='ezPMS.t115' /></th>
 	</tr>
@@ -172,12 +337,16 @@ window.onload = function() {
 		<td>${member.userDeptname }</td>
 	</tr>
 	</c:forEach>
+	<tr>
+		<td colspan="2"><spring:message code='ezPMS.t336'/></td>
+	</tr>
 	</table>
 	</div>
 	<div id="calendar">
 	<table id="workSchedule" class="content">
-	<tr>
-	<c:forEach items="${dateList }" var="dateVO">
+	<tr id="dateListHeader1"></tr>
+	<tr id="dateListHeader2">
+	<%-- <c:forEach items="${dateList }" var="dateVO">
 		<c:choose>
 			<c:when test="${dateVO.holidayOrNot eq true}">
 				<th style="background-color: rgba(236, 195, 176, 0.40);">${dateVO.date}</th>
@@ -186,11 +355,11 @@ window.onload = function() {
 				<th>${dateVO.date}</th>
 			</c:otherwise>
 		</c:choose>
-	</c:forEach>
+	</c:forEach> --%>
 	</tr>
 	<c:forEach items="${memberList}" var="member">
-	<tr userId="${member.userId }">
-	<c:forEach items="${dateList}" var="dateVO">
+	<tr userId="${member.userId }" class="dateList">
+	<%-- <c:forEach items="${dateList}" var="dateVO">
 		<c:choose>
 			<c:when test="${dateVO.holidayOrNot eq true}">
 				<td date="${dateVO.date}" style="text-align:center; background-color: #FFFAF2;">&nbsp;</td>
@@ -200,9 +369,10 @@ window.onload = function() {
 			</c:otherwise>
 		</c:choose>
 		
-	</c:forEach>
+	</c:forEach> --%>
 	</tr>
 	</c:forEach>
+	<tr id='memberCNT'></tr>
 	</table>
 	</div>
 </div>
