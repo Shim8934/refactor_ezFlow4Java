@@ -29,7 +29,7 @@
 			}
 
 			#open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;}
-			.individual-memo { width:200px; height:200px; background:white; text-align:center; border:1px solid black; cursor: pointer; float: left;}
+			.individual-memo { width:200px; height:200px; background:white; text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 3px 3px 3px 38px;}
 			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);}
 			#selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;}
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
@@ -37,6 +37,7 @@
 			.selected-memoWrapper {display:table-cell;vertical-align:middle;}
 			#memo-btn{text-align:right;margin:0 auto;}
 			#slider-range{width:100px;float:left; margin-left:15px;}
+			.ui-widget-header{background: #0470e4}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -152,12 +153,12 @@
 		    function layerPopupOpacity(){
 		    	$("#slider-range").slider({
 		            step: 1,
-		            range: true,
+		            range: "max",
 		            min: 0,
 		            max: 5,
-		            values: [5],
+		            value: 5,
 		            slide: function( event, ui ) {
-		            	var opacityValue = ui.values[0];
+		            	var opacityValue = ui.value;
 		            
 		             	switch(opacityValue) {
 				        	case 0:
