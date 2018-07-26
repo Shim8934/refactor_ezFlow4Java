@@ -444,7 +444,11 @@
 	   		
 	   		// 담당자, 참여자, 조회자 인원을 표시
 	   		function setMemberCNT() {
-	   			$("#managerCNT").text(managerArray.length - 1 + "<spring:message code='ezPMS.t44'/>");
+	   			// 프로젝트 수정일 때에만 담당자리스트에서 관리자를 제외하고 인원수를 구함.
+	   			var mode = parent.opener.mode;
+	   			var managerCnt = parent.opener.mode === "edit" ? managerArray.length - 1 : managerArray.length;
+	   			
+	   			$("#managerCNT").text(managerArray.length + "<spring:message code='ezPMS.t44'/>");
 	   			$("#participantCNT").text(participantArray.length + "<spring:message code='ezPMS.t44'/>");
 	   			$("#viewerCNT").text(viewerArray.length + "<spring:message code='ezPMS.t44'/>");
 	   		}
