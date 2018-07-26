@@ -2,7 +2,7 @@ package egovframework.ezEKP.ezSchedule.service;
 
 public interface EzScheduleAdminService {
 	
-	public String scheduleGetShareManage(String lang, int tenantId) throws Exception;
+	public String scheduleGetShareManage(String lang, int tenantId, String companyID) throws Exception;
 
 	public void scheduleDelShareDept(String id, int tenantId) throws Exception;
 
