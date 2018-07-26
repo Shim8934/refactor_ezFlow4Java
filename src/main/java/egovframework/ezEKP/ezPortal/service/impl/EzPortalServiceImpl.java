@@ -2167,7 +2167,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	
 	public String getSubMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
 		logger.debug("getSubMenuHTML started");
-
+System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		List<PortalMenuItemItemsMenuItemsVO> result = getSubMenuHtml(pCallingMenuID, pUID, userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();

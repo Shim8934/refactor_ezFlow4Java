@@ -266,7 +266,12 @@ public class EzSystemAdminController {
 			startRow = -1;
 		}
 		
-		String companyId = req.getParameter("companyId"); // 선택된 회사
+		//String companyId = req.getParameter("companyId"); // 선택된 회사
+		/*
+		 * 2017.07.26 강민석
+		 * 로그인 히스토리에는 자신의 회사만 나오도록 수정
+		 * */
+		String companyId = userInfo.getCompanyID();
 		logger.debug("companyId : " + companyId);
 
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
