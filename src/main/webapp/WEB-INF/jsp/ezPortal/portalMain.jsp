@@ -29,7 +29,7 @@
 
 			#open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;}
 			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: gray;}
-			.individual-memo { width:200px; height:200px; background:white; text-align:center; border:1px solid black; cursor: pointer;}
+			.individual-memo { width:200px; height:200px; background:white; text-align:center; border:1px solid black; cursor: pointer; float: left;}
 			#selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;}
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
 			#maskDiv { position:absolute; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);}
@@ -155,7 +155,7 @@
 		    
 		    function save() {
 		    	var text = $("#textarea").val();
-		    	$("#memoList").prepend("<div class='individual-memo' style='float: left; margin: 10px'><img src='/images/close_xBtn.png'  style='display: none; float:right;'><div class='memo-text'>" + text + "</div></div>");
+		    	$("#memoList").prepend("<div class='individual-memo' style='margin: 10px'><img src='/images/close_xBtn.png'  style='display: none; float:right;'><div class='memo-text'>" + text + "</div></div>");
 		    	$("#memoList > div:first > .memo-text").attr("onclick", "read('" + text + "')");
 		    	$("#textarea").val('');
 		    	$("#maskDiv").css("display", "none");
