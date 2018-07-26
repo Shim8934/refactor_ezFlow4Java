@@ -187,7 +187,8 @@
 					}
 					
 					//연관문서리스트
-					var divElmt = document.getElementById("fileListDiv");
+					var divElmt       = document.getElementById("fileListDiv");
+					divElmt.innerHTML = "";
 					
 					for (var i = 0, len = relatedFile.length; i < len; i++) {
 						var spanElmt = document.createElement("span");
@@ -483,6 +484,11 @@
 					document.getElementById("fileModifyDivBttn").style.display = "none";
 					var relDocDivElmt = document.getElementById("rlWrapDiv");
 					if (relDocDivElmt.childElementCount > 1) {relDocDivElmt.removeChild(relDocDivElmt.lastElementChild);}
+					
+					//Remove events
+					var fileDivElmt         = document.getElementById("fileDiv");
+					var cloneNode           = fileDivElmt.cloneNode(true);
+					fileDivElmt.parentElement.replaceChild(cloneNode, fileDivElmt);
 					
 					getFileDetail();
 				}
