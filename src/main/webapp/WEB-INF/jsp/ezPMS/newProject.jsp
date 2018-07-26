@@ -295,7 +295,9 @@ var headManagerObj = {};
 		return;
 	}
 	
-	managerList.push({"userName" : headManagerName, "userId" : headManagerId, "memberRoleId" : 1, "userDeptname" : replaceString(headManagerDept), "userIdType" : "user"});
+	if(mode === "new"){
+		managerList.push({"userName" : headManagerName, "userId" : headManagerId, "memberRoleId" : 1, "userDeptname" : replaceString(headManagerDept), "userIdType" : "user"});
+	}
 	
 	var data = {
 			mode : mode,
