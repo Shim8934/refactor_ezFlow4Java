@@ -44,9 +44,9 @@
 		        var pLeft = (pwidth - 765) / 2;
 		        
 		        if(CrossYN())
-		            window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=500,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=642,width=765,top=" + pTop + ",left=" + pLeft, "");
 				else
-		            window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=500,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=642,width=765,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		    
 		    function vote_poll() {
