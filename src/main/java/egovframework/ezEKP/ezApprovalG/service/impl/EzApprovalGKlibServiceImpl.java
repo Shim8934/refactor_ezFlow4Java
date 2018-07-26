@@ -31,11 +31,10 @@ import egovframework.let.utl.fcc.service.KlibUtil;
  * @see EzApprovalGKlibService
  * 
  * @NOTE TODO: 아래는 리펙토링 대상 (중복 코드)<br>
- *       <code>
- * 	encryptEndDocFile(docId, companyId, tenantId);<br>
- * 	encryptEndAttachFiles(docId, companyId, tenantId);<br>
- * 	encryptHistoryDocFiles(docId, companyId, tenantId);<br>
- * 	encryptHistoryAttachFiles(docId, companyId, tenantId);</code>
+ *       {@link #encryptEndDocFile(String, String, int)}<br>
+ *       {@link #encryptEndAttachFiles(String, String, int)}<br>
+ *       {@link #encryptHistoryDocFiles(String, String, int)}<br>
+ *       {@link #encryptHistoryAttachFiles(String, String, int)}<br>
  * */
 @Service("EzApprovalGKlibService")
 public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService {
