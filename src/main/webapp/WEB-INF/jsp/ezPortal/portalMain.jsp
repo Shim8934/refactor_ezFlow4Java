@@ -194,7 +194,6 @@
 		    function save() {
 		    	var text = $("#textarea").val();
 		    	$("#memoList").prepend("<div class='individual-memo' style='margin: 10px'><img src='/images/close_xBtn.png'  style='display: none; float:right;'><div class='memo-text'>" + text + "</div></div>");
-		    	$("#memoList > div:first > .memo-text").attr("onclick", "read('" + text + "')");
 		    	$("#textarea").val('');
 		    	$("#maskDiv").css("display", "none");
 		    	$("#selected-memo").css("display", "none");
@@ -202,11 +201,11 @@
 		    	addremove();
 		    }
 		    
-		    function read(text) {
+/* 		    function read(text) {
 		        $("#maskDiv").css("display", "");
 		        $("#selected-memo").css("display", "");
 		        $("#textarea").val(text);
-		    }
+		    } */
 		    
 		    function closeMemo() {
 		    	$("#textarea").val('');
@@ -224,6 +223,12 @@
 		        
 		        $(".individual-memo").mouseleave(function(){
 		        	$(this).children("img").css("display", "none");
+		        });
+		        
+		        $(".individual-memo").click(function(){
+		        	$("#maskDiv").css("display", "");
+			        $("#selected-memo").css("display", "");
+			        $("#textarea").val($(this).children(".memo-text").html());
 		        });
 		    }
 
