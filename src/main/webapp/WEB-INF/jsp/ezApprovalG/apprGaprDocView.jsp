@@ -443,8 +443,8 @@
 	        }
 	        
 			function addRelatedCabinet() {
-				//* moon 2018.07.25
-				window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(400, 370));
+				//* moon 2018.07.26
+				window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 370));
 			}
 			
 			function getOpenWindowfeature(popUpW, popUpH) {
