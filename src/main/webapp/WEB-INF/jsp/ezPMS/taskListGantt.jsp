@@ -880,12 +880,14 @@
 // 	   			  var res = this.master.getResource(headManagerId);
 	   			  var res = this.master.getResource(this.assigs.length > 0 ? this.assigs[0].id : "");
 	   			  
-	   			  if (res) {
+	   			  /*if (res) {
 	   			  	ret = res.name;
-	   			  }
+	   			  } */
 	   			  
 	   			  if(this.assigs.length > 1) {
-	   				ret += ' 외 ' + (this.assigs.length - 1) + '명';
+	   				ret = "<spring:message code='ezPMS.t349' arguments='" + res.name + "," + (this.assigs.length - 1) +"'/>"
+	   			  } else {
+	   				ret = res.name;
 	   			  }
 	   			 
 	   			  return ret;
