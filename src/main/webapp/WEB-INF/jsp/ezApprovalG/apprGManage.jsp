@@ -576,7 +576,9 @@
 		            para[0] = pDocID;
 		            para[1] = pURL;
 		            var openLocation;
-		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+		            var ext = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
+		            // 2018.07.26 (KLIB) - ezd 확장자 처리
+		            if (ext == "hwp" || ext == "ezd") {
 		            	if (isIE()) {
 			            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 		                } else {
@@ -627,7 +629,8 @@
 		
 		            Html1 = Html.substring(Html.length - 3);
 		
-		            if (Html1 == "hwp") {
+		            // 2018.07.26 (KLIB) - ezd 확장자 처리
+		            if (Html1 == "hwp" || Html1 == 'ezd') {
 		                if (FunctionType == "000")                   //한글양식 미결 문서
 		                    openServerDraftUI("REDRAFT", pCurSelRow);
 		                else
@@ -693,10 +696,11 @@
 		                var pDocID = pCurSelRow.getAttribute("DATA1");
 		                var pURL = pCurSelRow.getAttribute("DATA3");
 		                var openLocation = "";
+		                var ext = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
 		                
-		                if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "doc") {
+		                if (ext == "doc") {
 		                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezConvOut_word_Cross.aspx?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pURL);
-		                } else if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+		                } else if (ext == "hwp" || ext == "ezd") { // 2018.07.26 (KLIB) - ezd 확장자 처리
 		                    if (CrossYN() && !(/netscape/i.test(navigator.appName) && /trident/i.test(navigator.userAgent) || /msie/i.test(navigator.userAgent))) {
 		                        alert(strLang1103);
 		                        return;
