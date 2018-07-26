@@ -15,12 +15,12 @@
 			<c:if test="${activeFlag == '1'}">
 				<div class="addRelatedConfig" id="addRelated">
 					<a class="cabRadio">
-						<input type="radio" name="checkCabinet" id="1"/>
-						<label for="1"><span><spring:message code="ezCabinet.t126"/></span></label><br>
+						<input type="radio" name="checkCabinet" id="auto"/>
+						<label for="auto"><span><spring:message code="ezCabinet.t126"/></span></label><br>
 					</a>
 					<a class="cabRadio">
-						<input type="radio" name="checkCabinet" id="2" checked="checked"/>
-						<label for="2"><span><spring:message code="ezCabinet.t127"/></span></label>
+						<input type="radio" name="checkCabinet" id="manual" checked="checked"/>
+						<label for="manual"><span><spring:message code="ezCabinet.t127"/></span></label>
 					</a>
 				</div>
 			</c:if>
@@ -66,82 +66,143 @@
 					if (cabMgConfig) {
 						var listMgConfig        = cabMgConfig.children;
 						listMgConfig[0].onclick = function(e) {autoSelect();};
-						listMgConfig[1].onclick = function(e) {directSelect();};
+						listMgConfig[1].onclick = function(e) {manualSelect();};
 					}
 					
 					var cabMgBttnElmt        = document.getElementById("cabMgDivBttn");
 					var listMgBttns          = cabMgBttnElmt.children;
 					
-					listMgBttns[0].onclick   = function(e) {addRelatedCabinet();};
+					listMgBttns[0].onclick   = function(e) {documentSavehandler();};
 					listMgBttns[1].onclick   = function(e) {closeWindow();};
 				}
 				
 				function autoSelect(){
-					var cabinetMainDiv = document.getElementById("cabMgTreeId");
-					var fogPanel = document.getElementById("fogPanel");
-					fogPanel.style.display = "";
+					var cabinetMainDiv                   = document.getElementById("cabMgTreeId");
+					var fogPanel                         = document.getElementById("fogPanel");
+					fogPanel.style.display               = "";
 					cabinetMainDiv.style.backgroundColor = "#f1f1f1";
 				}
 				
-				function directSelect(){
-					var fogPanel = document.getElementById("fogPanel");
-					var cabinetMainDiv = document.getElementById("cabMgTreeId");
+				function manualSelect(){
+					var fogPanel                         = document.getElementById("fogPanel");
+					var cabinetMainDiv                   = document.getElementById("cabMgTreeId");
 					cabinetMainDiv.style.backgroundColor = "#fff";
-					fogPanel.style.display = "none";
-					console.log("${module}");
+					fogPanel.style.display               = "none";
 				}
 				
 				function closeWindow() {window.close();}
 				
-				function addRelatedCabinet() {
-					var msgToGot = window.opener.document.getElementById("MsgToGot").value;
-					var mailSubject = window.opener.document.getElementById("mailSubject").value;
+				function documentSavehandler() {
+					var saveMode     = 1; //Mode 0 : auto save, mode 1: manual
+					var cabinetId    = null;
+					var checkedInput = document.querySelector("input[name='checkCabinet']:checked");
+					if (checkedInput) {saveMode = checkedInput.id == "auto" ? 0 : 1;}
+					
+					if (saveMode == 1) {
+						var cabinetTree  = document.getElementById("cabinetMgTree");
+						var selectedNode = cabinetTree.querySelector("span[class='selectedNode']");
+						
+						if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
+						
+						cabinetId        = selectedNode.getAttribute("role");
+					}
+					
+					switch(moduleType) {
+						case "apprv" : saveApprovalDocument(saveMode, cabinetId) ; break;
+						case "board" : saveBoardDocument(saveMode, cabinetId)    ; break;
+						case "email" : saveEmailDocument(saveMode, cabinetId)    ; break;
+						case "schedl": saveScheduleDocument(saveMode, cabinetId) ; break;
+						case "todo"  : saveTodoDocument(saveMode, cabinetId)     ; break;
+						case "commu" : saveCommunityDocument(saveMode, cabinetId); break;
+						case "option": saveOptionDocument(saveMode, cabinetId)   ; break;
+						case "projt" : saveProjectDocument(saveMode, cabinetId)  ; break;
+						case "resrc" : saveResourceDocument(saveMode, cabinetId) ; break;
+						case "addrs" : saveAddressDocument(saveMode, cabinetId)  ; break;
+						default      : alert(CabinetMessages.strError)           ; return;
+					}
+				}
+				
+				function saveEmailDocument(saveMode, cabinetId) {
+					var msgToGot     = window.opener.document.getElementById("MsgToGot").textContent;
+					var mailSubject  = window.opener.document.getElementById("mailSubject").textContent;
 					var messageFrame = window.opener.document.getElementById("message");
 					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
 					var normalScreen = contentWd.document.getElementById("normalScreen").innerHTML;
-					var ifrmPreViewRayer = contentWd.document.getElementById("ifrmPreViewRayer");
-					//console.log(contentWd.document.body.innerHTML);
+					var url          = "/ezCabinet/saveRelatedEmail.do";
+					var data         = {type: moduleType, mode: saveMode, title : mailSubject, author: msgToGot, content: JSON.stringify(normalScreen)};
 					
-					if(document.getElementById("1").checked){
-						console.log(normalScreen);
-						console.log(mailSubject);
-						console.log(msgToGot);
-					    
-						$.ajax({
-							type: "POST",
-							url: "/ezCabinet/saveRelatedItem.do",
-							data: {
-								"title"       : mailSubject,
-								"author"      : msgToGot,
-								"cabinetId"   : cabinetId,
-								
-								"normalScreen": JSON.stringify(normalScreen)
-							},
-							dataType: "JSON",
-							async: false,
-							success : function(data) {
-								var code = data.code;
-								
-								switch(code) {
-									case 0 : afterSaveSuccessfully()            ; break;
-									case 1 : alert(CabinetMessages.strParamErr) ; break;
-									case 2 : alert(CabinetMessages.strError)    ; break;
-									case 3 : alert(CabinetMessages.strPerm)     ; break;
-									case 4 : alert(CabinetMessages.strError)    ; break;
-									default: alert(CabinetMessages.strError)    ; return;
-								}
-							},
-							error : function(error) {
-								alert(CabinetMessages.strError + error);
-							}
-						}); 
-						
-						
-					}else if(document.getElementById("2").checked){
-						
+					if (saveMode == 1) {data.cabinetId = cabinetId;}
+					
+					makeAjaxCall(data, "GET", url, afterSaveDocument, null, true, null);
+				}
+				
+				function saveApprovalDocument() {
+					//Add code here
+				}
+				
+				function saveBoardDocument() {
+					//Add code here
+				}
+				
+				function saveScheduleDocument() {
+					//Add code here
+				}
+				
+				function saveTodoDocument() {
+					//Add code here
+				}
+				
+				function saveCommunityDocument() {
+					//Add code here
+				}
+				
+				function saveOptionDocument() {
+					//Add code here
+				}
+				
+				function saveProjectDocument() {
+					//Add code here
+				}
+				
+				function saveResourceDocument() {
+					//Add code here
+				}
+				
+				function saveAddressDocument() {
+					//Add code here
+				}
+				
+				function afterSaveDocument(data) {
+					var code = data.code;
+					
+					switch(code) {
+						case 0 : afterSaveSuccessfully()            ; break;
+						case 1 : alert(CabinetMessages.strParamErr) ; break;
+						case 2 : alert(CabinetMessages.strError)    ; break;
+						case 3 : alert(CabinetMessages.strPerm)     ; break;
+						case 4 : alert(CabinetMessages.strError)    ; break;
+						default: alert(CabinetMessages.strError)    ; return;
 					}
-					
-					function afterSaveSuccessfully() {alert(CabinetMessages.strSave); closeWindow();}
+				}
+				
+				function afterSaveSuccessfully() {alert(CabinetMessages.strSave); closeWindow();}
+				
+				function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {
+					$.ajax({
+						type: ajaxType,
+						url: ajaxUrl,
+						data: ajaxData,
+						dataType: "JSON",
+						async: asyncMode != false ? true : false,
+						success : function(data) {
+							handleSuccess(data, moreParam);
+						},
+						error : function(error) {
+							if (handleError != null) {handleError();}
+							
+							alert(CabinetMessages.strError);
+						}
+					});
 				}
 				
 				return {init : initEvents};
