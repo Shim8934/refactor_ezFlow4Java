@@ -19,8 +19,8 @@
 			.imgPopup{position: relative; float: left; max-width: 400px; max-height: 400px; zoom: 1; cursor:pointer;}
 			.imgPopupMagnify{position: relative; float: left; cursor: pointer;}
 			.imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px;}
-			.imgPopupBoxMagnify{width: 685px;height: 636px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px; z-index: 5;}
-			.imgPopupDivMagnify{width: 655px; max-width:655px; height:558px; overflow:auto; margin:0px auto;}
+			.imgPopupBoxMagnify{width: 685px;height: 614px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px; z-index: 5;}
+			.imgPopupDivMagnify{width: 655px; max-width:650px; height:530px; overflow:auto; margin:0px auto;}
 			.imgPopupDiv{width:400px; height:400px; margin:0px auto;}
 			.imgPopupBoxOff, .imgPopupOff{display: none;}
 			.imgNotAttached{vertical-align: middle; margin: 0px auto; display: block; border: 1px dotted #cfcfcf; width: 33px; padding: 5px 2px 2px 5px;}
@@ -711,7 +711,7 @@
 		    			$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","");
 		    			
 	    				var imgPB_LeftOffset = (window.innerWidth - imgPopupBox.width()) / 2;
-	    	    		var imgPB_TopOffset = ((window.innerHeight - 100) - imgPopupBox.height()) / 2  + window.pageYOffset;
+	    	    		var imgPB_TopOffset = ((window.innerHeight - 118) - imgPopupBox.height()) / 2  + window.pageYOffset;
 	    	    		var imgP_LeftOffset = (imgPopup.parent().width() - imgPopup.width()) / 2;
 	    	    		
 	    	    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
@@ -723,7 +723,7 @@
 	    			$("#imgPopupDiv, #imgPopupBox, #imgPopup").css("display","");
 	    			
 	    			var imgPB_LeftOffset = (window.innerWidth - imgPopupBox.width()) / 2;
-    	    		var imgPB_TopOffset = ((window.innerHeight - 100) - imgPopupBox.height()) / 2  + window.pageYOffset;
+    	    		var imgPB_TopOffset = ((window.innerHeight - 118) - imgPopupBox.height()) / 2  + window.pageYOffset;
     	    		var imgP_LeftOffset = (imgPopup.parent().width() - imgPopup.width()) / 2;
     	    		
     	    		imgPopupBox.css({"left": imgPB_LeftOffset, "top": imgPB_TopOffset});
@@ -759,10 +759,10 @@
 	    		
 	    		//imgPopupBox frame 가운데로 위치 조정.
 	    		$imgPopupBox.css("left",(window.innerWidth - $imgPopupBox.width()) / 2);
-	    		var iPBTopOffset = ((window.innerHeight - 100) - $imgPopupBox.height()) / 2 + window.pageYOffset;
+	    		var iPBTopOffset = ((window.innerHeight - 118) - $imgPopupBox.height()) / 2 + window.pageYOffset;
 	    		
 	    		if(iPBTopOffset < 0){
-	    			$imgPopupBox.css("top", 0);
+	    			$imgPopupBox.css("top", 10);
 	    		}
 	    		else{
 		    		$imgPopupBox.css("top", iPBTopOffset);
