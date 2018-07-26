@@ -36,12 +36,12 @@
 			};
 			
 			$(document).ready(function() {
-	            if (document.getElementById("ListCompany").length == 0)
-	                alert("<spring:message code = 'ezPersonal.t106' />");
-	            else {
-	                document.getElementById("ListCompany").selectedIndex = 0;
+	            if (document.getElementById("ListCompany").length == 0) {
+					alert("<spring:message code = 'ezPersonal.t106' />");
 	            }
-	
+	            else {
+// 	                document.getElementById("ListCompany").selectedIndex = 0;
+	            }
 	            makelist();
 	        });
 			
@@ -351,7 +351,7 @@
 	                <li style="background: none">
 	                    <SELECT id="ListCompany" name="ListCompany" onChange="company_change()">
 			        	<c:forEach var="item" items="${list}">
-		            		<option value="<c:out value='${item.cn}'/>" ><c:out value='${item.displayName}'/></option>
+							<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 		            	</c:forEach>
 			        	</SELECT>
 	                </li>
