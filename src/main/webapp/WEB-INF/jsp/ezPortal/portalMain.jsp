@@ -152,12 +152,12 @@
 		    function layerPopupOpacity(){
 		    	$("#slider-range").slider({
 		            step: 1,
-		            range: true,
+		            range: "max",
 		            min: 0,
 		            max: 5,
-		            values: [5],
+		            value: 5,
 		            slide: function( event, ui ) {
-		            	var opacityValue = ui.values[0];
+		            	var opacityValue = ui.value;
 		            
 		             	switch(opacityValue) {
 				        	case 0:
