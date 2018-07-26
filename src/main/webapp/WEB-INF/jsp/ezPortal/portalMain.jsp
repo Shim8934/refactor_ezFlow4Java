@@ -153,7 +153,7 @@
 		    
 		    function save() {
 		    	var text = $("#textarea").val();
-		    	$("#memoList").preppend("<div class='individual-memo' style='float: left; margin: 10px'>" + text + "</div>");
+		    	$("#memoList").prepend("<div class='individual-memo' style='float: left; margin: 10px'>" + text + "</div>");
 		    	$("#memoList > div").attr("onclick", "read('" + text + "')");
 		    	$("#textarea").val('');
 		    	$("#maskDiv").css("display", "none");
