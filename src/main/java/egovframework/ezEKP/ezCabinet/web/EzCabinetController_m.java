@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_m;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -26,29 +26,7 @@ public class EzCabinetController_m {
 	private CommonUtil commonUtil;
 	
 	@Autowired
-	private EzCabinetRestService cabinetRestService;
-	
-	@RequestMapping(value = "/ezCabinet/cabinetAddRelated.do")
-	public String jspGetCabinetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model)  throws Exception {
-		logger.debug("jspGetCabinetFileDetail started");
-		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String module        = request.getParameter("module") != null ? request.getParameter("module") : "";
-		
-		if (module.equals("")) {
-			return "ezCabinet/cabinetAccessDenied";
-		}
-		
-		JSONObject resultObj = cabinetRestService.checkUserActiveModules(request, user.getId(), module);
-		
-		if (resultObj.get("status").toString().equals("ok")) {
-			String activeFlag = resultObj.get("active").toString();
-			model.addAttribute("activeFlag", activeFlag);
-		}
-		
-		model.addAttribute("module", module);
-		logger.debug("jspGetCabinetFileDetail ended");
-		return "ezCabinet/cabinetAddRelated";
-	}
+	private EzCabinetRestService_m cabinetRestService_m;
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezCabinet/saveRelatedApproval.do", method = RequestMethod.POST)
@@ -56,18 +34,16 @@ public class EzCabinetController_m {
 	public String jsonSaveRelatedApproval(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveRelatedApproval is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String title           = request.getParameter("title")       != null ? request.getParameter("title")       : "";
-		String author          = request.getParameter("author")      != null ? request.getParameter("author")      : "";
-		String normalScreen    = request.getParameter("normalScreen")!= null ? request.getParameter("normalScreen"): "";
+		String divContent      = request.getParameter("normalScreen")!= null ? request.getParameter("divContent"):     "";
 		JSONObject resultObj   = new JSONObject();
 		
-		if (title.equals("")) {
+		if (divContent.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.saveRelatedApproval(request, userInfo.getId(), title, author, normalScreen);
+		resultObj = cabinetRestService_m.saveRelatedApproval(request, userInfo.getId(), divContent);
 		
 		logger.debug("jsonSaveRelatedApproval finishes!");
 		return resultObj.toString();

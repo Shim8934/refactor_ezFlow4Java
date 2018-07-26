@@ -120,6 +120,7 @@
 						case "addrs" : saveAddressDocument(saveMode, cabinetId)  ; break;
 						default      : alert(CabinetMessages.strError)           ; return;
 					}
+					
 				}
 				
 				function saveEmailDocument(saveMode, cabinetId) {
@@ -136,12 +137,17 @@
 					makeAjaxCall(data, "GET", url, afterSaveDocument, null, true, null);
 				}
 				
-				function saveApprovalDocument() {
-					//Add code here
+				function saveApprovalDocument(saveMode, cabinetId) {
+					var messageFrame = window.opener.document.getElementById("message");
+					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
+					var divContent   = contentWd.document.getElementById("div_Content").innerHTML;
 					var url          = "/ezCabinet/saveRelatedApproval.do";
-					var data         = {type: moduleType, mode: saveMode};
+					var data         = {type: moduleType, mode: saveMode, content: JSON.stringify(divContent)};
+					console.log(data);
 					
 					if (saveMode == 1) {data.cabinetId = cabinetId;}
+					
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
 				function saveBoardDocument() {
