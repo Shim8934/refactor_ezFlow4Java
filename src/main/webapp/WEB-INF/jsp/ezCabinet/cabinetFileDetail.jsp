@@ -497,8 +497,10 @@
 					var fileDivElmt         = document.getElementById("fileDiv");
 					var divInformElmt       = fileDivElmt.querySelector("div[class='divInform']");
 					
-					while (divInformElmt.firstChild) {
-						divInformElmt.removeChild(divInformElmt.firstChild);
+					if (divInformElmt) {
+						while (divInformElmt.firstChild) {
+							divInformElmt.removeChild(divInformElmt.firstChild);
+						}
 					}
 					
 					var cloneNode           = fileDivElmt.cloneNode(true);
