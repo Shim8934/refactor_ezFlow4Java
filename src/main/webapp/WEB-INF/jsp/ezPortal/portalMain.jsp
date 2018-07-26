@@ -182,8 +182,6 @@
 			    	$(this).children("img").click(function(){
 			    		$(this).parent().remove();
 			    	})
-			    	// $(this).prepend("<img src='/images/close_xBtn.png'  style='display: none; float:right;' onclick='$(this).remove()'>");
-		          //  $(this).attr("background-position", "right top");
 		        });
 		        
 		        $(".individual-memo").mouseleave(function(){
