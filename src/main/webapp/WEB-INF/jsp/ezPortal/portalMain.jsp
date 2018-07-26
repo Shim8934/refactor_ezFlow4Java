@@ -7,6 +7,7 @@
 	<head>
 		<title>::: ezEKP Java :::</title>
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
@@ -28,13 +29,14 @@
 			}
 
 			#open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;}
-			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: gray;}
 			.individual-memo { width:200px; height:200px; background:white; text-align:center; border:1px solid black; cursor: pointer; float: left;}
+			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);}
 			#selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;}
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
 			#maskDiv { position:absolute; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);}
 			.selected-memoWrapper {display:table-cell;vertical-align:middle;}
 			#memo-btn{text-align:right;margin:0 auto;}
+			#slider-range{width:100px;float:left; margin-left:15px;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -142,9 +144,44 @@
 		        	 containment: '#layer-popup'
 		        });
 		        
-		        
+		        layerPopupOpacity();
+
 		     });
 			
+		    function layerPopupOpacity(){
+		    	$("#slider-range").slider({
+		            step: 1,
+		            range: true,
+		            min: 0,
+		            max: 5,
+		            values: [5],
+		            slide: function( event, ui ) {
+		            	var opacityValue = ui.values[0];
+		            
+		             	switch(opacityValue) {
+				        	case 0:
+				        		opacityValue = 0;
+				            	break;
+				            case 1:
+				            	opacityValue = 0.2;
+				            	break;
+				            case 2:
+				            	opacityValue = 0.4;
+				            	break;
+				            case 3:
+				            	opacityValue = 0.6;
+				            	break;
+				            case 4:
+				            	opacityValue = 0.8;
+				            	break;
+				            case 5:
+				            	opacityValue = 1;
+				            	break;
+				          }
+		             	$("#layer-popup").css("background-color", "rgba(231,231,231," + opacityValue + ")");
+		            }
+		        });
+		    }
 		    function newMemo() {
 		        $("#maskDiv").css("display", "");
 		        $("#selected-memo").css("display", "");
@@ -210,6 +247,7 @@
 				<div style="text-align: center">
 					
 					<div style="text-align: right">
+						<div id="slider-range"></div>
 						<button id="change-mode">모드</button>
 						<button id="new-memo" onclick="newMemo()">추가</button>
 						<button id="close-button">닫기</button>
