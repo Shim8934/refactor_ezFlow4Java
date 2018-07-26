@@ -228,7 +228,7 @@
 
 /* cabinet share */
 .cabShareInf {padding: 15px;}
-.cabShareInf tr th {width: 20px;}
+.cabShareInf tr th {width: 50px;}
 .cabShareInf tr td {padding-left: 10px;}
 .cabShareSearPanel {background-color: #f8f8fa; margin-top: 15px; border: 1px solid #eaeaea; margin: 10px 0px 0px 0px; padding: 0px; clear: both; overflow: hidden; z-index: 1;}
 .cabShareSearPanelSub {border-bottom: 0px; height:26px; list-style: none; margin: 0px; padding: 0px;}
