@@ -59,7 +59,7 @@
 	 									<x:out select = '$xml/PERCENT' />
 	 								</c:set>
 	 								
- 									<td style="width:<c:out value='${percent * 4}' />px;background-color:#68bbef"></td>
+ 									<td style="width:<c:out value='${percent * 4}' />px;background-color:rgb(245, 117, 120)"></td>
                                  	<td style="width:<c:out value='${400 - percent * 4}' />px;"></td>
                               	</tr> 
 	 						</table>

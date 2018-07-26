@@ -22,23 +22,27 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
         }
 
     	var result = "";
-    	
-    	$.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/ezApprovalG/getCabinetSN.do",
-    		data : {
-    			docID : pDocID,
-    			deptID : pDeptID
-    		},
-    		success: function(xml){
-    			result = xml;
-    		}
-    	});
-
-        var dataNodes = GetChildNodes(loadXMLString(result));
-        var SN = getNodeText(dataNodes[0]);
+    	var SN = ""; 
+    	var dataNodes = "";
+    	if (isHWP == "Y" && nonElecRec != "Y") {
+	    	$.ajax({
+	    		type : "POST",
+	    		dataType : "text",
+	    		async : false,
+	    		url : "/ezApprovalG/getCabinetSN.do",
+	    		data : {
+	    			docID : pDocID,
+	    			deptID : pDeptID
+	    		},
+	    		success: function(xml){
+	    			result = xml;
+	    		}
+	    	});
+	    	dataNodes = GetChildNodes(loadXMLString(result));
+	    	SN = getNodeText(dataNodes[0]);
+    	} else {
+    		SN = fractionsymbol;
+    	}
 
         if (SN == "") {
             DocNumCode = "";
@@ -69,13 +73,17 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
         		return true;
         	} else {
         		if (isHWP == "Y") {
-                    HwpCtrl.SetFieldText(name, fractionsymbol.substr(0, fractionsymbol.lastIndexOf('-') + 1) + SN);
-                    var tempNumString = SN;
-                    var i = 0;
-                    var templen = tempNumString.length;
-                    for (i = 0; i < 6 - templen; i++)
-                        tempNumString = "0" + tempNumString;
-                    DocNumCode = pDeptID + tempNumString;
+        			if (nonElecRec != "Y") {
+	                    HwpCtrl.SetFieldText(name, fractionsymbol.substr(0, fractionsymbol.lastIndexOf('-') + 1) + SN);
+	                    var tempNumString = SN;
+	                    var i = 0;
+	                    var templen = tempNumString.length;
+	                    for (i = 0; i < 6 - templen; i++)
+	                        tempNumString = "0" + tempNumString;
+	                    DocNumCode = pDeptID + tempNumString;
+        			} else {
+        				DocNumCode = SN;
+        			}
 
                     if (HwpCtrl.CheckFieldExist("enforcedate"))
                         if (trim(HwpCtrl.GetFieldText("enforcedate")) == "")

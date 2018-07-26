@@ -32,6 +32,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery.js"></script>
 		<!-- <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script> -->
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
 		
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    window.onload = window_onload;
@@ -750,22 +751,32 @@
 		        
 		        if (approvalFlag == "G") {
 			        if (oArrRows.length > 0) {
-			            var pCurSelRow = oArrRows[0];
-			            if (pCurSelRow.cells.length >= 7) {
-			                if (pCurSelRow.cells[6].innerHTML == "<spring:message code='ezApprovalG.t1731'/>") {
-			                    var pAlertContent = "<spring:message code='ezApprovalG.t1732'/>";
-			                    //OpenAlertUI(pAlertContent);
-			                    alert(pAlertContent);
-			                    return;
-			                }
-			            }
-			            if (pListTypeValue == "1") {
-			                g_selReturn = "Y";
-			                OpenReceiveENDDraftUI(pCurSelRow, "REDRAFT");
-			            }
-			            else
-			                OpenOpinionUI(pCurSelRow, "HeSong");
-			        }
+			        	if (checkNonElecRec(oArrRows[0].getAttribute("DATA7"))) {
+			        		alert("비전자문서는 회송이 불가능 합니다.");
+			        		return;
+			        		/* if (confirm("삭제 하시겠습니까 ?")) {
+			        			RemoveSusinNonElecRecDoc(oArrRows[0].getAttribute("DATA1"));
+			        		} else {
+				        		return;
+			        		} */
+			        	} else {
+				            var pCurSelRow = oArrRows[0];
+				            if (pCurSelRow.cells.length >= 7) {
+				                if (pCurSelRow.cells[6].innerHTML == "<spring:message code='ezApprovalG.t1731'/>") {
+				                    var pAlertContent = "<spring:message code='ezApprovalG.t1732'/>";
+				                    //OpenAlertUI(pAlertContent);
+				                    alert(pAlertContent);
+				                    return;
+				                }
+				            }
+				            if (pListTypeValue == "1") {
+				                g_selReturn = "Y";
+				                OpenReceiveENDDraftUI(pCurSelRow, "REDRAFT");
+				            }
+				            else
+				                OpenOpinionUI(pCurSelRow, "HeSong");
+					        }
+			        	}
 			    } else {
 			    	if (oArrRows != 0) {
 		                var pCurSelRow = oArrRows[0];
@@ -1702,6 +1713,17 @@
 		    function initselyear() {
 		        $('#sel_year').selectmenu('close');
 		    }
+			<%-- 비전자문서 등록 --%>
+			function btnNonElecRec_onclick() {
+				if (isIE()) {
+					var url = "/ezApprovalG/draftuiHWP.do?formURL=";
+				    var form = "/files/upload_approvalG/form/2018000000.hwp";
+				    var docInfo = "&draftFlag=DRAFT&formDocType=003&susinSN=0&docState=&listType=4&aprState=&isTmpDoc=&nonElecRec=Y";
+				   	window.open(url + form + docInfo, "", GetOpenWindowfeature(1145, 1000));
+                } else {
+                	alert("비전자문서 등록은 IE에서만 가능합니다.");
+                }
+			}
 		    
 		</script>
 	</head>
@@ -1726,6 +1748,7 @@
 				<!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" ></li> -->
 				<li id="tbtnApprove" style="DISPLAY:none"><span id="btnApprove" onclick="return  btnApprove_onclick('0')" ><spring:message code='ezApprovalG.t1'/></span></li>
 				<li id="tbtnApprove1" style="DISPLAY:none"><span id="btnApprove1"  onclick ="return  btnApprove_onclick('1')" ><spring:message code='ezApprovalG.t1739'/></span></li>
+				<li id="tbtnNonElecRec" style="DISPLAY:none"><span id="btnNonElecRec" onclick="return btnNonElecRec_onclick()" >비전자문서등록</span></li><%-- 비전자문서 등록 --%>
 				<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>
 				<li id="tbtnApprove2" style="DISPLAY:none"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
 				<li id="tbtnReceipt"  style="DISPLAY:none"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>

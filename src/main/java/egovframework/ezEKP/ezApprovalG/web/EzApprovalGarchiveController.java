@@ -1297,7 +1297,6 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.getRecSCInfo(xmlDom,userInfo.getLang(),userInfo);
-		
 		logger.debug("getRecSCInfo ended");
 		
 		return result;
@@ -2262,7 +2261,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			File file = new File(realPath + savePath);
 			FileOutputStream fop = new FileOutputStream(file);
 			// get the content in bytes
-			fop.write(saveXML.toString().getBytes("utf-8"));
+			fop.write(saveXML.toString().getBytes("euc-kr"));
 			fop.flush();
 			fop.close();
 
@@ -2305,21 +2304,21 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		Document xmlDom = commonUtil.convertStringToDocument(extXML);
 		String mapPath = commonUtil.getRealPath(request);
 
-		xmlDom.getElementsByTagName("send-gw").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-gw").item(0).getTextContent().getBytes("UTF-8")));
-		xmlDom.getElementsByTagName("send-name").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-name").item(0).getTextContent().getBytes("UTF-8")));
-		xmlDom.getElementsByTagName("title").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("title").item(0).getTextContent().getBytes("UTF-8")));
-		xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getNodeValue().getBytes("UTF-8")));
-		xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getNodeValue().getBytes("UTF-8")));
+		xmlDom.getElementsByTagName("send-gw").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-gw").item(0).getTextContent().getBytes("euc-kr")));
+		xmlDom.getElementsByTagName("send-name").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-name").item(0).getTextContent().getBytes("euc-kr")));
+		xmlDom.getElementsByTagName("title").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("title").item(0).getTextContent().getBytes("euc-kr")));
+		xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getNodeValue().getBytes("euc-kr")));
+		xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getNodeValue().getBytes("euc-kr")));
 
 		for (int i = 0; i < xmlDom.getElementsByTagName("content").getLength(); i++) {
 				switch (xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-role").getNodeValue()) {
 				case "pubdoc":
-					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String("pubdoc.xml".getBytes("UTF-8")));
-					xmlDom.getElementsByTagName("content").item(i).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getTextContent().replace("&lt;", "<").replace("&gt;", ">").replace("\n", "").replace("\t", "").replace("&amp;", "&").getBytes("UTF-8")));
+					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String("pubdoc.xml".getBytes("euc-kr")));
+					xmlDom.getElementsByTagName("content").item(i).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getTextContent().replace("&lt;", "<").replace("&gt;", ">").replace("\n", "").replace("\t", "").replace("&amp;", "&").getBytes("euc-kr")));
 					break;
 
 				default:
-					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").getNodeValue().getBytes("UTF-8")));
+					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").getNodeValue().getBytes("euc-kr")));
 					break;
 				}
 		}

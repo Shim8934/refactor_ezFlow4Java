@@ -280,7 +280,7 @@ function btnChangeCabinet_onclick() {
     selectcabinet_cross_dialogArguments[0] = para;
     selectcabinet_cross_dialogArguments[1] = btnChangeCabinet_onclick_Complete;
 
-    DivPopUpShow(975, 500, url);
+    DivPopUpShow(980, 620, url);
 
 }
 
@@ -296,7 +296,7 @@ function InitAVTypeTD(nodeXml, objTD1, objTD2) {
     var szHtm1 = "";
     var szHtm2 = "";
     var i;
-    szHtm1 = "<div style=\"width:100%;height:140px;overflow:auto;\">";
+    szHtm1 = "<div style=\"width:99%;height:130px;padding: 3px 0px 0px 2px;\">";
 
     for (i = 0; i < nodeXml.length; i++) {
         if (i % 2 == 0) {

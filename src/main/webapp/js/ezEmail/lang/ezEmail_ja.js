@@ -308,7 +308,7 @@ var strLangKMS08 = "フォルダはアップロードすることができませ
 var strLangKYJ01 = "選択したメールがありません。";
 var strLangKYJ02 = "再利用するメールを選択してください。";
 var strLangKYJ03 = "スペースは入力できません。";
-	
+var strLangLSD02 = "選択した部署に部署員が登録されていないため、宛先指定できません。";
 
 function GetLocalTime(Offset , pDateTime)
 {

@@ -79,7 +79,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String aprState = request.getParameter("aprState");
 		String isTmpDoc = request.getParameter("isTmpDoc");
 		String connkey = request.getParameter("connkey");
+		String nonElecRec = request.getParameter("nonElecRec");
 		String docSN = "";
+		
+		if (nonElecRec == null) {
+			nonElecRec = "";
+		}
 		
 		if (listType.equals("21")) {
 			if (request.getParameter("docSN") != null) {
@@ -126,6 +131,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("connkey", connkey);
 		model.addAttribute("docSN", docSN);
 		model.addAttribute("isHWP", "Y");
+		model.addAttribute("nonElecRec", nonElecRec);
 		
 		LOGGER.debug("draftuiHWP ended");
 		
@@ -151,6 +157,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String orgAprUserDeptID = request.getParameter("deptID");
 		String docID = request.getParameter("docID");
 		String tempUserID = userInfo.getId();
+		String orgDocID = request.getParameter("orgDocID");
 
 		String allFlag = request.getParameter("allFlag");
 		//hwp 툴바가 6줄인데 맨윗줄 부터 '1' 이면 사용 '0' 이면 사용하지 않는다. ex)'100001' 맨위랑 맨아래 툴바만 표시
@@ -158,6 +165,10 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String docState = request.getParameter("docState");
+		
+		if (orgDocID == null) {
+			orgDocID = "";
+		}
 
         if (userInfo.getRollInfo().indexOf("a=1") > -1) {
         	susinAdmin = "YES";
@@ -188,6 +199,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
         String optjunKyukInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE");
              
+        String nonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+        if (!nonElecRec.equals("")) {
+        	model.addAttribute("nonElecRec", nonElecRec);
+        }
+        
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("approvalPWD", approvalPWD);
         model.addAttribute("useEditor", useEditor);
@@ -568,6 +584,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("pass", pass);
 		
 		LOGGER.debug("ezViewEnd_HWP ended");
+		
 		return "ezApprovalG/apprGviewEndHWP";
 	}
 	
@@ -637,6 +654,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			}
 		}
 		
+		// 비전자문서 구분 값  (return >> "Y" = TRUE, "" = FALSE)
+		String isNonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		model.addAttribute("optSignDateFormat", optSignDateFormat);
 		model.addAttribute("optIsSplit", optIsSplit);
 		model.addAttribute("optSplitKind", optSplitKind);
@@ -651,6 +671,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("isNonElecRec", isNonElecRec);
 		model.addAttribute("approvalRoot", approvalRoot);
 		
 		LOGGER.debug("ezRecevGSusinHWP ended");

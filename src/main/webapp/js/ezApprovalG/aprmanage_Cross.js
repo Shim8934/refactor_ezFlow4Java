@@ -800,7 +800,7 @@ function openApprovUI(allFlag) {
         	if (isIE()) {
         		var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + encodeURI(pArgument[0]);
         		openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-        		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode)
+        		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
         	} else {
         		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
         		alert(pAlertContent);
@@ -811,7 +811,7 @@ function openApprovUI(allFlag) {
             openLocation = "/ezApprovalG/approvui.do?docID=";
             openLocation = openLocation + encodeURI(pArgument[0]);
             openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode);
+            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
         }
         openwindow(openLocation, "ApprovUI", 880, 550);
     }
@@ -1039,7 +1039,7 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
                      return;
             	 } else {
             		if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp" || g_RelayG_Type.toUpperCase() == "HWP") {
-            			openLocation = "/ezApprovalG/ezRecevGSusinHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag);
+            			openLocation = "/ezApprovalG/ezRecevGSusinHWP.do?docID=" + escape(pDocID) + "&draftFlag=" + escape(pDraftFlag) + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
                     }
             	 }
             }
@@ -1799,6 +1799,7 @@ function setbuttonenable() {
         //document.getElementById("tbtnApproveALL").style.display = "none";
         document.getElementById("tbtnReceipt").style.display = "none";
         document.getElementById("tbtnReturn").style.display = "none";
+        document.getElementById("tbtnNonElecRec").style.display = "none";
         document.getElementById("tbtnSimsa").style.display = "none";
         document.getElementById("tbtnGongRam").style.display = "none";
 
@@ -1827,6 +1828,7 @@ function setbuttonenable() {
             }
         } else if (pListTypeValue == "7") {
             document.getElementById("tbtnReceipt").style.display = "";
+            document.getElementById("tbtnNonElecRec").style.display = "";
         }
         document.getElementById("tbtnRegList").style.display = "none";
         document.getElementById("tbtnLinkDraft").style.display = "none";
@@ -1878,6 +1880,7 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                document.getElementById("tbtnNonElecRec").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
             } else if (GetAttribute(tr, "DATA12") == "015") {
                 document.getElementById("tbtnDraft").style.display = "";
@@ -1892,6 +1895,7 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                document.getElementById("tbtnNonElecRec").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
             } else if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
                 if (pFunctionType == "004")
@@ -1914,6 +1918,7 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                document.getElementById("tbtnNonElecRec").style.display = "none";
 
                 if (GetAttribute(tr, "DATA9") != "0") {
                     document.getElementById("tbtnRemoveDoc").style.display = "none";
@@ -1943,6 +1948,7 @@ function setbuttonenable() {
 
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                document.getElementById("tbtnNonElecRec").style.display = "none";
                 document.getElementById("tbtnRegList").style.display = "none";
                 document.getElementById("tbtnLinkDraft").style.display = "none";
             }
@@ -1958,6 +1964,7 @@ function setbuttonenable() {
             document.getElementById("tbtnApprove2").style.display = "none";
             document.getElementById("tbtnApproveALL").style.display = "none";
             document.getElementById("tbtnReceipt").style.display = "none";
+            document.getElementById("tbtnNonElecRec").style.display = "none";
             document.getElementById("tbtnViewDoc").style.display = "none";
             document.getElementById("tbtnReturn").style.display = "none";
             document.getElementById("tbtnRegList").style.display = "none";
@@ -1967,6 +1974,13 @@ function setbuttonenable() {
         }
     } else {
         document.getElementById("tbtnSimsa").style.display = "none";
+        
+		if (approvalFlag == "G") {
+			if(pListTypeValue == "4") {
+				document.getElementById("tbtnNonElecRec").style.display = "";
+			}
+		}
+        
         //20130311 cpno.64
         document.getElementById("tbtnGongRam").style.display = "none";
         if (oArrRows.length != 0) {
@@ -1983,6 +1997,7 @@ function setbuttonenable() {
                 document.getElementById("tbtnApprove2").style.display = "none";
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "";
+                document.getElementById("tbtnNonElecRec").style.display = "";
                 document.getElementById("tbtnRegList").style.display = "none";
                 if (tr.getAttribute("DATA9") == "003" || tr.getAttribute("DATA9") == "014")
                     document.getElementById("tbtnReturn").style.display = "none";
@@ -2005,6 +2020,7 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "none";
                 document.getElementById("tbtnReturn").style.display = "none";
+                document.getElementById("tbtnNonElecRec").style.display = "none";
                 
                 if(approvalFlag == "G") {
                 	document.getElementById("tbtnRegList").style.display = "";
@@ -2062,6 +2078,7 @@ function setbuttonenable() {
         //document.getElementById("tbtnApproveALL").style.display = "none";
         document.getElementById("tbtnReceipt").style.display = "none";
         document.getElementById("tbtnReturn").style.display = "none";
+        document.getElementById("tbtnNonElecRec").style.display = "none";
         document.getElementById("tbtncallback").style.display = "none";
         document.getElementById("tbtnRegList").style.display = "none";
         document.getElementById("tbtnLinkDraft").style.display = "none";
