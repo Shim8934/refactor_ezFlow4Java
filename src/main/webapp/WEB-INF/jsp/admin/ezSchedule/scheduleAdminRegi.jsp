@@ -35,7 +35,7 @@
 		    		async : true,
 		    		url : "/ezSchedule/scheduleGetRegi.do",
 		    		data : {
-		    			COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value		    			
+		    			/* COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value */		    			
 		    		},
 		    		success: function(text) {
 		    			if (text == "0") {
@@ -58,11 +58,16 @@
 		    		async : false,
 		    		url : "/admin/ezSchedule/scheduleSaveRegi.do",
 		    		data : {
-		    			COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value,
+		    			/* COMPANYID  : document.getElementById("ListCompany")[document.getElementById("ListCompany").selectedIndex].value, */
 		    			PREVIOSLYREGIUSE : (document.getElementsByName("USE")[0].checked ? "1" : "2")
 		    		},
 		    		success: function(text) {
-		    			alert("<spring:message code='ezSchedule.t4012' />");
+		    			
+		    			if(text='0'){
+		    				alert("<spring:message code='ezAddress.t1' />");
+		    			}else if(text='1'){
+			    			alert("<spring:message code='ezSchedule.t4012' />");
+		    			}
 		    		}
 		        });
 		    }
@@ -71,14 +76,15 @@
 	<body class="mainbody"> 
 		<h1><spring:message code='ezSchedule.t9990007' /></h1>
 		<form id="Form1" method="post">
-			<div id="mainmenu">
+			<!-- 2018-07-26 구해안 SelectBox 안나오게 수정 -->
+			<%-- <div id="mainmenu">
 			<span><b><spring:message code='ezResource.t28' /></b></span>&nbsp;
 	            <select id="ListCompany" onchange="schedule_get_regiUse()">
 					<c:forEach var="item" items="${list}">
            				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
           				</c:forEach>
 	            </select>
-			</div>
+			</div> --%>
 			<br />
 			<table class="content" style="width: 450px;">
 			    <tr>
@@ -94,7 +100,7 @@
 			    <a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code='ezSchedule.t5' /></span></a>
 			</div>
 		    <script type="text/javascript">
-		    	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+		    	/* selToggleList(document.getElementById("mainmenu"), "ul", "li", "0"); */
 			</script>
 		</form>
 	</body>
