@@ -10,15 +10,25 @@
 	</head>
 	<body class="popup cabAddRelated" style="overflow: hidden;">
 		<h1 id="cabMagHeader"><spring:message code="ezCabinet.t125"/></h1>
-		<div class="addRelatedConfig" id="addRelated">
-			<a class="cabRadio"><input type="radio" name="checkCabinet" id="1"/><label for="1">
-			<span><spring:message code="ezCabinet.t126"/></span></label><br></a>
-			<a class="cabRadio"><input type="radio" name="checkCabinet" id="2" checked="checked"/><label for="2">
-			<span><spring:message code="ezCabinet.t127"/></span></label></a>
-		</div>
-		<div id="cabMgTreeId" class="cabMgRelTree">
-			<div id="cabinetMgTree" class="mdlRelTree"></div>
-			<div id="fogPanel"      class="mdlFog"    ></div>
+		
+		<div class="addRlWrapper">
+			<c:if test="${activeFlag == '1'}">
+				<div class="addRelatedConfig" id="addRelated">
+					<a class="cabRadio">
+						<input type="radio" name="checkCabinet" id="1"/>
+						<label for="1"><span><spring:message code="ezCabinet.t126"/></span></label><br>
+					</a>
+					<a class="cabRadio">
+						<input type="radio" name="checkCabinet" id="2" checked="checked"/>
+						<label for="2"><span><spring:message code="ezCabinet.t127"/></span></label>
+					</a>
+				</div>
+			</c:if>
+			
+			<div id="cabMgTreeId" class="cabMgRelTree">
+				<div id="cabinetMgTree" class="mdlRelTree"></div>
+				<div id="fogPanel"      class="mdlFog"    ></div>
+			</div>
 		</div>
 		
 		<div class="cabdivBttn" id="cabMgDivBttn">
@@ -30,13 +40,14 @@
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTree.js"           ></script>
 		<script type="text/javascript">
-			(function() {
-				var rlWindow    = null;
-				var cabinetId   = null;
+			var CabinetRlModule = function() {
+				var rlWindow      = null;
+				var cabinetId     = null;
 				var myCabinetTree = new CabinetTree();
-				initEvents();
+				var moduleType    = null;
 				
-				function initEvents() {
+				function initEvents(mdlType) {
+					moduleType = mdlType;
 					myCabinetTree.setTreeInfo({
 						treeId     : "cabinetMgTree",
 						treeType   : "cabinet",
@@ -49,16 +60,14 @@
 					
 					myCabinetTree.makeTree({cabinetNode : document.getElementById("cabMagHeader").getAttribute("role")});
 					
-					document.onselectstart   = function() {return false;};
-					
-					var fogPanel = document.getElementById("fogPanel");
-					var cabinetMgTree = document.getElementById("cabinetMgTree");
-					
+					document.onselectstart   = function(e) {return false;};
 					var cabMgConfig          = document.getElementById("addRelated");
-					var listMgConfig         = cabMgConfig.children;
 					
-					listMgConfig[0].onclick  = function() {sendMailCabinet();};
-					listMgConfig[1].onclick  = function() {directCabinect();};
+					if (cabMgConfig) {
+						var listMgConfig        = cabMgConfig.children;
+						listMgConfig[0].onclick = function(e) {autoSelect();};
+						listMgConfig[1].onclick = function(e) {directSelect();};
+					}
 					
 					var cabMgBttnElmt        = document.getElementById("cabMgDivBttn");
 					var listMgBttns          = cabMgBttnElmt.children;
@@ -67,14 +76,14 @@
 					listMgBttns[1].onclick   = function(e) {closeWindow();};
 				}
 				
-				function sendMailCabinet(){
+				function autoSelect(){
 					var cabinetMainDiv = document.getElementById("cabMgTreeId");
 					var fogPanel = document.getElementById("fogPanel");
 					fogPanel.style.display = "";
 					cabinetMainDiv.style.backgroundColor = "#f1f1f1";
 				}
 				
-				function directCabinect(){
+				function directSelect(){
 					var fogPanel = document.getElementById("fogPanel");
 					var cabinetMainDiv = document.getElementById("cabMgTreeId");
 					cabinetMainDiv.style.backgroundColor = "#fff";
@@ -132,17 +141,13 @@
 						
 					}
 					
-					function afterSaveSuccessfully() {
-						alert(CabinetMessages.strSave);
-						var parentWd    = window.opener;
-						if (parentWd && parentWd.CabinetItem) {parentWd.CabinetItem.reload();}
-						closeWindow();
-					}
+					function afterSaveSuccessfully() {alert(CabinetMessages.strSave); closeWindow();}
 				}
 				
-				
-			})();
+				return {init : initEvents};
+			}();
 		</script>
+		<script type="text/javascript">CabinetRlModule.init("<c:out value='${module}'/>");</script>
 	</body>
 </html>
 

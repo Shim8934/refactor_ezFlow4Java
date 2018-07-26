@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezCabinet.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -31,12 +29,28 @@ public class EzCabinetController_m {
 	private EzCabinetRestService cabinetRestService;
 	
 	@RequestMapping(value = "/ezCabinet/cabinetAddRelated.do")
-	public String jspGetCabinetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+	public String jspGetCabinetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model)  throws Exception {
 		logger.debug("jspGetCabinetFileDetail started");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String module        = request.getParameter("module") != null ? request.getParameter("module") : "";
+		
+		if (module.equals("")) {
+			return "ezCabinet/cabinetAccessDenied";
+		}
+		
+		JSONObject resultObj = cabinetRestService.checkUserActiveModules(request, user.getId(), module);
+		
+		if (resultObj.get("status").toString().equals("ok")) {
+			String activeFlag = resultObj.get("active").toString();
+			model.addAttribute("activeFlag", activeFlag);
+		}
+		
+		model.addAttribute("module", module);
 		logger.debug("jspGetCabinetFileDetail ended");
 		return "ezCabinet/cabinetAddRelated";
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/ezCabinet/saveRelatedItem.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String jsonSaveRelatedItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {

@@ -7,10 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -38,7 +36,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 
 @Service
@@ -189,6 +186,15 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	public JSONObject getModuleListForUser(HttpServletRequest request, String userId) {
 		String url            = "/rest/ezcabinet/module/id/" + userId + "/person";
 		JSONObject resultBody = getJsonResult(url, null, request, "get", null);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject checkUserActiveModules(HttpServletRequest request, String userId, String module) throws Exception {
+		String url            = "/rest/ezcabinet/module/id/" + userId + "/active-check";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("module", module);
+		JSONObject resultBody = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
 	

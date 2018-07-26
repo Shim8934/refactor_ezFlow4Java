@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -472,6 +471,45 @@ public class EzCabinetGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("modules", modules);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/module/id/{userid}/active-check", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject checkActiveModules(@PathVariable(value="userid") String userId, HttpServletRequest request) {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		String moduleType = request.getParameter("module") != null ? request.getParameter("module") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("userId: " + userId + " || serverName: " + serverName + " || moduleType: " + moduleType);
+		
+		if (serverName.equals("") || userId.equals("") || moduleType.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo              = commonUtil.getUserForGw(userId, serverName);
+			List<CabinetModuleVO> modules = cabinetService.getModuleListForUser(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+			List<CabinetModuleVO> actives = modules.stream().filter(module -> (module.getActiveStatus() == 1 && module.getModuleType().equals(moduleType))).collect(Collectors.toList());
+			
+			if (actives == null || actives.size() == 0) {
+				result.put("active", "0");
+			}
+			else {
+				result.put("active", "1");
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

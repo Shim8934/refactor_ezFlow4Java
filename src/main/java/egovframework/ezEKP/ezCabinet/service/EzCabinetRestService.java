@@ -31,6 +31,7 @@ public interface EzCabinetRestService {
 	//User related modules service
 	public JSONObject getModuleListForUser(HttpServletRequest request, String userId);
 	public JSONObject saveModulesSettingForUser(HttpServletRequest request, JSONArray modules, String userId) throws Exception;
+	public JSONObject checkUserActiveModules(HttpServletRequest request, String userId, String module) throws Exception;
 	
 	//User capacity service
 	public JSONObject getUserCapacity(HttpServletRequest request, String userId) throws Exception;
