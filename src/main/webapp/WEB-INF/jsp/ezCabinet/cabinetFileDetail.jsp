@@ -473,6 +473,8 @@
 				
 				function afterChangeSuccessfully() {
 					alert(CabinetMessages.strModify);
+					var parentWd    = window.opener;
+					if (parentWd && parentWd.CabinetItem) {parentWd.CabinetItem.reload();}
 					closeWindow();
 				}
 				

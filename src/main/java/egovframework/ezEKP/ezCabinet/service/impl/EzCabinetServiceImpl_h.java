@@ -298,7 +298,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 			
 			for (int i = 0; i < relatedSize; i++, relationId++) {
 				JSONObject relationObj = (JSONObject)relatedFiles.get(i);
-				int relatedItemId = Integer.parseInt((String)relationObj.get("itemId"));
+				int relatedItemId = Integer.parseInt(relationObj.get("itemId").toString());
 				
 				if (relatedId.contains(relatedItemId)) {
 					relatedId.removeIf(id -> id.intValue() == relatedItemId);
