@@ -21,6 +21,8 @@ var CabinetPreview = function() {
 		var _prevCntW     = generalInf["preContentW"];
 		
 		function resizeHeight() {
+			var wrapDiv           = document.getElementById(_wrapperDivId);
+			wrapDiv.style.height  = (document.documentElement.clientHeight - 110) + "px";
 			var mainDiv           = document.getElementById(_mainDivId);
 			var divChild          = mainDiv.querySelector("div[class='tableDataDiv']");
 			if (divChild) {divChild.style.height = mainDiv.clientHeight - 70 + "px";}
@@ -28,6 +30,7 @@ var CabinetPreview = function() {
 		
 		function resizeWidth() {
 			var wrapDiv           = document.getElementById(_wrapperDivId);
+			wrapDiv.style.height  = (document.documentElement.clientHeight - 150) + "px";
 			var divChild          = wrapDiv.querySelector("div[class='tableDataDiv']");
 			if (divChild) {divChild.style.height = wrapDiv.clientHeight - 40 + "px";}
 		}

@@ -835,7 +835,7 @@ var CabinetItem = function() {
 			var divInform        = document.createElement("div");
 			divInform.className  = "divInform";
 			var spanElmt         = document.createElement("span");
-			spanElmt.textContent = CabinetMessages.strAttach;
+			spanElmt.textContent = CabinetMessages.strNoAttach;
 			divInform.appendChild(spanElmt);
 			fileList.appendChild(divInform);
 		}
@@ -939,8 +939,18 @@ var CabinetItem = function() {
 		dlElmt.className     = "cabPrevItem";
 		pSpanElmt1.className = "cabPrevIcon";
 		pSpanElmt2.className = "cabTitleTxt";
-		var preDivId         = crrPreMode == "w" ? "itemPreviewDivW" : "itemPreviewDivH";
-		var preContId        = crrPreMode == "w" ? "itemContentW"    : "itemContentH";
+		
+		if (crrPreMode == "w") {
+			prevDiv.setAttribute("id",  "itemPreviewDivW");
+			prevCont.setAttribute("id", "itemContentW");
+			prevCont.className = "itemContentW";
+		}
+		else {
+			prevDiv.setAttribute("id",  "itemPreviewDivH");
+			prevCont.setAttribute("id", "itemContentH");
+			prevCont.className = "itemContentH";
+		}
+		
 		prevChild.className  = "zoomDiv";
 		imgElmt1.src         = "/images/minus.png";
 		imgElmt2.src         = "/images/plus.png";
@@ -951,8 +961,6 @@ var CabinetItem = function() {
 		divChild.appendChild(spanElmt);
 		divChild.appendChild(dlElmt);
 		divElmt.appendChild(divChild);
-		prevDiv.setAttribute("id",  preDivId);
-		prevCont.setAttribute("id", preContId);
 		prevChild.appendChild(imgElmt1);
 		prevChild.appendChild(imgElmt2);
 		parentDiv.appendChild(prevChild);

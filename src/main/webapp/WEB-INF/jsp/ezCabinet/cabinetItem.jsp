@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="/css/jquery-ui.css"                        type="text/css"/>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css"/>
 	</head>
-	<body class="mainbody">
+	<body class="mainbody overY">
 		<h1 id="cabInfo">
 			<c:out value='${cabinet.cabinetName}'/>
 			<span id="cabinetInfo" class="cabTtlInf"></span>
