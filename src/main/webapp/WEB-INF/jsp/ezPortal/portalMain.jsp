@@ -43,6 +43,7 @@
 			var topHeight = "${topHeight}";
 			var topUrl = "${topUrl}";
 			var mainUrl = "${mainUrl}";
+			var memoIndex = -1;
 			
 			topHeight = "56";
 
@@ -193,6 +194,11 @@
 		    }
 		    
 		    function save() {
+		    	if(memoIndex != -1) {		// 수정일때
+		    		$(".individual-memo").eq(memoIndex).remove();
+		    		memoIndex = -1;
+		    	}
+		    	
 		    	var text = $("#textarea").val();
 		    	$("#memoList").prepend("<div class='individual-memo' style='margin: 10px;'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right;'><textarea class='memo-text' style='padding-left:10px; padding-right:10px; border:0px; width:90%; height:85%; resize:none; overflow-y:hidden;' readonly>" + text + "</textarea></div>");
 		    	$("#textarea").val('');
@@ -221,6 +227,7 @@
 		        });
 		        
 		        $(".individual-memo").click(function(){
+		        	memoIndex = $(this).index();
 		        	var currText = $(this).children(".memo-text").html();
 		        	$("#maskDiv").css("display", "");
 			        $("#selected-memo").css("display", "");
