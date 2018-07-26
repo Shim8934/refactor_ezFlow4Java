@@ -403,7 +403,7 @@
 	</head>
 	<body class="mainbody" onload="makePageSelPage()">
 		<h1><spring:message code='ezOrgan.t311'/><span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
-		<div id=""> <!-- mainmenu -->    
+		<div id="mainmenu"> <!-- mainmenu -->    
    		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
    			    <select id="ListCompany" onChange="selectCompanyID()">
    		        	<c:forEach var="item" items="${companylist}">

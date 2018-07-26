@@ -448,6 +448,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("list", resultList);
+		model.addAttribute("userInfo", userInfo);
 
 		logger.debug("managePoll ended");
 		return "admin/ezPersonal/personalManagePoll";

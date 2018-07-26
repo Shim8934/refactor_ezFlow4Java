@@ -39,7 +39,6 @@
 	            if (document.getElementById("ListCompany").length == 0)
 	                alert("<spring:message code = 'ezPersonal.t106' />");
 	            else {
-	                document.getElementById("ListCompany").selectedIndex = 0;
 	            }
 	
 	            makelist();
@@ -347,14 +346,14 @@
 	    <form method="post">
 	        <h1>Quick Poll<span id="mailBoxInfo"></span></h1>
 	        <div id="mainmenu">
-	            <ul>
-	                <li style="background: none">
-	                    <SELECT id="ListCompany" name="ListCompany" onChange="company_change()">
+	        	<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
+				    <select id="ListCompany" onChange="company_change()">
 			        	<c:forEach var="item" items="${list}">
-		            		<option value="<c:out value='${item.cn}'/>" ><c:out value='${item.displayName}'/></option>
+		            		<option value="<c:out value='${item.cn}'/>" <c:if test="${item.cn eq userInfo.companyID}">selected=""</c:if> ><c:out value='${item.displayName}'/></option>
 		            	</c:forEach>
-			        	</SELECT>
-	                </li>
+				    </select><br /><br />
+			    </span>
+	            <ul>
 	                <li><span onclick="add_poll()"><spring:message code = 'ezPersonal.t235' /></span></li>
 	            </ul>
 	        </div>

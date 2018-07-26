@@ -221,7 +221,7 @@
 	    <form method="post">
 			<h1><spring:message code = 'ezPersonal.t266' /></h1>
 			<div id="mainmenu">
-				<span><b><spring:message code='ezEmail.t59' /></b></span>&nbsp;
+				<span><b><spring:message code='ezEmail.t59' /></b></span>
 				<SELECT id="ListCompany" name="ListCompany" onChange="company_change()">
 		        	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ><c:out value='${item.displayName}'/></option>
