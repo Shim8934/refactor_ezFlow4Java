@@ -564,7 +564,7 @@
                 <li><span id="btnClose" onclick="return btnClose_onclick()"></span></li>
             </ul>
         </div>
-		<h2 style="font-weight: normal;">▒ <spring:message code='ezApprovalG.t1018'/></h2>
+		<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1018'/></h2>
 		<table class="content" style="width:100%">
 		  <tr>
 		    <th style="width:15%;"><spring:message code='ezApprovalG.t1063'/></th>
@@ -584,7 +584,7 @@
 		    <td id="tdCabinetVolNo"  >&nbsp;</td>
 		  </tr>
 		</table>
-		<h2 style="font-weight: normal; margin-top: 10px;">▒ <spring:message code='ezApprovalG.t1089'/></h2>
+		<h2 class="h2_dot" style="font-weight: normal; margin-top: 10px;"><spring:message code='ezApprovalG.t1089'/></h2>
 		<table class="content" style="width:100%">
 		  <tr>
 		    <th style="width:15%;"><spring:message code='ezApprovalG.t859'/></th>
@@ -609,7 +609,7 @@
 		</table>
 		
 		<Div id="divAudioVisual">
-		  <h2 style="font-weight: normal; margin-top: 10px;">▒ <spring:message code='ezApprovalG.t1074'/></h2>
+		  <h2 class="h2_dot" style="font-weight: normal; margin-top: 10px;"><spring:message code='ezApprovalG.t1074'/></h2>
 		  <table class="content" style="width:100%">
 		    <tr>
 		      <th style="width:15%;"><spring:message code='ezApprovalG.t1075'/></th>
@@ -618,7 +618,7 @@
 		    </tr>
 		    <tr >
 		      <th><spring:message code='ezApprovalG.t826'/></th>
-		      <td id=tdAVType><table border="0" style="border-collapse:collapse; border-spacing:0;padding:0px;height:140px;width:100%">
+		      <td id=tdAVType><table style="border-collapse:collapse; border-spacing:0;padding:0px;height:140px;width:99%">
 		          <tr>
 		            <td id=tdAVType1 style="padding-right:0; padding-left:0;overflow:auto;vertical-align:top"></td>
 		            <td id=tdAVType2 style="padding-right:0; padding-left:0;vertical-align:top"></td>

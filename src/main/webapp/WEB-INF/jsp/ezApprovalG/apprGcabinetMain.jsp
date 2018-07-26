@@ -994,7 +994,7 @@
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = CabinetSelect_onclick_Complete;
 		
-		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(980, 620));
+		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(1000, 620));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		

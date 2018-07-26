@@ -219,7 +219,7 @@
 		<table>
 		  <tr>
 		    <td style="width:400px;vertical-align:top">
-		    <h2 style="font-weight: normal; margin-bottom: 8px;">▒ <spring:message code='ezApprovalG.t1090'/>
+		    <h2 class="h2_dot" style="font-weight: normal; margin-bottom: 8px;"><spring:message code='ezApprovalG.t1090'/>&nbsp;:
 		    	<input type="text" id="Cabinetkeyword" name="Cabinetkeyword" style="width:135px" onKeyPress="CabinetSearch_Press(event)">
 				<a class="imgbtn imgbck" style="height: 22px;"><span onClick="return CabinetSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></a>
 		    </h2>
