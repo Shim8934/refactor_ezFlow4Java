@@ -138,6 +138,10 @@
 				
 				function saveApprovalDocument() {
 					//Add code here
+					var url          = "/ezCabinet/saveRelatedApproval.do";
+					var data         = {type: moduleType, mode: saveMode};
+					
+					if (saveMode == 1) {data.cabinetId = cabinetId;}
 				}
 				
 				function saveBoardDocument() {

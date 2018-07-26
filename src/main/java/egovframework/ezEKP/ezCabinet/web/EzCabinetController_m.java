@@ -51,10 +51,10 @@ public class EzCabinetController_m {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/ezCabinet/saveRelatedItem.do", method = RequestMethod.POST)
+	@RequestMapping(value="/ezCabinet/saveRelatedApproval.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String jsonSaveRelatedItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
-		logger.debug("Save relatedItem is running!");
+	public String jsonSaveRelatedApproval(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSaveRelatedApproval is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String title           = request.getParameter("title")       != null ? request.getParameter("title")       : "";
 		String author          = request.getParameter("author")      != null ? request.getParameter("author")      : "";
@@ -67,9 +67,9 @@ public class EzCabinetController_m {
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.saveRelatedItem(request, userInfo.getId(), title, author, normalScreen);
+		resultObj = cabinetRestService.saveRelatedApproval(request, userInfo.getId(), title, author, normalScreen);
 		
-		logger.debug("Save relatedItem finishes!");
+		logger.debug("jsonSaveRelatedApproval finishes!");
 		return resultObj.toString();
 	}
 	

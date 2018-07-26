@@ -517,7 +517,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	}
 
 	@Override
-	public JSONObject saveRelatedItem(HttpServletRequest request, String id, String title, String author, String mailContent) {
+	public JSONObject saveRelatedApproval(HttpServletRequest request, String id, String title, String author, String mailContent) {
 		return null;
 	}
 
