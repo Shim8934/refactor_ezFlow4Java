@@ -255,6 +255,7 @@ window.onload = function() {
 	margin-top : 15px;
 	display : inline-block;
 	width : 98%;
+	height : 550px;
 	overflow : auto;
 	float : left;
 }
