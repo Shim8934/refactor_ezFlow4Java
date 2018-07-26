@@ -193,19 +193,13 @@
 		    
 		    function save() {
 		    	var text = $("#textarea").val();
-		    	$("#memoList").prepend("<div class='individual-memo' style='margin: 10px'><img src='/images/close_xBtn.png'  style='display: none; float:right;'><div class='memo-text'>" + text + "</div></div>");
+		    	$("#memoList").prepend("<div class='individual-memo' style='margin: 10px;'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right;'><textarea class='memo-text' style='padding-left:10px; padding-right:10px; border:0px; width:90%; height:85%; resize:none; overflow-y:hidden;' readonly>" + text + "</textarea></div>");
 		    	$("#textarea").val('');
 		    	$("#maskDiv").css("display", "none");
 		    	$("#selected-memo").css("display", "none");
 		    	
 		    	addremove();
 		    }
-		    
-/* 		    function read(text) {
-		        $("#maskDiv").css("display", "");
-		        $("#selected-memo").css("display", "");
-		        $("#textarea").val(text);
-		    } */
 		    
 		    function closeMemo() {
 		    	$("#textarea").val('');
@@ -215,20 +209,21 @@
 		    
 		    function addremove() {
 			    $(".individual-memo").mouseenter(function(){
-			    	$(this).children("img").css("display", "");
+			    	$(this).children("img").css("visibility", "visible");
 			    	$(this).children("img").click(function(){
 			    		$(this).parent().remove();
 			    	})
 		        });
 		        
 		        $(".individual-memo").mouseleave(function(){
-		        	$(this).children("img").css("display", "none");
+		        	$(this).children("img").css("visibility", "hidden");
 		        });
 		        
 		        $(".individual-memo").click(function(){
+		        	var currText = $(this).children(".memo-text").html();
 		        	$("#maskDiv").css("display", "");
 			        $("#selected-memo").css("display", "");
-			        $("#textarea").val($(this).children(".memo-text").html());
+			        $("#textarea").val(currText);
 		        });
 		    }
 
@@ -271,7 +266,7 @@
 				<div id="selected-memo" style="display: none">
 					<div class="selected-memoWrapper">
 						<div id="memo-btn">
-							<button onclick="save()">저장</button> 
+							<button id="save" onclick="save()">저장</button> 
 							<button onclick="closeMemo()">닫기</button>
 						</div>
 						<textarea id="textarea" cols="50" rows="28"></textarea>
