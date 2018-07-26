@@ -168,8 +168,8 @@
 
 /* cabinet item */
 .topSearchSpan {float: right; font-weight: normal; color: black;}
-.topSearchSpan >input[type='radio'] {margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;}
-.topSearchSpan >input[type='text'] {width: 150px; ime-mode: active; height: 20px; border-right: 0px; vertical-align: top; outline: none; padding: 0px 3px;}
+.topSearchSpan >select {height: 27px; margin-right: 0px; border: 1px solid #cbcbcb; min-width:80px; outline: none;}
+.topSearchSpan >input[type='text'] {width: 150px; ime-mode: active; height: 27px; border: 1px solid #cbcbcb; border-right: 0px; vertical-align: top; outline: none; padding: 0px 3px;}
 .topSearchSpan >a {float: right;}
 .topSearchSpan >a img {border: none; cursor: pointer;}
 .btnimg.cabinet {width: 22px; height: 20px;}

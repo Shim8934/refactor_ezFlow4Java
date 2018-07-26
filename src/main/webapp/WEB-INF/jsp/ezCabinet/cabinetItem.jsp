@@ -15,11 +15,13 @@
 			<c:out value='${cabinet.cabinetName}'/>
 			<span id="cabinetInfo" class="cabTtlInf"></span>
 			<span class="topSearchSpan">
-				<input name="searchCheck" id="radio1" type="radio" value="title" checked><label for="radio1">&nbsp;<spring:message code='ezCabinet.t51'/></label>
-				<input name="searchCheck" id="radio2" type="radio" value="summary"      ><label for="radio2">&nbsp;<spring:message code='ezCabinet.t52'/></label>
-				&nbsp;
+				<select id="searchCheck">
+					<option value="title" selected><spring:message code='ezCabinet.t51'/></option>
+					<option value="summary"       ><spring:message code='ezCabinet.t52'/></option>
+				</select>
+				
 				<input name="keyword" type="text" id="ssInput">
-				<a id="searchBttn"><img src="/images/sub/bsearch.gif"></a>
+				<a id="searchBttn"><img src="/images/bsearch_new.gif"></a>
 			</span>
 		</h1>
 		

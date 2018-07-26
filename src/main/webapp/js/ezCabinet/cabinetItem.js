@@ -320,7 +320,7 @@ var CabinetItem = function() {
 	function startSearchCabinet(pPage) {
 		var orderInf  = cabinetTable.getOrderInfo();
 		var listCnt   = document.getElementById("listcount").value;
-		var searchOpt = document.querySelector("input[name='searchCheck']:checked").value;
+		var searchOpt = document.getElementById("searchCheck").value;
 		
 		$.ajax({
 			type: "POST",
@@ -499,7 +499,7 @@ var CabinetItem = function() {
 		if (!searchStr.replace(/\s/g,'')) {alert(CabinetMessages.strNoInput); return;}
 		
 		searchMode    = "1";
-		var searchOpt = document.querySelector("input[name='searchCheck']:checked").value;
+		var searchOpt = document.getElementById("searchCheck").value;
 		if (searchOpt == "title") {titelStr = searchStr;} else {summaryStr = searchStr;}
 		
 		startSearchCabinet("1");
