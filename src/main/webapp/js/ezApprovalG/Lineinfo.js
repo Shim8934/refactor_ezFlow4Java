@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 //#############################################################################################################################################사용자리스트 원클릭 이벤트 list2_onSel_Click()
 function list2_onSel_Click() {
 }
@@ -428,7 +428,7 @@ function aprLineAddDeptUser(mode, xmlData) {
             pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
             pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
             pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
-            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>140</WIDTH></HEADER>";
             pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
             pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
             pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
@@ -558,7 +558,7 @@ function AprLineAddUserCC(Mode, tr, pSelectedRow) {
                 pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
                 pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
                 pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>140</WIDTH></HEADER>";
                 pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
                 pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
                 pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
@@ -627,7 +627,7 @@ function AprLineAddUserCC(Mode, tr, pSelectedRow) {
             	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
             	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
             	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
-            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>140</WIDTH></HEADER>";
             	pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
             	pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
             	pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
@@ -3691,7 +3691,7 @@ function Checkline() {
         var receptRow = listview.GetDataRows();
 
         var CurListLen = receptRow.length;
-        if (CurListLen == 0 || (CurListLen == 1 && receptRow[0].id == "lvRECEPTLIST_TR_noItems")) {
+        if (CurListLen == 0 || (CurListLen == 1 && receptRow[0].id == "lvRECEPTLIST_TR_noItems") && pDocType != "002") {
             OpenAlertUI(linealt14);
             var tabshow = document.getElementById("1tab2");
             Tab1_MouseClick(tabshow);

@@ -7,7 +7,7 @@
 		<title><spring:message code = 'ezCommunity.t352' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/TreeView.js"></script>
@@ -238,9 +238,13 @@
 	</head>
 	<body class="popup" style="overflow: hidden">
 		<h1><spring:message code = 'ezCommunity.t359' /></h1>
-		
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
         <div class="box" style="width: 320px; height: 550px; overflow: auto; word-break: break-all;border-top:0px" id="TopBoardsList"></div>
-        <div class="btnposition">
+        <div class="btnpositionNew">
             <a class="imgbtn" name="Submit" onclick="Select()"><span><spring:message code = 'ezCommunity.t278' /></span></a>
         </div>
         <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>

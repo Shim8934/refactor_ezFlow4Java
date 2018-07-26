@@ -36,7 +36,7 @@
 	        });	        
 
 	        function window_resize() {
-	            document.getElementById("BoardEnv_ifrm").style.height = (document.documentElement.clientHeight - 120) + "PX";
+	            document.getElementById("BoardEnv_ifrm").style.height = (document.documentElement.clientHeight - 85) + "PX";
 	        }
 	        function ChangeTab(obj) {
 	            var pSelectTab = obj.getAttribute("divname");
@@ -113,17 +113,19 @@
 	        }
 	    </script>
 	</head>
-	<body class="mainbody">
-		<h1><p style="padding-left:5px">${boardName}</p></h1>
-	    <div class="portlet_tabpart01">
-	        <div class="portlet_tabpart01_top" id="tab1">
-	            <p id="BoardEnv_sub1"><span divname="BoardEnv_div1" id="1tab1"><spring:message code="ezBoard.t338" /></span></p>
-	            <p id="BoardEnv_sub2"><span divname="BoardEnv_div2" id="1tab2"><spring:message code="ezBoard.t60" /></span></p>
-	            <p id="BoardEnv_sub3"><span divname="BoardEnv_div3" id="1tab3"><spring:message code="ezBoard.t63" /></span></p>
-	            <p id="BoardEnv_sub4" style="display:none;"><span divname="BoardEnv_div4" id="1tab4"><spring:message code="ezBoard.t0003" /></span></p>
-	            <p id="BoardEnv_sub5"><span divname="BoardEnv_div5" id="1tab5"><spring:message code="ezBoard.t999026" /></span></p>
-	        </div>
-	    </div>
+	<body class="mainbody" style="margin:0px;overflow-y:hidden">
+		<div style="margin-left:10px">
+			<h1><p style="padding-left:5px">${boardName}</p></h1>
+		    <div class="portlet_tabpart01">
+		        <div class="portlet_tabpart01_top" id="tab1">
+		            <p id="BoardEnv_sub1"><span divname="BoardEnv_div1" id="1tab1"><spring:message code="ezBoard.t338" /></span></p>
+		            <p id="BoardEnv_sub2"><span divname="BoardEnv_div2" id="1tab2"><spring:message code="ezBoard.t60" /></span></p>
+		            <p id="BoardEnv_sub3"><span divname="BoardEnv_div3" id="1tab3"><spring:message code="ezBoard.t63" /></span></p>
+		            <p id="BoardEnv_sub4" style="display:none;"><span divname="BoardEnv_div4" id="1tab4"><spring:message code="ezBoard.t0003" /></span></p>
+		            <p id="BoardEnv_sub5"><span divname="BoardEnv_div5" id="1tab5"><spring:message code="ezBoard.t999026" /></span></p>
+		        </div>
+		    </div>
+		</div> 
 	    <iframe id="BoardEnv_ifrm" style="width: 100%; height: 100%;" frameborder="0"></iframe>
 	</body>
 	<script type="text/javascript">

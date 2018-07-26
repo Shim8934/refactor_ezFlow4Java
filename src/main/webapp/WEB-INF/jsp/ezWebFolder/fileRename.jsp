@@ -59,16 +59,19 @@
 </head>
 <body class="popup" style="overflow: hidden;"> 
 	<h1 id ="topMenu" style="margin:2px;"><spring:message code='ezWebFolder.t118'/></h1>
+	<div id="close">
+        <ul>
+            <li><span id="btnCancel" onclick="wClose();"></span></li>
+        </ul>
+    </div>
 	<div style="margin: 0px; height:112px; border:1px solid #ddd; padding:15px; margin-bottom:10px">
 		<div style="text-align:left; font-size:12px"><spring:message code='ezWebFolder.t119'/></div>
 		<div style="height: 40px; line-height: 40px; margin-top: 10px;">
-			<input id="nameInput" type="text" placeholder="<spring:message code='ezWebFolder.t212'/>" style="width: 380px; height: 35px; line-height: 35px; font-size: 12px; padding: 0px 10px; border-radius: 5px; border: 1px solid #666;">
+			<input id="nameInput" type="text" placeholder="<spring:message code='ezWebFolder.t212'/>" style="width: 380px; height: 35px; line-height: 35px; font-size: 12px; padding: 0px 10px; border-radius: 5px; border: 1px solid #ddd;">
 		</div>
 	</div>	
-	<div style="margin: 6px 0px 0px; bottom: 0px; text-align: center">
-		<a id="btnSave" class="webfolderBttn" onclick="ok_Click();"><span><spring:message code='ezWebFolder.t116'/></span></a>
-		<a id="btnCancel" class="webfolderBttn" onclick="wClose();"><span><spring:message code='ezWebFolder.t112'/></span></a>
+	<div class="btnpositionNew">
+		<a id="btnSave" class="imgbtn" onclick="ok_Click();"><span><spring:message code='ezWebFolder.t116'/></span></a>
 	</div>
-	
 </body>
 </html>

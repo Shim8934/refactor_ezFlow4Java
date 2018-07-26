@@ -10,6 +10,7 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
 		    var ReturnFunction;
+		    var type = "${type}";
 		    window.onload = function()
 		    {
 		        try {
@@ -52,7 +53,19 @@
 	    </script>
 	</head>
 	<body class="popup">
-	    <h1><spring:message code="ezBoard.t176" /></h1>
+	<c:choose>
+		<c:when test="${type ne ''}">
+			<h1><spring:message code="ezEmail.t99000071" /></h1><%-- 메일 색상설정 --%>
+		</c:when>
+		<c:otherwise>
+			<h1><spring:message code="ezBoard.t176" /></h1><%-- 게시판명 색상선택 --%>
+		</c:otherwise>
+	</c:choose>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 	    <table  onClick="select_color(event)" id="ColorTable" style="width:256px;" class="box">
 			<tr>
 			    <td style="width:32px; background-color: #ff8080" title="#ff8080">&nbsp;</td>
@@ -126,9 +139,8 @@
 		  <%--<span id=selColorShow style="width:100%"></span>
 		  &nbsp;<input type="text" id=selColor>--%>
 		</div>
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn"><span onclick="ok_onclick()" ><spring:message code="ezBoard.t14" /></span></a>
-		    <a class="imgbtn"><span onclick="window.close()" ><spring:message code="ezBoard.t15" /></span></a>
 		</div>
 	</body>	
 </html>

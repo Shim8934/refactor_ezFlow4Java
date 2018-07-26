@@ -118,6 +118,9 @@
 		        }
 		    }
 		</script>
+		<style>
+			.mainlist tr th { border-top:0px }
+		</style>
 	</head>	
 	<body class="popup"> 
 	    <xml id="listviewheader" style="display: none"> 
@@ -154,13 +157,17 @@
 	    </xml>
 		<object style="display:none" classid="clsid:F8E93A35-2D04-4E2C-A04D-87947594C674" id="ListViewBehave" height="0px" width="0px" VIEWASTEXT> </object> 
 		<h1><spring:message code='ezSchedule.t53' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="cancel_onClick()"></span></li>
+            </ul>
+        </div>
 		<h2><spring:message code='ezSchedule.t58' /></h2>
 		<div class="listview" style="overflow:auto;">
-			<div id="ListViewid" STYLE="Width:570px; Height:195px; border:0px;overflow:auto"></div>
+			<div id="ListViewid" STYLE="Height:195px; border:0px;overflow:auto"></div>
 		</div>
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn" name="button2" onClick="change_onClick()" ><span><spring:message code='ezSchedule.t4' /></span></a>
-		    <a class="imgbtn" name="button3" onClick="cancel_onClick()" ><span><spring:message code='ezSchedule.t5' /></span></a>
 		</div>
 	</body>
 </html>

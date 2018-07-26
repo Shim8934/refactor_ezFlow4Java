@@ -189,6 +189,11 @@
 	</head>
 	<body style="overflow:hidden;" class="popup">
         <h1><spring:message code='ezEmail.t554' /></h1>
+        <div id="close">
+			<ul>
+				<li><span onClick="cancel()"></span></li>
+			</ul>
+		</div>
         <div class="portlet_tabpart01">
             <div class="portlet_tabpart01_top" id="tabGroup">
                 <p id="fromTab" class="tab" addressType="from"><span><spring:message code='ezEmail.t161' /></span></p>
@@ -233,7 +238,6 @@
         </div>
         <div class="btnposition btnpositionNew">
 			<a class="imgbtn" onClick="confirm()"><span><spring:message code='ezEmail.t38' /></span></a>
-			<a class="imgbtn" onClick="cancel()"><span><spring:message code='ezEmail.t39' /></span></a>
 		</div>
 	</body>
 </html>

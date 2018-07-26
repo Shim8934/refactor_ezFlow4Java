@@ -7,7 +7,7 @@
 		<title><spring:message code='ezPortal.t13'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<style>
 			.box {
 				border-right:0px;
@@ -234,9 +234,32 @@
   					error : function(jqXHR, textStatus, errorThrown) {
   						alert("<spring:message code='ezPortal.t14'/>" + textStatus);
   					}
-  				});  
+  				});
 	            
-	            
+	            $.ajax({
+					url : "/ezOrgan/getDeptMemberListCount.do",
+					method : "POST",
+					dataType : "json",
+					data : {
+						deptID : DeptID
+					},
+					success : function(result) {
+						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
+						
+						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
+			        		if (result.totalCount == result.totalCount2) {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]";
+			        		} else {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang1 + "</span>]";
+			        		}
+			            	
+			            	SelectDeptNM.setAttribute("countinfo","1")
+			        	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(error);
+					}
+				});
 	        }
 	        function event_displayUserList() {
 	            if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
@@ -252,7 +275,7 @@
 	            g_xmlHTTP = null;
 	        }
 	    }
-	    var m_strColorSelect = "#f0f6ff";
+	    var m_strColorSelect = "#edf4fd";
 	    var m_strColorOver = "#f4f5f5";
 	    var m_strColorDefault = "#ffffff";
 	    var p_ListOrderObject = null;
@@ -339,10 +362,16 @@
 	            document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
 	        }
 	        var UserListHTML = "";
-	        if (SelectDeptNM.getAttribute("countinfo") != "1") {
-	            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	        /* if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
+	            //SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	            if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
+        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+        		} else {
+        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang1 + "</span>]";
+        		}
+	            
 	            SelectDeptNM.setAttribute("countinfo", "1")
-	        }
+	        } */
 	        if (pListType == "IMG") {
 	            document.getElementById("DeptUserImgList").style.display = "";
 	            document.getElementById("txtlist_Layer").style.display = "none";
@@ -586,29 +615,34 @@
 	            return;
 	        } 
 	        
-	         	$.ajax({
-					url : '/ezOrgan/getSearchList.do',
-					method : 'POST',
-					dataType : "text",
-					data : {
-						search : document.getElementById("search_type").value + "::" + keyword.value,
-						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
-						type : "user"
-					} ,
-   				success : function(xml) {
-   					pListXML_Info = loadXMLString(xml);
-					pSeach = true;
-		            DisplayUserImageList(xml);
-					},
-					error : function(jqXHR, textStatus, errorThrown) {
-						alert("<spring:message code='ezPortal.t14'/>" + textStatus);
-					}
-				}); 
-	        
-	        
+         	$.ajax({
+				url : '/ezOrgan/getSearchList.do',
+				method : 'POST',
+				dataType : "text",
+				data : {
+					search : document.getElementById("search_type").value + "::" + keyword.value,
+					cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
+					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+					type : "user"
+				} ,
+  				success : function(xml) {
+  					pListXML_Info = loadXMLString(xml);
+  					
+  					if (pListXML_Info.getElementsByTagName("ROW").length == 0) {
+  						alert("<spring:message code='ezPortal.t22'/>");
+        			} else {
+        				pSeach = true;
+    		            DisplayUserImageList(xml);
+        			}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					alert("<spring:message code='ezPortal.t14'/>" + textStatus);
+				}
+			});
 	    }
-	    function event_displayUserList2() {
+	    
+	    //2018-07-23 이효진 미사용
+	    /* function event_displayUserList2() {
 	        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
 	            if (g_xmlHTTP.statusText == "OK") {
 	                if (g_xmlHTTP.responseXML.getElementsByTagName("ROW").length == 0)
@@ -624,7 +658,7 @@
 
 	            g_xmlHTTP = null;
 	        }
-	    }
+	    } */
 	    function deptsearch_click() {
 
 	        if (deptkeyword.value == "") {
@@ -647,7 +681,7 @@
                 		adCount = row.length;
 					},
 				error : function(jqXHR, textStatus, errorThrown) {
-					alert("<spring:message code="ezResource.t2"/>" + textStatus);
+					alert("<spring:message code='ezResource.t2'/>" + textStatus);
 					xmlDOM = null;
 				}
 			}); 
@@ -748,7 +782,7 @@
 	    function ChangeListView_onClick(Div) {
 	        pListType = Div;
 	        ListTypeChangeIcon();
-	        DisplayUserImageList();
+// 	        DisplayUserImageList();
             setOrganListType(pListType);
 	    }
 	    function keyword_Clear() {
@@ -885,6 +919,11 @@
     </tree>
 </xml>
     <h1 id="h1Title"><spring:message code='ezPortal.t13'/></h1>
+    <div id="close">
+        <ul>
+            <li><span onclick="window.close()"></span></li>
+        </ul>
+    </div>
     <table style="width: 100%">
         <tr>
             <td>
@@ -969,10 +1008,9 @@
         </tr>
     </table>
     <br />
-    <div class="btnposition">
+    <div class="btnpositionNew">
         <a class="imgbtn"><span onclick="dept_select()"><spring:message code='ezPortal.t43'/></span></a>
         <a class="imgbtn" onclick="Save_onclick()"><span><spring:message code='ezPortal.t45'/></span></a>
-        <a class="imgbtn" onclick="window.close()"><span><spring:message code='ezPortal.t46'/></span></a>
     </div>
 	</body>
 </html>

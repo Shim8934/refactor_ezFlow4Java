@@ -8,7 +8,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e3'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+		<style>
+			.mainlist tr th { border-top:0px }
+		</style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -313,8 +316,8 @@
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 			    </select><br /><br />
-	            <li><span onclick="return btnInfo_onclick()"><spring:message code = 'ezApprovalG.t1277' /></span></li>
-	            <li id="addbtn"><span onclick="return btnAdd_onclick()"><spring:message code = 'ezApprovalG.t1249' /></span></li>
+			    <li id="addbtn"><span onclick="return btnAdd_onclick()"><spring:message code = 'ezApprovalG.t1249' /></span></li>
+	            <li><span onclick="return btnInfo_onclick()"><spring:message code = 'ezApprovalG.t1277' /></span></li>	            
 	        </ul>
 	    </div>
 	
@@ -323,11 +326,11 @@
 	    <table>
 	        <tr>
 	            <td>
-	                <div class="box" id="TreeView" style="height: 400px; width: 250px; overflow-x: auto; overflow-y: auto;"></div>
+	                <div class="box" id="TreeView" style="height: 550px; width: 250px; overflow-x: auto; overflow-y: auto;"></div>
 	            </td>
 	            <td style="padding-left: 5px">
 	                <div class="listview">
-	                    <div id="lvtForm" style="border: 0; HEIGHT: 400px; WIDTH: 700px; OVERFLOW-Y: auto; OVERFLOW-X: auto;">
+	                    <div id="lvtForm" style="border: 0; HEIGHT: 550px; WIDTH: 700px; OVERFLOW-Y: auto; OVERFLOW-X: auto;">
 	                    </div>
 	                </div>
 	            </td>

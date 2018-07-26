@@ -8,7 +8,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e3'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+		<style>
+			.mainlist tr th { border-top:0px }
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -199,8 +202,7 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code = 'ezApprovalG.t713' /></h1>
-		<div class="page" id="PageNum"><span id="listcount">&nbsp;</span></div>
+		<h1><spring:message code = 'ezApprovalG.t713' /></h1>		
 		<div id="mainmenu">
   			<ul>
       			<b><spring:message code = 'ezApprovalG.t1276' /></b>
@@ -212,14 +214,16 @@
 		   		<li id=UpdateClass style="display:none" ><span onClick="return ReceiveTaskResult()" ><spring:message code = 'ezApprovalG.t714' /></span></li>
 			   	<li id=ViewTaskCode><span onClick="return btnViewTask_onclick()" ><spring:message code = 'ezApprovalG.t715' /></span></li>
 			   	<li id=ViewTaskCode><span onClick="return btnViewTaskHistoryInfo_onclick()" ><spring:message code = 'ezApprovalG.t716' /></span></li>
+			   	<div id="PageNum" style="margin:15px 0px 0px 258px"><span id="listcount">&nbsp;</span></div>
   			</ul>
 		</div>
+		
 		<table>
   			<tr> 
-				<td><div class="box" id="TreeView" style="border:1px solid #ddd; height:400px;width:250px; overflow-x:auto;overflow-y:auto"></div></td>
+				<td><div class="box" id="TreeView" style="border:1px solid #ddd; height:550px;width:250px; overflow-x:auto;overflow-y:auto"></div></td>
 				<td style="padding-left:5px" >
         			<div class="listview">
-            			<div id="lvtDoclist" style="OVERFLOW-Y:auto; overflow-x:auto;border:0;HEIGHT: 400px; WIDTH: 490px" onClick ="" onselchanged="lvtDoclist_onselchanged()" onrowdblclick="">
+            			<div id="lvtDoclist" style="OVERFLOW-Y:auto; overflow-x:auto;border:0;HEIGHT: 550px; WIDTH: 100%; min-width:1200px" onClick ="" onselchanged="lvtDoclist_onselchanged()" onrowdblclick="">
             			</div>
         			</div>
 				</td>

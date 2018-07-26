@@ -808,8 +808,8 @@ public class EzWebFolderGWController {
 			String primary         = userInfo.getPrimary();
 			int startRow           = (pageSize * (pageNum - 1)) + 1;
 			int endRow             = pageSize * pageNum;
-			int cnt                = ezOrganAdminService.getPermissionListCount(companyId, type, primary, tenantId);
-			List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyId, type, primary, startRow, endRow, tenantId);
+			int cnt                = ezOrganAdminService.getPermissionListCount(companyId, type,"","", primary, tenantId);
+			List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyId, type,"","", primary, startRow, endRow, tenantId);
 			
 			logger.debug("List size: " + list.size());
 			

@@ -40,7 +40,8 @@
 			        }
 			    }
 			    
-				var UserAgentState = navigator.userAgent.toLowerCase();
+			    /* 2018-06-20 홍승비 - 커뮤니티 가입(비공개) 팝업 리사이즈 미사용 주석처리 */
+				/* var UserAgentState = navigator.userAgent.toLowerCase();
 		        
 		        if (CrossYN()) {
 		        	if (UserAgentState.indexOf("chrome") > 0) {
@@ -61,8 +62,9 @@
 		        if (MACSAFARIYN()) {
 		            window.resizeTo(330, 251);
 		        }
+		        */        
 			}
-			
+			 
 			function btn_OpinionOK_onclick() {
 			    if (ReturnFunction != null) {
 			        ReturnFunction(true, ReturnFunctionName);
@@ -105,7 +107,7 @@
 	        </div>
 	        
 	        <div class="popup_noti_btnarea">
-	            <div class="btnposition">
+	            <div class="btnposition" style="padding-top:0px;">
 	                <input type="submit"  value="<spring:message code = 'ezCommunity.t108' />" id="btn_OpinionOK" onClick="return btn_OpinionOK_onclick()">
 	                <input type="submit"  value="<spring:message code = 'ezCommunity.t109' />" id="btn_OpinionCANCEL" onClick="return btn_OpinionCANCEL_onclick()">
 	            </div>

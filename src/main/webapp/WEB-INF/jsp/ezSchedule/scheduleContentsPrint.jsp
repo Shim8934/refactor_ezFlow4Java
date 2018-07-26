@@ -16,7 +16,7 @@
 			    empty-cells: show;
 			    padding:0;margin:0;
 			    font-size:12px;
-			    font-family: 'Gulim', 'arial', 'verdana';
+			    font-family: Gulim, Meiryo UI;
 		    }
 		    .printcontent th{
 			    white-space: nowrap;
@@ -114,7 +114,7 @@
 	          	<tr>
 	            	<th><spring:message code='ezSchedule.t311' /></th>
 	              	<td colspan="3">
-	                	<div id="printAttendant">${printAttendant}</div>
+	                	<div id="printAttendant" style="padding:2px 0px;">${printAttendant}</div>
 	              	</td>
 	          	</tr>
 	          	</c:if>
@@ -125,13 +125,15 @@
 				    </td>
 				    <th><spring:message code='ezSchedule.t313' /></th>
 				    <td>
-				       <div id="printLocation">${printLocation}</div>
+				    	<!-- 2018-07-09 김보미 - 태그적용 막기 -->
+						<%-- <div id="printLocation">${printLocation}</div> --%>
+						<div id="printTitle"><c:out value="${printLocation}" /></div>
 				   </td>
 				</tr>
 				<tr>
 				    <th><spring:message code='ezSchedule.t314' /></th>
 				    <td colspan="3">
-				        <div id="printTitle">${printTitle}</div>
+				        <div id="printTitle"><c:out value="${printTitle} " escapeXml="true" /></div>
 				    </td>
 				</tr>
 			</table>

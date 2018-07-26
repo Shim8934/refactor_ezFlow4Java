@@ -314,9 +314,9 @@
 	       
 	        var feature = GetOpenPosition(820, 700);
 	        if (CrossYN() || pNoneActiveX == "YES") {
-	        	window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}&brdName=" + encodeURIComponent("${brdNm}"), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	        	window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}", "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        } else {
-                window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}&brdName=" + encodeURIComponent("${brdNm}"), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        }
 	    }
 
@@ -406,61 +406,66 @@
         }
 		//2018-06-05 구해안 showres 함수 추가
 		function showRes(val01) {
-	    		$.ajax({
-					type : "POST",
-					dataType : "json",
-					async : false,
-					url : "/ezResource/scheduleResourceData.do",
-					data : { 
-						resourceId   : val01						
-					},
-					success: function(result){
-						if (result.primary == "1") {						
-							$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
-							$("#ownerDept").html(result.resBrd.ownDeptNm);
-							$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm);
-						} else {
-							$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
-							$("#ownerDept").html(result.resBrd.ownDeptNm2);
-							$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm2);
-						}
-						
-						$("#ownerCall").html(result.resBrd.ownerCall);
-						$("#resLocation").html(result.resBrd.resLocation);						
-						
-						var approveFlag = result.resBrd.approveFlag;
-						
-						if (approveFlag == "1") {
-							$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
-						} else {
-							$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
-						}
-						
-						var resbrdExc = result.resBrd.brdExplain.replace(/(?:\r\n|\r|\n)/g, '<br />');
-						
-						$("#brdExplain").html(resbrdExc);
-						
-						/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
-			        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
-			        	
-			        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
-			        	
-			        	$("#ResourceInfo").css("left", popupX);
-			        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
-						
-						$("#ResourceInfo").modal();
-					}, 
-					error: function() {
-						
+    		$.ajax({
+				type : "POST",
+				dataType : "json",
+				async : false,
+				url : "/ezResource/scheduleResourceData.do",
+				data : { 
+					resourceId   : val01						
+				},
+				success: function(result){
+					if (result.primary == "1") {						
+						$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
+						$("#ownerDept").html(result.resBrd.ownDeptNm);
+						$("#brdNm").html(result.resBrd.brdNm);
+					} else {
+						$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
+						$("#ownerDept").html(result.resBrd.ownDeptNm2);
+						$("#brdNm").html(result.resBrd.brdNm2);
 					}
-				});	    		
-	        }
+					
+					$("#ownerCall").html(result.resBrd.ownerCall);
+					$("#resLocation").html(result.resBrd.resLocation);						
+					
+					var approveFlag = result.resBrd.approveFlag;
+					
+					if (approveFlag == "1") {
+						$("#approveFlag").html("<spring:message code='ezResource.t272'/>");
+					} else {
+						$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
+					}
+					
+					var resbrdExc = result.resBrd.brdExplain.replace(/(?:\r\n|\r|\n)/g, '<br />');
+					
+					$("#brdExplain").html(resbrdExc);
+					
+					/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+		        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
+		        	
+		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+		        	
+		        	$("#ResourceInfo").css("left", popupX);
+		        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
+					
+					$("#ResourceInfo").modal();
+				}, 
+				error: function() {
+					
+				}
+			});	    		
+        }
+		
+		function SearchOptionHidden() {
+        	$.modal.close();
+        }
     </script>
 	
 	</head>
 	<!-- 2018-06-13 구해안 우측 여백수정 -->
+	<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
 	<body class="mainbody" style="overflow: auto; margin-bottom:0px;padding-right: 6px;" id="BodyTop">
-		<h1><span id="titleimg"></span> <c:out value='${brdNm}' /></h1>
+		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title="${brdNm}"><span id="titleimg"></span> <c:out value='${brdNm}' /></h1>
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
@@ -468,9 +473,6 @@
 		<div id="mainmenu">
   			<ul>
     			<li><span id="pn_img" onClick="newSchedule_onclick(event)"><spring:message code='ezResource.t171'/></span></li>
-    			<li><span onclick='onViewDate("DAY");'><spring:message code='ezResource.t251'/></span></li>
-    			<li><span onclick='onViewDate("WEEK");'><spring:message code='ezResource.t253'/></span></li>
-    			<li><span onclick='onViewDate("MONTH");'><spring:message code='ezResource.t255'/></span></li>
     			<!-- 2018-06-05 구해안 자원정보 버튼 추가 및 resinfo 정보 popup으로 수정 -->
     			<li><span onclick='showRes(${resID});'><spring:message code='ezResource.t142'/></span></li>
     			<c:if test="${adminFg eq 'Y'}" >
@@ -479,6 +481,10 @@
     					<li id="approvlist"><span onClick="btnApprov_list();"><spring:message code='ezResource.t1000'/></span></li>
     				</c:if>
     			</c:if>
+    			<!-- <li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li> -->
+    			<li><span onclick='onViewDate("DAY");'><spring:message code='ezResource.t251'/></span></li>
+    			<li><span onclick='onViewDate("WEEK");'><spring:message code='ezResource.t253'/></span></li>
+    			<li><span onclick='onViewDate("MONTH");'><spring:message code='ezResource.t255'/></span></li>
     			<!-- 2018-06-05 구해안 허가,비허가 오른쪽으로 ui 수정 -->
 				<li style="background:none;float:right;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t370'/></li>
     			<li style="background:none;float:right;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code='ezResource.t369'/></li>
@@ -496,36 +502,42 @@
 			</tr>
 		</table>	
 		<!-- 2018-06-04 구해안 resinfo display:none 으로 추가 -->
+		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
 		<div id="ResourceInfo" style="display: none">
-        	<table id="resourceDataTable" style="width:440px; font-size:12;border-collapse:collapse; border-spacing:0px; margin-top:10px; border-color:#ccc; margin-bottom:10px">
-				<tr>
-					<th colspan="2" class="layerHeader" id="brdNm"></th>
-				</tr>
-				<tr>
-					<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
-					<td><span id="ownerNm"></span></td>
-				</tr>
-				<tr>
-					<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t151'/></th>
-					<td><span id="ownerDept"></span></td>
-				</tr>
-				<tr>
-					<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t155'/></th>
-					<td><span id="ownerCall"></span></td>
-				</tr>
-				<tr>
-					<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t148'/></th>
-					<td style="word-break:break-all;" id="resLocation"><%-- ${resLocation} --%></td>
-				</tr>							
-				<tr>
-					<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
-					<td id="approveFlag"></td>
-				</tr>
-				<tr>
-					<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
-					<td><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></td>
-				</tr>
-         	</table>
+			<div class="popupJQLayer" style="padding-top:6px">
+				<div class="title" id="brdNm" style="overflow:hidden; text-overflow:ellipsis; width:450px; white-space:nowrap;" title="${brdNm }"></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span></span></a></li>
+		            </ul>
+		        </div>
+	        	<table id="resourceDataTable" style="width:478px; margin-top:10px;">
+					<tr>
+						<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
+						<td><span id="ownerNm"></span></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t151'/></th>
+						<td><span id="ownerDept"></span></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t155'/></th>
+						<td><span id="ownerCall"></span></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t148'/></th>
+						<td style="word-break:break-all;" id="resLocation"><%-- ${resLocation} --%></td>
+					</tr>							
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
+						<td id="approveFlag"></td>
+					</tr>
+					<tr>
+						<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
+						<td><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></td>
+					</tr>
+	         	</table>
+	         </div>	
         </div>
 	</body>
 </html>

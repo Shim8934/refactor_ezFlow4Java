@@ -74,3 +74,4 @@ var strLang70	=	"시작시간은 종료시간보다 빨라야합니다.";
 /*2018-05-24 구해안*/
 var strLang71 = "期间"
 var strLang72 = "不设置终结日期";
+var strLang73 = "저장";

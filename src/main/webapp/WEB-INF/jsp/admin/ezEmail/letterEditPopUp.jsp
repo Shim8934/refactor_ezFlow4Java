@@ -15,6 +15,11 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 	</head>
 	<body style="background: url(/images/kr/cm/popup_bg.gif) #ffffff repeat-x left top">
+		<div id="close">
+            <ul>
+                <li><span onclick="letterPopUpClose()"></span></li>
+            </ul>
+        </div>
 		<div id="leTop">
 			<div class="leTitle" style="margin-left:5px;"></div>
 			<div class="leLetter"  style="padding:8px; padding-top:3px;">
@@ -26,11 +31,11 @@
 							<col width="">
 						</colgroup>
 						<tr>
-							<th><spring:message code='ezEmail.letter8'/> (${primary })</th>
+							<th style="font-weight: normal"><spring:message code='ezEmail.letter37'/></th>
 							<td><input type="text" id="displayname" name="displayname" maxlength="40" placeholder="<spring:message code='ezEmail.letter10'/>"></td>
 						</tr>
 						<tr>
-							<th><spring:message code='ezEmail.letter8'/> (${secondary })</th>
+							<th style="font-weight: normal"><spring:message code='ezEmail.letter38'/></th>
 							<td><input type="text" id="displayname2" name="displayname2" maxlength="40" placeholder="<spring:message code='ezEmail.letter10'/>"></td>
 						</tr>
 					</table>
@@ -50,21 +55,12 @@
 					<button id="leSave" onClick="letterSave(this)"><spring:message code='main.sp09'/></button>
 					<button id="leClose" onClick="letterPopUpClose()"><spring:message code='main.t135'/></button>
 				</div> --%>
-				<div style="width:100%;margin-left:-10px;position: fixed; bottom: 0px; z-index: 1000;height:45px;background-color:#f8f8fa;">
-					<div id="mainmenu" style="margin-top:8px; margin-left:45%; position:relative;">
-				        <ul>
-				            <li><span style="border-image: none;" onClick="letterSave(this)">&nbsp;<spring:message code='main.sp09'/>&nbsp;</span></li>
-				            <li><span style="border-image: none;" onClick="letterPopUpClose()">&nbsp;<spring:message code='main.t135'/>&nbsp;</span></li>
-				        </ul>
-				    </div>
-				</div>
+				
+				<div class="btnpositionNew">
+		            <a class="imgbtn"><span onClick="letterSave(this)"><spring:message code='main.sp09'/></span></a>
+			    </div>
 			</div> <!-- leLetter End -->
 		</div>
-			
-		<script>
-			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-		</script>
-		
 		<script>
 			var popUpType = "${popUpType}"; // add 작성, modify 수정
 			var popLetterBoxNo = "${letterBoxNo}";

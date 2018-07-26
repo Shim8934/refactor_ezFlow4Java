@@ -90,7 +90,7 @@ var strLang101 = "メニューでキャンセルできます。";
 var strLang102 = "に送信されます。\n送信をキャンセルするには";
 var strLang103 = "エラーが発生しました。";
 var strLang104 = "エラーが発生しました。";
-var strLang105 = "エラーが発生しました。";
+var strLang105 = "サーバへの接続に失敗しました。しばらくしてから再度お試しください。";
 var strLang106 = "エラーが発生しました。 - ";
 var strLang107 = "エラーが発生しました。 - ";
 var strLang108 = "メールを下書きに保存しました。";
@@ -308,7 +308,7 @@ var strLangKMS08 = "フォルダはアップロードすることができませ
 var strLangKYJ01 = "選択したメールがありません。";
 var strLangKYJ02 = "再利用するメールを選択してください。";
 var strLangKYJ03 = "スペースは入力できません。";
-	
+var strLangLSD02 = "選択した部署に部署員が登録されていないため、宛先指定できません。";
 
 function GetLocalTime(Offset , pDateTime)
 {

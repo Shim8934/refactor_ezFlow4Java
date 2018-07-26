@@ -9,7 +9,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css"/>
 <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-<link rel="stylesheet" href="/css/organ_tree.css" type="text/css"/>    
+<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css"/>    
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>	
@@ -745,80 +745,83 @@ function AprDept_onDblclick()
 </script>
 </head>
 <body class="popup">
-<xml id="userlist_h" style="display:none">
-	<LISTVIEWDATA>
-		<HEADERS>
-			<HEADER>
-				<NAME><spring:message code='ezApprovalG.t249'/></NAME>
-				<WIDTH>80</WIDTH>
-			</HEADER>
-		</HEADERS>
-		<ROWS></ROWS>
-	</LISTVIEWDATA>
-</xml>
-<h1><spring:message code='ezApprovalG.t235'/></h1>
+	<xml id="userlist_h" style="display:none">
+		<LISTVIEWDATA>
+			<HEADERS>
+				<HEADER>
+					<NAME><spring:message code='ezApprovalG.t249'/></NAME>
+					<WIDTH>80</WIDTH>
+				</HEADER>
+			</HEADERS>
+			<ROWS></ROWS>
+		</LISTVIEWDATA>
+	</xml>
+	<h1><spring:message code='ezApprovalG.t235'/></h1>
+	<div id="close">
+        <ul>
+            <li><span id="AprDeptCancel" onclick="return AprDeptCancel_onclick()"></span></li>
+        </ul>
+    </div>
+	<table style="width:730px">
+		<tr>
+			<td style="vertical-align:top; width:300px">
+				<table>
+					<tr>
+	                    <td style="vertical-align:top" colspan="2" ><h2><spring:message code='ezApprovalG.t232'/></h2>									
+	                        <div class="box" style="overflow:auto;height:305px;width:300px;" id="TreeView"></div>
+	                    </td>
+					</tr>
+					<tr>
+						<td style="padding-top:5px" ><div class="listview">	
+						<div id="UserList" style="overflow:auto;Border:0;Width:100%; Height:160px;"></div>
+						</div></td>
+					</tr>
+					<tr>
+						<td style="height:30px; text-align:right">
+							<input id="textUser" style="width:100px" name="textUser" onKeyPress="return textUser_onkeypress()" tabindex="1">
+                            <a class="imgbtn imgbck" style="vertical-align:middle">
+                                <span id="btn_searchUser" onKeyPress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t250'/></span>
+                            </a>
+						</td>
+					</tr>
+				</table>
+			</td>
+            <td style="width:50px;text-align:center">
+                <img id="AprDeptAdd"  alt="<spring:message code='ezApprovalG.t251'/>" src="/images/arr_right.gif" width="16"
+		        height="16" onClick="return AprDeptAdd_onclick()"
+		        onmouseover="MM_swapImage('Image10','','/images/arrow_next.gif',1)" onMouseOut="MM_swapImgRestore()" style="CURSOR:pointer"><br>
+		          <img id="AprDeptDel" alt="<spring:message code='ezApprovalG.t252'/>"  src="/images/arr_left.gif"  width="16"
+		        height="16" onClick="return AprDeptDel_onclick()" onMouseOut="MM_swapImgRestore()"
+		        onMouseOver="MM_swapImage('Image11','','/images/arrow_delete1.gif',1)" style="CURSOR:pointer"><br><br><br>
+		          <img id="AprDeptAdd2" alt="<spring:message code='ezApprovalG.t251'/>"  src="/images/arr_right.gif" style="CURSOR:pointer" width="16" height="16" onClick="return AprDeptAdd2_onclick()" onMouseOut="MM_swapImgRestore()"
+		        onmouseover="MM_swapImage('Image10','','/images/arrow_next.gif',1)">
+            </td>
+			<td style="vertical-align:top">
+				<table>
+					<tr>
+					  <td style="white-space:nowrap" ><h2><spring:message code='ezApprovalG.t253'/></h2></td>
+					  <td style="display:none"><a class="imgbtn imgbck"><span onClick="return btn_DeptGroupAdd()" ><spring:message code='ezApprovalG.t254'/></span></a></td>
+				  	</tr>
+					<tr>
+						<td colspan="2" style="vertical-align:top">
+                            <div class="listview">									
+							    <div id="APRDEPT" style="overflow:auto;border:0;HEIGHT: 500px; WIDTH: 400px;margin:1px 1px 1px 1px;">
+							</div></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
 
-			<table style="width:730px">
-				<tr>
-					<td style="vertical-align:top; width:300px">
-						<table>
-							<tr>
-                                <td style="vertical-align:top" colspan="2" ><h2><spring:message code='ezApprovalG.t232'/></h2>									
-                                    <div class="box" style="overflow:auto;height:305px;width:300px;" id="TreeView"></div>
-                                </td>
-							</tr>
-							<tr>
-								<td style="padding-top:5px" ><div class="listview">	
-								<div id="UserList" style="overflow:auto;Border:0;Width:100%; Height:160px;"></div>
-								</div></td>
-							</tr>
-							<tr>
-								<td style="height:30px; text-align:right">
-									<input id="textUser" style="width:100px" name="textUser" onKeyPress="return textUser_onkeypress()" tabindex="1">
-                                    <a class="imgbtn" style="vertical-align:middle">
-                                        <span id="btn_searchUser" onKeyPress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t250'/></span>
-                                    </a>
-								</td>
-							</tr>
-						</table>
-					</td>
-                    <td style="width:50px;text-align:center">
-                        <img id="AprDeptAdd"  alt="<spring:message code='ezApprovalG.t251'/>" src="/images/arr_right.gif" width="16"
-				            height="16" onClick="return AprDeptAdd_onclick()"
-				            onmouseover="MM_swapImage('Image10','','/images/arrow_next.gif',1)" onMouseOut="MM_swapImgRestore()" style="CURSOR:pointer"><br>
-		                <img id="AprDeptDel" alt="<spring:message code='ezApprovalG.t252'/>"  src="/images/arr_left.gif"  width="16"
-				            height="16" onClick="return AprDeptDel_onclick()" onMouseOut="MM_swapImgRestore()"
-				            onMouseOver="MM_swapImage('Image11','','/images/arrow_delete1.gif',1)" style="CURSOR:pointer"><br><br><br>
-		                <img id="AprDeptAdd2" alt="<spring:message code='ezApprovalG.t251'/>"  src="/images/arr_right.gif" style="CURSOR:pointer" width="16" height="16" onClick="return AprDeptAdd2_onclick()" onMouseOut="MM_swapImgRestore()"
-				            onmouseover="MM_swapImage('Image10','','/images/arrow_next.gif',1)">
-                    </td>
-					<td style="vertical-align:top">
-						<table>
-							<tr>
-							  <td style="white-space:nowrap" ><h2><spring:message code='ezApprovalG.t253'/></h2></td>
-											<td style="display:none"><a class="imgbtn"><span onClick="return btn_DeptGroupAdd()" ><spring:message code='ezApprovalG.t254'/></span></a></td>
-						  </tr>
-							<tr>
-								<td colspan="2" style="vertical-align:top">
-                                    <div class="listview">									
-									    <div id="APRDEPT" style="overflow:auto;border:0;HEIGHT: 500px; WIDTH: 400px;margin:1px 1px 1px 1px;">
-									</div></div>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-
-<div class="btnposition">
-<a class="imgbtn"><span id="AprDeptSave" onclick="return AprDeptSave_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-<a class="imgbtn"><span id="AprDeptCancel" onclick="return AprDeptCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>  
-</div>
-<%--START--%>
-<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
-<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
-</div>
+	<div class="btnpositionNew">
+		<a class="imgbtn"><span id="AprDeptSave" onclick="return AprDeptSave_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
+	</div>
+	<%--START--%>
+	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+		<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	</div>
 <%--END--%>
 </body>
 </html>

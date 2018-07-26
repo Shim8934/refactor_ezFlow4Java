@@ -76,9 +76,18 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_TENANTID", tenantID);
 		map.put("v_PQUERY", userID);
 		
+		/* 2018-07-12 홍승비 - PRI 제약을 가지는 CompanyID 칼럼의 데이터 삽입 판단용 분기 추가(차후 companyID 통합 시 제거) */
 		try {
-			ezBoardAdminDAO.addMyBoards(map);
-			ezBoardAdminDAO.getBoardTree_Set_D(map);
+			// 해당 테이블이 companyID 칼럼을 가지고 있는 경우
+			if (ezBoardAdminDAO.checkCompanyIDCol() != 0) {
+				ezBoardAdminDAO.addMyBoardsComp(map);
+				ezBoardAdminDAO.getBoardTree_Set_D(map);
+			}
+			// 해당 테이블에 companyID 칼럼이 없는 경우
+			else {
+				ezBoardAdminDAO.addMyBoards(map);
+				ezBoardAdminDAO.getBoardTree_Set_D(map);
+			}
 			
 			logger.debug("addMyBoards ended");
 			return "OK";
@@ -792,6 +801,15 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				boardListHeaderVO.setColName(doc.getElementsByTagName("COLNAME").item(i).getTextContent());
 				boardListHeaderVO.setWidth(doc.getElementsByTagName("WIDTH").item(i).getTextContent());
 				boardListHeaderVO.setName("Y");
+				
+				/* 2018-07-25 홍승비 - 기본헤더 저장 시 다국어 저장을 위한 분기 추가 */
+				if (boardListHeaderVO.getColName().equals("ATTACHMENTS") || boardListHeaderVO.getColName().equals("TITLE") || boardListHeaderVO.getColName().equals("WRITERDEPTNAME")
+						|| boardListHeaderVO.getColName().equals("WRITERNAME") || boardListHeaderVO.getColName().equals("WRITEDATE") || boardListHeaderVO.getColName().equals("READCOUNT")) {
+					boardListHeaderVO.setIsInitHeader("YES");
+				}
+				else {
+					boardListHeaderVO.setIsInitHeader("NO");
+				}
 				
 				ezBoardAdminDAO.saveHeader(boardListHeaderVO);
 			}

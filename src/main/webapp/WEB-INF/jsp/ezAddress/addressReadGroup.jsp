@@ -9,6 +9,11 @@
 		<link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<style>
+			select {
+				background: none;
+			}
+		</style>
 		<script type="text/javascript">
 			var creatorid = "${addressInfo.creatorId}";
 			var modifierid = "${addressInfo.modifierId}";
@@ -42,8 +47,12 @@
 			        userid = creatorid;
 			    else
 			        userid = modifierid;
+			    
+			    // 2018.07.26  - 팝업을 창 가운데 띄우도록 개선 (재은 수정)
+				var popupX = Math.ceil((window.screen.width - 500)/2);
+				var popupY = Math.ceil((window.screen.height - 500)/2);
 		
-			    window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			    window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + popupX + ",top=" + popupY);
 			}
 			function modify_address() {
 				if (creatorid != userid && modifierid != userid) {
@@ -67,47 +76,52 @@
 				window.close();
 			}
 		    function write_letter() {
-		        var xmlHTTP = createXMLHttpRequest();
-		        var xmlDom = createXmlDom();
-		
-		        var objNode, objRow, objRows, objRowRow;
-		        objNode = createNodeInsert(xmlDom, objNode, "DATA");
-		        createNodeAndInsertText(xmlDom, objNode, "ADDRESSID", addressid);
-		        createNodeAndInsertText(xmlDom, objNode, "FOLDERTYPE", foldertype);
-		
-		        /* if(foldertype == "P")
-		            xmlHTTP.open("POST", "RemoteEWS/address_get_groupemail.aspx", false);
-		        else
-		            xmlHTTP.open("POST", "Remote/address_get_groupemail.aspx", false); */
-		        xmlHTTP.open("POST", "/ezAddress/addressGetGroupEmail.do", false);
-		        
-		        xmlHTTP.send(xmlDom);
-		        xmlDom = loadXMLString(xmlHTTP.responseText);
-		        var email = "";
-		        var emailRows = SelectNodes(xmlDom, "DATA/ROW");
-		        
-                if (emailRows.length > 0) {
-                    var addrname = getNodeText(document.getElementById("TextName"));
-                    if (foldertype == "P")
-                        var addremail = addressid + "|!|P";
-                    else
-                        var addremail = addressid + "|!|D";
-
-                    if (email == "")
-                        email = "\"" + addrname + "\" <" + addremail + ">";
-                    else
-                        email += ",\"" + addrname + "\" <" + addremail + ">";
-                }
-		        		        
-		        var pheight = window.screen.availHeight;
-		        var conHeight = pheight * 0.8;
-		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
-		        
-	            window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
-	            	"top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		    }
+			    if(document.getElementById("ListMember").length > 0){
+			                
+			        var xmlHTTP = createXMLHttpRequest();
+			        var xmlDom = createXmlDom();
+			
+			        var objNode, objRow, objRows, objRowRow;
+			        objNode = createNodeInsert(xmlDom, objNode, "DATA");
+			        createNodeAndInsertText(xmlDom, objNode, "ADDRESSID", addressid);
+			        createNodeAndInsertText(xmlDom, objNode, "FOLDERTYPE", foldertype);
+			
+			        /* if(foldertype == "P")
+			            xmlHTTP.open("POST", "RemoteEWS/address_get_groupemail.aspx", false);
+			        else
+			            xmlHTTP.open("POST", "Remote/address_get_groupemail.aspx", false); */
+			        xmlHTTP.open("POST", "/ezAddress/addressGetGroupEmail.do", false);
+			        
+			        xmlHTTP.send(xmlDom);
+			        xmlDom = loadXMLString(xmlHTTP.responseText);
+			        var email = "";
+			        var emailRows = SelectNodes(xmlDom, "DATA/ROW");
+			        
+	                if (emailRows.length > 0) {
+	                    var addrname = getNodeText(document.getElementById("TextName"));
+	                    if (foldertype == "P")
+	                        var addremail = addressid + "|!|P";
+	                    else
+	                        var addremail = addressid + "|!|D";
+	
+	                    if (email == "")
+	                        email = "\"" + addrname + "\" <" + addremail + ">";
+	                    else
+	                        email += ",\"" + addrname + "\" <" + addremail + ">";
+	                }
+			        		        
+			        var pheight = window.screen.availHeight;
+			        var conHeight = pheight * 0.8;
+			        var pwidth = window.screen.availWidth;
+			        var pTop = (pheight - conHeight) / 2;
+			        var pLeft = (pwidth - 890) / 2;
+			        
+		            window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
+		            	"top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			    } else {
+			    	alert(document.getElementById("TextName").innerText + " <spring:message code='ezAddress.t277' />");
+			    }
+			}
 		</script>
 	</head>
 	<body class="popup">
@@ -122,12 +136,11 @@
 		    </div>
 		    <div id="close">
 		      <ul>
-		        <li><span onClick="window.close()"><spring:message code='ezAddress.t5' /></span></li>
+		        <li><span onClick="window.close()"></span></li>
 		      </ul>
 		    </div>
 		    <script type="text/javascript">
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
-				selToggleList(document.getElementById("close"), "ul", "li", "0");
 			</script>
 		    <table  class="content">
 		      <tr>
@@ -152,7 +165,7 @@
 		      </tr>
 		    </table>
 		    <div class="nobox" style="margin-top:10px;">
-		    	     <select id="ListMember" name="ListMember" style="width:100%;height:258px" size="4">${listMember}</select>
+		    	     <select id="ListMember" name="ListMember" style="width:100%;height:258px;overflow:auto" size="4">${listMember}</select>
 		  	</div>
 		  </div>
 		  <div id="printScreen" style="DISPLAY: none">

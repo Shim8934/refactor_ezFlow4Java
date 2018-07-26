@@ -8,7 +8,7 @@
 		<title><spring:message code='ezSchedule.t1004' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />	    
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css" />	    
 	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -346,6 +346,11 @@
 	    </xml>
 	    
 	    <h1><spring:message code='ezSchedule.t1004' /></h1>
+	    <div id="close"> 
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
@@ -381,9 +386,8 @@
 	        	</td>
 	      	</tr>
 	    </table>	    
-	    <div class="btnposition">
+	    <div class="btnpositionNew">
 	        <a class="imgbtn" name="Dbutton" ><span onClick="select_member()"><spring:message code='ezSchedule.t4' /></span></a>
-	        <a class="imgbtn" name="Rbutton"><span onClick="window.close()"><spring:message code='ezSchedule.t5' /></span></a>    
 	    </div>
 	</body>
 </HTML>

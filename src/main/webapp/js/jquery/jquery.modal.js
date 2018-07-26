@@ -107,12 +107,35 @@
     		  $(parent.frames["left"].document.body).css("overflow", "");
     		  $(parent.frames["left"].document.getElementById("blockLeft")).remove();
     	  }
+      }	else if (parent.frames["attitude_menu"]) {
+    	  if (parent.frames["attitude_menu"].document.getElementById("blockLeft")) {
+    		  $(parent.frames["attitude_menu"].document.getElementById("blockLeft")).remove();
+    	  }
       }
+      
+      if (parent.parent.frames["left"]) {
+    	  if (parent.parent.frames["board_menu"]) {  		  
+			  $(parent.parent.frames["board_menu"].document.body).css("overflow", "");
+			  $(parent.parent.frames["board_menu"].document.getElementById("blockLeft")).remove();
+			  $(parent.parent.frames["board_main"].document.getElementById("blockTop")).remove();
+		  }
+    	  else if (parent.parent.frames["left"].document.getElementById("blockLeft")) {  		  
+			  $(parent.parent.frames["left"].document.body).css("overflow", "");
+			  $(parent.parent.frames["left"].document.getElementById("blockLeft")).remove();
+			  $(parent.parent.frames["right"].document.getElementById("blockTop")).remove();
+		  }
+      }
+      
       modals.pop();
       this.unblock();
       this.hide();
-      if (!$.modal.isActive())
+      if (!$.modal.isActive()) {
         $(document).off('keydown.modal');
+        
+        if (parent.frames["right"]) {        	
+        	parent.frames["right"].document.body.style.overflow = "hidden";
+        }
+      }
     },
 
     block: function() {

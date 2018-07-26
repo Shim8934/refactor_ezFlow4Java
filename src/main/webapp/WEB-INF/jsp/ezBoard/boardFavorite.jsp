@@ -45,11 +45,14 @@
                 	var parentBoardName = getNodeText(listdom.getElementsByTagName("TOPBOARDLIST")[0]).split(';');
                 	for (var i = 0; i < listdom.getElementsByTagName("ROW").length; i++) {
                     	strHTML += "<tr BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' BoardOrder='" + i + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);'>";
-                    	if (getNodeText(listdom.getElementsByTagName("TABUSED")[i]) == "Y")
-	                        strHTML += "<td style='width:12%;text-align:center;'><input type='checkbox' BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' onclick='event_statuschange(this);' checked></td>";
-    	                else
-        	                strHTML += "<td style='width:12%;text-align:center;'><input type='checkbox' BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' onclick='event_statuschange(this);'></td>";
-        	            
+                    	
+                    	/* 2018-07-16 홍승비 - 게시판 환경설정 >  즐겨찾기 체크박스 정렬 */
+                    	if (getNodeText(listdom.getElementsByTagName("TABUSED")[i]) == "Y") {
+	                        strHTML += "<td style='width:12%;text-align:center; padding-right:20px;'><input type='checkbox' BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' onclick='event_statuschange(this);' checked></td>";
+                    	} else {
+        	                strHTML += "<td style='width:12%;text-align:center; padding-right:20px;'><input type='checkbox' BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' onclick='event_statuschange(this);'></td>";
+                    	}
+                    	
         	            if (strPrimary == "1") {
 	           		        strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + getNodeText(listdom.getElementsByTagName("BOARDNAME")[i]) + "</td>";
         	            } else {
@@ -168,9 +171,9 @@
                 	_RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
             	}
             	_RowObject = obj;
-            	obj.childNodes.item(0).style.backgroundColor = "#f0f6ff";
-            	obj.childNodes.item(1).style.backgroundColor = "#f0f6ff";
-            	obj.childNodes.item(2).style.backgroundColor = "#f0f6ff";
+            	obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
+            	obj.childNodes.item(1).style.backgroundColor = "#edf4fd";
+            	obj.childNodes.item(2).style.backgroundColor = "#edf4fd";
         	}
         	function swapNodes(item1, item2) {
             	var itemtmp = item1.cloneNode(1);
@@ -284,6 +287,9 @@
             	}
         	}
     	</script>
+    	<style>
+    		.mainlist tr th {border-top:0px}
+    	</style>    	
 	</head>
 	<body style="margin-left: 10px; margin-right: 10px;">
 		<br/>
@@ -332,8 +338,7 @@
                 	</tr>
             	</table>
         	</div>
-        	<br />
-        	<div style="width:435px; text-align:center;">
+        	<div class="btnpositionJsp" style="width:422px; text-align:center;">
             	<a class="imgbtn" onclick="Save();">
                 	<span><spring:message code="ezBoard.t98" /></span>
             	</a>

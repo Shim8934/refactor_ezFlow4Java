@@ -134,7 +134,9 @@
 		            document.getElementById("message").style.height = document.documentElement.clientHeight - 220 + "px";
 		        else
 			        document.getElementById("message").style.height = document.documentElement.clientHeight - 190 + "px";
-			}	
+				
+		        mailPrevSentDateChk();
+		    }	
 			
 			function HideMenu()
 			{
@@ -443,7 +445,16 @@
 				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
 				return feature;
 			}
-		    
+			
+		    function mailPrevSentDateChk() {
+		    	if (sentDateMsg != "") { // 전달 및 회신시 보낸시각
+		    		var sentDateHeight = $(".sentDateStr").innerHeight();
+		    		sentDateHeight = (Math.ceil(sentDateHeight/10) * 10);
+		    		
+		    		var messageH = $("#message").height();
+		    		$("#message").height(messageH - sentDateHeight);
+		    	}
+		    }
 		</script>
 	</head>
 
@@ -476,7 +487,7 @@
 		                    </c:if>
 		                </ul>
 		            </div>
-		            <div id="close"><ul><li><span onClick="OnBtnClose()"><spring:message code="ezEmail.t63" /></span></li></ul></div>	
+		            <div id="close"><ul><li><span onClick="OnBtnClose()"></span></li></ul></div>	
 		        </td> 
 		    </tr>  
 		    <tr> 
@@ -562,7 +573,7 @@
 		</table>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
+			
 			if("${pIsCCFg}"!="N") {
 				document.getElementById("message").style.height = document.documentElement.clientHeight - 220 + "px";
 			} else {

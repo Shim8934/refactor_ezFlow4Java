@@ -8,7 +8,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e3'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+		<style>
+			.mainlist tr th { border-top:0px }
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -294,14 +297,14 @@
 		<h1><spring:message code = 'ezApprovalG.t799' /></h1>
 		<div id="close">
 			<ul>
-		    	<li><span onClick="window.close()"><spring:message code = 'ezApprovalG.t64' /></span></li>
+		    	<li><span onClick="window.close()"></span></li>
 			</ul>
 		</div>
 		
 		<table>
 			<tr>
 		    	<td style="vertical-align:top;"><h2><spring:message code = 'ezApprovalG.t232' /></h2>
-		      		<div class="box" style="OVERFLOW:auto;width:210px; HEIGHT:245px" id="TreeView"></div>
+		      		<div class="box" style="OVERFLOW:auto;width:250px; HEIGHT:463px" id="TreeView"></div>
 		      	</td>
 		
 		    	<td style="width:25px;text-align:center;">
@@ -312,17 +315,13 @@
 		    	<td style="vertical-align:top;">
 		    		<h2><spring:message code = 'ezApprovalG.t432' /></h2>
 		      		<div class="listview">
-		        		<DIV id="APRLINE1" style="BORDER:0;WIDTH: 179px; HEIGHT: 245px;  OVERFLOW-Y:auto; OVERFLOW-X:auto;" ></DIV>
+		        		<DIV id="APRLINE1" style="BORDER:0;WIDTH: 250px; HEIGHT: 465px;  OVERFLOW-Y:auto; OVERFLOW-X:auto;" ></DIV>
 		      		</div>
 		      	</td>
 			</tr>
 		</table>
 		
-		<div class="point"><spring:message code = 'ezApprovalG.t807' /></div>
-		
-		<script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
+		<div class="point" style="margin-top:5px">※ <spring:message code = 'ezApprovalG.t807' /></div>
 		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

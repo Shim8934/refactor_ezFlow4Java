@@ -117,12 +117,11 @@
 }
 
 .test1{
-	font-family: 'Gulim', 'arial', 'verdana';    
     text-decoration: none;
     ime-mode: active;
 }
 
-.mainlist1{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.mainlist1{table-layout:fixed; border:0 none !important;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist1 tr{height:31px}
 .mainlist1 tr th{text-align:left;border:0px;text-decoration:none; font-size:12px; padding:8px 4px; border-top:1px solid #ddd;border-bottom:1px solid #ddd; background:url(/images/sub/th_bg1.gif) #fff repeat-x bottom;}
 .mainlist1 tr th.title{width:100%; text-align:left;}
@@ -133,7 +132,7 @@
 .mainlist1 tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
 
 
-.mainlist1_free{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.mainlist1_free{table-layout:fixed; border:0 none !important;font-size:12px; border-spacing:0; border-collapse:collapse;}
 /* fomace */
 .mainlist1_free tr th{text-align:left;border:0px;text-decoration:none; font-size:12px; padding:8px 4px; border-top:1px solid #ddd;border-bottom:1px solid #ddd; background:url(/images/sub/th_bg1.gif) #fff repeat-x bottom;}
 .mainlist1_free tr th.title{width:100%; text-align:left;}
@@ -142,7 +141,7 @@
 .mainlist1_free tr td.title{width:100%; text-align:left; }
 .mainlist1_free tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle;}
 
-.mainlist1_depth{table-layout:fixed; border:0 none !important;font-family:Gulim, Verdana, Arial, Helvetica, sans-serif;font-size:12px;}
+.mainlist1_depth{table-layout:fixed; border:0 none !important;font-size:12px;}
 .mainlist1_depth tr th{text-align:left;border:0px;text-decoration:none; font-size:12px; padding:8px 4px; border-top:1px solid #ddd;border-bottom:1px solid #ddd; background:url(../images/sub/th_bg2.gif) #eee repeat-x bottom;}
 .mainlist1_depth tr th.title{width:100%; text-align:left;}
 .mainlist1_depth tr th.left {border-left:1px solid #ddd;}
@@ -204,3 +203,6 @@ img.voteUserMailImg{float: right; margin-right: 10px; cursor: pointer;}
 .qstSetting{height:30px; line-height:30px; border-bottom:1px solid #DDD; margin:0px; padding:0px 5px;}
 
 .voteCmtCnt{color: #c64200;}
+
+#selectType{width:80px;height:27px;border-color:#c8c8c8;}
+#searchInput{height: 27px;border: 1px solid #cbcbcb; border-right:0px;}

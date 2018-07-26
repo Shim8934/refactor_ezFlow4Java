@@ -8,7 +8,7 @@
 		<title><c:out value="${title}" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />	    
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css" />	    
 	    <style>
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;
@@ -359,9 +359,34 @@
   					error : function(jqXHR, textStatus, errorThrown) {
   						alert(error);
   					}
-	  			});   
-	        	 
+	  			});
+	        	
+	        	$.ajax({
+					url : "/ezOrgan/getDeptMemberListCount.do",
+					method : "POST",
+					dataType : "json",
+					data : {
+						deptID : tempDeptID
+					},
+					success : function(result) {
+						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
+						
+						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
+			        		if (result.totalCount == result.totalCount2) {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang256 + "</span>]";
+			        		} else {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang256+ "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang256 + "</span>]";
+			        		}
+			            	
+			            	SelectDeptNM.setAttribute("countinfo","1")
+			        	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(error);
+					}
+				});
 	    	}
+	        
 	        function event_displayUserList(xml) {
 		        if (xml != null) {
     	            pListXML_Info = xml;
@@ -372,7 +397,7 @@
 		        } 
 		    }	    
 	        
-	        var m_strColorSelect = "#f0f6ff";
+	        var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -723,11 +748,15 @@
 		        }
 		        
 		        var UserListHTML = "";
-		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
-		        	//SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
-		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") + strLang256 + "</span>]";
+		        /* if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") != null && SelectSingleNodeValueNew(xmlRtn,"LISTVIEWDATA/TOTALCOUNT") != "") {
+		            if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang256 + "</span>]";
+	        		} else {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang256 + "</span>]";
+	        		}
+		            
 		            SelectDeptNM.setAttribute("countinfo", "1")
-		        }
+		        } */
 		        
 		        if (pListType == "IMG") {
 		            document.getElementById("DeptUserImgList").style.display = "";
@@ -1102,25 +1131,25 @@
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang268 + "</span>";
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang268 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang268 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -1144,27 +1173,27 @@
 		        }
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang269 + "</span>";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang269 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang269 + "</span>";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		            strtext = "";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        PagingHTML += "</div>";
@@ -1339,6 +1368,11 @@
 	</head>
 	<body class="popup" style="overflow:hidden">
 		<h1 id="h1Title"><c:out value="${title}" /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table style="width:100%">
 			<tr>
 				<td>
@@ -1394,7 +1428,7 @@
 	                                                </th>
 	                                            </tr>
 	                                        </table>
-	                                        <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
+	                                        <div style="vertical-align: top; height: 422px; overflow: auto; width: 440px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
 	                                                    <td style="width: 150px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezSchedule.t18' /></td>
@@ -1411,8 +1445,8 @@
 	                                                </tr>
 	                                            </table>
 	                                        </div>
-	                                        <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
-	                                        <div id="tblPageRayer" style="text-align:center;border-top:1px; height:32px"></div>
+	                                        <div style="vertical-align: top; text-align: center; height: 422px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
+	                                        <div id="tblPageRayer" style="text-align:center;border-top:1px;"></div>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -1434,10 +1468,9 @@
 	      		</td> 
 	    	</tr> 
 	 	</table>	    
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 	    	<a id="btnAddUser" class="imgbtn" onClick="Add_UserInfo_onclick()" style="display:none" ><span><spring:message code='ezSchedule.t123' /></span></a>
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezSchedule.t4' /></span></a>
-	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezSchedule.t5' /></span></a>
 		</div>
 	</body>
 </HTML>

@@ -364,11 +364,10 @@
 	            <ul><li><span onclick="javascript:Save_Onclick();"><spring:message code='ezQuestion.t163' /></span></li></ul>
 	        </div>
 	        <div id="close">
-	            <ul><li><span onclick="javascript:fun_QuesCancel();"><spring:message code='ezQuestion.t88' /></span></li></ul>
+	            <ul><li><span onclick="javascript:fun_QuesCancel();"></span></li></ul>
 	        </div>
 	        <script type="text/javascript">
 	            selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	            selToggleList(document.getElementById("close"), "ul", "li", "0");
 	        </script>
 	        <table class="content" style="margin-bottom:4px">
 	            <tr>
@@ -399,7 +398,7 @@
 	                        <input type="text" name="AttachPath" style="display:none" />        
 	                    </td>
 	                    <td class="pos2">
-	                        <a class="imgbtn"><span onclick="AttachFile_Onclick()"><spring:message code='ezQuestion.t173' /></span></a>
+	                        <a class="imgbtn imgbck"><span onclick="AttachFile_Onclick()"><spring:message code='ezQuestion.t173' /></span></a>
 	                    </td>
 	                </tr>
 	            </table>
@@ -426,24 +425,24 @@
 	            <table width="100%" class="content" style="margin-top:4px">
 	                <tr>
 	                    <td align="center">
-	                        <a class="imgbtn"><span onclick="javascript:fun_AddAns();"><spring:message code='ezQuestion.t176' /></span></a>
-	                        <a class="imgbtn"><span onclick="javascript:fun_AnsDelete();"><spring:message code='ezQuestion.t177' /></span></a>
+	                        <a class="imgbtn imgbck"><span onclick="javascript:fun_AddAns();"><spring:message code='ezQuestion.t176' /></span></a>
+	                        <a class="imgbtn imgbck"><span onclick="javascript:fun_AnsDelete();"><spring:message code='ezQuestion.t177' /></span></a>
 	                    </td>
 	                </tr>
 	                <tr>
 	                    <td>
-	                        <select name="input_Value" id="input_Value" size="4"  style="WIDTH:100%;HEIGHT:100px; background:none;"></select>
+	                        <select name="input_Value" id="input_Value" size="4"  style="WIDTH:100%;HEIGHT:170px; background:none;margin:0px;border:0px;margin-top:5px"></select>
 	                    </td>
 	                </tr>
 	            </table>
 	        </div>
 	    </form>
 	    <iframe name="ifrm" src="about:blank" style="display:none"></iframe>
-	    <form method="post" action="/ezQuestion/attachFileNonActX.do" name="Attach_Upload" id="Attach_Upload" target="ifrm" enctype="multipart/form-data" style="width:1px; height:1px;">
+	    <form method="post" action="/ezQuestion/attachFileNonActX.do" name="Attach_Upload" id="Attach_Upload" target="ifrm" enctype="multipart/form-data" style="display:none;">
 	        <input type="file" name="cmuds" id="cmuds" accept="image/*" onchange="javascript:TempFileOpen_onClick(this);" style="width:1px; height:1px;" />
 	        <input type="text" name="QstType" style="display:none" />
 	    </form>
-	    <form method="post" action="/ezQuestion/attachFileDeleteNonActX.do" name="Delete_Upload" id="Delete_Upload" target="ifrm" enctype="multipart/form-data" style="display:none">
+	    <form method="post" action="/ezQuestion/attachFileDeleteNonActX.do" name="Delete_Upload" id="Delete_Upload" target="ifrm" enctype="multipart/form-data" style="display:none;">
 	        <input type="text" name="QstIndex_delFile" />
 	        <input type="text" name="QstType_delFile" />
 	        <input type="text" name="QstPath_delFile" />

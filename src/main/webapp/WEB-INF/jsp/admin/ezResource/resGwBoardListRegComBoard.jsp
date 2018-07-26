@@ -198,8 +198,8 @@
     			</td>
   			</tr>
   			<tr>
-    			<th><spring:message code="ezResource.t47" /></th>
-    			<td style="height: 300px;"><textarea id="Brd_Explain" style="font-size:9pt ; width:98%; height:98%; margin-left:1px; margin-top: 1px;" rows="3"><c:out value="${getBrdInfo.brdExplain}" /></textarea></td>
+    			<th style="text-align:center"><spring:message code="ezResource.t47" /></th>
+    			<td ><textarea id="Brd_Explain" style="resize:none; font-size:9pt ; width:98.5%; height:300px; margin-top: 2px;margin-bottom:2px; overflow: auto;"><c:out value="${getBrdInfo.brdExplain}" /></textarea></td>
   			</tr>
   			<tr style="display:none">  
     			<th><spring:message code="ezResource.t48" /></th>
@@ -240,7 +240,7 @@
     			<td><textarea id="BRD_ACCESS" style="font-size:9pt ; width:100%" rows="3"><c:out value="${getBrdInfo.brdAccess}" /></textarea></td>
   			</tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionJsp">
     		<a class="imgbtn"><span onclick="cmdOK_onclick()" ><spring:message code="ezResource.t54" /></span></a>
 		</div>
 		<form name="brds">

@@ -8,6 +8,9 @@
 		<title><spring:message code='ezCircular.t82'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
+	    <style>
+	    	.mainlist tr th {border-top:0px}
+	    </style>
 	    <script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -38,7 +41,7 @@
 		<!-- 2018-02-14 김보미 - 닫기 -->
 		<div id="close">
 			<ul>
-				<li><span onclick="closing();"><spring:message code='ezCircular.t84' /></span></li>
+				<li><span onclick="closing();"></span></li>
 			</ul>
 		</div>
 		<div class="listview" style="height:220px; overflow:auto;">

@@ -132,6 +132,11 @@
 	</head>
 	<body class="popup" scroll="no" onload="javascript:window_onload()">
     	<h1><spring:message code='ezPortal.t147'/></h1>
+    	<div id="close">
+            <ul>
+                <li><span name="btnClose" onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table class="content" style="width:100%">
   			<tr>
     			<th>
@@ -142,16 +147,11 @@
     			</th>
   			</tr>
   			<tr>
-    			<td><div id="div_PortletList" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:280px;border:none"></div></td>
+    			<td><div id="div_PortletList" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:275px;border:none"></div></td>
   			</tr>
 		</table>
-    	<table width="270" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px"> 
-			<tr>
-				<td align="right">
-            		<a class="imgbtn" name="btnSave"><span onClick="Save()"><spring:message code='ezPortal.t282'/></span></a>
-            		<a class="imgbtn" name="btnClose"><span onClick="window.close()"><spring:message code='ezPortal.t8'/></span></a>
-				</td>
-			</tr>
-		</table>
+		<div class="btnpositionNew">
+       		<a class="imgbtn" name="btnSave"><span onClick="Save()"><spring:message code='ezPortal.t282'/></span></a>
+		</div>
 	</body>
 </html>

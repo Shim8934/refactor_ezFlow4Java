@@ -97,7 +97,7 @@
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t106'/>");
-		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "200");
+		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "150");
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t874'/>");
@@ -117,7 +117,7 @@
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");     
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t1029'/>");
-		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "450");
+		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "220");
 		
 		        Rows = createNodeAndAppandNode(oList, ListViewData, Rows, "ROWS");
 		
@@ -510,24 +510,28 @@
 	</head>
 	<body class="popup">
 		<div id="menu">
-		        <ul id="trModify" style="display:none">
-		          <li id="btnAddList"><span style="padding-top:1px" onClick="return btnAddList_onclick()"><spring:message code='ezApprovalG.t268'/></span></li>
-		          <li id="btnModList" ><span style="padding-top:1px" onClick="return btnModList_onclick()"><spring:message code='ezApprovalG.t1033'/></span></li>
-				  <li id="btnDelList"><span style="padding-top:1px" onClick="return btnDelList_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
-		        </ul>
-				<ul id="trChangeCabinet" style="display:none">
-		          <li id="btnSelectCabinet"><span onClick="return btnSelectCabinet_onclick()"><spring:message code='ezApprovalG.t941'/></span></li>
-		        </ul>
+	        <ul id="trModify" style="display:none">
+	          <li id="btnAddList"><span style="padding-top:1px" onClick="return btnAddList_onclick()"><spring:message code='ezApprovalG.t268'/></span></li>
+	          <li id="btnModList" ><span style="padding-top:1px" onClick="return btnModList_onclick()"><spring:message code='ezApprovalG.t1033'/></span></li>
+			  <li id="btnDelList"><span style="padding-top:1px" onClick="return btnDelList_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
+	        </ul>
+			<ul id="trChangeCabinet" style="display:none">
+	          <li id="btnSelectCabinet"><span onClick="return btnSelectCabinet_onclick()"><spring:message code='ezApprovalG.t941'/></span></li>
+	        </ul>
 		</div>
+		<div id="close">
+            <ul>
+                <li><span onclick="return btnClose_onclick()"></span></li>
+            </ul>
+        </div>
 		
-		<h2><spring:message code='ezApprovalG.t1034'/></h2>
+		<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1034'/></h2>
 		<div id="listviewdiv" class="listview" style="Width:100%; Height:225px;">
 		    <div id= "lvList" style="overflow:auto;border:0;Width:100%; Height:225px; font-size:9pt;"></div>
 		</div>
 		
 		<div class="btnposition btnpositionNew" >
-		<a class="imgbtn"><span onclick = "return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
-		<a class="imgbtn"><span onclick = "return btnClose_onclick()"> <spring:message code='ezApprovalG.t119'/></span></a>
+			<a class="imgbtn"><span onclick = "return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

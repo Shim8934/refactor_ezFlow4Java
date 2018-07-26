@@ -7,7 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />		
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css" />		
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
@@ -100,9 +100,9 @@
 		        }
 		
 		        _RowObject = obj;
-		        obj.childNodes.item(0).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(1).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(2).style.backgroundColor = "#f0f6ff";
+		        obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(1).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(2).style.backgroundColor = "#edf4fd";
 		    }
 		
 		    function event_dbclick() {}
@@ -162,10 +162,10 @@
 		        <li><span onClick="share_delete()"><spring:message code='ezSchedule.t41' /></span></li>
 		    </ul>
 		</div>
-	    <table style="width: 750px; height: 385px;" >
+	    <table style="width: 750px; height: 500px; border-bottom:1px solid #e8e8e8" >
             <tr>
                 <td>
-                    <div style="border: 1px solid #dbdbda;border-top:0px; width: 750px; height: 396px;">
+                    <div style="border: 1px solid #e8e8e8;border-top:0px;border-bottom:0px; width: 750px; height: 500px;">
                         <table class="mainlist" style="width: 100%;">
                             <tr>
                                 <th style="width: 38%;"><span><spring:message code='ezSchedule.t999' /></span></th>
@@ -173,7 +173,7 @@
                                 <th style="width: 30%;"><span><spring:message code='ezSchedule.t205' /><spring:message code='ezSchedule.t12' /></span></th>
                             </tr>
                         </table>
-                        <div id="contentlist" name="contentlist" style="height: 365px; overflow-y: auto;">
+                        <div id="contentlist" name="contentlist" style="height: 468px; overflow-y: auto;">
                             <table class="mainlist" style="width: 100%;">
                                 <tr>
                                     <td style="text-align: center;">

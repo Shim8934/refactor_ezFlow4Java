@@ -18,6 +18,7 @@ import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.ezMobile.ezPortal.vo.MPortalTimeLineVO;
+import egovframework.let.user.login.vo.LoginDeviceVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -177,7 +178,5 @@ public class MOptionServiceImpl extends EgovAbstractServiceImpl implements MOpti
 		
 		return info;
 	}
-	
-	
 	
 }

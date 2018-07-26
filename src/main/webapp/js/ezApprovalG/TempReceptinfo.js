@@ -238,10 +238,20 @@ function AddGroupReceptADD(p_AprLineTempletID) {
 				},
 		success: function(text){
 			result = text;
+			
+			document.getElementById('RECEPTLIST').innerHTML = "";
+			var listview = new ListView();
+            listview.SetID("lvRECEPTLIST");
+            listview.SetSelectFlag(false);
+            listview.SetHeightFree(true);
+            listview.SetRowOnDblClick("AprDeptDel_onclick");
+            listview.DataSource(loadXMLString(result));
+            listview.DataBind("RECEPTLIST");
 		}        			
 	});
 	
-    var ResultXML = loadXMLString(result)
+    /*var ResultXML = loadXMLString(result);
+    
     if (SelectNodes(ResultXML, "LISTVIEWDATA/ROWS/ROW").length > 0) {
         var listview = new ListView();
         listview.LoadFromID("lvRECEPTLIST");
@@ -306,7 +316,7 @@ function AddGroupReceptADD(p_AprLineTempletID) {
             }
         }
 
-    }
+    }*/
 }
 function DuplicateAddGroupReceptCheck(APRDEPT) {
     var listview = new ListView();
@@ -411,13 +421,13 @@ function AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN) {
 	});
 
     document.getElementById('RECEPTLIST').innerHTML = "";
-    var listview = new ListView();                      
-    listview.SetID("lvRECEPTLIST");                     
-    listview.SetMulSelectable(false);                     
+    var listview = new ListView();
+    listview.SetID("lvRECEPTLIST");
+    listview.SetMulSelectable(false);
     listview.SetHeightFree(true);
     listview.SetSelectFlag(false);
     listview.SetRowOnDblClick("AprDeptDel_onclick");
-    listview.DataSource(result);            
+    listview.DataSource(result);
     listview.DataBind("RECEPTLIST");
 }
 //############################################################################################################################################# 수신처 즐겨찾기 적용 

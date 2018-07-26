@@ -53,30 +53,35 @@
 					} else {
 							flag = true;
 				            var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
-				            alert(pAlertContent); // 추가
-				            //OpenAlertUI(pAlertContent);
+				            //alert(pAlertContent);
+				            OpenAlertUI(pAlertContent);
 				            return;
 					}
 			    }
 		    }
 		    
 		    var ezapralert_cross_dialogArguments = new Array();
-		    function OpenAlertUI(pAlertContent) {
+		    function OpenAlertUI(pAlertContent, CompleteFunction) {
+		        var parameter = pAlertContent;
+		        var url = "/ezApprovalG/ezAprAlert.do";
+		
 		        if (CrossYN()) {
-		            ezapralert_cross_dialogArguments[0] = pAlertContent;
-		            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-		            var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
-		            try { ezAPRALERT_Cross.focus(); } catch (e) {
-		            }
-		        } else {
-		            var parameter = pAlertContent;
-		            var url = "/ezApprovalG/ezAprAlert.do";
+		            ezapralert_cross_dialogArguments[0] = parameter;
+		            if (CompleteFunction != undefined)
+		                ezapralert_cross_dialogArguments[1] = CompleteFunction;
+		            else
+		                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+		            DivPopUpShow(330, 205, url);
+		        }
+		        else {
 		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		            feature = feature + GetShowModalPosition(330, 205);
 		            var RtnVal = window.showModalDialog(url, parameter, feature);
 		        }
 		    }
-		    
+		
 		    function OpenAlertUI_Complete() {
+		        DivPopUpHidden();
 		    }
 		    
 		    function btn_OpinionCANCEL_onclick() {
@@ -195,15 +200,23 @@
 		</script>
 	</head>
 	<body class="popup" >
-		<h1><spring:message code='ezApprovalG.t1745'/></h1>		
+		<h1><spring:message code='ezApprovalG.t1745'/></h1>
+		<div id="close">
+            <ul>
+                <li><span id="btn_OpinionCANCEL" onClick="return btn_OpinionCANCEL_onclick();"></span></li>
+            </ul>
+        </div>
 		<h2 style="font-weight: normal;margin-top:10px">▒&nbsp;<spring:message code='ezApprovalG.t1746'/></h2>
 		<div class="nobox"><input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%;height:25px;border:1px solid #ccc" onkeypress="password_OnKeyPress(event)"></div>
 		
 		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn" id="btn_OpinionOK" onClick="return btn_OpinionOK_onclick();"><span><spring:message code='ezApprovalG.t20'/></span></a>
-		    <a class="imgbtn" id="btn_OpinionCANCEL" onClick="return btn_OpinionCANCEL_onclick();"><span><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 		<input id="publicExponent" value="${publicExponent}" type="hidden"/>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </html>

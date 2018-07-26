@@ -286,7 +286,7 @@
 		<li><span onClick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t10017'/></span></li> 
 	</ul>
 </div>
-<div id="close"><ul><li id=btnClose ><span onClick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li></ul></div>
+<div id="close"><ul><li id=btnClose ><span onClick="return btnClose_onclick()"></span></li></ul></div>
 <table style="table-layout:fixed; width:100%; height:480px">
 	<tr> 
 		<td style="height:30px">
@@ -308,7 +308,6 @@
 </table>
 <script type="text/javascript">
 	selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	selToggleList(document.getElementById("close"), "ul", "li", "0");
 </script>
 
     <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezApprovalG/excelExportOut.do">

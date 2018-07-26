@@ -57,7 +57,8 @@
 						<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 						<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 						<script type="text/javascript" src="/js/mouseeffect.js"></script>
-						<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>					
+						<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+						<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>					
 						<%--
 						<c:choose>
 							<c:when test="${clubVO.c_MemberCnt < 0 }">
@@ -139,7 +140,14 @@
 									
 									window.onload = function(){
 									    if ("${userInfo.lang}" != '3') {
-									        document.getElementById("pMessageContent").innerHTML = "<c:out value = '${userInfo.displayName1}' />" + "<spring:message code = 'ezCommunity.t1087' />" + "<br /> (" + "<c:out value = '${clubVO.c_ClubName}' />" + ")Community" + "<spring:message code = 'ezCommunity.t1088' />" + "<br />" + "<spring:message code = 'ezCommunity.t1089' />";
+									    	//2018-07-04 김보미 - 커뮤니티명 길 경우 처리
+// 									        document.getElementById("pMessageContent").innerHTML = "<c:out value = '${userInfo.displayName1}' />" + "<spring:message code = 'ezCommunity.t1087' />" + "<br />(" + "<c:out value = '${clubVO.c_ClubName}' />" + ")</span>Community" + "<spring:message code = 'ezCommunity.t1088' />" + "<br />" + "<spring:message code = 'ezCommunity.t1089' />";
+									        document.getElementById("pMessageContent").innerHTML = "<c:out value = '${userInfo.displayName1}' />" + "<spring:message code = 'ezCommunity.t1087' />" + "<br /> <span id='clubName'>(" + "<c:out value = '${clubVO.c_ClubName}' />" + ")</span>Community" + "<spring:message code = 'ezCommunity.t1088' />" + "<br />" + "<spring:message code = 'ezCommunity.t1089' />";
+									    	var clubName = "<c:out value = '${clubVO.c_ClubName}' />";
+									    	if (getByteLength(clubName) > 50) {
+									    		$("#clubName").css({"width":"305px","display":"inline-block", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "margin-bottom":"-5px" });
+									    		$("#clubName").attr("title", clubName);
+									    	}
 									    }
 									    else {
 									        document.getElementById("pMessageContent").innerHTML = "<spring:message code = 'ezCommunity.t1089' />";
@@ -168,6 +176,12 @@
 								            window.resizeTo(330, 251);
 								        } */
 									}
+									//2018-07-04 김보미 - 커뮤니티명 길 경우 처리
+									//문자열  byte수 구하는 함수
+									function getByteLength(s,b,i,c){
+										for(b=i=0; c=s.charCodeAt(i++); b+=c>>11?3:c>>7?2:1);
+										return b;
+									}
 								</script>
 						<%--	
 							</c:otherwise>
@@ -184,7 +198,8 @@
 						<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 						<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 						<script type="text/javascript" src="/js/mouseeffect.js"></script>
-						<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>							
+						<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+						<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>							
 						<script type="text/javascript">
 							function refresh() {
 							    //if(window.opener.window.parent.frames.left.location == undefined)
@@ -211,7 +226,14 @@
 							//}
 
 							window.onload = function() {
-							    document.getElementById("pMessageContent").innerHTML = "<c:out value = '${clubVO.c_ClubName}' />" + " Community" + "<spring:message code = 'ezCommunity.t1093' />"  + "<spring:message code = 'ezCommunity.t1094' />" + "<br />" + "<spring:message code = 'ezCommunity.t1095' />";
+								//2018-07-04 김보미 - 커뮤니티명 길 경우 처리
+// 							    document.getElementById("pMessageContent").innerHTML = "<c:out value = '${clubVO.c_ClubName}' />" + " Community" + "<spring:message code = 'ezCommunity.t1093' />"  + "<spring:message code = 'ezCommunity.t1094' />" + "<br />" + "<spring:message code = 'ezCommunity.t1095' />";
+							    document.getElementById("pMessageContent").innerHTML = "<span id='clubName'><c:out value = '${clubVO.c_ClubName}' /></span>" + " Community" + "<spring:message code = 'ezCommunity.t1093' />"  + "<spring:message code = 'ezCommunity.t1094' />" + "<br />" + "<spring:message code = 'ezCommunity.t1095' />";
+							    var clubName = "<c:out value = '${clubVO.c_ClubName}' />";
+							    if (getByteLength(clubName) > 50) {
+						    		$("#clubName").css({"width":"305px","display":"inline-block", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "margin-bottom":"-5px" });
+						    		$("#clubName").attr("title", clubName);
+						    	}
 							    
 							/* 2018-06-08 홍승비 - 커뮤니티 가입(결과) 팝업 리사이즈 미사용 주석처리 */
 							/* var UserAgentState = navigator.userAgent.toLowerCase();
@@ -234,6 +256,12 @@
 						        if (MACSAFARIYN()) {
 						            window.resizeTo(330, 251);
 						        } */
+							}
+							//2018-07-04 김보미 - 커뮤니티명 길 경우 처리
+							//문자열  byte수 구하는 함수
+							function getByteLength(s,b,i,c){
+								for(b=i=0; c=s.charCodeAt(i++); b+=c>>11?3:c>>7?2:1);
+								return b;
 							}
 						</script>
 					</head>

@@ -152,25 +152,29 @@
 	</head>
 	<body class="popup">
 	    <h1><spring:message code='ezSchedule.t6' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 	    <table class="content">
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t999' /></th>
 	            <td>
 	                <input id="txtuser" type="text" style="width:84%" onfocus="this.blur();" readonly="readonly" />
-	                <a href="#" class="imgbtn"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	                <a href="#" class="imgbtn imgbck"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t1004' /></th>
 	            <td>
 	                <input id="txtdept" type="text" style="width:84%" onfocus="this.blur();" readonly="readonly" />
-	                <a href="#" class="imgbtn"><span onclick="select_sharedept()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	                <a href="#" class="imgbtn imgbck"><span onclick="select_sharedept()"><spring:message code='ezSchedule.t1000' /></span></a>                
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnpositionNew">
 	        <a class="imgbtn"><span onclick="save_info()" ><spring:message code='ezSchedule.t157' /></span></a>
-	        <a class="imgbtn"><span onclick="window.close()"><spring:message code='ezSchedule.t5' /></span></a>      
 	    </div>
 	</body>
 </html>

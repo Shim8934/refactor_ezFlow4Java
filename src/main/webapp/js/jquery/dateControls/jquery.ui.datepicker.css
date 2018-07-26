@@ -12,7 +12,8 @@
 {
     margin-left:5px;
     margin-top:0px;
-    margin-bottom:-5px;
+    margin-bottom:3px;
+    vertical-align:middle;
     cursor:pointer;
 }
 .ui-datepicker {
@@ -82,7 +83,7 @@
 .ui-datepicker th {
 	padding: .7em .3em;
 	text-align: center;
-	font-weight: bold;
+	font-weight: normal;
 	border: 0;
 }
 .ui-datepicker td {

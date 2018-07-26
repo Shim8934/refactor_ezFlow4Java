@@ -59,13 +59,11 @@
         var tableView = new TableView();
 		
 		window.onresize = function () {
-			var reheight = document.documentElement.clientHeight - 160;
+			var reheight = document.documentElement.clientHeight - 170;
 			document.getElementById("dragDropArea").style.height = reheight + "px";
 		};
 		
-		document.onselectstart = function() {
-			return false;
-		};
+		document.onselectstart = function() {return false;};
 		
 		window.onbeforeunload = function() {
 			hiddenPanel();
@@ -73,6 +71,7 @@
 		}
 		
 		window.onload = function() {
+			hiddenPanel();
 			tableView.setTableId("tblFileList");
 			tableView.setTableType("deletedfile");
 			tableView.setSelectedClass("bnkWebFolder2");
@@ -480,7 +479,7 @@
 			<li><span onClick="filePermanentDelete()"><spring:message code='ezWebFolder.t19'/></span></li>
 			<li id="SearchOption" mode="off" onClick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
 			<li id="right" style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv"></li>
-			<li><img src="/images/i_bar.gif"></li>
+			<!-- <li><img src="/images/i_bar.gif"></li> -->
 			<li id="right" style="float:left; height: 28px;">
 				<select class="select" id="idSelect" onchange="changeValue(this.value);">
 					<option value=""><spring:message code='ezWebFolder.t191'/></option>
@@ -551,15 +550,15 @@
     <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
         <iframe style="border:none;" id="iFrameLayer"></iframe>
     </div>
-    <div id="searchpopup" class="popupwrap3" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
-		<div class="popupwrap4">
-			<table class="content" style="margin-top:10px;">  
-				<tr>
-					<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" width="16px" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezWebFolder.t10' />&nbsp;<spring:message code='ezWebFolder.t123' /></th>
-				</tr>
-				<tr>
-					<td style="border-left-color:white;border-right-color:white;height:10px" colspan="2"></td>
-				</tr>
+    <div id="searchpopup" class="popupwrap3" style="display:none;margin-bottom:70px">
+		<div class="popupJQLayer" style="padding-top:6px">
+			<div class="title"><spring:message code='ezWebFolder.t10' /><spring:message code='ezWebFolder.t123' /></div>
+			<div id="close">
+	            <ul>
+	                <li><a rel="modal:close"><span onclick="searchOptionHidden()"></span></a></li>
+	            </ul>
+	        </div>	
+			<table class="content" style="margin-top:10px;">
 				<tr>
 		           <th style="text-align:center"><spring:message code='ezWebFolder.t190' /></th>
 		           <td>
@@ -593,8 +592,9 @@
 			<table style="width:100%">
 				<tr>
 					<td style="text-align:center;">
-						<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezWebFolder.t123' /></span></a>
-						<a class="imgbtn" rel="modal:close"><span onClick="searchOptionHidden()"><spring:message code='ezWebFolder.t112' /></span></a>
+						<div class="btnpositionLayer">
+							<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezWebFolder.t123' /></span></a>
+						</div>	
 					</td>
 				</tr>
 			</table>

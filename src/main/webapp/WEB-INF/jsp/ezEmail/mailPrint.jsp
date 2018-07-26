@@ -9,6 +9,86 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<title><spring:message code='ezEmail.t546' /></title>
+		<c:if test="${userLang == '1'}">
+		<style>
+			table, th, td {
+				border-collapse: collapse;
+				empty-cells: show;
+				padding:0;margin:0;
+				font-size:12px;
+				font-family: 'Gulim', 'arial', 'verdana';
+			}
+			th{
+				white-space: nowrap;
+				word-break: keep-all;
+				word-wrap: normal;
+				color: #777;
+				background-color:#f8f8fa;
+				border:1px solid #d2d2d2;
+				padding:2px 10px;
+			}
+		</style>
+		</c:if>
+		<c:if test="${userLang == '2'}">
+		<style>
+			table, th, td {
+				border-collapse: collapse;
+				empty-cells: show;
+				padding:0;margin:0;
+				font-size:12px;
+				font-family: 'Gulim', 'arial', 'verdana';
+			}
+			th{
+				white-space: nowrap;
+				word-break: keep-all;
+				word-wrap: normal;
+				color: #666;
+				background-color:#f8f8f8;
+				border:1px solid #ddd;
+				padding:2px 10px;
+			}
+		</style>
+		</c:if>
+		<c:if test="${userLang == '3'}">
+		<style>
+			table, th, td {
+				border-collapse: collapse;
+				empty-cells: show;
+				padding:0;margin:0;
+				font-size:12px;
+				font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
+			}
+			th{
+				white-space: nowrap;
+				word-break: keep-all;
+				word-wrap: normal;
+				color: #777;
+				background-color:#f8f8fa;
+				border:1px solid #d2d2d2;
+				padding:2px 10px;
+			}
+		</style>
+		</c:if>
+		<c:if test="${userLang == '4'}">
+		<style>
+			table, th, td {
+				border-collapse: collapse;
+				empty-cells: show;
+				padding:0;margin:0;
+				font-size:12px;
+				font-family:'Gulim','simsun', 'simhei', 'arial', 'verdana';
+			}
+			th{
+				white-space: nowrap;
+				word-break: keep-all;
+				word-wrap: normal;
+				color: #666;
+				background-color:#f8f8f8;
+				border:1px solid #ddd;
+				padding:2px 10px;
+			}
+		</style>
+		</c:if>
 	    <script type="text/javascript">
 	        var myVar;
 	        window.onload = function ()
@@ -36,7 +116,7 @@
 	    </script>
 	</head>
 	<body>    
-	    <table cellpadding="0" cellspacing="0" style="margin:5px 5px 5px 5px; border-collapse:collapse; font-family:Gulim;" >
+	    <table cellpadding="0" cellspacing="0" style="margin:5px 5px 5px 5px; border-collapse:collapse;" >
 	        <tr>
 	            <th style="white-space:nowrap; text-align:left; padding:0px 10px; font-size:12px; color:#666666; background:#f8f8f8; border:1px solid #ddd;"><spring:message code='ezEmail.t161' /></th>
 	            <td style="width:60%; font-size:12px; color:#393939; border:1px solid #ddd; vertical-align:middle; padding:7px 7px 7px 7px;">

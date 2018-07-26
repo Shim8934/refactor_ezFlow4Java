@@ -64,20 +64,20 @@
 	</head>
 	<body class="popup" scroll="no">
   		<h1><spring:message code='ezPortal.t280'/></h1>
+  		<div id="close">
+            <ul>
+                <li><span name="btnClose" onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table class="content" style="width:100%"> 
-			<tr> 
+			<tr style="height:31px"> 
 				<th><spring:message code='ezPortal.t281'/></th> 
 			</tr>
 			${mainHTML}
   		</table>
 	
-		<table width="270" border="0" cellspacing="0" cellpadding="0" style="margin-top:10px"> 
-			<tr>
-				<td align="right">
-                	<a class="imgbtn" name="btnSave"><span onClick="Save()"><spring:message code='ezPortal.t282'/></span></a>
-                	<a class="imgbtn" name="btnClose"><span onClick="window.close()"><spring:message code='ezPortal.t46'/></span></a>
-				</td>
-			</tr>
-		</table>
+		<div class="btnpositionNew">
+       		<a class="imgbtn" name="btnSave"><span onClick="Save()"><spring:message code='ezPortal.t282'/></span></a>
+       	</div>	
   	</body>
 </html>

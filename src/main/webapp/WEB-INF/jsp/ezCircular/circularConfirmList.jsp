@@ -224,25 +224,25 @@
 	        PagingHTML += strtext;
 	        var pageNum = CurPage;
 	        if (totalPage > 1 && pageNum != 1) {
-	            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+	            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
 	            PagingHTML += strtext;
 	        }
 	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
 	            PagingHTML += strtext;
 	        }
 	        if (totalPage > BlockSize) {
 	            if (pageNum > BlockSize) {
-	                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang24 + "</span>";
+	                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang24 + "</span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	        }
 	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang24 + "</span>";
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 	            PagingHTML += strtext;
 	        }
 	        var MaxNum;
@@ -266,27 +266,27 @@
 	        }
 	        if (totalPage > BlockSize) {
 	            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang25 + "</span>";
-	                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+	                strtext = "";
+	                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            else {
-	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang25 + "</span>";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                strtext = "";
+	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	        }
 	        else {
-	            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang25 + "</span>";
-	            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	            strtext = "";
+	            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 	            PagingHTML += strtext;
 	        }
 	        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+	            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 	            PagingHTML += strtext;
 	        }
 	        else {
-	            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+	            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 	            PagingHTML += strtext;
 	        }
 	        
@@ -305,7 +305,7 @@
 		  <h1><spring:message code='ezCircular.kmsc01'/></h1>
 		  <div id="close">
 		    <ul>
-		      <li onClick="close_onclick()"><span><spring:message code='ezCircular.t84' /></span></li>
+		      <li onClick="close_onclick()"><span></span></li>
 		    </ul>
 		  </div>
 		        <div style="width:100%; height:305px" id="divList">
@@ -315,7 +315,4 @@
 		        <div id="tblPageRayer" style="width:470px; height:24px; margin:6px auto; font-size:0"></div>
 		</form>
 	</body>
-	<script>
-		selToggleList(document.getElementById("close"), "ul", "li", "0");
-	</script>
 </html>

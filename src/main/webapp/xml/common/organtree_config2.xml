@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <tree>
 	<config>
-		<size width="16px" height="16px" />
+		<size width="18px" height="18px" />
 		<baseimage>
 			<dot_continue path="/images/OrganTree_cross/dot_continue.gif" />
 			<dot_end path="/images/OrganTree_cross/dot_end.gif" />

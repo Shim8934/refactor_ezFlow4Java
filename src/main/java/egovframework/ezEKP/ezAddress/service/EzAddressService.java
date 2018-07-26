@@ -15,6 +15,10 @@ public interface EzAddressService {
 	public void setAddressConfig(int tenantId, String pUserID, String pListCnt, String pListType) throws Exception;
 	public int getAddressCount(int tenantId, String pFolderId, String pOwnerId, String pFilter) throws Exception;
 	public int getSearchCount(int tenantId, String[] pIdLists, String pFilter) throws Exception;
+	public int getAddressSearchCount(int tenantId, String pFolderId, String[] pOwnerId, String pFilter) throws Exception;
+	public int getFilterAddressSearchCount(int tenantId, String pFolderId, String[] pOwnerId, String pFilter, String pAddressTpe) throws Exception;
+	public List<AddressVO> getAddressSearchList(int tenantId, String pFolderID, String[] pOwnerIDs, String pOrderOption, String pFilter, int pListPageSize, int pStart) throws Exception;
+	public List<AddressVO> getFilterAddressSearchList(int tenantId, String pFolderID, String[] pOwnerIDs, String pOrderOption, String pFilter, int pListPageSize, int pStart, String pAddressTpe) throws Exception;
 	public List<AddressVO> getAddressList(int tenantId, String pFolderID, String pOwnerID, String pOrderOption, String pFilter, int pListPageSize, int pStart) throws Exception;
 	public List<AddressVO> getAllAddressList(int tenantId, String pFolderID, String pOwnerID, String pOrderOption, String pFilter) throws Exception;
 	public List<AddressVO> getSearchList(int tenantId, String[] pIdLists, String pOrderOption, String pFilter, int pListPageSize, int pStart) throws Exception;
@@ -32,6 +36,8 @@ public interface EzAddressService {
 	public void moveAddress(int tenantId, String[] pAddressIds, String pFolderId, String pOwnerId) throws Exception;
 	public void copyAddress(int tenantId, String[] pAddressIds, String pFolderId, String pOwnerId, String pCreatorId, String pCreatorName, String pCreatorName2) throws Exception;
 	public List<AddressFolderVO> getSubTreeInfo(int tenantId, String pParentID, String pOwnerID) throws Exception;
+	public List<AddressFolderVO> getHighTreeInfo(int tenantId, String folderID, String pOwnerID) throws Exception;
+	public List<AddressFolderVO> getLowTreeInfo(int tenantId, String folderID, String pOwnerID) throws Exception;
 	public AddressFolderVO getFolderInfo(String pFolderId) throws Exception;
 	public void insertFolder(int tenantId, String pParentId, String pOwnerId, String pFolderType, String pFolderName) throws Exception;
 	public void updateFolder(String pFolderId, String pFolderName) throws Exception;

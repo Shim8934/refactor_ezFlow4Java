@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+
 		<script type="text/javascript">
 			var labelcolor = "gray";
 	        var xmlhttp = createXMLHttpRequest();
@@ -40,6 +40,10 @@
 	                KeEventControl(document.getElementById("tbList3"));
 	                KeEventControl(document.getElementById("tbTaskDesc"));
 	                KeEventControl(document.getElementById("tbKPReason"));
+	            }
+	            //2018-07-25 김보미 - 하단 공백 사이즈 크롬/ie 상이한것 조정
+	            else if (ua.indexOf("Chrome") > 0) {
+	                $(".popup h1").css("margin-bottom","2px");
 	            }
 
 	            try {
@@ -74,7 +78,7 @@
 	                InitCode();
 	            } else {
 	            	$("#ilbanCode").hide();
-	            	$("#tbTaskCode").attr ("style", "width:100%;");
+	            	//$("#tbTaskCode").attr ("style", "width:100%;");
 	            	
 	                gState = "U";
 	                TaskCode = RetValue[1];
@@ -540,13 +544,18 @@
 	</head>
 	<body class="popup" style="overflow:hidden">
 	    <h1><c:out value = '${title}' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return btncancel_onclick()"></span></li>
+            </ul>
+        </div>
 	    <span style="color:red"><spring:message code = 'ezApprovalG.t00011' /></span>
 	    <table class="content">
 	        <tr class = 'approvalG'>
 	            <th><spring:message code = 'ezApprovalG.t751' /></th>
 	            <td>
 	                <input type="radio" name="isAllDept" value="0" checked>
-	                <spring:message code = 'ezApprovalG.t752' /><br />
+	                <spring:message code = 'ezApprovalG.t752' />
 	                <input type="radio" name="isAllDept" value="1">
 	                <spring:message code = 'ezApprovalG.t753' />
 				</td>
@@ -555,7 +564,7 @@
 	            <th><spring:message code = 'ezApprovalG.t733' /></th>
 	            <td>
 	                <input type="text" id="tbSubCode" name="tbSubCode" style="WIDTH: 200px" readonly="readonly">
-	                <a class="imgbtn"><span id="btnSelPCode" onclick="return btnSelPCode_onclick()"><spring:message code = 'ezApprovalG.t690' /></span></a>
+	                <a class="imgbtn imgbck"><span id="btnSelPCode" onclick="return btnSelPCode_onclick()"><spring:message code = 'ezApprovalG.t690' /></span></a>
 	            </td>
 	        </tr>
 	        <tr>
@@ -569,7 +578,7 @@
 	        			<th><spring:message code = 'ezApprovalG.t576' /><br>(8<spring:message code = 'ezApprovalG.t754' /> <span style="color:red">*</span></th>
 	        			<td>
 			                <input type="text" id="tbTaskCode" name="tbTaskCode" style="WIDTH: 200px" maxlength="8">
-			                <a class="imgbtn"><span id="btnDuplicate" onclick="return btnDuplicate_onclick()"><spring:message code = 'ezApprovalG.t730' /></span></a>
+			                <a class="imgbtn imgbck"><span id="btnDuplicate" onclick="return btnDuplicate_onclick()"><spring:message code = 'ezApprovalG.t730' /></span></a>
 			            </td>
 	        		</c:otherwise>
 	        	</c:choose>
@@ -600,7 +609,7 @@
 	        </tr>
 	        <tr class = 'approvalG'>
 	            <th><spring:message code = 'ezApprovalG.t755' /> <span style="color:red">*</span></th>
-	            <td><textarea style="WIDTH: 100%; HEIGHT: 60px; box-sizing: border-box; -moz-box-sizing: border-box;" id="tbTaskDesc" name="tbTaskDesc" maxlength="300"></textarea></td>
+	            <td><textarea style="margin-top:2px;margin-bottom:2px; WIDTH: 100%; HEIGHT: 60px; box-sizing: border-box; -moz-box-sizing: border-box;" id="tbTaskDesc" name="tbTaskDesc" maxlength="300"></textarea></td>
 	        </tr>
 	        <tr class = 'approvalS'>
 	        	<th><spring:message code = 'ezApprovalG.t118' /></th>
@@ -629,7 +638,7 @@
 	        </tr>
 	        <tr class = 'approvalG'>
 	            <th><spring:message code = 'ezApprovalG.t117' /> <spring:message code = 'ezApprovalG.t756' /> <span style="color:red">*</span></th>
-	            <td><textarea style="WIDTH: 100%; HEIGHT: 60px; box-sizing: border-box; -moz-box-sizing: border-box;" id="tbKPReason" name="tbKPReason" maxlength="200"></textarea></td>
+	            <td><textarea style="margin-top:2px;margin-bottom:2px;WIDTH: 100%; HEIGHT: 60px; box-sizing: border-box; -moz-box-sizing: border-box;" id="tbKPReason" name="tbKPReason" maxlength="200"></textarea></td>
 	        </tr>
 	        <tr class = 'approvalG'>
 	            <th><spring:message code = 'ezApprovalG.t599' /></th>
@@ -698,9 +707,8 @@
 	            <td><input type="text" id="tbList3" name="tbList3" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="50"></td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnpositionNew">
 	        <a class="imgbtn"><span onclick="return btnOk_onclick()"><spring:message code = 'ezApprovalG.t413' /></span></a>
-	        <a class="imgbtn"><span onclick="return btncancel_onclick()"><spring:message code = 'ezApprovalG.t414' /></span></a>
 	    </div>
 	</body>
 </html>

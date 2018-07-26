@@ -98,8 +98,10 @@
 		        var cnt = listview.GetRowCount();
 		        var list = listview.GetDataRows();
 		
-		        if (cnt == 0)
+		        if (cnt == 0) {
+					window.close();
 		            return;
+		        }
 		
 		        var itemid = "";
 		        for (var i = 0; i < cnt; i++) {
@@ -127,25 +129,29 @@
 	</head>
 	<body class="popup">
 	<h1><spring:message code='ezBoard.t4000'/></h1>
-	    <table>
-	        <tr>
-	            <td>
-	                <div class="listview">
-	                    <div id="NotiList" style="BORDER: 0; HEIGHT: 340px; WIDTH: 300px; overflow:auto;"></div>
-	                </div>
-	            </td>
-	            <td>
-	                <div style="padding-left:8px">
-	                    <a class="imgbtn"><span onclick="movenoti(1)" style="font-family: 'Gulim', 'arial', 'verdana'">△</span></a>
-	                    <br />
-	                    <a class="imgbtn"><span onclick="movenoti(2)" style="font-family: 'Gulim', 'arial', 'verdana'">▽</span></a>
-	                </div>
-	            </td>
-	        </tr>
-	    </table>
+	<div id="close">
+        <ul>
+            <li><span onclick="window.close()"></span></li>
+        </ul>
+    </div>
+    <table style="border:1px solid #ddd">
+        <tr>
+            <td style="border-right:1px solid #ddd">
+                <div class="listview" style="border:0px">
+                    <div id="NotiList" style="BORDER: 0; HEIGHT: 340px; WIDTH: 300px; overflow:auto;"></div>
+                </div>
+            </td>
+            <td>
+                <div style="padding:0px 5px">
+                    <a class="imgbtn imgbck"><span onclick="movenoti(1)">△</span></a>
+                    <br />
+                    <a class="imgbtn imgbck"><span onclick="movenoti(2)">▽</span></a>
+                </div>
+            </td>
+        </tr>
+    </table>
 	<div class="btnposition btnpositionNew">
 	    <a class="imgbtn" onClick="save_order()" name="Submit"><span><spring:message code='ezBoard.t14'/></span></a>
-	    <a class="imgbtn" onClick="window.close()" name="Submit"><span><spring:message code='ezBoard.t15'/></span></a>
 	</div>
 	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

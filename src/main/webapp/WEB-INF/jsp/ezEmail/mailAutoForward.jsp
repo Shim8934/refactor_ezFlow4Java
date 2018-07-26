@@ -195,15 +195,16 @@
 			    	<th><spring:message code='ezEmail.t139' /></th>
 			    	<td style="height:32px">
 			        	<input type="text" id="ForwardAddress" value="${forwardAddress}" class="textarea" style="WIDTH:80%;margin-left:2px" NAME="ForwardAddress" onkeyup="onkeydown_SaveKeyEvent(event);">
-			        	<a id="ReceiverSelect" class="imgbtn" style="width:14%;" onClick="SelectReceiver_onClick()"><span style="width:80%;text-align:center;"><spring:message code='ezEmail.t488' /></span></a>
+			        	<a id="ReceiverSelect" class="imgbtn imgbck" style="width:14%;" onClick="SelectReceiver_onClick()"><span style="width:80%;text-align:center;"><spring:message code='ezEmail.t488' /></span></a>
 			        </td>
 			  	</tr>
 			</table>
-			<div class="btnposition"></div>
 			<div style="text-align:center;width:490px;">
-			    <a class="imgbtn" id="ForwardDel" onClick="ButtonSaveAutoForward_Click()"><span><spring:message code='ezEmail.t95' /></span></a>
-			    <a id="btnSave" class="imgbtn" onClick="btnSave_onClick()"><span><spring:message code='main.sp09' /></span></a>
-			    <a class="imgbtn" onClick="window.location.href='/ezEmail/mailAutoForward.do'"><span><spring:message code='ezEmail.t39' /></span></a>			    
+				<div class="btnpositionJsp">
+			    	<a class="imgbtn" id="ForwardDel" onClick="ButtonSaveAutoForward_Click()"><span><spring:message code='ezEmail.t95' /></span></a>
+			    	<a id="btnSave" class="imgbtn" onClick="btnSave_onClick()"><span><spring:message code='main.sp09' /></span></a>
+			    	<a class="imgbtn" onClick="window.location.href='/ezEmail/mailAutoForward.do'"><span><spring:message code='ezEmail.t39' /></span></a>
+			    </div>				    
 			</div>
 			<div style="display:none;">
 			    <input type="text" id="DisplayName" value="${forwardAddress}" class="textarea" style="WIDTH:250px"> 

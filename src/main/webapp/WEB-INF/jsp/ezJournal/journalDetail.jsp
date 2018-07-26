@@ -133,12 +133,11 @@
 					</div>
 					<div id="close">
 						<ul>
-							<li><span onClick="window.close()"> <spring:message code='ezBoard.t12' /></span></li>
+							<li><span onClick="window.close()"></span></li>
 						</ul>
 					</div> 
 					<script type="text/javascript">
 						selToggleList(document.getElementById("menu"), "ul", "li", "0");
-						selToggleList(document.getElementById("close"), "ul", "li", "0");
 					</script>
 				</td>
 			</tr>
@@ -247,9 +246,9 @@
 							</div>
 						</td>
 						<td class="pos2" style="white-space: normal; overflow: hidden;">
-							<a class="imgbtn"><span style="width: 57px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a>
+							<a class="imgbtn imgbck"><span style="width: 57px;" onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a>
 							<br /> 
-							<a class="imgbtn"><span style="width: 57px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
+							<a class="imgbtn imgbck"><span style="width: 57px;" onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
 						</td>
 					</tr>
 				</table>
@@ -275,11 +274,11 @@
 		    };
 		    window.onload = function (){
 		    	
-		    	if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
-                    self.resizeTo(760, 800);
-                } else {
-                    self.resizeTo(785, 830);
-                }
+// 		    	if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+//                     self.resizeTo(760, 800);
+//                 } else {
+//                     self.resizeTo(785, 830);
+//                 }
 		    	
 		    	sizeOn();
 		    	
@@ -343,10 +342,10 @@
 				}
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var left = (width - 500) / 2;
-		        var top = (heigth - 300) / 2;
+		        var left = (width - 620) / 2;
+		        var top = (heigth - 425) / 2;
 		        var szHref = "/ezJournal/JournalViewerList.do?journalId=" + journalId+"&currentPage="+currentPage;
-	            DivPopUpShow(600, 415, szHref);
+	            DivPopUpShow(620, 425, szHref);
 		    }
 		    
 		    //엑셀로 저장 (미구현)
@@ -424,10 +423,10 @@
 				}
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var left = (width - 500) / 2;
-		        var top = (heigth - 300) / 2;
+		        var left = (width - 620) / 2;
+		        var top = (heigth - 425) / 2;
 		        var szHref = "/ezJournal/JournalReceiverList.do?journalId=" + journalId + "&currentPage=" + currentPage;
-	            DivPopUpShow(600, 415, szHref);
+	            DivPopUpShow(620, 425, szHref);
 		    }
 		    
 		    //인쇄
