@@ -57,10 +57,10 @@
 		    	$("#open-memo").css("display", "");
 		    }
 		    
-	    	var winHeight = window.innerHeight;
-			var winWidth = window.innerWidth;
 		
 		    function chagePosition() {
+		    	var winHeight = window.innerHeight;
+				var winWidth = window.innerWidth;
 		    	
 				var memoBtn = $("#open-memo");
 				var opendMemo = $("#selected-memo");
@@ -72,6 +72,9 @@
 		    }
 		    
 		    function changSizeOfLayer() {
+		    	var winHeight = window.innerHeight;
+				var winWidth = window.innerWidth;
+		    	
 				var layerHalf = $(".layer-half");
 				var layerWhole = $(".layer-whole");
 		    	var maskDiv = $("#maskDiv");
@@ -129,7 +132,7 @@
 		        	$("#maskDiv").css("display", "none");
 		        	$("#selected-memo").css("display", "none");
 		        });
-/////////////////////////////////
+
 		        $("#change-mode").click(function() {
 		        	
 		        	changSizeOfLayer();
@@ -139,7 +142,7 @@
 		        	 containment: '#layer-popup'
 		        });
 		     });
-//////////////////////////////
+			
 		    function newMemo() {
 		        $("#maskDiv").css("display", "");
 		        $("#selected-memo").css("display", "");
@@ -150,9 +153,8 @@
 		    
 		    function save() {
 		    	var text = $("#textarea").val();
-		    	alert('저장 되었습니다.');
-		    	$("#memoList").append("<div class='individual-memo' style='float: left; margin: 10px'>" + text + "</div>");
-		    	$("#memoList > div:last").attr("onclick", "read('" + text + "')");
+		    	$("#memoList").preppend("<div class='individual-memo' style='float: left; margin: 10px'>" + text + "</div>");
+		    	$("#memoList > div").attr("onclick", "read('" + text + "')");
 		    	$("#textarea").val('');
 		    	$("#maskDiv").css("display", "none");
 		    	$("#selected-memo").css("display", "none");
