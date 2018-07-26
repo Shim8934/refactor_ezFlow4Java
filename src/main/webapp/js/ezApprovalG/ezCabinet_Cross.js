@@ -1377,7 +1377,7 @@ function btnSearchRec_onclick(opnOption,opentype) {
         searchrec_cross_dialogArguments[1] = btnSearchRec_onclick_Complete;
 
         if (opentype == "OPEN") {
-            var OpenWin = window.open(url, "SearchRec_Cross", GetOpenWindowfeature(623, 370));
+            var OpenWin = window.open(url, "SearchRec_Cross", GetOpenWindowfeature(623, 380));
             try { OpenWin.focus(); } catch (e) { }
         }
         else
