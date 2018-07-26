@@ -119,7 +119,7 @@
         listview.DataSource(LVXml);
         listview.RowDataBind("SelUserList");
         listview.SetSelectFlag(false);
-        SwapRoleList();
+        //SwapRoleList();
     }
     function GetRecViewerInfo(pRecID, pSepAttNo) {
         var xmlhttp = createXMLHttpRequest();
