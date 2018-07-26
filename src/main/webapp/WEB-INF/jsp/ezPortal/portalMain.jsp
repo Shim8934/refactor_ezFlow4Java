@@ -198,8 +198,8 @@
 					
 					<div>메모 레이어 팝업</div>
 					
-					<div class="memoListBox">
-						<div id="memoList" style="height: 100%; overflow:auto; margin: 10px"></div>
+					<div class="memoListBox" style="overflow:hidden;">
+						<div id="memoList" style="height: 100%; overflow-y:scroll; margin: 10px; position:relative; margin-right:-25px;"></div>
 					</div>
 					
 				</div>
