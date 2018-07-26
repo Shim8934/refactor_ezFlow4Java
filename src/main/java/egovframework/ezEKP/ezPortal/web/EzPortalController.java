@@ -524,7 +524,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				Cookie[] cookies = req.getCookies();
 				if (cookies != null) {
 					for (int j=0; j<cookies.length; j++) {
-						if (cookies[j].getName().equals("POPUP_"+itemSeq)) {
+						if (cookies[j].getName().equals("POPUP_"+itemSeq+"_"+userInfo.getId())) {
 							cookieValue = cookies[j].getValue();
 						}
 					}
@@ -547,7 +547,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			//topMenuId로 사용중인 모듈을 확인하기 위해서 parameter로 전달
 			strHTML = strHTML.replace("/ezPortal/environmentMain.do", "/ezPortal/environmentMain.do?topMenuID=" + pageID);
 			strHTML = strHTML.replace("/ezPortal/help/help.do", "/ezPortal/help/help.do?topMenuID=" + pageID);
-
+			
 			if (!mode.equals("edit") || !mode.equals("view")) {
 				mode = "view";
 			}
@@ -1058,8 +1058,12 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pollNum = "";
 		String userPhoto = "";
 		String userOffset = userInfo.getOffset().split("\\|")[1];
-		String userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
-		
+		String userApprovalG = config.getProperty("config.UserInfo_ApprovalG");
+		/*근태관리 추가*/
+		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String accessID = ezPortalService.getAccessList(userInfo);
+		String attitudeLinkURL = "/ezAttitude/attitudeMain.do";
+		String isUseAttMenuItem = "";
 		mailAddress = userInfo.getEmail();
 		
 		if (userInfo.getPrimary().equals("1")) {
@@ -1101,6 +1105,8 @@ public class EzPortalController extends EgovFileMngUtil {
 			checkBrowser = false;
 		}
 		
+		//근태관리 사용에 따른 시계 사용 유무 로직
+		isUseAttMenuItem = ezPortalService.getMainMenuItemUID(accessID, attitudeLinkURL, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
 		String accessList = ezPortalService.getAccessList(userInfo);
 		
 		/*
@@ -1151,6 +1157,9 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("host", userInfo.getServerName());
 		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("checkBrowser", checkBrowser);
+		//근태관리 추가
+		model.addAttribute("serverTime", serverTime);
+		model.addAttribute("isUseAttMenuItem", isUseAttMenuItem);
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";
@@ -1638,15 +1647,33 @@ public class EzPortalController extends EgovFileMngUtil {
 								float poolRstPer = ((poolRstCnt / pTotalCnt) * 100);
 								String strAnswer =  xmlDom.getElementsByTagName("ANSWER"+list.get(i).getResult()).item(0).getTextContent();
 								String titleString = strAnswer;
-								if (strAnswer.length() > 11) {
-									strAnswer = strAnswer.substring(0, 11) + "…";
-								}
+								// 2018-07-25 김보미 - 주석
+//								if (strAnswer.length() > 11) {
+//									strAnswer = strAnswer.substring(0, 11) + "…";
+//								}
 								pPollResultList.add(list.get(i).getResult());
-								pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + list.get(i).getResult() + "." + strAnswer + " (" + 
-								"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
-								"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
-								"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
-								"</dl>";
+								// 2018-07-25 김보미 - content부분 변경
+//								pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + list.get(i).getResult() + "." + strAnswer + " (" + 
+//								"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
+//								"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
+//								"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
+//								"</dl>";
+								pPollResultContent += 
+								"<div class='poll_list1'>" + 								    
+									"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
+										"<div style='float:left; display: block;'>" + list.get(i).getResult() + "." + "</div>" +
+										"<div class='Pt_QstOptTitleDiv' title='" + titleString + "'>" + titleString + "</div>" +
+										"<div id='info" + list.get(i).getResult() + "' class='Pt_QstInfoDiv'>&nbsp" + 
+											 "<span class='Pt_QstInfoVotes'>"+ list.get(i).getCount() + "</span>" +
+											 egovMessageSource.getMessage("main.t20000", locale) + "/" +
+											 "<span class='Pt_QstInfoPercent'>" + String.format("%.1f", poolRstPer) + "</span>" +
+										"%</div>" +
+									"</div>" +
+									"<div class='graphbar1' id='divGraph" + list.get(i).getResult() + "' style='display: block;'>" +
+										"<p id='graph" + list.get(i).getResult() + "' class='gx_bar11' style='width:" + Math.round((poolRstCnt / pTotalCnt) * 100) + "%;'></p>" +
+									"</div>"+	
+								"</div>";
+								
 		                        resultPrintCnt++;
 							}
 						}
@@ -1664,13 +1691,31 @@ public class EzPortalController extends EgovFileMngUtil {
 								if (!isDuplication) {
 									String strAnswer = xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent();
 									String titleString = strAnswer;
-									if (strAnswer.length() > 13) {
-										strAnswer = strAnswer.substring(0, 13) + "...";
-									}
-									pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
-		                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
-		                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
-																	resultPrintCnt++;
+									// 2018-07-25 김보미 - 주석
+//									if (strAnswer.length() > 13) {
+//										strAnswer = strAnswer.substring(0, 13) + "...";
+//									}
+									// 2018-07-25 김보미 - content부분 변경
+//									pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
+//		                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
+//		                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
+									pPollResultContent += 
+									"<div class='poll_list1'>" + 								    
+										"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
+											"<div style='float:left; display: block;'>" + i + "." + "</div>" +
+											"<div class='Pt_QstOptTitleDiv' title='" + titleString + "'>" + titleString + "</div>" +
+											"<div id='info" + i + "' class='Pt_QstInfoDiv'>&nbsp" + 
+												 "<span class='Pt_QstInfoVotes'>0</span>" +
+												 egovMessageSource.getMessage("main.t20000", locale) + "/" +
+												 "<span class='Pt_QstInfoPercent'>0.0</span>" +
+											"%</div>" +
+										"</div>" +
+										"<div class='graphbar1' id='divGraph" + i + "' style='display: block;'>" +
+											"<p id='graph" + i + "' class='gx_bar11' style='display: none;'></p>" +
+										"</div>"+
+									"</div>";
+									
+									resultPrintCnt++;
 									if (resultPrintCnt == 4) {
 										break;
 									}
@@ -3353,7 +3398,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/help/help.do")
 	public String help(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("help started");
-		
+
 		String topMenuID = "";
 		
 		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").equals("")) {
@@ -3596,12 +3641,12 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/help/leftEnv.do")
 	public String leftEnv(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftEnv started");
-		
+
 		String topMenuID = "";
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
-		
+				
 		String accessList = ezPortalService.getAccessList(userInfo);
 		
 		/*

@@ -21,7 +21,14 @@
 			<c:if test="${primary == '1' && scheduleInfo.ownerName != 'undefined'}"><c:out value="${scheduleInfo.ownerName}" /></c:if>
 	        <c:if test="${primary != '1' && scheduleInfo.ownerName2 != 'undefined'}"><c:out value="${scheduleInfo.ownerName2}" /></c:if> )
 		</title>
-		<style> P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm; line-height:20px }</style>
+		<style> 
+			P { 
+				MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm; line-height:20px 
+			}
+			/* 2018-07-23 김보미 - 테이블 중앙정렬 */
+			.popuplist th { width:10%; text-align: center; }
+			.popuplist td { width:40%; }
+		</style>
 		<script>
 			var contentpath = "${scheduleInfo.contentPath}";
 			var ownerid = "<c:out value='${scheduleInfo.ownerId}' />";
@@ -373,7 +380,7 @@
 	                    <div id="close">
 	                        <ul>
 	                            <li>
-	                            	<span onclick="window.close()"><spring:message code='ezSchedule.t16' /></span>
+	                            	<span onclick="window.close()"></span>
 	                            </li>
 	                        </ul>
 	                    </div>
@@ -388,7 +395,9 @@
 		                                <spring:message code='ezSchedule.jjh04' />
 		                            </th>
 		                            <td colspan="3" style="white-space:nowrap;">
-		                                <div style="cursor: pointer;width:280px">
+		                            <!-- 2018-07-23 김보미 - 테이블 중앙정렬을 위한 너비값 제거 -->
+<!-- 		                                <div style="cursor: pointer;width:280px"> -->
+		                                <div style="cursor: pointer;">
 		                                    <c:out value="${scheduleInfo.groupName}" />
 		                                </div>
 		                            </td>                            
@@ -399,15 +408,23 @@
 	                                <spring:message code='ezSchedule.jjh05' />
 	                            </th>
 	                            <td style="white-space:nowrap;">
-	                                <div style="cursor: pointer;width:280px;" onclick="show_personinfo('0')" id="LabelCreator">	                                    
-	                                    <c:if test="${primary == '1'}"><c:out value="${scheduleInfo.creatorName}" /></c:if>
-	                                    <c:if test="${primary != '1'}"><c:out value="${scheduleInfo.creatorName2}" /></c:if>	                                    
+	                                <div>
+	                                 <!-- 2018-07-23 김보미 - 테이블 중앙정렬을 위한 너비값 제거 -->
+<!-- 	                                	<span  style="cursor: pointer;width:280px;" onclick="show_personinfo('0')" id="LabelCreator"> -->
+	                                	<span  style="cursor: pointer;" onclick="show_personinfo('0')" id="LabelCreator">
+		                                    <c:if test="${primary == '1'}"><c:out value="${scheduleInfo.creatorName}" /></c:if>
+		                                    <c:if test="${primary != '1'}"><c:out value="${scheduleInfo.creatorName2}" /></c:if>	                                    
+	                                	</span>	                                    
 	                                </div>
 	                            </td>
-	                            <th style="white-space:nowrap; width:80px">
+	                             <!-- 2018-07-23 김보미 - 테이블 중앙정렬을 위한 너비값 제거 -->
+<!-- 	                            <th style="white-space:nowrap; width:80px"> -->
+	                            <th style="white-space:nowrap;">
 	                                <spring:message code='ezSchedule.jjh06' />
 	                            </th>
-	                            <td style="white-space:nowrap; width:100%">
+	                             <!-- 2018-07-23 김보미 - 테이블 중앙정렬을 위한 너비값 제거 -->
+<!-- 	                            <td style="white-space:nowrap; width:100%"> -->
+	                            <td style="white-space:nowrap;">
 	                                <div id="LabelCreateDate">	                                    
 	                                    <c:out value="${fn:substring(scheduleInfo.createDate,0,16)}" />
 	                                </div>
@@ -537,10 +554,10 @@
 	                                </div>
 	                            </td>
 	                            <td class="pos2">	                                
-	                                <a href="#" class="imgbtn">
+	                                <a href="#" class="imgbtn imgbck">
 	                                	<span style="width:57px;" onclick="attach_SelectAll()"><spring:message code='ezSchedule.t317' /></span>
 	                                </a><br/>	                                
-	                                <a href="#" class="imgbtn">
+	                                <a href="#" class="imgbtn imgbck">
 	                                	<span style="width:57px;" onclick="attach_Download()"><spring:message code='ezSchedule.t157' /></span>
 	                                </a>
 	                            </td>
@@ -629,7 +646,6 @@
 	        </div>	
 	        <script type="text/javascript">
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
-				selToggleList(document.getElementById("close"), "ul", "li", "0");
 	        </script>	
 	    </form>
 	</body>

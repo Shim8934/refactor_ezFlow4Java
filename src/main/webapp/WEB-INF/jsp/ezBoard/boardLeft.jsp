@@ -5,10 +5,17 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	   	<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	   	<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <style>
-	    	.tree { min-height : 100px; }
+	    	.tree {
+	    		min-height : 100px;
+	    	}
+	    	.groupBoard {
+				width:158px;
+				overflow:hidden;
+				text-overflow:ellipsis;
+			}
 	    </style>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -231,7 +238,7 @@
 		        for(var i=0; i<title2.length; i++) {
 		        	title3 = title2[i].getElementsByClassName("node_normal");
 		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
-		        	title3[0].style.width = 156 - 16*nodeLevel +'px';
+		        	title3[0].style.width = 152 - 18*nodeLevel +'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
 		        }
@@ -326,7 +333,7 @@
 		        for(var i=0; i<title2.length; i++) {
 		        	title3 = title2[i].getElementsByClassName("node_normal");
 		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
-		        	title3[0].style.width = 156 - 16*nodeLevel +'px';
+		        	title3[0].style.width = 152 - 18*nodeLevel +'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
 		        }
@@ -388,7 +395,7 @@
 				var node = $(".node_normal");
 				for(var i=0; i<node.length; i++) {
 					node[i].setAttribute("TITLE", node[i].parentElement.getAttribute("DATA2"));
-					node[i].style.width = '156px';
+					node[i].style.width = '152px';
 					node[i].style.textOverflow = 'ellipsis';
 					node[i].style.overflow = 'hidden';
 				} 
@@ -456,7 +463,7 @@
 					var node = $(".node_normal");
 					for(var i=0; i<node.length; i++) {
 						node[i].setAttribute("TITLE", node[i].parentElement.getAttribute("DATA2"));
-						node[i].style.width = '156px';
+						node[i].style.width = '152px';
 						node[i].style.textOverflow = 'ellipsis';
 						node[i].style.overflow = 'hidden';
 					} 
@@ -619,7 +626,7 @@
 		        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do";
 		    }
 		    function ConfigMyBoard() {
-		        var OpenWin = window.open("/ezBoard/myBoardConfig.do?type=CONFIG", "MyBoardConfig", GetOpenWindowfeature(460, 418));
+		        var OpenWin = window.open("/ezBoard/myBoardConfig.do?type=CONFIG", "MyBoardConfig", GetOpenWindowfeature(500, 418));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function MyBoard() {
@@ -653,6 +660,9 @@
 		       	
 		        window.parent.frames["right"].location.href = "/ezBoard/boardItemListAppr.do";
 		    }
+		    function boardSearch(){
+		    	window.parent.frames["right"].location.href = "/ezBoard/boardSearchView.do";
+		    }
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
@@ -673,7 +683,7 @@
 		            </h2>
 		        </div>
 		        <ul id="TreeCtrl_MyBoardTree_ul">
-		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #e8e8e8' id='TreeCtrl_MyBoardTree'></div>
+		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #eaeaea' id='TreeCtrl_MyBoardTree'></div>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></h3>
@@ -687,7 +697,8 @@
         			var i = 0;
         			$(xmlDoc).find("NODE").each(function(){
        			        document.write("<h2>");
-           				document.write("<div id='TreeCtr" + i + "' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text() + "\")'>" + $(this).find("DATA2").text() + "</div>"); 
+           				document.write("<div id='TreeCtr" + i + "' class='groupBoard' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
+           					+ "\")'>" + $(this).find("DATA2").text() + "</div>"); 
            				document.write("</h2>\n");
            				document.write("<ul>\n");
            				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 100%; padding-bottom: 20px; padding-left: 10px; overflow-x: auto; overflow-y: auto;'></div>\n");
@@ -711,7 +722,7 @@
 		            </h2>
 		        </div>
 		        <ul id="TreeCtrl_MyBoardTree_ul">
-		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #e8e8e8' id='TreeCtrl_MyBoardTree'></div>
+		            <div class="tree" style='width:auto;overflow-x:auto;overflow-y:auto; margin-left: 5px; height: 100%; border-bottom:1px solid #eaeaea' id='TreeCtrl_MyBoardTree'></div>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ConfigMyBoard()"><spring:message code="ezBoard.t10044" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="MyBoard()"><spring:message code="ezBoard.t10032" /></span></h3>
 		            <h3><span style="width: 100%; display: inline-block;width: 100%;" onclick="ReservationItem_onclick()"><spring:message code="ezBoard.t229" /></span></h3>
@@ -745,11 +756,17 @@
 	            <%-- <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(1)"><spring:message code="ezBoard.t372" /></span></li>	            
 	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(2)"><spring:message code="ezBoard.t373" /></span></li> --%>	            
 	        </ul>
+
 			<div class="ladder" onclick="ladder_Func(1)">
 				<h2><span><spring:message code="ezBoard.l001" /></span></h2>
 			</div>
 			<ul></ul>
-	        <h3>
+
+			<h3>
+				<span onclick="boardSearch()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.khj1" /></span>
+			</h3>
+	        
+			<h3>
 		        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
 		    </h3>
 		    <c:if test="${applyFlag == 'OK'}">

@@ -36,7 +36,7 @@
 		
 		<div id="close">
 		  <ul>
-		    <li><span onClick="btnClose()"><spring:message code='ezEmail.t63' /></span></li>
+		    <li><span onClick="btnClose()"></span></li>
 		  </ul>
 		</div>
 		
@@ -83,9 +83,9 @@
 			<table style="width:100%;text-align:center">
 				<c:forEach var="vo" items="${secureReaderList}">
 					<tr>
-						<td>${vo.reader}</td>
-						<td width="60px">${vo.readCount}</td>
-						<td width="150px">${vo.readDate}</td>
+			    		<td width="278px" style="color: #5b5a5a;border-bottom: 1px solid #eaeaea;padding: 5px 4px;box-sizing: border-box;">${vo.reader}</td>
+						<td width="85px" style="color: #5b5a5a;border-bottom: 1px solid #eaeaea;padding: 5px 4px;box-sizing: border-box;">${vo.readCount}</td>
+						<td width="160px" style="color: #5b5a5a;border-bottom: 1px solid #eaeaea;padding: 5px 4px;box-sizing: border-box;">${vo.readDate}</td>
 					</tr>
 				</c:forEach>
 			</table>

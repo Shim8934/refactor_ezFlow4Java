@@ -16,7 +16,7 @@
 				background-color: rgb(244,245,245);
 			}
 			.selectTR{
-				background-color: #f0f6ff;
+				background-color: #edf4fd;
 			}
 		</style>
 		<script type="text/javascript">
@@ -45,15 +45,11 @@
 		<form method="post" >
 		  <h1><spring:message code='ezJournal.t75'/></h1>
 		  <div id="close">
-		    <ul>
-		      <li onClick="bindOtherJournal();"><span><spring:message code='ezJournal.t86'/></span></li>
-		      <li onClick="close_onclick()"><span><spring:message code='ezBoard.t12'/></span></li>
+		  	<ul>		      
+		  		<li onClick="close_onclick()"><span></span></li>
 		    </ul>
 		  </div>
-		  <script type="text/javascript">
-		    selToggleList(document.getElementById("close"), "ul", "li", "0");
-		  </script>
-	        <div style="width:100%; height:305px" id="divList">
+	      <div style="width:100%; height:305px" id="divList">
 	            <table class="mainlist" id="otherJournalList" style="width:100%">
 	            <c:choose>
 		            <c:when test="${fn:length(journalList) ne 0 }">
@@ -74,9 +70,12 @@
 						</tr>
 		            </c:otherwise>
 	            </c:choose>
-			</table>
+				</table>
 	        </div>
-	        <div id='runtime' style="color:#666;padding-top:5px"></div>
+	        <div class="btnpositionNew">
+		        <a class="imgbtn"><span onclick="bindOtherJournal()"><spring:message code='ezJournal.t86' /> </span></a>
+		    </div>
+	        <!-- <div id='runtime' style="color:#666;padding-top:5px"></div> -->
 		</form>
 	</body>
 </html>

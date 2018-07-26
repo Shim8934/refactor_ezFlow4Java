@@ -125,21 +125,94 @@ function SetGongRamList(pstrXML) {
     try {
         var listnodes = SelectNodes(pstrXML, "LISTVIEWDATA/ROWS/ROW");
 
-        var AprLineAddIndex = 0;
         var pAPRLINE = new ListView();
         pAPRLINE.LoadFromID("pAPRLINE");
         var objRows = pAPRLINE.GetDataRows();
-        var totCnt = objRows.length;
-        var newCnt = 0;
-        AprLineAddIndex = totCnt + 1;
 
         if (GetAttribute(objRows[0], "id") == "pAPRLINE_TR_noItems") {
             pAPRLINE.DeleteRow("pAPRLINE_TR_noItems");
-            AprLineAddIndex = 1;
         }
-
-        //for (var cnt = 0; cnt < listnodes.length; cnt++) {
+        
+        //2018-07-05 이효진
+        var listnodes = SelectNodes(pstrXML, "LISTVIEWDATA/ROWS/ROW");
+        var strHeader = "<HEADERS>";
+        strHeader += "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>35</WIDTH></HEADER>";
+        strHeader += "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+        strHeader += "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+        strHeader += "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
+        strHeader += "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+        strHeader += "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
+        strHeader += "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>140</WIDTH></HEADER>";
+        strHeader += "</HEADERS>";
+        
+        var strRows = "<ROWS>"; 
+        
+        var i = 1;
         for (var cnt = listnodes.length-1; cnt >= 0; cnt-- ) {
+        	var preDeptName = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
+            var preDeptJobTitle = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
+            var preDeptName1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
+            var preDeptName2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[9], "DATA9");
+            var preWriterName1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[2])[0], "VALUE");
+            var preWriterName2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[2])[0], "VALUE");
+            var preDeptJobTitle1 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
+            var preDeptJobTitle2 = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[7], "DATA7");
+            var preDeptID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[8], "DATA8");
+            var preUserID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[5], "DATA5");
+            
+            strRows += "<ROW>";
+            strRows += "<CELL>";
+            strRows += "<VALUE>" + i + "</VALUE>";
+            strRows += "<DATA1>" + "" + "</DATA1>";
+            strRows += "<DATA2>" + "" + "</DATA2>";
+            strRows += "<DATA3>" + pDocID + "</DATA3>";
+            strRows += "<DATA4>" + preUserID + "</DATA4>";
+            strRows += "<DATA5>" + "N" + "</DATA5>";
+            strRows += "<DATA6>" + preDeptID + "</DATA6>";
+            strRows += "<DATA7>" + "" + "</DATA7>";
+            strRows += "<DATA8>" + "N" + "</DATA8>";
+            strRows += "<DATA9>" + "N" + "</DATA9>";
+            strRows += "<DATA10>7001388</DATA10>";
+            strRows += "<DATA11>015</DATA11>";
+            strRows += "<DATA12>001</DATA12>";
+            strRows += "<DATA13>" + MakeXMLString(preWriterName1) + "</DATA13>";
+            strRows += "<DATA14>" + MakeXMLString(preWriterName2) + "</DATA14>";
+            strRows += "<DATA15>" + MakeXMLString(preDeptName1) + "</DATA15>";
+            strRows += "<DATA16>" + MakeXMLString(preDeptName2) + "</DATA16>";
+            strRows += "<DATA17>" + MakeXMLString(preDeptJobTitle1) + "</DATA17>";
+            strRows += "<DATA18>" + MakeXMLString(preDeptJobTitle2) + "</DATA18>";
+            strRows += "</CELL><CELL>";
+            strRows += "<VALUE>" + MakeXMLString(preWriterName1) + "</VALUE>";
+            strRows += "</CELL><CELL>";
+            strRows += "<VALUE>" + MakeXMLString(preDeptJobTitle) + "</VALUE>";
+            strRows += "</CELL><CELL>";
+            strRows += "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
+            strRows += "</CELL><CELL>";
+            strRows += "<VALUE>" + strLangAprType17 + "</VALUE>";
+            strRows += "</CELL><CELL>";
+            strRows += "<VALUE>" + strLang72 + "</VALUE>";
+            strRows += "</CELL><CELL><VALUE></VALUE></CELL></ROW>";
+            
+            i++;
+        }
+        
+        strRows += "</ROWS>";
+        
+        pparsingXML = "<LISTVIEWDATA>" + strHeader + strRows + "</LISTVIEWDATA>";
+        objXML = loadXMLString(pparsingXML);
+        
+        document.getElementById("APRLINECC").innerHTML = "";
+        
+        var pAPRLINE = new ListView();
+        pAPRLINE.SetID("pAPRLINE");
+        pAPRLINE.SetMulSelectable(false);
+        pAPRLINE.SetRowOnDblClick("AprlineDel_onclickCC");
+        pAPRLINE.SetSelectFlag(false);
+        pAPRLINE.SetHeightFree(true);
+        pAPRLINE.DataSource(objXML);
+        pAPRLINE.DataBind("APRLINECC");
+
+        /*for (var cnt = listnodes.length-1; cnt >= 0; cnt-- ) {
 
             var DuplicateFlag = false;
             for (i = 0; i < objRows.length; i++) {
@@ -162,47 +235,47 @@ function SetGongRamList(pstrXML) {
                 var preUserID = getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[5], "DATA5");
 
                 var pparsingXML = "";
-                pparsingXML = "<LISTVIEWDATA><HEADERS>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>30</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>60</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "</HEADERS><ROWS>";
-                pparsingXML = pparsingXML + "<ROW>";
-                pparsingXML = pparsingXML + "<CELL>";
-                pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
-                pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
-                pparsingXML = pparsingXML + "<DATA2>" + "" + "</DATA2>";
-                pparsingXML = pparsingXML + "<DATA3>" + pDocID + "</DATA3>";
-                pparsingXML = pparsingXML + "<DATA4>" + preUserID + "</DATA4>";
-                pparsingXML = pparsingXML + "<DATA5>" + "N" + "</DATA5>";
-                pparsingXML = pparsingXML + "<DATA6>" + preDeptID + "</DATA6>";
-                pparsingXML = pparsingXML + "<DATA7>" + "" + "</DATA7>";
-                pparsingXML = pparsingXML + "<DATA8>" + "N" + "</DATA8>";
-                pparsingXML = pparsingXML + "<DATA9>" + "N" + "</DATA9>";
-                pparsingXML = pparsingXML + "<DATA10>7001388</DATA10>";
-                pparsingXML = pparsingXML + "<DATA11>015</DATA11>";
-                pparsingXML = pparsingXML + "<DATA12>001</DATA12>";
-                pparsingXML = pparsingXML + "<DATA13>" + MakeXMLString(preWriterName1) + "</DATA13>";
-                pparsingXML = pparsingXML + "<DATA14>" + MakeXMLString(preWriterName2) + "</DATA14>";
-                pparsingXML = pparsingXML + "<DATA15>" + MakeXMLString(preDeptName1) + "</DATA15>";
-                pparsingXML = pparsingXML + "<DATA16>" + MakeXMLString(preDeptName2) + "</DATA16>";
-                pparsingXML = pparsingXML + "<DATA17>" + MakeXMLString(preDeptJobTitle1) + "</DATA17>";
-                pparsingXML = pparsingXML + "<DATA18>" + MakeXMLString(preDeptJobTitle2) + "</DATA18>";
-                pparsingXML = pparsingXML + "</CELL><CELL>";
-                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(preWriterName1) + "</VALUE>";
-                pparsingXML = pparsingXML + "</CELL><CELL>";
-                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(preDeptJobTitle) + "</VALUE>";
-                pparsingXML = pparsingXML + "</CELL><CELL>";
-                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
-                pparsingXML = pparsingXML + "</CELL><CELL>";
-                pparsingXML = pparsingXML + "<VALUE>" + strLangAprType17 + "</VALUE>";
-                pparsingXML = pparsingXML + "</CELL><CELL>";
-                pparsingXML = pparsingXML + "<VALUE>" + strLang72 + "</VALUE>";
-                pparsingXML = pparsingXML + "</CELL><CELL><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>";
+                pparsingXML += "<LISTVIEWDATA><HEADERS>";
+                pparsingXML += "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>30</WIDTH></HEADER>";
+                pparsingXML += "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+                pparsingXML += "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>60</WIDTH></HEADER>";
+                pparsingXML += "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+                pparsingXML += "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+                pparsingXML += "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+                pparsingXML += "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+                pparsingXML += "</HEADERS><ROWS>";
+                pparsingXML += "<ROW>";
+                pparsingXML += "<CELL>";
+                pparsingXML += "<VALUE>" + AprLineAddIndex + "</VALUE>";
+                pparsingXML += "<DATA1>" + "" + "</DATA1>";
+                pparsingXML += "<DATA2>" + "" + "</DATA2>";
+                pparsingXML += "<DATA3>" + pDocID + "</DATA3>";
+                pparsingXML += "<DATA4>" + preUserID + "</DATA4>";
+                pparsingXML += "<DATA5>" + "N" + "</DATA5>";
+                pparsingXML += "<DATA6>" + preDeptID + "</DATA6>";
+                pparsingXML += "<DATA7>" + "" + "</DATA7>";
+                pparsingXML += "<DATA8>" + "N" + "</DATA8>";
+                pparsingXML += "<DATA9>" + "N" + "</DATA9>";
+                pparsingXML += "<DATA10>7001388</DATA10>";
+                pparsingXML += "<DATA11>015</DATA11>";
+                pparsingXML += "<DATA12>001</DATA12>";
+                pparsingXML += "<DATA13>" + MakeXMLString(preWriterName1) + "</DATA13>";
+                pparsingXML += "<DATA14>" + MakeXMLString(preWriterName2) + "</DATA14>";
+                pparsingXML += "<DATA15>" + MakeXMLString(preDeptName1) + "</DATA15>";
+                pparsingXML += "<DATA16>" + MakeXMLString(preDeptName2) + "</DATA16>";
+                pparsingXML += "<DATA17>" + MakeXMLString(preDeptJobTitle1) + "</DATA17>";
+                pparsingXML += "<DATA18>" + MakeXMLString(preDeptJobTitle2) + "</DATA18>";
+                pparsingXML += "</CELL><CELL>";
+                pparsingXML += "<VALUE>" + MakeXMLString(preWriterName1) + "</VALUE>";
+                pparsingXML += "</CELL><CELL>";
+                pparsingXML += "<VALUE>" + MakeXMLString(preDeptJobTitle) + "</VALUE>";
+                pparsingXML += "</CELL><CELL>";
+                pparsingXML += "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
+                pparsingXML += "</CELL><CELL>";
+                pparsingXML += "<VALUE>" + strLangAprType17 + "</VALUE>";
+                pparsingXML += "</CELL><CELL>";
+                pparsingXML += "<VALUE>" + strLang72 + "</VALUE>";
+                pparsingXML += "</CELL><CELL><VALUE></VALUE></CELL></ROW></ROWS></LISTVIEWDATA>";
 
                 objXML = loadXMLString(pparsingXML);
 
@@ -241,7 +314,7 @@ function SetGongRamList(pstrXML) {
                     AprLineAddIndex++;
                 }
             }
-        }
+        }*/
     } catch (e) {
         alert("AprGongRamLine_Cross_SetGongRamList::" + e.description);
     }

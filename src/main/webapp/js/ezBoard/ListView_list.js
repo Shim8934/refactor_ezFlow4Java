@@ -6,7 +6,7 @@ var PressShiftKey = false;
 //모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
 //따라서 List의 SetMulSelectable 속성의 값이 true인 경우에만
 //document 객체에 keydown, keyup 이벤트를 등록하여 FLAG의 값을 지정한다.
-var m_strColorSelect = "#f0f6ff";
+var m_strColorSelect = "#edf4fd";
 var m_strColorDefault =  "#FFFFFF";
 var m_strColorOver = "#f4f5f5";
 var m_UrgentColor = "#E9101A";
@@ -741,7 +741,12 @@ function ListView() {
                     objTd.style.color = "RED";
                 }
 
-                objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
+                /* 2018-07-16 홍승비 - 체크박스를 사용하지 않는 게시판검색 기능 분기 위치 수정 */
+                if (SelectSingleNodeValue(oHeaders[j], "WIDTH") == 0) {
+                	continue;
+                } else {
+                	objTd.width = SelectSingleNodeValue(oHeaders[j], "WIDTH");
+                }
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "TITLE") {
                     objTd.style.margin = "0";
@@ -765,9 +770,9 @@ function ListView() {
                     if (getNodeText(oDatas[6]) == "Y") {
                         titleImage = titleImage + "<img src='/images/i_new.gif'>&nbsp;";                        
                     }
-                    if (getNodeText(oDatas[4]) == "0") 
+                    if (getNodeText(oDatas[4]) == "0") {
                         objTd.style.fontWeight = "BOLD";
-
+                    }
                     if (getNodeText(oDatas[10]) != "0" && Use_OneLineCount == "YES")
                         titleOneLineCnt = "<span style='color:#c64200'>[" + getNodeText(oDatas[10]) + "]</span>";
                     
@@ -792,6 +797,10 @@ function ListView() {
                 	objTd.style.overflow = "hidden";
                 	objTd.style.whiteSpace = "nowrap";
                 	objTd.style.textOverflow = "ellipsis";
+                }
+                /* 2018-07-09 홍승비 - 읽지 않은 일반&그룹&익명&QNA&포토게시판의 게시물 리스트 폰트를 bold로 수정 */
+                if (getNodeText(oDatas[4]) == "0") {
+                    objTd.style.fontWeight = "BOLD";
                 }
 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ATTACHMENTS") {
@@ -822,6 +831,7 @@ function ListView() {
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "READCOUNT") {
                     objTd.style.textAlign = "center";
                 }
+                
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ITEMID") {
                     var _TDCheckBox_Sub = document.createElement("INPUT");
                     _TDCheckBox_Sub.type = "checkbox";
@@ -847,7 +857,7 @@ function ListView() {
                     } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('DOCNO') > -1) { //2018-01-09 강민수92 공지일 때 docNo 안보이게
                     	if (getNodeText(oDatas[8]) == "1") {
                     		objTd.style.padding = "0";
-                    		objTd.innerHTML = "<img src='/images/i_notice.gif'>";
+                    		objTd.innerHTML = "<img src='/images/i_notice.gif' style='vertical-align:middle' >";
                     	} else {
                     		objTd.style.padding = "0";
                     		objTd.innerHTML = titleImage + strValue;

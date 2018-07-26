@@ -886,7 +886,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	//재사용 추가
 		if (approvalFlag.equals("S")) {
 			if (!beforeDocID.equals("")) {
-				beforeUrl = ezApprovalGService.getDocHref(beforeDocID, "END", "", userInfo.getCompanyID(), userInfo.getTenantId());
+				beforeUrl = ezApprovalGService.getDocHref(beforeDocID, "END", "", "", userInfo.getCompanyID(), userInfo.getTenantId());
 			}
 		}
 		
@@ -1143,7 +1143,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String ezAprOpinion(){
 		return "ezApprovalG/apprGezAprOpinion";
 	}
-
+	
+	/**
+	 * 전자결재G 메일발송 선택 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/ezAprOpinionSend.do")
+	public String ezAprOpinionSend(){
+		return "ezApprovalG/apprGezAprOpinionSend";
+	}
 	/**
 	 * 전자결재G 결재라인저장 표출 Method
 	 */
@@ -2138,15 +2145,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String attachSN = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
 		String fileName = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
-		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String realPath = commonUtil.getRealPath(request);
+		String uploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
-		String upd = dirPath + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator;
 		String fileAttachFormatSN = "00000" + attachSN;
 		fileAttachFormatSN = fileAttachFormatSN.substring(fileAttachFormatSN.length() - 4);
 		
-		String fileSpec = upd + docID + fileAttachFormatSN + fileName;
+		String attachHref = uploadPath + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + fileAttachFormatSN + fileName;
+		String fileSpec = realPath + attachHref;
 		
-		if (new File(fileSpec).exists()) {
+		if (ezApprovalGService.isLinkedAttachFile(attachHref)) {
+			rtnVal = "TRUE";
+			logger.debug("is linked attach file: {}", attachHref);
+		} else if (new File(fileSpec).exists()) {
 			deleteFile(fileSpec);
 			rtnVal = "TRUE";
 		} else {
@@ -2349,9 +2360,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String type = request.getParameter("type");
 		String docStatus = request.getParameter("docStatus");
 		String fileName = request.getParameter("fileName");
+		String docAttachSN = request.getParameter("docAttachSN");
 		String realPath = commonUtil.getRealPath(request);
 
-		String href = ezApprovalGService.getDocHref(docID, docStatus, type, userInfo.getCompanyID(), userInfo.getTenantId());
+		String href = ezApprovalGService.getDocHref(docID, docStatus, type, docAttachSN, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		downFile(request, response, realPath + href, fileName);
 		

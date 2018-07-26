@@ -18,9 +18,6 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +31,8 @@ import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 
 @Service("EzOrganService")
 public class EzOrganServiceImpl implements EzOrganService {
@@ -409,7 +408,21 @@ public class EzOrganServiceImpl implements EzOrganService {
             memberInfo[memberCount] = getMemberInfo(sb.toString(), pCellList, pPropList, cn, obj.getType());
             memberCount++;
         }
+		
+		map2.put("v_CN", pDeptID);
+		map2.put("v_TENANT_ID", tenantID);
+		
+		// 하위부서 포함
+		/*String containLow= ezCommonService.getTenantConfig("containLow", tenantID);
+		int totalCount2 = 0;
+		
+		if (containLow.equals("YES")) {
+			totalCount2 = getMemberListCount2(pDeptID, null, totalCount2, containLow, tenantID);
+		} else {
+			totalCount2 = memberCount;
+		}*/
 
+//        StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA><TOTALCOUNT2>" + totalCount2 + "</TOTALCOUNT2><ROWS>");
         StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA><ROWS>");
         
         for (int i = 0; i < memberCount; i++) {
@@ -418,7 +431,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         
         memberlist.append("</ROWS></LISTVIEWDATA>");
         
-        logger.debug("getDeptMemberList ended");
+//        logger.debug("getDeptMemberList ended. totalCount2 = " + totalCount2);
         
         return memberlist.toString();
 	}
@@ -441,12 +454,12 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_STARTROW", (Integer.parseInt(pPage) -1) * 50 + 1);
 		map.put("v_ENDROW", Integer.parseInt(pPage) * 50 + 1);
         map.put("v_STARTROWForMySQL", (Integer.parseInt(pPage) -1) * 50);
-        map.put("v_COUNT", 50);		
+        map.put("v_COUNT", 50);
 		
 		// 지정된 부서의 멤버 목록을 페이지를 고려하여 구한다.
 		List<OrganDeptVO> list = ezOrganDAO.getDeptMemberListPage(map);
 		
-		int memberCount = 0;		
+		int memberCount = 0;
 		String[] memberInfo = new String[list.size()];
 		
 		for (int i = 0; i < list.size(); i++) {
@@ -489,8 +502,20 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map2.put("v_TENANT_ID", tenantID);
 		String totalcount = ezOrganDAO.getMemberListCount(map2);
 		
+		//본인포함 자기하위(하위 하위 제외) 
+		/*String containLow= ezCommonService.getTenantConfig("containLow", tenantID);
+		int totalCount2 = 0;
+		
+		if (containLow.equals("YES")) {
+			totalCount2 = getMemberListCount2(pDeptID, null, totalCount2, containLow, tenantID);
+		} else {
+			totalCount2 = Integer.parseInt(totalcount);
+		}*/
+		
         StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA>");
-        memberlist.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
+        
+//    	memberlist.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><TOTALCOUNT2>" + totalCount2 + "</TOTALCOUNT2><ROWS>");
+    	memberlist.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
         
         for (int i = 0; i < memberCount; i++) {
             memberlist.append(memberInfo[i]);
@@ -499,6 +524,68 @@ public class EzOrganServiceImpl implements EzOrganService {
         memberlist.append("</ROWS></LISTVIEWDATA>");
         
         return memberlist.toString();
+	}
+	
+	/**
+	 * 하위부서 포함하여 카운트 필요시 사용 
+	 * @param companyList 하위회사 목록
+	 * @param totalCount2 하위포함 전체카운트
+	 * @param containLow YES일때 본인포함 하위, NO일때 본인제외 하위 (하위가 회사인경우를 위해 추가함)
+	 * @param tenantID
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public int getMemberListCount2(String deptCN, List<String> companyList, int totalCount, String containLow, int tenantID) throws Exception {
+		logger.debug("getMemberListCount2 started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deptCN", deptCN);
+		map.put("containConfig", containLow);
+		map.put("tenantID", tenantID);
+		
+		totalCount = ezOrganDAO.getMemberListCount2(map);
+		
+		logger.debug("totalCount2 = " + totalCount);
+		
+		if (companyList == null) {
+			companyList = ezOrganDAO.getChildCompany(map);
+		}
+		
+		for (String company : companyList) {
+			map.put("deptCN", company);
+			
+			List<String> childCompanyList = ezOrganDAO.getChildCompany(map);
+			
+			totalCount += getMemberListCount2(company, childCompanyList, totalCount, "NO", tenantID);
+		}
+		
+		logger.debug("getMemberListCount2 ended.");
+		
+		return totalCount;
+	}
+	
+	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID) throws Exception {
+		logger.debug("getDeptMemberListCount started.");
+		logger.debug("deptID = " + deptID + " || containLow = " + containLow + " || primary = " + primary + " || tenantID = " + tenantID);
+		
+		int totalCount = 0;
+		
+		if (!containLow) {
+			//totalCount
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_CN", deptID);
+			map.put("v_TENANT_ID", tenantID);
+			
+			totalCount = Integer.parseInt(ezOrganDAO.getMemberListCount(map));
+		} else {
+			//totalCount2
+			totalCount = getMemberListCount2(deptID, null, totalCount, ezCommonService.getTenantConfig("containLow", tenantID), tenantID);
+		}
+		
+		logger.debug("getDeptMemberListCount ended.");
+		
+		return totalCount;
 	}
 	
 	private String getMemberInfo(String pXMLString, String pCellList, String pPropList, String pMemberID, String pCategory) {		
@@ -631,7 +718,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                 	
                 	//수정(2017-01-23)
                 	// 검색 시 _가 들어간 문자가 검색이 안되어, [_]로 replace하는부분 제거
-                	searchParemeta[i] = searchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'");
+                	searchParemeta[i] = searchInfo[1].replaceAll("%", "\\%").replaceAll("'", "\\'").replaceAll("_", "\\_");
                 	
                     if (checkSearchField(searchInfo[0])){
                         if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParemeta[0].toString().equals("/")){
@@ -653,7 +740,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                     }
                 }else{
                     // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
-                    searchParemeta[i] = searchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'");
+                    searchParemeta[i] = searchInfo[1].replaceAll("%", "\\\\%").replaceAll("'", "\\\\'").replaceAll("_", "\\_");;
                     
                     if (checkSearchField(searchInfo[0])){
                         strSQL = strSQL + " AND (" + searchInfo[0].toLowerCase() + " LIKE  '%" + searchParemeta[i] + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + searchParemeta[i] + "%')";
@@ -731,6 +818,148 @@ public class EzOrganServiceImpl implements EzOrganService {
 		memberlist2.append("</ROWS></LISTVIEWDATA>");
 
 		logger.debug("getSearchList ended");
+		
+		return memberlist2.toString();
+	}
+	
+	@Override
+	public String getSearchListOR(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID) throws Exception {
+		logger.debug("getSearchListOR started");
+		
+        String[] searchParemeta = null;
+        String[] searchList;
+        String[] searchInfo;
+        String listInfo = "";
+        String strSize = "";
+        String strSizeForMySQL = "";
+        String strSQL = "";        
+        String type = "";        
+        int i = 0;
+        
+        if (pLimit != 0) {
+            strSize = " AND ROWNUM <= " + pLimit;
+            strSizeForMySQL = " LIMIT " + pLimit;
+        }
+        
+        if (!pSearchList.equals("")){
+            pSearchList = pSearchList.replace(";;", "##");
+            pSearchList = pSearchList.replace("::", "@@");
+            searchList = pSearchList.split("##");
+            searchParemeta = new String[searchList.length];
+            
+            logger.debug("searchList.length=" + searchList.length);
+            
+            for (i = 0; i < searchList.length; i++){      	
+                searchInfo = searchList[i].split("@@");
+
+                if (i == 0){
+                    // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
+                    //searchParemeta[i] = searchInfo[1].replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
+                	
+                	//수정(2017-01-23)
+                	// 검색 시 _가 들어간 문자가 검색이 안되어, [_]로 replace하는부분 제거
+                	searchParemeta[0] = searchInfo[1].replace("%", "\\%").replace("_", "\\_");
+                	
+                    if (checkSearchField(searchInfo[0])){
+                        if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParemeta[0].toString().equals("/")){
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " = '" + searchParemeta[0] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParemeta[0] + "'";
+                            searchParemeta[0] = searchParemeta[0].substring(0, searchParemeta[0].length() - 1);
+                        }else{
+                            strSQL = strSQL + " WHERE (" + searchInfo[0].toLowerCase() + " LIKE  '%" + searchParemeta[0] + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + searchParemeta[0] + "%'";
+                        }
+                    }else{
+                        if (searchInfo[0].indexOf("EXACT_") == 0){
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParemeta[i] + "' ";
+                        }else if (searchInfo[0].indexOf("LEFT_") == 0){
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + searchParemeta[i] + "%' ";
+                        }else if (searchInfo[0].indexOf("RIGHT_") == 0){
+                            strSQL = strSQL + " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + searchParemeta[i] + "%'";
+                    	}else{
+                            strSQL = strSQL + " WHERE " + searchInfo[0].toLowerCase() + " LIKE '%" + searchParemeta[i] + "%'";
+                    	}
+                    }
+                }else{
+                    // 수정(2007.06.26) : 검색 시 특정 필드(이름/부서명/직위)의 경우 Primary/Secondary 값을 모두 검색하도록 수정
+                    searchParemeta[i] = searchInfo[1].replace("%", "\\%").replace("_", "\\_");
+                    
+                    // 20180628 - 기존 AND 조건이 아닌, OR 조건으로 검색
+                    if (checkSearchField(searchInfo[0])){
+                        strSQL = strSQL + " OR " + searchInfo[0].toLowerCase() + " LIKE  '%" + searchParemeta[i] + "%' OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + searchParemeta[i] + "%'";
+                    }else{
+                        if (searchInfo[0].indexOf("EXACT_") == 0){
+                            strSQL = strSQL + " OR " + searchInfo[0].substring(6).toLowerCase() + "='" + searchParemeta[i] + "'";
+                        }else if (searchInfo[0].indexOf("LEFT_") == 0){
+                            strSQL = strSQL + " OR " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + searchParemeta[i] + " %'";
+                        }else if (searchInfo[0].indexOf("RIGHT_") == 0){
+                            strSQL = strSQL + " OR " + searchInfo[0].substring(5).toLowerCase() + " LIKE '%" + searchParemeta[i] + "%'";
+                        }else{
+                            strSQL = strSQL + " OR " + searchInfo[0].toLowerCase() + " LIKE '%" + searchParemeta[i] + "%'";
+                        }
+                    }
+                }
+            }
+            strSQL = strSQL + ") ";
+        }        
+        
+        if (pClass.equals("user") || pClass.equals("all")){
+            strSQL = strSQL.replace("cn", "a.cn");
+            strSQL = strSQL.replace("title", "a.title");
+                        
+            type = "U";
+        }else{
+        	type = "G";
+        }
+
+        Map<String, Object> map = new HashMap<String, Object>();
+                
+        map.put("strSQL", strSQL + strSize);
+        map.put("strSQLForMySQL", strSQL);
+        map.put("strSizeForMySQL", strSizeForMySQL);
+        map.put("strGyumjikForOracle", strSQL.replace("department", "deptID"));
+        map.put("type", type);
+        map.put("class", pClass);
+        map.put("v_TENANT_ID", tenantID);
+        
+        logger.debug("strSQL=" + strSQL);
+        
+        List<OrganDeptVO> list = ezOrganDAO.organSearch(map);
+        
+        StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
+      
+		for(int j=0; j < list.size(); j++){
+			Map<String, Object> map1 = new HashMap<String, Object>();			
+			OrganDeptVO organVO = list.get(j);
+			Object result = null;			
+			
+			if(!organVO.getCn().equals("") && organVO.getCn() != null){
+				StringBuilder sb = new StringBuilder();
+				sb.append("<DATA>");
+				
+				if(organVO.getType().equals("user")){
+					map1.put("v_CN", organVO.getCn());
+	        		map1.put("v_DEPTCD", organVO.getDisplayName());
+	        		map1.put("v_LANGDATA", primary);
+	        		map1.put("v_TENANT_ID", tenantID);
+	        		
+	        		result = ezOrganDAO.getTBLUserMaster(map1);	        		
+	        	}else{
+	        		map1.put("v_CN", organVO.getCn());
+					map1.put("v_LANGDATA", primary);
+					map1.put("v_TENANT_ID", tenantID);
+					
+					result = ezOrganDAO.getTBLDeptMaster(map1);	        		
+				}
+				
+				sb.append(commonUtil.getQueryResult(result));
+				sb.append("</DATA>");
+				
+				listInfo = getMemberInfo(sb.toString(), pCellList, pPropList, "", organVO.getType());
+				memberlist2.append(listInfo);
+			}			
+		}
+		memberlist2.append("</ROWS></LISTVIEWDATA>");
+
+		logger.debug("getSearchListOR ended");
 		
 		return memberlist2.toString();
 	}

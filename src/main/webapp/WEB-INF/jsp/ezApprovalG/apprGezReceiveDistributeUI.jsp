@@ -9,7 +9,7 @@
 	    <meta http-equiv="Content-Type" content="text/html;charset=utf-8;">
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 	    <link rel="stylesheet" type="text/css" href="/css/Tab.css">
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -947,7 +947,7 @@
 	    }
 	    function CreateNewAprDeptTemplet_Complete() {
 	        DivPopUpHidden();
-	        InitReceptTemplet();
+	        /* InitReceptTemplet(); */
 	    }
 	    function AprDeptTempletXmlParsing(p_AprDeptTempletName) {
 	        try {
@@ -1313,9 +1313,14 @@
 	</head>
 	<body class="popup">
 	    <h1><spring:message code='ezApprovalG.t427'/></h1>
-	    <div class="portlet_tabpart02">
+	    <div id="close">
+            <ul>
+                <li><span onclick="return btnCancel_onclick()"></span></li>
+            </ul>
+        </div>
+	    <div class="portlet_tabpart02" style="margin-bottom:10px">
 	        <div class="portlet_tabpart02_top" id="tab1">
-	            <p id="showAprLine"><span divname="Lineinfo" id="1tab1"><spring:message code='ezApprovalG.t427'/></span></p>
+	            <p id="showAprLine"><span divname="Lineinfo" id="1tab1" class="tabover"><spring:message code='ezApprovalG.t427'/></span></p>
 	        </div>
 	    </div>
 	    <table>
@@ -1346,10 +1351,10 @@
 	                            <td style="background-color: transparent; text-align: center; height: 30px;">
 	                                <table class="content" style="margin-bottom: 5px; width: 100%;">
 	                                    <tr>
-	                                        <td style="text-align: center; background-color:#f8f8fa; padding-top:1.5px;">
-	                                            <a class="imgbtn"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
-	                                            <a class="imgbtn"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
-	                                            <a class="imgbtn"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
+	                                        <td style="text-align: center; padding-top:1.5px;">
+	                                            <a class="imgbtn imgbck"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
+	                                            <a class="imgbtn imgbck"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
+	                                            <a class="imgbtn imgbck"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
 	                                        </td>
 	                                    </tr>
 	                                </table>
@@ -1380,27 +1385,26 @@
 	                </div>
 	            </td>
 	            <td style="vertical-align: top;">
-	                <h2 class="h2_dot" style="padding-top:6px;padding-bottom:3px"><spring:message code='ezApprovalG.t432'/></h2>
+	                <h2 class="h2_dot" style="padding-top:6px;padding-bottom:3px;float:left"><spring:message code='ezApprovalG.t432'/></h2>
+	                <div style="float:right;">
+	                    <a class="imgbtn imgbck" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
+	                </div>
+	                <div style="clear:both"></div>
 	                <div class="listview">
 	                    <div id="APRLINE1" style="border: 0; Width: 550px; Height: 550px; overflow: auto;"></div>
-	                </div>
-	                <div style="text-align: right;">
-	                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
 	                </div>
 	            </td>
 	        </tr>
 	    </table>
 	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-	        <a class="imgbtn"><span onclick="return btnCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
-	<script type="text/javascript">
-	    Tab3_NewTabIni("tab1");
+	<script type="text/javascript">	    
 	    Tab3_NewTabIni("tab3");
 	</script>
 </html>

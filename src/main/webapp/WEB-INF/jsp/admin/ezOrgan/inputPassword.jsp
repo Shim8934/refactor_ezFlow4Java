@@ -46,7 +46,12 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code="ezOrgan.t231" /></h1>
-		  <table class="content"> 
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
+		<table class="content"> 
 		  <tr> 
 		    <th><spring:message code="ezOrgan.t232" /></th>
 		    <td><input id=NewPassword type=password style="width:98%" maxlength="50"></td>
@@ -56,9 +61,8 @@
 		    <td><input id=ConfirmPassword type=password style="width:98%" maxlength="50"></td>
 		  </tr>        
 		</table>
-		  <div class="btnposition">
+		  <div class="btnpositionNew">
 		    <a class="imgbtn" onClick="OK_Click()"><span><spring:message code="ezOrgan.t124" /></span></a>
-		    <a class="imgbtn" onClick="window.close()"><span><spring:message code="ezOrgan.t125" /></span></a>
 		</div>
 	</body>
 </html>

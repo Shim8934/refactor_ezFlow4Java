@@ -7,7 +7,12 @@
 		<title><spring:message code='ezApprovalG.t1124'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css"  type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>"  type="text/css">
+		<style type="text/css">
+			.mainlist tr th {
+				border-top :0px;
+			}
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/OrganTree_Cross.js"></SCRIPT>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -124,16 +129,19 @@
 		            case "OrganTree":
 		                trOrganTree.style.display = "block";
 		                trFindDept.style.display = "none";
+		                trFindDept2.style.display = "none";
 		                break;
 		
 		            case "FindByName":
 		                trOrganTree.style.display = "none";
 		                trFindDept.style.display = "block";
+		                trFindDept2.style.display = "";
 		                break;
 		
 		            default:
 		                trOrganTree.style.display = "block";
 		                trFindDept.style.display = "none";
+		                trFindDept2.style.display = "none";
 		                break;
 		        }
 		        if (CurMthd != strValue) {
@@ -162,7 +170,11 @@
 		</LISTVIEWDATA>
 		</xml>
 		<h1><spring:message code='ezApprovalG.t1124'/></h1>
-		
+		<div id="close">
+            <ul>
+                <li><span name="btnCancel" onclick="return cmdCancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<table class="content">
 		  <tr> 
 		    <td colspan="2" > 
@@ -176,27 +188,30 @@
 			<th ><spring:message code='ezApprovalG.t1130'/></th>
 		    <td id="tdSelDept">&nbsp;</td>
 		  </tr>
+		  <tr style="display: none;" id="trFindDept2">
+		  	<th><spring:message code='ezApprovalG.t250'/></th>
+		  	<td colspan="2">
+		  		<input id= "textDeptName"type="text" class="text" style="Width:155px;" name="text232422222" onKeyPress="return textDeptName_onkeypress()">&nbsp;<a  class="imgbtn imgbck" style="vertical-align:middle;">
+				<span id=btSearchDept style="vertical-align:middle;" onclick= "return btSearchDept_onclick()"><spring:message code='ezApprovalG.t250'/></span></a>
+		  	</td>
+		  </tr>
 		</table>	
 		<div id="trOrganTree" style="margin-top:10px" >
-			  <div class="box" id="DocTreeView" style="height:175px;overflow:auto;">
+			  <div class="box" id="DocTreeView" style="height:178px;overflow:auto;">
 			  </div>
 		</div>
 		<table style="display:none" id=trFindDept >
 		  <tr> 
-			<th><input id= "textDeptName"type="text" class="text" style="Width:200px;" name="text232422222" onKeyPress="return textDeptName_onkeypress()">&nbsp;<a  class="imgbtn" style="vertical-align:middle;">
-			<span id=btSearchDept style="vertical-align:middle;" onclick= "return btSearchDept_onclick()"><spring:message code='ezApprovalG.t250'/></span></a></th>
-		  </tr>
-		  <tr> 
 			<td>
-		        <div class="listview" style="Width:328px; Height:159px;">
-			    <div id="OrgListView"  STYLE="overflow:auto;Width:327px; Height:159px;margin: 0px 1px 1px 1px 1px;"></div></div>
+		        <div class="listview" style="Width:328px; Height:150px; margin-top: 10px;">
+			    	<div id="OrgListView"  STYLE="overflow:auto;Width:327px; Height:159px;"></div>
+			    </div>
 			</td>
 		  </tr>
 		</table>
 		
 		<div class="btnposition btnpositionNew">
 			<a class="imgbtn" name="btnOK"><span onClick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-			<a class="imgbtn" name="btnCancel"><span onClick="return cmdCancel_onclick()" ><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 	</body>
 </html>

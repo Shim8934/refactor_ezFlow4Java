@@ -90,7 +90,7 @@ var strLang101 = "after approved by administrator.";
 var strLang102 = ".\nIf you want to cancel sending, use  ";
 var strLang103 = "Error occurred while sending message.";
 var strLang104 = "Error occurred while saving message.";
-var strLang105 = "Connectiion error to web server";
+var strLang105 = "Connecting to the server has failed. Please try again later.";
 var strLang106 = "Error occurred while sending message. - ";
 var strLang107 = "Error occurred while saving message. - ";
 var strLang108 = "Saved message in drafts.";
@@ -308,7 +308,7 @@ var strLangKMS08 = "폴더는 업로드 할 수 없습니다."
 var strLangKYJ01 = "Not selected mail.";
 var strLangKYJ02 = "재작성할 메일을 하나만 선택해주세요.";
 var strLangKYJ03 = "공백은 입력할 수 없습니다."
-
+var strLangLSD02 = "구성원이 없는 부서입니다.";
 
 function GetLocalTime(Offset , pDateTime)
 {

@@ -90,7 +90,7 @@ var strLang101 = "를 이용하세요.";
 var strLang102 = "에 발송됩니다.\n발송을 취소하시려면 ";
 var strLang103 = "메일을 발송하는중에 오류가 발생했습니다.";
 var strLang104 = "메일을 저장하는중에 오류가 발생했습니다.";
-var strLang105 = "웹서버와의 연결오류";
+var strLang105 = "서버 접속에 실패했습니다. 잠시 후 다시 시도해 주세요.";
 var strLang106 = "메일을 발송하는중에 오류가 발생했습니다. - ";
 var strLang107 = "메일을 저장하는중에 오류가 발생했습니다. - ";
 var strLang108 = "메일을 임시보관함에 저장했습니다.";
@@ -308,6 +308,7 @@ var strLangKMS08 = "폴더는 업로드 할 수 없습니다."
 var strLangKYJ01 = "선택된 메일이 없습니다.";
 var strLangKYJ02 = "재작성할 메일을 하나만 선택해주세요.";
 var strLangKYJ03 = "공백은 입력할 수 없습니다.";
+var strLangLSD02 = "구성원이 없는 부서입니다.";
 
 
 function GetLocalTime(Offset , pDateTime)

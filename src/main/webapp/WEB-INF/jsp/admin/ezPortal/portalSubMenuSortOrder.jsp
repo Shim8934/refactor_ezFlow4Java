@@ -81,7 +81,7 @@
 		</div>	
 		<div id="close">
 			<ul>
-				<li><span onClick="window.close()"><spring:message code='ezPortal.t8'/></span></li>
+				<li><span onClick="window.close()"></span></li>
 			</ul>
 		</div>
 		<table class="content">
@@ -99,7 +99,6 @@
 
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 	</body>
 </html>

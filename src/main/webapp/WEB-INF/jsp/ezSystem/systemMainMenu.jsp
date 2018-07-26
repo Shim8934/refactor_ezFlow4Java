@@ -258,7 +258,7 @@
 		    	
 	        </tbody>
 	    </table> 
-	    <div class="btnposition">
+	    <div class="btnpositionJsp">
 	        <a class="imgbtn" onclick="update_Sys_Param()"><span><spring:message code='main.sp09'/></span></a>
 	        <a class="imgbtn" onClick="window.location.href='/admin/ezSystem/systemMainMenu.do'"><span><spring:message code='main.t135'/></span></a>
 	    </div>       

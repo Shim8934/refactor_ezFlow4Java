@@ -6,13 +6,8 @@
 	<head>
 		<title><spring:message code='ezCommunity.t1047' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="/css/organ_tree.css">
+		<link rel="stylesheet" type="text/css" href="<spring:message code='ezOrgan.e3'/>">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
-		<style>
-			#TopBoardsList {
-				border-top:0px;
-			}
-		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
@@ -24,6 +19,8 @@
       		var ItemIDList = "<c:out value = '${itemIDList}' />";
 			var BoardID = "<c:out value = '${boardID}' />";
 			var code = "<c:out value = '${code}' />";
+			//2018-07-13 김보미
+    		var treeCtrl = "<c:out value='${treeCtrl}' />";
 			var xmlDom_treeview = createXmlDom();
 			
 			function Select() {
@@ -150,6 +147,23 @@
 			    xmlHTTP.send();
 			
 			    DisplayTopBoard();
+			    
+			    //2018-07-13 김보미 - 복사하려는 게시글의 게시판이 선택되도록(트리뷰 펼치기)
+			    $("h2[treeCtrl=" + treeCtrl.split("TreeView")[1].split("_")[0] + "]").trigger("click");//그룹선택
+			    
+			    var treeCtrlarr = treeCtrl.split("_"); 
+			    var spanId = "#spn_" + treeCtrlarr[0]; //spn_TreeViewTreeCtrl0
+			    var imgId = "#imgNode_" + treeCtrlarr[0]; //imgNode_TreeViewTreeCtrl0
+			    for (var i = 1; i < treeCtrlarr.length; i++) {
+			    	if(i != 1) { //하위게시판일 경우 펼쳐지게끔.
+			    		$(imgId).trigger("click");
+			    	}
+			    	//게시판 클릭
+			    	spanId += "_" + treeCtrlarr[i];
+			    	$(spanId).trigger("click");
+			    	
+			    	imgId += "_" + treeCtrlarr[i];
+			    }
 			}
 
 			function TreeCtrl_onNodeExpanded(pNodeID, pTreeID) {
@@ -272,7 +286,9 @@
 			    for (i = 0; i < xmldomNodes.length; i++) {
 			        var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
 			        tid = tid.substring(1, 37);
-			        strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
+			        //2018-07-13 김보미 - h2태그에 속성값 추가
+// 			        strHTML += "<tr><td><h2 style='border-top:0px' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
+			        strHTML += "<tr><td><h2 style='border-top:0px' TreeCtrl='TreeCtrl" + i.toString() + "' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
 			        strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:420px;padding-top:5px;padding-bottom:3px;overflow: auto;'></DIV></td></tr>";
 			    }
 			    
@@ -290,11 +306,14 @@
 	</head>
 	<body class = "popup" style = "overflow : hidden">
 		<h1><spring:message code='ezCommunity.t359' /></h1>
-		
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 	    <div class="box" style="width: 420px; height: 540px; overflow: auto; word-break: break-all" id="TopBoardsList"></div>
 	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn" name="Submit" onclick="return Select()"><span><spring:message code='ezCommunity.t278' /></span></a>
-	        <a class="imgbtn" name="Submit" onclick="javascript: window.close();"><span><spring:message code='ezCommunity.t21' /></span></a>
 	    </div>
 	    <div id="dialog_alert" style="display:none;">
 	    	<button id="close_pop">확인</button>

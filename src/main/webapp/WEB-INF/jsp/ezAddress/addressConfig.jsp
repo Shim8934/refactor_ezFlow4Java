@@ -76,10 +76,11 @@
 			  	</td>
 			  </tr>
 			</table>
-			<br />
 			<div align="center" style="width:450px;">
-				<a class="imgbtn" onClick="Change_Click()"><span><spring:message code='ezAddress.t300' /></span></a>
-				<a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezAddress.t11' /></span></a>
+				<div class="btnpositionJsp">
+					<a class="imgbtn" onClick="Change_Click()"><span><spring:message code='ezAddress.t300' /></span></a>
+					<a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezAddress.t11' /></span></a>
+				</div>	
 			</div>
 		</form>
 	</body>

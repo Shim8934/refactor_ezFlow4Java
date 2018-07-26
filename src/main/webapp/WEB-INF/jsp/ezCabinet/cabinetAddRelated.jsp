@@ -128,9 +128,22 @@
 					var mailSubject  = window.opener.document.getElementById("mailSubject").textContent;
 					var messageFrame = window.opener.document.getElementById("message");
 					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
-					var normalScreen = contentWd.document.getElementById("normalScreen").innerHTML;
+					var senderEmail  = window.opener.g_fromEmail;
+					var receiverDiv  = window.opener.document.getElementById("LabelToHidden");
+					var spanList     = receiverDiv.querySelectorAll("span");
+					var receiveList  = [];
+					
+					if (!spanList || spanList.length == 0) {alert(CabinetMessages.strSelect); return;}
+					
+					for (var i = 0, len = spanList.length; i < len; i++) {
+						receiveList.push(spanList[i].getAttribute("title"));
+					}
+					
+					console.log("senderEmail: " + senderEmail);
+					
+					var emailContent = contentWd.document.getElementById("normalScreen").innerHTML;
 					var url          = "/ezCabinet/saveRelatedEmail.do";
-					var data         = {type: moduleType, mode: saveMode, title : mailSubject, author: msgToGot, content: JSON.stringify(normalScreen)};
+					var data         = {type: moduleType, mode: saveMode, title : mailSubject, author: msgToGot, content: JSON.stringify(emailContent)};
 					
 					if (saveMode == 1) {data.cabinetId = cabinetId;}
 					

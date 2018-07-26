@@ -18,11 +18,11 @@
 				function setValue(pUID, pObj) {
 				    g_UID = pUID;
 				    if (g_SelectedObj == null) {
-				        pObj.style.backgroundColor = "#f0f6ff";
+				        pObj.style.backgroundColor = "#edf4fd";
 				        g_SelectedObj = pObj;
 				    }
 				    else {
-				        pObj.style.backgroundColor = "#f0f6ff";
+				        pObj.style.backgroundColor = "#edf4fd";
 				        if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
 				        g_SelectedObj = pObj;
 				    }
@@ -96,7 +96,7 @@
 	        <ul>
 	            <c:if test="${result == '1'}">
 	            	<li><span onclick="newpage()"><spring:message code='ezPortal.t247'/></span></li>
-	            	<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+	            	<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 	            	<li><span onclick="Modify_Theme()"><spring:message code='ezPortal.t336'/></span></li>
 	            	<li><span onclick="deleteTopMenu()"><spring:message code='ezPortal.t67'/></span></li>
 	            </c:if>

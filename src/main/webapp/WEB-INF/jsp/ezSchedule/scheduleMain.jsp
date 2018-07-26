@@ -43,6 +43,9 @@
 		  cursor: pointer;
 		  text-align: center;
 		}		
+		.chk_noneDisplay {
+			display:none;
+		}
 		</style>
 		<script type="text/javascript">		    
 			var timeZoneStr = "<c:out value='${timeZoneStr}'/>";
@@ -186,14 +189,14 @@
 		        if (pDefaultview == 2) {
 		            typeCal = 0
 		            // 2018-06-07 구해안 미니 호출 부분 주석처리
-		            /* parent.frames["left"].typeCal = 0 */
+		            parent.frames["left"].typeCal = 0
 
 		        } else if (pDefaultview == 1) {
 		            typeCal = 1
-		            /* parent.frames["left"].typeCal = 1 */
+		            parent.frames["left"].typeCal = 1
 		        } else if (pDefaultview == 0) {
 		            typeCal = 2
-		            /* parent.frames["left"].typeCal = 2 */
+		            parent.frames["left"].typeCal = 2
 		        }
 
 		        if (pStartday == 1)
@@ -202,6 +205,7 @@
 		            DefaultView = 0            
        
 				if (receivecount != "0") {
+					parent.frames["left"].document.body.style.overflow = "hidden";
 		            schedule_receive_attendant_cross_dialogArguments[0] = this;
 		            schedule_receive_attendant_cross_dialogArguments[1] = windowonload_Complete;
 		           
@@ -236,6 +240,7 @@
 		    	}
 		        
 		    	if (groupcount != "0") {
+		    		parent.frames["left"].document.body.style.overflow = "hidden";
 		            schedule_receive_member_dialogArguments[0] = this;
 		            schedule_receive_member_dialogArguments[1] = windowonload_Complete2;
 		            
@@ -531,7 +536,7 @@
 		            case "DAY":
 		                typeCal = 2;
 		                // 2018-06-08 구해안 미니달력 미사용으로 주석처리
-		                /* parent.frames["left"].typeCal = 2; */
+		                parent.frames["left"].typeCal = 2;
 
 		                if (g_selTDID != null && g_selTDID != "") {
 		                    sDate = new Date(g_selTDID.substring(7, 11), parseInt(g_selTDID.substring(12, 14)) - 1, parseInt(g_selTDID.substring(15, 17)));
@@ -551,7 +556,7 @@
 		            case "WEEK":
 		                typeCal = 1;
 		                // 2018-06-08 구해안 미니달력 미사용으로 주석처리
-		                /* parent.frames["left"].typeCal = 1; */
+		                parent.frames["left"].typeCal = 1;
 
 		                if (g_selTDID != null && g_selTDID != "") {
 		                    sDate = new Date(g_selTDID.substring(7, 11), parseInt(g_selTDID.substring(12, 14)) - 1, parseInt(g_selTDID.substring(15, 17)));
@@ -570,9 +575,9 @@
 
 		            case "MONTH":
 		                typeCal = 0;
-		                //2018-06-08 구해안 미니달력 미사용으로 주석처리
-		                /* parent.frames["left"].typeCal = 0;
-		                var ItemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
+		                // 2018-06-08 구해안 미니달력 미사용으로 주석처리
+		                parent.frames["left"].typeCal = 0;
+		                /* var ItemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
 
 		                var item = parent.frames["left"].document.getElementById(ItemID);
 		                if (item)
@@ -1040,12 +1045,12 @@
         <div id="mainmenu">
             <ul>
             	<li><span id="pn_img" onClick="WriteSchedule()"><spring:message code='ezSchedule.t214'/></span></li>
-              	<li><span onclick='ViewChange("DAY");'><spring:message code='ezSchedule.t140'/></span></li>
+            	<li><span onClick="PrintSchedule()"><spring:message code='ezSchedule.t217'/></span></li>
+              	<li><span onClick="RefreshView()"><spring:message code='ezSchedule.t218'/></span></li>              	
+		      	<!-- <li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li> -->
+		      	<li><span onclick='ViewChange("DAY");'><spring:message code='ezSchedule.t140'/></span></li>
               	<li><span onclick='ViewChange("WEEK");'><spring:message code='ezSchedule.t141'/></span></li>
-              	<li><span onclick='ViewChange("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>
-		      	<li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li>
-              	<li><span onClick="PrintSchedule()"><spring:message code='ezSchedule.t217'/></span></li>
-              	<li><span onClick="RefreshView()"><spring:message code='ezSchedule.t218'/></span></li>
+              	<li><span onclick='ViewChange("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>              	
               	<!-- 2018-06-08 구해안 상단 셀렉트박스 및 라디오버튼 미사용으로 삭제 및 bar 이미지 삭제 -->
               	<%-- <li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li>
               	<li style="background:none; padding:0; cursor:default;">

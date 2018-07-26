@@ -9,11 +9,24 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<style>
 			.btype_list ul li .date {
 				-webkit-margin-start:20px;
 			}
+			/* ellipisis 추가 */
+			.node_normal{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		width:135px;
+	    	}
+	    	.node_selected{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		width:135px;
+	    	}	    			
 		</style>
 		<script type="text/javascript" src="/js/ezCommunity/TreeView.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -37,6 +50,8 @@
 		    var strLang4 = "<spring:message code='ezCommunity.t2009' />"; 
 		    var strLang5 = "<spring:message code='ezCommunity.t1102' />"; 
 		    var strLang6 =  "<spring:message code='ezCommunity.t431' />";
+		    //2018-07-24 김보미
+		    var strLang7 =  "<spring:message code='ezCommunity.kbm01' />";
 		    
 		    $(function () {
 		        $.ajax({
@@ -268,8 +283,12 @@
 	            document.getElementById("master").innerHTML += "(" + SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/DEPTNAME") + ")";
 	            document.getElementById("regdate").innerHTML =  strLang1 + ": " + SelectSingleNodeValueNew(xmldom, "DATA/C_REGDATE").substring(0, 10);
 	            document.getElementById("membercnt").innerHTML =  SelectSingleNodeValueNew(xmldom, "DATA/C_MEMBERCNT");
+	            //2018-07-11 김보미 - 공백 조정
+	            countSpanPadding(document.getElementById("membercnt"), SelectSingleNodeValueNew(xmldom, "DATA/C_MEMBERCNT"));
 	            document.getElementById("itemcnt").innerHTML = SelectSingleNodeValueNew(xmldom, "DATA/ITEMCNT");
-
+	            //2018-07-11 김보미 - 공백 조정
+	            countSpanPadding(document.getElementById("itemcnt"), SelectSingleNodeValueNew(xmldom, "DATA/ITEMCNT"));
+	            
 	            var userImage = SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERIMAGE").trim();
 
 	            var _img = document.createElement("img");
@@ -350,6 +369,8 @@
 		        treeView.SetNodeClick("TreeCtrl_onNodeClick");
 		        treeView.DataSource(GetSubBoard(ID, "1"));
 		        treeView.DataBind(obj + "obj");
+		        
+		        applyEllipsis();
 		    }
 		    
 		    function SetTreeConfig() {
@@ -394,13 +415,15 @@
 		        var treeView = new TreeView();
 		        treeView.LoadFromID(pTreeID);
 		        treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+		        
+		        applyEllipsis();
 		    }
 		    
 		    function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
 		        try {
 		            var treeNode = new TreeNode();
 		            treeNode.LoadFromID(pNodeID);
-
+		            
 		            var SelectedBoardID = treeNode.GetNodeData("DATA1");
 		            var SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
 		            var chkPhotoBrd = treeNode.GetNodeData("DATA6")
@@ -409,9 +432,22 @@
 		            document.getElementById("mainboard").style.display = "none";
 		            document.getElementById("makeguide").style.display = "none";
 		            
+		            //2018-07-02 김보미 - 클릭시 색 변경 안되게
+			        var SelectedNodeID = treeNode.GetNodeData("id");
+		            var boardColor = treeNode.GetNodeData("DATA4");
+		            if (boardColor != "" && boardColor != null) {
+		                var objSpan = document.getElementById("spn_" + SelectedNodeID);
+		                if(CrossYN())
+		                    objSpan.setAttribute("style", "color:" + boardColor);
+		                else
+		                    objSpan.style.color = boardColor;
+		            }
+		            
 		            document.getElementById("rightfrm").style.height = "659px";
 		            if (chkPhotoBrd != "3") {
-		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code;
+		            	//2018-07-13 김보미 - 파라메터 추가
+// 		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code;
+		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code + "&treeCtrl=" + SelectedNodeID;
 		            } else {
 		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemListPhoto.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code;
 		            }
@@ -509,7 +545,7 @@
 		                    
 		                    break;
 		                case "btn_MemberJoinIng":
-		                    alert(strLang5);
+		                    alert(strLang7);
 		                    break;
 		                case "btn_Manager_home1": open_admin_home(code, "2");
 		                    break;
@@ -633,7 +669,7 @@
 		                    
 		                    break;
 		                case "btn_MemberJoinIng":
-		                    alert(strLang5);
+		                    alert(strLang7);
 		                    break;
 		                default: document.getElementById("rightfrm").src = "/ezCommunity/commHome/commHome.do?code=" + code + "&userLevel=" + userLevel, "right";
 		                    tempboard.className = "off";
@@ -679,8 +715,10 @@
 				            if (userID == master) {
 				                alert("Community <spring:message code='ezCommunity.t1103' />");
 				            } else {
-				                var wWeight = "425";
-				                var wHeight = "385";
+				            	//2018-07-09  김보미 - 너비값 조정
+ 				                //var wWeight = "425";
+				                var wWeight = "475";
+				                var wHeight = "395";
 				                var heigth = window.screen.availHeight;
 				                var width = window.screen.availWidth;
 				                var left = (width - wWeight) / 2;
@@ -793,6 +831,39 @@
 //		    	}	    	
 //		    }
 
+			//2018-07-11 김보미 - 공백 조정
+			function countSpanPadding(elem, cnt) {
+	            if (cnt.length == 1) {
+	            	elem.style.paddingLeft = "30px";
+	            } else if (cnt.length == 2) {
+	            	elem.style.paddingLeft = "22px";
+	            } else if (cnt.length == 3) {
+	            	elem.style.paddingLeft = "16px";
+	            } else if (cnt.length == 4) {
+	            	elem.style.paddingLeft = "12px";
+	            }
+			}
+			
+	        /**
+	        	게시판 트리 view  ellipsis 추가.
+	        	박종균
+	        */
+	        function applyEllipsis() {
+	        	
+	        	//nodelevel 값을 가져와서 처리한다.
+	        	$(".node_div").each(function(index, element){
+	        		var nodelevel = $(element).attr("nodelevel");
+	        		var title = $(element).attr("nodename");
+	        		var nodeId = $(element).attr("id");
+	        		
+	        		$("#spn_"+nodeId).attr("title", title);
+	        		
+	        		if (nodelevel > 0) {
+	        			var customWidth = 135 - (18 * nodelevel);
+	        			$("#spn_"+nodeId).css("width", customWidth+"px");
+	        		}
+	        	});
+	        }			
 		</script>
 	</head>
 	

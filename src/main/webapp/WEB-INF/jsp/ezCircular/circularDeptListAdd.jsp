@@ -38,7 +38,7 @@
 		    	}
 
 		        _RowObject = obj;
-		        obj.style.backgroundColor = "#f0f6ff";
+		        obj.style.backgroundColor = "#edf4fd";
 		    }
 		    
 		    function memberList() {
@@ -62,14 +62,10 @@
 		
 		<div id="close">
 			<ul>
-				<li><span onclick="closeDeptListAdd();"><spring:message code='ezCircular.t84'/></span></li>
+				<li><span onclick="closeDeptListAdd();"></span></li>
 			</ul>
 		</div>
-		
-		<script type="text/javascript" >
-   			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
-		
+
 		<table style="width: 550px; height: 250px;" border="0">
 	        <tr>
 	            <td>

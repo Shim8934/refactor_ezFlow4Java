@@ -18,12 +18,12 @@
 		</script>
 		<style type="text/css">
 			.gameType_wrap{margin:0px; padding:0px;}
-			.gameType_wrap h2{margin:38px 0px; padding:0px; text-align:center; font-size:24px; color:#323333; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+			.gameType_wrap h2{margin:38px 0px; padding:0px; text-align:center; font-size:24px; color:#323333; font-family: Malgun Gothic, Meiryo UI;}
 			.gameType_wrap ul{overflow:hidden; list-style:none; width:968px; margin:0px auto; padding:0px;}
 			.gameType_wrap ul li{float:left; margin:0px 10px 0px 0px; padding:0px; width:230px; height:378px; border-radius:5px; background:#f3f3f3; border:1px solid #d5d5d5; cursor:pointer;}
 			.gameType_wrap ul li dl{margin:230px 0px 0px 0px; padding:0px; text-align:center;}
-			.gameType_wrap ul li dl dt{margin:0px 0px 20px 0px; padding:0px; font-size:18px; color:#313333; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
-			.gameType_wrap ul li dl dd{margin:0px; padding:0px; font-size:12px; color:#313333; line-height:22px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+			.gameType_wrap ul li dl dt{margin:0px 0px 20px 0px; padding:0px; font-size:18px; color:#313333; font-family:Malgun Gothic, Meiryo UI}
+			.gameType_wrap ul li dl dd{margin:0px; padding:0px; font-size:12px; color:#313333; line-height:22px; font-family:Malgun Gothic, Meiryo UI}
 						
 			.gameType_wrap ul li.gameType0{background:url(/images/ezLadder/img_bomb.png) #f3f3f3 center 40px no-repeat;}
 			.gameType_wrap ul li.gameType1{background:url(/images/ezLadder/img_money.png) #f3f3f3 center 40px no-repeat;}

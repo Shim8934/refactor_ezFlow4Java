@@ -147,12 +147,12 @@ function fnValueClick() {
 
         if (BeforeClickID == "") {
             if (GetAttribute(parentTR.cells[0], "ID") != "")
-                document.getElementById(GetAttribute(parentTR.cells[0], "ID")).style.backgroundColor = "#f0f6ff";
+                document.getElementById(GetAttribute(parentTR.cells[0], "ID")).style.backgroundColor = "#edf4fd";
         }
         else {
             document.getElementById(BeforeClickID).style.backgroundColor = "#fff";
             if (GetAttribute(parentTR.cells[0], "ID") != "")
-                document.getElementById(GetAttribute(parentTR.cells[0], "ID")).style.backgroundColor = "#f0f6ff";
+                document.getElementById(GetAttribute(parentTR.cells[0], "ID")).style.backgroundColor = "#edf4fd";
         }
 
         BeforeClickID = GetAttribute(parentTR.cells[0], "ID");

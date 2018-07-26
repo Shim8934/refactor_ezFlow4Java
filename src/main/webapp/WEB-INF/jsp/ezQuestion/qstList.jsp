@@ -35,11 +35,11 @@
 		    
 			window.onload = function() {
 				makePageSelPage();
-				var height = parseInt(document.documentElement.clientHeight - 160);
+				var height = parseInt(document.documentElement.clientHeight - 170);
 	            document.getElementById("QstDiv").style.height = height + "px";
 			};
 			 window.onresize = function () {
-				 var height = parseInt(document.documentElement.clientHeight - 160);
+				 var height = parseInt(document.documentElement.clientHeight - 170);
 				 document.getElementById("QstDiv").style.height = height + "px";
 			};
 			
@@ -270,7 +270,9 @@
 		    
 		    function menu_Delete(){
 		    	itemList = "";
-		    	$("input:checkbox:checked").each(function(index) {
+		    	//2018-07-13 김보미
+// 		    	$("input:checkbox:checked").each(function(index) {
+		    	$("input:checkbox:not(#HeaderAllCheckBox):checked").each(function(index) {
 		    		if (index == 0) {
 		    			itemList = this.value;
 		    		} else {
@@ -279,7 +281,7 @@
 		    	});
 		    	
 		    	if (itemList == "") {
-		    		alert('<spring:message code="ezQuestion.t294" />');
+		    		alert('<spring:message code="ezQuestion.t289" />');
 		            return;
 		    	} else {
 		    		if (confirm('<spring:message code="ezQuestion.t267" />')) {
@@ -411,22 +413,22 @@
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
 		        if(totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
 		            PagingHTML += strtext;
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 		                PagingHTML += strtext;
 		            } else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -453,24 +455,24 @@
 		       
 		        if (totalPage > BlockSize) {
 	            	if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-	            	    strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
-	            	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+	            	    strtext = "";
+	            	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 		                PagingHTML += strtext;
 	            	} else {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		                PagingHTML += strtext;
 	            	}
 		        } else {
-		            strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		            strtext = "";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 		            PagingHTML += strtext;
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        PagingHTML += "</div>";
@@ -550,7 +552,7 @@
 		            }
 		        }
 		        if(szCheckCnt == 0){
-		            alert('<spring:message code="ezQuestion.t294" />');
+		            alert('<spring:message code="ezQuestion.t289" />');
 		            return;
 		        }
 		        if (szCheckCnt == 1) {
@@ -564,6 +566,30 @@
 			function qstWhite() {
 				window.location = "/ezQuestion/qstStep1.do?brdID=5";		        	        
 		    }
+			
+			//2018-07-13 김보미
+		    function event_HeaderCheckBoxClick(obj) {
+		    	// tr 노드들 (리스트의 전체 행)
+				var QstNodes = $('#QstList tbody').children( 'tr:not(:first)' );
+		    	
+		    	// tr 노드 (하나의 행)
+		    	var QstNode;
+		    	// tr 노드 개수
+		    	var nodeCount = QstNodes.length;
+		        if (obj.checked) {
+		        	
+		            for (var i = 0; i < nodeCount; i++) {
+		            	QstNode = QstNodes.get(i);
+		            	QstNode.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
+		            }
+		        } else {
+		        	
+		            for (var i = 0; i < nodeCount; i++) {
+		            	QstNode = QstNodes.get(i);
+		            	QstNode.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
+		            }
+		        }
+		    }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -572,11 +598,11 @@
 			<ul>
 				<c:if test="${adminYN == 'Y' }">
 					<li><span onclick="qstWhite()"><spring:message code="ezBoard.t367" /></span></li>
-					<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li>
+					<!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				</c:if>	
 				<li><span onClick="menu_Result()"><spring:message code="ezQuestion.t303" /></span></li>
 				<li><span onClick="menu_Analysis()"><spring:message code="ezQuestion.t304" /></span></li>
-				<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li>
+				<!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li> -->
 				<li><span onClick="menu_Search()"><spring:message code="ezQuestion.t34" /></span></li>
 				<li><span onClick="menu_InfoModify()" <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if> ><spring:message code="ezQuestion.t305" /></span></li>
 				<li><span onClick="menu_Delete()" <c:if test="${adminYN != 'Y' }">style = "display : none;"</c:if>><spring:message code="ezQuestion.t177" /></span></li>
@@ -590,7 +616,9 @@
 		<div id = "QstDiv" style="overflow:auto;">
 			<table id="QstList" class="mainlist" style="width:100%;"> 
 			    <tr> 
-					<th width="30px" align="center"> <spring:message code="ezQuestion.t306" /></th> 
+			    	<!-- 2018-07-13 김보미 - '선택' 대신 체크박스로 -->
+<%-- 					<th width="30px" align="center"> <spring:message code="ezQuestion.t306" /></th>  --%>
+					<th width="30px" align="center"><input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/></th> 
 					<th><spring:message code="ezQuestion.t307" /></th> 
 					<th width="60px"><spring:message code="ezQuestion.t308" /></th> 
 					<th width="80px"><spring:message code="ezQuestion.t309" /></th> 

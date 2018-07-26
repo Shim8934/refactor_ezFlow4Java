@@ -670,6 +670,28 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
+	@RequestMapping(value="/ezCabinet/saveRelatedEmail.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonSaveRelatedEmail(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSaveRelatedEmail is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String title           = request.getParameter("title")       != null ? request.getParameter("title")       : "";
+		String author          = request.getParameter("author")      != null ? request.getParameter("author")      : "";
+		String emailContent    = request.getParameter("normalScreen")!= null ? request.getParameter("normalScreen"): "";
+		JSONObject resultObj   = new JSONObject();
+		
+		if (title.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		//resultObj = cabinetRestService.saveRelatedEmail(request, userInfo.getId(), title, author, normalScreen);
+		
+		logger.debug("jsonSaveRelatedEmail finishes!");
+		return resultObj.toString();
+	}
+	
 	private String getFileSize(long fileSize) {
 		String fileSize_ = "";
 		

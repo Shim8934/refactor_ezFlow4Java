@@ -185,6 +185,11 @@
 	<!-- <OBJECT classid="clsid:F8E93A35-2D04-4E2C-A04D-87947594C674" id="behavelist1" style="HEIGHT: 0px; WIDTH: 0px"> -->
 	<!-- </OBJECT> -->
 		<h1><spring:message code='ezApprovalG.t1037'/></h1>
+		<div id="close">
+            <ul>
+                <li><span name="btnCancel" onClick="return cmdCancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<table style="width:100%">
 			<tr>
 				<td valign="top" style="padding:3px; width:207px; height:100%"><h2><spring:message code='ezApprovalG.t1039'/></h2>
@@ -202,7 +207,7 @@
 							</td>
 						</tr>
 					</table>
-					<div class="listview" style="margin-top:5px" >
+					<div class="listview" style="margin-top:5px; overflow:auto; overflow-x:hidden" >
 						<div id="TaskSCateList" style="height:233px" onClick="TaskSCateList_rowclick()"></div>
 					</div>
 				</td>
@@ -299,7 +304,6 @@
 		</table>
 		<div class="btnposition btnpositionNew">
 			<a class="imgbtn" name="btnOK" onClick="return cmdConfirm_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
-			<a class="imgbtn" name="btnCancel" onClick="return cmdCancel_onclick()"><span><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

@@ -64,12 +64,22 @@
 				if ($("#divCross p a").length > 0) {
 					$("#divCross p a").attr("target", "_blank")
 				}
+				
+				//2018-07-10 김보미 - 제목이 2줄이상일 경우 공백 추가
+				titleSpace();
+				//2018-07-16 김보미 - 제목이길어질때 내용부분 높이 조정
+				titleHeight();
 	        });
 			
 			window.onresize = function () {
 				var contentHeight;
 				document.getElementById("divCross").style.height = window.innerHeight - 340 + "px";
 // 				document.getElementById("divCross").style.width = window.innerWidth - 40 + "px";
+
+				//2018-07-10 김보미 - 제목 공백 조절
+				titleSpace();
+				//2018-07-16 김보미 - 제목이길어질때 내용부분 높이 조정
+				titleHeight();
 			};
 			
 			/* 18-05-25 김민성 - 회람판 > 회람 상세정보 회람확인 시 창 새로고침 되도록 수정 */
@@ -177,10 +187,10 @@
 				}
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var left = (width - 500) / 2;
-		        var top = (heigth - 300) / 2;
+		        var left = (width - 620) / 2;
+		        var top = (heigth - 425) / 2;
 		        var szHref = url = "/ezCircular/circularConfirmList.do?circularID=" + circularID; 
-	            DivPopUpShow(600, 415, szHref);
+	            DivPopUpShow(620, 425, szHref);
 		    }
 		    
 	        var ezprtquestion_cross_dialogArguments = new Array();
@@ -307,10 +317,10 @@
             				
             				if (vo.status == 1) {
             					//확인 이미지
-            					printCircularUserList += "<img src='/images/ImgIcon/circular_read.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            					printCircularUserList += "<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
             				} else {
             					//미확인 이미지
-            					printCircularUserList += "<img src='/images/ImgIcon/circular_unread.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            					printCircularUserList += "<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
             				}
             				
             				printCircularUserList += "</th>";
@@ -461,6 +471,38 @@
 		        	});	
 				}
 			}
+			
+			//2018-07-10 김보미 - title부분 길이를 비교해 2줄 이상이면 공백을 더 준다.
+			function titleSpace() {
+				var text = $("#titleTd").text();
+				var res;
+				var cont = $('<div>' + text + '</div>').css("display", "table")
+								.css("z-index", "-1").css("position", "absolute")
+								.css("font-family", $("#titleTd").css("font-family"))
+								.css("font-size", $("#titleTd").css("font-size"))
+								.css("font-weight", $("#titleTd").css("font-weight")).appendTo('body');
+				res = (cont.width() > $("#titleTd").width());
+				cont.remove();
+				
+				if (res) {
+					$("#titleTd").css("padding","6px 4px 6px 6px");
+				} else {
+					$("#titleTd").css("padding","");
+					$("#titleTd").css("padding-left","4px");
+				}
+			}
+			
+			//2018-07-16 김보미 - 타이틀 높이에 따라 content부분 높이 조절
+			function titleHeight() {
+				var titleHeight = $("#titleTd").height();
+				var tdHeight = 26; //한줄일때의 td 높이
+				
+				var res = (titleHeight - tdHeight);
+				res = ($("#divCross").css("height").replace(/[^-\d\.]/g, '') - res) + "px";
+				
+				$("#divCross").css("height", res);
+			}
+			
 		</script>
 	</head>
 	<style>
@@ -485,49 +527,48 @@
                 	    	<!-- 회람확인이 뜨는 사람 - 회람 작성자 이외의 사람 -->
                 	    	<c:if test="${result.confirmStatus == '0'}">
 								<li id="circularConfirm"><span onclick="circularConfirm()"><spring:message code='ezCircular.t195' /></span></li>
-								<li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" alt=""><img src="/images/i_bar.gif" ></li>
+								<!-- <li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" alt=""><img src="/images/i_bar.gif" ></li> -->
                 	    	</c:if>
                 	    	
                 	    	<!-- 회람종료가 뜨는 사람 - 회람 작성자 -->
                 	    	<c:if test="${result.memberID == userInfo.id && result.status == '0'}">
 		                        <li><span onClick="CircularClose_onclick()"><spring:message code='ezCircular.t57'/></span></li>
-		                        <li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" alt=""><img src="/images/i_bar.gif" ></li>
+		                        <!-- <li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" alt=""><img src="/images/i_bar.gif" ></li> -->
 		                     </c:if>
 
                	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}/${totalCommentCount }]</span></li>
 	                        
 	                        <li><span onclick="circularConfirmList()"><spring:message code='ezCircular.kmsc01' /></span></li>
-	                        
 	                        <c:if test="${result.memberID == userInfo.id}">
 	                        	<c:if test="${result.status == '0'}">
 		                        	<li><span onclick="circularModify()"><spring:message code='ezCircular.t184' /></span></li>
-		                        </c:if>
-		                        <li><span onclick="circularReUse()"><spring:message code='ezCircular.t183' /></span></li>
+		                        </c:if>		                       
 	                        </c:if>
-	                        
 	                        <c:if test="${type != 'new'}">
 	                        	<li id="deletebtbn"><span onclick="btn_delete()"><spring:message code='ezCircular.t30' /></span></li>
 	                        </c:if>
-               	    		
-	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>
+	                        <c:if test="${result.memberID == userInfo.id}">
+	                        	 <li><span onclick="circularReUse()"><spring:message code='ezCircular.t183' /></span></li>
+	                        </c:if>
+	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>	                        
                     	</ul>
                 	</div>
                 	<div id="close">
 	                    <ul>
-    	                    <li><span onclick="closing();"><spring:message code='ezCircular.t84' /></span></li>
+    	                    <li><span onclick="closing();"></span></li>
         	            </ul>
             	    </div>
             	    
             	    <script type="text/javascript" >
 		      			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		  			</script>
             	    
             	    <!-- 18-05-24 김민성 - 회람판 > 회람 본문 작성일 단어 등록일로 수정 -->
 					<table class="content" style="width:100%;">
 	                    <tr>
     	                    <th style="width: 10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t32' /></th>
-        	                <td colspan="3" style="padding-left: 4px;"><c:out value = '${result.title}' /></td>
+    	                    <!-- 2018-07-10 김보미 - td에 id값 추가 -->
+        	                <td colspan="3" id="titleTd" style="padding-left: 4px;"><c:out value = '${result.title}' /></td>
                     	</tr>
                     	<tr>
 							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t122' /></th>
@@ -653,10 +694,10 @@
                                 </div>
                             </td>
                             <td class="pos2">	                                
-                                <a href="#" class="imgbtn">
+                                <a href="#" class="imgbtn imgbck">
                                 	<span style="width:57px;" onclick="attach_SelectAll()"><spring:message code='ezCircular.t112' /></span>
                                 </a><br/>	                                
-                                <a href="#" class="imgbtn">
+                                <a href="#" class="imgbtn imgbck">
                                 	<span style="width:57px;" onclick="attach_Download()"><spring:message code='ezCircular.t25' /></span>
                                 </a>
                             </td>
@@ -745,7 +786,7 @@
 						</tr>
 						<tr style="height:25px"> 
  							<th style="padding-left:10px"><spring:message code='ezCircular.t86' /></th>
-		            		<td colspan="3" class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
+		            		<td class="confirmStatus" style="padding-left: 4px; vertical-align: middle;">
 		            			<c:choose>
 		            				<c:when test="${result.confirmStatus == '0'}">
 		            					<img src='/images/ImgIcon/msg-unrd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t143' />
@@ -755,6 +796,10 @@
 		            					<img src='/images/ImgIcon/msg-rd.gif' style='vertical-align:middle;'/>&nbsp;<spring:message code='ezCircular.t65' />
 		            				</c:when>
 		            			</c:choose>
+		            		</td>
+		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezPoll.t161' /></th>
+		            		<td>
+		            			<div id="status" style="padding-left: 4px;">${fn:substring(result.endDate,0,16) }</div>
 		            		</td>
 						</tr>
 					</table>

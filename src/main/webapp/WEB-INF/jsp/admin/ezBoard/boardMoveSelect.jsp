@@ -216,14 +216,18 @@
 			    var treeView = new TreeView();
 			    treeView.LoadFromID(pTreeID);
 			    treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
-			}
-			
+			}			
 	    </script>
 	</head>
 	<body class="popup" style ="overflow:hidden">
 		<h1><spring:message code="ezBoard.t135" /></h1>
-		<div class="box" style="width:320px;height:550px;overflow:auto;word-break:break-all" id=TopBoardsList></div>
-		<div class="btnposition">
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
+		<div class="box" style="width:320px;height:550px;overflow-x:hidden;overflow-y:auto;word-break:break-all" id=TopBoardsList></div>
+		<div class="btnpositionNew">
 			<a class="imgbtn" name="Submit" onClick="Select()" ><span><spring:message code="ezBoard.t47" /></span></a>
 		</div>
 	</body>

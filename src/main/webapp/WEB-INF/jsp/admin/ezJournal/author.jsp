@@ -24,7 +24,7 @@
 				var url = "/admin/ezJournal/authorView.do";
 				var companyId = document.getElementById("companyId").value;
 				url+="?companyId="+companyId;
-				window.open(url, "authorView", GetOpenWindowfeature(500, 200));
+				window.open(url, "authorView", GetOpenWindowfeature(520, 200));
 			}
 			
 			function updateAuth() {			
@@ -34,7 +34,7 @@
 				url+="?companyId="+companyId;
 				if (userId) {
 					url+="&userId="+userId+"&userName="+selectedUserName;
-					window.open(url, "authorView", GetOpenWindowfeature(500, 200));
+					window.open(url, "authorView", GetOpenWindowfeature(520, 200));
 				} else {
 					alert("<spring:message code='ezPortal.t85' />");
 				}
@@ -72,7 +72,7 @@
 		<style>	
 			tr:hover{background:#eee; color:#fff;}
 			.selectTR{
-				background-color: #f0f6ff;
+				background-color: #edf4fd;
 			}
 		</style>
 	</head>
@@ -100,32 +100,34 @@
 			<script type="text/javascript">
 		   		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			</script>
-			<table class="mainlist" style="width:100%; margin-left:5px;">
-			    <tr>
-			        <th style="text-align: left; width:20%;"><spring:message code='ezJournal.t38' /></th>
-			        <th style="text-align: left; width:20%;"><spring:message code='ezJournal.t39' /></th>
-			        <th style="text-align: left; width:20%;"><spring:message code='ezJournal.t40' /></th>
-			        <th style="text-align: left; width:40%;"><spring:message code='ezJournal.t41' /></th>
-			    </tr>
-			    <c:choose>
-				    <c:when test="${fn:length(authList) ne 0}">
-					    <c:forEach items="${authList }" var="auth">
-					    	<tr ondblclick="updateAuth();" id="${auth.userId}" userName="${auth.userName }" onclick="selectedTR(this);" style="cursor: pointer;">
-					    		<td style="text-align: left;"><c:out value='${auth.userName }'/> </td>
-					    		<td style="text-align: left;"><c:out value='${auth.jikwi }'/> </td>
-					    		<td style="text-align: left;"><c:out value='${auth.deptName }'/> </td>
-					    		<td style="text-align: left;">${auth.authDept }</td>
+			<div id="divlvtForm" style="height: 500px; width:100%; overflow-x:hidden; overflow-y:auto; padding:0px;">
+				<table class="mainlist" style="width:100%; margin-left:5px;">
+				    <tr>
+				        <th style="text-align: left; width:20%;"><spring:message code='ezJournal.t38' /></th>
+				        <th style="text-align: left; width:20%;"><spring:message code='ezJournal.t39' /></th>
+				        <th style="text-align: left; width:20%;"><spring:message code='ezJournal.t40' /></th>
+				        <th style="text-align: left; width:40%;"><spring:message code='ezJournal.t41' /></th>
+				    </tr>
+				    <c:choose>
+					    <c:when test="${fn:length(authList) ne 0}">
+						    <c:forEach items="${authList }" var="auth">
+						    	<tr ondblclick="updateAuth();" id="${auth.userId}" userName="${auth.userName }" onclick="selectedTR(this);" style="cursor: pointer;">
+						    		<td style="text-align: left;"><c:out value='${auth.userName }'/> </td>
+						    		<td style="text-align: left;"><c:out value='${auth.jikwi }'/> </td>
+						    		<td style="text-align: left;"><c:out value='${auth.deptName }'/> </td>
+						    		<td style="text-align: left;">${auth.authDept }</td>
+						    	</tr>
+						    </c:forEach>
+					    </c:when>
+					    <c:otherwise>
+					    	<tr>
+					    		<td style="text-align: center;" colspan="4"><spring:message code='ezJournal.t125' /></td>
 					    	</tr>
-					    </c:forEach>
-				    </c:when>
-				    <c:otherwise>
-				    	<tr>
-				    		<td style="text-align: center;" colspan="4"><spring:message code='ezJournal.t125' /></td>
-				    	</tr>
-				    </c:otherwise>
-			    </c:choose>
-			    
-			</table>
+					    </c:otherwise>
+				    </c:choose>
+				    
+				</table>
+			</div>
 		</form>
 	</body>
 </html>

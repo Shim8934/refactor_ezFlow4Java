@@ -14,9 +14,8 @@ var rootFolder   = "";
 var folderLevel  = "";
 var tableView    = new TableView();
 
-window.onbeforeunload = function() {
-	closeAllPopup();
-}
+window.addEventListener("beforeunload", function (e) {closeAllPopup();});
+window.addEventListener("load", function (e) {closeAllPopup();});
 
 function setParameter(fldId, lang, fldType, rootFld, level) {
 	folderId    = fldId;

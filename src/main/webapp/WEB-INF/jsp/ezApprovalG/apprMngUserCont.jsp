@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
     <script type="text/javascript" src="/js/escapenew.js"></script>
 	<script type="text/javascript" src="/js/ezApprovalG/Common_Function.js"></script>
@@ -344,12 +344,16 @@
 </head>
 <body class="popup">
     <h1><spring:message code='ezApproval.t317'/></h1>
-    <div class="box" style="WIDTH: 440px; HEIGHT: 240px; overflow: auto; BACKGROUND-COLOR: #FFFFFF; padding: 4px 6px 6px 4px" id="divUserContTree"></div>
+    <div id="close">
+        <ul>
+            <li><span onclick="return btnCancel_onclick()"></span></li>
+        </ul>
+    </div>
+    <div class="box" style="WIDTH: 440px; HEIGHT: 270px; overflow: auto; BACKGROUND-COLOR: #FFFFFF; padding: 4px 6px 6px 4px" id="divUserContTree"></div>
     <div class="btnposition btnpositionNew">
         <a class="imgbtn" onclick="return btnIns_onclick()"><span><spring:message code='ezApproval.t313'/></span></a>
         <a class="imgbtn" onclick="return btnEdit_onclick()"><span><spring:message code='ezApproval.t314'/></span></a>
         <a class="imgbtn" onclick="return btnDel_onclick()"><span><spring:message code='ezApproval.t315'/></span></a>
-        <a class="imgbtn" onclick="return btnCancel_onclick()"><span><spring:message code='ezApproval.t70'/></span></a>
     </div>
     <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
     <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

@@ -1374,9 +1374,9 @@
 		                    }
 		                    
 		                    IsSkipDrafter = "FALSE";
-		                }
-
-		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "string") {
+		                }    
+		                
+		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "string" && pDocType != "002") {
 		                	$.ajax({
 	                    		type : "POST",
 	                    		dataType : "text",
@@ -1394,8 +1394,7 @@
 
 		                    btnReceivLineEnable = false;
 		                    setRecevInfo(ret[3]);
-		                }
-		                else if (pSuSinFlag == "Y" && ret[2] == "") {
+		                } else if (pSuSinFlag == "Y" && ret[2] == "" && pDocType != "002") {
 		                    DeleteDeptInfo();
 		                    setRecevInfo("");
 		                }
@@ -1601,7 +1600,7 @@
 		        </div>        
 		      <div id="close">
 		        <ul>
-		          <li><span id="btnClose" onClick="return btnClose_onclick()" ><spring:message code='ezApprovalG.t64'/></span></li>
+		          <li><span id="btnClose" onClick="return btnClose_onclick()" ></span></li>
 		        </ul>
 		      </div></td>
 		  </tr>
@@ -1621,7 +1620,6 @@
 		</table>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		<XML id="SA_coredata"></XML>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>

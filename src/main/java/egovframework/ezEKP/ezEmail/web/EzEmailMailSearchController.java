@@ -3,19 +3,19 @@ package egovframework.ezEKP.ezEmail.web;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
 import javax.mail.Address;
-import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.UIDFolder;
-import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -184,6 +184,8 @@ public class EzEmailMailSearchController {
 		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
 		String prop = doc.getElementsByTagName("PORP").item(0).getTextContent();
 		String orderBy = doc.getElementsByTagName("ORDERBY").item(0).getTextContent();
+		int startIndex = Integer.parseInt(doc.getElementsByTagName("STARTINDEX").item(0).getTextContent());
+		int listCount = Integer.parseInt(doc.getElementsByTagName("LISTCOUNT").item(0).getTextContent());
 		
 		startDate = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
 		endDate = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);
@@ -206,221 +208,128 @@ public class EzEmailMailSearchController {
 			
 			Folder folder = null;
 			Message[] messages = null;
+			int totalCount = 0;
 			
-			if (mailFolder.equals("ALL")) {
-				String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", userInfo.getTenantId());
-				boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
-				
-				List<Folder> topLevelFolders = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);		
-				
-				List<String> topLevelFolderNames = new ArrayList<String>();
-				int maxFolderCount = Math.min(5, topLevelFolders.size());
-				
-				for (int i = 0; i < maxFolderCount; i++) {
-					Folder tmpFolder = topLevelFolders.get(i);
-					
-					topLevelFolderNames.add(tmpFolder.getName());
-				}
-				
-				logger.debug("topLevelFolderNames=" + topLevelFolderNames);	
-				
-				for (String folderName : topLevelFolderNames) {
-					Folder tmpFolder = ia.getFolder(folderName);
-					
-					if (folder == null) {
-						folder = tmpFolder;
-					}
-					
-					tmpFolder.open(Folder.READ_ONLY);			
-					
-					Message[] subMessages = ezEmailUtil.searchFolder(tmpFolder, category, keyword, startDateObj, endDateObj, true, null, false, false);
-					
-					if (messages == null) {
-						messages = subMessages;
-					}
-					else if (subMessages.length > 0) {
-					   int mainLen = messages.length;
-					   int subLen = subMessages.length;
-					   Message[] combined = new Message[mainLen + subLen];
-					   System.arraycopy(messages, 0, combined, 0, mainLen);
-					   System.arraycopy(subMessages, 0, combined, mainLen, subLen);	
-					   
-					   messages = combined;
-					}				
-					
-					FetchProfile fp = new FetchProfile();
-					
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
-					fp.add(FetchProfile.Item.SIZE);
-					fp.add(FetchProfile.Item.FLAGS);
-					
-					tmpFolder.fetch(messages, fp);		
-				}
+			String sortTypeSpecifier = prop;
+			boolean isAscending = orderBy.equals("ASC") ? true : false;
+			
+			if (prop.equals("importance")) {
+				sortTypeSpecifier = "importance";
 			}
-			else {
+			else if (prop.equals("view")) {
+				sortTypeSpecifier = "readFlag";
+			}
+			else if (prop.equals("flag")) {
+				sortTypeSpecifier = "flag";
+			}
+			else if (prop.equals("attach")) {
+				sortTypeSpecifier = "attachment";
+			}
+			else if (prop.equals("from")) {
+				sortTypeSpecifier = "sender";
+			}
+			else if (prop.equals("subject")) {
+				sortTypeSpecifier = "subject";
+			}
+			else if (prop.equals("recevdate")) {
+				sortTypeSpecifier = "receivedDate";
+			}
+			else if (prop.equals("size")) {
+				sortTypeSpecifier = "size";
+			}
+			
+			if (!mailFolder.equals("ALL")) {
 				folder = ia.getFolder(mailFolder);
-				folder.open(Folder.READ_ONLY);			
-				messages = ezEmailUtil.searchFolder(folder, category, keyword, startDateObj, endDateObj, true, null, false, false);					
+				folder.open(Folder.READ_ONLY);
 			}
-					
-			if (messages.length > 0) {
-				String sortTypeSpecifier = prop;
-				boolean isAscending = orderBy.equals("ASC") ? true : false;
-				
-				if (prop.equals("importance")) {
-					sortTypeSpecifier = "importance";
-				}
-				else if (prop.equals("view")) {
-					sortTypeSpecifier = "readFlag";
-				}
-				else if (prop.equals("flag")) {
-					sortTypeSpecifier = "flag";
-				}
-				else if (prop.equals("attach")) {
-					sortTypeSpecifier = "attachment";
-				}
-				else if (prop.equals("from")) {
-					sortTypeSpecifier = "sender";
-				}
-				else if (prop.equals("subject")) {
-					sortTypeSpecifier = "subject";
-				}
-				else if (prop.equals("recevdate")) {
-					sortTypeSpecifier = "receivedDate";
-				}
-				else if (prop.equals("size")) {
-					sortTypeSpecifier = "size";
-				}		
-				
-				// sort the messages
-				if (sortTypeSpecifier != null) {
-					ezEmailUtil.sortMessages(folder, messages, sortTypeSpecifier, isAscending);
-				}
-				
-				FetchProfile fp = new FetchProfile();
-				
-				if (sortTypeSpecifier.equals("importance")
-						|| sortTypeSpecifier.equals("receivedDate")) {
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(FetchProfile.Item.SIZE);
-					fp.add(FetchProfile.Item.FLAGS);								
-				}
-				else if (sortTypeSpecifier.equals("readFlag")
-							|| sortTypeSpecifier.equals("flag")) {
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(FetchProfile.Item.SIZE);								
-				}
-				else if (sortTypeSpecifier.equals("attachment")) {
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(FetchProfile.Item.SIZE);
-					fp.add(FetchProfile.Item.FLAGS);								
-				}
-				else if (sortTypeSpecifier.equals("sender") || sortTypeSpecifier.equals("subject")) {
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.FLAGS);								
-				}
-				else if (sortTypeSpecifier.equals("size")) {
-					fp.add(UIDFolder.FetchProfileItem.UID);
-					fp.add("X-Priority");
-					fp.add(FetchProfile.Item.CONTENT_INFO);
-					fp.add(FetchProfile.Item.ENVELOPE);
-					fp.add(FetchProfile.Item.FLAGS);								
-				}					
 			
-				folder.fetch(messages, fp);
+			Map<String, Object> extraMap = new HashMap<String, Object>();
+			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, category, keyword, startDateObj, endDateObj, true, 
+					false, false, sortTypeSpecifier, isAscending, startIndex, listCount, false, extraMap, userInfo.getTenantId());
+			
+			totalCount = (int) extraMap.get("totalCount");
+			logger.debug("totalCount=" + totalCount);
 				
-				for (int i = 0; i < messages.length; i++) {
-					Message message = messages[i];
-					
-					sb.append("<ROW>");
-					
-					Folder msgFolder = message.getFolder();
-			        UIDFolder uidFolder = (UIDFolder)msgFolder;				
-					String folderPath = msgFolder.getFullName();
-					
-					sb.append(String.format("<ITEMID><![CDATA[%s/%s]]></ITEMID>", folderPath, uidFolder.getUID(message)));
-					
-					String email = ezEmailUtil.getFromEmailAddressOfMessage(message);
-					sb.append(String.format("<FROMEMAIL><![CDATA[%s]]></FROMEMAIL>", email));
-					
-					String name = ezEmailUtil.getFromNameOrAddressOfMessage(message);			
-					sb.append(String.format("<FROMNAME><![CDATA[%s]]></FROMNAME>", name));
-					
-					Address[] addresses = message.getRecipients(Message.RecipientType.TO);
-					String displayTo = ezEmailUtil.getStringListOfNameOrAddressOfAddresses(addresses);
-					sb.append(String.format("<DISPLAYTO><![CDATA[%s]]></DISPLAYTO>", displayTo));
+			for (int i = 0; i < messages.length; i++) {
+				Message message = messages[i];
+				
+				sb.append("<ROW>");
+				
+				Folder msgFolder = message.getFolder();
+		        UIDFolder uidFolder = (UIDFolder)msgFolder;				
+				String folderPath = msgFolder.getFullName();
+				
+				sb.append(String.format("<ITEMID><![CDATA[%s/%s]]></ITEMID>", folderPath, uidFolder.getUID(message)));
+				
+				String email = ezEmailUtil.getFromEmailAddressOfMessage(message);
+				sb.append(String.format("<FROMEMAIL><![CDATA[%s]]></FROMEMAIL>", email));
+				
+				String name = ezEmailUtil.getFromNameOrAddressOfMessage(message);			
+				sb.append(String.format("<FROMNAME><![CDATA[%s]]></FROMNAME>", name));
+				
+				Address[] addresses = message.getRecipients(Message.RecipientType.TO);
+				String displayTo = ezEmailUtil.getStringListOfNameOrAddressOfAddresses(addresses);
+				sb.append(String.format("<DISPLAYTO><![CDATA[%s]]></DISPLAYTO>", displayTo));
+							
+				Date receivedDate = message.getReceivedDate();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");	
+				sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+				sb.append(String.format("<DATERECEIVED><![CDATA[%s]]></DATERECEIVED>", sdf.format(receivedDate)));
+				
+				String folderPathName = ezEmailUtil.getDisplayNameFromFolderId(folderPath, locale);
+				folderPathName = folderPathName.replaceAll("\\.", "/");
+				sb.append(String.format("<PARENTNAME><![CDATA[/%s]]></PARENTNAME>", folderPathName));
+				
+				// subject
+				String subject = ezEmailUtil.getSubject(message);
 								
-					Date receivedDate = message.getReceivedDate();
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");	
-					sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-					sb.append(String.format("<DATERECEIVED><![CDATA[%s]]></DATERECEIVED>", sdf.format(receivedDate)));
-					
-					String folderPathName = ezEmailUtil.getDisplayNameFromFolderId(folderPath, locale);
-					folderPathName = folderPathName.replaceAll("\\.", "/");
-					sb.append(String.format("<PARENTNAME><![CDATA[/%s]]></PARENTNAME>", folderPathName));
-					
-					// subject
-					String subject = ezEmailUtil.getSubject(message);
-									
-					subject = (subject != null) ? subject : "";
-					sb.append(String.format("<SUBJECT><![CDATA[%s]]></SUBJECT>", subject));
-					
-					// secureMail
-					if (ezEmailUtil.hasSecureMailFlag(message)) {
-						sb.append(String.format("<SECUREMAIL>1</SECUREMAIL>"));
-					} else {
-						sb.append(String.format("<SECUREMAIL>0</SECUREMAIL>"));
-					}
-					
-					String[] headers = message.getHeader("X-Priority");
-					String header = headers != null ? headers[0] : "normal";
-					int importance = 1;
-					// startsWith is used since
-					// there are cases like X-Priority: 1 (Highest) generated by Thunderbird.
-					if (header.startsWith("1")) {
-						importance = 2;
-					}
-					else if (header.startsWith("5")) {
-						importance = 0;
-					}			
-					sb.append(String.format("<IMPORTANCE><![CDATA[%d]]></IMPORTANCE>", importance));
-					
-					// attachment
-					boolean isAttached = IMAPAccess.hasAttachment(message);
-					int attached = isAttached ? 1 : 0;			
-					sb.append(String.format("<HASATTACHMENT><![CDATA[%d]]></HASATTACHMENT>", attached));
-					
-					int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;			
-					sb.append(String.format("<READ><![CDATA[%d]]></READ>", readFlag));
-					
-					sb.append(String.format("<CONTENTCLASS><![CDATA[%s]]></CONTENTCLASS>", "IPM.Note"));
-					
-					int flagged = 0;
-					if (message.isSet(Flags.Flag.FLAGGED)) {
-						flagged = 1;
-					}			
-					sb.append(String.format("<FLAG><![CDATA[%d]]></FLAG>", flagged));
-					sb.append(String.format("<SIZE><![CDATA[%d]]></SIZE>", message.getSize()));
-					
-					sb.append("</ROW>");
+				subject = (subject != null) ? subject : "";
+				sb.append(String.format("<SUBJECT><![CDATA[%s]]></SUBJECT>", subject));
+				
+				// secureMail
+				if (ezEmailUtil.hasSecureMailFlag(message)) {
+					sb.append(String.format("<SECUREMAIL>1</SECUREMAIL>"));
+				} else {
+					sb.append(String.format("<SECUREMAIL>0</SECUREMAIL>"));
 				}
+				
+				String[] headers = message.getHeader("X-Priority");
+				String header = headers != null ? headers[0] : "normal";
+				int importance = 1;
+				// startsWith is used since
+				// there are cases like X-Priority: 1 (Highest) generated by Thunderbird.
+				if (header.startsWith("1")) {
+					importance = 2;
+				}
+				else if (header.startsWith("5")) {
+					importance = 0;
+				}			
+				sb.append(String.format("<IMPORTANCE><![CDATA[%d]]></IMPORTANCE>", importance));
+				
+				// attachment
+				boolean isAttached = IMAPAccess.hasAttachment(message);
+				int attached = isAttached ? 1 : 0;			
+				sb.append(String.format("<HASATTACHMENT><![CDATA[%d]]></HASATTACHMENT>", attached));
+				
+				int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;			
+				sb.append(String.format("<READ><![CDATA[%d]]></READ>", readFlag));
+				
+				sb.append(String.format("<CONTENTCLASS><![CDATA[%s]]></CONTENTCLASS>", "IPM.Note"));
+				
+				int flagged = 0;
+				if (message.isSet(Flags.Flag.FLAGGED)) {
+					flagged = 1;
+				}			
+				sb.append(String.format("<FLAG><![CDATA[%d]]></FLAG>", flagged));
+				sb.append(String.format("<SIZE><![CDATA[%d]]></SIZE>", message.getSize()));
+				
+				sb.append("</ROW>");
 			}
 			
-			sb.append("</ROWS></DATA>");
+			
+			sb.append("</ROWS>");
+			sb.append(String.format("<TOTALCOUNT><![CDATA[%d]]></TOTALCOUNT>", totalCount));
+			sb.append("</DATA>");
 			
 			returnData = sb.toString();
 		
@@ -435,7 +344,7 @@ public class EzEmailMailSearchController {
 		
 		logger.debug("mailSearch ended.");
 		
-		return returnData;		
+		return returnData;
 	}
 	
 	/**
@@ -464,11 +373,8 @@ public class EzEmailMailSearchController {
 		String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();	
 		
 		String folderId = null;
-		
-		if (uniqueId.endsWith(",")) {
-			uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
-		}
-		String[] folderAndMsgIdArray = uniqueId.split(",");
+
+		String[] folderAndMsgIdArray = ezEmailUtil.makeFolderAndMsgIdArray(uniqueId);
 					
 		String returnData = "OK";
 		
@@ -532,11 +438,7 @@ public class EzEmailMailSearchController {
 		String uniqueId = doc.getElementsByTagName("UNIQUEID").item(0).getTextContent();
 		String mfolderId = doc.getElementsByTagName("FOLDERID").item(0).getTextContent();
 		
-		if (uniqueId.endsWith(",")) {
-			uniqueId = uniqueId.substring(0, uniqueId.length() - 1);
-		}
-		
-		String[] folderAndMsgIdArray = uniqueId.split(",");
+		String[] folderAndMsgIdArray = ezEmailUtil.makeFolderAndMsgIdArray(uniqueId);
 		
 		IMAPAccess ia = null;
 		

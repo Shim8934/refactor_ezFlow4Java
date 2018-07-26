@@ -45,7 +45,7 @@
 					return;
 				}
 			    
-			    window.open("/admin/ezPortal/subMenuItemEdit.do?pageID=" + pageid + "&mode=new&parentUID=" + parentuid, "", "height = 340px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 300));
+			    window.open("/admin/ezPortal/subMenuItemEdit.do?pageID=" + pageid + "&mode=new&parentUID=" + parentuid, "", "height = 357px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 357));
 			}
 			
 			// layout 변경
@@ -67,12 +67,12 @@
 				// 선택된 개체가 없는 경우
 				if( g_SelectedObj == null )
 				{
-					pObj.style.backgroundColor = "#f0f6ff";
+					pObj.style.backgroundColor = "#edf4fd";
 					g_SelectedObj = pObj;
 				}
 				else
 				{
-					pObj.style.backgroundColor = "#f0f6ff";
+					pObj.style.backgroundColor = "#edf4fd";
 					
 					if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
 					g_SelectedObj = pObj;
@@ -81,7 +81,7 @@
 			
 			// 수정
 			function selectItem(pUID, pObj) {
-			    window.open("/admin/ezPortal/subMenuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + pUID, "", "height = 340px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 300));
+			    window.open("/admin/ezPortal/subMenuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + pUID, "", "height = 357px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 357));
 			}
 			
 			// 삭제
@@ -168,45 +168,51 @@
 			}
 		</script>
 	</head>
-	 <body class="popup">
-	<h1><spring:message code='ezPortal.t216'/></h1>
-	<div id="mainmenu">
-  		<ul>
-    		<li><span onClick="Add()" ><spring:message code='ezPortal.t99'/></span></li>
-    		<li><span onClick="Delete()" ><spring:message code='ezPortal.t67'/></span></li>
-    		<%--<li><span onClick="SetPosition()"><%=RM.GetString("t100")%></span></li>--%>
-    		<li><span onClick="SetOrder()"><spring:message code='ezPortal.t108'/></span></li>
-    		<li><span onClick="preview()"><spring:message code='ezPortal.t63'/></span></li>
-  		</ul>
-	</div>
-	<script type="text/javascript">
-		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-	</script>
-	<table class="content">
-  		<tr>
-    		<th><spring:message code='ezPortal.t64'/></th>
-    		<td>
-    			<select name="layoutList" id="layoutList" onChange="layout_change()">
-        			${layoutList}
-      			</select>
-    		</td>
-  		</tr>
-  		<tr>
-    		<th ><spring:message code='ezPortal.t217'/></th>
-    		<td>
-    			<select name="menuList" id="menuList" onChange="menu_change()">
-        			${menuList}
-      			</select>
-    		</td>
-  		</tr>
-	</table>
-	<br>
-	<table class="mainlist" style="width:100%">
-  		<tr>
-    		<th width="60" height="23"><spring:message code='ezPortal.t101'/></th>
-    		<th><spring:message code='ezPortal.t109'/></th>
-  		</tr>
-  		${mainHTML}
-	</table>
+	<body class="popup">
+		<h1><spring:message code='ezPortal.t216'/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
+		<div id="mainmenu">
+	  		<ul>
+	    		<li><span onClick="Add()" ><spring:message code='ezPortal.t99'/></span></li>
+	    		<li><span onClick="Delete()" ><spring:message code='ezPortal.t67'/></span></li>
+	    		<%--<li><span onClick="SetPosition()"><%=RM.GetString("t100")%></span></li>--%>
+	    		<li><span onClick="SetOrder()"><spring:message code='ezPortal.t108'/></span></li>
+	    		<li><span onClick="preview()"><spring:message code='ezPortal.t63'/></span></li>
+	  		</ul>
+		</div>
+		<script type="text/javascript">
+			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+		</script>
+		<table class="content">
+	  		<tr>
+	    		<th><spring:message code='ezPortal.t64'/></th>
+	    		<td>
+	    			<select name="layoutList" id="layoutList" onChange="layout_change()">
+	        			${layoutList}
+	      			</select>
+	    		</td>
+	  		</tr>
+	  		<tr>
+	    		<th ><spring:message code='ezPortal.t217'/></th>
+	    		<td>
+	    			<select name="menuList" id="menuList" onChange="menu_change()">
+	        			${menuList}
+	      			</select>
+	    		</td>
+	  		</tr>
+		</table>
+		<div style="width: 100%; height: 180px; overflow: auto; margin-top: 10px;">
+			<table class="mainlist" style="width:100%">
+		  		<tr>
+		    		<th width="60" height="23"><spring:message code='ezPortal.t101'/></th>
+		    		<th><spring:message code='ezPortal.t109'/></th>
+		  		</tr>
+		  		${mainHTML}
+			</table>
+		</div>
 	</body>
 </html>

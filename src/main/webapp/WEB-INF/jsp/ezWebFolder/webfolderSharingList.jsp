@@ -35,7 +35,7 @@
 			
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
-				var reheight = document.documentElement.clientHeight - 200;
+				var reheight = document.documentElement.clientHeight - 210;
 				document.getElementById("dragDropArea").style.height = reheight + "px";
 				
 				reheight = document.documentElement.clientHeight - 100;
@@ -928,15 +928,15 @@
 					<li><a onclick="buttons.fileDelete()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t274'/></span></a></li>
 					<li><a onclick="buttons.fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
 					<li><a onclick="buttons.fileMoveAndCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
-					<li><img src="/images/i_bar.gif"></li>
+					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li id="addShareBtn" style="display:none"><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t254'/></span></a></li>
 					<li id="modifyShareBtn"><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t217'/></span></a></li>
 					<li id="deleteShareBtn"><a onclick="shareContext.deleteShare()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t218'/></span></a></li>
-					<li><img src="/images/i_bar.gif"></li>
+					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li><span onclick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
 					<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
 					<li><a onclick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
-					<li><img src="/images/i_bar.gif"></li>
+					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li style="height: 28px;">
 						<select id="fileTypeSelect" class="select" onchange="onFileTypeChange(this.value);">
 							<option value=""><spring:message code='ezWebFolder.t191'/></option>
@@ -1022,15 +1022,15 @@
 			<div id="tblPageRayer"></div>
 		</div>
 		
-		<div id="searchpopup" class="popupwrap3" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
-			<div class="popupwrap4">
-				<table class="content" style="margin-top:10px;">  
-					<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" width="16px" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezWebFolder.t10' />&nbsp;<spring:message code='ezWebFolder.t123' /></th>
-					</tr>
-					<tr>
-						<td style="border-left-color:white;border-right-color:white;height:10px" colspan="2"></td>
-					</tr>
+		<div id="searchpopup" class="popupwrap3" style="display:none;margin-bottom:70px">
+			<div class="popupJQLayer" style="padding-top:6px">
+				<div class="title"><spring:message code='ezWebFolder.t10' /><spring:message code='ezWebFolder.t123' /></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="searchOptionHidden()"></span></a></li>
+		            </ul>
+		        </div>
+				<table class="content" style="margin-top:10px;">
 					<tr>
 			           <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
 			           <td>
@@ -1053,12 +1053,12 @@
 			            <td><input type="text" id="searchCreateName" style="width:99%" value="" name="searchCreateName"></td>
 			        </tr>    
 				</table>
-				<br/>
 				<table style="width:100%">
 					<tr>
 						<td style="text-align:center;">
-							<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142' /></span></a>
-							<a class="imgbtn" rel="modal:close"><span onClick="searchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
+							<div class="btnpositionLayer">
+								<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142' /></span></a>
+							</div>	
 						</td>
 					</tr>
 				</table>

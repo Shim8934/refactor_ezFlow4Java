@@ -22,9 +22,13 @@
 	                var pTop = (pheight - 370) / 2;
 	                var pLeft = (pwidth - 300) / 2;
 	                if (CrossYN())
-	                    window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=370,width=300,top=" + pTop + ",left=" + pLeft, "");
+	                	//2018-07-25 김보미 - 팝업창 크기 조정
+ 	                    //window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=370,width=300,top=" + pTop + ",left=" + pLeft, "");
+	                    window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=400px,width=455px,top=" + pTop + ",left=" + pLeft, "");
 	                else
-	                    window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=370,width=300,top=" + pTop + ",left=" + pLeft, "");
+	                	//2018-07-25 김보미 - 팝업창 크기 조정
+ 	                    //window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=370,width=300,top=" + pTop + ",left=" + pLeft, "");
+	                    window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=400px,width=455px,top=" + pTop + ",left=" + pLeft, "");
 	            }
 	            else {
 	                var heigth = window.screen.availHeight;

@@ -8,7 +8,7 @@
 		<title><spring:message code='ezSchedule.t6000' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -72,7 +72,7 @@
 		<h1><spring:message code='ezSchedule.t6000' /></h1>
 		<form id="Form1" method="post">
 			<div id="mainmenu">
-				<span><b><spring:message code='ezResource.t28' /></b></span>&nbsp;
+				<span><b><spring:message code='ezResource.t28' /> : </b></span>
 	            <select id="ListCompany" onchange="schedule_get_lunaruse()">
 	            	<c:forEach var="item" items="${list}">
            				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
@@ -89,7 +89,7 @@
 			        </td>
 			    </tr>
 			</table>
-			<div class="btnposition" style="width: 450px">
+			<div class="btnpositionJsp" style="width: 436px">
 			    <a class="imgbtn" onclick="Change_Click()"><span><spring:message code='ezSchedule.t4' /></span></a>
 			    <a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code='ezSchedule.t5' /></span></a>
 			</div>

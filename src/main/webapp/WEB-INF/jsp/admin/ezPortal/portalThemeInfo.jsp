@@ -304,7 +304,7 @@
 		</div>
 		<div id="close">
   			<ul>
-    			<li><span onClick="close_onclick()"><spring:message code='ezPortal.t8'/></span></li>
+    			<li><span onClick="close_onclick()"></span></li>
   			</ul>
 		</div>
 		<%-- <div id="tabnav">
@@ -314,7 +314,6 @@
   			</ul>
 			<script type="text/javascript">
     			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-    			selToggleList(document.getElementById("close"), "ul", "li", "0");
     			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 			</script>
 		</div> --%>
@@ -324,7 +323,6 @@
 			</div>
 			<script type="text/javascript">
     			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-    			selToggleList(document.getElementById("close"), "ul", "li", "0");
 			</script>
 		</div>
 		
@@ -454,12 +452,12 @@
 	                    	            <div>(<spring:message code='ezPortal.t990012'/>)</div>
 								    </td>
 							    	<td style="border-left:1px solid #ddd;" align="center">
-								    	<a class="imgbtn" style="margin-left:2px;">
+								    	<a class="imgbtn imgbck" style="margin-left:2px;">
 								    		<span onclick="changeNormalImage()">
 										    	<spring:message code='ezPortal.t66'/><br />
 									    	</span>
 									    </a>
-									    <a class="imgbtn" style="margin-left:2px;">
+									    <a class="imgbtn imgbck" style="margin-left:2px;">
 									    	<span onclick="removeNormalImage()">
 										    	<spring:message code='ezPortal.t990008'/>
 									    	</span>

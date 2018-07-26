@@ -1,6 +1,6 @@
 @charset "utf-8";
 /* CSS Document */
-body{margin:0px; padding:0px; font-family: 'Gulim', 'arial', 'verdana';}
+body{margin:0px; padding:0px;}
 /* .popup{margin:0px; padding:5px 10px 10px; background:url(../images/popup_bg.gif)  #ffffff repeat-x left top;}
 .popup h1{margin:0px 0px 5px 0px; padding:0px 12px; font-size:11pt; font-weight:bold; color:black; height:34px; line-height:34px;} */
 .ladderPreList_wrap{overflow:hidden; width:1216px; margin:20px auto;}
@@ -10,7 +10,7 @@ body{margin:0px; padding:0px; font-family: 'Gulim', 'arial', 'verdana';}
 .search_title .input_text{float:left; width:257px; height:30px; padding:0px 5px; line-height:28px; border:1px solid #ddd; background:#FFF; border-right:0px}
 .search_title .search_btn{position:absolute; top:0px; width:45px; height:30px; border:0;}
 
-.game_list{list-style:none; overflow:auto; width:300px; height:590px; margin:0px 0px 15px 0px; padding:0px; border:1px solid #ddd; font-size:12px; color:#333; background:#f8f8fa; font-family:"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.game_list{list-style:none; overflow:auto; width:300px; height:590px; margin:0px 0px 15px 0px; padding:0px; border:1px solid #ddd; font-size:12px; color:#333; background:#f8f8fa;}
 .game_list li{height:49px; line-height:49px; border-bottom:1px solid #ddd; cursor:pointer; background:#FFF; overflow:hidden;}
 .game_list li:hover{background:#eef7ff;}
 .game_list li span{display:inline-block; vertical-align:middle;}
@@ -25,18 +25,18 @@ body{margin:0px; padding:0px; font-family: 'Gulim', 'arial', 'verdana';}
 
 .ladderPreList_right{float:left; width:894px; height:668px; background:#FFF; border:1px solid #ddd; overflow-y:auto; overflow-x: hidden;}
 /* .ladderPreList_right h2{width:100%; height:72px; margin:0px; padding:0px; background:#fafafb; border-bottom:1px solid #dcdcdc;} */
-.ladderPreList_right h2{height:50px; margin:0px; padding:0px; background:#f9f9fa; border-bottom:1px solid #ddd;}
-.ladderGame_title{float:left; min-width: 200px; height: 50px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin:0px; padding:0px 18px; line-height:48px; font-size:16px; font-weight:bold; color:#333; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.ladderPreList_right h2{height:46px; margin:0px; padding:0px; background:#f9f9fa; border-bottom:1px solid #ddd;}
+.ladderGame_title{float:left; min-width: 200px; height: 46px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin:0px; padding:0px 18px; line-height:45px; font-size:16px; font-weight:bold; color:#333; font-family:Malgun Gothic, Meiryo UI;}
 
 .ladderGame_info{padding-top:7px}
-.ladderGame_info .attribute{float:left; overflow:hidden; list-style:none; margin:0px 6px; padding:0px 6px; border-right:1px solid #DDD;}
+.ladderGame_info .attribute{float:left; overflow:hidden; list-style:none; margin-right:10px;/* margin:0px 6px; padding:0px 6px; border-right:1px solid #DDD; */}
 .ladderGame_info .attribute li{float:left; margin:0px 10px 0px 0px; border: 1px solid #DDD; border-radius: 15px; background: #FFF; width: 45px; height: 45px;}
 .ladderGame_info .pic{float:left; margin:15px 10px; padding:0px; border: 2px solid #DDD; border-radius: 30px; overflow: hidden; width: 56px; height: 56px;}
-.ladderGame_info .txt{float:left; margin: 18px 45px 18px 5px; padding:0px; color:#333; font-size:12px; font-weight:normal; font-family:"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif; clear: none;}
+.ladderGame_info .txt{float:left; margin: 18px 45px 18px 5px; padding:0px; color:#333; font-size:12px; font-weight:normal; clear: none;}
 .ladderGame_info .txt span{display:block; line-height:18px;}
 .ladderGame_info .txt span.name{font-size: 14px; font-weight: bold; color: #2568b3;}
 .ladderGame_info .txt span.date{color: #777;}
-.ladderGame_info .edit{float:left; list-style:none; margin:0px 8px; padding:0px;}
+.ladderGame_info .edit{float:left; list-style:none; margin:0px 0px; padding:0px;}
 .ladderGame_info .edit li{float:left; margin:0px 10px 0px 0px; border: 1px solid #DDD; border-radius: 15px; background: #FFF; width: 45px; height: 45px; overflow: hidden;}
 
 .ladderGame_view{clear:both; width:796px; height:100%;}
@@ -47,14 +47,14 @@ body{margin:0px; padding:0px; font-family: 'Gulim', 'arial', 'verdana';}
 .ladderView{clear:both; width:754px; height:512px; margin:0px auto; background:#FFF; border:1px solid #DDD;}
 
 .participation_user{overflow:hidden; list-style:none; width:700px; margin:20px auto 8px; padding:0px;}
-.participation_user li{float:left; margin:0px 3px; padding:0px; font-size:12px; text-align:center; color:#333; font-family:"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.participation_user li{float:left; margin:0px 3px; padding:0px; font-size:12px; text-align:center; color:#333;}
 .participation_user li dl{margin:0px; padding:0px;}
 .participation_user li dl dt{margin:0px; padding:0px;}
 .participation_user li dl dd{width:92px; height:32px; line-height:32px; margin:0px; padding:0px; background:#f6f5f5; border:1px solid #d5d5d5;}
 .participation_user li.win dl dd{background:#FFF; border:1px solid #2568b3; color:#2568b3;}
 
 .result{overflow:hidden; list-style:none; width:700px; margin:8px auto; padding:0px;}
-.result li{float:left; width:92px; height:32px; line-height:32px; margin:0px 3px; padding:0px; background:#f6f5f5; border:1px solid #d5d5d5; font-size:12px; text-align:center; color:#333; font-family:"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.result li{float:left; width:92px; height:32px; line-height:32px; margin:0px 3px; padding:0px; background:#f6f5f5; border:1px solid #d5d5d5; font-size:12px; text-align:center; color:#333;}
 .result li.win{background:#FFF; border:1px solid #2568b3; color:#2568b3;}
 
 .temporarily{width:604px; height:300px; margin:0px auto; padding:0px;}

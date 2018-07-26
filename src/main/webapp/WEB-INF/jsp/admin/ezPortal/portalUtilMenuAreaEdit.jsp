@@ -45,7 +45,7 @@
 					return;
 				}
 			    //if (CrossYN())
-			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=new&parentUID=202", "", "height = 350px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 350));
+			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=new&parentUID=202", "", "height = 357px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 357));
 			    //else
 			    //   window.open("MenuItem_Edit.aspx?pageid=" + pageid + "&mode=new&parentuid=202", "", "height = 300px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes");
 			}
@@ -63,10 +63,10 @@
 				
 				// 선택된 개체가 없는 경우
 				if( g_SelectedObj == null ) {
-				    pObj.style.backgroundColor = "#f0f6ff";
+				    pObj.style.backgroundColor = "#edf4fd";
 					g_SelectedObj = pObj;
 				} else {
-				    pObj.style.backgroundColor = "#f0f6ff";
+				    pObj.style.backgroundColor = "#edf4fd";
 					
 					if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
 					g_SelectedObj = pObj;
@@ -76,7 +76,7 @@
 			// 수정
 			function selectItem(pUID, pObj) {
 			    //if (CrossYN())
-			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + pUID + "&parentUID=202", "", "height = 350px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 350));
+			    window.open("/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + pUID + "&parentUID=202", "", "height = 357px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 357));
 	            //else
 	            //    window.open("MenuItem_Edit.aspx?pageid=" + pageid + "&mode=edit&uid=" + pUID + "&parentuid=202", "", "height = 300px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes");
 			}
@@ -152,11 +152,11 @@
 		<div id="mainmenu">
   			<ul>
     			<li><span onClick="Add()" ><spring:message code='ezPortal.t99'/></span></li>
-    			<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+    			<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
     			<li><span onClick="Delete()" ><spring:message code='ezPortal.t67'/></span></li>
     			<%-- <li><span onClick="SetPosition()"><spring:message code='ezPortal.t100'/></span></li> --%>
     			<li><span onClick="preview()"><spring:message code='ezPortal.t63'/></span></li>
-    			<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+    			<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
     			<li><span onClick="SetOrder()"><spring:message code='ezPortal.t108'/></span></li>
   			</ul>
 		</div>

@@ -5,7 +5,8 @@
 	<head>
 		<title><spring:message code='ezBoard.t350'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -21,8 +22,8 @@
 		    var rtnVal = "";
 		    var ReturnFunction = "";
 		    
+		    /* 2018-07-11 홍승비 - 서로 다른 유형의 게시판 간 복사 시도 시 메세지 수정 */
 		    var board_alertArguments = new Array();
-		    
 		    function Select() {
 		    	board_alertArguments[1] = DivPopUpHidden;
 		        if (selectedBoard == "") {
@@ -41,22 +42,22 @@
 
 		        if (oldguBun > 0) {
 			    	if (oldguBun != newguBun) {
-			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.jsh02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.jsh02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
-// 			        	alert("<spring:message code='ezBoard.jsh02'/>");
+// 			        	alert("<spring:message code='ezBoard.hsb02'/>");
 			            return;
 			        }
 			    	if (oldguBun == "3" && newguBun == "3") {
-			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.jsh02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.jsh02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+			    		var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
-// 			        	alert("<spring:message code='ezBoard.jsh02'/>");
+// 			        	alert("<spring:message code='ezBoard.hsb02'/>");
 			            return;
 			        }
 		    	} else {
 		    		if (newguBun != "0") {
-		    			var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.jsh02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.jsh02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+		    			var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 						DivPopUpShow(330, 205, pUrl);
-// 			        	alert("<spring:message code='ezBoard.jsh02'/>");
+// 			        	alert("<spring:message code='ezBoard.hsb02'/>");
 			            return;
 			        }
 		    	}
@@ -68,9 +69,9 @@
 		    }
 		    function CopyItem(pDestBoardID) {
 		        if (CheckIfAnonyBoard(pDestBoardID) == "1") {
-		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.jsh02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.jsh02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.hsb02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
-// 		            alert("<spring:message code='ezBoard.jsh02'/>");
+// 		            alert("<spring:message code='ezBoard.hsb02'/>");
 		            return;
 		        }
 		
@@ -188,9 +189,12 @@
 		            MakeTopBoardView(xmlhttp.responseText);
 		        }
 		    }
+		    /* 2018-07-11 홍승비 - 하위게시판 선택한 후 다른 게시판그룹 선택 시, 기존에 선택한 하위게시판 해제 */
 		    function TopBoard_onclick(obj, ID, items) {
 		        var rootBoardID = "{" + ID + "}";
 		        var num = obj.split("TreeCtrl");
+		        selectedBoard = "";
+		        
 		        if (document.getElementById(obj).style.display != "none") {
 		            document.getElementById(obj).style.display = "none";
 		            document.getElementById("TopBoardsList").getElementsByTagName("h2").item(Number(num[1])).className = "off";
@@ -255,43 +259,21 @@
 		        }
 		    }
 		</script>
-		<style>
-		.node_normal{
-			margin-top: 3px;
-			vertical-align:top;
-			font-size: 9pt;
-			background-color : #ffffff;
-			height : 15px;
-			cursor : hand;
-		}
-		.node_selected{
-			margin-top: 3px;
-			vertical-align:top;
-			font-size: 9pt;
-			height : 15px;
-			background-color : #f0f6ff;
-			cursor : hand;
-		}
-		.node_hover{
-			margin-top: 3px;
-			vertical-align:top;
-			font-size: 9pt;
-			background-color : #F7FAE0;
-			height : 15px;
-			cursor : hand;
-		}
-		</style>
 	</head>
 	<body class="popup"> 
 	<h1><spring:message code='ezBoard.t135'/></h1>
-	<div class="box" style="width:320px;height:520px;overflow:auto;" id="TopBoardsList"></div>
+	<div id="close">
+        <ul>
+            <li><span onclick="window.close()"></span></li>
+        </ul>
+    </div>
+	<div class="box" style="width:320px;height:520px;overflow-y:auto;overflow-x:hidden" id="TopBoardsList"></div>
 	<div class="btnposition btnpositionNew">
 	    <a class="imgbtn" onClick="Select()" ><span><spring:message code='ezBoard.t47'/></span></a>
-	    <a class="imgbtn" onClick="javascript:window.close();" ><span><spring:message code='ezBoard.t15'/></span></a>
 	</div>
 	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
-		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-	    	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+    	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	</div>
 	</body>
 </html>

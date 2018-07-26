@@ -7,6 +7,9 @@
 		<title><spring:message code='ezApprovalG.t1594'/></title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<style>
+			.mainlist tr th { border-top:0px }
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
@@ -154,7 +157,12 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t1594'/></h1>
-		<div class="listview" style="width:265px;height:210px;overflow-y:auto;overflow-x:hidden;">
+		<div id="close">
+            <ul>
+                <li><span onclick="return btncancel_onclick()"></span></li>
+            </ul>
+        </div>
+		<div class="listview" style="width:272px;height:210px;overflow-y:auto;overflow-x:hidden;">
 			<div id="lvDocTypeList" style="BORDER:0; HEIGHT: 200px; WIDTH: 250px"></div>
 		</div>
 		<table class="content" style="margin-top:5px">
@@ -174,10 +182,9 @@
 				</td>
 			</tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn"><span onClick="return btnOk_onclick()"><spring:message code='ezApprovalG.t949'/></span></a>
 		    <a class="imgbtn"><span onClick="return btnDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
-		    <a class="imgbtn"><span onClick="return btncancel_onclick()"><spring:message code='ezApprovalG.t64'/></span></a>
 		</div>
 	</body>
 </html>

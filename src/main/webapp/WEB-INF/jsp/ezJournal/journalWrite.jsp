@@ -107,16 +107,16 @@
     	    		isSum = "Y"
 	    		}
 	    	
-	    	 	if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
-                    self.resizeTo(760, 800);
-                } else {
-                    self.resizeTo(785, 830);
-                } 
+// 	    	 	if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+//                     self.resizeTo(760, 800);
+//                 } else {
+//                     self.resizeTo(785, 830);
+//                 } 
 	    		
-	    		// IE10에서 에디터사이즈 조절
-	    		if (new RegExp(/MSIE 10/).test(navigator.userAgent)) {
-		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 310 + "PX";
-		    	}
+// 	    		// IE10에서 에디터사이즈 조절
+// 	    		if (new RegExp(/MSIE 10/).test(navigator.userAgent)) {
+// 		    		document.getElementById("EdtorSize").style.height = document.body.clientHeight - 310 + "PX";
+// 		    	}
 	    	}; 
 	    
 	    	// 양식내용을 에디터에 넣어주는 작업 
@@ -625,17 +625,16 @@
 			                        <li><span onclick="btn_TempSave('temp')"><spring:message code='ezJournal.t74' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>
+	                    	<li id="btnGetOther"><span onclick="getOtherJournalList()"><spring:message code='ezJournal.t75' /></span></li>
 	                    </ul>
 	                </div>
 	                <div id="close">
-	                    <ul>
-	                        <li id="btnGetOther"><span onclick="getOtherJournalList()"><spring:message code='ezJournal.t75' /></span></li>
-	                        <li><span onclick="btn_Close();"><spring:message code='ezJournal.t27' /></span></li>
+	                    <ul>	                        
+	                        <li><span onclick="btn_Close();"></span></li>
 	                    </ul>
 	                </div>
 	                <script type="text/javascript">
 	                    selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	                    selToggleList(document.getElementById("close"), "ul", "li", "0");
 	                </script>
 	            </td>
 	        </tr>
@@ -674,7 +673,7 @@
 	                    <tr>
 	                        <th><spring:message code='ezJournal.t80' /></th>
 	                        <td style="width: 5%; border-right: none;">
-                        		<a class="imgbtn"><span style="text-align: right;" id="clickbtn" onclick="selectReceiver()"><spring:message code='ezJournal.t81'/></span></a>
+                        		<a class="imgbtn imgbck"><span style="text-align: right;" id="clickbtn" onclick="selectReceiver()"><spring:message code='ezJournal.t81'/></span></a>
 	                        </td>
 	                        <td colspan="3" style="border-left: none; vertical-align: middle; height: 28px;">
 	                       		<div style="overflow-y: auto; height: 28px;">

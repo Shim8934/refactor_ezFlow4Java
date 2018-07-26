@@ -11,7 +11,7 @@
 	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 	    <style>
 	    	.tree div div{
-	    		margin-bottom:5px;
+	    		margin-bottom:0px;
 	    	}
 	    </style>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
@@ -434,13 +434,20 @@
 	    <h1>${title}</h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="Window_close();"><spring:message code='ezAddress.t5' /></span></li>
+	            <li><span onclick="Window_close();"></span></li>
 	        </ul>
 	    </div>
-	    <script type="text/javascript">
-	        selToggleList(document.getElementById("close"), "ul", "li", "0");
-	    </script>
-	    <div style="margin-top: -5px; margin-bottom: 5px;">
+	    <table class="content" style="width: 100%;">
+	        <tr>
+	            <td class="pos1" style="padding-right: 8px; width: 100%;">
+	                <div class="tree" style="border: 0; margin-left: 5px; width: 100%; height: 370px; overflow: auto" id="AddressTreeView"></div>
+	            </td>
+	        </tr>
+	    </table>
+	    <xml id="AddressFolderXML" style="display: none;">
+			${rootAddressXML}
+		</xml>
+		<div class="btnposition btnpositionNew">
 		    <c:choose>
 		    	<c:when test="${show == 'Y'}">
 		    		<a class="imgbtn"><span onclick="select_onclick()"><spring:message code='ezAddress.t25' /></span></a>
@@ -455,16 +462,6 @@
 		    	</c:otherwise>
 		    </c:choose>
 	    </div>
-	    <table class="content" style="width: 100%;">
-	        <tr>
-	            <td class="pos1" style="padding-right: 8px; width: 100%;">
-	                <div class="tree" style="border: 0; margin-left: 5px; width: 100%; height: 370px; overflow: auto" id="AddressTreeView"></div>
-	            </td>
-	        </tr>
-	    </table>
-	    <xml id="AddressFolderXML" style="display: none;">
-			${rootAddressXML}
-		</xml>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		    <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>

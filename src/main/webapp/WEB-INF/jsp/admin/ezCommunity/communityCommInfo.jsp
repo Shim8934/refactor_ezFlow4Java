@@ -69,6 +69,11 @@
 			<input type="hidden" name="code" value="<c:out value = '${code }' />">
 	
 	   		<h1 style="height:45px;">Community <spring:message code = 'ezCommunity.t64' /></h1>
+	   		<div id="close">
+	            <ul>
+	                <li><span onclick="window.close()"></span></li>
+	            </ul>
+	        </div>
 	   		
 			<table class="content" style="margin-top:10px;">
 				<tr> 
@@ -156,14 +161,12 @@
 				</tr>
 			</table>
 		</form>
-		<div class="btnposition" style="margin-top:5px;">
+		<div class="btnpositionNew">
 		    <a class="imgbtn"><span onclick="return comClose_onclick('${code}','${type}')" ><spring:message code = 'ezCommunity.t46' /></span></a>
 		         
             <c:if test="${type == 'New' }">
          		<a class="imgbtn"><span onclick="return closeCancel_onclick('${code}','${type}')" ><spring:message code = 'ezCommunity.t44' /></span></a>	
-         	</c:if>            
-						
-		    <a class="imgbtn"><span onclick="window.close()" ><spring:message code = 'ezCommunity.t21' /></span></a>
+         	</c:if>
 		</div>
 	</body>
 </html>

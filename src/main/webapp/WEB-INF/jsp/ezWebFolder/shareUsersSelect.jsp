@@ -8,7 +8,7 @@
 		<c:if test="${type ne 'NEW'}"><title><spring:message code='ezWebFolder.t217' /></title></c:if>
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1' />" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -116,6 +116,11 @@
 	<body class="popup">
 		<c:if test="${type eq 'NEW'}"><h1><spring:message code='ezWebFolder.t323' /></h1></c:if>
 		<c:if test="${type ne 'NEW'}"><h1><spring:message code='ezWebFolder.t217' /></h1></c:if>
+		<div id="close">
+            <ul>
+                <li><span onclick="close_onclick()"></span></li>
+            </ul>
+        </div>
 		<table>
 			<tr>
 				<td width="195" valign="top">
@@ -144,7 +149,7 @@
 					<h2 style="display: inline-block;"><spring:message code='ezWebFolder.t179'/></h2>
 					<span style="float:right;padding-top:3px">
 						<input id="cnkeyword" onkeypress="cnsearch_press(event)" style="width:120px;height:20px">
-						<a class="imgbtn btnSearch" id="cnkeybtn" onclick="cnsearch_click()" style="vertical-align: top"><span><spring:message code='ezTask.t183' /></span></a>
+						<a class="imgbtn imgbck btnSearch" id="cnkeybtn" onclick="cnsearch_click()" style="vertical-align: top"><span><spring:message code='ezTask.t183' /></span></a>
 					</span>
 					<div class="listview" style="margin-top:3px;margin-bottom:5px">
 						<div id="OrganListView" style="overflow:auto; width:280px; height:240px;border:0">
@@ -175,11 +180,10 @@
 					</div>
 				</td>
 			</tr>
-			<tr style="height:35px;">
+			<tr>
 				<td colspan="3">
-					<div class="btnposition" style="margin-top:5px;padding-top:0px">
+					<div class="btnposition btnpositionNew">
 						<a class="imgbtn btnSave"   name="Submit"  onclick="addShare();"><span><spring:message code='ezWebFolder.t116'/></span></a>
-						<a class="imgbtn btnCancel" name="Submit2" onclick="close_onclick();"><span><spring:message code='ezWebFolder.t112'/></span></a>
 					</div>
 				</td>
 			</tr>

@@ -14,6 +14,8 @@
 	<script type="text/javascript">
 		var folderId = "<c:out value="${folderId}"/>";
 		
+		
+		
 		function wClose() {
 			parent.closeAllPopup();
 			window.close();
@@ -54,7 +56,7 @@
 	<h1 id ="topmenu" style="margin: 0px; margin-top: 2px;"><spring:message code='ezWebFolder.t246'/></h1>
 	<div id="close">
 		<ul>
-			<li><span onclick="wClose();"><spring:message code='ezWebFolder.t110'/></span></li>
+			<li><span onclick="wClose();"></span></li>
 		</ul>
 	</div>
 	

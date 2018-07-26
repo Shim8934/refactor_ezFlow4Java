@@ -314,8 +314,13 @@
 	</head>
 	<body class="popup">
 		<h1><c:out value = '${title}' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return btncancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<span style="color:red"><spring:message code = 'ezApprovalG.t00011' /></span>
-		<table class="content">
+		<table class="content" style="margin-top:5px">
 			<tbody>
 				<c:choose>
 					<c:when test="${approvalFlag == 'S' }">
@@ -347,7 +352,7 @@
 					<th><spring:message code = 'ezApprovalG.t729' /><span style="color:red">*</span></th>
 					<td>
 						<input type="text" id="tbCateCode" name="tbCateCode" style="wigth:206px" maxlength="8">
-						<a class="imgbtn"><span onClick="return btnDuplicate_onclick()"><spring:message code = 'ezApprovalG.t730' /></span></a>
+						<a class="imgbtn imgbck"><span onClick="return btnDuplicate_onclick()"><spring:message code = 'ezApprovalG.t730' /></span></a>
 					</td>
 				</tr>
 				<tr>
@@ -373,14 +378,13 @@
 					<th><spring:message code = 'ezApprovalG.t733' /></th>
 					<td>
 						<input type="text" id="tbPCateCode"  name="tbPCateCode" style="width:206px" readonly="true">
-						<a class="imgbtn"><span id="btnSelPCode"  onClick="return btnSelPCode_onclick()"><spring:message code = 'ezApprovalG.t690' /></span></a>
+						<a class="imgbtn imgbck"><span id="btnSelPCode"  onClick="return btnSelPCode_onclick()"><spring:message code = 'ezApprovalG.t690' /></span></a>
 					</td>
 				</tr>
 			</tbody>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionNew">
 		    <a class="imgbtn"><span onClick="return btnOk_onclick()"><spring:message code = 'ezApprovalG.t413' /></span></a>
-		    <a class="imgbtn"><span onClick="return btncancel_onclick()"><spring:message code = 'ezApprovalG.t414' /></span></a>
 		</div>
 	</body>
 </html>

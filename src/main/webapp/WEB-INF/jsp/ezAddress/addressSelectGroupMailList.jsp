@@ -66,7 +66,11 @@
 	<body style="overflow:hidden;" class="popup" onload="javascript:window_onload()">
 		<form id="Form1" method="post">
 			<h1><spring:message code='ezAddress.t320' /></h1>
-			
+			<div id="close">
+	            <ul>
+	                <li><span onclick="Window_Close()"></span></li>
+	            </ul>
+	        </div>
 			<div id="maillist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; border:0px; HEIGHT:323px;" class="box">
 				<table style="width:100%;table-layout: fixed;" class="popuplist" > 
 					<tr> 
@@ -87,7 +91,6 @@
 			</div>
 			<div class="btnposition btnpositionNew">
 				<a class="imgbtn" onClick="add_personal()" id="cmd_ok"><span><spring:message code='ezAddress.t25' /></span></a>
-				<a class="imgbtn" onClick="Window_Close()"><span><spring:message code='ezAddress.t11' /></span></a>
 			</div>
 		</form>
 	</body>

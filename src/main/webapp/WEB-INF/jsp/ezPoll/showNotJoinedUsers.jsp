@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='main.t70' /></title>
+		<title><spring:message code='ezPoll.t123' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='main.e15' />" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -55,9 +55,18 @@
 		<form method = "POST">
 			<div id="normalScreen" style="overflow: hidden;">
 			    <div id="menu1" style="float: left; display: block; width:100%; text-align:left; padding-left:5px;">
-					<h1 style="display: inline-block;"><spring:message code='ezPoll.t123'/>&nbsp;(<c:out value='${numberOfUnVotedUsers}'/>)</h1>
-					<img style="float: right; margin-right: 10px; cursor: pointer;" src="/images/poll/sendMail01.png" onClick="sendMailAll('${qstID}')">
-			    </div>					
+					<h1 style="display: inline-block;"><spring:message code='ezPoll.t123'/>&nbsp;(<c:out value='${numberOfUnVotedUsers}'/>)</h1>					
+			    </div>
+			    <div id="close">			    	
+		            <ul>		            	
+		                <li><span onclick="window.close()"></span></li>
+		            </ul>
+		        </div>
+		        <div id="menu" class="extraMenu">
+		            <ul>
+		            	<li><img style="cursor: pointer;" src="/images/poll/sendMail01.png" onClick="sendMailAll('${qstID}')"></li>		                
+		            </ul>
+		        </div>
 			</div>
 			<div style="height:365px; overflow-y: auto; overflow-x: hidden;" id="divTbl">
 				<table border=1 style="width : 100%; border-color: grey;">

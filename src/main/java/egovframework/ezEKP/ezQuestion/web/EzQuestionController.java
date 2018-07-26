@@ -1099,10 +1099,16 @@ public class EzQuestionController extends EgovFileMngUtil {
 						XPath xpath = XPathFactory.newInstance().newXPath();
 						NodeList nodes = (NodeList)xpath.evaluate("//ROW/ANSWER["+(i+1)+"]/ATTACH", doc, XPathConstants.NODESET);
 						if(nodes.getLength() > 0) {
-							//if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
-							
-							pSelectOption += "AnsInfo=\"" + nodes.item(0).getChildNodes() + "\">";
-							//pSelectOption += "AnsInfo=\"" + doc.getElementsByTagName("ATTACH").item(i).getTextContent() + "\">";
+							//<ATTACH><ROW><TYPE>첨부타입</TYPE><ATTACHTITLE>첨부명</ATTACHTITLE><HREF>파일경로</HREF></ROW></ATTACH>
+							pSelectOption += "AnsInfo=\"" + "<ATTACH>";
+							for (int rowIndex = 0; rowIndex < nodes.item(0).getChildNodes().getLength(); rowIndex++){
+								pSelectOption += "<ROW><TYPE>" + nodes.item(0).getChildNodes().item(rowIndex).getChildNodes().item(0).getTextContent() + "</TYPE>" 
+										+ "<ATTACHTITLE>" + nodes.item(0).getChildNodes().item(rowIndex).getChildNodes().item(1).getTextContent() + "</ATTACHTITLE>" 
+										+ "<HREF>" + nodes.item(0).getChildNodes().item(rowIndex).getChildNodes().item(2).getTextContent() + "</HREF>" + "</ROW>";
+								
+								//pSelectOption += "AnsInfo=\"" + doc.getElementsByTagName("ATTACH").item(i).getTextContent() + "\">";
+							}
+							pSelectOption += "</ATTACH>\">";
 						} else {
 							pSelectOption += ">";
 						}
@@ -1550,11 +1556,11 @@ public class EzQuestionController extends EgovFileMngUtil {
         pAnsNo = request.getParameter("ansNo");
         pAttID = request.getParameter("attID");
         
-        if(request.getParameter("fileName") != null && !request.getParameter("fileName").equals("")){
+        if (request.getParameter("fileName") != null && !request.getParameter("fileName").equals("")) {
         	pFileName = request.getParameter("fileName");
         }
         
-        if(pType.equals("QUESTION")){
+        if (pType.equals("QUESTION")) {
             if (pFileName != null && !pFileName.equals("")) {
             	pFilePath = commonUtil.getUploadPath("upload_board.UPLOADQUESTION", userInfo.getTenantId())+commonUtil.separator+pFileName;
             } else {
@@ -1565,10 +1571,12 @@ public class EzQuestionController extends EgovFileMngUtil {
             
             pFileName = URLDecoder.decode(pFileName, "utf-8");
             
-            if (pFilePath != null && !pFilePath.equals("")){
+            if (pFilePath != null && !pFilePath.equals("")) {
             	pFilePath = pFilePath.split(",")[0];
-            	if(request.getParameter("trName")!=null && !request.getParameter("trName").equals("")){
-            	pFileName = request.getParameter("trName")+"."+pFilePath.split("\\.")[1];
+            	if (request.getParameter("trName")!=null && !request.getParameter("trName").equals("")) {
+            		pFileName = request.getParameter("trName")+"."+pFilePath.split("\\.")[1];
+            		//2018-07-13 김보미 - 파일명 깨지는 버그 수정
+            		pFileName = URLDecoder.decode(pFileName, "utf-8");
             	}
                 ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
             }
@@ -2183,7 +2191,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		rNodes.appendChild(rNode);
 		
 		Node node = resultXML.createElement("STYLE");
-		CDATASection CDATASection = resultXML.createCDATASection("background-color:#C4D4EB;");
+		CDATASection CDATASection = resultXML.createCDATASection("background-color:#f2f2f2;");
 		rNode.appendChild(CDATASection);
 		
 		node = resultXML.createElement("CELL");
@@ -2322,7 +2330,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2338,7 +2346,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2354,7 +2362,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2506,7 +2514,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		Node node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2522,7 +2530,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2538,7 +2546,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2688,7 +2696,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		Node node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2704,7 +2712,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2720,7 +2728,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2870,7 +2878,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		Node node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2886,7 +2894,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -2902,7 +2910,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		hNodes.appendChild(nodeData);
 		
 		node = resultXML.createElement("STYLE");
-		node.setTextContent("background-color:#C4D4EB;");
+		node.setTextContent("background-color:#f2f2f2;");
 		nodeData.appendChild(node);
 		
 		node = resultXML.createElement("NAME");
@@ -4345,7 +4353,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		strData += "<table class=\"question\">";
 		strData += "<tr>";
-		strData += "<th title=\"" + commonUtil.cleanValue(strContent) + "\">" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + commonUtil.cleanValue(strContent) + "";
+		strData += "<th style=\"white-space:normal; word-break:break-all;\"title=\"" + commonUtil.cleanValue(strContent) + "\">" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + commonUtil.cleanValue(strContent) + "";
 		
 		if (multiSelect.equals("1")){
 			strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55", locale) + "</span>";

@@ -6,10 +6,17 @@
 	<head>
 		<title><spring:message code="ezBoard.t52" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	   	<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">	   	
+	   	<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">	   	
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <style>
-	    	.tree { min-height : 100px; }
+	    	.tree {
+	    		min-height : 100px;
+	    	}
+	    	.groupBoard {
+				width:158px;
+				overflow:hidden;
+				text-overflow:ellipsis;
+			}
 	    </style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/TreeView.js"></script>
@@ -159,7 +166,7 @@
 		        for(var i=0; i<title2.length; i++) {
 		        	title3 = title2[i].getElementsByClassName("node_normal");
 		        	title3[0].setAttribute("TITLE", title3[0].parentElement.getAttribute("DATA2")); 
-		        	title3[0].style.width = 156 - 16*nodeLevel +'px';
+		        	title3[0].style.width = 152 - 18*nodeLevel +'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
 		        }
@@ -186,7 +193,7 @@
 				var node = $(".node_normal");
 				for(var i=0; i<node.length; i++) {
 					node[i].setAttribute("TITLE", node[i].parentElement.getAttribute("DATA2"));
-					node[i].style.width = '156px';
+					node[i].style.width = '152px';
 					node[i].style.textOverflow = 'ellipsis';
 					node[i].style.overflow = 'hidden';
 				} 
@@ -296,7 +303,7 @@
 	        }	        
 	    </script>
 	</head>
-	<body class="leftbody" style="overflow-y: auto; overflow-x: hidden">
+	<body class="leftbody">
 	    <div id="left">
 	        <div class="left_admin"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code="ezBoard.t58" /></div>
 	        <div id="TopBoard"></div>	
@@ -322,7 +329,7 @@
 				success: function(result){
 					$.each(result, function(idx, item){	        					
 						$.each(item, function(idx, i){
-							strHTML += "<h2><div AccessLevel='1' id='TreeCtr" + idx + "' value='" + i.boardId;
+							strHTML += "<h2><div AccessLevel='1' class='groupBoard' id='TreeCtr" + idx + "' value='" + i.boardId;
 	                        strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + idx + "','" + i.boardId + "')\">";
 	                        strHTML += i.boardName + "</div></h2>";
 	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj' style='width: auto; overflow: auto; padding-left: 10px; padding-bottom: 20px;'>";

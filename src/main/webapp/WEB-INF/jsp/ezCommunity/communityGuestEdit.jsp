@@ -28,6 +28,15 @@
 					return;
 				}
 				
+				//2018-07-02 김보미 - 개행문자 -> <br>태그로 변경
+				var memo = $("#memo").val();
+				//memo = memo.replace(/(?:\r\n|\r|\n)/g, "<br>");
+
+				//2018-07-16 김보미 - 특수문자, 개행처리
+				/* var memoTemp = $("#memo").val();
+				memoTemp = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(memoTemp, "&", "&amp;"), "&lt;", "<"), "&gt;", ">"), "&quot;", "'"),"&dquot;", '"');
+				memo = memoTemp.split("\n"); */
+				
 				$.ajax({
 		        	type : "POST",
 		        	url : "/ezCommunity/guestEditOk.do",
@@ -36,7 +45,8 @@
 		        			name : $("#name").val(),
 		        			code : $("#code").val(),
 		        			mode : $("#mode").val(),
-		        			memo : encodeURIComponent($("#memo").val().trim())
+ 		        			memo : encodeURIComponent(memo)
+//		        			memo : JSON.stringify(memo)
 		        			},
 		        	success : function(result) {
 		        		goPage(1);
@@ -55,6 +65,7 @@
 				
 			    window.location.href = url;
 			}
+				
 			
 			/* function checkIsZenkaku(value) { 
 				for (var i = 0; i < value.length; ++i) { 
@@ -107,7 +118,7 @@
 					</c:choose> --%>
 				</tr>
 				<tr>
-	          		<td colspan="2" style="padding:3px"><textarea id="memo" style="width:98%;height:200px" maxlength="3000"><c:out value='${item.content}' /></textarea></td>
+	          		<td colspan="2" style="padding:3px"><textarea id="memo" style="width:98%;height:200px;resize:none;" maxlength="3000"><c:out value='${item.content}' /></textarea></td>
 	        	</tr>
 			</table>
 		</form>	
