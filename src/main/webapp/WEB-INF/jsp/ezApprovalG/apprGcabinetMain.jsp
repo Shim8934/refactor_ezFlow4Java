@@ -417,8 +417,9 @@
 		                document.getElementById("trCabSubMenu").style.display = "";
 		                document.getElementById("trRecSubMenu").style.display = "none";
 		
-		                document.getElementById("Radio2").style.display = "none";
-		                document.getElementById("searchwriter").style.display = "none";
+		                //document.getElementById("Radio2").style.display = "none";11
+		                //document.getElementById("searchwriter").style.display = "none";
+		                document.getElementById('rad2').style.display = "none";
 		
 		                if (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") {
 		                    if (ListTypeFlag != "8" && ListTypeFlag != "9" && ListTypeFlag != "10")
@@ -1582,8 +1583,8 @@
 	    <h1><span id="imgTitle"></span>&nbsp;<span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 			<span style="float:right;font-weight:normal;color:black;">
 				<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
-					<option selected="" value="rad_Subject"><spring:message code='ezApprovalG.t106'/></option>
-					<option value="rad_Writer"><spring:message code='ezApprovalG.t445'/></option>
+					<option selected="" value="rad_Subject" id="rad1"><spring:message code='ezApprovalG.t106'/></option>
+					<option value="rad_Writer" id="rad2"><spring:message code='ezApprovalG.t445'/></option>
 				</select>
 				<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true" onmousedown="keyword_Clear();"> 
 				<a href="#" style="float:right;"><img src="/images/bsearch_new.gif" border="0" onclick="search()"></a>
