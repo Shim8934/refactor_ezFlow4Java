@@ -449,7 +449,7 @@
 	        searchcabinet_cross_dialogArguments[0] = param;
 	        searchcabinet_cross_dialogArguments[1] = CabinetSearch_onclick_Complete;
 	
-	        DivPopUpShow(610, 410, "/ezApprovalG/searchCabinet.do");
+	        DivPopUpShow(980, 510, "/ezApprovalG/searchCabinet.do");
 	    }
 	        function CabinetSearch_onclick_Complete(rtn) {
 	            DivPopUpHidden();
