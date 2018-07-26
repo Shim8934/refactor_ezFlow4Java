@@ -38,6 +38,7 @@
 			#memo-btn{text-align:right;margin:0 auto;}
 			#slider-range{width:100px;float:left; margin-left:15px;}
 			.ui-widget-header{background: #0470e4}
+			.ui-slider-handle{background: #eeeeee; margin-top:2px}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
