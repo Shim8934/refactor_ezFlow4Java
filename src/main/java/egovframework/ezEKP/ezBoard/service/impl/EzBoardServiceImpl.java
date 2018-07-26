@@ -3909,6 +3909,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		/* 2018-07-26 홍승비 - 게시판검색 시 게시판명 조건에 lang 추가 */
+		map.put("lang", commonUtil.getMultiData(boardVO.getLang(), boardVO.getTenantID()));
 		map.put("v_PUSERID", boardListVO.getUserID());
 		map.put("v_PBOARDID", boardVO.getBoardId());
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
