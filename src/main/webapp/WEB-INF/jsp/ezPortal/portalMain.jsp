@@ -99,7 +99,8 @@
 		    }
 		    
 		    $(function() {
-			    
+		    	$(".noteBlock").css("pointer-events", "none");
+	        	$("#open-memo").css("pointer-events", "auto");
 		    	chagePosition();
 		    	
 		    	$( "#open-memo" ).draggable().on("mouseup", function() {
