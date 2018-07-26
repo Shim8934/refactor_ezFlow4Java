@@ -139,11 +139,11 @@
 		        if (CrossYN()) {
 		            addpoll_cross_dialogArguments[0] = document.getElementById("ListCompany").value;
 		            addpoll_cross_dialogArguments[1] = add_poll_Complete;
-		            var AddPoll_Cross = window.open("/admin/ezPersonal/addPoll.do", "AddPoll_Cross", GetOpenWindowfeature(450, 490));
+		            var AddPoll_Cross = window.open("/admin/ezPersonal/addPoll.do", "AddPoll_Cross", GetOpenWindowfeature(450, 500));
 		            try { AddPoll_Cross.focus(); } catch (e) {
 		            }
 		        } else {
-		            rtnValue = window.showModalDialog("/admin/ezPersonal/addPoll.do", document.getElementById("ListCompany").value, "dialogHeight:490px;dialogwidth:430px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(430, 490));
+		            rtnValue = window.showModalDialog("/admin/ezPersonal/addPoll.do", document.getElementById("ListCompany").value, "dialogHeight:500px;dialogwidth:430px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(430, 500));
 		
 		            if (typeof (rtnValue) != "undefined") {
 		                company_change();
@@ -345,19 +345,18 @@
 		</xml>
 		
 	    <form method="post">
-	        <h1>Quick Poll<span id="mailBoxInfo"></span></h1>
+	        <h1>Quick Poll<span id="mailBoxInfo" style="display:none"></span></h1>
 	        <div id="mainmenu">
-	            <ul>
-	                <li style="background: none">
-	                    <SELECT id="ListCompany" name="ListCompany" onChange="company_change()">
-			        	<c:forEach var="item" items="${list}">
-		            		<option value="<c:out value='${item.cn}'/>" ><c:out value='${item.displayName}'/></option>
-		            	</c:forEach>
-			        	</SELECT>
-	                </li>
+				<span><b><spring:message code='ezEmail.t59' /> : </b></span>
+				<SELECT id="ListCompany" name="ListCompany" onChange="company_change()">
+	        	<c:forEach var="item" items="${list}">
+            		<option value="<c:out value='${item.cn}'/>" ><c:out value='${item.displayName}'/></option>
+            	</c:forEach>
+	        	</SELECT>
+				<ul style="margin-top:15px">	            	
 	                <li><span onclick="add_poll()"><spring:message code = 'ezPersonal.t235' /></span></li>
 	            </ul>
-	        </div>
+		  	</div>
 	        
 	        <script type="text/javascript">
 	            selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");

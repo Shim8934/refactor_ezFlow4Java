@@ -48,6 +48,16 @@ function CalendarView(pTargetID) {
 		var oText = document.createTextNode(" " + dayText + " ");
 		oTh.appendChild(oText);
 		
+		// month picker 
+        var uploadSDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
+        var datePick = document.createElement("INPUT");
+        datePick.setAttribute("type", "hidden");
+        datePick.setAttribute("name", "datePick");
+        datePick.setAttribute("class", "datePick");
+        datePick.setAttribute("value", uploadSDate);
+        
+        oTh.appendChild(datePick);
+		
 		// 다음 달로 이동하는 버튼 생성
 		var mSpan = document.createElement("SPAN");
 		mSpan.className = "btn_next";
@@ -86,6 +96,45 @@ function CalendarView(pTargetID) {
 	getAttitudeMainList();
 	//CalViewSource(); //달력에 근태 데이터 뿌리면 되고
 	
+	//month picker 호출함수    
+    var WstartDate, WendDate; 
+    var monthCssHidden = function(){
+		window.setTimeout(function(){
+			 $('.ui-datepicker-month').css('display','none');
+			 $('.ui-datepicker-year').css('margin','0 auto');
+		}, 1);
+	}
+    var monthCssShow = function(){
+		window.setTimeout(function(){
+			 $('.ui-datepicker-month').css('display','');
+			 $('.ui-datepicker-year').css('margin','');
+		}, 1);
+	}
+    var removeMonthClass = function(){
+		window.setTimeout(function(){
+			 $('#ui-datepicker-div').removeClass('ui-monthpicker');
+		}, 1);
+	}
+       
+    $(".datePick").monthpicker({
+    	showOn: "both",
+		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		buttonImageOnly: true,
+		onSelect: function (dateText, inst) {
+			var iMonth = parseInt($('.datePick').val().substring(5,7),10)-1;
+			var iYear = $('.datePick').val().substring(0,4);
+			var iDay = $('.datePick').val().substring(8,10);
+			
+			var beforeMonth = leadingZeros((sDate.getMonth() + 1), 2) - 1; 	   
+			var beforeYear = sDate.getFullYear();
+			
+			sDate.setFullYear(iYear, iMonth, iDay); 
+			if(iYear == beforeYear && iMonth == beforeMonth){
+				return;   			   
+			}else CalendarView("attiCalendar");
+
+		}
+    });               
 }
 
 /**

@@ -802,6 +802,15 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				boardListHeaderVO.setWidth(doc.getElementsByTagName("WIDTH").item(i).getTextContent());
 				boardListHeaderVO.setName("Y");
 				
+				/* 2018-07-25 홍승비 - 기본헤더 저장 시 다국어 저장을 위한 분기 추가 */
+				if (boardListHeaderVO.getColName().equals("ATTACHMENTS") || boardListHeaderVO.getColName().equals("TITLE") || boardListHeaderVO.getColName().equals("WRITERDEPTNAME")
+						|| boardListHeaderVO.getColName().equals("WRITERNAME") || boardListHeaderVO.getColName().equals("WRITEDATE") || boardListHeaderVO.getColName().equals("READCOUNT")) {
+					boardListHeaderVO.setIsInitHeader("YES");
+				}
+				else {
+					boardListHeaderVO.setIsInitHeader("NO");
+				}
+				
 				ezBoardAdminDAO.saveHeader(boardListHeaderVO);
 			}
 			

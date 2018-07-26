@@ -533,7 +533,7 @@
 	            }
 	            else {
 	            	$.modal.close();
-	            	window.location.href = window.location.href;	            	
+	            	Get_AddressList();
 	            }	            
 	        }
 	        function address_inout(which) {
@@ -792,7 +792,7 @@
 					<li style="width:40px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
 				</c:when>
 				<c:when test="${userInfo.lang eq '3'}">
-					<li style="width:60px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
+					<li style="width:68px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
 				</c:when>
 				<c:otherwise>
 					<li style="width:40px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
@@ -965,7 +965,7 @@
 								<option value="S_TITLE"><spring:message code='main.t77' /></option>
 								<option value="S_COMPANY_ADDR"><spring:message code='ezAddress.t295' /></option>
 								<option value="S_HOME_ADDR"><spring:message code='ezAddress.t296' /></option>
-								<option value="S_MEMO"><spring:message code='ezAddress.t259' /></option>
+								<option value="S_MEMO"><spring:message code='ezAddress.t91' /></option>
 								<option value="S_EMAIL"><spring:message code='ezAddress.t264' /></option>
 								<option value="S_COMPANY_PHONE"><spring:message code='ezAddress.t263' /></option>
 								<option value="S_MOBILE"><spring:message code='ezAddress.t189' /></option>

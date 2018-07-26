@@ -347,35 +347,22 @@
 		</isEqual>
 		<isNotEqual property="v_pStart" compareValue="0">
 			<![CDATA[
-       			SELECT
-       				ITEMSEQ ,
-                    POLLTITLE ,
-                    POLLTITLE2 ,
-                    STARTDATE ,
-                    ENDDATE 
-       			FROM
-   				    ( 	SELECT
-            				ITEMSEQ ,
-                          	POLLTITLE ,
-                          	POLLTITLE2 ,
-                          	STARTDATE ,
-                          	IFNULL(ENDDATE, DATE_FORMAT('1900-01-01', '%Y-%m-%d %H:%i:%s')) EndDate  
-          				FROM
-          					TBL_PS_LIGHTPOLL 
-           				WHERE
-           					(	COMPANYID = #v_pCompanyID#
-                    		OR
-                    			COMPANYID = 'Top' )
-                    		AND
-                    			TENANT_ID = #tenantID#	
-            			ORDER BY
-            				ITEMSEQ ASC
-            			LIMIT
-            				 #v_pTotal# - #v_pStart# ) temp
-       			ORDER BY
-       				 ITEMSEQ DESC
-       			LIMIT
-       				#v_pCount#
+   				SELECT
+					ITEMSEQ ,
+       						POLLTITLE ,
+       						POLLTITLE2 ,
+       						STARTDATE ,
+       						IFNULL(ENDDATE, DATE_FORMAT('1900-01-01', '%Y-%m-%d %H:%i:%s')) EndDate  
+				FROM
+					TBL_PS_LIGHTPOLL 
+				WHERE
+					COMPANYID = #v_pCompanyID#
+				AND
+					TENANT_ID = #tenantID#	
+					ORDER BY
+						ITEMSEQ DESC
+					LIMIT
+						#v_pStart#, #v_pCount#
 			]]>
 		</isNotEqual>
 	</select>

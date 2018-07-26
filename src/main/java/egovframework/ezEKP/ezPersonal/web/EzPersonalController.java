@@ -500,7 +500,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		int currentPage;
-		int pageSize = 10;
+		int pageSize = 15;
 		boolean isPollEmpty = false;
 		String votePoll = "";
 		
@@ -549,6 +549,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("pageCount", pageCount);
 		model.addAttribute("totalCount", totalCount);
 		model.addAttribute("isPollEmpty", isPollEmpty);
+		model.addAttribute("pageSize", pageSize);
 
 		logger.debug("homePollListUser ended");
 		return "ezPersonal/persHomePollListUser";
@@ -579,12 +580,30 @@ public class EzPersonalController extends EgovFileMngUtil {
 				} else {
 					labelPollTitle = result.getPollTitle();
 				}
+				//2018-07-26 김보미 - 크롬/ie별 상이하게 title길이 조정
+				String header = req.getHeader("User-Agent");
+				String pollTitle = labelPollTitle;
+				if (header.indexOf("Chrome") > 0) { //크롬일때
+					if (labelPollTitle.length() > 45) {
+						pollTitle = labelPollTitle.substring(0, 45) + "...";
+					}
+				} else {
+					if (labelPollTitle.length() > 47) {//ie일때
+						pollTitle = labelPollTitle.substring(0, 47) + "...";
+					}
+				}
+				labelPollTitle = "<div title='" + labelPollTitle + "'>" + pollTitle + "</div>";
 				
 				pollSeq = String.valueOf(result.getItemSeq());
 				int count = Integer.parseInt(result.getPollSelectionCount());
-				
+				//2018-07-26 김보미 - ellipsis처리하기 위해 div추가
+//				for (int i=0; i<count; i++) {
+//					answer += "<input type=radio name='answer' id='answer" + i + "' value=" + (i + 1) + "><label for='answer" + i + "' style='cursor:pointer''>" + xmlDom.getElementsByTagName("ANSWER"+(i+1)).item(0).getTextContent() + "</label><br>";
+//				}
 				for (int i=0; i<count; i++) {
+					answer += "<div class='line_ellipsis' title='" + xmlDom.getElementsByTagName("ANSWER"+(i+1)).item(0).getTextContent() + "'>";
 					answer += "<input type=radio name='answer' id='answer" + i + "' value=" + (i + 1) + "><label for='answer" + i + "' style='cursor:pointer''>" + xmlDom.getElementsByTagName("ANSWER"+(i+1)).item(0).getTextContent() + "</label><br>";
+					answer += "</div>";
 				}
 				
 				literalAnswer = answer;
@@ -683,20 +702,45 @@ public class EzPersonalController extends EgovFileMngUtil {
 		}
 		
 		String strHtml = "";
+		//2018-07-26 김보미 - 설문결과 내용부분 수정
+//		for (int i=0; i<resultDom.getElementsByTagName("ROW").getLength(); i++) {
+//			strHtml += "<span class='txt'>"+resultDom.getElementsByTagName("TITLE").item(i).getTextContent()+"</b>(<b>"+resultDom.getElementsByTagName("COUNT").item(i).getTextContent()+"</b>"+egovMessageSource.getMessage("ezPersonal.t247", locale) + "<span class='point'>"+resultDom.getElementsByTagName("PERCENT").item(i).getTextContent()+"</span>%)</span>";
+//			strHtml += "<table style='border:1px solid #c9c9c9;width:100%;height:12px;background-image:url(/images/quickpoll_bg.gif);'>";
+//			strHtml += "<tr>";
+//			strHtml += "<td style='width:"+Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4 +"px;background-color:rgb(245, 117, 120)'></td>";
+//			//pollResult 전자설문 그래프부분 브라우저에 따라 width px 조건에 맞게 처리
+//			if (req.getHeader("User-Agent").indexOf("Trident") > 0 || req.getHeader("User-Agent").indexOf("MSIE") > 0) {
+//				strHtml += "<td style='width:"+(400-Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4)+"px;'></td>";
+//			} else {
+//				strHtml += "<td style='width:"+(408-Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4)+"px;'></td>";
+//			}
+//			strHtml += "</tr>";
+//			strHtml += "</table>";
+//			strHtml += "<br>";
+//		}
 		for (int i=0; i<resultDom.getElementsByTagName("ROW").getLength(); i++) {
-			strHtml += "<span class='txt'>"+resultDom.getElementsByTagName("TITLE").item(i).getTextContent()+"</b>(<b>"+resultDom.getElementsByTagName("COUNT").item(i).getTextContent()+"</b>"+egovMessageSource.getMessage("ezPersonal.t247", locale) + "<span class='point'>"+resultDom.getElementsByTagName("PERCENT").item(i).getTextContent()+"</span>%)</span>";
-			strHtml += "<table style='border:1px solid #c9c9c9;width:100%;height:12px;background-image:url(/images/quickpoll_bg.gif);'>";
-			strHtml += "<tr>";
-			strHtml += "<td style='width:"+Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4 +"px;background-color:#68bbef'></td>";
-			//pollResult 전자설문 그래프부분 브라우저에 따라 width px 조건에 맞게 처리
-			if (req.getHeader("User-Agent").indexOf("Trident") > 0 || req.getHeader("User-Agent").indexOf("MSIE") > 0) {
-				strHtml += "<td style='width:"+(400-Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4)+"px;'></td>";
-			} else {
-				strHtml += "<td style='width:"+(408-Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4)+"px;'></td>";
-			}
-			strHtml += "</tr>";
-			strHtml += "</table>";
-			strHtml += "<br>";
+			strHtml +=
+			"<div class='poll_list1'>" + 								    
+					"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
+						"<div class='Pt_QstOptTitleDiv' style='width: 315px;' title='" + resultDom.getElementsByTagName("TITLE").item(i).getTextContent() + "'>" + resultDom.getElementsByTagName("TITLE").item(i).getTextContent() + "</div>" +
+						"<div id='info" + i + "' class='Pt_QstInfoDiv'>&nbsp" + 
+							 "<span class='Pt_QstInfoVotes'>"+ resultDom.getElementsByTagName("COUNT").item(i).getTextContent() + "</span>" +
+							 egovMessageSource.getMessage("main.t20000", locale) + "/" ;
+							 if (resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0")) {
+								 strHtml += "<span class='Pt_QstInfoPercent'>" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + ".0</span>";
+							 } else {
+								 strHtml += "<span class='Pt_QstInfoPercent'>" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + "</span>";
+							 }
+						 strHtml += "%</div>"+
+					"</div>" +
+					"<div class='graphbar1' id='divGraph" + i + "' style='display: block;'>" ;
+						if (resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0.0") || resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0")) {
+							strHtml += "<p id='graph" + i + "' class='gx_bar11' style='display: none;'></p>";
+						} else {
+							strHtml += "<p id='graph" + i + "' class='gx_bar11' style='width:" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + "%;'></p>" ;
+						}
+					strHtml += "</div>"+	
+				"</div>";
 		}
 		
 		model.addAttribute("listPoll", resultDom);

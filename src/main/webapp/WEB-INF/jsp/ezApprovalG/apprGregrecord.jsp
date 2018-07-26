@@ -316,12 +316,12 @@
 
             if (Val == 5) {
                 if (CrossYN())
-                    window.resizeTo(1030, 780);
+                    //window.resizeTo(1030, 780);
                 InitAVTypeTD(g_NodesPhotoAVType, tdAVType, "");
             }
             else if (Val == 6) {
                 if (CrossYN())
-                    window.resizeTo(1030, 810);
+                    //window.resizeTo(1030, 810);
                 InitAVTypeTD(g_NodesRcdgAVType, tdAVType, "");
             }
         }
@@ -333,7 +333,7 @@
             if (Val == "1" || Val == "3" || Val == "5" || Val == "6")
             {
                 if (CrossYN())
-                    window.resizeTo(1030, 710);
+                    //window.resizeTo(1030, 710);
 
                 trDeliveryNo.style.display = "none";
                 trOriginSN.style.display = "none";
@@ -342,7 +342,7 @@
             else if (Val == "2" || Val == "4")
             {
                 if (CrossYN())
-                    window.resizeTo(1030, 710);
+                    //window.resizeTo(1030, 710);
 
                 trDeliveryNo.style.display = "";
                 trOriginSN.style.display = "";
@@ -350,7 +350,7 @@
             }
             else {
                 if (CrossYN())
-                    window.resizeTo(1030, 750);
+                    //window.resizeTo(1030, 750);
 
                 trDeliveryNo.style.display = "";
                 trOriginSN.style.display = "";
@@ -465,99 +465,127 @@
         <li><span id="btnCancel" onclick="return cmdCancel_onclick()"></span></li>
     </ul>
 </div>
-<h2><spring:message code='ezApprovalG.t1018'/></h2>
-<table style="width:100%" class="content" >
-  <tr>
-    <th><b><spring:message code='ezApprovalG.t1063'/></b></th>
-    <td style="padding-right:15px;white-space:nowrap"><table style="width:100%">
-        <tr>
-          <td id="tdCabinetName">&nbsp;</td>
-          <td style="width:70px"><a  class="imgbtn"><span onClick="return btnChangeCabinet_onclick()" style=""><spring:message code='ezApprovalG.t1064'/></span></a></td>
-        </tr>
-      </table></td>
-    <th><spring:message code='ezApprovalG.t572'/></th>
-    <td id="tdCabinetSN" style="padding-right:15px;width:300px;white-space:nowrap">&nbsp;</td>
-  </tr>
-  <tr>
-    <th><b><spring:message code='ezApprovalG.t1065'/></b></th>
-    <td id="tdCabinetType" style="padding-right:15px;white-space:nowrap">&nbsp;</td>
-    <th ><spring:message code='ezApprovalG.t573'/></th>
-    <td id="tdCabinetVolNo" style="padding-right:15px;white-space:nowrap">&nbsp;</td>
-  </tr>
+
+<table style="width: 100%;">
+	<tr>
+		<td colspan="2">
+			<h2 class="h2_dot" style="font-weight: normal; margin-top: 4px;"><spring:message code='ezApprovalG.t1018'/></h2>
+		</td>
+	</tr>
+	<tr>
+		<td width="50%">
+			<table style="width:100%; border-bottom: 0px; border-right: 0px;" class="content">
+				<tr>
+					<th style="width: 21%; border-bottom: 0px;"><spring:message code='ezApprovalG.t1063'/></th>
+       				<td style="border-bottom: 0px; border-right: 0px;">
+       				<span id="tdCabinetName">&nbsp;</span>
+       				<a class="imgbtn imgbck" style="position: absolute; top: 77px; left: 441px;"><span onClick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a>
+       				</td>
+				</tr>
+			</table>
+		</td>
+		<td width="50%">
+			<table style="width:100%; border-bottom: 0px;" class="content">
+				<tr>
+					<th style="width: 19%; border-bottom: 0px;"><spring:message code='ezApprovalG.t572'/></th>
+		    		<td style="border-bottom: 0px;" id="tdCabinetSN">&nbsp;</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td width="50%">
+			<table style="width:100%; border-right: 0px;" class="content">
+				<tr>
+					<th width="21%;"><spring:message code='ezApprovalG.t1065'/></th>
+    				<td style="border-right: 0px;" id="tdCabinetType">&nbsp;</td>
+				</tr>
+			</table>
+		</td>
+		<td width="50%">
+			<table style="width:100%;" class="content">
+				<tr>
+					<th width="19%;"><spring:message code='ezApprovalG.t573'/></th>
+	    			<td id="tdCabinetVolNo">&nbsp;</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
 </table>
 <table style="width:100%">
   <tr>
     <td style="vertical-align:top"><table>
         <tr>
-          <td style="vertical-align:top;width:100%"><h2><spring:message code='ezApprovalG.t1066'/></h2>
+          <td style="vertical-align:top;width:100%;height:419px;">
+          <h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1066'/></h2>
             <table style="width:100%" id="tbBasicInfo" class="content" >
               <tr>
                 <th><spring:message code='ezApprovalG.t859'/></th>
                 <td>
-                	<select id="selRegisterType" style="width:150px" onChange="return selRegisterType_onchange()" name="select">
+                	<select id="selRegisterType" style="width:150px; height: 25px;" onChange="return selRegisterType_onchange()" name="select">
                     </select>
                 </td>
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t1067'/></th>
-                <td><input type="text" name="txtTitle" id="txtTitle" class="text" style="Width:98%;">
+                <td><input type="text" name="txtTitle" id="txtTitle" class="text" style="Width:100%;">
                 </td>
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t831'/></th>
-                <td><input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regY}" name="txtRegY" id="txtRegY" maxlength = "4" size="4">
+                <td><input type="text" class="text" style="height:25px;padding:0px;margin:0px;" value="${regY}" name="txtRegY" id="txtRegY" maxlength = "4" size="4">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t456'/></span>
-                  <input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" value="${regM}" name="txtRegM"  id="txtRegM" maxlength = "2" size="2">
+                  <input type="text" class="text" style="height:25px;padding:0px;margin:0px;" value="${regM}" name="txtRegM"  id="txtRegM" maxlength = "2" size="2">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
-                  <input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" value="${regD}" name="txtRegD"  id="txtRegD" maxlength = "2" size="2">
+                  <input type="text" class="text" style="height:25px;padding:0px;margin:0px;" value="${regD}" name="txtRegD"  id="txtRegD" maxlength = "2" size="2">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regH}" name="txtRegH"  id="txtRegH" maxlength = "2" size="2">
+                  <input type="text" class="text" style="height:25px;padding:0px;margin:0px;" value="${regH}" name="txtRegH"  id="txtRegH" maxlength = "2" size="2">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t977'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regMi}"  name="txtRegMi"  id="txtRegMi" maxlength = "2" size="2">
+                  <input type="text" class="text" style="height:25px;padding:0px;margin:0px;" value="${regMi}"  name="txtRegMi"  id="txtRegMi" maxlength = "2" size="2">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t1068'/></span></td>
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t979'/></th>
-                <td><input type="text" name="txtTotalPage" id="txtTotalPage" class="text" style="Width:60px;height:16px;padding:0px;margin:0px;">
+                <td><input type="text" name="txtTotalPage" id="txtTotalPage" class="text" style="Width:60px;height:25px;padding:0px;margin:0px;">
                 &nbsp;<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t980'/></span></td>
               </tr>
               <tr  id="trAprMemberTitle">
                 <th ><spring:message code='ezApprovalG.t862'/></th>
-                <td><input type="text" name="txtAprMemberTitle" id="txtAprMemberTitle" class="text" style="Width:98%;">
+                <td><input type="text" name="txtAprMemberTitle" id="txtAprMemberTitle" class="text" style="Width:100%;">
                 </td>
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t445'/></th>
-                <td><input type="text" name="txtDrafter" id="txtDrafter" class="text" style="Width:98%;">
+                <td><input type="text" name="txtDrafter" id="txtDrafter" class="text" style="Width:100%;">
                 </td>
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t863'/></th>
-                <td><input type="text" class="text" style="Width:40px;height:16px;padding:0px;margin:0px;" name="txtExeY" id="txtExeY" maxlength = "4">
+                <td><input type="text" class="text" style="height:25px;padding:0px;margin:0px;" name="txtExeY" id="txtExeY" maxlength = "4" size="4">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t456'/></span>
-                  <input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" name="txtExeM"  id="txtExeM" maxlength = "2">
+                  <input type="text" class="text" style="height:25px;padding:0px;margin:0px;" name="txtExeM"  id="txtExeM" maxlength = "2" size="2">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
-                  <input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" name="txtExeD"  id="txtExeD" maxlength = "2">
+                  <input type="text" class="text" style="height:25px;padding:0px;margin:0px;" name="txtExeD"  id="txtExeD" maxlength = "2" size="2">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span></td>
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t864'/></th>
-                <td><input type="text" name="txtReceiptMember" id="txtReceiptMember" class="text" style="Width:98%;">
+                <td><input type="text" name="txtReceiptMember" id="txtReceiptMember" class="text" style="Width:100%;">
                 </td>
               </tr>
               <tr  id="trDeliveryNo">
                 <th ><spring:message code='ezApprovalG.t1069'/></th>
-                <td><input type="text" name="txtDeliveryNo" id="txtDeliveryNo" class="text" style="Width:98%;" maxlength="6">
+                <td><input type="text" name="txtDeliveryNo" id="txtDeliveryNo" class="text" style="Width:100%;" maxlength="6">
                 </td>
               </tr>
               <tr  id="trOriginSN">
                 <th ><spring:message code='ezApprovalG.t866'/></th>
-                <td><input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:98%;" maxlength="13">
+                <td><input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="13">
                 </td>
               </tr>
               <tr>
                 <th><spring:message code='ezApprovalG.t94'/></th>
-                <td><table border="0" style="width:98%;border-collapse:collapse; border-spacing:0;padding:0px;" >
+                <td><table border="0" style="width:100%;border-collapse:collapse; border-spacing:0;padding:0px;" >
                     <tr>
                       <td id="tdSpecialFlag">&nbsp;</td>
                       <td style="width:70px"><img src="/images/btn_add.gif" style="display:none;cursor:pointer;vertical-align:middle" id="btnAddSC" name="btnAddSC" onClick="return btnAddSpecialCatalog_onclick()" width="39" height="20"></td>
@@ -573,10 +601,10 @@
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t58'/></th>
-                <td><a class="imgbtn"><span id="btnAddSepAttach" onClick="return btnAddSepAttach_onclick()" style="" ><spring:message code='ezApprovalG.t949'/></span></a></td>
+                <td><a class="imgbtn imgbck" style="height: 21px; margin-top: 2px;"><span id="btnAddSepAttach" onClick="return btnAddSepAttach_onclick()" style="line-height: 22px;" ><spring:message code='ezApprovalG.t949'/></span></a></td>
               </tr>
             </table></td>
-          <td style="padding-left:5px;vertical-align:top" ><h2><spring:message code='ezApprovalG.t1071'/></h2>
+          <td style="padding-left:5px;vertical-align:top" ><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1071'/></h2>
             <table style="width:<%if("${userInfo.lang}"=="1"){%>375<%}else{%>494<%}%>px"  class="content">
               <tr>
                 <th ><spring:message code='ezApprovalG.t875'/></th>
@@ -617,11 +645,12 @@
             </table>
             <div id="divAudioVisualDummy" style="display:none"> </div>
             <div id="divAudioVisual">
-              <h2><spring:message code='ezApprovalG.t1074'/></h2>
-              <table style="width:<%if("${userInfo.lang}"=="1"){%>375<%}else{%>410<%}%>px" class="content">
+              <h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1074'/></h2>
+              <%-- <table style="width:<%if("${userInfo.lang}"=="1"){%>375<%}else{%>410<%}%>px" class="content"> --%>
+              <table style="width:100%;" class="content">
                 <tr>
-                  <th><spring:message code='ezApprovalG.t1075'/></th>
-                  <td><TextArea style="width:96%; height:50px" id=txtSummary name=txtSummary></TextArea>
+                  <th style="width:19%;"><spring:message code='ezApprovalG.t1075'/></th>
+                  <td><TextArea style="width:97%; height:48px; margin-top: 2px;" id=txtSummary name=txtSummary></TextArea>
                   </td>
                 </tr>
                 <tr>
@@ -640,10 +669,10 @@
             <td colspan="2" style="height:20px">
                 <table class="file">
 	                <tr>
-		                <th id="btn_Attach" ><spring:message code='ezApprovalG.t65'/></th>
+		                <th id="btn_Attach" style="font-weight: normal; text-align: left; width: 11%;"><spring:message code='ezApprovalG.t65'/></th>
 		                <td ><div id="lstAttachLink"></div></td>
 	                    <td >
-                            <a href="#" class="imgbtn">
+                            <a href="#" class="imgbtn imgbck">
                                 <span onclick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t268'/></span>
                             </a>
                         </td>

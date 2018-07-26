@@ -2,7 +2,7 @@
 	border:1px solid #999
 }
 
-input, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .popuplist td, .txt, .imgbtn{
+input, label, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .popuplist td, .txt, .imgbtn{
 	font-size:12px;
 	font-family: 'Gulim', 'arial', 'verdana';
 	color: #393939;
@@ -2315,3 +2315,5 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .mailpopupicon {
 	vertical-align: middle;	
 }
+
+.question { font-family: gulim }

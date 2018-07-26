@@ -8,6 +8,7 @@
 		<title><spring:message code='ezPersonal.t380' /></title>
 		<link rel="stylesheet"  href="<spring:message code='ezPersonal.e3' />" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<style type="text/css">
         	.question {
             	background:url(/images/kr/main/popup_pollimg.gif) no-repeat #f2f2f2 0px 0px;
@@ -15,7 +16,7 @@
             	margin-top:0px;
             	height:60px;
             	word-break:break-all;
-				border:1px solid #b8b6b6;
+				border:1px solid #ddd;
 	        }
 			.question p { 
 				margin:0px;
@@ -31,7 +32,7 @@
             	word-break:break-all;
             	font-size:12px;
 				line-height:20px;
-				border:1px solid #d7d4d5;
+				border:1px solid #ddd;
 				border-top:0px ;
         	}
 	        .btn_vote, .btn_vote_view, .btn_result {
@@ -40,13 +41,20 @@
 	            cursor: pointer;
             	margin: 1px;
         	}
+        	input[type=radio] { vertical-align: middle }
+        	/* 2018-07-26 김보미 */ 
+        	.line_ellipsis {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space:nowrap;
+        	}
     	</style>
 		<script type="text/javascript">
 			var g_UsePortal = "${usePortal}";
 
 			window.onload = function () {
-		    	var userlnag = ${userInfo.lang};
-		    	if(userlnag == 1){
+		    	/* var userlnag = ${userInfo.lang}; */
+		    	/* if(userlnag == 1){
 			        document.getElementById("btnpoll").src ="/images/main/btn_vote.gif";
 		        	document.getElementById("btnview").src = "/images/main/btn_vote_view.gif"
 		        	document.getElementById("btnresult").src = "/images/main/btn_result.gif";
@@ -66,6 +74,11 @@
 		        	document.getElementById("btnpoll").src ="/images/main/btn_vote.gif";
 		        	document.getElementById("btnview").src = "/images/main/btn_vote_view.gif"
 		        	document.getElementById("btnresult").src = "/images/main/btn_result.gif";
+		    	} */
+		    	//2018-07-26 김보미 - 크롬/ie 양 사이드 여백 상이한것 조정
+		    	var ua = navigator.userAgent;
+		    	if (ua.indexOf("Chrome") == -1) {
+		    		$("div[name=popupContentDiv]").css("margin-left","2px");
 		    	}
 			}
 			var PollResult_Cross_dialogArguments = new Array();
@@ -124,18 +137,33 @@
 	<body style="overflow:hidden;height:100%">
 		<div class="popup">
   			<h1><spring:message code='ezPersonal.t380' /></h1>
-    		<div style="overflow:auto;height:325px;width:auto">
-  				<div class="question" style="width:223px;overflow-y:auto">
+  			<div id="close">
+	            <ul>
+	                <li><span onclick="window.close()"></span></li>
+	            </ul>
+	        </div>
+	        <!-- 2018-07-26 김보미 - div네임속성 추가 -->
+     		<!-- <div style="overflow:auto;height:325px;width:auto"> -->
+    		<div style="overflow:auto;height:325px;width:auto" name='popupContentDiv'>
+    			<!-- 2018-07-26 김보미 - style속성 수정 -->   				
+   				<!-- <div class="question" style="width:223px;overflow-y:auto"> -->
+  				<div class="question" style="width:378px;overflow-y:hidden;">
 					<p><spring:message code='ezPersonal.t2000' />:</p>
     				${labelPollTitle}
   				</div>
-  				<div class="qlist" style="width: 268px;height:179px;padding:10px 0px 0px 10px;overflow:auto">
+  					<!-- 2018-07-26 김보미 - 너비값 조정 -->
+   				<!--<div class="qlist" style="width: 268px;height:179px;padding:10px 0px 0px 10px;overflow:auto"> -->
+  				<div class="qlist" style="width: 423px;height:200px;padding:10px 0px 0px 10px;overflow:auto">
     				${literalAnswer}
   				</div>
-  				<div style="text-align:center;padding-top:10px">
+  				<div class="btnpositionNew">
+  					<a class="imgbtn"><span onclick="vote_poll('1')"><spring:message code='ezPersonal.jjh1' /> </span></a>
+  					<a class="imgbtn"><span onclick="vote_poll('')"><spring:message code='ezPersonal.jjh2' /> </span></a>
+  					<!-- <a class="imgbtn"><span onclick="open_polllist()"><spring:message code='ezEmail.t38' /> </span></a> --%>
+  					
     				<img class="btn_vote" id="btnpoll" onclick="vote_poll('1')" />
     				<img class="btn_vote_view" id="btnview" onclick="vote_poll('')" />
-    				<img class="btn_result" id="btnresult" onclick="open_polllist()" />
+    				<!-- <img class="btn_result" id="btnresult" onclick="open_polllist()" /> -->
   				</div>
 			</div>
     	</div>

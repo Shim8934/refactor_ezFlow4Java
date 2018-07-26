@@ -417,8 +417,9 @@
 		                document.getElementById("trCabSubMenu").style.display = "";
 		                document.getElementById("trRecSubMenu").style.display = "none";
 		
-		                document.getElementById("Radio2").style.display = "none";
-		                document.getElementById("searchwriter").style.display = "none";
+		                //document.getElementById("Radio2").style.display = "none";11
+		                //document.getElementById("searchwriter").style.display = "none";
+		                document.getElementById('rad2').style.display = "none";
 		
 		                if (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") {
 		                    if (ListTypeFlag != "8" && ListTypeFlag != "9" && ListTypeFlag != "10")
@@ -922,12 +923,12 @@
 		
 		                if ("${userInfo.lang}" == "1") { 
 			                wWeight = 1015;
-			                wHeight = 625;
+			                wHeight = 670;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
 		                } else { 
 			                wWeight = 1015;
-			                wHeight = 625;
+			                wHeight = 670;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
 		                } 
@@ -994,7 +995,7 @@
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = CabinetSelect_onclick_Complete;
 		
-		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(1105, 500));
+		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(1000, 620));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1025,7 +1026,7 @@
 		            selectcabinet_cross_dialogArguments[0] = para;
 		            selectcabinet_cross_dialogArguments[1] = btnChangeRecCabinet_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "SelectCabinet_Cross", GetOpenWindowfeature(1106, 500));
+		            var OpenWin = window.open(url, "SelectCabinet_Cross", GetOpenWindowfeature(1000, 620));
 		            try { OpenWin.focus(); } catch (e) { }
 		
 		           
@@ -1396,14 +1397,14 @@
 		        }
 		
 		        if (document.getElementById("trRecSubMenu").style.display == "") {
-		            var radiosearch = document.getElementsByName('searchCheck');
-		
-		            if (radiosearch.item(0).checked) {
+		            var radiosearch = document.getElementById('selectType');
+		            
+		            if (radiosearch.value == "rad_Subject") {
 		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE>" + document.getElementById("txt_keyword").value + "</TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER></DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
-		            }
-		            else if (radiosearch.item(1).checked) {
+		            } else if (radiosearch.value == "rad_Writer") {
 		                g_RecSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><REGTYPE></REGTYPE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><CHARGER></CHARGER><SC></SC><TRANSEXPIRE/><DRAFTER>" + document.getElementById("txt_keyword").value + "</DRAFTER><CABTITLE></CABTITLE></SEARCHPARAM>";
 		            }
+		            
 		            switch (ListTypeFlag) {
 		                case "2":
 		                    GetTransListXml("P02");
@@ -1422,12 +1423,12 @@
 		            }
 		        }
 		        else if (document.getElementById("trCabSubMenu").style.display == "") {
-		            var radiosearch = document.getElementsByName('searchCheck');
+		            var radiosearch = document.getElementById('selectType');
 		
-		            if (radiosearch.item(0).checked) {
+		            if (radiosearch.value == "rad_Subject") {
 		                g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE>" + document.getElementById("txt_keyword").value + "</TITLE><TASKCODE></TASKCODE><SPRODUCEY></SPRODUCEY><EPRODUCEY></EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER></CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
 		            }
-		            else if (radiosearch.item(1).checked) {
+		            else if (radiosearch.value == "rad_Writer") {
 		                g_CabSearchParamXml = "<SEARCHPARAM><DEPTCODE>" + DeptID + "</DEPTCODE><TITLE></TITLE><TASKCODE></TASKCODE><SPRODUCEY></SPRODUCEY><EPRODUCEY></EPRODUCEY><SENDY></SENDY><EENDY></EENDY><RECTYPECODE></RECTYPECODE><KEEPPERIOD></KEEPPERIOD><KEEPMETHOD></KEEPMETHOD><KEEPPLACE></KEEPPLACE><CHARGER>" + document.getElementById("txt_keyword").value + "</CHARGER><TRANSEXPIRE/><TRANSFLAG/><RECEIVEDCAB/><GIVECAB/></SEARCHPARAM>";
 		            }
 		
@@ -1449,12 +1450,12 @@
 		            }
 		        }
 		        else {
-		            var radiosearch = document.getElementsByName('searchCheck');
+		            var radiosearch = document.getElementById('selectType');
 		
-		            if (radiosearch.item(0).checked) {
+		            if (radiosearch.value == "rad_Subject") {
 		                g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE>" + document.getElementById("txt_keyword").value + "</TITLE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><DEBENTURER></DEBENTURER></SEARCHPARAM>";
 		            }
-		            else if (radiosearch.item(1).checked) {
+		            else if (radiosearch.value == "rad_Writer") {
 		                g_DeliverySearchParamXml = "<SEARCHPARAM><DEPTCODE></DEPTCODE><DEPTCODE2>" + DeptID + "</DEPTCODE2><TITLE></TITLE><SREGDATE></SREGDATE><EREGDATE></EREGDATE><DEBENTURER>" + document.getElementById("txt_keyword").value + "</DEBENTURER></SEARCHPARAM>";
 		            }
 		
@@ -1580,13 +1581,14 @@
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
 	    <h1><span id="imgTitle"></span>&nbsp;<span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
-	        <span style="float:right;font-weight:normal;display:inline-block;vertical-align:middle;color:black;">
-	            <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin-bottom:5px; width:13px;height:13px;vertical-align:middle;"><spring:message code='ezApprovalG.t106'/>
-		        <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin-bottom:5px; width:13px;height:13px;vertical-align:middle;"><span id="searchwriter"><spring:message code='ezApprovalG.t445'/></span>
-		        &nbsp;
-		        <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	            <a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
-	        </span>
+			<span style="float:right;font-weight:normal;color:black;">
+				<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+					<option selected="" value="rad_Subject" id="rad1"><spring:message code='ezApprovalG.t106'/></option>
+					<option value="rad_Writer" id="rad2"><spring:message code='ezApprovalG.t445'/></option>
+				</select>
+				<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true" onmousedown="keyword_Clear();"> 
+				<a href="#" style="float:right;"><img src="/images/bsearch_new.gif" border="0" onclick="search()"></a>
+			</span>
 	    </h1>
 	
 	    <div id="mainmenu">

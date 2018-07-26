@@ -77,9 +77,9 @@
 <body style="background-color:#FFFFFF;margin-left:0px;margin-top:0px" class="popup" >
 <h1><spring:message code='ezApprovalG.t1184'/></h1>
 <div id="close"><ul><li><span onClick="return cmdConfirm_onclick()"></span></li></ul></div>
-<h2 id="tdTitle"> <spring:message code='ezApprovalG.t1186'/></h2>
+<h2 class="h2_dot" id="tdTitle" style="font-weight: normal;"><spring:message code='ezApprovalG.t1186'/></h2>
 <div class="listview" style="width:100%; "> 
-<div id=lvList style="overflow:auto; border:0; height: 300px; width:100%;"></div>
+<div id=lvList style="overflow:auto; border:0; height: 355px; width:100%;"></div>
 </div>
 </body>
 </html>
