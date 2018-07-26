@@ -7,7 +7,7 @@
 	<title>문서편집</title>
 	<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 	<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -60,12 +60,12 @@
     <input type="hidden" name="txt_OpinionContent2" id="txt_OpinionContent2" value="" />
         <div id="menu">
             <ul>
-                <li><span id="btnSave" onClick="return btn_save()">저장</span></li>
+                <li><span id="btnSave" onClick="return btn_save()"><spring:message code='ezApprovalG.t1767' /></span></li>
             </ul>
         </div>
         <div id="close">
             <ul>
-                <li><span id="btnClose" onClick="return btn_close()">닫기</span></li>
+                <li><span id="btnClose" onClick="return btn_close()"></span></li>
             </ul>
         </div>		
         <div id="ApvForm_content2" style="width:100%; padding-top:10px;">

@@ -23,6 +23,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/html2canvas.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/Circulation.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">                                                                                        
 		    var OrgAprUserID		= '${uID}';
 		    var OrgAprUserName		= '${name}';
@@ -101,13 +102,13 @@
 		    arr_userinfo[8]  = "${userInfo.email}";
 		    arr_userinfo[9]  = "";
 		    arr_userinfo[10] = "${susinAdmin}";
-		    var pCompanyID = "${userInfo.companyID}";
 		    arr_userinfo[11]  = "${userInfo.displayName1}";
 		    arr_userinfo[12]  = "${userInfo.displayName2}";
 		    arr_userinfo[13]  = "${userInfo.title1}";
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    var pCompanyID = "${userInfo.companyID}";
 		    var KuyjeType = "002";
 		    var signDateFormat = "${optSignDateFormat}";
 		    var isSplit = "${optIsSplit}";
@@ -151,6 +152,8 @@
 			var draftDeptID = "${draftDeptID}";
 			var isHWP = "";
 			var ext = "mht";
+			var nonElecRec = "${nonElecRec}";
+	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
 			
 			var docState = "${docState}";
 		    window.onload = function () {
@@ -161,6 +164,11 @@
 		    	if(approvalFlag == "G") {
 	        		$("#btnAddSepAttach").css("display","");
 	        	} 
+		    	
+		    	if (nonElecRec == "Y") {
+			        getNonElecInfoSusinInit();
+					document.getElementById("btnAddSepAttach").style.display = "none";
+		        }
 		    };
 		    
 		    function getNextDocList()
@@ -555,8 +563,10 @@
 		                }
 		            }		
 		        }
+ 		        <%--2018-07-11 천성준 -전자결재G 중간결재자 부재설정 시, 부재내용 사인칸에 표기안되서 주석해제 --%>
 		        //없이 테스트
-// 		        SignCheck();
+ 		        SignCheck(); 
+		        
 		        if (pDraftFlag == "HABYUI") {
 		            setMenuBar("btntotaldocinfo", false);
 		        }
@@ -1299,6 +1309,19 @@
 		        parameter[39] = SummaryFlag;
 		        parameter[40] = "";
 		        parameter[45] = pPublicityYN;
+		        parameter[46] = nonElecRec;
+			    
+			    if (nonElecRec == "Y") {
+			    	if (pGubun != "1") {
+			        	parameter[47] = cabinetID;
+		        	} else {
+			        	parameter[47] = "nonElecRecTempCabinet";
+		        	}
+			        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
+			        parameter[49] = nonSepAttachLVXml; // 분첨
+			        parameter[50] = g_szSCListXml;
+			        parameter[51] = sepAttachCheckYN;
+		        }
 		        
 		        if (approvalFlag == "S") {
 		        	parameter[13] = pOrgAprUserID;
@@ -1435,6 +1458,17 @@
 			                //문서 공개 범위 설정
 			                //setPublicFlag();
 			                setPublicFlag();
+			                
+			                if (nonElecRec == "Y") {
+				            	nonElecRecInfoXml = ret[23];
+				            	nonSepAttachLVXml = ret[24];
+				            	g_szSCListXml = ret[25];
+				            	sepAttachCheckYN = ret[26];
+				            	if (ext == "hwp") {
+					            	setNonElecRecInfo(nonElecRecInfoXml);
+				            	}
+				            }
+			                
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {
@@ -1477,7 +1511,7 @@
 		            var contentEditable = message.DocumentBodyGetAttribute("contentEditable");
 		            if (contentEditable)
 		                message.DocumentBodySetAttribute("contentEditable", "inherit");
-		            btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t42'/>";
+		            btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t1767'/>";
 		        }
 		        else {
 		            var pInformationContent = "<spring:message code='ezApprovalG.t43'/>";
@@ -1595,7 +1629,7 @@
 		                  <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		              </ul>
 				</div>
-			<div id="close"><ul><li><span id="btnClose" onClick="return btnClose_onclick()" ><spring:message code='ezApprovalG.t64'/></span></li></ul></div>
+			<div id="close"><ul><li><span id="btnClose" onClick="return btnClose_onclick()" ></span></li></ul></div>
 		</td> 
 		  </tr>
 		  <tr>
@@ -1615,7 +1649,6 @@
 		</table>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		<XML ID="ATTACHINFO"></XML>
 		<XML ID="DOCINFO"></XML>

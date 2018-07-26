@@ -76,23 +76,27 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t111'/></h1>
-		<h2><spring:message code='ezApprovalG.t648'/></h2>
+		<div id="close">
+            <ul>
+                <li><span id="btnClose" onClick="return btnClose_onclick()"></span></li>
+            </ul>
+        </div>
+		<h2 style="font-weight: normal;">▒ <spring:message code='ezApprovalG.t648'/></h2>
 		<table class="content">
 		  <tr>
 		    <th><spring:message code='ezApprovalG.t649'/></th>
-		    <td><input type="text" class="text" style="Width:98%; " name="txtTitle" id="txtTitle">
+		    <td><input type="text" class="text" style="Width:100%; " name="txtTitle" id="txtTitle">
 		    </td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code='ezApprovalG.t1024'/></th>
-		    <td><input type="text" class="text" style="Width:98%; " name="txtCode" id="txtCode">
+		    <td><input type="text" class="text" style="Width:100%; " name="txtCode" id="txtCode">
 		    </td>
 		  </tr>
 		</table>
 		<div class="btnposition btnpositionNew">
-			<a class="imgbtn"><span id="btnReset" onClick="return btnReset_onclick()" style="width:40px;" ><spring:message code='ezApprovalG.t621'/></span></a>
-			<a class="imgbtn"><span id="btnOK" onClick="return btnOK_onclick()" style="width:40px;" ><spring:message code='ezApprovalG.t111'/></span></a>
-			<a class="imgbtn"><span id="btnClose" onClick="return btnClose_onclick()" style="width:40px;" ><spring:message code='ezApprovalG.t64'/></span></a>
+			<a class="imgbtn"><span id="btnReset" onClick="return btnReset_onclick()"><spring:message code='ezApprovalG.t621'/></span></a>
+			<a class="imgbtn"><span id="btnOK" onClick="return btnOK_onclick()"><spring:message code='ezApprovalG.t111'/></span></a>
 		</div>
 	</body>
 </html>

@@ -941,6 +941,7 @@ function Save_onClick_Complete(ReturnValue) {
                         MailSend_Show_Progress();                        
                     }
 
+                    g_saveHttp.timeout = 20000;
                     g_saveHttp.onreadystatechange = event_SaveonClick;
                     g_saveHttp.send(xmlDoc);
                 }
@@ -998,11 +999,14 @@ function event_SaveonClick() {
     	
         var xmlResult = loadXMLString(g_saveHttp.responseText);
         var pRtnMessage = "";
-        if (!CrossYN()) {
-            pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).text;
-        }
-        else if (CrossYN()) {
-        	pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).textContent;
+        
+        try {
+            if (!CrossYN()) {
+                pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).text;
+            } else if (CrossYN()) {
+                pRtnMessage = xmlResult.childNodes.item(0).childNodes.item(0).textContent;
+            }
+        } catch (e) {
         }
         
         //메일 발송인 경우
@@ -1088,6 +1092,10 @@ function event_SaveonClick() {
                 	/* 2018-05-07 이소담 - 왼쪽 메뉴의 '메일쓰기'로 '내게쓰기'로 메일을 발신했을때 메일 목록 자동으로 새로고침되도록 개선*/
                 	if (window.opener.name == "left") {
                 		window.opener.parent.frames["right"].MailListRefreshByTimeout();
+                	} 
+                	/* 2018-07-23 정재은 - 미리보기에서 전달, 회신, 전체회신 후 메일 목록 자동으로 새로고침되도록 개선*/
+                	else if (window.opener.name == "ifrmPreViewH" || window.opener.name == "ifrmPreViewW") {
+                		window.opener.parent.parent.frames["right"].MailListRefreshByTimeout();
                 	} else {
                 		window.opener.MailListRefreshByTimeout();
                 	}
@@ -1262,7 +1270,7 @@ function GetMailAddresses(name) {
     createNodeInsert(xmlDOM, objNode, "DATA");
 
     if (EmaaddrFormatExt(name).indexOf("@") == -1) {
-        createNodeAndInsertText(xmlDOM, objNode, "ORGSEARCH", "displayname::" + EmaaddrFormatExt(name));
+        createNodeAndInsertText(xmlDOM, objNode, "ORGSEARCH", "displayname::" + name + ";;mail::" + name);
     }
     else {
     	/* 2018-04-26 이소담 - 메일쓰기에서 받는사람에 메일 주소를 직접 입력하였을때 도메인이 내부도메인일 경우 계정이 존재하는지 확인 후 존재하지않으면 입력되지않도록 개선*/
@@ -1289,7 +1297,7 @@ function GetMailAddresses(name) {
         		console.log(error);
         	}
         })
-        createNodeAndInsertText(xmlDOM, objNode, "ORGSEARCH", "mail::" + EmaaddrFormatExt(name));
+        createNodeAndInsertText(xmlDOM, objNode, "ORGSEARCH", "displayname::" + name + ";;mail::" + name);
     }
     createNodeAndInsertText(xmlDOM, objNode, "DLGSEARCH", "displayname::" + name);
     createNodeAndInsertText(xmlDOM, objNode, "CELL", "displayName");
@@ -2047,7 +2055,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
         for (var i = 0; i < AttachRows.length; i++) {
             var filepath = SelectSingleNodeValue(AttachRows[i], "FilePath");
             var filenameTemp = filepath.split('/')[filepath.split('/').length - 1];
-            var filename = MakeXMLString(filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length));
+            var filename = filenameTemp.substring(filenameTemp.indexOf("_") + 1, filenameTemp.length);
             var filesize = SelectSingleNodeValue(AttachRows[i], "FileSize2");
 
             pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
@@ -2390,7 +2398,8 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
         for (var i = 0 ; i < nodes.length ; i++) {
             if (getNodeText(GetChildNodes(nodes[i])[5]) == "Y") {
                 if (getNodeText(GetChildNodes(nodes[i])[1]) == "true") {
-                    var strTarget = "target='_blank'";
+                	// skyblue0o0 20180709 : 모든 대용량 첨부파일 다운로드 링크에 target을 ''로 수정
+                    var strTarget = "target=''";
                     var FileName = getNodeText(GetChildNodes(nodes[i])[2]);
                     FileName = replaceAll(FileName, "&", "&amp;");
                     var fileSize = getNodeText(GetChildNodes(nodes[i])[3]);
@@ -2399,12 +2408,13 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                     var strFileExt = FileName.substr(FileName.lastIndexOf('.'));
                     strFileExt = strFileExt.toLowerCase();
                     
+                    /*
                     if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
-                    		strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
-                    		strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
-                    		strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mp3" || strFileExt == ".zip") {
+                    strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+                    strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+                    strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mp3" || strFileExt == ".zip") {
                         strTarget = "target=''";
-                    }
+                    }*/
                     
                     if (fileSize / 1024 / 1024 / 1024 > 1) {
                         fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 / 1024 * 10)) / 10).toFixed(1) + "GB";
@@ -2422,7 +2432,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                     var EmailHref = document.location.protocol + "//" + g_servername + "/ezEmail/downloadAttachCommon.do?fileid=" + getNodeText(GetChildNodes(nodes[i])[0]) + "&filedate=" + fileDate + "&tid=" + tid;
                     TempText += "<tr>" +
                                 "<td colspan='2' style='border-left:1px solid #dadada;border-right:1px solid #dadada;border-bottom:1px solid #dadada;  line-height:18px; padding:5px 10px 5px 10px; margin:0px;list-style:none;'>" +
-                                "<a href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;' border='0'/></a>" +
+                                "<a href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;vertical-align:middle' border='0'/></a>" +
                                 "<a id='BigSizeFileLink' href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;font-size:12px;'>" + FileName + " (" + fileSize + ")</a></td>" +
                                 "</tr>";
                 }
@@ -3277,8 +3287,13 @@ function getEmailAddressList(ReceiverList) {
         var pEmail = receiverPart[1].replace("<", "").replace(">", "");
         
         if (g_cmd != "EDIT") {
-            if (pEmail == g_myemail) 
+            if (pEmail == g_myemail) {
+            	if (Org_cmd == "attitudeAbsented") {
+            		attitudeIncludeMe = true;
+                }
+            	
             	continue;
+            }
         }
         
         retVal["name"][count3] = pName.replace("\"", "").replace("\"", "");

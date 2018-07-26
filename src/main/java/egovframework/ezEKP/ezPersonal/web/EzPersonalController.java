@@ -347,8 +347,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 				proxyUserID = xmlDom.getElementsByTagName("PROXYUSERID").item(0).getTextContent();
 				proxyDeptID = xmlDom.getElementsByTagName("PROXYUSERDEPTID").item(0).getTextContent();
 				proxyUserName = xmlDom.getElementsByTagName("PROXYUSERNAME").item(0).getTextContent();
-				startDate = xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent();
-				endDate = xmlDom.getElementsByTagName("ENDDATE").item(0).getTextContent();
+				startDate = commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent().substring(0, 16), userInfo.getOffset(), false);
+				endDate = commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("ENDDATE").item(0).getTextContent().substring(0, 16), userInfo.getOffset(), false);
 				
 				startDate = startDate.substring(0, startDate.length()-2);
 				endDate = endDate.substring(0, endDate.length()-2);
@@ -500,7 +500,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		int currentPage;
-		int pageSize = 10;
+		int pageSize = 15;
 		boolean isPollEmpty = false;
 		String votePoll = "";
 		
@@ -549,6 +549,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("pageCount", pageCount);
 		model.addAttribute("totalCount", totalCount);
 		model.addAttribute("isPollEmpty", isPollEmpty);
+		model.addAttribute("pageSize", pageSize);
 
 		logger.debug("homePollListUser ended");
 		return "ezPersonal/persHomePollListUser";
@@ -687,7 +688,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			strHtml += "<span class='txt'>"+resultDom.getElementsByTagName("TITLE").item(i).getTextContent()+"</b>(<b>"+resultDom.getElementsByTagName("COUNT").item(i).getTextContent()+"</b>"+egovMessageSource.getMessage("ezPersonal.t247", locale) + "<span class='point'>"+resultDom.getElementsByTagName("PERCENT").item(i).getTextContent()+"</span>%)</span>";
 			strHtml += "<table style='border:1px solid #c9c9c9;width:100%;height:12px;background-image:url(/images/quickpoll_bg.gif);'>";
 			strHtml += "<tr>";
-			strHtml += "<td style='width:"+Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4 +"px;background-color:#68bbef'></td>";
+			strHtml += "<td style='width:"+Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4 +"px;background-color:rgb(245, 117, 120)'></td>";
 			//pollResult 전자설문 그래프부분 브라우저에 따라 width px 조건에 맞게 처리
 			if (req.getHeader("User-Agent").indexOf("Trident") > 0 || req.getHeader("User-Agent").indexOf("MSIE") > 0) {
 				strHtml += "<td style='width:"+(400-Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4)+"px;'></td>";

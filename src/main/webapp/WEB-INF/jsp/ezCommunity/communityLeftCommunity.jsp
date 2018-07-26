@@ -7,7 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>left_community</title>
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<style>
 			.btn_comm {
@@ -352,7 +352,9 @@
 			                }
 			                break;
 			            case "btn_MemberJoinIng":
-			                alert("<spring:message code='ezCommunity.t1102' />");
+			            	//2018-07-24 김보미
+// 			                alert("<spring:message code='ezCommunity.t1102' />");
+			                alert("<spring:message code='ezCommunity.kbm01' />");
 			                break;
 			            default: 
 			            	window.open("/ezcommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel, "right");
@@ -396,7 +398,9 @@
 			                    }
 			                    break;
 		                case "btn_MemberJoinIng":
-		                    alert("<spring:message code='ezCommunity.t1102' />");
+			            	//2018-07-24 김보미
+// 			                alert("<spring:message code='ezCommunity.t1102' />");
+			                alert("<spring:message code='ezCommunity.kbm01' />");
 		                    break;
 		                default: 
 		                	window.open("/ezcommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel, "right");
@@ -484,8 +488,10 @@
 				            if (userID == master) {
 				                alert("Community <spring:message code='ezCommunity.t1103' />");
 				            } else {
-				                var wWeight = "425";
-				                var wHeight = "385";
+				            	//2018-07-09  김보미 - 너비값 조정
+ 				                //var wWeight = "425";
+				                var wWeight = "475";
+				                var wHeight = "395";
 				                var heigth = window.screen.availHeight;
 				                var width = window.screen.availWidth;
 				                var left = (width - wWeight) / 2;

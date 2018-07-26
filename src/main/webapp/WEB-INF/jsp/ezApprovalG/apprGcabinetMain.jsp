@@ -40,9 +40,9 @@
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
+		<!-- <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
-		<link rel="stylesheet" href="/js/jquery/jquery-ui.min.css">   
+		<link rel="stylesheet" href="/js/jquery/jquery-ui.min.css"> -->   
 		<script type="text/javascript" id="clientEventHandlersJS">
 				var OrderOption = "";
 		        var OrderCell = "";        
@@ -115,10 +115,10 @@
 		                }
 		            }); */
 		
-		            $("#number")
+		            /* $("#number")
 		              .selectmenu()
 		              .selectmenu("menuWidget")
-		                .addClass("overflow");
+		                .addClass("overflow"); */
 		        });
 		
 		        window.onload = function () {
@@ -456,7 +456,7 @@
 		                    }
 		
 		                    document.getElementById("tdbtnViewRecList").style.display = "";
-		                    document.getElementById("tbar1").style.display = "";
+// 		                    document.getElementById("tbar1").style.display = "";
 		
 		                }
 		                else {
@@ -464,7 +464,7 @@
 		                    document.getElementById("tdViewCabHist").style.display = "none";
 		                    document.getElementById("tdSetCharger").style.display = "none";
 		                    document.getElementById("tdbtnViewRecList").style.display = "none";
-		                    document.getElementById("tbar1").style.display = "none";
+// 		                    document.getElementById("tbar1").style.display = "none";
 		
 		                }
 		
@@ -923,12 +923,12 @@
 		
 		                if ("${userInfo.lang}" == "1") { 
 			                wWeight = 1015;
-			                wHeight = 625;
+			                wHeight = 670;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
 		                } else { 
 			                wWeight = 1015;
-			                wHeight = 625;
+			                wHeight = 670;
 			                left = (width - wWeight) / 2;
 			                top = (heigth - wHeight) / 2;
 		                } 
@@ -995,7 +995,7 @@
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = CabinetSelect_onclick_Complete;
 		
-		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(1105, 500));
+		        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(980, 620));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1245,7 +1245,7 @@
 		            aprgongramline_cross_dialogArguments[0] = para;
 		            aprgongramline_cross_dialogArguments[1] = btnSendAround_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 740));
+		            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 760));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		    }
@@ -1465,7 +1465,7 @@
 		
 		
 		        $('#sel_year').val("ALL");
-		        $('#sel_year').selectmenu('refresh');
+		        /* $('#sel_year').selectmenu('refresh'); */
 		    }
 		    
 			/////////////////////////////////////////////////////////////////////////////
@@ -1586,8 +1586,8 @@
 	            <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin-bottom:5px; width:13px;height:13px;vertical-align:middle;"><spring:message code='ezApprovalG.t106'/>
 		        <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin-bottom:5px; width:13px;height:13px;vertical-align:middle;"><span id="searchwriter"><spring:message code='ezApprovalG.t445'/></span>
 		        &nbsp;
-		        <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align:top;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	            <a href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onClick="search()"></a>
+		        <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+	            <a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
 	        </span>
 	    </h1>
 	
@@ -1603,20 +1603,20 @@
 	                <spring:message code='ezApprovalG.t932'/></span></li>
 	            <li id="tdbtnViewRecList"><span id="btnViewRecList" onclick="return btnViewRecList_onclick()">
 	                <spring:message code='ezApprovalG.t526'/></span></li>
-	            <li id="tbar1" style="background: none; padding-right: 2px;">
-	                <img src="/images/i_bar.gif"></li>
+	            <!-- <li id="tbar1" style="background: none; padding-right: 2px;">
+	                <img src="/images/i_bar.gif"></li> -->
 	            <li id="tdRegCabinet" style="Display: None"><span id="RegCabinet" onclick="return btnRegCabinet_onclick()"><spring:message code='ezApprovalG.t2002'/></span></li>
 	            <li id="tdNewVol" style="Display: None"><span id="NewVol" onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></li>
 	            <li id="tdSetCharger" style="Display: None"><span id="SetCharger" onclick="return btnSetTaskCharger_onclick()"><spring:message code='ezApprovalG.t937'/></span></li>
 	            <li id="tdViewCabInfo"><span id="ViewCabInfo" onclick="return btnViewCabInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 	            <li id="tdViewCabHist" style="Display: None"><span id="ViewCabHist" onclick="return btnViewCabHistory_onclick()"><spring:message code='ezApprovalG.t529'/></span></li>
-	            <li id="tbar2" style="background: none; padding-right: 2px;">
-	                <img src="/images/i_bar.gif"></li>
+	            <!-- <li id="tbar2" style="background: none; padding-right: 2px;">
+	                <img src="/images/i_bar.gif"></li> -->
 	            <li id="tdModifyCab" style="Display: None"><span id="ModifyCab" onclick="return btnChangeCabinetInfo_onclick()"><spring:message code='ezApprovalG.t269'/></span></li>
 	            <li id="tdSearchCab"><span id="SearchCab" onclick="return SearchCabinet('0')"><spring:message code='ezApprovalG.t111'/></span></li>
 	            <li id="tdDocListPrint"><span id="DocListPrintRec" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li ><span id="btnCabDel" onclick="return DeleteCab();" style="Display: None"><spring:message code='ezApprovalG.t266'/></span> </li>
-	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
+	            <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
 	            <li style="vertical-align: middle; margin-top:1px;"> <select id="cab_year" name="cab_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 	            </select>  </li>
@@ -1627,8 +1627,8 @@
 	               <spring:message code='ezApprovalG.t939'/></span></li>
 	            <li id="tdReSend"><span id="ReSend" onclick="return btnReSend_onclick()">
 	                <spring:message code='ezApprovalG.t940'/></span></li>
-	            <li id="tbar3" style="background: none; padding-right: 2px;">
-	                <img src="/images/i_bar.gif"></li>
+	            <!-- <li id="tbar3" style="background: none; padding-right: 2px;">
+	                <img src="/images/i_bar.gif"></li> -->
 	            <li id="tdCabSelect"><span id="CabSelect" onclick="return CabinetSelect_onclick()"><spring:message code='ezApprovalG.t941'/></span></li>
 	            <li id="tdRegRecord" style="Display: None"><span id="RegRecord" onclick="return btnRegRecord_onclick()"><spring:message code='ezApprovalG.t933'/></span></li>
 	            <li id="tdRegSepAtt" style="Display: None"><span id="RegSepAtt" onclick="return btnRegAttach_onclick()"><spring:message code='ezApprovalG.t942'/></span></li>
@@ -1638,15 +1638,15 @@
 	            <li id="tDocInfo"><span id="DocInfo" onclick="return GongRamDocInfo()"><spring:message code='ezApprovalG.t946'/></span></li>
 	            <li id="tdViewRecInfo"><span id="ViewRecInfo" onclick="return btnViewRecInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
 	            <li id="tdVeiwRecHist" style="Display: None"><span id="VeiwRecHist" onclick="return btnViewRecHistory_onclick()"><spring:message code='ezApprovalG.t947'/></span></li>
-	            <li id="tbar4" style="background: none; padding-right: 2px;">
-	                <img src="/images/i_bar.gif"></li>
+	            <!-- <li id="tbar4" style="background: none; padding-right: 2px;">
+	                <img src="/images/i_bar.gif"></li> -->
 	            <li id="tdMoveRec" style="Display: None"><span id="MoveRec" onclick="return btnChangeRecCabinet_onclick()"><spring:message code='ezApprovalG.t948'/></span></li>
 	            <li id="tdModifyRec" style="Display: None"><span id="ModifyRec" onclick="return btnChangeRecInfo_onclick()"><spring:message code='ezApprovalG.t269'/></span></li>
 	            <li id="tdSearchRec"><span id="SearchRec" onclick="return btnSearchRec_onclick(0,'OPEN')"><spring:message code='ezApprovalG.t111'/></span></li>
 	            <li id="tdGongRam"><span id="GongRam" onclick="return btnSendAround_onclick()"><spring:message code='ezApprovalG.t1428'/></span></li>
 	            <li id="tdDocListPrint"><span id="DocListPrintRec" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
+	            <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
 	            <li style="vertical-align: middle; margin-top:1px;"> <select id="rec_year" name="rec_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 	            </select>  </li>  
@@ -1656,7 +1656,7 @@
 	            <li id="tbSearchDelivery"><span id="SearchDelivery" onclick="return btnSearchDelivery_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
 	            <li id="Li1"><span id="Span1" onclick="return DocListPrinter_onclick()"><spring:message code='ezApprovalG.t530'/></span></li>
 	            <li id="tbnBaeBu"><span id="Span2" onclick="return btnBaeBu_onclick()"><spring:message code='ezApprovalG.t100000'/></span></li>
-	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
+	            <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
 	            <li style="vertical-align: middle; margin-top:1px;"> <select id="del_year" name="del_year" style="width:75px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 	            </select>    </li>

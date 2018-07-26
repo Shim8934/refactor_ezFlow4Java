@@ -205,7 +205,7 @@
 			</div>
 			<div id="close">
 		  		<ul>
-		    		<li><span onClick="window.close()"><spring:message code='ezSchedule.t16' /></span></li>
+		    		<li><span onClick="window.close()"></span></li>
 		  		</ul>
 			</div>		
 			<div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:auto; WIDTH:505px; HEIGHT:277px"> 
@@ -246,7 +246,6 @@
 			</div>
 			<script type="text/javascript">
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
-				selToggleList(document.getElementById("close"), "ul", "li", "0");
 			</script>
 		</form> 
 	</body>

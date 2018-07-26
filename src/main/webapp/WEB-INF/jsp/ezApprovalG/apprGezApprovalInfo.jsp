@@ -7,7 +7,7 @@
 	    <title><spring:message code='ezApprovalG.t1742'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
@@ -17,6 +17,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/escapenew.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
+	    <script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
 	    <script src="/js/ezApprovalG/MiscFunc_Cross.js" type="text/javascript"></script>
 	    <script src="/js/ezApprovalG/TabMenu.js" type="text/javascript"></script>
 	    <script src="/js/ezApprovalG/TreeView.js" type="text/javascript"></script>
@@ -39,6 +40,11 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    <script src="/js/Common.js" type="text/javascript"></script>
+	    <style type="text/css">
+	    	.h2_dot {
+	    		background: url(/images/kr/left/left_dot02.gif) no-repeat 0px 70%;
+	    	}
+	    </style>
 	    <script type="text/javascript">
 	    	var approvalFlag = "${approvalFlag}";
 	        var OrderCell = "";
@@ -187,6 +193,9 @@
 			var beforeDocID = "${beforeDocID}";
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
 	        var ext = "${ext}";
+	        var nonElecRec = "";
+	        var nonElecRecInfoXml = "";
+	        var g_CabID = "";
 	        
 	        $(function () {
 	        	if (document.getElementById("AprSecurity").checked){
@@ -219,14 +228,15 @@
 	            if (MACSAFARIYN()) {
 	                window.resizeBy(0, 35);
 	            }
-	            if (screen.height >= 900) {
+	            /* if (screen.height >= 900) {
 	                document.getElementById("orgbtnArea").style.display = "";
 	                document.getElementById("btnArea").style.display = "none";
 	            }
 	            else {
 	                document.getElementById("orgbtnArea").style.display = "none";
 	                document.getElementById("btnArea").style.display = "inline";
-	            }
+	            } */
+	
 	            GetDocInfo(); 
 	            AprTypeXML = loadXMLString(tempAprTypeXML);
 	            ChangeTab(document.getElementById("1tab1"));
@@ -308,7 +318,6 @@
 	                 }
 
 	            }
-	            
 	        };
 	
 	        function KeEventControl(obj) {
@@ -383,7 +392,18 @@
 	            vAprSecurity = RetValue[38];
 	            SummaryFlag = RetValue[39];
 	            vPublicFlag2 = RetValue[45];
-	            if (pSuSinFlag == "N") {
+	            
+	            nonElecRec = RetValue[46];
+	            
+	            if (nonElecRec == "Y") {
+	            	g_CabID = RetValue[47];
+	            	nonElecRecInfoXml = RetValue[48];
+	            	g_SepAttachLVXml = RetValue[49];
+	            	g_szSCListXml = RetValue[50];
+	            	sepAttachCheckYN = RetValue[51];
+	            }
+	            
+	            if (pSuSinFlag == "N" || pDocType == "002") {
 	                document.getElementById("showReceptinfo").style.display = "none";//.innerHTML = "";
 	            }
 	            
@@ -421,17 +441,29 @@
 	                liniReceptOuter();
 	            }
 	            else if (pIniGubun == "5") { //수신자, 결재정보
-	                document.getElementById("showAprLine").style.display = "none";
-	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("Lineinfo").style.display = "none";
-	                document.getElementById("Cabinetinfo").style.display = "none";
-	                document.getElementById("1tab2").onclick();
-	                ChangeTab(document.getElementById("1tab2"));
-	                liniReceptOuter();
+	            	//기안문일경우 수신자탭 안뜨게 하기위해 if문 추가 2018-07-25 강민수92
+	            	if (pDocType == "002") {
+		                document.getElementById("showAprLine").style.display = "none";
+		                document.getElementById("showCabinetinfo").style.display = "none";
+		                document.getElementById("Lineinfo").style.display = "none";
+		                document.getElementById("Cabinetinfo").style.display = "none";
+		                document.getElementById("1tab4").onclick();
+	                	ChangeTab(document.getElementById("1tab4"));
+	            	} else {
+		                document.getElementById("showAprLine").style.display = "none";
+		                document.getElementById("showCabinetinfo").style.display = "none";
+		                document.getElementById("Lineinfo").style.display = "none";
+		                document.getElementById("Cabinetinfo").style.display = "none";
+		                document.getElementById("1tab2").onclick();
+		                ChangeTab(document.getElementById("1tab2"));
+		                liniReceptOuter();
+	            	}
 	            }
 	            else if (pIniGubun == "6") { //결재선, 결재정보
 	                document.getElementById("showReceptinfo").style.display = "none";
 	                document.getElementById("showCabinetinfo").style.display = "none";
+	                document.getElementById("showNonElecRecInfo").style.display = "none";
+	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
 	                document.getElementById("1tab1").onclick();
@@ -441,6 +473,8 @@
 	                document.getElementById("showAprLine").style.display = "none";
 	                document.getElementById("showReceptinfo").style.display = "none";
 	                document.getElementById("showCabinetinfo").style.display = "none";
+	                document.getElementById("showNonElecRecInfo").style.display = "none";
+	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Lineinfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
@@ -449,6 +483,8 @@
 	            }
 	            else if (pIniGubun == "8") { //결재선, 수신자, 결재정보
 	                document.getElementById("showCabinetinfo").style.display = "none";
+	                document.getElementById("showNonElecRecInfo").style.display = "none";
+	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
 	                document.getElementById("1tab1").onclick();
 	                document.getElementById("2tab1").onclick();
@@ -458,6 +494,8 @@
 	                document.getElementById("showDocinfo").style.display = "none";
 	                document.getElementById("showReceptinfo").style.display = "none";
 	                document.getElementById("showCabinetinfo").style.display = "none";
+	                document.getElementById("showNonElecRecInfo").style.display = "none";
+	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
 	                document.getElementById("Docinfo").style.display = "none";
@@ -468,6 +506,8 @@
 	                document.getElementById("showDocinfo").style.display = "none";
 	                document.getElementById("showAprLine").style.display = "none";
 	                document.getElementById("showCabinetinfo").style.display = "none";
+	                document.getElementById("showNonElecRecInfo").style.display = "none";
+	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Lineinfo").style.display = "none";
 	                document.getElementById("Cabinetinfo").style.display = "none";
 	                document.getElementById("Docinfo").style.display = "none";
@@ -477,6 +517,8 @@
 	            }
 	            else if (pIniGubun == "11") { //결재선, 기록물철, 결재정보
 	                document.getElementById("showReceptinfo").style.display = "none";
+	                document.getElementById("showNonElecRecInfo").style.display = "none";
+	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("1tab1").onclick();
 	                document.getElementById("2tab1").onclick();
@@ -484,6 +526,8 @@
 	            else if (pIniGubun == "12") { //기록물철, 결재정보
 	                document.getElementById("showAprLine").style.display = "none";
 	                document.getElementById("showReceptinfo").style.display = "none";
+	                document.getElementById("showNonElecRecInfo").style.display = "none";
+	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Lineinfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("1tab3").onclick();
@@ -493,6 +537,8 @@
 	                document.getElementById("showAprLine").style.display = "none";
 	                document.getElementById("showReceptinfo").style.display = "none";
 	                document.getElementById("showDocinfo").style.display = "none";
+	                document.getElementById("showNonElecRecInfo").style.display = "none";
+	                document.getElementById("NonElecRecInfo").style.display = "none";
 	                document.getElementById("Lineinfo").style.display = "none";
 	                document.getElementById("Receptinfo").style.display = "none";
 	                document.getElementById("Docinfo").style.display = "none";
@@ -502,7 +548,47 @@
 	            if (pHapYuiCount == 0) {
 	                document.getElementById("deptaddbtn").style.display = "none";
 	            }
-
+	            
+	            if (nonElecRec == "Y" && pIniGubun == "1") { // 비전자문서등록 - 문서정보, 기록물정보
+                    document.getElementById("showAprLine").style.display = "none";
+                    document.getElementById("showReceptinfo").style.display = "none";
+                    document.getElementById("showCabinetinfo").style.display = "none";
+                    document.getElementById("showDocinfo").style.display = "";
+                    document.getElementById("showNonElecRecInfo").style.display = "";
+                    document.getElementById("Lineinfo").style.display = "none";
+                    document.getElementById("Receptinfo").style.display = "none";
+                    document.getElementById("Cabinetinfo").style.display = "none";
+                    document.getElementById("Docinfo").style.display = "";
+                    document.getElementById("NonElecRecInfo").style.display = "";
+                    document.getElementById("1tab6").onclick();
+                    ChangeTab(document.getElementById("1tab6"));
+                } else if (nonElecRec == "Y" && pIniGubun == "11") { // 비전자문서등록 - 결재선, 기록물철, 문서정보, 기록물정보
+                	document.getElementById("showAprLine").style.display = "";
+                    document.getElementById("showReceptinfo").style.display = "none";
+                    document.getElementById("showCabinetinfo").style.display = "";
+                    document.getElementById("showDocinfo").style.display = "";
+                    document.getElementById("showNonElecRecInfo").style.display = "";
+                    document.getElementById("Lineinfo").style.display = "";
+                    document.getElementById("Receptinfo").style.display = "none";
+                    document.getElementById("Cabinetinfo").style.display = "";
+                    document.getElementById("Docinfo").style.display = "";
+                    document.getElementById("NonElecRecInfo").style.display = "";
+                    document.getElementById("1tab1").onclick();
+                    ChangeTab(document.getElementById("1tab1"));
+                } else if (nonElecRec == "Y" && pIniGubun == "6") {
+                	document.getElementById("showAprLine").style.display = "";
+                    document.getElementById("showReceptinfo").style.display = "none";
+                    document.getElementById("showCabinetinfo").style.display = "none";
+                    document.getElementById("showDocinfo").style.display = "";
+                    document.getElementById("showNonElecRecInfo").style.display = "";
+                    document.getElementById("Lineinfo").style.display = "";
+                    document.getElementById("Receptinfo").style.display = "none";
+                    document.getElementById("Cabinetinfo").style.display = "none";
+                    document.getElementById("Docinfo").style.display = "";
+                    document.getElementById("NonElecRecInfo").style.display = "";
+                    document.getElementById("1tab1").onclick();
+                    ChangeTab(document.getElementById("1tab1"));
+                }
 	        }
 	
 	        var bool = false;
@@ -510,6 +596,7 @@
 	        var bool3 = false;
 	        var bool4 = false;
 	        var bool5 = false;
+	        var bool6 = false;
 	        // 결재정보 창에서 보이는 탭 이동 관련 함수.
 	        function ChangeTab(obj) {
 	            //DisabledTab();
@@ -521,6 +608,8 @@
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
+	                    document.getElementById("NonElecRecInfo").style.display = "none";
+	                    
 	                    
 	                    if (approvalFlag == "S") {
 		                    document.getElementById("Circulation").style.display = "none";
@@ -535,6 +624,7 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
+	                    document.getElementById("NonElecRecInfo").style.display = "none";
 	                    
 	                    if (approvalFlag == "S") {
 		                    document.getElementById("Circulation").style.display = "none";
@@ -549,6 +639,7 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Docinfo").style.display = "none";
+	                    document.getElementById("NonElecRecInfo").style.display = "none";
 	                    
 	                    if (approvalFlag == "S") {
 		                    document.getElementById("Circulation").style.display = "none";
@@ -572,6 +663,7 @@
 	                    document.getElementById("Lineinfo").style.display = "none";
 	                    document.getElementById("Receptinfo").style.display = "none";
 	                    document.getElementById("Cabinetinfo").style.display = "none";
+	                    document.getElementById("NonElecRecInfo").style.display = "none";
 	                    
 	                    if (approvalFlag == "S") {
 		                    document.getElementById("Circulation").style.display = "none";
@@ -604,6 +696,20 @@
 	                    if (!bool5)
 	                        circulation_ini();
 	                    bool5 = true;
+	                    break;
+	                    
+	                case "NonElecRecInfo":
+	                    document.getElementById("Lineinfo").style.display = "none";
+	                    document.getElementById("Receptinfo").style.display = "none";
+	                    document.getElementById("Cabinetinfo").style.display = "none";
+	                    document.getElementById("Docinfo").style.display = "none";
+	                    
+	                    if (!bool6) {
+	                    	nonElecRecInit();
+	                    }
+	                    setCabInfoInit();
+	                    
+	                    bool6 = true;
 	                    break;
 	            }
 	        }
@@ -791,36 +897,37 @@
 			                
 			                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
 			                    if (hideCabinet == "0") {
-				                    var List = new ListView();
-				                    List.LoadFromID("DivTaskSCateList");
-				
-				                    var MyList = new ListView();
-				                    MyList.LoadFromID("DivMyTaskSCateList");
-				
-				                    var totalRows = List.GetSelectedRows();
-				                    var MyRows = MyList.GetSelectedRows();
-			                    	
-				                    if (totalRows.length == 0 && MyRows.length == 0) {
-				                        OpenAlertUI(Cabinet4);
-				                        document.getElementById("1tab3").onclick();
-				                        return;
-				                    } else {
-				                        if (MyRows.length > 0) {
-				                            if (GetAttribute(MyRows[0], "DATA1") == "") {
-				                                OpenAlertUI(Cabinet4);
-				                                document.getElementById("1tab3").onclick();
-				                                return;
-				                            }
-				                            else
-				                                totalRows = MyRows;
-				                        } else if (totalRows.length > 0) {
-				                            if (GetAttribute(totalRows[0], "DATA1") == "") {
-				                                OpenAlertUI(Cabinet4);
-				                                document.getElementById("1tab3").onclick();
-				                                return;
-				                            }
-				                        }
-				                    }
+			                    	if (nonElecRec != "Y" || pIniGubun == "11") {
+					                    var List = new ListView();
+					                    List.LoadFromID("DivTaskSCateList");
+					
+					                    var MyList = new ListView();
+					                    MyList.LoadFromID("DivMyTaskSCateList");
+					
+					                    var totalRows = List.GetSelectedRows();
+					                    var MyRows = MyList.GetSelectedRows();
+					                    if (totalRows.length == 0 && MyRows.length == 0) {
+					                        OpenAlertUI(Cabinet4);
+					                        document.getElementById("1tab3").onclick();
+					                        return;
+					                    } else {
+					                        if (MyRows.length > 0) {
+					                            if (GetAttribute(MyRows[0], "DATA1") == "") {
+					                                OpenAlertUI(Cabinet4);
+					                                document.getElementById("1tab3").onclick();
+					                                return;
+					                            }
+					                            else
+					                                totalRows = MyRows;
+					                        } else if (totalRows.length > 0) {
+					                            if (GetAttribute(totalRows[0], "DATA1") == "") {
+					                                OpenAlertUI(Cabinet4);
+					                                document.getElementById("1tab3").onclick();
+					                                return;
+					                            }
+					                        }
+					                    }
+			                    	}
 			                    }
 			                }
 
@@ -870,7 +977,7 @@
 		                listview.LoadFromID("lvRECEPTLIST");
 		                var receptRow = listview.GetDataRows();
 		
-		                if (receptRow.length > 0 && receptRow[0].id.indexOf("noItems") == -1) {
+		                if (receptRow.length > 0 && receptRow[0].id.indexOf("noItems") == -1 && pDocType != "002") {
 		                    ret[2] = AprDeptListXML(); //수신자 저장 XML
 		                    ret[3] = MakertnVal(); //문서 매핑 XML
 		                }
@@ -923,6 +1030,7 @@
 		                	ret[11] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pPublicFlag");
 		                	ret[12] = "";
 		                	ret[13] = "";
+		                	ret[21] = "";
 		                }
 	
 		                if (document.getElementById("AprSecurity").checked)
@@ -935,6 +1043,31 @@
 			                    ret[15] = document.getElementById("inputSummaryOuterReceiverList").value;
 			                } else {
 			                    ret[15] = "";
+			                }
+			                
+			                if (nonElecRec == "Y") {
+			                	if (!bool6) {
+			                    	nonElecRecInit();
+			                    }
+			                	
+			                	if (pIniGubun == "11") {
+			                		setCabInfoInit();
+			                	} else if (!CheckInputField()) { // 기록물정보 입력란 유효성 검사
+			                		return;
+			                	}
+			                	
+			                	if (g_SepAttachLVXml != "") {
+			                		if (sepAttachCheckYN != "TRUE" && pIniGubun != "6") {
+			                			OpenAlertUI("분리첨부가 있습니다. 확인해주세요.");
+			                			document.getElementById("1tab6").onclick();
+			    		                return;
+			                		}
+			                	}
+			                	
+			                	ret[23] = getNonElecRecInfo(); // 비전자문서 기본등록사항 + 분리첨부 + 특수목록
+			                	ret[24] = g_SepAttachLVXml; // 분리첨부
+			                	ret[25] = g_szSCListXml; // 특수목록
+			                	ret[26] = sepAttachCheckYN; // 분리첨부 확인여부
 			                }
 		                }
 		
@@ -1463,20 +1596,165 @@
 		            alert("AprGongRamLine_Cross_ChangeReceptTab::" + e.description);
 		        }
 		    }
+		    /*
+			 * 비전자 기록물 정보 유효성 검사		    
+		     */
+		    function CheckInputField() {
+		        var pRegType = selRegisterType.value;
+				if (txtTitle.value == "") {
+		            alert("<spring:message code='ezApprovalG.t955'/>");
+		            return false;
+		        }
+				if (txtRegY.value == "" || txtRegD.value == "" || txtRegM.value == "") {
+		            alert("<spring:message code='ezApprovalG.t1045'/>");
+		            return false;
+		        } else {
+		        	if (!ValidateYearValue(txtRegY.value)) {
+			            alert("<spring:message code='ezApprovalG.t1046'/>");
+			            return false;
+			        }
+			        if (!ValidateNumber(txtRegM.value)) {
+			            alert("<spring:message code='ezApprovalG.t1047'/>");
+			            return false;
+			        }
+			        if (!ValidateNumber(txtRegD.value)) {
+			            alert("<spring:message code='ezApprovalG.t1048'/>");
+			            return false;
+			        }
+			        if (!ValidateNumber(txtRegH.value)) {
+			            alert("<spring:message code='ezApprovalG.t1049'/>");
+			            return false;
+			        }
+			        if (!ValidateNumber(txtRegMi.value)) {
+			            alert("<spring:message code='ezApprovalG.t1050'/>");
+			            return false;
+			        }
+			        if (!ValidateYearValue(txtExeY.value)) {
+			            alert("<spring:message code='ezApprovalG.t1051'/>");
+			            return false;
+			        }
+			        if (!ValidateNumber(txtExeM.value)) {
+			            alert("<spring:message code='ezApprovalG.t1052'/>");
+			            return false;
+			        }
+			        if (!ValidateNumber(txtExeD.value)) {
+			            alert("<spring:message code='ezApprovalG.t1053'/>");
+			            return false;
+			        }
+		        }
+				if (txtDrafter.value == "") {
+		            alert("<spring:message code='ezApprovalG.t1055'/>");
+		            return false;
+		        }
+				if (txtReceiptMember.value == "") {
+	                alert("<spring:message code='ezApprovalG.t1056'/>");
+	                return false;
+	            }
+				
+				if (pRegType == "1" || pRegType == "3") {
+					if (txtAprMemberTitle.value == "") {
+		                alert("<spring:message code='ezApprovalG.t1054'/>");
+		                return false;
+		            }
+				}
+				if (pRegType == "5" || pRegType == "6") {
+					if (txtSummary.value == "") {
+		                alert("<spring:message code='ezApprovalG.t1058'/>");
+		                return false;
+		            }
+		            if (GetAVTypeCode() == "") {
+		                alert("<spring:message code='ezApprovalG.t1059'/>");
+		                return false;
+		            }
+				}
+				if (pRegType == "2" || pRegType == "4" || pRegType == "7" || pRegType == "8") {
+					if (txtOriginSN.value == "") {
+		                alert("<spring:message code='ezApprovalG.t1057'/>");
+		                return false;
+		            }
+				}
+		        return true;
+		    }
+		    
+		    var g_SepAttachLVXml = "";
+		    var inssepattach_cross_dialogArguments = new Array();
+		    function btnAddSepAttach_onclick() {
+		    	if (pIniGubun != "1") {
+		    		setCabInfoInit();
+		    	}
+		        if (g_CabID != "") {
+		            var para = new Array();
+		            para[0] = g_SepAttachLVXml;
+		            para[1] = g_CabID;
+					para[3] = ext;
+					para[4] = nonElecRec;
+					
+					if (pIniGubun == "11") {
+						para[2] = "1";	
+					} else if (pIniGubun == "6") {
+						para[2] = "2";
+					}
+					
+		            var url = "/ezApprovalG/insSepAttach.do";
+
+		            inssepattach_cross_dialogArguments[0] = para;
+		            inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
+
+		            DivPopUpShow(950, 630, url);
+		        }
+		        else
+		        {
+		            OpenAlertUI(Cabinet4);
+                    document.getElementById("1tab3").onclick();
+                    return;
+		            //alert("기록물철을 먼저 선택하여주십시오.");
+		            //btnChangeCabinet_onclick();
+		        }
+		    }
+
+		    var sepAttachCheckYN = "";
+		    function btnAddSepAttach_onclick_Complete(rtn) {
+		        DivPopUpHidden();
+		        if (rtn[0] == "TRUE") {
+			        sepAttachCheckYN = rtn[0];
+		            g_SepAttachLVXml = rtn[1];
+		        }
+		    }
 	    </script>
 	    <style>
 	    	.mainlist_free tr th {text-align:center}
-	    	.mainlist_free tr td {text-align:center}	    	
+	    	.mainlist_free tr td {text-align:center}
+	    	#lvAPRTEMPLIST_TH_0 {text-align:left}
+	    	#lvAPRTEMPLIST td {text-align:left}
+	    	#lvAPRTEMPLIST_TR_noItems td {text-align:center}
+	    	#lvRecSaveList_TH_0 {text-align:left}
+	    	#lvRecSaveList td {text-align:left}
+	    	#lvRecSaveList_TR_noItems td {text-align:center}
+	    	#lvRecSaveListCC_TH_0 {text-align:left}
+	    	#lvRecSaveListCC td {text-align:left}
+	    	#lvRecSaveListCC_TR_noItems td {text-align:center}
+	    	#lvRecGroupList_TH_0 {text-align:left}
+	    	#lvRecGroupList td {text-align:left}
+	    	#lvRecGroupList_TR_noItems td {text-align:center}
+	    	#lvRecGroupDetail_TH_0 {text-align:left}
+	    	#lvRecGroupDetail td {text-align:left}
+	    	#lvRecGroupDetail_TR_noItems td {text-align:center}
 	    </style>
 	</head>
 	<body id="bodytag" class="popup" style="background-color: #ffffff; overflow: hidden">
-	    <h1><spring:message code='ezApprovalG.t1742'/>
-	        <div id="btnArea" style="display:inline;float:right;">
+	    <h1>
+	    	<spring:message code='ezApprovalG.t1742'/>
+	        <div id="btnArea" style="display:none;float:right;">
 	            <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
 	            <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="btn_Close()"><spring:message code='ezApprovalG.t1761'/></span></a>
-	        </div>
+	        </div>	        
 	    </h1>
-	    <div class="portlet_tabpart02">
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
+	    <div class="portlet_tabpart02" style="margin: 5px 0px 15px">
 	        <div class="portlet_tabpart02_top" id="tab1">
 	            <p id="showAprLine"><span divname="Lineinfo" id="1tab1"><spring:message code='ezApprovalG.t1769'/></span></p>
 	            <p id="showReceptinfo"><span divname="Receptinfo" id="1tab2"><c:if test="${approvalFlag eq 'G'}" ><spring:message code='ezApprovalG.t448'/></c:if><c:if test="${approvalFlag  eq 'S'}"><spring:message code='ezApprovalG.t999932'/></c:if></span></p>
@@ -1501,11 +1779,14 @@
 	            <c:if test="${approvalFlag eq 'S' }">
 		            <p id="showHRAprLine"><span divname="Circulation" id="1tab5"><spring:message code='ezApprovalG.hyj06'/></span></p>
 	            </c:if>
+				<c:if test="${approvalFlag eq 'G'}">
+					<p id="showNonElecRecInfo" style="display: none;"><span divname="NonElecRecInfo" id="1tab6">기록물정보</span></p>
+				</c:if>
 	        </div>
 	    </div>
 	    <div id="Approvallist">
 	        <!-- 결재선 -->
-	        <div id="Lineinfo" style="border-bottom: 1px solid #dbdbda; width: 100%; height: 597px;">
+	        <div id="Lineinfo" style="width: 100%; height: 597px;">
 	            <table>
 	                <tr>
 	                    <td style="vertical-align: top">
@@ -1547,17 +1828,17 @@
                                 </c:if>
 	                                <tr>
 	                                <c:if test="${approvalFlag == 'S'}">
-	                                    <td style="background-color: transparent; height: 28px; padding-top: 5px; vertical-align: top;">
-	                                    <input id="textUser" style="width: 150px" name="textUser" onkeypress="return textUser_onkeypress(event)"  maxlength="50">
-	                                        <a class="imgbtn"><span name="btn_searchUser" id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
-	                                        <a class="imgbtn" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a>
+	                                    <td style="background-color: transparent; height: 28px; padding-top: 10px; vertical-align: top;">
+	                                    <input id="textUser" style="width: 150px;height:22px" name="textUser" onkeypress="return textUser_onkeypress(event)"  maxlength="50">
+	                                        <a class="imgbtn imgbck"><span name="btn_searchUser" id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
+	                                        <a class="imgbtn imgbck" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a>
 	                                    </td>
 	                                </c:if>
 	                                <c:if test="${approvalFlag == 'G'}">
 	                                    <td style="background-color: transparent; height: 38px; padding-right: 5px;margin-top: auto;margin-bottom: auto;" >
 	                                    	<input id="textUser" style="width: 150px" name="textUser" onkeypress="return textUser_onkeypress(event)"  maxlength="50">
-	                                    	<a class="imgbtn" style="vertical-align: middle; margin: auto;"><span name="btn_searchUser" id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
-	                                    	<a class="imgbtn" style="vertical-align: middle; margin: auto;" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a>
+	                                    	<a class="imgbtn imgbck" style="vertical-align: middle; margin: auto;"><span name="btn_searchUser" id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
+	                                    	<a class="imgbtn imgbck" style="vertical-align: middle; margin: auto;" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a>
 	                                    </td>
 	                                </c:if>
 	                                </tr>
@@ -1579,9 +1860,9 @@
 	                                        <table class="content" style="margin-bottom: 5px; width: 100%;">
 	                                            <tr>
 	                                                <td style="vertical-align: middle; text-align: center; padding-top: 3px;">
-	                                                    <a class="imgbtn"><span id="btn_DelAprLineTemplet" onclick="return btn_DelAprLineTemplet_onclick()"><spring:message code='ezApprovalG.G0004'/></span></a>
-	                                                    <a class="imgbtn"><span id="Span1" onclick="return btn_ModifyToAprLine_onclick()"><spring:message code='ezApprovalG.G0005'/></span></a>
-	                                                    <a class="imgbtn"><span onclick="return btn_AddToAprLine_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
+	                                                    <a class="imgbtn imgbck"><span id="btn_DelAprLineTemplet" onclick="return btn_DelAprLineTemplet_onclick()"><spring:message code='ezApprovalG.G0004'/></span></a>
+	                                                    <a class="imgbtn imgbck"><span id="Span1" onclick="return btn_ModifyToAprLine_onclick()"><spring:message code='ezApprovalG.G0005'/></span></a>
+	                                                    <a class="imgbtn imgbck"><span onclick="return btn_AddToAprLine_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
 	                                                </td>
 	                                            </tr>
 	                                        </table>
@@ -1615,11 +1896,11 @@
 	                            <tr>
 	                                <td style="vertical-align: top;">
 	                                    <h2 class="h2_dot"><spring:message code='ezApprovalG.t407'/>
-	                                        <div style="text-align: right; margin-top: -20px;">
-	                                            <a class="imgbtn" onclick="AprlineUpper_onclick();"><span>
-	                                                <img src="/images/ImgIcon/prev.gif" height="16" alt="<spring:message code='ezApprovalG.pjj28'/>" style="vertical-align:middle"/></span></a>
-	                                            <a class="imgbtn" onclick="AprlineDown_onclick();"><span>
-	                                                <img src="/images/ImgIcon/next.gif" height="16" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align:middle"/></span></a>
+	                                        <div style="text-align: right; margin-top: -23px;">
+	                                            <a class="imgbtn" onclick="AprlineUpper_onclick();" style="height:22px;box-shadow:0px 2px 0px 0px rgba(0,0,0,0.1)"><span>
+	                                                <img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezApprovalG.pjj28'/>" style="vertical-align:middle"/></span></a>
+	                                            <a class="imgbtn" onclick="AprlineDown_onclick();" style="height:22px;box-shadow:0px 2px 0px 0px rgba(0,0,0,0.1)"><span>
+	                                                <img src="/images/ImgIcon/next.gif" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align:middle"/></span></a>
 	                                        </div>
 	                                    </h2>
 	                                  
@@ -1674,8 +1955,8 @@
 	                                    <a style="margin-top: 8px;" class="imgbtn">
 	                                 </c:if>
 	                                 <c:if test = "${approvalFlag=='S'}">
-	                                 <td style="padding-top: 5px; text-align: right; vertical-align: top;" id="SaveAprLineTemplet">
-	                                 <a class="imgbtn">
+	                                 <td style="padding-top: 10px; text-align: right; vertical-align: top;" id="SaveAprLineTemplet">
+	                                 <a class="imgbtn imgbck">
 	                                 </c:if>
 	                                 <span id="btn_SaveAprLineTemplet" onclick="return btn_SaveAprLineTemplet_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t384'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t270'/></c:if></span></a>
 	                                </td>
@@ -1688,7 +1969,7 @@
 	    </div>
 	
 	    <!-- 수신처 -->
-	    <div id="Receptinfo" style="border-bottom: 1px solid #dbdbda; width: 100%; height: 597px; display: none;">
+	    <div id="Receptinfo" style="width: 100%; height: 597px; display: none;">
 	        <table>
 	            <tr>
 	            	<c:if test= "${approvalFlag eq 'G'}">
@@ -1732,16 +2013,16 @@
                                 </tr>
                                 </c:if>
 	                            <tr>
-	                                <td height="36px;" style="background-color: transparent; margin-top: auto;margin-bottom: auto;">
+	                                <td height="36px;" style="background-color: transparent; padding-top: 10px;vertical-align: top">
 	                                <c:if test="${approvalFlag == 'G'}">
 	                                    <input id="txtDeptName" style="width: 150px;" name="textUser" onkeyup="return btnSearchDept_onKeyPress(event)"  maxlength="50">
 	                                    <a class="imgbtn" style="vertical-align: middle; margin: auto;"><span id="Span2" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
 	                                	<a class="imgbtn" style="vertical-align: middle; margin: auto;" id="AprDeptAdd" onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApprovalG.G0002'/></span></a>
 	                                </c:if>
 	                                <c:if test="${approvalFlag == 'S'}">
-	                                 	<input id="textUser2" style="width: 200px;" name="textUser" onkeypress="return textUser_onkeypress2()" maxlength="50">
-                                        <a class="imgbtn" style="vertical-align: middle"><span name="btn_searchUser" id="Span2" onkeypress="return btn_searchUser_onclick2()" onclick="return btn_searchUser_onclick2()"><spring:message code='ezApproval.t175'/></span></a>
-	                                	<a class="imgbtn" style="vertical-align: middle" id="AprDeptAdd"  onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApproval.t1101'/></span></a>
+	                                 	<input id="textUser2" style="width: 150px;height:22px" name="textUser" onkeypress="return textUser_onkeypress2()" maxlength="50">
+                                        <a class="imgbtn imgbck"><span name="btn_searchUser" id="Span2" onkeypress="return btn_searchUser_onclick2()" onclick="return btn_searchUser_onclick2()"><spring:message code='ezApproval.t175'/></span></a>
+	                                	<a class="imgbtn imgbck" id="AprDeptAdd"  onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApproval.t1101'/></span></a>
 	                                </c:if>
 	                                </td>
 	                            </tr>
@@ -1782,9 +2063,9 @@
 	                                    <table class="content" style="margin-bottom: 5px; width: 100%;">
 	                                        <tr>
 	                                            <td style="text-align: center; padding-top: 3px">
-	                                                <a class="imgbtn"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t252'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t219'/></c:if></span></a>
-	                                                <a class="imgbtn"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.G0006'/></c:if></span></a>
-	                                                <a class="imgbtn"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
+	                                                <a class="imgbtn imgbck"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t252'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t219'/></c:if></span></a>
+	                                                <a class="imgbtn imgbck"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.G0006'/></c:if></span></a>
+	                                                <a class="imgbtn imgbck"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
 	                                            </td>
 	                                        </tr>
 	                                    </table>
@@ -1816,7 +2097,7 @@
 	                                    <table class="content" style="margin-bottom: 5px; width: 100%">
 	                                        <tr>
 	                                            <td style="text-align: center; padding-top: 3px">
-	                                                <a class="imgbtn"><span onclick="return btn_GroupReceptAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.G0008'/></span></a>
+	                                                <a class="imgbtn imgbck"><span onclick="return btn_GroupReceptAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.G0008'/></span></a>
 	                                            </td>
 	                                        </tr>
 	                                    </table>
@@ -1857,7 +2138,7 @@
 	                                    </div>
 	                                </c:if>
 	                                <c:if test="${approvalFlag == 'S'}">
-	                                    <div id="RECEPTLIST" style="Width: 710px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                    <div id="RECEPTLIST" style="Width: 716px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
                                         </div>
                                     </c:if>
 	                                </div>
@@ -1880,7 +2161,7 @@
 	                                <a style="margin-top: 8px; display: none;" class="imgbtn" id="btnaddressChange" ><span onclick="return btnaddressChange()" ><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a>
 	                            </td>
 	                            <td style="text-align:right">
-	                                <a class="imgbtn" style="margin-top:8px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
+	                                <a class="imgbtn imgbck" style="margin-top:10px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
 	                            </td>
 	                        </tr>
 	                    </table>
@@ -1914,8 +2195,8 @@
 		                                        	</c:if>
 		                                        </span>
 		                                <span id="trCreateCabDummy" style="display: none"></span>
-		                                <span  style="vertical-align: middle; margin-left: 240px;">
-		                                    <select id="selSearchOption" style="vertical-align: none;">
+		                                <span  style="vertical-align: middle; margin-left: 247px;">
+		                                    <select id="selSearchOption" style="vertical-align: none;height:24px">
 		                                        <option>
 		                                            <spring:message code='ezApprovalG.t10026'/>
 		                                        </option>
@@ -1963,13 +2244,13 @@
 	                <tr>
 	                    <td style="border: 0px solid red; height: 580px; width: 971px; vertical-align: top">
 	                        <table style="width: 100%">
-	                            <tr style="height:30px">
+	                            <tr style="height:33px">
 	                                <td>
 	                                    <h2 class="h2_dot"><spring:message code='ezApproval.t335'/></h2>
 	                                </td>
 	                                <td>
 	                                    <span style="float: right;">
-	                                        <select id="selSearchOption" style="vertical-align: middle;">
+	                                        <select id="selSearchOption" style="vertical-align: middle;height:22px">
 	                                            <option id="ITEMNAME">
 	                                                <spring:message code='ezApproval.t79'/>
 	                                            </option>
@@ -1977,9 +2258,13 @@
 	                                                <spring:message code='ezApprovalG.t114'/>
 	                                            </option>
 	                                        </select>
-	                                        <input type="text" id="txtCodeSearch" onkeypress="CodeSearch_Press(event)" />
-	                                        <a class="imgbtn" onclick="return CodeSearch_onclick()"><span name="btnSearch"><spring:message code='ezApproval.t236'/></span></a>
-	                                        <a class="imgbtn"><span name="btnSearch" onclick="Draftinfo_reload()"><spring:message code='ezApproval.t1042'/></span></a>
+	                                        <input type="text" style="height:22px" id="txtCodeSearch" onkeypress="CodeSearch_Press(event)" />
+	                                        <a class="imgbtn imgbck" onclick="return CodeSearch_onclick()">
+	                                        	<span style="height:22px;line-height:22px" name="btnSearch"><spring:message code='ezApproval.t236'/></span>
+	                                        </a>
+	                                        <a class="imgbtn imgbck">
+	                                        	<span style="height:22px;line-height:22px" name="btnSearch" onclick="Draftinfo_reload()"><spring:message code='ezApproval.t1042'/></span>
+	                                        </a>
 	                                    </span>
 	                                </td>
 	                            </tr>
@@ -2002,17 +2287,17 @@
 					                    <td>
 					                       <h2 class="h2_dot"><spring:message code='ezApproval.t1100'/></h2>
 					                    </td>
-					                    <td style="padding-top:5px;">
+					                    <td style="padding-top:10px;padding-bottom:5px">
 					                        <div align="right">
-					                            <a class="imgbtn"><span style="text-align: center;" onclick="btnAddCode_onclick()"><spring:message code='ezApproval.t00001'/></span></a>
-					                            <a class="imgbtn"><span style="text-align: center;" onclick="btnDelCode_onclick()"><spring:message code='ezApproval.t00002'/></span></a>
+					                            <a class="imgbtn imgbck"><span style="text-align: center;" onclick="btnAddCode_onclick()"><spring:message code='ezApproval.t00001'/></span></a>
+					                            <a class="imgbtn imgbck"><span style="text-align: center;" onclick="btnDelCode_onclick()"><spring:message code='ezApproval.t00002'/></span></a>
 					                        </div>
 					                    </td>
 					                </tr>
 					                <tr>
 					                    <td colspan="2">
 					                        <div class="border_gray">
-					                            <div id="infofrequencylist" style="border: 0px; HEIGHT: 160px; WIDTH: 1108px; overflow-x: hidden; overflow-y: auto; margin: 1px 1px 1px 1px; padding-top: 0px;"></div>
+					                            <div id="infofrequencylist" style="border: 0px; HEIGHT: 155px; WIDTH: 1108px; overflow-x: hidden; overflow-y: auto; margin: 1px 1px 1px 1px; padding-top: 0px;"></div>
 					                        </div>
 					                    </td>
 					                </tr>
@@ -2116,22 +2401,24 @@
 		                <td>
 		                    <div style="padding-left: 3px; padding-bottom: 5px;">
 		                    	<div style="padding-left: 3px; padding-top: 5px;">
-			                        <input id="rdoSecType2Y" type="radio" name="rdoSecType2" value="Y" checked onclick="return rdoSecType2_onclick(this.value)" style="height: 13px; width: 13px; padding-top: 5px; padding-bottom: 5px; margin: 0px; vertical-align: top;"><label for="rdoSecType2Y"><span><spring:message code='ezApprovalG.t47'/> (<spring:message code='ezApproval.t2000'/>)</span></label>
+<%-- 			                        <input id="rdoSecType2Y" type="radio" name="rdoSecType2" value="Y" checked onclick="return rdoSecType2_onclick(this.value)" style="height: 13px; width: 13px; padding-top: 5px; padding-bottom: 5px; margin: 0px; vertical-align: top;"><label for="rdoSecType2Y"><span><spring:message code='ezApprovalG.t47'/> (<spring:message code='ezApproval.t2000'/>)</span></label> --%>
+			                        <input id="rdoSecType2Y" type="radio" name="rdoSecType2" value="Y" checked style="height: 13px; width: 13px; padding-top: 5px; padding-bottom: 5px; margin: 0px; vertical-align: top;"><label for="rdoSecType2Y"><span><spring:message code='ezApprovalG.t47'/> (<spring:message code='ezApproval.t2000'/>)</span></label>
 		                    	</div>
 		                    	<div style="padding-left: 3px; padding-top: 5px;">
-			                        <input id="rdoSecType2N" type="radio" name="rdoSecType2" value="N" onclick="return rdoSecType2_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><label for="rdoSecType2N"><span><spring:message code='ezApprovalG.t46'/> (<spring:message code='ezApproval.t2001'/>)</span></label>
+<%-- 			                        <input id="rdoSecType2N" type="radio" name="rdoSecType2" value="N" onclick="return rdoSecType2_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><label for="rdoSecType2N"><span><spring:message code='ezApprovalG.t46'/> (<spring:message code='ezApproval.t2001'/>)</span></label> --%>
+			                        <input id="rdoSecType2N" type="radio" name="rdoSecType2" value="N" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><label for="rdoSecType2N"><span><spring:message code='ezApprovalG.t46'/> (<spring:message code='ezApproval.t2001'/>)</span></label>
 		                    	</div>
 		                    </div>
 		                </td>
 		           </tr>
 		        </table>
-		        <h2 style="margin-left: 5px;"><spring:message code='ezApprovalG.t1203'/></h2>
+		        <h2 class="h2_dot" style="margin-left: 5px;"><spring:message code='ezApprovalG.t1203'/></h2>
 		        <textarea id="taSummery" name="taSummery" style="HEIGHT: 170px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin-left:3px;"></textarea>
 		    </div>
 	    </c:if>
 	    
 	    <c:if test="${approvalFlag eq 'S' }">
-	    	<div id="Docinfo" style="width: 1110px; height: 597px; display: none;">
+	    	<div id="Docinfo" style="width: 1110px; height: 594px; display: none; padding-top:3px">
         		<td style="border: 0px solid red; height: 580px; width: 390px; margin-left: 5px; vertical-align: top">
 		            <h2 class="h2_dot"><spring:message code='ezApproval.t334'/></h2>
 		            <table class="content" style="margin-top:4px">
@@ -2148,7 +2435,7 @@
 		                                    <input type="hidden" id="tbItemName2" />
 		                                </td>
 		                                <td>
-		                                    <a class="imgbtn" id="btndocinfo"><span id="btndocinfo2" onclick="movedraftinfo()"><spring:message code='ezApproval.t335'/><spring:message code='ezApproval.t321'/></span></a>
+		                                    <a class="imgbtn imgbck" id="btndocinfo"><span id="btndocinfo2" onclick="movedraftinfo()"><spring:message code='ezApproval.t335'/><spring:message code='ezApproval.t321'/></span></a>
 		                                </td>
 		                            </tr>
 		                        </table>                                                
@@ -2212,7 +2499,7 @@
 		                	<th><spring:message code='ezApproval.t339'/></th>
 		                    <td>		                    	
 		                        <!-- <div class="nobox"> -->
-		                            <textarea id="taSummery" name="taSummery" style="HEIGHT: 337px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin: 2px 2px 2px 2px"></textarea>
+		                            <textarea id="taSummery" name="taSummery" style="HEIGHT: 370px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin: 2px 2px 2px 2px"></textarea>
 		                        <!-- </div> -->
 		                    </td>
 		                </tr>
@@ -2222,7 +2509,7 @@
 	    </c:if>
 	    <c:if test="${approvalFlag eq 'S' }">
 <!-- 	    회람 -->
-	    	<div id="Circulation" style="border-bottom: 1px solid #dbdbda; width: 1110px; height: 597px; display: none;">
+	    	<div id="Circulation" style="width: 1110px; height: 597px; display: none;">
         		<table>
 			        <tr>
 			            <td style="vertical-align: top">
@@ -2250,11 +2537,11 @@
                                     </td>
                                 	</tr>
 			                    	<tr>
-	                                    <td style="background-color: transparent; height: 28px;">
-	                                        <input id="textUserCC" style="width: 150px" name="textUserCC" onkeypress="return textUserCC_onkeypress(event)"  maxlength="50">
-	                                        <a class="imgbtn"><span name="btn_searchUserCC" id="btn_searchUserCC" onkeypress="return btn_searchUserCC_onclick()" onclick="return btn_searchUserCC_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
+	                                    <td style="background-color: transparent; height: 28px; padding-top:10px; vertical-align: top">
+	                                        <input id="textUserCC" style="width: 150px;height:22px" name="textUserCC" onkeypress="return textUserCC_onkeypress(event)"  maxlength="50">
+	                                        <a class="imgbtn imgbck"><span name="btn_searchUserCC" id="btn_searchUserCC" onkeypress="return btn_searchUserCC_onclick()" onclick="return btn_searchUserCC_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
 											<!-- 부서추가 -->
-											<a class="imgbtn" style="vertical-align: middle;"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.t1101'/></span></a>
+											<a class="imgbtn imgbck"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.t1101'/></span></a>
 	                                    </td>
 	                                </tr>
 			                    </table>
@@ -2276,9 +2563,9 @@
 			                                <table class="content" style="margin-bottom: 5px; width: 100%; ">
 			                                    <tr>
 			                                        <td style="text-align: center;">
-			                                            <a class="imgbtn"><span id="Span3" onclick="return btn_AprDeptTempletDelCC_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
-			                                            <a class="imgbtn"><span id="Span4" onclick="return btn_AprDeptTempletSaveCC_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
-			                                            <a class="imgbtn"><span onclick="return btn_AprDeptTempletAddCC_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
+			                                            <a class="imgbtn imgbck"><span id="Span3" onclick="return btn_AprDeptTempletDelCC_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
+			                                            <a class="imgbtn imgbck"><span id="Span4" onclick="return btn_AprDeptTempletSaveCC_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
+			                                            <a class="imgbtn imgbck"><span onclick="return btn_AprDeptTempletAddCC_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
 			                                        </td>
 			                                    </tr>
 			                                </table>
@@ -2308,21 +2595,214 @@
                               	</div>
                             </div>
 			                <div style="text-align: right;">
-			                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSaveCC_onclick('NEW')"><spring:message code='ezApprovalG.hyj07'/> </span></a>
+			                    <a class="imgbtn imgbck" style="padding-right: 5px; margin-top: 10px;"><span id="Span5" onclick="return btn_AprDeptTempletSaveCC_onclick('NEW')"><spring:message code='ezApprovalG.hyj07'/> </span></a>
 			                </div>
 			            </td>
 			        </tr>
 			    </table>
 		    </div>
 	    </c:if>
-	    
+	    <c:if test="${approvalFlag eq 'G' }">
+			<!-- 비전자문서 정보 -->
+			<div id="NonElecRecInfo" style="width: 100%; height: 597px; display: none;">
+				<c:if test="${guBun eq '6'}">
+				<h2 class="h2_dot"><spring:message code='ezApprovalG.t1018'/></h2><!-- 기록물철 정보 -->
+				<table style="width:100%" class="content">
+					<tr>
+        				<th><spring:message code='ezApprovalG.t1063'/></th><!-- 기록물철 이름 -->
+						<td style="padding-right:15px;white-space:nowrap">
+							<table style="width:100%">
+            					<tr>
+            						<td id="tdCabinetName">&nbsp;</td>
+            					</tr>
+     						</table>
+						</td>
+						<th><spring:message code='ezApprovalG.t572'/></th><!-- 연번 -->
+						<td id="tdCabinetSN" style="padding-right:15px;width:300px;white-space:nowrap">&nbsp;</td>
+					</tr>
+					<tr>
+	        			<th><spring:message code='ezApprovalG.t1065'/></th><!-- 형태 -->
+						<td id="tdCabinetType" style="padding-right:15px;white-space:nowrap">&nbsp;</td>
+						<th><spring:message code='ezApprovalG.t573'/></th><!-- 권호수 -->
+						<td id="tdCabinetVolNo" style="padding-right:15px;white-space:nowrap">&nbsp;</td>
+            		</tr>
+	        	</table>
+	        	</c:if>
+				<table style="width: 100%;">
+					<tr>
+	        			<td>
+            				<h2 class="h2_dot"><spring:message code='ezApprovalG.t1066'/></h2><!-- 기록물 기본등록사항 -->
+							<table style="width: 100%;" id="tblBasicInfo" class="content">
+								<tr>
+	        						<th><spring:message code='ezApprovalG.t859'/></th><!-- 등록구분 -->
+									<td>
+	        							<select id="selRegisterType" style="width:150px" onChange="return selRegisterType_onchange()" name="select"></select>
+	        						</td>
+								</tr>
+								<tr>
+									<th><spring:message code='ezApprovalG.t1067'/></th><!-- 기록물 제목 -->
+									<td>
+	        							<input type="text" name="txtTitle" id="txtTitle" class="text" style="Width:100%;">
+	        						</td>
+								</tr>
+								<tr>
+	        						<th><spring:message code='ezApprovalG.t831'/></th><!-- 등록일자 -->
+									<td>
+								        <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regY}" name="txtRegY" id="txtRegY" maxlength = "4" size="4">
+							            <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t456'/></span>
+							            <input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" value="${regM}" name="txtRegM"  id="txtRegM" maxlength = "2" size="2">
+							            <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
+							            <input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" value="${regD}" name="txtRegD"  id="txtRegD" maxlength = "2" size="2">
+							            <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span>
+							            <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regH}" name="txtRegH"  id="txtRegH" maxlength = "2" size="2">
+							            <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t977'/></span>
+							            <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regMi}"  name="txtRegMi"  id="txtRegMi" maxlength = "2" size="2">
+							            <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t1068'/></span>
+							        </td>
+								</tr>
+								<tr style="display: none;">
+									<th><spring:message code='ezApprovalG.t979'/></th><!-- 쪽수 -->
+									<td>
+	        							<input type="text" name="txtTotalPage" id="txtTotalPage" class="text" style="Width:60px;padding:0px;margin:0px;">&nbsp;
+										<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t980'/></span>
+	        						</td>
+								</tr>
+								<tr id="trAprMemberTitle">
+	        						<th><spring:message code='ezApprovalG.t862'/></th><!-- 결재권자 -->
+									<td>
+	        							<input type="text" name="txtAprMemberTitle" id="txtAprMemberTitle" class="text" style="Width:100%;">
+	        						</td>
+								</tr>
+								<tr>
+	        						<th><spring:message code='ezApprovalG.t445'/></th><!-- 기안자 -->
+									<td>
+	        							<input type="text" name="txtDrafter" id="txtDrafter" class="text" style="Width:100%;">
+		    						</td>
+								</tr>
+								<tr>
+            						<th><spring:message code='ezApprovalG.t863'/></th><!-- 시행일자 -->
+  	    							<td>
+										<input type="text" class="text" style="Width:40px;height:16px;padding:0px;margin:0px;" name="txtExeY" id="txtExeY" maxlength = "4">
+										<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t456'/></span>
+										<input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" name="txtExeM"  id="txtExeM" maxlength = "2">
+										<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
+										<input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" name="txtExeD"  id="txtExeD" maxlength = "2">
+										<span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span>
+            						</td>
+	        					</tr>
+	       						<tr>
+									<th >발신기관명</th><!--발신기관명-->
+									<td>
+							        	<input type="text" name="txtReceiptMember" id="txtReceiptMember" class="text" style="Width:100%;">
+							        </td>
+								</tr>
+								<tr id="trDeliveryNo" style="display: none;">
+						 	        <th><spring:message code='ezApprovalG.t1069'/></th><!-- 문서과 배부번호 -->
+									<td>
+							       		<input type="text" name="txtDeliveryNo" id="txtDeliveryNo" class="text" style="Width:100%;" maxlength="5">
+								    </td>
+								</tr>
+								<tr id="trOriginSN" style="display: none;">
+								    <th>문서번호</th><!-- 문서번호 -->
+									<td>
+							        	<input type="text" name="txtOriginSN" id="txtOriginSN" class="text" style="Width:100%;" maxlength="9">
+								    </td>
+								</tr>
+								<c:if test="${guBun ne '1'}">
+									<tr>
+									    <th><spring:message code='ezApprovalG.t94'/></th><!-- 특수목록 -->
+										<td>
+								        	<table border="0" style="width:100%;border-collapse:collapse; border-spacing:0;padding:0px;" >
+								       			<tr>
+								               		<td id="tdSpecialFlag">&nbsp;</td>
+								               		<td style="width:70px">
+								                       <img src="/images/btn_add.gif" style="display:none;cursor:pointer;vertical-align:middle" id="btnAddSC" name="btnAddSC" onClick="return btnAddSpecialCatalog_onclick()" width="39" height="20">
+						                            </td>
+							                    </tr>
+								            </table>
+								    	</td>
+									</tr>
+								</c:if>
+								<tr>
+								    <th><spring:message code='ezApprovalG.t868'/></th><!-- 전자기록물여부 -->
+									<td style="text-align:left">
+										<input type="radio" name="rdoElectronicFlag" value="1" style="height:13px;width:13px;padding:0px;margin:0px;vertical-align:top; display: none;" disabled="disabled">
+										<%-- <span><spring:message code='ezApprovalG.t981'/></span> --%>
+										<input type="radio" name="rdoElectronicFlag" style="height:13px;width:13px;padding:0px;margin:0px;" value="2" checked>
+										<span><spring:message code='ezApprovalG.t1070'/></span>
+								    </td>
+								</tr>
+								<tr>
+								    <th><spring:message code='ezApprovalG.t58'/></th><!-- 분리첨부 -->
+									<td>
+								        <a class="imgbtn">
+						     	           <span id="btnAddSepAttach" onClick="return btnAddSepAttach_onclick()" style="" >
+						     	           <c:choose>
+						     	           		<c:when test="${guBun eq '1'}">
+							     	           		<spring:message code='ezApprovalG.t949'/>
+						     	           		</c:when>
+						     	           		<c:otherwise>
+						     	           			<spring:message code='ezPersonal.jjs01'/>
+						     	           		</c:otherwise>
+						     	           </c:choose>
+						     	           </span>
+				                        </a>
+					                </td>
+				                </tr>
+			        		</table>
+			        		<div id="divAudioVisualDummy" style="display:none"></div>
+			        		<div id="divAudioVisual" style="display: none">
+			        			<h2 class="h2_dot"><spring:message code='ezApprovalG.t1074'/></h2><!-- 시청각 기록물 추가등록 사항 -->
+			        			<table style="width:100%;" class="content">
+									<tr>
+				        				<th><spring:message code='ezApprovalG.t1075'/></th>
+										<td>
+				        					<TextArea style="width:99%; height:60px" id=txtSummary name=txtSummary></TextArea>
+				        				</td>
+									</tr>
+									<tr>
+				        				<th><spring:message code='ezApprovalG.t826'/></th>
+										<td>
+				        					<div id=tdAVType style="overflow:auto;"></div>
+											<div id="lstAttachLink" style="display: none;"></div>
+	                                    </td>
+	                        	    </tr>
+			                    </table>
+			        		</div>
+						</td>
+						<%-- <td>
+			        		<div id="divAudioVisualDummy" style="display:none"></div>
+							<div id="divAudioVisual" style="display: none">
+								<h2><spring:message code='ezApprovalG.t1074'/></h2><!-- 시청각 기록물 추가등록 사항 -->
+								<table style="width:100%; margin-left:5px;" class="content">
+									<tr>
+				        				<th><spring:message code='ezApprovalG.t1075'/></th>
+										<td>
+				        					<TextArea style="width:98%; height:180px" id=txtSummary name=txtSummary></TextArea>
+				        				</td>
+									</tr>
+									<tr>
+				        				<th><spring:message code='ezApprovalG.t826'/></th>
+										<td>
+				        					<div id=tdAVType style="overflow:auto;"></div>
+											<div id="lstAttachLink" style="display: none;"></div>
+	                                    </td>
+	                        	    </tr>
+			                    </table>
+		                    </div>
+	                    </td> --%>
+		            </tr>
+			    </table>
+			</div>
+		</c:if>
 	    <br />
 	    <div style="text-align: center;" id="orgbtnArea">
-	        <table style="width: 1110px">
+	        <table style="width: 100%">
 	            <tr>
 	                <td style="text-align: center;">
-	                    <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
-	                    <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="btn_Close()"><spring:message code='ezApprovalG.t1761'/></span></a>
+	                	<div class="btnpositionNew">
+	                    	<a class="imgbtn"><span style="text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
+	                    </div>	
 	                </td>
 	            </tr>
 	        </table>

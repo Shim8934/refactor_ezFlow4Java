@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css" />
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<style>
 	    	.mainlist tr td:first-child {
@@ -132,32 +132,56 @@
 	            	tempDeptID = DeptID;
 		        }
 
-	        	 $.ajax({
-	  					url : '/ezOrgan/getDeptMemberList.do',
-	  					method : 'POST',
-	  					dataType : "text",
-	  					data : {
-	  						deptID : tempDeptID ,
-	  						cell : "company;description;displayName;title;telephoneNumber",
-	  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
-	  						page : CurPage ,
-	  						type : "user"
-	  					} ,
-	      				success : function(xml) {
-	 		                event_displayUserList(loadXMLString(xml));
-	 		                
-	 		                //2016-10-17 자바스크립트 실행순서때문에 자꾸 getDeptMemberList.do리스트가 나중에 나와서 window.onload 밑에있던부분 이쪽으로 위치 이동
-	 		               	if (strSearch != "") {
-	 			            	document.getElementById('keyword').value = strSearch;
-	 							search_click("search"); 
-	 							strSearch = "";
-	 		              	}
-	  					},
-	  					error : function(jqXHR, textStatus, errorThrown) {
-	  						alert(error);
-	  					}
-	  				});   
-	        	 
+	        	$.ajax({
+	  				url : '/ezOrgan/getDeptMemberList.do',
+	  				method : 'POST',
+	  				dataType : "text",
+	  				data : {
+	  					deptID : tempDeptID ,
+	  					cell : "company;description;displayName;title;telephoneNumber",
+	  					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+	  					page : CurPage ,
+	  					type : "user"
+	  				} ,
+	      			success : function(xml) {
+						event_displayUserList(loadXMLString(xml));
+	 		               
+	 		            //2016-10-17 자바스크립트 실행순서때문에 자꾸 getDeptMemberList.do리스트가 나중에 나와서 window.onload 밑에있던부분 이쪽으로 위치 이동
+	 		            if (strSearch != "") {
+	 			           	document.getElementById('keyword').value = strSearch;
+	 						search_click("search"); 
+	 						strSearch = "";
+	 		            }
+	  				},
+	  				error : function(jqXHR, textStatus, errorThrown) {
+	  					alert(error);
+	  				}
+	  			});
+	        	
+				$.ajax({
+					url : "/ezOrgan/getDeptMemberListCount.do",
+					method : "POST",
+					dataType : "json",
+					data : {
+						deptID : tempDeptID
+					},
+					success : function(result) {
+						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
+						
+						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
+			        		if (result.totalCount == result.totalCount2) {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]";
+			        		} else {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang1 + "</span>]";
+			        		}
+			            	
+			            	SelectDeptNM.setAttribute("countinfo","1")
+			        	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(error);
+					}
+				});
 	    	}
 	    	
 	     	function event_displayUserList(xml) {
@@ -169,7 +193,7 @@
                 	makePageSelPage();
 		        } 
 		    } 
-		    var m_strColorSelect = "#f0f6ff";
+		    var m_strColorSelect = "#edf4fd";
 	    	var m_strColorOver = "#f4f5f5";
 	    	var m_strColorDefault = "#ffffff";
 	    	var p_ListOrderObject = null;
@@ -235,10 +259,15 @@
 	        	}
 	        	var UserListHTML = "";
 	        	
-	        	if (SelectDeptNM.getAttribute("countinfo") != "1") {
-	            	SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
+	        	/* if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
+	        		if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
+	        		} else {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang1 + "</span>]";
+	        		}
+	            	
 	            	SelectDeptNM.setAttribute("countinfo","1")
-	        	}
+	        	} */
 	        	
 	        	if (pListType == "IMG") {
 	            	document.getElementById("DeptUserImgList").style.display = "";
@@ -700,22 +729,22 @@
 		        PagingHTML += strtext;
 	        	var pageNum = CurPage;
 	        	if (totalPage > 1 && pageNum != 1) {
-	            	strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+	            	strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
 	            	PagingHTML += strtext;
 	        	} else {
-	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	if (totalPage > BlockSize) {	
 		            if (pageNum > BlockSize) {
-	                	strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+	                	strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 		                PagingHTML += strtext;
 		            } else {
-	                	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+	                	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 	                	PagingHTML += strtext;
 	            	}
 	        	} else {
-	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	var MaxNum;
@@ -735,26 +764,29 @@
 	                	PagingHTML += strtext;
 	            	}
 	        	}
+	        	if (MaxNum == 0) {
+                	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+                }
 	        	if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-	                	strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-	                	strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+	                	strtext = "";
+	                	strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 	                	PagingHTML += strtext;
 	            	} else {
-	                	strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-	                	strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                	strtext = "";
+	                	strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 	                	PagingHTML += strtext;
 	            	}
 	        	} else {
-	            	strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-	            	strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	            	strtext = "";
+	            	strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	            	strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+	            	strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 	            	PagingHTML += strtext;
 	        	} else {
-	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+	            	strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 	            	PagingHTML += strtext;
 	        	}
 	        	PagingHTML += "</div>";
@@ -862,12 +894,11 @@
   			</div>
   			<div id="close">
     			<ul>
-      				<li><span onClick="window.close()"><spring:message code='ezPersonal.t10'/></span></li>
+      				<li><span onClick="window.close()"></span></li>
     			</ul>
   			</div>
   			<script type="text/javascript" >
       			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-      			selToggleList(document.getElementById("close"), "ul", "li", "0");
   			</script>
   			<div style="width: 730px;">
         	<div class="portlet_tabpart03" style="background-color:#f8f8fa; border: 1px solid #dedede; border-bottom: 0px; padding-top: 6px;">
@@ -920,7 +951,7 @@
                   			</th>
               			</tr>              
           			</table>
-          			<div style="vertical-align:top;height:390px;overflow:auto;width:425px;" id="txtlist_Layer">   
+          			<div style="vertical-align:top;height:375px;overflow:auto;width:425px;" id="txtlist_Layer">   
           				<table style="width:100%;border:1px solid #ddd;display:none;" id="txtlist_table" class="mainlist" > 
               				<tr>
                   				<td style="width:150px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
@@ -937,7 +968,7 @@
               				</tr>
           				</table>
           			</div>
-		  			<div style="vertical-align:top;text-align:center;height:390px;overflow:auto;display:none;width:425px;" id="DeptUserImgList"></div>
+		  			<div style="vertical-align:top;text-align:center;height:375px;overflow:auto;display:none;width:425px;" id="DeptUserImgList"></div>
           			<div id="tblPageRayer" style="text-align:center;"></div>
     			</tr>
     			<tr>

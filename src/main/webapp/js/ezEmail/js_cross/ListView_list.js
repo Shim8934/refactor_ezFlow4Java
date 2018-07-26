@@ -1,8 +1,8 @@
 ﻿﻿var PressCtrlKey = false;
 var PressShiftKey = false;
-var m_strColorSelect =  "#f0f6ff";
+var m_strColorSelect =  "#edf4fd";
 var m_strColorDefault =  "#FFFFFF";
-var m_strColorOver = "#F7FAE0";
+var m_strColorOver = "#f4f5f5";
 var m_UrgentColor = "#E9101A";
 var HeaerCnt = 0;
 
@@ -1452,6 +1452,8 @@ function ListView() {
 
 //ROW 선택 함수
 function tr_select(pRowID, pTableID, callbackFunc) {
+	
+	pTableID = document.getElementById(pRowID).parentNode.parentNode.id;
 
     var oList = document.getElementById(pTableID);
     if (!oList)
@@ -1507,7 +1509,7 @@ function tr_unselectedAll(pTableID) {
     for (var i = 0; i < oList.rows.length; i++) {
 
         var strID ;
-       if(oList.rows[i].id.indexOf(pTableID)>-1)
+       //if(oList.rows[i].id.indexOf(pTableID)>-1)
         strID = oList.rows[i].id;
         var objTr = document.getElementById(strID);
 
@@ -1523,19 +1525,31 @@ function tr_unselectedAll(pTableID) {
 //컨트롤 혹은 쉬프트 키를 이용한 멀티 선택 함수
 function tr_selectBlock(pRowID, pTableID) {
     var oList = document.getElementById(pTableID);
+    var moveReceive = false;
     if (!oList)
         return;
 
     var lastSelectedRowID = GetAttribute(oList, "lastSelectedRowID");
 
     tr_unselectedAll(pTableID);
+    
+    if (pTableID == 'MsgToList' || pTableID == 'MsgCCList' || pTableID == 'MsgBCCList') {
+    	moveReceive = true;
+    }
 
     var lastSelectedIndex = "0";
-    if (lastSelectedRowID != "")
-        lastSelectedIndex = lastSelectedRowID.substring(lastSelectedRowID.lastIndexOf("_") + 1);
-
-    var currentSelectedIndex = pRowID.substring(pRowID.lastIndexOf("_") + 1);
-
+    var currentSelectedIndex = "0";
+    
+    if (lastSelectedRowID != "") {
+    	if (moveReceive == true) {
+    		lastSelectedIndex = $("#" + pTableID + " tr").index($("#" + lastSelectedRowID));
+    		currentSelectedIndex = $("#" + pTableID + " tr").index($("#" + pRowID));
+    	} else {
+    		lastSelectedIndex = lastSelectedRowID.substring(lastSelectedRowID.lastIndexOf("_") + 1);
+    		currentSelectedIndex = pRowID.substring(pRowID.lastIndexOf("_") + 1);
+    	}
+    }
+    
     var currentIdx = 0;
     var lastIdx = 0;
 
@@ -1549,8 +1563,13 @@ function tr_selectBlock(pRowID, pTableID) {
     }
 
     for (var i = currentIdx; i <= lastIdx; i++) {
-        var strID = pTableID + "_TR_" + i;
-        var objTr = document.getElementById(strID);
+        if (moveReceive) {
+    		var objTr = $("#" + pTableID + " tr:eq(" + i + ")")[0];
+    	} else {
+    		var strID = pTableID + "_TR_" + i;
+    		var objTr = document.getElementById(strID);
+    	}
+    	
 
         if (objTr) {
             objTr.setAttribute("selected", true);

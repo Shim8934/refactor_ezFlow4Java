@@ -11,7 +11,7 @@
 	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 	    <style>
 	    	.tree div div{
-	    		margin-bottom:5px;
+	    		margin-bottom:0px;
 	    	}
 	    </style>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
@@ -434,7 +434,7 @@
 	    <h1>${title}</h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="Window_close();"><spring:message code='ezAddress.t5' /></span></li>
+	            <li><span onclick="Window_close();"></span></li>
 	        </ul>
 	    </div>
 	    <table class="content" style="width: 100%;">
@@ -447,7 +447,7 @@
 	    <xml id="AddressFolderXML" style="display: none;">
 			${rootAddressXML}
 		</xml>
-		<div class="btnbtn">
+		<div class="btnposition btnpositionNew">
 		    <c:choose>
 		    	<c:when test="${show == 'Y'}">
 		    		<a class="imgbtn"><span onclick="select_onclick()"><spring:message code='ezAddress.t25' /></span></a>

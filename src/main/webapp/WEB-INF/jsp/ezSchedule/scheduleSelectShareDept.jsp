@@ -8,7 +8,7 @@
 		<title><spring:message code='ezSchedule.t1004' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	    <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />	    
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css" />	    
 	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -130,7 +130,12 @@
 		</script>
 	</head>
 	<body class="popup">
-	    <h1><spring:message code='ezSchedule.t1004' /></h1>	
+	    <h1><spring:message code='ezSchedule.t1004' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 	    <table>
 	    	<tr>
 	        	<td style="padding-right:5px">
@@ -138,9 +143,8 @@
 	        	</td>
 	        </tr>
 	    </table>	    
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="select_dept()" ><spring:message code='ezSchedule.t4' /></span></a>
-	        <a class="imgbtn"><span onclick="window.close()"><spring:message code='ezSchedule.t5' /></span></a>      
 	    </div>
 	</body>
 </HTML>

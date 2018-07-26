@@ -29,7 +29,7 @@
 				<li><span onClick="btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li> 
 			</ul>
 		</div>
-		<div id="close"><ul><li><span onClick="btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li></ul></div>
+		<div id="close"><ul><li><span onClick="btnClose_onclick()"></span></li></ul></div>
 		<table class="content">
 			<tr> 
 				<th><spring:message code='ezApprovalG.t106'/></th>
@@ -54,14 +54,14 @@
 				<td id="tdProduceY" nowrap style="padding-right:15px">&nbsp;</td>
 			</tr>
 			<tr> 
+				<th><spring:message code='ezApprovalG.t831'/></th>
+				<td id="tdRegDate" nowrap style="padding-right:15px">&nbsp;</td>
 				<th><spring:message code='ezApprovalG.t830'/></th>
 				<td id="tdRegSN" nowrap style="padding-right:15px">&nbsp;</td>
+			</tr>
+			<tr style="display:none">
 				<th><spring:message code='ezApprovalG.t573'/></th>
 				<td id="tdVolNo" nowrap style="padding-right:15px">&nbsp;</td>
-			</tr>
-			<tr>
-				<th><spring:message code='ezApprovalG.t831'/></th>
-				<td id="tdRegDate" colspan=3>&nbsp;&nbsp;</td>
 			</tr>
 		</table>
 		<br>
@@ -215,8 +215,6 @@
 		</span>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-			selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 		</script>
 	</body>
 </html>

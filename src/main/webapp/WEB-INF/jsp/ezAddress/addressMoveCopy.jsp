@@ -10,7 +10,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 	    <style>
-	    	#AddressTreeView div {height:20px !important}
+	    	/* #AddressTreeView div {height:20px !important} */
 	    </style>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -55,6 +55,11 @@
 	            AddressTreeView.update();
 	            if (AddressTreeView.selectedIndex() == -1) {
 	                AddressTreeView.select(1);
+	            }
+	            
+	            var addressTreeChild = document.getElementById("AddressTreeView").childNodes[0].childNodes;
+	            for (var i = 0; i < addressTreeChild.length; i++) {
+	            	addressTreeChild[i].style.marginBottom = "0px";
 	            }
 	        }
 
@@ -148,17 +153,17 @@
 	    <h1><spring:message code='ezAddress.t269' /></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="Window_Close()"><spring:message code='ezAddress.t5' /></span></li>
+	            <li><span onclick="Window_Close()"></span></li>
 	        </ul>
 	    </div>
 	    <table class="content" style="width: 100%;">
 	        <tr>
 	            <td class="pos1" style="padding-right: 0">
                     <c:if test="${browser == 'Chrome'}">
-                    <div class="tree" style="border: 0; margin-left: 5px; width: 98%; height: 250px; overflow: auto" id="AddressTreeView"></div>
+                    <div class="tree" style="border: 0; margin-left: 5px; width: 98%; height: 240px; overflow: auto" id="AddressTreeView"></div>
                     </c:if>
                     <c:if test="${browser != 'Chrome'}">
-	                <div class="tree" style="border: 0; margin-left: 5px; width: 98%; height: 255px; overflow: auto" id="AddressTreeView"></div>
+	                <div class="tree" style="border: 0; margin-left: 5px; width: 98%; height: 245px; overflow: auto" id="AddressTreeView"></div>
                     </c:if>
 	            </td>
 	        </tr>
@@ -166,7 +171,7 @@
 	    <xml id="AddressFolderXML" style="display: none;">
 			${rootAddressXML}
 		</xml>
-		<div style="margin-top: 10px;text-align: center">
+		<div class="btnpositionNew">
 	        <a class="imgbtn"><span onclick="return btn_Move_onclick()"><spring:message code='ezAddress.t270' /></span></a>
 	        <a class="imgbtn"><span onclick="return btn_Copy_onclick()"><spring:message code='ezAddress.t271' /></span></a>
 	    </div>

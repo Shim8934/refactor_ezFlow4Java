@@ -6,6 +6,11 @@
 		<title><spring:message code='ezApprovalG.t9995'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<style type="text/css">
+			.mainlist tr th {
+				border-top: 0px;
+			}
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -69,19 +74,19 @@
 		        Headers = createNodeAndAppandNode(oList, ListViewData, Headers, "HEADERS");
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t691'/>");
-		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "70");
+		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "140");
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t692'/>");
-		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "70");
+		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "140");
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t693'/>");
-		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "70");
+		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "140");
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t577'/>");
-		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "70");
+		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "140");
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t379'/>");
-		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "120");
+		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "100");
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");
 		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t572'/>");
 		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "50");
@@ -205,30 +210,32 @@
 		</script>
 	</head>
 	<body class="popup" style="margin-left:0px;margin-top:0px;overflow:hidden">
-		<h1><spring:message code='ezApprovalG.t9995'/></h1>
+		<h1 style="margin-bottom: 0px;"><spring:message code='ezApprovalG.t9995'/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return cmdCancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<table>
 		  <tr>
-		    <td style="width:400px;vertical-align:top"><h2><spring:message code='ezApprovalG.t1090'/></h2>
+		    <td style="width:400px;vertical-align:top">
+		    <h2 style="font-weight: normal; margin-bottom: 8px;">▒ <spring:message code='ezApprovalG.t1090'/>
+		    	<input type="text" id="Cabinetkeyword" name="Cabinetkeyword" style="width:135px" onKeyPress="CabinetSearch_Press(event)">
+				<a class="imgbtn imgbck" style="height: 22px;"><span onClick="return CabinetSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></a>
+		    </h2>
 			<table style="width:100%">
-			    <tr>
-			        <td>
-			        	<input type="text" id="Cabinetkeyword" name="Cabinetkeyword" style="width:200px" onKeyPress="CabinetSearch_Press(event)">
-		      			<a class="imgbtn" style="vertical-align:middle"><span onClick="return CabinetSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></a>
-		      		</td>
-			    </tr>
 		        <tr>
 		            <td>
 						<div class="listview">
-						    <div id="SelCabinetList" style="border:0;HEIGHT:250px;WIDTH: 580px;overflow:auto;"></div>
+						    <div id="SelCabinetList" style="border:0;HEIGHT:372px;WIDTH: 957px;overflow:auto;"></div>
 						</div>
 				    </td>
 		        </tr>
 		      </table></td>
 		  </tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionNew">
 		    <a class="imgbtn" onClick="return cmdConfirm_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
-		    <a class="imgbtn" onClick="return cmdCancel_onclick()"><span><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 	</body>
 </html>

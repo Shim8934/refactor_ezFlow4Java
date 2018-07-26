@@ -77,7 +77,7 @@
 			<h1 id="h1"><spring:message code='ezEmail.t659' /></h1>
 			<div id="close">
 	            <ul>
-	                <li><span onclick="Window_Close()"><spring:message code='ezEmail.t63' /></span></li>
+	                <li><span onclick="Window_Close()"></span></li>
 	            </ul>
 	        </div>
 			<div class="box" id="maillist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:320px;border:0px">

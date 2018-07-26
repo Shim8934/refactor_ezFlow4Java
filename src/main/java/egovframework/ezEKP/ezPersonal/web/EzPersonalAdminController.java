@@ -462,7 +462,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("managePollList started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		int currentPage = 1, pageSize = 12;
+		int currentPage = 1, pageSize = 15;
 		String progressPollFlag = "false";
 		StringBuilder result = new StringBuilder();
 		
@@ -482,10 +482,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		result.append("<CURPAGE>" + currentPage + "</CURPAGE>");
 		result.append("<ROWS>");
 		
-		for (PersonalLightPollVO vo : list) {
+		for (int i = 0; i < list.size(); i++) {
+			PersonalLightPollVO vo = list.get(i);
 			result.append("<ROW>");
-			result.append("<CELL>");
-			result.append("<VALUE>" + vo.getItemSeq() + "</VALUE>");
+			result.append("<CELL>"); 
+			result.append("<VALUE>" + (totalCount - (pageSize * (currentPage-1)+i)) + "</VALUE>");
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("</CELL>");
 			result.append("<CELL>");
@@ -857,6 +858,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("itemSeq", itemSeq);
 		model.addAttribute("title", title);
 		model.addAttribute("content", content);
+		model.addAttribute("user", userInfo.getId());
 		
 		logger.debug("showPopup ended");
 		return "admin/ezPersonal/personalShowPopup";

@@ -9,6 +9,11 @@
 		<link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<style>
+			select {
+				background: none;
+			}
+		</style>
 		<script type="text/javascript">
 			var creatorid = "${addressInfo.creatorId}";
 			var modifierid = "${addressInfo.modifierId}";
@@ -122,12 +127,11 @@
 		    </div>
 		    <div id="close">
 		      <ul>
-		        <li><span onClick="window.close()"><spring:message code='ezAddress.t5' /></span></li>
+		        <li><span onClick="window.close()"></span></li>
 		      </ul>
 		    </div>
 		    <script type="text/javascript">
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
-				selToggleList(document.getElementById("close"), "ul", "li", "0");
 			</script>
 		    <table  class="content">
 		      <tr>
@@ -152,7 +156,7 @@
 		      </tr>
 		    </table>
 		    <div class="nobox" style="margin-top:10px;">
-		    	     <select id="ListMember" name="ListMember" style="width:100%;height:258px" size="4">${listMember}</select>
+		    	     <select id="ListMember" name="ListMember" style="width:100%;height:258px;overflow:auto" size="4">${listMember}</select>
 		  	</div>
 		  </div>
 		  <div id="printScreen" style="DISPLAY: none">

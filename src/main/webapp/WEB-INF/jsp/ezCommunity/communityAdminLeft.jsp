@@ -6,7 +6,7 @@
 	<head>
 		<title><c:out value = '${club.c_ClubName}' /> <spring:message code = 'ezCommunity.t485' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<style>
 			.groupBoard {
@@ -22,7 +22,10 @@
 				width:190px;
 				padding-left:20px;
 				margin-left:-40px;
+			}
+			.node_div {
 				overflow:hidden;
+				text-overflow:ellipsis;
 			}
 		</style>
 		<script type="text/javascript" src="/js/ezCommunity/TreeView.js"></script>

@@ -8,7 +8,7 @@
 		<title><spring:message code='ezSchedule.t4003' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -59,8 +59,8 @@
 		                    for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
 		                        var _Value;
 		                        _html += "<tr style='cursor:pointer' id = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYID")[0].textContent
-		                              + "'holidayname = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent
-		                              + "'holidayname2 = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent
+		                              + "'holidayname = '" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent)
+		                              + "'holidayname2 = '" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent)
 		                              + "'date = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0,10)
 		                              + "'issolar = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent
 		                              + "'isrepeat = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent
@@ -74,9 +74,9 @@
 		                            _html += "<td style='width:5%;padding-left:5px;'><input type='checkbox' onclick='event_statuschange(this);'></td>";
 	
 		                        if (userlang == "1")
-		                            _html += "<td style='width:30%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent + "</td>";
+		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent) + "</td>";
 		                        else
-		                            _html += "<td style='width:30%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent + "</td>";
+		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent) + "</td>";
 	
 		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
 		                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
@@ -115,8 +115,8 @@
 		                    for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
 		                        var _Value;
 		                        _html += "<tr style='cursor:pointer' id = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYID")[0].text
-		                              + "'holidayname = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].text
-		                              + "'holidayname2 = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].text
+		                              + "'holidayname = '" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].text)
+		                              + "'holidayname2 = '" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].text)
 		                              + "'date = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].text.substring(0, 10)
 		                              + "'issolar = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].text
 		                              + "'isrepeat = '" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].text
@@ -130,9 +130,9 @@
 		                            _html += "<td style='width:5%;padding-left:5px;'><input type='checkbox' onclick='event_statuschange(this);'></td>";
 	
 		                        if (userlang == "1")
-		                            _html += "<td style='width:30%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].text + "</td>";
+		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].text) + "</td>";
 		                        else
-		                            _html += "<td style='width:30%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].text + "</td>";
+		                            _html += "<td style='width:30%;color:gray;'>" + MakeXMLString(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].text) + "</td>";
 	
 		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].text == "1")
 		                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
@@ -209,13 +209,13 @@
 		        }
 	
 		        _RowObject = obj;
-		        obj.childNodes.item(0).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(1).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(2).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(3).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(4).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(5).style.backgroundColor = "#f0f6ff";
-		        obj.childNodes.item(6).style.backgroundColor = "#f0f6ff";
+		        obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(1).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(2).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(3).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(4).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(5).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(6).style.backgroundColor = "#edf4fd";
 		    }
 	
 	
@@ -255,23 +255,26 @@
 		        	alert("<spring:message code='ezSchedule.t4001' />");
 		            return;
 		        }
-		        
-		        $.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/admin/ezSchedule/scheduleDelHoliday.do",
-		    		data : {
-		    			holidayID  : _RowObject.id		    			
-		    		},
-		    		success: function() {
-		    			alert("<spring:message code='ezSchedule.t4002' />");
-			            schedule_get_holiday();
-		    		},
-		    		error: function(err) {
-		    			alert(strLang86);
-		    		}
-		        });
+		        // 2018-07-24 천성준 - 삭제 시, 한번더 체크할수 있게
+		        var holidayName = _RowObject.getAttribute("holidayname");
+		        if (confirm(holidayName + " <spring:message code='ezBoard.t117' />")) {
+			        $.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/admin/ezSchedule/scheduleDelHoliday.do",
+			    		data : {
+			    			holidayID  : _RowObject.id		    			
+			    		},
+			    		success: function() {
+			    			alert("<spring:message code='ezSchedule.t4002' />");
+				            schedule_get_holiday();
+			    		},
+			    		error: function(err) {
+			    			alert(strLang86);
+			    		}
+			        });
+		        }
 		    }
 	
 		    function event_statuschange(obj) {
@@ -309,10 +312,10 @@
 			        <li><span onClick="del_holiday()"><spring:message code='ezSchedule.t4006' /></span></li>			        
 			    </ul>
 			</div>
-			<table style="width: 750px; height: 385px;" border="0">
+			<table style="width: 750px; height: 500px;" border="0">
 		        <tr>
 		            <td>
-		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 750px; height: 385px;">
+		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 750px; height: 500px;">
 		                    <table class="mainlist" style="width: 100%;">
 		                        <tr>
 		                            <th style="width: 5%;"><span><spring:message code='ezSchedule.t403' /></span></th>
@@ -324,7 +327,7 @@
 		                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t2000' /></span></th>
 		                        </tr>
 		                    </table>
-		                    <div id="contentlist" name="contentlist" style="height: 365px; overflow-y: auto;">
+		                    <div id="contentlist" name="contentlist" style="height: 468px; overflow-y: auto;">
 		                        <table class="mainlist" style="width: 100%;">
 		                            <tr>
 		                                <td style="text-align: center;">

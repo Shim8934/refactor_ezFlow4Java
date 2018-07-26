@@ -1,4 +1,4 @@
-﻿// ApprovUI\ApprovUI.js
+// ApprovUI\ApprovUI.js
 var strLang2 = "合議"
 var strLang3 = "協議"
 var strLang4 = "差し戻し"
@@ -652,7 +652,7 @@ var strLang940 = "前へ"
 var strLang941 = "次へ"
 var strLang942 = "総 "
 var strLang943 = "件"
-var strLang944 = "データが存在ません";
+var strLang944 = "データが存在しません";
 var strLang945 = "起案者は削除することができません。"
 // TreeViewCtrl.js
 var strLang1001 ="選択した項目がないです。<br>文書だけ印刷しますか?";
@@ -1008,6 +1008,10 @@ var strLangSpjj31 =	"後決を承認しました。";
 var strLangSpjj32 =	"後決を承認処理中にエラーが発生しました。";
 	
 var strLangSpjj33 = "決裁文書へリンク";
-var strLangSpjj34 = "さんが起案した決裁文書が届きました。<br/>処理を行うには下記のリックをクリックしてください。";
+var strLangSpjj34 = "さんが起案した決裁文書が届きました。<br/>処理を行うには下記のリンクをクリックしてください。";
 
 var strLang129 = "수신자"
+
+//2018-06-27 강민수92
+var strLanggarm01 = "管理部署を追加してください。"
+

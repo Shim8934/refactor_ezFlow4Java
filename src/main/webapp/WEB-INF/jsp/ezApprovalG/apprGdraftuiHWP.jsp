@@ -26,6 +26,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 		<script type="text/javascript" src="/js/showModalDialog.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ezDraft_HWP.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
 	    <script type="text/javascript">
 	        var FormHref = "${formURL}";
 	        var DraftFlag = "${draftFlag}";
@@ -147,6 +148,8 @@
 	        var isHWP = "${isHWP}";
 	        var isUsed = "";
 	        var ext = "hwp";
+	        var nonElecRec = "${nonElecRec}";
+	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "";
 	        
 	        window.onload = function () {
 	            try {
@@ -182,6 +185,22 @@
 	
 	                HwpCtrl.SetFieldFocus("doctitle");
 	                HwpCtrl.ezSetScrollPosInfo(0);
+	                
+	                /* 
+	                * 비전자문서 구분 값, 사용불가한 버튼들 가리기
+	                */
+	                if (nonElecRec == "Y") {
+	                	document.getElementById("btnSelForm").style.display = "none"; <%-- 양식선택 --%>
+	                	document.getElementById("btnAddSepAttach").style.display = "none"; <%-- 분리첨부 --%>
+	                	document.getElementById("btnSaveServer").style.display = "none"; <%-- 임시저장 --%>
+	                	document.getElementById("btnHelper").style.display = "none"; <%-- 연동 --%>
+	                	document.getElementById("btnhistory").style.display = "none"; <%-- 변경내역 --%>
+	                	document.getElementById("btnSave").style.display = "none"; <%-- 저장 --%>
+	                	document.getElementById("btnOpinion").style.display = "none"; <%-- 의견 --%>
+	                	document.getElementById("btnAprDocAttach").style.display = "none"; <%-- 문서첨부 --%>
+	                	document.getElementById("btnPrint").style.display = "none"; <%-- 인쇄 --%>
+	                	HwpCtrl.SetFieldText("docnumber","");
+	                }
 	            } catch (e) {
 	                alert("ezdraftui_hwp.window.onload::" + e.description);
 	                hideProgress();
@@ -226,7 +245,7 @@
 	                        var DocumentInfo = new ActiveXObject("Microsoft.XMLDOM");
 	                        DocumentInfo.loadXML(HwpCtrl.GetDocumentInfo());
 	
-	                        if (GetDocumentElement(HwpCtrl, "CONNROOT") != "") {
+	                        if (GetDocumentElement(HwpCtrl, "CONNROOT", true) != "") {
 	                            var pAlertContent = "<spring:message code='ezApprovalG.t1391'/><br><br><spring:message code='ezApprovalG.t1392'/>";
 	                            OpenAlertUI(pAlertContent);
 	                            HwpCtrl.ClearDocument();
@@ -490,13 +509,29 @@
 			    		}        			
 			    	});
 			    	
+			    	// 본문의 용량을 구하기 위함 2018-07-13
+			    	var strClone = HwpCtrl.GetCloneData("", "HWPML2X");
+			    	var strBytes = parseInt(getByteLength(strClone));
+								    	
+			    	console.log(strBytes);
+			    	
 	                var rtnAttachXML = new ActiveXObject("Microsoft.XMLDOM");
-	                rtnAttachXML.loadXML(loadXMLString(result).xml);
-	
+	                rtnAttachXML.loadXML(result);
+					
+	                var attachTotalSize = getNodeText(rtnAttachXML.getElementsByTagName("TOTALSIZE").item(0));
+	                
+	                
 	                if (getNodeText(rtnAttachXML.getElementsByTagName("FLAG").item(0)) == "Y") {
 	                    OpenAlertUI("외부발송문서 총 첨부용량은 최대 6MB 입니다" + "<br>" + "첨부용량을 줄여주시기 바랍니다.");
 	                    return;
+	                    
 	                }
+
+	                // 본문과 첨부파일의 총합이 7.4mb가 초과시 알러트 2018-07-13 강민수92
+                    if (getNodeText(rtnAttachXML.getElementsByTagName("EXTFLAG").item(0)) == "Y" && strBytes + parseInt(attachTotalSize) > 7400000) {
+                    	OpenAlertUI("외부발송문서 총 용량은 최대 7.4MB 입니다" + "<br>" + "첨부파일이나 본문용량을 줄여주시기 바랍니다.");
+	                    return;
+                    }
 	
 	                bAttachProcess = false;
 	
@@ -532,6 +567,13 @@
 	                if (pDocTitle.length > 127) {
 	                    var pAlertContent = "<spring:message code='ezApprovalG.t132'/>";
 	                    OpenAlertUI(pAlertContent);
+	                    return;
+	                }
+	                
+	                if (nonElecRec == "Y" && nonElecRecInfoXml == "") {
+	                	var pAlertContent = "기록물 정보를 입력해 주세요.";
+	                    OpenAlertUI(pAlertContent);
+	                    btnApprovalInfo(1);
 	                    return;
 	                }
 	
@@ -575,18 +617,20 @@
 	                if (pDraftFlag == "REDRAFT")
 	                    delOpinionInfo();
 	
-	                if (LastSignSN == 1 || DraftLastFlag) {
-	                    var pInformationContent = "<spring:message code='ezApprovalG.t143'/><br> <spring:message code='ezApprovalG.t144'/>";
-	                    var Ans = OpenInformationUI(pInformationContent);
-	
-	                    if (!Ans) return;
-	
-	                    if (pDraftFlag == "HABYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
-	                        getLastOpinon();
-	                    }
-	
-	                    if (HwpCtrl.CheckFieldExist("lastdraftdate"))
-	                        HwpCtrl.SetFieldText("lastdraftdate", getGyulJeDate());
+	                if (nonElecRec != "Y") {
+		                if (LastSignSN == 1 || DraftLastFlag) {
+		                    var pInformationContent = "<spring:message code='ezApprovalG.t143'/><br> <spring:message code='ezApprovalG.t144'/>";
+		                    var Ans = OpenInformationUI(pInformationContent);
+		
+		                    if (!Ans) return;
+		
+		                    if (pDraftFlag == "HABYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
+		                        getLastOpinon();
+		                    }
+		
+		                    if (HwpCtrl.CheckFieldExist("lastdraftdate"))
+		                        HwpCtrl.SetFieldText("lastdraftdate", getGyulJeDate());
+		                }
 	                }
 	
 	                if ("${approvalPWD}" != "N") {
@@ -595,7 +639,7 @@
 	                        var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
 	                        OpenAlertUI(pAlertContent);
 	                        return;
-	                    } else if (chkpass == "cancel") {
+	                    } else if (chkpass == "cancel" || chkpass == undefined) {
 	                        var pAlertContent = "<spring:message code='ezApprovalG.t28'/>";
                             OpenAlertUI(pAlertContent);
                             return;
@@ -603,17 +647,19 @@
 	                }
 	
 	                if (IsSkipDrafter == "FALSE") {
-	                    var ret;
-	                    var parameter = new Array();
-	
-	                    parameter[0] = pDocID;
-	                    ret = openSignUI(parameter);
-	
-	                    if (ret == "cancel") {
-	                        var pAlertContent = "<spring:message code='ezApprovalG.t145'/>";
-	                        OpenAlertUI(pAlertContent);
-	                        return;
-	                    }
+	                	if (nonElecRec != "Y") {
+		                    var ret;
+		                    var parameter = new Array();
+		
+		                    parameter[0] = pDocID;
+		                    ret = openSignUI(parameter);
+		
+		                    if (ret == "cancel") {
+		                        var pAlertContent = "<spring:message code='ezApprovalG.t145'/>";
+		                        OpenAlertUI(pAlertContent);
+		                        return;
+		                    }
+	                	}
 	
 	                    pOrgHtml = HwpCtrl.GetCloneData("", "HWP");
 	
@@ -683,6 +729,7 @@
 	                            }
 	
 	                            UpdateLineHistory();
+	                            
 	                            pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
 	                            OpenAlertUI(pAlertContent);
 	                            draftFlag = true;
@@ -766,13 +813,22 @@
 	                        }
 	
 	                        UpdateLineHistory();
-	
-	                        pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
+	                        
+	                        if (nonElecRec == "Y") {
+                            	pAlertContent = "문서를 [등록]하였습니다.";
+                            } else {
+		                        pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
+                            }
+	                        
 	                        OpenAlertUI(pAlertContent);
 	                        draftFlag = true;
 	
 	                        if (ListType == "21" && DraftFlag == "REDRAFT") {
 	                            RemoveTmpDoc(DocSN);
+	                        }
+	                        
+	                        if (nonElecRec == "Y") {
+	                        	RemoveEndNonElecRecDoc(pDocID);
 	                        }
 	
 	                        window.close();
@@ -997,7 +1053,7 @@
 					}
 				
 				    var g_SepAttachLVXml = "";
-				    g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml");
+				    g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml", true);
 				    if (!g_SepAttachLVXml)
 				        g_SepAttachLVXml = "";
 				
@@ -1083,6 +1139,14 @@
 			        parameter[41] = tempItemName;
 			        parameter[42] = tempItemName2;
 			        parameter[45] = pPublicityYN;
+			        parameter[46] = nonElecRec;
+			        
+			        if (nonElecRec == "Y") {
+			        	parameter[2] = "1";
+				        parameter[47] = "nonElecRecTempCabinet";
+				        parameter[48] = nonElecRecInfoXml;
+				        parameter[49] = nonSepAttachLVXml;
+			        }
 			        
 			        if (tempItemCode != "")
 			            tempdocnumcode = tempItemCode;
@@ -1154,6 +1218,13 @@
 		                }
 			            setPublicFlag();
 			            SummaryFlag = true;
+			            
+			            if (nonElecRec == "Y") {
+			            	nonElecRecInfoXml = ret[23];
+			            	nonSepAttachLVXml = ret[24];
+			            	
+			            	setNonElecRecInfo(nonElecRecInfoXml);
+			            }
 			        }
 			    } catch (e) {
 			        alert("ezdraftui_hwp.GetSepAttParamXml()::" + e.description);
@@ -1261,6 +1332,15 @@
 	            }
 	            catch (e) { }
 	        }
+	        
+	    	function getByteLength(s){
+	    		var bytes;
+	    		var i;
+	    		var c;
+	    		
+	    	    for(bytes=i=0; c=s.charCodeAt(i++); bytes += c >> 11? 3 : c >> 7 ? 2 : 1);
+	    	    return bytes;
+	    	}
 	    </script>
 	</head>
 	<body class="popup">
@@ -1272,7 +1352,14 @@
 	                        <li id="btnSelForm"><span onclick="return btnSelForm_onclick()"><spring:message code='ezApprovalG.t152'/></span></li>
 	                        <li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()"><spring:message code='ezApprovalG.t1742'/></span></li>
 	                        <li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li>
-	                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
+							<c:choose>
+								<c:when test="${nonElecRec eq 'Y'}">
+			                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()">등록</span></li>
+								</c:when>
+								<c:otherwise>
+			                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
+								</c:otherwise>
+							</c:choose>
 	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 	                        <li id="btnFileAttach"><span onclick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
 	                        <li id="btnAprDocAttach"><span onclick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t57'/></span></li>
@@ -1293,7 +1380,7 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li id="btnClose"><span onclick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
+	                        <li id="btnClose"><span onclick="return btnClose_onclick()"></span></li>
 	                    </ul>
 	                </div>
 	                <script type="text/javascript">

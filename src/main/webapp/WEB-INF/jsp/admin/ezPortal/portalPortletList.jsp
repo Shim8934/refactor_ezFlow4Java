@@ -72,12 +72,12 @@
 				// 선택된 개체가 없는 경우
 				if( g_SelectedObj == null )
 				{
-				    pObj.style.backgroundColor = "#f0f6ff";
+				    pObj.style.backgroundColor = "#edf4fd";
 					g_SelectedObj = pObj;
 				}
 				else
 				{
-				    pObj.style.backgroundColor = "#f0f6ff";
+				    pObj.style.backgroundColor = "#edf4fd";
 					
 					if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
 					g_SelectedObj = pObj;
@@ -203,7 +203,7 @@
 		<div id="mainmenu">
 			<ul>
   				<li><span onClick="newpage()"><spring:message code='ezPortal.t247'/></span></li>
-  				<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+  				<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   				<li><span onClick="DeletePortlet()"><spring:message code='ezPortal.t67'/></span></li>
   				<li><span onClick="preview()"><spring:message code='ezPortal.t63'/></span></li>
 			</ul>
@@ -230,20 +230,20 @@
 		<div class="page">
 			<c:choose>
 				<c:when test="${intPage != '1'}">
-					<img src="/images/page_previous.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('front')" style="cursor:pointer"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
+					<img src="/images/page_previous.gif" align="absmiddle" hspace="2" onClick="goToPage('front')" style="cursor:pointer"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
 				</c:when>
 				<c:otherwise>
-					<img src="/images/page_previous.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('front')"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
+					<img src="/images/page_previous.gif" align="absmiddle" hspace="2" onClick="goToPage('front')"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
 				</c:otherwise>
 			</c:choose>
 			
   			<input type="text"name="txt_PageInputNum" style="width:30px" value='${intPage}' onKeyPress="if ( window.event.keyCode == 13 ) { goToPage('page'); }">
   			<c:choose>
   				<c:when test="${intPage != totalPage}">
-  					<img src="/images/page_next.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('next')" style="cursor:pointer">
+  					<img src="/images/page_next.gif" align="absmiddle" hspace="2" onClick="goToPage('next')" style="cursor:pointer">
   				</c:when>
   				<c:otherwise>
-  					<img src="/images/page_next.gif" width="15" height="15" align="absmiddle" hspace="2" onClick="goToPage('next')">
+  					<img src="/images/page_next.gif" align="absmiddle" hspace="2" onClick="goToPage('next')">
   				</c:otherwise>
   			</c:choose>  			
   		</div>

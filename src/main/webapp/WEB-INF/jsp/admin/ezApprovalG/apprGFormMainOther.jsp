@@ -8,7 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -805,6 +805,10 @@
 		        OpenInformationUI_Complete();
 		    }
 		</script>
+		<style>
+			#mainmenu ul li {float:right !important}
+			#mainmenu ul li span {height:13px !important; background: none !important; margin-top:2px !important}
+		</style>
 	</head>
     <body class="popup">
         <div id="menu">
@@ -814,7 +818,7 @@
         </div>
         <div id="close">
             <ul>
-                <li><span id="btnClose" onClick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
+                <li><span id="btnClose" onClick="return btnClose_onclick()"></span></li>
             </ul>
         </div>
         <div class="portlet_tabpart01">
@@ -873,8 +877,8 @@
                         <input type="text" id="tbItemCode" name="tbItemCode" style="WIDTH: 80px" readonly>
                         <input type="text" id="tbItemName" name="tbItemName" style="WIDTH: 100px" readonly>
                         <input type="hidden" id="tbItemName2" name="tbItemName2">
-                        <a class="imgbtn"><span onclick="return btnItemCode_onclick()"><spring:message code='ezApproval.t321'/></span></a>
-                        <a class="imgbtn"><span onclick="DeleteItemCode()"><spring:message code='ezApprovalG.t266'/></span></a>
+                        <a class="imgbtn imgbck"><span onclick="return btnItemCode_onclick()"><spring:message code='ezApproval.t321'/></span></a>
+                        <a class="imgbtn imgbck"><span onclick="DeleteItemCode()"><spring:message code='ezApprovalG.t266'/></span></a>
                     </td>
                     <th style="width:10%; text-align:center"><spring:message code='ezApprovalG.t118'/></th>
                     <td style="width:100px; text-align:center">

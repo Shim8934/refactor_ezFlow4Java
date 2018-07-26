@@ -23,12 +23,9 @@
 		      			<h1><spring:message code = 'ezPersonal.t157' /></h1>
 		        		<div id="close">
 		          			<ul>
-		            			<li><span onClick="window.close()"><spring:message code = 'ezPersonal.t10' /></span></li>
+		            			<li><span onClick="window.close()"></span></li>
 		          			</ul>
-		        		</div>
-		        		<script type="text/javascript">
-		            		selToggleList(document.getElementById("close"), "ul", "li", "0");
-						</script>
+		        		</div>		        		
 					</td>
 		    	</tr>
 		    	<tr>

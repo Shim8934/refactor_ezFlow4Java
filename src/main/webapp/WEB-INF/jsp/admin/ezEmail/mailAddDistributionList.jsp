@@ -7,6 +7,7 @@
 	<head>
 	    <title><spring:message code='ezEmail.t8' /></title>
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <link rel="stylesheet" href="/js/ezEmail/Controls/ezSearchDatePicker.htc" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code="main.lhm01" />" type="text/css">
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -267,6 +268,31 @@
 		        		alert("<spring:message code='ezEmail.t9' />" + error);
 		        	}
 		        });
+	        	
+	        	$.ajax({
+					url : "/ezOrgan/getDeptMemberListCount.do",
+					method : "POST",
+					dataType : "json",
+					data : {
+						deptID : DeptID
+					},
+					success : function(result) {
+						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
+						
+						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
+			        		if (result.totalCount == result.totalCount2) {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]";
+			        		} else {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang1 + "</span>]";
+			        		}
+			            	
+			            	SelectDeptNM.setAttribute("countinfo","1")
+			        	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(error);
+					}
+				});
 	        	
 	            listContentArry = new Array();
 	            var xmlpara = createXmlDom();
@@ -580,10 +606,16 @@
 	                document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
 	            }
 	            var UserListHTML = "";
-	            if (SelectDeptNM.getAttribute("countinfo") != "1") {
-	                SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	           /*  if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
+	                //SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	                if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	        		} else {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang1 + "</span>]";
+	        		}
+	                
 	                SelectDeptNM.setAttribute("countinfo", "1")
-	            }
+	            } */
 	            if (pListType == "IMG") {
 	                document.getElementById("DeptUserImgList").style.display = "";
 	                document.getElementById("txtlist_Layer").style.display = "none";
@@ -798,7 +830,7 @@
 	            }
 	        }
 	
-	        var m_strColorSelect = "#f0f6ff";
+	        var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -1224,6 +1256,7 @@
 	        }
 			
 	        function orgTabButton_onClick() {
+	        	methodForTabAction(1);
 		        selTab = "orglistView";
 		        m_tabDialogState["org"] = "select";
 		        m_tabDialogState["contact"] = "normal";
@@ -1239,6 +1272,7 @@
 		    }
 	        
 	        function dlTabButton_onClick() {
+	        	methodForTabAction(3);
 		        m_tabDialogState["org"] = "normal";
 		        m_tabDialogState["contact"] = "normal";
 		        m_tabDialogState["dl"] = "select";
@@ -1298,7 +1332,52 @@
 	                }
 	            }
 	        }
-	        
+	        function event_listdragend(evt) {
+                evt.stopPropagation();
+                evt.preventDefault();
+                if (dropelement != "")
+                    InsertReceiver(document.getElementById(dropelement));
+            }
+            
+            function event_listdragstart(obj) {
+                dropelement = "";
+                var islist = false;
+                if (m_selectedTree == AddressListView) {
+                    var pListViewDL = new ListView();
+                    pListViewDL.LoadFromID("Address");
+                    for (var i = 0; i < pListViewDL.GetSelectedRows().length; i++) {
+                        if (pListViewDL.GetSelectedRows()[i].id == obj.id) {
+                            islist = true;
+                            break;
+                        }
+                    }
+                    if (!islist)
+                        obj.onclick();
+                }
+                else if (m_selectedTree == ListViewDL) {
+                    var pListViewDL = new ListView();
+                    pListViewDL.LoadFromID("pListViewDL");
+                    for (var i = 0; i < pListViewDL.GetSelectedRows().length; i++) {
+                        if (pListViewDL.GetSelectedRows()[i].id == obj.id) {
+                            islist = true;
+                            break;
+                        }
+                    }
+                    if (!islist)
+                        obj.onclick();
+                }
+                else if (m_selectedTree == orglistView) {
+                    for (var i = 0; i < listContentArry.length; i++) {
+                        if (listContentArry[i] == obj.getAttribute("id")) {
+                            islist = true;
+                            break;
+                        }
+                    }
+                    if (!islist)
+                        event_listclick(obj);
+                }
+            }
+            
 	        function ImageUpdate() {
 	            return (navigator.userAgent.indexOf('Firefox') != -1) ?
 	                (function () {
@@ -1338,6 +1417,7 @@
 	            window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=" + height + ",width=" + width + ", left=" + leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY=" + topPosition + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	        }
 	        
+	        var mail_select_dlmember_cross_dialogArguments = new Array();
 	        function dlmember_click() {
 	            var DlList = new ListView();
 	            DlList.LoadFromID("pListViewDL");
@@ -1401,30 +1481,51 @@
 	                    var InitTrTo = listviewTo.GetDataRows();
 	                    var pparsingXML = "";
 	                    var pparsingXML2 = "";
-	                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                    var aa = 0;
 	                    for (var i = 0; i < count; i++) {
 	                        var IsInsert = CheckMailReceiver(mail_select_dlmember_cross_dialogArguments[0]["email"][i], "3");
 	                        if (!IsInsert) {
+	                        	pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + "</DATA1>";
 	                            pparsingXML = pparsingXML + "<DATA2>" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "</DATA2>";
 	                            pparsingXML = pparsingXML + "<DATA3></DATA3>";
 	                            pparsingXML = pparsingXML + "<DATA4></DATA4>";
 	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + " &lt;" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "&gt;" + "</VALUE></CELL></ROW>";
-	                        }
-	                    }
-	                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	
-	                    var Resultxml = loadXMLString(pparsingXML2);
-	
-	                    var listview = new ListView();
-	                    listview.SetID("MsgToList");
-	                    listview.SetHeightFree(true);
-	                    listview.SetSelectFlag(false);
-	                    listview.SetMulSelectable(false);
-	                    listview.SetRowOnDblClick("DeleteReceiver");
-	                    listview.DataSource(Resultxml);
-	                    listview.RowDataBind2();
+	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+	                            var Resultxml = loadXMLString(pparsingXML2);
+	                            
+	                            pparsingXML2 = "";
+	                            pparsingXML = "";
+	                            
+	                            var listview = new ListView();
+	                            listview.LoadFromID("MsgToList");
+	                            
+	                            var MaxID = 0;
+                                var InitTr = listview.GetDataRows();
+                                var MaxCntNum = 0;
+                                for (var j = 0  ; j < InitTr.length  ; j++) {
+                                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+                                    if (MaxID < curnum) {
+                                        MaxID = curnum;
+                                        MaxCntNum = j;
+                                    }
+                                }
+
+                                var objTr = listview.AddRow(InitTr.length);
+                                if (MaxCntNum != 0)
+                                    MaxCntNum = MaxCntNum + 1;
+                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                                listview.AddDataRow(objTr, Resultxml);
+
+                                document.getElementById("MsgToList").className = "receiver_list";
+                                var _tdlength = document.getElementById("MsgToList").getElementsByTagName("TD").length;
+                                for (var y = 0; y < _tdlength; y++) {
+                                    document.getElementById("MsgToList").getElementsByTagName("TD")[y].style.textOverflow = "";
+                                    document.getElementById("MsgToList").getElementsByTagName("TD")[y].style.overflow = "";
+                                }
+
+                            }
+                        }
 	                }
 	            } catch (e) { }
 	        }
@@ -1542,7 +1643,59 @@
 	        	})
 	        	return organListType;
 	        }
-	    </script>
+	        
+	        function SelectReceiverWindow(Title, selectedWindow) {
+	            for (var count = 0; count < m_receiverTitleList.length; count++) {
+	                m_receiverTitleList[count].style.fontWeight = "normal";
+	                m_receiverWindowList[count].style.backgroundColor = m_titleNoneSelectedColor;
+	                m_receiverWindowList[count].normalColor = m_titleNoneSelectedColor;
+	                m_receiverTitleList[count].setAttribute("class", "receiver_tltype02");
+	            }
+	            Title.style.fontWeight = "bold";
+	            Title.setAttribute("class", "receiver_tltype01");
+	            if (type == "")
+	                selectedWindow.style.backgroundColor = m_titleSelectedColor;
+	            else
+	                selectedWindow.style.backgroundColor = "white";
+	
+	            selectedWindow.normalColor = m_titleSelectedColor;
+	            m_selectedWindow = selectedWindow;
+	        }
+	        
+	        function methodForTabAction(target) {
+            	var tab1 = document.getElementById("orgTabButton").children[0];
+            	var tab3 = document.getElementById("dlTabButton").children[0];
+            	if (target == 1) {
+            		tab1.className = "tabon";
+            		tab3.className = "";
+            	} else if (target == 3) {
+            		tab1.className = "";
+            		tab3.className = "tabon";
+            	}
+	        }
+       	 	var PressShiftKey = false;
+   		    var PressCtrlKey = false;
+   		    function event_listOnkeyUp(event) {
+   		        if (navigator.userAgent.indexOf('Firefox') != -1) {
+   		            if (!event) event = window.event;
+   		        }
+   		        switch (event.keyCode) {
+   		            case 16: PressShiftKey = false; break;
+   		            case 17: PressCtrlKey = false; break;
+   		            case 46: deleteWork(false); break;
+   		        }
+   		
+   		    }
+   		    function event_listOnkeyDown(event) {
+   		        if (navigator.userAgent.indexOf('Firefox') != -1) {
+   		            if (!event) event = window.event;
+   		        }
+   		        switch (event.keyCode) {
+   		            case 16: PressShiftKey = true; break;
+   		            case 17: PressCtrlKey = true; break;
+   		        }
+   		    }
+    	</script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
 		<xml id="listviewheader" style="display: none;">
@@ -1599,7 +1752,7 @@
 		        </div>
 		        <div id="close">
 		            <ul>
-		                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+		                <li><span onclick="window.close()"></span></li>
 		            </ul>
 		        </div>
 		
@@ -1617,21 +1770,19 @@
 		                </td>
 		            </tr>
 		        </table>
-		    <table style="width:100%;">
+		    <table style="width:100%;margin-top:10px">
 		        <tr>
 		            <td style="vertical-align: top;">
-		                <div id="tabnav" style="float: left; width: 100%;">
-		                    <ul>
-		                        <li id="orgTabButton"><span onclick="orgTabButton_onClick()">
-		                            <spring:message code='ezEmail.t591' /></span></li>
-		                        <li id="dlTabButton"><span onclick="dlTabButton_onClick()">
-		                            <spring:message code='ezEmail.t593' /></span></li>
-		                        <li id="inputTabButton" style="display: none;"><span onclick="inputTabButton_onClick()"><spring:message code='ezEmail.t244' /></span></li>
-		                    </ul>
-		                </div>
-		                <script type="text/javascript">
-		                    selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
-		                </script>
+		            	<div class="portlet_tabpart01" style="margin:0px;">
+		            		<div class="portlet_tabpart01_top" id="tab1" style="margin-bottom:3px;">
+		            			<p id="orgTabButton">
+		            				<span onclick="orgTabButton_onClick()"><spring:message code='ezEmail.t591' /></span>
+		            			</p>
+		            			<p id="dlTabButton">
+		            				<span onclick="dlTabButton_onClick()"><spring:message code='ezEmail.t593' /></span>
+		            			</p>
+		            		</div>
+	            		</div>
 		                <table id="TreeViewTD">
 		                    <tr>
 		                        <td>
@@ -1645,6 +1796,7 @@
 		                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezEmail.t31' /></option>
 		                                                        <option value="description" usedefault="1"><spring:message code='ezEmail.t26' /></option>
 		                                                        <option value="title" usedefault="1"><spring:message code='ezEmail.t28' /></option>
+		                                                        <option value="extensionAttribute10" usedefault="1"><spring:message code='ezEmail.t281' /></option>
 		                                                        <option value="telephonenumber" usedefault="1"><spring:message code='ezEmail.t99000045' /></option>
 		                                                        <option value="mobile" usedefault="0"><spring:message code='ezEmail.t99000046' /></option>
 		                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezEmail.t29' /></option>
@@ -1652,7 +1804,7 @@
 		                                                        <option value="mail" usedefault="0"><spring:message code='ezEmail.t99000048' /></option>
 		                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezEmail.t99000049' /></option>
 		                                                    </select>
-		                                                    <input id="keyword" value="" onkeypress="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
+		                                                    <input id="keyword" value="" onkeypress="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;height:22px">
 		                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezEmail.t37' /></span></a>
 		
 		                                                </div>
@@ -1670,7 +1822,7 @@
 		                            <table style="margin-top: 3px;">
 		                                <tr>
 		                                    <td class="box" style="border-right:0px">
-		                                        <div style="width: 220px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+		                                        <div style="width: 220px; height: 445px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 		                                    </td>
 		                                    <td></td>
 		                                    <td class="listview" style="width: 432px" id="orglistView">

@@ -26,7 +26,7 @@
 		<li><span onClick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li> 
 	</ul>
 </div>
-<div id="close"><ul><li id="btnClose" ><span onClick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li></ul></div>
+<div id="close"><ul><li id="btnClose" ><span onClick="return btnClose_onclick()"></span></li></ul></div>
 <table class="content">
 	<tr>
 		<th><spring:message code='ezApprovalG.t106'/></th>
@@ -170,15 +170,14 @@
 		<tr> 
 			<td id="tdSCInfo">
 			<div class="listview" style="width:610px;overflow-x : auto">
-            <div id="SCList" style="BEHAVIOR:url('#behave1#ListView');border:0; width:950px; height:230px;" onclick ="" OnSelChanged="" onRowDblClick=""></div></div></td>
+            <div id="SCList" style="BEHAVIOR:url('#behave1#ListView');border:0; /* width:950px; */ width:100%; height:230px;" onclick ="" OnSelChanged="" onRowDblClick=""></div></div></td>
 
 		</tr>
 	</table>
 </div>
 <script type="text/javascript" >
 	selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	selToggleList(document.getElementById("close"), "ul", "li", "0");
-	selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+	/* selToggleList(document.getElementById("tabnav"), "ul", "li", "1"); */
 </script>
 </body>
 </html>

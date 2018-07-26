@@ -6,6 +6,11 @@
 		<title><spring:message code='ezApprovalG.t711'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<style type="text/css">
+			.mainlist tr th {
+				border-top :0px;
+			}
+		</style>
     	<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
     	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -360,7 +365,7 @@
 		        pLvList.LoadFromID("pSCLvList");
 		        var totalRows = pLvList.GetDataRows();
 		
-		        if (totalRows.length > 0) {
+		        if (totalRows.length > 0 && totalRows[0].id.indexOf("noItems") == -1) {
 		            rtnVal[0] = "TRUE";
 		            rtnVal[1] = GetSelCabInfoXml();
 		            
@@ -524,52 +529,55 @@
 		</script>
 	</head>
 	<body class="popup" style="margin-left:0px;margin-top:0px">
-		<h1><spring:message code='ezApprovalG.t711'/></h1>
-		<table style="width:445px">
-		  <tr>			
-		    <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t711'/></h2> 
-		      <table>
-		        <tr id="trCreateCab"> 
-		          <th><a  class="imgbtn" style="vertical-align:middle; margin-top:1.5px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
-				  <a  class="imgbtn" style="vertical-align:middle; margin-top:1.5px; display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a></th>
-		        </tr>
-		        <tr id="trCreateCabDummy" style="display:none"> 
-		          <td></td>
-		        </tr>
-		        <tr> 
-		          <td>
-				        <div class="listview">
-		                    <div id="CabinetList" style="border:0;HEIGHT: 215px; WIDTH: 380px;overflow:auto;"></div>
-		                </div>
-		          </td>
-		        </tr>
-		      </table>
-		    </td>
-		    <td style="width:45px;text-align:center"> 
-		      <table border="0" style="border-collapse:collapse; border-spacing:0;padding:2px;">
-		        <tr > 
-		          <td ><a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image93','','/images/arr_right.gif',1)" > 
-		                  <img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" 
-								onClick="return AddCabList_onclick()"></a></td>
-		        </tr>
-		        <tr > 
-		          <td ><a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image103','','/images/arr_left.gif',1)"> 
-		                  <img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16" 
-								onClick="return DelCabList_onclick()"></a></td>
-		        </tr>
-		      </table>
-		    </td>
-		    <td style="width:200px;vertical-align:top">
-			<h2><spring:message code='ezApprovalG.t1120'/></h2>
-		      <div class="listview">
-			    <div id="SelCabinetList" style="border:0; HEIGHT: 242px; WIDTH: 250px;overflow:auto;" ></div>
-		      </div>
-		    </td>
-		  </tr>
-		</table>
+		<%-- <h1><spring:message code='ezApprovalG.t711'/></h1> --%> <!-- 기록물철 선택 -->
+		<div id="menu">
+			<ul id="trCreateCab" style="display: none">
+	          <li id="btnCreateCab"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></li> <!-- 철생성 -->
+	          <li id="btnNewVolume" style="display: none"><span onClick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></li> <!-- 권호수 추가 -->
+	        </ul>
+		</div>
+		<div id="close">
+            <ul>
+                <li><span id="btnCancel" onclick="return cmdCancel_onclick()"></span></li>
+            </ul>
+        </div>
+        <table>
+        	<tr>
+        		<td>
+        			<h2 style="font-weight: normal">
+        				▒ <spring:message code='ezApprovalG.t711'/>
+        				<span id="trCreateCab">
+	        				<a class="imgbtn imgbck" style="margin:-4px 0px 0px 5px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
+					  		<a class="imgbtn imgbck" style="display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a>
+        				</span>
+        			</h2>
+        		</td>
+        		<td></td>
+        		<td><h2 style="font-weight: normal">▒ <spring:message code='ezApprovalG.t1120'/></h2></td>
+        	</tr>
+        	<tr>
+        		<td>
+					<div class="listview">
+						<div id="CabinetList" style="border:0;HEIGHT: 310px; WIDTH: 380px;overflow:auto;"></div>
+					</div>
+        		</td>
+        		<td>
+					<a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image93','','/images/arr_right.gif',1)" style="margin-left: 4px; cursor: pointer;"> 
+						<img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" onClick="return AddCabList_onclick()">
+					</a><br>
+					<a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image103','','/images/arr_left.gif',1)" style="margin-left: 4px; cursor: pointer;"> 
+						<img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16"onClick="return DelCabList_onclick()">
+					</a>
+        		</td>
+        		<td>
+					<div class="listview">
+						<div id="SelCabinetList" style="border:0; HEIGHT: 310px; WIDTH: 247px;overflow:auto;"></div>
+					</div>
+        		</td>
+        	</tr>
+        </table>
 		<div class="btnposition btnpositionNew">
-		<a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>  
-		<a class="imgbtn"><span id="btnCancel" onclick="return cmdCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a> 
+			<a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

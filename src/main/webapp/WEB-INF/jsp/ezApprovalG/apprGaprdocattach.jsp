@@ -221,12 +221,17 @@
 		  	</LISTVIEWDATA>
 		</xml>
 	    <h1><spring:message code='ezApprovalG.t364'/></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return bt_Cancel_onclick()"></span></li>
+            </ul>
+        </div>
 	    <table>
 	        <tr>
 	            <td style="padding-bottom: 5px; width: 250px;">
 	                <h2><spring:message code='ezApprovalG.t366'/>
-	                    <select id="selSContName" name="selSContName" onchange="return bt_selSContName_onclick()"></select>
-	                    <a class="imgbtn"><span id="SearchCondi" onclick="return SearchCondi_onclick()" style="font-weight: normal"><spring:message code='ezApprovalG.t111'/></span></a>
+	                    <select id="selSContName" name="selSContName" onchange="return bt_selSContName_onclick()" style="height:22px"></select>
+	                    <a class="imgbtn imgbck"><span id="SearchCondi" onclick="return SearchCondi_onclick()" style="font-weight: normal"><spring:message code='ezApprovalG.t111'/></span></a>
 					</h2>
 	            </td>
 	            <td style="text-align: right; white-space: nowrap; float: right; margin-top: 10px;">
@@ -253,9 +258,8 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <div class="btnposition btnpositionNew" style="margin-top:20px">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn" onclick="return bt_OK_onclick()"><span><spring:message code='ezApprovalG.t1760'/></span></a>
-	        <a class="imgbtn" onclick="return bt_Cancel_onclick()"><span><spring:message code='ezApprovalG.t1761'/></span></a>
 	    </div>
 	
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

@@ -8,12 +8,10 @@
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 	    <style>
-	    .mainlist tr th {
-	    	border-top:0px;
-	    }
+	    
 	    table, td {
 			white-space: nowrap;
-			overflow: hidden;
+			/* overflow-x: hidden; */
 			text-overflow: ellipsis;
 		}
 		td {
@@ -263,23 +261,23 @@
 			var pageNum = CurPage;
 
 			if (totalPage > 1 && pageNum != 1) {
-				strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+				strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";
 				PagingHTML += strtext;
 			} else {
-				strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+				strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
 				PagingHTML += strtext;
 			}
 
 			if (totalPage > BlockSize) {
 				if (pageNum > BlockSize) {
-					strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'><spring:message code='ezApproval.t931'/></span>";
+					strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
 					PagingHTML += strtext;
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'><spring:message code='ezApproval.t931'/></span>";
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
 					PagingHTML += strtext;
 				}
 			} else {
-				strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'><spring:message code='ezApproval.t931'/></span>";
+				strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
 				PagingHTML += strtext;
 			}
 
@@ -307,30 +305,30 @@
 			if (totalPage > BlockSize) {
 				if (totalPage >= parseInt(((parseInt((pageNum - 1)
 						/ BlockSize) + 1) * BlockSize) + 1)) {
-					strtext = "<span class='ptxt' onclick='return selafterBlock_one()'><spring:message code='ezApproval.t932'/></span>";
+					strtext = "";
 					strtext = strtext
-							+ "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+							+ "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif'></span>";
 					PagingHTML += strtext;
 				} else {
-					strtext = "<span class='ptxt' onclick='return selafterBlock_one()'><spring:message code='ezApproval.t932'/></span>";
+					strtext = "";
 					strtext = strtext
-							+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+							+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
 					PagingHTML += strtext;
 				}
 			} else {
-				strtext = "<span class='ptxt' onclick='return selafterBlock_one()'><spring:message code='ezApproval.t932'/></span>";
+				strtext = "";
 				strtext = strtext
-						+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+						+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
 				PagingHTML += strtext;
 			}
 
 			if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
 				strtext = "<span class='btnimg' onclick='return goToPageByNum("
 						+ totalPage
-						+ ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+						+ ")'><img src='/images/sub/btn_n_next.gif'></span>";
 				PagingHTML += strtext;
 			} else {
-				strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+				strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
 				PagingHTML += strtext;
 			}
 
@@ -438,7 +436,7 @@
 	        }
 
 	        selectelem = elem;
-	        elem.style.backgroundColor = "#f0f6ff";
+	        elem.style.backgroundColor = "#edf4fd";
 	        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
 
 	        // 목록화면 나오고 처음 선택할 때 strMoveListIDInfo 값 셋팅
@@ -456,7 +454,7 @@
 					strMoveListIDInfo = "";
 
 					$(":checkbox[name=myCheckbox]").prop("checked", true);
-					$(".row_body").css("background", "#f0f6ff");
+					$(".row_body").css("background", "#edf4fd");
 
 					$(":checkbox[name=myCheckbox]:checked").each(function(){
 						deleteListID.push($(this).attr("id") + ";")
@@ -759,7 +757,7 @@
 		        }
 
 		        selectelem = elem;
-		        elem.style.backgroundColor = "#f0f6ff";
+		        elem.style.backgroundColor = "#edf4fd";
 		        $("input[id='" + $(elem).attr("id") + "']").prop("checked", true);
 
 		        // 목록화면 나오고 처음 선택할 때 strMoveListIDInfo 값 셋팅
@@ -773,41 +771,43 @@
 	
 	<body class="mainbody" onLoad="javascript:window_onload()">
 		<h1><spring:message code='ezApprovalG.t1678'/><span id="listInfo"></span></h1>
-		<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-		    <select id="ListCompany" onChange="return changeCompID">
-	        	<c:forEach var="item" items="${list}">
-            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-            	</c:forEach>
-		    </select><br /><br />
-		</span>
+		<div id="mainmenu">	
+			<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
+			    <select id="ListCompany" onChange="return changeCompID">
+		        	<c:forEach var="item" items="${list}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+			    </select><br /><br />
+			</span>
+		</div>
 		<table style="width:100%;">		
 			<tr>
-				<table id = "t1" style="width:100%;">
+				<table id = "t1" style="width:100%;border-top:1px solid #e8e8e8">
 					<tr>
-						<td style="width:5%;">
+						<td style="width:60px;">
 							<spring:message code='ezApprovalG.kes04'/>  
 						</td>
-						<td style="width:12%;">
-							<input type="text" id="SDeptName" name="SDeptName" style="WIDTH: 71%;" readonly="true" />
+						<td style="width:200px;">
+							<input type="text" id="SDeptName" name="SDeptName" style="width: 110px; height: 23px;" readonly="readonly" />
 			 	            <a class="imgbtn" name="SDeptSelect"><span onclick="bt_SDeptSelect_onclick()"><spring:message code='ezApprovalG.t105'/></span></a>
 						</td>
-						<td style="width:5.5%;">
+						<td style="width:50px;">
 							<spring:message code='ezApproval.t611'/>
 						</td>
-						<td style="width: 11%;">
-							<select name="selSContName" style="WIDTH: 90%; height: 23px;" onchange="return bt_selSContName_onclick()"></select>
+						<td style="width:80px;">
+							<select name="selSContName" style="width:110px; height: 23px;" onchange="return bt_selSContName_onclick()"></select>
 						</td>
-						<td style="width:5%;">
+						<td style="width:50px;">
 							<spring:message code='ezApproval.t434'/> 
 						</td>
-						<td style="width:11%;">
-							<input type="text" id="DocNumber" name="DocNumber" style="width:90%;" maxlength="50" onkeypress="return search_keypress(event)" />
+						<td style="width:80px;">
+							<input type="text" id="DocNumber" name="DocNumber" style="width: 110px; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)" />
 						</td>
-						<td style="width:5%;">
+						<td style="width:50px;">
 							<spring:message code='ezApproval.t435'/> 
 						</td>
-						<td style="width:11%;">
-							<input type="text" id="DocTitle" name="DocTitle" style="width:90%;" maxlength="50" onkeypress="return search_keypress(event)"/>
+						<td style="width:80px;">
+							<input type="text" id="DocTitle" name="DocTitle" style="width: 110px; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>
 						</td>
 						<td style=" width:*; margin-bottom: 10px; padding: 8px 5px;">
 						</td>
@@ -817,29 +817,29 @@
 			<tr>
 			<table id ="t2" style="width:100%;">
 				<tr>
-					<td style="width:5%;">
+					<td style="width:60px;">
 							 <spring:message code='ezApproval.t437'/>
 					</td>
-					<td style="width:12%;">
-							<input type="text" id="drafterdept" name="drafterdept" style="width: 71%;" maxlength="50" readonly="readonly"/>
+					<td style="width:200px;">
+							<input type="text" id="drafterdept" name="drafterdept" style="width: 110px; height: 23px;" maxlength="50" readonly="readonly"/>
 							<a class="imgbtn" name="TDeptSelect"><span id = "spandept" onclick="bt_TDeptSelect_onclick(this)"><spring:message code='ezApprovalG.t105'/></span></a>
 					</td>
-					<td style="width:5.5%;">
+					<td style="width:50px;">
 						    <spring:message code='ezApproval.t436'/> 
 					</td>
-					<td style="width:11%;">
-							<input type="text" id="drafter" name="drafter" style="width: 90%;" maxlength="50" onkeypress="return search_keypress(event)"/>
+					<td style="width:80px;">
+							<input type="text" id="drafter" name="drafter" style="width:110px; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>
 					</td>
-					<td style="width: 3%;">
+					<td style="width: 70px;">
 							<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/></label>
 					</td>
-					<td style="width: 20%;">
+					<td style="width: 250px;">
 						<span id="topmenu" style="width: 500px">
-							<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 35%; text-align: center" readonly="readonly" />&nbsp; ~ &nbsp;
-							<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 35%; text-align: center" readonly="readonly" />
+							<input type="text" id="startDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />&nbsp; ~ &nbsp;
+							<input type="text" id="endDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />
 						</span>						
 					</td>
-					<td style=" width:*;">
+					<td style="width: 290px;">
 						<a class="imgbtn" >
 							<span onclick="javascript:search(1);"><spring:message code="ezApproval.t236"></spring:message></span>
 						</a>&nbsp;
@@ -876,7 +876,7 @@
 				</tr>
 			</thead>
 			<tbody id="DocCompleteListBody" style="overflow: auto;">
-			<tr><td colspan="11" style="text-align: center; font-size: 15px;"><spring:message code="ezApprovalG.t1126"/></td></tr></tbody> 
+			<tr><td colspan="11" style="text-align: center; font-size: 12px;"><spring:message code="ezApprovalG.t1126"/></td></tr></tbody> 
 		</table>
 		<div id="tblPageRayer" style="padding-top: 10px;"></div>
 </html>

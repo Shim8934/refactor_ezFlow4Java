@@ -1,5 +1,4 @@
-﻿﻿
-var XmlHeader;
+﻿﻿﻿var XmlHeader;
 var XmlHeader_SUB;
 var BlockSize = 10;
 var p_ListOrderObject = null;
@@ -11,9 +10,10 @@ var GetList_HTTP;
 var GetList_HTTP_SUB;
 var GetListInfo_HeaderObject;
 var GetListInfo_ContentObject;
-var m_strColorSelect = "#f0f6ff";
+var m_strColorSelect = "#edf4fd";
 var m_strColorOver = "#f4f5f5";
 var m_strColorDefault = "#ffffff";
+var m_strColorOpened = "#fafafa";
 var GroupplusImg ="/images/ImgIcon/groupplus.gif";
 var GroupminImg ="/images/ImgIcon/groupmin.gif";
 var GroupSenderImg ="/images/ImgIcon/groupsender.gif";
@@ -38,9 +38,10 @@ function MakeHeaderHTML(HeaderObject) {
         XmlRows = SelectNodes(XmlHeader, "view/column");
         var _HeaderTR = document.createElement("TR");
         var _HeaderTH = document.createElement("TH");
-        _HeaderTH.style.width = "22px";
+        _HeaderTH.style.width = "22px";        
         if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
-            var _HeaderCheckBox = document.createElement("INPUT");
+        	_HeaderTH.style.textAlign = "center";
+             var _HeaderCheckBox = document.createElement("INPUT");
             _HeaderCheckBox.type = "checkbox";
             _HeaderCheckBox.style.margin = "0px";
             _HeaderCheckBox.style.padding = "0px";
@@ -54,8 +55,8 @@ function MakeHeaderHTML(HeaderObject) {
         _HeaderTR.appendChild(_HeaderTH);
         for (var Cnt = 0; Cnt < XmlRows.length; Cnt++) {
             var _HeaderRow = document.createElement("TH");
-            if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
-                if (p_ListorderValue == "GROUPSUBLIST") {
+            if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT" && SelectSingleNodeValue(XmlRows[Cnt], "propname") != "readdt") {
+            	if (p_ListorderValue == "GROUPSUBLIST") {
                     _HeaderRow.onclick = function () { event_SubHeaderClick(this); };
                 }
                 else {
@@ -74,11 +75,20 @@ function MakeHeaderHTML(HeaderObject) {
             }
             
             var HeaderType = SelectSingleNodeValue(XmlRows[Cnt], "heading");
-            if (HeaderType == "IMG")
-                _HeaderRow.innerHTML = "<IMG style=\"cursor:pointer\" src=\"" + SelectSingleNodeValue(XmlRows[Cnt], "imgpath") + "\"/>";
-            else
+            if (HeaderType == "IMG") {
+            	if (SelectSingleNodeValue(XmlRows[Cnt], "imgpath") == "") {
+            		_HeaderRow.innerHTML = "&nbsp;";
+            	} else {
+            		_HeaderRow.innerHTML = "<IMG style=\"cursor:pointer\" src=\"" + SelectSingleNodeValue(XmlRows[Cnt], "imgpath") + "\"/>";
+            	}
+            } else {
                 _HeaderRow.innerHTML = SelectSingleNodeValue(XmlRows[Cnt], "heading");
-
+            }
+            if (SelectSingleNodeValue(XmlRows[Cnt], "propname") == "readdt") {
+            	_HeaderTR.appendChild(_HeaderRow);
+            	continue;
+            }
+            
             var _HeaderSpanimg = null;
             if (SelectSingleNodeValue(XmlRows[Cnt], "prop") == p_ListOrderby) {
                 _HeaderRow.setAttribute("orderoption", p_ListOrderOption);
@@ -192,6 +202,7 @@ function drag(ev) {
     }
 }
 
+var xmlhttp_MailReceiverList = null;
 function MakeListInfoHTML(ConentObject) {
     if (p_ListorderValue == "" || p_ListorderValue == "RECEIV" || p_ListorderValue == "UNREAD" || p_ListorderValue == "GROUPSUBLIST") {
     	try {
@@ -225,6 +236,11 @@ function MakeListInfoHTML(ConentObject) {
                 var p_ContentClass = SelectSingleNodeValue(XmlRows[Cnt], "contentclass");
                 var p_IsDraft = SelectSingleNodeValue(XmlRows[Cnt], "isdraft");
                 var p_SecureMail = SelectSingleNodeValue(XmlRows[Cnt], "securemail");
+                var p_Readdt = SelectSingleNodeValue(XmlRows[Cnt], "readdt");
+                var p_Group = SelectSingleNodeValue(XmlRows[Cnt], "group");
+                var recipients = [];
+            	var recipientsLen = 1;
+                
                 var _TR = document.createElement("TR");
                 _TR.setAttribute("id", "Maillist_" + Cnt);
                 _TR.style.cursor = "pointer";
@@ -242,6 +258,7 @@ function MakeListInfoHTML(ConentObject) {
             
                 var _TDCheckBox = document.createElement("TD");
                 _TDCheckBox.style.width = "22px";
+                _TDCheckBox.style.textAlign = "center";
                 _TDCheckBox.style.cursor = "default";
                 var _TDCheckBox_Sub = document.createElement("INPUT");
                 _TDCheckBox_Sub.type = "checkbox";
@@ -255,6 +272,13 @@ function MakeListInfoHTML(ConentObject) {
                 _TDCheckBox.appendChild(_TDCheckBox_Sub);
                 _TR.appendChild(_TDCheckBox);
                 XmlHeaderRows = SelectNodes(XmlHeader, "view/column");
+                
+                // 수신확인 중 수신자가 여러명일 경우
+            	if (useReceivingChk) {
+            		recipients = p_Msgto.split(';');
+            		recipientsLen = recipients.length;
+            	}
+            	
                 for (var HRows = 0; HRows < XmlHeaderRows.length; HRows++) {
 
                     var _TDColum = document.createElement("TD");
@@ -266,6 +290,14 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.cursor = "default";
                             _TDColum.innerHTML = p_Importance == "0" ? "<IMG style='cursor:default' draggable='false' src='/images/ImgIcon/icon-lowimportance.gif'/>" : p_Importance == "2" ? "<IMG style='cursor:default' src='/images/ImgIcon/icon-highimportance.gif'/>" : "";
                             break;
+                        case "receiveInfo":
+                        	_TDColum.style.width = "18px";
+                        	if (recipientsLen > 2 || p_Group == "yes") {
+                        		_TDColum.innerHTML = "<span style='cursor: pointer'><IMG src='/images/receivedCheck_closed.png'></span>";
+                        		_TDColum.setAttribute("viewSelect", "false");
+                        		_TDColum.onclick = function () { viewReceivers(this); };
+                        	}
+                        	break;
                         case "status":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.width = SelectSingleNodeValue(XmlHeaderRows[HRows], "width");
@@ -287,7 +319,6 @@ function MakeListInfoHTML(ConentObject) {
                             break;
                         case "sender":
                         	var innerHTML = p_Sender;
-                        	
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
                             _TDColum.style.overflow = "hidden";
                             _TDColum.style.textOverflow = "ellipsis";
@@ -296,6 +327,7 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.style.color = p_Importance == "2" ? importanceColor : "";
                             _TDColum.innerHTML = p_Subject;
                             _TDColum.innerHTML = innerHTML;
+                            
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
                             // 수아 수정 (보낸사람 클릭 -> 보낸 사람에게 메일 전송창)
                             _TDColum.setAttribute("data-msgto", p_Msgto);
@@ -321,10 +353,13 @@ function MakeListInfoHTML(ConentObject) {
                             if (p_SecureMail == 1) {
                             	p_Subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"15px\" />" + p_Subject;
                             }
-                            if (g_bdraft == true) {
-                            	p_Subject = p_Subject
-                            } else {
-                            	p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" />";
+
+                            if (useMailNewWindow == "YES") {
+                            	if (g_bdraft == true) {
+	                            	p_Subject = p_Subject
+	                            } else {
+                            		p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;<img class='mailpopupicon' src=\"/images/email/popup_icon.gif\" width=\"10px\"  onclick = \"mailOpenPopup(this, event)\" />";
+	                            }
                             }
                             
                             _TDColum.innerHTML = p_Subject;
@@ -363,6 +398,33 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.ondblclick = function () { event_listDBClick(this.parentElement); };
                             _TDColum.onselectstart = function () { return false; };
                             break;
+                        case "readdt":
+                            _TDColum.style.textAlign = "center";
+                            _TDColum.style.width = "150px";
+                            _TDColum.style.overflow = "hidden";
+                            _TDColum.style.textOverflow = "ellipsis";
+                            _TDColum.style.whiteSpace = "nowrap";
+                            _TDColum.style.minWidth = "70px";
+                        	
+                        	if (p_Readdt == "UNREAD") {                                
+                                var TD_ATag = document.createElement("A");
+                                TD_ATag.className = "imgbtn";
+                                
+                                var TD_Span = document.createElement("SPAN");
+                                TD_Span.innerHTML = reSendMsg;
+                                TD_Span.onclick = function () {
+                                    var msgHref = this.parentElement.parentElement.parentElement.getAttribute("_href");
+                                    
+                                    ReSendWithURLOnly(msgHref);
+                                };
+                                TD_ATag.appendChild(TD_Span);
+                                
+                                _TDColum.appendChild(TD_ATag);                        		
+                        	} else {
+                        	    _TDColum.innerHTML = p_Readdt;
+                        	}
+                        	
+                        	break;
                     }
                     _TR.appendChild(_TDColum);
                     
@@ -466,6 +528,145 @@ function MakeListInfoHTML(ConentObject) {
         }
     }
 }
+
+var xmlhttp_MailReceiverList;
+var MailReceiverListXML;
+function getReaderCount(parentId) {
+	 if (xmlhttp_MailReceiverList != null && xmlhttp_MailReceiverList.readyState == 4) {
+	        if (xmlhttp_MailReceiverList.status >= 200 && xmlhttp_MailReceiverList.status < 300) {
+	        	MailReceiverListXML = xmlhttp_MailReceiverList.responseXML;
+                xmlhttp_MailReceiverList = null;
+                makeReceiverList(parentId);
+	        }      
+	 }
+}
+
+function makeReceiverList(parentId) {
+	var XmlRows = SelectNodes(MailReceiverListXML, "DATA/ROW");
+	
+	for (var i = 0; i < XmlRows.length; i++) {
+		var readDate = SelectSingleNodeValue(XmlRows[i], "READDATE");
+        var readerEmail = SelectSingleNodeValue(XmlRows[i], "READEREMAIL");
+        var cancel = trim_Cross(SelectSingleNodeValue(XmlRows[i], "CANCEL"));
+        var readerName = SelectSingleNodeValue(XmlRows[i], "READERNAME");
+        
+        var TR = document.createElement("TR");
+        TR.setAttribute("id", parentId + "_" + i);
+        
+        if ($("#" + parentId)[0].childNodes[0].childNodes[0].checked == true) {
+        	TR.style.backgroundColor = m_strColorSelect;
+        } else {
+        	TR.style.backgroundColor = m_strColorOpened;
+        }
+        
+        var TD1 = document.createElement("TD");
+        TD1.style.width = "22px;";
+        
+        var TD2 = document.createElement("TD");
+        TD2.style.width = "18px;";
+        
+        var TD3 = document.createElement("TD");
+        TD3.style.textAlign = "left";
+        TD3.style.overflow = "hidden";
+        TD3.style.textOverflow = "ellipsis";
+        TD3.style.whiteSpace = "nowrap";
+        TD3.style.width = "22%";
+        TD3.innerHTML = readerName;
+        
+        var TD4 = document.createElement("TD");
+        var subject = $("#" + parentId)[0].getAttribute("_subject");
+        TD4.style.textAlign = "left";
+        TD4.style.overflow = "hidden";
+        TD4.style.textOverflow = "ellipsis";
+        TD4.style.whiteSpace = "nowrap";
+        TD4.style.width = "49%";
+        TD4.innerHTML = subject;
+        
+        var TD5 = document.createElement("TD");
+        var sendDate = $("#" + parentId)[0].childNodes[4].innerText;
+        TD5.style.textAlign = "center";
+        TD5.style.width = "150px";
+        TD5.style.overflow = "hidden";
+        TD5.style.textOverflow = "ellipsis";
+        TD5.style.whiteSpace = "nowrap";
+        TD5.style.minWidth = "70px";
+        TD5.innerHTML = sendDate;
+        
+        var TD6 = document.createElement("TD");
+        TD6.style.textAlign = "center";
+        TD6.style.width = "150px";
+        TD6.style.overflow = "hidden";
+        TD6.style.textOverflow = "ellipsis";
+        TD6.style.whiteSpace = "nowrap";
+        TD6.style.minWidth = "70px";
+        
+        if (readDate == 'UNREAD') {
+            var msgHref = $("#" + parentId)[0].getAttribute("_href");
+        	
+            var TD6_ATag = document.createElement("A");
+            TD6_ATag.className = "imgbtn";
+            
+            var TD6_Span = document.createElement("SPAN");
+            TD6_Span.innerHTML = reSendMsg;
+            TD6_Span.setAttribute("EMAIL", readerEmail);
+            TD6_Span.onclick = function () {
+                ReSend(msgHref, this.getAttribute("EMAIL"));
+            };
+            TD6_ATag.appendChild(TD6_Span);
+            
+            TD6.appendChild(TD6_ATag);
+        } else {        
+            TD6.innerHTML = readDate;
+        }
+        
+        TR.appendChild(TD1);
+        TR.appendChild(TD2);
+        TR.appendChild(TD3);
+        TR.appendChild(TD4);
+        TR.appendChild(TD5);
+        TR.appendChild(TD6);
+        
+        $(".mainlist #" + parentId).after(TR);
+	}
+}
+
+function viewReceivers(obj) {
+	if (obj.getAttribute("viewSelect") == "false") {
+		var parentHref = obj.parentElement.getAttribute("_href");
+		var parentId = obj.parentElement.id;
+		
+		MailReceiverListXML = null;
+        xmlhttp_MailReceiverList = null;
+        
+        var strQuery = "<MESSAGEID>" + decodeURIComponent(parentHref) + "</MESSAGEID>";
+        xmlhttp_MailReceiverList = createXMLHttpRequest();
+        xmlhttp_MailReceiverList.open("POST", "/ezEmail/mailGetReceiveList.do", true);
+        xmlhttp_MailReceiverList.onreadystatechange = function() { getReaderCount(parentId); }
+        xmlhttp_MailReceiverList.send(strQuery);
+		
+		obj.setAttribute("viewSelect", "true");
+		obj.childNodes[0].childNodes[0].src = "/images/receivedCheck_opend.png";
+	} else {
+		
+		var parentId = obj.parentElement.id;
+		var removeElement = $("#MailList")[0].childNodes;
+		var removeArry = [];
+		
+		for (var i = 0; i < removeElement.length; i++) {
+			if (removeElement[i].id.indexOf(parentId  + "_") != -1) {
+				removeArry[removeArry.length] = removeElement[i].id;
+			}
+		}
+		
+		for (var i = 0; i <removeArry.length; i++) {
+			$("#" + removeArry[i]).remove();
+		}
+		
+		obj.setAttribute("viewSelect", "false");
+		obj.childNodes[0].childNodes[0].src = "/images/receivedCheck_closed.png";
+	}
+}
+
 function MakeListInfoHTML_SUB(ConentObject) {
         try {
             var XmlList = GetList_HTTP_SUB.responseXML;
@@ -645,9 +846,15 @@ function GetListInfo(HeaderObject, ContentObject) {
         createNodeAndInsertText(xmlpara, objNode, "END", pEnd);
 
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
-
+    
+    var _url = "/ezEmail/mailGetList.do";
+    
+    if (useReceivingChk) {
+    	_url = "/ezEmail/getReceiverMailList.do";
+    }
+    
     GetList_HTTP = createXMLHttpRequest();
-    GetList_HTTP.open("POST", "/ezEmail/mailGetList.do", true);
+    GetList_HTTP.open("POST", _url, true);
     GetList_HTTP.onreadystatechange = GetListIevent_ongetxmlcomplete;
     GetList_HTTP.send(xmlpara);
     GetListInfo_HeaderObject = HeaderObject;
@@ -995,21 +1202,21 @@ function makePageSelPage() {
     var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
     document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang255 + "<span id='folderUnreadCount' style='color:#017BEC;'> " + pFolderUnReadCount + " </span>" + strLang257 + " / " + strLang256 + "<span id='folderTotalCount' style='color:#017BEC;'> " + pFolderTotalCount + " </span>" + strLang257 + "</b>]";
     if (totalPage > 1 && pageNum != 1) {
-        PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\" width=\"16\" height=\"16\"></span>";
+        PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\"></span>";
     }
     else {
-        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_p_prev01.gif\" width=\"16\" height=\"16\"></span>";
+        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_p_prev01.gif\"></span>";
     }
     if (totalPage > BlockSize) {
         if (pageNum > BlockSize) {
-            PagingHTML += "<span class=\"btnimg\" onclick= 'return selbeforeBlock()'><img src=\"/images/kr/cm/btn_prev.gif\" width=\"16\" height=\"16\"></span><span class=\"ptxt\" onclick= 'return selbeforeBlock_one()'>" + strLang258 + "</span>";
+            PagingHTML += "<span class=\"btnimg\" onclick= 'return selbeforeBlock()'><img src=\"/images/kr/cm/btn_prev.gif\"></span>";
         }
         else {
-            PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\" width=\"16\" height=\"16\"></span><span class=\"ptxt\" onclick= 'return selbeforeBlock_one()'>" + strLang258 + "</span>";
+            PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
         }
     }
     else {
-        PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\" width=\"16\" height=\"16\"></span><span class=\"ptxt\" onclick= 'return selbeforeBlock_one()'>" + strLang258 + "</span>";
+        PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
     }
     var MaxNum;
     var i;
@@ -1033,20 +1240,20 @@ function makePageSelPage() {
     }
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-            PagingHTML += "<span class=\"ptxt\" onclick='return selafterBlock_one()'>" + strLang259 + "</span><span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\" width=\"16\" height=\"16\"></span>";
+            PagingHTML += "<span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\"></span>";
         }
         else {
-            PagingHTML += "<span class=\"ptxt\" onclick='return selafterBlock_one()'>" + strLang259 + "</span><span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\" width=\"16\" height=\"16\"></span>";
+            PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
         }
     }
     else {
-        PagingHTML += "<span class=\"ptxt\" onclick='return selafterBlock_one()'>" + strLang259 + "</span><span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\" width=\"16\" height=\"16\"></span>";
+        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
     }
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-        PagingHTML += "<span class=\"btnimg\" onclick='return goToPageByNum(" + totalPage + ")'><img src=\"/images/kr/cm/btn_n_next.gif\" width=\"16\" height=\"16\"></span>";
+        PagingHTML += "<span class=\"btnimg\" onclick='return goToPageByNum(" + totalPage + ")'><img src=\"/images/kr/cm/btn_n_next.gif\"></span>";
     }
     else {
-        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_n_next01.gif\" width=\"16\" height=\"16\"></span>";
+        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_n_next01.gif\"></span>";
     }
     PagingHTML += "</div>";
     td_Create1(PagingHTML);
@@ -1211,7 +1418,11 @@ function event_HeaderCheckBoxClick(obj) {
         for (var i = 0; i < nodeCount; i++) {
         	mailNode = mailNodes.item(i);
         	
-        	mailNode.childNodes.item(0).childNodes.item(0).checked = true;
+        	if (mailNode.childNodes.item(0).childNodes.length != 0) {
+        		mailNode.childNodes.item(0).childNodes.item(0).checked = true;
+        	}
+        	
+        	
         	mailNode.style.backgroundColor = m_strColorSelect;
             //TODO: 테스트해보기 2016-06-02
             // dhlee: modified so that existing elements aren't merged with new ones.
@@ -1223,7 +1434,9 @@ function event_HeaderCheckBoxClick(obj) {
         for (var i = 0; i < nodeCount; i++) {
         	mailNode = mailNodes.item(i);
         	
-        	mailNode.childNodes.item(0).childNodes.item(0).checked = false;
+        	if (mailNode.childNodes.item(0).childNodes.length != 0) {
+        		mailNode.childNodes.item(0).childNodes.item(0).checked = false;
+        	}
         	mailNode.style.backgroundColor = m_strColorDefault;
         }
         
@@ -1328,6 +1541,15 @@ function event_listclick(obj, event) {
                     _RowObject = document.getElementById(listContentArry[Cnt]);
                     _RowObject.style.backgroundColor = m_strColorDefault;
                     _RowObject.childNodes.item(0).childNodes.item(0).checked = false;
+                    
+                    if (useReceivingChk) {
+                    	var receiveChilds = $("#MailList [id^=" + listContentArry[Cnt] + "_]");
+                    	
+                    	for (var i = 0; i < receiveChilds.length; i++) {
+                    		receiveChilds[i].style.backgroundColor = m_strColorDefault;
+                    	}
+                    }// end if
+                    
                 }
                 listContentArry = new Array();
             }
@@ -1397,6 +1619,15 @@ function event_listclick(obj, event) {
                     _RowObject.style.backgroundColor = m_strColorSelect;
                     _RowObject.childNodes.item(0).childNodes.item(0).checked = true;
                     listContentArry[listContentArry.length] = _RowObject.getAttribute("id");
+                    
+                    if (useReceivingChk) {
+                    	var receiveChilds = $("#MailList [id^=" + _RowObject.getAttribute("id") + "_]");
+                    	
+                    	for (var i = 0; i < receiveChilds.length; i++) {
+                    		receiveChilds[i].style.backgroundColor = m_strColorSelect;
+                    	}
+                    }// end if
+                    
                     prevShow();
                 }
             }
@@ -1409,10 +1640,29 @@ function event_listclick(obj, event) {
 function event_listCheckboxclick(obj) {
     if (obj.checked) {
         obj.parentElement.parentElement.style.backgroundColor = m_strColorSelect;
+        
+        var allChild = $("#MailList")[0].childNodes;
+        
+        for (var i = 0;i < allChild.length; i++) {
+        	if (allChild[i].id.indexOf(obj.parentNode.parentNode.id + "_") != -1) {
+        		allChild[i].style.backgroundColor = m_strColorSelect;
+        	}
+        }
+        
         listContentArry[listContentArry.length] = obj.parentElement.parentElement.getAttribute("id");
     }
     else {
         var TemplistArray = new Array();
+        
+        var allChild = $("#MailList")[0].childNodes;
+        
+        for (var i = 0;i < allChild.length; i++) {
+        	if (allChild[i].id.indexOf(obj.parentNode.parentNode.id + "_") != -1) {
+        		/*allChild[i].style.backgroundColor = m_strColorDefault;*/
+        		allChild[i].style.backgroundColor = m_strColorOpened;
+        	}
+        }
+        
         for (var i = 0; i < listContentArry.length; i++) {
             if (obj.parentElement.parentElement.getAttribute("id") == listContentArry[i]) {
                 obj.parentElement.parentElement.style.backgroundColor = m_strColorDefault;

@@ -217,8 +217,11 @@ function InitSCInfo() {
 
     if (ret == "FALSE") {
         alert("" + strLang708 + "");
-    }
-    else {
+    } else if (ret == "NORECORD") {
+    	tdSCInfo.innerHTML = strLang711;
+        tdSCInfo.style.textAlign  = "center";
+        tdSCInfo.style.height  = "215px";
+    } else {
         //SCList.dataSource=rtnXml;
         var listview = new ListView();                          
         listview.SetID("lvtSCList");                            

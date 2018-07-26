@@ -23,12 +23,12 @@
 	    	
 	    	window.onload = function () {
 	        	document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
-	        	document.getElementById("divCross").style.height = window.innerHeight - 75 + "px";
+	        	document.getElementById("divCross").style.height = window.innerHeight - 111 + "px";
 	        }
 	    	
 	    	window.onresize = function () {
 	        	document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
-	        	document.getElementById("divCross").style.height = window.innerHeight - 75 + "px";
+	        	document.getElementById("divCross").style.height = window.innerHeight - 111 + "px";
 	        }
 	    	
 	    	function Editor_Complete() {
@@ -184,18 +184,15 @@
 		
  		<div id="close">
         	<ul>
-          		<li id="idDocSaveBtn"><span onclick="return idDocSaveBtn_onclick()"><spring:message code="ezResource.t378" /></span></li>
-          		<li id="idDelBtn"><span onclick="return idDelBtn_onclick()"><spring:message code="ezResource.t379" /></span></li>
-          		<li><span onclick="window.close();"> <spring:message code="ezResource.t150" /></span></li>
+          		<li><span onclick="window.close();"></span></li>
         	</ul>
  		</div>
- 		
- 		<script type="text/javascript">
-    		selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
-		
- 		<div id="divCross" style="margin-top:10px;vertical-align:top;">
+ 		<div id="divCross" style="margin-top:10px;vertical-align:top;height:535px">
 			<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-       </div>
+       	</div>
+       	<div class="btnpositionNew">
+       		<a class="imgbtn" onClick="return idDocSaveBtn_onclick()" id="idDocSaveBtn"><span><spring:message code="ezResource.t378" /></span></a>
+		    <a class="imgbtn" onClick="return idDelBtn_onclick()" id="idDelBtn"><span><spring:message code="ezResource.t379" /></span></a>
+		</div>
 	</body>
 </html>

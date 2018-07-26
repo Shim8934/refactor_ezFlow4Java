@@ -85,6 +85,7 @@
 	                            break;
 	                    }
 	                    IMG.style.display = "inline-block";
+	                    IMG.style.verticalAlign = "middle";
 	                    SPAN.style.paddingLeft = "5px";
 	                    SPAN.style.height = "16px";
 	                    SPAN.style.verticalAlign = "middle";
@@ -151,7 +152,7 @@
 	        {
 	            document.getElementById('cbx_all').checked = false;
 	            if (obj.checked) {
-	                obj.parentElement.parentElement.style.backgroundColor = "#f0f6ff";
+	                obj.parentElement.parentElement.style.backgroundColor = "#edf4fd";
 	                strPathInfo = strPathInfo + obj.value + "|||";
 	                strTypeInfo = strTypeInfo + GetAttribute(obj, "data1") + "|||";
 	                strFileName = strFileName + GetAttribute(obj, "data2") + "|||";
@@ -173,10 +174,10 @@
 	
 	                    document.getElementById('chk_' + i).checked = true;
 	                    if (CrossYN())
-	                        GetChildNodes(document.getElementById('table_filelist'))[i].style.backgroundColor = "#f0f6ff";
+	                        GetChildNodes(document.getElementById('table_filelist'))[i].style.backgroundColor = "#edf4fd";
 	                    else {
-	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[0].style.backgroundColor = "#f0f6ff";
-	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[1].style.backgroundColor = "#f0f6ff";
+	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[0].style.backgroundColor = "#edf4fd";
+	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[1].style.backgroundColor = "#edf4fd";
 	                    }
 	
 	                    strPathInfo += document.getElementById('chk_' + i).value + "|||";
@@ -210,6 +211,11 @@
 	</head>
 	<body class="popup">
 	    <h1><spring:message code='ezApprovalG.t00008'/></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window_close()"></span></li>
+            </ul>
+        </div>
 	    <span>&nbsp;▒ <spring:message code='ezApprovalG.t00009'/></span>
 	    <table class="mainlist" style="width: 550px; margin-left: 5px;margin-top:7px">
 	        <tr>
@@ -222,9 +228,8 @@
 	        </table>
 	    </div>
 	    <br />
-	     <div class="btnposition btnpositionNew" align="center">
-	        <a class="imgbtn"><span style="width: 40px; text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
-	        <a class="imgbtn"><span style="width: 40px; text-align: center;" onclick="window_close()"><spring:message code='ezApprovalG.t1761'/></span></a>
+	     <div class="btnposition btnpositionNew">
+	        <a class="imgbtn"><span style="text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>	        
 	    </div>
 	    <iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>
 	</body>

@@ -9,6 +9,11 @@
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />		
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
+		<style>
+			.h2_dot {
+				background: url(/images/kr/left/left_dot02.gif) no-repeat 0px 70%;
+			}
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
@@ -46,6 +51,11 @@
 			        usedate = false;
 		        }
 				//////////////////
+				
+				/* 2018-07-20 홍승비 - 일정검색 > 검색결과 좌측네모 IE에서 높이조절 */
+		        if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
+					document.getElementsByClassName("h2_dot")[0].style.background = "url(/images/kr/left/left_dot02.gif) no-repeat 0px 67%";
+		        }
 		    }
 			
 		    $(function () {
@@ -183,7 +193,7 @@
 			
 		    function onmouseOver(elem) {
 		        elem.style.color = "blue";
-		        elem.style.backgroundColor = "#f0f6ff";
+		        elem.style.backgroundColor = "#edf4fd";
 		    }
 		
 		    function onmouseOut(elem) {
@@ -220,12 +230,12 @@
 		    	<tr> 
 		      		<th><spring:message code='ezSchedule.t348'/></th> 
 		      		<td style="width:100%">
-		      			<select name="search_field" style="WIDTH: 70px"> 
+		      			<select name="search_field" style="WIDTH: 70px;height:22px"> 
 		          			<option value="title"selected><spring:message code='ezSchedule.t272'/></option> 
 		          			<option value="location"><spring:message code='ezSchedule.t273'/></option> 
 		        		</select> 
-		        		<input type="text" id="keyword" size="21" value="<c:out value="${keyword}"/>" onkeypress="return search_keypress(event)" /> 
-		        		<a href="#" class="imgbtn"><span onClick="search()"><spring:message code='ezSchedule.t24'/></span></a>
+		        		<input type="text" id="keyword" size="21" value="<c:out value="${keyword}"/>" onkeypress="return search_keypress(event)" style="height:22px" /> 
+		        		<a href="#" class="imgbtn imgbck"><span onClick="search()"><spring:message code='ezSchedule.t24'/></span></a>
 		        	</td> 
 		    	</tr> 
 		    	<tr> 

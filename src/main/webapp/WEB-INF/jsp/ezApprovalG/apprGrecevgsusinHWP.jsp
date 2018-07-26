@@ -24,6 +24,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/AutoAprLine_Cross.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
 		<script type="text/javascript">
 		    var pWriterDeptID;
 		    var pDocID = "${docID}";
@@ -86,6 +87,7 @@
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";		
+		    var pCompanyID = "${userInfo.companyID}";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "", pLimitRange = "", pPageNum = "1";
 		    var cabinetID = "";
 		    var TaskCode = "";
@@ -113,6 +115,9 @@
 		    var g_senderinfo = '${userInfo.companyID}' + ", " + "${userInfo.deptName1}" + ", " + "${userInfo.title1}";
 		    var approvalFlag  = '${approvalFlag}';
 		    var ext = "hwp";
+		    var nonElecRec = "${isNonElecRec}";
+		    var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
+		    var dirPath = "${approvalRoot}";
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -253,7 +258,12 @@
 			        SetBtnStateTrue();
 			
 			        getReceiveDocInfo();
-			
+			        
+			        if (nonElecRec == "Y") {
+				        getNonElecInfoSusinInit();
+	                	document.getElementById("btnAddSepAttach").style.display = "none";
+			        }
+			        
 			        if (pSusinDocURL != "") {
 			            if (pSusinDocURL == "PC") {
 			
@@ -318,6 +328,7 @@
 			                        }
 			                        else {
 			                            var emlName = getNodeText(pRelayDocInfo.getElementsByTagName("emlURL").item(0));
+			                            //이부분이 타는지 체크해야함 탄다면 어떤 의미인지도 체크
 			                            if (!decodeUp(emlName)) {
 			                                hideProgress();
 			                                chkBtnConfirm("1");
@@ -325,6 +336,7 @@
 			                            }
 			                        }
 			                    }
+			                    
 			                    var tempFlag = getExtInfo();
 			                    if (tempFlag) {
 			                        setAutoProperty();
@@ -406,7 +418,7 @@
 			        getGongRamDocInfo();
 			
 			        var g_SepAttachLVXml = "";
-			        g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml");
+			        g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml", true);
 			
 			        if (!g_SepAttachLVXml)
 			            g_SepAttachLVXml = "";
@@ -501,17 +513,18 @@
 			        }
 			        catch (e) { }
 			
-			        if (cabinetID == "")
-			            btnApprovalInfo();
+			        /* if (cabinetID == "")
+			            btnApprovalInfo(); */
 			
 			        if (cabinetID == "") {
 			            var pAlertContent = "<spring:message code='ezApprovalG.t134'/>";
 			            OpenAlertUI(pAlertContent);
+			            btnApprovalInfo();
 			            return;
 			        }
 			
 			        var g_SepAttachLVXml = "";
-			        g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml")
+			        g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml", true);
 			        if (!g_SepAttachLVXml)
 			            g_SepAttachLVXml = "";
 			
@@ -540,8 +553,7 @@
 			                    var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
 					            OpenAlertUI(pAlertContent);
 					            return;
-					        }
-					        else if (chkpass == "cancel") {
+			                } else if (chkpass == "cancel" || chkpass == undefined) {
 					            var pAlertContent = "[<spring:message code='ezApprovalG.t1413'/>";
 					                OpenAlertUI(pAlertContent);
 					                return;
@@ -872,7 +884,8 @@
 			      }
 			      catch (e) { }
 			
-			      DeleteLocalFiles();
+			      //사용하지 않는게 좋을듯 엑티브엑스를 이용하여 템프파일 생성 후 지우는거 
+// 			      DeleteLocalFiles();
 			  }
 		
 			  function DeleteLocalFiles() {
@@ -1286,6 +1299,19 @@
 			    parameter[38] = tempSecurityDate;
 			    parameter[39] = SummaryFlag;
 			    parameter[45] = pPublicityYN;
+			    parameter[46] = nonElecRec;
+			    
+			    if (nonElecRec == "Y") {
+			    	if (pGubun == "11") {
+			        	parameter[47] = cabinetID;
+		        	} else {
+			        	parameter[47] = "nonElecRecTempCabinet";
+		        	}
+			        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
+			        parameter[49] = nonSepAttachLVXml; // 분첨
+			        parameter[50] = g_szSCListXml; // 특수목록
+			        parameter[51] = sepAttachCheckYN; // 분첨 확인여부
+		        }
 			    
 			    if (tempItemCode != "") {
 			        tempdocnumcode = tempItemCode;
@@ -1369,6 +1395,14 @@
 				                /*2018-04-05 김은석 수정 건설공사 공개여부*/
 //	 			                setPublicFlag();
 				                setPublicFlag2();
+				                
+				                if (nonElecRec == "Y") {
+					            	nonElecRecInfoXml = ret[23];
+					            	nonSepAttachLVXml = ret[24];
+					            	g_szSCListXml =  ret[25];
+					            	sepAttachCheckYN = ret[26];
+					            	setNonElecRecInfo(nonElecRecInfoXml);
+					            }
 			                } else {
 			                	tempKeep = ret[16];
 			                	tempItemName = ret[17];
@@ -1379,6 +1413,8 @@
 			                	tempPublic = ret[11];
 			                	SetDocOption(ret[20]);
 			                }
+			                
+			                
 			                SummaryFlag = true;
 			                HwpCtrl.ChangeMode(3);
 			            } catch (e) {
@@ -1395,6 +1431,69 @@
 			function RefreshRecvDoc() {
 			    SetHref("DEL");
 			    window.location.reload(true);
+			}
+			
+			function insertApprovConn() {
+	        	$.ajax({
+            		type : "POST",
+            		dataType : "text",
+            		async : false,
+            		url : "/ezConn/insertApprovConn.do",
+            		data : {
+            				htmlPK : "${htmlPK}",
+            				docID : pDocID,
+            				writerID : arr_userinfo[1],
+            				formID : pFormID
+            				},
+            		success : function(data) {
+            		}
+            	});
+	        }
+			
+			function updateApprovConn() {
+		    	$.ajax({
+            		type : "POST",
+            		dataType : "text",
+            		async : false,
+            		url : "/ezConn/updateApprovConn.do",
+            		data : {
+            				docID : pDocID,
+            				formID : pFormID
+            				},
+            		success : function(data) {
+            		}
+            	});
+		    }
+	        
+	        function ezNotieSetting() {
+	        }
+			
+			function GetObject() {
+				i_icd2.SetDocumentDisp(window.document);
+                i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/ezPortal/componentListTransfer.do";
+                i_icd2.CheckVersion();
+                var nCount = i_icd2.nNeedDownload;
+
+                if (nCount) {
+                    if_Progress.StartOn();
+                } else {
+                    finish_download();
+                }
+			}
+	
+			function finish_download() {
+				OfficeBugPatch();
+			}
+			
+			function OfficeBugPatch() {
+			}
+			
+			function btnDel_onclick() {
+				if (nonElecRec == "Y") {
+					if (confirm("삭제하시겠습니까 ?")) {
+						RemoveSusinNonElecRecDoc(pDocID);
+					}
+				}
 			}
 		</script>
 <!-- 		<script type="text/vbscript" language="vbscript"> -->
@@ -1441,17 +1540,25 @@
 	                        <li id="btnReAssign" style="display: none"><span onclick="return btnReAssign_onclick()"><spring:message code='ezApprovalG.t1431'/></span></li>
 	                        <li id="btnDistribute"><span onclick="return btnDistribute_onclick()"><spring:message code='ezApprovalG.t1432'/></span></li>
 	                        <li id="btnReDistribute" style="display: none"><span onclick="return btnReDistribute_onclick()"><spring:message code='ezApprovalG.t1433'/></span></li>
-	                        <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
+	                        <c:choose>
+		                        <c:when test="${isNonElecRec eq 'Y'}">
+			                        <li id="btnDel"><span onclick="return btnDel_onclick()">삭제</span></li>
+		                        </c:when>
+		                        <c:otherwise>
+			                        <li id="btnReturn"><span onclick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
+		                        </c:otherwise>
+	                        </c:choose>
 	                        <li id="btnReqReSend" style="display: none"><span onclick="return btnReqReSend_onclick()"><spring:message code='ezApprovalG.t1435'/></span></li>
 	                        <li id="btnEdit"><span onclick="return btnEdit_onclick()"><spring:message code='ezApprovalG.t44'/></span></li>
 	                        <li id="btnPrint"><span onclick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
 	                        <li id="btnMail"><span onclick="return btnMail_onclick()"><spring:message code='ezApprovalG.t62'/></span></li>
+	                        <li id="btnHelper" style="display: none"><span onclick="return btnHelper_onclick()" style="display: none;"><spring:message code='ezApprovalG.t157'/></span></li>
 	                        <li id="btnRefresh" style="display: none"><span onclick="return RefreshRecvDoc()"><spring:message code='ezApprovalG.t00013'/></span></li>
 	                    </ul>
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li id="btnClose"><span onclick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
+	                        <li id="btnClose"><span onclick="return btnClose_onclick()"></span></li>
 	                    </ul>
 	                </div>
 	                <script type="text/javascript">

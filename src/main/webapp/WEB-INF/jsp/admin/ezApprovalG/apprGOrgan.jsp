@@ -6,7 +6,7 @@
 	    <title><spring:message code='ezApproval.t344'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezApproval.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/control_Cross/TreeView.js" ></script>
@@ -101,10 +101,14 @@
 	</head>
 	<body class="popup">
 	    <h1><spring:message code='ezApproval.t344'/></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="bt_Close_onclick()"></span></li>
+            </ul>
+        </div>
 	    <div id="TreeView" style="border: 1px solid #ddd; height: 370px; width: 100%; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF;" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)"></div>
-	    <div class="btnposition">
+	    <div class="btnpositionNew">
 	        <a class="imgbtn" onclick="bt_Ok_onclick()"><span><spring:message code='ezApproval.t84'/></span></a>
-	        <a class="imgbtn" onclick="bt_Close_onclick()"><span><spring:message code='ezApproval.t70'/></span></a>
 	    </div>
 	</body>
 </html>

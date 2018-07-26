@@ -1,4 +1,4 @@
-﻿var wTable;
+﻿﻿var wTable;
 var xmlhttp;
 
 var delFlag = false;
@@ -27,6 +27,53 @@ function CalViewSource(chk_str) {
 			delFlag = false;
 		}
     }); 
+}
+//2018-06-19 구해안 이동할때 css 적용하는 함수 제작
+function chk_scheduleCSS() {
+	if(typeCal == 0){		
+		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
+			var chk_eachVal1 = $(this).val();
+			$('.td_list td[ownerid = "'+chk_eachVal1+'"]').each(function(index, value){
+				$(value).addClass('chk_noneDisplay');
+			});
+		});
+		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
+			var test = $(this).val();
+			
+			$('.td_list td[ownerid = "'+test+'"]').each(function(index, value){
+				$(value).removeClass('chk_noneDisplay');
+			});
+		});					
+	}else if(typeCal == 1) {
+		console.log('주보기진입');
+		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
+			var chk_eachVal1 = $(this).val();
+			$('div[ownerid = "'+chk_eachVal1+'"]').each(function(index, value){
+				$(value).addClass('chk_noneDisplay');
+			});			
+		});
+		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
+			var test = $(this).val();
+			$('div[ownerid = "'+test+'"]').each(function(index, value){
+				$(value).removeClass('chk_noneDisplay');
+			});			
+		});	
+	}else{
+		console.log('일보기진입');
+		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
+			var chk_eachVal1 = $(this).val();
+			$('div[ownerid = "'+chk_eachVal1+'"]').each(function(index, value){
+				$(value).addClass('chk_noneDisplay');
+			});			
+		});
+		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
+			var test = $(this).val();
+			
+			$('div[ownerid = "'+test+'"]').each(function(index, value){
+				$(value).removeClass('chk_noneDisplay');
+			});			
+		});	
+	}			
 }
 
 function sDataTemp() {
@@ -69,6 +116,7 @@ function getCalMonthViewSource_after(text) {
             DataEDT = null;
         }        
         tempData = null;
+        chk_scheduleCSS();
     }
     catch (e) {
         alert("getCalMonthViewSource_after : " + e.description);
@@ -161,6 +209,7 @@ function getCalWeekViewSource_after(text) {
                 CalDataWidth(tempData[i], i, tempData);
         }
         tempData = null;
+        chk_scheduleCSS();
     }
     catch (e) {
         alert("getCalWeekViewSource_after : " + e.description);
@@ -256,6 +305,7 @@ function getCalDayViewSource_after(text) {
                 CalDataWidth(tempData[i], i, tempData);
         }        
         tempData = null;
+        chk_scheduleCSS();
     }
     catch (e) {
         alert("getCalDayViewSource_after : " + e.description);
@@ -900,7 +950,7 @@ function CalWeekAllDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        oDiv.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
+        oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
 
         objDivS.appendChild(oDiv);
 
@@ -1151,7 +1201,7 @@ function CalDayAllDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        oDiv.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
+        oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
 
         objDivS.appendChild(oDiv);
 
@@ -1424,7 +1474,7 @@ function leadingZeros(n, digits) {
 }
 
 function MonthlyViewHeader_onMouseOver(pThis) {
-    pThis.style.backgroundColor = "#f0f6ff";
+    pThis.style.backgroundColor = "#edf4fd";
 }
 
 
@@ -1439,7 +1489,7 @@ function Schedule_onMouseClick(event) {
             document.getElementById(g_szCurrentApptDivID).style.backgroundColor = "";
         }
 
-        event.style.backgroundColor = "#f0f6ff";
+        event.style.backgroundColor = "#edf4fd";
 
         g_szCurrentApptDivID = GetAttribute(event, "id");
     }
@@ -1490,7 +1540,7 @@ function showTooltip_MouseOver(thisID, e, pTime, pSubject, pScheduleType, pSched
     tTable.setAttribute("border", "0");
     tTable.setAttribute("width", "100%");
     tTh.setAttribute("scope", "col");
-    tTh.style.background = "#f0f6ff";
+    tTh.style.background = "#edf4fd";
     tTh.style.border = "1px solid #d1ddec";
     var oText = document.createTextNode(pSubject);        
     //tTh.innerHTML = pSubject;

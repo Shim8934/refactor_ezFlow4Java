@@ -1,4 +1,4 @@
-var pRelayDocInfo = createXmlDom();
+var pRelayDocInfo = new ActiveXObject("Microsoft.XMLDOM");
 var decodePass = "";
 var decodePath = "";
 var pRelayURL = "";
@@ -6,8 +6,10 @@ var pRelayURL2 = "";
 var needDoubleFormFlag = false;
 var pPublicFlag = "";
 
-function GetRelayDocInfo() {
-    try {
+function GetRelayDocInfo()
+{
+	try
+	{
     	var result ="";
       	$.ajax({
     		type : "POST",
@@ -27,24 +29,24 @@ function GetRelayDocInfo() {
             return false;
         else
             return true;
-
-    } catch (e) {
-        alert("GetRelayDocInfo : " + e.description);
-        return false;
-    }
+	}
+	catch(e)
+	{
+		alert("GetRelayDocInfo : " + e.description);
+		return false;
+	}
 }
 
-function getPasswdEnd()
-{
-    var url = "/myoffice/ezApprovalG/enforce/cert.aspx";
+function getPasswdEnd() { 
+    var url	= "/ezApprovalG/cert.do";
 	var feature = "status:no;dialogWidth:420px;dialogHeight:350px;help:no;scroll:no"
 	var param = true;
 	var ret = window.showModalDialog(url,param,feature);
 		
 	if(ret[0])
 	{
-		decodePass = ret[1];
-		decodePath = ret[2];	
+		encodePass = ret[1];
+		encodePath = ret[2];	
 	}		
 	return ret[0];
 }
@@ -55,7 +57,7 @@ function decodeUp(emlName)
 	var result = true; 
 
 	
-	var xmlContent = createXmlDom();
+	var xmlContent = new ActiveXObject("Microsoft.XMLDOM");
 	xmlContent.async = false;	
 	xmlContent.load("/Upload_ApprovalG/" + sCompanyID + "/ExDocMSG/" + emlName);
 	var ContentsView = xmlContent.selectSingleNode("pack/contents");
@@ -173,8 +175,8 @@ function UploadDec(XMLText)
 {	
 	
 	var xmlhttp = createXMLHttpRequest();
-	var xmlpara = createXmlDom();
-	var xmlpara2 = createXmlDom();
+	var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
+	var xmlpara2 = new ActiveXObject("Microsoft.XMLDOM");
 	xmlpara.loadXML(XMLText);
 	xmlpara2.loadXML(xmlpara.documentElement.xml);
 	
@@ -190,8 +192,8 @@ function UploadDec(XMLText)
 function UpdateAttachURL()
 {
 	var xmlhttp = createXMLHttpRequest();
-	var xmlpara = createXmlDom();
-	var xmlre = createXmlDom();
+	var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
+	var xmlre = new ActiveXObject("Microsoft.XMLDOM");
 	
 	var objNode;
 	createNodeInsert(xmlpara, objNode, "PARAMETER");
@@ -216,31 +218,8 @@ function UpdateAttachURL()
 	}
 }
 
-/*function SendAckForSend(errMsg, type)
+function SendAckForSend(errMsg, type)
 {
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-    
-
-	var objNode;
-	createNodeInsert(xmlpara, objNode, "PARAMETER");
-	createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-	createNodeAndInsertText(xmlpara, objNode, "pType", type);
-	createNodeAndInsertText(xmlpara, objNode, "pUserName", arr_userinfo[2]);
-	createNodeAndInsertText(xmlpara, objNode, "pDeptName", arr_userinfo[5]);
-	createNodeAndInsertText(xmlpara, objNode, "errMsg", errMsg);
-
-
-	xmlhttp.open ("Post","/myoffice/ezApprovalG/ezAPRRECEIVE/aspx/sendAckforReSend.aspx",false);
-    xmlhttp.send(xmlpara);
-    
-    if (type == "req-resend")
-    {
-		var pAlertContent = strLang725;
-		OpenAlertUI(pAlertContent);
-	}
-}*/
-function SendAckForSend(errMsg, type) {
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -266,7 +245,7 @@ function SendAckForSend(errMsg, type) {
 
 function RemoveDocInfo()
 {
-    var xmlpara = createXmlDom();
+    var xmlpara = new ActiveXObject("Microsoft.XMLDOM");
     var xmlhttp = createXMLHttpRequest();
 
 
@@ -278,11 +257,10 @@ function RemoveDocInfo()
     xmlhttp.send(xmlpara);
 }
 
-function getExtInfo() {
-    /*var xmlURL = getNodeText(pRelayDocInfo.getElementsByTagName("xmlURL").item(0));
-    var sealURL = getNodeText(pRelayDocInfo.getElementsByTagName("sealURL").item(0));*/
-	var xmlURL = getNodeText(GetElementsByTagName(pRelayDocInfo, "xmlURL")[0]);
-    var sealURL = getNodeText(GetElementsByTagName(pRelayDocInfo, "sealURL")[0]);
+function getExtInfo()
+{
+    var xmlURL = getNodeText(pRelayDocInfo.getElementsByTagName("xmlURL").item(0));
+    var sealURL = getNodeText(pRelayDocInfo.getElementsByTagName("sealURL").item(0));
 	
 	if( xmlURL == "" )
 	{
@@ -292,18 +270,11 @@ function getExtInfo() {
 		return false;
 	}
 	
-	//xmlURL = "/Upload_ApprovalG/" + sCompanyID + "/ExDocXML/" + xmlURL;
 	xmlURL = sCompanyID + "/ExDocXML/" + xmlURL;
+    
+	var result = "";
 	
-	/*var xmlhttp = createXMLHttpRequest();
-	var xmlDocCheck = createXmlDom();
-	var sihangXML =  createXmlDom();
-	var objNode;
-	createNodeInsert(xmlDocCheck, objNode, "PARAMETER");
-	createNodeAndInsertText(xmlDocCheck, objNode, "XMLPATH", xmlURL);
-	xmlhttp.open("POST","/myoffice/ezApprovalG/ReceivUI/aspx/loadDocXML.aspx",false);
-	xmlhttp.send(xmlDocCheck);*/
-	$.ajax({
+    $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
@@ -315,37 +286,31 @@ function getExtInfo() {
 			result = xml;
 		}        			
 	});
+    
+    var xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+    xmlDoc.async = "false";
+    xmlDoc.loadXML(result);
+    
+    sihangXML = xmlDoc;
 	
-	//sihangXML = loadXMLString(xmlhttp.responseText);
-	sihangXML = loadXMLString(result);
-	
-	/*if (sihangXML.xml == "") {
+	if (sihangXML.xml == "") {
 	    alert(strLang726 + xmlURL);
 	    return false;
-	}*/
-	if (getXmlString(sihangXML) == "") {
-        alert(strLang726 + xmlURL);
-        return false;
-    }
+	}
 
-	//var eNodes = sihangXML.documentElement;
-	var eNodes = sihangXML;
-
+	var eNodes = sihangXML.documentElement;
 	var bodyTagUse = true;
     // 에러로그 여부
     try {
-        //var Nodes = eNodes.selectNodes("body");
-    	Nodes = SelectNodes(eNodes, "pubdoc/body");
-    	
+        var Nodes = eNodes.selectNodes("body");
         if (Nodes.length > 0) {
             bodyTagUse = true;
         }
         else {
             bodyTagUse = false;
         }
-        //Nodes = eNodes.selectNodes("ERRORMESSAGE");
-        Nodes = SelectNodes(eNodes, "pubdoc/ERRORMESSAGE");
-        
+        Nodes = eNodes.selectNodes("ERRORMESSAGE");
+
         if (Nodes.length > 0) {
             if (bodyTagUse) {
                 OpenAlertUI("오류내용:" + getNodeText(Nodes[0]) + "<br>" + " > 문서를 불러올수 있으나 정상표시되는지 확인하세요.");
@@ -355,12 +320,11 @@ function getExtInfo() {
                 return false;
             }
         }
-    } catch (e) { }
+    } catch (e) {
+    	alert("getExtInfo error");
+    }
 
-
-
-	//var Nodes = eNodes.selectNodes("head/organ");
-    Nodes = SelectNodes(eNodes, "pubdoc/head/organ");
+	var Nodes = eNodes.selectNodes("head/organ");		
 	if( Nodes.length > 0 )
 	{
 		if( HwpCtrl.CheckFieldExist("organ") )
@@ -451,7 +415,7 @@ function getExtInfo() {
 			if( !needDoubleFormFlag )
 			{
 				needDoubleFormFlag = true;
-				var URL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(pRelayURL2);
+				var URL = document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(pRelayURL2);
 	  			var isTrue = HwpCtrl.LoadFile(URL, true);
 	  			FieldsAvailable(isTrue);
 	  			return false;
@@ -497,11 +461,11 @@ function getExtInfo() {
 	    var pomit = GetAttribute(Nodes(0),"omit")
 		if( pomit == "false" )
 		{
-			sealPath = "/Upload_ApprovalG/" + sCompanyID + "/ExDocSign/" + sealURL;
+			sealPath = dirPath + sCompanyID + "/ExDocSign/" + sealURL;
 			if( HwpCtrl.CheckFieldExist("sealsign") )
 			{
 				HwpCtrl.SetFieldText("sealsign", "");
-				HwpCtrl.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(sealPath));
+				HwpCtrl.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(sealPath));
 			}
 		}
 		
@@ -510,7 +474,7 @@ function getExtInfo() {
 			if( HwpCtrl.CheckFieldExist("sealsign") )
 			{
 				HwpCtrl.SetFieldText("sealsign", "");
-				HwpCtrl.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape("/Upload_ApprovalG/SealImg/nostamp.gif"), 12);
+				HwpCtrl.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape("/Upload_ApprovalG/SealImg/nostamp.gif"), 12);
 			}
 		}
 	}
@@ -587,11 +551,11 @@ function getExtInfo() {
 			var tempNode = Nodes(i).selectSingleNode("signimage");
 			if (tempNode)
 			{
-			    signPath =  "/Upload_ApprovalG/" + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(tempNode.selectSingleNode("img"),"src"));
+			    signPath =  dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(tempNode.selectSingleNode("img"),"src"));
 				if( HwpCtrl.CheckFieldExist("sign" + SignOrder) )
 				{
 					HwpCtrl.SetFieldText("sign" + SignOrder, "");
-					HwpCtrl.SetFieldImage("sign" + SignOrder, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(signPath), 3, 0, 0, true, 2);
+					HwpCtrl.SetFieldImage("sign" + SignOrder, document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(signPath), 3, 0, 0, true, 2);
 					HwpCtrl.AppendFieldText("sign" + SignOrder, SignText, true);
 				}
 				SignInputFlag = true;
@@ -639,11 +603,11 @@ function getExtInfo() {
 			var tempNode = Nodes(i).selectSingleNode("signimage");
 			if( tempNode )
 			{
-			    signPath =  "/Upload_ApprovalG/" + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(tempNode.selectSingleNode("img"),"src"));
+			    signPath =  dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(tempNode.selectSingleNode("img"),"src"));
 				if( HwpCtrl.CheckFieldExist("habyuisign" + SignOrder) )
 				{					
 					HwpCtrl.SetFieldText("habyuisign" + SignOrder, "");
-					HwpCtrl.SetFieldImage("habyuisign" + SignOrder, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(signPath), 3, 0, 0, true, 2);
+					HwpCtrl.SetFieldImage("habyuisign" + SignOrder, document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(signPath), 3, 0, 0, true, 2);
 					HwpCtrl.AppendFieldText("habyuisign" + SignOrder, SignText, true);
 				}
 			}
@@ -861,7 +825,7 @@ function getExtInfo() {
 	{
 		if( HwpCtrl.CheckFieldExist("symbol") )
 		{
-		    signPath =  "/Upload_ApprovalG/" + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(Nodes(0).childNodes(0),"src"));
+		    signPath =  dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(Nodes(0).childNodes(0),"src"));
 			var signWidth, signHeight;
 			if (GetAttribute(Nodes(0).childNodes(0),"width") == "" || GetAttribute(Nodes(0).childNodes(0),"width") == null)
 				signWidth = 20;
@@ -874,7 +838,7 @@ function getExtInfo() {
 			    signHeight = GetAttribute(Nodes(0).childNodes(0),"height").replace("mm", "");
 	  		
 			HwpCtrl.SetFieldText("symbol", "");
-			HwpCtrl.SetFieldImage("symbol", document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(signPath), 1, signWidth, signHeight, true, 2);
+			HwpCtrl.SetFieldImage("symbol", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(signPath), 1, signWidth, signHeight, true, 2);
 		}
 	}
 	else
@@ -890,7 +854,7 @@ function getExtInfo() {
 	{
 		if( HwpCtrl.CheckFieldExist("logo") )
 		{
-		    signPath =  "/Upload_ApprovalG/" + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(Nodes(0).childNodes(0),"src"));
+		    signPath =  dirPath + sCompanyID + "/ExDocUserSign/" + getSignURL(GetAttribute(Nodes(0).childNodes(0),"src"));
 			var signWidth, signHeight;
 			if (GetAttribute(Nodes(0).childNodes(0),"width") == "" || GetAttribute(Nodes(0).childNodes(0),"width") == null)
 	  			signWidth = 20;
@@ -903,7 +867,7 @@ function getExtInfo() {
 			    signHeight = GetAttribute(Nodes(0).childNodes(0),"height").replace("mm", "");
 	  		
 			HwpCtrl.SetFieldText("logo", "");
-			HwpCtrl.SetFieldImage("logo", document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(signPath), 1, signWidth, signHeight, true, 2);
+			HwpCtrl.SetFieldImage("logo", document.location.protocol + "//" + document.location.hostname  + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(signPath), 1, signWidth, signHeight, true, 2);
 		}
 	}
 	else
@@ -977,20 +941,9 @@ function getExtInfo() {
 	return true;
 }          
 
-/*function SetHref(mode) {
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-    createNodeAndInsertText(xmlpara, objNode, "pFileType", "hwp");
-    createNodeAndInsertText(xmlpara, objNode, "pMode", mode);
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/ReceivUI/aspx/setHref.aspx", false); 
-    xmlhttp.send(xmlpara);
-}
-*/
 function SetHref(mode) {
  	var result = "";
+ 	
 	$.ajax({
 		type : "POST",
 		dataType : "text",
@@ -1073,24 +1026,9 @@ function getSignURL(SignURL) {
     return rtnVal;
 }
 
-/*function SetDocInfo() {
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-    createNodeAndInsertText(xmlpara, objNode, "pPublicFlag", pPublicFlag);
-    createNodeAndInsertText(xmlpara, objNode, "pDocNo", pDocNo);
-    createNodeAndInsertText(xmlpara, objNode, "pDocNumCode", pDocNumCode);
-    createNodeAndInsertText(xmlpara, objNode, "pOrgDocNumCode", pOrgDocNumCode);
-    createNodeAndInsertText(xmlpara, objNode, "pMode", "I");
-    createNodeAndInsertText(xmlpara, objNode, "pFileType", "hwp");
-
-    xmlhttp.open("POST", "/myoffice/ezApprovalG/ReceivUI/aspx/setRecvDocInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-}*/
 function SetDocInfo() {
-    var result ="";
+    var result = "";
+    
   	$.ajax({
 		type : "POST",
 		dataType : "text",

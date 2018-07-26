@@ -6,8 +6,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.StringReader;
 import java.net.URLDecoder;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
-import java.util.Properties;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -25,6 +27,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -51,12 +54,6 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
     
 	@Autowired
 	private CommonUtil commonUtil;
-	
-	@Autowired
-	private Properties config;
-	
-	@Autowired
-	private Properties globals;
 	
 	@Resource(name = "crypto") 
     private EgovFileScrty egovFileScrty;
@@ -1300,7 +1297,6 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.getRecSCInfo(xmlDom,userInfo.getLang(),userInfo);
-		
 		logger.debug("getRecSCInfo ended");
 		
 		return result;
@@ -1679,33 +1675,33 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
                 TempQuery = xmldomsub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
 
                 if (TempQuery.indexOf("DOCNO;") != -1) {
-                    ReturnQuery += " AND DOCNO LIKE '%'DOCNO'%' ";
+                    ReturnQuery += " AND DOCNO LIKE '%" + xmldomsub.getElementsByTagName("DOCNO").item(0).getTextContent() + "%' ";
                 }
                 if (TempQuery.indexOf("DOCTITLE;") != -1) {
-                    ReturnQuery += " AND DocTitle LIKE '%'DOCTITLE'%' ";
+                    ReturnQuery += " AND DocTitle LIKE '%" + xmldomsub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
                 }
                 if (p_UserLang.equals("2")) {
                     if (TempQuery.indexOf("WRITERNAME;") != -1) {
-                        ReturnQuery += " AND WRITERNAME" + p_UserLang + " LIKE '%'WRITERNAME'%' ";
+                        ReturnQuery += " AND WRITERNAME" + p_UserLang + " LIKE '%" + xmldomsub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
                     }
                 } else {
                     if (TempQuery.indexOf("WRITERNAME;") != -1) {
-                        ReturnQuery += " AND WRITERNAME LIKE '%'WRITERNAME'%' ";
+                        ReturnQuery += " AND WRITERNAME LIKE '%" + xmldomsub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
                     }
                 }
                 
                 if (commonUtil.getDatabaseType().equalsIgnoreCase("mysql")) {
 	                if (TempQuery.indexOf("STARTDATEAF;") != -1) {
-	                    ReturnQuery += " AND LINKDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'%Y-%m-%d %H:%i:%s') ";
+	                    ReturnQuery += " AND LINKDATE >= " + "STR_TO_DATE('" + xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent() + "'  ,'%Y-%m-%d %H:%i:%s') ";
 	                }
 	                if (TempQuery.indexOf("STARTDATEBF;") != -1) {
-	                    ReturnQuery += " AND LINKDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'%Y-%m-%d %H:%i:%s')";
+	                    ReturnQuery += " AND LINKDATE <= " + "STR_TO_DATE('" + xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent() + "'  ,'%Y-%m-%d %H:%i:%s')";
 	                }
 	                if (TempQuery.indexOf("ENDDATEAF;") != -1) {
-	                    ReturnQuery += " AND ENDDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
+	                    ReturnQuery += " AND ENDDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'%Y-%m-%d %H:%i:%s')";
 	                }
 	                if (TempQuery.indexOf("ENDDATEBF;") != -1) {
-	                    ReturnQuery += " AND ENDDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent() , userInfo.getOffset(), false) + "' ,'%Y-%m-%d %H:%i:%s')";
+	                    ReturnQuery += " AND ENDDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent(), userInfo.getOffset(), true) + "' ,'%Y-%m-%d %H:%i:%s')";
 	                }
                 } else if (commonUtil.getDatabaseType().equalsIgnoreCase("oracle")) {
                 	if (TempQuery.indexOf("STARTDATEAF;") != -1) {
@@ -1715,10 +1711,10 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
  	                    ReturnQuery += " AND LINKDATE <= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'YYYY-MM-DD HH24:MI:SS')";
  	                }
  	                if (TempQuery.indexOf("ENDDATEAF;") != -1) {
- 	                    ReturnQuery += " AND ENDDATE >= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'YYYY-MM-DD HH24:MI:SS')";
+ 	                    ReturnQuery += " AND ENDDATE >= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), true) + "'  ,'YYYY-MM-DD HH24:MI:SS')";
  	                }
  	                if (TempQuery.indexOf("ENDDATEBF;") != -1) {
- 	                    ReturnQuery += " AND ENDDATE <= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent() , userInfo.getOffset(), false) + "' ,'YYYY-MM-DD HH24:MI:SS')";
+ 	                    ReturnQuery += " AND ENDDATE <= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent() , userInfo.getOffset(), true) + "' ,'YYYY-MM-DD HH24:MI:SS')";
  	                }
                 }
                 
@@ -1727,11 +1723,11 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
                 }
                 if (p_UserLang.equals("2")) {
                     if (TempQuery.indexOf("WRITERDEPTNAME;") != -1) {
-                        ReturnQuery += " AND WriterDeptName" + p_UserLang + " LIKE '%'WRITERDEPTNAME'%' ";
+                        ReturnQuery += " AND WriterDeptName" + p_UserLang + " LIKE '%" + xmldomsub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
                     }
                 } else {
                     if (TempQuery.indexOf("WRITERDEPTNAME;") != -1) {
-                        ReturnQuery += " AND WriterDeptName LIKE '%'WRITERDEPTNAME'%' ";
+                        ReturnQuery += " AND WriterDeptName LIKE '%" + xmldomsub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
                     }
                 }
                 if (TempQuery.indexOf("KAPR;") != -1) {
@@ -1771,7 +1767,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	
 	
 	/** 전자결재 개인 문서함 리스트*/
-	@RequestMapping(value = "/ezApprovalG/getUserContListSave.do")
+	@RequestMapping(value = "/ezApprovalG/getUserContListSave.do", produces = "text/xml;charset=utf-8")
 	public void getUserContListSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model, @RequestBody String xmlPara) throws Exception{
 		logger.debug("getUserContListSave started");
 		
@@ -1780,8 +1776,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		response.setContentType("application/vnd.ms-excel");
-		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application/ms-excel");
+		response.setCharacterEncoding("utf-8");
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptID() + "_" + CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), messageSource.getMessage("ezApprovalG.t1750", userInfo.getLocale())) + ".xls\"");
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
@@ -1900,14 +1896,13 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			String headerName = objXML.getElementsByTagName("NAME").item(k).getTextContent();
 			String headerWidth = objXML.getElementsByTagName("WIDTH").item(k).getTextContent();
 			
-			int width = Integer.parseInt(headerWidth);
+			int width = Integer.parseInt(headerWidth) * 2;
 			
-			resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'>"
-			+"<p align='center'><STRONG>" + commonUtil.cleanValue(headerName) + "</STRONG></p></td>        ");
+			resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BACKGROUND-COLOR: #a6a6a6; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=center><STRONG>" + " " + commonUtil.cleanValue(headerName) + "</STRONG></p></td>        ");
 		}
-		resultExcel.append("</tr>");
+		resultExcel.append("</tr></table>");
 		
-		resultExcel.append("");
+		resultExcel.append("<table>");
 
 		NodeList objRow = objXML.getElementsByTagName("ROW");
 		
@@ -1920,14 +1915,18 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 				Element cell = (Element) objCell.item(p);
 				String cellValue = cell.getElementsByTagName("VALUE").item(0).getTextContent();
 				String headerWidth = objXML.getElementsByTagName("WIDTH").item(p).getTextContent();
-				int width = Integer.parseInt(headerWidth);
+				int width = Integer.parseInt(headerWidth) * 2;
 				
-				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align='left'>" + commonUtil.cleanValue(cellValue) + "</p></td>       ");
+				resultExcel.append("<td style='BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: windowtext; BORDER-TOP: windowtext 0.5pt solid; BORDER-RIGHT: windowtext 0.5pt solid;width:" + width + "'><p align=left>" + commonUtil.cleanValue(cellValue) + " </p></td>       ");
 			}
 			resultExcel.append("</tr>");
 		}
 		resultExcel.append("</table>");
-		response.getWriter().write(resultExcel.toString());
+		
+//		response.getWriter().write(resultExcel.toString());
+		
+		//2018-07-13 천성준 - (#13042) 임시로 euc-kr로 해결, 추후에 왜 utf-8이 안먹는지 분석해서 utf-8로 고쳐야됨.  
+		response.getOutputStream().write(resultExcel.toString().getBytes("euc-kr"));
 		
 		logger.debug("getUserContListSave ended");
 	}
@@ -2262,7 +2261,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			File file = new File(realPath + savePath);
 			FileOutputStream fop = new FileOutputStream(file);
 			// get the content in bytes
-			fop.write(saveXML.toString().getBytes("utf-8"));
+			fop.write(saveXML.toString().getBytes("euc-kr"));
 			fop.flush();
 			fop.close();
 
@@ -2305,21 +2304,21 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		Document xmlDom = commonUtil.convertStringToDocument(extXML);
 		String mapPath = commonUtil.getRealPath(request);
 
-		xmlDom.getElementsByTagName("send-gw").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-gw").item(0).getTextContent().getBytes("UTF-8")));
-		xmlDom.getElementsByTagName("send-name").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-name").item(0).getTextContent().getBytes("UTF-8")));
-		xmlDom.getElementsByTagName("title").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("title").item(0).getTextContent().getBytes("UTF-8")));
-		xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getNodeValue().getBytes("UTF-8")));
-		xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getNodeValue().getBytes("UTF-8")));
+		xmlDom.getElementsByTagName("send-gw").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-gw").item(0).getTextContent().getBytes("euc-kr")));
+		xmlDom.getElementsByTagName("send-name").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("send-name").item(0).getTextContent().getBytes("euc-kr")));
+		xmlDom.getElementsByTagName("title").item(0).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("title").item(0).getTextContent().getBytes("euc-kr")));
+		xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("dept").getNodeValue().getBytes("euc-kr")));
+		xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("doc-type").item(0).getAttributes().getNamedItem("name").getNodeValue().getBytes("euc-kr")));
 
 		for (int i = 0; i < xmlDom.getElementsByTagName("content").getLength(); i++) {
 				switch (xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-role").getNodeValue()) {
 				case "pubdoc":
-					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String("pubdoc.xml".getBytes("UTF-8")));
-					xmlDom.getElementsByTagName("content").item(i).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getTextContent().replace("&lt;", "<").replace("&gt;", ">").replace("\n", "").replace("\t", "").replace("&amp;", "&").getBytes("UTF-8")));
+					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String("pubdoc.xml".getBytes("euc-kr")));
+					xmlDom.getElementsByTagName("content").item(i).setTextContent(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getTextContent().replace("&lt;", "<").replace("&gt;", ">").replace("\n", "").replace("\t", "").replace("&amp;", "&").getBytes("euc-kr")));
 					break;
 
 				default:
-					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").getNodeValue().getBytes("UTF-8")));
+					xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").setNodeValue(Base64.encodeBase64String(xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("filename").getNodeValue().getBytes("euc-kr")));
 					break;
 				}
 		}
@@ -2349,35 +2348,47 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		} catch (Exception e) {
 		} 
 		
-		    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
-		    DocumentBuilder builder;  
-	        builder = factory.newDocumentBuilder();  
-	        Document xmlDom = builder.parse( new InputSource( new StringReader( xmlData.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "").replace("\n", "").replace("\t", "") ) ) );  
-			
-			String sendID = xmlDom.getElementsByTagName("send-id").item(0).getTextContent();
-			String receiveID = xmlDom.getElementsByTagName("receive-id").item(0).getTextContent();
-			String[] arrReceiveID = receiveID.split(";");
-			String strReceiveID = receiveID;
-			
-			if (receiveID.substring(0, 1).equals(";")) {
-				strReceiveID = receiveID.substring(1);
-			}
-	
-	        if (receiveID.substring(receiveID.length() - 1, receiveID.length()).equals(";")) {
-	        	strReceiveID = receiveID.substring(0, receiveID.length() - 1);
-	        }
-	
-	        xmlDom.getElementsByTagName("receive-id").item(0).setTextContent(strReceiveID);
-	        xmlDom.getElementsByTagName("date").item(0).setTextContent(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
-	
-	        String strXML = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
-	        strXML = strXML + commonUtil.convertDocumentToString(xmlDom); //.Replace("&amp;", "&");
-	
-	        String strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMddHHmmss"), userInfo.getOffset(), false);
-	     
-	        String result = ezApprovalGService.getFileName(commonUtil.getRealPath(request), sendID + arrReceiveID[arrReceiveID.length - 1].toString() + strTime, "sendtemp", strXML, userInfo.getTenantId());
-	        logger.debug("sendMsg ended");
-	        return result;
+	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
+	    DocumentBuilder builder;  
+        builder = factory.newDocumentBuilder();  
+        Document xmlDom = builder.parse( new InputSource( new StringReader( xmlData.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "").replace("\n", "").replace("\t", "") ) ) );  
+		
+		String sendID = xmlDom.getElementsByTagName("send-id").item(0).getTextContent();
+		String receiveID = xmlDom.getElementsByTagName("receive-id").item(0).getTextContent();
+		String[] arrReceiveID = receiveID.split(";");
+		String strReceiveID = receiveID;
+		
+		if (receiveID.substring(0, 1).equals(";")) {
+			strReceiveID = receiveID.substring(1);
+		}
+
+        if (receiveID.substring(receiveID.length() - 1, receiveID.length()).equals(";")) {
+        	strReceiveID = receiveID.substring(0, receiveID.length() - 1);
+        }
+
+        xmlDom.getElementsByTagName("receive-id").item(0).setTextContent(strReceiveID);
+        xmlDom.getElementsByTagName("date").item(0).setTextContent(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
+
+        String strXML = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
+        strXML = strXML + commonUtil.convertDocumentToString(xmlDom); //.Replace("&amp;", "&");
+
+        String strTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMddHHmmss"), userInfo.getOffset(), false);
+        String result = "";
+        
+        //여러부서 보낼수 있게 수정
+        for (String recevID : arrReceiveID) {
+        	result = ezApprovalGService.getFileName(commonUtil.getRealPath(request), sendID + recevID + strTime, "sendtemp", strXML, userInfo.getTenantId());
+        	
+        	if (result.equals("FALSE")) {
+        		logger.debug("sendMsg Fail : " + sendID + recevID + strTime);
+        		
+        		return result;
+        	}
+		}
+        
+        logger.debug("sendMsg ended");
+        
+        return result;
 	}
 	
 	@RequestMapping(value = "/ezApprovalG/cert.do", produces = "text/xml;charset=utf-8")

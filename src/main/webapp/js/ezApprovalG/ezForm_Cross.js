@@ -34,10 +34,10 @@ function fnValueClick() {
         var parentTR = window.event.srcElement.parentElement;
 
         if (BeforeClickID == "")
-            parentTR.cells[0].style.backgroundColor = "#f0f6ff";
+            parentTR.cells[0].style.backgroundColor = "#edf4fd";
         else {
             BeforeClickID.style.backgroundColor = "#fff";
-            parentTR.cells[0].style.backgroundColor = "#f0f6ff";
+            parentTR.cells[0].style.backgroundColor = "#edf4fd";
         }
 
         BeforeClickID = parentTR.cells[0];
@@ -308,10 +308,12 @@ function BottomPropertyTable(parentTD) {
     TD.align = "center";
     TD.colSpan = 2;
     TD.height = "40px";
+    TD.style.border = "0px";
 
     var MENUDIV = document.createElement("DIV");
     MENUDIV.id = "mainmenu";
     var UL = document.createElement("UL");
+    UL.style.width = "100%";
     var LI1 = document.createElement("LI");
     var LI2 = document.createElement("LI");
     var SPAN1 = document.createElement("SPAN");

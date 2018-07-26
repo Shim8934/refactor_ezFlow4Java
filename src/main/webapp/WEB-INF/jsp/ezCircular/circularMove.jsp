@@ -49,35 +49,37 @@
 	        }
 	        
 	        function btn_Move_onclick() {
-	        	var folderId = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
-	        	var circularIdList = "${circularIdList}";
-				var originLoc = "${originLoc}";
-
-				if (folderId == oldFolderId) {
-					alert("<spring:message code='ezCircular.t109' />");
-					return;
-				}
-
-	        	$.ajax ({
-	                type : 'POST',
-	                dataType : 'text',
-	                cache: false,
-	 			   	url : '/ezCircular/moveCircular.do',
-	                data : {	
-	                		folderId 		: 	folderId,
-	                		circularIdList  : 	circularIdList,
-	                		oldFolderId 	: 	oldFolderId,
-	                		originLoc		:	originLoc,
-	                },  
-	                success : function(data) {		                  
-	             	  window.close();
-	                  window.opener.getLeftCount();
-	                  window.opener.refresh_onclick();
-	                },
-	                error : function() {
-	                	alert("<spring:message code='ezCircular.t102' />")
-	                }
-	 			});
+	        	if (confirm("<spring:message code='ezApprovalG.hyj06' /><spring:message code='ezResource.t90' />")) {
+		        	var folderId = PostTreeView.getvalue(PostTreeView.selectedIndex(), "href");
+		        	var circularIdList = "${circularIdList}";
+					var originLoc = "${originLoc}";
+	
+					if (folderId == oldFolderId) {
+						alert("<spring:message code='ezCircular.t109' />");
+						return;
+					}
+	
+		        	$.ajax ({
+		                type : 'POST',
+		                dataType : 'text',
+		                cache: false,
+		 			   	url : '/ezCircular/moveCircular.do',
+		                data : {	
+		                		folderId 		: 	folderId,
+		                		circularIdList  : 	circularIdList,
+		                		oldFolderId 	: 	oldFolderId,
+		                		originLoc		:	originLoc,
+		                },  
+		                success : function(data) {		                  
+		             	  window.close();
+		                  window.opener.getLeftCount();
+		                  window.opener.refresh_onclick();
+		                },
+		                error : function() {
+		                	alert("<spring:message code='ezCircular.t102' />")
+		                }
+		 			});
+	        	}
 	        }
 	    </script>
 	</head>
@@ -85,22 +87,19 @@
 	    <h1><spring:message code='ezCircular.t56' /></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="window.close()"><spring:message code='ezCircular.t84' /></span></li>
+	            <li><span onclick="window.close()"></span></li>
 	        </ul>
 	    </div>
 	    <table class="content">
 	        <tr>
 	            <td class="pos1">
-	                <div style="border: 0px solid #ddd; height: 275px; width: 240px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px;" id="PostTreeView">
+	                <div style="border: 0px solid #ddd; height: 262px; width: 392px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px;" id="PostTreeView">
 	                </div>
-	            </td>
-	            <td class="pos3">
-	            	<a class="imgbtn"><span onclick="return btn_Move_onclick()"><spring:message code='ezCircular.t56' /></span></a>
 	            </td>
 	        </tr>
 	    </table>
-	    <script type="text/javascript">
-	        selToggleList(document.getElementById("close"), "ul", "li", "0");
-	    </script>
+	    <div class="btnposition btnpositionNew">
+	    	<a class="imgbtn"><span onclick="return btn_Move_onclick()"><spring:message code='ezCircular.t56' /></span></a>
+	    </div>
 	</body>
 </html>

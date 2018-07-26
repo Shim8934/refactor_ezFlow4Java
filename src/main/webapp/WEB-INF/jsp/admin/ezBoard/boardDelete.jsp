@@ -8,7 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />	    
 	    <style type="text/css">
-	    	.warningbox01 { width:520px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
+	    	.warningbox01 { width:520px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;}
 			.warningbox02 { width:450px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}
 			.warnintxt01 { position:relative; margin-bottom:10px;margin-top:20px}
 			.warningimg { position:absolute; top:0px; left:0px;}
@@ -97,8 +97,8 @@
 				<spring:message code="ezBoard.t116"/><b>'<c:out value="${boardName}"/>'</b>
 				<spring:message code="ezBoard.t117"/><br/>
 			  	<spring:message code="ezBoard.t118"/>
-			</div><br/>			
-			<div class="btnposition">
+			</div>			
+			<div class="btnpositionJsp">
 			    <a class="imgbtn"><span onclick="Delete()" ><spring:message code="ezBoard.t89"/></span></a>
 			</div>
 		</c:if>

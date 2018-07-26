@@ -5,7 +5,7 @@
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/organ_tree.css"                     type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"          type="text/css">
@@ -30,6 +30,7 @@
 			var tableView   = new TableView();
 			
 			window.onload = function() {
+				closeAllPopup();
 				tableView.setTableId("tblFileStorage");
 				tableView.setTableType("configTable");
 				tableView.setSelectedClass("bnkWebFolder2");

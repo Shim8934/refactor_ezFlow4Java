@@ -173,7 +173,9 @@ function toggleList() {
 	    (itemId == "btn_Manager" || itemId == "Del_Cache" || itemId == "btn_MemberIn" || itemId == "btn_MemberOut"
 	    || GetAttribute(level2El.item(this.listNum).previousSibling, 'name') == "BoardAdminLeftOn"
 	    || itemId == "searchBoard" || itemId == "btn_MemberJoinIng" || itemId == "btn_MemberInfo"
-        || itemId == "m01" || itemId == "m02" || itemId == "m03" || itemId == "m04" || itemId == "m05" || itemId == "m06" || itemId == "m07" || itemId == "m08" || itemId == "m09"))) {
+	    	//2018-07-24 이효진 전자결재G LEFT메뉴 toggle
+//        || itemId == "m01" || itemId == "m02" || itemId == "m03" || itemId == "m04" || itemId == "m05" || itemId == "m06" || itemId == "m07" || itemId == "m08" || itemId == "m09"))) {
+    	))) {
         level1El.item(this.listNum).className = null;
         level2El.item(this.listNum).className = "off";
     }
@@ -211,10 +213,10 @@ function toggleList_Sub(event)
 }
 
 function mouseOver_Sub()
-{
+{	
 	if( prevSelMenu != this )
 	{
-		this.className = "on";
+		this.className = "on ing";
 	}
 }
 

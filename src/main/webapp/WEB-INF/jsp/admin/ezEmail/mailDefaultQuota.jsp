@@ -151,9 +151,9 @@
 		            <td style="width:115px; border-right:1px solid #dbdbda;">
 		                <input id="defaultWarn" type="text" onkeyup="return Mark1000Sep(this)" value="${defaultWarn}" style="width:83%; text-align:right"> GB
 		            </td>
-		        	<td style="width:40px; /* background-color: #f8f8fa; */">
-		        		<img src="/images/plusicon.png" width="20" height="20"style="cursor:pointer" onClick="valuePlus(defaultWarn);">
-		        		<img src="/images/minusicon.png" width="20" height="20"style="cursor:pointer" onClick="valueMinuse(defaultWarn)">
+		        	<td style="width:40px;text-align: center">
+		        		<img src="/images/plusicon.png" style="cursor:pointer" onClick="valuePlus(defaultWarn);">
+		        		<img src="/images/minusicon.png" style="cursor:pointer" onClick="valueMinuse(defaultWarn)">
 		        	</td>
 		        </tr>     
 		        <tr>
@@ -161,16 +161,16 @@
 		            <td style="width:115px; border-bottom:0px; border-right:1px solid #dbdbda;">
 		                <input id="defaultMax" type="text" onkeyup="return Mark1000Sep(this)" value="${defaultMax}" style="width:83%; text-align:right"> GB
 		            </td>
-		        	<td style="width:40px; /* background-color: #f8f8fa; */">
-		        		<img src="/images/plusicon.png" width="20" height="20" style="cursor:pointer" onClick="valuePlus(defaultMax)">
-		        		<img src="/images/minusicon.png" width="20" height="20" style="cursor:pointer" onClick="valueMinuse(defaultMax)">
+		        	<td style="width:40px;text-align: center">
+		        		<img src="/images/plusicon.png" style="cursor:pointer" onClick="valuePlus(defaultMax)">
+		        		<img src="/images/minusicon.png" style="cursor:pointer" onClick="valueMinuse(defaultMax)">
 		        	</td>
 		        </tr>
 		    </table>
 	    </div>
-    <div style="padding-top: 15px;" align="center">
-	    <a href="#" class="imgbtn"><span onClick="Save('')"><spring:message code='main.sp09' /></span></a>
-    </div>
+	    <div class="btnpositionJsp">
+		    <a href="#" class="imgbtn"><span onClick="Save('')"><spring:message code='main.sp09' /></span></a>
+	    </div>
     </div>
   </body>
 </html>

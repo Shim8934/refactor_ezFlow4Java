@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezBoard.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -275,8 +276,20 @@ public interface EzBoardService {
 	
 	//2018-05-09 강민수92
 	public void moveOneLineReply(String orgBoardID, String orgItemID, String destBoardID, String destItemID) throws Exception;
-	
+
+	//2018-06-07 김혜정
+	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> accessBoardList, int pMode) throws Exception;
+
+	//2018-06-08 김혜정
+	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> accessBoardList, int pMode) throws Exception;
+
 	//2018-06-11 홍승비
 	public String getLastImageID(String boardID, String itemID, int tenantID) throws Exception;
 	
+	//2018-06-28 홍승비 - 승인게시물 검색용 메서드 추가
+	public int getSearchApprBoardItemCount(LoginVO userInfo, BoardVO boardVO) throws Exception;
+	
+	public List<HashMap<String, Object>> getSearchApprBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
+	
+
 }

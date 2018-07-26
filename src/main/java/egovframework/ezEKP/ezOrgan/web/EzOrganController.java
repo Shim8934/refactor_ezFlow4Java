@@ -1,7 +1,5 @@
 package egovframework.ezEKP.ezOrgan.web;
 
-import java.util.ArrayList;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import antlr.collections.List;
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -162,12 +159,13 @@ public class EzOrganController {
                 Element Nodetip = doc.createElement("TOOLTIP");
 
                 if (!doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().equals("")) {
-                    String[] arry = doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().split(":");
+                	//2018-07-12 이효진 미사용 소스 주석처리
+                    /*String[] arry = doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().split(":");
                     tooltip = arry[3].replace("/", ":") + " ~ " + arry[4].replace("/", ":");
                     
                     if (arry.length > 5) {
                         tooltip += " " + messageSource.getMessage(arry[5], userInfo.getLocale());
-                    }
+                    }*/
                     
                     /* 
                      * 2016-03-29 장진혁과장 날짜비교 작업 필요
@@ -195,6 +193,28 @@ public class EzOrganController {
 		logger.debug("getDeptMemberList ended");
 		
 		return result;
+	}
+	
+	@RequestMapping(value = "/ezOrgan/getDeptMemberListCount.do")
+	public String getDeptMemberListCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getDeptMemberList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String deptID = request.getParameter("deptID");
+		
+		String primary = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
+		int totalCount = 0, totalCount2 = 0;
+		
+		totalCount = ezOrganService.getDeptMemberListCount(deptID, false, primary, tenantID);
+		totalCount2 = ezOrganService.getDeptMemberListCount(deptID, true, primary, tenantID);
+		
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("totalCount2", totalCount2);
+
+		logger.debug("getDeptMemberList ended.");
+		
+		return "json";
 	}
 	
 	/**

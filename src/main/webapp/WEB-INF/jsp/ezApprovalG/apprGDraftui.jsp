@@ -25,6 +25,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/Circulation.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var FormHref	=	"${formURL}";
 		    var DraftFlag	=	"${draftFlag}";
@@ -156,6 +157,9 @@
 			var isEditorComplete = false;
 			var isHWP = "";
 			var ext = "mht";
+			var nonElecRec = "${nonElecRec}";
+			var nonElecRecInfoXml = "";
+			var nonSepAttachLVXml = "";
 			
 		    window.onload = function ()
 		    {
@@ -170,6 +174,12 @@
 		        if(approvalFlag == "G") {
 		        	$("#btnAddSepAttach").css("display","");
 	        	}
+		        
+		        if(nonElecRec == "Y") {
+		        	document.getElementById("btnSelForm").style.display = "none";
+                	document.getElementById("btnAddSepAttach").style.display = "none";
+                	document.getElementById("btnSaveServer").style.display = "none";
+		        }
 		    };
 		    function dragNdrapNo()
 		    {
@@ -527,16 +537,24 @@
 			            
 			            if (hideCabinet == "0") {
 				            if (approvalFlag == "G") {
+				            	if (nonElecRec == "Y" && nonElecRecInfoXml == "") {
+				            		var pAlertContent = "기록물 정보를 입력해 주세요.";
+					                OpenAlertUI(pAlertContent);
+					                return;
+				            	}
+				            	
 					            if (cabinetID == "") {
 					                var pAlertContent = "<spring:message code='ezApprovalG.t134'/>";
 					                OpenAlertUI(pAlertContent, check_btnSendDraft);
 					                return;
 					            }
 					            
-					            if (cabinetID.substring(0, arr_userinfo[4].length).toLowerCase() != arr_userinfo[4].toLowerCase()) {
-					                var pAlertContent = "<spring:message code='ezApprovalG.t135'/>" + "<br>" + "<spring:message code='ezApprovalG.t136'/>";
-					                OpenAlertUI(pAlertContent);
-					                return;
+					            if (nonElecRec != "Y") {
+						            if (cabinetID.substring(0, arr_userinfo[4].length).toLowerCase() != arr_userinfo[4].toLowerCase()) {
+						                var pAlertContent = "<spring:message code='ezApprovalG.t135'/>" + "<br>" + "<spring:message code='ezApprovalG.t136'/>";
+						                OpenAlertUI(pAlertContent);
+						                return;
+						            }
 					            }
 				            } else {
 					            if (cabinetID == "") {
@@ -607,13 +625,16 @@
 			            setDrafterAddress();
 			            if (pDraftFlag == "REDRAFT")
 			                delOpinionInfo();
-			            if (LastSignSN == 1 || DraftLastFlag) {
-			                var pInformationContent = "<spring:message code='ezApprovalG.t143'/>" + "<br>" + "<spring:message code='ezApprovalG.t144'/>";
-			                OpenInformationUI(pInformationContent, check_btnSendDraft4);
-			            }
-			            else
+			            if (nonElecRec != "Y") {
+				            if (LastSignSN == 1 || DraftLastFlag) {
+				                var pInformationContent = "<spring:message code='ezApprovalG.t143'/>" + "<br>" + "<spring:message code='ezApprovalG.t144'/>";
+				                OpenInformationUI(pInformationContent, check_btnSendDraft4);
+				            }
+				            else
+				                CheckPassWord();
+			            } else {
 			                CheckPassWord();
-		        		
+			            }
 		        	} else {
 		        		OpenAlertUI("<spring:message code='ezApprovalG.pjg02'/>");
 		        	}		            
@@ -1323,6 +1344,13 @@
 		        parameter[41] = tempItemName;
 		        parameter[42] = tempItemName2;
 		        parameter[45] = pPublicityYN;
+		        parameter[46] = nonElecRec;
+		        
+		        if (nonElecRec == "Y") {
+			        parameter[47] = "nonElecRecTempCabinet";
+			        parameter[48] = nonElecRecInfoXml; // 기록물 기본등록 정보
+			        parameter[49] = nonSepAttachLVXml; // 분첨
+		        }
 		
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
@@ -1373,9 +1401,9 @@
 		                    }
 		                    
 		                    IsSkipDrafter = "FALSE";
-		                }
-
-		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "string") {
+		                }    
+		                
+		                if (pSuSinFlag == "Y" && typeof (ret[2]) == "string" && pDocType != "002") {
 		                	$.ajax({
 	                    		type : "POST",
 	                    		dataType : "text",
@@ -1393,8 +1421,7 @@
 
 		                    btnReceivLineEnable = false;
 		                    setRecevInfo(ret[3]);
-		                }
-		                else if (pSuSinFlag == "Y" && ret[2] == "") {
+		                } else if (pSuSinFlag == "Y" && ret[2] == "" && pDocType != "002") {
 		                    DeleteDeptInfo();
 		                    setRecevInfo("");
 		                }
@@ -1425,9 +1452,15 @@
 			                if (ret[21].substring(0,1) == "N") {
 			                	tempPublic = "N";
 			                }
-			                
  			                setPublicFlag();
 			                // setPublicFlag2();
+			                
+			                if (nonElecRec == "Y") {
+			                	nonElecRecInfoXml = ret[23];
+			                	nonSepAttachLVXml = ret[24];
+			                	
+			                	setNonElecRecInfo(nonElecRecInfoXml);
+			                }
 		                } else {
 		                	//회람
 		                	if (ret[22] == "noItem") {
@@ -1601,7 +1634,7 @@
 		        </div>        
 		      <div id="close">
 		        <ul>
-		          <li><span id="btnClose" onClick="return btnClose_onclick()" ><spring:message code='ezApprovalG.t64'/></span></li>
+		          <li><span id="btnClose" onClick="return btnClose_onclick()" ></span></li>
 		        </ul>
 		      </div></td>
 		  </tr>
@@ -1621,7 +1654,6 @@
 		</table>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		<XML id="SA_coredata"></XML>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>

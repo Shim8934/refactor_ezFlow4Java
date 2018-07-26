@@ -39,12 +39,12 @@
 				
 				if( g_SelectedObj == null )
 				{
-				    pObj.style.backgroundColor = "#f0f6ff";
+				    pObj.style.backgroundColor = "#edf4fd";
 					g_SelectedObj = pObj;
 				}
 				else
 				{
-				    pObj.style.backgroundColor = "#f0f6ff";
+				    pObj.style.backgroundColor = "#edf4fd";
 					
 					if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
 					g_SelectedObj = pObj;
@@ -214,20 +214,20 @@
 			<ul>
   				<c:if test="${result == '1'}">
   					<li><span onClick="newpage()"><spring:message code='ezPortal.t247'/></span></li>
-  					<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+  					<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   				</c:if>
   				<li><span onClick="deleteTopMenu()"><spring:message code='ezPortal.t67'/></span></li>
   				<li><span onClick="preview()"><spring:message code='ezPortal.t63'/></span></li>
-  				<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+  				<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   				<li><span onClick="usepage()"><spring:message code='ezPortal.t248'/></span></li>
   				<li><span onClick="Outofusepage()"><spring:message code='ezPortal.t249'/></span></li>
   				<c:choose>
   					<c:when test="${host == 'jgw.cloud.kaoni.com'}">
-  						<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+  						<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   						<li><span onClick="uselang(3)"><spring:message code='ezPortal.t4073'/></span></li>			
   					</c:when>
   					<c:otherwise>
-  						<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+  						<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
   						<li><span onClick="uselang(1)"><spring:message code='ezPortal.t406'/></span></li>
   						<li><span onClick="uselang(2)"><spring:message code='ezPortal.t407'/></span></li>
   						<li><span onClick="uselang(3)"><spring:message code='ezPortal.t4073'/></span></li>

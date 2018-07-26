@@ -92,12 +92,12 @@
 	</head>
 	<body class="popup" style="overflow:hidden;">
 	    <h1><spring:message code='ezAddress.t23' /></h1>
-		 <div id="close">
+		<div id="close">
             <ul>
-                <li><span onclick="return btn_cancel_onclick()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="return btn_cancel_onclick()"></span></li>
             </ul>
         </div>
-	    <h2 style="height:100%;margin-bottom:10px;"><spring:message code='ezAddress.t24' /></h2>
+	    <h2 style="height:100%;margin-bottom:10px;font-weight: normal"><spring:message code='ezAddress.t24' /></h2>
 	    <table class="content">
 	        <tr>
 	            <th><spring:message code='ezAddress.t373' /></th>

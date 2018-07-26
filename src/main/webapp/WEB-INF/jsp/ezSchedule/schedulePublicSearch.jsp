@@ -10,6 +10,11 @@
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />		
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
+		<style>
+			.h2_dot {
+				background: url(/images/kr/left/left_dot02.gif) no-repeat 0px 70%;
+			}
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
@@ -51,6 +56,11 @@
 	                g_entity["id"][i] = list1[i];
 	                g_entity["deptname"][i] = "";
 	            }
+	        }
+	        
+	        /* 2018-07-20 홍승비 - 공개일정검색 > 검색결과 좌측네모 IE에서 높이조절 */
+	        if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
+				document.getElementsByClassName("h2_dot")[0].style.background = "url(/images/kr/left/left_dot02.gif) no-repeat 0px 67%";
 	        }
 	    }
 		
@@ -201,7 +211,7 @@
 		
 	    function onmouseOver(elem) {
 	        elem.style.color = "blue";
-	        elem.style.backgroundColor = "#f0f6ff";
+	        elem.style.backgroundColor = "#edf4fd";
 	    }
 
 	    function onmouseOut(elem) {
@@ -217,7 +227,7 @@
 				<tr>
 			    	<th style="white-space:nowrap"><spring:message code='ezSchedule.t290' /></th>
 			    	<td style="width:20px;border-right:none">
-			    		<a href="#" class="imgbtn">
+			    		<a href="#" class="imgbtn imgbck">
 			    			<span onClick="select_entity();"><spring:message code='ezSchedule.t291' /></span>
 			    		</a>
 			    	</td>
@@ -230,7 +240,7 @@
 			    	<td colspan="2">
 			       		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~ 
 			       		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
-						<a href="#" class="imgbtn">
+						<a href="#" class="imgbtn imgbck">
 							<span onClick="search()"><spring:message code='ezSchedule.t24' /></span>
 						</a>
 					</td>

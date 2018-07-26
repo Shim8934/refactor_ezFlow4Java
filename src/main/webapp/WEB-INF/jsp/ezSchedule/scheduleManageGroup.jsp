@@ -51,7 +51,7 @@
 				        listview.SetSelectFlag(false);
 				        listview.SetMulSelectable(true);
 				        listview.SetRowOnClick("View_Detail");
-				        listview.SetRowOnDblClick("show_groupinfo");
+				        listview.SetRowOnDblClick("show_groupinfo2");
 				        listview.DataSource(xmlDoc);
 				        listview.DataBind("GroupList");				        
 				        xmldom = null;
@@ -59,26 +59,21 @@
 		    	});		        
 		    }
 		
-		    function View_Detail() {
+		    function View_Detail(obj) {
 		        document.getElementById("Group_View").innerHTML = "";
 		        
 		        var listview = new ListView();
 		        listview.LoadFromID("GroupListView");
 		        var Selected = listview.GetSelectedRows();
-		        var DIV_Description = document.createElement("DIV");
-		        var IMG = document.createElement("IMG");
-		        IMG.src = '/images/ImgIcon/dot.gif';
-		        IMG.align = "absmiddle";
-		        IMG.hspace = 5;
+		        var DIV_Description = document.createElement("DIV");		       
 		        var Span = document.createElement("SPAN");
-		        Span.setAttribute("style", "color: #3b7cbe; font-weight: bold;");
+		        Span.setAttribute("style", "color: #000; font-weight: bold;");
 		        
 		        if (CrossYN())
-		            Span.textContent = strLang264;
+		            Span.textContent = "▒ " +strLang264;
 		        else
-		            Span.innerText = strLang264;
-		
-		        DIV_Description.appendChild(IMG);
+		            Span.innerText = "▒ " +strLang264;		
+		        
 		        DIV_Description.appendChild(Span);
 		        var P = document.createElement("P");
 		        DIV_Description.appendChild(P);
@@ -89,9 +84,9 @@
 		        DIV.style.wordBreak = "break-all";
 		
 		        if (CrossYN())
-		            DIV.textContent = GetAttribute(Selected[0], "data2")
+		            DIV.textContent = obj.getAttribute('data2');
 		        else
-		            DIV.innerText = GetAttribute(Selected[0], "data2")
+		            DIV.innerText = obj.getAttribute('data2');
 		
 		        DIV_Description.appendChild(DIV);
 		        DIV_Description.appendChild(P);
@@ -103,7 +98,7 @@
 		    		dataType : "xml",
 		    		async : false,
 		    		data : {
-		    			groupID : GetAttribute(Selected[0], "data1")
+		    			groupID : obj.getAttribute('data1')
 		    		},
 		    		url : "/ezSchedule/getGroupDetail.do",		    		
 		    		success: function(text){
@@ -113,18 +108,13 @@
 		                var DIV_GroupMember = document.createElement("DIV");
 		                var Span = document.createElement("SPAN");
 		                var BR = document.createElement("BR");
-		                var IMG = document.createElement("IMG");
-		                IMG.src = '/images/ImgIcon/dot.gif';
-		                IMG.align = "absmiddle";
-		                IMG.hspace = 5;
-		                Span.setAttribute("style", "color: #3b7cbe; font-weight: bold;");
+		                Span.setAttribute("style", "color: #000; font-weight: bold;");
 		                
 		                if (CrossYN())
-		                    Span.textContent = strLang265;
+		                    Span.textContent = "▒ " +strLang265;
 		                else
-		                    Span.innerText = strLang265;
-		
-		                DIV_GroupMember.appendChild(IMG);
+		                    Span.innerText = "▒ " +strLang265;
+		                
 		                DIV_GroupMember.appendChild(Span);
 		                var P = document.createElement("P");
 		                DIV_GroupMember.appendChild(P);
@@ -135,20 +125,20 @@
 		                    DIV.style.marginLeft = "5px";
 		                    DIV.style.marginTop = "5px";
 		                    DIV.style.cursor = "hand";
-		                    DIV.style.color = "blue";
+		                    DIV.style.color = "#000";
 		                    DIV.style.display = "inline-block";
 		                    
 		                    if (CrossYN()) {
 		                        //if (use_ocs == "YES") {
 		                            //DIV.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + SelectNodes(text, "MAIL").item(i).textContent + "\",this);'/></span><span style='margin-top:50px; cursor:pointer' id=" + SelectNodes(text, "MEMBERID").item(i).textContent + " onclick='show_member(this)'>" + SelectNodes(text, "INFO").item(i).textContent + "</span>";
-		                            DIV.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'/></span>&nbsp;<span style='margin-top:50px; cursor:pointer' id=" + SelectNodes(text, "MEMBERID").item(i).textContent + " onclick='show_member(this)'>" + SelectNodes(text, "INFO").item(i).textContent + "</span>";
+		                            DIV.innerHTML = "<span style='margin-top:50px; cursor:pointer' id=" + SelectNodes(text, "MEMBERID").item(i).textContent + " onclick='show_member(this)'>" + SelectNodes(text, "INFO").item(i).textContent + "</span>";
 		                        /* } else {
 		                            DIV.innerHTML = SelectNodes(text, "INFO").item(i).textContent;
 		                        } */
 		                    } else {
 		                        //if (use_ocs == "YES") {
 		                            //DIV.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + SelectNodes(text, "MAIL").item(i).text + "\",this);'/></span><span style='margin-top:50px; ; cursor:pointer' id=" + SelectNodes(text, "MEMBERID").item(i).text + " onclick='show_member(this)'>" + SelectNodes(text, "INFO").item(i).text + "</span>";
-		                            DIV.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'/></span>&nbsp;<span style='margin-top:50px; ; cursor:pointer' id=" + SelectNodes(text, "MEMBERID").item(i).text + " onclick='show_member(this)'>" + SelectNodes(text, "INFO").item(i).text + "</span>";
+		                            DIV.innerHTML = "<span style='margin-top:50px; ; cursor:pointer' id=" + SelectNodes(text, "MEMBERID").item(i).text + " onclick='show_member(this)'>" + SelectNodes(text, "INFO").item(i).text + "</span>";
 		                        /* } else {
 		                            DIV.innerHTML = SelectNodes(text, "INFO").item(i).text;
 		                        } */
@@ -198,7 +188,21 @@
 		    }
 					
 		    function del_group() {		
-		        if (strListInfo == "") {
+		    	var strListInfo = "";
+		    	var checkId = $("input[name=chk_group]:checked");
+		    	
+		    	if(checkId.length == 0){
+		    		 alert("<spring:message code='ezSchedule.t253' />");
+			         return;
+		    	}
+		    	
+		    	for(var i=0; i<$("input[name=chk_group]:checked").length; i++){
+		    		strListInfo += $("input[name=chk_group]:checked")[i].id;
+		    	}
+		    	console.log('strListInfo : ' + strListInfo);
+		    	 var count = strListInfo.split(';').length - 1;
+		    	
+		      /*   if (strListInfo == "") {
 		            alert("<spring:message code='ezSchedule.t253' />");
 		            return;
 		        }
@@ -206,7 +210,7 @@
 		        var count = strListInfo.split(';').length - 1;
 		
 		        if (!confirm(count + "<spring:message code='ezSchedule.t254' />"))
-		            return;
+		            return; */
 
 		        $.ajax({
 		    		type : "POST",
@@ -241,13 +245,16 @@
 			            return;
 			        }
 			        
-			        listview.GetSelectedRows()[0].onclick(); 
+			        /* listview.GetSelectedRows()[0].onclick();  */
 		        }
       		            
 		        var Selected = listview.GetSelectedRows();
+		        console.log('Selected : ' + Selected);
+		        
 		        var feature = GetOpenPosition(430, 370);
 		        //window.open("/myoffice/ezSchedule/schedule_group_member.aspx?id=" + GetAttribute(Selected[0], "data1"), "", "height = 370px, width = 430px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		        
+		        console.log('GetAttribute(Selected[0], "data1") : ' + GetAttribute(Selected[0], "data1"));
 		        window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + GetAttribute(Selected[0], "data1"), "", "height = 370px, width = 460px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		        
 		        //getGroupList();		
@@ -263,7 +270,7 @@
 	    <div id="mainmenu" style="margin-top:20px">
 	        <ul>
 	            <li><span onClick="add_group()"><spring:message code='ezSchedule.t191' /></span></li>
-	            <li><span onClick="show_groupinfo()"><spring:message code='ezSchedule.t00001' /></span></li>
+	            <li><span onClick="show_groupinfo2('show')"><spring:message code='ezSchedule.t00001' /></span></li>
 	            <li><span onclick='del_group();'><spring:message code='ezSchedule.t215' /></span></li>
 	        </ul>
 	    </div>
@@ -273,7 +280,7 @@
 	                <div id="GroupList" style ="BORDER:0;WIDTH:100%; height:400px; overflow-y: auto; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid;"></div>
 	            </td>
 	            <td style="vertical-align:top; border-bottom:none">
-	                <div id="Group_View" style="padding-top:5px; padding-left:5px; width: 100%; height: 395px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; overflow-y: auto;">
+	                <div id="Group_View" style="padding:15px; width: 100%; height: 369px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; border-top-color: #dbdbda; border-right-color: #dbdbda; border-bottom-color: #dbdbda; border-left-color: #dbdbda; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; overflow-y: auto;">
 	                </div>
 	            </td>
 	        </tr>

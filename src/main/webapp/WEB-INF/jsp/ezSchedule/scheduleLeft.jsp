@@ -65,6 +65,7 @@
 			    -ms-transform: rotate(45deg);
 			    transform: rotate(45deg);
 			}
+			
 	    </style>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/Holiday.js"></script>
@@ -90,6 +91,10 @@
 			var totalCnt = 0;
 			var sStartDate;
 			var sEndDate;
+			var typeCal;
+			
+			/* var chk_total = $("input[name=chk_schedule]:checked").length;
+			var chk_fullLength = $("input[name=chk_schedule]").length; */
 			
 			//2018-06-08 구해안 left checkbox checkall			
 			function chk_all(){
@@ -97,22 +102,97 @@
 			        $('.checkSelect').each(function() {
 			            $(this).prop('checked',true);			            
 			        });
-			        chk_IDchange();
+			        /* chk_IDchange(); */
+			        chk_DisplayChange();
 			    } else {			    	
 			        $('.checkSelect').each(function() {
 			            $(this).prop('checked',false);  			            
 			        });
-			        chk_IDchange();
+			        /* chk_IDchange(); */
+			        chk_DisplayChange();
 			    }
 			}   
+			function FindByAttributeValue(attribute, value, element_type)    {
+			   element_type = element_type || "*";
+			   var All = document.getElementsByTagName(element_type);
+			   for (var i = 0; i < All.length; i++)       {
+			     if (All[i].getAttribute(attribute) == value) { return All[i]; }
+			   }
+			}
 			
+			//2018-06-18 구해안 checkbox에 대한 css 변환 함수
+			function chk_DisplayChange() {
+				var chk_str =  "";
+				var chk_total = $("input[name=chk_schedule]:checked").length;
+				var chk_fullLength = $("input[name=chk_schedule]").length;
+				
+				if(typeCal == 0) {		
+					$("input[name=chk_schedule]").each(function(index){
+						var chk_eachVal1 = $(this).val();
+						var chk_type=$(this).data("schedule-type")
+						
+						$('.td_list td[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+							
+							$(value).addClass('chk_noneDisplay');
+							
+						});
+					});
+					$("input[name=chk_schedule]:checked").each(function(index) {
+						var test = $(this).val();
+						var chk_type = $(this).data("schedule-type");
+						
+						$('.td_list td[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+							$(value).removeClass('chk_noneDisplay');
+						});
+					});					
+				}else if(typeCal == 1) {
+					$("input[name=chk_schedule]").each(function(index){
+						var chk_eachVal1 = $(this).val();
+						var chk_type = $(this).data("schedule-type");
+						
+						$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+							$(value).addClass('chk_noneDisplay');
+						});
+					});
+					$("input[name=chk_schedule]:checked").each(function(index) {
+						var test = $(this).val();
+						var chk_type = $(this).data("schedule-type");
+						
+						$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+							$(value).removeClass('chk_noneDisplay');
+						});
+					});	
+				}else{
+					$("input[name=chk_schedule]").each(function(index){
+						var chk_eachVal1 = $(this).val();
+						var chk_type = $(this).data("schedule-type");
+						
+						$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+							$(value).addClass('chk_noneDisplay');
+						});
+					});
+					$("input[name=chk_schedule]:checked").each(function(index) {
+						var test = $(this).val();
+						var chk_type = $(this).data("schedule-type");
+						
+						$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+							$(value).removeClass('chk_noneDisplay');
+						});						
+					});	
+				}		
+				if(chk_total > 0 && chk_total < chk_fullLength) {
+					$('#select-all').prop('checked',false);					
+				} else if(chk_total == chk_fullLength) {
+					$('#select-all').prop('checked',true);	
+				} else if(chk_total == 0){
+					chk_str += $('#select-all').val();
+				}
+			}
 			
 			
 			//2018-06-08 구해안 left checkbox 함수
 			function chk_IDchange() {
-				var chk_str =  "";
-				var chk_total = $("input[name=chk_schedule]:checked").length;
-				var chk_fullLength = $("input[name=chk_schedule]").length;
+				
 				
 				if($(parent.frames["left"].document.getElementById("secretarySelect")).val() != "" && $(parent.frames["left"].document.getElementById("secretarySelect")).val() != null){
 					$("input[name=chk_schedule]:checked").each(function(index) {
@@ -352,6 +432,11 @@
 		                break;
 
 		            case 10:	// Search public search
+		            	$('.checkSelect').each(function() {
+				            $(this).prop('checked',true);			            
+				        });
+		            	$('#select-all').prop('checked',true);
+		            	$('#IDClick').css('pointer-events','none');
 		                window.open("/ezSchedule/schedulePublicSearch.do", "right");
 		                break;
 		            case 11:		// Search public calendar
@@ -388,7 +473,8 @@
 	        function MonthMiniDbClick(obj) {
 	            if (_funCode == 2)
 	                parent.frames["right"].WriteDateSchedule_left(obj)
-	        }
+	        }	        
+	      
 		</script>
 	</head>
 
@@ -396,6 +482,7 @@
         <div class="left_pims" title="<spring:message code='ezSchedule.t1010'/>"><span><spring:message code='ezSchedule.t1010'/></span></div>
         <input type="hidden" id="chk_str" value="">
 	    <div id="left">
+	    	
 	        <div class="left_pims1" title="<spring:message code='ezSchedule.t1010'/>" id='pims1'></div>
 		    <div class="left_pims2" title="<spring:message code='ezSchedule.t1017'/>" id='pims2' style="display:none"></div>
 		    <div class="left_pims3" title="<spring:message code='ezSchedule.t1011'/>" id='pims3' style="display:none"></div>
@@ -404,58 +491,62 @@
 		    	<!-- 2018-06-07 구해안 mini 호출하는 부분 삭제하고 체크박스 생성 -->    	
 		    	<!-- <div id="CalendarMini" style="padding-top:5px;margin:0px 10px 10px 10px;"></div> -->
 		    	<div id="IDClick">
+		    	<!-- 2018-07-11 구해안 left 체크박스 label에 title 삽입 -->
 		    	<label class="IDcontainer" onchange="chk_all()"><spring:message code='ezSchedule.t220'/>
 				  <input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse">
 				  <span class="checkmark"></span>
 				</label>
-				<label class="IDcontainer" onchange="chk_IDchange()"><spring:message code='ezSchedule.t221'/>
-				  <input type="checkbox" checked="checked" name="chk_schedule" value="${loginVO.id}" class="checkSelect">
+				<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t221'/>
+				  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${loginVO.id}" class="checkSelect">
 				  <span class="checkmark" style="background:#018bfa;"></span>
 				</label>
 				<c:if test='${!empty scheSec}'>
 					<c:forEach var="sec" items="${scheSec}">
-						<label class="IDcontainer" onchange="chk_IDchange()"><spring:message code='ezSchedule.t372'/>${sec.secName }
-						  <input type="checkbox" checked="checked" name="chk_schedule" value="${sec.secId }" class="checkSelect">
+						<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="${sec.secName }"style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t372'/>${sec.secName }</span>
+						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${sec.secId }" class="checkSelect">
 						  <span class="checkmark" style="background-color:#018bfa;"></span>
 						</label>
 					</c:forEach>
 				</c:if>
-				<label class="IDcontainer" onchange="chk_IDchange()"><spring:message code='ezSchedule.t222'/>
-				  <input type="checkbox" checked="checked" name="chk_schedule" value="${loginVO.deptID}" class="checkSelect">
-				  <span class="checkmark" style="background:#01b43f;"></span>
-				</label>
+					<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t222'/>
+					  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${loginVO.deptID}" class="checkSelect">
+					  <span class="checkmark" style="background:#01b43f;"></span>
+					</label>
+				
 				<c:if test='${!empty scheDept}'>
 					<c:forEach var="dep" items="${scheDept}">
-						<label class="IDcontainer" onchange="chk_IDchange()"><spring:message code='ezSchedule.t373'/>${dep.deptName }
-						  <input type="checkbox" checked="checked" name="chk_schedule" value="${dep.deptId }" class="checkSelect">
+						<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="${dep.deptName }"style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t373'/>${dep.deptName }</span>
+						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${dep.deptId }" class="checkSelect">
 						  <span class="checkmark" style="background-color:#01b43f;"></span>
 						</label>
 					</c:forEach>
 				</c:if>
 				<c:if test='${!empty scheCum}'>
 					<c:forEach var="cum" items="${scheCum}">
-						<label class="IDcontainer" onchange="chk_IDchange()"><spring:message code='ezSchedule.t373'/>${cum.titleName }
-						  <input type="checkbox" checked="checked" name="chk_schedule" value="${cum.deptId }" class="checkSelect">
-						  <span class="checkmark" style="background-color:#01b43f;"></span>
-						</label>
+						<c:if test="${cum.deptId ne loginVO.deptID}">
+							<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="${cum.titleName }" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t373'/>${cum.titleName }</span>
+							  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="2" value="${cum.deptId }" class="checkSelect">
+							  <span class="checkmark" style="background-color:#01b43f;"></span>
+							</label>
+						</c:if>
 					</c:forEach>
 				</c:if>
-				<label class="IDcontainer" onchange="chk_IDchange()"><spring:message code='ezSchedule.t223'/>
-				  <input type="checkbox" checked="checked" name="chk_schedule" value="${loginVO.companyID}" class="checkSelect">
+				<label class="IDcontainer" onchange="chk_DisplayChange()"><spring:message code='ezSchedule.t223'/>
+				  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="3" value="${loginVO.companyID}" class="checkSelect">
 				  <span class="checkmark" style="background:#ff1c71;"></span>
 				</label>
 				<c:if test='${!empty groupList}'>
 					<c:forEach var="group" items="${groupList}">
-						<label class="IDcontainer" onchange="chk_IDchange()"><spring:message code='ezSchedule.t375'/>${group.groupName }
-						  <input type="checkbox" checked="checked" name="chk_schedule" value="${group.groupId }" class="checkSelect">
+						<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="${group.groupName }" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t375'/>${group.groupName }</span>
+						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="7" value="${group.groupId }" class="checkSelect">
 						  <span class="checkmark" style="background-color:#e9de13;"></span>
 						</label>
 					</c:forEach>
 				</c:if>
 		    	</div>
 		    	<!-- 2018-06-08 구해안 일정관리 탭 삭제 -->
-			    <%-- <li style="border-top:1px solid #dedede" evt="0"><span id='Schedule_Main' onClick="Function_Flag(2)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1010'/></span></li> --%>
-	            <li style="border-top:1px solid #e8e8e8" evt="0"><span id='Schedule_Group' onClick="Function_Flag(5)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t252'/></span></li>
+			    <%-- <li style="border-top:1px solid #dedede" evt="0"><span id='Schedule_Main' onClick="Function_Flag(2)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1010'/></span></li> --%>	            
+				<li style="border-top:1px solid #eaeaea" evt="0"><span id='Schedule_Group' onClick="Function_Flag(5)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t252'/></span></li>
 			    <li evt="0"><span id='Schedule_Search' onClick="Function_Flag(6)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1018'/></span></li>
 			    <li evt="0"><span id='Schedule_Public_Search' onClick="Function_Flag(10)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1021'/></span></li>
 		    </ul>

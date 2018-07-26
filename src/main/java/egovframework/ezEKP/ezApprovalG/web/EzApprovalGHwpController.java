@@ -71,7 +71,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String aprState = request.getParameter("aprState");
 		String isTmpDoc = request.getParameter("isTmpDoc");
 		String connkey = request.getParameter("connkey");
+		String nonElecRec = request.getParameter("nonElecRec");
 		String docSN = "";
+		
+		if (nonElecRec == null) {
+			nonElecRec = "";
+		}
 		
 		if (listType.equals("21")) {
 			if (request.getParameter("docSN") != null) {
@@ -118,6 +123,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("connkey", connkey);
 		model.addAttribute("docSN", docSN);
 		model.addAttribute("isHWP", "Y");
+		model.addAttribute("nonElecRec", nonElecRec);
 		
 		LOGGER.debug("draftuiHWP ended");
 		
@@ -143,6 +149,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String orgAprUserDeptID = request.getParameter("deptID");
 		String docID = request.getParameter("docID");
 		String tempUserID = userInfo.getId();
+		String orgDocID = request.getParameter("orgDocID");
 
 		String allFlag = request.getParameter("allFlag");
 		//hwp 툴바가 6줄인데 맨윗줄 부터 '1' 이면 사용 '0' 이면 사용하지 않는다. ex)'100001' 맨위랑 맨아래 툴바만 표시
@@ -150,6 +157,10 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String docState = request.getParameter("docState");
+		
+		if (orgDocID == null) {
+			orgDocID = "";
+		}
 
         if (userInfo.getRollInfo().indexOf("a=1") > -1) {
         	susinAdmin = "YES";
@@ -180,6 +191,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
         String optjunKyukInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE");
              
+        String nonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+        if (!nonElecRec.equals("")) {
+        	model.addAttribute("nonElecRec", nonElecRec);
+        }
+        
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("approvalPWD", approvalPWD);
         model.addAttribute("useEditor", useEditor);
@@ -478,10 +494,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String susinAdmin = "";
         String SignCheck = "N";
         String pass = "";
-		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+        
+        userInfo = commonUtil.aprUserInfo(loginCookie);
+
+        String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
         String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -552,6 +570,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("pass", pass);
 		
 		LOGGER.debug("ezViewEnd_HWP ended");
+		
 		return "ezApprovalG/apprGviewEndHWP";
 	}
 	
@@ -579,7 +598,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String retFlag = request.getParameter("retFlag");
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
-		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String dirPath = commonUtil.getRealPath(request) + approvalRoot;
 
 		String rtnVal = ezApprovalGService.getOrgDocInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 
@@ -609,6 +629,9 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			}
 		}
 		
+		// 비전자문서 구분 값  (return >> "Y" = TRUE, "" = FALSE)
+		String isNonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		model.addAttribute("optSignDateFormat", optSignDateFormat);
 		model.addAttribute("optIsSplit", optIsSplit);
 		model.addAttribute("optSplitKind", optSplitKind);
@@ -623,6 +646,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("isNonElecRec", isNonElecRec);
+		model.addAttribute("approvalRoot", approvalRoot);
 		
 		LOGGER.debug("ezRecevGSusinHWP ended");
 		
@@ -691,6 +716,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 	    String Use_ImgTagTOAttah_body = "N";
+	    String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator;
 
 	    model.addAttribute("userInfo", userInfo);
 	    model.addAttribute("docID", docID);
@@ -698,6 +724,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    model.addAttribute("orgDocID", orgDocID);
 	    model.addAttribute("hwpToolbar", hwpToolbar);
 	    model.addAttribute("useEditor", useEditor);
+	    model.addAttribute("approvalRoot", approvalRoot);
 	    model.addAttribute("Use_ImgTagTOAttah_body", Use_ImgTagTOAttah_body);
 		
 		LOGGER.debug("ezSimsaG_HWP ended");
@@ -715,6 +742,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
+		String result = "";
 		String docID = request.getParameter("docID");
 		String formText = request.getParameter("html");
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
@@ -741,7 +769,12 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
 				bos.write(buffer, 0, bytesRead);
 			}
+			
+			result = "SUCCESS";
 		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result = "FAIL";
 		} finally {
 			if (bos != null) {
 				try {
@@ -762,7 +795,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		LOGGER.debug("saveEndFileHwp ended");
 		
-		return "SUCCESS";
+		return result;
 	}
 	
 	/**

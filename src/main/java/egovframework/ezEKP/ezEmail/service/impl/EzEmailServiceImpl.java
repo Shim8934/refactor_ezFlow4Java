@@ -6,7 +6,6 @@ import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,7 +16,6 @@ import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
-import javax.mail.FetchProfile;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -1549,7 +1547,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userEmail = userInfo.getId() + "@" + domainName;
-		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		IMAPAccess ia = null;
@@ -1560,35 +1557,13 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 			Folder folder = ia.getFolder(ezEmailUtil.getInboxFolderId());		
 			folder.open(Folder.READ_ONLY);
-	        UIDFolder uidFolder = (UIDFolder)folder;
-	        
-	        Message[] messages = ezEmailUtil.searchFolder(folder, "", "", null, sdf.parse(dateTime), false, null, true, false, true);
-	        
-	        // sort the messages
- 			ezEmailUtil.sortMessages(folder, messages, "receivedDate", false);
-	        
- 			// set mailCount
- 			int unreadCount = ia.getUnreadCount(ezEmailUtil.getInboxFolderId());
- 			if (unreadCount < count) {
- 				count = unreadCount;
- 			}
- 			
- 			int messageCount = messages.length;
- 			
- 			if ( messageCount < 0 ) {
- 				messageCount = 0;
- 			}
- 			
- 			messages = Arrays.copyOfRange(messages, 0, messageCount);
-
- 			// pre-fetch
-	        FetchProfile fp = new FetchProfile();
-	        fp.add(UIDFolder.FetchProfileItem.UID);
-	        fp.add(FetchProfile.Item.ENVELOPE);
-	        folder.fetch(messages, fp);
+			
+	        Message[] messages = ezEmailUtil.searchFolder(ia, userEmail, folder, "", "", null, sdf.parse(dateTime), false, 
+	        		true, false, "receivedDate", false, 0, 30, true, null, userInfo.getTenantId());
 	        
 	        for (int i=0; i<messages.length; i++) {
 	        	Message message = messages[i];
+	        	UIDFolder uidFolder = (UIDFolder)message.getFolder();
 	        	
 	        	Date receivedDate = message.getReceivedDate();
 	        	String receivedDateStr = sdf.format(receivedDate);
@@ -1676,7 +1651,6 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",searchValue=" + searchValue);
 		
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
-				
 		String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
 		inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
 		inputParams += "&searchValue=" + URLEncoder.encode(searchValue, "UTF-8");
@@ -2121,8 +2095,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
 				JSONArray array = (JSONArray)responseObj.get("result");
 				
-				if (array != null) {
-					
+				if (array != null && !array.equals("")) {
 					JSONObject obj = null;
 					while (isIncluded.equals("NO")) {
 						
@@ -2150,11 +2123,72 @@ public class EzEmailServiceImpl implements EzEmailService {
 					throw new Exception("JGwServer ERROR");
 				}
 			}
-		
 		}
 			
 		logger.debug("checkDistributionIsIncluded ended.");
 		return isIncluded;
+	}
+	
+	@Override
+	public List<MailDistributionVO> getDistributioUpperList(String userName, int tenantId) throws Exception {
+		logger.debug("getDistributioIncludednList started.");
+		logger.debug("userName = " + userName + ",tenantId=" + tenantId);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String inputParams = "userName=" + URLEncoder.encode(userName, "UTF-8");
+		inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributioIncludednList";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		List<MailDistributionVO> distributionList = new ArrayList<MailDistributionVO>();
+		List<MailDistributionVO> distributionUpperList = null;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONArray resultArray = (JSONArray)responseObj.get("result");
+					
+					if (resultArray != null &&  resultArray.size() > 0) {
+						for (int i=0; i<resultArray.size(); i++) {
+							MailDistributionVO vo = new MailDistributionVO();
+							
+							JSONObject obj = (JSONObject)resultArray.get(i);
+							
+							vo.setName((String)obj.get("distributionName"));
+							vo.setId((String)obj.get("distributionId"));
+							vo.setMail((String)obj.get("distributionMail"));
+							
+							distributionList.add(vo);
+							
+							distributionUpperList = getDistributioUpperList(vo.getId(), tenantId);
+							if (distributionUpperList != null && distributionUpperList.size() >0) {
+								for (MailDistributionVO upperVO : distributionUpperList) {
+									distributionList.add(upperVO);
+								}
+							}
+						}
+					}
+				}
+			}
+		}						
+		
+		logger.debug("getDistributioIncludednList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		logger.debug(distributionList.toString());
+		
+		return distributionList;
 	}
 	
 }

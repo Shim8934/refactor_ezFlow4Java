@@ -9,7 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <style>
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;
@@ -369,9 +369,34 @@
   					error : function(jqXHR, textStatus, errorThrown) {
   						alert(error);
   					}
-	  			});   
-	        	 
+	  			});
+	        	
+	        	$.ajax({
+					url : "/ezOrgan/getDeptMemberListCount.do",
+					method : "POST",
+					dataType : "json",
+					data : {
+						deptID : tempDeptID
+					},
+					success : function(result) {
+						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
+						
+						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
+			        		if (result.totalCount == result.totalCount2) {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang256 + "</span>]";
+			        		} else {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang256 + "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang256 + "</span>]";
+			        		}
+			            	
+			            	SelectDeptNM.setAttribute("countinfo","1")
+			        	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(error);
+					}
+				});
 	    	}
+	        
 	        function event_displayUserList(xml) {
 		        if (xml != null) {
     	            pListXML_Info = xml;
@@ -382,7 +407,7 @@
 		        } 
 		    }	    
 	        
-	        var m_strColorSelect = "#f0f6ff";
+	        var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -572,7 +597,9 @@
 	            var strSIP = "";
 	            var pAddFlag = false;
 	           
-	            if (_RowObjectID != null) {
+	            if (_RowObjectID == null && Tab1_SelectID == "1tab2") {
+	            	alert("<spring:message code='ezCircular.t53'/>");
+	            } else if (_RowObjectID != null && Tab1_SelectID == "1tab2") {
 	            	if (_RowObjectName.trim() == "deptList") {
 		            	for (var i = 0; i < $("#List_TBODY2 tr").length; i++) {
 		            		strId = $("#List_TBODY2 tr").eq(i).find("#data7").text();
@@ -1004,7 +1031,8 @@
 				}
 
 				var listid = "MsgToList";
-				_RowObjectID = null;
+				//2018-07-06 즐겨찾기 추가 로직 개선 배현상
+				//_RowObjectID = null;
 			}
 
 			function CheckMailReceiver(selRow, option) {
@@ -1062,12 +1090,15 @@
 				}
 
 				var UserListHTML = "";
-				if (SelectDeptNM.getAttribute("countinfo") != "1") {
-					SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>"
-							+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
-							+ strLang256 + "</span>]";
+				/* if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != null && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
+					if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang256 + "</span>]";
+	        		} else {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang256 + "</span>]";
+	        		}
+					
 					SelectDeptNM.setAttribute("countinfo", "1")
-				}
+				} */
 
 				if (pListType == "IMG") {
 					document.getElementById("DeptUserImgList").style.display = "";
@@ -1080,7 +1111,9 @@
 								+ strLang257
 								+ ""
 								+ "-[<span style='color:#017BEC;'>"
-								+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
+								//2018-07-10 김보미 - 전체 결과 갯수로 변경
+	 							//+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
+								+ getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])
 								+ strLang256 + "</span>]";
 						SelectDeptNM.setAttribute("countinfo", "1");
 					}
@@ -1098,7 +1131,9 @@
 								+ strLang257
 								+ ""
 								+ "-[<span style='color:#017BEC;'>"
-								+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
+								//2018-07-10 김보미 - 전체 결과 갯수로 변경
+	 							//+ SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length
+								+ getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])
 								+ strLang256 + "</span>]";
 						SelectDeptNM.setAttribute("countinfo", "1")
 					}
@@ -1589,25 +1624,22 @@
 				PagingHTML += strtext;
 				var pageNum = CurPage;
 				if (totalPage > 1 && pageNum != 1) {
-					strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+					strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>"
 					PagingHTML += strtext;
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>"
 					PagingHTML += strtext;
 				}
 				if (totalPage > BlockSize) {
 					if (pageNum > BlockSize) {
-						strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>"
-								+ strLang24 + "</span>";
+						strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 						PagingHTML += strtext;
 					} else {
-						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>"
-								+ strLang24 + "</span>";
+						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 						PagingHTML += strtext;
 					}
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>"
-							+ strLang24 + "</span>";
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 					PagingHTML += strtext;
 				}
 				var MaxNum;
@@ -1631,32 +1663,29 @@
 				if (totalPage > BlockSize) {
 					if (totalPage >= parseInt(((parseInt((pageNum - 1)
 							/ BlockSize) + 1) * BlockSize) + 1)) {
-						strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>"
-								+ strLang25 + "</span>";
+						strtext = "";
 						strtext = strtext
-								+ "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+								+ "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 						PagingHTML += strtext;
 					} else {
-						strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>"
-								+ strLang25 + "</span>";
+						strtext = "";
 						strtext = strtext
-								+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+								+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 						PagingHTML += strtext;
 					}
 				} else {
-					strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>"
-							+ strLang25 + "</span>";
+					strtext = "";
 					strtext = strtext
-							+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+							+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 					PagingHTML += strtext;
 				}
 				if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
 					strtext = "<span class='btnimg' onclick='return goToPageByNum("
 							+ totalPage
-							+ ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+							+ ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 					PagingHTML += strtext;
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 					PagingHTML += strtext;
 				}
 				PagingHTML += "</div>";
@@ -1798,7 +1827,7 @@
 				_RowObjectID = obj.id;
 				_RowObjectName = $(obj).attr("name");
 
-				obj.style.backgroundColor = "#f0f6ff";
+				obj.style.backgroundColor = "#edf4fd";
 
 				$
 						.ajax({
@@ -1849,7 +1878,7 @@
 				_RowObject = obj;
 				_RowObjectID = obj.id;
 				_RowObjectName = $(obj).attr("name");
-				obj.style.backgroundColor = "#f0f6ff";
+				obj.style.backgroundColor = "#edf4fd";
 			}
 
 			var Tab1_SelectID = "1tab1";
@@ -1861,8 +1890,9 @@
 					if (document.getElementById("circularOrgan_content").style.display == "none") {
 						document.getElementById("circularOrgan_content").style.display = "";
 						document.getElementById("circularDept_content").style.display = "none";
-						$("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제
-						_RowObjectID = null; // 탭 바꾸면 기존에 가지고 있던 값 초기화
+// 						$("#List_TBODY tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제, 즐겨찾기
+// 						$("#List_TBODY2 tr").css("backgroundColor", "#ffffff"); // 탭 바꾸면 즐겨찾기에 선택되어있던 것 해제, 즐겨찾기 구성원
+//						_RowObjectID = null; // 탭 바꾸면 기존에 가지고 있던 값 초기화
 					}
 					break;
 				case "circularDept":
@@ -1920,6 +1950,11 @@
 	</head>
 	<body class="popup" style="overflow:hidden">
 		<h1 id="h1Title" style="height: 20px;"><spring:message code='ezCircular.t40' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table style="width:100%">
 			<tr>
 				<td>
@@ -1938,7 +1973,7 @@
 	                                        <tr>
 	                                            <td>
 	                                                <div style="margin-left: 5px;">
-	                                                    <select id="search_type">
+	                                                    <select id="search_type" style="height:21px">
 	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezCircular.t80' /></option>
 	                                                        <option value="description" usedefault="1"><spring:message code='ezCircular.t78' /></option>
 	                                                        <option value="title" usedefault="1"><spring:message code='ezCircular.t154' /></option>
@@ -1949,7 +1984,7 @@
 	                                                        <option value="mail" usedefault="0"><spring:message code='ezCircular.t159' /></option>
 	                                                        <option value="streetAddress" usedefault="0"><spring:message code='ezCircular.t160' /></option>
 	                                                    </select>
-	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;">
+	                                                    <input id="keyword" value="" onkeyup="search_press(event)" onmousedown="keyword_Clear();" style="width: 130px; margin: 0px;height:21px">
 	                                                    <a class="imgbtn"><span onclick="search_click('search')"><spring:message code='ezCircular.t85' /></span></a>
 	                                                </div>
 	                                            </td>
@@ -1980,7 +2015,7 @@
 	                                                </th>
 	                                            </tr>
 	                                        </table>
-	                                        <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
+	                                        <div style="vertical-align: top; height: 418px; overflow: auto; width: 440px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
 	                                                    <td style="width: 150px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezCircular.t80' /></td>
@@ -1997,8 +2032,8 @@
 	                                                </tr>
 	                                            </table>
 	                                        </div>
-	                                        <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
-	                                        <div id="tblPageRayer" style="text-align:center; height:32px"></div>
+	                                        <div style="vertical-align: top; text-align: center; height: 418px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
+	                                        <div id="tblPageRayer" style="text-align:center; height:32px;margin-bottom:10px"></div>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -2069,9 +2104,8 @@
 	      		</td> 
 	    	</tr> 
 	 	</table>	    
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezCircular.t65' /></span></a>
-	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezCircular.t26' /></span></a>
 		</div>
 	</body>
 </HTML>

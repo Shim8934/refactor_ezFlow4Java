@@ -145,7 +145,7 @@
 	
 		    function setAttachFileInfo(str) {
 		        var filelist = JSON.parse(str);
-		        
+
 		        try {
 		            var listtable;
 		            var extCheck = false; 
@@ -201,8 +201,9 @@
 		                    extCheck = true;
 		                }
 		            }
-		            if (extCheck)
-		                alert("<spring:message code='main.sp12'/>");
+		            if (extCheck) {
+						alert("<spring:message code='ezJournal.kms01'/>");
+		            }
 		        }
 		        catch (e) { alert("returnvalue :: " + e.description); }
 		    }
@@ -327,8 +328,8 @@
     <body style ="width:100%;height:100%;overflow:hidden">   
         <div style="width:100%;white-space:nowrap;display:inline-block;height:22px">
             <div style="float:left">
-                <a class="imgbtn" onclick="btnfileup()"><span><spring:message code='ezSchedule.t370'/></span></a>
-                <a class="imgbtn" onclick="btnfiledel()"><span><spring:message code='ezSchedule.t371'/></span></a>
+                <a class="imgbtn imgbck" onclick="btnfileup()"><span><spring:message code='ezSchedule.t370'/></span></a>
+                <a class="imgbtn imgbck" onclick="btnfiledel()"><span><spring:message code='ezSchedule.t371'/></span></a>
             </div>
             <div id="progdiv" class="progarea" style="display:none">
              	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>

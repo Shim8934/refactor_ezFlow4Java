@@ -9,7 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	    <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 	    <link rel="stylesheet" href="/css/style.css" type="text/css" />
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css" />
 	    <style>
 	    	.mainlist tr th {
 	    		border-top:0px;
@@ -33,7 +33,7 @@
 		    var ReturnValue_NameEng = new Array();
 		    var pStartTime = "<c:out value='${startTime}'/>";
 		    var pEndTime = "<c:out value='${endTime}'/>";
-		    var m_strColorSelect = "#f0f6ff";
+		    var m_strColorSelect = "#edf4fd";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var RetValue;
@@ -366,7 +366,7 @@
 	    <h1><spring:message code='ezSchedule.t1101' /></h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="btn_close()"><spring:message code='ezEmail.t63' /></span></li>
+                <li><span onclick="btn_close()"></span></li>
             </ul>
         </div>
 	    <table>
@@ -376,13 +376,13 @@
 	                <div class="box" style="height:300px;width:245px;overflow-x:auto;overflow-y:auto;" id="TreeView"></div>
 	            </td>
 	            <td style="width: 30px; text-align: center;">
-                    <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver()"><br/>
+                    <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;margin-top:22px" onclick="InsertReceiver()"><br/>
                     <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver()">
                 </td>
 	            <td>
 	                <h2><span id="Span1"><spring:message code='ezSchedule.t1105' /></span></h2>
 	                <div class="listview">
-	                    <div id="ListView" STYLE="border:0; Width:245px; Height:296px; overflow:auto;"></div>
+	                    <div id="ListView" STYLE="border:0; Width:245px; Height:302px; overflow:auto;"></div>
 	                </div> 
 	            </td>
 	        </tr>      

@@ -906,12 +906,11 @@
 					</div>
 					<div id="close">
 						<ul>
-							<li><span onclick="window.close();"><spring:message	code='ezCommunity.t21' /></span></li>
+							<li><span onclick="window.close();"></span></li>
 						</ul>
 					</div> 
 					<script type="text/javascript">
 						selToggleList(document.getElementById("menu"), "ul", "li", "0");
-		                selToggleList(document.getElementById("close"), "ul", "li", "0");
 					</script>
 				</td>
 			</tr>
@@ -933,26 +932,31 @@
 							</c:otherwise>
 						</c:choose>
 	
-						<th><spring:message code='ezCommunity.t1169' /></th>
-						<td><c:choose>
-								<c:when test="${pReservedItem == 'true' }">
-									<input type="checkbox" id="chk_reservation"
-										onclick="Reservation_onclick()" checked>
-									<spring:message code='ezCommunity.t913' />
-								</c:when>
-								<c:otherwise>
-									<input type="checkbox" id="chk_reservation"
-										onclick="Reservation_onclick()">
-									<spring:message code='ezCommunity.t913' />
-								</c:otherwise>
-							</c:choose> <span id="reservation_date"> <input type="text"
-								id="Sdatepicker" style="width: 80px; text-align: center" /> <input
-								id="Stimepicker" type="text" class="time"
-								style="width: 43px; margin-left: 10px; text-align: center;" /> <a
-								class="imgbtn" style="margin-top: 4px;"><span onclick="btn_PostDate_Clear()"
-									popuplocation='topright'><spring:message
-											code='ezCommunity.t444' /></span></a>
-						</span></td>
+							<th><spring:message code='ezCommunity.t1169' /></th>
+							<td>
+								<!-- 2018-07-16 김보미 - 가운데 정렬을 위한 div -->
+								<div style="height: 24px;vertical-align: middle;display: inline-block;">
+									<c:choose>
+										<c:when test="${pReservedItem == 'true' }">
+											<input type="checkbox" id="chk_reservation"
+												onclick="Reservation_onclick()" checked>
+											<spring:message code='ezCommunity.t913' />
+										</c:when>
+										<c:otherwise>
+											<input type="checkbox" id="chk_reservation"
+												onclick="Reservation_onclick()">
+											<spring:message code='ezCommunity.t913' />
+										</c:otherwise>
+									</c:choose> 
+									<span id="reservation_date">
+										<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" />
+										<input id="Stimepicker" type="text" class="time" style="width: 43px; margin-left: 10px; text-align: center;" /> 
+										<a class="imgbtn imgbck" style="margin-top: 2px;">
+											<span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezCommunity.t444' /></span>
+										</a>
+									</span>
+								</div>
+							</td>
 						</tr>
 						<tr id="tdEndDate">
 							<th><spring:message code='ezCommunity.t384' /></th>
@@ -1046,8 +1050,8 @@
 												style="display: none; OVERFLOW: auto; HEIGHT: 50px;">&nbsp;</div>
 										</td>
 										<td class="pos2">
-											<a class="imgbtn"><span id="btn_AttachAdd" onClick="return btn_AttachAdd_onclick()"><spring:message code='ezCommunity.t1177' /></span></a><br>
-											<a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
+											<a class="imgbtn imgbck"><span id="btn_AttachAdd" onClick="return btn_AttachAdd_onclick()"><spring:message code='ezCommunity.t1177' /></span></a><br>
+											<a class="imgbtn imgbck"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
 										</td>
 									</tr>
 								</form>
@@ -1071,9 +1075,9 @@
 											<div id="lstAttachLink">&nbsp;</div>
 										</td>
 										<td class="pos2" style ="white-space:normal;">
-											<a class="imgbtn"><span id="btn_AttachAdd" onclick="return btn_AttachSelect_onclick()"><spring:message code='ezCommunity.t1177' /></span></a>
+											<a class="imgbtn imgbck"><span id="btn_AttachAdd" onclick="return btn_AttachSelect_onclick()"><spring:message code='ezCommunity.t1177' /></span></a>
 											<br>
-											<a class="imgbtn"><span id="btn_AttachDel" onclick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
+											<a class="imgbtn imgbck"><span id="btn_AttachDel" onclick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
 										</td>
 									</tr>
 								</form>

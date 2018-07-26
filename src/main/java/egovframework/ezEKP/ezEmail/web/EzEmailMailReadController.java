@@ -829,35 +829,32 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				
 					downFileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message) + ".zip";
 					Part part = null;
+					Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
 					
 					if (idx.length == 0) {
 						part = message;
 					} else {
 						
 						for (int i = 0; i < idx.length; i++) {
-							
 							part = ezEmailUtil.getAttachPart(message, idx[i]);
 
 							if (part == null) {
 								logger.debug("attachpart not found. AttachPartIndex=" + idx[i]);
 							} else {
-							
 								InputStream input = null;
-								response.setContentType(part.getContentType());
-							
-								filename[i] = MimeUtility.decodeText(filename[i]);
-								filename[i] = filename[i].replaceAll("[\\\\/:*?\"<>|]", "_")
-											 .replaceAll("[\\t\\r\\n\\v\\f]", "")
-											 .replaceAll("[+]", " ");
-								logger.debug("fname=" + filename[i]);
 								
 								try {
+									filename[i] = MimeUtility.decodeText(filename[i]);
+									filename[i] = filename[i].replaceAll("[\\\\/:*?\"<>|]", "_")
+												 .replaceAll("[\\t\\r\\n\\v\\f]", "")
+												 .replaceAll("[+]", " ");
+									filename[i] = commonUtil.normalizeFileName(filename[i]);
+									filename[i] = commonUtil.getUniqueFileName(filename[i], fileNameMap);
+									logger.debug("filename=" + filename[i]);
+									
 									input = part.getInputStream();
 									
-									String nfcFilename = commonUtil.normalizeFileName(filename[i]);
-									
-									ZipEntry zipEntry = new ZipEntry(nfcFilename);
-									
+									ZipEntry zipEntry = new ZipEntry(filename[i]);
 									zos.putNextEntry(zipEntry);
 									
 									byte[] buffer = new byte[4096];
@@ -868,20 +865,27 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 									}
 									
 									zos.closeEntry();
-									input.close();
-									
 								} catch (IOException e) {
 									e.printStackTrace();
-								} 
+								} finally {
+									if (input != null) {
+										try {
+											input.close();
+										} catch (Exception e) {
+										}
+									}
+								}
 							}
 						}
 					}
 				}
 			}
 			
+			f.close(true);
+			
 			zos.flush();
 			zos.close();
-			f.close(true);
+			zos = null;
 
 			File file = new File(pDirTempPath + ".zip");
 			
@@ -891,7 +895,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 
 		} catch (Exception e) {
-			
 			File file = new File(pDirTempPath + ".zip");
 			
 			if (file.exists()) {
@@ -899,13 +902,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 			
 		} finally {
-			
 			if (ia != null) {
 				ia.close();
 			}
 			
 			if (zos != null) {
-				zos.close();
+				try {
+					zos.close();
+				} catch (Exception e) {
+				}
 			}
 		}
 		
@@ -1039,7 +1044,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String fileId = request.getParameter("fileid") == null ? "" : request.getParameter("fileid");
 		String fileDate = request.getParameter("filedate") == null ? "" : request.getParameter("filedate");
 		String tenantIdStr = request.getParameter("tid") == null ? "0" : request.getParameter("tid");
-		
+			
 		int tenantId = Integer.parseInt(tenantIdStr);
 		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", tenantId);
 		String realPath = commonUtil.getRealPath(request);
@@ -1047,55 +1052,67 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String serverLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(serverLang));
 		String realFilePath = pDirPath + commonUtil.separator + fileDate;
-		
-		//get fileId with extension
-		fileId = fileId.substring(0, 36);
-		File directory = new File(realFilePath);
-		File[] files = directory.listFiles((FileFilter) new PrefixFileFilter(fileId));
-		
-		for (int i = 0; i < files.length; i++) {
-			if (!files[i].getName().endsWith("__.txt")) {
-				fileId = files[i].getName();
-				break;
-			}
-		}
-		
-		realFilePath = realFilePath + commonUtil.separator + fileId;
-		logger.debug("realFilePath=" + realFilePath);
-		
-		//get original filename from text file
-		String fileName = "";
-		File originalNameFile = new File(realFilePath + "__.txt");
-		if (!originalNameFile.exists()) {
-			logger.error("originalNameFile not found. filePath=" + realFilePath + "__.txt");
-		} else {
-			InputStreamReader isr = null;
-			try {
-				isr = new InputStreamReader(new FileInputStream(originalNameFile));
-			    int read = 0;
-				while ((read = isr.read()) != -1) {
-					fileName += (char)read;
-				}
-			} finally {
-				if (isr != null) {
-					isr.close();
-				}
-			}
-		}
-		
-		if (fileName.equals("")) {
-			fileName = fileId;
-		}
-		else {
-			fileName = new String(Base64.decodeBase64(fileName), "UTF-8");
-		}
-		logger.debug("originalFileName=" + fileName);
-		
+			
 		try {
+			// get fileId with extension
+			fileId = fileId.substring(0, 36);
+			File directory = new File(realFilePath);
+			File[] files = directory.listFiles((FileFilter) new PrefixFileFilter(fileId));
+			
+			// 대용량 첨부파일의 기간이 만료되었을 경우
+			if (files == null) {
+				response.setContentType("text/plain; charset=utf-8");
+				response.getWriter().print(egovMessageSource.getMessage("main.t4", locale));
+				
+				return;
+			}
+			
+			for (int i = 0; i < files.length; i++) {
+				if (!files[i].getName().endsWith("__.txt")) {
+					fileId = files[i].getName();
+					break;
+				}
+			}
+			
+			realFilePath = realFilePath + commonUtil.separator + fileId;
+			logger.debug("realFilePath=" + realFilePath);
+			
+			// get original filename from text file
+			String fileName = "";
+			File originalNameFile = new File(realFilePath + "__.txt");
+			
+			if (!originalNameFile.exists()) {
+				logger.error("originalNameFile not found. filePath=" + realFilePath + "__.txt");
+			} else {
+				InputStreamReader isr = null;
+				try {
+					isr = new InputStreamReader(new FileInputStream(originalNameFile));
+				    int read = 0;
+					while ((read = isr.read()) != -1) {
+						fileName += (char)read;
+					}
+				} finally {
+					if (isr != null) {
+						isr.close();
+					}
+				}
+			}
+			
+			if (fileName.equals("")) {
+				fileName = fileId;
+			}
+			else {
+				fileName = new String(Base64.decodeBase64(fileName), "UTF-8");
+			}
+			
+			logger.debug("originalFileName=" + fileName);
+		
 			downFile(request, response, realFilePath, fileName);
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
+			e.printStackTrace();
+			
 			response.setContentType("text/plain; charset=utf-8");
-			response.getWriter().print(egovMessageSource.getMessage("main.t4", locale));
+			response.getWriter().print(egovMessageSource.getMessage("ezEmail.lhm14", locale));
 		}
 		
 		logger.debug("downloadAttachCommon ended.");

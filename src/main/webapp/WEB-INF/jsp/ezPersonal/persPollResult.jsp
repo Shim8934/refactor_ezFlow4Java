@@ -17,7 +17,7 @@
             	margin-top: 0px;
             	height: 60px;
             	word-break: break-all;
-            	border: 1px solid #b8b6b6;
+            	border: 1px solid #ddd;
         	}
         	.question p {
 	            margin: 0px;
@@ -43,10 +43,7 @@
 	</head>
 	<body class="popup" style="overflow:hidden"> 
   		<h1>Quick Poll</h1>
-  		<div id="close"><ul><li><span onClick="close_btn()"><spring:message code='ezPersonal.t10' /></span></li></ul></div>
-		<script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script> 
+  		<div id="close"><ul><li><span onClick="close_btn()"></span></li></ul></div>
     	<table>
 	        <tr>
     	        <td>
@@ -58,7 +55,7 @@
         	</tr>
         	<tr style="height:100%">
             	<td>
-                	<div id="receivelist" style="OVERFLOW-X: hidden; padding:10px;overflow-y:auto;height:225px;width:410px" class="box"> 
+                	<div id="receivelist" style="OVERFLOW-X: hidden; padding:10px;overflow-y:auto;height:225px;width:410px;border-top:0px" class="box"> 
 						${strHtml}                    	
                 	</div>
             	</td>

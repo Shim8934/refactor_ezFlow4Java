@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="<spring:message code='ezStatistics.e2' />" type="text/css" />
     <link rel="stylesheet" href="/css/Tab.css" type="text/css">
     <link rel="stylesheet" href="/js/ezStatistics/js/jquery.jqplot.min.css" type="text/css">
-    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">    
+    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">    
     <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
     <script type="text/javascript" src="<spring:message code='ezStatistics.e1' />"></script>
     <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -524,7 +524,7 @@
             </span>
         </td>
         <td>
-            <div id="mainmenu" style="height: 28px;">
+            <div id="mainmenu" style="height: 28px;margin:3px 0px !important">
                 <ul>
                     <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003' /></span></li>
                 </ul>

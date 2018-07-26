@@ -327,17 +327,31 @@
 		        
 		     	// 전달, 회신 시 보낸 시간
 		        function sentDateView(msg) {
-				    if (window.parent.sentDateMsg != "") {
-				    	var sentDateMsg = window.parent.sentDateMsg;
-				    	
-				    	$("body").prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
-				    	$(".sentDateStr").css({
-				    		"padding" : "5px 0",
-					        "margin-bottom" : "10px",
-					        "font-size" : "14px",
-					        "background" : "rgba(255,250,205,0.5)"
+					var sendDateStrApp = $(".content", parent.document).parent();
+					
+					sendDateStrApp.find(".sentDateStr").remove();
+
+		     		if (parent.sentDateMsg != "") {
+		     			sendDateStrApp.prepend("<div class='sentDateStr'>" + parent.sentDateMsg + "</div>");
+		     			sendDateStrApp.find(".sentDateStr").css({
+		     				"height" : "27px",
+			     		    "box-sizing" : "border-box",
+			     		    "background" : "#fdfec1",
+			     		    "border-top" : "1px solid #e9ea94",
+			     			"border-left" : "1px solid #e9ea94",
+			     			"border-right" : "1px solid #e9ea94",
+			     		    "line-height" : "27px",
+			     			"width" : "100%",
+			     		    "padding" : "0px 0px 0px 10px",
+			     			"margin" : "0px",
+			     			"font-family" : "Gulim",
+			     			"font-size" : "12px",
+			     			"color" : "#333"
 				    	});
+
 				    }
+		     		
+			    	parent.mailPrevSentDateChk();
 		        }
 			</script> 
 	</head>

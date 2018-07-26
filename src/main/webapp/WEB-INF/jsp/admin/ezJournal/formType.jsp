@@ -8,7 +8,7 @@
 		<title><spring:message code='ezSchedule.t6000' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css" />
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript">		
@@ -96,7 +96,7 @@
 			    </c:forEach>
 			    
 			</table>
-			<div class="btnposition" style="width: 400px; margin-left: 15px; text-align: center">
+			<div class="btnpositionJsp" style="width: 391px;">
 			    <a class="imgbtn" onclick="Change_Click()"><span><spring:message code='ezJournal.t26' /></span></a>
 			    <a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code='ezJournal.t16' /></span></a>
 			</div>

@@ -83,4 +83,10 @@ public interface EzOrganService {
 	public String setListType(String listType, String userID, int tenantID, String companyID) throws Exception;
 
 	public String getListType(String userID, int tenantID, String companyID) throws Exception;
+
+	public String getSearchListOR(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID) throws Exception;
+
+	public int getMemberListCount2(String pDeptID, List<String> companyList, int totalCount2, String containCompany, int tenantId) throws Exception;
+	
+	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID) throws Exception;
 }

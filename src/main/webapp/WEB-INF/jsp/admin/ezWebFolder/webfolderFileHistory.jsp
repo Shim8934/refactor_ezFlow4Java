@@ -41,6 +41,7 @@
 			var tableView    = new TableView();
 			
 			window.onload = function () {
+				closeAllPopup();
 				document.onselectstart = function() {return false;}
 				
 				tableView.setTableId("tblFileHistory");

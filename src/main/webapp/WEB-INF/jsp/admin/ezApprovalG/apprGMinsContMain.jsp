@@ -7,7 +7,7 @@
 		<title><c:out value='${title}' /></title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
@@ -327,6 +327,11 @@
 	</head>
 	<body class="popup">
 		<h1><c:out value='${title}' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return btncancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<table class="content">
   			<tr>
    				<th><spring:message code='ezApprovalG.t1549'/></th>
@@ -345,20 +350,19 @@
 			</tr>
 			<tr>
 				<td style="vertical-align:top;">
-					<div id="TreeView" style="padding-top:5px;BORDER:#ddd 1px solid; OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:260px; HEIGHT:230px; BACKGROUND-COLOR:#ffffff"></div>
+					<div id="TreeView" style="padding-top:5px;BORDER:#ddd 1px solid; OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:255px; HEIGHT:230px; BACKGROUND-COLOR:#ffffff"></div>
 				</td>
-				<td style="width:50px;text-align:center;white-space:nowrap;">
+				<td style="width:70px;text-align:center;white-space:nowrap;">
 					<a class="imgbtn"><span id="btnAppdept" onClick="return btnAppdept_onclick()"><spring:message code='ezApprovalG.t1649'/></span></a><br/>					
 	                <a class="imgbtn"><span id="btnDeldept" onClick="return btnDeldept_onclick()"><spring:message code='ezApprovalG.t1650'/></span></a><br/>
 				</td>
 				<td style="vertical-align:top;">
-					<select id="selUseDept" name="selUseDept" style="background:none; WIDTH: 240px; HEIGHT: 235px" size="2"></select>
+					<select id="selUseDept" name="selUseDept" style="WIDTH: 235px; HEIGHT: 235px" size="2"></select>
 				</td>
 			</tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionNew">
 		    <a class="imgbtn"><span onClick="return btnOk_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-		    <a class="imgbtn"><span onClick="return btncancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 	</body>
 </html>

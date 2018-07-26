@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
+
 		<script type="text/javascript">
 			var labelcolor = "gray";
 	        var xmlhttp = createXMLHttpRequest();
@@ -40,6 +40,10 @@
 	                KeEventControl(document.getElementById("tbList3"));
 	                KeEventControl(document.getElementById("tbTaskDesc"));
 	                KeEventControl(document.getElementById("tbKPReason"));
+	            }
+	            //2018-07-25 김보미 - 하단 공백 사이즈 크롬/ie 상이한것 조정
+	            else if (ua.indexOf("Chrome") > 0) {
+	                $(".popup h1").css("margin-bottom","2px");
 	            }
 
 	            try {
@@ -539,6 +543,11 @@
 	</head>
 	<body class="popup" style="overflow:hidden">
 	    <h1><c:out value = '${title}' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return btncancel_onclick()"></span></li>
+            </ul>
+        </div>
 	    <span style="color:red"><spring:message code = 'ezApprovalG.t00011' /></span>
 	    <table class="content">
 	        <tr class = 'approvalG'>
@@ -697,9 +706,8 @@
 	            <td><input type="text" id="tbList3" name="tbList3" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="50"></td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnpositionNew">
 	        <a class="imgbtn"><span onclick="return btnOk_onclick()"><spring:message code = 'ezApprovalG.t413' /></span></a>
-	        <a class="imgbtn"><span onclick="return btncancel_onclick()"><spring:message code = 'ezApprovalG.t414' /></span></a>
 	    </div>
 	</body>
 </html>

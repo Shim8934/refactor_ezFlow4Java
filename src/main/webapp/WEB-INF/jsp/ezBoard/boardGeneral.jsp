@@ -12,18 +12,27 @@
     	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 	 		$(document).ready(function() {	 		
-		 	var HListUser = $('#HListUser option:selected').val();
-		 	$("#HListUser").val("<c:out value="${boardListConfig.previewHList}"/>").attr("selected", "selected");
-		 
-		 	var WListUser = $('#WListUser option:selected').val();
-		 	$("#WListUser").val("<c:out value="${boardListConfig.previewWList}"/>").attr("selected", "selected");
-		 
-		 	var HPreUser = $('#HPreUser option:selected').val();
-		 	$("#HPreUser").val("<c:out value="${boardListConfig.previewHContent}"/>").attr("selected", "selected");
-		 
-		 	var WPreUser = $('#WPreUser option:selected').val();
-		 	$("#WPreUser").val("<c:out value="${boardListConfig.previewWContent}"/>").attr("selected", "selected");	    
-		 		});
+			 	$("#HListUser").val("<c:out value="${boardListConfig.previewHList}"/>").attr("selected", "selected");
+			 	var HListUser = $('#HListUser option:selected').val();
+			 
+			 	$("#WListUser").val("<c:out value="${boardListConfig.previewWList}"/>").attr("selected", "selected");
+			 	var WListUser = $('#WListUser option:selected').val();
+			 
+			 	$("#HPreUser").val("<c:out value="${boardListConfig.previewHContent}"/>").attr("selected", "selected");
+			 	var HPreUser = $('#HPreUser option:selected').val();
+			 
+			 	$("#WPreUser").val("<c:out value="${boardListConfig.previewWContent}"/>").attr("selected", "selected");	    
+			 	var WPreUser = $('#WPreUser option:selected').val();
+		 		
+		 		if (HListUser == undefined || HPreUser == undefined) {
+		 			$("#HListUser").val("50").attr("selected", "selected");
+		 			$("#HPreUser").val("50").attr("selected", "selected");
+		 		}
+		 		if (WListUser == undefined || WPreUser == undefined) {
+		 			$("#WListUser").val("50").attr("selected", "selected");
+		 			$("#WPreUser").val("50").attr("selected", "selected");
+		 		}
+		 	});
 	 		
          	document.onselectstart = function () { return false; };
         	window.onload = function () {
@@ -255,9 +264,8 @@
                      			 </c:choose>
                 		</td>
             	</tr>
-        	</table>       
-    		<br />
-    		<div style="width:623px;text-align:center;">      
+        	</table>
+    		<div class="btnpositionJsp" style="width:623px;">      
         		<a class="imgbtn" onclick="Change_Click()"><span><spring:message code="ezBoard.t98" /></span></a>
         		<a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code="ezBoard.t15" /></span></a>
     		</div>

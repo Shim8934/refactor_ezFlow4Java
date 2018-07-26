@@ -8,7 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e3'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
@@ -486,59 +486,47 @@
 				<h1><spring:message code='ezApprovalG.t718'/></h1>
 			</c:otherwise>
 		</c:choose>
-		
 	    <table>
         	<tr>
-            	<td style="vertical-align: top;">
-                	<h2><spring:message code='ezApprovalG.t1566'/></h2>
-                	<table class="popuplist" style="width: 360px; height: 110px;">
-                    	<tr>
-                        	<td colspan="2">        
-                            	<select id="SCompID" name="SCompID" onchange="SCompID_onchange()">
-						    		<c:forEach var="item" items="${list}">
-					            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-					            	</c:forEach>
-					            </select>
-                        	</td>
-                    	</tr>
-                    	<tr>
-                    		<c:choose>
-                    			<c:when test="${approvalFlag == 'S' }">
-		                        	<th id="pGroupID" style="width:25%"><spring:message code = 'ezApproval.t227' /></th>
-                    			</c:when>
-                    			<c:otherwise>
-		                        	<th id="pGroupID" style="width:25%"><spring:message code = 'ezApprovalG.t1568' /></th>
-                    			</c:otherwise>
-                    		</c:choose>
-                        	<td id="pGroupName2" style="word-break: break-all;width:75%;padding-left:5px"></td>
-                    	</tr>
-                    	<tr>
-	                        <td colspan="2">
-	                            <input type="text" name="textfield" style="width: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" id="pGroupName" maxlength="50" />
-	                            <div style="margin-top:1px">
-		                            <a class="imgbtn"><span onclick="return Updategroupmaininfo()"><spring:message code='ezApprovalG.t1567'/></span></a>
-	                            	<a class="imgbtn"><span onclick="return SetGroupMainInfo()"><spring:message code='ezApprovalG.t268'/></span></a>
-	                            	<a class="imgbtn"><span onclick="return Deletegroupmaininfo()"><spring:message code='ezApprovalG.t266'/></span></a>
-	                            </div>	
-	                        </td>
-	                    </tr>
-                	</table>
-            	</td>
-            	<td>&nbsp;</td>
-            	<td style="vertical-align: top;">
-	            	<c:choose>
-						<c:when test="${approvalFlag == 'S' }">
-							<h2><spring:message code='ezApproval.t227'/></h2>
-						</c:when>
-						<c:otherwise>
-							<h2><spring:message code='ezApprovalG.t1568'/></h2>
-						</c:otherwise>
-					</c:choose>
-                	
+        		<td style="vertical-align: top;">
+                	<div id="mainmenu">	
+						<span><b><spring:message code = 'ezApprovalG.t1566' /></b> :</span> 
+	                	<select id="SCompID" name="SCompID" onchange="SCompID_onchange()">
+				    		<c:forEach var="item" items="${list}">
+			            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+			            	</c:forEach>
+			            </select>
+			        </div>  
                 	<div class="listview">
                     	<div id="lvtDept" style="border: 0px solid #ddd; OVERFLOW-Y: auto; OVERFLOW-X: hidden; Width: 360px; Height: 110px;" onselchanged="return lvtDept_SelChange()"></div>
                 	</div>
                 	<br/>
+            	</td>
+            	<td>&nbsp;</td>
+            	<td style="vertical-align: top;">
+                	<table class="popuplist" style="width: 360px; height: 110px; margin-top:39px">
+                    	<tr>
+                    		<c:choose>
+                    			<c:when test="${approvalFlag == 'S' }">
+		                        	<th id="pGroupID" style="width:25%;height:17px"><spring:message code = 'ezApproval.t227' /></th>
+                    			</c:when>
+                    			<c:otherwise>
+		                        	<th id="pGroupID" style="width:25%;height:17px"><spring:message code = 'ezApprovalG.t1568' /></th>
+                    			</c:otherwise>
+                    		</c:choose>
+                        	<td id="pGroupName2" style="word-break: break-all;width:75%;padding-left:5px;height:17px"></td>
+                    	</tr>
+                    	<tr>
+	                        <td colspan="2">
+	                            <input type="text" name="textfield" style="width: 98%; box-sizing: border-box; -moz-box-sizing: border-box; margin-left:3px" id="pGroupName" maxlength="50" />
+	                            <div style="margin-top:10px;text-align:center">
+		                            <a class="imgbtn imgbck"><span onclick="return Updategroupmaininfo()"><spring:message code='ezApprovalG.t1567'/></span></a>
+	                            	<a class="imgbtn imgbck"><span onclick="return SetGroupMainInfo()"><spring:message code='ezApprovalG.t268'/></span></a>
+	                            	<a class="imgbtn imgbck"><span onclick="return Deletegroupmaininfo()"><spring:message code='ezApprovalG.t266'/></span></a>
+	                            </div>	
+	                        </td>
+	                    </tr>
+                	</table>
             	</td>
         	</tr>
         	<tr>
@@ -547,10 +535,10 @@
                 	<div class="box" style="overflow: auto; height: 320px; width: 360px;" id="TreeView" onrequestdata="RequestData()" onnodeselect="TreeViewNodeClick()" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)"></div>
             	</td>
             	<td style="width: 30px; text-align: center;">
-                	<img src="/images/arr_right.gif" width="16" height="16" onclick="return insertCont_onclick()" style="cursor: pointer">
-                	<img src="/images/arr_left.gif" width="16" height="16" onclick="return deleteCont_onclick()" style="cursor: pointer">
-                	<img src="/images/arr_rright.gif" width="16" height="16" onclick="return insertAllCont_onclick()" style="cursor: pointer">
-                	<img src="/images/arr_lleft.gif" width="16" height="16" onclick="return deleteAllCont_onclick()" style="cursor: pointer">
+                	<img src="/images/arr_right.gif" onclick="return insertCont_onclick()" style="cursor: pointer">
+                	<img src="/images/arr_left.gif" onclick="return deleteCont_onclick()" style="cursor: pointer;margin-top:5px">
+                	<img src="/images/arr_rright.gif" onclick="return insertAllCont_onclick()" style="cursor: pointer;margin-top:5px">
+                	<img src="/images/arr_lleft.gif" onclick="return deleteAllCont_onclick()" style="cursor: pointer;margin-top:5px">
             	</td>
             	<td style="vertical-align: top;">
             		<c:choose>

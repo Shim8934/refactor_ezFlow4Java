@@ -181,21 +181,25 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t10018'/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return Cancel()"></span></li>
+            </ul>
+        </div>
 		<span>▒ <spring:message code='ezApprovalG.t10019'/></span>
 		<span id=pMessageContent></span>
 		<table class="content" style="margin-top:10px">
-		<tr><th><input id='opi' name ='opi'  type='checkbox' ></th>
-		<td><span id="ext1"><spring:message code='ezApprovalG.t10020'/></span></td></tr>
-		<tr><th ><input id='att' name='att'  type='checkbox' ></th>
-		<td><span id="ext2"><spring:message code='ezApprovalG.t10021'/></span></td> </tr>
-		<tr><th ><input id='line' name='line' type='checkbox'></th>
-		<td><span id="ext3"><spring:message code='ezApprovalG.t10022'/></span></td> </tr>
+			<tr><th><input id='opi' name ='opi'  type='checkbox' ></th>
+			<td><span id="ext1"><spring:message code='ezApprovalG.t10020'/></span></td></tr>
+			<tr><th ><input id='att' name='att'  type='checkbox' ></th>
+			<td><span id="ext2"><spring:message code='ezApprovalG.t10021'/></span></td> </tr>
+			<tr><th ><input id='line' name='line' type='checkbox'></th>
+			<td><span id="ext3"><spring:message code='ezApprovalG.t10022'/></span></td> </tr>
 		</table>
-		<div class="btnposition btnpositionNew" style="margin-top:15px">
+		<div class="btnposition btnpositionNew">
 		    <a id="Submit1" class="imgbtn" onClick="return all_click()"><span><spring:message code='ezApprovalG.t10023'/></span></a>
 		    <a id="Submit2" class="imgbtn" onClick="return select_click()" ><span><spring:message code='ezApprovalG.t10024'/></span></a>
 		    <a id="Submit3" class="imgbtn" onClick="return only_click()" ><span><spring:message code='ezApprovalG.t10025'/></span></a>
-		    <a id="Submit4" class="imgbtn" onClick="return Cancel()" ><span><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

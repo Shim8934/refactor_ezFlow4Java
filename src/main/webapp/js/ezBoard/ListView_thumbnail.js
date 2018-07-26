@@ -14,7 +14,7 @@ var PressShiftKey = false;
 //모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
 //따라서 List의 SetMulSelectable 속성의 값이 true인 경우에만
 //document 객체에 keydown, keyup 이벤트를 등록하여 FLAG의 값을 지정한다.
-var m_strColorSelect = "#f0f6ff";
+var m_strColorSelect = "#edf4fd";
 var m_strColorDefault =  "#FFFFFF";
 var m_strColorOver = "#f4f5f5";
 var m_UrgentColor = "#E9101A";
@@ -677,8 +677,12 @@ function ListView() {
                 var oText = document.createTextNode(strValue);
                 var objTd = document.createElement("TD");
 
-                objTd.setAttribute("style", "text-align:left; padding-top:2px; padding-bottom:2px; ");
-
+                /* 2018-07-09 홍승비 - 썸네일게시판의 읽지 않은 게시물 리스트 폰트를 bold로 수정 */
+                if(getNodeText(oDatas[7]) == "0") {
+                	objTd.setAttribute("style", "text-align:left; padding-top:2px; padding-bottom:2px; font-weight:bold;");
+                } else {
+                	objTd.setAttribute("style", "text-align:left; padding-top:2px; padding-bottom:2px;");
+                }
                 //objTd.style.textAlign = "left";
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ITEMID") {
@@ -733,11 +737,11 @@ function ListView() {
 
                     var TextCell1 = document.createElement("SPAN");
                     TextCell1.id = "spn_title" + i;
-                    if(getNodeText(oDatas[7]) == "0")
+                    if(getNodeText(oDatas[7]) == "0") {
                         TextCell1.setAttribute("style", "font-weight:bold; font-size:12px; padding-left:5px;");
-                    else
+                    } else {
                         TextCell1.setAttribute("style", "font-size:12px; padding-left:5px;");
-
+                    }
                     //var Text1 = document.createTextNode(strValue);
                     //TextCell1.appendChild(Text1);
                     
@@ -762,13 +766,19 @@ function ListView() {
                     }
 
                     var ContentNewCell2 = document.createElement("TD");
-                    ContentNewCell2.setAttribute("style", "text-overflow:ellipsis; overflow:hidden; white-space:nowrap; border-bottom:0px;padding-left:10px");
+                    ContentNewCell2.id = "spn_content" + i;
+                    if (getNodeText(oDatas[7]) == "0") {
+                    	ContentNewCell2.setAttribute("style", "font-weight:bold;text-overflow:ellipsis; overflow:hidden; white-space:nowrap; border-bottom:0px;padding-left:10px;");
+                    } else {
+                    	ContentNewCell2.setAttribute("style", "text-overflow:ellipsis; overflow:hidden; white-space:nowrap; border-bottom:0px;padding-left:10px;");
+                    }
 
-                    var TextCell2 = document.createElement("SPAN");
+                    // TextCell2은 전혀 사용되지 않는다. spn_content + i의 아이디를 상단의 ContentCell2에 부여하도록 한다.
+                 /*   var TextCell2 = document.createElement("SPAN");
                     TextCell2.id = "spn_content" + i;
-                    if (getNodeText(oDatas[7]) == "0")
+                    if (getNodeText(oDatas[7]) == "0") {
                         TextCell2.setAttribute("style", "font-weight:bold;");
-
+                    }*/
                     //TextCell2.innerHTML = ReplaceText(getNodeText(oDatas[5]), "<br>", "&nbsp;");
                     
                     //ContentNewCell2.appendChild(TextCell2);

@@ -273,7 +273,7 @@ function DateView_onMouseClick(event) {
     if (typeCal == 0) { //월보기
     }
     else if (typeCal == 1) {
-        document.getElementById(GetAttribute(event.parentNode.parentNode,"id")).style.backgroundColor = "#f0f6ff";
+        document.getElementById(GetAttribute(event.parentNode.parentNode,"id")).style.backgroundColor = "#edf4fd";
         g_selTRID = GetAttribute(event.parentNode.parentNode,"id");
         g_selTDID = GetAttribute(event,"id");
 
@@ -282,7 +282,7 @@ function DateView_onMouseClick(event) {
     }
     else if (typeCal == 2) { //일보기
 
-        document.getElementById(GetAttribute(event,"id")).style.backgroundColor = "#f0f6ff";
+        document.getElementById(GetAttribute(event,"id")).style.backgroundColor = "#edf4fd";
         g_selTRID = GetAttribute(event.parentNode.parentNode,"id");
         g_selTDID = GetAttribute(event,"id");
         sDate = new Date(GetAttribute(event,"id").substring(7, 11), parseInt(GetAttribute(event,"id").substring(12, 14), 10) - 1, parseInt(GetAttribute(event,"id").substring(15, 17), 10));
@@ -432,12 +432,12 @@ function OnDoubleClickAppointment(srcEl) {
         windowName = "";
 
         if (CrossYN()) {
-            GetOpenWindow(filename + "?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate + "&brdName=" + encodeURIComponent(brd_NM), "", 820, 700);
+            GetOpenWindow(filename + "?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate, "", 820, 700);
 
         }
         else {
             var feature = GetOpenPosition(790, 420);
-            window.open(filename + "?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate + "&brdName=" + encodeURIComponent(brd_NM), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+            window.open(filename + "?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
         }
     }
 }
