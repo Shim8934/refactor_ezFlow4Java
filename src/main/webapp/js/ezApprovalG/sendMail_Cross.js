@@ -175,7 +175,7 @@ function attachOpinion(){
 	var divs = document.createElement('div');
 	divs.innerHTML = bodycontents.trim();
 	divs.id="opinionBox";
-	document.getElementById("message").contentWindow.document.getElementById("BodyContent").append(divs);
+	document.getElementById("message").contentWindow.document.getElementById("BodyContent").appendChild(divs);
 } 
 
 //메일에 전자결재 doc을 첨부

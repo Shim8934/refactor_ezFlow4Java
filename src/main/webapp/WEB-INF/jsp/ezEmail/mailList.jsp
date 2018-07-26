@@ -110,6 +110,15 @@
 		    	return host;
 		    }
 		    
+		    // 2018.07.26 - 컨텍스트메뉴 두번 연속으로 클릭시 윈도우 메뉴 펼쳐지는 현상 수정 (재은)
+		    $(document).ready(function(){
+		        $(document).bind("contextmenu",function(event){
+		        	document.getElementById("ContextMenuDiv").style.display = "none";
+		        	event_listContextMenu(event);
+		        	return false;
+		        });
+		    });
+		    
 		    // commented out to allow users to be able to select text in the preview : dhlee
 			// document.onselectstart = function () { return false; };
 		    window.onresize = Window_resize;
@@ -864,7 +873,7 @@
               	  <tr>
                     <th><spring:message code="ezEmail.t179" /></th>
                     <td> 
-	                   <select id="listcount" style="WIDTH:46px;height:20px;" onChange="ListCount(this.value);">
+	                   <select id="listcount" style="WIDTH:50px;height:20px;" onChange="ListCount(this.value);">
 	                        <option value=10 <c:if test="${mailGeneral.listCount == '10'}">selected</c:if>>10</option>
 	                        <option value=20 <c:if test="${mailGeneral.listCount == '20'}">selected</c:if>>20</option>
 	                        <option value=30 <c:if test="${mailGeneral.listCount == '30'}">selected</c:if>>30</option>

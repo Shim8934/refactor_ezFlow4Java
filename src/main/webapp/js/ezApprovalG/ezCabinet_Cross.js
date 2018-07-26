@@ -1,4 +1,4 @@
-﻿﻿var ListTypeFlag;
+﻿﻿﻿var ListTypeFlag;
 var g_SelCabXml = "";
 var g_TransFlag = "0";
 var g_szParamXml = "";
@@ -132,7 +132,7 @@ function ezCabMunuCtl(MenuType, selRow) {
 
 
             if (typeof (tdSetCharger) != "undefined" && typeof (tdSetCharger) != "unknown") {
-                if (IsUserDeptRec() == "true")
+                if (GetCabChargerRight() == "true")
                     document.getElementById("tdSetCharger").style.display = "";
                 else
                     document.getElementById("tdSetCharger").style.display = "none";
