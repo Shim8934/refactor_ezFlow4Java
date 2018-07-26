@@ -1714,8 +1714,26 @@
 	   		
 	   		//엑셀 저장
 	   		function exportExcel() {
-		    	exportExcelframe.location.href = "/ezPMS/exportGanttExcel.do?projectId=" + projectId;
-		    	exportExcelframe.target = "_blank";
+	   			var tasks = $(".taskEditRow").not(".emptyRow");
+	   			
+	   			var taskId = "";
+	   			var taskLevel = "";
+	   			
+	   			for (var i = 0; i < tasks.length; i++) {
+	   				taskId += $("#" + tasks[i].id).attr("taskid") + ",";
+	   				taskLevel += $("#" + tasks[i].id).attr("level") + ",";
+	   			}
+	   			
+	   			taskId = taskId.substring(0, taskId.length - 1);
+	   			taskLevel = taskLevel.substring(0, taskLevel.length - 1);
+	   			
+	   			$("input[name='taskId']").val(taskId);
+	   			$("input[name='taskLevel']").val(taskLevel);
+	   			$("input[name='projectId']").val(projectId);
+	   			
+	   			document.exportGantt.action = "/ezPMS/exportGanttExcel.do";
+	   			document.exportGantt.method = "POST";
+	   			document.exportGantt.submit();
 			}
 	   		
 		</script>
@@ -2592,6 +2610,10 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank_kr.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>
+		<form id="exportGantt" name="exportGantt" method="POST" style="display:none;">
+			<input name="projectId">
+			<input name="taskId">
+			<input name="taskLevel">
+		</form>
 	</body>
 </html>
