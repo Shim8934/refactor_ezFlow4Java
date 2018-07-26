@@ -37,6 +37,7 @@
 			.selected-memoWrapper {display:table-cell;vertical-align:middle;}
 			#memo-btn{text-align:right;margin:0 auto;}
 			#slider-range{width:100px;float:left; margin-left:15px;}
+			.ui-widget-header{background: #0470e4}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
