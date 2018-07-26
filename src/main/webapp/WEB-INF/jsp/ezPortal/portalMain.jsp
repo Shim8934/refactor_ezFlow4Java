@@ -29,7 +29,7 @@
 			}
 
 			#open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;}
-			.individual-memo { width:200px; height:200px; background:white; text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 10px;}
+			.individual-memo { width:200px; height:200px; background:white; text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 3px 3px 3px 38px;}
 			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);}
 			#selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;}
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
