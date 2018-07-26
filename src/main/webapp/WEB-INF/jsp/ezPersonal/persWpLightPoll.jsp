@@ -8,6 +8,7 @@
 		<title><spring:message code='ezPersonal.t380' /></title>
 		<link rel="stylesheet"  href="<spring:message code='ezPersonal.e3' />" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<style type="text/css">
         	.question {
             	background:url(/images/kr/main/popup_pollimg.gif) no-repeat #f2f2f2 0px 0px;
@@ -41,6 +42,12 @@
             	margin: 1px;
         	}
         	input[type=radio] { vertical-align: middle }
+        	/* 2018-07-26 김보미 */ 
+        	.line_ellipsis {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space:nowrap;
+        	}
     	</style>
 		<script type="text/javascript">
 			var g_UsePortal = "${usePortal}";
@@ -68,6 +75,11 @@
 		        	document.getElementById("btnview").src = "/images/main/btn_vote_view.gif"
 		        	document.getElementById("btnresult").src = "/images/main/btn_result.gif";
 		    	} */
+		    	//2018-07-26 김보미 - 크롬/ie 양 사이드 여백 상이한것 조정
+		    	var ua = navigator.userAgent;
+		    	if (ua.indexOf("Chrome") == -1) {
+		    		$("div[name=popupContentDiv]").css("margin-left","2px");
+		    	}
 			}
 			var PollResult_Cross_dialogArguments = new Array();
 			function vote_poll(poll_answer) {
@@ -130,12 +142,18 @@
 	                <li><span onclick="window.close()"></span></li>
 	            </ul>
 	        </div>
-    		<div style="overflow:auto;height:325px;width:auto">
-  				<div class="question" style="width:223px;overflow-y:auto">
+	        <!-- 2018-07-26 김보미 - div네임속성 추가 -->
+     		<!-- <div style="overflow:auto;height:325px;width:auto"> -->
+    		<div style="overflow:auto;height:325px;width:auto" name='popupContentDiv'>
+    			<!-- 2018-07-26 김보미 - style속성 수정 -->   				
+   				<!-- <div class="question" style="width:223px;overflow-y:auto"> -->
+  				<div class="question" style="width:378px;overflow-y:hidden;">
 					<p><spring:message code='ezPersonal.t2000' />:</p>
     				${labelPollTitle}
   				</div>
-  				<div class="qlist" style="width: 268px;height:179px;padding:10px 0px 0px 10px;overflow:auto">
+  					<!-- 2018-07-26 김보미 - 너비값 조정 -->
+   				<!--<div class="qlist" style="width: 268px;height:179px;padding:10px 0px 0px 10px;overflow:auto"> -->
+  				<div class="qlist" style="width: 423px;height:200px;padding:10px 0px 0px 10px;overflow:auto">
     				${literalAnswer}
   				</div>
   				<div class="btnpositionNew">
