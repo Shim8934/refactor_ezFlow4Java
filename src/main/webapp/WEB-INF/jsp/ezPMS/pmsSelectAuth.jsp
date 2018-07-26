@@ -448,7 +448,7 @@
 	   			var mode = parent.opener.mode;
 	   			var managerCnt = parent.opener.mode === "edit" ? managerArray.length - 1 : managerArray.length;
 	   			
-	   			$("#managerCNT").text(managerArray.length - 1 + "<spring:message code='ezPMS.t44'/>");
+	   			$("#managerCNT").text(managerArray.length + "<spring:message code='ezPMS.t44'/>");
 	   			$("#participantCNT").text(participantArray.length + "<spring:message code='ezPMS.t44'/>");
 	   			$("#viewerCNT").text(viewerArray.length + "<spring:message code='ezPMS.t44'/>");
 	   		}
