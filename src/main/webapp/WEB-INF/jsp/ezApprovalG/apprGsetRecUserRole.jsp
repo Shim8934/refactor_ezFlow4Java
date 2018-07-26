@@ -119,7 +119,7 @@
         listview.DataSource(LVXml);
         listview.RowDataBind("SelUserList");
         listview.SetSelectFlag(false);
-        SwapRoleList();
+        //SwapRoleList();
     }
     function GetRecViewerInfo(pRecID, pSepAttNo) {
         var xmlhttp = createXMLHttpRequest();
@@ -519,24 +519,27 @@
 			<Input Type="radio" name="rdoRecRole" id="rdoRecRole2" value="1" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()">&nbsp<spring:message code='ezApprovalG.t1165'/></td>
 	</tr>
 </table>
-<table id="DataLayout" style="margin-top:10px; display: none;">
+<table id="DataLayout" style="margin-top:5px; display: none;">
 	<tr id="trRecUserRole">			
-		<td style="vertical-align:top"> <h2><spring:message code='ezApprovalG.t1166'/></h2>
+		<td style="vertical-align:top">
+		<h2 class="h2_dot" style="font-weight: normal; margin-top: 0px;">
+			<spring:message code='ezApprovalG.t1166'/>
+			<span>
+				<select id="selSearchType" style="height:22px; margin-left: 82px;">
+					<option selected value="displayname"><spring:message code='ezApprovalG.t379'/></option>
+					<option value="description"><spring:message code='ezApprovalG.t108'/></option>
+					<option value="title"><spring:message code='ezApprovalG.t230'/></option>
+				</select>
+				<input id="txtKeyword" value="" onKeyPress="txtKeyword_onKeyPress()" style="width:90px;height:22px;">&nbsp;<a class="imgbtn imgbck"><span onClick="btnSearch_Click()" style="width:25px" ><spring:message code='ezApprovalG.t111'/></span></a>
+			</span>
+		</h2>
 			<table>
-				<tr>
-					<th style="height:30px"><select id="selSearchType">
-						<option selected value="displayname"><spring:message code='ezApprovalG.t379'/></option>
-						<option value="description"><spring:message code='ezApprovalG.t108'/></option>
-						<option value="title"><spring:message code='ezApprovalG.t230'/></option>
-					</select>
-					<input id="txtKeyword" value="" onKeyPress="txtKeyword_onKeyPress()" style="width:90px;height:20px;">&nbsp;<a class="imgbtn" style="vertical-align:middle"><span onClick="btnSearch_Click()" style="width:40px" ><spring:message code='ezApprovalG.t111'/></span></a></th>
-				</tr>
 				<tr style="height:2px">
 				<td></td>
 				</tr>
 				<tr> 
 					<td><div class="listview">
-					<div id="OrgListView" style="overflow:auto; border:0;HEIGHT: 205px; WIDTH: 370px;"></div>
+					<div id="OrgListView" style="overflow:auto; border:0;HEIGHT: 240px; WIDTH: 370px;"></div>
 					</div></td>
 				</tr>
 			</table>
@@ -549,9 +552,9 @@
 			</a>
 		</td>
 
-		<td style="width:200px;vertical-align:top"><h2><spring:message code='ezApprovalG.t1167'/></h2>
+		<td style="width:200px;vertical-align:top"><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1167'/></h2>
 		<div class="listview">
-		<div id="SelUserList" style="overflow:auto; border:0;HEIGHT: 237px; WIDTH: 300px;"></div>
+		<div id="SelUserList" style="overflow:auto; border:0;HEIGHT: 240px; WIDTH: 300px;"></div>
 		</div></td>
 	</tr>
 </table>

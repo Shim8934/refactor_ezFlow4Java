@@ -124,13 +124,15 @@
 	</head>
 	<body class="mainbody">
 	    <h1><spring:message code = 'ezApprovalG.t1582' /></h1>
-	    <div>
-	        <b><spring:message code='ezApprovalG.t1276'/></b>
-	    	<select id="SCompID" name="SCompID" onchange="selectCompanyID()">
-	    		<c:forEach var="item" items="${list}">
-            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-            	</c:forEach>
-            </select>
+	    <div id="mainmenu">
+		  	<ul>	    
+		        <b><spring:message code='ezApprovalG.t1276'/></b>
+		    	<select id="SCompID" name="SCompID" onchange="selectCompanyID()">
+		    		<c:forEach var="item" items="${list}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+	            </select>
+	        </ul>    
 	    </div>
 	
 	    <table class="content" style="margin-top: 10px">
@@ -150,7 +152,7 @@
 	        </tr>
 	    </table>
 	
-	    <div class="btnposition" style="width: 580px">
+	    <div class="btnpositionJsp" style="width: 560px">
 	        <a class="imgbtn"><span onclick="return bt_OK_onclick()"><spring:message code = 'ezApprovalG.t20' /></span></a>
 	    </div>
 	</body>

@@ -7,6 +7,9 @@
 		<title><spring:message code = 'ezApprovalG.t1279' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<style>
+			.mainlist tr th { border-top:0px }
+		</style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -322,12 +325,12 @@
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 		        </select><br /><br />
-		    	<li id="SearchCondi"><span onClick="return btnInfo_onclick()"><spring:message code = 'ezApprovalG.t1284' /></span></li>
-		    	<li id="GetEDMSXML"><span onClick="return btnAdd_onclick()" ><spring:message code = 'ezApprovalG.t1261' /></span></li>
+		        <li id="GetEDMSXML"><span onClick="return btnAdd_onclick()" ><spring:message code = 'ezApprovalG.t1261' /></span></li>
+		    	<li id="SearchCondi"><span onClick="return btnInfo_onclick()"><spring:message code = 'ezApprovalG.t1284' /></span></li>		    	
 		  	</ul>
 		</div>
-	
-		<div class="listview"  style="width:790px" >
+
+		<div class="listview" style="width:790px; height:550px; overflow-y:auto; overflow-x:hidden" >
 			<DIV id=lvtForm class="text" style="OVERFLOW-Y:auto; overflow-x:auto; border:0; HEIGHT:300px; WIDTH:790px"></DIV>
 		</div>
 	

@@ -1643,15 +1643,33 @@ public class EzPortalController extends EgovFileMngUtil {
 								float poolRstPer = ((poolRstCnt / pTotalCnt) * 100);
 								String strAnswer =  xmlDom.getElementsByTagName("ANSWER"+list.get(i).getResult()).item(0).getTextContent();
 								String titleString = strAnswer;
-								if (strAnswer.length() > 11) {
-									strAnswer = strAnswer.substring(0, 11) + "…";
-								}
+								// 2018-07-25 김보미 - 주석
+//								if (strAnswer.length() > 11) {
+//									strAnswer = strAnswer.substring(0, 11) + "…";
+//								}
 								pPollResultList.add(list.get(i).getResult());
-								pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + list.get(i).getResult() + "." + strAnswer + " (" + 
-								"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
-								"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
-								"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
-								"</dl>";
+								// 2018-07-25 김보미 - content부분 변경
+//								pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + list.get(i).getResult() + "." + strAnswer + " (" + 
+//								"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
+//								"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
+//								"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
+//								"</dl>";
+								pPollResultContent += 
+								"<div class='poll_list1'>" + 								    
+									"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
+										"<div style='float:left; display: block;'>" + list.get(i).getResult() + "." + "</div>" +
+										"<div class='Pt_QstOptTitleDiv' title='" + titleString + "'>" + titleString + "</div>" +
+										"<div id='info" + list.get(i).getResult() + "' class='Pt_QstInfoDiv'>&nbsp" + 
+											 "<span class='Pt_QstInfoVotes'>"+ list.get(i).getCount() + "</span>" +
+											 egovMessageSource.getMessage("main.t20000", locale) + "/" +
+											 "<span class='Pt_QstInfoPercent'>" + String.format("%.1f", poolRstPer) + "</span>" +
+										"%</div>" +
+									"</div>" +
+									"<div class='graphbar1' id='divGraph" + list.get(i).getResult() + "' style='display: block;'>" +
+										"<p id='graph" + list.get(i).getResult() + "' class='gx_bar11' style='width:" + Math.round((poolRstCnt / pTotalCnt) * 100) + "%;'></p>" +
+									"</div>"+	
+								"</div>";
+								
 		                        resultPrintCnt++;
 							}
 						}
@@ -1669,13 +1687,31 @@ public class EzPortalController extends EgovFileMngUtil {
 								if (!isDuplication) {
 									String strAnswer = xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent();
 									String titleString = strAnswer;
-									if (strAnswer.length() > 13) {
-										strAnswer = strAnswer.substring(0, 13) + "...";
-									}
-									pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
-		                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
-		                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
-																	resultPrintCnt++;
+									// 2018-07-25 김보미 - 주석
+//									if (strAnswer.length() > 13) {
+//										strAnswer = strAnswer.substring(0, 13) + "...";
+//									}
+									// 2018-07-25 김보미 - content부분 변경
+//									pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
+//		                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
+//		                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
+									pPollResultContent += 
+									"<div class='poll_list1'>" + 								    
+										"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
+											"<div style='float:left; display: block;'>" + i + "." + "</div>" +
+											"<div class='Pt_QstOptTitleDiv' title='" + titleString + "'>" + titleString + "</div>" +
+											"<div id='info" + i + "' class='Pt_QstInfoDiv'>&nbsp" + 
+												 "<span class='Pt_QstInfoVotes'>0</span>" +
+												 egovMessageSource.getMessage("main.t20000", locale) + "/" +
+												 "<span class='Pt_QstInfoPercent'>0.0</span>" +
+											"%</div>" +
+										"</div>" +
+										"<div class='graphbar1' id='divGraph" + i + "' style='display: block;'>" +
+											"<p id='graph" + i + "' class='gx_bar11' style='display: none;'></p>" +
+										"</div>"+
+									"</div>";
+									
+									resultPrintCnt++;
 									if (resultPrintCnt == 4) {
 										break;
 									}
