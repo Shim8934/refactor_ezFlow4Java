@@ -11,7 +11,6 @@
 	</head>
 	<body class="popup cabDetail">
 		<h1 id="fileFileH1"><spring:message code='ezCabinet.t108'/></h1>
-		<h1 id="fileModifyH1" style="display: none;"><spring:message code='ezCabinet.t142'/></h1>
 		
 		<div class="divInfo">
 			<table class="tblFileInf">
@@ -139,7 +138,7 @@
 					
 					if(attachFile == null || attachFile.length == 0) {
 						var spanElmt         = document.createElement("span");
-						spanElmt.textContent = CabinetMessages.strNoAttach;
+						spanElmt.textContent = CabinetMessages.strNoAttach; 
 						divInformElmt.appendChild(spanElmt);
 					}
 					else {
@@ -293,8 +292,8 @@
 				
 				function fileModify() {
 					//Set title
-					document.getElementById("fileFileH1").style.display   = "none";
-					document.getElementById("fileModifyH1").style.display = "";
+					document.getElementById("fileFileH1").textContent = CabinetMessages.strFileMod;
+					document.title = CabinetMessages.strFileMod;
 					
 					//Set button
 					var fileDivBttn = document.getElementById("fileDivBttn");
@@ -485,15 +484,23 @@
 				}
 				
 				function cancelChanges() {
-					document.getElementById("fileFileH1").style.display        = "";
-					document.getElementById("fileModifyH1").style.display      = "none";
+					document.getElementById("fileFileH1").textContent = CabinetMessages.strFileDet;
+					document.title = CabinetMessages.strFileDet;
+					
 					document.getElementById("fileDivBttn").style.display       = "";
 					document.getElementById("fileModifyDivBttn").style.display = "none";
+					
 					var relDocDivElmt = document.getElementById("rlWrapDiv");
 					if (relDocDivElmt.childElementCount > 1) {relDocDivElmt.removeChild(relDocDivElmt.lastElementChild);}
 					
 					//Remove events
 					var fileDivElmt         = document.getElementById("fileDiv");
+					var divInformElmt       = fileDivElmt.querySelector("div[class='divInform']");
+					
+					while (divInformElmt.firstChild) {
+						divInformElmt.removeChild(divInformElmt.firstChild);
+					}
+					
 					var cloneNode           = fileDivElmt.cloneNode(true);
 					fileDivElmt.parentElement.replaceChild(cloneNode, fileDivElmt);
 					
