@@ -72,47 +72,52 @@
 				window.close();
 			}
 		    function write_letter() {
-		        var xmlHTTP = createXMLHttpRequest();
-		        var xmlDom = createXmlDom();
-		
-		        var objNode, objRow, objRows, objRowRow;
-		        objNode = createNodeInsert(xmlDom, objNode, "DATA");
-		        createNodeAndInsertText(xmlDom, objNode, "ADDRESSID", addressid);
-		        createNodeAndInsertText(xmlDom, objNode, "FOLDERTYPE", foldertype);
-		
-		        /* if(foldertype == "P")
-		            xmlHTTP.open("POST", "RemoteEWS/address_get_groupemail.aspx", false);
-		        else
-		            xmlHTTP.open("POST", "Remote/address_get_groupemail.aspx", false); */
-		        xmlHTTP.open("POST", "/ezAddress/addressGetGroupEmail.do", false);
-		        
-		        xmlHTTP.send(xmlDom);
-		        xmlDom = loadXMLString(xmlHTTP.responseText);
-		        var email = "";
-		        var emailRows = SelectNodes(xmlDom, "DATA/ROW");
-		        
-                if (emailRows.length > 0) {
-                    var addrname = getNodeText(document.getElementById("TextName"));
-                    if (foldertype == "P")
-                        var addremail = addressid + "|!|P";
-                    else
-                        var addremail = addressid + "|!|D";
-
-                    if (email == "")
-                        email = "\"" + addrname + "\" <" + addremail + ">";
-                    else
-                        email += ",\"" + addrname + "\" <" + addremail + ">";
-                }
-		        		        
-		        var pheight = window.screen.availHeight;
-		        var conHeight = pheight * 0.8;
-		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
-		        
-	            window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
-	            	"top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		    }
+			    if(document.getElementById("ListMember").length > 0){
+			                
+			        var xmlHTTP = createXMLHttpRequest();
+			        var xmlDom = createXmlDom();
+			
+			        var objNode, objRow, objRows, objRowRow;
+			        objNode = createNodeInsert(xmlDom, objNode, "DATA");
+			        createNodeAndInsertText(xmlDom, objNode, "ADDRESSID", addressid);
+			        createNodeAndInsertText(xmlDom, objNode, "FOLDERTYPE", foldertype);
+			
+			        /* if(foldertype == "P")
+			            xmlHTTP.open("POST", "RemoteEWS/address_get_groupemail.aspx", false);
+			        else
+			            xmlHTTP.open("POST", "Remote/address_get_groupemail.aspx", false); */
+			        xmlHTTP.open("POST", "/ezAddress/addressGetGroupEmail.do", false);
+			        
+			        xmlHTTP.send(xmlDom);
+			        xmlDom = loadXMLString(xmlHTTP.responseText);
+			        var email = "";
+			        var emailRows = SelectNodes(xmlDom, "DATA/ROW");
+			        
+	                if (emailRows.length > 0) {
+	                    var addrname = getNodeText(document.getElementById("TextName"));
+	                    if (foldertype == "P")
+	                        var addremail = addressid + "|!|P";
+	                    else
+	                        var addremail = addressid + "|!|D";
+	
+	                    if (email == "")
+	                        email = "\"" + addrname + "\" <" + addremail + ">";
+	                    else
+	                        email += ",\"" + addrname + "\" <" + addremail + ">";
+	                }
+			        		        
+			        var pheight = window.screen.availHeight;
+			        var conHeight = pheight * 0.8;
+			        var pwidth = window.screen.availWidth;
+			        var pTop = (pheight - conHeight) / 2;
+			        var pLeft = (pwidth - 890) / 2;
+			        
+		            window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
+		            	"top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			    } else {
+			    	alert(document.getElementById("TextName").innerText + " <spring:message code='ezAddress.t277' />");
+			    }
+			}
 		</script>
 	</head>
 	<body class="popup">
