@@ -118,6 +118,14 @@ public class EzOrganServiceImpl implements EzOrganService {
 	    logger.debug("pUserID=" + pUserID + ",pDeptID=" + pDeptID + ",pTopID=" + pTopID
 	            + ",pPropList=" + pPropList + ",primary=" + primary + ",tenantID=" + tenantID);
 	    
+	    String [] adminOrganChk = pTopID.split("/"); // 관리자 페이지  > 조직도, 겸직, 권한 관리에서 topId + "/organ" 붙임
+	    
+	    String isOrgan ="";
+	    if (adminOrganChk.length > 1) {
+	    	pTopID = adminOrganChk[0];
+			isOrgan = adminOrganChk[1];
+		} 
+	    
 	    // pUserID는 값이 있으나 pDeptID가 비어 있을 때는 해당 사용자의 부서 ID를 구한다. 
 		if (!pUserID.equals("") && pDeptID.equals("")) {
 			OrganDeptVO organVo = getDeptInfo(pUserID, primary, tenantID);
@@ -140,6 +148,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 			map.put("v_CN", deptID);
 			map.put("v_LANGDATA", primary);
 			map.put("v_TENANT_ID", tenantID);
+			map.put("isOrgan", isOrgan);
 			
 			// 지정된 부서의 자식 부서 목록을 가져온다.
 			List<OrganDeptVO> list = ezOrganDAO.getDeptTreeInfo(map);
@@ -162,7 +171,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 					OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
 	                
 					// 자식 부서의 상세 정보를 XML String 형태로 변환한다.
-	                memberInfo[memberCount] = getTreeNodeInfo(result, pDeptID, prevDeptID, deptInfo, pPropList);
+	                memberInfo[memberCount] = getTreeNodeInfo(result, pDeptID, prevDeptID, deptInfo, pPropList, "");
 	                memberCount++;
 				}		
 			}
@@ -202,7 +211,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        // 부모 부서가 있는 경우 부모 부서로 이동하여 처리를 반복한다. 
         } while (!prevDeptID.toLowerCase().equals(pTopID.toLowerCase()) && !deptID.equals(""));
 		
-        deptInfo = "<TREEVIEWDATA>" + getTreeNodeInfo(vo, pDeptID, prevDeptID, deptInfo, pPropList) + "</TREEVIEWDATA>";
+        deptInfo = "<TREEVIEWDATA>" + getTreeNodeInfo(vo, pDeptID, prevDeptID, deptInfo, pPropList, isOrgan) + "</TREEVIEWDATA>";
         
         logger.debug("deptInfo=" + deptInfo);
         logger.debug("getDeptTreeInfo ended");
@@ -239,7 +248,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 				
 				OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
                 
-                memberInfo[memberCount] = getTreeNodeInfo(result, "", "", "", pPropList);
+                memberInfo[memberCount] = getTreeNodeInfo(result, "", "", "", pPropList, "");
                 memberCount++;
 			}		
 		}
@@ -258,7 +267,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return deptlist.toString();
 	}
 	
-	private String getTreeNodeInfo(OrganDeptVO vo, String pOrgDeptID, String pPrevDeptID, String pDeptInfo, String pPropList) throws Exception {
+	private String getTreeNodeInfo(OrganDeptVO vo, String pOrgDeptID, String pPrevDeptID, String pDeptInfo, String pPropList, String isOrgan) throws Exception {
 		logger.debug("getTreeNodeInfo started");
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", vo.getTenantId());
@@ -286,7 +295,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		}
 		
 		// 부서의 자식 부서의 갯수를 구한다.
-		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDepartment(), vo.getTenantId());
+		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDepartment(), vo.getTenantId(), isOrgan);
 		
 		if (cnt > 0) {
 	        nodeInfo.append("<ISLEAF>FALSE</ISLEAF>");

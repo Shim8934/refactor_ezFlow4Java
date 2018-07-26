@@ -13,12 +13,7 @@
 	    	}
 	    </style>
 		<title><spring:message code='ezPersonal.t210'/></title>
-		<script type="text/javascript" src="/js/m
-		
-		
-		
-		ouseeffect.js"></script>
-		
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>		
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>

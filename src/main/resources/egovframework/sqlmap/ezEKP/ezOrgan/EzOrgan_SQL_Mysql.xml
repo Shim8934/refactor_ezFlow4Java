@@ -215,10 +215,16 @@
                				TBL_DEPTMASTER 
               			WHERE
               				EXTENSIONATTRIBUTE1 = #v_CN#
+		]]>
+              			<isEmpty property="isOrgan">
+              				<![CDATA[
+		              			AND
+		              				EXTENSIONATTRIBUTE2 <> CN
+		              		]]>
+              			</isEmpty>
               			AND
               				TENANT_ID = #v_TENANT_ID#	 ) A
         	ORDER BY A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
-		]]>
 	</select> 
 		
  	<select id="EzOrganDAO.getDeptSubTreeInfo" parameterClass="Map" resultMap="deptSubTreeInfo">
@@ -1525,16 +1531,20 @@
 	</select>
 
 	<select id="EzOrganDAO.deptSubDeptCnt" parameterClass="Map" resultClass="int">
-		<![CDATA[
 			SELECT 
 				COUNT(cn)
      		FROM 
      			TBL_DEPTMASTER 
       		WHERE  
       			extensionattribute1 = #deptID#
+    		<isEmpty property="isOrgan">
+				<![CDATA[
+		      		AND
+		      			extensionattribute2 <> CN
+			     ]]> 
+    		</isEmpty>
       		AND
       			tenant_id = #tenantId#	
-	     ]]> 
 	</select>
 	
 	<select id="EzOrganDAO.getDeptFullPath" parameterClass="Map" resultClass="String">

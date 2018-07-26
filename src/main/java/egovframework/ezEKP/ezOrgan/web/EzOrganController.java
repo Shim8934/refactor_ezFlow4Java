@@ -70,11 +70,12 @@ public class EzOrganController {
         String userCompanyID = userInfo.getCompanyID();
         String [] adminOrganChk = topID.split("/"); // 관리자 페이지  > 조직도, 겸직, 권한 관리에서 topId + "/organ" 붙임
         
-        if ((userInfo.getRollInfo().indexOf("c=1") != -1 && adminOrganChk.length > 1) || adminDist.equals("true")) {
+        if (adminDist.equals("true")) {
         	topID = adminOrganChk[0];
+        } else if (adminOrganChk.length>1 && adminOrganChk[1].equals("organ")){
         } else  if (!topID.equals(userCompanyID)) {
         	topID = userCompanyID;
-        }
+        } 
         
         logger.debug("deptID=" + deptID + ",topID=" + topID + ",propList=" + propList + ",userCompanyID=" + userCompanyID);
         
