@@ -236,7 +236,7 @@
 				function downloadFile(event) {
 					event.stopPropagation();
 					var imgElmt     = event.currentTarget;
-					var liElmt      = imgElmt.parentElement.parentElement;
+					var liElmt      = imgElmt.parentElement.parentElement.parentElement;
 					var fileName    = liElmt.getAttribute("fname");
 					var filePath    = liElmt.getAttribute("path");
 					var downloadUrl = "/ezCabinet/downloadAttachFile?filePath=" + filePath + "&fileName=" + fileName;
