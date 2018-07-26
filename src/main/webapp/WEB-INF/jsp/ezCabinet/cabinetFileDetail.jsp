@@ -10,7 +10,8 @@
 		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">
 	</head>
 	<body class="popup cabDetail">
-		<h1><spring:message code='ezCabinet.t108'/></h1>
+		<h1 id="fileFileH1"><spring:message code='ezCabinet.t108'/></h1>
+		<h1 id="fileModifyH1" style="display: none;"><spring:message code='ezCabinet.t142'/></h1>
 		
 		<div class="divInfo">
 			<table class="tblFileInf">
@@ -291,6 +292,10 @@
 				}
 				
 				function fileModify() {
+					//Set title
+					document.getElementById("fileFileH1").style.display   = "none";
+					document.getElementById("fileModifyH1").style.display = "";
+					
 					//Set button
 					var fileDivBttn = document.getElementById("fileDivBttn");
 					fileDivBttn.style.display = "none";
@@ -480,6 +485,8 @@
 				}
 				
 				function cancelChanges() {
+					document.getElementById("fileFileH1").style.display        = "";
+					document.getElementById("fileModifyH1").style.display      = "none";
 					document.getElementById("fileDivBttn").style.display       = "";
 					document.getElementById("fileModifyDivBttn").style.display = "none";
 					var relDocDivElmt = document.getElementById("rlWrapDiv");
