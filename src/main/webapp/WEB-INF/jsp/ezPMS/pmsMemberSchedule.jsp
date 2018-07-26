@@ -54,6 +54,8 @@ function setMemberScheduleList() {
 		}
 	}
 	
+	$("#calendar").css("width", filteredDateList.length * 26 + 1);
+	
 	var tmp = filteredDateList[0].date.substring(0, 7);
 	var monthCount = 0;
 	
@@ -253,16 +255,18 @@ window.onload = function() {
 	margin-top : 15px;
 	display : inline-block;
 	width : 98%;
+	height : 550px;
 	overflow : auto;
-	height : 568px;
 	float : left;
 }
 
 #calendar {
 	max-width : 84%;
+	min-width : 73px;
 	display : inline-block;
 	height : 100%;
 	overflow-x : scroll;
+	overflow: auto;
 }
 
 #mainmenu {

@@ -880,12 +880,14 @@
 // 	   			  var res = this.master.getResource(headManagerId);
 	   			  var res = this.master.getResource(this.assigs.length > 0 ? this.assigs[0].id : "");
 	   			  
-	   			  if (res) {
+	   			  /*if (res) {
 	   			  	ret = res.name;
-	   			  }
+	   			  } */
 	   			  
 	   			  if(this.assigs.length > 1) {
-	   				ret += ' 외 ' + (this.assigs.length - 1) + '명';
+	   				ret = "<spring:message code='ezPMS.t349' arguments='" + res.name + "," + (this.assigs.length - 1) +"'/>"
+	   			  } else {
+	   				ret = res.name;
 	   			  }
 	   			 
 	   			  return ret;
@@ -1215,7 +1217,6 @@
 	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : newPreTask});
 	   						} else {
 	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : -1});
-	   							console.log('index : ' + index + ', idx : ' + idx + ', id : ' + elem.id);
 	   						}
 		   				});
 	   				} else if (index == 0) {
@@ -1842,7 +1843,7 @@
 		        <li id="pmsGanttRowDelBtn" class="pmsGanttMenuLi" style="display:none;"><span><spring:message code='ezPMS.t287' /></span></li>
 		        <li id="pmsGanttDelGroup" class="pmsGanttMenuLi" style="display:none;"><span><spring:message code='ezPMS.t288' /></span></li>
 		        <li><span onclick="getMemberSchedule()"><spring:message code='ezPMS.t290' /></span></li>
-		        <li onclick="exportExcel()"><span><spring:message code='ezPMS.t349' /></span></li>
+		        <li onclick="exportExcel()"><span><spring:message code='ezPMS.t350' /></span></li>
 		        <div style="float:right">
 		        <li id="pmsGanttViewBtn" class="pmsGanttZoomBtn">
 					<select>

@@ -178,7 +178,7 @@
 				    		strHTML += "(" + managerArray[i].userDeptname + ")";
 				    		strHTML += "</td>";
 				    		strHTML += "<td>";
-				    		strHTML += "<input type='text' name='" + managerArray[i].userId + "' value='100' style='width:40px;text-align:center'> %";
+				    	 	// strHTML += "<input type='text' name='" + managerArray[i].userId + "' value='100' style='width:40px;text-align:center'> %";
 				    		strHTML += "</td>";
 				    		strHTML += "</tr>";
 				    		strHTML += "</table>";

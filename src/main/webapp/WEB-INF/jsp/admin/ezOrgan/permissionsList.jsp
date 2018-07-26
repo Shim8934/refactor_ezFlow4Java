@@ -477,7 +477,7 @@
 	    <form id="Form1" method="post">
 		    <h1><spring:message code='ezOrgan.t00005' /><span id="mailBoxInfo"></span></h1>
 		    <div id="mainmenu">
-			    <span><b><spring:message code='ezOrgan.t00006' /></b></span>&nbsp;    		           
+			    <span><b><spring:message code='ezOrgan.t00006' /> : </b></span>    		           
 	            <select id="ListCompany" onchange="company_change()">
 	            	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>

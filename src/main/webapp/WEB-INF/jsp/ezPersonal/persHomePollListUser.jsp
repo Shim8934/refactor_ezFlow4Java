@@ -28,7 +28,9 @@
 			        var pwidth = window.screen.availWidth;
 			        var pTop = (pheight - 370) / 2;
 			        var pLeft = (pwidth - 300) / 2;
-			        window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=370,width=300,top=" + pTop + ",left=" + pLeft, "");
+			      	//2018-07-25 김보미 - 팝업창 크기 조정
+ 			        //window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=370,width=300,top=" + pTop + ",left=" + pLeft, "");
+			        window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=400px,width=455px,top=" + pTop + ",left=" + pLeft, "");
 			        return;
 			    }
 				if (itemseq == "0")
@@ -154,7 +156,7 @@
 			<div id="close"><ul><li><span onClick="window.close()"></span></li></ul></div>
   			<table> 
     			<tr> 
-      				<td class="mainbody" style="padding:3px 10px;vertical-align:top;background:none">
+      				<td class="mainbody" style="height:500px; padding:3px 10px;vertical-align:top;background:none">
         				<table class="mainlist" style="width:100%;"> 
           					<tr> 
             					<th style="width:40px;text-align:center"><spring:message code='ezPersonal.t166' /></th> 
@@ -164,9 +166,9 @@
           					</tr> 
            					
             				<c:if test="${isPollEmpty != true}">
-            					<c:forEach var="item"  items="${list}" >
+            					<c:forEach var="item"  items="${list}" varStatus="status" >
 	            					<tr> 
-                						<td style="text-align:center">${item.itemSeq}</td> 
+                						<td style="text-align:center">${totalCount - (pageSize * (currentPage-1)+status.index)}</td> 
                 						<td style="white-space:nowrap;width:100%;overflow:hidden;text-overflow:ellipsis;cursor:pointer"  onClick="open_poll('${item.itemSeq}')"><span> ${item.pollTitle} </span></td> 
                 						<td> ${item.startDate} </td> 
                 						<td> ${item.endDate} </td> 

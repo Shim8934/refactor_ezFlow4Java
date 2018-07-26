@@ -11,7 +11,9 @@
 		<section  class="body_bg1">
 			<article class="portletbox pollbox">
    				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt"><spring:message code='main.t2000' /></span><span class="btn_more" onclick="viewquicklist()"><img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span></div>
-  				<div class="pollcont">
+  				<!-- 2018-07-25 김보미 - 스크롤 생기지 않게 style추가 -->
+<!--   				<div class="pollcont"> -->
+  				<div class="pollcont" style="overflow-y: hidden; overflow-x: hidden;">
  	 				<c:choose>
   						<c:when test="${pPollItemSeq != 0}">
   							<p class="qusetion">
@@ -33,6 +35,8 @@
 		
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<!-- 2018-07-25 김보미 - 투표모듈 css맞추기 위해 추가 -->
+		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
 		<script type="text/javascript">
 			var votepoll = "${votePoll}";
 		    var itemseq = "${pPollItemSeq}";
@@ -44,9 +48,9 @@
 		        var pLeft = (pwidth - 765) / 2;
 		        
 		        if(CrossYN())
-		            window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=500,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=642,width=765,top=" + pTop + ",left=" + pLeft, "");
 				else
-		            window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=500,width=765,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezPersonal/homePollListUser.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=642,width=765,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		    
 		    function vote_poll() {
@@ -57,9 +61,13 @@
 		            var pLeft = (pwidth - 300) / 2;
 		            
 		            if (CrossYN())
-		                window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=370,width=300,top=" + pTop + ",left=" + pLeft, "");
+		            	//2018-07-25 김보미 - 팝업창 크기 조정
+ 		                //window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=370,width=300,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=400px,width=455px,top=" + pTop + ",left=" + pLeft, "");
 		            else
-		                window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=370,width=300,top=" + pTop + ",left=" + pLeft, "");
+		            	//2018-07-25 김보미 - 팝업창 크기 조정
+ 		                //window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=370,width=300,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezPersonal/wpLightPoll.do", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=400px,width=455px,top=" + pTop + ",left=" + pLeft, "");
 		        } else {
 		            var heigth = window.screen.availHeight;
 		            var width = window.screen.availWidth;
