@@ -104,13 +104,13 @@
 								changeListOrder();
 							},
 							
-						})
-						.on("mousedown", function() {
-							userSwitchFlag = true;
-						})
-						.on("mouseup", function() {
-							userSwitchFlag = false;
 						});
+						/* .on("mousedown", function() {
+							userSwitchFlag = true;
+						}) */
+						/* .on("mouseup", function() {
+							userSwitchFlag = false;
+						}); */
 				} else {
 					$(".ladderDrag").on("dragstart", function() {
 						return false;
@@ -182,12 +182,12 @@
 			$("#usePreladder").on("click", function() {
 				window.location.href = "/ezLadder/setLadder.do?ladderId=" + ${vo.ladderId};
 			});
-			$("#ladderContents")
+			/* $("#ladderContents")
 				.on("mouseleave", function() {
 					if(!!moFlag) {
 						scrollMouseUpEvent();
 					}
-				});
+				}); */
 		});
 		
 		function ladder_window_resize() {
@@ -379,7 +379,17 @@
 			
 			$(document)
 			.on("click", "[id^=drag]", function() {
-				if(userClickFlag) {
+				clickUserOrder = Number($(this).attr("id").slice(4));
+				
+				if($body.scrollTop() != ladLineTop) {
+					$body.animate({"scrollTop": ladLineTop}, 200);
+				}
+				if(userStatus[clickUserOrder] == 0) {
+					aniOneUser();
+				} else {
+					popOneUser();
+				}
+				/* if(userClickFlag) {
 					clickUserOrder = Number($(this).attr("id").slice(4));
 					
 					if($body.scrollTop() != ladLineTop) {
@@ -390,7 +400,7 @@
 					} else {
 						popOneUser();
 					}
-				}
+				} */
 			});
 		}
 		function ladderAnimationComplete(type) {
@@ -654,7 +664,7 @@
 			}
 		}
 		
-		var moFlag = false;
+		/* var moFlag = false;
 		var userSwitchFlag = false;
 		var userClickFlag = false;
 		var $linebox;
@@ -682,7 +692,7 @@
 			if(moFlag) {
 				moFlag = !moFlag;
 			}
-		}
+		} */
 	</script>
 	<style type="text/css">
 		input[type=text]::-ms-clear {
@@ -863,7 +873,8 @@
 						</div>
 					</td>
 				</tr>
-				<tr id="ladderContents" onmousedown="scrollMouseDownEvent(this, event);" onmousemove="scrollMouseDragEvent(this, event);" onmouseup="scrollMouseUpEvent(this, event);" onselectstart="return false;">
+				<!-- <tr id="ladderContents" onmousedown="scrollMouseDownEvent(this, event);" onmousemove="scrollMouseDragEvent(this, event);" onmouseup="scrollMouseUpEvent(this, event);" onselectstart="return false;"> -->
+					<tr id="ladderContents">
 					<td>
 						<c:if test="${vo.status eq 0}">
 							<div id="startButton" style="position: absolute; z-index: 100; top: 0; left: 0; margin-top:-10px">
