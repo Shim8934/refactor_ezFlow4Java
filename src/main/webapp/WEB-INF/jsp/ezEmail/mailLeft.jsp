@@ -765,7 +765,7 @@
 		            EventMouseX = EventMouseX - Div_;
 		        }
 		        
-		        document.getElementById("folderPanel").style.display = "";
+		        //document.getElementById("folderPanel").style.display = "";
 		        document.getElementById("folderMenuDiv").style.left = EventMouseX + "px";
 		        document.getElementById("folderMenuDiv").style.top = EventMouseY + "px";
 		        document.getElementById("folderMenuDiv").style.display = "";
@@ -1036,7 +1036,7 @@
 	        <div class="left_mail" title="<spring:message code="ezEmail.t99000012" />"><span><spring:message code="ezEmail.t99000012" /></span></div>
 	        <h2><span onclick="Email_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000012" /></span></h2>
 	        <ul>
-	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;"></div>
+	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
 	            <li><span onclick="write_Letter()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000013" /></span></li>
 	            
 	            <c:if test="${useMailReceiveScreen == 'YES'}">
