@@ -119,7 +119,7 @@
         listview.DataSource(LVXml);
         listview.RowDataBind("SelUserList");
         listview.SetSelectFlag(false);
-        SwapRoleList();
+        //SwapRoleList();
     }
     function GetRecViewerInfo(pRecID, pSepAttNo) {
         var xmlhttp = createXMLHttpRequest();
@@ -524,12 +524,14 @@
 		<td style="vertical-align:top">
 		<h2 class="h2_dot" style="font-weight: normal; margin-top: 0px;">
 			<spring:message code='ezApprovalG.t1166'/>
-			<select id="selSearchType" style="height:22px; margin-left: 83px;">
-				<option selected value="displayname"><spring:message code='ezApprovalG.t379'/></option>
-				<option value="description"><spring:message code='ezApprovalG.t108'/></option>
-				<option value="title"><spring:message code='ezApprovalG.t230'/></option>
-			</select>
-			<input id="txtKeyword" value="" onKeyPress="txtKeyword_onKeyPress()" style="width:90px;height:22px;">&nbsp;<a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="btnSearch_Click()" style="width:25px" ><spring:message code='ezApprovalG.t111'/></span></a>
+			<span>
+				<select id="selSearchType" style="height:22px; margin-left: 82px;">
+					<option selected value="displayname"><spring:message code='ezApprovalG.t379'/></option>
+					<option value="description"><spring:message code='ezApprovalG.t108'/></option>
+					<option value="title"><spring:message code='ezApprovalG.t230'/></option>
+				</select>
+				<input id="txtKeyword" value="" onKeyPress="txtKeyword_onKeyPress()" style="width:90px;height:22px;">&nbsp;<a class="imgbtn imgbck"><span onClick="btnSearch_Click()" style="width:25px" ><spring:message code='ezApprovalG.t111'/></span></a>
+			</span>
 		</h2>
 			<table>
 				<tr style="height:2px">
