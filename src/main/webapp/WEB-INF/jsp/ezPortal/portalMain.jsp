@@ -222,7 +222,7 @@
 		    	}
 		    	
 		    	var text = $("#textarea").val();
-		    	$("#memoList").prepend("<div class='individual-memo' style='margin: 10px;'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right;'><textarea class='memo-text' style='padding-left:10px; padding-right:10px; border:0px; width:90%; height:90%; resize:none; overflow-y:hidden;' readonly>" + text + "</textarea></div>");
+		    	$("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right;'><textarea class='memo-text' style='padding-left:10px; padding-right:10px; border:0px; width:90%; height:90%; resize:none; overflow-y:hidden;' readonly>" + text + "</textarea></div>");
 		    	$("#textarea").val('');
 		    	$("#maskDiv").css("display", "none");
 		    	$("#selected-memo").css("display", "none");
