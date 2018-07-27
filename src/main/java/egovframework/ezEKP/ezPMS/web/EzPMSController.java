@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +23,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFPalette;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.hssf.util.Region;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.tomcat.jni.Status;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -4179,5 +4191,617 @@ public class EzPMSController {
 		
 		LOGGER.debug("ezPMS setFolderName ended");
 		return roleCheck;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/ezPMS/exportGanttExcel.do")
+	@ResponseBody
+	public void exportGanttExcel(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
+		LOGGER.debug("ezPMS exportGanttExcel started."); 
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		Long projectId = Long.parseLong(request.getParameter("projectId"));
+		JSONArray taskList = new JSONArray();
+		JSONObject project = new JSONObject();
+		JSONArray groupList = new JSONArray();
+		
+		LOGGER.debug("projectId : " + projectId);
+		
+		//순서와 레벨 매칭
+		String taskId = request.getParameter("taskId");
+		String taskLevel = request.getParameter("taskLevel");
+		
+		String[] taskIdList = taskId.split(",");
+		String[] taskLevelList = taskLevel.split(",");
+		
+		List<Map<String, String>> ganttTaskOrder = new ArrayList<Map<String,String>>();
+		
+		for (int i = 0; i < taskIdList.length; i++) {
+			Map<String, String> taskPair = new HashMap<String, String>();
+			taskPair.put("taskId", taskIdList[i]);
+			taskPair.put("taskLevel", taskLevelList[i]);
+			
+			ganttTaskOrder.add(taskPair);
+		}
+		
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("position", "gantt");
+		param.put("userId", userId);
+		
+		JSONObject resultBodyTask = commonUtil.getJsonFromRestApi("/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		String status = resultBodyTask.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBodyTask.get("data");
+			taskList = (JSONArray) data.get("taskList");
+		}
+		
+		JSONObject resultBodyProject = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/users/" + userInfo.getId() + "/gantt", param, request, "get", null);
+		status = resultBodyProject.get("status").toString();
+		
+		if(status.equals("ok")) {
+			JSONObject data = (JSONObject) resultBodyProject.get("data");
+			project = (JSONObject) data.get("project");
+		}
+		
+		JSONObject resultBodyGroup = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/groups/users/" + userInfo.getId() + "/gantt", param, request, "get", null);
+		status = resultBodyGroup.get("status").toString();
+		
+		if(status.equals("ok")) {
+			groupList = (JSONArray) resultBodyGroup.get("data");
+		}
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet;
+		//색 설정
+		HSSFPalette palette = workbook.getCustomPalette();
+		// get the color which most closely matches the color you want to use
+		HSSFColor myColor = palette.findSimilarColor(255, 198, 198);
+		// get the palette index of that color 
+		short groupColor = myColor.getIndex();
+		
+		myColor = palette.findSimilarColor(166, 255, 199);
+		short delimiterColor = myColor.getIndex();
+		
+		//1행 타이틀 font (bold, 맑은고딕, 크기 12pt)
+		HSSFFont titleFont = workbook.createFont();
+		titleFont.setBoldweight((short) titleFont.BOLDWEIGHT_BOLD);
+		titleFont.setFontHeight((short) 240);
+		titleFont.setFontName("맑은 고딕");
+		
+		//header font (bold, 맑은고딕)
+		HSSFFont headerFont = workbook.createFont();
+		headerFont.setBoldweight((short) headerFont.BOLDWEIGHT_BOLD);
+		headerFont.setFontName("맑은 고딕");
+		
+		//기본 font(맑은고딕)
+		HSSFFont basicFont = workbook.createFont();
+		basicFont.setFontName("맑은 고딕");
+		
+		//헤더 스타일(회색 배경, border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
+		HSSFCellStyle headerStyle= workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		headerStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		headerStyle.setFont(headerFont);
+		headerStyle.setWrapText(true);
+		
+		//간트쪽 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
+		HSSFCellStyle ganttStyle= workbook.createCellStyle();
+		ganttStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		ganttStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		ganttStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		ganttStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		ganttStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		ganttStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		ganttStyle.setFont(headerFont);
+		ganttStyle.setWrapText(true);
+		
+		//간트 그래프 색칠 o  스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
+		HSSFCellStyle graphStyle = workbook.createCellStyle();
+		graphStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		graphStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		graphStyle.setBorderRight(HSSFCellStyle.BORDER_NONE);
+		graphStyle.setBorderLeft(HSSFCellStyle.BORDER_NONE);
+		graphStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+		graphStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		
+		//간트 그래프 색칠 o  스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
+		HSSFCellStyle noGraphStyle = workbook.createCellStyle();
+		noGraphStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		noGraphStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		noGraphStyle.setBorderRight(HSSFCellStyle.BORDER_NONE);
+		noGraphStyle.setBorderLeft(HSSFCellStyle.BORDER_NONE);
+		noGraphStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex());
+		noGraphStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		
+		//작업 이름 border스타일(좌우 라인 없음, 왼쪽정렬)
+		HSSFCellStyle taskNameStyle= workbook.createCellStyle();
+		taskNameStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		taskNameStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		taskNameStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+		taskNameStyle.setFont(basicFont);
+
+		//1행 타이틀 스타일
+		HSSFCellStyle titleStyle = workbook.createCellStyle();
+		titleStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+		titleStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		titleStyle.setFont(titleFont);
+		
+		//project 이름 라인 style
+		HSSFCellStyle projectStyle = workbook.createCellStyle();
+		projectStyle.setFont(headerFont);
+		projectStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		projectStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		projectStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		projectStyle.setBorderBottom(HSSFCellStyle.BORDER_DOUBLE);
+		projectStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+		projectStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		
+		//프로젝트 아래 그룹/업무 라인 style
+		HSSFCellStyle upperGroupTaskStyle = workbook.createCellStyle();
+		upperGroupTaskStyle.setFont(headerFont);
+		upperGroupTaskStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		upperGroupTaskStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		upperGroupTaskStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		upperGroupTaskStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		upperGroupTaskStyle.setFillForegroundColor(groupColor);
+		upperGroupTaskStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		upperGroupTaskStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+		
+		//그룹 아래 그룹/업무 라인 style
+		HSSFCellStyle lowerGroupTaskStyle = workbook.createCellStyle();
+		lowerGroupTaskStyle.setFont(headerFont);
+		lowerGroupTaskStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		lowerGroupTaskStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		lowerGroupTaskStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		lowerGroupTaskStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		
+		//최하위 그룹 아래 업무 stlye
+		HSSFCellStyle taskStyle = workbook.createCellStyle();
+		taskStyle.setFont(basicFont);
+		taskStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		taskStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		taskStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		taskStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		
+		//경계라인 style
+		HSSFCellStyle delimiterStyle = workbook.createCellStyle();
+		delimiterStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		delimiterStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		delimiterStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		delimiterStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		delimiterStyle.setFillForegroundColor(delimiterColor);
+		delimiterStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		
+		Row row;
+		      
+		sheet = workbook.createSheet("report");
+		row = sheet.createRow(0);
+		String fileName = URLEncoder.encode(project.get("projectName").toString() + "_gantt","UTF-8");
+		
+		//프로젝트 제목
+		row.createCell(0).setCellValue(project.get("projectName").toString());
+		row.getCell(0).setCellStyle(titleStyle);
+		row.setHeight((short)512);
+		
+		//기준일, 간트차트 시작 주수 등 들어감
+		row = sheet.createRow(1);
+		//빈 행
+		row = sheet.createRow(2);
+		
+		//셀병합
+		sheet.addMergedRegion(new CellRangeAddress(3, 4, 0, 0));
+		sheet.addMergedRegion(new CellRangeAddress(3, 4, 1, 5));
+		sheet.addMergedRegion(new CellRangeAddress(3, 4, 6, 6));
+		sheet.addMergedRegion(new CellRangeAddress(3, 3, 7, 8));
+		sheet.addMergedRegion(new CellRangeAddress(3, 4, 9, 9));
+		sheet.addMergedRegion(new CellRangeAddress(3, 4, 10, 10));
+		sheet.addMergedRegion(new CellRangeAddress(3, 4, 11, 11));
+		sheet.addMergedRegion(new CellRangeAddress(3, 3, 12, 13));
+		sheet.addMergedRegion(new CellRangeAddress(3, 4, 14, 14));
+		sheet.addMergedRegion(new CellRangeAddress(3, 4, 15, 15));
+		sheet.addMergedRegion(new CellRangeAddress(3, 4, 16, 16));
+		sheet.addMergedRegion(new CellRangeAddress(3, 4, 17, 17));
+		
+		//열/행 고정
+		sheet.createFreezePane(19, 6);
+		
+		//간트 헤더 - 4번째 줄
+		row = sheet.createRow(3);
+		row.createCell(0).setCellValue("WBS");//numbering
+		row.getCell(0).setCellStyle(headerStyle);
+		row.createCell(1).setCellValue("작업 항목");//업무명
+		row.getCell(1).setCellStyle(headerStyle);
+		row.createCell(2).setCellStyle(headerStyle);
+		row.createCell(3).setCellStyle(headerStyle);
+		row.createCell(4).setCellStyle(headerStyle);
+		row.createCell(5).setCellStyle(headerStyle);
+		row.createCell(6).setCellValue("작업\n구분");//업무 상태
+		row.getCell(6).setCellStyle(headerStyle);
+		row.createCell(7).setCellValue("실시 일자");//실시 일자
+		row.getCell(7).setCellStyle(headerStyle);
+		row.createCell(8).setCellStyle(headerStyle);
+		row.createCell(9).setCellValue("기간");//workingday
+		row.getCell(9).setCellStyle(headerStyle);
+		row.createCell(10).setCellValue("진척률\n(%)");//실제 진행률
+		row.getCell(10).setCellStyle(headerStyle);
+		row.createCell(11).setCellValue("지연율\n(%)");//목표진행률 - 실제 진행률
+		row.getCell(11).setCellStyle(headerStyle);
+		row.createCell(12).setCellValue("계획일자");
+		row.getCell(12).setCellStyle(headerStyle);
+		row.createCell(13).setCellStyle(headerStyle);
+		row.createCell(14).setCellValue("가중치\n(%)");
+		row.getCell(14).setCellStyle(headerStyle);
+		row.createCell(15).setCellValue("계획\n일수");
+		row.getCell(15).setCellStyle(headerStyle);
+		row.createCell(16).setCellValue("담당자");
+		row.getCell(16).setCellStyle(headerStyle);
+		row.createCell(17).setCellValue("산출물");
+		row.getCell(17).setCellStyle(headerStyle);
+		row.createCell(18).setCellValue("목표");
+		row.getCell(18).setCellStyle(headerStyle);
+		
+		//간트차트 프로젝트 개월수 및 각 달의 일 수 구하기
+		
+		String pPlanStartDateStr = project.get("planStartDate").toString().replaceAll("-", "");
+		String pPlanEndDateStr = project.get("planEndDate").toString().replaceAll("-", "");
+		
+		int sYear= Integer.parseInt(pPlanStartDateStr.substring(0,4));
+		int sMonth = Integer.parseInt(pPlanStartDateStr.substring(4,6));
+		int eYear = Integer.parseInt(pPlanEndDateStr.substring(0,4));
+		int eMonth = Integer.parseInt(pPlanEndDateStr.substring(4,6));
+		
+		int month_diff = (eYear - sYear)* 12 + (eMonth - sMonth); 
+				
+		List<Map<String, Object>> monthDays = new ArrayList<Map<String, Object>>();
+		
+		for (int i = 0; i < month_diff + 1; i++) {
+			Map<String, Object> months = new HashMap<String, Object>();
+			String yearAndMonth = sYear + " / " + sMonth;
+			
+			Calendar cal = Calendar.getInstance();
+			cal.set(sYear, sMonth - 1, 1);
+					
+			int maxDaysOfMonth = cal.getActualMaximum(Calendar.DATE);
+			
+			months.put("yearAndMonth", yearAndMonth);
+			months.put("maxDaysOfMonth", maxDaysOfMonth);
+			System.out.println(yearAndMonth + " : " + maxDaysOfMonth);
+			monthDays.add(months);
+			
+			if (sMonth != 12) {
+				sMonth ++;
+			} else {
+				sMonth = 1;
+				sYear ++;
+			}
+		}
+		
+		//간트차트 셀 병합
+		int cellCount = 19;
+		int chartTotalDays = 0;
+		
+		for (int i = 0; i < monthDays.size(); i++) {
+			int maxDays = Integer.parseInt(monthDays.get(i).get("maxDaysOfMonth").toString());
+			sheet.addMergedRegion(new CellRangeAddress(3, 3, cellCount, cellCount + maxDays - 1));
+			row.createCell(cellCount).setCellValue(monthDays.get(i).get("yearAndMonth").toString());
+			row.getCell(cellCount).setCellStyle(ganttStyle);
+			
+			chartTotalDays = chartTotalDays + maxDays;
+			
+			for (int j = 0; j < maxDays - 1; j++) {
+				row.createCell(cellCount + 1 + j).setCellStyle(ganttStyle);
+			}
+			
+			
+			cellCount = cellCount + maxDays;
+		}
+		
+		//간트 헤더 - 5번째 줄
+		row = sheet.createRow(4);
+		row.createCell(0).setCellStyle(headerStyle);
+		row.createCell(1).setCellStyle(headerStyle);
+		row.createCell(2).setCellStyle(headerStyle);
+		row.createCell(3).setCellStyle(headerStyle);
+		row.createCell(4).setCellStyle(headerStyle);
+		row.createCell(5).setCellStyle(headerStyle);
+		row.createCell(6).setCellStyle(headerStyle);
+		row.createCell(7).setCellValue("시작 일자");//실시 일자
+		row.getCell(7).setCellStyle(headerStyle);
+		row.createCell(8).setCellValue("종료 일자");//실시 일자
+		row.getCell(8).setCellStyle(headerStyle);
+		row.createCell(9).setCellStyle(headerStyle);
+		row.createCell(10).setCellStyle(headerStyle);
+		row.createCell(11).setCellStyle(headerStyle);
+		row.createCell(12).setCellValue("시작 일자");//목표진행률 - 실제 진행률
+		row.getCell(12).setCellStyle(headerStyle);
+		row.createCell(13).setCellValue("종료 일자");
+		row.getCell(13).setCellStyle(headerStyle);
+		row.createCell(14).setCellStyle(headerStyle);
+		row.createCell(15).setCellStyle(headerStyle);
+		row.createCell(16).setCellStyle(headerStyle);
+		row.createCell(17).setCellStyle(headerStyle);
+		row.createCell(18).setCellValue("task 수");
+		row.getCell(18).setCellStyle(headerStyle);
+		
+		//간트차트 날짜 넣기
+		int dateCount = 19;
+				
+		for (int i = 0; i < monthDays.size(); i++) {
+			int maxDays = Integer.parseInt(monthDays.get(i).get("maxDaysOfMonth").toString());
+			
+			for (int j = 0; j < maxDays; j++) {
+				row.createCell(dateCount + j).setCellValue(j + 1);
+				row.getCell(dateCount + j).setCellStyle(ganttStyle);
+
+				sheet.setColumnWidth(dateCount + j, 1000);
+			}
+			
+			dateCount = dateCount + maxDays;
+		}
+		
+		//body(정보)
+		//프로젝트 정보
+		row = sheet.createRow(5);
+		row.createCell(0).setCellValue("*");//numbering
+		row.getCell(0).setCellStyle(projectStyle);
+		row.createCell(1).setCellValue(project.get("projectName").toString());//numbering
+		row.getCell(1).setCellStyle(projectStyle);
+		row.createCell(2).setCellStyle(projectStyle);
+		row.createCell(3).setCellStyle(projectStyle);
+		row.createCell(4).setCellStyle(projectStyle);
+		row.createCell(5).setCellStyle(projectStyle);
+		row.createCell(6).setCellStyle(projectStyle);
+		row.createCell(7).setCellValue(project.get("realStartDate").toString());//numbering
+		row.getCell(7).setCellStyle(projectStyle);
+		row.createCell(8).setCellValue(request.getParameter("test"));//numbering
+		row.getCell(8).setCellStyle(projectStyle);
+		row.createCell(9).setCellValue(project.get("workingday").toString());//numbering
+		row.getCell(9).setCellStyle(projectStyle);
+		row.createCell(10).setCellValue(project.get("progress").toString());//numbering
+		row.getCell(10).setCellStyle(projectStyle);
+		row.createCell(11).setCellValue(project.get("progress").toString());//numbering
+		row.getCell(11).setCellStyle(projectStyle);
+		row.createCell(12).setCellValue(project.get("planStartDate").toString());//numbering
+		row.getCell(12).setCellStyle(projectStyle);
+		row.createCell(13).setCellValue(project.get("planEndDate").toString());//numbering
+		row.getCell(13).setCellStyle(projectStyle);
+		row.createCell(14).setCellValue(100);//numbering
+		row.getCell(14).setCellStyle(projectStyle);
+		row.createCell(15).setCellValue(project.get("workingday").toString());//numbering
+		row.getCell(15).setCellStyle(projectStyle);
+		row.createCell(16).setCellValue("");//numbering
+		row.getCell(16).setCellStyle(projectStyle);
+		row.createCell(17).setCellValue("");//numbering
+		row.getCell(17).setCellStyle(projectStyle);
+		row.createCell(18).setCellValue(project.get("progress").toString());//numbering
+		row.getCell(18).setCellStyle(projectStyle);
+		
+		//프로젝트 기간에 그래프 색칠 
+		Date pPlanStartDate = new SimpleDateFormat("yyyyMMdd").parse(pPlanStartDateStr);
+		Date pPlanEndDate = new SimpleDateFormat("yyyyMMdd").parse(pPlanEndDateStr);
+		String monthStartStr = pPlanStartDateStr.substring(0, 6) + "01";
+		Date monthStartDate = new SimpleDateFormat("yyyyMMdd").parse(monthStartStr);
+		
+		//프로젝트 시작일 - 해당 월의 1일 차이만큼 띄우고 프로젝트 종료일 차이까지 색칠 (그 외는 noGraphStyle적용)//프로젝트 시작일 - 해당 월의 1일 차이만큼 띄우고 프로젝트 종료일 차이까지 색칠 (그 외는 noGraphStyle적용)
+		long monthStartDiff = (pPlanStartDate.getTime() - monthStartDate.getTime()) / (24 * 60 * 60 * 1000);
+
+		//두 날짜 차이
+		long pDateDiff = (pPlanEndDate.getTime() - pPlanStartDate.getTime()) / (24 * 60 * 60 * 1000);
+		//시작일 해당 월의 1일 부터 종료일 해당 월의 마지막 날까지 일 수 (chartTotalDays)
+		
+		int startCell = 19;
+		
+		for (int i = 0; i < chartTotalDays; i++) {
+			if (i < monthStartDiff) {
+				//시작일 부터 처음
+				row.createCell(startCell + i).setCellStyle(noGraphStyle);
+			} else if (i >= monthStartDiff && i <= monthStartDiff + pDateDiff) {
+				row.createCell(startCell + i).setCellStyle(graphStyle);
+				//ganttStyle.setFillPattern(HSSFCellStyle.NO_FILL);
+			} else {
+				//색칠이 끝나고 난 다음 부터 끝까지
+				row.createCell(startCell + i).setCellStyle(noGraphStyle);
+			}
+		}
+		
+		
+		
+		//////////group, task정보
+		int upperGroupTask = 0;
+		int lowerGroupTask = 0;
+		int lowestTask = 0;
+		
+		//task와 group정보
+		for (int i = 1; i < ganttTaskOrder.size(); i++) {
+			row = sheet.createRow(5 + i);
+			
+			//업무/그룹 구분
+			String ganttTaskId = ganttTaskOrder.get(i).get("taskId");
+			ganttTaskId = ganttTaskId.substring(ganttTaskId.lastIndexOf("_") + 1);
+			JSONObject content = new JSONObject();
+			
+			if (ganttTaskId.contains("t")) {
+				for (int j = 0; j < taskList.size(); j++) {
+					content = (JSONObject) taskList.get(j);
+					String contentTaskId = content.get("taskId").toString();
+					String compTaskId = ganttTaskId.substring(1);
+					
+					if (contentTaskId.equals(compTaskId)) {
+						break;
+					}
+				}
+			} else if (ganttTaskId.contains("g")) {
+				for (int j = 0; j < groupList.size(); j++) {
+					content = (JSONObject) groupList.get(j);
+					
+					String contentGroupId = content.get("groupId").toString();
+					String compGroupId = ganttTaskId.substring(1);
+					
+					if (contentGroupId.equals(compGroupId)) {
+						content.put("status", "");
+						break;
+					}
+				}
+			}
+			
+			
+			if (ganttTaskOrder.get(i).get("taskLevel").equals("1")) {
+				upperGroupTask++;
+				lowerGroupTask = 0;
+				lowestTask = 0;
+				
+				//numbering
+				row.createCell(0).setCellValue(upperGroupTask);
+				row.getCell(0).setCellStyle(upperGroupTaskStyle);
+				
+				//이름
+				if (content.get("taskId") == null) {
+					row.createCell(1).setCellValue("■ " + content.get("groupName").toString());
+				} else {
+					row.createCell(1).setCellValue(content.get("taskName").toString());
+				}
+				
+				row.getCell(1).setCellStyle(upperGroupTaskStyle);
+				row.createCell(2).setCellStyle(upperGroupTaskStyle);
+				row.createCell(3).setCellStyle(upperGroupTaskStyle);
+				row.createCell(4).setCellStyle(upperGroupTaskStyle);
+				row.createCell(5).setCellStyle(upperGroupTaskStyle);
+			} else if (ganttTaskOrder.get(i).get("taskLevel").equals("2")) {
+				lowerGroupTask++;
+				
+				//numbering
+				row.createCell(0).setCellValue(upperGroupTask + "." + lowerGroupTask);//numbering
+				row.getCell(0).setCellStyle(lowerGroupTaskStyle);
+
+				row.createCell(1).setCellStyle(lowerGroupTaskStyle);
+					
+				//이름
+				if (content.get("taskId") == null) {
+					row.createCell(2).setCellValue(content.get("groupName").toString());
+				} else {
+					row.createCell(2).setCellValue(content.get("taskName").toString());
+				}
+				
+				row.getCell(2).setCellStyle(lowerGroupTaskStyle);
+				row.createCell(3).setCellStyle(lowerGroupTaskStyle);
+				row.createCell(4).setCellStyle(lowerGroupTaskStyle);
+				row.createCell(5).setCellStyle(lowerGroupTaskStyle);
+			} else if (ganttTaskOrder.get(i).get("taskLevel").equals("3")) {
+				lowestTask++;
+				
+				//numbering
+				row.createCell(0).setCellValue(upperGroupTask + "." + lowerGroupTask + "." + lowestTask);//numbering
+				row.getCell(0).setCellStyle(taskStyle);
+
+				row.createCell(1).setCellStyle(taskStyle);
+				row.createCell(2).setCellStyle(taskStyle);
+					
+				//이름
+				if (content.get("taskId") == null) {
+					row.createCell(3).setCellValue(content.get("groupName").toString());
+				} else {
+					row.createCell(3).setCellValue(content.get("taskName").toString());
+				}
+				
+				row.createCell(4).setCellStyle(taskStyle);
+				row.createCell(5).setCellStyle(taskStyle);
+			}
+			
+			//작업 구분
+			row.createCell(6).setCellValue(content.get("status").toString());
+			String realStartDate = "";
+			String realEndDate = "";
+			
+			if (content.get("realStartDate") != null) {
+				realStartDate = content.get("realStartDate").toString();
+			}
+			
+			if (content.get("realEndDate") != null) {
+				realEndDate = content.get("realEndDate").toString();
+			}
+			
+			row.createCell(7).setCellValue(realStartDate);
+			row.createCell(8).setCellValue(realEndDate);
+			row.createCell(9).setCellValue(content.get("workingday").toString());
+			row.createCell(10).setCellValue(content.get("realProgress").toString());
+			row.createCell(11).setCellValue("0%"); //지연율
+			row.createCell(12).setCellValue(content.get("planStartDate").toString());
+			row.createCell(13).setCellValue(content.get("planEndDate").toString());
+			row.createCell(14).setCellValue(content.get("weight").toString());
+			row.createCell(15).setCellValue(content.get("workingday").toString());
+			row.createCell(16).setCellValue("담당자");
+			row.createCell(17).setCellValue("");
+			row.createCell(18).setCellValue("1");
+			
+			for (int j = 5; j < 19; j++) {
+				if (ganttTaskOrder.get(i).get("taskLevel").equals("1")) {
+					row.getCell(j).setCellStyle(upperGroupTaskStyle);
+				} else if (ganttTaskOrder.get(i).get("taskLevel").equals("2")) {
+					row.getCell(j).setCellStyle(lowerGroupTaskStyle);
+				} else {
+					row.getCell(j).setCellStyle(taskStyle);
+				}
+			}
+			
+			//프로젝트 기간에 그래프 색칠 
+			Date contPlanEndDate = new SimpleDateFormat("yyyy-MM-dd").parse(content.get("planEndDate").toString());
+			Date contPlanStartDate = new SimpleDateFormat("yyyy-MM-dd").parse(content.get("planStartDate").toString());
+			//프로젝트 시작일 - 해당 월의 1일 차이만큼 띄우고 프로젝트 종료일 차이까지 색칠 (그 외는 noGraphStyle적용)//프로젝트 시작일 - 해당 월의 1일 차이만큼 띄우고 프로젝트 종료일 차이까지 색칠 (그 외는 noGraphStyle적용)
+			long contStartDiff = (contPlanStartDate.getTime() - monthStartDate.getTime()) / (24 * 60 * 60 * 1000);
+
+			//두 날짜 차이
+			long contDateDiff = (contPlanEndDate.getTime() - contPlanStartDate.getTime()) / (24 * 60 * 60 * 1000);
+			//시작일 해당 월의 1일 부터 종료일 해당 월의 마지막 날까지 일 수 (chartTotalDays)
+			
+			for (int j = 0; j < chartTotalDays; j++) {
+				if (j < contStartDiff) {
+					//시작일 부터 처음
+					row.createCell(startCell + j).setCellStyle(noGraphStyle);
+				} else if (j >= contStartDiff && j <= contStartDiff + contDateDiff) {
+					row.createCell(startCell + j).setCellStyle(graphStyle);
+					//ganttStyle.setFillPattern(HSSFCellStyle.NO_FILL);
+				} else {
+					//색칠이 끝나고 난 다음 부터 끝까지
+					row.createCell(startCell + j).setCellStyle(noGraphStyle);
+				}
+			}
+		}
+		
+		//열 너비 설정
+		sheet.setColumnWidth(0, 2000);
+		sheet.setColumnWidth(1, 340);
+		sheet.setColumnWidth(2, 340);
+		sheet.setColumnWidth(3, 340);
+		sheet.setColumnWidth(4, 340);
+		sheet.setColumnWidth(5, 8000);
+		sheet.setColumnWidth(6, 2000);
+		sheet.setColumnWidth(7, 4000);
+		sheet.setColumnWidth(8, 4000);
+		sheet.setColumnWidth(9, 50);
+		sheet.setColumnWidth(10, 2000);
+		sheet.setColumnWidth(11, 2000);
+		sheet.setColumnWidth(12, 4000);
+		sheet.setColumnWidth(13, 4000);
+		sheet.setColumnWidth(14, 50);
+		sheet.setColumnWidth(15, 2000);
+		sheet.setColumnWidth(16, 4000);
+		sheet.setColumnWidth(17, 8000);
+		sheet.setColumnWidth(18, 2000);
+
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + fileName + ".xls\"");
+		workbook.write(response.getOutputStream());
+
+		
+		System.out.println(projectId);
+		System.out.println(request.getParameter("taskId"));
+		System.out.println(request.getParameter("taskLevel"));
+		workbook.close();
+		LOGGER.debug("ezPMS exportGanttExcel ended."); 
 	}
 }
