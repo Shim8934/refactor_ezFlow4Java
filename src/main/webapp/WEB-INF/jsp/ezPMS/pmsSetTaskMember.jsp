@@ -178,7 +178,8 @@
 				    		strHTML += "(" + managerArray[i].userDeptname + ")";
 				    		strHTML += "</td>";
 				    		strHTML += "<td>";
-				    	 	// strHTML += "<input type='text' name='" + managerArray[i].userId + "' value='100' style='width:40px;text-align:center'> %";
+				    		// 투입률 적용 후 display none해제 예정
+				    	 	strHTML += "<input type='text' name='" + managerArray[i].userId + "' value='100' style='width:40px; text-align:center; display: none;'>";
 				    		strHTML += "</td>";
 				    		strHTML += "</tr>";
 				    		strHTML += "</table>";
