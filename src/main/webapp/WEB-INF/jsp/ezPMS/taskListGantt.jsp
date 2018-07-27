@@ -1601,7 +1601,7 @@
 	   							infoHTML += "<div class='tooltipText'>";
 	   							infoHTML += "<spring:message code='ezPMS.t61' /> : " + start + "<br>";
 	   							infoHTML += "<spring:message code='ezPMS.t62' /> : " + end + "<br>";
-	   							infoHTML += "<spring:message code='ezPMS.t36' /> : " + ge.tasks[i].duration + "<br>";
+	   							infoHTML += "<spring:message code='ezPMS.t352' /> : " + ge.tasks[i].duration + "<br>";
 	   							infoHTML += "<spring:message code='ezPMS.t250' /> : " + ge.tasks[i].progress + "%";
 	   							infoHTML += "</div>";
 	   						}
@@ -1614,7 +1614,7 @@
 						infoHTML += "<div class='tooltipText'>";
 						infoHTML += "<spring:message code='ezPMS.t61' /> : " + start + "<br>";
 						infoHTML += "<spring:message code='ezPMS.t62' /> : " + end + "<br>";
-						infoHTML += "<spring:message code='ezPMS.t36' /> : " + ge.tasks[0].duration + "<br>";
+						infoHTML += "<spring:message code='ezPMS.t352' /> : " + ge.tasks[0].duration + "<br>";
 						infoHTML += "<spring:message code='ezPMS.t250' /> : " + ge.tasks[0].progress + "<br>";
 						infoHTML += "</div>";
 	   				}
@@ -2296,18 +2296,18 @@
 			    <tr style="height:40px">
 			      <th class="gdfColHeader" style="width:35px; border-right: none"></th>
 			      <th class="gdfColHeader" style="width:25px; display:none;"></th>
-			      <th class="gdfColHeader gdfResizable" style="width:240px;">업무명</th>
+			      <th class="gdfColHeader gdfResizable" style="width:240px;"><spring:message code='ezPMS.t98'/></th>
 			      <th class="gdfColHeader gdfResizable" style="width:100px; display:none;">code/short name</th>
 			      <th class="gdfColHeader"  align="center" style="width:17px; display:none;" title="Start date is a milestone."><span class="teamworkIcon" style="font-size: 8px;">^</span></th>
-			      <th class="gdfColHeader gdfResizable" style="width:80px;">시작일</th>
+			      <th class="gdfColHeader gdfResizable" style="width:80px;"><spring:message code='ezPMS.t61'/></th>
 			      <th class="gdfColHeader"  align="center" style="width:17px; display:none;" title="End date is a milestone."><span class="teamworkIcon" style="font-size: 8px;">^</span></th>
-			      <th class="gdfColHeader gdfResizable" style="width:80px;">완료일</th>
-			      <th class="gdfColHeader gdfResizable" style="width:50px;">남은기간</th>
-			      <th class="gdfColHeader gdfResizable" style="width:50px;">가중치</th>
-			      <th class="gdfColHeader gdfResizable" style="width:60px;">실제진행률</th>
-			      <th class="gdfColHeader gdfResizable" style="width:60px;">목표진행률</th>
-			      <th class="gdfColHeader gdfResizable requireCanSeeDep" style="width:50px;">선행작업</th>
-			      <th class="gdfColHeader gdfResizable" style="width:1000px; text-align: left; padding-left: 10px;">담당자</th>
+			      <th class="gdfColHeader gdfResizable" style="width:80px;"><spring:message code='ezPMS.t62'/></th>
+			      <th class="gdfColHeader gdfResizable" style="width:50px;"><spring:message code='ezPMS.t352'/></th>
+			      <th class="gdfColHeader gdfResizable" style="width:50px;"><spring:message code='ezPMS.t267'/></th>
+			      <th class="gdfColHeader gdfResizable" style="width:60px;"><spring:message code='ezPMS.t178'/><spring:message code='ezPMS.t250'/></th>
+			      <th class="gdfColHeader gdfResizable" style="width:60px;"><spring:message code='ezPMS.t177'/><spring:message code='ezPMS.t250'/></th>
+			      <th class="gdfColHeader gdfResizable requireCanSeeDep" style="width:50px;"><spring:message code='ezPMS.t181'/></th>
+			      <th class="gdfColHeader gdfResizable" style="width:1000px; text-align: left; padding-left: 10px;"><spring:message code='ezPMS.t63'/></th>
 			    </tr>
 			    </thead>
 			  </table>
