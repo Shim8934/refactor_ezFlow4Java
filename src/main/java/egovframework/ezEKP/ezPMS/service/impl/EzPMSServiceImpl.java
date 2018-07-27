@@ -655,17 +655,19 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			// workingday 계산
 			Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanStartDate());
 			Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getPlanEndDate());
-			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getWriteDate());
+//			Date createDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskVO.getWriteDate());
 			
 			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId, lang);
 
-			int createAndEndDateComp = createDate.compareTo(endDate);
-
-			if (createAndEndDateComp > 0) {
-				taskVO.setStatus("L");
-			} else {
-				taskVO.setStatus("W");
-			}
+//			int createAndEndDateComp = createDate.compareTo(endDate);
+//
+//			if (createAndEndDateComp > 0) {
+//				taskVO.setStatus("L");
+//			} else {
+//				taskVO.setStatus("W");
+//			}
+			
+			taskVO.setStatus("W");
 
 			// 업무 총괄담당자 정보 불러오기
 			ProjectMemberVO headManagerInfo = getUserInfo(taskVO.getHeadManagerId(), taskVO.getTenantId(), "user");
