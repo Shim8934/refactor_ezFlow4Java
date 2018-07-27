@@ -46,18 +46,14 @@ var strLang45 = "시작일을 종료일보다 빠르게 지정해주십시오."
 var strLang48 = "Attachment filename"
 var strLang49 = "Filesize"
 var strLang50 = "Filesize"
-
-var strLang51 ="Can not attach empty file."
-
+var strLang51 = "Can not attach empty file."
 var strLang52 = "The attached file size can not exceed "
 var strLang53 = "MB."
-
 var strLang54 = "Only one person can be a representative.";
 var strLang55 = "are registered in the sharers.";
 var strLang56 = "is representative is registered.";
 var strLang57 = "Please specify the person.";
 var strLang58 = "The extension of the file upload limit.";
-
 var strLang59 = "트리뷰의 ID가 지정되지 않았습니다.";
 var strLang60 = "데이터가 지정되지 않았습니다.";
 var strLang61 = "리스트의 ID가 지정되지 않았습니다.";
