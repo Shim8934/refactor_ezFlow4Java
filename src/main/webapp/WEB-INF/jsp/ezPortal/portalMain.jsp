@@ -36,6 +36,7 @@
 			#maskDiv { position:absolute; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);}
 			.selected-memoWrapper {display:table-cell;vertical-align:middle;}
 			#memo-btn{text-align:right;margin:0 auto;}
+			#font-btn{text-align:right;margin:0 auto; width:367px;}
 			#slider-range{width:100px;float:left; margin-left:15px;}
 			.ui-widget-header{background: #0470e4}
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
@@ -170,6 +171,43 @@
 		        });
 		        
 		        layerPopupOpacity();
+		        
+		        $("#font-up").click(function() {
+		        	var textarea = $("#font-up").parent().parent().find("textarea");
+		        	var thisWidth = textarea.css("width");
+		        	var thisHeight = textarea.css("height");
+		        	var thisFont = textarea.css("font-size");
+		        	var fontNum = parseInt(thisFont.substr(0, 2));
+		        	 
+					if (fontNum == 13) {
+		        		
+			        	textarea.css("font-size", "large");
+		        	} else if (fontNum == 12) {
+		        		
+			        	textarea.css("font-size", "1em");
+		        	}
+		        	
+		        	textarea.css("width", thisWidth);
+		        	textarea.css("height", thisHeight);
+		        });
+		        
+		        $("#font-down").click(function() {
+		        	var textarea = $("#font-down").parent().parent().find("textarea");
+		        	var thisWidth = textarea.css("width");
+		        	var thisHeight = textarea.css("height");
+		        	var thisFont = textarea.css("font-size");
+		        	var fontNum = parseInt(thisFont.substr(0, 2));
+		        	
+		        	if (fontNum == 16) {
+		        		
+			        	textarea.css("font-size", "1em");
+		        	} else if (fontNum == 13) {
+		        		
+			        	textarea.css("font-size", "small");
+		        	}
+		        	textarea.css("width", thisWidth);
+		        	textarea.css("height", thisHeight);
+		        });
 
 		     });
 			
@@ -256,10 +294,13 @@
 		        	var currText = $(this).children(".memo-text").val();
 		        	$("#maskDiv").css("display", "");
 			        $("#selected-memo").css("display", "");
+			        $("#textarea").css("font-size", "1em");
+			        $("#font-btn").css("display", "");
 			        $("#textarea").val(currText);
+			        
 		        });
 		    }
-
+		    
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
@@ -301,6 +342,10 @@
 							<button onclick="closeMemo()">닫기</button>
 						</div>
 						<textarea id="textarea" cols="50" rows="28"></textarea>
+						<div id="font-btn" style="text-align: right; display: none">
+					        <button id="font-up">폰트+</button> 
+					        <button id="font-down">폰트-</button>
+			        	</div>
 					</div>
 				</div>
 			</div>
