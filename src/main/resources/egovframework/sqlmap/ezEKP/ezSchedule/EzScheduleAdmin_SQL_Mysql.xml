@@ -34,6 +34,8 @@
 				tbl_schedule_public_dept a inner join tbl_usermaster b on a.usercn = b.cn and a.tenant_id = b.tenant_id
 			where
 				a.tenant_id = #v_TENANTID#
+			and
+				a.companyID = #v_COMPANYID#
 			order by a.idx
 		]]>
 	</select>

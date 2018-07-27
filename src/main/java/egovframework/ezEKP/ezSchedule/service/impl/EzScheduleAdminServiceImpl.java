@@ -25,10 +25,11 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 
 	
 	@Override
-	public String scheduleGetShareManage(String lang, int tenantId) throws Exception {
+	public String scheduleGetShareManage(String lang, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LANGDATA", lang);
 		map.put("v_TENANTID", tenantId);
+		map.put("v_COMPANYID", companyID);
 		
 		List<ScheduleShareVO> list = ezScheduleAdminDAO.scheduleGetShareManage(map);
 		

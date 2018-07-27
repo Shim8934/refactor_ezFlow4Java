@@ -472,7 +472,7 @@
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code="ezSystem.x0021"></spring:message><span id="listInfo"></span></h1>
-		<div id="mainmenu"> <!-- mainmenu -->    
+		<div id="" style="display:none"> <!-- mainmenu -->
 		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
 			    <select id="ListCompany" onChange="selectCompanyID()">
 		        	<c:forEach var="item" items="${list}">

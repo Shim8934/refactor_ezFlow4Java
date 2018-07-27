@@ -36,11 +36,12 @@
 			};
 			
 			$(document).ready(function() {
-	            if (document.getElementById("ListCompany").length == 0)
-	                alert("<spring:message code = 'ezPersonal.t106' />");
-	            else {
+	            if (document.getElementById("ListCompany").length == 0) {
+					alert("<spring:message code = 'ezPersonal.t106' />");
 	            }
-	
+	            else {
+// 	                document.getElementById("ListCompany").selectedIndex = 0;
+	            }
 	            makelist();
 	        });
 			
@@ -349,7 +350,7 @@
 	        	<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
 				    <select id="ListCompany" onChange="company_change()">
 			        	<c:forEach var="item" items="${list}">
-		            		<option value="<c:out value='${item.cn}'/>" <c:if test="${item.cn eq userInfo.companyID}">selected=""</c:if> ><c:out value='${item.displayName}'/></option>
+							<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 		            	</c:forEach>
 				    </select><br /><br />
 			    </span>

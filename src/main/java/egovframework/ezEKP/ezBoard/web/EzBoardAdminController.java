@@ -713,9 +713,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			boardPropertyVO.setGuBun("6");
 		}
 		
+		/* 2018-07-26 홍승비 - 다국어 표출 시 lang 대신 primary 조건 사용하도록 수정 */
 		model.addAttribute("model", boardPropertyVO);
 		model.addAttribute("use_multiData", use_multiData);
-		model.addAttribute("lang", lang);
+		model.addAttribute("primary", userInfo.getPrimary());
 		model.addAttribute("lang_primary", lang_primary);
 		model.addAttribute("lang_secondary", lang_secondary);
 		model.addAttribute("use_portal", use_portal);
@@ -1082,11 +1083,11 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			topid = "Top";
 		}
 		
-		model.addAttribute("strXML", "");
+		/* 2018-07-26 홍승비 - 비어있는 userLang 대신 primary값이 들어가도록 수정, 사용하지 않는 strXML 제거 */
 		model.addAttribute("topid", topid);
-		model.addAttribute("userLang", "");
+		model.addAttribute("primary", user.getPrimary());
 		model.addAttribute("deptID", user.getDeptID());
-
+		
 		logger.debug("selectTarget ended");
 		return "admin/ezBoard/selectTarget";
 	}
@@ -1108,9 +1109,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			topid = "Top";
 		}
 		
-		model.addAttribute("strXML", "");
+		/* 2018-07-26 홍승비 - 비어있는 userLang 대신 primary값이 들어가도록 수정, 사용하지 않는 strXML 제거 */
 		model.addAttribute("topid", topid);
-		model.addAttribute("userLang", "");
+		model.addAttribute("primary", user.getPrimary());
 		model.addAttribute("deptID", user.getDeptID());
 
 		logger.debug("selectTarget2 ended");
