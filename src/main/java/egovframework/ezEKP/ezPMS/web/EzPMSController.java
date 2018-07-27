@@ -2242,6 +2242,7 @@ public class EzPMSController {
 	public String getProjectForGantt(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
 		
 		LOGGER.debug("ezPMS getProjectForGantt started");
+		Long startMillis = System.currentTimeMillis();
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2282,6 +2283,9 @@ public class EzPMSController {
 		}
 
 		model.addAttribute("projectId", projectId);
+		
+		Long endMillis = System.currentTimeMillis();
+		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0) + " sec");
 		LOGGER.debug("ezPMS getProjectForGantt ended");
 		
 		return "/ezPMS/taskListGantt";

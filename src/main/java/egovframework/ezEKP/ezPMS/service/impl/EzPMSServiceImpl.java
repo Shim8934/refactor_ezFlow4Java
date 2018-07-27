@@ -1384,39 +1384,39 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 		int workingDays = (int) (daysWithoutSunday - startWeek + endWeek + 1);
 		
-		HashSet<String> solarHolidayMap = new HashSet<String>();
-		HashSet<String> lunarHolidayMap = new HashSet<String>();
-		int noRepeatHolidayCount = 0;
-		
-		//고정공휴일 & 사용자 정의 공휴일 불러오기
-		map.put("lang", lang); //parameter추가
-		if (lang.equals("3")) {
-			map.put("country", "jap");
-		} else {
-			map.put("country", "kor");
-		}
-		
-		List<ProjectHolidayVO> holidayList = ezPMSDAO.getCustomHoliday(map);
-		
-		for (int i = 0; i < holidayList.size(); i++) {
-			if (holidayList.get(i).getIsRepeat() == 1) {
-				if (holidayList.get(i).getIsSolar() == 1) {
-					String solarHoliday = holidayList.get(i).getHoliday();
-					solarHolidayMap.add(solarHoliday);
-				} else {
-					String lunarHoliday = holidayList.get(i).getHoliday();
-					lunarHolidayMap.add(lunarHoliday);
-				}
-			} else {
-				noRepeatHolidayCount++;
-			}
-		}
-		
-		//토요일 일요일이 포함이 안된 고정공휴일 & 사용자 정의 공휴일 개수 구하기
-		int holidays = getWorkingDays2(start, end, solarHolidayMap, lunarHolidayMap).size();
-		
-		//고정공휴일과 사용자 정의 공휴일이 개수를  workindays에서 뺌
-		workingDays = workingDays - holidays - noRepeatHolidayCount;
+//		HashSet<String> solarHolidayMap = new HashSet<String>();
+//		HashSet<String> lunarHolidayMap = new HashSet<String>();
+//		int noRepeatHolidayCount = 0;
+//		
+//		//고정공휴일 & 사용자 정의 공휴일 불러오기
+//		map.put("lang", lang); //parameter추가
+//		if (lang.equals("3")) {
+//			map.put("country", "jap");
+//		} else {
+//			map.put("country", "kor");
+//		}
+//		
+//		List<ProjectHolidayVO> holidayList = ezPMSDAO.getCustomHoliday(map);
+//		
+//		for (int i = 0; i < holidayList.size(); i++) {
+//			if (holidayList.get(i).getIsRepeat() == 1) {
+//				if (holidayList.get(i).getIsSolar() == 1) {
+//					String solarHoliday = holidayList.get(i).getHoliday();
+//					solarHolidayMap.add(solarHoliday);
+//				} else {
+//					String lunarHoliday = holidayList.get(i).getHoliday();
+//					lunarHolidayMap.add(lunarHoliday);
+//				}
+//			} else {
+//				noRepeatHolidayCount++;
+//			}
+//		}
+//		
+//		//토요일 일요일이 포함이 안된 고정공휴일 & 사용자 정의 공휴일 개수 구하기
+//		int holidays = getWorkingDays2(start, end, solarHolidayMap, lunarHolidayMap).size();
+//		
+//		//고정공휴일과 사용자 정의 공휴일이 개수를  workindays에서 뺌
+//		workingDays = workingDays - holidays - noRepeatHolidayCount;
 		
 		LOGGER.debug("WORKINGDAYS : " + workingDays);
 		LOGGER.debug("[SERVICE]getWorkingDays ended");
@@ -2769,6 +2769,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public float getPlanProgress(Date start, Date end, String companyId, int tenantId, String lang) throws Exception {
+		LOGGER.debug("[SERVICE] getPlanProgress started.");
 		Date today = new Date();
 		String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 		Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
@@ -2795,7 +2796,8 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 				planProgress = 100;
 			}
 		}
-
+		
+		LOGGER.debug("[SERVICE] getPlanProgress started.");
 		return planProgress;
 	}
 
