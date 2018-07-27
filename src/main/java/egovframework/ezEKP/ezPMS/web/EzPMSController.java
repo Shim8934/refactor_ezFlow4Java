@@ -31,6 +31,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.hssf.util.Region;
+import org.apache.poi.ss.formula.functions.Index;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -4252,15 +4253,6 @@ public class EzPMSController {
 		}
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;
-		//색 설정
-		HSSFPalette palette = workbook.getCustomPalette();
-		// get the color which most closely matches the color you want to use
-		HSSFColor myColor = palette.findSimilarColor(255, 198, 198);
-		// get the palette index of that color 
-		short groupColor = myColor.getIndex();
-		
-		myColor = palette.findSimilarColor(166, 255, 199);
-		short delimiterColor = myColor.getIndex();
 		
 		//1행 타이틀 font (bold, 맑은고딕, 크기 12pt)
 		HSSFFont titleFont = workbook.createFont();
@@ -4307,7 +4299,7 @@ public class EzPMSController {
 		graphStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		graphStyle.setBorderRight(HSSFCellStyle.BORDER_NONE);
 		graphStyle.setBorderLeft(HSSFCellStyle.BORDER_NONE);
-		graphStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+		graphStyle.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
 		graphStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		
 		//간트 그래프 색칠 o  스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
@@ -4341,6 +4333,7 @@ public class EzPMSController {
 		projectStyle.setBorderBottom(HSSFCellStyle.BORDER_DOUBLE);
 		projectStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
 		projectStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		projectStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 		
 		//프로젝트 아래 그룹/업무 라인 style
 		HSSFCellStyle upperGroupTaskStyle = workbook.createCellStyle();
@@ -4349,7 +4342,7 @@ public class EzPMSController {
 		upperGroupTaskStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 		upperGroupTaskStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 		upperGroupTaskStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		upperGroupTaskStyle.setFillForegroundColor(groupColor);
+		upperGroupTaskStyle.setFillForegroundColor(IndexedColors.TAN.getIndex());
 		upperGroupTaskStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		upperGroupTaskStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 		
@@ -4360,6 +4353,7 @@ public class EzPMSController {
 		lowerGroupTaskStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 		lowerGroupTaskStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 		lowerGroupTaskStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		lowerGroupTaskStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 		
 		//최하위 그룹 아래 업무 stlye
 		HSSFCellStyle taskStyle = workbook.createCellStyle();
@@ -4368,6 +4362,7 @@ public class EzPMSController {
 		taskStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 		taskStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 		taskStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		taskStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 		
 		//경계라인 style
 		HSSFCellStyle delimiterStyle = workbook.createCellStyle();
@@ -4375,7 +4370,7 @@ public class EzPMSController {
 		delimiterStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 		delimiterStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 		delimiterStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		delimiterStyle.setFillForegroundColor(delimiterColor);
+		delimiterStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
 		delimiterStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		
 		Row row;
@@ -4557,29 +4552,48 @@ public class EzPMSController {
 		row.createCell(4).setCellStyle(projectStyle);
 		row.createCell(5).setCellStyle(projectStyle);
 		row.createCell(6).setCellStyle(projectStyle);
-		row.createCell(7).setCellValue(project.get("realStartDate").toString());//numbering
+		
+		if (project.get("realStartDate") != null && !project.get("realStartDate").equals("")) {
+			String pRealStartDate = project.get("realStartDate").toString();
+			row.createCell(7).setCellValue(pRealStartDate);//수행 시작일
+		} else {
+			row.createCell(7).setCellValue(project.get("").toString());//프로젝트가 시작 안한경우
+		}
+		
 		row.getCell(7).setCellStyle(projectStyle);
-		row.createCell(8).setCellValue(request.getParameter("test"));//numbering
+		
+		if (project.get("realEndDate") != null && !project.get("realEndDate").equals("")) {
+			String pRealEndDate = project.get("realEndDate").toString();
+			row.createCell(8).setCellValue(pRealEndDate);//수행 종료일
+		} else {
+			row.createCell(8).setCellValue("");
+		}
 		row.getCell(8).setCellStyle(projectStyle);
-		row.createCell(9).setCellValue(project.get("workingday").toString());//numbering
+		
+		row.createCell(9).setCellValue(0);//실시 일수
 		row.getCell(9).setCellStyle(projectStyle);
-		row.createCell(10).setCellValue(project.get("progress").toString());//numbering
+		
+		float pProgress = Float.parseFloat(project.get("progress").toString());
+		row.createCell(10).setCellValue((Math.round(pProgress * 10) / 10.0) + "%");//진척률
 		row.getCell(10).setCellStyle(projectStyle);
-		row.createCell(11).setCellValue(project.get("progress").toString());//numbering
+		row.createCell(11).setCellValue((Math.round(pProgress * 10) / 10.0) + "%");//지연율
 		row.getCell(11).setCellStyle(projectStyle);
-		row.createCell(12).setCellValue(project.get("planStartDate").toString());//numbering
+		row.createCell(12).setCellValue(project.get("planStartDate").toString());//계획 종료일
 		row.getCell(12).setCellStyle(projectStyle);
-		row.createCell(13).setCellValue(project.get("planEndDate").toString());//numbering
+		row.createCell(13).setCellValue(project.get("planEndDate").toString());//계획 시작일
 		row.getCell(13).setCellStyle(projectStyle);
-		row.createCell(14).setCellValue(100);//numbering
+		row.createCell(14).setCellValue(100 + "%");//가중치
 		row.getCell(14).setCellStyle(projectStyle);
-		row.createCell(15).setCellValue(project.get("workingday").toString());//numbering
+		
+		//working day
+		float pWorkingday = Float.parseFloat(project.get("workingday").toString());
+		row.createCell(15).setCellValue(Math.floor(pWorkingday));//계획 일수
 		row.getCell(15).setCellStyle(projectStyle);
-		row.createCell(16).setCellValue("");//numbering
+		row.createCell(16).setCellValue("");//담당자
 		row.getCell(16).setCellStyle(projectStyle);
-		row.createCell(17).setCellValue("");//numbering
+		row.createCell(17).setCellValue("");//산출물
 		row.getCell(17).setCellStyle(projectStyle);
-		row.createCell(18).setCellValue(project.get("progress").toString());//numbering
+		row.createCell(18).setCellValue(project.get("progress").toString());//업무 수
 		row.getCell(18).setCellStyle(projectStyle);
 		
 		//프로젝트 기간에 그래프 색칠 
@@ -4715,7 +4729,29 @@ public class EzPMSController {
 			}
 			
 			//작업 구분
-			row.createCell(6).setCellValue(content.get("status").toString());
+			String statusStr = content.get("status").toString();
+			
+			if (statusStr != null && !statusStr.equals("")) {
+				switch (statusStr) {
+				case "L":
+					statusStr = "지연";
+					break;
+				case "W":
+					statusStr = "대기";
+					break;
+				case "P":
+					statusStr = "진행";
+					break;
+				case "C":
+					statusStr = "완료";
+					break;
+				case "S":
+					statusStr = "보류";
+					break;
+				}
+			}
+			
+			row.createCell(6).setCellValue(statusStr);
 			String realStartDate = "";
 			String realEndDate = "";
 			
@@ -4730,12 +4766,23 @@ public class EzPMSController {
 			row.createCell(7).setCellValue(realStartDate);
 			row.createCell(8).setCellValue(realEndDate);
 			row.createCell(9).setCellValue(content.get("workingday").toString());
-			row.createCell(10).setCellValue(content.get("realProgress").toString());
+			
+			float contProgress = Float.parseFloat(content.get("realProgress").toString());
+			row.createCell(10).setCellValue((Math.round(contProgress * 10) / 10.0) + "%");
 			row.createCell(11).setCellValue("0%"); //지연율
 			row.createCell(12).setCellValue(content.get("planStartDate").toString());
 			row.createCell(13).setCellValue(content.get("planEndDate").toString());
-			row.createCell(14).setCellValue(content.get("weight").toString());
-			row.createCell(15).setCellValue(content.get("workingday").toString());
+			
+			float contWeight = Float.parseFloat(content.get("weight").toString());
+			row.createCell(14).setCellValue((Math.round(contWeight * 10) / 10.0) + "%");
+			
+			if (content.get("workingday") != null) {
+				float workingday = Float.parseFloat(content.get("workingday").toString());
+				row.createCell(15).setCellValue(Math.floor(workingday));
+			} else {
+				row.createCell(15).setCellValue("");
+			}
+			
 			row.createCell(16).setCellValue("담당자");
 			row.createCell(17).setCellValue("");
 			row.createCell(18).setCellValue("1");
@@ -4781,7 +4828,7 @@ public class EzPMSController {
 		sheet.setColumnWidth(3, 340);
 		sheet.setColumnWidth(4, 340);
 		sheet.setColumnWidth(5, 8000);
-		sheet.setColumnWidth(6, 2000);
+		sheet.setColumnWidth(6, 1300);
 		sheet.setColumnWidth(7, 4000);
 		sheet.setColumnWidth(8, 4000);
 		sheet.setColumnWidth(9, 50);
@@ -4790,7 +4837,7 @@ public class EzPMSController {
 		sheet.setColumnWidth(12, 4000);
 		sheet.setColumnWidth(13, 4000);
 		sheet.setColumnWidth(14, 50);
-		sheet.setColumnWidth(15, 2000);
+		sheet.setColumnWidth(15, 1500);
 		sheet.setColumnWidth(16, 4000);
 		sheet.setColumnWidth(17, 8000);
 		sheet.setColumnWidth(18, 2000);
