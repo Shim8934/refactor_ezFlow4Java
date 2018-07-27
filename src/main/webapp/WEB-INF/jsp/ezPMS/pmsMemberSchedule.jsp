@@ -54,6 +54,10 @@ function setMemberScheduleList() {
 		}
 	}
 	
+	if(filteredDateList.length == 0) {
+		return;
+	}
+	
 	$("#calendar").css("width", filteredDateList.length * 26 + 1);
 	
 	var tmp = filteredDateList[0].date.substring(0, 7);
@@ -68,7 +72,13 @@ function setMemberScheduleList() {
 		} else {
 			var month = tmp.charAt(5) == '0' ? tmp.substring(6) : tmp.substring(5);
 			var year  = tmp.substring(0, 4);
-			$("#dateListHeader1").append('<th colspan=' + monthCount + '>' + '<spring:message code="ezPMS.t341" arguments="' + month + '"/> ' + year + '</th>');
+			
+			if(monthCount == 1) {
+				$("#dateListHeader1").append('<th colspan=' + monthCount + '>' + '<spring:message code="ezPMS.t341" arguments="' + month + '"/></th>');
+			} else {
+				$("#dateListHeader1").append('<th colspan=' + monthCount + '>' + '<spring:message code="ezPMS.t341" arguments="' + month + '"/> ' + year + '</th>');
+			}
+			
 			monthCount = 1;
 		}
 		
@@ -85,7 +95,12 @@ function setMemberScheduleList() {
 	
 	var month = tmp.charAt(5) == '0' ? tmp.substring(6) : tmp.substring(5);
 	var year  = tmp.substring(0, 4);
-	$("#dateListHeader1").append('<th colspan=' + monthCount + '>' + '<spring:message code="ezPMS.t341" arguments="' + month + '"/> ' + year + '</th>');
+	
+	if(monthCount == 1) {
+		$("#dateListHeader1").append('<th colspan=' + monthCount + '>' + '<spring:message code="ezPMS.t341" arguments="' + month + '"/></th>');
+	} else {
+		$("#dateListHeader1").append('<th colspan=' + monthCount + '>' + '<spring:message code="ezPMS.t341" arguments="' + month + '"/> ' + year + '</th>');
+	}
 	
 	// 멤버 스케쥴을 테이블에 반영
 	setMemberSchedule();
@@ -262,7 +277,6 @@ window.onload = function() {
 
 #calendar {
 	max-width : 84%;
-	min-width : 73px;
 	display : inline-block;
 	height : 100%;
 	overflow-x : scroll;
@@ -308,7 +322,7 @@ window.onload = function() {
 #dateListHeader2{text-align:center; height: 20px; padding: 2px 2px; }
 #dateListHeader2 th{height: 20px; min-width:25px; padding: 2px 0px;}
 #dateListHeader1{padding: 2px 4px; height: 20px;}
-#dateListHeader1 th{height: 20px;}
+#dateListHeader1 th{padding: 2px 0px; height: 20px;}
 .dateList td.holyday{text-align:center; background-color: #FFFAF2;}
 .dateList td, #dateListHeader1 th, #dateListHeader2 th{text-align:center;}
 </style>
