@@ -128,7 +128,7 @@
 	   		
 	   		//오른쪽 리스트에서 클릭이벤트 적용
 	   		function setMainListUserAuthorDept(elem) {
-	   			var tableId = cancelSelectTr(elem);
+	   			var tableId = $(elem).parent().parent().parent().attr("id");
 	   			var rowId = elem.getAttribute("id");
 	   			
 	   			var listTable = document.getElementById(tableId);
@@ -616,7 +616,7 @@
 		                	}
 		                	
 		                	$(obj).addClass("selectTR");
-		                	selUserList.push(obj);
+		                	selUserList[selUserList.length] = obj;
 		                    listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
 		                }
 						return;

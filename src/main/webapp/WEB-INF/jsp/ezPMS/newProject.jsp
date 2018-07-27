@@ -129,6 +129,7 @@ var headManagerObj = {};
    		headManagerName = writerName;
 	}
 	applyHeadManager();
+	document.getElementById("projectName").focus();
  
  });
 
