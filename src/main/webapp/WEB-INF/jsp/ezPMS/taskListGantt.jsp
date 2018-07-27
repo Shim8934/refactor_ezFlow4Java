@@ -795,7 +795,7 @@
 
 	   			  row.find(".taskRowIndex").html(task.getRow() + 1);
 	   			  row.find(".indentCell").css("padding-left", task.level * 15 + 18);
-	   			  row.find("[name=name]").val(task.name).prop("readonly", true).css({"color":"black", "width":"calc(100% - 28px)"});
+	   			  row.find("[name=name]").val(task.name).prop("readonly", false).css({"color":"black", "width":"calc(100% - 28px)"});
 	   			  row.find("[name=code]").val(task.code);
 	   			  row.find("[status]").attr("status", task.status);
 
@@ -1198,6 +1198,7 @@
 		   		document.querySelector("#pmsGanttViewBtn select").onchange = function(){setMyTaskList(this.value);}
 		   		$(document).on("change", "input[name='weight']", function(){ updateWeight(this); });
 		   		$(document).on("change", "input[name='realProgress']", function(){ updateProgress(this); });
+		   		$(document).on("change", "input[name='name']", function(){ updateTaskName(this); });
 		   	}
 	   		
 	   		function changeGanttOrder(targetTaskId, toGroupId, fromGroupId) {
@@ -1601,7 +1602,7 @@
 	   							infoHTML += "<div class='tooltipText'>";
 	   							infoHTML += "<spring:message code='ezPMS.t61' /> : " + start + "<br>";
 	   							infoHTML += "<spring:message code='ezPMS.t62' /> : " + end + "<br>";
-	   							infoHTML += "<spring:message code='ezPMS.t36' /> : " + ge.tasks[i].duration + "<br>";
+	   							infoHTML += "<spring:message code='ezPMS.t352' /> : " + ge.tasks[i].duration + "<br>";
 	   							infoHTML += "<spring:message code='ezPMS.t250' /> : " + ge.tasks[i].progress + "%";
 	   							infoHTML += "</div>";
 	   						}
@@ -1614,7 +1615,7 @@
 						infoHTML += "<div class='tooltipText'>";
 						infoHTML += "<spring:message code='ezPMS.t61' /> : " + start + "<br>";
 						infoHTML += "<spring:message code='ezPMS.t62' /> : " + end + "<br>";
-						infoHTML += "<spring:message code='ezPMS.t36' /> : " + ge.tasks[0].duration + "<br>";
+						infoHTML += "<spring:message code='ezPMS.t352' /> : " + ge.tasks[0].duration + "<br>";
 						infoHTML += "<spring:message code='ezPMS.t250' /> : " + ge.tasks[0].progress + "<br>";
 						infoHTML += "</div>";
 	   				}
@@ -1736,6 +1737,87 @@
 	   			document.exportGantt.method = "POST";
 	   			document.exportGantt.submit();
 			}
+	   		
+	   		function updateTaskName(elem){
+	   			var curTask = ge.currentTask;
+		   		var newTaskName = elem.value.trim();
+		   		var prevTaskName = curTask.name;
+		   		var taskType = curTask.type;
+		   		var taskId = getIdAndgroupId(curTask,taskType).id;
+		   		var prevTasks = Array.prototype.slice.call(ge.tasks);
+		   		var upperGroupId = getIdAndgroupId(curTask,taskType).groupId;
+		   		var flag = true;
+		   		
+		   		if(newTaskName === prevTaskName){
+		   			return;
+		   		}
+		   		
+		   		//업무 이름 길이 제한
+		   		if (newTaskName.length == 0) {
+		   			alert("<spring:message code='ezPMS.t90' />");
+		   			flag = false;
+		   		} else if (newTaskName.length > 100) {
+		   			alert("<spring:message code='ezPMS.t91' />");
+		   			flag = false;
+		   		}
+		   		
+		   		if(!flag){
+		   			ge.loadTasks(prevTasks);
+   					ge.redraw();
+	   				return;
+		   		}
+	   			
+		   		var data = {
+						taskName : newTaskName,
+						taskType : taskType,
+						taskId : taskId,
+						projectId : projectId,
+						groupId : upperGroupId
+				}
+		   		
+				$.ajax({
+					type : "POST",
+					url : "/ezPMS/updateTaskName.do",
+					dataType : "json",
+					contentType: "application/json; charset=UTF-8",
+					data : JSON.stringify(data),
+					success : function(data) {
+						var logContent = "<spring:message code='ezPMS.t351' arguments='" + prevTaskName + "," + newTaskName +"'/>"; 
+	   					if(taskType == "p"){
+							addTaskLog(projectId, 2, null, null, logContent);
+	   					} else if(taskType == "t") {
+							addTaskLog(projectId, 2, groupId, taskId, logContent);
+	   					} else {
+	   						var groupId = taskId;
+							addTaskLog(projectId, 2, groupId, null, logContent);
+	   					}
+	   					
+					}
+				});
+	   		
+	   		}
+	   		
+	   		function getIdAndgroupId(task, taskType){
+	   			var targetId = "";
+	   			var groupId = "";
+	   			if(taskType === "p"){
+	   				targetId = task.id.match(/p(\d+)/)[1];
+	   				groupId = projectGroupId;
+		   		}else if(taskType === "t"){
+		   			targetId = task.id.match(/t(\d+)/)[1];
+		   			if(task.id.indexOf("g") == -1){
+		   				groupId = projectGroupId;
+		   			}else{
+		   				groupId = task.id.match(/g(\d+)/)[1];
+		   			}
+		   		}else{
+		   			targetId = task.id.match(/g(\d+)/)[1];
+		   			var ancestorGroupArr = task.code.split(",");
+		   			groupId = ancestorGroupArr[ancestorGroupArr.indexOf(targetId) - 1];
+		   		}
+	   			
+	   			return {"id" : targetId, "groupId" : groupId}
+	   		}
 	   		
 		</script>
 		<style>
@@ -2296,18 +2378,18 @@
 			    <tr style="height:40px">
 			      <th class="gdfColHeader" style="width:35px; border-right: none"></th>
 			      <th class="gdfColHeader" style="width:25px; display:none;"></th>
-			      <th class="gdfColHeader gdfResizable" style="width:240px;">업무명</th>
+			      <th class="gdfColHeader gdfResizable" style="width:240px;"><spring:message code='ezPMS.t98'/></th>
 			      <th class="gdfColHeader gdfResizable" style="width:100px; display:none;">code/short name</th>
 			      <th class="gdfColHeader"  align="center" style="width:17px; display:none;" title="Start date is a milestone."><span class="teamworkIcon" style="font-size: 8px;">^</span></th>
-			      <th class="gdfColHeader gdfResizable" style="width:80px;">시작일</th>
+			      <th class="gdfColHeader gdfResizable" style="width:80px;"><spring:message code='ezPMS.t61'/></th>
 			      <th class="gdfColHeader"  align="center" style="width:17px; display:none;" title="End date is a milestone."><span class="teamworkIcon" style="font-size: 8px;">^</span></th>
-			      <th class="gdfColHeader gdfResizable" style="width:80px;">완료일</th>
-			      <th class="gdfColHeader gdfResizable" style="width:50px;">남은기간</th>
-			      <th class="gdfColHeader gdfResizable" style="width:50px;">가중치</th>
-			      <th class="gdfColHeader gdfResizable" style="width:60px;">실제진행률</th>
-			      <th class="gdfColHeader gdfResizable" style="width:60px;">목표진행률</th>
-			      <th class="gdfColHeader gdfResizable requireCanSeeDep" style="width:50px;">선행작업</th>
-			      <th class="gdfColHeader gdfResizable" style="width:1000px; text-align: left; padding-left: 10px;">담당자</th>
+			      <th class="gdfColHeader gdfResizable" style="width:80px;"><spring:message code='ezPMS.t62'/></th>
+			      <th class="gdfColHeader gdfResizable" style="width:50px;"><spring:message code='ezPMS.t352'/></th>
+			      <th class="gdfColHeader gdfResizable" style="width:50px;"><spring:message code='ezPMS.t267'/></th>
+			      <th class="gdfColHeader gdfResizable" style="width:60px;"><spring:message code='ezPMS.t178'/><spring:message code='ezPMS.t250'/></th>
+			      <th class="gdfColHeader gdfResizable" style="width:60px;"><spring:message code='ezPMS.t177'/><spring:message code='ezPMS.t250'/></th>
+			      <th class="gdfColHeader gdfResizable requireCanSeeDep" style="width:50px;"><spring:message code='ezPMS.t181'/></th>
+			      <th class="gdfColHeader gdfResizable" style="width:1000px; text-align: left; padding-left: 10px;"><spring:message code='ezPMS.t63'/></th>
 			    </tr>
 			    </thead>
 			  </table>

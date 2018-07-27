@@ -2061,10 +2061,12 @@ public class EzPMSGWController {
 			List<ProjectTaskVO> taskList = new ArrayList<ProjectTaskVO>();
 			taskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow, position, roleId,
 					deptId);
-
+			
+			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			
 			for (int i = 0; i < taskList.size(); i++) {
-				Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskList.get(i).getPlanStartDate());
-				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskList.get(i).getPlanEndDate());
+				Date startDate = sdf.parse(taskList.get(i).getPlanStartDate());
+				Date endDate = sdf.parse(taskList.get(i).getPlanEndDate());
 //				Date today = new Date();
 //				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 //				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
@@ -5180,6 +5182,95 @@ public class EzPMSGWController {
 		}
 
 		LOGGER.debug("ezPMS G/W [DELETE /rest/ezPMS/projects/" + projectId + "/board/folders/" + folderId + "] ended");
+		return result;
+	}
+	
+	/**
+	 * 프로젝트관리 업무 수정
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/name/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject updateTaskName(@PathVariable String taskId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/name/users/" + userId + "] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			int tenantId = info.getTenantId();
+			String companyId = info.getCompanyId();
+			Long groupId = Long.parseLong(request.getParameter("groupId"));
+			String taskType = request.getParameter("taskType").toString();
+			String projectId = request.getParameter("projectId");
+
+			// 권한 체크
+			String roleCheck = "";
+
+			// 권한 체크
+			// 1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
+			int userProjectRole = ezPMSService.getUserProjectRole(userId, tenantId, Long.parseLong(projectId), info.getDeptId());
+			if (userProjectRole == 1) {
+				roleCheck = "permitted";
+			} else if (userProjectRole == 3) {
+				// 프로젝트 조회자는 열람권한밖에 없음
+				roleCheck = "rejected";
+			} else {
+				int userGroupRole = 0;
+
+				// upperGroupId가 0이아닌 상위 그룹이 있다면 담당자인지
+				long upperGroupId = ezPMSService.getUpperGroupId(groupId, Long.parseLong(projectId), tenantId);
+
+				if (upperGroupId != 0) {
+					// 해당 그룹의 담당자인지 해당 그룹에 해당이 안되면 roleId는 참여자(2)
+					userGroupRole = ezPMSService.getUserGroupRole(userId, tenantId, Long.parseLong(projectId), groupId);
+
+					if (userGroupRole != 1) {
+						userGroupRole = ezPMSService.getUserGroupRole(userId, tenantId, Long.parseLong(projectId),
+								upperGroupId);
+					}
+				}
+
+				// userGroupRole이 2일때 업무 담당자인지도 확인
+				if (userGroupRole == 2) {
+					String taskRole = ezPMSService.getUserTaskRole(userId, tenantId, Long.parseLong(taskId));
+
+					if (taskRole != null) {
+						userGroupRole = 1;
+					}
+				}
+
+				if (userGroupRole != 1) {
+					roleCheck = "rejected";
+				} else {
+					roleCheck = "permitted";
+				}
+			}
+
+			if (roleCheck.equals("permitted")) {
+
+				ProjectTaskVO projectTaskVO = new ProjectTaskVO();
+				projectTaskVO.setTenantId(tenantId);
+				projectTaskVO.setTaskId(Long.parseLong(request.getParameter("taskId")));
+				projectTaskVO.setProjectId(Long.parseLong(request.getParameter("projectId")));
+				projectTaskVO.setGroupId(Long.parseLong(request.getParameter("groupId")));
+				projectTaskVO.setTaskName(request.getParameter("taskName"));
+				
+				ezPMSService.updateTaskNameGantt(projectTaskVO, taskType);
+
+			}
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", roleCheck);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/name/users/" + userId + "] ended.");
 		return result;
 	}
 }

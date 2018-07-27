@@ -1568,8 +1568,7 @@ public class EzPMSController {
 					if (status.equals("ok")) {
 						JSONObject data = (JSONObject) result.get("data");
 						model.addAttribute("taskList", data.get("taskList"));
-						// model.addAttribute("userRoleId",
-						// data.get("userRoleId"));
+						model.addAttribute("userRoleId", data.get("userRoleId"));
 						model.addAttribute("position", param.get("position"));
 
 						if (data.get("groupDetail") == null) {
@@ -5146,5 +5145,39 @@ public class EzPMSController {
 		System.out.println(request.getParameter("taskLevel"));
 		workbook.close();
 		LOGGER.debug("ezPMS exportGanttExcel ended.");
+	}
+	
+	/**
+	 * 프로젝트, 그룹, 업무의 이름 변경(간트차트)
+	 * @param request
+	 * @param model
+	 * @param loginCookie
+	 * @return
+	 */
+	@RequestMapping(value="/ezPMS/updateTaskName.do")
+	@ResponseBody
+	public String updateTaskName(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) {
+		
+		LOGGER.debug("ezPMS updateTaskName started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		
+		String taskId = (String)param.get("taskId");
+		
+		String url = "/rest/ezPMS/tasks/" + taskId + "/name/users/" + userId;
+				
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, param, request, "put", null);
+		String status = resultBody.get("status").toString();
+		String roleCheck = "";
+		
+		if(status.equals("ok")) {
+			roleCheck = resultBody.get("data").toString();
+		}
+		
+		LOGGER.debug("[result] roleCheck : " + roleCheck);
+		LOGGER.debug("ezPMS updateTaskName ended");
+		
+		return roleCheck;
 	}
 }
