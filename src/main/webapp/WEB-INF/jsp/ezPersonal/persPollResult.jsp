@@ -23,11 +23,18 @@
             	border: 1px solid #ddd;
         	}
         	.question p {
-	            margin: 0px;
+        		/* 2018-07-27 김보미 */
+	            /* margin: 0px; */
+	            margin: 0px 0px 4px 0px;
             	padding: 0px;
             	font-size: 12px;
             	font-weight: bold;
             	color: #4a83d5;
+        	}
+        	/* 2018-07-27 김보미 */
+        	.question span {
+        		display: block;
+        		padding-right: 2px;
         	}
     	</style>
 		<script type="text/javascript">
@@ -57,9 +64,14 @@
     	<table id="popupContentTb">
 	        <tr>
     	        <td>
-        	        <div class="question" style="overflow-y:auto;width:378px">
+    	        	<!-- 2018-07-27 김보미 - 스크롤바 생성 제거, ellipsis처리 -->
+<!--         	        <div class="question" style="overflow-y:auto;width:378px"> -->
+<%-- 	        	        <p><spring:message code='ezPersonal.t2000' />:</p> --%>
+<%--                     	<span>${subject}</span> --%>
+<!--                 	</div> -->
+        	        <div class="question" style="overflow-y:hidden;width:378px">
 	        	        <p><spring:message code='ezPersonal.t2000' />:</p>
-                    	<span>${subject}</span>
+                    	<span title='${subject}'>${subjectCont}</span>
                 	</div>
             	</td>
         	</tr>
