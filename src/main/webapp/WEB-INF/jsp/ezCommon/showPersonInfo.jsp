@@ -138,7 +138,8 @@
 				
 				<table class="content" style="margin-top:10px" >
 					<tr>
-						<th><spring:message code='main.t79' /></th>
+						<%-- <th><spring:message code='main.t79' /></th> --%>
+						<th><spring:message code='ezPersonal.t177' /></th>
 						<td colspan="2" width="100%">${LiteralPhone }</td>
 					</tr>
 					<tr>

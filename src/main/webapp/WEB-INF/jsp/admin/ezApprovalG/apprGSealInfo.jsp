@@ -94,11 +94,11 @@
 	        </ul>
 	    </div>
 	
-	    <table class="content">
+	    <table class="content" style="width:485px">
 	        <tr>
 	        	<c:choose>
 					<c:when test="${pDeptYN == 'Y' }">
-						<th><spring:message code = 'ezApprovalG.t1250' /></th>
+						<th style="width:80px"><spring:message code = 'ezApprovalG.t1250' /></th>
 					</c:when>
 					<c:otherwise>
 						<th><spring:message code = 'ezApprovalG.t1262' /></th>
@@ -133,7 +133,9 @@
 	        </tr>
 	        <tr>
 	            <td colspan="2" style="text-align:center; padding-top:5px; padding-bottom:5px;">
+	            	<div style="width:475px;height:190px;overflow: auto">
 	                  <img id="signimage" alt="" src="" />
+	                </div> 
 	            </td>
 	        </tr>
 	    </table>

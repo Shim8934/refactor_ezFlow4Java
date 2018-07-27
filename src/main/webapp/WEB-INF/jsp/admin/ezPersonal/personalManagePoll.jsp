@@ -345,7 +345,7 @@
 		</xml>
 		
 	    <form method="post">
-	        <h1>Quick Poll<span id="mailBoxInfo"></span></h1>
+	        <h1>Quick Poll<span id="mailBoxInfo" style="display:none"></span></h1>
 	        <div id="mainmenu">
 	        	<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
 				    <select id="ListCompany" onChange="company_change()">
@@ -354,10 +354,10 @@
 		            	</c:forEach>
 				    </select><br /><br />
 			    </span>
-	            <ul>
+				<ul style="margin-top:15px">	            	
 	                <li><span onclick="add_poll()"><spring:message code = 'ezPersonal.t235' /></span></li>
 	            </ul>
-	        </div>
+		  	</div>
 	        
 	        <script type="text/javascript">
 	            selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");

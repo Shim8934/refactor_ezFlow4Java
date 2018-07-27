@@ -280,7 +280,7 @@ function btnChangeCabinet_onclick() {
     selectcabinet_cross_dialogArguments[0] = para;
     selectcabinet_cross_dialogArguments[1] = btnChangeCabinet_onclick_Complete;
 
-    DivPopUpShow(980, 620, url);
+    DivPopUpShow(1000, 620, url);
 
 }
 
