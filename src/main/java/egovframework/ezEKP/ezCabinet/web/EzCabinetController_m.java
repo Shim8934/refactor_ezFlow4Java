@@ -32,10 +32,11 @@ public class EzCabinetController_m {
 	public String jsonSaveRelatedApproval(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveRelatedApproval is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String divContent      = request.getParameter("normalScreen")!= null ? request.getParameter("divContent"):     "";
+		String divContent      = request.getParameter("content")!= null ? request.getParameter("content"):     "";
 		JSONObject resultObj   = new JSONObject();
 		
 		if (divContent.equals("")) {
+			logger.debug("Invalid parameter!");
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();

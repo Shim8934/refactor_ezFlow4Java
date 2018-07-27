@@ -196,8 +196,13 @@
 					var messageFrame = window.opener.document.getElementById("message");
 					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
 					var divContent   = contentWd.document.getElementById("div_Content").innerHTML;
+					
 					var url          = "/ezCabinet/saveRelatedApproval.do";
-					var data         = {type: moduleType, mode: saveMode, content: JSON.stringify(divContent)};
+					var data         = {
+						type   : moduleType, 
+						mode   : saveMode, 
+						content: JSON.stringify(divContent)
+					};
 					console.log(data);
 					
 					if (saveMode == 1) {data.cabinetId = cabinetId;}
