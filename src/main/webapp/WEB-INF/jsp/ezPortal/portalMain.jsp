@@ -109,12 +109,10 @@
 	        	var opendMemo = $("#selected-memo");
 
 				if (className.indexOf("layer-half") != -1) {
-	        		console.log("half: " + className);
 	        		layerHalf.css({"top":65, "left": winWidth/2, "right" : 10, "width" : winWidth/2 - 20, "height":winHeight - 56 - 30});
 	        		maskDiv.css({"top":0, "left":0, "width" : winWidth/2 - 20, "height":winHeight - 56 - 30});
 	        		opendMemo.css({"top":10, "left":10, "width" : winWidth/2 - 50, "height":winHeight - 56 - 50})
 	        	} else if (className.indexOf("layer-whole") != -1) {
-	        		console.log("whole: " + className);
 	        		layerWhole.css({"top":65, "left": 10, "right" : 20, "width" : winWidth - 30, "height":winHeight - 56 - 30});
 	        		maskDiv.css({"top":0, "left": 0, "width" : winWidth - 30, "height":winHeight - 56 - 30});
 	        		opendMemo.css({"top":20, "left": 20, "width" : winWidth - 90, "height":winHeight - 56 - 90})
@@ -173,21 +171,24 @@
 		        layerPopupOpacity();
 		        
 		        $("#font-up").click(function() {
+		        	
 		        	var textarea = $("#font-up").parent().parent().find("textarea");
 		        	var thisWidth = textarea.css("width");
 		        	var thisHeight = textarea.css("height");
 		        	var thisFont = textarea.css("font-size");
 		        	var fontNum = parseInt(thisFont.substr(0, 2));
 		        	 
-					if (fontNum == 13) {
+					if (fontNum == 15) {
 		        		
-			        	textarea.css("font-size", "large");
-		        	} else if (fontNum == 12) {
+			        	textarea.css("font-size", "20px");
+		        	} else if (fontNum == 10) {
 		        		
-			        	textarea.css("font-size", "1em");
+			        	textarea.css("font-size", "15px");
 		        	}
 		        	
+					console.log(thisWidth);
 		        	textarea.css("width", thisWidth);
+		        	
 		        	textarea.css("height", thisHeight);
 		        });
 		        
@@ -198,12 +199,12 @@
 		        	var thisFont = textarea.css("font-size");
 		        	var fontNum = parseInt(thisFont.substr(0, 2));
 		        	
-		        	if (fontNum == 16) {
+		        	if (fontNum == 20) {
 		        		
-			        	textarea.css("font-size", "1em");
-		        	} else if (fontNum == 13) {
+			        	textarea.css("font-size", "15px");
+		        	} else if (fontNum == 15) {
 		        		
-			        	textarea.css("font-size", "small");
+			        	textarea.css("font-size", "10px");
 		        	}
 		        	textarea.css("width", thisWidth);
 		        	textarea.css("height", thisHeight);
@@ -294,7 +295,7 @@
 		        	var currText = $(this).children(".memo-text").val();
 		        	$("#maskDiv").css("display", "");
 			        $("#selected-memo").css("display", "");
-			        $("#textarea").css("font-size", "1em");
+			        $("#textarea").css("font-size", "15px");
 			        $("#font-btn").css("display", "");
 			        $("#textarea").val(currText);
 			        
