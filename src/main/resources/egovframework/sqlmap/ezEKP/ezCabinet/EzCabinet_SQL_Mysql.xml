@@ -14,6 +14,7 @@
 	<typeAlias alias="CabinetItemSimpleVO"  type="egovframework.ezEKP.ezCabinet.vo.CabinetItemSimpleVO"/>
 	<typeAlias alias="CabinetSimpleUserVO"  type="egovframework.ezEKP.ezCabinet.vo.SimpleUserVO"       />
 	<typeAlias alias="CabinetShareVO"       type="egovframework.ezEKP.ezCabinet.vo.CabinetShareVO"     />
+	<typeAlias alias="CabinetColumnVO"      type="egovframework.ezEKP.ezCabinet.vo.CabinetColumnVO"    />
 	
 	<!-- SimpleDept resultMap -->
 	<resultMap id="simpleDeptVO" class="cabinetSimpleDeptVO">
@@ -424,6 +425,10 @@
 	
 	<select id="EzCabinetDAO.getCabinetById" resultMap="cabinetVO">
 		<![CDATA[ select * from tbl_cb_cabinet where cabinet_id = #cabinetId# and tenant_id = #tenantId# ]]>
+	</select>
+	
+	<select id="EzCabinetDAO.getRootCabinetByType" resultMap="cabinetVO">
+		<![CDATA[ select * from tbl_cb_cabinet where cabinet_type = #type# and parent_id = -1 and creator_id = #userId# and tenant_id = #tenantId# ]]>
 	</select>
 	
 	<insert id="EzCabinetDAO.insertCabinet" parameterClass="CabinetVO">
@@ -974,4 +979,13 @@
 					(s.cabinet_id = #cabinetId# and s.child_permission = 1)
 				)
 	</select>
+	
+	<!--***********************************************************************************
+	**                              Cabinet related column process                       **
+	************************************************************************************-->
+	
+	<insert id="EzCabinetDAO.saveRelatedColumn" parameterClass="CabinetColumnVO">
+		<![CDATA[ insert into tbl_cb_rel (rel_id, item_id, rel_name1, rel_name2, rel_value, company_id, tenant_id) values (#columnId#, #itemId#, #columnName1#, #columnName2#, #columnValue#, #companyId#, #tenantId#) ]]>
+	</insert>
+	
 </sqlMap>

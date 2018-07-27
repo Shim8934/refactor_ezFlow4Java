@@ -700,21 +700,21 @@ public class EzCabinetController {
 		String title           = request.getParameter("title")     != null ? request.getParameter("title")     : "";
 		String sender          = request.getParameter("sender")    != null ? request.getParameter("sender")    : "";
 		String attach          = request.getParameter("attach")    != null ? request.getParameter("attach")    : "";
-		String type            = request.getParameter("type")      != null ? request.getParameter("type")      : "";
 		String mode            = request.getParameter("mode")      != null ? request.getParameter("mode")      : "";
 		String cabinetId       = request.getParameter("cabinet")   != null ? request.getParameter("cabinet")   : "";
 		String content         = request.getParameter("content")   != null ? request.getParameter("content")   : "";
 		String receiver        = request.getParameter("receiver")  != null ? request.getParameter("receiver")  : "";
 		String forward         = request.getParameter("forward")   != null ? request.getParameter("forward")   : "";
+		String dateTime        = request.getParameter("crdDate")   != null ? request.getParameter("crdDate")   : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		if (title.equals("") || sender.equals("") || type.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || receiver.equals("")) {
+		if (title.equals("") || sender.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || receiver.equals("") || dateTime.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.saveRelatedEmail(request, userInfo.getId(), title, sender, attach, type, mode, cabinetId, content, receiver, forward);
+		resultObj = cabinetRestService.saveRelatedEmail(request, userInfo.getId(), title, sender, attach, mode, cabinetId, content, receiver, forward, dateTime);
 		
 		logger.debug("jsonSaveRelatedEmail finishes!");
 		return resultObj.toString();

@@ -1,14 +1,12 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import java.util.List;
-
+import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
-
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemSimpleVO;
@@ -79,6 +77,9 @@ public interface EzCabinetService {
 	void deleteItems(List<Integer> itemIdList, LoginVO userInfo) throws Exception;
 	JSONObject moveItems(String realPath, int cabinetId, String mode, List<Integer> itemIdList, LoginVO userInfo) throws Exception;
 	
-	//Get item size
+	//Get item size function
 	public long getTotalItemsSize(List<Integer> itemIdList, LoginVO userInfo) throws Exception;
+	
+	//Save related item functions
+	JSONObject saveEmailItem(String realPath, int parseInt, String title, String sender, String attach, String mode, String content, String receiver, String forward, String dateTime, Locale locale, LoginVO userInfo) throws Exception;
 }

@@ -158,10 +158,10 @@
 							var spElmt  = listChildren[i].firstElementChild;
 							var hrefStr = spElmt.getAttribute("_filehref");
 							var params  = getAllUrlParams(hrefStr);
+							console.log(params);
 							
 							normalList.push({
 								fileHref : params,
-								fileSize : spElmt.getAttribute("_filesize"),
 								fileName : spElmt.getAttribute("_filename")
 							});
 						}
@@ -176,7 +176,6 @@
 					
 					var url  = "/ezCabinet/saveRelatedEmail.do";
 					var data = {
-						type      : moduleType,
 						mode      : saveMode,
 						title     : mailSubject,
 						sender    : senderEmail,
@@ -258,52 +257,42 @@
 				function afterSaveSuccessfully() {alert(CabinetMessages.strSave); closeWindow();}
 				
 				function getAllUrlParams(url) {
-					// get query string from url
 					var queryString = url.split('?')[1];
-					var obj = {};
+					var obj         = {};
 					
-					// if query string exists
 					if (queryString) {
-						// stuff after # is not part of query string, so get rid of it
+						// remove all #
 						queryString = queryString.split("#")[0];
-						// split our query string into its component parts
-						var arr = queryString.split("&");
+						var arr     = queryString.split("&");
 						
 						for (var i=0; i<arr.length; i++) {
 							var a = arr[i].split("=");
-							// in case params look like: list[]=thing1&list[]=thing2
+							
 							var paramNum = undefined;
 							var paramName = a[0].replace(/\[\d*\]/, function(v) {
 								paramNum = v.slice(1,-1);
 								return '';
 							});
 							
-							// set parameter value (use 'true' if empty)
+							// Set parameter value (use 'true' if empty)
 							var paramValue = typeof(a[1]) === "undefined" ? true : a[1];
 							
-							// (optional) keep case consistent
-							paramName  = paramName.toLowerCase();
-							paramValue = paramValue.toLowerCase();
+							// Keep case consistent
+							//paramName  = paramName.toLowerCase();
+							//paramValue = paramValue.toLowerCase();
 							
 							// if parameter name already exists
 							if (obj[paramName]) {
-								// convert value to array (if still string)
-								if (typeof obj[paramName] === "string") {
-									obj[paramName] = [obj[paramName]];
-								}
+								if (typeof obj[paramName] === "string") {obj[paramName] = [obj[paramName]];}
 								
 								// if no array index number specified
 								if (typeof paramNum === 'undefined') {
-									// put the value on the end of the array
 									obj[paramName].push(paramValue);
 								}
-								// if array index number specified
 								else {
-									// put the value at that index number
 									obj[paramName][paramNum] = paramValue;
 								}
 							}
-							// if param name doesn't exist yet, set it
 							else {
 								obj[paramName] = paramValue;
 							}

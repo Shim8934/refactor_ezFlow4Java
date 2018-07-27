@@ -4,6 +4,10 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,29 +18,34 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Part;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
-
+import com.sun.mail.imap.IMAPFolder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetColumnVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemSimpleVO;
@@ -49,6 +58,9 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleUserVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -56,14 +68,23 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetService {
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetServiceImpl.class);
 	
+	@Autowired
+	private CommonUtil commonUtil;
+	
+	@Autowired
+	private Properties config;
+	
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
+	
 	@Resource(name = "EzCabinetDAO")
 	private EzCabinetDAO ezCabinetDAO;
 	
 	@Resource(name = "EzCabinetAdminDAO")
 	private EzCabinetAdminDAO ezCabinetAdminDAO;
 	
-	@Autowired
-	private CommonUtil commonUtil;
+	@Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -260,8 +281,8 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		String companyId       = userInfo.getCompanyID();
 		String userId          = userInfo.getId();
 		String primary         = userInfo.getPrimary();
-		String cabinetStr1     = egovMessageSource.getMessage("ezCabinet.t02", new Locale("ko"));
-		String cabinetStr2     = egovMessageSource.getMessage("ezCabinet.t02", new Locale("en"));
+		String cabinetStr1     = egovMessageSource.getMessage("ezCabinet.t02", new Locale(config.getProperty("config.cabinetPrimary")));
+		String cabinetStr2     = egovMessageSource.getMessage("ezCabinet.t02", new Locale(config.getProperty("config.cabinetSecondary")));
 		Map<String,Object> map = new HashMap<String, Object>();
 		
 		map.put("companyId", companyId);
@@ -717,7 +738,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 				item.setUpdateId(userId);
 				item.setCompanyId(userInfo.getCompanyID());
 				
-				ezCabinetDAO.saveItem(item);
+				saveItem(item);
 				
 				map.put("itemId", itemId);
 				List<CabinetAttachFileVO> listAttachFile = ezCabinetDAO.getAllAttachFilesOfItem(map);
@@ -744,7 +765,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 						attach.setItemId(newItemId);
 						attach.setFilePath(newPath);
 						attach.setAttachId(attachId);
-						ezCabinetDAO.saveAttachFile(attach);
+						saveAttachFile(attach);
 						attachId ++;
 					}
 				}
@@ -839,7 +860,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		itemVO.setCompanyId(companyId);
 		itemVO.setTenantId(tenantId);
 		
-		ezCabinetDAO.saveItem(itemVO);
+		saveItem(itemVO);
 		
 		int attachSize  = attacheFiles.size();
 		int relatedSize = relatedFiles.size();
@@ -856,7 +877,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 				long fileSize      = file.length();
 				
 				CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, filePath, fileName, fileSize, companyId, tenantId);
-				ezCabinetDAO.saveAttachFile(attachFile);
+				saveAttachFile(attachFile);
 			}
 		}
 		
@@ -874,6 +895,10 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		}
 	}
 	
+	private synchronized void saveItem(CabinetItemVO itemVO) {
+		ezCabinetDAO.saveItem(itemVO);
+	}
+
 	private String getCabinetDirPath(int tenantId) {
 		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "cabinet" + commonUtil.separator;
 	}
@@ -973,8 +998,8 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		List<CabinetVO> result = new ArrayList<>();
 		
 		for (int moduleType : moduleTypes) {
-			String cabinetStr1 = egovMessageSource.getMessage("ezCabinet.m" + moduleType, new Locale("ko"));
-			String cabinetStr2 = egovMessageSource.getMessage("ezCabinet.m" + moduleType, new Locale("en"));
+			String cabinetStr1 = egovMessageSource.getMessage("ezCabinet.m" + moduleType, new Locale(config.getProperty("config.cabinetPrimary")));
+			String cabinetStr2 = egovMessageSource.getMessage("ezCabinet.m" + moduleType, new Locale(config.getProperty("config.cabinetSecondary")));
 			CabinetVO cabinet  = generateCabinetVO(cabinetStr1, cabinetStr2, 0, moduleType, -1, userInfo);
 			insertCabinet(cabinet);
 			result.add(cabinet);
@@ -1301,5 +1326,223 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		response.getOutputStream().flush();
 		response.getOutputStream().close();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject saveEmailItem(String realPath, int cabinetId, String title, String sender, String attach, String mode, String content, String receiver, String forward, String dateTime, Locale locale, LoginVO userInfo) throws Exception {
+		JSONObject result          = new JSONObject();
+		String userId              = userInfo.getId();
+		int tenantId               = userInfo.getTenantId();
+		String companyId           = userInfo.getCompanyID();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(new Date()), userInfo.getOffset(), true);
+		JSONParser jp              = new JSONParser();
+		int itemCabinetId          = -1;
+		String dateColumn          = userInfo.getEmail().equals(sender) ? "ezEmail.t704" : "ezEmail.t657";
+		Map<String,Object> map     = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//Save item
+		int itemId     = ezCabinetDAO.getMaxItem(map) + 1;
+		int moduleType = 1; //mail module
+		
+		if (mode.equals("0")) {
+			map.put("userId",   userId);
+			map.put("tenantId", tenantId);
+			map.put("type",     moduleType);
+			
+			CabinetVO cabinet = ezCabinetDAO.getRootCabinetByType(map);
+			itemCabinetId     = cabinet.getCabinetId();
+		}
+		else {
+			itemCabinetId = cabinetId;
+		}
+		
+		CabinetItemVO itemVO = new CabinetItemVO();
+		itemVO.setCabinetId(itemCabinetId);
+		itemVO.setItemId(itemId);
+		itemVO.setItemType(moduleType);
+		itemVO.setTitle(title);
+		itemVO.setCreatorId(userId);
+		itemVO.setCreatorName1(userInfo.getDisplayName1());
+		itemVO.setCreatorName2(userInfo.getDisplayName2());
+		itemVO.setDepartmentId(userInfo.getDeptID());
+		itemVO.setDepartmentName1(userInfo.getDeptName1());
+		itemVO.setDepartmentName2(userInfo.getDeptName2());
+		itemVO.setConentPath(content);
+		itemVO.setCreatedDate(timeUTC);
+		itemVO.setUpdatedDate(timeUTC);
+		itemVO.setUseStatus(1);
+		itemVO.setUpdateId(userId);
+		itemVO.setDeleterId(null);
+		itemVO.setCompanyId(companyId);
+		itemVO.setTenantId(tenantId);
+		
+		saveItem(itemVO);
+		
+		//Save email columns information
+		List<CabinetColumnVO> listColm = new ArrayList<>();
+		
+		String senderColName1          = egovMessageSource.getMessage("ezEmail.t161", new Locale(config.getProperty("config.cabinetPrimary")));
+		String senderColName2          = egovMessageSource.getMessage("ezEmail.t161", new Locale(config.getProperty("config.cabinetSecondary")));
+		CabinetColumnVO senderColumn   = new CabinetColumnVO("sender", itemId, senderColName1, senderColName2, sender, companyId, tenantId);
+		listColm.add(senderColumn);
+		
+		List<String> receiverList      = (List<String>) jp.parse(receiver);
+		String receiveColName1         = egovMessageSource.getMessage("ezEmail.t66", new Locale(config.getProperty("config.cabinetPrimary")));
+		String receiveColName2         = egovMessageSource.getMessage("ezEmail.t66", new Locale(config.getProperty("config.cabinetSecondary")));
+		CabinetColumnVO receiverColumn = new CabinetColumnVO("receiver", itemId, receiveColName1, receiveColName2, String.join(";", receiverList), companyId, tenantId);
+		listColm.add(receiverColumn);
+		
+		if (!forward.equals("")) {
+			List<String> forwardList = (List<String>) jp.parse(forward);
+			if (forwardList.size() > 0) {
+				String forwardColName1        = egovMessageSource.getMessage("ezEmail.t555", new Locale(config.getProperty("config.cabinetPrimary")));
+				String forwardColName2        = egovMessageSource.getMessage("ezEmail.t555", new Locale(config.getProperty("config.cabinetSecondary")));
+				CabinetColumnVO forwardColumn = new CabinetColumnVO("forward", itemId, forwardColName1, forwardColName2, String.join(";", forwardList), companyId, tenantId);
+				listColm.add(forwardColumn);
+			}
+		}
+		
+		String dateColName1            = egovMessageSource.getMessage(dateColumn, new Locale(config.getProperty("config.cabinetPrimary")));
+		String dateColName2            = egovMessageSource.getMessage(dateColumn, new Locale(config.getProperty("config.cabinetSecondary")));
+		CabinetColumnVO dateTimeColumn = new CabinetColumnVO("emailTime", itemId, dateColName1, dateColName2, dateTime, companyId, tenantId);
+		listColm.add(dateTimeColumn);
+		
+		saveAllColumns(listColm);
+		
+		//Save attach files
+		String cabinetPath = getCabinetDirPath(tenantId);
+		File file          = new File(realPath + cabinetPath);
+		
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		
+		if (!attach.equals("")) {
+			JSONArray attachList = (JSONArray) jp.parse(attach);
+			int totalCnt         = attachList.size();
+			int attachId         = ezCabinetDAO.getMaxAttachId(map) + 1;
+			for (int i = 0; i < totalCnt; i++, attachId++) {
+				JSONObject attachInf = (JSONObject) attachList.get(i);
+				saveEmailAttachFiles(attachInf, attachId, itemId, realPath, cabinetPath, locale, companyId, userId, tenantId);
+			}
+		}
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
+	
+	private void saveEmailAttachFiles(JSONObject attachInf, int attachId, int itemId, String realPath, String cabinetPath, Locale locale, String companyId, String userId, int tenantId) throws Exception{
+		JSONObject fileHref  = (JSONObject) attachInf.get("fileHref");
+		String fileName      = attachInf.get("fileName").toString();
+		String folderPath    = fileHref.get("folderPath").toString();
+		String uId           = fileHref.get("uid").toString();
+		String fname         = fileHref.get("uid").toString();
+		String strIndex      = fileHref.get("index").toString();
+		String password      = commonUtil.getMailPassword();
+		String domainName    = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String userEmail     = userId + "@" + domainName;
+		int dotPos           = fileName.lastIndexOf(".");
+		String extend        = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
+		String newName       = UUID.randomUUID().toString() + "." + extend;
+		String pDirPath      = realPath + cabinetPath;
+		String filePath      = cabinetPath + newName;
+		String newFilePath   = pDirPath + File.separator + newName;
+		
+		logger.debug("userEmail: " + userEmail);
+		logger.debug("UID: " + uId + " || Folder path: " + folderPath + " || File name: " + fname);
+		
+		int index     = strIndex != null ? Integer.parseInt(strIndex) : -1;
+		int uid       = uId      != null ? Integer.parseInt(uId)      : -1;
+		IMAPAccess ia = null;
+		
+		try {
+			ia       = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale, ezEmailUtil);
+			Folder f = ia.getFolder(folderPath);
+			
+			if (f == null || !f.exists()) {
+				logger.error("Folder not found. folderPath=" + folderPath);
+			}
+			else {
+				f.open(Folder.READ_ONLY);
+				Message message = null;
+				if(f.isOpen() && f instanceof IMAPFolder){
+					message = ((IMAPFolder)f).getMessageByUID(uid);
+				}
+				
+				if (message == null) {
+					logger.error("Message not found. uid=" + uid);
+					throw new FileNotFoundException();
+				}
+				else {
+					Part part = index == -1 ? message : ezEmailUtil.getAttachPart(message, index);
+					
+					if (part == null) {
+						logger.error("AttachPart not found. AttachPartIndex=" + index);
+						throw new FileNotFoundException();
+					}
+					else {
+						InputStream input   = null;
+						OutputStream output = null;
+						
+						try {
+							input              = part.getInputStream();
+							File newAttachFile = new File(newFilePath);
+							output             = new FileOutputStream(newAttachFile);
+							byte[] buffer      = new byte[4096];
+							int byteRead       = 0;
+							
+							while ((byteRead = input.read(buffer)) != -1) {
+								output.write(buffer, 0, byteRead);
+							}
+						}
+						catch(IOException e1) {
+							throw e1;
+						}
+						finally {
+							if (ia != null) {
+								ia.close();
+							}
+							if (input != null) {
+								try { input.close(); } catch (IOException e2) {throw e2;}
+							}
+							if (output != null) {
+								try { output.flush(); } catch (IOException e3) {throw e3;}
+								try { output.close(); } catch (IOException e4) {throw e4;}
+							}
+						}
+						
+					}
+				}
+			}
+		}
+		catch (Exception e5) {
+			throw e5;
+		}
+		finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		//Save Attach to database
+		File readfile = new File(newFilePath);
+		long fileSize = readfile.length();
+		
+		CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, filePath, fileName, fileSize, companyId, tenantId);
+		saveAttachFile(attachFile);
+	}
+	
+	private synchronized void saveAttachFile(CabinetAttachFileVO attachFile) {
+		ezCabinetDAO.saveAttachFile(attachFile);
+	}
+	
+	private synchronized void saveAllColumns(List<CabinetColumnVO> listColm) {
+		for (CabinetColumnVO column : listColm) {
+			ezCabinetDAO.saveRelatedColumn(column);
+		}
 	}
 }

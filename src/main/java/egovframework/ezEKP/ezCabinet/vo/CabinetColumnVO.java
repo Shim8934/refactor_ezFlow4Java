@@ -1,7 +1,7 @@
 package egovframework.ezEKP.ezCabinet.vo;
 
 public class CabinetColumnVO {
-	private int    columId;
+	private String columnId;
 	private int    itemId;
 	private String columnName1;
 	private String columnName2;
@@ -9,12 +9,24 @@ public class CabinetColumnVO {
 	private String companyId;
 	private int    tenantId;
 	
-	public int getColumId() {
-		return columId;
+	public CabinetColumnVO() {}
+	
+	public CabinetColumnVO(String columnId, int itemId, String columnNm1, String columnNm2, String columnVal, String companyId, int tenantId) {
+		this.columnId    = columnId;
+		this.itemId      = itemId;
+		this.columnName1 = columnNm1;
+		this.columnName2 = columnNm2;
+		this.columnValue = columnVal;
+		this.companyId   = companyId;
+		this.tenantId    = tenantId;
 	}
 	
-	public void setColumId(int columId) {
-		this.columId = columId;
+	public String getColumnId() {
+		return columnId;
+	}
+	
+	public void setColumnId(String columnId) {
+		this.columnId = columnId;
 	}
 	
 	public int getItemId() {

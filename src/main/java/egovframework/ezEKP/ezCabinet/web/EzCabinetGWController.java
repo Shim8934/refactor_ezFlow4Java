@@ -1537,19 +1537,18 @@ public class EzCabinetGWController {
 		String title      = request.getParameter("title")    != null ? request.getParameter("title")    : "";
 		String sender     = request.getParameter("sender")   != null ? request.getParameter("sender")   : "";
 		String attach     = request.getParameter("attach")   != null ? request.getParameter("attach")   : "";
-		String type       = request.getParameter("type")     != null ? request.getParameter("type")     : "";
 		String mode       = request.getParameter("mode")     != null ? request.getParameter("mode")     : "";
 		String cabinetId  = request.getParameter("cabinet")  != null ? request.getParameter("cabinet")  : "";
 		String content    = request.getParameter("content")  != null ? request.getParameter("content")  : "";
 		String receiver   = request.getParameter("receiver") != null ? request.getParameter("receiver") : "";
 		String forward    = request.getParameter("forward")  != null ? request.getParameter("forward")  : "";
 		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
+		String dateTime   = request.getParameter("dateTime") != null ? request.getParameter("dateTime") : "";
 		JSONObject result = new JSONObject();
-		JSONParser jp     = new JSONParser();
 		
-		logger.debug("ServerName: " + serverName + " || title: " + title + " || sender: " + sender + " || receiver: " + receiver + " || forward: " + forward + " || userId: " + userId + " || attach: " + attach + " || type: " + type + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content);
+		logger.debug("ServerName: " + serverName + " || title: " + title + " || sender: " + sender + " || receiver: " + receiver + " || forward: " + forward + " || userId: " + userId + " || attach: " + attach + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content + " || dateTime: " + dateTime);
 		
-		if (serverName.equals("") || userId.equals("") || title.equals("") || sender.equals("") || type.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || receiver.equals("")) {
+		if (serverName.equals("") || userId.equals("") || title.equals("") || sender.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || receiver.equals("") || dateTime.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1557,19 +1556,10 @@ public class EzCabinetGWController {
 		}
 		
 		try {
-			LoginVO userInfo       = commonUtil.getUserForGw(userId, serverName);
-			JSONArray forwardList  = new JSONArray();
-			JSONArray attachList   = (JSONArray) jp.parse(attach);
-			JSONArray receiverList = (JSONArray) jp.parse(receiver);
-			
-			//Save receiver list
-			
-			
-			if (!forward.equals("")) {
-				forwardList = (JSONArray) jp.parse(forward);
-			}
-			
-			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
+			String realPath  = request.getServletContext().getRealPath("");
+			result           = cabinetService.saveEmailItem(realPath, dstCabinetId, title, sender, attach, mode, content, receiver, forward, dateTime, locale, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

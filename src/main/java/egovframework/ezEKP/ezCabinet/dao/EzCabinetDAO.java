@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
+import egovframework.ezEKP.ezCabinet.vo.CabinetColumnVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemSimpleVO;
@@ -236,5 +237,13 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 
 	public void deleteRelatedFiles(Map<String, Object> map) {
 		delete("EzCabinetDAO.deleteRelatedFiles", map);
+	}
+
+	public CabinetVO getRootCabinetByType(Map<String, Object> map) {
+		return (CabinetVO)select("EzCabinetDAO.getRootCabinetByType", map);
+	}
+
+	public void saveRelatedColumn(CabinetColumnVO column) {
+		insert("EzCabinetDAO.saveRelatedColumn", column);
 	}
 }

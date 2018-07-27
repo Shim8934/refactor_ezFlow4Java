@@ -3,9 +3,7 @@ package egovframework.ezEKP.ezCabinet.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -19,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_m;
 
 @Service
@@ -29,12 +26,14 @@ public class EzCabinetRestServiceImpl_m implements EzCabinetRestService_m {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetRestServiceImpl_m.class);
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveRelatedApproval(HttpServletRequest request, String userId, String divContent) {
 		String url                = "/rest/ezcabinet/relate-item/save/apprv";
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("divContent", divContent);
-		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		JSONObject jsonParam      = new JSONObject();
+		jsonParam.put("content", divContent);
+		jsonParam.put("userId",  userId);
+		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonParam);
 		return resultBody;
 	}
 	

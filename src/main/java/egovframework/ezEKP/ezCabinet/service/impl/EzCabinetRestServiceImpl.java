@@ -553,18 +553,18 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	}
 
 	@Override
-	public JSONObject saveRelatedEmail(HttpServletRequest request, String userId, String title, String sender, String attach, String type, String mode, String cabinetId, String content, String receiver, String forward) throws Exception {
+	public JSONObject saveRelatedEmail(HttpServletRequest request, String userId, String title, String sender, String attach, String mode, String cabinetId, String content, String receiver, String forward, String dateTime) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/email";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId",   userId);
 		param.put("title",    title);
 		param.put("sender",   sender);
 		param.put("attach",   attach);
-		param.put("type",     type);
 		param.put("mode",     mode);
 		param.put("content",  content);
 		param.put("receiver", receiver);
 		param.put("forward",  forward);
+		param.put("dateTime", dateTime);
 		param.put("cabinet",  cabinetId);
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;

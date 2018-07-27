@@ -1252,4 +1252,9 @@ public class CommonUtil {
 		logger.debug("getJsonFromWebFolderRestApi ended");
 		return resultBody;
 	}
+	
+	public String getMailPassword() {
+		String pass = jspw;
+		return pass;
+	}
 }
