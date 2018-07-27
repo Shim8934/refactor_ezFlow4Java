@@ -370,6 +370,6 @@
        		</div>
        	</div>
        	
-		<div class="listview" style="overflow-x:auto;width:100%;"><div id="lvAprLine" style="HEIGHT:350px;WIDTH:100%;"></div></div>
+		<div class="listview" style="overflow-x:auto;width:100%;"><div id="lvAprLine" style="HEIGHT:360px;WIDTH:100%;"></div></div>
 	</body>
 </html>

@@ -1096,7 +1096,7 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			List<HolidayVO> holidayList = ezAttitudeService.getHolidayList("", companyId, tenantId);
+			List<HolidayVO> holidayList = ezAttitudeService.getHolidayList("rest", companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

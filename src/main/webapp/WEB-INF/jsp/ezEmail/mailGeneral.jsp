@@ -436,24 +436,24 @@
 		    </div>
 		</div> 
 		<div  id="inboxRuleConbtn1" style="position:absolute; left:100px; top:65px;border:1px solid gray;width:415px;background-color:white; display:none;">
-		<table style="width:100%;border:0;border-collapse:collapse; border-spacing:0;padding:0px;margin-top:10px;" >
-		  <tr>
-		    <td style="width:60%;padding:10px 0 0 10px" id="ReceiverSelecttd" name="ReceiverSelecttd">
-		        <INPUT type="text" id="inboxRuleCon1" name="inboxRuleCon1" style="width:100%" onKeyDown="event_keyDown();"></td>
-		    <td style="width:60%;padding:12px 10px 0 8px;">
-		    <div ><a class="imgbtn imgbck"><span onClick="pop_addcon();" id="inputBtn"><spring:message code='ezEmail.t308' /></span></a>&nbsp;<a class="imgbtn imgbck"><span onClick="pop_delete();"><spring:message code='ezEmail.t95' /></span></a></div></td>
-		  </tr>
-		</table>
-		<div style="border:1px solid #dddddd; margin:10px 10px 10px 10px; padding:10px 10px 10px 10px; background-color:#f8f8fa;">
-		       <div id="Conitems" name="Conitems" style="border:1px solid #dbdbda;width:370px;height:200px;overflow-y:auto;overflow-x:hidden;text-overflow:ellipsis;background-color:#ffffff;">
-		       </div>
-		</div>
-		<div id="mainmenu" style="margin-left:150px;">
-		<ul id="tb_Parent">
-		  <li><span onClick="pop_confrim();Change_Click('0');"><img src="/images/ImgIcon/mtg-accept.png" height="16" style="margin-top:-3px;text-align:center"  /><spring:message code='ezEmail.t38' /></span></li>
-		  <li><span onClick="pop_cancel();"><img src="/images/ImgIcon/mtg-decline.png" height="16" style="margin-top:-3px;text-align:center;"  /><spring:message code='ezEmail.t39' /></span></li>
-		  </ul>        
-		</div>
+			<table style="width:100%;border:0;border-collapse:collapse; border-spacing:0;padding:0px;margin-top:10px;" >
+			  <tr>
+			    <td style="width:60%;padding:10px 0 0 10px" id="ReceiverSelecttd" name="ReceiverSelecttd">
+			        <INPUT type="text" id="inboxRuleCon1" name="inboxRuleCon1" style="width:100%" onKeyDown="event_keyDown();"></td>
+			    <td style="width:60%;padding:12px 10px 0 8px;">
+			    <div ><a class="imgbtn imgbck"><span onClick="pop_addcon();" id="inputBtn"><spring:message code='ezEmail.t308' /></span></a>&nbsp;<a class="imgbtn imgbck"><span onClick="pop_delete();"><spring:message code='ezEmail.t95' /></span></a></div></td>
+			  </tr>
+			</table>
+			<div style="border:1px solid #dddddd; margin:10px 10px 10px 10px; padding:10px 10px 10px 10px; background-color:#f8f8fa;">
+			       <div id="Conitems" name="Conitems" style="border:1px solid #dbdbda;width:370px;height:200px;overflow-y:auto;overflow-x:hidden;text-overflow:ellipsis;background-color:#ffffff;">
+			       </div>
+			</div>
+			<div id="mainmenu" style="margin-left:150px;">
+			<ul id="tb_Parent">
+			  <li><span onClick="pop_confrim();Change_Click('0');"><img src="/images/ImgIcon/mtg-accept.png" height="16" style="margin-top:-3px;text-align:center"  /><spring:message code='ezEmail.t38' /></span></li>
+			  <li><span onClick="pop_cancel();"><img src="/images/ImgIcon/mtg-decline.png" height="16" style="margin-top:-3px;text-align:center;"  /><spring:message code='ezEmail.t39' /></span></li>
+			  </ul>        
+			</div>
 		</div>
 	</body>
 </html>
