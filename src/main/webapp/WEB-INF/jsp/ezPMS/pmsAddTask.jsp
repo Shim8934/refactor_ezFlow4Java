@@ -44,6 +44,7 @@ var groupId = "";
 var groupName = "";
 var remainingWeight = "${remainingWeight}";
 var weightInput = "${weightInput}";
+// 소속 그룹의 뎁쓰
 var treeDepth = 0;
 var projectStatus = "${projectStatus}";
 
@@ -316,7 +317,8 @@ function addTask() {
 		managerList : managerList,
 		weight : weight,
 		writerId : writerId,
-		treeDepth : treeDepth,
+		// 소속 그룹의 뎁쓰보다 1커야함
+		treeDepth : treeDepth + 1,
 		projectStatus : projectStatus,
 		projectPlanEndDate : projectEndDate,
 		projectChangeDate : changeDate
@@ -370,13 +372,16 @@ function setDefaultGroup(){
 	} else if (curTreeGroup.attr("id")){ //업무 목록에서 업무 추가 했을 경우
 		groupId = parent.opener.groupDetail.groupId;
 		groupName = parent.opener.groupDetail.groupName;
+		treeDepth = parent.opener.groupDetail.treeDepth;
 	} else { // 간트차트에서 업무 추가했을 경우
 		if(curTask.id.indexOf("_t") != -1){ //업무를 선택했을 경우
 			groupId = curTask.getParent().id.match(/g(\d+)/) ? curTask.getParent().id.match(/g(\d+)/)[1] : parent.opener.projectGroupId;
 			groupName = curTask.getParent().name;
+			treeDepth = curTask.getParent().level;
 		} else { // 그룹이나 프로젝트를 선택했을 경우
 			groupId = curTask.id.match(/g(\d+)/) ? curTask.id.match(/g(\d+)/)[1] : parent.opener.projectGroupId;
 			groupName = curTask.name;
+			treeDepth = curTask.level;
 		}
 	}
 	
@@ -412,12 +417,10 @@ function setDefaultGroup(){
 				<th><spring:message code='ezPMS.t61' /></th>
 				<td style="width:50%">
 					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-					<span style="margin-left:20px "><spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t61' /> : ${projectStartDate}</span>
 				</td>
 				<th><spring:message code='ezPMS.t62' /></th>
 				<td>
 					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-					<span style="margin-left:20px "><spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t62' /> : ${projectEndDate}</span>
 				</td>
 			</tr>
 			<tr>
