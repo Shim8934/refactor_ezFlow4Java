@@ -3415,7 +3415,7 @@ public class EzPMSGWController {
 				// endDate, companyId, tenantId));
 
 				groupList.get(i).setGroupMember(groupMemberListTemp);
-
+				
 				search.setGroupId(groupList.get(i).getGroupId());
 				search.setIsMyTask("A");
 				groupList.get(i).setTaskCount(ezPMSService.getTaskListCount(search, userId, 3, info.getDeptId()));
