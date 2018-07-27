@@ -37,14 +37,14 @@
 		            return true;
 		    };
 		    window.onload = function () {
-		        if (document.all("ListCompany").length == 0)
+		        if (document.all("ListCompany") != null && document.all("ListCompany").length == 0)
 		            alert("<spring:message code='ezEmail.t49' />");
 		        else {
 		            company_change();
 		        }
 		    }
 		    function company_change() {
-		    	companyId = document.all("ListCompany").value;
+		    	companyId = document.all("ListCompany") == null ? companyId : document.all("ListCompany").value;
 		        document.getElementById("DIV_Member").innerHTML = "";
 		
 		        var xmlDom = createXmlDom();
@@ -53,7 +53,7 @@
 		        var objRoot;
 		        createNodeInsert(xmlDom, objRoot, "DATA");
 		        createNodeAndInsertText(xmlDom, objRoot, "CN", null);
-		        createNodeAndInsertText(xmlDom, objRoot, "COMPID", document.all("ListCompany").value);
+		        createNodeAndInsertText(xmlDom, objRoot, "COMPID", companyId);
 		
 		        xmlHTTP.open("POST", "/admin/ezEmail/mailGetDistribution.do", false);
 		        xmlHTTP.send(xmlDom);
@@ -201,13 +201,13 @@
 		        var feature = "dialogHeight:670px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
 		        feature = feature + GetShowModalPosition(970, 670);
 		        if (CrossYN()) {
-		            mail_add_distributionlist_cross_dialogArguments[0] = document.all("ListCompany").value;
+		            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
 		            mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
 		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?companyId=" + companyId, "", GetOpenWindowfeature(970, 650));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
-		            var rtnValue = window.showModalDialog("/admin/ezEmail/mailAddDistributionList.do", document.all("ListCompany").value,
+		            var rtnValue = window.showModalDialog("/admin/ezEmail/mailAddDistributionList.do", companyId,
 		                    feature);
 		            if (typeof (rtnValue) != "undefined")
 		                company_change();
@@ -233,14 +233,14 @@
 		        feature = feature + GetShowModalPosition(970, 670);
 		        if (CrossYN()) {
 		            mail_add_distributionlist_cross_dialogArguments = new Array();
-		            mail_add_distributionlist_cross_dialogArguments[0] = document.all("ListCompany").value;
+		            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
 		            mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
 		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText) + "&companyId=" + companyId, "", GetOpenWindowfeature(970, 650));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
 		            var rtnValue = window.showModalDialog("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID +
-		                    "&name=" + encodeURIComponent(selnode[0].innerText), document.all("ListCompany").value,
+		                    "&name=" + encodeURIComponent(selnode[0].innerText), companyId,
 		                    feature);
 		            if (typeof (rtnValue) != "undefined")
 		                company_change();
@@ -262,8 +262,8 @@
 	<form id="Form1" method="post">
 		<h1><spring:message code='ezEmail.t58' /></h1>
 		<div id="mainmenu">
-			<span><b> <spring:message code='ezEmail.t59' /></b></span>
-			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
+			<span style="display:none;"><b> <spring:message code='ezEmail.t59' /></b></span>
+			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px; display:none;">
 				<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>	      		
