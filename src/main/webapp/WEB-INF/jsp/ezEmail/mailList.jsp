@@ -110,15 +110,6 @@
 		    	return host;
 		    }
 		    
-		    // 2018.07.26 - 컨텍스트메뉴 두번 연속으로 클릭시 윈도우 메뉴 펼쳐지는 현상 수정 (재은)
-		    $(document).ready(function(){
-		        $(document).bind("contextmenu",function(event){
-		        	document.getElementById("ContextMenuDiv").style.display = "none";
-		        	event_listContextMenu(event);
-		        	return false;
-		        });
-		    });
-		    
 		    // commented out to allow users to be able to select text in the preview : dhlee
 			// document.onselectstart = function () { return false; };
 		    window.onresize = Window_resize;
