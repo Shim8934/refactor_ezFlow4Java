@@ -778,20 +778,19 @@ public class EzAddressController{
 		
 		AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), pAddressId);
 		String address = addressInfo.getsMemo();
-		StringBuilder listMember = new StringBuilder();
 		
+		List<String> listMember = new ArrayList<String>();
 		int listMemberSize = 0;
 		
         if (address != null && !address.trim().equals("")) {
-	        	String[] addrList = address.split(";");
-	        	listMemberSize = addrList.length;
-        	
-	        	for (String addr : addrList) {
-	        		logger.debug("addr Before=" + addr);
+	        	String[] addressArr = address.split(";");
+	        	
+	        	for (String addr : addressArr) {
 	        		addr = EgovStringUtil.getSpclStrCnvr(addr).replaceAll("\"", "");
-	        		addr = "<option title='"+ addr +"'>" + addr + "</option>";
-	        		listMember.append(addr);
+	        		listMember.add(addr);
 	        	}
+	        	
+	        	listMemberSize = listMember.size();
         }
         
 		String dateInUserTimeZone = commonUtil.getDateStringInUTC(addressInfo.getCreateDate(), userInfo.getOffset(), false);
@@ -806,7 +805,7 @@ public class EzAddressController{
         model.addAttribute("pAddressId", pAddressId);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("addressInfo", addressInfo);
-		model.addAttribute("listMember", listMember.toString());
+		model.addAttribute("listMember", listMember);
 		model.addAttribute("listMemberSize", listMemberSize);
 		model.addAttribute("compAdmin", compAdmin);
 		model.addAttribute("deptAdmin", deptAdmin);
@@ -816,7 +815,7 @@ public class EzAddressController{
 		
 		logger.debug("addressReadGroup ended.");
 		logger.debug("pFolderType=" + pFolderType + ",pAddressId=" + pAddressId + ",userInfo=" + userInfo + ",addressInfo=" + addressInfo
-				 + ",listMember=" + listMember.toString() + ",listMemberSize=" + listMemberSize + ",compAdmin=" + compAdmin + ",deptAdmin=" + deptAdmin
+				 + ",listMemberSize=" + listMemberSize + ",compAdmin=" + compAdmin + ",deptAdmin=" + deptAdmin
 				 + ",useEditor=" + useEditor + ",noneActiveX=" + noneActiveX);
 		
 		return "ezAddress/addressReadGroup";
