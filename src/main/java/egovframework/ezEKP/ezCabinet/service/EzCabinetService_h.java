@@ -1,6 +1,9 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,4 +25,5 @@ public interface EzCabinetService_h {
 	List<CabinetAttachFileVO> getAttachFileList(String itemId, int tenantId) throws Exception;
 	List<CabinetRelationItemVO> getRelatedFileList(String itemId, int tenantId) throws Exception;
 	void modifyItem(int itemId, JSONArray attacheFiles, JSONArray relatedFiles, String title, String summary, String realPath, LoginVO userInfo) throws Exception;
+	JSONObject saveApprovalItem(String approvalContent, Locale locale, LoginVO userInfo);
 }

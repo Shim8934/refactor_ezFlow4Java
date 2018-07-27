@@ -5,10 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -315,4 +317,15 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 			ezCabinetDAO.deleteRelatedFiles(map);
 		}
 	}
+
+	@Override
+	public JSONObject saveApprovalItem(String approvalContent, Locale locale, LoginVO userInfo) {
+		String url                ="/rest/ezcabinet/relate-item/save/apprv";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("approvalContent", approvalContent);
+		
+		return null;
+	}
+	
+	
 }

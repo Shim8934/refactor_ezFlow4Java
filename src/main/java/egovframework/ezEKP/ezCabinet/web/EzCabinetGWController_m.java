@@ -71,6 +71,8 @@ public class EzCabinetGWController_m {
 			
 			//Save receiver list
 			
+			result                 = cabinetService_m.saveApprovalItem(approvalContent, locale, userInfo);
+			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
