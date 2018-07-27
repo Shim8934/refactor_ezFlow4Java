@@ -1,12 +1,8 @@
-﻿// \ezBoardSTD\admin\OrganAdmin\SelectTarget.aspx1.js
-// \ezBoardSTD\admin\BoardACL.aspx1.js
-// \ezBoardSTD\js\AttachItem.js
-var strLang1 = "Attachment filename";
+﻿var strLang1 = "Attachment filename";
 var strLang2 = "Filesize";
 var strLang3 = "Filesize";
 var strLang4 = "Create";
 var strLang5 = "넘겨줄 파라미터 노드 생성 ListType";
-// \ezBoardSTD\js\AttachMain.js
 var strLang6 = "Can not attach empty file.";
 var strLang7 = "The length of filename can not exceed 111bytes.";
 var strLang8 = "The attached file size can not exceed ";
@@ -27,17 +23,13 @@ var strLang22 = "All image file\0*.jpg;*.gif;*.bmp;*.jpeg;*.jpe;*.jfif;*.tif;*.t
 var strLang23 = "Uploading can only 5 files at once.";
 var strLang24 = " - It is not image file type.";
 var strLang25 = "업로드가 정상적일때 해당 파일의 이름을 넣어준다.(버그등록필요)";
-// \ezBoardSTD\js\ErrorHandler.js
-// \ezBoardSTD\js\kaoni_ActiveX.js
 var strLang26 = "You can not move in the post.";
 var strLang27 = "Cancelled.";
-
 var strLang39 = "Prev";
 var strLang40 = "Next";
 var strLang41 = "Total ";
 var strLang42 = "-items";
 var strLang43 = "There is no post.";
-
 var strLang44 = "Add a picture.";
 var strLang45 = "Select your main photo.";
 var strLang46 = "Add Photo completion";
@@ -49,7 +41,6 @@ var strLang51 = "Fix Errors";
 var strLang52 = "No subject";
 var strLang53 = "There is no data.";
 var strLang54 = "The extension of the file upload limit.";
-
 var strLang60 = "OK";
 var strLang61 = "Atmosphere";
 var strLang62 = "Return";
