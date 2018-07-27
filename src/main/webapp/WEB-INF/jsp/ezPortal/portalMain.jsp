@@ -52,6 +52,7 @@
 		        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
 		        document.getElementById("mainFrame").style.height = MainHeight + "px";
 		        chagePosition();
+		        setSizeOfLayer();
 		 	}
 		 	
 		    function Div_Close() {
@@ -64,16 +65,14 @@
 		    
 		
 		    function chagePosition() {
+		    	
 		    	var winHeight = window.innerHeight;
 				var winWidth = window.innerWidth;
-		    	
 				var memoBtn = $("#open-memo");
 				var opendMemo = $("#selected-memo");
 				
 				memoBtn.css({"top" : winHeight - 80, "left" : winWidth - 100});
 				//opendMemo.css({"top": 50, "left": 50});
-				
-				changSizeOfLayer();
 		    }
 		    
 		    function changSizeOfLayer() {
@@ -91,12 +90,33 @@
 
 				if (className.indexOf("layer-half") != -1) {
 	        		$("#layer-popup").removeClass().addClass("layer-whole");
-	        		maskDiv.css({"top":0, "left": 0, "width" : winWidth - 30, "height":winHeight - 56 - 30});
-	        		opendMemo.css({"top":20, "left": 20, "width" : winWidth - 90, "height":winHeight - 56 - 90})
 	        	} else if (className.indexOf("layer-whole") != -1) {
 	        		$("#layer-popup").removeClass().addClass("layer-half");
+	        	}
+				setSizeOfLayer();
+				$(".memoListBox").css("height",winHeight - 56 - 90);
+		    }
+		    
+		    function setSizeOfLayer() {
+		    	var winHeight = window.innerHeight;
+				var winWidth = window.innerWidth;
+		    	
+				var layerHalf = $(".layer-half");
+				var layerWhole = $(".layer-whole");
+		    	var maskDiv = $("#maskDiv");
+				var className = $("#layer-popup").attr("class");
+	        	var opendMemo = $("#selected-memo");
+
+				if (className.indexOf("layer-half") != -1) {
+	        		console.log("half: " + className);
+	        		layerHalf.css({"top":65, "left": winWidth/2, "right" : 10, "width" : winWidth/2 - 20, "height":winHeight - 56 - 30});
 	        		maskDiv.css({"top":0, "left":0, "width" : winWidth/2 - 20, "height":winHeight - 56 - 30});
 	        		opendMemo.css({"top":10, "left":10, "width" : winWidth/2 - 50, "height":winHeight - 56 - 50})
+	        	} else if (className.indexOf("layer-whole") != -1) {
+	        		console.log("whole: " + className);
+	        		layerWhole.css({"top":65, "left": 10, "right" : 20, "width" : winWidth - 30, "height":winHeight - 56 - 30});
+	        		maskDiv.css({"top":0, "left": 0, "width" : winWidth - 30, "height":winHeight - 56 - 30});
+	        		opendMemo.css({"top":20, "left": 20, "width" : winWidth - 90, "height":winHeight - 56 - 90})
 	        	}
 				$(".memoListBox").css("height",winHeight - 56 - 90);
 		    }
@@ -105,6 +125,7 @@
 		    	$(".noteBlock").css("pointer-events", "none");
 	        	$("#open-memo").css("pointer-events", "auto");
 		    	chagePosition();
+		    	setSizeOfLayer();
 		    	
 		    	$( "#open-memo" ).draggable().on("mouseup", function() {
 		        	$(".noteBlock").css("pointer-events", "none");
