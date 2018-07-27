@@ -4674,6 +4674,7 @@ public class EzPMSController {
 				row.createCell(5).setCellStyle(upperGroupTaskStyle);
 			} else if (ganttTaskOrder.get(i).get("taskLevel").equals("2")) {
 				lowerGroupTask++;
+				lowestTask = 0;
 				
 				//numbering
 				row.createCell(0).setCellValue(upperGroupTask + "." + lowerGroupTask);//numbering
