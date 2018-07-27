@@ -2061,10 +2061,12 @@ public class EzPMSGWController {
 			List<ProjectTaskVO> taskList = new ArrayList<ProjectTaskVO>();
 			taskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow, position, roleId,
 					deptId);
-
+			
+			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			
 			for (int i = 0; i < taskList.size(); i++) {
-				Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskList.get(i).getPlanStartDate());
-				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskList.get(i).getPlanEndDate());
+				Date startDate = sdf.parse(taskList.get(i).getPlanStartDate());
+				Date endDate = sdf.parse(taskList.get(i).getPlanEndDate());
 //				Date today = new Date();
 //				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 //				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
