@@ -176,12 +176,15 @@
 					
 					var url  = "/ezCabinet/saveRelatedEmail.do";
 					var data = {
-						type   : moduleType,
-						mode   : saveMode,
-						title  : mailSubject,
-						sender : senderEmail,
-						attach : JSON.stringify(normalList),
-						content: JSON.stringify(emailContent)
+						type      : moduleType,
+						mode      : saveMode,
+						title     : mailSubject,
+						sender    : senderEmail,
+						receiver  : JSON.stringify(receiveList),
+						crdDate   : mailDate,
+						forward   : JSON.stringify(forwardList),
+						attach    : JSON.stringify(normalList),
+						content   : emailContent
 					};
 					
 					if (saveMode == 1) {data.cabinet = cabinetId;}

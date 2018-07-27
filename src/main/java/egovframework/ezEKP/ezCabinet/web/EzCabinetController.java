@@ -190,6 +190,28 @@ public class EzCabinetController {
 		return "ezCabinet/cabinetAddFile";
 	}
 	
+	@RequestMapping(value = "/ezCabinet/cabinetAddRelated.do")
+	public String jspGetCabinetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model)  throws Exception {
+		logger.debug("jspGetCabinetFileDetail started");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		String module        = request.getParameter("module") != null ? request.getParameter("module") : "";
+		
+		if (module.equals("")) {
+			return "ezCabinet/cabinetAccessDenied";
+		}
+		
+		JSONObject resultObj = cabinetRestService.checkUserActiveModules(request, user.getId(), module);
+		
+		if (resultObj.get("status").toString().equals("ok")) {
+			String activeFlag = resultObj.get("active").toString();
+			model.addAttribute("activeFlag", activeFlag);
+		}
+		
+		model.addAttribute("module", module);
+		logger.debug("jspGetCabinetFileDetail ended");
+		return "ezCabinet/cabinetAddRelated";
+	}
+	
 	@RequestMapping(value="/ezCabinet/getCompanyTree.do")
 	@ResponseBody
 	public String jsonGetCompanyTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
@@ -675,22 +697,24 @@ public class EzCabinetController {
 	public String jsonSaveRelatedEmail(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveRelatedEmail is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String title           = request.getParameter("title")   != null ? request.getParameter("title")   : "";
-		String sender          = request.getParameter("sender")  != null ? request.getParameter("sender")  : "";
-		String attach          = request.getParameter("attach")  != null ? request.getParameter("attach")  : "";
-		String type            = request.getParameter("type")    != null ? request.getParameter("type")    : "";
-		String mode            = request.getParameter("mode")    != null ? request.getParameter("mode")    : "";
-		String cabinetId       = request.getParameter("cabinet") != null ? request.getParameter("cabinet") : "";
-		String content         = request.getParameter("content") != null ? request.getParameter("content") : "";
+		String title           = request.getParameter("title")     != null ? request.getParameter("title")     : "";
+		String sender          = request.getParameter("sender")    != null ? request.getParameter("sender")    : "";
+		String attach          = request.getParameter("attach")    != null ? request.getParameter("attach")    : "";
+		String type            = request.getParameter("type")      != null ? request.getParameter("type")      : "";
+		String mode            = request.getParameter("mode")      != null ? request.getParameter("mode")      : "";
+		String cabinetId       = request.getParameter("cabinet")   != null ? request.getParameter("cabinet")   : "";
+		String content         = request.getParameter("content")   != null ? request.getParameter("content")   : "";
+		String receiver        = request.getParameter("receiver")  != null ? request.getParameter("receiver")  : "";
+		String forward         = request.getParameter("forward")   != null ? request.getParameter("forward")   : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		if (title.equals("") || sender.equals("") || type.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("")) {
+		if (title.equals("") || sender.equals("") || type.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || receiver.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.saveRelatedEmail(request, userInfo.getId(), title, sender, attach, type, mode, cabinetId, content);
+		resultObj = cabinetRestService.saveRelatedEmail(request, userInfo.getId(), title, sender, attach, type, mode, cabinetId, content, receiver, forward);
 		
 		logger.debug("jsonSaveRelatedEmail finishes!");
 		return resultObj.toString();

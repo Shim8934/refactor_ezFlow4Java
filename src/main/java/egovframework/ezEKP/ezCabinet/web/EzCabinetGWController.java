@@ -1531,6 +1531,55 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
+	@RequestMapping(value="/rest/ezcabinet/relate-item/save/email", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveEmailItem(Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
+		String title      = request.getParameter("title")    != null ? request.getParameter("title")    : "";
+		String sender     = request.getParameter("sender")   != null ? request.getParameter("sender")   : "";
+		String attach     = request.getParameter("attach")   != null ? request.getParameter("attach")   : "";
+		String type       = request.getParameter("type")     != null ? request.getParameter("type")     : "";
+		String mode       = request.getParameter("mode")     != null ? request.getParameter("mode")     : "";
+		String cabinetId  = request.getParameter("cabinet")  != null ? request.getParameter("cabinet")  : "";
+		String content    = request.getParameter("content")  != null ? request.getParameter("content")  : "";
+		String receiver   = request.getParameter("receiver") != null ? request.getParameter("receiver") : "";
+		String forward    = request.getParameter("forward")  != null ? request.getParameter("forward")  : "";
+		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
+		JSONObject result = new JSONObject();
+		JSONParser jp     = new JSONParser();
+		
+		logger.debug("ServerName: " + serverName + " || title: " + title + " || sender: " + sender + " || receiver: " + receiver + " || forward: " + forward + " || userId: " + userId + " || attach: " + attach + " || type: " + type + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content);
+		
+		if (serverName.equals("") || userId.equals("") || title.equals("") || sender.equals("") || type.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || receiver.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo       = commonUtil.getUserForGw(userId, serverName);
+			JSONArray forwardList  = new JSONArray();
+			JSONArray attachList   = (JSONArray) jp.parse(attach);
+			JSONArray receiverList = (JSONArray) jp.parse(receiver);
+			
+			//Save receiver list
+			
+			
+			if (!forward.equals("")) {
+				forwardList = (JSONArray) jp.parse(forward);
+			}
+			
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
 	private boolean isCabinetAdmin(LoginVO user) {
 		return user.getRollInfo().contains("cb=1");
 	}
