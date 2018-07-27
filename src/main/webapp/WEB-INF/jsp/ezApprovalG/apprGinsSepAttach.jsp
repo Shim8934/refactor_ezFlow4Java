@@ -158,9 +158,10 @@
 		            DivPopUpShow(700, 615, url);
 		        }
 		        else {
-		            var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
-		            feature = feature + GetShowModalPosition(410, 555);
-		
+		            var feature = "dialogWidth:700px;dialogHeight:615px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
+		            //한글기안에서 분리첨부>추가창이 잘리는현상때문에 주석처리 2018-07-27 강민수92
+// 		            feature = feature + GetShowModalPosition(410, 555);
+					
 		            if (url != "")
 		                var rtn = window.showModalDialog(url, para, feature);
 		
