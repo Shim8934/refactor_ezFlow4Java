@@ -755,7 +755,7 @@
 								AND
 									(LOCATE((SELECT CONCAT(dept_cd_path, ',') from TBL_DEPTMASTER where tenant_id = #tenantID# AND cn = #deptCN#), dept_cd_path)
 								OR
-									extensionattribute1 = #deptCN#))
+									extensionattribute2 = #deptCN#))
 			UNION ALL
 			
 			SELECT
@@ -780,7 +780,7 @@
 							AND
 								(LOCATE((SELECT CONCAT(dept_cd_path, ',') FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = #deptCN#), dept_cd_path))
 							OR
-								extensionattribute1 = #deptCN#)) AA
+								extensionattribute2 = #deptCN#)) AA
 		]]>
 	</select>
 	

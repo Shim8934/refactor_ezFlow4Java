@@ -558,17 +558,17 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 		logger.debug("totalCount2 = " + totalCount);
 		
-		if (companyList == null) {
-			companyList = ezOrganDAO.getChildCompany(map);
-		}
-		
-		for (String company : companyList) {
-			map.put("deptCN", company);
-			
-			List<String> childCompanyList = ezOrganDAO.getChildCompany(map);
-			
-			totalCount += getMemberListCount2(company, childCompanyList, totalCount, "NO", tenantID);
-		}
+//		if (companyList == null) {
+//			companyList = ezOrganDAO.getChildCompany(map);
+//		}
+//		
+//		for (String company : companyList) {
+//			map.put("deptCN", company);
+//			
+//			List<String> childCompanyList = ezOrganDAO.getChildCompany(map);
+//			
+//			totalCount += getMemberListCount2(company, childCompanyList, totalCount, "NO", tenantID);
+//		}
 		
 		logger.debug("getMemberListCount2 ended.");
 		
