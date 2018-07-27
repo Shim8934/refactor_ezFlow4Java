@@ -124,30 +124,69 @@
 				}
 				
 				function saveEmailDocument(saveMode, cabinetId) {
-					var msgToGot     = window.opener.document.getElementById("MsgToGot").textContent;
-					var mailSubject  = window.opener.document.getElementById("mailSubject").textContent;
-					var messageFrame = window.opener.document.getElementById("message");
+					var mailOpener   = window.opener;
+					if (!mailOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var mailDate     = mailOpener.document.getElementById("LabelReceiveDate").textContent;
+					var mailSubject  = mailOpener.document.getElementById("mailSubject").textContent;
+					var messageFrame = mailOpener.document.getElementById("message");
 					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
-					var senderEmail  = window.opener.g_fromEmail;
-					var receiverDiv  = window.opener.document.getElementById("LabelToHidden");
-					var spanList     = receiverDiv.querySelectorAll("span");
+					var emailContent = contentWd.document.getElementById("normalScreen").innerHTML;
+					var senderEmail  = mailOpener.g_fromEmail;
+					var normalAttach = contentWd.document.getElementById("PreviewAttachList");
+					var largeAttach  = contentWd.document.getElementById("_BigAttachListHtml");
+					var receiverDiv  = mailOpener.document.getElementById("LabelToHidden");
+					var spanRcList   = receiverDiv.querySelectorAll("span");
 					var receiveList  = [];
+					var forwardList  = [];
+					var normalList   = [];
 					
-					if (!spanList || spanList.length == 0) {alert(CabinetMessages.strSelect); return;}
+					if (!spanRcList || spanRcList.length == 0) {alert(CabinetMessages.strSelect); return;}
 					
-					for (var i = 0, len = spanList.length; i < len; i++) {
-						receiveList.push(spanList[i].getAttribute("title"));
+					for (var i = 0, len = spanRcList.length; i < len; i++) {receiveList.push(spanRcList[i].getAttribute("title"));}
+					
+					var forwardDiv = window.opener.document.getElementById("LabelCCHidden");
+					
+					if (forwardDiv) {
+						var spanCcList   = forwardDiv.querySelectorAll("span");
+						for (var i = 0, len = spanCcList.length; i < len; i++) {forwardList.push(spanCcList[i].getAttribute("title"));}
 					}
 					
-					console.log("senderEmail: " + senderEmail);
+					if (normalAttach) {
+						var listChildren = normalAttach.children;
+						for (var i = 0, len = listChildren.length; i < len; i++) {
+							var spElmt  = listChildren[i].firstElementChild;
+							var hrefStr = spElmt.getAttribute("_filehref");
+							var params  = getAllUrlParams(hrefStr);
+							
+							normalList.push({
+								fileHref : params,
+								fileSize : spElmt.getAttribute("_filesize"),
+								fileName : spElmt.getAttribute("_filename")
+							});
+						}
+					}
 					
-					var emailContent = contentWd.document.getElementById("normalScreen").innerHTML;
-					var url          = "/ezCabinet/saveRelatedEmail.do";
-					var data         = {type: moduleType, mode: saveMode, title : mailSubject, author: msgToGot, content: JSON.stringify(emailContent)};
+					//console.log("ReceiveList: " + JSON.stringify(receiveList));
+					//console.log("ForwardList: " + JSON.stringify(forwardList));
+					//console.log("SenderEmail: " + senderEmail);
+					//console.log("MailDate   : " + mailDate);
+					//console.log("MailContent: " + JSON.stringify(emailContent));
+					//console.log("Normal List: " + JSON.stringify(normalList))
 					
-					if (saveMode == 1) {data.cabinetId = cabinetId;}
+					var url  = "/ezCabinet/saveRelatedEmail.do";
+					var data = {
+						type   : moduleType,
+						mode   : saveMode,
+						title  : mailSubject,
+						sender : senderEmail,
+						attach : JSON.stringify(normalList),
+						content: JSON.stringify(emailContent)
+					};
 					
-					makeAjaxCall(data, "GET", url, afterSaveDocument, null, true, null);
+					if (saveMode == 1) {data.cabinet = cabinetId;}
+					
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
 				function saveApprovalDocument(saveMode, cabinetId) {
@@ -209,6 +248,62 @@
 				}
 				
 				function afterSaveSuccessfully() {alert(CabinetMessages.strSave); closeWindow();}
+				
+				function getAllUrlParams(url) {
+					// get query string from url
+					var queryString = url.split('?')[1];
+					var obj = {};
+					
+					// if query string exists
+					if (queryString) {
+						// stuff after # is not part of query string, so get rid of it
+						queryString = queryString.split("#")[0];
+						// split our query string into its component parts
+						var arr = queryString.split("&");
+						
+						for (var i=0; i<arr.length; i++) {
+							var a = arr[i].split("=");
+							// in case params look like: list[]=thing1&list[]=thing2
+							var paramNum = undefined;
+							var paramName = a[0].replace(/\[\d*\]/, function(v) {
+								paramNum = v.slice(1,-1);
+								return '';
+							});
+							
+							// set parameter value (use 'true' if empty)
+							var paramValue = typeof(a[1]) === "undefined" ? true : a[1];
+							
+							// (optional) keep case consistent
+							paramName  = paramName.toLowerCase();
+							paramValue = paramValue.toLowerCase();
+							
+							// if parameter name already exists
+							if (obj[paramName]) {
+								// convert value to array (if still string)
+								if (typeof obj[paramName] === "string") {
+									obj[paramName] = [obj[paramName]];
+								}
+								
+								// if no array index number specified
+								if (typeof paramNum === 'undefined') {
+									// put the value on the end of the array
+									obj[paramName].push(paramValue);
+								}
+								// if array index number specified
+								else {
+									// put the value at that index number
+									obj[paramName][paramNum] = paramValue;
+								}
+							}
+							// if param name doesn't exist yet, set it
+							else {
+								obj[paramName] = paramValue;
+							}
+						}
+					}
+					
+					return obj;
+				}
 				
 				function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {
 					$.ajax({

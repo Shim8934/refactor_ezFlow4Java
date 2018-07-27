@@ -675,18 +675,22 @@ public class EzCabinetController {
 	public String jsonSaveRelatedEmail(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveRelatedEmail is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String title           = request.getParameter("title")       != null ? request.getParameter("title")       : "";
-		String author          = request.getParameter("author")      != null ? request.getParameter("author")      : "";
-		String emailContent    = request.getParameter("normalScreen")!= null ? request.getParameter("normalScreen"): "";
+		String title           = request.getParameter("title")   != null ? request.getParameter("title")   : "";
+		String sender          = request.getParameter("sender")  != null ? request.getParameter("sender")  : "";
+		String attach          = request.getParameter("attach")  != null ? request.getParameter("attach")  : "";
+		String type            = request.getParameter("type")    != null ? request.getParameter("type")    : "";
+		String mode            = request.getParameter("mode")    != null ? request.getParameter("mode")    : "";
+		String cabinetId       = request.getParameter("cabinet") != null ? request.getParameter("cabinet") : "";
+		String content         = request.getParameter("content") != null ? request.getParameter("content") : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		if (title.equals("")) {
+		if (title.equals("") || sender.equals("") || type.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		//resultObj = cabinetRestService.saveRelatedEmail(request, userInfo.getId(), title, author, normalScreen);
+		resultObj = cabinetRestService.saveRelatedEmail(request, userInfo.getId(), title, sender, attach, type, mode, cabinetId, content);
 		
 		logger.debug("jsonSaveRelatedEmail finishes!");
 		return resultObj.toString();
