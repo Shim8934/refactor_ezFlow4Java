@@ -235,6 +235,8 @@
 		    	$("#textarea").val('');
 		    	$("#maskDiv").css("display", "none");
 		    	$("#selected-memo").css("display", "none");
+		    	
+		    	memoIndex = -1;
 		    }
 		    
 		    function addremove() {
@@ -251,7 +253,7 @@
 		        
 		        $(".individual-memo").dblclick(function(){
 		        	memoIndex = $(this).index();
-		        	var currText = $(this).children(".memo-text").html();
+		        	var currText = $(this).children(".memo-text").val();
 		        	$("#maskDiv").css("display", "");
 			        $("#selected-memo").css("display", "");
 			        $("#textarea").val(currText);
