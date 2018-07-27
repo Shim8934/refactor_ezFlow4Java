@@ -218,14 +218,15 @@
 		    function save() {
 		    	if(memoIndex != -1) {		// 수정일때
 		    		$(".individual-memo").eq(memoIndex).remove();
-		    		memoIndex = -1;
 		    	}
 		    	
 		    	var text = $("#textarea").val();
-		    	$("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right;'><textarea class='memo-text' style='padding-left:10px; padding-right:10px; border:0px; width:90%; height:90%; resize:none; overflow-y:hidden;' readonly>" + text + "</textarea></div>");
+		    	$("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right;'><textarea class='memo-text' style='padding-left:10px; padding-right:10px; border:0px; width:90%; height:90%; resize:none; overflow-y:auto;'>" + text + "</textarea></div>");
 		    	$("#textarea").val('');
 		    	$("#maskDiv").css("display", "none");
 		    	$("#selected-memo").css("display", "none");
+		    	
+		    	memoIndex = -1;
 		    	
 		    	addremove();
 		    }
@@ -248,7 +249,7 @@
 		        	$(this).children("img").css("visibility", "hidden");
 		        });
 		        
-		        $(".individual-memo").click(function(){
+		        $(".individual-memo").dblclick(function(){
 		        	memoIndex = $(this).index();
 		        	var currText = $(this).children(".memo-text").html();
 		        	$("#maskDiv").css("display", "");
@@ -285,7 +286,7 @@
 					</div>
 										
 					<div class="memoListBox" style="overflow:hidden;">
-						<div id="memoList" style="height: 100%; overflow-y:scroll; margin: 10px; position:relative; margin-right:-25px;"></div>
+						<div id="memoList" style="height: 100%; overflow-y:scroll;  position:relative; margin-right:-25px;"></div>
 					</div>
 					
 				</div>
