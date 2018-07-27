@@ -626,7 +626,7 @@
 		        window.parent.frames["right"].location.href = "/ezBoard/boardItemList_favorite.do";
 		    }
 		    function ConfigMyBoard() {
-		        var OpenWin = window.open("/ezBoard/myBoardConfig.do?type=CONFIG", "MyBoardConfig", GetOpenWindowfeature(500, 418));
+		        var OpenWin = window.open("/ezBoard/myBoardConfig.do?type=CONFIG", "MyBoardConfig", GetOpenWindowfeature(525, 418));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function MyBoard() {
@@ -756,10 +756,12 @@
 	            <%-- <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(1)"><spring:message code="ezBoard.t372" /></span></li>	            
 	            <li><span style="width: 100%; display: inline-block;" onclick="Poll_Open(2)"><spring:message code="ezBoard.t373" /></span></li> --%>	            
 	        </ul>
-
+			
+			 <c:if test="${ladderFlag == 'YES'}">
 			<div class="ladder" onclick="ladder_Func(1)">
 				<h2><span><spring:message code="ezBoard.l001" /></span></h2>
 			</div>
+			</c:if>
 			<ul></ul>
 
 			<h3>
