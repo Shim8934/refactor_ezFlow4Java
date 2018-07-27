@@ -78,7 +78,7 @@ function putBansongSign() {
  * 현재 결재중인 양식에 결재관련 서명 및 기타 내용 출력.
  * field.innerHTML = String Data
  * */
-function AprrovMappingSign(ret) {
+function ApprovMappingSign(ret) {
     var fields = message.GetFieldsList();
     var field;
     var SingFlag = true;
@@ -142,7 +142,8 @@ function AprrovMappingSign(ret) {
                 strimg = strimg + " width=" + signWidth;
                 
                 if (signImageType == "NAME") {
-                	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+//                	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+                	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 				} else {
 				    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 				}
@@ -356,7 +357,8 @@ function AprrovMappingSign(ret) {
                         strimg = strimg + " width=" + signWidth;
                         
                         if (signImageType == "NAME") {
-                        	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
+//                        	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
+                        	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
 						} else {
 						    strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
 						}
@@ -564,7 +566,8 @@ function AprrovMappingSign(ret) {
                     strimg = strimg + " width=" + signWidth;
                     
                     if (signImageType == "NAME") {
-                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+//                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     } else {
                         strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
@@ -670,7 +673,8 @@ function AprrovMappingSign(ret) {
                     strimg = strimg + " width=" + signWidth;
                     
                     if (signImageType == "NAME") {
-                    	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
+//                    	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
+                    	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
 					} else {
 					    strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
 					}
@@ -3045,7 +3049,8 @@ function putSignXML(SignXML) {
                             strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
                             strimg = strimg + " width=" + signWidth;
                             if (signImage = "NAME") {
-                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + arr_userinfo[2] ;
+//                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + arr_userinfo[2] ;
+                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
                             } else {
                                 strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
                             }
