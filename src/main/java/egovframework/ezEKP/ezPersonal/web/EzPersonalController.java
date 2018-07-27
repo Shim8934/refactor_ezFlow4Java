@@ -580,19 +580,13 @@ public class EzPersonalController extends EgovFileMngUtil {
 				} else {
 					labelPollTitle = result.getPollTitle();
 				}
-				//2018-07-26 김보미 - 크롬/ie별 상이하게 title길이 조정
-				String header = req.getHeader("User-Agent");
+				//2018-07-26 김보미 - title ellipsis처럼 보이게 처리
 				String pollTitle = labelPollTitle;
-				if (header.indexOf("Chrome") > 0) { //크롬일때
-					if (labelPollTitle.length() > 45) {
-						pollTitle = labelPollTitle.substring(0, 45) + "...";
-					}
-				} else {
-					if (labelPollTitle.length() > 47) {//ie일때
-						pollTitle = labelPollTitle.substring(0, 47) + "...";
-					}
+				if (labelPollTitle.length() > 93) {
+					pollTitle = labelPollTitle.substring(0, 92) + "...";
 				}
-				labelPollTitle = "<div title='" + labelPollTitle + "'>" + pollTitle + "</div>";
+				
+				labelPollTitle = "<span title='" + labelPollTitle + "'>" + pollTitle + "</span>";
 				
 				pollSeq = String.valueOf(result.getItemSeq());
 				int count = Integer.parseInt(result.getPollSelectionCount());
@@ -638,6 +632,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String title = "";
 		int totalCount = 0;
 		String subject = "";
+		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
+		String subjectCont = "";
 		
 		String itemSeq = req.getParameter("itemSeq");
 		
@@ -697,8 +693,20 @@ public class EzPersonalController extends EgovFileMngUtil {
 				
 				resultDom.getElementsByTagName("PERCENT").item(i).setTextContent(String.format("%.1f", temp));
 			}
-			
-			subject += " - " + egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
+			//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
+			subjectCont = subject;
+			if (subject.length() > 86) {
+				subjectCont = subject.substring(0, 86) + "...";
+			}
+			//subject += " - " + egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
+			subjectCont += " - " + egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
+		}
+		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
+		else {
+			subjectCont = subject;
+			if (subject.length() > 93) {
+				subjectCont = subject.substring(0, 92) + "...";
+			}
 		}
 		
 		String strHtml = "";
@@ -747,6 +755,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("subject", subject);
 		model.addAttribute("strHtml", strHtml);
 		model.addAttribute("title", title);
+		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
+		model.addAttribute("subjectCont", subjectCont);
 		
 		logger.debug("pollResult ended");
 		return "ezPersonal/persPollResult";
