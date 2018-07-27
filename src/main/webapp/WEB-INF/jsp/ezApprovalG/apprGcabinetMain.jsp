@@ -1290,10 +1290,12 @@
 		            xmlhttp.open("POST", "/ezApprovalG/resendEndDoc.do", false);
 		            xmlhttp.send(rtn[1]);
 		        }
-		    	if (xmlhttp.statusText == "OK")
-		    		 return;
-		    	else
+		    	if (xmlhttp.statusText == "OK") {
+		    		OpenAlertUI("<spring:message code='ezApproval.t157'/> <spring:message code='ezApproval.t854'/>");		    		
+		    		return;
+		    	} else {
 		    		alert(strLang223);
+		    	}
 		    }
 		    // END
 		
