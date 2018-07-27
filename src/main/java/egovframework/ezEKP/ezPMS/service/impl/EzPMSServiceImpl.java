@@ -3457,4 +3457,29 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		ezPMSDAO.deleteBoardFolder(map);
 	}
+
+	@Override
+	public void updateTaskNameGantt(ProjectTaskVO taskVO, String taskType) throws Exception {
+		LOGGER.debug("[SERVICE] ezPMS updateTaskNameGantt started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", taskVO.getProjectId());
+		map.put("tenantId", taskVO.getTenantId());
+		if(taskType.equals("p")) {
+			map.put("groupId", taskVO.getGroupId());
+			map.put("projectName", taskVO.getTaskName());
+			map.put("groupName", taskVO.getTaskName());
+			ezPMSDAO.updateProjectName(map);
+			ezPMSDAO.updateGroupName(map);
+		} else if(taskType.equals("t")) {
+			map.put("taskName", taskVO.getTaskName());
+			map.put("taskId", taskVO.getTaskId());
+			ezPMSDAO.updateTaskName(map);
+		} else {
+			map.put("groupId", taskVO.getTaskId());
+			map.put("groupName", taskVO.getTaskName());
+			ezPMSDAO.updateGroupName(map);
+		}
+		
+		LOGGER.debug("[SERVICE] ezPMS updateTaskNameGantt ended");
+	}
 }

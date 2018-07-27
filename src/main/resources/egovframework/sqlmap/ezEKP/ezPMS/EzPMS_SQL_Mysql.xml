@@ -2162,6 +2162,8 @@
 				B.tenant_id = #tenantId#
 			AND 
 				B.del_status = 0
+			AND	
+				F.PROJECT_ID = #projectId#
 		]]>	
 	</select>
 	
@@ -3883,7 +3885,7 @@
 	]]>
 	</select>
 	
-	<select id="EzPMSDAO.getGroupSchedule" parameterClass="map" resultMap="groupScheduleVO">
+	<select id="EzPMSDAO.getGroupSchedule" parameterClass="map">
 	<![CDATA[
 		SELECT
 			PLAN_START_DATE, PLAN_END_DATE
@@ -4252,16 +4254,46 @@
 			TENANT_ID = #tenantId#
 	</update>
 	
-	<update id="EzPMSDAO.deleteBoardFolder" parameterClass="map">
-		UPDATE 
-			TBL_PMS_BOARD_FOLDER
-		SET
-			DEL_STATUS = 1
-		WHERE
-			PROJECT_ID = #projectId#
-		AND
-			FOLDER_ID = #folderId#
-		AND
-			TENANT_ID = #tenantId#
+	<update id="EzPMSDAO.updateTaskName" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_TASK
+			SET
+				TASK_NAME = #taskName#
+			WHERE
+				PROJECT_ID = #projectId#
+			AND
+				TASK_ID = #taskId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateGroupName" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_GROUP
+			SET
+				GROUP_NAME = #groupName#
+			WHERE
+				PROJECT_ID = #projectId#
+			AND
+				GROUP_ID = #groupId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateProjectName" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_PROJECT
+			SET
+				PROJECT_NAME = #projectName#
+			WHERE
+				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
 	</update>
 </sqlMap>

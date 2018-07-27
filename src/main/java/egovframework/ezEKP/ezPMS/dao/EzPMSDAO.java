@@ -662,4 +662,15 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (ProjectBoardFolderVO) select ("EzPMSDAO.getBoardFolder", map);
 	}
 	
+	public void updateTaskName(Map<String, Object> map) {
+		update ("EzPMSDAO.updateTaskName", map);
+	}
+	
+	public void updateGroupName(Map<String, Object> map) {
+		update ("EzPMSDAO.updateGroupName", map);
+	}
+	
+	public void updateProjectName(Map<String, Object> map) {
+		update ("EzPMSDAO.updateProjectName", map);
+	}
 } 
