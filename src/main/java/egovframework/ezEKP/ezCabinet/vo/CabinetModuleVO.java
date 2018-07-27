@@ -70,6 +70,7 @@ public class CabinetModuleVO {
 			case "todo"  : mdlType = 5 ; break;
 			case "resrc" : mdlType = 11; break;
 			case "projt" : mdlType = 10; break;
+			case "jounl" : mdlType = 9 ; break;
 			case "option": mdlType = 6 ; break;
 			case "commu" : mdlType = 7 ; break;
 			case "addrs" : mdlType = 8 ; break;

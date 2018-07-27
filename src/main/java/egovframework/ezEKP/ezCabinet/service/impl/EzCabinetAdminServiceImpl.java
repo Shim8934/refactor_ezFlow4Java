@@ -110,6 +110,8 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 			result.add(new CabinetModuleVO(companyId, "board" , 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "apprv" , 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "addrs" , 0, tenantId));
+			result.add(new CabinetModuleVO(companyId, "jounl" , 0, tenantId));
+			
 			map.put("moduleList", result);
 			
 			ezCabinetAdminDAO.insertModulForAdmin(map);

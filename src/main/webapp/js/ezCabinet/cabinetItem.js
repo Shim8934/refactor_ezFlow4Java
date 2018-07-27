@@ -709,9 +709,6 @@ var CabinetItem = function() {
 	
 	function afterGetItemInfo(data) {
 		var itemInfo    = data.fileDetail;
-		var attachList  = data.attachFileList;
-		var relatedList = data.relatedFileList;
-		var columns     = data.columns;
 		var itemType    = itemInfo["itemType"];
 		var divPrevId   = crrPreMode == "w" ? "previewHeaderW" : "previewHeaderH";
 		var divElmt     = document.getElementById(divPrevId);
@@ -732,21 +729,198 @@ var CabinetItem = function() {
 		
 		if (itemType != 0) {
 			//연동 review here
-			
+			switch(itemType) {
+				case 1 : showMailPreview(data, dlElmt)     ; break;
+				case 2 : showApprovalPreview() ; break;
+				case 3 : showBoardPreview()    ; break;
+				case 4 : showSchedulePreview() ; break;
+				case 5 : showTodoPreview()     ; break;
+				case 6 : showOptionPreview()   ; break;
+				case 7 : showCommunityPreview(); break;
+				case 8 : showAddressPreview()  ; break;
+				case 9 : showJournalPreview()  ; break;
+				case 10: showProjectPreview()  ; break;
+				case 11: showResourcePreview() ; break;
+			}
 		}
 		else {
+			var attachList  = data.attachFileList;
+			var relatedList = data.relatedFileList;
 			generalItemTitle(relatedList,  itemInfo["creatorName"], itemInfo["summary"], dlElmt);
 			generalItemContent(attachList, itemInfo["itemSize"]);
 		}
 	}
 	
-	function generalItemTitle(relatedList, creatorName, summary, dlElmt) {
+	function showMailPreview(data, dlElmt) {
+		var itemInfo       = data.fileDetail;
+		var attachList     = data.attachFileList;
+		var relatedList    = data.relatedFileList;
+		var columnList     = data.columns;
+		var receiverList   = data.receivers;
+		var forwardList    = data.forwards;
+		var senderUser     = data.sender;
+		var senderColumn   = columnList.filter(function(col) {return col["columnId"] == "sender";})[0];
+		var receiverColumn = columnList.filter(function(col) {return col["columnId"] == "receiver";})[0];
+		var forwardColumn  = columnList.filter(function(col) {return col["columnId"] == "forward";})[0];
+		
+		//Generate mail title
+		generateEmailTitle(itemInfo, relatedList, senderColumn, receiverColumn, forwardColumn, senderUser, receiverList, forwardList, dlElmt);
+		//Generat mail content + attach files
+	}
+	
+	function generateEmailTitle(itemInfo, relatedList, senderColumn, receiverColumn, forwardColumn, senderUser, receiverList, forwardList, dlElmt) {
+		console.log(senderColumn);
+		console.log(receiverColumn);
+		var creatorName = itemInfo["creatorName"];
+		//Creator title
+		generateCreatorTitle(dlElmt, creatorName);
+		
+		//Sender title
+		var sdtElmt = document.createElement("dt");
+		var sddElmt = document.createElement("dd");
+		sdtElmt.textContent = senderColumn["columnName"] + ": ";
+		var senderElmt = document.createElement("span");
+		senderElmt.textContent = senderUser["userName"];
+		senderElmt.setAttribute("title", senderUser["userEmail"]);
+		senderElmt.className   = "txtSpan";
+		senderElmt.addEventListener("click", function(e) {showUserInfoFromEmail(senderUser["userEmail"]);}, false);
+		sddElmt.appendChild(senderElmt);
+		
+		dlElmt.appendChild(sdtElmt);
+		dlElmt.appendChild(sddElmt);
+		
+		//Receiver title
+		var rdtElmt = document.createElement("dt");
+		var rddElmt = document.createElement("dd");
+		rdtElmt.textContent = receiverColumn["columnName"] + ": ";
+		var totalReceivers  = receiverList.length;
+		
+		if (totalReceivers == 1) {
+			var spanElmt = document.createElement("span");
+			var userMail = receiverList[0]["userEmail"];
+			spanElmt.textContent = receiverList[0]["userName"];
+			spanElmt.setAttribute("title", userMail);
+			spanElmt.className   = "txtSpan";
+			spanElmt.addEventListener("click", function(e) {showUserInfoFromEmail(userMail);}, false);
+			rddElmt.appenChild(spanElmt);
+		}
+		else {
+			var spanElmt1 = document.createElement("span");
+			var spanElmt2 = document.createElement("span");
+			var spanElmt3 = document.createElement("span");
+			var pElmt     = document.createElement("p");
+			
+			spanElmt1.addEventListener("click", function(e) {showUserInfoFromEmail(receiverList[0]["userEmail"]);}, false);
+			spanElmt1.textContent = receiverList[0]["userName"];
+			spanElmt1.className   = "txtSpan";
+			spanElmt1.setAttribute("title", receiverList[0]["userEmail"]);
+			spanElmt2.textContent = " (" + CabinetMessages.strTotal + " " + totalReceivers + CabinetMessages.strPeople + ")";
+			spanElmt3.className   = "icDown";
+			spanElmt3.addEventListener("click", function(e) {showRelatedList(this);}, false);
+			pElmt.className       = "relateList hide";
+			
+			for (var i = 0; i < totalReceivers; i++) {
+				var spanChild = document.createElement("span");
+				spanChild.className   = "txtSpan";
+				spanChild.textContent = receiverList[i]["userName"];
+				spanChild.setAttribute("title", receiverList[i]["userEmail"]);
+				spanChild.onclick     = (function(receiver) {
+					return function() {showUserInfoFromEmail(receiver["userEmail"]);}
+				})(receiverList[i]);
+				
+				pElmt.appendChild(spanChild);
+				
+				if (i != totalReceivers - 1) {
+					var divideEm         = document.createElement("em");
+					divideEm.textContent = "; ";
+					pElmt.appendChild(divideEm);
+				}
+			}
+			
+			rddElmt.appendChild(spanElmt1);
+			rddElmt.appendChild(spanElmt2);
+			rddElmt.appendChild(spanElmt3);
+			rddElmt.appendChild(pElmt);
+		}
+		
+		dlElmt.appendChild(rdtElmt);
+		dlElmt.appendChild(rddElmt);
+		
+		//Related documents title
+		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
+	}
+	
+	function generateCreatorTitle(dlElmt, creatorName) {
 		var dtElmt       = document.createElement("dt");
 		var ddElmt       = document.createElement("dd");
 		dtElmt.textContent = CabinetMessages.strCreator + ": ";
 		ddElmt.textContent = creatorName;
 		dlElmt.appendChild(dtElmt);
 		dlElmt.appendChild(ddElmt);
+	}
+	
+	function generateRelatedListTitle(dlElmt, relatedList) {
+		var totalCnt = relatedList.length;
+		var dtElmt2  = document.createElement("dt");
+		var ddElmt2  = document.createElement("dd");
+		dtElmt2.textContent = CabinetMessages.strRelated + ": ";
+		
+		if (totalCnt == 1) {
+			var spanElmt = document.createElement("span");
+			spanElmt.textContent = relatedList[0]["title"];
+			spanElmt.setAttribute("role",   relatedList[0]["relatedItemId"]);
+			spanElmt.setAttribute("title",  relatedList[0]["title"]);
+			spanElmt.setAttribute("status", relatedList[0]["useStatus"]);
+			spanElmt.className   = "txtSpan";
+			spanElmt.addEventListener("click", function(e) {readRelatedItem(this);}, false);
+			ddElmt2.appenChild(spanElmt);
+		}
+		else {
+			var spanElmt1 = document.createElement("span");
+			var spanElmt2 = document.createElement("span");
+			var spanElmt3 = document.createElement("span");
+			var pElmt     = document.createElement("p");
+			
+			spanElmt1.addEventListener("click", function(e) {readRelatedItem(this);}, false);
+			spanElmt1.setAttribute("title",  relatedList[0]["title"]);
+			spanElmt1.setAttribute("role",   relatedList[0]["relatedItemId"]);
+			spanElmt1.setAttribute("status", relatedList[0]["useStatus"]);
+			spanElmt1.textContent = relatedList[0]["title"];
+			spanElmt1.className   = "txtSpan";
+			spanElmt2.textContent = " (" + CabinetMessages.strTotal + " " + totalCnt + CabinetMessages.strItem + ")";
+			spanElmt3.className   = "icDown";
+			spanElmt3.addEventListener("click", function(e) {showRelatedList(this);}, false);
+			pElmt.className       = "relateList hide";
+			
+			for (var i = 0; i < totalCnt; i++) {
+				var spanChild = document.createElement("span");
+				spanChild.className   = "txtSpan";
+				spanChild.textContent = relatedList[i]["title"];
+				spanChild.setAttribute("title",  relatedList[i]["title"]);
+				spanChild.setAttribute("role",   relatedList[i]["relatedItemId"]);
+				spanChild.setAttribute("status", relatedList[i]["useStatus"]);
+				spanChild.addEventListener("click", function(e) {readRelatedItem(this);}, false);
+				pElmt.appendChild(spanChild);
+				
+				if (i != totalCnt - 1) {
+					var divideEm         = document.createElement("em");
+					divideEm.textContent = "; ";
+					pElmt.appendChild(divideEm);
+				}
+			}
+			
+			ddElmt2.appendChild(spanElmt1);
+			ddElmt2.appendChild(spanElmt2);
+			ddElmt2.appendChild(spanElmt3);
+			ddElmt2.appendChild(pElmt);
+		}
+		
+		dlElmt.appendChild(dtElmt2);
+		dlElmt.appendChild(ddElmt2);
+	}
+	
+	function generalItemTitle(relatedList, creatorName, summary, dlElmt) {
+		generateCreatorTitle(dlElmt, creatorName);
 		
 		if (summary.replace(/\s/g,'')) {
 			var sDtElmt         = document.createElement("dt");
@@ -757,65 +931,7 @@ var CabinetItem = function() {
 			dlElmt.appendChild(sDdElmt);
 		}
 		
-		if(relatedList && relatedList.length > 0) {
-			var totalCnt = relatedList.length;
-			var dtElmt2  = document.createElement("dt");
-			var ddElmt2  = document.createElement("dd");
-			dtElmt2.textContent = CabinetMessages.strRelated + ": ";
-			
-			if (totalCnt == 1) {
-				var spanElmt = document.createElement("span");
-				spanElmt.textContent = relatedList[0]["title"];
-				spanElmt.setAttribute("role",   relatedList[0]["relatedItemId"]);
-				spanElmt.setAttribute("title",  relatedList[0]["title"]);
-				spanElmt.setAttribute("status", relatedList[0]["useStatus"]);
-				spanElmt.className   = "txtSpan";
-				spanElmt.addEventListener("click", function(e) {readRelatedItem(this);}, false);
-				ddElmt2.appenChild(spanElmt);
-			}
-			else {
-				var spanElmt1 = document.createElement("span");
-				var spanElmt2 = document.createElement("span");
-				var spanElmt3 = document.createElement("span");
-				var pElmt     = document.createElement("p");
-				
-				spanElmt1.addEventListener("click", function(e) {readRelatedItem(this);}, false);
-				spanElmt1.setAttribute("title",  relatedList[0]["title"]);
-				spanElmt1.setAttribute("role",   relatedList[0]["relatedItemId"]);
-				spanElmt1.setAttribute("status", relatedList[0]["useStatus"]);
-				spanElmt1.textContent = relatedList[0]["title"];
-				spanElmt1.className   = "txtSpan";
-				spanElmt2.textContent = " (" + CabinetMessages.strTotal + " " + totalCnt + CabinetMessages.strItem + ")";
-				spanElmt3.className   = "icDown";
-				spanElmt3.addEventListener("click", function(e) {showRelatedList(this);}, false);
-				pElmt.className       = "relateList hide";
-				
-				for (var i = 0; i < totalCnt; i++) {
-					var spanChild = document.createElement("span");
-					spanChild.className   = "txtSpan";
-					spanChild.textContent = relatedList[i]["title"];
-					spanChild.setAttribute("title",  relatedList[i]["title"]);
-					spanChild.setAttribute("role",   relatedList[i]["relatedItemId"]);
-					spanChild.setAttribute("status", relatedList[i]["useStatus"]);
-					spanChild.addEventListener("click", function(e) {readRelatedItem(this);}, false);
-					pElmt.appendChild(spanChild);
-					
-					if (i != totalCnt - 1) {
-						var divideEm         = document.createElement("em");
-						divideEm.textContent = "; ";
-						pElmt.appendChild(divideEm);
-					}
-				}
-				
-				ddElmt2.appendChild(spanElmt1);
-				ddElmt2.appendChild(spanElmt2);
-				ddElmt2.appendChild(spanElmt3);
-				ddElmt2.appendChild(pElmt);
-			}
-			
-			dlElmt.appendChild(dtElmt2);
-			dlElmt.appendChild(ddElmt2);
-		}
+		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
 	}
 	
 	function generalItemContent(attachList, itemSize) {
@@ -1023,6 +1139,12 @@ var CabinetItem = function() {
 			isImage  : imgCheck,
 			urlImage : urlImg
 		};
+	}
+	
+	function showUserInfoFromEmail(userMail) {
+		var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+		feature = feature + getOpenWindowfeature(420, 500);
+		window.open("/ezCommon/showPersonInfo.do?email=" + encodeURIComponent(userMail), "userMail", feature);
 	}
 	
 	function getFileSize(fileSize) {

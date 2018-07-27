@@ -252,7 +252,7 @@
 					var obj         = {};
 					
 					if (queryString) {
-						// remove all #
+						// Remove all #
 						queryString = queryString.split("#")[0];
 						var arr     = queryString.split("&");
 						
@@ -265,18 +265,14 @@
 								return '';
 							});
 							
-							// Set parameter value (use 'true' if empty)
+							// Set parameter value (set true if empty)
 							var paramValue = typeof(a[1]) === "undefined" ? true : a[1];
 							
-							// Keep case consistent
-							//paramName  = paramName.toLowerCase();
-							//paramValue = paramValue.toLowerCase();
-							
-							// if parameter name already exists
+							// If parameter name already exists
 							if (obj[paramName]) {
 								if (typeof obj[paramName] === "string") {obj[paramName] = [obj[paramName]];}
 								
-								// if no array index number specified
+								// If no array index number specified
 								if (typeof paramNum === 'undefined') {
 									obj[paramName].push(paramValue);
 								}

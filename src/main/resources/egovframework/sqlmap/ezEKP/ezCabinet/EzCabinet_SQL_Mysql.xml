@@ -15,6 +15,7 @@
 	<typeAlias alias="CabinetSimpleUserVO"  type="egovframework.ezEKP.ezCabinet.vo.SimpleUserVO"       />
 	<typeAlias alias="CabinetShareVO"       type="egovframework.ezEKP.ezCabinet.vo.CabinetShareVO"     />
 	<typeAlias alias="CabinetColumnVO"      type="egovframework.ezEKP.ezCabinet.vo.CabinetColumnVO"    />
+	<typeAlias alias="SimpleUserMailVO"     type="egovframework.ezEKP.ezCabinet.vo.SimpleUserMailVO"   />
 	
 	<!-- SimpleDept resultMap -->
 	<resultMap id="simpleDeptVO" class="cabinetSimpleDeptVO">
@@ -237,6 +238,24 @@
 		<result property="telNumber"        column="telephone_number"       columnIndex="6"/>
 		<result property="mail"             column="mail"                   columnIndex="7"/>
 		<result property="userImg"          column="user_image"             columnIndex="8"/>
+	</resultMap>
+	
+	<!-- CabinetRelatedColumn resultMap -->
+	<resultMap id="cabinetColumnVO" class="CabinetColumnVO">
+		<result property="columnId"           column="rel_id"               columnIndex="1"/>
+		<result property="itemId"             column="item_id"              columnIndex="2"/>
+		<result property="columnName"         column="rel_name"             columnIndex="3"/>
+		<result property="columnName1"        column="rel_name1"            columnIndex="4"/>
+		<result property="columnName2"        column="rel_name2"            columnIndex="5"/>
+		<result property="columnValue"        column="rel_value"            columnIndex="6"/>
+		<result property="companyId"          column="company_id"           columnIndex="7"/>
+		<result property="tenantId"           column="tenant_id"            columnIndex="8"/>
+	</resultMap>
+	
+		<!-- CabinetRelatedColumn resultMap -->
+	<resultMap id="simpleUserMailVO" class="SimpleUserMailVO">
+		<result property="userName"           column="user_name"            columnIndex="1"/>
+		<result property="userEmail"          column="user_email"           columnIndex="2"/>
 	</resultMap>
 	
 	<sql id="cabinetTreeSelect">
@@ -988,4 +1007,44 @@
 		<![CDATA[ insert into tbl_cb_rel (rel_id, item_id, rel_name1, rel_name2, rel_value, company_id, tenant_id) values (#columnId#, #itemId#, #columnName1#, #columnName2#, #columnValue#, #companyId#, #tenantId#) ]]>
 	</insert>
 	
+	<select id="EzCabinetDAO.getAllRelatedColumnsOfItem" resultMap="cabinetColumnVO">
+		<![CDATA[
+			select
+				rel_id                                                      as rel_id,
+				item_id                                                     as item_id,
+				case when #primary# = '1' then rel_name1 else rel_name2 end as rel_name,
+				rel_name1                                                   as rel_name1,
+				rel_name2                                                   as rel_name2,
+				rel_value                                                   as rel_value,
+				company_id                                                  as company_id,
+				tenant_id                                                   as tenant_id
+			from
+				tbl_cb_rel
+			where
+				item_id = #itemId# and tenant_id = #tenantId#
+		]]>
+	</select>
+	
+	<!--***********************************************************************************
+	**                              Cabinet email infor process                          **
+	************************************************************************************-->
+	
+	<select id="EzCabinetDAO.getUserInfoFromEmail" resultMap="simpleUserMailVO">
+			select
+				a.*
+			from
+				(
+					select
+						case when #primary# = '1' then u.displayname else u.displayname2 end as user_name,
+						u.mail                                                               as user_email
+					from tbl_usermaster u where u.tenant_id = #tenantId# and u.mail in
+						<iterate property="mailList" open="(" close=")" conjunction=",">#mailList[]#</iterate>
+					union
+					select 
+						case when #primary# = '1' then d.displayname else d.displayname2 end as user_name,
+						d.mail                                                               as user_email
+					from tbl_deptmaster d where d.tenant_id = #tenantId# and d.mail in
+						<iterate property="mailList" open="(" close=")" conjunction=",">#mailList[]#</iterate>
+				) a
+	</select>
 </sqlMap>
