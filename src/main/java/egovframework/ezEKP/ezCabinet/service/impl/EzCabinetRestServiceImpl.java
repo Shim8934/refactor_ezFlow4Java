@@ -393,16 +393,17 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		return resultBody;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveItem(HttpServletRequest request, String userId, String cabinetId, String title, String summary, JSONArray fileArray, JSONArray relatedArr) throws Exception {
+	public JSONObject saveItem(HttpServletRequest request, String userId, String cabinetId, String title, String summary, String fileArray, String relatedArr) throws Exception {
 		String url                = "/rest/ezcabinet/item/id/" + cabinetId + "/add";
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("title",      title);
-		param.put("summary",    summary);
-		param.put("fileArray",  fileArray);
-		param.put("relatedArr", relatedArr);
-		param.put("userId",     userId);
-		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		JSONObject jsonBody       = new JSONObject();
+		jsonBody.put("title",      title);
+		jsonBody.put("summary",    summary);
+		jsonBody.put("fileArray",  fileArray);
+		jsonBody.put("relatedArr", relatedArr);
+		jsonBody.put("userId",     userId);
+		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
 	
@@ -552,21 +553,22 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		rest.execute(builder.build().encode().toUri(), HttpMethod.GET, requestCallback, responseExtractor);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveRelatedEmail(HttpServletRequest request, String userId, String title, String sender, String attach, String mode, String cabinetId, String content, String receiver, String forward, String dateTime) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/email";
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userId",   userId);
-		param.put("title",    title);
-		param.put("sender",   sender);
-		param.put("attach",   attach);
-		param.put("mode",     mode);
-		param.put("content",  content);
-		param.put("receiver", receiver);
-		param.put("forward",  forward);
-		param.put("dateTime", dateTime);
-		param.put("cabinet",  cabinetId);
-		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		JSONObject jsonBody       = new JSONObject();
+		jsonBody.put("userId",   userId);
+		jsonBody.put("title",    title);
+		jsonBody.put("sender",   sender);
+		jsonBody.put("attach",   attach);
+		jsonBody.put("mode",     mode);
+		jsonBody.put("content",  content);
+		jsonBody.put("receiver", receiver);
+		jsonBody.put("forward",  forward);
+		jsonBody.put("dateTime", dateTime);
+		jsonBody.put("cabinet",  cabinetId);
+		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
 }

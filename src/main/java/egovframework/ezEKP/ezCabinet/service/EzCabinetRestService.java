@@ -1,10 +1,8 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,7 +58,7 @@ public interface EzCabinetRestService {
 	public void downloadAttachFile(HttpServletRequest request, HttpServletResponse response, String userId, String filePath, String fileName) throws Exception;
 	
 	//User item
-	public JSONObject saveItem(HttpServletRequest request, String userId, String cabinetId, String title, String summary, JSONArray fileArray, JSONArray relatedArr) throws Exception;
+	public JSONObject saveItem(HttpServletRequest request, String userId, String cabinetId, String title, String summary, String fileArray, String relatedArr) throws Exception;
 	
 	//User cabinet information
 	public JSONObject getCabinetInfo(HttpServletRequest request, String userId, String cabinetId) throws Exception;

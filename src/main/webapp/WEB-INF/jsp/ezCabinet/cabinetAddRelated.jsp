@@ -128,7 +128,7 @@
 					if (!mailOpener) {alert(CabinetMessages.strSelect); return;}
 					
 					var mailDate     = mailOpener.document.getElementById("LabelReceiveDate").textContent;
-					var mailSubject  = mailOpener.document.getElementById("mailSubject").textContent;
+					var mailSubject  = mailOpener.document.getElementById("LabelSubject").textContent;
 					var messageFrame = mailOpener.document.getElementById("message");
 					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
 					var emailContent = contentWd.document.getElementById("normalScreen").innerHTML;
@@ -158,7 +158,6 @@
 							var spElmt  = listChildren[i].firstElementChild;
 							var hrefStr = spElmt.getAttribute("_filehref");
 							var params  = getAllUrlParams(hrefStr);
-							console.log(params);
 							
 							normalList.push({
 								fileHref : params,
@@ -166,13 +165,6 @@
 							});
 						}
 					}
-					
-					//console.log("ReceiveList: " + JSON.stringify(receiveList));
-					//console.log("ForwardList: " + JSON.stringify(forwardList));
-					//console.log("SenderEmail: " + senderEmail);
-					//console.log("MailDate   : " + mailDate);
-					//console.log("MailContent: " + JSON.stringify(emailContent));
-					//console.log("Normal List: " + JSON.stringify(normalList))
 					
 					var url  = "/ezCabinet/saveRelatedEmail.do";
 					var data = {
@@ -202,7 +194,6 @@
 						mode   : saveMode, 
 						content: JSON.stringify(divContent)
 					};
-					console.log(data);
 					
 					if (saveMode == 1) {data.cabinetId = cabinetId;}
 					
