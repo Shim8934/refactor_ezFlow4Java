@@ -142,6 +142,7 @@ var userRoleId = parent.userRoleId;
 	 applyList();
 	 applyParticipantList();
 	 initpretaskNames();
+	 document.getElementById("taskName").focus();
  });
  
 function initpretaskNames() {

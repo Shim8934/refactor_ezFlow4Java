@@ -92,6 +92,8 @@
 			fileList = decodeURIComponent(fileList);
 			dadiframe.setAttachFileInfo(fileList);
 		}
+		
+		document.getElementById("title").focus();
 	};
 	
 	function getTaskSelectionTree() {

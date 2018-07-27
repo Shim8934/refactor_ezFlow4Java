@@ -616,7 +616,7 @@
 		                	}
 		                	
 		                	$(obj).addClass("selectTR");
-		                	selUserList.push(obj);
+		                	selUserList[selUserList.length] = obj;
 		                    listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
 		                }
 						return;

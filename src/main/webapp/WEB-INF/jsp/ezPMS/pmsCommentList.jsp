@@ -197,6 +197,8 @@
 		if(typeof setContentTitle != 'undefined') {
 			setContentTitle(taskName, contentCount);
 		}
+		
+		document.getElementById("comment_input").focus();
 	});
 </script>
 <div id="divList" style="width: 100%;">
