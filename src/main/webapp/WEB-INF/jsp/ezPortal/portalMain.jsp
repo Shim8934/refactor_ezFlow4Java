@@ -29,7 +29,7 @@
 			}
 
 			#open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;}
-			.individual-memo { width:200px; height:200px; background:#0470e4; text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 3px 3px 3px 38px;}
+			.individual-memo { width:200px; height:200px; background:url('/images/ezMemo/background.gif') repeat-x; background-size:200px 190px;text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 3px 3px 3px 38px;}
 			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);}
 			#selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;}
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
@@ -95,7 +95,7 @@
 	        		$("#layer-popup").removeClass().addClass("layer-half");
 	        	}
 				setSizeOfLayer();
-				$(".memoListBox").css("height",winHeight - 56 - 90);
+				$(".memoListBox").css("height",winHeight - 56 - 60);
 		    }
 		    
 		    function setSizeOfLayer() {
@@ -119,7 +119,7 @@
 	        		maskDiv.css({"top":0, "left": 0, "width" : winWidth - 30, "height":winHeight - 56 - 30});
 	        		opendMemo.css({"top":20, "left": 20, "width" : winWidth - 90, "height":winHeight - 56 - 90})
 	        	}
-				$(".memoListBox").css("height",winHeight - 56 - 90);
+				$(".memoListBox").css("height",winHeight - 56 - 60);
 		    }
 		    
 		    $(function() {
@@ -167,7 +167,7 @@
 		        });
 		        
 		        $("#memoList").sortable({
-		        	 containment: '#layer-popup'
+		        	 containment: '.memoListBox'
 		        });
 		        
 		        layerPopupOpacity();
@@ -259,7 +259,7 @@
 		    	}
 		    	
 		    	var text = $("#textarea").val();
-		    	$("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right;'><textarea class='memo-text' style='padding-left:10px; padding-right:10px; border:0px; width:90%; height:90%; resize:none; overflow-y:auto;'>" + text + "</textarea></div>");
+		    	$("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right;'><textarea class='memo-text' style='margin-top:5px; padding-left:10px; padding-right:10px; border:0px; width:90%; height:87%; resize:none; overflow-y:auto;'>" + text + "</textarea></div>");
 		    	$("#textarea").val('');
 		    	$("#maskDiv").css("display", "none");
 		    	$("#selected-memo").css("display", "none");
