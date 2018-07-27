@@ -2574,6 +2574,7 @@ public class EzPMSGWController {
 			search.setGroupName(request.getParameter("searchByGroupName"));
 			search.setOverview(request.getParameter("searchByOverview"));
 			search.setProjectName(request.getParameter("searchByProjectName"));
+			search.setTaskName("");
 			search.setMemberId(userId);
 
 			List<ProjectGroupVO> groupList = ezPMSService.getGroupList(search, orderWhat, orderHow, startRow, limit,
@@ -2581,12 +2582,14 @@ public class EzPMSGWController {
 			
 			for(ProjectGroupVO vo : groupList) {
 				vo.setGroupMember(ezPMSService.getGroupMemberList(vo.getProjectId(), info.getTenantId(), vo.getGroupId()));
+				
 			}
 
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", groupList);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -3407,6 +3410,10 @@ public class EzPMSGWController {
 				// endDate, companyId, tenantId));
 
 				groupList.get(i).setGroupMember(groupMemberListTemp);
+
+				search.setGroupId(groupList.get(i).getGroupId());
+				search.setIsMyTask("A");
+				groupList.get(i).setTaskCount(ezPMSService.getTaskListCount(search, userId, 3, info.getDeptId()));
 			}
 
 			result.put("status", "ok");

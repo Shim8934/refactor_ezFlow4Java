@@ -121,6 +121,9 @@ public class ProjectGroupVO {
     // 상위 그룹의 treeDepth
     private int upperTreeDepth;
     
+    //하위 task 개수
+    private int taskCount;
+    
     public String getProjectName() {
 		return projectName;
 	}
@@ -431,5 +434,13 @@ public class ProjectGroupVO {
 
 	public void setUpperTreeDepth(int upperTreeDepth) {
 		this.upperTreeDepth = upperTreeDepth;
+	}
+
+	public int getTaskCount() {
+		return taskCount;
+	}
+
+	public void setTaskCount(int taskCount) {
+		this.taskCount = taskCount;
 	}
 }
