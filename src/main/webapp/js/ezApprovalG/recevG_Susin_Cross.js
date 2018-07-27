@@ -1174,9 +1174,10 @@ function SendDraftMappingSign(ret) {
                     }
                    
                     if (signImageType == "NAME") {
-                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+//                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     } else {
-                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" ;
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
                     
                     //대결 시 서명 데이트 입력란 없으면 날짜 표시
@@ -1241,7 +1242,8 @@ function SendDraftMappingSign(ret) {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
                     if (signImageType == "NAME") {
-                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+//                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     } else {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }

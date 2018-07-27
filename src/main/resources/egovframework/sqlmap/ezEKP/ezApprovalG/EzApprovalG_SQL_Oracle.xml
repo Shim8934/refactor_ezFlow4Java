@@ -3285,7 +3285,7 @@
 		    FROM 
 		    		TBL_LINTEMPLET 
 		    WHERE  
-		    		FORMID = #v_FORMID#
+		    		TRIM(FORMID) = #v_FORMID#
 		    AND 
 		    		USERID = #v_USERID#
 		    AND
@@ -3322,7 +3322,7 @@
 		    FROM 
 		    		TBL_LINTEMPLET 
 		    WHERE  
-		    		FORMID = #v_FORMID#
+		    		TRIM(FORMID) = #v_FORMID#
 		    AND 
 		    		USERID = #v_USERID#
 		    AND
@@ -3341,7 +3341,7 @@
 		    FROM 
 		    		TBL_LINTEMPLETDETAIL 
 		    WHERE  
-		    		FORMID = #v_FORMID#
+		    		TRIM(FORMID) = #v_FORMID#
 		    AND 
 		    		USERID = #v_USERID#
 		    AND 
@@ -3446,7 +3446,7 @@
 		        WHERE  
 		        	  USERID = #v_USERID#
 		        AND 
-		        	  FORMID = #v_FORMID#
+		        	  TRIM(FORMID) = #v_FORMID#
 		        AND 
 		        	  APRLINESN = #v_APRLINESN#
 		        AND 
@@ -10135,7 +10135,7 @@
 	        FROM 
 	        		TBL_LINTEMPLET 
 	      	WHERE  
-	      			FORMID = #v_FORMID#
+	      			TRIM(FORMID) = #v_FORMID#
 	        AND 
 	        		USERID = #v_USERID#
 	       	AND
@@ -15344,7 +15344,7 @@
     		WHERE  
     			USERID = #v_USERID#
             AND 
-            	FORMID = #v_FORMID#
+            	TRIM(FORMID) = #v_FORMID#
             AND 
             	APRLINESN = #v_APRLINESN#
             AND
@@ -15359,7 +15359,7 @@
        	WHERE  
        			USERID = #v_USERID#
         AND 
-        		FORMID = #v_FORMID#
+        		TRIM(FORMID) = #v_FORMID#
         AND 
         		APRLINESN = #v_APRLINESN#
         AND

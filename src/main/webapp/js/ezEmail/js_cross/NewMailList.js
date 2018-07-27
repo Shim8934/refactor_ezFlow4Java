@@ -1279,7 +1279,7 @@ function event_listContextMenu(event) {
     if (g_foldertype == "draft") {
     	$("#ContextMenuDiv tbody :nth-child(3)").css("display","none");
     }
-    document.getElementById("mailPanel").style.display = "";
+    //document.getElementById("mailPanel").style.display = "";
     document.getElementById("ContextMenuDiv").style.left = EventMouseX + "px";
     document.getElementById("ContextMenuDiv").style.top = EventMouseY + "px";
     document.getElementById("ContextMenuDiv").style.display = "";
