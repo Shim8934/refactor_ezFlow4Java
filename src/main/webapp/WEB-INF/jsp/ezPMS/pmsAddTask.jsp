@@ -129,6 +129,7 @@ var projectStatus = "${projectStatus}";
 		  $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		  
 		  setDefaultGroup();
+		  document.getElementById("taskName").focus();
  
  });
  

@@ -57,6 +57,7 @@ var participantList = [];
 // 	 taskDetails = ${taskDetails};
 // 	 managerList = ${taskDetails.taskMember};
 // 	 headManagerId = "${taskDetails.headManagerId}";
+	 document.getElementById("groupName").focus();
  });
  
 function openMemberList(type) {
