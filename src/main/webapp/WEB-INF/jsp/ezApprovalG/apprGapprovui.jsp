@@ -618,7 +618,7 @@
 		    /**
 		    * ExcuteInfo()를 통한 연동관리
 		    * getDocNumber()를 통한 문서번호 채번
-		    * AprrovMappingSign()를 통한 결재정보 내용 출력
+		    * ApprovMappingSign()를 통한 결재정보 내용 출력
 		    * SaveApproveInfo()를 통한 xml 생성 및 Contoller 호출
 		    */
 		    function Approv_Complete(signtype) {
@@ -724,7 +724,7 @@
 		            }
 		        }
 		        
-		        signInfo = AprrovMappingSign(signtype); // 현재 양식에 결재 관련 정보 출력( ex. 서명 서명 날짜 등등)
+		        signInfo = ApprovMappingSign(signtype); // 현재 양식에 결재 관련 정보 출력( ex. 서명 서명 날짜 등등)
 
 		        var rtnVal = true;
 		        if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {

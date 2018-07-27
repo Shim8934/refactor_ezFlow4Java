@@ -2202,6 +2202,14 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 				}
 				//end
 				
+				// 2018-07-27 황윤호 추가 
+				// tenant_config 테이블 useLadder가 yes이면 활성화, no이거나 row가 없으면 비활성화
+				if (menuitemLinkURL.equals("/ezBoard/boardMain.do?func=4")) {
+					if (!ezCommonService.getTenantConfig("useLadder", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+			        	continue;
+			        }
+				}
+				
 				String menuitemLinkLocation = result2.get(j).getLinkLocation();
 				String menuitemWindowOption = result2.get(j).getWindowOption();
 				
