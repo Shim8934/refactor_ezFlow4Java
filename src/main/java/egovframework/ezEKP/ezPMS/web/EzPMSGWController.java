@@ -1995,7 +1995,8 @@ public class EzPMSGWController {
 	public JSONObject getTaskList(@PathVariable long projectId, @PathVariable String userId, HttpServletRequest request)
 			throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId + "/users/" + userId + "] started.");
-
+		Long startMillis = System.currentTimeMillis();
+		
 		JSONObject result = new JSONObject();
 
 		try {
@@ -2064,12 +2065,12 @@ public class EzPMSGWController {
 			for (int i = 0; i < taskList.size(); i++) {
 				Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskList.get(i).getPlanStartDate());
 				Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(taskList.get(i).getPlanEndDate());
-				Date today = new Date();
-				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
-				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
+//				Date today = new Date();
+//				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
+//				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
 
-				int restDueday = ezPMSService.getWorkingDays(now, endDate, companyId, tenantId, lang);
-				taskList.get(i).setRestDueday(restDueday);
+//				int restDueday = ezPMSService.getWorkingDays(now, endDate, companyId, tenantId, lang);
+//				taskList.get(i).setRestDueday(restDueday);
 				taskList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate, companyId, tenantId, lang));
 				taskList.get(i).setTaskMember(
 						ezPMSService.getTaskMemberList(info.getTenantId(), taskList.get(i).getTaskId(), lang));
@@ -2111,6 +2112,8 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
+		Long endMillis = System.currentTimeMillis();
+		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0) + " sec");
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId + "/users/" + userId + "] ended.");
 		return result;
 	}
@@ -3088,7 +3091,7 @@ public class EzPMSGWController {
 	public JSONObject getProjectDetailsforGantt(@PathVariable Long projectId, @PathVariable String userId,
 			HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/users/" + userId + "/gantt] started.");
-
+		Long startMillis = System.currentTimeMillis();
 		JSONObject result = new JSONObject();
 
 		try {
@@ -3121,6 +3124,8 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
+		Long endMillis = System.currentTimeMillis();
+		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0) + " sec");
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/users/" + userId + "/gantt] ended.");
 		return result;
 	}
@@ -3342,7 +3347,7 @@ public class EzPMSGWController {
 			HttpServletRequest request) throws Exception {
 		LOGGER.debug(
 				"ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/groups/users/" + userId + "/gantt] started.");
-
+		Long startMillis = System.currentTimeMillis();
 		JSONObject result = new JSONObject();
 		
 		try {
@@ -3404,8 +3409,8 @@ public class EzPMSGWController {
 				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
 
-				int restDueday = ezPMSService.getWorkingDays(now, endDate, companyId, tenantId, lang);
-				groupList.get(i).setRestDueday(restDueday);
+//				int restDueday = ezPMSService.getWorkingDays(now, endDate, companyId, tenantId, lang);
+//				groupList.get(i).setRestDueday(restDueday);
 				// groupList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate,
 				// endDate, companyId, tenantId));
 
@@ -3426,6 +3431,8 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
+		Long endMillis = System.currentTimeMillis();
+		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0) + " sec");
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/groups/users/" + userId + "] ended.");
 		return result;
 	}
