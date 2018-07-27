@@ -11,7 +11,7 @@
 	    
 	    table, td {
 			white-space: nowrap;
-			/* overflow-x: hidden; */
+			overflow-x: hidden;
 			text-overflow: ellipsis;
 		}
 		td {
@@ -738,15 +738,7 @@
 	
 	<body class="mainbody" onLoad="javascript:window_onload()">
 		<h1><spring:message code='ezApprovalG.t1678'/><span id="listInfo"></span></h1>
-		<div id="mainmenu">	
-			<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-			    <select id="ListCompany" onChange="return changeCompID">
-		        	<c:forEach var="item" items="${list}">
-	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-	            	</c:forEach>
-			    </select><br /><br />
-			</span>
-		</div>
+		<input type="hidden" id="ListCompany" value="${userInfo.companyID }" >
 		<table style="width:100%;">		
 			<tr>
 				<table id = "t1" style="width:100%;border-top:1px solid #e8e8e8">

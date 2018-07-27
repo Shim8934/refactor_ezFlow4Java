@@ -489,14 +489,7 @@
 	    <table>
         	<tr>
         		<td style="vertical-align: top;">
-                	<div id="mainmenu">	
-						<span><b><spring:message code = 'ezApprovalG.t1566' /></b> :</span> 
-	                	<select id="SCompID" name="SCompID" onchange="SCompID_onchange()">
-				    		<c:forEach var="item" items="${list}">
-			            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-			            	</c:forEach>
-			            </select>
-			        </div>  
+        			<input type="hidden" id="SCompID" value="${userInfo.companyID }" >
                 	<div class="listview">
                     	<div id="lvtDept" style="border: 0px solid #ddd; OVERFLOW-Y: auto; OVERFLOW-X: hidden; Width: 360px; Height: 110px;" onselchanged="return lvtDept_SelChange()"></div>
                 	</div>
