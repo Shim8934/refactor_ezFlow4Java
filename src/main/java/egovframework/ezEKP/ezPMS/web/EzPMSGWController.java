@@ -2075,26 +2075,26 @@ public class EzPMSGWController {
 						ezPMSService.getTaskMemberList(info.getTenantId(), taskList.get(i).getTaskId(), lang));
 			}
 
-			if (request.getParameter("position") == null || !request.getParameter("position").equals("gantt")) {
-				if (roleId != 3 && roleId != 1 && roleId != 0 && groupId != 0) {
-					// upperGroupId가 0이아닌 상위 그룹이 있다면 담당자인지
-					long upperGroupId = ezPMSService.getUpperGroupId(groupId, projectId, tenantId);
-
-					if (upperGroupId != 0) {
-						// 해당 그룹의 담당자인지 해당 그룹에 해당이 안되면 roleId는 참여자(2)
-						roleId = ezPMSService.getUserGroupRole(userId, tenantId, projectId, groupId);
-
-						if (roleId != 1) {
-							roleId = ezPMSService.getUserGroupRole(userId, tenantId, projectId, upperGroupId);
-						}
-					}
-				}
-			}
+//			if (request.getParameter("position") == null || !request.getParameter("position").equals("gantt")) {
+//				if (roleId != 3 && roleId != 1 && roleId != 0 && groupId != 0) {
+//					// upperGroupId가 0이아닌 상위 그룹이 있다면 담당자인지
+//					long upperGroupId = ezPMSService.getUpperGroupId(groupId, projectId, tenantId);
+//
+//					if (upperGroupId != 0) {
+//						// 해당 그룹의 담당자인지 해당 그룹에 해당이 안되면 roleId는 참여자(2)
+//						roleId = ezPMSService.getUserGroupRole(userId, tenantId, projectId, groupId);
+//
+//						if (roleId != 1) {
+//							roleId = ezPMSService.getUserGroupRole(userId, tenantId, projectId, upperGroupId);
+//						}
+//					}
+//				}
+//			}
 
 			JSONObject data = new JSONObject();
 			data.put("taskList", taskList);
 			data.put("userRoleId", roleId);
-
+						
 			if (groupId != 0) {
 				// 그룹정보 불러오기
 				ProjectGroupVO groupDetail = ezPMSService.getGroupDetails(groupId, tenantId, projectId);
