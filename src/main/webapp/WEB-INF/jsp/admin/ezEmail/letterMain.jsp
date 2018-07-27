@@ -14,16 +14,16 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
 	    	var Tab1_SelectID = "";
-	    	var companyID = "";
+	    	var companyID = "${userInfo.companyID}";
 	    	
 	        window.onload = function () {
-	        	companyID = document.getElementById("ListCompany").value;
+	        	companyID = document.getElementById("ListCompany") != null ? document.getElementById("ListCompany").value : companyID;
 	        	Tab_init_select(document.getElementById("tagsub1"));
 	        	Tab1_NewTabIni("tab1");
 	        };
 	        
 	        function selectCompanyID() {
-	        	var company = document.getElementById("ListCompany").value;
+	        	var company = document.getElementById("ListCompany") != null ? document.getElementById("ListCompany").value : companyID;
 	        	if (companyID != company) {
 	        		companyID = company;
 	        		
@@ -159,13 +159,13 @@
 	</head>
 	<body class="mainbody" style="height: 95%;">
 	    <h1><spring:message code='main.t374'/><span></span></h1>
-		    <span><b><spring:message code = 'ezApprovalG.t1566' /> : </b>
-			    <select id="ListCompany" onchange="selectCompanyID()" style="height:29px">
-		        	<c:forEach var="item" items="${list}">
-		        		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-	            	</c:forEach>
-			    </select>
-		    </span><br>
+	    <span style="display:none"><b><spring:message code = 'ezApprovalG.t1566' /> : </b>
+		    <select id="ListCompany" onchange="selectCompanyID()" style="height:29px">
+	        	<c:forEach var="item" items="${list}">
+	        		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            	</c:forEach>
+		    </select><br>
+	    </span>
 	    <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
 	        	<p><span id="tagsub1"><spring:message code='ezEmail.letter20'/></span></p>
