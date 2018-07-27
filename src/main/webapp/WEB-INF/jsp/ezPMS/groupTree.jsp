@@ -67,6 +67,10 @@
 		$(document).on("click", "a.jstree-anchor", function(e){
 			getTreeDepth(e.target);
 		})
+		
+		$(document).on("dblclick", "a.jstree-anchor", function(e){
+			ok_Click();
+		})
 	});
 	
 	function ok_Click() {
