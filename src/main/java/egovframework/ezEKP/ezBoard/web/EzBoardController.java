@@ -214,6 +214,15 @@ public class EzBoardController extends EgovFileMngUtil{
         	pollFlag = "NO";
         }
         //end
+        
+        // 2018-07-26 황윤호 추가
+        String ladderFlag = "";
+        if (ezCommonService.getTenantConfig("useLadder", tenantID).equalsIgnoreCase("YES")) {
+        	ladderFlag = "YES";
+        }
+        else {
+        	ladderFlag = "NO";
+        }
 		
 		if (request.getParameter("photoType") != null && !request.getParameter("photoType").equals("")) {
 			photoType  = request.getParameter("photoType");
@@ -303,6 +312,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("MyBoardTopFlag", ezCommonService.getTenantConfig("MyBoardTopFlag", tenantID));
         modelMap.addAttribute("useQuestion", useQuestion);
         modelMap.addAttribute("pollFlag", pollFlag);
+        modelMap.addAttribute("ladderFlag", ladderFlag);
         
 		logger.debug("boardLeft ended");
 
@@ -461,10 +471,19 @@ public class EzBoardController extends EgovFileMngUtil{
 			endTime = boardPollConfigVO.getDefaultEndTime();
 			
 			//Process target
-	        String[] departIdList = boardPollConfigVO.getTargetDepts().split(",");
-	        String[] userIdList = boardPollConfigVO.getTargetUsers().split(",");
+	        String[] departIdList = null;
+	        String targetDepts = boardPollConfigVO.getTargetDepts();
+	        if(targetDepts != null){
+	        	departIdList = targetDepts.split(",");
+	        }
 	        
-	        if (departIdList.length > 0 && !departIdList[0].equals("")) {
+	        String[] userIdList = null;
+	        String targetUsers = boardPollConfigVO.getTargetUsers();
+	        if(targetUsers != null){
+	        	userIdList = targetUsers.split(",");
+	        }
+	        
+	        if (targetDepts != null && !departIdList[0].equals("")) {
 	        	strXMLRange.append("<DEPT>"); 
 	        	
 		        for (String deptID : departIdList) {
@@ -484,7 +503,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		        strXMLRange.append("</DEPT>"); 
 	        }
 	        
-	        if (userIdList.length > 0 && !userIdList[0].equals("")) {
+	        if (targetUsers != null && !userIdList[0].equals("")) {
 	        	strXMLRange.append("<MEMBER>"); 
 	        	
 	        	for (String userID : userIdList) {

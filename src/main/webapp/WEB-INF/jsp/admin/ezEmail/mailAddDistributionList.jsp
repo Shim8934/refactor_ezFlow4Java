@@ -269,6 +269,33 @@
 		        	}
 		        });
 	        	
+	        	$.ajax({
+					url : "/ezOrgan/getDeptMemberListCount.do",
+					method : "POST",
+					dataType : "json",
+					data : {
+						deptID : DeptID
+					},
+					success : function(result) {
+						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
+						
+						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
+			        		if (result.totalCount == result.totalCount2) {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]";
+			        		} else {
+			        			//2018-07-27 김보미 - [1/10명]형식으로 수정
+// 			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang1 + "</span>]";
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + "</span>/<span style='color:#017BEC;'>" + result.totalCount2 + strLang1 + "</span>]";
+			        		}
+			            	
+			            	SelectDeptNM.setAttribute("countinfo","1")
+			        	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(error);
+					}
+				});
+	        	
 	            listContentArry = new Array();
 	            var xmlpara = createXmlDom();
 	
@@ -581,7 +608,7 @@
 	                document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
 	            }
 	            var UserListHTML = "";
-	            if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
+	           /*  if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
 	                //SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
 	                if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
 	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
@@ -590,7 +617,7 @@
 	        		}
 	                
 	                SelectDeptNM.setAttribute("countinfo", "1")
-	            }
+	            } */
 	            if (pListType == "IMG") {
 	                document.getElementById("DeptUserImgList").style.display = "";
 	                document.getElementById("txtlist_Layer").style.display = "none";

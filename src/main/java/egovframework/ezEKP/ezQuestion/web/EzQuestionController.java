@@ -1099,10 +1099,16 @@ public class EzQuestionController extends EgovFileMngUtil {
 						XPath xpath = XPathFactory.newInstance().newXPath();
 						NodeList nodes = (NodeList)xpath.evaluate("//ROW/ANSWER["+(i+1)+"]/ATTACH", doc, XPathConstants.NODESET);
 						if(nodes.getLength() > 0) {
-							//if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
-							
-							pSelectOption += "AnsInfo=\"" + nodes.item(0).getChildNodes() + "\">";
-							//pSelectOption += "AnsInfo=\"" + doc.getElementsByTagName("ATTACH").item(i).getTextContent() + "\">";
+							//<ATTACH><ROW><TYPE>첨부타입</TYPE><ATTACHTITLE>첨부명</ATTACHTITLE><HREF>파일경로</HREF></ROW></ATTACH>
+							pSelectOption += "AnsInfo=\"" + "<ATTACH>";
+							for (int rowIndex = 0; rowIndex < nodes.item(0).getChildNodes().getLength(); rowIndex++){
+								pSelectOption += "<ROW><TYPE>" + nodes.item(0).getChildNodes().item(rowIndex).getChildNodes().item(0).getTextContent() + "</TYPE>" 
+										+ "<ATTACHTITLE>" + nodes.item(0).getChildNodes().item(rowIndex).getChildNodes().item(1).getTextContent() + "</ATTACHTITLE>" 
+										+ "<HREF>" + nodes.item(0).getChildNodes().item(rowIndex).getChildNodes().item(2).getTextContent() + "</HREF>" + "</ROW>";
+								
+								//pSelectOption += "AnsInfo=\"" + doc.getElementsByTagName("ATTACH").item(i).getTextContent() + "\">";
+							}
+							pSelectOption += "</ATTACH>\">";
 						} else {
 							pSelectOption += ">";
 						}

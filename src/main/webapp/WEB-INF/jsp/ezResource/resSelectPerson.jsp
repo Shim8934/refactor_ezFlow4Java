@@ -94,8 +94,8 @@
 	 	        if (DeptID != undefined)
 		            tempDeptID = DeptID;
 
-			 	 $.ajax({
-  					url : '/ezOrgan/getDeptMemberList.do',
+			 	$.ajax({
+					url : '/ezOrgan/getDeptMemberList.do',
   					method : 'POST',
   					dataType : "text",
   					data : {
@@ -114,7 +114,34 @@
   					error : function(jqXHR, textStatus, errorThrown) {
   						alert("<spring:message code="ezResource.t2"/>" + textStatus);
   					}
-  				});   
+  				});
+			 	 
+			 	$.ajax({
+					url : "/ezOrgan/getDeptMemberListCount.do",
+					method : "POST",
+					dataType : "json",
+					data : {
+						deptID : tempDeptID
+					},
+					success : function(result) {
+						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
+						
+						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
+			        		if (result.totalCount == result.totalCount2) {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang400 + "</span>]";
+			        		} else {
+			        			//2018-07-27 김보미 - [1명/전체 10명]형식으로 수정
+// 			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang400+ "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang400 + "</span>]";
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang400+ "</span>/<spring:message code='ezAddress.t362' /> <span style='color:#017BEC;'>" + result.totalCount2 + strLang400 + "</span>]";
+			        		}
+			            	
+			            	SelectDeptNM.setAttribute("countinfo","1")
+			        	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(error);
+					}
+				}); 
 		    }
 
 		    function event_displayUserList() {
@@ -378,8 +405,7 @@
 		            document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
 		        }
 		        var UserListHTML = "";
-		        /* if (SelectDeptNM.getAttribute("countinfo") != "1") { */
-		        if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) != null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
+		        /* if (SelectDeptNM.getAttribute("countinfo") != "1" && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) != null && getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0])!= "") {
 		        	if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
 	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang400 + "</span>]";
 	        		} else {
@@ -387,7 +413,8 @@
 	        		}
 		        	
 		            SelectDeptNM.setAttribute("countinfo","1")
-		        }
+		        } */
+		        
 		        if (pListType == "IMG") {
 		            document.getElementById("DeptUserImgList").style.display = "";
 		            document.getElementById("txtlist_Layer").style.display = "none";

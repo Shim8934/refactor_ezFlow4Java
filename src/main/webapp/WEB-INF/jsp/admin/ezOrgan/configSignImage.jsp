@@ -310,24 +310,24 @@
                 <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
-		<table class="popuplist"> 
+		<table class="popuplist" style="width:100%;"> 
 			<tr> 
 		    	<th><spring:message code='ezOrgan.t195' /></th> 
 		    	<th><h2><spring:message code='ezOrgan.t140' /></h2></th> 
 		  	</tr> 
 		  	<tr> 
-		    	<td style="padding:3px"> 
+		    	<td style="padding:3px; width: 50%;"> 
 		    		 <c:if test="${!isCrossBrowser}">
 		    	 	   <SCRIPT type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
 		    	 	 </c:if>
-		    		<select id="signlist" size="10" style="width:150px;height:150px;border:0px" onChange="sign_change()"> </select>
+		    		<select id="signlist" size="10" style="width:100%;height:150px;border:0px;background:none;" onChange="sign_change()"> </select>
 		    	</td> 
 		    	<td id="signimage" style="width:150px;height:150px;text-align:center" class="point"><spring:message code='ezOrgan.t191' /></td> 
 		  	</tr> 
 		</table> 
 		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
-			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="false" />
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px; display: none;" multiple="false" />
 			<input type="hidden" name="mode" id="mode" />
 			<input type="hidden" name="tempFilePath" id="tempFilePath" />
 		</form>		

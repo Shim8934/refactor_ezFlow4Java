@@ -1431,10 +1431,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				sb.append("</TR>\n");
 			} else { 
 				if (menuItemMenuItemType.equals("0")) {
-					System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + sb.toString());
+					/*System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + sb.toString());*/
 					sb.append(getMenuItemHTML(pCallingMenuID, menuItemUID, userInfo));
 				} else {
-					System.out.println("######################################### " + sb.toString());
+					/*System.out.println("######################################### " + sb.toString());*/
 					sb.append(getRenderedTopMenuHTMLInsert(pCallingMenuID, menuItemUID, "", "view", userInfo, userInfo.getTenantId()));
 				}
 			}
@@ -2200,6 +2200,14 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			        }
 				}
 				//end
+				
+				// 2018-07-27 황윤호 추가 
+				// tenant_config 테이블 useLadder가 yes이면 활성화, no이거나 row가 없으면 비활성화
+				if (menuitemLinkURL.equals("/ezBoard/boardMain.do?func=4")) {
+					if (!ezCommonService.getTenantConfig("useLadder", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+			        	continue;
+			        }
+				}
 				
 				String menuitemLinkLocation = result2.get(j).getLinkLocation();
 				String menuitemWindowOption = result2.get(j).getWindowOption();

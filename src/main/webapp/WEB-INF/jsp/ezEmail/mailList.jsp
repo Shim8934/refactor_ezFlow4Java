@@ -95,6 +95,7 @@
 		    var useSearchContent = "${useSearchContent}";
 		    var useMailNewWindow = "${useMailNewWindow}";
 		    var useReceivingChk = false;
+		    var reSendMsg = "<spring:message code='ezEmail.t569' />";
 		    var noReadMsg = "<spring:message code='ezPoll.t137'/>"; // 읽지 않음
 		    
 		    function defineHost(protocol){
@@ -394,6 +395,20 @@
 		                refreshTimeoutTimerId = 0;
 		            }
 		        }
+		    }
+		    
+		    function ReSendWithURLOnly(pURL) {
+		        var pheight = window.screen.availHeight;
+		        var conHeight = pheight * 0.8;
+		        var pwidth = window.screen.availWidth;
+		        var conWidth = pwidth * 0.8;
+		        if (conWidth > 890)
+		            conWidth = 890;
+		        var pTop = (pheight - conHeight) / 2;
+		        var pLeft = (pwidth - 890) / 2;
+		        var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px,width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+		        
+		        window.open("/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND", "", feature);
 		    }
 		    
 		    function mailGeneralSave() {
@@ -849,7 +864,7 @@
               	  <tr>
                     <th><spring:message code="ezEmail.t179" /></th>
                     <td> 
-	                   <select id="listcount" style="WIDTH:46px;height:20px;" onChange="ListCount(this.value);">
+	                   <select id="listcount" style="WIDTH:50px;height:20px;" onChange="ListCount(this.value);">
 	                        <option value=10 <c:if test="${mailGeneral.listCount == '10'}">selected</c:if>>10</option>
 	                        <option value=20 <c:if test="${mailGeneral.listCount == '20'}">selected</c:if>>20</option>
 	                        <option value=30 <c:if test="${mailGeneral.listCount == '30'}">selected</c:if>>30</option>

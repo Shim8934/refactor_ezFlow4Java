@@ -157,15 +157,16 @@ var strLang271 = "Select attachment to delete."
 var strLang272 = "End time is earlier than the time today.";
 var strLang273 = "Certain departments can register a department manager, company manager.";
 var strLang274 = "Companies can register only certain company managers.";
-/*2018.02.01*/
-var strLang275 = "반복 일정은 시작시간을 현재시간 이전으로 등록할 수 없습니다.";
 var strLang535 = "No data found.";
-
 var strLang1000 = "Can not insert company schedule.";
 var strLang1001 = "Can not insert department schedule.";
 /* 2017-07-11 */
 var strLang1002 = "leap ";
 /* 2017-11-17 */
 var strLang1003 = "이미 등록된 일정공유정보가 있습니다.";
+/*2018.02.01*/
+var strLang275 = "시작일을 오늘 이전으로 등록할 수 없습니다.";
 //2018.02.22
 var strLangKMS1 = "100회 이하만 반복가능합니다.";
+/*2018-07-16*/
+var strLang276 = "구성원 보기를 할 그룹을 하나만 선택해주세요.";

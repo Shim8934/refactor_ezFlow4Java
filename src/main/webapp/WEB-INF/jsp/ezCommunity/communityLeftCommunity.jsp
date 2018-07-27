@@ -352,7 +352,9 @@
 			                }
 			                break;
 			            case "btn_MemberJoinIng":
-			                alert("<spring:message code='ezCommunity.t1102' />");
+			            	//2018-07-24 김보미
+// 			                alert("<spring:message code='ezCommunity.t1102' />");
+			                alert("<spring:message code='ezCommunity.kbm01' />");
 			                break;
 			            default: 
 			            	window.open("/ezcommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel, "right");
@@ -396,7 +398,9 @@
 			                    }
 			                    break;
 		                case "btn_MemberJoinIng":
-		                    alert("<spring:message code='ezCommunity.t1102' />");
+			            	//2018-07-24 김보미
+// 			                alert("<spring:message code='ezCommunity.t1102' />");
+			                alert("<spring:message code='ezCommunity.kbm01' />");
 		                    break;
 		                default: 
 		                	window.open("/ezcommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel, "right");
