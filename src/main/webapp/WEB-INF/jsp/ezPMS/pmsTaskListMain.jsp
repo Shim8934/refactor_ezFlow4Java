@@ -38,7 +38,7 @@
 	var orderHow = "";
 	var checkedVal = "";
 	var viewType = "1";
-	var userRole = 0;
+	var userRole = "${userRole}";
 	
 	//검색을 위한 variables
 	var searchByStatus = "";
@@ -109,7 +109,8 @@
 				$("#contentList").html(contentList);
 				viewSetting();
 				setInitOrder();
-
+				console.log(userRole);
+				
 				if (userRole == 1) {
 					$("#addTaskBtn").parent().css("display", "");
 					$("#deleteTaskBtn").parent().css("display", "");

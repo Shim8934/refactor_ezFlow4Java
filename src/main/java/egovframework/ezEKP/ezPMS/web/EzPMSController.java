@@ -1491,7 +1491,7 @@ public class EzPMSController {
 					if (status.equals("ok")) {
 						JSONObject data = (JSONObject) result.get("data");
 						model.addAttribute("taskList", data.get("taskList"));
-						model.addAttribute("userRoleId", data.get("userRoleId"));
+						// model.addAttribute("userRoleId", data.get("userRoleId"));
 						model.addAttribute("position", param.get("position"));
 						
 						if (data.get("groupDetail") == null) {
