@@ -701,21 +701,6 @@
 		<isEqual property="containConfig" compareValue="YES">
 			<![CDATA[
 				SELECT
-       				cn
-				FROM
-					TBL_USERMASTER
-				WHERE
-					department = #deptCN#
-				AND
-					cn <> 'masteradmin'
-				AND
-					cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantID#)
-				AND
-					tenant_id = #tenantID#
-					
-				UNION ALL
-				
-				SELECT
 					B.cn
 				FROM
 					TBL_ADDJOBMASTER B
