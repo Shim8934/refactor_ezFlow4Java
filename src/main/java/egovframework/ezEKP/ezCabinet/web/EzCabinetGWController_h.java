@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,7 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetColumnVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationItemVO;
+import egovframework.ezEKP.ezCabinet.vo.SimpleUserMailVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
@@ -354,16 +356,47 @@ public class EzCabinetGWController_h {
 		}
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			String primary   = userInfo.getPrimary();
-			int tenantId     = userInfo.getTenantId();
-			String offset    = commonUtil.getMinuteUTC(userInfo.getOffset());
-			CabinetItemVO fileDetail                    = cabinetService_h.getFileDetail(itemId, primary, offset, tenantId);
+			LoginVO userInfo         = commonUtil.getUserForGw(userId, serverName);
+			String primary           = userInfo.getPrimary();
+			int tenantId             = userInfo.getTenantId();
+			String offset            = commonUtil.getMinuteUTC(userInfo.getOffset());
+			CabinetItemVO fileDetail = cabinetService_h.getFileDetail(itemId, primary, offset, tenantId);
 			
 			if(fileDetail.getItemType() != 0) {
 				//Get related columns
-				List<CabinetColumnVO> columnList = new ArrayList<>(); // replace by real function
-				result.put("columns", columnList);
+				List<CabinetColumnVO> columnList = cabinetService.getAllRelatedColumnsOfItem(itemId, primary, tenantId);
+				if (columnList != null && columnList.size() > 0) {
+					result.put("columns", columnList);
+				}
+				
+				//Check if is email type
+				if (fileDetail.getItemType() == 1) {
+					CabinetColumnVO sender = columnList.stream().filter(column -> column.getColumnId().equals("sender")).collect(Collectors.toList()).get(0);
+					CabinetColumnVO receivers = columnList.stream().filter(column -> column.getColumnId().equals("receiver")).collect(Collectors.toList()).get(0);
+					
+					if (sender == null || sender.getColumnValue().equals("") || receivers == null || receivers.getColumnValue().equals("")) {
+						logger.debug("Invalid data!");
+						result.put("status", "error");
+						result.put("code", 2);
+					}
+					
+					List<String> senderMail = new ArrayList<>();
+					senderMail.add(sender.getColumnValue());
+					SimpleUserMailVO senderUser = cabinetService.getUserInfoFromEmail(senderMail, primary, tenantId).get(0);
+					result.put("sender", senderUser);
+					
+					List<String> receiverMail           = Arrays.asList(receivers.getColumnValue().split(";"));
+					List<SimpleUserMailVO> listReceiver = cabinetService.getUserInfoFromEmail(receiverMail, primary, tenantId);
+					result.put("receivers", listReceiver);
+					
+					CabinetColumnVO forwards = columnList.stream().filter(column -> column.getColumnId().equals("forward")).collect(Collectors.toList()).get(0);
+					
+					if (forwards != null && !forwards.getColumnValue().equals("")) {
+						List<String> forwardMail           = Arrays.asList(forwards.getColumnValue().split(";"));
+						List<SimpleUserMailVO> listForward = cabinetService.getUserInfoFromEmail(forwardMail, primary, tenantId);
+						result.put("forwards", listForward);
+					}
+				}
 			}
 			
 			List<CabinetAttachFileVO> attachFileList    = cabinetService_h.getAttachFileList(itemId, tenantId);

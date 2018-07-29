@@ -2,9 +2,7 @@ package egovframework.ezEKP.ezCabinet.dao;
 
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.stereotype.Repository;
-
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetColumnVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
@@ -17,6 +15,7 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetShareVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezCabinet.vo.SimpleUserMailVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -214,36 +213,44 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 	public List<SimpleUserVO> getSharedUserList(Map<String, Object> map) {
 		return (List<SimpleUserVO>)list("EzCabinetDAO.getSharedUserList", map);
 	}
-
+	
 	public List<CabinetSimpleVO> getUserSharedCabinet(Map<String, Object> map) {
 		return (List<CabinetSimpleVO>)list("EzCabinetDAO.getUserSharedCabinet", map);
 	}
-
+	
 	public List<CabinetShareVO> getSharedCabinetListById(Map<String, Object> map) {
 		return (List<CabinetShareVO>)list("EzCabinetDAO.getSharedCabinetListById", map);
 	}
-
+	
 	public List<CabinetShareVO> checkSubPermission(Map<String, Object> map) {
 		return (List<CabinetShareVO>)list("EzCabinetDAO.checkSubPermission", map);
 	}
-
+	
 	public CabinetItemVO getItemById(Map<String, Object> map) {
 		return (CabinetItemVO)select("EzCabinetDAO.getItemById", map);
 	}
-
+	
 	public void deleteAttachFiles(Map<String, Object> map) {
 		delete("EzCabinetDAO.deleteAttachFiles", map);
 	}
-
+	
 	public void deleteRelatedFiles(Map<String, Object> map) {
 		delete("EzCabinetDAO.deleteRelatedFiles", map);
 	}
-
+	
 	public CabinetVO getRootCabinetByType(Map<String, Object> map) {
 		return (CabinetVO)select("EzCabinetDAO.getRootCabinetByType", map);
 	}
-
+	
 	public void saveRelatedColumn(CabinetColumnVO column) {
 		insert("EzCabinetDAO.saveRelatedColumn", column);
+	}
+	
+	public List<CabinetColumnVO> getAllRelatedColumnsOfItem(Map<String, Object> map) {
+		return (List<CabinetColumnVO>)list("EzCabinetDAO.getAllRelatedColumnsOfItem", map);
+	}
+
+	public List<SimpleUserMailVO> getUserInfoFromEmail(Map<String, Object> map) {
+		return (List<SimpleUserMailVO>)list("EzCabinetDAO.getUserInfoFromEmail", map);
 	}
 }

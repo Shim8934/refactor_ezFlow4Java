@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -321,11 +320,7 @@ public class EzCabinetController {
 			return resultObj.toString();
 		}
 		
-		JSONParser jp        = new JSONParser();
-		JSONArray fileArray  = (JSONArray) jp.parse(fileList);
-		JSONArray relatedArr = (JSONArray) jp.parse(relatedList);
-		
-		resultObj = cabinetRestService.saveItem(request, userInfo.getId(), cabinetId, title, summary, fileArray, relatedArr);
+		resultObj = cabinetRestService.saveItem(request, userInfo.getId(), cabinetId, title, summary, fileList, relatedList);
 		
 		logger.debug("Save item finishes!");
 		return resultObj.toString();

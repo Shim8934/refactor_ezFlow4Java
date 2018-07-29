@@ -73,5 +73,6 @@ var CabinetMessages = {
 	strSlTxt     : "선택",
 	strModify    : "수정하였습니다.",
 	strFileDet   : "파일 상세",
-	strFileMod   : "파일 수정"
+	strFileMod   : "파일 수정",
+	strPeople    : "명"
 }

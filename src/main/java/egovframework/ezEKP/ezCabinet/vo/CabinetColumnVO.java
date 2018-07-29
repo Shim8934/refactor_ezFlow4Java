@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezCabinet.vo;
 public class CabinetColumnVO {
 	private String columnId;
 	private int    itemId;
+	private String columnName;
 	private String columnName1;
 	private String columnName2;
 	private String columnValue;
@@ -75,5 +76,13 @@ public class CabinetColumnVO {
 	
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
+	}
+	
+	public String getColumnName() {
+		return columnName;
+	}
+	
+	public void setColumnName(String columnName) {
+		this.columnName = columnName;
 	}
 }

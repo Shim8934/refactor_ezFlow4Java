@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.mail.Folder;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.Part;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,6 +55,7 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetShareVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezCabinet.vo.SimpleUserMailVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleUserVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -161,8 +161,9 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 					listAllModule.add(new CabinetModuleVO(companyId, "option", 0, tenantId));
 					listAllModule.add(new CabinetModuleVO(companyId, "commu" , 0, tenantId));
 					listAllModule.add(new CabinetModuleVO(companyId, "addrs" , 0, tenantId));
-					listModule.add(new CabinetModuleVO(companyId, "schedl", 1, tenantId));
+					listAllModule.add(new CabinetModuleVO(companyId, "jounl" , 0, tenantId));
 					listModule.add(new CabinetModuleVO(companyId, "email" , 1, tenantId));
+					listModule.add(new CabinetModuleVO(companyId, "schedl", 1, tenantId));
 					listModule.add(new CabinetModuleVO(companyId, "board" , 1, tenantId));
 					listModule.add(new CabinetModuleVO(companyId, "apprv" , 1, tenantId));
 					
@@ -1544,5 +1545,25 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		for (CabinetColumnVO column : listColm) {
 			ezCabinetDAO.saveRelatedColumn(column);
 		}
+	}
+
+	@Override
+	public List<CabinetColumnVO> getAllRelatedColumnsOfItem(String itemId, String primary, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("itemId",    itemId);
+		map.put("tenantId",  tenantId);
+		map.put("primary",   primary);
+		
+		return ezCabinetDAO.getAllRelatedColumnsOfItem(map);
+	}
+
+	@Override
+	public List<SimpleUserMailVO> getUserInfoFromEmail(List<String> receiverMail, String primary, int tenantId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("mailList",  receiverMail);
+		map.put("tenantId",  tenantId);
+		map.put("primary",   primary);
+		
+		return ezCabinetDAO.getUserInfoFromEmail(map);
 	}
 }

@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
+
+import egovframework.ezEKP.ezCabinet.vo.CabinetColumnVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemSimpleVO;
@@ -14,6 +16,7 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezCabinet.vo.SimpleUserMailVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleUserVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -80,6 +83,12 @@ public interface EzCabinetService {
 	//Get item size function
 	public long getTotalItemsSize(List<Integer> itemIdList, LoginVO userInfo) throws Exception;
 	
+	//Get all related item columns function
+	List<CabinetColumnVO> getAllRelatedColumnsOfItem(String itemId, String primary, int tenantId) throws Exception;
+	
 	//Save related item functions
 	JSONObject saveEmailItem(String realPath, int parseInt, String title, String sender, String attach, String mode, String content, String receiver, String forward, String dateTime, Locale locale, LoginVO userInfo) throws Exception;
+	
+	//Get mail information functions
+	List<SimpleUserMailVO> getUserInfoFromEmail(List<String> receiverMail, String primary, int tenantId);
 }

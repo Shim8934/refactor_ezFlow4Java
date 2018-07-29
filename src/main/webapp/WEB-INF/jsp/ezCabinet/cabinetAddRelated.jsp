@@ -128,7 +128,7 @@
 					if (!mailOpener) {alert(CabinetMessages.strSelect); return;}
 					
 					var mailDate     = mailOpener.document.getElementById("LabelReceiveDate").textContent;
-					var mailSubject  = mailOpener.document.getElementById("mailSubject").textContent;
+					var mailSubject  = mailOpener.document.getElementById("LabelSubject").textContent;
 					var messageFrame = mailOpener.document.getElementById("message");
 					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
 					var emailContent = contentWd.document.getElementById("normalScreen").innerHTML;
@@ -158,7 +158,6 @@
 							var spElmt  = listChildren[i].firstElementChild;
 							var hrefStr = spElmt.getAttribute("_filehref");
 							var params  = getAllUrlParams(hrefStr);
-							console.log(params);
 							
 							normalList.push({
 								fileHref : params,
@@ -166,13 +165,6 @@
 							});
 						}
 					}
-					
-					//console.log("ReceiveList: " + JSON.stringify(receiveList));
-					//console.log("ForwardList: " + JSON.stringify(forwardList));
-					//console.log("SenderEmail: " + senderEmail);
-					//console.log("MailDate   : " + mailDate);
-					//console.log("MailContent: " + JSON.stringify(emailContent));
-					//console.log("Normal List: " + JSON.stringify(normalList))
 					
 					var url  = "/ezCabinet/saveRelatedEmail.do";
 					var data = {
@@ -202,7 +194,6 @@
 						mode   : saveMode, 
 						content: JSON.stringify(divContent)
 					};
-					console.log(data);
 					
 					if (saveMode == 1) {data.cabinetId = cabinetId;}
 					
@@ -261,7 +252,7 @@
 					var obj         = {};
 					
 					if (queryString) {
-						// remove all #
+						// Remove all #
 						queryString = queryString.split("#")[0];
 						var arr     = queryString.split("&");
 						
@@ -274,18 +265,14 @@
 								return '';
 							});
 							
-							// Set parameter value (use 'true' if empty)
+							// Set parameter value (set true if empty)
 							var paramValue = typeof(a[1]) === "undefined" ? true : a[1];
 							
-							// Keep case consistent
-							//paramName  = paramName.toLowerCase();
-							//paramValue = paramValue.toLowerCase();
-							
-							// if parameter name already exists
+							// If parameter name already exists
 							if (obj[paramName]) {
 								if (typeof obj[paramName] === "string") {obj[paramName] = [obj[paramName]];}
 								
-								// if no array index number specified
+								// If no array index number specified
 								if (typeof paramNum === 'undefined') {
 									obj[paramName].push(paramValue);
 								}

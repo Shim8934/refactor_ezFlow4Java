@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -1154,17 +1155,17 @@ public class EzCabinetGWController {
 	}
 	
 	@RequestMapping(value="/rest/ezcabinet/item/id/{cabinetid}/add", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject saveItem(@PathVariable(value="cabinetid") String cabinetId, Locale locale, HttpServletRequest request) throws Exception {
-		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
-		String title      = request.getParameter("title")      != null ? request.getParameter("title")      : "";
-		String summary    = request.getParameter("summary")    != null ? request.getParameter("summary")    : "";
-		String fileArray  = request.getParameter("fileArray")  != null ? request.getParameter("fileArray")  : "";
-		String relatedArr = request.getParameter("relatedArr") != null ? request.getParameter("relatedArr") : "";
-		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
+	public JSONObject saveItem(@RequestBody JSONObject itemInf, @PathVariable(value="cabinetid") String cabinetId, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name")       : "";
+		String title      = itemInf.get("title")           != null ? itemInf.get("title").toString()      : "";
+		String summary    = itemInf.get("summary")         != null ? itemInf.get("summary").toString()    : "";
+		String fileArray  = itemInf.get("fileArray")       != null ? itemInf.get("fileArray").toString()  : "";
+		String relatedArr = itemInf.get("relatedArr")      != null ? itemInf.get("relatedArr").toString() : "";
+		String userId     = itemInf.get("userId")          != null ? itemInf.get("userId").toString()     : "";
 		JSONObject result = new JSONObject();
 		JSONParser jp     = new JSONParser();
 		
-		logger.debug("ServerName: " + serverName + " ||  title: " + title + " ||  summary: " + summary + " ||  userId: " + userId + " || fileArray: " + fileArray + " || relatedArr: " + relatedArr);
+		logger.debug("ServerName: " + serverName + " || title: " + title + " || summary: " + summary + " || userId: " + userId + " || fileArray: " + fileArray + " || relatedArr: " + relatedArr);
 		
 		if (serverName.equals("") || title.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
@@ -1532,18 +1533,18 @@ public class EzCabinetGWController {
 	}
 	
 	@RequestMapping(value="/rest/ezcabinet/relate-item/save/email", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject saveEmailItem(Locale locale, HttpServletRequest request) throws Exception {
-		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
-		String title      = request.getParameter("title")    != null ? request.getParameter("title")    : "";
-		String sender     = request.getParameter("sender")   != null ? request.getParameter("sender")   : "";
-		String attach     = request.getParameter("attach")   != null ? request.getParameter("attach")   : "";
-		String mode       = request.getParameter("mode")     != null ? request.getParameter("mode")     : "";
-		String cabinetId  = request.getParameter("cabinet")  != null ? request.getParameter("cabinet")  : "";
-		String content    = request.getParameter("content")  != null ? request.getParameter("content")  : "";
-		String receiver   = request.getParameter("receiver") != null ? request.getParameter("receiver") : "";
-		String forward    = request.getParameter("forward")  != null ? request.getParameter("forward")  : "";
-		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
-		String dateTime   = request.getParameter("dateTime") != null ? request.getParameter("dateTime") : "";
+	public JSONObject saveEmailItem(@RequestBody JSONObject emailItemInf, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name")          : "";
+		String title      = emailItemInf.get("title")      != null ? emailItemInf.get("title").toString()    : "";
+		String sender     = emailItemInf.get("sender")     != null ? emailItemInf.get("sender").toString()   : "";
+		String attach     = emailItemInf.get("attach")     != null ? emailItemInf.get("attach").toString()   : "";
+		String mode       = emailItemInf.get("mode")       != null ? emailItemInf.get("mode").toString()     : "";
+		String cabinetId  = emailItemInf.get("cabinet")    != null ? emailItemInf.get("cabinet").toString()  : "";
+		String content    = emailItemInf.get("content")    != null ? emailItemInf.get("content").toString()  : "";
+		String receiver   = emailItemInf.get("receiver")   != null ? emailItemInf.get("receiver").toString() : "";
+		String forward    = emailItemInf.get("forward")    != null ? emailItemInf.get("forward").toString()  : "";
+		String userId     = emailItemInf.get("userId")     != null ? emailItemInf.get("userId").toString()   : "";
+		String dateTime   = emailItemInf.get("dateTime")   != null ? emailItemInf.get("dateTime").toString() : "";
 		JSONObject result = new JSONObject();
 		
 		logger.debug("ServerName: " + serverName + " || title: " + title + " || sender: " + sender + " || receiver: " + receiver + " || forward: " + forward + " || userId: " + userId + " || attach: " + attach + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content + " || dateTime: " + dateTime);
