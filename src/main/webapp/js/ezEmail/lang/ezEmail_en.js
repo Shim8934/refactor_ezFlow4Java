@@ -55,11 +55,11 @@ var strLang59 = "Do you want to delete this message?";
 var strLang60 = "Select message to receiving denial.";
 var strLang61 = "Processed receiving denial.";
 var strLang62 = "Error occurred while adding receiving denial list.";
-var strLang63 = "받은 편지함";
-var strLang64 = "보낸 편지함";
-var strLang65 = "임시 보관함";
-var strLang66 = "지운 편지함";
-var strLang67 = "개인 편지함";
+var strLang63 = "received mailbox";
+var strLang64 = "Sent Items";
+var strLang65 = "Drafts";
+var strLang66 = "Deleted Items";
+var strLang67 = "My Items";
 var strLang68 = "Inbox";
 var strLang69 = "Sent Items";
 var strLang70 = "Drafts";
@@ -257,7 +257,7 @@ var strLang331 = "Please select the Folder you want to delete.";
 var strLang332 = "You can not delete the top level folder.";
 var strLang333 = "Are you sure you want to permanently delete all the files in the Folder?";
 var strLang334 = "Choose the Folder.";
-var strLang336 = "경로를 찾을 수 없습니다.";
+var strLang336 = "Path not found.";
 var strLang337 = "Can not post e-mail/approval-document to photo-board or anonymous-board or URL-link-board.";
 var strLang338 = "Please register include the words of the subject or body. Example) \"advertise\"";
 var strLang339 = "In the message subject or body ";
@@ -295,20 +295,21 @@ var strLangLHM15 = ", Current Size : ";
 var strLangLHM16 = "There are invalid recipient(s). Please check email addresses.";
 var strLangLHM17 = "Would you like to send the mail without the recipient(s)?";
 var strLangLHM18 = "/blank_us.htm";
-var strLangLHM19 = "보안메일을 삭제하시면 수신자도 보안메일의 열람이 불가능합니다.\n그래도 삭제하시겠습니까?";
-var strLangLHM20 = "보안메일을 이동하시면 보안메일의 열람과 보안정보 확인이 불가능합니다.\n그래도 이동하시겠습니까?";
+var strLangLHM19 = "If you delete an e-mail security is also impossible to view the secure mail recipients. \nAre you sure you want to delete it?";
+var strLangLHM20 = "If you move a security e-mail will not be checked for secure mail and browsing security information. \nDo you want to go anyway?";
 var strLangKMS01 = "";
-var strLangKMS02 = "첨부파일 총 크기가 ";
+var strLangKMS02 = "The total size of attached file";
 var strLangKMS03 = "No mail.";
-var strLangKMS04 = "수신자가 "; 
-var strLangKMS05 = "명 보다 많아서 개별발신 기능을 사용 하실 수 없습니다.\n개별발신을 해제 하시고 메일을 발송 하시겠습니까?";
+var strLangKMS04 = "Recipient"; 
+var strLangKMS05 = "Many more people can not be used for individual calling features. \nDo you want to send the message off the individual prices originating?";
 var strLangKMS06 = "There was an error attempting to upload the file.";
 var strLangKMS07 = "The upload has been canceled by the user or the browser dropped the connection.";
-var strLangKMS08 = "폴더는 업로드 할 수 없습니다."
+var strLangKMS08 = "Folders can not be uploaded."
 var strLangKYJ01 = "Not selected mail.";
-var strLangKYJ02 = "재작성할 메일을 하나만 선택해주세요.";
-var strLangKYJ03 = "공백은 입력할 수 없습니다."
-var strLangLSD02 = "구성원이 없는 부서입니다.";
+var strLangKYJ02 = "Please select only one e-mail re-create.";
+var strLangKYJ03 = "Spaces can not be entered."
+var strLangLSD02 = "The non-members of the department.";
+
 
 function GetLocalTime(Offset , pDateTime)
 {
@@ -329,8 +330,7 @@ function GetLocalTime(Offset , pDateTime)
 	
 	
 	
-	
-	ibjD.setFullYear(szYear ,szMonth-1 , szDay );
+	ibjD.setFullYear(szYear ,szMonth -1 , szDay );
 	ibjD.setHours(szHr ,szMin , szSec );
 	
 	var rYear = ibjD.getFullYear();
@@ -370,7 +370,7 @@ function ReversGetLocalTime(Offset , pDateTime)
 	
 	ibjD.setHours(szHr ,szMin , szSec );	
 	var rYear = ibjD.getFullYear();
-	var rMonth = addzero(ibjD.getMonth()+1);
+	var rMonth = addzero(ibjD.getMonth() + 1);
 	var rDate = addzero(ibjD.getDate());
 	var rHour = addzero(ibjD.getHours());
 	var rMin = addzero(ibjD.getMinutes());
@@ -381,8 +381,8 @@ function ReversGetLocalTime(Offset , pDateTime)
 	{
 		rMonth = addzero(Number(rMonth) -1) ;
 		rDate = 31 ;		
-	}
-	*/
+	}*/
+	
 	
 	return rYear + "-" + rMonth + "-" + rDate + " " + rHour+ ":" +rMin + ":" + rSec;
 }
@@ -393,8 +393,8 @@ function addzero(arg)
 		arg = "0" + arg;
 	}
 	return arg
-}
 
+}
 function folderdisnameChange(pFolderPath)
 {
 	var FolderNameKo = new Array( "받은 편지함" ,  "보낸 편지함" ,  "임시 보관함" ,  "지운 편지함" ,  "개인편지함" );
