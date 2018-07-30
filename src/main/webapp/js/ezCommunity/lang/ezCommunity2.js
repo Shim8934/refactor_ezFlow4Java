@@ -11,7 +11,7 @@ var strLang14 = "Delete"
 var strLang15 = "Select all"
 var strLang16 = "Font color"
 var strLang17 = "Set font color"
-var strLang18 = "클릭이 발생되면 닫히도록 합니다."
+var strLang18 = "Then to be closed when clicked on."
 var strLang19 = "Arial;word-break:break-all"
 var strLang20 = "Arial"
 var strLang22 = "Attachment filename"
@@ -42,12 +42,12 @@ var strLang535 = "No data found.";
 var strLang5351 = "People";
 
 /* 2017-11-01 장진혁 */
-var strLang84 = "파일명은 ";
-var strLangLHM01 = "자를 넘을 수 없습니다.";
+var strLang84 = "The length of filename ";
+var strLangLHM01 = "Cannot be longer than ";
 
 //2018-01-12 강민수92
-var strLang85 = "그림파일을 업로드 해야 합니다.";
+var strLang85 = "You must upload an image file.";
 //2018-02-13 장진혁
-var strLang86 = "My 커뮤니티가 없습니다";
-var strLang87 = "커뮤니티에 가입해 보세요";
-var strLang88 = "개설된 커뮤니티가 없습니다";
+var strLang86 = "No My Community";
+var strLang87 = "Join the Community";
+var strLang88 = "No communities open";
