@@ -1639,7 +1639,7 @@
                         	${pThemeSelectObject}
                         </select>
                      </td>
-                     <td bgcolor="#F5f5f5" >페이지 보기옵션</td>
+                     <td bgcolor="#F5f5f5" ><spring:message code='ezPortal.t2000'/></td>
                      <td bgcolor="#F5f5f5">
                      	<select id="Optioninfo">
                         	<option value="D" selected>
@@ -1652,7 +1652,7 @@
 					</td>
 				</tr>
                 <tr height="20">
-                	<td bgcolor="#F5f5f5" colspan="5">&nbsp;넓이를 * 입력 시 100%로 저장됩니다.</td>
+                	<td bgcolor="#F5f5f5" colspan="5">&nbsp;<spring:message code='ezPortal.t2003'/></td>
             	</tr>
 			</table>
 			
