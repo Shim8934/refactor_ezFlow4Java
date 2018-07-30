@@ -132,7 +132,7 @@
 		      			<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li>
 		      			
 		      			<c:if test="${packageType != 'mail'}">      
-			      			<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="main.t14" /></span></li>
+			      			<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="ezSchedule.t1010" /></span></li>
 			      			<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="main.t12" /></span></li>
 		      			</c:if>
 		      			
