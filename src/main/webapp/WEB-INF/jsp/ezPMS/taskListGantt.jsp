@@ -138,7 +138,8 @@
 	   				
 	   				var tempTask = {};
 	   				tempTask.id = "p" + pd.projectId;
-		   			tempTask.name = pd.projectName.replace(/\"/g,"&quot;");
+		   			tempTask.name = pd.projectName.replace(/\"/g, "&quot;");
+// 		   			tempTask.name = ReplaceText(pd.projectName, "\"", "&quot;");
 		   			tempTask.code = "";
 		   			tempTask.level = 0;
 		   			tempTask.status = ganttStatus[pd.status];
@@ -795,7 +796,9 @@
 
 	   			  row.find(".taskRowIndex").html(task.getRow() + 1);
 	   			  row.find(".indentCell").css("padding-left", task.level * 15 + 18);
-	   			  row.find("[name=name]").val(task.name).prop("readonly", false).css({"color":"black", "width":"calc(100% - 28px)"});
+	   			  //컬럼명에 &quot;가 문자열로  찍히는 문제 때문에 val부분 제거
+// 	   			  row.find("[name=name]").val(task.name).prop("readonly", false).css({"color":"black", "width":"calc(100% - 28px)"});
+	   			  row.find("[name=name]").prop("readonly", false).css({"color":"black", "width":"calc(100% - 28px)"});
 	   			  row.find("[name=code]").val(task.code);
 	   			  row.find("[status]").attr("status", task.status);
 
