@@ -5233,7 +5233,7 @@ public class EzPMSGWController {
 	}
 	
 	/**
-	 * 프로젝트관리 업무 수정
+	 * 프로젝트관리 업무명 수정
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/name/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
