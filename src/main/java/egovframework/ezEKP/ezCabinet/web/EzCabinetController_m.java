@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezCabinet.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_m;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -32,17 +34,21 @@ public class EzCabinetController_m {
 	public String jsonSaveRelatedApproval(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveRelatedApproval is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String divContent      = request.getParameter("content")!= null ? request.getParameter("content"):     "";
+		String mode            = request.getParameter("mode")             != null ? request.getParameter("mode")          : "";
+		String cabinetId       = request.getParameter("cabinetId")        != null ? request.getParameter("cabinetId")     : "";
+		String divContent      = request.getParameter("content")          != null ? request.getParameter("content")       : "";
+		String doctitle        = request.getParameter("doctitle")         != null ? request.getParameter("doctitle")      : "";
+		String lstAttachLink   = request.getParameter("lstAttachLink")    != null ? request.getParameter("lstAttachLink") : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		if (divContent.equals("")) {
+		if (divContent.equals("") || (mode.equals("1") && cabinetId.equals("")) || (doctitle.equals("")) || (lstAttachLink.equals(""))) {
 			logger.debug("Invalid parameter!");
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService_m.saveRelatedApproval(request, userInfo.getId(), divContent);
+		resultObj = cabinetRestService_m.saveRelatedApproval(request, userInfo.getId(), mode, cabinetId, divContent, doctitle, lstAttachLink);
 		
 		logger.debug("jsonSaveRelatedApproval finishes!");
 		return resultObj.toString();

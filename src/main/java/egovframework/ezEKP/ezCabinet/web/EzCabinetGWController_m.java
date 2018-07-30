@@ -55,14 +55,18 @@ public class EzCabinetGWController_m {
 	
 	@RequestMapping(value="/rest/ezcabinet/relate-item/save/apprv", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject saveRelatedApproval(@RequestBody JSONObject apprContent, Locale locale, HttpServletRequest request) throws Exception {
-		String serverName      = request.getHeader("host-name")        != null ? request.getHeader("host-name")        : "";
-		String approvalContent = apprContent.get("content").toString();
-		String userId          = apprContent.get("userId").toString();
+		String serverName      = request.getHeader("host-name")             != null ? request.getHeader("host-name")               : "";
+		String approvalContent = apprContent.get("content").toString()      != null ? apprContent.get("content").toString()        : "";
+		String userId          = apprContent.get("userId").toString()       != null ? apprContent.get("userId").toString()         : "";
+		String mode            = apprContent.get("mode").toString()         != null ? apprContent.get("mode").toString()           : "";
+		String doctitle        = apprContent.get("doctitle").toString()     != null ? apprContent.get("doctitle").toString()       : "";
+		String lstAttachLink   = apprContent.get("lstAttachLink").toString()!= null ? apprContent.get("lstAttachLink").toString()  : "";
+		String cabinetId       = apprContent.get("cabinetId").toString()    != null ? apprContent.get("cabinetId").toString()      : "";
 		JSONObject result      = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " || Content: " + approvalContent + " || userId: " + userId);
+		logger.debug("ServerName: " + serverName + " || Content: " + approvalContent + " || userId: " + userId + " || mode: " +mode+ " ||  cabinetId: " + cabinetId+ " || doctitle: " +doctitle+ " || lstAttachLink: " +lstAttachLink);
 		
-		if (serverName.equals("") || approvalContent.equals("")) {
+		if (serverName.equals("") || approvalContent.equals("") || userId.equals("") || cabinetId.equals("") || mode.equals("") || doctitle.equals("") || lstAttachLink.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -71,11 +75,12 @@ public class EzCabinetGWController_m {
 		
 		try {
 			LoginVO userInfo       = commonUtil.getUserForGw(userId, serverName);
-			JSONArray forwardList  = new JSONArray();
+			int dstCabinetId       = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
+			String realPath        = request.getServletContext().getRealPath("");
 			
 			//Save receiver list
 			
-			result                 = cabinetService_m.saveApprovalItem(approvalContent, locale, userInfo);
+			result                 = cabinetService_m.saveApprovalItem(realPath, dstCabinetId, approvalContent, mode, doctitle, lstAttachLink, locale, userInfo);
 			
 		}
 		catch (Exception e) {

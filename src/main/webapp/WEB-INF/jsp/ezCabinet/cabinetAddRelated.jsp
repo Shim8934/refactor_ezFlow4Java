@@ -184,15 +184,21 @@
 				}
 				
 				function saveApprovalDocument(saveMode, cabinetId) {
-					var messageFrame = window.opener.document.getElementById("message");
-					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
-					var divContent   = contentWd.document.getElementById("div_Content").innerHTML;
+					var messageFrame  = window.opener.document.getElementById("message");
+					var contentWd     = messageFrame.contentWindow || messageFrame.contentDocument;
+					var divContent    = contentWd.document.getElementById("div_Content").innerHTML;
+					var doctitle      = contentWd.document.getElementById("doctitle").textContent;
+					var lstAttachLink = window.opener.document.getElementById("lstAttachLink");
+					var lstAttachLinkList = [];
 					
+					console.log(lstAttachLink);
 					var url          = "/ezCabinet/saveRelatedApproval.do";
 					var data         = {
-						type   : moduleType, 
-						mode   : saveMode, 
-						content: JSON.stringify(divContent)
+						type          : moduleType, 
+						mode          : saveMode, 
+						content       : JSON.stringify(divContent),
+						doctitle      : doctitle,
+						lstAttachLink : JSON.stringify(lstAttachLink)
 					};
 					
 					if (saveMode == 1) {data.cabinetId = cabinetId;}
