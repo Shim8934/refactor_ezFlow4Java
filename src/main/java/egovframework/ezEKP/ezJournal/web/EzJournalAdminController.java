@@ -658,6 +658,7 @@ public class EzJournalAdminController {
 			model.addAttribute("key", key);
 			model.addAttribute("totalCount", resultBody.get("totalCount"));
 			model.addAttribute("totalCount2", resultBody.get("totalCount2"));
+			model.addAttribute("containLow", resultBody.get("containLow"));
 		}
 		
 		logger.debug("userList ended");
