@@ -807,7 +807,7 @@
 	   			  row.find("[name=progress]").val(task.progress).prop("readonly",!canWrite || task.progressByWorklog==true).css({"text-align":"right"});
 	   			  row.find("[name=weight]").prop("readonly", task.type !== "t").css({"text-align":"right"});
 	   			  row.find("[name=planProgress]").prop("readonly", true).css({"text-align":"right"});
-	   			  row.find("[name=realProgress]").prop("readonly", task.type !== "t").css({"text-align":"right"});
+	   			  row.find("[name=realProgress]").prop("readonly", task.type !== "t" || task.statusPMS === "W").css({"text-align":"right"});
 	   			  row.find("[name=startIsMilestone]").prop("checked", task.startIsMilestone);
 	   			  var startReadonly = !canWrite || task.depends || !(task.canWrite  || this.master.permissions.canWrite) || task.type !== "t" || task.statusPMS === "C";
 	   			  row.find("[name=start]").val(new Date(task.start).format()).updateOldValue().prop("readonly", startReadonly); // called on dates only because for other field is called on focus event
@@ -1358,7 +1358,7 @@
 					contentType: "application/json; charset=UTF-8",
 					data : JSON.stringify(data),
 					success : function(data) {
-						alert("<spring:message code='ezPMS.t280' />");
+// 						alert("<spring:message code='ezPMS.t280' />");
 						
 						location.reload();
 					},
@@ -1424,7 +1424,7 @@
 					contentType: "application/json; charset=UTF-8",
 					data : JSON.stringify(data),
 					success : function(data) {
-						alert("<spring:message code='ezPMS.t280' />");
+// 						alert("<spring:message code='ezPMS.t280' />");
 						
 						var logContent = "[" + curTask.name + "<spring:message code='ezPMS.t317' /> " + curTask.progress + "%<spring:message code='ezPMS.t313'/> " + new Number(newProgress).toFixed(1) + "%<spring:message code='ezPMS.t314'/>"; 
 	   					addTaskLog(projectId, 2, groupId, taskId, logContent);
@@ -1787,18 +1787,26 @@
 					contentType: "application/json; charset=UTF-8",
 					data : JSON.stringify(data),
 					success : function(data) {
-						var logContent = ""; 
-	   					if(taskType == "p"){
-							logContent = "<spring:message code='ezPMS.t364' arguments='" + prevTaskName + "," + newTaskName +"'/>"; 
-							addTaskLog(projectId, 2, projectGroupId, null, logContent);
-	   					} else if(taskType == "t") {
-							logContent = "<spring:message code='ezPMS.t351' arguments='" + prevTaskName + "," + newTaskName +"'/>"; 
-							addTaskLog(projectId, 2, upperGroupId, taskId, logContent);
-	   					} else {
-							logContent = "<spring:message code='ezPMS.t363' arguments='" + prevTaskName + "," + newTaskName +"'/>"; 
-	   						var groupId = taskId;
-							addTaskLog(projectId, 2, groupId, null, logContent);
-	   					}
+						if(data !== "rejected"){
+							var logContent = ""; 
+		   					if(taskType == "p"){
+								logContent = "<spring:message code='ezPMS.t364' arguments='" + prevTaskName + "," + newTaskName +"'/>"; 
+								addTaskLog(projectId, 2, projectGroupId, null, logContent);
+		   					} else if(taskType == "t") {
+								logContent = "<spring:message code='ezPMS.t351' arguments='" + prevTaskName + "," + newTaskName +"'/>"; 
+								addTaskLog(projectId, 2, upperGroupId, taskId, logContent);
+		   					} else {
+								logContent = "<spring:message code='ezPMS.t363' arguments='" + prevTaskName + "," + newTaskName +"'/>"; 
+		   						var groupId = taskId;
+								addTaskLog(projectId, 2, groupId, null, logContent);
+		   					}
+						} else {
+							ge.currentTask.name = prevTaskName;
+							alert("<spring:message code='ezPMS.t322'/>");
+				   			ge.loadTasks(prevTasks);
+		   					ge.redraw();
+			   				return;
+						}
 	   					
 					}
 				});

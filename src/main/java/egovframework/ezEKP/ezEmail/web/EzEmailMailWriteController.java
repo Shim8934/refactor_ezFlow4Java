@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
@@ -3626,13 +3627,23 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        	        messageBodyPart.setDataHandler(new DataHandler(source));
 				        	        messageBodyPart.setFileName(imageName);
 				        	        
-				        	        // 이미지 파일의 Default Content-Type은 application/octet-stream 로 설정한다.
-				        	        String contentType = "application/octet-stream";
+				        	        String contentType = null;
+				        	        BufferedInputStream bis = null;
 				        	        
-				        	        // 이미지 파일의 Content-Type을 구한다.
-				        	        if (Files.probeContentType(f.toPath()) != null) {
-				        	        	contentType = Files.probeContentType(f.toPath());
+				        	        try {
+				        		        bis = new BufferedInputStream(new FileInputStream(f));
+				        		        contentType = URLConnection.guessContentTypeFromStream(bis);
+				        	        } catch(Exception e) {
+				        	        } finally {
+				        	        	if (bis != null) {
+				        	        		bis.close();
+				        	        	}
 				        	        }
+				        	        
+				        	        if (contentType == null) {
+			        		        	contentType = "application/octet-stream";
+			        		        }
+				        	        
 				        	        
 				        	        messageBodyPart.setHeader("Content-Type", contentType);
 				        	        String cidWithBrackets = "<" + cid + ">";
@@ -3816,9 +3827,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	                                        }
 	                                    }								
 	                                    // there are cases where an in-line image part doesn't have
-	                                    // a Content-Disposition header, but has a Content-ID header.    								
+	                                    // a Content-Disposition header, but has a Content-ID header.
+	    								// 첨부파일 파트나 본문 파트에도 Content-ID가 있을 수 있어서 if문에 들어가지 않도록 조건을 추가함
 	    								else if (p instanceof MimePart 
-	    								        && ((MimePart)p).getContentID() != null) {
+	    								        && ((MimePart)p).getContentID() != null
+	    								        && !(p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
+	    								        && !p.isMimeType("text/*")) {
 	    								    String contentId = ((MimePart)p).getContentID();
 	    								    logger.debug("Existing ContentId=" + contentId);
 	    								    

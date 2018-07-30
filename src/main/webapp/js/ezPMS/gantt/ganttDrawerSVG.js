@@ -453,7 +453,9 @@ Ganttalendar.prototype.drawTask = function (task) {
 //    }
 
     //task label
-    svg.text(taskSvg, "100%", 18, task.name, {class:"taskLabelSVG", transform:"translate(20,-5)"});
+//    svg.text(taskSvg, "100%", 18, task.name, {class:"taskLabelSVG", transform:"translate(20,-5)"});
+	//특수문자 처리하려고 수정함 - 홍대표 2018-07-30
+	svg.text(taskSvg, "100%", 18, replaceString(task.name), {class:"taskLabelSVG", transform:"translate(20,-5)"});
 
     //link tool
     if (task.level>0){

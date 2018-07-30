@@ -232,6 +232,8 @@ function CalendarView(pTagetID) {
                 var dTr = document.createElement("TR")
                 var dTd = document.createElement("TD")
                 dTd.className = "calendar_t_time";
+                dTd.setAttribute("dispDate", dayText.substring(0,10));
+                dTd.setAttribute("ondblclick", "newSchedule_onclick(event)");
                 var dDiv = document.createElement("DIV")
                 dDiv.setAttribute("id", dayText.substring(0, 10) + "ALL");
                 dDiv.style.width = "100%"
@@ -243,7 +245,7 @@ function CalendarView(pTagetID) {
                 var dTr = document.createElement("TR")
                 var dTd = document.createElement("TD")
                 dTd.className = "calendar_t_text";
-                dTd.setAttribute("dispDate", dayText);
+                dTd.setAttribute("dispDate", dayText.substring(0,10));
                 dTd.setAttribute("ondblclick", "newSchedule_onclick(event)");
                 dTr.appendChild(dTd);
                 dTable.appendChild(dTr);
@@ -1044,6 +1046,8 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         var dTr = document.createElement("TR")
         var dTd = document.createElement("TD")
         dTd.className = "calendar_t_time";
+        dTd.setAttribute("ondblclick", "newSchedule_onclick(this)");
+        dTd.setAttribute("dispDate", divID);
         var dDiv = document.createElement("DIV")
         dDiv.setAttribute("id", divID + "ALL");
         dDiv.style.height = "100px";
