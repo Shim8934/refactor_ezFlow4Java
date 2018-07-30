@@ -331,7 +331,7 @@ var headManagerObj = {};
 					addTaskLog(projectId, 2, groupId, null, logContent);
 					alert ("<spring:message code='ezPMS.t52' />");
 					parent.projectId = projectId;
-					parent.window.location.reload();
+					parent.parent.window.location.reload();
 				} else {
 					sendNotiMail(result.projectId, projectName);
 					var logContent = "[" + projectName + "<spring:message code='ezPMS.t51' />"
