@@ -347,7 +347,7 @@ function AppendFileAttachInfo(ret) {
                             	objTd2.innerHTML = replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;");
                             	objTd2.innerHTML += "&nbsp;" + "<font style='color:blue'>[" + strLangLHM10 + "]</font>";
                             } else {
-                            	objTd2.innerHTML = replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;");
+                            	objTd2.innerHTML = "<span style='display:block; text-overflow:ellipsis; overflow:hidden;'>" + replaceAll(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "&", "&amp;") + "</span>";
                             	
                             	/* 20180510 김윤진 - 수정창에서 파일클릭시 다운로드링크 적용 */
                             	objTd2.onclick = function () { 
