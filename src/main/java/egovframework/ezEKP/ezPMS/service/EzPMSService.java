@@ -284,4 +284,6 @@ public interface EzPMSService {
 	public void deleteBoardFolder (long projectId, long folderId, int tenantId);
 	
 	public void updateTaskNameGantt (ProjectTaskVO taskVO, String taskType) throws Exception;
+	
+	public void updateTaskEndDate (int tenantId, long taskId) throws Exception;
 }

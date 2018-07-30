@@ -3560,8 +3560,11 @@ public class EzPMSGWController {
 
 			// 실제 진행률이 100 이상이면 해당 업무의 상태를 완료로 반영.
 			if (realProgress >= 100) {
+				Date today = new Date();
+				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 				taskVO.setStatus("C");
 				taskVO.setRealProgress(100.0F);
+				taskVO.setRealEndDate(simpToday);
 			} else {
 				taskVO.setStatus(request.getParameter("status"));
 			}

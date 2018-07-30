@@ -2899,6 +2899,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 		// 업무의 진행률을 업데이트 해준다.
 		ezPMSDAO.updateTaskProgress(taskVO);
+//		if(taskVO.getRealProgress() == 100){
+//			updateTaskEndDate(taskVO.getTenantId(), taskVO.getTaskId());
+//		}
 
 		// 프로젝트 직속 업무가 아니라면 업무가 속한 모든 조상그룹의 진행률을 업데이트 해준다.
 		if (!taskVO.getGroupId().equals(0L)) {
@@ -3519,5 +3522,22 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		}
 		
 		LOGGER.debug("[SERVICE] ezPMS updateTaskNameGantt ended");
+	}
+
+	@Override
+	public void updateTaskEndDate(int tenantId, long taskId) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		Date today = new Date();
+		String simpToday = sdf.format(today);
+		Date now = sdf.parse(simpToday);
+		
+		map.put("realEndDate", simpToday);
+		map.put("tenantId", tenantId);
+		map.put("taskId", taskId);
+		
+		ezPMSDAO.updateTaskEndDate(map);
+		
 	}
 }
