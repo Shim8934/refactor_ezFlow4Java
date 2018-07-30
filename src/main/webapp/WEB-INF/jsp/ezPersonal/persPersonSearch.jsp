@@ -169,13 +169,22 @@
 						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
 						
 						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
-			        		if (result.totalCount == result.totalCount2) {
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]";
-			        		} else {
-			        			//2018-07-27 김보미 - [1명/전체 10명]형식으로 수정
-// 			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang1 + "</span>]";
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>/<spring:message code='ezAddress.t362' /> <span style='color:#017BEC;'>" + result.totalCount2 + strLang1 + "</span>]";
-			        		}
+							if (result.containLow == "YES") {
+								var selectedSpan = document.getElementsByClassName("node_selected")[0];
+								var id = selectedSpan.getAttribute("id");
+								id = id.substring(id.indexOf("_") + 1);
+								
+								var selectedDiv = document.getElementById(id);
+								var strIsLeaf = selectedDiv.getAttribute("isleaf");
+	
+								if (strIsLeaf == "TRUE") { //하위가 없으면
+				        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]";
+				        		} else { //하위가 있으면
+				        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>/<spring:message code='ezAddress.t362' /> <span style='color:#017BEC;'>" + result.totalCount2 + strLang1 + "</span>]";
+				        		}
+							} else {
+								SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]";
+							}
 			            	
 			            	SelectDeptNM.setAttribute("countinfo","1")
 			        	}

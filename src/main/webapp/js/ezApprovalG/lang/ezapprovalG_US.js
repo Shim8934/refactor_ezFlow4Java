@@ -106,7 +106,7 @@ var strLang205 = "This document does not have drafter information."
 var strLang206 = "Does not drafter"
 var strLang207 = "Only drafter can request sending document."
 var strLang208 = "Failed to lookup availability whether or not to request sent."
-// ezAPRATTACH\at
+// ezAPRATTACH\attach.js
 var strLang214 = "User"
 var strLang215 = "Filename"
 var strLang216 = "File size"
@@ -251,7 +251,7 @@ var strLang389 = "Save"
 var strLang390 = "Modify"
 var strLang391 = "Write"
 var strLang397 = "Close"
-var strLang400 = "Can not modify .."
+var strLang400 = "Can not modify."
 var strLang401 = "Select the opinion!"
 var strLang402 = "Input the opinion!"
 var strLang405 = "Returned opinion"
@@ -281,10 +281,10 @@ var strLang433 = "Application has been completed!"
 var strLang434 = "Request Failed!"
 var strLang435 = "No connection with the document center. Request can not be completed."
 var strLang436 = "Unit working Code"
-// ezCabinet\Mana
+// ezCabinet\Manage\TaskCodeManage.js
 var strLang437 = "Choose unit business."
 var strLang438 = "Company ID"
-// ezCabinet\Man
+// ezCabinet\Manage\TaskManage.js
 var strLang439 = "Unit working list"
 var strLang440 = "Unit working"
 var strLang441 = "Unit working proposal list"
@@ -306,7 +306,7 @@ var strLang456 = "Temporary unit workiing that do not modify the application! Pl
 var strLang457 = "Documentary classification standard file does not exist."
 var strLang458 = "Classification standard has been updated"
 var strLang459 = "Classification standard has not been updated"
-// ezCabinet\CabC
+// ezCabinet\CabCategoryInfo.js
 var strLang460 = "Choice after initialize"
 var strLang461 = "Initializing unit working list view if it is defined"
 var strLang462 = "Only initializing listview header if do not selected row."
@@ -327,7 +327,7 @@ var strLang476 = "Minor function code"
 var strLang477 = "Error occurred while unit working code lookup!"
 var strLang478 = "Error occurred while searching unit working!"
 var strLang479 = "Documentary archive name"
-// ezCabinet\Cabi
+// ezCabinet\CabinetInfo.js
 var strLang480 = "Production Year"
 var strLang481 = "Lookup flag: 0-View the record 1-Categories filing (Does not getting transferred documentar archive)"
 var strLang482 = "Error occurred while documentary archive lookup!"
@@ -337,13 +337,13 @@ var strLang485 = "Documentary archive classification number"
 var strLang486 = "Error occurred while adding the number of volumes!"
 var strLang487 = "End year"
 var strLang488 = "Exit production, 1: Cancel exit"
-// ezCabinet\CabR
+// ezCabinet\CabRoleInfo.js
 var strLang489 = "Failed to search whether documentary archive working director or not."
-// ezCabinet\CabU
+// ezCabinet\CabUser.js
 // ezCabinet\DocListView.js
 var strLang490 = "Save."
 var strLang491 = "Failed to save."
-// ezCabinet\ezCa
+// ezCabinet\ezCabinet.js
 var strLang492 = "Confirm whether or not filing"
 var strLang493 = "Whether the documentary management officer or not"
 var strLang494 = "Whether the department service coordinator or not"
@@ -427,17 +427,17 @@ var strLang595 = "If the production status report / the transfer of the document
 var strLang596 = "Documentary distribution record:"
 var strLang597 = "Sending"
 var strLang598 = "You must choose approver"
-// ezCabinet\Init
+// ezCabinet\InitSCPopup.js
 var strLang601 = "Special list listview XML"
 var strLang602 = "First special list name"
 var strLang603 = "Second special list name"
 var strLang604 = "Third special list name"
 var strLang605 = "No."
 var strLang606 = "If you have a special list (A special list of items, if the name is not an empty string.)"
-// ezCabinet\Misc
+// ezCabinet\MiscFunc.js
 var strLang607 = "Output register information flag:"
 var strLang608 = "Documentary archive"
-// ezCabinet\Open
+// ezCabinet\OpenAlert.js
 // ezCabinet\OpenSelWin.js
 // ezCabinet\OrganTree.js
 // ezCabinet\RecordInfo.js
@@ -462,7 +462,7 @@ var strLang647 = "If you have a second special list"
 var strLang648 = "If you have a third special list"
 var strLang649 = "Error occurred while registering documentary archive!"
 var strLang650 = "Stocked date of termination"
-// ezCabinet\RegR
+// ezCabinet\RegRecord.js
 var strLang651 = "When the location of the special list of cases is"
 var strLang652 = "Yes"
 var strLang665 = "Special documentary"
@@ -478,7 +478,7 @@ var strLang675 = "Audio-visual documentary"
 var strLang676 = "If the position of the special list is article,"
 var strLang677 = "Error occurred while registering documentary!"
 var strLang678 = "Selected documentary archive ID return."
-// ezCabinet\Sele
+// ezCabinet\SelectTransXml.js
 // ezCabinet\SpecialList.js
 var strLang692 = "If you have a first special list"
 var strLang693 = "Special list # 1"
@@ -490,7 +490,7 @@ var strLang698 = "To delete the selected item!"
 var strLang699 = "First special list"
 var strLang700 = "Second special list"
 var strLang701 = "Third special list"
-// ezCabinet\View
+// ezCabinet\ViewCabInfo.js
 var strLang702 = "Successfully loading additional information then click the first tip"
 var strLang703 = "Failed loading documentary information!"
 var strLang704 = "Not applicable"
@@ -501,13 +501,13 @@ var strLang708 = "Error occurred while loading special information list."
 var strLang709 = "Then Special list location is archive"
 var strLang710 = "Special list information initialization"
 var strLang711 = "No special list"
-// ezCabinet\View
+// ezCabinet\ViewRecInfo.js
 var strLang712 = "Special list flag"
 var strLang713 = "Can not find the documentary information."
 var strLang714 = "Additional information initialization"
 var strLang715 = "Classification information initialization"
 var strLang716 = "Failed loading documentary classification information!"
-// ezDocInfo\setL
+// ezDocInfo\setLogData.js
 // ezStatistics\_vti_cnf\ezStatistics.js
 // ezStatistics\ezStatistics.js
 // ezViewHWP\ezAprove_HWP.js
@@ -519,7 +519,7 @@ var strLang723 = "Retransmission requests."
 var strLang724 = "Method is not clear."
 var strLang725 = "Request the retransmission of the document has."
 var strLang728 = "Reference recipient"
-// ezViewHWP\ezRe
+// ezViewHWP\ezRecevG_Susin_HWP.js
 var strLang731 = "Please select the documentary archive, first."
 var strLang732 = "Originally documnet is filed to be documentary archive ID- Return an empty string if not specified."
 var strLang733 = "Separate attach title"
@@ -529,7 +529,7 @@ var strLang736 = "Audio-visual documentary summary"
 var strLang737 = "Audio-visual documentary type code"
 var strLang740 = "Failed returned back."
 var strLang741 = "Documents are returned back!"
-// ezViewHWP\ezSi
+// ezViewHWP\ezSimsaG_HWP.js
 // ezViewWord\ezAprovUI.js
 var strLang752 = "Display"
 // ezViewWord\ezDeptRecevUI.js
@@ -539,13 +539,13 @@ var strLang779 = "Property value"
 var strLang783 = "Type"
 var strLang786 = "Apply"
 var strLang787 = "Cancel"
-// ezViewWord\ezR
+// ezViewWord\ezRecevUI.js
 // ezViewWord\ezViewApr.js
 // formContainer\getContainerInfo.js
 var strLang789 = "Documents of audit archive:"
 var strLang790 = "Documents of document archive:"
 var strLang791 = "Search documents:"
-// formContainer\
+// formContainer\getFormCont.js
 // formContainer\MFgetFormCont.js
 // formContainer\selectContainer.js
 var strLang797 = "Doc. Folder name"
@@ -555,7 +555,7 @@ var strLang801 = "Select the document to be discard at document list."
 var strLang802 = "Documents have been removed."
 var strLang803 = "Error occurred while processing."
 var strLang804 = "No document at document list."
-// manage\ezForm.
+// manage\ezForm.js
 // manage\mdocnumui.js
 // manage\MinsContType.js
 var strLang810 = "Please select the document type to be insert at document type list."
@@ -563,7 +563,7 @@ var strLang811 = "Please select the document status to be insert of document typ
 var strLang812 = "Please select the document type to be delete."
 var strLang813 = "Please select the document status and type to be delete at list."
 var strLang814 = "Successfully saved."
-// manage\MoveCo
+// manage\MoveContainer.js
 var strLang818 = "Moved the document .."
 // ReceivUI\AprGongRamLine.js
 var strLang821 = "Error occurred while importing department members -."
@@ -572,7 +572,7 @@ var strLang823 = "You can not delete."
 var strLang824 = "Duplicated the display person."
 var strLang825 = "Plesase assign the display person."
 var strLang826 = "Display has not been sent out."
-// ReceivUI\Recev
+// ReceivUI\Recev.js
 // ReceivUI\RecevG.js
 var strLang830 = "Recipient"
 // ReceivUI\RecevG_Susin.js
@@ -631,12 +631,12 @@ var strLang902 = "Returned document failed to register on the records."
 var strLang904 = "Position Information"
 var strLang912 = "Return has been processed by another person.";
 var strLang913 = "Another person has received treatment.";
-// ezAPRATTACH/Re
+// ezAPRATTACH/RegRecord_Attach.aspx
 var strLang926 = "An error occurred during upload. \n \nfile type (extension), please check with.";
 // formContainer/ContDocView_NoDoc.aspx
 var strLang928 = "Records to retrieve information failed!";
 var strLang929 = "Do not have permission to view this document. <br> Draft, please contact or.";
-// ApprovUI/doApp
+// ApprovUI/doApprovAllSelect.aspx
 var strLang930 = "The selected article does not.";
 var strLang931 = "<br> Batch settlement is completed.";
 var strLang932 = "An error has occurred in the batch settlement. <br>";
@@ -645,14 +645,14 @@ var strLang934 = "Items <br>";
 var strLang935 = "Success:";
 var strLang936 = "Failure:";
 var strLang937 = "Results bulk reassign document.";
-// ezViewHWP/ezDe
+// ezViewHWP/ezDeptRecev_HWP.js
 var strLang940 = "Prev"
 var strLang941 = "Next"
 var strLang942 = "Total"
 var strLang943 = "-items"
 var strLang944 = "No data found.";
 var strLang945 = "Mastermind can not be deleted."
-// TreeViewCtrl.j
+// TreeViewCtrl.js
 var strLang1001 = "Not exist selected items. Do you want to only document print?";
 var strLang1002 = "External recipients can not be saved.";
 var strLang1003 = "Added to favorites.";
@@ -725,7 +725,7 @@ var strLangDocState24 = "Distribution";
 var strLangDocState31 = "Transport";
 var strLangDocState32 = "Return";
 
-// AprType, FunctionType : 결재 형태A03
+// AprType, FunctionType : 결재 형태 A03
 var strAprType1 = "001";
 var strAprType2 = "002";
 var strAprType3 = "003";
@@ -913,13 +913,13 @@ var strLangS245 = "Moderators can not change the payment line.";
 var strLangS247 = "Hasilsu not delete the billing approver.";
 var strLangS249 = "Hasilsu not delete the payment facilitator.";
 var strLangS250 = "You can add your payment participant";
-strLangS251 = "Does not exist.";
+var strLangS251 = "Does not exist.";
 var strLangS254 = "Gyeoljaeja final approval will not be good change.";
 var strLangS264 = "Pre-audit";
 var strLangS266 = "Is not specified in the payment line.";
 var strLangS267 = "Please check again.";
 var strLangS276 = "Payment can be Khan";
-strLangS277 = "It is";
+var strLangS277 = "It is";
 var strLangS281 = "Khan will be agreed";
 var strLangS283 = "Department can not be designated as a department to an agreement.";
 var strLangS286 = "Please specify the final gyeoljaeja after jeongyeol.";
@@ -986,7 +986,7 @@ var strLangS826 = "I was not sent out circulars.";
 var strLangpjj27 = "A favorite you want to edit, you can edit should be applied to the party circulated a list.";
 var strLangHYJ28 = "The party circulated a list does not exist.";
 
-var strLang1104 = ". The agency can not receive electronic documents. \nCan not be added.";
+var strLang1104 = "The agency can not receive electronic documents. \nCan not be added.";
 
 //2017-11-09 장진혁 추가
 var strLangjjh01 = "Attachment total";
@@ -999,8 +999,8 @@ var strLangPJG01 = "Are you sure you want to delete the favorites?";
 var strLangPJG02 = "Are you sure that you want to include all the sub-departments?";
 var strLangPJG03 = "Already returned the document.";
 
-var strLangPJG01 = "Are you sure you want to delete the favorites?";
-var strLangPJG02 = "Are you sure that you want to include all the sub-departments?";
+var strLangSpjj28 = "기안자나 최종결재자는 '후결'일 수 없습니다.";
+var strLangSpjj29 = "동일인이 '후결'로 2번이상 지정될 수 없습니다."
 var strLangSpjj30 = "Do you approve the hugyeol?"; 
 var strLangSpjj31 = "I approved the hugyeol.";
 var strLangSpjj32 = "There was an error in hugyeol approval."
