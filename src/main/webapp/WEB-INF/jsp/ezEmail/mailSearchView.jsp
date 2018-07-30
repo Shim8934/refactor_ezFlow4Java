@@ -493,6 +493,68 @@
 			    }
 			}
 		
+			function deleteWork(bDel) {
+			    if (GetChildNodes(resultTD).length == 0) {
+			        alert(strLang57);
+			        return;
+			    }
+
+				var selcheck = new Array();
+				var count = 0;
+				    
+				var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
+				for (var i = 0; i < Rows.length; i++) {
+				    if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
+				        selcheck[count] = Rows.item(i);
+				        count++;
+				    }
+				}		
+
+				var includeSecureMail = false;
+				for (var i = 0; i < selcheck.length; i++) {
+					if (selcheck[i].getAttribute("securemail") == "1") {
+						includeSecureMail = true;
+				    	break;
+				    }
+				}
+				
+				var strItemID = "";
+				for(i=0; i < count; i++)
+		        {
+					var itemId = selcheck[i].getAttribute("itemid");
+		            strItemID += itemId + ",";
+			    }
+				
+			    if (includeSecureMail) {
+		        	if (!confirm(strLangLHM19)) {
+		        		return;
+		        	}
+		        }
+	        	if (!confirm(strLang59)) {
+	            	return;
+	            }
+				
+				var xmlpara = createXmlDom();
+			    var objNode;
+			    xmlhttp_mailMoveDelete = createXMLHttpRequest();
+			    createNodeInsert(xmlpara, objNode, "DATA");
+			    createNodeAndInsertText(xmlpara, objNode, "UNIQUEID", strItemID);
+			    createNodeAndInsertText(xmlpara, objNode, "FOLDERID", "");
+			    xmlhttp_mailMoveDelete.open("POST", "/ezEmail/mailDeleteS.do?cmd=BMOVE", true);
+			    xmlhttp_mailMoveDelete.send(xmlpara);
+			    xmlhttp_mailMoveDelete.onreadystatechange = function () {
+			    	if (xmlhttp_mailMoveDelete.readyState == 4) {
+				    	if (xmlhttp_mailMoveDelete.status < 200 || xmlhttp_mailMoveDelete.status > 300)
+						    alert('<spring:message code="ezEmail.t638" />');
+						else {
+						    alert('<spring:message code="ezEmail.t604" />');
+						    listContentArry = new Array();
+						    start_search();
+						}
+			    	}
+			    } // onreadystatechange End
+			}
+			
 			function delete_mail()
 			{
 			    var selcheck = new Array();
@@ -714,6 +776,7 @@
 			  <li><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
 			  <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 			  <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
+			  <li><span onClick="deleteWork()"><spring:message code="ezEmail.t95" /></span></li>
 			  <li><span onClick="delete_mail()"><spring:message code="ezEmail.t156" /></span></li>
 			</ul>
 		</div>  

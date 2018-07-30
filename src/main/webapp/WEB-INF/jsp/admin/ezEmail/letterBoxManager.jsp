@@ -32,37 +32,33 @@
 		        <li><span onclick="deleteLetterBox()"><spring:message code='ezEmail.letter18'/></span></li>
 		    </ul>
 		</div>
-		<div id="divTree" class="myScrollableBlock" style="border:1px solid #ddd">
-		</div>
-		<div id="divInput" style="border:1px solid #ddd; padding:15px; height:319px">
-			<form id="myForm" action="/admin/ezEmail/updateLetterBox.do" method="post">
-				<label for="display">
-					<spring:message code='ezEmail.letter35'/>
-				</label>
-				<input type="text" id="display" name="displayname" size="30" maxlength="40">
-				
-				<br><br>
-				
-				<label for="display2">
-					<spring:message code='ezEmail.letter36'/>
-				</label>
-				<input type="text" id="display2" name="displayname2" size="30" maxlength="40">
-				
-				<br>
-				
-				<input type="hidden" id="letterbox_no" name="letterBoxNo">
-				<input type="hidden" id="parent_letterbox_no" name="parentLetterBoxNo">
-				<input type="hidden" id="company_id" name="companyID" value="${companyId}">
-				
-				<%-- <div class="divInputBtn">
-					<input type="button" id="submitBtn" onclick="submitClick()" value="<spring:message code="ezEmail.t38"/>">
-				</div> --%>
-				<div id="mainmenu" style="width:100%;text-align:center">
-			        <ul style="float:none;">
-			            <li style="float:none;"><span style="float:none;display: inline-block; margin-top:220px" onClick="submitClick()">&nbsp;<spring:message code="ezEmail.t38"/>&nbsp;</span></li>
-			        </ul>
-			    </div>
-			</form>
+		<div id="letterContentDiv" style="width:639px;">
+			<div id="divTree" class="myScrollableBlock" style="border:1px solid #ddd">
+			</div>
+			<div id="divInput" style="border:1px solid #ddd; padding:15px; height:319px">
+				<form id="myForm" action="/admin/ezEmail/updateLetterBox.do" method="post">
+					<label for="display">
+						<spring:message code='ezEmail.letter35'/>
+					</label>
+					<input type="text" id="display" name="displayname" size="30" maxlength="40">
+					
+					<br><br>
+					
+					<label for="display2">
+						<spring:message code='ezEmail.letter36'/>
+					</label>
+					<input type="text" id="display2" name="displayname2" size="30" maxlength="40">
+					
+					<br>
+					
+					<input type="hidden" id="letterbox_no" name="letterBoxNo">
+					<input type="hidden" id="parent_letterbox_no" name="parentLetterBoxNo">
+					<input type="hidden" id="company_id" name="companyID" value="${companyId}">
+				</form>
+			</div>
+			<div class="btnpositionJsp" style="width:100%;text-align:center;float:left;margin-top:10px;padding:7px;">
+		        <a class="imgbtn" onclick="submitClick()"><span><spring:message code="ezEmail.t38"/></span></a>
+		    </div>
 		</div>
 		<script>
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");

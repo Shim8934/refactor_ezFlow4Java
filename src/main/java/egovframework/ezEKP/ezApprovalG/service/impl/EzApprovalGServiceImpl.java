@@ -3392,15 +3392,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (approvalFlag.equals("G")) {
 					map.put("v_AprType", getName2Code("A03", rowNode.item(i).getChildNodes().item(4).getTextContent(), companyID, lang, tenantID).trim());
-				} else {
-					map.put("v_AprType", getName2Code("SA03", rowNode.item(i).getChildNodes().item(4).getTextContent(), companyID, lang, tenantID).trim());
-				}
-				
-				if (approvalFlag.equals("G")) {
 					map.put("v_AprState", getName2Code("A04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim());
 				} else {
+					map.put("v_AprType", getName2Code("SA03", rowNode.item(i).getChildNodes().item(4).getTextContent(), companyID, lang, tenantID).trim());
 					map.put("v_AprState", getName2Code("SA04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim());
 				}
+				
 				map.put("v_AprMemberID", rowNode.item(i).getChildNodes().item(9).getTextContent().trim());
 				map.put("v_AprMemberIsDeptYN", rowNode.item(i).getChildNodes().item(10).getTextContent().trim());
 				map.put("v_AprMemberName", rowNode.item(i).getChildNodes().item(18).getTextContent().trim());
@@ -21619,8 +21616,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("</HEADER>");
 				}
 				resultXML.append("</HEADERS>");
-			} else { //리스트뷰 Rows 부분이다.
 				resultXML.append("<ROWS>");
+			} else { //리스트뷰 Rows 부분이다.
 				resultXML.append("<ROW>");
 				resultXML.append("<CELL>");
 				resultXML.append("<VALUE>" + SepAttSN + "</VALUE>");
