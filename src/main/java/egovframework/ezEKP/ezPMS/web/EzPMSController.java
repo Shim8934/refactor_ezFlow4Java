@@ -4453,6 +4453,7 @@ public class EzPMSController {
 		JSONArray taskList = new JSONArray();
 		JSONObject project = new JSONObject();
 		JSONArray groupList = new JSONArray();
+		JSONArray holidayList = new JSONArray();
 
 		LOGGER.debug("projectId : " + projectId);
 
@@ -4495,6 +4496,7 @@ public class EzPMSController {
 		if (status.equals("ok")) {
 			JSONObject data = (JSONObject) resultBodyProject.get("data");
 			project = (JSONObject) data.get("project");
+			holidayList = (JSONArray) data.get("holidayList");
 		}
 
 		JSONObject resultBodyGroup = commonUtil.getJsonFromRestApi(
@@ -4522,7 +4524,19 @@ public class EzPMSController {
 		// 기본 font(맑은고딕)
 		HSSFFont basicFont = workbook.createFont();
 		basicFont.setFontName("맑은 고딕");
-
+		
+		//토요일일 경우 font
+		HSSFFont satFont = workbook.createFont();
+		satFont.setBoldweight((short) satFont.BOLDWEIGHT_BOLD);
+		satFont.setFontName("맑은 고딕");
+		satFont.setColor(HSSFColor.BLUE.index);
+		
+		//일요일/공휴일일 경우  font
+		HSSFFont sunFont = workbook.createFont();
+		sunFont.setBoldweight((short) sunFont.BOLDWEIGHT_BOLD);
+		sunFont.setFontName("맑은 고딕");
+		sunFont.setColor(HSSFColor.RED.index);
+		
 		// 헤더 스타일(회색 배경, border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
 		HSSFCellStyle headerStyle = workbook.createCellStyle();
 		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
@@ -4546,7 +4560,33 @@ public class EzPMSController {
 		ganttStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
 		ganttStyle.setFont(headerFont);
 		ganttStyle.setWrapText(true);
-
+		
+		// 간트쪽 토요일 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
+		HSSFCellStyle ganttSatStyle = workbook.createCellStyle();
+		ganttSatStyle.setFillForegroundColor(HSSFColor.LIGHT_YELLOW.index);
+		ganttSatStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		ganttSatStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		ganttSatStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		ganttSatStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		ganttSatStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		ganttSatStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		ganttSatStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		ganttSatStyle.setFont(satFont);
+		ganttSatStyle.setWrapText(true);		
+		
+		// 간트쪽 일요일 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
+		HSSFCellStyle ganttSunStyle = workbook.createCellStyle();
+		ganttSunStyle.setFillForegroundColor(HSSFColor.LIGHT_YELLOW.index);
+		ganttSunStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		ganttSunStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		ganttSunStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		ganttSunStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		ganttSunStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		ganttSunStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		ganttSunStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+		ganttSunStyle.setFont(sunFont);
+		ganttSunStyle.setWrapText(true);
+				
 		// 간트 그래프 색칠 o 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
 		HSSFCellStyle graphStyle = workbook.createCellStyle();
 		graphStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
@@ -4834,11 +4874,50 @@ public class EzPMSController {
 
 		for (int i = 0; i < monthDays.size(); i++) {
 			int maxDays = Integer.parseInt(monthDays.get(i).get("maxDaysOfMonth").toString());
-
+			String yearAndMonth = monthDays.get(i).get("yearAndMonth").toString();
+			
+			int year = Integer.parseInt(yearAndMonth.substring(0, 4));
+			int month = Integer.parseInt(yearAndMonth.substring(7));
+			
 			for (int j = 0; j < maxDays; j++) {
 				row.createCell(dateCount + j).setCellValue(j + 1);
 				row.getCell(dateCount + j).setCellStyle(ganttStyle);
-
+				String comDateStr = year + "-";
+				
+				if (month < 10) {
+					comDateStr += "0" + month + "-";
+				} else {
+					comDateStr += month + "-";
+				}
+				
+				if (j + 1 < 10) {
+					comDateStr += "0" + (j + 1);
+				} else {
+					comDateStr += (j + 1);
+				}
+				
+				Date compDate = new SimpleDateFormat("yyyy-MM-dd").parse(comDateStr);
+				
+				Calendar compCal = Calendar.getInstance();
+				compCal.setTime(compDate);
+				
+				int weekDay = compCal.get(Calendar.DAY_OF_WEEK);
+				
+				if (weekDay == 7) {
+					row.getCell(dateCount + j).setCellStyle(ganttSatStyle);
+				} else if (weekDay == 1) {
+					row.getCell(dateCount + j).setCellStyle(ganttSunStyle);
+				} else {
+					for (int k = 0; k < holidayList.size(); k ++) {
+						String holiday = holidayList.get(k).toString();
+						
+						if (holiday.equals(comDateStr)) {
+							row.getCell(dateCount + j).setCellStyle(ganttSunStyle);
+						}
+					}
+				}
+				
+				
 				sheet.setColumnWidth(dateCount + j, 1000);
 			}
 
