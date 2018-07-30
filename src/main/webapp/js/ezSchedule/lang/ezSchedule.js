@@ -5,8 +5,8 @@ var strLang3 = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월"
 var strLang4 = "일요일;월요일;화요일;수요일;목요일;금요일;토요일"
 var strLang5 = "일;월;화;수;목;금;토"
 var strLang6 = "월;화;수;목;금;토;일"
-var strLang5_1 = "SUN;MON;TUE;WED;THU;FRI;SAT"
-var strLang6_1 = "MON;TUE;WED;THU;FRI;SAT;SUN"
+var strLang5_1 = "일;월;화;수;목;금;토"
+var strLang6_1 = "월;화;수;목;금;토;일"
 var strLang7 = "제목 없음"
 // X:\NetModule\FrontEnd\Home\myoffice\ezSchedule\js\kaoni_ActiveX.js
 // X:\NetModule\FrontEnd\Home\myoffice\ezSchedule\js\schedule_write.js
