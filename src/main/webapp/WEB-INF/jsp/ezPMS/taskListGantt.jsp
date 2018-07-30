@@ -887,7 +887,9 @@
 	   			  if(this.assigs.length > 1) {
 	   				ret = "<spring:message code='ezPMS.t349' arguments='" + res.name + "," + (this.assigs.length - 1) +"'/>"
 	   			  } else {
-	   				ret = res.name;
+	   				if(res){
+		   				ret = res.name;
+	   				}
 	   			  }
 	   			 
 	   			  return ret;
