@@ -596,7 +596,10 @@
                 <td><table border="0" style="width:100%;border-collapse:collapse; border-spacing:0;padding:0px;" >
                     <tr>
                       <td id="tdSpecialFlag">&nbsp;</td>
-                      <td style="width:70px"><img src="/images/btn_add.gif" style="display:none;cursor:pointer;vertical-align:middle" id="btnAddSC" name="btnAddSC" onClick="return btnAddSpecialCatalog_onclick()" width="39" height="20"></td>
+                      <td style="width:70px">
+                      <a class="imgbtn imgbck" id="btnAddSC" style="position: absolute; top: 406px; left: 453px; display:none;"><span onClick="return btnAddSpecialCatalog_onclick()"><spring:message code='ezApprovalG.t268'/></span></a>
+                      <!-- <img src="/images/btn_add.gif" style="display:none;cursor:pointer;vertical-align:middle" id="btnAddSC" name="btnAddSC" onClick="return btnAddSpecialCatalog_onclick()" width="39" height="20"> -->
+                      </td>
                     </tr>
                   </table></td>
               </tr>
