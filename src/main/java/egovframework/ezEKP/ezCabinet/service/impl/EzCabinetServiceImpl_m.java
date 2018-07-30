@@ -5,10 +5,12 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
+import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_m;
 import egovframework.let.user.login.vo.LoginVO;
 
+@Service
 public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 
 	@Override
