@@ -29,5 +29,5 @@ var strLang28 = "Prev";
 var strLang29 = "Next";
 var strLang30 = "Are you sure you want to delete all the concurrent position?";
 var strLang31 = "You can not specify a full administrator privileges.";
-var strLang32 = "의 모든 권한을 삭제 하시겠습니까?";
+var strLang32 = "Are you sure you want to delete all of the authority?";
 var strLang535 = "No Items";
