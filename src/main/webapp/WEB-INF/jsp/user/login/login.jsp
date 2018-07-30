@@ -39,8 +39,6 @@
 			.password_reset .passwordForm li.grayText{ color:#8e8e8e; font-size:12px; margin:0px; padding:0px}
 			#exDiv3 dl{margin-top: 20px;}
 			#layerTitle{margin-bottom: 20px;}
-			#exDiv4 dl{margin-top: 20px;}
-			#exDiv4Title{margin-bottom: 20px;}
 		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -52,21 +50,11 @@
 		<script type="text/javascript">		
 			function actionLogin() {
 			    if (document.loginForm.id.value =="") {
-// 			        alert("<spring:message code='main.jjs02'/>");
-// 			        return;
-					//보미 수정
-					$("#exDiv4Title").text("<spring:message code='main.jjs02'/>");
-					$("#exDiv4Content2").text("아이디가 없을 경우 회사 관리자에게 문의해 주세요.");
-					$("#exDiv4").modal();
-					return;
+			        alert("<spring:message code='main.jjs02'/>");
+			        return;
 			    } else if (document.loginForm.password.value =="") {
-// 			        alert("<spring:message code='main.jjs01'/>");
-// 			        return;
-			    	//보미 수정
-					$("#exDiv4Title").text("<spring:message code='main.jjs01'/>");
-					$("#exDiv4Content2").text("<spring:message code='fail.common.login.warning6'/>");
-					$("#exDiv4").modal();
-					return;
+			        alert("<spring:message code='main.jjs01'/>");
+			        return;
 			    } else {
 			    	var frm = document.loginForm;
 			    	var rsa = new RSAKey();
@@ -147,11 +135,7 @@
 					$("#exDiv").show(function() {						
 						$("#txtOldPassword").focus();
 					});
-			    }	
-				
-				//보미 추가
-				$("#imgMnt3").html("<img src='/images/warning2.png'>");
-				
+			    }				
 			}
 			
 			function setting_click() {
@@ -361,23 +345,6 @@
 					<dt id="layerTitle">${message1}</dt>
 		            <dd><spring:message code='fail.common.login.warning1'/></dd>
 		            <dd><spring:message code='fail.common.login.warning6'/></dd>
-		        </dl>
-		    </div>
-		</div>
-		
-		<%-- 2018-07-30 김보미 - id, 비밀번호 미 입력시 레이어팝업 출력 --%>
-		<div id="exDiv4" style="display:none;max-width:620px;height:190px;padding-top:27px;margin-bottom:100px">
-			<div id="close">
-	            <ul>
-	                <li><a rel="modal:close"><span></span></a></li>
-	            </ul>
-	        </div>
-			<div class="warning_wrap" style="padding-left:20px">
-				<p style="border:0px" id="imgMnt3"></p>
-		        <dl>
-					<dt id="exDiv4Title"></dt>
-					<dd id="exDiv4Content1"><spring:message code='fail.common.login'/></dd>
-					<dd id="exDiv4Content2"></dd>
 		        </dl>
 		    </div>
 		</div>
