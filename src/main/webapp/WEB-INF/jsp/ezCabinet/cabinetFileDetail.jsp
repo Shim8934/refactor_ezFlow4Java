@@ -195,7 +195,7 @@
 						spanElmt.setAttribute("role", relatedFile[i]["relatedItemId"]);
 						spanElmt.textContent = relatedFile[i]["title"];
 						spanElmt.className   = "rlSpanBnk";
-						spanElmt.onclick = (function(status, itemId){return readRelatedItem(itemId, status)})(relatedFile[i]["useStatus"], relatedFile[i]["relatedItemId"]);
+						spanElmt.onclick = (function(status, itemId){return function() {readRelatedItem(itemId, status);}; })(relatedFile[i]["useStatus"], relatedFile[i]["relatedItemId"]);
 						divElmt.appendChild(spanElmt);
 						
 						if (i != len - 1) {
@@ -408,7 +408,7 @@
 						spanElmt.setAttribute("role", relatedArr[i]["itemId"]);
 						spanElmt.textContent = relatedArr[i]["itemTitle"];
 						spanElmt.className   = "rlSpanBnk";
-						spanElmt.onclick = (function(itemId){return readRelatedItem(itemId)})(relatedArr[i]["itemId"]);
+						spanElmt.onclick = (function(itemId){return function() {readRelatedItem(itemId);}; })(relatedArr[i]["itemId"]);
 						divElmt.appendChild(spanElmt);
 						
 						if (i != len - 1) {

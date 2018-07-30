@@ -825,7 +825,7 @@ var CabinetItem = function() {
 				spanChild.textContent = receiverList[i]["userName"];
 				spanChild.setAttribute("title", receiverList[i]["userEmail"]);
 				spanChild.onclick     = (function(receiver) {
-					return function() {showUserInfoFromEmail(receiver["userEmail"]);}
+					return function() {showUserInfoFromEmail(receiver["userEmail"]);};
 				})(receiverList[i]);
 				
 				pElmt.appendChild(spanChild);
@@ -872,11 +872,9 @@ var CabinetItem = function() {
 		if (totalCnt == 1) {
 			var spanElmt = document.createElement("span");
 			spanElmt.textContent = relatedList[0]["title"];
-			spanElmt.setAttribute("role",   relatedList[0]["relatedItemId"]);
 			spanElmt.setAttribute("title",  relatedList[0]["title"]);
-			spanElmt.setAttribute("status", relatedList[0]["useStatus"]);
 			spanElmt.className   = "txtSpan";
-			spanElmt.addEventListener("click", function(e) {readRelatedItem(this);}, false);
+			spanElmt.onclick     = function(e) {readRelatedItem(relatedList[0]["relatedItemId"], relatedList[0]["useStatus"]);};
 			ddElmt2.appendChild(spanElmt);
 		}
 		else {
@@ -885,10 +883,8 @@ var CabinetItem = function() {
 			var spanElmt3 = document.createElement("span");
 			var pElmt     = document.createElement("p");
 			
-			spanElmt1.addEventListener("click", function(e) {readRelatedItem(this);}, false);
+			spanElmt1.onclick     = function(e) {readRelatedItem(relatedList[0]["relatedItemId"], relatedList[0]["useStatus"]);};
 			spanElmt1.setAttribute("title",  relatedList[0]["title"]);
-			spanElmt1.setAttribute("role",   relatedList[0]["relatedItemId"]);
-			spanElmt1.setAttribute("status", relatedList[0]["useStatus"]);
 			spanElmt1.textContent = relatedList[0]["title"];
 			spanElmt1.className   = "txtSpan";
 			spanElmt2.textContent = " (" + CabinetMessages.strTotal + " " + totalCnt + CabinetMessages.strItem + ")";
@@ -901,9 +897,7 @@ var CabinetItem = function() {
 				spanChild.className   = "txtSpan";
 				spanChild.textContent = relatedList[i]["title"];
 				spanChild.setAttribute("title",  relatedList[i]["title"]);
-				spanChild.setAttribute("role",   relatedList[i]["relatedItemId"]);
-				spanChild.setAttribute("status", relatedList[i]["useStatus"]);
-				spanChild.addEventListener("click", function(e) {readRelatedItem(this);}, false);
+				spanChild.onclick     = (function(itemId, useStatus) {return function() {readRelatedItem(itemId, useStatus);};})(relatedList[i]["relatedItemId"], relatedList[i]["useStatus"]);
 				pElmt.appendChild(spanChild);
 				
 				if (i != totalCnt - 1) {
@@ -1033,9 +1027,9 @@ var CabinetItem = function() {
 		}
 	}
 	
-	function readRelatedItem(spanElmt) {
-		var itemId    = spanElmt.getAttribute("role");
-		var useStatus = spanElmt.getAttribute("status");
+	function readRelatedItem(itemId, useStatus) {
+		console.log("ItemId: " + itemId + " || useStatus: " + useStatus);
+		
 		if(useStatus == 0) {alert(CabinetMessages.strNoRelated); return;}
 		openFileDetail(itemId);
 	}
@@ -1146,13 +1140,13 @@ var CabinetItem = function() {
 	}
 	
 	function showUserInfoFromEmail(userMail) {
-		var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+		var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
 		feature = feature + getOpenWindowfeature(420, 500);
 		window.open("/ezCommon/showPersonInfo.do?email=" + encodeURIComponent(userMail), "userInfo", feature);
 	}
 	
 	function showUserInfoFromId(userId) {
-		var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+		var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
 		feature = feature + getOpenWindowfeature(420, 500);
 		window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
 	}
