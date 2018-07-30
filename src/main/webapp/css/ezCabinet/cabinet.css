@@ -97,7 +97,7 @@
 .relateList.hide {display: none;}
 .relateList em {font-style: normal;}
 .cabWrapFile {padding: 8px;}
-.itemContentH, .itemContentW {overflow: auto; flex: 1;}
+.itemContentH, .itemContentW {overflow: auto; flex: 1; display: flex; flex-flow: column;}
 .itemContentH .fileDetailDiv, .itemContentW .fileDetailDiv {height: auto !important; min-height: auto !important;}
 
 .cabDivPrevH {width: 100%; overflow: hidden; flex: 1; display: flex;}
@@ -362,5 +362,14 @@
 .organCabTbl .pic img {border: none !important;}
 .organCabTbl .pic img {width: 90px; height: 90px;}
 .cUserInfor {text-align: left;}
+
+.cabrlframe {border: none; width: 100%; flex: 1; min-height: 0px; min-width: 0px;}
+.cabuloff{display: none;}
+.cabrltxt {padding: 0px 5px !important; margin-top: 5px; word-wrap: break-word;}
+.previewmail_addfile.cabattach {padding: 0px 5px !important; width: auto !important; margin-bottom: 10px; font-family: 굴림;}
+.cabSpanAttach {cursor: pointer;}
+.cabSpanAttach img {width: 16px; height: 16px; vertical-align: middle;}
+.title_btn, .cabSpanAttach >span {color: #666; cursor: pointer;}
+.title_btn:hover, .cabSpanAttach:hover >span {color: #164aad;}
 
 @media print {.cabBttnDiv {display: none;} .fileDetailDiv {height: auto; overflow: visible;} .rlDocDiv {overflow: visible;}}

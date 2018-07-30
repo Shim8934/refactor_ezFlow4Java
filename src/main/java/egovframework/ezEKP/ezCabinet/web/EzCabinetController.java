@@ -215,6 +215,15 @@ public class EzCabinetController {
 		return "ezCabinet/cabinetAddRelated";
 	}
 	
+	@RequestMapping(value = "/ezCabinet/getPreviewContent.do")
+	public String jspGetPreviewPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model)  throws Exception {
+		logger.debug("jspGetPreviewPage started");
+		
+		logger.debug("jspGetPreviewPage ended");
+		return "ezCabinet/cabinetPrevContent";
+	}
+	
+	
 	@RequestMapping(value="/ezCabinet/getCompanyTree.do")
 	@ResponseBody
 	public String jsonGetCompanyTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{

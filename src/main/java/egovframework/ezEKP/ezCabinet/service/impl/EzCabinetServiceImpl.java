@@ -901,7 +901,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	}
 
 	private String getCabinetDirPath(int tenantId) {
-		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "cabinet" + commonUtil.separator;
+		return commonUtil.getUploadPath("upload_cabinet.ROOT", tenantId) + commonUtil.separator;
 	}
 
 	@Override

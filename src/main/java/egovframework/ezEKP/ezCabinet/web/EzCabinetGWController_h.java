@@ -389,10 +389,10 @@ public class EzCabinetGWController_h {
 					List<SimpleUserMailVO> listReceiver = cabinetService.getUserInfoFromEmail(receiverMail, primary, tenantId);
 					result.put("receivers", listReceiver);
 					
-					CabinetColumnVO forwards = columnList.stream().filter(column -> column.getColumnId().equals("forward")).collect(Collectors.toList()).get(0);
+					List<CabinetColumnVO> forwards = columnList.stream().filter(column -> column.getColumnId().equals("forward")).collect(Collectors.toList());
 					
-					if (forwards != null && !forwards.getColumnValue().equals("")) {
-						List<String> forwardMail           = Arrays.asList(forwards.getColumnValue().split(";"));
+					if (forwards != null && forwards.size() > 0 && !forwards.get(0).getColumnValue().equals("")) {
+						List<String> forwardMail           = Arrays.asList(forwards.get(0).getColumnValue().split(";"));
 						List<SimpleUserMailVO> listForward = cabinetService.getUserInfoFromEmail(forwardMail, primary, tenantId);
 						result.put("forwards", listForward);
 					}

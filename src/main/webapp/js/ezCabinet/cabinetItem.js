@@ -18,12 +18,7 @@ var CabinetItem = function() {
 	var sharePopup     = null;
 	var addPopup       = null;
 	var itemPopup      = null;
-	var currentZoom    = 100;
-	var maxZoom        = 200;
-	var minZoom        = 80;
-	var mozCrrZoom     = 1;
-	var mozMaxZoom     = 2;
-	var mozMinZoom     = 0.8;
+	var documentCont   = null;
 	
 	/* Preview option */
 	function setData(height, width, prevMode) {
@@ -708,7 +703,6 @@ var CabinetItem = function() {
 	}
 	
 	function afterGetItemInfo(data) {
-		console.log(data);
 		var itemInfo    = data.fileDetail;
 		var itemType    = itemInfo["itemType"];
 		var divPrevId   = crrPreMode == "w" ? "previewHeaderW" : "previewHeaderH";
@@ -767,6 +761,33 @@ var CabinetItem = function() {
 		//Generate mail title
 		generateEmailTitle(itemInfo, relatedList, senderColumn, receiverColumn, forwardColumn, senderUser, receiverList, forwardList, dlElmt);
 		//Generat mail content + attach files
+		generateEmailContent(attachList, itemInfo);
+	}
+	
+	function generateEmailContent(attachList, itemInfo) {
+		var content     = itemInfo["conentPath"];
+		var attachSize   = itemInfo["itemSize"];
+		var totalFiles   = attachList.length;
+		var fileDivId    = crrPreMode == "w" ? "itemContentW" : "itemContentH";
+		var fileDivElmt  = document.getElementById(fileDivId);
+		var ifameContent = null;
+		
+		if (fileDivElmt) {
+			var parentElemt        = fileDivElmt.parentElement;
+			ifameContent           = document.createElement("iframe");
+			ifameContent.id        = "mainContentIframe";
+			ifameContent.className = "cabrlframe";
+			parentElemt.replaceChild(ifameContent, fileDivElmt);
+		}
+		else {
+			ifameContent = document.getElementById("mainContentIframe");
+		}
+		//Email content using iframe
+		ifameContent.src       = "/ezCabinet/getPreviewContent.do";
+		documentCont           = {};
+		documentCont.content   = content;
+		documentCont.size      = itemInfo["itemSize"];
+		documentCont.attach    = attachList;
 	}
 	
 	function generateEmailTitle(itemInfo, relatedList, senderColumn, receiverColumn, forwardColumn, senderUser, receiverList, forwardList, dlElmt) {
@@ -790,19 +811,31 @@ var CabinetItem = function() {
 		dlElmt.appendChild(sddElmt);
 		
 		//Receiver title
-		var rdtElmt = document.createElement("dt");
-		var rddElmt = document.createElement("dd");
-		rdtElmt.textContent = receiverColumn["columnName"] + ": ";
-		var totalReceivers  = receiverList.length;
+		createEmailFieldTitle(receiverColumn, receiverList, dlElmt);
 		
-		if (totalReceivers == 1) {
+		//Forward
+		if (forwardList && forwardList.length > 0) {
+			createEmailFieldTitle(forwardColumn, forwardList, dlElmt);
+		}
+		
+		//Related documents title
+		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
+	}
+	
+	function createEmailFieldTitle(columnJsonObj, fieldList, dlElmt) {
+		var fdtElmt         = document.createElement("dt");
+		var fddElmt         = document.createElement("dd");
+		fdtElmt.textContent = columnJsonObj["columnName"] + ": ";
+		var totalField      = fieldList.length;
+		
+		if (totalField == 1) {
 			var spanElmt = document.createElement("span");
-			var userMail = receiverList[0]["userEmail"];
-			spanElmt.textContent = receiverList[0]["userName"];
+			var userMail = fieldList[0]["userEmail"];
+			spanElmt.textContent = fieldList[0]["userName"];
 			spanElmt.setAttribute("title", userMail);
 			spanElmt.className   = "txtSpan";
 			spanElmt.addEventListener("click", function(e) {showUserInfoFromEmail(userMail);}, false);
-			rddElmt.appendChild(spanElmt);
+			fddElmt.appendChild(spanElmt);
 		}
 		else {
 			var spanElmt1 = document.createElement("span");
@@ -810,44 +843,41 @@ var CabinetItem = function() {
 			var spanElmt3 = document.createElement("span");
 			var pElmt     = document.createElement("p");
 			
-			spanElmt1.addEventListener("click", function(e) {showUserInfoFromEmail(receiverList[0]["userEmail"]);}, false);
-			spanElmt1.textContent = receiverList[0]["userName"];
+			spanElmt1.addEventListener("click", function(e) {showUserInfoFromEmail(fieldList[0]["userEmail"]);}, false);
+			spanElmt1.textContent = fieldList[0]["userName"];
 			spanElmt1.className   = "txtSpan";
-			spanElmt1.setAttribute("title", receiverList[0]["userEmail"]);
-			spanElmt2.textContent = " (" + CabinetMessages.strTotal + " " + totalReceivers + CabinetMessages.strPeople + ")";
+			spanElmt1.setAttribute("title", fieldList[0]["userEmail"]);
+			spanElmt2.textContent = " (" + CabinetMessages.strTotal + " " + totalField + CabinetMessages.strPeople + ")";
 			spanElmt3.className   = "icDown";
 			spanElmt3.addEventListener("click", function(e) {showRelatedList(this);}, false);
 			pElmt.className       = "relateList hide";
 			
-			for (var i = 0; i < totalReceivers; i++) {
+			for (var i = 0; i < totalField; i++) {
 				var spanChild = document.createElement("span");
 				spanChild.className   = "txtSpan";
-				spanChild.textContent = receiverList[i]["userName"];
-				spanChild.setAttribute("title", receiverList[i]["userEmail"]);
+				spanChild.textContent = fieldList[i]["userName"];
+				spanChild.setAttribute("title", fieldList[i]["userEmail"]);
 				spanChild.onclick     = (function(receiver) {
 					return function() {showUserInfoFromEmail(receiver["userEmail"]);};
-				})(receiverList[i]);
+				})(fieldList[i]);
 				
 				pElmt.appendChild(spanChild);
 				
-				if (i != totalReceivers - 1) {
+				if (i != totalField - 1) {
 					var divideEm         = document.createElement("em");
 					divideEm.textContent = "; ";
 					pElmt.appendChild(divideEm);
 				}
 			}
 			
-			rddElmt.appendChild(spanElmt1);
-			rddElmt.appendChild(spanElmt2);
-			rddElmt.appendChild(spanElmt3);
-			rddElmt.appendChild(pElmt);
+			fddElmt.appendChild(spanElmt1);
+			fddElmt.appendChild(spanElmt2);
+			fddElmt.appendChild(spanElmt3);
+			fddElmt.appendChild(pElmt);
 		}
 		
-		dlElmt.appendChild(rdtElmt);
-		dlElmt.appendChild(rddElmt);
-		
-		//Related documents title
-		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
+		dlElmt.appendChild(fdtElmt);
+		dlElmt.appendChild(fddElmt);
 	}
 	
 	function generateCreatorTitle(dlElmt, creatorName, creatorId) {
@@ -988,10 +1018,7 @@ var CabinetItem = function() {
 				divMainElmt.appendChild(divChildElmt1);
 				divMainElmt.appendChild(divChildElmt2);
 				
-				liElmt.addEventListener("click", function(e) {downloadFile(e);}, false);
-				liElmt.setAttribute("path",  filePath);
-				liElmt.setAttribute("fname", fileName);
-				
+				liElmt.onclick = (function(name, path) {return function() {downloadFileAttach(name, path);}; })(attachList[i]["fileName"], attachList[i]["filePath"]);
 				liElmt.appendChild(divMainElmt);
 				ulElmt.appendChild(liElmt);
 			}	
@@ -1005,10 +1032,7 @@ var CabinetItem = function() {
 		fileWrap.appendChild(storageDiv);
 	}
 	
-	function downloadFile(event) {
-		var liElmt      = event.currentTarget;
-		var fileName    = liElmt.getAttribute("fname");
-		var filePath    = liElmt.getAttribute("path");
+	function downloadFileAttach(fileName, filePath) {
 		var downloadUrl = "/ezCabinet/downloadAttachFile?filePath=" + filePath + "&fileName=" + fileName;
 		var attachFrame = document.getElementById("attachFrame");
 		attachFrame.src = downloadUrl;
@@ -1028,8 +1052,6 @@ var CabinetItem = function() {
 	}
 	
 	function readRelatedItem(itemId, useStatus) {
-		console.log("ItemId: " + itemId + " || useStatus: " + useStatus);
-		
 		if(useStatus == 0) {alert(CabinetMessages.strNoRelated); return;}
 		openFileDetail(itemId);
 	}
@@ -1037,9 +1059,6 @@ var CabinetItem = function() {
 	function generatePreviewElmt(divElmt) {
 		var parentDiv  = divElmt.parentElement;
 		var prevDiv    = document.createElement("div");
-		var prevChild  = document.createElement("div");
-		var imgElmt1   = document.createElement("img");
-		var imgElmt2   = document.createElement("img");
 		var prevCont   = document.createElement("div");
 		var divChild   = document.createElement("div");
 		var pElmt      = document.createElement("p");
@@ -1065,44 +1084,13 @@ var CabinetItem = function() {
 			prevCont.className = "itemContentH";
 		}
 		
-		prevChild.className  = "zoomDiv";
-		imgElmt1.src         = "/images/minus.png";
-		imgElmt2.src         = "/images/plus.png";
-		
 		pElmt.appendChild(pSpanElmt1);
 		pElmt.appendChild(pSpanElmt2);
 		divChild.appendChild(pElmt);
 		divChild.appendChild(spanElmt);
 		divChild.appendChild(dlElmt);
 		divElmt.appendChild(divChild);
-		prevChild.appendChild(imgElmt1);
-		prevChild.appendChild(imgElmt2);
-		parentDiv.appendChild(prevChild);
 		parentDiv.appendChild(prevCont);
-	}
-	
-	function zoomIn() {
-		if (navigator.userAgent.indexOf('Firefox') != -1) {
-			if (mozCrrZoom < mozMaxZoom) {mozCrrZoom += 0.1;} else {return;}
-			document.getElementById("txtField").style.MozTransform = "scale(" + mozCrrZoom + ")";
-			document.getElementById("txtField").style.MozTransformOrigin = "0 0";
-		}
-		else {
-			if (currentZoom < maxZoom) {currentZoom += 10;} else {return;}
-			document.getElementById("txtField").style.zoom = currentZoom + "%";
-		}
-	}
-	
-	function zoomOut() {
-		if (navigator.userAgent.indexOf('Firefox') != -1) {
-			if (mozCrrZoom > mozMinZoom) {mozCrrZoom -= 0.1;} else {return;}
-			document.getElementById("txtField").style.MozTransform = "scale(" + mozCrrZoom + ")";
-			document.getElementById("txtField").style.MozTransformOrigin = "0 0";
-		}
-		else {
-			if (currentZoom > minZoom) {currentZoom -= 10;} else {return;}
-			document.getElementById("txtField").style.zoom = currentZoom + "%";
-		}
 	}
 	
 	function isImage(fileName) {
@@ -1168,6 +1156,8 @@ var CabinetItem = function() {
 		if(addPopup)   {addPopup.close();}
 	}
 	
+	function getIframeContent() {return documentCont;}
+	
 	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {
 		$.ajax({
 			type: ajaxType,
@@ -1187,7 +1177,8 @@ var CabinetItem = function() {
 	}
 	
 	return {
-		start  : initEvents,
-		reload : refreshAllFrames
+		start      : initEvents,
+		reload     : refreshAllFrames,
+		getContent : getIframeContent
 	};
 }();

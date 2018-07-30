@@ -1080,9 +1080,9 @@ public class EzCabinetGWController {
 		}
 		
 		try {
-			int tenantId     = loginService.getTenantId(serverName);
-			String realPath  = request.getServletContext().getRealPath("");
-			String filePath  = cabinetService.saveUploadFile(multiFileLists, nameArray, realPath, tenantId);
+			int tenantId    = loginService.getTenantId(serverName);
+			String realPath = request.getServletContext().getRealPath("");
+			String filePath = cabinetService.saveUploadFile(multiFileLists, nameArray, realPath, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

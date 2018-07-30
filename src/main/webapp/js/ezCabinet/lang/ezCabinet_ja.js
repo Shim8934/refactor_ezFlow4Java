@@ -75,5 +75,8 @@ var CabinetMessages = {
 	strFileDet   : "파일 상세",
 	strFileMod   : "파일 수정",
 	strPeople    : "명",
-	strSame      : "같은 파일은 연관문서로 선택할 수 없습니다."
+	strSame      : "같은 파일은 연관문서로 선택할 수 없습니다.",
+	strAttach3   : "일반 첨부파일",
+	strAttach4   : "모두저장",
+	strDelete2   : "게시물이 삭제되었습니다."
 }
