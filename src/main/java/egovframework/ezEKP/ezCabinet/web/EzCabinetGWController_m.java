@@ -1,8 +1,10 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.Locale;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetService_m;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -41,7 +45,7 @@ public class EzCabinetGWController_m {
 	private EzOrganService ezOrganService;
 	
 	@Autowired
-	private EzCabinetService_h cabinetService_m;
+	private EzCabinetService_m cabinetService_m;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;

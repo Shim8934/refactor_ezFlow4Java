@@ -520,4 +520,43 @@ public class EzCabinetGWController_h {
 		
 		return result;
 	}
+	
+	@RequestMapping(value="/rest/ezcabinet/relate-item/save/board", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveBoarditem(Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
+		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
+		String mode       = request.getParameter("mode")     != null ? request.getParameter("mode")     : "";
+		String cabinetId  = request.getParameter("cabinet")  != null ? request.getParameter("cabinet")  : "";
+		String title      = request.getParameter("title")    != null ? request.getParameter("title")    : "";
+		String writer     = request.getParameter("writer")   != null ? request.getParameter("writer")   : "";
+		String dateTime   = request.getParameter("dateTime") != null ? request.getParameter("dateTime") : "";
+		String attach     = request.getParameter("attach")   != null ? request.getParameter("attach")   : "";
+		String content    = request.getParameter("content")  != null ? request.getParameter("content")  : "";
+		
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || userId: " + userId + " || mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + " || dateTime: " + dateTime + " || attach: " + attach  + " || content: " + content);
+		
+		if (serverName.equals("") || userId.equals("") || (mode.equals("1") && cabinetId.equals(""))  || mode.equals("") || content.equals("") || dateTime.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
+			String realPath  = request.getServletContext().getRealPath("");
+			result           = cabinetService_h.saveBoarditem(realPath, mode, dstCabinetId, title, writer, attach, content, dateTime, locale, userInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
 }

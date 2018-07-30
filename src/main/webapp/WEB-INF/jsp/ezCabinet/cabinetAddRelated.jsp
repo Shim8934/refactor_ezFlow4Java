@@ -200,8 +200,46 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
-				function saveBoardDocument() {
-					//Add code here
+				function saveBoardDocument(saveMode, cabinetId) {
+					var boardOpener   = window.opener;
+					if (!boardOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var boardWriter  = window.opener.document.getElementById("WriteUserNM").textContent;
+					var postDate     = window.opener.document.getElementById("PostDate").textContent;
+					var boardTitle   = window.opener.document.getElementById("cTitle").textContent;
+					var messageFrame = window.opener.document.getElementById("message");
+					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
+					var boardContent = contentWd.document.querySelector("div[class='contentDiv']").innerHTML;
+					var attach       = window.opener.document.getElementById("lstAttachLink");
+					var attachList = [];
+					
+					if (attach.childElementCount > 1) {
+						var listChildren = attach.getElementsByTagName("a");
+						for (var i = 0, len = listChildren.length; i < len; i++) {
+							var hrefStr = listChildren[i].getAttribute("href");
+							var params  = getAllUrlParams(hrefStr);
+							
+							attachList.push({
+								fileHref : params,
+								fileName : params.fileName
+							});
+						}
+					}
+					
+					var url  = "/ezCabinet/saveRelatedBoard.do";
+					var data = {
+						mode      : saveMode,
+						title     : boardTitle,
+						writer    : boardWriter,
+						date      : postDate,
+						attach    : JSON.stringify(attachList),
+						content   : boardContent
+					};
+					
+					
+					if (saveMode == 1) {data.cabinet = cabinetId;}
+					
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
 				function saveScheduleDocument() {

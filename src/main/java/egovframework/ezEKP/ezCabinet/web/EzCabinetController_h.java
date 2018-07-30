@@ -1,8 +1,10 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
@@ -290,6 +293,34 @@ public class EzCabinetController_h {
 		resultObj = cabinetRestService_h.modifyItem(request, userInfo.getId(), itemId, title, summary, fileArray, relatedArr);
 		
 		logger.debug("Modify item finishes!");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/saveRelatedBoard.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonSaveRelatedBoard(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSaveRelatedBoard is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String mode            = request.getParameter("mode")      != null ? request.getParameter("mode")      : "";
+		String cabinetId       = request.getParameter("cabinet")   != null ? request.getParameter("cabinet")   : "";
+		String title           = request.getParameter("title")     != null ? request.getParameter("title")     : "";
+		String writer          = request.getParameter("writer")    != null ? request.getParameter("writer")    : "";
+		String dateTime        = request.getParameter("date")      != null ? request.getParameter("date")      : "";
+		String attach          = request.getParameter("attach")    != null ? request.getParameter("attach")    : "";
+		String content         = request.getParameter("content")   != null ? request.getParameter("content")   : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + " || dateTime: " + dateTime + " || attach: " + attach + " || content : " + content);
+		
+		if (title.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || writer.equals("") ||content.equals("") || dateTime.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService_h.saveRelatedBoard(request, userInfo.getId(), mode, cabinetId, title, writer, dateTime, attach, content);
+		
+		logger.debug("jsonSaveRelatedBoard finishes!");
 		return resultObj.toString();
 	}
 }

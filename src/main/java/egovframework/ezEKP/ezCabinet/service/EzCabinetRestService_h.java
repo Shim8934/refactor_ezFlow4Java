@@ -27,4 +27,8 @@ public interface EzCabinetRestService_h {
 
 	//Modify file 
 	JSONObject modifyItem(HttpServletRequest request, String userId, String itemId, String title, String summary, JSONArray fileArray, JSONArray relatedArr) throws Exception;
+
+	//Save boardModules
+	JSONObject saveRelatedBoard(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String dateTime, String attach, String content) throws Exception;
+
 }
