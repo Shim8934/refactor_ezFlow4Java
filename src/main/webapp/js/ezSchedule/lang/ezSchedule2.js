@@ -5,8 +5,8 @@ var strLang3 = "JAN;FEB;MAR;APR;MAY;JUN;JUL;AUG;SEP;OCT;NOV;DEC"
 var strLang4 = "SUN;MON;TUE;WED;THU;FRI;SAT"
 var strLang5 = "SUN;MON;TUE;WED;THU;FRI;SAT"
 var strLang6 = "MON;TUE;WED;THU;FRI;SAT;SUN"
-var strLang5_1 = "SUN;MON;TUE;WED;THU;FRI;SAT"
-var strLang6_1 = "MON;TUE;WED;THU;FRI;SAT;SUN"
+var strLang5_1 = "Su;Mo;Tu;We;Th;Fr;Sa"
+var strLang6_1 = "Mo;Tu;We;Th;Fr;Sa;Su"
 var strLang7 = "(No title)"
 // X:\NetModule\FrontEnd\Home\myoffice\ezSchedule\js\kaoni_ActiveX.js
 // X:\NetModule\FrontEnd\Home\myoffice\ezSchedule\js\schedule_write.js
