@@ -166,7 +166,10 @@
 	   		function setAuthorViewUser(authName, isUser) {
    				var receiverId = "";
    				selUserList = document.querySelectorAll("#orglistView tr.selectTR");
-	   			if(selUserList.length === 1){
+   				if(!isUser){
+   					selUserList = getSelUserInfo(isUser);
+   				}
+	   			if((selUserList && selUserList.length === 1) || isUser == false){
 		   			if ((selUserId != "" && selUserId != undefined) || isUser == false) {
 		   				var chkFlag = true;
 		   				getSelUserInfo(isUser);
@@ -189,7 +192,7 @@
 		   			} else {
 		   				alert("<spring:message code='ezPMS.t164' />");
 		   			}
-	   			} else if (selUserList.length > 1 || isUser == false){
+	   			} else if (selUserList && selUserList.length > 1){
 	   				selUserList.forEach(function(elem, idx){
 	   					var chkFlag = true;
 	   					receiverId = elem.getAttribute("id");

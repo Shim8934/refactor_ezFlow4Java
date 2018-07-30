@@ -298,6 +298,9 @@
 	   					$('#' + elem.userId).click().dblclick();
 		   			});
 	   			}
+	   			
+	   			//포커스 제거.
+	   			$("#txtlist_Layer .mainlist tr").removeClass("selectTR");
 	   		}
 		</script>
 		<style>
