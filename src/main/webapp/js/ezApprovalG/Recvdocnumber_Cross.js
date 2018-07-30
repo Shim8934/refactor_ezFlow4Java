@@ -180,37 +180,37 @@ function getRecvDocNumber(pDeptID) {
         var rtnval;
 
         if (approvalFlag =='G') {
-        name = "receiptnumber";
-        var field = message.GetListItem(fields, name);
-        if (!field) {
-            var DeptSymbol = arr_userinfo[5];
-        	var result = "";
-        	
-        	$.ajax({
-        		type : "POST",
-        		dataType : "text",
-        		async : false,
-        		url : "/ezApprovalG/getCabinetSN.do",
-        		data : {
-        			docID : pDocID,
-        			deptID : pDeptID
-        		},
-        		success: function(xml){
-        			result = loadXMLString(xml);
-        		}
-        	});
-
-            var SN = getNodeText(GetChildNodes(result)[0]);
-            pDocNo = DeptSymbol + "-" + SN;
-            var tempNumString = SN;
-            var i = 0;
-            var templen = tempNumString.length;
-            for (i = 0; i < 6 - templen; i++)
-                tempNumString = "0" + tempNumString;
-            pDocNumCode = pDeptID + tempNumString;
-            SaveFile();
-            return true;
-        }
+	        name = "receiptnumber";
+	        var field = message.GetListItem(fields, name);
+	        if (!field) {
+	            var DeptSymbol = arr_userinfo[5];
+	        	var result = "";
+	        	
+	        	$.ajax({
+	        		type : "POST",
+	        		dataType : "text",
+	        		async : false,
+	        		url : "/ezApprovalG/getCabinetSN.do",
+	        		data : {
+	        			docID : pDocID,
+	        			deptID : pDeptID
+	        		},
+	        		success: function(xml){
+	        			result = loadXMLString(xml);
+	        		}
+	        	});
+	
+	            var SN = getNodeText(GetChildNodes(result)[0]);
+	            pDocNo = DeptSymbol + "-" + SN;
+	            var tempNumString = SN;
+	            var i = 0;
+	            var templen = tempNumString.length;
+	            for (i = 0; i < 6 - templen; i++)
+	                tempNumString = "0" + tempNumString;
+	            pDocNumCode = pDeptID + tempNumString;
+	            SaveFile();
+	            return true;
+	        }
         }
         var rtnVal = setDocNumFormat();
         if (!rtnVal)
@@ -220,43 +220,42 @@ function getRecvDocNumber(pDeptID) {
 
     	var result = "";
     	
-    	 if (approvalFlag =='G') {
-    	$.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/ezApprovalG/getCabinetSN.do",
-    		data : {
-    			docID : pDocID,
-    			deptID : pDeptID
-    		},
-    		success: function(xml){
-    			result = loadXMLString(xml);
-    		}
-    	});
+    	if (approvalFlag =='G') {
+			$.ajax({
+				type : "POST",
+				dataType : "text",
+				async : false,
+				url : "/ezApprovalG/getCabinetSN.do",
+				data : {
+					docID : pDocID,
+					deptID : pDeptID
+				},
+				success: function(xml){
+					result = loadXMLString(xml);
+				}
+			});
     	
-        var SN = getNodeText(GetChildNodes(result)[0]);
-        if (SN == "") {
-            pDocNumCode = "";
-            pDocNo = "";
-            field.textContent = "";
-            return false;
-        }
-        else {
-            field.textContent = fractionsymbol + SN;
-            pDocNo = fractionsymbol + SN;
-            var tempNumString = SN;
-            var i = 0;
-            var templen = tempNumString.length;
-            for (i = 0; i < 6 - templen; i++)
-                tempNumString = "0" + tempNumString;
-            pDocNumCode = pDeptID + tempNumString;
-            SaveFile();
-            return true;
-        }
-    	 } else {
+	        var SN = getNodeText(GetChildNodes(result)[0]);
+	        if (SN == "") {
+	            pDocNumCode = "";
+	            pDocNo = "";
+	            field.textContent = "";
+	            return false;
+	        } else {
+	            field.textContent = fractionsymbol + SN;
+	            pDocNo = fractionsymbol + SN;
+	            var tempNumString = SN;
+	            var i = 0;
+	            var templen = tempNumString.length;
+	            for (i = 0; i < 6 - templen; i++)
+	                tempNumString = "0" + tempNumString;
+	            pDocNumCode = pDeptID + tempNumString;
+	            SaveFile();
+	            return true;
+	        }
+    	} else {
     		 
-    	 }
+    	}
     } catch (e) {
         if (SN != "") {
             field.textContent = fractionsymbol + SN;
