@@ -181,4 +181,21 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
+
+	@Override
+	public JSONObject saveRelatedBoard(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String dateTime, String attach, String content) throws Exception {
+		String url                = "/rest/ezcabinet/relate-item/save/board";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",   userId);
+		param.put("mode",     mode);
+		param.put("cabinet",  cabinetId);
+		param.put("title",    title);
+		param.put("writer",   writer);
+		param.put("dateTime", dateTime);
+		param.put("attach",   attach);
+		param.put("content",  content);
+		
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		return resultBody;
+	}
 }

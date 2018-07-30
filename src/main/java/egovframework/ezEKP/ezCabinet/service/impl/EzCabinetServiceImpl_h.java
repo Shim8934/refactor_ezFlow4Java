@@ -8,17 +8,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
@@ -318,14 +315,17 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 		}
 	}
 
-	@Override
-	public JSONObject saveApprovalItem(String approvalContent, Locale locale, LoginVO userInfo) {
-		String url                ="/rest/ezcabinet/relate-item/save/apprv";
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("approvalContent", approvalContent);
+	public JSONObject saveBoarditem(String realPath, String mode, int dstCabinetId, String title, String writer, String attach, String content, String dateTime, Locale locale, LoginVO userInfo) throws Exception {
+		JSONObject result          = new JSONObject();
+		String userId              = userInfo.getId();
+		int tenantId               = userInfo.getTenantId();
+		String companyId           = userInfo.getCompanyID();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(new Date()), userInfo.getOffset(), true);
+		JSONParser jp              = new JSONParser();
+		int itemCabinetId          = -1;
 		
 		return null;
 	}
-	
-	
+
 }
