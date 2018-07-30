@@ -2076,6 +2076,25 @@ public class EzPMSGWController {
 				taskList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate, companyId, tenantId, lang));
 				taskList.get(i).setTaskMember(
 						ezPMSService.getTaskMemberList(info.getTenantId(), taskList.get(i).getTaskId(), lang));
+				
+				//지연율
+				if (taskList.get(i).getStatus().equals("L")) {
+					taskList.get(i).setLatePercent(100 - taskList.get(i).getRealProgress());
+				} else {
+					taskList.get(i).setLatePercent(0);
+				}
+				
+				//실제 시작일과 종료일 (완료일 경우)
+				if (taskList.get(i).getStatus().equals("C")) {
+					Date realStartDate = sdf.parse(taskList.get(i).getRealStartDate());
+					Date realEndDate = sdf.parse(taskList.get(i).getRealEndDate());
+					
+					int realWorkingday = ezPMSService.getWorkingDays(realStartDate, realEndDate, info.getCompanyId(), tenantId, lang);
+					
+					taskList.get(i).setRealStartEndDiff(realWorkingday);
+				} else {
+					taskList.get(i).setRealStartEndDiff(0);
+				}
 			}
 
 //			if (request.getParameter("position") == null || !request.getParameter("position").equals("gantt")) {
@@ -3421,6 +3440,34 @@ public class EzPMSGWController {
 				search.setGroupId(groupList.get(i).getGroupId());
 				search.setIsMyTask("A");
 				groupList.get(i).setTaskCount(ezPMSService.getTaskListCount(search, userId, 3, info.getDeptId()));
+				
+				//지연율
+				limit = 0;
+				search.setMemberName("");
+				List<ProjectTaskVO> groupTaskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow, location, 3, info.getDeptId());
+				
+				float latePercent = 0;
+				
+				for (int j = 0; j < groupTaskList.size(); j++) {
+					if (groupTaskList.get(j).getStatus().equals("L")) {
+						latePercent += (100 - groupTaskList.get(j).getRealProgress()) * (groupTaskList.get(j).getWeight() / 100);
+					}
+				}
+				
+				groupList.get(i).setLatePercent(latePercent);
+				
+//				//실제 시작일과 종료일 기간 수				
+//				if (groupList.get(i).getRealProgress() == 100f) {
+//					
+//					Date realStartDate = new SimpleDateFormat("yyyy-MM-dd").parse(groupList.get(i).getRealStartDate());
+//					Date realEndDate = new SimpleDateFormat("yyyy-MM-dd").parse(groupList.get(i).getRealEndDate());
+//					
+//					int realWorkingday = ezPMSService.getWorkingDays(realStartDate, realEndDate, companyId, tenantId, lang);
+//					
+//					groupList.get(i).setRealStartEndDiff(realWorkingday);
+//				} else {
+					groupList.get(i).setRealStartEndDiff(0);
+//				}
 			}
 
 			result.put("status", "ok");

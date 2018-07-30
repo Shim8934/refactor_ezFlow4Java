@@ -129,6 +129,12 @@ public class ProjectTaskVO {
     
     // 상위그룹의 treeDepth
     private int upperTreeDepth;
+
+    //지연율
+    private float latePercent;
+    
+    //실제시작일, 실제종료일의 workingday
+    private int realStartEndDiff;
     
     public Long getTaskId() {
         return taskId;
@@ -464,5 +470,21 @@ public class ProjectTaskVO {
 
 	public void setUpperTreeDepth(int upperTreeDepth) {
 		this.upperTreeDepth = upperTreeDepth;
+	}
+
+	public float getLatePercent() {
+		return latePercent;
+	}
+
+	public void setLatePercent(float latePercent) {
+		this.latePercent = latePercent;
+	}
+
+	public int getRealStartEndDiff() {
+		return realStartEndDiff;
+	}
+
+	public void setRealStartEndDiff(int realStartEndDiff) {
+		this.realStartEndDiff = realStartEndDiff;
 	}
 }
