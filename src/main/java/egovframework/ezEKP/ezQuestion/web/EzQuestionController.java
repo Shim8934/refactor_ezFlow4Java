@@ -3721,8 +3721,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 			itemNo = Integer.parseInt(req.getParameter("itemID"));
 		}
 		
-		ezQuestionService.questionDelete2(5, itemNo, loginVO.getTenantId());
-		ezQuestionService.questionDelete2_D(5, itemNo, loginVO.getTenantId());
+		//재사용하는데 왜 기존걸 지워????
+		//ezQuestionService.questionDelete2(5, itemNo, loginVO.getTenantId());
+		//ezQuestionService.questionDelete2_D(5, itemNo, loginVO.getTenantId());
 		
 		strQuestion = objXML.getChildNodes().item(0).getTextContent().trim();
 		arrQuestion = strQuestion.trim().split("\\;\\;");
@@ -3844,12 +3845,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 							node.appendChild(nodeData2);
 							
 							Node nodeTitle2 = resultXML.createElement("ANSWER_TITLE");
-							nodeTitle2.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ANSWER_ANSWERCONTENT").item(j).getTextContent())));
+							//nodeTitle2.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ANSWER_ANSWERCONTENT").item(j).getTextContent())));
+							nodeTitle2.setTextContent(String.valueOf(xmlTemp.getElementsByTagName("ANSWER_ANSWERCONTENT").item(j).getTextContent()));
 							nodeData2.appendChild(nodeTitle2);
 						}
 					}
 					
-					ezQuestionService.questionDelete1(5, itemNo, Integer.parseInt(arrLine[0]), loginVO.getTenantId());
+					//ezQuestionService.questionDelete1(5, itemNo, Integer.parseInt(arrLine[0]), loginVO.getTenantId());
 					
 					QstCompleteVO qstCompleteVO = new QstCompleteVO();
 					qstCompleteVO.setQuesContent(arrLine[1]);
@@ -3865,7 +3867,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 						qstCompleteVO.setAnswerContent(arrLine[8].replace("'", "''"));
 					}
 					
-					ezQuestionService.insertQuestion(qstCompleteVO, loginVO.getTenantId());
+					//ezQuestionService.insertQuestion(qstCompleteVO, loginVO.getTenantId());
 				}
 				
 				QstCompleteVO qstCompleteVO = new QstCompleteVO();
@@ -3881,7 +3883,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 					qstCompleteVO.setAnswerContent(arrLine[8].replace("'", "''"));
 				}
 				
-				ezQuestionService.insertAnswerContent(qstCompleteVO, loginVO.getTenantId());
+				//ezQuestionService.insertAnswerContent(qstCompleteVO, loginVO.getTenantId());
 				
 				nodeData = resultXML.createElement("ANSWER");
 				node.appendChild(nodeData);
