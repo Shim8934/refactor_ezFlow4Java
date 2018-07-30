@@ -124,6 +124,12 @@ public class ProjectGroupVO {
     //하위 task 개수
     private int taskCount;
     
+    //지연율
+    private float latePercent;
+    
+    //실제시작일, 실제종료일의 workingday
+    private int realStartEndDiff;
+    
     public String getProjectName() {
 		return projectName;
 	}
@@ -442,5 +448,21 @@ public class ProjectGroupVO {
 
 	public void setTaskCount(int taskCount) {
 		this.taskCount = taskCount;
+	}
+
+	public float getLatePercent() {
+		return latePercent;
+	}
+
+	public void setLatePercent(float latePercent) {
+		this.latePercent = latePercent;
+	}
+
+	public int getRealStartEndDiff() {
+		return realStartEndDiff;
+	}
+
+	public void setRealStartEndDiff(int realStartEndDiff) {
+		this.realStartEndDiff = realStartEndDiff;
 	}
 }

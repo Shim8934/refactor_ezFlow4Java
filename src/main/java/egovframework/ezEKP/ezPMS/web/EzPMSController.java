@@ -4631,7 +4631,59 @@ public class EzPMSController {
 
 		sheet = workbook.createSheet("report");
 		row = sheet.createRow(0);
-		String fileName = URLEncoder.encode(project.get("projectName").toString() + "_gantt", "UTF-8");
+		String fileName = project.get("projectName").toString() + "_gantt";
+		
+		String[] invalidName = {"\\\\","/",":","[*]","[?]","\"","<",">","[|]"}; // 윈도우 파일명으로 사용할 수 없는 문자
+		
+		for(int i = 0;i < invalidName.length; i++) { 
+			fileName = fileName.replaceAll(invalidName[i], "_"); //언더바로 치환
+		}
+		
+		String browser = "";
+		String header = request.getHeader("User-Agent"); 
+		
+		if (header.indexOf("MSIE") > -1) { 
+			browser = "MSIE"; 
+		} else if (header.indexOf("Chrome") > -1) { 
+			browser = "Chrome"; 
+		} else if (header.indexOf("Opera") > -1) { 
+			browser = "Opera"; 
+		} else if (header.indexOf("Trident/7.0") > -1) { 
+			//IE 11 이상 
+			//IE 버전 별 체크 >> Trident/6.0(IE 10) , Trident/5.0(IE 9) , Trident/4.0(IE 8)
+			browser = "MSIE"; 
+		} else if (header.indexOf("Trident/6.0") > -1) { 
+			//IE 11 이상 
+			//IE 버전 별 체크 >> Trident/6.0(IE 10) , Trident/5.0(IE 9) , Trident/4.0(IE 8)
+			browser = "MSIE"; 
+		}
+
+		String encodedFileName = "";
+		
+		if (browser.equals("MSIE")) { 
+			encodedFileName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20"); 
+		} else if (browser.equals("Firefox")) { 
+			encodedFileName = "\"" + new String(fileName.getBytes("UTF-8"), "8859_1") + "\"";
+		} else if (browser.equals("Opera")) {
+			encodedFileName = "\"" + new String(fileName.getBytes("UTF-8"), "8859_1") + "\""; 
+		} else if (browser.equals("Chrome")) { 
+			StringBuffer sb = new StringBuffer(); 
+			
+			for (int i = 0; i < fileName.length(); i++) { 
+				char c = fileName.charAt(i); 
+				
+				if (c > '~') { 
+					sb.append(URLEncoder.encode("" + c, "UTF-8")); 
+				
+				} else { 
+					sb.append(c); 
+				} 
+			} 
+			
+			encodedFileName = sb.toString(); 
+		} else { 
+			fileName = URLEncoder.encode(project.get("projectName").toString() + "_gantt", "UTF-8").replaceAll("\\+", "%20"); 
+		}
 
 		// 프로젝트 제목
 		row.createCell(0).setCellValue(project.get("projectName").toString());
@@ -4659,40 +4711,41 @@ public class EzPMSController {
 
 		// 열/행 고정
 		sheet.createFreezePane(19, 6);
-
+		
 		// 간트 헤더 - 4번째 줄
 		row = sheet.createRow(3);
 		row.createCell(0).setCellValue("WBS");// numbering
 		row.getCell(0).setCellStyle(headerStyle);
-		row.createCell(1).setCellValue("작업 항목");// 업무명
+		row.createCell(1).setCellValue(egovMessageSource.getMessage("ezPMS.t98", userInfo.getLocale()));// 업무명
 		row.getCell(1).setCellStyle(headerStyle);
 		row.createCell(2).setCellStyle(headerStyle);
 		row.createCell(3).setCellStyle(headerStyle);
 		row.createCell(4).setCellStyle(headerStyle);
 		row.createCell(5).setCellStyle(headerStyle);
-		row.createCell(6).setCellValue("작업\n구분");// 업무 상태
+		row.createCell(6).setCellValue(egovMessageSource.getMessage("ezPMS.t353", userInfo.getLocale()));// 업무 상태
 		row.getCell(6).setCellStyle(headerStyle);
-		row.createCell(7).setCellValue("실시 일자");// 실시 일자
+		row.createCell(7).setCellValue(egovMessageSource.getMessage("ezPMS.t354", userInfo.getLocale()));// 실시 일자
 		row.getCell(7).setCellStyle(headerStyle);
 		row.createCell(8).setCellStyle(headerStyle);
-		row.createCell(9).setCellValue("기간");// workingday
+		row.createCell(9).setCellValue(egovMessageSource.getMessage("ezPMS.t355", userInfo.getLocale()));// 실제 시작일과 종료일 기간
+		
 		row.getCell(9).setCellStyle(headerStyle);
-		row.createCell(10).setCellValue("진척률\n(%)");// 실제 진행률
+		row.createCell(10).setCellValue(egovMessageSource.getMessage("ezPMS.t356", userInfo.getLocale()));// 실제 진행률
 		row.getCell(10).setCellStyle(headerStyle);
-		row.createCell(11).setCellValue("지연율\n(%)");// 목표진행률 - 실제 진행률
+		row.createCell(11).setCellValue(egovMessageSource.getMessage("ezPMS.t357", userInfo.getLocale()));// 목표진행률 - 실제 진행률
 		row.getCell(11).setCellStyle(headerStyle);
-		row.createCell(12).setCellValue("계획일자");
+		row.createCell(12).setCellValue(egovMessageSource.getMessage("ezPMS.t358", userInfo.getLocale()));
 		row.getCell(12).setCellStyle(headerStyle);
 		row.createCell(13).setCellStyle(headerStyle);
-		row.createCell(14).setCellValue("가중치\n(%)");
+		row.createCell(14).setCellValue(egovMessageSource.getMessage("ezPMS.t267", userInfo.getLocale()) + "\n(%)");
 		row.getCell(14).setCellStyle(headerStyle);
-		row.createCell(15).setCellValue("계획\n일수");
+		row.createCell(15).setCellValue(egovMessageSource.getMessage("ezPMS.t359", userInfo.getLocale()));
 		row.getCell(15).setCellStyle(headerStyle);
-		row.createCell(16).setCellValue("담당자");
+		row.createCell(16).setCellValue(egovMessageSource.getMessage("ezPMS.t63", userInfo.getLocale()));
 		row.getCell(16).setCellStyle(headerStyle);
-		row.createCell(17).setCellValue("산출물");
+		row.createCell(17).setCellValue(egovMessageSource.getMessage("ezPMS.t360", userInfo.getLocale()));
 		row.getCell(17).setCellStyle(headerStyle);
-		row.createCell(18).setCellValue("목표");
+		row.createCell(18).setCellValue(egovMessageSource.getMessage("ezPMS.t361", userInfo.getLocale()));
 		row.getCell(18).setCellStyle(headerStyle);
 
 		// 간트차트 프로젝트 개월수 및 각 달의 일 수 구하기
@@ -4720,7 +4773,6 @@ public class EzPMSController {
 
 			months.put("yearAndMonth", yearAndMonth);
 			months.put("maxDaysOfMonth", maxDaysOfMonth);
-			System.out.println(yearAndMonth + " : " + maxDaysOfMonth);
 			monthDays.add(months);
 
 			if (sMonth != 12) {
@@ -4759,22 +4811,22 @@ public class EzPMSController {
 		row.createCell(4).setCellStyle(headerStyle);
 		row.createCell(5).setCellStyle(headerStyle);
 		row.createCell(6).setCellStyle(headerStyle);
-		row.createCell(7).setCellValue("시작 일자");// 실시 일자
+		row.createCell(7).setCellValue(egovMessageSource.getMessage("ezPMS.t61", userInfo.getLocale()));// 실시 일자
 		row.getCell(7).setCellStyle(headerStyle);
-		row.createCell(8).setCellValue("종료 일자");// 실시 일자
+		row.createCell(8).setCellValue(egovMessageSource.getMessage("ezPMS.t62", userInfo.getLocale()));// 실시 일자
 		row.getCell(8).setCellStyle(headerStyle);
 		row.createCell(9).setCellStyle(headerStyle);
 		row.createCell(10).setCellStyle(headerStyle);
 		row.createCell(11).setCellStyle(headerStyle);
-		row.createCell(12).setCellValue("시작 일자");// 목표진행률 - 실제 진행률
+		row.createCell(12).setCellValue(egovMessageSource.getMessage("ezPMS.t61", userInfo.getLocale()));// 목표진행률 - 실제 진행률
 		row.getCell(12).setCellStyle(headerStyle);
-		row.createCell(13).setCellValue("종료 일자");
+		row.createCell(13).setCellValue(egovMessageSource.getMessage("ezPMS.t62", userInfo.getLocale()));
 		row.getCell(13).setCellStyle(headerStyle);
 		row.createCell(14).setCellStyle(headerStyle);
 		row.createCell(15).setCellStyle(headerStyle);
 		row.createCell(16).setCellStyle(headerStyle);
 		row.createCell(17).setCellStyle(headerStyle);
-		row.createCell(18).setCellValue("task 수");
+		row.createCell(18).setCellValue(egovMessageSource.getMessage("ezPMS.t362", userInfo.getLocale()));
 		row.getCell(18).setCellStyle(headerStyle);
 
 		// 간트차트 날짜 넣기
@@ -4831,7 +4883,18 @@ public class EzPMSController {
 		float pProgress = Float.parseFloat(project.get("progress").toString());
 		row.createCell(10).setCellValue((Math.round(pProgress * 10) / 10.0) + "%");// 진척률
 		row.getCell(10).setCellStyle(projectStyle);
-		row.createCell(11).setCellValue((Math.round(pProgress * 10) / 10.0) + "%");// 지연율
+		
+		float pLatePercent = 0.0f;
+		
+		for (int i = 0; i < taskList.size(); i ++) {
+			JSONObject lateContent = (JSONObject) taskList.get(i);
+			
+			if (lateContent.get("status").equals("L")) {
+				pLatePercent += (100 - Float.parseFloat(lateContent.get("realProgress").toString())) 
+						*  (Float.parseFloat(lateContent.get("weight").toString()) / 100.00);
+			}
+		}
+		row.createCell(11).setCellValue((Math.round(pLatePercent * 10) / 10.0) + "%");// 지연율
 		row.getCell(11).setCellStyle(projectStyle);
 		row.createCell(12).setCellValue(project.get("planStartDate").toString());// 계획
 																					// 종료일
@@ -4843,15 +4906,14 @@ public class EzPMSController {
 		row.getCell(14).setCellStyle(projectStyle);
 
 		// working day
-		System.out.println(project.get("workingday").toString());
 		float pWorkingday = Float.parseFloat(project.get("workingday").toString());
 		row.createCell(15).setCellValue(Math.floor(pWorkingday));// 계획 일수
 		row.getCell(15).setCellStyle(projectStyle);
 		
 		String pName = project.get("headManagerName").toString();
-		JSONArray pCount = (JSONArray) project.get("projectMember");
-				
-		row.createCell(16).setCellValue(pName + " 외 " + (pCount.size() - 1) + "명");// 담당자
+		JSONArray pProjectMemberList = (JSONArray) project.get("projectMember");
+		int pCount = pProjectMemberList.size() - 1;
+		row.createCell(16).setCellValue(egovMessageSource.getMessageExtend("ezPMS.t349", new Object[] {pName, pCount}, userInfo.getLocale()) );// 담당자
 		row.getCell(16).setCellStyle(projectStyle);
 		row.createCell(17).setCellValue("");// 산출물
 		row.getCell(17).setCellStyle(projectStyle);
@@ -4895,7 +4957,7 @@ public class EzPMSController {
 
 		// 하위 업무 개수
 		int taskCount = 0;
-
+		
 		// task와 group정보
 		for (int i = 1; i < ganttTaskOrder.size(); i++) {
 			row = sheet.createRow(5 + i);
@@ -4906,58 +4968,73 @@ public class EzPMSController {
 			int workingday = 0;
 			JSONObject content = new JSONObject();
 			String contMemberName = "";
-
+			
+			// 지연율
+			float latePercent = 0;
+			int realWorkingday = 0;
+			
 			if (ganttTaskId.contains("t")) {
 				for (int j = 0; j < taskList.size(); j++) {
 					content = (JSONObject) taskList.get(j);
 					String contentTaskId = content.get("taskId").toString();
 					String compTaskId = ganttTaskId.substring(1);
-					float workingdayFloat = Float.parseFloat(content.get("realWorkingday").toString());
-					workingday = Math.round(workingdayFloat);
-					taskCount = 1;
-					JSONArray taskMemberList = (JSONArray) content.get("taskMember");
-					JSONObject taskMember = (JSONObject) taskMemberList.get(0);
-					int taskMemberCount = taskMemberList.size() - 1;
-					
-					if (taskMemberCount != 0) {
-						contMemberName = taskMember.get("userName") + " 외 " + (taskMemberList.size() - 1) + "명";
-					} else {
-						contMemberName = taskMember.get("userName").toString();
-					}
 					
 					if (contentTaskId.equals(compTaskId)) {
+						float workingdayFloat = Float.parseFloat(content.get("realWorkingday").toString());
+						workingday = Math.round(workingdayFloat);
+						taskCount = 1;
+						JSONArray taskMemberList = (JSONArray) content.get("taskMember");
+						JSONObject taskMember = (JSONObject) taskMemberList.get(0);
+						int taskMemberCount = taskMemberList.size() - 1;
+						
+						if (taskMemberCount != 0) {
+							contMemberName = egovMessageSource.getMessageExtend("ezPMS.t349", new Object[] {taskMember.get("userName").toString(), taskCount}, userInfo.getLocale());// 담당자
+						} else {
+							contMemberName = taskMember.get("userName").toString();
+						}
+						
+						if (content.get("status").equals("L")) {
+							latePercent = 100 - Float.parseFloat(content.get("realProgress").toString());	
+						}
+						
+						realWorkingday = Integer.parseInt(content.get("realStartEndDiff").toString());
 						break;
 					}
 				}
-			} else if (ganttTaskId.contains("g")) {
+			} else if (ganttTaskId.contains("g")) {				
 				for (int j = 0; j < groupList.size(); j++) {
 					content = (JSONObject) groupList.get(j);
 
 					String contentGroupId = content.get("groupId").toString();
 					String compGroupId = ganttTaskId.substring(1);
-					float workingdayFloat = Float.parseFloat(content.get("workingday").toString());
-					workingday = Math.round(workingdayFloat);
-					taskCount = Integer.parseInt(content.get("taskCount").toString());
-
-					JSONArray groupMemberList = (JSONArray) content.get("groupMember");
-					JSONObject groupMember = new JSONObject();
-					
-					if (groupMemberList.size() != 0 ) {
-						groupMember = (JSONObject) groupMemberList.get(0);
-						
-						int groupMemberCount = groupMemberList.size() - 1;
-						if (groupMemberCount != 0) {
-							contMemberName = groupMember.get("userName") + " 외 " + (groupMemberList.size() - 1) + "명";
-						} else {
-							contMemberName = groupMember.get("userName").toString();
-						}
-						
-					} else {
-						groupMember = null;
-						contMemberName = "";
-					}
 					
 					if (contentGroupId.equals(compGroupId)) {
+						float workingdayFloat = Float.parseFloat(content.get("workingday").toString());
+						workingday = Math.round(workingdayFloat);
+						taskCount = Integer.parseInt(content.get("taskCount").toString());
+
+						JSONArray groupMemberList = (JSONArray) content.get("groupMember");
+						JSONObject groupMember = new JSONObject();
+						
+						if (groupMemberList.size() != 0 ) {
+							groupMember = (JSONObject) groupMemberList.get(0);
+							
+							int groupMemberCount = groupMemberList.size() - 1;
+							
+							if (groupMemberCount != 0) {
+								contMemberName = egovMessageSource.getMessageExtend("ezPMS.t349", new Object[] {groupMember.get("userName").toString(), groupMemberCount}, userInfo.getLocale());// 담당자
+							} else {
+								contMemberName = groupMember.get("userName").toString();
+							}
+							
+						} else {
+							groupMember = null;
+							contMemberName = "";
+						}
+						
+						latePercent = Float.parseFloat(content.get("latePercent").toString());
+						realWorkingday = Integer.parseInt(content.get("realStartEndDiff").toString());
+						
 						content.put("status", "");
 						break;
 					}
@@ -5033,19 +5110,19 @@ public class EzPMSController {
 			if (statusStr != null && !statusStr.equals("")) {
 				switch (statusStr) {
 				case "L":
-					statusStr = "지연";
+					statusStr = egovMessageSource.getMessage("ezPMS.t18", userInfo.getLocale());
 					break;
 				case "W":
-					statusStr = "대기";
+					statusStr = egovMessageSource.getMessage("ezPMS.t16", userInfo.getLocale());
 					break;
 				case "P":
-					statusStr = "진행";
+					statusStr = egovMessageSource.getMessage("ezPMS.t15", userInfo.getLocale());
 					break;
 				case "C":
-					statusStr = "완료";
+					statusStr = egovMessageSource.getMessage("ezPMS.t17", userInfo.getLocale());
 					break;
 				case "S":
-					statusStr = "보류";
+					statusStr = egovMessageSource.getMessage("ezPMS.t19", userInfo.getLocale());
 					break;
 				}
 			}
@@ -5064,11 +5141,16 @@ public class EzPMSController {
 
 			row.createCell(7).setCellValue(realStartDate);
 			row.createCell(8).setCellValue(realEndDate);
-			row.createCell(9).setCellValue(content.get("workingday").toString());
+			
+			if (realWorkingday == 0) {
+				row.createCell(9).setCellValue("");
+			} else {
+				row.createCell(9).setCellValue(realWorkingday);
+			}
 
 			float contProgress = Float.parseFloat(content.get("realProgress").toString());
 			row.createCell(10).setCellValue((Math.round(contProgress * 10) / 10.0) + "%");
-			row.createCell(11).setCellValue("0%"); // 지연율
+			row.createCell(11).setCellValue((Math.round(latePercent * 10) / 10.0) + "%"); // 지연율
 			row.createCell(12).setCellValue(content.get("planStartDate").toString());
 			row.createCell(13).setCellValue(content.get("planEndDate").toString());
 
@@ -5137,7 +5219,7 @@ public class EzPMSController {
 		sheet.setColumnWidth(17, 8000);
 		sheet.setColumnWidth(18, 2000);
 
-		response.setHeader("Content-Disposition", "attachment; fileName=\"" + fileName + ".xls\"");
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + encodedFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
 
 		System.out.println(projectId);

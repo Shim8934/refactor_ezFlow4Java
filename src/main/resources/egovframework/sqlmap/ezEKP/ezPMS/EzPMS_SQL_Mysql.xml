@@ -959,6 +959,72 @@
 				u.CN = #userId# 
 			AND	
 				u.tenant_id = #tenantId#
+		UNION
+		<![CDATA[
+			SELECT 
+				P1.setting_id as SETTING_ID,
+				R.tenant_id as TENANT_ID,
+				P1.user_id as USER_ID,
+				IFNULL(P1.view_type,0) as VIEW_TYPE,
+				IFNULL(P1.progress_color,'##438ddd') as PROGRESS_COLOR,
+				IFNULL(P1.complete_color,'##63c449') as COMPLETE_COLOR,
+				IFNULL(P1.overdue_color,'##dd7238') as OVERDUE_COLOR,
+				IFNULL(P1.hold_color,'##57c7b6') as HOLD_COLOR,
+				IFNULL(P1.project_sort,0) as PROJECT_SORT,
+				IFNULL(P1.list_number,10) as LIST_NUMBER,
+				IFNULL(P1.list_project_status, "P") as LIST_PROJECT_STATUS,
+				R.mail as USER_MAIL,
+				R.displayname as USER_NAME,
+				R.displayname2 as USER_NAME2
+		]]>
+		<isEqual property="userIdType" compareValue="user">
+			FROM 
+				tbl_usermaster_retire R
+			LEFT JOIN 
+				tbl_pms_setting P1
+			ON (
+				R.CN = P1.user_id 
+				AND 
+				R.tenant_id = P1.tenant_id
+			)
+		</isEqual>
+		 WHERE 
+				R.CN = #userId# 
+			AND	
+				R.tenant_id = #tenantId#
+		UNION
+			<![CDATA[
+			SELECT 
+				P2.setting_id as SETTING_ID,
+				D.tenant_id as TENANT_ID,
+				P2.user_id as USER_ID,
+				IFNULL(P2.view_type,0) as VIEW_TYPE,
+				IFNULL(P2.progress_color,'##438ddd') as PROGRESS_COLOR,
+				IFNULL(P2.complete_color,'##63c449') as COMPLETE_COLOR,
+				IFNULL(P2.overdue_color,'##dd7238') as OVERDUE_COLOR,
+				IFNULL(P2.hold_color,'##57c7b6') as HOLD_COLOR,
+				IFNULL(P2.project_sort,0) as PROJECT_SORT,
+				IFNULL(P2.list_number,10) as LIST_NUMBER,
+				IFNULL(P2.list_project_status, "P") as LIST_PROJECT_STATUS,
+				D.mail as USER_MAIL,
+				D.displayname as USER_NAME,
+				D.displayname2 as USER_NAME2
+		]]>
+		<isEqual property="userIdType" compareValue="user">
+			FROM 
+				tbl_usermaster_delete D
+			LEFT JOIN 
+				tbl_pms_setting P2
+			ON (
+				D.CN = P2.user_id 
+				AND 
+				D.tenant_id = P2.tenant_id
+			)
+		</isEqual>
+		 WHERE 
+				D.CN = #userId# 
+			AND	
+				D.tenant_id = #tenantId#
 	</select>
 	
 	

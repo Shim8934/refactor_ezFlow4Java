@@ -581,7 +581,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		param.put("projectId", search.getProjectId());
 		param.put("taskName", search.getTaskName());
 		param.put("upperGroupName", search.getUpperGroupName());
-		param.put("headManagerName", search.getMemberId());
+		param.put("headManagerName", search.getMemberName());
 		param.put("overview", search.getOverview());
 		param.put("searhByStartDate", search.getPlanStartDate());
 		param.put("searchByEndDate", search.getPlanEndDate());

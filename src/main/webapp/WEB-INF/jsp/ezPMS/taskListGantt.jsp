@@ -1783,16 +1783,19 @@
 				$.ajax({
 					type : "POST",
 					url : "/ezPMS/updateTaskName.do",
-					dataType : "json",
+					dataType : "text",
 					contentType: "application/json; charset=UTF-8",
 					data : JSON.stringify(data),
 					success : function(data) {
-						var logContent = "<spring:message code='ezPMS.t351' arguments='" + prevTaskName + "," + newTaskName +"'/>"; 
+						var logContent = ""; 
 	   					if(taskType == "p"){
-							addTaskLog(projectId, 2, null, null, logContent);
+							logContent = "<spring:message code='ezPMS.t364' arguments='" + prevTaskName + "," + newTaskName +"'/>"; 
+							addTaskLog(projectId, 2, projectGroupId, null, logContent);
 	   					} else if(taskType == "t") {
-							addTaskLog(projectId, 2, groupId, taskId, logContent);
+							logContent = "<spring:message code='ezPMS.t351' arguments='" + prevTaskName + "," + newTaskName +"'/>"; 
+							addTaskLog(projectId, 2, upperGroupId, taskId, logContent);
 	   					} else {
+							logContent = "<spring:message code='ezPMS.t363' arguments='" + prevTaskName + "," + newTaskName +"'/>"; 
 	   						var groupId = taskId;
 							addTaskLog(projectId, 2, groupId, null, logContent);
 	   					}
