@@ -1659,7 +1659,7 @@
         	<table class="box" style="height:600px;">
             	<tr>
                 	<td id="td_mainframe" style="width:820px;HEIGHT:600px" valign="top">			
-                    	<div id="main_div" style="OVERFLOW:auto;width:820px;HEIGHT:100%">
+                    	<div id="main_div" style="OVERFLOW:auto;width:820px;HEIGHT:600px">
                     		${strHTML}
                     	</div>			
                 	</td>

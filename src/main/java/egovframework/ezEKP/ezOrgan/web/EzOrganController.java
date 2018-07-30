@@ -212,6 +212,11 @@ public class EzOrganController {
 		int totalCount = 0, totalCount2 = 0;
 		
 		String containLow = ezCommonService.getTenantConfig("containLow", tenantID);
+		
+		if (containLow == null || containLow.equals("")) {
+			containLow = "NO";
+		}
+		
 		model.addAttribute("containLow", containLow);
 		
 		totalCount = ezOrganService.getDeptMemberListCount(deptID, false, primary, tenantID);

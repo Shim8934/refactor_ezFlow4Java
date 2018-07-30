@@ -170,12 +170,8 @@
 						
 						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
 							if (result.containLow == "YES") {
-								var selectedSpan = document.getElementsByClassName("node_selected")[0];
-								var id = selectedSpan.getAttribute("id");
-								id = id.substring(id.indexOf("_") + 1);
-								
-								var selectedDiv = document.getElementById(id);
-								var strIsLeaf = selectedDiv.getAttribute("isleaf");
+								var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
+								var strIsLeaf = $("div#" + id + "").attr("isleaf");
 	
 								if (strIsLeaf == "TRUE") { //하위가 없으면
 				        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]";
@@ -186,7 +182,7 @@
 								SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang1 + "</span>]";
 							}
 			            	
-			            	SelectDeptNM.setAttribute("countinfo","1")
+			            	SelectDeptNM.setAttribute("countinfo","1");
 			        	}
 					},
 					error : function(jqXHR, textStatus, errorThrown) {

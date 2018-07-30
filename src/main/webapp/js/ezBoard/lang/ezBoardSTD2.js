@@ -2,7 +2,6 @@
 var strLang2 = "Filesize";
 var strLang3 = "Filesize";
 var strLang4 = "Create";
-var strLang5 = "넘겨줄 파라미터 노드 생성 ListType";
 var strLang6 = "Can not attach empty file.";
 var strLang7 = "The length of filename can not exceed 111bytes.";
 var strLang8 = "The attached file size can not exceed ";
@@ -37,22 +36,22 @@ var strLang50 = "Complete modification";
 var strLang51 = "Fix Errors";
 var strLang53 = "There is no data.";
 var strLang54 = "The extension of the file upload limit.";
+var strLang55 =	"Preview is not available for moved or deleted scrap.";
 var strLang60 = "OK";
 var strLang61 = "Atmosphere";
 var strLang62 = "Return";
 
 
 //2016 추가
-
-var strLang171 = "리스트의 ID가 지정되지 않았습니다.";
-var strLang172 = "데이터가 지정되지 않았습니다.";
-var strLang173 = "권한이 없습니다";
-var strLang174 = "사진추가 도중 오류 발생";
-var strLang175 = "읽기 권한이 없습니다.";
-var strLang176 = "삭제 권한이 없습니다.";
-var strLang177 = "게시물을 선택해 주세요.";
-var strLang178 = "읽음 표시 하시겠습니까?";
-var strLang179 = "를(을) 선택하세요.";
+var strLang171 = "The ID of the list was not specified.";
+var strLang172 = "data is not specified.";
+var strLang173 = "no authority";
+var strLang174 = "An error occurred while trying to add picture";
+var strLang175 = "You do not have read permissions.";
+var strLang176 = "no delete privileges.";
+var strLang177 = "Please select your posts.";
+var strLang178 = "Are you sure you want read?";
+var strLang179 = "Choose ";
 
 //2017.12.26 강민수92 추가
 var strLang180 = "Are you sure you want to delete a comment ?";
