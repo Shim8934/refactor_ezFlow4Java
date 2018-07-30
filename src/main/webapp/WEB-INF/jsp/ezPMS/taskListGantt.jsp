@@ -2404,7 +2404,7 @@
 			    <td class="gdfCell indentCell" style="padding-left:(#=obj.level*10+22#)px;">
 			      <div class="exp-controller" align="center"></div>
 			      <div class="typeImgDiv" align="center"></div>
-			      <input type="text" name="name" value="(#=obj.name#)" placeholder="name" title="(#=obj.name#)" >
+			      <input type="text" name="name" value="(#=obj.name#)" placeholder="<spring:message code='ezPMS.t264'/>" title="(#=obj.name#)" >
 			    </td>
 			    <td class="gdfCell" style="display:none"><input type="text" name="code" value="(#=obj.code?obj.code:''#)" placeholder="code/short name"></td>
 			    <td class="gdfCell" style="display:none" align="center"><input type="checkbox" name="startIsMilestone"></td>
