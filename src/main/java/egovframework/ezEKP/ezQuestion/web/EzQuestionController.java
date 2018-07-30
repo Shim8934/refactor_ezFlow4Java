@@ -1510,6 +1510,8 @@ public class EzQuestionController extends EgovFileMngUtil {
         pAnsNo = request.getParameter("ansNo");
         pAttID = request.getParameter("attID");
         
+        String realPath = commonUtil.getRealPath(request);
+        
         if(request.getParameter("fileName") != null && !request.getParameter("fileName").equals("")){
         	pFileName = request.getParameter("fileName");
         }
@@ -1526,7 +1528,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             pFileName = URLDecoder.decode(pFileName, "utf-8");
             
             if (pFilePath != null && !pFilePath.equals("")){
-                ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
+                downFile(request, response, realPath + pFilePath, pFileName);
             }
         }
         logger.debug("getPollAttachInfo ended.");
@@ -1557,6 +1559,8 @@ public class EzQuestionController extends EgovFileMngUtil {
         pAnsNo = request.getParameter("ansNo");
         pAttID = request.getParameter("attID");
         
+        String realPath = commonUtil.getRealPath(request);
+        
         if (request.getParameter("fileName") != null && !request.getParameter("fileName").equals("")) {
         	pFileName = request.getParameter("fileName");
         }
@@ -1579,7 +1583,9 @@ public class EzQuestionController extends EgovFileMngUtil {
             		//2018-07-13 김보미 - 파일명 깨지는 버그 수정
             		pFileName = URLDecoder.decode(pFileName, "utf-8");
             	}
-                ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
+            	
+                downFile(request, response, realPath + pFilePath, pFileName);
+                
             }
         }
         logger.debug("getPollAttachInfo ended.");

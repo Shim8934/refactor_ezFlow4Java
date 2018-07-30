@@ -313,7 +313,9 @@
 			        		if (result.totalCount == result.totalCount2) {
 			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang400 + "</span>]";
 			        		} else {
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang400 + "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang400 + "</span>]";
+			        			//2018-07-27 김보미 - [1명/전체 10명]형식으로 수정
+// 			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang400 + "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang400 + "</span>]";
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang400 + "</span>/<spring:message code='ezAddress.t362' /> <span style='color:#017BEC;'>" + result.totalCount2 + strLang400 + "</span>]";
 			        		}
 			            	
 			            	SelectDeptNM.setAttribute("countinfo","1")

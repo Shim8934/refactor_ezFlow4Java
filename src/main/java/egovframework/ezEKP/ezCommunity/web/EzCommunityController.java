@@ -228,7 +228,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (pFilePath != null && !pFilePath.equals("")) {
-            ezCommonService.responseAttach(pFilePath, pfileName, true, request, response);
+			downImage(pFilePath, request, response);
 		}
 	}
 

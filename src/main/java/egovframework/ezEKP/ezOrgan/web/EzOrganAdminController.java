@@ -837,7 +837,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			String filePath = commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + fileName.split("_")[0] + commonUtil.separator + fileName;
 			
 			if (fileName != null && !fileName.equals("")) {
-				ezCommonService.responseAttach(filePath, "", true, request, response);
+				downImage(filePath, request, response);
 			}
 		}	
 	}
@@ -1576,7 +1576,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("filePath=" + filePath);
 		
 		if (fileName != null && !fileName.equals("")) {
-			ezCommonService.responseAttach(filePath, fileName, false, request, response);
+			downImage(filePath, request, response);
 		}
 		
 		logger.debug("getPersonalInfo ended");
