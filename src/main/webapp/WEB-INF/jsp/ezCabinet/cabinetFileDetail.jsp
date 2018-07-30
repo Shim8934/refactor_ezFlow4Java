@@ -193,10 +193,9 @@
 					for (var i = 0, len = relatedFile.length; i < len; i++) {
 						var spanElmt = document.createElement("span");
 						spanElmt.setAttribute("role", relatedFile[i]["relatedItemId"]);
-						spanElmt.setAttribute("status", relatedFile[i]["useStatus"]);
 						spanElmt.textContent = relatedFile[i]["title"];
 						spanElmt.className   = "rlSpanBnk";
-						spanElmt.addEventListener("click", function(e) {readRelatedItem(this);}, false);
+						spanElmt.onclick = (function(status, itemId){return readRelatedItem(itemId, status)})(relatedFile[i]["useStatus"], relatedFile[i]["relatedItemId"]);
 						divElmt.appendChild(spanElmt);
 						
 						if (i != len - 1) {
@@ -224,11 +223,8 @@
 				
 				function getRelatedFiles() {return relatedArr;}
 				
-				function readRelatedItem(spanElmt) {
-					var itemId    = spanElmt.getAttribute("role");
-					var useStatus = spanElmt.getAttribute("status");
-					
-					if(useStatus == 0) {alert(CabinetMessages.strNoRelated); return;}
+				function readRelatedItem(itemId, useStatus) {
+					if(useStatus && useStatus == 0) {alert(CabinetMessages.strNoRelated); return;}
 					
 					if(itemPopup) {itemPopup.close();}
 					itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "itemDetail", getOpenWindowfeature(600, 565));
@@ -412,7 +408,7 @@
 						spanElmt.setAttribute("role", relatedArr[i]["itemId"]);
 						spanElmt.textContent = relatedArr[i]["itemTitle"];
 						spanElmt.className   = "rlSpanBnk";
-						spanElmt.addEventListener("click", function(e) {readRelatedItem(this);}, false);
+						spanElmt.onclick = (function(itemId){return readRelatedItem(itemId)})(relatedArr[i]["itemId"]);
 						divElmt.appendChild(spanElmt);
 						
 						if (i != len - 1) {

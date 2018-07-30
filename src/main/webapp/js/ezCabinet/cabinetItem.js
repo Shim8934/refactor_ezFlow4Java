@@ -708,6 +708,7 @@ var CabinetItem = function() {
 	}
 	
 	function afterGetItemInfo(data) {
+		console.log(data);
 		var itemInfo    = data.fileDetail;
 		var itemType    = itemInfo["itemType"];
 		var divPrevId   = crrPreMode == "w" ? "previewHeaderW" : "previewHeaderH";
@@ -746,7 +747,7 @@ var CabinetItem = function() {
 		else {
 			var attachList  = data.attachFileList;
 			var relatedList = data.relatedFileList;
-			generalItemTitle(relatedList,  itemInfo["creatorName"], itemInfo["summary"], dlElmt);
+			generalItemTitle(relatedList,  itemInfo["creatorName"], itemInfo["creatorId"], itemInfo["summary"], dlElmt);
 			generalItemContent(attachList, itemInfo["itemSize"]);
 		}
 	}
@@ -769,11 +770,10 @@ var CabinetItem = function() {
 	}
 	
 	function generateEmailTitle(itemInfo, relatedList, senderColumn, receiverColumn, forwardColumn, senderUser, receiverList, forwardList, dlElmt) {
-		console.log(senderColumn);
-		console.log(receiverColumn);
 		var creatorName = itemInfo["creatorName"];
+		var creatorId   = itemInfo["creatorId"];
 		//Creator title
-		generateCreatorTitle(dlElmt, creatorName);
+		generateCreatorTitle(dlElmt, creatorName, creatorId);
 		
 		//Sender title
 		var sdtElmt = document.createElement("dt");
@@ -802,7 +802,7 @@ var CabinetItem = function() {
 			spanElmt.setAttribute("title", userMail);
 			spanElmt.className   = "txtSpan";
 			spanElmt.addEventListener("click", function(e) {showUserInfoFromEmail(userMail);}, false);
-			rddElmt.appenChild(spanElmt);
+			rddElmt.appendChild(spanElmt);
 		}
 		else {
 			var spanElmt1 = document.createElement("span");
@@ -850,11 +850,15 @@ var CabinetItem = function() {
 		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
 	}
 	
-	function generateCreatorTitle(dlElmt, creatorName) {
+	function generateCreatorTitle(dlElmt, creatorName, creatorId) {
 		var dtElmt       = document.createElement("dt");
 		var ddElmt       = document.createElement("dd");
-		dtElmt.textContent = CabinetMessages.strCreator + ": ";
-		ddElmt.textContent = creatorName;
+		var spanElmt     = document.createElement("span");
+		dtElmt.textContent   = CabinetMessages.strCreator + ": ";
+		spanElmt.className   = "txtSpan";
+		spanElmt.textContent = creatorName;
+		spanElmt.addEventListener("click", function(e) {showUserInfoFromId(creatorId);}, false);
+		ddElmt.appendChild(spanElmt);
 		dlElmt.appendChild(dtElmt);
 		dlElmt.appendChild(ddElmt);
 	}
@@ -873,7 +877,7 @@ var CabinetItem = function() {
 			spanElmt.setAttribute("status", relatedList[0]["useStatus"]);
 			spanElmt.className   = "txtSpan";
 			spanElmt.addEventListener("click", function(e) {readRelatedItem(this);}, false);
-			ddElmt2.appenChild(spanElmt);
+			ddElmt2.appendChild(spanElmt);
 		}
 		else {
 			var spanElmt1 = document.createElement("span");
@@ -919,8 +923,8 @@ var CabinetItem = function() {
 		dlElmt.appendChild(ddElmt2);
 	}
 	
-	function generalItemTitle(relatedList, creatorName, summary, dlElmt) {
-		generateCreatorTitle(dlElmt, creatorName);
+	function generalItemTitle(relatedList, creatorName, creatorId, summary, dlElmt) {
+		generateCreatorTitle(dlElmt, creatorName, creatorId);
 		
 		if (summary.replace(/\s/g,'')) {
 			var sDtElmt         = document.createElement("dt");
@@ -1144,7 +1148,13 @@ var CabinetItem = function() {
 	function showUserInfoFromEmail(userMail) {
 		var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 		feature = feature + getOpenWindowfeature(420, 500);
-		window.open("/ezCommon/showPersonInfo.do?email=" + encodeURIComponent(userMail), "userMail", feature);
+		window.open("/ezCommon/showPersonInfo.do?email=" + encodeURIComponent(userMail), "userInfo", feature);
+	}
+	
+	function showUserInfoFromId(userId) {
+		var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+		feature = feature + getOpenWindowfeature(420, 500);
+		window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
 	}
 	
 	function getFileSize(fileSize) {
