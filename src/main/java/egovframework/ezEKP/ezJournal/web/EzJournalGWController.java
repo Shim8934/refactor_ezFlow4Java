@@ -1813,8 +1813,6 @@ public class EzJournalGWController {
 			
 			if (containLow.equals("YES") && key.equals("DEPARTMENT")) {
 				totalCount2 = ezOrganService.getMemberListCount2(value, null, totalCount2, containLow, info.getTenantId());
-			} else {
-				totalCount2 = userCount;
 			}
 			
 			result.put("status", "ok");
@@ -1822,6 +1820,7 @@ public class EzJournalGWController {
 			result.put("data", userList);
 			result.put("totalCount", userCount);
 			result.put("totalCount2", totalCount2);
+			result.put("containLow", containLow);
 		} catch (Exception e) {
 			result.put("code", 1);
 			result.put("status", "error");

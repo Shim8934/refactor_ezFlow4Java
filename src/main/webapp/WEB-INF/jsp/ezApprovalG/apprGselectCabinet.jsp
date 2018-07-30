@@ -560,10 +560,7 @@
 	    						<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1039'/></h2>
 	    					</td>
 	    					<td style="text-align: right;">
-		    					<h2 style="font-weight: normal;">
-			    					<spring:message code='ezApprovalG.garm02'/>&nbsp;:
-	    							<select id="selYear" onchange="return TaskList_rowclick()"></select>
-	    						</h2>
+    							<select id="selYear" onchange="return TaskList_rowclick()"></select>
 	    					</td>
 	    				</tr>
 	    			</table>
@@ -654,7 +651,6 @@
 	    					</td>
 	    					<td style="text-align: right;">
 					        	<h2 style="font-weight: normal; margin-top: -5px;">
-					        		<span style="vertical-align: sub;"><spring:message code='ezApprovalG.t1090'/>&nbsp;:</span>
 							        <input type="text" id="Cabinetkeyword" value="" onkeypress="CabinetSearch_Press(event)" style="height: 22px;">
 							        <a class="imgbtn imgbck" onclick="return CabinetSearch_onclick()" style="height: 21px;">
 							        	<span style="line-height: 22px;"><spring:message code='ezApprovalG.t111'/></span>
