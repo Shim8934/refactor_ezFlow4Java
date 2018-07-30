@@ -128,10 +128,12 @@ public class EzPMSScheduler {
 				nowCal.setTime(nowDate);
 				
 				Date endAlamDay = new SimpleDateFormat("yyyy-MM-dd").parse(new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime()));
-				Date endDateDay = new SimpleDateFormat("yyyy-MM-dd").parse(new SimpleDateFormat("yyyy-MM-dd").format(endDateCal.getTime()));
+				Date endDateDay = new SimpleDateFormat("yyyy-MM-dd")
+						.parse(new SimpleDateFormat("yyyy-MM-dd").format(endDateCal.getTime()));
 				
 				if (nowDate.equals(endAlamDay) || 
-						(projectList.get(i).getMailRepeat() == 1 && cal.getTimeInMillis() < endDateCal.getTimeInMillis() && nowCal.getTimeInMillis() < endDateCal.getTimeInMillis())) {
+						(projectList.get(i).getMailRepeat() == 1 && cal.getTimeInMillis() < endDateCal.getTimeInMillis() && nowCal.getTimeInMillis() < endDateCal.getTimeInMillis() 
+						&& cal.getTimeInMillis() < nowCal.getTimeInMillis())) {
 					LOGGER.debug(projectList.get(i).getProjectName() + " should get AlamMail");
 					
 					int isGantt = 1;

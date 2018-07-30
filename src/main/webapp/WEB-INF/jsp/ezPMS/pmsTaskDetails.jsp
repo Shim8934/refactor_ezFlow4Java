@@ -508,7 +508,7 @@ button.PHBtn {
 			</c:if>
 			   <div class="portlet_tabpart01_top" id="tab1">
 			   		<p id="FBoard_sub0"><span id="1tab0" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t256' /></span></p>
-			  	 	<p id="FBoard_sub1"><span id="1tab1" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t180' /></span></p>
+			  	 	<%-- <p id="FBoard_sub1"><span id="1tab1" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t180' /></span></p> --%>
 			  	 	<p id="FBoard_sub2"><span id="1tab2" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t153' /></span></p>
 			   		<p id="FBoard_sub3"><span id="1tab3" divname="FBoard_div0" class="tab"><spring:message code='ezPMS.t154' /></span></p>
 			   </div>
