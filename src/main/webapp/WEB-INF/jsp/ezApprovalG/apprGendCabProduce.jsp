@@ -105,7 +105,7 @@
                 <li><span name="btnCancel" onClick="return cmdCancel_onclick()"></span></li>
             </ul>
         </div>
-		<h2><spring:message code='ezApprovalG.t1018'/></h2>
+		<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1018'/></h2>
 		<table class="content">
 		  <tr>                 
 		    <th  ><spring:message code='ezApprovalG.t998'/></th>
@@ -125,8 +125,8 @@
 		  </tr>
 		</table>
 		<br>
-		<div style="font-family:'arial', 'verdana', 'dotum'; FONT-SIZE: 9pt"><spring:message code='ezApprovalG.t1020'/><br>
-				(<spring:message code='ezApprovalG.t1021'/></div>
+		<h2 style="font-weight: normal;">▒ <spring:message code='ezApprovalG.t1020'/><br>
+				&nbsp;&nbsp;(<spring:message code='ezApprovalG.t1021'/></h2>
 		<!---------------------------------------- 확인, 취소버튼 ----------------------------------------------->
 		<div class="btnposition btnpositionNew" >
 		    <a class="imgbtn"><span name="btnOK" onClick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
