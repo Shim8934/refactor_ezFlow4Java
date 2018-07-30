@@ -1358,7 +1358,7 @@
 					contentType: "application/json; charset=UTF-8",
 					data : JSON.stringify(data),
 					success : function(data) {
-						alert("<spring:message code='ezPMS.t280' />");
+// 						alert("<spring:message code='ezPMS.t280' />");
 						
 						location.reload();
 					},
@@ -1424,7 +1424,7 @@
 					contentType: "application/json; charset=UTF-8",
 					data : JSON.stringify(data),
 					success : function(data) {
-						alert("<spring:message code='ezPMS.t280' />");
+// 						alert("<spring:message code='ezPMS.t280' />");
 						
 						var logContent = "[" + curTask.name + "<spring:message code='ezPMS.t317' /> " + curTask.progress + "%<spring:message code='ezPMS.t313'/> " + new Number(newProgress).toFixed(1) + "%<spring:message code='ezPMS.t314'/>"; 
 	   					addTaskLog(projectId, 2, groupId, taskId, logContent);
