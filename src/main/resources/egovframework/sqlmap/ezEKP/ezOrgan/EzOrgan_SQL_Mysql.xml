@@ -765,7 +765,10 @@
 							AND
 								(LOCATE((SELECT CONCAT(dept_cd_path, ',') FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = #deptCN#), dept_cd_path))
 							OR
-								extensionattribute2 = #deptCN#)) AA
+								(extensionattribute2 = #deptCN#
+									AND
+								CN <> #deptCN#)
+								)) AA
 		]]>
 	</select>
 	
