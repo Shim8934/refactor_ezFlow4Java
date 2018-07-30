@@ -116,7 +116,7 @@ function replaceString(p_str) {
 }
 
 function popupClose() {
-	if(window.opener){
+	if(window.close){
 		window.close();
 	} else {
 		parent.DivPopUpHidden();
