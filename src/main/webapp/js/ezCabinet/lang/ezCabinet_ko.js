@@ -74,5 +74,6 @@ var CabinetMessages = {
 	strModify    : "수정하였습니다.",
 	strFileDet   : "파일 상세",
 	strFileMod   : "파일 수정",
-	strPeople    : "명"
+	strPeople    : "명",
+	strSame      : "같은 파일은 연관문서로 선택할 수 없습니다."
 }

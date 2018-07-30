@@ -107,6 +107,10 @@ public class EzCabinetController {
 	@RequestMapping(value="/ezCabinet/getRelatedFile.do")
 	public String jspGetRelatedFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetRelatedFile started");
+		
+		String itemId = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
+		model.addAttribute("itemId", itemId);
+		
 		logger.debug("jspGetRelatedFile ended");
 		return "ezCabinet/cabinetFileSelect";
 	}

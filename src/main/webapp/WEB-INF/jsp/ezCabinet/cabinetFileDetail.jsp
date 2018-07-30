@@ -358,7 +358,7 @@
 					var relSpanElmt           = document.createElement("span");
 					relSpanElmt.textContent   = CabinetMessages.strSlTxt;
 					relatedBttn.appendChild(relSpanElmt);
-					relatedBttn.onclick       = function(e) {getRelatedFile();};
+					relatedBttn.onclick       = function(e) {getRelatedPopUp();};
 					relDocDivElmt.appendChild(relatedBttn);
 				}
 				
@@ -372,9 +372,9 @@
 				
 				function startUpload() {document.getElementById("fileBttn").click();}
 				
-				function getRelatedFile() {
+				function getRelatedPopUp() {
 					if (rlWindow) {rlWindow.close();}
-					rlWindow = window.open("/ezCabinet/getRelatedFile.do", "relatedWd", getOpenWindowfeature(800, 600));
+					rlWindow = window.open("/ezCabinet/getRelatedFile.do?itemId=" + itemId, "relatedWd", getOpenWindowfeature(800, 600));
 				}
 				
 				function closeAllPopups() {
