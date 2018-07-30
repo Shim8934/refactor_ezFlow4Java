@@ -963,13 +963,13 @@ function event_listDBClick(obj) {
             "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 500px, width =600px, status = no, toolbar=no, menubar=no,location=no, resizable=yes");
     }
     else {
-        var conHeight = 470;
-        var conWidth = 370;
+        var conHeight = 575;
+        var conWidth = 717;
         var pTop = (pheight - conHeight) / 2;
         var pLeft = (pwidth - conWidth) / 2;
         address_group_edit_dialogArguments[0] = edit_group;
         window.open("/ezAddress/addressReadGroup.do?addressid=" + encodeURIComponent(pAddressID) + "&type=" + pFolderType, "",
-                "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 470px, width = 370px, status = no, toolbar=no, menubar=no,location=no, resizable=yes");
+                "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 575px, width = 717px, status = no, toolbar=no, menubar=no,location=no, resizable=yes");
     }
 }
 var address_group_edit_dialogArguments = new Array();
@@ -989,13 +989,13 @@ function event_SearchlistDBClick(obj) {
             "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 500px, width =600px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
     }
     else {
-        var conHeight = 470;
-        var conWidth = 370;
+        var conHeight = 575;
+        var conWidth = 717;
         var pTop = (pheight - conHeight) / 2;
         var pLeft = (pwidth - conWidth) / 2;
         address_group_edit_dialogArguments[0] = edit_group;
         window.open("/ezAddress/addressReadGroup.do?addressid=" + encodeURIComponent(pAddressID) + "&type=" + pFolderType, "",
-            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 470px, width = 370px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 575px, width = 717px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
     }
 }
 
