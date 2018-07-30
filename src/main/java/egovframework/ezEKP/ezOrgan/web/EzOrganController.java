@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezOrgan.web;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,6 +17,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -45,6 +47,9 @@ public class EzOrganController {
 
 	@Autowired
 	private EgovMessageSource messageSource;
+	
+	@Resource(name = "EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	/**
 	 * 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
@@ -218,8 +223,18 @@ public class EzOrganController {
 		int tenantID = userInfo.getTenantId();
 		int totalCount = 0, totalCount2 = 0;
 		
+		String containLow = ezCommonService.getTenantConfig("containLow", tenantID);
+		
+		if (containLow == null || containLow.equals("")) {
+			containLow = "NO";
+		}
+		
+		model.addAttribute("containLow", containLow);
+		
 		totalCount = ezOrganService.getDeptMemberListCount(deptID, false, primary, tenantID);
-		totalCount2 = ezOrganService.getDeptMemberListCount(deptID, true, primary, tenantID);
+		if (containLow.equals("YES")) {
+			totalCount2 = ezOrganService.getDeptMemberListCount(deptID, true, primary, tenantID);
+		}
 		
 		model.addAttribute("totalCount", totalCount);
 		model.addAttribute("totalCount2", totalCount2);

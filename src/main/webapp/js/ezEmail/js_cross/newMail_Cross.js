@@ -2902,6 +2902,7 @@ function NameChange_onClick_Complete(rgParams) {
 
             checkname_cross_dialogArguments[3].parentElement.insertAdjacentElement("afterEnd", newElem);
         }
+        return;
         changedReceiverList.removeChild(checkname_cross_dialogArguments[3].parentElement);
     }
 }
