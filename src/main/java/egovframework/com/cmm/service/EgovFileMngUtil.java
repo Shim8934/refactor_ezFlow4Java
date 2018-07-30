@@ -513,6 +513,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
     public void downImage(String filePath, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String realPath = commonUtil.getRealPath(request);
         BufferedInputStream bis = null;
+        OutputStream os = null;
         String contentType = null;
         int fileSize = 0;
         
@@ -523,20 +524,39 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	        bis = new BufferedInputStream(new FileInputStream(file));
 	        contentType = URLConnection.guessContentTypeFromStream(bis);
 	        
-	        IOUtils.copy(bis, response.getOutputStream());
+	        if (contentType == null) {
+	        	contentType = "application/octet-stream";
+	        }
+	        
+	        response.setContentType(contentType);
+	        response.setContentLength(fileSize);
+	        
+	        LOGGER.debug("contentType=" + contentType + ",fileSize=" + fileSize);
+	        
+	        os = response.getOutputStream();
+	        
+	        IOUtils.copy(bis, os);
+	        
+	        os.flush();
         } catch(Exception e) {
+        	e.printStackTrace();
         } finally {
+        	if (os != null) {
+        		try {
+        			os.close();
+        		} catch(Exception e) {
+        		}
+        	}
+        	
         	if (bis != null) {
-        		bis.close();
+        		try {
+        			bis.close();
+        		} catch(Exception e) {
+        		}
         	}
         }
         
-        if (contentType == null) {
-        	contentType = "application/octet-stream";
-        }
-        
-        response.setContentType(contentType);
-        response.setContentLength(fileSize);
+
 	}
     
     /**
