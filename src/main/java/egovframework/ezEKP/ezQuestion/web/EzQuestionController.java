@@ -3721,7 +3721,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			itemNo = Integer.parseInt(req.getParameter("itemID"));
 		}
 		
-		//재사용하는데 왜 기존걸 지워????
+		//2018-07-30 배현상, 재사용 시 기존 데이터 삭제하는 로직 제거
 		//ezQuestionService.questionDelete2(5, itemNo, loginVO.getTenantId());
 		//ezQuestionService.questionDelete2_D(5, itemNo, loginVO.getTenantId());
 		
@@ -3757,7 +3757,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 				
 				if(!strQstNo.trim().equals(lastItemNo.trim())) {
 					ansNo = 0;
-					strResult = strResult.replace("| "+arrLine[1], "");
+					//2018-07-30 배현상, 재사용 시 replace사용으로 질문이 같을 경우 공백으로 치환되어 등록이 안되는 현상 발생
+					//strResult = strResult.replace("| "+arrLine[1], "");
 					strResult = strResult + "| "+arrLine[1]+";"+arrLine[5];
 					
 					node = resultXML.createElement("ROW");
