@@ -309,7 +309,7 @@
 		
 		var SDateDiff = (RSDate.getTime() - PSDate.getTime()) / (60 * 60 * 24 * 1000);
 		var EDateDiff = (REDate.getTime() - PEDate.getTime()) / (60 * 60 * 24 * 1000);
-		var progDiff = Number(planProg - realProg).toFixed(1);
+		var progDiff = Number(realProg - planProg).toFixed(1);
 		
 		document.getElementById("startDiff").innerText = SDateDiff > 0 ? "+" + SDateDiff : SDateDiff < 0 ? SDateDiff : "";
 		document.getElementById("endDiff").innerText = EDateDiff > 0 ? "+" + EDateDiff : EDateDiff < 0 ? EDateDiff : "";
