@@ -45,10 +45,12 @@
 	
 	$(function(){
 		console.log(userRoleId);
+		
 		if (target == null || target != "group") {
 			weightData = JSON.parse('${weightData}');
 		}
 		
+		setPlanProgress();
 		setFrameParams();
 		initProgressBar();
 		tabFuncSetting();
@@ -57,6 +59,18 @@
 		selToggleList(document.getElementById("menu"), "ul", "li", "0");
 	});
 	
+	function setPlanProgress() {
+		var planProgress;
+		
+		if(target == "group") {
+			planProgress = $("tr[id$='g" + groupId + "']", opener.document).find("input[name='planProgress']").val();
+		} else {
+			planProgress = taskDetails.planProgress;
+			planProgress = planProgress.toFixed(1);
+		}
+		
+		$("#planProgress").text(planProgress + '%');
+	}
 
 	function initProgressBar() {
 		if (taskDetails.status == null) {
@@ -282,7 +296,15 @@
 		var PEDate = new Date("<c:out value='${taskDetails.planEndDate}'/>");
 		var RSDate = new Date("<c:out value='${taskDetails.realStartDate}'/>");
 		var REDate = new Date("<c:out value='${taskDetails.realEndDate}'/>");
-		var planProg = "<c:out value='${taskDetails.planProgress}'/>";
+		
+		var planProg;
+		
+		if(target == 'group') {
+			planProg = $("tr[id$='g" + groupId + "']", opener.document).find("input[name='planProgress']").val();
+		} else {
+			planProg = "<c:out value='${taskDetails.planProgress}'/>";
+		}
+		
 		var realProg = "<c:out value='${taskDetails.realProgress}'/>";
 		
 		var SDateDiff = (RSDate.getTime() - PSDate.getTime()) / (60 * 60 * 24 * 1000);
@@ -468,16 +490,7 @@ button.PHBtn {
 			  </tr>
 			  <tr>
 			    <th class="detailsTable-th"><spring:message code='ezPMS.t250' /></th>
-			    <td class="detailsTable-td">
-			    	<c:choose>
-			    		<c:when test="${taskDetails.planProgress == '' || taskDetails.planProgress eq null}">
-					    	0.0%
-			    		</c:when>
-			    		<c:otherwise>
-					    	<fmt:formatNumber value="${taskDetails.planProgress}" pattern=".0"/>%
-			    		</c:otherwise>
-			    	</c:choose>
-			    </td>
+			    <td class="detailsTable-td" id="planProgress"></td>
 			    <th class="detailsTable-th"><spring:message code='ezPMS.t250' /></th>
 			     <td class="detailsTable-td">
 			    	<c:choose>

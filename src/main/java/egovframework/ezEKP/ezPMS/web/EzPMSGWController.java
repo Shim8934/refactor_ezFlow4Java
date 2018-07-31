@@ -2058,42 +2058,40 @@ public class EzPMSGWController {
 			search.setOverview(request.getParameter("searchByOverview"));
 			search.setProjectName(request.getParameter("searchByProjectName"));
 
-			List<ProjectTaskVO> taskList = new ArrayList<ProjectTaskVO>();
-			taskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow, position, roleId,
-					deptId);
+			List<ProjectTaskVO> taskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow, position, roleId, deptId);
 			
 			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			
-			for (int i = 0; i < taskList.size(); i++) {
-				Date startDate = sdf.parse(taskList.get(i).getPlanStartDate());
-				Date endDate = sdf.parse(taskList.get(i).getPlanEndDate());
+			for (ProjectTaskVO vo : taskList) {
+				Date startDate = sdf.parse(vo.getPlanStartDate());
+				Date endDate = sdf.parse(vo.getPlanEndDate());
 //				Date today = new Date();
 //				String simpToday = new SimpleDateFormat("yyyy-MM-dd").format(today);
 //				Date now = new SimpleDateFormat("yyyy-MM-dd").parse(simpToday);
 
 //				int restDueday = ezPMSService.getWorkingDays(now, endDate, companyId, tenantId, lang);
 //				taskList.get(i).setRestDueday(restDueday);
-				taskList.get(i).setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate, companyId, tenantId, lang));
-				taskList.get(i).setTaskMember(
-						ezPMSService.getTaskMemberList(info.getTenantId(), taskList.get(i).getTaskId(), lang));
+				vo.setPlanProgress(ezPMSService.getPlanProgress(startDate, endDate, companyId, tenantId, lang));
+				vo.setTaskMember(
+						ezPMSService.getTaskMemberList(info.getTenantId(), vo.getTaskId(), lang));
 				
 				//지연율
-				if (taskList.get(i).getStatus().equals("L")) {
-					taskList.get(i).setLatePercent(100 - taskList.get(i).getRealProgress());
+				if (vo.getStatus().equals("L")) {
+					vo.setLatePercent(100 - vo.getRealProgress());
 				} else {
-					taskList.get(i).setLatePercent(0);
+					vo.setLatePercent(0);
 				}
 				
 				//실제 시작일과 종료일 (완료일 경우)
-				if (taskList.get(i).getStatus().equals("C")) {
-					Date realStartDate = sdf.parse(taskList.get(i).getRealStartDate());
-					Date realEndDate = sdf.parse(taskList.get(i).getRealEndDate());
+				if (vo.getStatus().equals("C")) {
+					Date realStartDate = sdf.parse(vo.getRealStartDate());
+					Date realEndDate = sdf.parse(vo.getRealEndDate());
 					
-					int realWorkingday = ezPMSService.getWorkingDays(realStartDate, realEndDate, info.getCompanyId(), tenantId, lang);
+					int realWorkingday = ezPMSService.getWorkingDays(realStartDate, realEndDate, companyId, tenantId, lang);
 					
-					taskList.get(i).setRealStartEndDiff(realWorkingday);
+					vo.setRealStartEndDiff(realWorkingday);
 				} else {
-					taskList.get(i).setRealStartEndDiff(0);
+					vo.setRealStartEndDiff(0);
 				}
 			}
 
@@ -3122,11 +3120,15 @@ public class EzPMSGWController {
 			int isGantt = 0;
 			String companyId = info.getCompanyId();
 			String deptId = info.getDeptId();
-
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			
 			ProjectInfoVO project = ezPMSService.getProjectDetails(projectId, userId, info.getTenantId(), info.getOffSet(),
 					lang, deptId, companyId);
 			project.setProjectMember(ezPMSService.getProjectMemberList(projectId, 4, lang, info.getTenantId(), isGantt));
 			project.setWeight(ezPMSService.getProjectWeight(projectId, info.getTenantId()));
+			project.setWorkingday(ezPMSService.getWorkingDays(sdf.parse(project.getPlanStartDate()), sdf.parse(project.getPlanEndDate()), 
+															companyId, info.getTenantId(), lang));
 			
 			HashSet<String> holidayList = ezPMSService.getHolidayList(project.getPlanStartDate(), project.getPlanEndDate(), info.getTenantId(), info.getCompanyId(), lang);
 			
@@ -3411,7 +3413,12 @@ public class EzPMSGWController {
 
 				// 그룹 가중치를 얻어옴.
 				Float weight = ezPMSService.getGroupWeight(groupId, info.getTenantId());
-				groupList.get(i).setWeight(weight);
+				
+				if (weight == null || weight == 0.0f) {
+					groupList.get(i).setWeight(0.0f);
+				} else {
+					groupList.get(i).setWeight(weight);
+				}
 
 				// 그룹 멤버를 얻어옴.
 				Iterator<ProjectGroupMemberVO> iter = groupMemberList.iterator();

@@ -775,7 +775,7 @@
 	   			  	
 	   			  	if(addPreTaskRel(projectId, taskId, preTaskId, progress, task.name, preTaskRowName, groupId, preGroupId) == true) {
 	   			  		// 후행작업의 기간이 정상적으로 조정된 후, 화면의 정보를 바탕으로 기간 정보를 DB에 업데이트
-	   			  		if(task.moveTo(task.start,false,true)) {
+	   			  		if(task.moveTo(task.start,false,true,true)) {
 	   			  			saveAllSchedules();
 	   			  			setAllGanttItems();
 	   			  		} else {  			
@@ -810,7 +810,7 @@
 	   			  row.find("[name=planProgress]").prop("readonly", true).css({"text-align":"right"});
 	   			  row.find("[name=realProgress]").prop("readonly", task.type !== "t" || task.statusPMS === "W").css({"text-align":"right"});
 	   			  row.find("[name=startIsMilestone]").prop("checked", task.startIsMilestone);
-	   			  var startReadonly = !canWrite || task.depends || !(task.canWrite  || this.master.permissions.canWrite) || task.type !== "t" || task.statusPMS === "C";
+	   			  var startReadonly = !canWrite || !(task.canWrite  || this.master.permissions.canWrite) || task.type !== "t" || task.statusPMS === "C";
 	   			  row.find("[name=start]").val(new Date(task.start).format()).updateOldValue().prop("readonly", startReadonly); // called on dates only because for other field is called on focus event
 	   			  row.find("[name=endIsMilestone]").prop("checked", task.endIsMilestone);
 	   			  var endReadonly = !canWrite || task.isParent() && task.master.shrinkParent || task.type === "g" || task.statusPMS === "C";
