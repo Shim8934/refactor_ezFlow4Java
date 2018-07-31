@@ -549,8 +549,13 @@
 						tdElmt.setAttribute("style", "vertical-align: top; height: " + (scrollHeight) + "px;");
 					}
 					
+					var divElmt          = document.getElementById("fileDiv");
+					var height           = Math.max(divElmt.scrollHeight, divElmt.clientHeight);
+					divElmt.style.height = height + 60 + "px";
+					
 					window.print();
 					
+					divElmt.removeAttribute("style");
 					tdElmt.removeAttribute("style");
 				}
 				
