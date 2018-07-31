@@ -702,6 +702,29 @@ var CabinetItem = function() {
 		openFileDetail(itemId);
 	}
 	
+	function generatePreviewElmt(divElmt) {
+		var parentDiv  = divElmt.parentElement;
+		var divChild   = document.createElement("div");
+		var pElmt      = document.createElement("p");
+		var spanElmt   = document.createElement("span");
+		var dlElmt     = document.createElement("dl");
+		var pSpanElmt1 = document.createElement("span");
+		var pSpanElmt2 = document.createElement("span");
+		
+		pElmt.className      = "cabPrevTitle";
+		spanElmt.className   = "cabPreDate";
+		dlElmt.className     = "cabPrevItem";
+		pSpanElmt1.className = "cabPrevIcon";
+		pSpanElmt2.className = "cabTitleTxt";
+		
+		pElmt.appendChild(pSpanElmt1);
+		pElmt.appendChild(pSpanElmt2);
+		divChild.appendChild(pElmt);
+		divChild.appendChild(spanElmt);
+		divChild.appendChild(dlElmt);
+		divElmt.appendChild(divChild);
+	}
+	
 	function afterGetItemInfo(data) {
 		var itemInfo    = data.fileDetail;
 		var itemType    = itemInfo["itemType"];
@@ -715,6 +738,7 @@ var CabinetItem = function() {
 		var spanSubject = divElmt.querySelector("span[class='cabTitleTxt']");
 		var spanDate    = divElmt.querySelector("span[class='cabPreDate']");
 		var dlElmt      = divElmt.querySelector("dl[class='cabPrevItem']");
+		var parentDiv   = divElmt.parentElement;
 		
 		spanIcon.onclick        = function(e) {openFileDetail(itemInfo["itemId"]);};
 		spanSubject.textContent = itemInfo["title"];
@@ -724,6 +748,24 @@ var CabinetItem = function() {
 		
 		if (itemType != 0) {
 			//연동 review here
+			var iframeId     = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
+			var ifameContent = document.getElementById(iframeId);
+			
+			if (!ifameContent) {
+				ifameContent           = document.createElement("iframe");
+				ifameContent.id        = iframeId;
+				ifameContent.className = "cabrlframe";
+				var fileDivId          = crrPreMode == "w" ? "itemContentW" : "itemContentH";
+				var fileDivElmt        = document.getElementById(fileDivId);
+				
+				if (fileDivElmt) {
+					parentDiv.replaceChild(ifameContent, fileDivElmt);
+				}
+				else {
+					parentDiv.appendChild(ifameContent);
+				}
+			}
+			
 			switch(itemType) {
 				case 1 : showMailPreview(data, dlElmt)     ; break;
 				case 2 : showApprovalPreview() ; break;
@@ -739,11 +781,27 @@ var CabinetItem = function() {
 			}
 		}
 		else {
-			var attachList  = data.attachFileList;
-			var relatedList = data.relatedFileList;
-			generalItemTitle(relatedList,  itemInfo["creatorName"], itemInfo["creatorId"], itemInfo["summary"], dlElmt);
-			generalItemContent(attachList, itemInfo["itemSize"]);
+			showGeneralItemPreview(parentDiv);
 		}
+	}
+	
+	function showGeneralItemPreview(data, dlElmt, itemInfo, parentDiv) {
+		var prevCont = document.createElement("div");
+		
+		if (crrPreMode == "w") {
+			prevCont.setAttribute("id", "itemContentW");
+			prevCont.className = "itemContentW";
+		}
+		else {
+			prevCont.setAttribute("id", "itemContentH");
+			prevCont.className = "itemContentH";
+		}
+		
+		parentDiv.appendChild(prevCont);
+		var attachList  = data.attachFileList;
+		var relatedList = data.relatedFileList;
+		generalItemTitle(relatedList,  itemInfo["creatorName"], itemInfo["creatorId"], itemInfo["summary"], dlElmt);
+		generalItemContent(attachList, itemInfo["itemSize"]);
 	}
 	
 	function showMailPreview(data, dlElmt) {
@@ -758,36 +816,21 @@ var CabinetItem = function() {
 		var receiverColumn = columnList.filter(function(col) {return col["columnId"] == "receiver";})[0];
 		var forwardColumn  = columnList.filter(function(col) {return col["columnId"] == "forward";})[0];
 		
-		//Generate mail title
 		generateEmailTitle(itemInfo, relatedList, senderColumn, receiverColumn, forwardColumn, senderUser, receiverList, forwardList, dlElmt);
-		//Generat mail content + attach files
 		generateEmailContent(attachList, itemInfo);
 	}
 	
 	function generateEmailContent(attachList, itemInfo) {
-		var content     = itemInfo["conentPath"];
-		var attachSize   = itemInfo["itemSize"];
-		var totalFiles   = attachList.length;
-		var fileDivId    = crrPreMode == "w" ? "itemContentW" : "itemContentH";
-		var fileDivElmt  = document.getElementById(fileDivId);
-		var ifameContent = null;
-		
-		if (fileDivElmt) {
-			var parentElemt        = fileDivElmt.parentElement;
-			ifameContent           = document.createElement("iframe");
-			ifameContent.id        = "mainContentIframe";
-			ifameContent.className = "cabrlframe";
-			parentElemt.replaceChild(ifameContent, fileDivElmt);
-		}
-		else {
-			ifameContent = document.getElementById("mainContentIframe");
-		}
-		//Email content using iframe
-		ifameContent.src       = "/ezCabinet/getPreviewContent.do";
-		documentCont           = {};
-		documentCont.content   = content;
-		documentCont.size      = itemInfo["itemSize"];
-		documentCont.attach    = attachList;
+		var content          = itemInfo["conentPath"];
+		var attachSize       = itemInfo["itemSize"];
+		var totalFiles       = attachList.length;
+		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
+		var ifameContent     = document.getElementById(iframeId);
+		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
+		documentCont         = {};
+		documentCont.content = content;
+		documentCont.size    = itemInfo["itemSize"];
+		documentCont.attach  = attachList;
 	}
 	
 	function generateEmailTitle(itemInfo, relatedList, senderColumn, receiverColumn, forwardColumn, senderUser, receiverList, forwardList, dlElmt) {
@@ -1054,43 +1097,6 @@ var CabinetItem = function() {
 	function readRelatedItem(itemId, useStatus) {
 		if(useStatus == 0) {alert(CabinetMessages.strNoRelated); return;}
 		openFileDetail(itemId);
-	}
-	
-	function generatePreviewElmt(divElmt) {
-		var parentDiv  = divElmt.parentElement;
-		var prevDiv    = document.createElement("div");
-		var prevCont   = document.createElement("div");
-		var divChild   = document.createElement("div");
-		var pElmt      = document.createElement("p");
-		var spanElmt   = document.createElement("span");
-		var dlElmt     = document.createElement("dl");
-		var pSpanElmt1 = document.createElement("span");
-		var pSpanElmt2 = document.createElement("span");
-		
-		pElmt.className      = "cabPrevTitle";
-		spanElmt.className   = "cabPreDate";
-		dlElmt.className     = "cabPrevItem";
-		pSpanElmt1.className = "cabPrevIcon";
-		pSpanElmt2.className = "cabTitleTxt";
-		
-		if (crrPreMode == "w") {
-			prevDiv.setAttribute("id",  "itemPreviewDivW");
-			prevCont.setAttribute("id", "itemContentW");
-			prevCont.className = "itemContentW";
-		}
-		else {
-			prevDiv.setAttribute("id",  "itemPreviewDivH");
-			prevCont.setAttribute("id", "itemContentH");
-			prevCont.className = "itemContentH";
-		}
-		
-		pElmt.appendChild(pSpanElmt1);
-		pElmt.appendChild(pSpanElmt2);
-		divChild.appendChild(pElmt);
-		divChild.appendChild(spanElmt);
-		divChild.appendChild(dlElmt);
-		divElmt.appendChild(divChild);
-		parentDiv.appendChild(prevCont);
 	}
 	
 	function isImage(fileName) {
