@@ -42,6 +42,29 @@ $(function() {
 });
 
 </script>
+<style>
+.groupNameTd{text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 250px;}
+.taskNameTd{text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.projectNameTd{text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 200px;}
+.memberNameTd{text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 175px;}
+.planStartDateTd{text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100px;}
+.planEndDateTd{text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100px;}
+.statusTd{text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 50px;}
+.realProgressTd{text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 80px;}
+
+.upperGroupNameTh{overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 250px;}
+.groupNameTh{overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;}
+.taskNameTh{overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;}
+.projectNameTh{overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 200px;}
+.memberNameTh{overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: default; width: 175px;}
+.planStartDateTh{overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 100px;}
+.planStartEndTh{overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 100px;}
+.statusTh{text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 50px;}
+.realProgressTh{text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 80px;}
+
+input[name='boardCheckbox']{margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer;}
+#HeaderAllCheckBox{margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;}
+</style>
 </head>
 <body>
 	<div style="width: 100%;" id="divList">
@@ -50,174 +73,132 @@ $(function() {
 						class="mainlist" style="overflow:hidden">
 				<thead id="BoardList_THEAD">
 					<tr id="BoardList_TH">
-						<th id="BoardList_TH_0" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px;"
+						<th class="checkboxTh" id="BoardList_TH_0" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px;"
 							class="h4_center" bgcolor="#CCCCCC">
-							<input type="checkbox" id="HeaderAllCheckBox" name="boardCheckbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);"
-								style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
+							<input type="checkbox" id="HeaderAllCheckBox" name="boardCheckbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);">
 						</th>
-						<th id="BoardList_TH_1" onclick="setListOrder(this)" order="UPPER_GROUP_NAME"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 250px;"
-							class="h5_center"><spring:message code='ezPMS.t42' /></th>
+						<th id="BoardList_TH_1" onclick="setListOrder(this)" order="UPPER_GROUP_NAME" class="h5_center upperGroupNameTh"><spring:message code='ezPMS.t42' /></th>
 						<c:choose>
 							<c:when test="${position eq 'myGroup' }">
-							<th id="BoardList_TH_2" onclick="setListOrder(this)" order="GROUP_NAME" style="text-align: center; overflow: hidden; white-space: nowrap; 
-								text-overflow: ellipsis; cursor: pointer;" class="h5_center"><spring:message code='ezPMS.t87' />
-							</th>
+								<th id="BoardList_TH_2" onclick="setListOrder(this)" order="GROUP_NAME" class="h5_center groupNameTh"><spring:message code='ezPMS.t87' /></th>
 							</c:when>
 							<c:otherwise>
-							<th id="BoardList_TH_2" onclick="setListOrder(this)" order="TASK_NAME" style="text-align: center; overflow: hidden; white-space: nowrap; 
-								text-overflow: ellipsis; cursor: pointer;" class="h5_center"><spring:message code='ezPMS.t98' />
-							</th>
+								<th id="BoardList_TH_2" onclick="setListOrder(this)" order="TASK_NAME" class="h5_center taskNameTh"><spring:message code='ezPMS.t98' /></th>
 							</c:otherwise>
 						</c:choose>
 						<c:if test="${position eq 'myTask' || position eq 'myGroup'}">
-						<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PROJECT_NAME"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 200px;"
-							class="h5_center"><spring:message code='ezPMS.t31' /></th>	
+							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PROJECT_NAME" class="h5_center projectNameTh"><spring:message code='ezPMS.t31' /></th>	
 						</c:if>
-						<th id="BoardList_TH_4"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: default; width: 175px"
-							class="h5_center"><spring:message code='ezPMS.t63' /></th>
-						<th id="BoardList_TH_5" onclick="setListOrder(this)" order="PLAN_START_DATE"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 100px"
-							class="h5_center"><spring:message code='ezPMS.t61' /></th>
-						<th id="BoardList_TH_6" onclick="setListOrder(this)" order="PLAN_END_DATE"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 100px"
-							class="h5_center"><spring:message code='ezPMS.t62' /></th>
+						<th id="BoardList_TH_4" class="h5_center memberNameTh"><spring:message code='ezPMS.t63' /></th>
+						<th id="BoardList_TH_5" onclick="setListOrder(this)" order="PLAN_START_DATE" class="h5_center planStartDateTh"><spring:message code='ezPMS.t61' /></th>
+						<th id="BoardList_TH_6" onclick="setListOrder(this)" order="PLAN_END_DATE" class="h5_center planStartEndTh"><spring:message code='ezPMS.t62' /></th>
 						<c:choose>
 							<c:when test="${position ne 'myGroup' }">
-								<th id="BoardList_TH_7" onclick="setListOrder(this)" order="STATUS"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 50px;"
-								class="h5_center"><spring:message code='ezPMS.t38' /></th>
+								<th id="BoardList_TH_7" onclick="setListOrder(this)" order="STATUS" class="h5_center statusTh"><spring:message code='ezPMS.t38' /></th>
 							</c:when>
 						</c:choose>
-						<th id="BoardList_TH_8" onclick="setListOrder(this)" order="REAL_PROGRESS"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 80px;"
-							class="h5_center"><spring:message code='ezPMS.t250' /></th>
-						</thead>
-					</table>
-				</div>
-				<div id="projectListBody" multiselectable="false" useocs="false" style="overflow:auto; min-width: 469px; height: 456px;">
-				<table id="tableBody" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowonclick="ItemPreviewRead_click" width="100%" border="0" class="mainlist" style="">
-						<tbody style="background-color: rgb(255, 255, 255);">
-							<c:choose>
-								<c:when test="${empty taskList}">
-									<tr>
-										<td colspan="8" style="text-align : center"> <spring:message code='ezPMS.t30' /> </td>
-									</tr>
-								</c:when>
-								<c:when test="${position ne 'myGroup' }">
-									<c:forEach items="${taskList }" var="task">
-								<tr style="cursor: pointer;" id="${task.taskId }" data-groupId="${task.groupId}" class="listRow" ondblclick="goTaskDetails(this)">
-									<td style="width: 20px; cursor: default; text-align: center"><input
-										type="checkbox" onchange="checkedCheckbox(this);"
-										name="boardCheckbox"
-										style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer;"></td>
-									<td class="groupName" onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 250px"><c:out
-											value="${task.groupName }" /></td>
-									<td class="taskName" onclick="selectedTR(this);"
-										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><c:out
-											value="${task.taskName }" /></td>
-									<c:if test="${position eq 'myTask' }">
-									<td onclick="selectedTR(this);" class="projectName" projectId="${task.projectId }"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 200px"><c:out
-											value="${task.projectName }" /></td>
-									</c:if>
-									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 175px"><div
-											style="margin-right: 2px;"></div>
-											<c:forEach items="${task.taskMember}" var="taskMember" varStatus="status">
-												<c:out value="${status.count == task.taskMember.size() ? taskMember.userName : taskMember.userName.concat(',')}" />
-											</c:forEach>
-									</td>
-									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100px"><div
-											style="margin-right: 2px;"></div>
-											<c:out value="${task.planStartDate }" />
-									</td>
-									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100px"><div
-											style="margin-right: 2px;"></div>
-											<c:out value="${task.planEndDate }" />
-									</td>
-									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 50px"><div
-											style="margin-right: 2px;"></div>
-											<c:choose>
-											<c:when test="${task.status eq 'P' }">
-												<spring:message code='ezPMS.t15' />
-											</c:when>
-											<c:when test="${task.status eq 'W' }">
-												<spring:message code='ezPMS.t16' />
-											</c:when>
-											<c:when test="${task.status eq 'L' }">
-												<spring:message code='ezPMS.t18' />
-											</c:when>
-											<c:when test="${task.status eq 'S' }">
-												<spring:message code='ezPMS.t19' />
-											</c:when>
-											<c:otherwise>
-												<spring:message code='ezPMS.t17' />
-											</c:otherwise>
-										</c:choose>
-										</td>
-									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 80px">
-										<div style="margin-top: 5px; display: inline-block;">
-											<fmt:formatNumber value="${task.realProgress }" pattern="0.0" />%
-										</div>
-									</td>
-								</tr>
-							</c:forEach>
-								</c:when>
-							<c:when test="${position eq 'myGroup' }">
-								<c:forEach items="${taskList }" var="task">
-								<tr style="cursor: pointer;" id="${task.groupId }" class="listRow" ondblclick="goGroupDetails(this)">
-									<td style="width: 20px; cursor: default; text-align: center"><input
-										type="checkbox" onchange="checkedCheckbox(this);"
-										name="boardCheckbox"
-										style="margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer;"></td>
-									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 250px"><c:out
-											value="${task.upperGroupName }" /></td>
-									<td onclick="selectedTR(this);"
-										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"><c:out
-											value="${task.groupName }" /></td>
-									<td onclick="selectedTR(this);" class="projectName" projectId="${task.projectId }"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 200px"><c:out
-											value="${task.projectName }" /></td>
-									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 175px"><div
-											style="margin-right: 2px;"></div>
-											<c:forEach items="${task.groupMember}" var="groupMember" varStatus="status">
-												<c:out value="${status.count == task.groupMember.size() ? groupMember.userName : groupMember.userName.concat(',')}" />
-											</c:forEach>
-									</td>
-									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100px"><div
-											style="margin-right: 2px;"></div>
-											<c:out value="${task.planStartDate }" />
-									</td>
-									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100px"><div
-											style="margin-right: 2px;"></div>
-											<c:out value="${task.planEndDate }" />
-									</td>
-									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 80px">
-										<div style="margin-top: 5px; display: inline-block;">
-											<c:out value="${task.realProgress }"/>%
-										</div>
-									</td>
-								</tr>
-							</c:forEach>
-							</c:when>
-							</c:choose>
-						</tbody>
-					</table>
-				</div>
-				</div>
+						<th id="BoardList_TH_8" onclick="setListOrder(this)" order="REAL_PROGRESS" class="h5_center realProgressTh"><spring:message code='ezPMS.t250' /></th>
+				</thead>
+			</table>
+		</div>
+		<div id="projectListBody" multiselectable="false" useocs="false" style="overflow:auto; min-width: 469px; height: 456px;">
+			<table id="tableBody" cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" rowonclick="ItemPreviewRead_click" width="100%" border="0" class="mainlist" style="">
+				<tbody style="background-color: rgb(255, 255, 255);">
+					<c:choose>
+						<c:when test="${empty taskList}">
+							<tr>
+								<td colspan="8" style="text-align : center"> <spring:message code='ezPMS.t30' /> </td>
+							</tr>
+						</c:when>
+						<c:when test="${position ne 'myGroup' }">
+							<c:forEach items="${taskList }" var="task">
+						<tr style="cursor: pointer;" id="${task.taskId }" data-groupId="${task.groupId}" class="listRow" ondblclick="goTaskDetails(this)">
+							<td style="width: 20px; cursor: default; text-align: center">
+								<input type="checkbox" onchange="checkedCheckbox(this);" name="boardCheckbox">
+							</td>
+							<td class="groupNameTd" onclick="selectedTR(this);"><c:out value="${task.groupName }" /></td>
+							<td class="taskNameTd" onclick="selectedTR(this);"><c:out value="${task.taskName }" /></td>
+							<c:if test="${position eq 'myTask' }">
+							<td class="projectNameTd" onclick="selectedTR(this);" projectId="${task.projectId }"><c:out value="${task.projectName }" /></td>
+							</c:if>
+							<td class="memberNameTd" onclick="selectedTR(this);">
+								<div style="margin-right: 2px;"></div>
+								<c:forEach items="${task.taskMember}" var="taskMember" varStatus="status">
+									<c:out value="${status.count == task.taskMember.size() ? taskMember.userName : taskMember.userName.concat(',')}" />
+								</c:forEach>
+							</td>
+							<td class="planStartDateTd" onclick="selectedTR(this);">
+								<div style="margin-right: 2px;"></div>
+								<c:out value="${task.planStartDate }" />
+							</td>
+							<td class="planEndDateTd" onclick="selectedTR(this);">
+								<div style="margin-right: 2px;"></div>
+								<c:out value="${task.planEndDate }" />
+							</td>
+							<td class="statusTd" onclick="selectedTR(this);">
+								<div style="margin-right: 2px;"></div>
+								<c:choose>
+									<c:when test="${task.status eq 'P' }">
+										<spring:message code='ezPMS.t15' />
+									</c:when>
+									<c:when test="${task.status eq 'W' }">
+										<spring:message code='ezPMS.t16' />
+									</c:when>
+									<c:when test="${task.status eq 'L' }">
+										<spring:message code='ezPMS.t18' />
+									</c:when>
+									<c:when test="${task.status eq 'S' }">
+										<spring:message code='ezPMS.t19' />
+									</c:when>
+									<c:otherwise>
+										<spring:message code='ezPMS.t17' />
+									</c:otherwise>
+								</c:choose>
+							</td>
+							<td class="realProgressTd" onclick="selectedTR(this);">
+								<div style="margin-top: 5px; display: inline-block;">
+									<fmt:formatNumber value="${task.realProgress }" pattern="0.0" />%
+								</div>
+							</td>
+						</tr>
+					</c:forEach>
+						</c:when>
+					<c:when test="${position eq 'myGroup' }">
+						<c:forEach items="${taskList }" var="task">
+						<tr style="cursor: pointer;" id="${task.groupId }" class="listRow" ondblclick="goGroupDetails(this)">
+							<td style="width: 20px; cursor: default; text-align: center">
+								<input type="checkbox" onchange="checkedCheckbox(this);" name="boardCheckbox">
+							</td>
+							<td class="groupNameTd" onclick="selectedTR(this);"><c:out value="${task.upperGroupName }" /></td>
+							<td class="taskNameTd" onclick="selectedTR(this);"><c:out value="${task.groupName }" /></td>
+							<td class="projectNameTd" onclick="selectedTR(this);" projectId="${task.projectId }"><c:out value="${task.projectName }" /></td>
+							<td class="memberNameTd" onclick="selectedTR(this);">
+								<div style="margin-right: 2px;"></div>
+								<c:forEach items="${task.groupMember}" var="groupMember" varStatus="status">
+									<c:out value="${status.count == task.groupMember.size() ? groupMember.userName : groupMember.userName.concat(',')}" />
+								</c:forEach>
+							</td>
+							<td class="planStartDateTd" onclick="selectedTR(this);">
+								<div style="margin-right: 2px;"></div>
+								<c:out value="${task.planStartDate }" />
+							</td>
+							<td class="planEndDateTd" onclick="selectedTR(this);">
+								<div style="margin-right: 2px;"></div>
+								<c:out value="${task.planEndDate }" />
+							</td>
+							<td class="realProgressTd" onclick="selectedTR(this);">
+								<div style="margin-top: 5px; display: inline-block;">
+									<c:out value="${task.realProgress }"/>%
+								</div>
+							</td>
+						</tr>
+					</c:forEach>
+					</c:when>
+					</c:choose>
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 <c:choose>
 <c:when test="${paging.endPage>0 }">
