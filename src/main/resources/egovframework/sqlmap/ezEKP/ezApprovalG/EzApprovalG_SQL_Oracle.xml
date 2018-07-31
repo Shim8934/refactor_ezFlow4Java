@@ -4199,6 +4199,7 @@
 			 TBL_RECORD.SpecialRecordCode ,
              TBL_RECORD.PublicityCode ,
              TBL_RECORD.LimitRange ,
+             TBL_RECORD.PublicityYn ,
              TBSEPATT.CatalogTransferFlag ,
              TBSEPATT.CatalogTransferYear ,
              TBSEPATT.DocTransferFlag ,
