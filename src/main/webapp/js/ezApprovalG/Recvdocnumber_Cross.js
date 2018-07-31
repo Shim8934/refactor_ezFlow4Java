@@ -178,15 +178,13 @@ function getRecvDocNumber(pDeptID) {
         var fields = message.GetFieldsList();
         var name, docnumber;
         var rtnval;
+        var result = "";
 
         if (approvalFlag =='G') {
-        name = "receiptnumber";
-        var field = message.GetListItem(fields, name);
-        if (!field) {
-            var DeptSymbol = arr_userinfo[5];
-        	var result = "";
-        	
-        	$.ajax({
+	        name = "receiptnumber";
+	        var field = message.GetListItem(fields, name);
+	        
+	        $.ajax({
         		type : "POST",
         		dataType : "text",
         		async : false,
@@ -200,22 +198,57 @@ function getRecvDocNumber(pDeptID) {
         			result = loadXMLString(xml);
         		}
         	});
-
-            var SN = getNodeText(GetChildNodes(result)[0]);
-            pDocNo = DeptSymbol + "-" + SN;
-            var tempNumString = SN;
-            var i = 0;
-            var templen = tempNumString.length;
-            for (i = 0; i < 6 - templen; i++)
-                tempNumString = "0" + tempNumString;
-            pDocNumCode = pDeptID + tempNumString;
-            SaveFile();
-            return true;
+	        
+	        if (!field) {
+	            var DeptSymbol = arr_userinfo[5];
+	            var SN = getNodeText(GetChildNodes(result)[0]);
+	            
+	            pDocNo = DeptSymbol + "-" + SN;
+	            
+	            var tempNumString = SN;
+	            var templen = tempNumString.length;
+	            
+	            for (var i = 0; i < 6 - templen; i++) {
+	            	tempNumString = "0" + tempNumString;
+	            }
+	            
+	            pDocNumCode = pDeptID + tempNumString;
+	            SaveFile();
+	            
+	            return true;
+	        } else {
+	        	var SN = getNodeText(GetChildNodes(result)[0]);
+	        	
+		        if (SN == "") {
+		            pDocNumCode = "";
+		            pDocNo = "";
+		            field.textContent = "";
+		            
+		            return false;
+		        } else {
+		            field.textContent = fractionsymbol + SN;
+		            pDocNo = fractionsymbol + SN;
+		            
+		            var tempNumString = SN;
+		            var templen = tempNumString.length;
+		            
+		            for (var i = 0; i < 6 - templen; i++) {
+		            	tempNumString = "0" + tempNumString;
+		            }
+		            
+		            pDocNumCode = pDeptID + tempNumString;
+		            SaveFile();
+		            
+		            return true;
+		        }
+	        }
         }
-        }
+        
         var rtnVal = setDocNumFormat();
-        if (!rtnVal)
-            return true;
+        
+        if (!rtnVal) {
+        	return true;
+        }
 
         fractionsymbol = field.textContent;
 
@@ -263,9 +296,9 @@ function getRecvDocNumber(pDeptID) {
         if (SN != "") {
             field.textContent = fractionsymbol + SN;
             rollbackDocNumber(pDeptID, pDocID);
+            
             return false;
-        }
-        else {
+        } else {
             field.value = "";
             pDocNo = "";
         }

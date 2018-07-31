@@ -300,6 +300,8 @@
 		 	                    alert(pAlertContent); */
 			                    
 			                    nodeIdx.DeleteNode(treeview.GetID());
+		 	                    //2018-07-30 김보미 - 삭제완료 후 폴더트리 리프레쉬
+			                    getGroupTree(1, 1, 0, true);
 		            		}
 		            	}
 		        	});

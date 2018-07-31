@@ -18,7 +18,11 @@
 	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-	
+	<style type="text/css">
+		.mainlist tr th {
+			border-top : 0px;
+		}
+	</style>
 	<script ID="clientEventHandlersJS"  type="text/javascript">
 		var OrderCell = "";    
 	   	var xmlhttp = createXMLHttpRequest();
@@ -192,18 +196,18 @@
         </div>
 		<table style="width:100%">
 			<tr>
-				<td valign="top" style="padding:3px; width:207px; height:100%"><h2><spring:message code='ezApprovalG.t1039'/></h2>
+				<td valign="top" style="padding:3px; width:207px; height:100%"><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1039'/></h2>
 					<table class="content">
 						<tr>
 							<th><spring:message code='ezApprovalG.t592'/></th>
 							<td>
-								<Select id="selTaskCategory" LANGUAGE="javascript" onChange="return selTaskCategory_onchange()"></Select>
+								<Select id="selTaskCategory" style="width: 100%" LANGUAGE="javascript" onChange="return selTaskCategory_onchange()"></Select>
 							</td>
 						</tr>
 						<tr>
 							<th ><spring:message code='ezApprovalG.t593'/></th>
 							<td>
-								<Select id="selTaskMCategory" LANGUAGE="javascript" onChange="return selTaskMCategory_onchange()"></Select>
+								<Select id="selTaskMCategory" style="width: 100%" LANGUAGE="javascript" onChange="return selTaskMCategory_onchange()"></Select>
 							</td>
 						</tr>
 					</table>
@@ -211,15 +215,16 @@
 						<div id="TaskSCateList" style="height:233px" onClick="TaskSCateList_rowclick()"></div>
 					</div>
 				</td>
-				<td valign="top" style="padding:3px;"><h2><spring:message code='ezApprovalG.t1040'/></h2>
+				<td valign="top" style="padding:3px;">
+					<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1040'/><a class="imgbtn imgbck" style="margin:-3px 0px 0px 156px;"><span onClick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t1041'/></span></a></h2>
 					<table>
-						<tr>
+						<%-- <tr>
 							<th align="left"><a class="imgbtn"><span onClick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t1041'/></span></a></th>
-						</tr>
+						</tr> --%>
 						<tr>
 							<td>
 								<div class="listview">
-									<div class="listView" style="overflow:auto; border:0;Width:340px; Height:271px">
+									<div class="listView" style="overflow:auto; border:0;Width:340px; Height:299px">
 										<div id="TaskList"  onRowDblClick="" onSelDblClick="" onSelClick=""	onClick="TaskList_rowclick()"> </div>
 									</div>
 								</div>
@@ -227,7 +232,7 @@
 						</tr>
 					</table>
 				</td>
-				<td valign="top" style="padding:3px; width:100%;"><h2><spring:message code='ezApprovalG.t1018'/></h2>
+				<td valign="top" style="padding:3px; width:100%;"><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1018'/></h2>
 					<table class="content">
 						<tr>
 							<th><spring:message code='ezApprovalG.t898'/>(<spring:message code='ezApprovalG.t1764'/>)</th>
@@ -292,7 +297,7 @@
 									<tr>
 										<td id="tdDisplayFlag">&nbsp;</td>
 										<td width="70" id="btnDisplayInfo" style="vertical-align:middle;">
-											<a class="imgbtn" style="margin:auto;"><span style="padding-top:1.2px;" onClick="return btnDisplayInfo_onclick()"><spring:message code='ezApprovalG.t1042'/></span></a>
+											<a class="imgbtn imgbck" style="margin:auto;"><span style="padding-top:1.2px;" onClick="return btnDisplayInfo_onclick()"><spring:message code='ezApprovalG.t1042'/></span></a>
 										</td>
 									</tr>
 								</table>
