@@ -1514,7 +1514,6 @@ function SaveApproveInfo(pApproveFlag) {
     			}
     		}
     	}
-    	
     }
 
     if (pHasAttachYN == "") {

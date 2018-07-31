@@ -630,10 +630,10 @@
                 <td><a class="imgbtn imgbck" style="height: 21px; margin-top: 2px;"><span id="btnAddSepAttach" onClick="return btnAddSepAttach_onclick()" style="line-height: 22px;" ><spring:message code='ezApprovalG.t949'/></span></a></td>
               </tr>
               <tr>
-             	<td id="blank_1" colspan="2" style="display: none">&nbsp;</td>
+             	<td id="blank_1" colspan="2" style="display: none;background-color: #f8f8fa;">&nbsp;</td>
               </tr>
               <tr>
-              	<td id="blank_2" colspan="2" style="display: none">&nbsp;</td>
+              	<td id="blank_2" colspan="2" style="display: none;background-color: #f8f8fa;">&nbsp;</td>
               </tr>
             </table></td>
           <td style="vertical-align:top" ><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1071'/></h2>
@@ -702,10 +702,10 @@
                 <table class="file">
 	                <tr>
 		                <th id="btn_Attach" style="font-weight: normal; text-align: left; padding-right: 58px;"><spring:message code='ezApprovalG.t65'/></th>
-		                <td ><div id="lstAttachLink"></div></td>
-	                    <td >
-                            <a href="#" class="imgbtn imgbck">
-                                <span onclick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t268'/></span>
+		                <td style="border-right: 0px;"><div id="lstAttachLink"></div></td>
+	                    <td style="border-left: 0px;">
+                            <a href="#" class="imgbtn imgbck" style="height: 44px; margin: 0px;">
+                                <span onclick="return btnFileAttach_onclick()" style="line-height: 45px;"><spring:message code='ezApprovalG.t268'/></span>
                             </a>
                         </td>
 	                </tr>

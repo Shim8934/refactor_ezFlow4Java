@@ -716,7 +716,7 @@
 		
 		            settaskchrger_cross_dialogArguments[0] = para;
 		
-		            var OpenWin = window.open(url, "SetTaskChrger_Cross", GetOpenWindowfeature(600, 415));
+		            var OpenWin = window.open(url, "SetTaskChrger_Cross", GetOpenWindowfeature(790, 490));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -974,7 +974,7 @@
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnRegAttach_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "schedule_select_attendant", GetOpenWindowfeature(705, 400));
+		            var OpenWin = window.open(url, "schedule_select_attendant", GetOpenWindowfeature(880, 615));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		    }
@@ -1584,7 +1584,7 @@
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
-	    <h1><span id="imgTitle"></span>&nbsp;<span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
+	    <h1><span id="imgTitle" style="font-size:15px"></span>&nbsp;<span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 			<span style="float:right;font-weight:normal;color:black;">
 				<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 					<option selected="" value="rad_Subject" id="rad1"><spring:message code='ezApprovalG.t106'/></option>

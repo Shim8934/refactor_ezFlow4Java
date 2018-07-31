@@ -35,7 +35,7 @@
 	            	url : "/admin/ezBoard/setUnderBoardAcl.do",
 	            	data : {boardID : pBoardID, type : type},
 	            	success : function(){
-	            		alert("<spring:message code='ezBoard.t79' />.")
+	            		alert("<spring:message code='ezBoard.t79' />")
 		                window.close();
 	            	},
 	            	error : function(error){
