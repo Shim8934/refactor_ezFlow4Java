@@ -8533,18 +8533,34 @@
 	
 	<select id ="EzApprovalG.getAccessYNG" parameterClass="Map" resultClass="String" remapResults="true">
 		<isEqual property="v_FLAG" compareValue="001">
-			<![CDATA[
-				SELECT 
-					TRIM(PUBLICITYCODE) 
-		        FROM 
-		        	TBL_EXPENDAPRDOCINFO 
-		        WHERE  
-		        	DOCID = #v_DOCID#
-		        AND
-					TENANT_ID = #v_TENANTID#
-				AND
-	      			COMPANYID = #companyID#					
-			]]>
+			<isEqual property="approvalFlag" compareValue="G">
+				<![CDATA[
+					SELECT 
+						PUBLICITYYN 
+			        FROM 
+			        	TBL_EXPENDAPRDOCINFO 
+			        WHERE  
+			        	DOCID = #v_DOCID#
+			        AND
+						TENANT_ID = #v_TENANTID#
+					AND
+		      			COMPANYID = #companyID#					
+				]]>
+			</isEqual>
+			<isNotEqual property="approvalFlag" compareValue="G">
+				<![CDATA[
+					SELECT 
+						PUBLICITYCODE 
+			        FROM 
+			        	TBL_EXPENDAPRDOCINFO 
+			        WHERE  
+			        	DOCID = #v_DOCID#
+			        AND
+						TENANT_ID = #v_TENANTID#
+					AND
+		      			COMPANYID = #companyID#					
+				]]>
+			</isNotEqual>
 		</isEqual>
 		
 		<isEqual property="v_FLAG" compareValue="002">
@@ -16185,6 +16201,7 @@
              ELECTRONICRECFLAG ,
              SPECIALRECORDCODE ,
              PUBLICITYCODE ,
+             PUBLICITYYN ,
              LIMITRANGE ,
              MANUALREGFLAG ,
              REGISTERDATE ,
@@ -18165,6 +18182,7 @@
    		SET 
    			SpecialRecordCode = #v_SPECIALREC#,
 			PublicityCode = #v_PUBCODE#,
+			PublicityYn = #v_PUBCODE2#,
 			LimitRange = #v_LIMITRANGE# 
 		WHERE 
 			RecordID = #v_RECORDID#
@@ -18180,6 +18198,7 @@
    		SET 
    			SpecialRecordCode = #v_SPECIALREC#,
 			PublicityCode = #v_PUBCODE#,
+			PublicityYn = #v_PUBCODE2#,
 			LimitRange = #v_LIMITRANGE# 
         WHERE 
         	DOCID = (	
@@ -24133,7 +24152,7 @@
 	  				PUBLICITYCODE = #v_PUBLICITYCODE#
 	  		</isEqual>
 	  		
-	  		<isNotEqual property="v-MODE" compareValue="E">
+	  		<isNotEqual property="v_MODE" compareValue="E">
 	  			UPDATE 
 	  				TBL_EXPAPRDOCINFO 
 	  			SET 

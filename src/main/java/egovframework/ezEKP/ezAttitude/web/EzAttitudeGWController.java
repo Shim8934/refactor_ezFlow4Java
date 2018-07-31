@@ -136,7 +136,7 @@ public class EzAttitudeGWController {
 			String mode = request.getParameter("mode");
 			String adminId = request.getParameter("adminId");
 			String checkAttitude = "";
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, adminId);
 			
 			if (typeId.equals("A01") || typeId.equals("A02") || typeId.equals("A03") || typeId.equals("A08")) {
 				checkAttitude = ezAttitudeService.getIsAttitude(typeId, userId, startDate, info.getOffSet(), info.getCompanyId(), info.getTenantId());
@@ -1096,7 +1096,7 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			List<HolidayVO> holidayList = ezAttitudeService.getHolidayList("", companyId, tenantId);
+			List<HolidayVO> holidayList = ezAttitudeService.getHolidayList("rest", companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -294,7 +294,7 @@
 			<input name="StartNum" id="StartNum" type="text" size="4" onkeyup="fn_onlyNumber(this)" onkeydown="return checkForNumber()">
 			~
 			<input name="EndNum" id="EndNum" type="text" size="4" onkeyup="fn_onlyNumber(this)" onkeydown="return checkForNumber()">
-			<a class="imgbtn" style="vertical-align:middle"><span onclick="return PrintLimit_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>  
+			<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="return PrintLimit_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>  
 			<span id = countInfo class="point"> </span>
 		</td>
 	</tr>

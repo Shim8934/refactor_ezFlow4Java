@@ -110,15 +110,19 @@
 </SCRIPT>
 </head>
 <body class="popup" >
-
 <h1><spring:message code='ezApprovalG.t1176'/></h1>
-<div id="close"><ul><li><span onClick="return cmdConfirm_onclick()"></span></li></ul></div>
-
-<h2 id="tdTitle"> <spring:message code='ezApprovalG.t1179'/></h2>
-<div class="listview"   id="divList" style="width:100%;HEIGHT:200px; overflow:auto;">
+	<div id="close">
+		<ul>
+			<li>
+				<span onClick="return cmdConfirm_onclick()"></span>
+			</li>
+		</ul>
+	</div>
+<h2 id="tdTitle" class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1179'/></h2>
+<div class="listview" id="divList" style="width:100%;HEIGHT:200px; overflow:auto;">
     <div ID="lvtDoclist"></div>
 </div>
-<h2 style="margin-top:5px" > <spring:message code='ezApprovalG.t626'/></h2>
-<TextArea id="txtChangeReason" Style="width:99%; height:80px; resize:none;" readonly ></TextArea>
+<h2 class="h2_dot" style="margin-top:5px; font-weight: normal;"><spring:message code='ezApprovalG.t626'/></h2>
+<TextArea id="txtChangeReason" Style="width:99%; height:130px; resize:none; overflow: auto;" readonly></TextArea>
 </body>
 </html>

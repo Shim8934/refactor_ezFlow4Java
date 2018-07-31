@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.w3c.dom.Document;
 
@@ -278,11 +279,11 @@ public interface EzBoardService {
 	public void moveOneLineReply(String orgBoardID, String orgItemID, String destBoardID, String destItemID) throws Exception;
 
 	//2018-06-07 김혜정
-	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> accessBoardList, int pMode) throws Exception;
+	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode) throws Exception;
 
 	//2018-06-08 김혜정
-	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> accessBoardList, int pMode) throws Exception;
-
+	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode) throws Exception;
+	
 	//2018-06-11 홍승비
 	public String getLastImageID(String boardID, String itemID, int tenantID) throws Exception;
 	
