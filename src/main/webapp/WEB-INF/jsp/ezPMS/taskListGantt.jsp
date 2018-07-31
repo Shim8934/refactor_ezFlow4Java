@@ -84,6 +84,7 @@
 	   					userRoleId = result.userRoleId;
 	   					initValues();
 	   					ge.loadTasks(ganttData.tasks);
+	   					ge.redraw();
 	   				}	
 	   			});
 	   		}
