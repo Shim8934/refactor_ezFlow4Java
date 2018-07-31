@@ -8435,7 +8435,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             rtnXML.append("<WRITERNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent())) + "</WRITERNAME2>");
             rtnXML.append("<WRITERJOBTITLE2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERJOBTITLE2").item(0).getTextContent())) + "</WRITERJOBTITLE2>");
             rtnXML.append("<WRITERDEPTNAME2>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent())) + "</WRITERDEPTNAME2>");
-            rtnXML.append("<PUBLICITYYN>" + makeXMLString(makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent())) + "</PUBLICITYYN>");
+            rtnXML.append("<PUBLICITYYN>" + makeXMLString(makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent())).trim() + "</PUBLICITYYN>");
 		} else {
 			for (int k = 0; k < selecteds.length; k++) {
 				if (!selecteds[k].trim().equals("")) {
@@ -19119,7 +19119,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<CABTITLE><![CDATA[" + makeListField(docXML.getElementsByTagName("CABTITLE").item(0).getTextContent()) + "]]></CABTITLE>");
 		resultXML.append("<SPECIALRECCODE><![CDATA[" + getSpecialRecString(makeListField(docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent()), companyID, lang, tenantID) + "]]></SPECIALRECCODE>");
 		resultXML.append("<PUBLICCODE>" + getPublicCodeString((docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent()), companyID, lang, tenantID) + "</PUBLICCODE>");
-		resultXML.append("<PUBLICCODE2>" + makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent()) + "</PUBLICCODE2>");
+		resultXML.append("<PUBLICCODE2>" + makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent()).trim() + "</PUBLICCODE2>");
 		resultXML.append("<LIMITRANGE>" + makeListField(docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent()) + "</LIMITRANGE>");
 		resultXML.append("<CONFIRMFLAG>" + makeListField(docXML.getElementsByTagName("CONFIRMFLAG").item(0).getTextContent()) + "</CONFIRMFLAG>");
 		resultXML.append("<CATATRANSFLAG>" + makeListField(docXML.getElementsByTagName("CATALOGTRANSFERFLAG").item(0).getTextContent()) + "</CATATRANSFLAG>");
@@ -19495,7 +19495,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<ELECTRONICRECFLAG>" + makeListField(docXML.getElementsByTagName("ELECTRONICRECFLAG").item(0).getTextContent()) + "</ELECTRONICRECFLAG>");
 		resultXML.append("<SPECIALRECCODE>" + makeListField(docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent()) + "</SPECIALRECCODE>");
 		resultXML.append("<PUBLICCODE>" + makeListField(docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent()) + "</PUBLICCODE>");
-		resultXML.append("<PUBLICCODE2>" + makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent()) + "</PUBLICCODE2>");
+		resultXML.append("<PUBLICCODE2>" + makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent()).trim() + "</PUBLICCODE2>");
 		resultXML.append("<LIMITRANGE>" + makeListField(docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent()) + "</LIMITRANGE>");
 		resultXML.append("<MANUALREGFLAG>" + makeListField(docXML.getElementsByTagName("MANUALREGFLAG").item(0).getTextContent()) + "</MANUALREGFLAG>");
 		resultXML.append("<SEPATTACHNO>" + makeListField(docXML.getElementsByTagName("SEPERATEATTACHNO").item(0).getTextContent()) + "</SEPATTACHNO>");
