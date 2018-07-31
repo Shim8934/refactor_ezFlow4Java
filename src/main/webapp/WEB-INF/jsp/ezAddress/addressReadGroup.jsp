@@ -29,8 +29,6 @@
 		    var ReturnFunction;
 		    
 			window.onload = function () {
-				window.resizeTo(370,560);
-				
 				try {
 					ReturnFunction = parent.address_group_edit_dialogArguments[0];
 			    } catch (e) {
@@ -39,6 +37,12 @@
 			        } catch (e) {
 			        }
 			    }
+			    
+			    document.getElementById("ListMember").style.height = document.documentElement.clientHeight - 165 + "px";
+			}
+			
+			window.onresize = function () {
+				document.getElementById("ListMember").style.height = document.documentElement.clientHeight - 165 + "px";
 			}
 			
 			function show_personinfo(whoto) {
@@ -47,8 +51,12 @@
 			        userid = creatorid;
 			    else
 			        userid = modifierid;
+			    
+			    // 2018.07.26  - 팝업을 창 가운데 띄우도록 개선 (재은 수정)
+				var popupX = Math.ceil((window.screen.width - 500)/2);
+				var popupY = Math.ceil((window.screen.height - 500)/2);
 		
-			    window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			    window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + popupX + ",top=" + popupY);
 			}
 			function modify_address() {
 				if (creatorid != userid && modifierid != userid) {
@@ -72,47 +80,52 @@
 				window.close();
 			}
 		    function write_letter() {
-		        var xmlHTTP = createXMLHttpRequest();
-		        var xmlDom = createXmlDom();
-		
-		        var objNode, objRow, objRows, objRowRow;
-		        objNode = createNodeInsert(xmlDom, objNode, "DATA");
-		        createNodeAndInsertText(xmlDom, objNode, "ADDRESSID", addressid);
-		        createNodeAndInsertText(xmlDom, objNode, "FOLDERTYPE", foldertype);
-		
-		        /* if(foldertype == "P")
-		            xmlHTTP.open("POST", "RemoteEWS/address_get_groupemail.aspx", false);
-		        else
-		            xmlHTTP.open("POST", "Remote/address_get_groupemail.aspx", false); */
-		        xmlHTTP.open("POST", "/ezAddress/addressGetGroupEmail.do", false);
-		        
-		        xmlHTTP.send(xmlDom);
-		        xmlDom = loadXMLString(xmlHTTP.responseText);
-		        var email = "";
-		        var emailRows = SelectNodes(xmlDom, "DATA/ROW");
-		        
-                if (emailRows.length > 0) {
-                    var addrname = getNodeText(document.getElementById("TextName"));
-                    if (foldertype == "P")
-                        var addremail = addressid + "|!|P";
-                    else
-                        var addremail = addressid + "|!|D";
-
-                    if (email == "")
-                        email = "\"" + addrname + "\" <" + addremail + ">";
-                    else
-                        email += ",\"" + addrname + "\" <" + addremail + ">";
-                }
-		        		        
-		        var pheight = window.screen.availHeight;
-		        var conHeight = pheight * 0.8;
-		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
-		        
-	            window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
-	            	"top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		    }
+			    if(document.getElementById("ListMember").length > 0){
+			                
+			        var xmlHTTP = createXMLHttpRequest();
+			        var xmlDom = createXmlDom();
+			
+			        var objNode, objRow, objRows, objRowRow;
+			        objNode = createNodeInsert(xmlDom, objNode, "DATA");
+			        createNodeAndInsertText(xmlDom, objNode, "ADDRESSID", addressid);
+			        createNodeAndInsertText(xmlDom, objNode, "FOLDERTYPE", foldertype);
+			
+			        /* if(foldertype == "P")
+			            xmlHTTP.open("POST", "RemoteEWS/address_get_groupemail.aspx", false);
+			        else
+			            xmlHTTP.open("POST", "Remote/address_get_groupemail.aspx", false); */
+			        xmlHTTP.open("POST", "/ezAddress/addressGetGroupEmail.do", false);
+			        
+			        xmlHTTP.send(xmlDom);
+			        xmlDom = loadXMLString(xmlHTTP.responseText);
+			        var email = "";
+			        var emailRows = SelectNodes(xmlDom, "DATA/ROW");
+			        
+	                if (emailRows.length > 0) {
+	                    var addrname = getNodeText(document.getElementById("TextName"));
+	                    if (foldertype == "P")
+	                        var addremail = addressid + "|!|P";
+	                    else
+	                        var addremail = addressid + "|!|D";
+	
+	                    if (email == "")
+	                        email = "\"" + addrname + "\" <" + addremail + ">";
+	                    else
+	                        email += ",\"" + addrname + "\" <" + addremail + ">";
+	                }
+			        		        
+			        var pheight = window.screen.availHeight;
+			        var conHeight = pheight * 0.8;
+			        var pwidth = window.screen.availWidth;
+			        var pTop = (pheight - conHeight) / 2;
+			        var pLeft = (pwidth - 890) / 2;
+			        
+		            window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
+		            	"top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+			    } else {
+			    	alert(document.getElementById("TextName").innerText + " <spring:message code='ezAddress.t277' />");
+			    }
+			}
 		</script>
 	</head>
 	<body class="popup">
@@ -136,28 +149,38 @@
 		    <table  class="content">
 		      <tr>
 		        <th><spring:message code='ezAddress.t304' /></th>
-		        <td><span id="TextName"><c:out value='${addressInfo.sName}' /></span></td>
+		        <td colspan="3"><span id="TextName"><c:out value='${addressInfo.sName}' /></span></td>
 		      </tr>
 		      <tr>
 		        <th><spring:message code='ezAddress.t286' /></th>
-		        <td title="<spring:message code='ezAddress.t287' />" style="CURSOR:pointer" onClick="show_personinfo(0)"><span id="TextCreator"><c:out value='${addressInfo.creatorName}' /></span></td>
+		        <td title="<spring:message code='ezAddress.t287' />" style="cursor:pointer;width:50%;" onClick="show_personinfo(0)"><span id="TextCreator"><c:out value='${addressInfo.creatorName}' /></span></td>
+		        <th><spring:message code='ezAddress.t289' /></th>
+		        <td title="<spring:message code='ezAddress.t287' />" style="cursor:pointer" onClick="show_personinfo(1)"><span id="TextModifier"><c:out value='${addressInfo.modifierName}' /></span></td>
 		      </tr>
 		      <tr>
 		        <th><spring:message code='ezAddress.t288' /></th>
-		        <td><span id="TextCreateDate"><c:out value='${addressInfo.createDate}' /></span></td>
-		      </tr>
-		      <tr>
-		        <th><spring:message code='ezAddress.t289' /></th>
-		        <td title="<spring:message code='ezAddress.t287' />" style="CURSOR:pointer" onClick="show_personinfo(1)"><span id="TextModifier"><c:out value='${addressInfo.modifierName}' /></span></td>
-		      </tr>
-		      <tr>
+		        <td style="width:50%;"><span id="TextCreateDate"><c:out value='${addressInfo.createDate}' /></span></td>
 		        <th><spring:message code='ezAddress.t290' /></th>
-		        <td><span id="TextModifyDate"><c:out value='${addressInfo.modifyDate}' /></span></td>
+		        <td style="width:50%;"><span id="TextModifyDate"><c:out value='${addressInfo.modifyDate}' /></span></td>
+		      </tr>
+		      <tr>
+		        
+		      </tr>
+		      <tr>
+		        
 		      </tr>
 		    </table>
-		    <div class="nobox" style="margin-top:10px;">
-		    	     <select id="ListMember" name="ListMember" style="width:100%;height:258px;overflow:auto" size="4">${listMember}</select>
-		  	</div>
+		    
+		    <div id="ListMember" style="width:100%;height:415px;margin-top:10px;padding:0;overflow:auto;border:1px solid #d2d2d2;">
+			    <table style="width:100%;">
+			    	<c:forEach items="${listMember}" var="member">
+				    	<tr onmouseover="" style="height:20px;border-bottom:1px solid #d2d2d2;">
+				    		<td style="padding:6px;" title="${member}">${member}</td>
+				    	</tr>
+			    	</c:forEach>
+			    </table>
+		    </div>
+		    
 		  </div>
 		  <div id="printScreen" style="DISPLAY: none">
 		    <table class="content">

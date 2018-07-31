@@ -472,7 +472,7 @@
 <table style="width: 100%;">
 	<tr>
 		<td colspan="2">
-			<h2 style="font-weight: normal; margin-top: 4px;">▒ <spring:message code='ezApprovalG.t1018'/></h2>
+			<h2 class="h2_dot" style="font-weight: normal; margin-top: 4px;"><spring:message code='ezApprovalG.t1018'/></h2>
 		</td>
 	</tr>
 	<tr>
@@ -520,7 +520,7 @@
     <td style="vertical-align:top"><table>
         <tr>
           <td style="vertical-align:top;width:100%;height:419px;">
-          <h2 style="font-weight: normal;">▒ <spring:message code='ezApprovalG.t1066'/></h2>
+          <h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1066'/></h2>
             <table style="width:100%" id="tbBasicInfo" class="content" >
               <tr>
                 <th><spring:message code='ezApprovalG.t859'/></th>
@@ -536,15 +536,15 @@
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t831'/></th>
-                <td><input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regY}" name="txtRegY" id="txtRegY" maxlength = "4" size="4">
+                <td><input type="text" class="text" style="height:25px;padding:0px;margin:0px;" value="${regY}" name="txtRegY" id="txtRegY" maxlength = "4" size="4">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t456'/></span>
-                  <input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" value="${regM}" name="txtRegM"  id="txtRegM" maxlength = "2" size="2">
+                  <input type="text" class="text" style="height:25px;padding:0px;margin:0px;" value="${regM}" name="txtRegM"  id="txtRegM" maxlength = "2" size="2">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
-                  <input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" value="${regD}" name="txtRegD"  id="txtRegD" maxlength = "2" size="2">
+                  <input type="text" class="text" style="height:25px;padding:0px;margin:0px;" value="${regD}" name="txtRegD"  id="txtRegD" maxlength = "2" size="2">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regH}" name="txtRegH"  id="txtRegH" maxlength = "2" size="2">
+                  <input type="text" class="text" style="height:25px;padding:0px;margin:0px;" value="${regH}" name="txtRegH"  id="txtRegH" maxlength = "2" size="2">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t977'/></span>
-                  <input type="text" class="text" style="height:16px;padding:0px;margin:0px;" value="${regMi}"  name="txtRegMi"  id="txtRegMi" maxlength = "2" size="2">
+                  <input type="text" class="text" style="height:25px;padding:0px;margin:0px;" value="${regMi}"  name="txtRegMi"  id="txtRegMi" maxlength = "2" size="2">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t1068'/></span></td>
               </tr>
               <tr>
@@ -564,11 +564,11 @@
               </tr>
               <tr>
                 <th ><spring:message code='ezApprovalG.t863'/></th>
-                <td><input type="text" class="text" style="Width:40px;height:16px;padding:0px;margin:0px;" name="txtExeY" id="txtExeY" maxlength = "4">
+                <td><input type="text" class="text" style="height:25px;padding:0px;margin:0px;" name="txtExeY" id="txtExeY" maxlength = "4" size="4">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t456'/></span>
-                  <input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" name="txtExeM"  id="txtExeM" maxlength = "2">
+                  <input type="text" class="text" style="height:25px;padding:0px;margin:0px;" name="txtExeM"  id="txtExeM" maxlength = "2" size="2">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t968'/></span>
-                  <input type="text" class="text" style="Width:25px;height:16px;padding:0px;margin:0px;" name="txtExeD"  id="txtExeD" maxlength = "2">
+                  <input type="text" class="text" style="height:25px;padding:0px;margin:0px;" name="txtExeD"  id="txtExeD" maxlength = "2" size="2">
                   <span style="height:14px;padding:0px;margin:0px;vertical-align:middle;"><spring:message code='ezApprovalG.t662'/></span></td>
               </tr>
               <tr>
@@ -607,7 +607,7 @@
                 <td><a class="imgbtn imgbck" style="height: 21px; margin-top: 2px;"><span id="btnAddSepAttach" onClick="return btnAddSepAttach_onclick()" style="line-height: 22px;" ><spring:message code='ezApprovalG.t949'/></span></a></td>
               </tr>
             </table></td>
-          <td style="padding-left:5px;vertical-align:top" ><h2 style="font-weight: normal;">▒ <spring:message code='ezApprovalG.t1071'/></h2>
+          <td style="padding-left:5px;vertical-align:top" ><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1071'/></h2>
             <table style="width:<%if("${userInfo.lang}"=="1"){%>375<%}else{%>494<%}%>px"  class="content">
               <tr>
                 <th ><spring:message code='ezApprovalG.t875'/></th>
@@ -648,7 +648,7 @@
             </table>
             <div id="divAudioVisualDummy" style="display:none"> </div>
             <div id="divAudioVisual">
-              <h2 style="font-weight: normal;">▒ <spring:message code='ezApprovalG.t1074'/></h2>
+              <h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1074'/></h2>
               <%-- <table style="width:<%if("${userInfo.lang}"=="1"){%>375<%}else{%>410<%}%>px" class="content"> --%>
               <table style="width:100%;" class="content">
                 <tr>

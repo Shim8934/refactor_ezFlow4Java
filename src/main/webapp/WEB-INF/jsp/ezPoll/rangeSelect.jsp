@@ -27,6 +27,8 @@
         	var retArr = new Array();
         	var langData = "${langData}";
         	var primary = "${primary}";
+        	var targetId = "";
+        	var targetName = "";
         	
         	window.onload = function () {
             	var InitData = "";
@@ -309,6 +311,7 @@
 	                listview.DataBind("OrganListView");
 	                listview.DataSource(loadXMLString(result));
 	                listview.RowDataBind();
+	                focusResult(listview.GetDataRows());
 	        	},
 	        	error : function(error){
 	        		alert("<spring:message code='ezBoard.t22'/>" + error);	
@@ -348,6 +351,9 @@
             	cnkeyword.focus();
             	return;
         	}
+        	
+        	targetName = cnkeyword.value.trim();
+        	
         	var count;
         	var adCount = 0;
         	var xmlDOM = createXmlDom();
@@ -408,6 +414,9 @@
     	}
 	    function cnsearch_click_Complete(RetValue) {
     	    if (RetValue["deptid"] != "") {
+    	    	targetId = RetValue["userid"];
+    	    	targetName = RetValue["username"];
+    	    	
         	    bSearch = true;
             	xmlHttp_Depttree = null;
             	xmlHttp_Depttree = createXMLHttpRequest();
@@ -687,6 +696,28 @@
 	            }
         	}
     	}    	
+    	
+    	function focusResult(list){
+    		var targetRow = list.filter(function(elem){
+    			if(targetId){
+    				return elem.getAttribute("data2") === targetId;
+    			} else {
+	    			return elem.getAttribute("data4") === targetName.trim();
+    			}
+    		});
+    		
+    		var organListView = document.getElementById("OrganListView");
+    		var organTh = document.getElementById("Organ_TH");
+    		
+    		if(targetRow && targetRow.length > 0){
+    			organListView.scrollTop = targetRow[0].offsetTop - ( targetRow[0].offsetHeight * 2 + organTh.offsetHeight );
+    			targetRow[0].click();
+	    		targetName = "";
+	    		targetId = "";
+    		}
+    		
+    		return;
+    	}
 		</script>
 		<style>
 			.mainlist tr th {border-top:0px}

@@ -1263,7 +1263,7 @@ function openAaprDocAttachUI()
 	try{
 		var parameter = pDocID;
 		var url = "/ezApprovalG/aprCabinetAttach.do";
-		var feature	= "status:no;dialogWidth:850px;dialogHeight:500px;edge:sunken;scroll:no;help:no"; 
+		var feature	= "status:no;dialogWidth:1050px;dialogHeight:500px;edge:sunken;scroll:no;help:no"; 
 		var ret = window.showModalDialog(url,parameter,feature);
 
 		if (ret != "cancel") {

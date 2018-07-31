@@ -3467,9 +3467,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	                                        }
 	                                    }								
 	                                    // there are cases where an in-line image part doesn't have
-	                                    // a Content-Disposition header, but has a Content-ID header.    								
+	                                    // a Content-Disposition header, but has a Content-ID header.
+	    								// 첨부파일 파트나 본문 파트에도 Content-ID가 있을 수 있어서 if문에 들어가지 않도록 조건을 추가함
 	    								else if (p instanceof MimePart 
-	    								        && ((MimePart)p).getContentID() != null) {
+	    								        && ((MimePart)p).getContentID() != null
+	    								        && !(p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
+	    								        && !p.isMimeType("text/*")) {
 	    								    String contentId = ((MimePart)p).getContentID();
 	    								    logger.debug("Existing ContentId=" + contentId);
 	    								    

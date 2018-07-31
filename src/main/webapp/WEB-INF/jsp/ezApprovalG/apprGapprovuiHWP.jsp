@@ -1004,7 +1004,7 @@
 			    function btnSave_onclick() {
 			        HwpCtrl.SetSaveMode(1);
 			        HwpCtrl.SetDocumentInfo(pFormID);
-			        HwpCtrl.SaveFile("", pDocID);
+			        HwpCtrl.SaveFile("", HwpCtrl.GetFieldText("doctitle"));
 			        HwpCtrl.ChangeMode(3);
 			    }
 			

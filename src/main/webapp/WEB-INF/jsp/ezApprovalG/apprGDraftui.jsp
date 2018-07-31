@@ -146,7 +146,7 @@
 			//회람
 			var type = "ING";
 			var pGongRamDocID = "";
-			var singImageType = "${signImageType}";
+			var signImageType = "${signImageType}";
 			var isUsed = "${isUsed}";
 			var beforeDocID = "${beforeDocID}";
 			var addLastKyulJeYN = "${addLastKyulJeYN}";

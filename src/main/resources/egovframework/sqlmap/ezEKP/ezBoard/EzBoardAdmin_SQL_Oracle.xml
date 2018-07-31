@@ -591,7 +591,7 @@
 		<![CDATA[
 			SELECT 
 				boardid,
-				boardname$lang$ boardname,
+				CASE WHEN (boardname$lang$ = '' OR boardname$lang$ IS NULL) THEN boardname ELSE boardname$lang$ END boardname,
 				treevieworder,
 				'' as boardcolor,
 				'' as gubun,
@@ -823,43 +823,43 @@
 				boardid, 	sn, 	name1, 		name2,	 	name3, 		name4, 		colname, 		width,		view_fg, tenant_id
 			)
 			VALUES(
-				#boardID#, 	#sn#, 	#name1#, 	#name2#,
+				#boardID#, 	#sn#,
 		]]>
 		<isEqual property="isInitHeader" compareValue="YES">
 			<isEqual property="colName" compareValue="ATTACHMENTS">
 				<![CDATA[
-					'添付', '附加', 
+					'첨부', 'Attachments', '添付', '附加', 
 				]]>
 			</isEqual>
 			<isEqual property="colName" compareValue="TITLE">
 				<![CDATA[
-					'件名', '标题', 
+					'제목', 'Title', '件名', '标题', 
 				]]>
 			</isEqual>
 			<isEqual property="colName" compareValue="WRITERDEPTNAME">
 				<![CDATA[
-					'部署', '部门', 
+					'부서', 'Department', '部署', '部门', 
 				]]>
 			</isEqual>
 			<isEqual property="colName" compareValue="WRITERNAME">
 				<![CDATA[
-					'作成者', '写作者', 
+					'게시자', 'Writer', '作成者', '写作者', 
 				]]>
 			</isEqual>
 			<isEqual property="colName" compareValue="WRITEDATE">
 				<![CDATA[
-					'掲示日', '发布日期', 
+					'게시일', 'Registered', '掲示日', '发布日期', 
 				]]>
 			</isEqual>
 			<isEqual property="colName" compareValue="READCOUNT">
 				<![CDATA[
-					'ヒット数', '查询数', 
+					'조회수', 'View', 'ヒット数', '查询数', 
 				]]>
 			</isEqual>
 		</isEqual>
 		<isNotEqual property="isInitHeader" compareValue="YES">
 			<![CDATA[
-				#name3#, 	#name4#, 
+				#name1#, #name2#, #name3#, #name4#, 
 			]]>
 		</isNotEqual>
 		<![CDATA[

@@ -282,11 +282,11 @@
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		</script>
 		
-		<table class="content">
+		<table class="content" style="width:415px">
 		  	<tr> 
 		    	<th><spring:message code = 'ezApprovalG.t1250' /></th>
 		    	<td id="SealName">
-		    		<input type="text" name="tbSealName" id="tbSealName" style="width: 140px">
+		    		<input type="text" name="tbSealName" id="tbSealName" style="width: 100%">
 		      		<%-- <iframe name="ifrm" id="ifrm" src="about:blank" style="display:none"></iframe>
 		      		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezApprovalG/deptSealUpload.do" target="ifrm">                    
 	            		<input type="text" name="tbSealName" id = "tbSealName" />
@@ -305,8 +305,8 @@
 	            <th><spring:message code = 'ezApprovalG.t00010' /></th>
 	            <td style="vertical-align:middle;">
 	                <input type="text" readonly id="filename" style="width:180px;">
-	                <a class="imgbtn"><label for="file1"><span><spring:message code = 'ezApprovalG.t1251' /></span></label></a>
-	                <a class="imgbtn"><span onclick="return btnDisplay_onclick()"><spring:message code = 'ezApprovalG.t1252' /></span></a>
+	                <a class="imgbtn imgbck"><label for="file1"><span><spring:message code = 'ezApprovalG.t1251' /></span></label></a>
+	                <a class="imgbtn imgbck"><span onclick="return btnDisplay_onclick()"><spring:message code = 'ezApprovalG.t1252' /></span></a>
 	            </td>
 	        </tr>
 		  	<tr> 
@@ -321,7 +321,9 @@
 		    	<td  id="tbRegUser"> </td>
 		  	</tr>
 		  	<tr>
-	            <td id="SIGNVIEW" colspan="2" style="text-align:center; padding-top:5px; padding-bottom:5px;"></td>
+	            <td colspan="2" style="text-align:center; padding-top:5px; padding-bottom:5px;">
+	            	<div id="SIGNVIEW" style="width:405px;height:165px;overflow:auto;"></div>
+	            </td>
 	        </tr>
 		</table>
 		

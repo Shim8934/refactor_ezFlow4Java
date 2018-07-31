@@ -41,6 +41,9 @@ public class EzMainAdminController {
 		String use_ezDMS = config.getProperty("config.Use_ezDMS");
 		String use_portal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
 		String firstScreenMail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
+		//2018-07-26 김보미 - 저널, 애티튜드 추가
+		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", userInfo.getTenantId());
+		String use_journal = ezCommonService.getTenantConfig("USE_JOURNAL", userInfo.getTenantId());
 		
 		String AdminActiveX = config.getProperty("config.AdminActiveX");
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
@@ -49,9 +52,19 @@ public class EzMainAdminController {
 		model.addAttribute("use_ezDMS", use_ezDMS);
 		model.addAttribute("use_portal", use_portal);
 		model.addAttribute("firstScreen_Mail", firstScreenMail);
+		//2018-07-26 김보미 - 저널, 애티튜드 추가
+		model.addAttribute("use_attitude", use_attitude);
+		model.addAttribute("use_journal", use_journal);
 		
 		if (firstScreenMail == null || firstScreenMail.equals("")) {
 			model.addAttribute("firstScreen_Mail", "NO");
+		}
+		//2018-07-26 김보미 - 저널, 애티튜드 널일때 처리
+		if (use_attitude == null || use_attitude.equals("")) {
+			model.addAttribute("use_attitude", "YES");
+		}
+		if (use_journal == null || use_journal.equals("")) {
+			model.addAttribute("use_journal", "YES");
 		}
 		
 		//baonk added

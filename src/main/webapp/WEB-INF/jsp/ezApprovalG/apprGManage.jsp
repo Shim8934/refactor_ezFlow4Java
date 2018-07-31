@@ -273,8 +273,20 @@
 		        var toDay = new Date();
 		        var toDayYear = parseInt(nowDate.substring(0,4));
 		        var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYaer);
-		        for (var i = toDayYear; i >= toDayYear - minusYear ; i--)
+				
+		        var cell = document.getElementById("sel_year");
+		        
+		        while(cell.hasChildNodes()) {
+		        	cell.removeChild(cell.firstChild);	
+		        }
+		        
+		        var defaultCell = '<spring:message code="ezApprovalG.kmsg01"/>';
+		        
+		        AddOption(sel_year, defaultCell, "ALL");
+		        
+		        for (var i = toDayYear; i >= toDayYear - minusYear ; i--) {
 		            AddOption(sel_year, i, i);
+		        }
 		            checkBujaeInfo();
 		        } catch (e) {
 		            hideProgress();
@@ -1779,7 +1791,7 @@
 		        <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
 		        <li style="vertical-align: middle;">
 		        	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">    
-		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
+		            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
 		        	</select>  
 		        </li>
 			</ul>
