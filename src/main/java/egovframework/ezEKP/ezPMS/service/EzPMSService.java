@@ -286,4 +286,6 @@ public interface EzPMSService {
 	public void updateTaskNameGantt (ProjectTaskVO taskVO, String taskType) throws Exception;
 	
 	public void updateTaskEndDate (int tenantId, long taskId) throws Exception;
+
+	public int getTaskOverProjectEndDate(Long projectId, int tenantId, String planEndDate);
 }

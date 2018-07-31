@@ -377,6 +377,7 @@ public class EzPMSController {
 
 		long projectId = 0;
 		long groupId = 0;
+		String roleCheck = "";
 		JSONObject json = new JSONObject();
 
 		try {
@@ -404,14 +405,18 @@ public class EzPMSController {
 				JSONObject resultValue = (JSONObject) result.get("data");
 				projectId = Long.parseLong(resultValue.get("projectId").toString());
 				groupId = Long.parseLong(resultValue.get("groupId").toString());
-
 			} else if (param.get("mode").equals("edit")) {// 프로젝트 수정 url로 넘김
 				projectId = Long.parseLong(param.get("projectId").toString());
 				groupId = Long.parseLong(param.get("groupId").toString());
 				url += "/" + projectId;
 				result = commonUtil.getJsonFromRestApi(url, param, request, "put", jsonList);
-			}
 
+				JSONObject resultValue = (JSONObject) result.get("data");
+				roleCheck = resultValue.get("roleCheck").toString();
+				
+			}
+			
+			json.put("roleCheck", roleCheck);
 			json.put("projectId", projectId);
 			json.put("groupId", groupId);
 

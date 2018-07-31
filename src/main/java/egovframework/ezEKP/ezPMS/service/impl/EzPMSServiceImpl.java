@@ -3543,4 +3543,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ezPMSDAO.updateTaskEndDate(map);
 		
 	}
+
+	@Override
+	public int getTaskOverProjectEndDate(Long projectId, int tenantId, String planEndDate) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		map.put("planEndDate", planEndDate);
+		
+		return ezPMSDAO.getTaskOverProjectEndDate(map);
+	}
 }

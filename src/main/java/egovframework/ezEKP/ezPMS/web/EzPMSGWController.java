@@ -645,10 +645,12 @@ public class EzPMSGWController {
 
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
+			String deptId = info.getDeptId();
 
 			ProjectInfoVO project = new ProjectInfoVO();
 			project.setProjectId(projectId);
@@ -661,45 +663,59 @@ public class EzPMSGWController {
 			project.setHeadManagerId(request.getParameter("headManagerId"));
 			project.setCreateDate(request.getParameter("createDate"));
 			project.setMailRepeat(Integer.parseInt(request.getParameter("mailRepeat")));
+			
+			String roleCheck = "";
+			String planEndDate = request.getParameter("planEndDate");
+			int projectListCount  = ezPMSService.getTaskOverProjectEndDate(projectId, tenantId, planEndDate);
+			
+			LOGGER.debug("taskOverProjectEndDate Count : " + projectListCount);
+			
+			if (projectListCount <= 0) {
+				ezPMSService.updateProject(project, tenantId, companyId, lang);
 
-			ezPMSService.updateProject(project, tenantId, companyId, lang);
+				// 멤버 삭제 후 다시 넣기
+				ezPMSService.deleteProjectMember(projectId, tenantId);
 
-			// 멤버 삭제 후 다시 넣기
-			ezPMSService.deleteProjectMember(projectId, tenantId);
+				List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) json.get("managerList");
+				projectMemberList.addAll((List<Map<String, Object>>) json.get("participantList"));
+				projectMemberList.addAll((List<Map<String, Object>>) json.get("viewerList"));
 
-			List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) json.get("managerList");
-			projectMemberList.addAll((List<Map<String, Object>>) json.get("participantList"));
-			projectMemberList.addAll((List<Map<String, Object>>) json.get("viewerList"));
+				for (int i = 0; i < projectMemberList.size(); i++) {
+					String pUserId = (String) projectMemberList.get(i).get("userId");
+					String userIdType = (String) projectMemberList.get(i).get("userIdType");
 
-			for (int i = 0; i < projectMemberList.size(); i++) {
-				String userId = (String) projectMemberList.get(i).get("userId");
-				String userIdType = (String) projectMemberList.get(i).get("userIdType");
+					ProjectMemberVO member = ezPMSService.getUserInfo(pUserId, tenantId, userIdType);
+					member.setMemberRoleId((int) projectMemberList.get(i).get("memberRoleId"));
+					member.setProjectId(projectId);
+					member.setUserIdType(userIdType);
 
-				ProjectMemberVO member = ezPMSService.getUserInfo(userId, tenantId, userIdType);
-				member.setMemberRoleId((int) projectMemberList.get(i).get("memberRoleId"));
-				member.setProjectId(projectId);
-				member.setUserIdType(userIdType);
+					ezPMSService.addProjectMember(member, tenantId);
+				}
 
-				ezPMSService.addProjectMember(member, tenantId);
+				long groupId = Long.parseLong(request.getParameter("groupId"));
+				// 프로젝트 정보를 프로젝트와 같은 이름의 최상위 그룹 정보도 바꿈
+				ProjectGroupVO groupInfo = new ProjectGroupVO();
+				groupInfo.setGroupName(request.getParameter("projectName"));
+				groupInfo.setGroupId(groupId);
+				groupInfo.setProjectId(Long.parseLong(request.getParameter("projectId")));
+				groupInfo.setOverview(request.getParameter("overview"));
+				groupInfo.setTenantId(info.getTenantId());
+				groupInfo.setUpperGroupId(0L);
+				groupInfo.setHeadManagerId(request.getParameter("headManagerId"));
+				groupInfo.setPlanStartDate(request.getParameter("planStartDate"));
+				groupInfo.setPlanEndDate(request.getParameter("planEndDate"));
+
+				ezPMSService.updateGroup(groupInfo, lang);
+				
+				roleCheck = "permitted";
+			} else {
+				roleCheck = "rejected";
 			}
-
-			long groupId = Long.parseLong(request.getParameter("groupId"));
-			// 프로젝트 정보를 프로젝트와 같은 이름의 최상위 그룹 정보도 바꿈
-			ProjectGroupVO groupInfo = new ProjectGroupVO();
-			groupInfo.setGroupName(request.getParameter("projectName"));
-			groupInfo.setGroupId(groupId);
-			groupInfo.setProjectId(Long.parseLong(request.getParameter("projectId")));
-			groupInfo.setOverview(request.getParameter("overview"));
-			groupInfo.setTenantId(info.getTenantId());
-			groupInfo.setUpperGroupId(0L);
-			groupInfo.setHeadManagerId(request.getParameter("headManagerId"));
-			groupInfo.setPlanStartDate(request.getParameter("planStartDate"));
-			groupInfo.setPlanEndDate(request.getParameter("planEndDate"));
-
-			ezPMSService.updateGroup(groupInfo, lang);
+			
 
 			JSONObject data = new JSONObject();
 			data.put("projectId", projectId);
+			data.put("roleCheck", roleCheck);
 
 			result.put("status", "ok");
 			result.put("code", 0);
