@@ -332,9 +332,7 @@
        			FROM
        				TBL_PS_LIGHTPOLL 
       			WHERE
-      				( COMPANYID = #v_pCompanyID#
-               	OR
-               		COMPANYID = 'Top' )
+      				COMPANYID = #v_pCompanyID#
                	AND
                		TENANT_ID = #tenantID#
        			ORDER BY
@@ -395,9 +393,7 @@
            	AND
            		USERID = #v_pUserID#
    			WHERE
-   				(COMPANYID = #v_pCompanyID#
-            		OR
-            	COMPANYID = 'Top' )
+   				COMPANYID = #v_pCompanyID#
             AND
             	STARTDATE < DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
             AND
