@@ -394,7 +394,7 @@ function setDefaultGroup(){
 		<div id="close" style="float:right">
 		<ul>
 			<li>
-				<span id="cancel" onclick="popupClose()"></span>
+				<span id="cancel" onclick="windowClose()"></span>
 			</li>
 		</ul>
 		</div>
