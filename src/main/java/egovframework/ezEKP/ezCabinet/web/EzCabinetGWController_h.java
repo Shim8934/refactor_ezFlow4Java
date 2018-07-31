@@ -518,8 +518,6 @@ public class EzCabinetGWController_h {
 		String dateTime   = request.getParameter("dateTime") != null ? request.getParameter("dateTime") : "";
 		String attach     = request.getParameter("attach")   != null ? request.getParameter("attach")   : "";
 		String content    = request.getParameter("content")  != null ? request.getParameter("content")  : "";
-		
-		
 		JSONObject result = new JSONObject();
 		
 		logger.debug("ServerName: " + serverName + " || userId: " + userId + " || mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + " || dateTime: " + dateTime + " || attach: " + attach  + " || content: " + content);
