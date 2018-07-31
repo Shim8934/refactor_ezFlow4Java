@@ -62,18 +62,18 @@ $(function() {
 				<thead id="BoardList_THEAD">
 					<tr id="BoardList_TH">
 						<th id="BoardList_TH_0" onclick="setListOrder(this)" order="LOG_STATUS" style="text-align: left; overflow: hidden; white-space: nowrap; 
-							text-overflow: ellipsis; cursor: pointer; width: 57px; text-align: center" class="h5_center"><spring:message code='ezPMS.t38' /></th>
+							text-overflow: ellipsis; cursor: pointer; width: 57px;" class="h5_center"><spring:message code='ezPMS.t38' /></th>
 						<th id="BoardList_TH_1" onclick="setListOrder(this)" order="LOG_CONTENT"
-							style="text-align: center;cursor: pointer;"
+							style="text-align: left;cursor: pointer;"
 							class="h5_center"><spring:message code='ezPMS.t186' /></th>
 						<th id="BoardList_TH_2"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 200px"
+							style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 200px"
 							class="h5_center"><spring:message code='ezPMS.t98' /></th>
 						<th id="BoardList_TH_3" onclick="setListOrder(this)" order="USER_NAME"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 80px"
+							style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 80px"
 							class="h5_center"><spring:message code='ezPMS.t63' /></th>
 						<th id="BoardList_TH_4" onclick="setListOrder(this)" order="LOG_DATE"
-							style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 163px"
+							style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 163px"
 							class="h5_center"><spring:message code='ezPMS.t187' /></th>
 						</tr>
 						</thead>
@@ -85,13 +85,13 @@ $(function() {
 							<c:choose>
 								<c:when test="${empty logList}">
 									<tr>
-										<td colspan="5" style="text-align : center"> <spring:message code='ezPMS.t30' /> </td>
+										<td colspan="5" style="text-align : left"> <spring:message code='ezPMS.t30' /> </td>
 									</tr>
 								</c:when>
 							<c:otherwise>
 								<c:forEach items="${logList }" var="log">
 								<tr id="${log.logId }" class="listRow" ondblclick="goProjectDetails(this)">
-									<td style="width: 57px; cursor: default; text-align: center">
+									<td style="width: 57px; cursor: default; text-align: left">
 										<c:choose>
 											<c:when test="${log.logStatus eq 1 }">
 												<span class="situation_registration">&nbsp;<spring:message code='ezPMS.t40' />&nbsp;</span>
@@ -119,11 +119,11 @@ $(function() {
 										</c:choose>
 									</td>
 									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 80px"><c:out
+										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 80px"><c:out
 											value="${log.userName }" /></td>
 									<td onclick="selectedTR(this);"
-										style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 163px"><div
-											name="${log.logId }" style="margin-right: 2px;"></div>&nbsp;
+										style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 163px"><div
+											name="${log.logId }" style="margin-right: 2px;"></div>
 										<div style="margin-top: 5px; display: inline-block;">
 											<c:out value="${fn:substring(log.logDate, 0, 16)}" />
 										</div>

@@ -190,7 +190,7 @@
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		cursor: pointer;
-		text-align: center;
+		text-align: left;
 	}
 </style>
 <div id="divList" style="width: 100%;">
@@ -238,7 +238,7 @@
 								</c:otherwise>
 							</c:choose>	
 								<td class="boardTitle" style="text-align: left;">
-									<c:forEach begin='0' end="${projectBoardVO.itemLevel}">&nbsp;&nbsp;&nbsp;</c:forEach>
+									<c:forEach begin='1' end="${projectBoardVO.itemLevel}">&nbsp;&nbsp;&nbsp;</c:forEach>
 									<c:if test="${projectBoardVO.itemLevel ne 0}"><img src="/images/i_rep.gif"/></c:if> 
 									<c:if test="${projectBoardVO.writeDate > yesterday}"><img src="/images/i_new.gif"/></c:if>
 									<c:out value="${projectBoardVO.title}"/> 
