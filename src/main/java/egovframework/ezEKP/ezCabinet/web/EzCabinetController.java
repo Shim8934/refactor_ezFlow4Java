@@ -109,6 +109,9 @@ public class EzCabinetController {
 		logger.debug("jspGetRelatedFile started");
 		
 		String itemId = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
+		String module = request.getParameter("module") != null ? request.getParameter("module") : "";
+		
+		model.addAttribute("module", module);
 		model.addAttribute("itemId", itemId);
 		
 		logger.debug("jspGetRelatedFile ended");

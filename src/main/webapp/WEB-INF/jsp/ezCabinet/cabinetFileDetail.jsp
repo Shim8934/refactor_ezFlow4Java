@@ -375,7 +375,7 @@
 				
 				function getRelatedPopUp() {
 					if (rlWindow) {rlWindow.close();}
-					rlWindow = window.open("/ezCabinet/getRelatedFile.do?itemId=" + itemId, "relatedWd", getOpenWindowfeature(800, 600));
+					rlWindow = window.open("/ezCabinet/getRelatedFile.do?itemId=" + itemId + "&module=normal", "relatedWd", getOpenWindowfeature(800, 600));
 				}
 				
 				function closeAllPopups() {

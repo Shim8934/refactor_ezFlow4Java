@@ -71,7 +71,7 @@
 		<script type="text/javascript" src="/js/ezCabinet/cabinetNavi.js"            ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTable.js"           ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetRelateFileSelect.js"></script>
-		<script type="text/javascript">CabinetRlFileSelect.init("<c:out value='${itemId}'/>")</script>
+		<script type="text/javascript">CabinetRlFileSelect.init("<c:out value='${itemId}'/>", "<c:out value='${module}'/>")</script>
 	</body>
 </html>
 

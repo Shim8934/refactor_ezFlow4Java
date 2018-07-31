@@ -380,5 +380,6 @@
 .title_btn, .cabSpanAttach >span {color: #666; cursor: pointer;}
 .title_btn:hover, .cabSpanAttach:hover >span, .cursor:hover {color: #164aad;}
 .cursor {cursor: pointer;}
+.icon_rbtn img {width: 16px; height: 16px;}
 
 @media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2 {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;}  .ulFiles li {page-break-inside: avoid;}}
