@@ -29,13 +29,7 @@ import egovframework.let.utl.fcc.service.KlibUtil;
 
 /**
  * @see EzApprovalGKlibService
- * 
- * @NOTE TODO: 아래는 리펙토링 대상 (중복 코드)<br>
- *       {@link #encryptEndDocFile(String, String, int)}<br>
- *       {@link #encryptEndAttachFiles(String, String, int)}<br>
- *       {@link #encryptHistoryDocFiles(String, String, int)}<br>
- *       {@link #encryptHistoryAttachFiles(String, String, int)}<br>
- * */
+ */
 @Service("EzApprovalGKlibService")
 public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService {
 
@@ -44,9 +38,6 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 	}
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzApprovalGKlibServiceImpl.class);
-
-	/** fileroot 파일 이전 까지의 절대 경로 */
-	private final String REAL_PATH;
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -63,12 +54,14 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 	@Resource(name = "EzApprovalGKlibDAO")
 	private EzApprovalGKlibDAO ezApprovalGKlibDAO;
 
-	// REAL_PATH 의 final 키워드를 유지하기 위해서는
-	// 생성자에서 ServletContext 인스턴스를 AutoWired 하여 파라미터로 받은 후에, REAL_PATH 를 설정해야한다.
+	/** fileroot 파일 이전 까지의 절대 경로 */
+	private String realPath;
+
+	// 생성자에서 ServletContext 인스턴스를 AutoWired 하여 파라미터로 받은 후에, realPath 변수를 초기화 한다.
 	@Autowired
 	public EzApprovalGKlibServiceImpl(ServletContext servletContext) throws IOException {
-		REAL_PATH = servletContext.getRealPath("");
-		LOGGER.debug("REAL_PATH: {}", REAL_PATH);
+		realPath = servletContext.getRealPath("");
+		LOGGER.debug("realPath: {}", realPath);
 	}
 
 	@Override
@@ -87,10 +80,17 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		}
 
 		try {
-			encryptEndDocFile(docId, companyId, tenantId);
-			encryptEndAttachFiles(docId, companyId, tenantId);
-			encryptHistoryDocFiles(docId, companyId, tenantId);
-			encryptHistoryAttachFiles(docId, companyId, tenantId);
+			Map<String, Object> parameterMap = new HashMap<>();
+
+			parameterMap.put("docId", docId);
+			parameterMap.put("companyId", companyId);
+			parameterMap.put("tenantId", tenantId);
+
+			// shallow copy
+			encryptEndDocFile(new HashMap<>(parameterMap));
+			encryptEndAttachFiles(new HashMap<>(parameterMap));
+			encryptHistoryDocFiles(new HashMap<>(parameterMap));
+			encryptHistoryAttachFiles(new HashMap<>(parameterMap));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			LOGGER.debug("Failed to encrypt files.");
@@ -105,11 +105,11 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		try {
 			String docDirPath = ezApprovalGService.getDocDir(docId);
 			String oldYear = ezApprovalGService.getDocHrefYear(docId, companyId, tenantId);
-			LOGGER.debug(String.format("realPath: %s", REAL_PATH));
+			LOGGER.debug(String.format("realPath: %s", realPath));
 
 			// 전자결재업로드 폴더, ex)
 			// ezFlow절대경로/fileroot/0/files/upload_approvalG/company 폴더
-			Path uploadApprovalDir = Paths.get(REAL_PATH, commonUtil.separator, commonUtil.getUploadPath("upload_approvalG.ROOT", tenantId), companyId);
+			Path uploadApprovalDir = Paths.get(realPath, commonUtil.separator, commonUtil.getUploadPath("upload_approvalG.ROOT", tenantId), companyId);
 			// 절대경로 존재 여부 검증
 			uploadApprovalDir.toRealPath();
 			LOGGER.debug(String.format("uploadApprovalDir: %s", uploadApprovalDir));
@@ -165,18 +165,13 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		LOGGER.debug("backupAllFiles ended.");
 	}
 
-	private void encryptEndDocFile(String docId, String companyId, int tenantId) {
+	private void encryptEndDocFile(Map<String, Object> parameterMap) {
 		LOGGER.debug("encryptEndDocFile started.");
-
-		Map<String, Object> parameterMap = new HashMap<>();
-		parameterMap.put("docId", docId);
-		parameterMap.put("companyId", companyId);
-		parameterMap.put("tenantId", tenantId);
 
 		// 결재완료문서 경로
 		String docHref = ezApprovalGKlibDAO.getEndDocHref(parameterMap);
 		// 결재완료문서 파일
-		Path docFile = Paths.get(REAL_PATH, docHref);
+		Path docFile = Paths.get(realPath, docHref);
 
 		LOGGER.debug("file: {}", docHref);
 
@@ -189,13 +184,8 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		LOGGER.debug("encryptEndDocFile ended.");
 	}
 
-	private void encryptEndAttachFiles(String docId, String companyId, int tenantId) {
+	private void encryptEndAttachFiles(Map<String, Object> parameterMap) {
 		LOGGER.debug("encryptEndAttachFiles started.");
-
-		Map<String, Object> parameterMap = new HashMap<>();
-		parameterMap.put("docId", docId);
-		parameterMap.put("companyId", companyId);
-		parameterMap.put("tenantId", tenantId);
 
 		// 첨부파일 리스트
 		List<ApprGAttachInfoVO> attachInfoList = ezApprovalGKlibDAO.getEndAttachInfoList(parameterMap);
@@ -203,7 +193,7 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		for (ApprGAttachInfoVO attachInfo : attachInfoList) {
 			// 첨부파일 경로
 			String attachHref = attachInfo.getAttachFileHref();
-			Path attachFile = Paths.get(REAL_PATH, attachHref);
+			Path attachFile = Paths.get(realPath, attachHref);
 
 			LOGGER.debug("file: {}", attachHref);
 
@@ -213,24 +203,19 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 				parameterMap.put("href", attachHref + "." + ENCRYPTED_FILE_EXT);
 
 				ezApprovalGKlibDAO.updateEndAttachInfoHref(parameterMap);
-				// 진행 중인 문서의 해당 첨부파일이 존재하면 .ezd 확장자를 붙여준다.
-				// orgdocid를 현재 결재완료된 문서의 아이디를 쓰는 경우가 존재하기 때문이다.
-				// 예를 들어 수신 문서 같은 경우에는 수신 정보를 원본 문서의 href를 복사해서 붙여넣기 때문에
-				// .ezd 확장자가 붙어있지 않아서 다운로드할 때 FileNotFound 오류가 난다.
-					ezApprovalGKlibDAO.updateAprAttachInfoHref(parameterMap);
-				});
+				/* 진행 중인 문서의 해당 첨부파일이 존재하면 .ezd 확장자를 붙여준다.
+				 orgdocid를 현재 결재완료된 문서의 아이디를 쓰는 경우가 존재하기 때문이다.
+				예를 들어 수신 문서 같은 경우에는 수신 정보를 원본 문서의 href를 복사해서 붙여넣기 때문에
+				.ezd 확장자가 붙어있지 않아서 다운로드할 때 FileNotFound 오류가 난다. */
+				ezApprovalGKlibDAO.updateAprAttachInfoHref(parameterMap);
+			});
 		}
 
 		LOGGER.debug("encryptEndAttachFiles ended.");
 	}
 
-	private void encryptHistoryDocFiles(String docId, String companyId, int tenantId) {
+	private void encryptHistoryDocFiles(Map<String, Object> parameterMap) {
 		LOGGER.debug("encryptHistoryDocFiles started.");
-
-		Map<String, Object> parameterMap = new HashMap<>();
-		parameterMap.put("docId", docId);
-		parameterMap.put("companyId", companyId);
-		parameterMap.put("tenantId", tenantId);
 
 		// 문서 히스토리 리스트
 		List<ApprGHistoryDocVO> historyDocList = ezApprovalGKlibDAO.getHistoryDocList(parameterMap);
@@ -238,7 +223,7 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		for (ApprGHistoryDocVO hisotryDoc : historyDocList) {
 			// 문서 경로
 			String historyDocUrl = hisotryDoc.getUrl();
-			Path historyDocFile = Paths.get(REAL_PATH, historyDocUrl);
+			Path historyDocFile = Paths.get(realPath, historyDocUrl);
 
 			LOGGER.debug("file: {}", historyDocUrl);
 
@@ -254,13 +239,8 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		LOGGER.debug("encryptHistoryDocFiles ended.");
 	}
 
-	private void encryptHistoryAttachFiles(String docId, String companyId, int tenantId) {
+	private void encryptHistoryAttachFiles(Map<String, Object> parameterMap) {
 		LOGGER.debug("encryptHistoryAttachFiles started.");
-
-		Map<String, Object> parameterMap = new HashMap<>();
-		parameterMap.put("docId", docId);
-		parameterMap.put("companyId", companyId);
-		parameterMap.put("tenantId", tenantId);
 
 		// 첨부파일 히스토리 리스트
 		List<ApprGHistoryAttachVO> historyAttachList = ezApprovalGKlibDAO.getHistoryAttachList(parameterMap);
@@ -268,7 +248,7 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 		for (ApprGHistoryAttachVO hisotryAttach : historyAttachList) {
 			// 첨부파일 경로
 			String historyAttachHref = hisotryAttach.getAttachFileHref();
-			Path historyAttachFile = Paths.get(REAL_PATH, historyAttachHref);
+			Path historyAttachFile = Paths.get(realPath, historyAttachHref);
 
 			LOGGER.debug("file: {}", historyAttachHref);
 
@@ -311,18 +291,20 @@ public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService 
 			String encryptedFileHref = file.toString() + "." + ENCRYPTED_FILE_EXT;
 			Path encryptedFile = Paths.get(encryptedFileHref);
 
-			// 암호화한 바이트를 .ezd 파일로 저장 및 원본 삭제
+			// 암호화한 바이트를 .ezd 파일로 저장
 			Files.write(encryptedFile, encryptedBytes);
-			Files.delete(file);
 
 			// 성공시 콜백 함수 호출
 			if (successCallback != null) {
 				successCallback.onSuccess();
 			}
+
+			// 원본 파일 삭제
+			Files.delete(file);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} catch (UnsatisfiedLinkError linkErr) {
-			LOGGER.error(linkErr.getMessage());
+			LOGGER.error(linkErr.toString());
 		}
 	}
 }
