@@ -421,6 +421,14 @@ var headManagerObj = {};
 		 success : function() {}
 	 });
  }
+ 
+ function close_Click(){
+	 if(mode === "new"){
+		 windowClose();
+	 } else {
+		 popupClose();
+	 }
+ }
 </script>
 </head>
 <body class="popup">
@@ -436,7 +444,7 @@ var headManagerObj = {};
 		<div id="close" style="float:right">
 		<ul>
 			<li>
-				<span id="cancel" onclick="popupClose()"></span>
+				<span id="cancel" onclick="close_Click()"></span>
 			</li>
 		</ul>
 		</div>
