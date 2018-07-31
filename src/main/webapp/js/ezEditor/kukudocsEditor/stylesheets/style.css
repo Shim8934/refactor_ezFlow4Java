@@ -36,7 +36,7 @@ body{ font-family:'Arial, MalgunGothic, AppleSDGothic'; font-size:12px; /*margin
 .kk_editor .kk_editor_toolbar.kk_disabled .kk_editor_toolbar_disabled { display:block; position: absolute; width: 100%; height: 100%; top: 0px; z-index: 101; background-color: #999999; opacity: 0.2; cursor: not-allowed; }
 
 .kk_editor .kk_editor_toolbar .menus { margin: 0 !important; list-style: none !important; line-height: 1 !important; border: none; position: relative; padding: 5px !important; background: #f3f3f3; z-index: 100; }
-.kk_editor .kk_editor_toolbar .menus .menu { vertical-align: top; display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ outline: none; list-style: none !important; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; padding : 2px; margin: 0px -2px 4px -1px; /* border : 1px solid #d0cece; box-shadow: 0 2px #eee;*/ }
+.kk_editor .kk_editor_toolbar .menus .menu { vertical-align: top; display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ outline: none; list-style: none !important; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; padding : 2px; margin: 0px -2px 0px -1px; /* border : 1px solid #d0cece; box-shadow: 0 2px #eee;*/ }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_line {display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ height: 12px; position: relative; top: -2px; background: #c0c0c0 /* url(../images/bg_toolbar_document.png) repeat-x top left*/; padding: 0 1px 0 0; margin-right: 4px;}
 
 .kk_editor .kk_editor_toolbar.chrome .menus .menu .menu_line {display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/ height: 12px; position: relative; top: -2px; background: #c0c0c0 /* url(../images/bg_toolbar_document.png) repeat-x top left*/; padding: 0 1px 0 0; margin-right: 2px;}
@@ -47,7 +47,7 @@ body{ font-family:'Arial, MalgunGothic, AppleSDGothic'; font-size:12px; /*margin
 .kk_editor .kk_editor_toolbar .menus .menu .menu_combobox,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_custombox,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_findreplacebox,
-.kk_editor .kk_editor_toolbar .menus .menu .menu_button { display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/  position : relative; padding:1px; border: 1px solid #dedede; box-shadow: 0 2px #eee; border-radius: 3px; cursor: pointer;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button { display:inline-block;zoom:1;*display:inline/*IE7 HACK*/;_display:inline;/*IE6 HACK*/  position : relative; padding:1px; border: 1px solid #dedede; box-shadow: 0 2px #eee; border-radius: 3px; cursor: pointer; margin-bottom: 5px;}
 
 .kk_editor .kk_editor_toolbar .menus .menu .menu_colorpicker:hover,
 .kk_editor .kk_editor_toolbar .menus .menu .menu_combobox:hover,
@@ -203,14 +203,14 @@ body{ font-family:'Arial, MalgunGothic, AppleSDGothic'; font-size:12px; /*margin
 .kk_editor .kk_editor_toolbar .menus .menu .menu_combobox .ui_combobox > li[selected] { background: #B9B9B9; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_combobox.ui_active > .ui_combobox { display: block; }
 
-.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox { display: block; float: left; margin: -2px; padding: 2px; background-color: #ffffff; height:22px; border: 1px solid #dedede; box-shadow: 0 2px #eee; border-radius: 3px;}
-.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox:hover { border: 1px solid #0e0e0e; margin: -2px; padding: 2px; cursor: pointer;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox { display: inline-block; margin: -2px; padding: 2px; background-color: #ffffff; height:22px; border: 1px solid #dedede; box-shadow: 0 2px #eee; border-radius: 3px; margin-right: 1px;}
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox:hover { border: 1px solid #0e0e0e; margin: -2px; padding: 2px; cursor: pointer; margin-right: 1px;}
 
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="heading"],
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="fontFamily"],
-.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="fontSize"] {float: left; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="fontSize"] {/*float: left;*/vertical-align:text-bottom; }
 
-.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="heading"] {width: 100px; }
+.kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="heading"] {width: 100px; vertical-align:text-bottom;}
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="heading"] .ui_select_list {min-width: 100px; }
 
 .kk_editor .kk_editor_toolbar .menus .menu .menu_selectbox[u-id="fontFamily"] {width: 115px; }

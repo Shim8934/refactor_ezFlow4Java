@@ -192,7 +192,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 .bannerlink_area { float: left;font-family:arial, Dotum, Arial, Helvetica, sans-serif ;width:186px; margin:30px 25px 0px 0px; padding:0px;}
 .writebanner {margin:0px; padding:0px;}
 .writebanner p { margin:0px; padding:0px;height:85px; overflow:hidden;}
-.writebanner p span {display:inline-block; cursor:pointer; margin:0px; padding:0px; height:85px; margin-left:-2px}
+.writebanner p span {display:inline-block; cursor:pointer; margin:0px; padding:0px; height:85px; margin-left:-1px}
 
 
 /*------------ time ------------*/

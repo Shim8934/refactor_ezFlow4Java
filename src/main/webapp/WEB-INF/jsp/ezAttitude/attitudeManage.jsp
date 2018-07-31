@@ -47,6 +47,15 @@
 			  box-shadow: 0 0 10px #000;
 			  text-align: left;
 			}
+			
+			table, td, th {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			th {
+				cursor: pointer;
+			}
 	    </style>
 	    
 		<script type="text/javascript" language="javascript">
@@ -68,7 +77,8 @@
 	    	var orderCell = ""; // 정렬 명
 	    	var orderOption = ""; // 정렬 형식(ASC, DESC)
 	    	var selectedDeptID = "${selectedDeptID}";
-	    	var listSize = 15;
+// 	    	var listSize = 15;
+	    	var listSize = 20;
 	    	var today = "${searchEndDate}"; //오늘날짜 
 
 	        $(function () {
@@ -171,7 +181,7 @@
 	        });
 	        
 	        function windowResize() {
-	        	var height = document.documentElement.clientHeight - 130 - document.getElementById("mainmenu").clientHeight;
+	        	var height = document.documentElement.clientHeight - 100 - document.getElementById("mainmenu").clientHeight;
 	        	document.getElementById("contentlist").style.height = (height - 100) + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
@@ -251,29 +261,29 @@
 	        	
 	        	switch (Tab1_SelectID) {
 	    		case "modify":
-					resultHtml += "<tr><th style='padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;' colname='NO'>NO.</th>";
-					resultHtml += "<th style='width: 24%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
-					resultHtml += "<th style='width: 22%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
-					resultHtml += "<th style='width: 24%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
-					resultHtml += "<th style='width: 30%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.t133' /></th>";
-					resultHtml += "<th style='width: 200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='type_name'><spring:message code='ezAttitude.t134' /></th></tr>";
+					resultHtml += "<tr><th style='width: 60px; cursor:default;' colname='NO'>NO.</th>";
+					resultHtml += "<th style='width: 24%;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
+					resultHtml += "<th style='width: 22%;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
+					resultHtml += "<th style='width: 24%;' colname='description'><spring:message code='ezAttitude.t9' /></th>";
+					resultHtml += "<th style='width: 30%;' colname='start_date'><spring:message code='ezAttitude.t133' /></th>";
+					resultHtml += "<th style='width: 200px;' colname='type_name'><spring:message code='ezAttitude.t134' /></th></tr>";
 	    			break;
 	    		case "absent":
-	    			resultHtml += "<tr><th style='padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;' colname='NO'>NO.</th>";
-	    			resultHtml += "<th style='width: 25%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='start_date'><spring:message code='ezAttitude.t133' /></th>";
-	    			resultHtml += "<th style='width: 25%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
-	    			resultHtml += "<th style='width: 24%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
-	    			resultHtml += "<th style='width: 26%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='description'><spring:message code='ezAttitude.t9' /></th></tr>";
+	    			resultHtml += "<tr><th style='width: 60px; cursor:default;' colname='NO'>NO.</th>";
+	    			resultHtml += "<th style='width: 25%;' colname='start_date'><spring:message code='ezAttitude.t133' /></th>";
+	    			resultHtml += "<th style='width: 25%;' colname='displayname'><spring:message code='ezAttitude.t10' /></th>";
+	    			resultHtml += "<th style='width: 24%;' colname='title'><spring:message code='ezAttitude.t11' /></th>";
+	    			resultHtml += "<th style='width: 26%;' colname='description'><spring:message code='ezAttitude.t9' /></th></tr>";
 	    			break;
 	    		case "history":
-	    			resultHtml += "<tr><th style='padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;' colname='NO'>NO.</th>";
-	    			resultHtml += "<th style='width: 13%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Name'><spring:message code='ezAttitude.t10' /></th>";
-	    			resultHtml += "<th style='width: 13%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Title'><spring:message code='ezAttitude.t11' /></th>";
-	    			resultHtml += "<th style='width: 13%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='writer_Dept_Name'><spring:message code='ezAttitude.t9' /></th>";
-	    			resultHtml += "<th style='width: 35%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Startdate'><spring:message code='ezAttitude.t149'/></th>";
-	    			resultHtml += "<th style='width: 13%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='change_Type_Name'><spring:message code='ezAttitude.t134' /></th>";
-	    			resultHtml += "<th style='width: 13%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_User_Name'><spring:message code='ezAttitude.t62'/></th>";
-	    			resultHtml += "<th style='width: 180px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;' colname='appr_Date'><spring:message code='ezAttitude.t63'/></th></tr>";
+	    			resultHtml += "<tr><th style='width: 60px; cursor:default;' colname='NO'>NO.</th>";
+	    			resultHtml += "<th style='width: 13%;' colname='writer_Name'><spring:message code='ezAttitude.t10' /></th>";
+	    			resultHtml += "<th style='width: 13%;' colname='writer_Title'><spring:message code='ezAttitude.t11' /></th>";
+	    			resultHtml += "<th style='width: 13%;' colname='writer_Dept_Name'><spring:message code='ezAttitude.t9' /></th>";
+	    			resultHtml += "<th style='width: 35%;' colname='change_Startdate'><spring:message code='ezAttitude.t149'/></th>";
+	    			resultHtml += "<th style='width: 13%;' colname='change_Type_Name'><spring:message code='ezAttitude.t134' /></th>";
+	    			resultHtml += "<th style='width: 13%;' colname='appr_User_Name'><spring:message code='ezAttitude.t62'/></th>";
+	    			resultHtml += "<th style='width: 180px;' colname='appr_Date'><spring:message code='ezAttitude.t63'/></th></tr>";
 	    			break;
 	    		}
 	        	
@@ -359,22 +369,22 @@
 	    		
 	    		result.forEach(function(vo, index) {
 	    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' typeId='" + vo.typeId + "' userid='" + vo.writerId + "' ondblclick=attDetail(this); style='cursor : pointer;'>";
-	    			resultHtml += "<td style='padding-left:15px width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" + i + "</td>";
-	    			resultHtml += "<td style='width: 24%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;' >" + vo.userName + "</td>";
-	    			resultHtml += "<td style='width: 22%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'>" + vo.userTitle + "</td>";
-	    			resultHtml += "<td style='width: 24%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'>" + vo.deptName + "</td>";
+	    			resultHtml += "<td style='width: 60px;'>" + i + "</td>";
+	    			resultHtml += "<td style='width: 24%;' >" + vo.userName + "</td>";
+	    			resultHtml += "<td style='width: 22%;'>" + vo.userTitle + "</td>";
+	    			resultHtml += "<td style='width: 24%;'>" + vo.deptName + "</td>";
 	    						
 	    			if (vo.endDate == null || vo.endDate == "") {
-	    				resultHtml += "<td style='width: 30%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'>" + vo.startDate.substring(0,16) + "</td>";
+	    				resultHtml += "<td style='width: 30%;'>" + vo.startDate.substring(0,16) + "</td>";
 	    			} else {
 	    				if (vo.dateType == 4) {
-	    					resultHtml += "<td style='width: 30%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'>" + vo.startDate.substring(0,11) + " ~ " + vo.endDate.substring(0,11) + "</td>";
+	    					resultHtml += "<td style='width: 30%;'>" + vo.startDate.substring(0,11) + " ~ " + vo.endDate.substring(0,11) + "</td>";
 	    				} else {
-		    				resultHtml += "<td style='width: 30%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'>" + vo.startDate.substring(0,16) + " ~ " + vo.endDate.substring(0,16) + "</td>";
+		    				resultHtml += "<td style='width: 30%;'>" + vo.startDate.substring(0,16) + " ~ " + vo.endDate.substring(0,16) + "</td>";
 	    				}
 	    			}
 	    			
-	    			resultHtml += "<td style='width: 200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;' >" + vo.typeName + "</td></tr>";
+	    			resultHtml += "<td style='width: 200px;' >" + vo.typeName + "</td></tr>";
 	    			
 	    			i++;
 	    		});
@@ -440,11 +450,11 @@
 	    		
 	    		result.forEach(function(vo, index) {
     				resultHtml += "<tr userid='" + vo.writerId + "' date='" + vo.startDate + "' ondblclick=attitudeNewItem(this); style='cursor : pointer;'>";
-	    			resultHtml += "<td style='padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" + i + "</td>";
-	    			resultHtml += "<td style='width: 25%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" + vo.startDate + "</td>";
-	    			resultHtml += "<td style='width: 25%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" + vo.userName + "</td>";
-	    			resultHtml += "<td style='width: 24%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" + vo.userTitle + "</td>";
-	    			resultHtml += "<td style='width: 26%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" + vo.deptName + "</td></tr>";
+	    			resultHtml += "<td style='width: 60px;'>" + i + "</td>";
+	    			resultHtml += "<td style='width: 25%;'>" + vo.startDate + "</td>";
+	    			resultHtml += "<td style='width: 25%;'>" + vo.userName + "</td>";
+	    			resultHtml += "<td style='width: 24%;'>" + vo.userTitle + "</td>";
+	    			resultHtml += "<td style='width: 26%;'>" + vo.deptName + "</td></tr>";
 	    			
 	    			i++;
 	    		});
@@ -519,18 +529,18 @@
 	    		
 	    		result.forEach(function(vo, index) {
 	    			resultHtml += "<tr attitudeId='" + vo.attitudeId + "' userid='" + vo.writerId + "';>";
-	    			resultHtml += "<td style='padding-left: 15px; width: 60px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" + i + "</td>";
-		   			resultHtml += "<td style='width: 13%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" + vo.writerName + "</td>";
-		   			resultHtml += "<td style='width: 13%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" + vo.writerTitle + "</td>";
-		   			resultHtml += "<td style='width: 13%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" + vo.writerDeptName + "</td>";
+	    			resultHtml += "<td style='width: 60px;'>" + i + "</td>";
+		   			resultHtml += "<td style='width: 13%;'>" + vo.writerName + "</td>";
+		   			resultHtml += "<td style='width: 13%;'>" + vo.writerTitle + "</td>";
+		   			resultHtml += "<td style='width: 13%;'>" + vo.writerDeptName + "</td>";
 		   			//일시
 		   			if (vo.originStartdate == null || vo.originStartdate == "") {
-		   				resultHtml += "<td style='width: 35%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'><spring:message code='ezAttitude.t61'/>";
+		   				resultHtml += "<td style='width: 35%;'><spring:message code='ezAttitude.t61'/>";
 		   			} else {
 		   				if (vo.originEnddate == null || vo.originEnddate == "") {
-		   					resultHtml += "<td style='width:35%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" + vo.originStartdate;
-		   				} else {
-		   					resultHtml += "<td style='width:35%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" + vo.originStartdate + " ~ " + vo.originEnddate;
+		   					resultHtml += "<td style='width:35%;'>" + vo.originStartdate;
+		   				} else {                                
+		   					resultHtml += "<td style='width:35%;'>" + vo.originStartdate + " ~ " + vo.originEnddate;
 		   				}
 		   			}
 		   			if (vo.changeStartdate == null || vo.changeStartdate == "") {
@@ -544,17 +554,17 @@
 		   			}
 		   			//근태유형
 		   			if (vo.originTypeName == null || vo.originTypeName == "") {
-		   				resultHtml += "<td style='width: 13%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'><spring:message code='ezAttitude.t61'/> -> " + vo.changeTypeName + "</td>";
+		   				resultHtml += "<td style='width: 13%;'><spring:message code='ezAttitude.t61'/> -> " + vo.changeTypeName + "</td>";
 	    			} else {
 	    				if (vo.changeTypeName == null || vo.changeTypeName == "") {
-	    					resultHtml += "<td style='width: 13%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" + vo.originTypeName + " -> <spring:message code='ezAttitude.t164'/></td>";
+	    					resultHtml += "<td style='width: 13%;'>" + vo.originTypeName + " -> <spring:message code='ezAttitude.t164'/></td>";
 	    				} else {
-		    				resultHtml += "<td style='width: 13%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" + vo.originTypeName + " -> " + vo.changeTypeName + "</td>";
+		    				resultHtml += "<td style='width: 13%;'>" + vo.originTypeName + " -> " + vo.changeTypeName + "</td>";
 	    				}
 	    			}
 		   			
-	    			resultHtml += "<td style='width: 13%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" + vo.apprUserName + "</td>"
-	    						+ "<td style='width: 180px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" + vo.apprDate + "</td></tr>";
+	    			resultHtml += "<td style='width: 13%;'>" + vo.apprUserName + "</td>"
+	    						+ "<td style='width: 180px;'>" + vo.apprDate + "</td></tr>";
 	    						
 	    			i++;
 	    		});
@@ -788,7 +798,6 @@
 	    		}
 	    		
 	        	goToPageByNum(1);
-	        	//getList();
 	        }
 	        
 	        function refresh() {
@@ -834,8 +843,7 @@
 		      	<div id="miniTitle" style="margin-bottom:10px;padding-left:2px;margin-top:15px"><spring:message code='ezAttitude.t74'/></div>
 		  	</div>
 	    </div>
-	    
-	    <div id="contentlist" style="width:100%; overflow:auto; height:620px;">
+	    <div id="contentlist" style="width:100%; overflow:auto; height:660px;">
 			<table class="mainlist" style="width:100%;">
 				<thead></thead>
 				<tbody></tbody>

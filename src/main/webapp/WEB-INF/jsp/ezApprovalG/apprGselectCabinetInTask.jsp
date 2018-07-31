@@ -552,7 +552,7 @@
         	<tr>
         		<td>
 					<div class="listview">
-						<div id="CabinetList" style="border:0;HEIGHT: 310px; WIDTH: 380px;overflow:auto;"></div>
+						<div id="CabinetList" style="border:0;HEIGHT: 410px; WIDTH: 380px;overflow:auto;"></div>
 					</div>
         		</td>
         		<td>
@@ -565,7 +565,7 @@
         		</td>
         		<td>
 					<div class="listview">
-						<div id="SelCabinetList" style="border:0; HEIGHT: 310px; WIDTH: 247px;overflow:auto;"></div>
+						<div id="SelCabinetList" style="border:0; HEIGHT: 410px; WIDTH: 372px;overflow:auto;"></div>
 					</div>
         		</td>
         	</tr>
