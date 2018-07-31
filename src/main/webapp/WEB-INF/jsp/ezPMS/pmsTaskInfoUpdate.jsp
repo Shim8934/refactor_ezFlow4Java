@@ -503,7 +503,7 @@ function initPreTask() {
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t267' /></th>
-						<td><input type="text" id="weight" class="textInput" placeholder="<fmt:formatNumber value="${taskDetails.weight}" pattern=".0"/>" value="<fmt:formatNumber value="${taskDetails.weight}" pattern=".0"/>"></td>
+						<td><input type="text" id="weight" class="textInput" placeholder="<fmt:formatNumber value="${taskDetails.weight}" pattern="0.0"/>" value="<fmt:formatNumber value="${taskDetails.weight}" pattern="0.0"/>"></td>
 		<%-- 				<td style="height:30px" id="weight">${taskDetails.weight == null ? "-" : taskDetails.weight}</td> --%>
 					</tr>
 					<tr>
