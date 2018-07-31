@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -504,6 +506,58 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 	    	fin.close();
 		//*/
     }
+    
+    /**
+     * 서버에 있는 이미지 요청을 처리한다. (화면에 보여주는 이미지)
+     */
+    public void downImage(String filePath, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String realPath = commonUtil.getRealPath(request);
+        BufferedInputStream bis = null;
+        OutputStream os = null;
+        String contentType = null;
+        int fileSize = 0;
+        
+        try {
+	        filePath = realPath + filePath;
+	        File file = new File(filePath);
+	        fileSize = (int) file.length();
+	        bis = new BufferedInputStream(new FileInputStream(file));
+	        contentType = URLConnection.guessContentTypeFromStream(bis);
+	        
+	        if (contentType == null) {
+	        	contentType = "application/octet-stream";
+	        }
+	        
+	        response.setContentType(contentType);
+	        response.setContentLength(fileSize);
+	        
+	        LOGGER.debug("contentType=" + contentType + ",fileSize=" + fileSize);
+	        
+	        os = response.getOutputStream();
+	        
+	        IOUtils.copy(bis, os);
+	        
+	        os.flush();
+        } catch(Exception e) {
+        	e.printStackTrace();
+        } finally {
+        	if (os != null) {
+        		try {
+        			os.close();
+        		} catch(Exception e) {
+        		}
+        	}
+        	
+        	if (bis != null) {
+        		try {
+        			bis.close();
+        		} catch(Exception e) {
+        		}
+        	}
+        }
+        
+
+	}
     
     /**
      * 서버 파일/폴더를 재귀적으로 삭제한다.
