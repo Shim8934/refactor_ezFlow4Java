@@ -1949,6 +1949,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 		int authority = ezPMSDAO.getUserProjectRole(map);
 
+		int docNo = ezPMSDAO.getMaxDocNo(map) + 1;
+		map.put("docNo", docNo);
+		
 		for (String itemId : itemIds) {
 			map.put("itemId", itemId);
 			ProjectBoardVO boardVO = ezPMSDAO.getBoardDetail(map);
@@ -3526,6 +3529,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public void updateTaskEndDate(int tenantId, long taskId) throws Exception {
+		LOGGER.debug("[SERVICE] ezPMS updateTaskEndDate started");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -3538,6 +3542,30 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("taskId", taskId);
 		
 		ezPMSDAO.updateTaskEndDate(map);
+		LOGGER.debug("[SERVICE] ezPMS updateTaskEndDate ended");
+	}
+
+	@Override
+	public int getTaskOverProjectEndDate(Long projectId, int tenantId, String planEndDate) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		map.put("planEndDate", planEndDate);
 		
+		return ezPMSDAO.getTaskOverProjectEndDate(map);
+	}
+	
+	@Override
+	public Map<String, Object> getMinMaxGroupRealDate(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] ezPMS getMinMaxGroupRealDate started");	
+		LOGGER.debug("[SERVICE] ezPMS getMinMaxGroupRealDate ended");
+		return ezPMSDAO.getMinMaxGroupRealDate(map);
+	}
+
+	@Override
+	public void updateGroupRealDate(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] ezPMS updateGroupRealDate started");
+		ezPMSDAO.updateGroupRealDate(map);
+		LOGGER.debug("[SERVICE] ezPMS updateGroupRealDate ended");
 	}
 }

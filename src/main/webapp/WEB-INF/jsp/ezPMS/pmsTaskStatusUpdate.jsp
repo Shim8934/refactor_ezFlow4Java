@@ -121,7 +121,7 @@
 		diff = Number(taskDetails.realProgress - taskDetails.planProgress).toFixed(1);
 		document.querySelector("[name='realProgress']").value = Number(taskDetails.realProgress).toFixed(1) + "%";
 		document.getElementById("planProgress").innerText = Number(taskDetails.planProgress).toFixed(1) + "%";
-		document.getElementById("progDiff").innerText = (diff > 0 ? "+" + diff : (diff < 0 ? diff : "-")) + "%";
+		document.getElementById("progDiff").innerText = diff == 0 ? "" : (diff > 0 ? "+" + diff : (diff < 0 ? diff : "-")) + "%";
 	}
 	
 	function setStatus() {
@@ -226,7 +226,7 @@
 			return;
 		}
 		 
-		// 가중치 검사
+		// 진행률 검사
 		realProgress = realProgress.replace(/%/,"");
 		if (realProgress != taskDetails.realProgress) {
 			if (realProgress == "") {
@@ -315,7 +315,14 @@
 				if (nowStatus != status) {	
 					var logContent = "[" + taskName + "<spring:message code='ezPMS.t283' />" + nowStatusStr + "]<spring:message code='ezPMS.t313' /> [" + statusStr + "]<spring:message code='ezPMS.t314' />"; 
 					addTaskLog(projectId, 2, groupId, taskId, logContent);
+					updateGroupRealStartEndDate(groupId);
 				}
+				
+				// 대기에서 진행으로 바뀌었거나 완료로 상태가 변경되었을 때만 실행
+				/* if((status == "W" && nowStatus == "P") || (status != "C" && nowStatus == "C")) {
+					// 소속 그룹과 소속 그룹의 상위까지 실제 시작일 및 종료일을 업데이트 한다.
+					updateGroupRealStartEndDate(groupId);
+				} */
 				
 				if (taskDetails.realProgress != realProgress) {
 					var logContent = "[" + taskName + "<spring:message code='ezPMS.t317' /> " + new Number(taskDetails.realProgress).toFixed(1) + "%<spring:message code='ezPMS.t313'/> " + new Number(realProgress).toFixed(1) + "%<spring:message code='ezPMS.t314'/>"; 
@@ -334,6 +341,20 @@
 			error : function(jqXHR, textStatus, errorThrown) {
 				alert("<spring:message code='ezPMS.t208' />");
 			}
+		});
+	}
+	
+	// 소속 그룹과 소속 그룹의 상위까지 실제 시작일 및 종료일을 업데이트 한다.
+	function updateGroupRealStartEndDate(groupId) {
+		var data = {groupId : groupId};
+		
+		$.ajax({
+			type : "PUT",
+			url : "/ezPMS/updateGroupRealStartEndDate.do",
+			dataType : "json",
+			contentType: "application/json; charset=UTF-8",
+			data : JSON.stringify(data),
+			success : function() {}
 		});
 	}
 	

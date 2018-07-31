@@ -414,6 +414,9 @@
     	<result property="taskId"							column="TASK_ID"/>
     	<result property="planStartDate"					column="plan_start_date"/>
     	<result property="planEndDate"						column="plan_end_date"/>
+    	<result property="realStartDate" 					column="real_start_date"/>
+    	<result property="realEndDate" 						column="real_end_date"/>
+    	<result property="status" 							column="status"/>
     </resultMap>
     
     <resultMap id="projectHolidayVO" class="ProjectHolidayVO">
@@ -2137,6 +2140,8 @@
 			AND 
 				B.tenant_id = #tenantId#
 			AND 
+				F.FOLDER_ID = #folderId#
+			AND 
 				B.del_status = 0
 			AND 
 				B.write_type in (1, 2)
@@ -2197,6 +2202,8 @@
 			ON B.folder_id = F.folder_id
 			WHERE
 				F.PROJECT_ID = #projectId#
+			AND 
+				F.FOLDER_ID = #folderId#
 		]]>
 			AND B.tenant_id = #tenantId#
 			AND B.del_status = 0
@@ -3680,6 +3687,11 @@
 				REAL_END_DATE = #realEndDate#,
 		]]>
 		</isNotEmpty>
+		<isEmpty property="realEndDate">
+		<![CDATA[
+				REAL_END_DATE = null,
+		]]>
+		</isEmpty>
 		<![CDATA[
 				STATUS = #status#
 			WHERE
@@ -3864,12 +3876,14 @@
 	<select id="EzPMSDAO.getTaskListByGroupId" resultMap="taskListByGroupId">
 	<![CDATA[
 		SELECT 
-			task_id, plan_start_date, plan_end_date
+			task_id, plan_start_date, plan_end_date, real_start_date, real_end_date, status
 		FROM tbl_pms_task
 		WHERE 
 			group_id = #groupId#
 		AND
 			tenant_id = #tenantId#
+		AND 
+			del_status = 0
 	]]>
 	</select>
 	
@@ -4378,6 +4392,81 @@
 				REAL_END_DATE = #realEndDate#
 			WHERE
 				TASK_ID = #taskId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<select id="EzPMSDAO.getTaskOverProjectEndDate" parameterClass="map" resultClass="Integer">
+		<![CDATA[
+		SELECT	
+			COUNT(DISTINCT A.TASK_ID)	
+		FROM
+			tbl_pms_task A
+		JOIN 
+			tbl_pms_project B
+		ON
+			A.PROJECT_ID = B.PROJECT_ID
+		AND
+			A.TENANT_ID = B.TENANT_ID
+		JOIN
+			tbl_pms_member C
+		ON	
+			A.PROJECT_ID = C.PROJECT_ID
+		JOIN
+			tbl_pms_group D
+		ON
+			A.GROUP_ID = D.GROUP_ID
+		JOIN	
+			tbl_pms_taskmember E
+		ON
+			A.TASK_ID = E.TASK_ID
+		WHERE 
+			A.TENANT_ID = #tenantId#
+		AND	
+			A.DEL_STATUS = 0
+		AND
+			A.PROJECT_ID = #projectId#
+		AND
+			A.PLAN_END_DATE > #planEndDate#
+		]]>
+	</select>
+	
+	<select id="EzPMSDAO.getMinMaxGroupRealDate" parameterClass="map" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT 
+				MIN(real_start_date) AS realStartDate, 
+				max(real_end_date) AS realEndDate
+			FROM tbl_pms_task
+			WHERE 
+				group_id in (select group_id
+							 from tbl_pms_group 
+							 where (group_id = #groupId#
+							 OR upper_group_id = #groupId#
+							 OR UPPER_GROUP_ID IN (SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#)))
+			AND 
+				del_status = 0
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateGroupRealDate" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_GROUP
+			SET
+				REAL_START_DATE = #realStartDate#
+		]]>
+			<isNotEmpty property="realEndDate">
+				, REAL_END_DATE = #realEndDate#
+			</isNotEmpty>
+			<isEmpty property="realEndDate">
+				, REAL_END_DATE = null
+			</isEmpty>
+		<![CDATA[
+			WHERE
+				GROUP_ID = #groupId#
 			AND
 				TENANT_ID = #tenantId#
 		]]>

@@ -326,12 +326,17 @@ var headManagerObj = {};
 		success : function(result) {
 		 	try { 
 				if (mode == "edit") {
-					sendNotiMail(projectId, projectName);
-					var logContent = "[" + projectName + "<spring:message code='ezPMS.t50' />"
-					addTaskLog(projectId, 2, groupId, null, logContent);
-					alert ("<spring:message code='ezPMS.t52' />");
-					parent.projectId = projectId;
-					parent.parent.window.location.reload();
+					if (result.roleCheck == "permitted") {
+						sendNotiMail(projectId, projectName);
+						var logContent = "[" + projectName + "<spring:message code='ezPMS.t50' />"
+						addTaskLog(projectId, 2, groupId, null, logContent);
+						alert ("<spring:message code='ezPMS.t52' />");
+						parent.projectId = projectId;
+						parent.parent.window.location.reload();
+					} else if (result.roleCheck == "rejected") {
+						alert("<spring:message code='ezPMS.t365' />");
+						popupClose();
+					}
 				} else {
 					sendNotiMail(result.projectId, projectName);
 					var logContent = "[" + projectName + "<spring:message code='ezPMS.t51' />"
@@ -339,6 +344,7 @@ var headManagerObj = {};
 					alert("<spring:message code='ezPMS.t53' />");
 					parent.opener.setProjectList(); 
 				}
+				
 				popupClose();
 			
 			} catch (e) {

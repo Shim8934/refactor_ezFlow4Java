@@ -286,4 +286,10 @@ public interface EzPMSService {
 	public void updateTaskNameGantt (ProjectTaskVO taskVO, String taskType) throws Exception;
 	
 	public void updateTaskEndDate (int tenantId, long taskId) throws Exception;
+	
+	public int getTaskOverProjectEndDate(Long projectId, int tenantId, String planEndDate);
+	
+	public Map<String, Object> getMinMaxGroupRealDate(Map<String, Object> map);
+	
+	public void updateGroupRealDate(Map<String, Object> map);
 }

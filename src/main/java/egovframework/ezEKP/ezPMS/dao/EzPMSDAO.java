@@ -677,4 +677,17 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void updateTaskEndDate(Map<String, Object> map) {
 		update ("EzPMSDAO.updateTaskEndDate", map);
 	}
+	
+	public int getTaskOverProjectEndDate(Map<String, Object> map) {
+		return (int) select ("EzPMSDAO.getTaskOverProjectEndDate", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getMinMaxGroupRealDate(Map<String, Object> map) {
+		return (Map<String, Object>) select ("EzPMSDAO.getMinMaxGroupRealDate", map);
+	}
+	
+	public void updateGroupRealDate(Map<String, Object> map) {
+		update ("EzPMSDAO.updateGroupRealDate", map);
+	}	
 } 
