@@ -673,4 +673,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public void updateProjectName(Map<String, Object> map) {
 		update ("EzPMSDAO.updateProjectName", map);
 	}
+	
+	public void updateTaskEndDate(Map<String, Object> map) {
+		update ("EzPMSDAO.updateTaskEndDate", map);
+	}
 } 

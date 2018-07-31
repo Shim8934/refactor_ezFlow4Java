@@ -3674,6 +3674,13 @@
 				TBL_PMS_TASK
 			SET
 				REAL_PROGRESS = #realProgress#,
+		]]>
+		<isNotEmpty property="realEndDate">
+		<![CDATA[
+				REAL_END_DATE = #realEndDate#,
+		]]>
+		</isNotEmpty>
+		<![CDATA[
 				STATUS = #status#
 			WHERE
 				TASK_ID = #taskId#
@@ -4358,6 +4365,19 @@
 				PROJECT_NAME = #projectName#
 			WHERE
 				PROJECT_ID = #projectId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
+	
+	<update id="EzPMSDAO.updateTaskEndDate" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_TASK
+			SET
+				REAL_END_DATE = #realEndDate#
+			WHERE
+				TASK_ID = #taskId#
 			AND
 				TENANT_ID = #tenantId#
 		]]>
