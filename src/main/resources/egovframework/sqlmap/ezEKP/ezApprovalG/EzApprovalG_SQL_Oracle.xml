@@ -16201,6 +16201,7 @@
              ELECTRONICRECFLAG ,
              SPECIALRECORDCODE ,
              PUBLICITYCODE ,
+             PUBLICITYYN ,
              LIMITRANGE ,
              MANUALREGFLAG ,
              REGISTERDATE ,
@@ -18181,6 +18182,7 @@
    		SET 
    			SpecialRecordCode = #v_SPECIALREC#,
 			PublicityCode = #v_PUBCODE#,
+			PublicityYn = #v_PUBCODE2#,
 			LimitRange = #v_LIMITRANGE# 
 		WHERE 
 			RecordID = #v_RECORDID#
@@ -18196,6 +18198,7 @@
    		SET 
    			SpecialRecordCode = #v_SPECIALREC#,
 			PublicityCode = #v_PUBCODE#,
+			PublicityYn = #v_PUBCODE2#,
 			LimitRange = #v_LIMITRANGE# 
         WHERE 
         	DOCID = (	
