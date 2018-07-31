@@ -904,7 +904,7 @@
 		</div>		
 		<div id="addpopup" class="popupwrap1" style="display:none;margin-bottom:60px;">
 			<div class="popupJQLayer">
-				<div class="title"><spring:message code='ezAddress.t2003' /></div>
+				<div class="title"><spring:message code='ezAddress.t2002' /></div>
 				<div id="close">
 		            <ul>
 		                <li><a rel="modal:close"><span onclick="quick_add_close()"></span></a></li>
