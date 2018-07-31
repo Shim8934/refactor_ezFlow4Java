@@ -19908,6 +19908,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String electronicRecFlag = xmlDom.getElementsByTagName("ELECTRONICRECFLAG").item(0).getTextContent().trim();	// 13
 		String specialRec = xmlDom.getElementsByTagName("SPECIALREC").item(0).getTextContent().trim();	// 15
 		String publicCode = xmlDom.getElementsByTagName("PUBLICCODE").item(0).getTextContent().trim();	// 16
+		String publicCode2 = xmlDom.getElementsByTagName("PUBLICCODE2").item(0).getTextContent().trim();	// 16
 		String limiTrange = xmlDom.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim();	// 17
 		String docType = "";
 		String visualAudioDesc= "";
@@ -19954,6 +19955,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_ElectronicRecFlag", electronicRecFlag);
 		map.put("v_SpecialRecordCode", specialRec);
 		map.put("v_PublicityCode", publicCode);
+		map.put("v_PublicityCode2", publicCode2);
 		map.put("v_LimitRange", limiTrange);
 		map.put("v_OldRecordFlag", OldFlag);
 		map.put("v_DelFlag", "0");

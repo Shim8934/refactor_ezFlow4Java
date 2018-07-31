@@ -182,10 +182,10 @@ function InitClassInfo() {
         	InsValueIntoTD(tdPublic, strLang83);
         }
         
-        if (SelectSingleNodeValue(clsInfo, "PUBLICCODE2") == "Y") {
-        	InsValueIntoTD(tdPublicYn, strLang82 );
-        } else {
+        if (SelectSingleNodeValue(clsInfo, "PUBLICCODE2") == "N") {
         	InsValueIntoTD(tdPublicYn, strLang84 );
+        } else {
+        	InsValueIntoTD(tdPublicYn, strLang82 );
         }
         InsValueIntoTD(tdLimit, SelectSingleNodeValue(clsInfo, "LIMITRANGE"));
 
