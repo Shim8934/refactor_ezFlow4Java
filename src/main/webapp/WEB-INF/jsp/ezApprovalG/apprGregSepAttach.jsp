@@ -140,7 +140,7 @@
 		        if (Val == 5 || Val == 6) {
 		            window.dialogHeight = "596px";
 		            if (CrossYN())
-		                window.resizeTo(705, 690);
+		                //window.resizeTo(705, 690);
 		
 		            divAudioVisualDummy.style.display = "none";
 		            divAudioVisual.style.display = "";
@@ -158,7 +158,7 @@
 		        else {
 		            window.dialogHeight = "420px";
 		            if (CrossYN())
-		                window.resizeTo(705, 550);
+		                //window.resizeTo(705, 550);
 		
 		            document.getElementById("divAudioVisualDummy").style.display = "";
 		            document.getElementById("divAudioVisual").style.display = "none";
