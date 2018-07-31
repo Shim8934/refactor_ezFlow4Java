@@ -549,7 +549,4 @@ public interface EzApprovalGService {
 	public boolean isLinkedAttachFile(String attachHref) throws Exception;
 
 	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String id, int tenantId) throws Exception;
-
-	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String id, int tenantId) throws Exception;
-
 }
