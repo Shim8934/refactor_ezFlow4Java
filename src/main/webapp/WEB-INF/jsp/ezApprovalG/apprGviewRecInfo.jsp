@@ -133,12 +133,16 @@
 			<td id="tdSpecialRec" colspan=3 style="padding-right:15px;white-space:nowrap">&nbsp;</td>
 		</tr>
 		<tr> 
-			<th style="white-space:nowrap"><spring:message code='ezApprovalG.t109'/></th>
+			<th style="white-space:nowrap"><spring:message code='ezApprovalG.kes06'/></th>
 			<td id="tdPublic" colspan=3 style="padding-right:15px;white-space:nowrap">&nbsp;</td>
 		</tr>
 		<tr> 
 			<th style="white-space:nowrap"><spring:message code='ezApprovalG.t876'/></th>
 			<td id="tdLimit" colspan=3 style="padding-right:15px;white-space:nowrap">&nbsp;</td>
+		</tr>
+		<tr> 
+			<th style="white-space:nowrap"><spring:message code='ezApprovalG.t109'/></th>
+			<td id="tdPublicYn" colspan=3 style="padding-right:15px;white-space:nowrap">&nbsp;</td>
 		</tr>
 		<tr> 
 			<th style="white-space:nowrap"><spring:message code='ezApprovalG.t845'/></th>
