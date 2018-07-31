@@ -84,7 +84,7 @@ public interface EzCabinetService {
 	public long getTotalItemsSize(List<Integer> itemIdList, LoginVO userInfo) throws Exception;
 	
 	//Get all related item columns function
-	List<CabinetColumnVO> getAllRelatedColumnsOfItem(String itemId, String primary, int tenantId) throws Exception;
+	List<CabinetColumnVO> getAllRelatedColumnsOfItem(int itemId, String primary, int tenantId) throws Exception;
 	
 	//Save related item functions
 	JSONObject saveEmailItem(String realPath, int parseInt, String title, String sender, String attach, String mode, String content, String receiver, String forward, String dateTime, Locale locale, LoginVO userInfo) throws Exception;

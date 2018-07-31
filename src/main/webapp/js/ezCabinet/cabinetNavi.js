@@ -1,6 +1,6 @@
 //Baonk 2018-06-25
 var CabinetNavi = function() {
-	 return function(data) {
+	return function(data) {
 		var _blockSize      = 10;
 		var _currentPage    = 0;
 		var _totalRows      = 0;

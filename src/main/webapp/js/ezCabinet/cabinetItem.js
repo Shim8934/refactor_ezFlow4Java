@@ -19,6 +19,7 @@ var CabinetItem = function() {
 	var addPopup       = null;
 	var itemPopup      = null;
 	var documentCont   = null;
+	var userWindow     = null;
 	
 	/* Preview option */
 	function setData(height, width, prevMode) {
@@ -821,14 +822,12 @@ var CabinetItem = function() {
 	}
 	
 	function generateEmailContent(attachList, itemInfo) {
-		var content          = itemInfo["conentPath"];
-		var attachSize       = itemInfo["itemSize"];
 		var totalFiles       = attachList.length;
 		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
 		var ifameContent     = document.getElementById(iframeId);
 		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
 		documentCont         = {};
-		documentCont.content = content;
+		documentCont.content = itemInfo["conentPath"];
 		documentCont.size    = itemInfo["itemSize"];
 		documentCont.attach  = attachList;
 	}
@@ -1136,13 +1135,13 @@ var CabinetItem = function() {
 	function showUserInfoFromEmail(userMail) {
 		var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
 		feature = feature + getOpenWindowfeature(420, 500);
-		window.open("/ezCommon/showPersonInfo.do?email=" + encodeURIComponent(userMail), "userInfo", feature);
+		userWindow = window.open("/ezCommon/showPersonInfo.do?email=" + encodeURIComponent(userMail), "userInfo", feature);
 	}
 	
 	function showUserInfoFromId(userId) {
 		var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
 		feature = feature + getOpenWindowfeature(420, 500);
-		window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
+		userWindow = window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
 	}
 	
 	function getFileSize(fileSize) {
@@ -1160,6 +1159,7 @@ var CabinetItem = function() {
 		if(itemPopup)  {itemPopup.close();}
 		if(sharePopup) {sharePopup.close();}
 		if(addPopup)   {addPopup.close();}
+		if(userWindow) {userWindow.close();}
 	}
 	
 	function getIframeContent() {return documentCont;}

@@ -263,18 +263,24 @@
 .popup .cabBttnDiv {text-align: center; margin: 10px auto;}
 
 .divInfo {width: 100%;}
-.tblFileInf, .cabShareInf {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse; table-layout: fixed;}
-.tblFileInf tr td, .tblFileInf tr th, .cabShareInf tr td, .cabShareInf tr th {border: 1px solid #ddd;}
+.tblFileInf, .cabShareInf, .tblEmailInf {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse; table-layout: fixed;}
+.tblFileInf tr td, .tblEmailInf tr td, .tblFileInf tr th, .cabShareInf tr td, .cabShareInf tr th, .tblEmailInf tr th {border: 1px solid #ddd;}
 .tblFileInf tr th {width: 120px;}
-.tblFileInf tr td, .cabShareInf {padding: 0px 5px; background: #fff; height: 29px; word-break: break-all;}
+.tblEmailInf tr th {text-align: left; max-width: 100px; width: 80px;}
+.tblFileInf tr td, .cabShareInf, .tblEmailInf tr td {padding: 0px 5px; background: #fff; height: 29px; word-break: break-all;}
 .tblFileInf tr td >input[type='text'] {width: 100%; border: 0px; padding: 5px; outline: none;}
-.tblFileInf .overfl {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.tblFileInf .overfl, .tblEmailInf .overfl {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 .tblFileInput {width: 100%; height: 24px; padding: 5px;}
 .rlFileDiv {display: flex; align-items: center;}
 .rlDocDiv {flex: 1; border: none; margin-right: 8px; outline: none; padding: 0px 5px; max-height: 30px; height: 20px; overflow-y: auto;}
 .rlDocDiv span {cursor: pointer; color: blue; text-decoration: underline; line-height: 20px;}
 .rlDocDiv span:hover {text-decoration:none; text-shadow: 1px 1px 1px #555;}
-.rlDocDiv em {padding-right: 5px; font-style: normal; padding-left: 2px;}
+.rlDocDiv em, .cabemailDiv em {padding-right: 5px; font-style: normal; padding-left: 2px;}
+
+.cabemailDiv {border: none; max-height: 30px; height: 20px; overflow-y: auto;}
+.cabemailDiv span {cursor: pointer; line-height: 20px;}
+.cabemailDiv span:hover {color: #164aad;}
+
 .rlFileDiv >a {padding-right: 8px; cursor: pointer;}
 .rlFileDiv >a >span {padding: 3px 8px; white-space: nowrap; border: 1px solid #ddd;}
 .fileUploadDiv {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 260px; height: 260px; overflow: auto; cursor: pointer;}
@@ -287,6 +293,8 @@
 .ulFiles li {float: left; width: 50%; min-width: 50%; height: 65px; position: relative; padding: 2.5px; box-sizing: border-box;}
 .ulFiles li >img {position: absolute; top: 4.5px; right: 2.5px;}
 .ulFiles li:lastChild {padding-bottom: 5px;}
+.mailContDiv1 {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 260px; height: 260px; overflow: auto;}
+.mailContDiv2 {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 290px; height: 290px; overflow: auto;}
 
 .cabDivFile {display: flex; border: 1px solid #ddd; width: 100%; height: 100%;}
 .cabDivFile .cabImgAva {height: 40px; width: 40px; min-width: 40px; margin: 10px 5px;}
@@ -352,7 +360,6 @@
 .spanDown:before   {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 5px 4px 0px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}
 .spanUp:before     {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 0px 4px 5px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}
 
-
 /* Cabinet share */
 .organCabTbl {margin-top: 5px !important; margin-right: auto !important; margin-left: auto !important; border: none !important; font-size: 12px; table-layout: fixed; width: 400px;}
 .organCabTbl td {border: 0px !important; padding: 0px;}
@@ -364,12 +371,14 @@
 .cUserInfor {text-align: left;}
 
 .cabrlframe {border: none; width: 100%; flex: 1; min-height: 0px; min-width: 0px;}
+.cabrlframe2 {border: none; width: 100%; min-height: 0px; min-width: 0px; height: 100%; display: block;}
 .cabuloff{display: none;}
 .cabrltxt {padding: 0px 5px !important; margin-top: 5px; word-wrap: break-word;}
 .previewmail_addfile.cabattach {padding: 0px 5px !important; width: auto !important; margin-bottom: 10px; font-family: 굴림;}
 .cabSpanAttach {cursor: pointer;}
 .cabSpanAttach img {width: 16px; height: 16px; vertical-align: middle;}
 .title_btn, .cabSpanAttach >span {color: #666; cursor: pointer;}
-.title_btn:hover, .cabSpanAttach:hover >span {color: #164aad;}
+.title_btn:hover, .cabSpanAttach:hover >span, .cursor:hover {color: #164aad;}
+.cursor {cursor: pointer;}
 
-@media print {.cabBttnDiv {display: none;} .fileDetailDiv {height: auto; overflow: visible;} .rlDocDiv {overflow: visible;}}
+@media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2 {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;}  .ulFiles li {page-break-inside: avoid;}}

@@ -705,7 +705,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		ezCabinetDAO.moveSubCabinetList(map);
 	}
 	
-	private synchronized void copyItems(int cabinetId, int newId, String timeUTC, String realPath, LoginVO userInfo) throws Exception {
+	private void copyItems(int cabinetId, int newId, String timeUTC, String realPath, LoginVO userInfo) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("tenantId",  userInfo.getTenantId());
 		map.put("cabinetId", cabinetId);
@@ -714,7 +714,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		copyListItems(realPath, timeUTC, itemList, newId, userInfo);
 	}
 	
-	private void copyListItems(String realPath, String timeUTC, List<CabinetItemVO> itemList, int newCabinetId, LoginVO userInfo) {
+	private synchronized void copyListItems(String realPath, String timeUTC, List<CabinetItemVO> itemList, int newCabinetId, LoginVO userInfo) throws Exception {
 		int tenantId           = userInfo.getTenantId();
 		String userId          = userInfo.getId();
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -785,6 +785,17 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 							relationId ++;
 						}
 					}
+				}
+				
+				//Copy columns
+				if (item.getItemType() != 0) {
+					//Get related columns
+					List<CabinetColumnVO> columnList = getAllRelatedColumnsOfItem(itemId, userInfo.getPrimary(), tenantId);
+					for (CabinetColumnVO column : columnList) {
+						column.setItemId(newItemId);
+					}
+					
+					saveAllColumns(columnList);
 				}
 				
 				newItemId ++;
@@ -1548,7 +1559,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	}
 
 	@Override
-	public List<CabinetColumnVO> getAllRelatedColumnsOfItem(String itemId, String primary, int tenantId) throws Exception {
+	public List<CabinetColumnVO> getAllRelatedColumnsOfItem(int itemId, String primary, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("itemId",    itemId);
 		map.put("tenantId",  tenantId);

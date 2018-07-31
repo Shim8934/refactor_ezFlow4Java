@@ -218,6 +218,8 @@ public class EzCabinetController {
 	@RequestMapping(value = "/ezCabinet/getPreviewContent.do")
 	public String jspGetPreviewPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model)  throws Exception {
 		logger.debug("jspGetPreviewPage started");
+		String module = request.getParameter("module") != null ? request.getParameter("module") : "";
+		model.addAttribute("module", module);
 		
 		logger.debug("jspGetPreviewPage ended");
 		return "ezCabinet/cabinetPrevContent";

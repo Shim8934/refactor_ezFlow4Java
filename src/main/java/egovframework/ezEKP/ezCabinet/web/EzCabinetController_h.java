@@ -1,10 +1,8 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
@@ -45,23 +42,19 @@ public class EzCabinetController_h {
 		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
 		String itemId         = request.getParameter("itemId");
 		String jspPageName    = "";
-		
 		JSONObject permission = cabinetRestService_h.checkPermission(request, user.getId(), itemId, "", 0);
 		
 		if ((long)permission.get("code") == 1) {
 			return "ezCabinet/cabinetAccessDenied";
 		}
 		
-		JSONObject Iteminfo = cabinetRestService_h.cabinetItemInfo(request, user.getId(), itemId);
+		JSONObject iteminfo = cabinetRestService_h.cabinetItemInfo(request, user.getId(), itemId);
 		
-		if (Iteminfo.get("status").toString().equals("ok")) {
-			int itemType = ((Long)Iteminfo.get("itemType")).intValue();
-			
-			switch(itemType) {
-				case 0  : jspPageName = "ezCabinet/cabinetFileDetail"; break;
-				default : break;
-			}
-			
+		if (iteminfo.get("status").toString().equals("ok")) {
+			jspPageName = getModuleHandler(model, iteminfo);
+		}
+		else {
+			return "ezCabinet/cabinetAccessDenied";
 		}
 		
 		model.addAttribute("itemId", itemId);
@@ -322,5 +315,66 @@ public class EzCabinetController_h {
 		
 		logger.debug("jsonSaveRelatedBoard finishes!");
 		return resultObj.toString();
+	}
+	
+	private String getModuleHandler(Model model, JSONObject iteminfo) {
+		String jspPageName   = "";
+		JSONObject item      = (JSONObject) iteminfo.get("item");
+		int itemType         = ((Long)item.get("itemType")).intValue();
+		model.addAttribute("item", item);
+		
+		switch(itemType) {
+			case 0  : jspPageName = "ezCabinet/cabinetFileDetail"                   ; break;
+			case 1  : jspPageName = getEmailColumnInfo(model, iteminfo) ; break;
+			default : break;
+		}
+		
+		return jspPageName;
+	}
+	
+	private String getEmailColumnInfo(Model model, JSONObject iteminfo) {
+		JSONArray columnList = new JSONArray();
+		String jspPageName   = "ezCabinet/cabinetEmailDetail";
+		
+		if (iteminfo.get("columns") != null) {
+			columnList = (JSONArray) iteminfo.get("columns");
+		}
+		
+		if (iteminfo.get("sender") != null) {
+			JSONObject senderUser = (JSONObject) iteminfo.get("sender");
+			model.addAttribute("sender", senderUser);
+		}
+		
+		if (iteminfo.get("receivers") != null) {
+			JSONArray receiverList = (JSONArray) iteminfo.get("receivers");
+			model.addAttribute("receiverList", receiverList);
+		}
+		
+		if (iteminfo.get("forwards") != null) {
+			JSONArray forwardList = (JSONArray) iteminfo.get("forwards");
+			model.addAttribute("forwardList", forwardList);
+		}
+		
+		for (int i = 0, totalColumn = columnList.size(); i < totalColumn; i++) {
+			JSONObject column = (JSONObject) columnList.get(i);
+			String columnId   = column.get("columnId").toString();
+			if (columnId.equals("sender")) {
+				model.addAttribute("senderColumn", column);
+			}
+			
+			if (columnId.equals("receiver")) {
+				model.addAttribute("receiverColumn", column);
+			}
+			
+			if (columnId.equals("forward")) {
+				model.addAttribute("forwardColumn", column);
+			}
+			
+			if (columnId.equals("emailTime")) {
+				model.addAttribute("timeColumn", column);
+			}
+		}
+		
+		return jspPageName;
 	}
 }

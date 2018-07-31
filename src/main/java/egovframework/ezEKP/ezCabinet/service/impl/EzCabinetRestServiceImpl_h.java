@@ -3,9 +3,7 @@ package egovframework.ezEKP.ezCabinet.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -95,14 +93,14 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject getUserListType(HttpServletRequest request, String userId) throws Exception {
 		String url                = "/rest/ezCabinet/list-type/userid/" + userId + "/get";
 		JSONObject resultBody     = getJsonResult(url, null, request, "get", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject saveUserListType(HttpServletRequest request, String userId, String listType) throws Exception {
 		String url                = "/rest/ezCabinet/list-type/userid/" + userId + "/save";
@@ -111,7 +109,7 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject getSearchMember(HttpServletRequest request, String userId, String srchOption, String srchValue, String currentPage) throws Exception {
 		String url                = "/rest/ezCabinet/search-member";
@@ -124,7 +122,7 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject saveShareUserList(HttpServletRequest request, String userId, String cabinetId, String userList) throws Exception {
 		String url                = "/rest/ezCabinet/shared-member/cabinetId/" + cabinetId + "/save";
@@ -135,7 +133,7 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject checkPermission(HttpServletRequest request, String userId, String itemId, String cabinetId, int permission) throws Exception {
 		String url                = "/rest/ezCabinet/check-permission";
@@ -148,7 +146,7 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject getFileDetail(HttpServletRequest request, String userId, String itemId) throws Exception {
 		String url                = "/rest/ezCabinet/file-detail/itemId/" + itemId + "/get";
@@ -158,7 +156,7 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject cabinetItemInfo(HttpServletRequest request, String userId, String itemId) throws Exception {
 		String url                = "/rest/ezCabinet/file-info/itemId/" + itemId;
@@ -168,7 +166,7 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
-
+	
 	@Override
 	public JSONObject modifyItem(HttpServletRequest request, String userId, String itemId, String title, String summary, JSONArray fileArray, JSONArray relatedArr) throws Exception {
 		String url                = "/rest/ezcabinet/item/id/" + itemId + "/modify";
