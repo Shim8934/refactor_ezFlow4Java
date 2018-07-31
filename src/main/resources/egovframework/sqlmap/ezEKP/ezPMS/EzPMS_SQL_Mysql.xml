@@ -520,6 +520,9 @@
 		<result property="taskId" column="TASK_ID" />
 		<result property="planStartDate" column="plan_start_date" />
 		<result property="planEndDate" column="plan_end_date" />
+		<result property="realStartDate" column="real_start_date"/>
+    	<result property="realEndDate" column="real_end_date"/>
+    	<result property="status" column="status"/>
 	</resultMap>
 
 	<resultMap id="projectHolidayVO" class="ProjectHolidayVO">
