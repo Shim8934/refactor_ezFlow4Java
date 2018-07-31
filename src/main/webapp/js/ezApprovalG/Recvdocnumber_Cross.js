@@ -179,6 +179,7 @@ function getRecvDocNumber(pDeptID) {
         var name, docnumber;
         var rtnval;
         var result = "";
+        var rtnVal = "";
 
         if (approvalFlag =='G') {
 	        name = "receiptnumber";
@@ -217,81 +218,48 @@ function getRecvDocNumber(pDeptID) {
 	            
 	            return true;
 	        } else {
-	        	var SN = getNodeText(GetChildNodes(result)[0]);
+	        	rtnVal = setDocNumFormat();
+	            
+	            if (!rtnVal) {
+	            	return true;
+	            }
+
+	            fractionsymbol = field.textContent;
+	            
+	            var SN = getNodeText(GetChildNodes(result)[0]);
 	        	
-		        if (SN == "") {
-		            pDocNumCode = "";
-		            pDocNo = "";
-		            field.textContent = "";
-		            
-		            return false;
-		        } else {
-		            field.textContent = fractionsymbol + SN;
-		            pDocNo = fractionsymbol + SN;
-		            
-		            var tempNumString = SN;
-		            var templen = tempNumString.length;
-		            
-		            for (var i = 0; i < 6 - templen; i++) {
-		            	tempNumString = "0" + tempNumString;
-		            }
-		            
-		            pDocNumCode = pDeptID + tempNumString;
-		            SaveFile();
-		            
-		            return true;
-		        }
+	        	if (SN == "") {
+	        		pDocNumCode = "";
+	        		pDocNo = "";
+	        		field.textContent = "";
+	        		
+	        		return false;
+	        	} else {
+	        		field.textContent = fractionsymbol + SN;
+	        		pDocNo = fractionsymbol + SN;
+	        		
+	        		var tempNumString = SN;
+	        		var templen = tempNumString.length;
+	        		
+	        		for (var i = 0; i < 6 - templen; i++) {
+	        			tempNumString = "0" + tempNumString;
+	        		}
+	        		
+	        		pDocNumCode = pDeptID + tempNumString;
+	        		SaveFile();
+	        		
+	        		return true;
+	        	}
 	        }
-        }
-        
-        var rtnVal = setDocNumFormat();
-        
-        if (!rtnVal) {
-        	return true;
-        }
+        } else {
+        	rtnVal = setDocNumFormat();
+            
+            if (!rtnVal) {
+            	return true;
+            }
 
-        fractionsymbol = field.textContent;
-
-    	var result = "";
-    	
-    	 if (approvalFlag =='G') {
-    	$.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/ezApprovalG/getCabinetSN.do",
-    		data : {
-    			docID : pDocID,
-    			deptID : pDeptID,
-    			orgCompanyID : orgCompanyID
-    		},
-    		success: function(xml){
-    			result = loadXMLString(xml);
-    		}
-    	});
-    	
-        var SN = getNodeText(GetChildNodes(result)[0]);
-        if (SN == "") {
-            pDocNumCode = "";
-            pDocNo = "";
-            field.textContent = "";
-            return false;
+            fractionsymbol = field.textContent;
         }
-        else {
-            field.textContent = fractionsymbol + SN;
-            pDocNo = fractionsymbol + SN;
-            var tempNumString = SN;
-            var i = 0;
-            var templen = tempNumString.length;
-            for (i = 0; i < 6 - templen; i++)
-                tempNumString = "0" + tempNumString;
-            pDocNumCode = pDeptID + tempNumString;
-            SaveFile();
-            return true;
-        }
-    	 } else {
-    		 
-    	 }
     } catch (e) {
         if (SN != "") {
             field.textContent = fractionsymbol + SN;

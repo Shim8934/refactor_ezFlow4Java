@@ -224,9 +224,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				String tmpEndDateStr = vo.getStartDate().substring(0, 10) + endDate.substring(10);
 				
 				date_Ecal.setTime(sdf.parse(tmpEndDateStr));
-				logger.debug("======utcStartDate======== " + utcStartDate);
-				logger.debug("=======vo.getStartDate()======= : " + vo.getStartDate());
-				logger.debug("=======endDate======= : " + endDate);
 				
 				switch (info[2]) {
 					case "0" :
@@ -306,13 +303,13 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 								
 								if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {	
 									if(info[0].equals("0")){
-											
+										
 												for (Integer yoil : wDay) {
 													
 													date_cal.set(Calendar.DAY_OF_WEEK,yoil+1);
 													calcuDate = nsdf.format(date_cal.getTime());
 													if (!rList.contains(calcuDate)) {
-														if (date_cal.getTime().after(sdf.parse(vo.getStartDate())) && date_cal.getTime().before(sdf.parse(endDate))) {
+														if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0 && date_cal.getTime().compareTo(sdf.parse(endDate)) <= 0) {
 														ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
 														resultList.add(rVo);
 													}

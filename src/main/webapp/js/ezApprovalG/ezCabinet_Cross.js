@@ -1461,7 +1461,7 @@ function SetRecUserRole(pRecID, pSepAttNo, pDeptCode) {
 
     setrecuserrole_cross_dialogArguments[0] = para;
 
-    var OpenWin = window.open(url, "SetRecUserRole_Cross", GetOpenWindowfeature(720, 450));
+    var OpenWin = window.open(url, "SetRecUserRole_Cross", GetOpenWindowfeature(909, 450));
     try { OpenWin.focus(); } catch (e) { }
 }
 
@@ -1582,9 +1582,9 @@ function makePageSelPage(pTotalCnt) {
         }
 
         if (!isPeriodYear)
-            document.getElementById("TitleInfo").innerHTML = "-&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + "]";
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + "]";
         else
-            document.getElementById("TitleInfo").innerHTML = "-&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
     }
 
     strtext = "<div class='pagenavi'>";

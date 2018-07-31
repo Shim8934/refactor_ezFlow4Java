@@ -1440,7 +1440,7 @@
 		                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
 		                        </td>
 		                        <td style="vertical-align: top;">
-		                            <h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
+		                            <h2 id="ToTitle" class="receiver_tltype01">
 		                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezSchedule.t00001' /></span>
 		                            </h2>
 		                            <div class="receiver_borderbox">
