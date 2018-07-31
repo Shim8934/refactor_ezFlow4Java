@@ -225,9 +225,11 @@
 							var hrefStr = listChildren[i].getAttribute("href");
 							var params  = getAllUrlParams(hrefStr);
 							
+							console.log("File path: " + javaURLDecode(params["filePath"]));
+							
 							attachList.push({
-								fileHref : params,
-								fileName : params.fileName
+								filePath : javaURLDecode(params["filePath"]),
+								fileName : params["fileName"]
 							});
 						}
 					}
@@ -331,6 +333,17 @@
 					}
 					
 					return obj;
+				}
+				
+				function javaURLDecode(str) {
+					return decodeURIComponent(str)
+						.replace("%2b", /\+/g)
+						.replace("%3b", /\;/g)
+						.replace("%21", /!/g)
+						.replace("%27", /'/g)
+						.replace("%28", /\(/g)
+						.replace("%29", /\)/g)
+						.replace("%7E", /~/g);
 				}
 				
 				function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {

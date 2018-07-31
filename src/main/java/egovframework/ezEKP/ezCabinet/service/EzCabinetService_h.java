@@ -21,5 +21,5 @@ public interface EzCabinetService_h {
 	List<CabinetAttachFileVO> getAttachFileList(String itemId, int tenantId) throws Exception;
 	List<CabinetRelationItemVO> getRelatedFileList(String itemId, int tenantId) throws Exception;
 	void modifyItem(int itemId, JSONArray attacheFiles, JSONArray relatedFiles, String title, String summary, String realPath, LoginVO userInfo) throws Exception;
-	JSONObject saveBoarditem(String realPath, String mode, int dstCabinetId, String title, String writer, String attach, String content, String dateTime, Locale locale, LoginVO userInfo) throws Exception;
+	JSONObject saveBoarditem(String realPath, String mode, int parseInt, String title, String writer, String attach, String content, String dateTime, Locale locale, LoginVO userInfo) throws Exception;
 }
