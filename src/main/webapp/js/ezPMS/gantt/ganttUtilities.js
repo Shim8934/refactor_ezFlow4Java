@@ -393,7 +393,15 @@ $.splittify = {
 //<%------------------------------------------------------------------------  UTILITIES ---------------------------------------------------------------%>
 // same dates returns 1
 function getDurationInUnits(start,end){
-  return start.distanceInWorkingDays(end)+1; // working in days
+  var eDate = new Date(end);
+  eDate.setHours(12, 0, 0, 0);
+  
+  // 시작일과 종료일을 공휴일로 지정 가능하게 하기 위해 추가 - 임민석
+  if(isHoliday(eDate)) {
+	  return start.distanceInWorkingDays(end); // working in days
+  } else {
+	  return start.distanceInWorkingDays(end)+1; // working in days
+  }
 }
 
 //con due date uguali ritorna 0: usata per cancolare la distanza effettiva tra due date
@@ -411,6 +419,17 @@ function computeStart(start) {
   return computeStartDate(start).getTime();
 }
 
+function computeStart2(start) {
+  var d;
+  d = new Date(start + 3600000 * 12);
+  d.setHours(0, 0, 0, 0);
+  //move to next working day
+  while (isHoliday(d)) {
+  d.setDate(d.getDate() + 1);
+  }
+  d.setHours(0, 0, 0, 0);
+  return d.getTime();
+}
 /**
  * @param start
  * @returns {Date} the closes start date
@@ -419,11 +438,12 @@ function computeStartDate(start) {
   var d;
   d = new Date(start + 3600000 * 12);
   d.setHours(0, 0, 0, 0);
-  //move to next working day
-  while (isHoliday(d)) {
-    d.setDate(d.getDate() + 1);
-  }
-  d.setHours(0, 0, 0, 0);
+  //move to next working day 주석 처리 - 임민석
+//  while (isHoliday(d)) {
+//    d.setDate(d.getDate() + 1);
+//  }
+//  d.setHours(0, 0, 0, 0);
+
   return d;
 }
 
@@ -438,18 +458,19 @@ function computeEnd(end) {
 function computeEndDate(end) {
   var d = new Date(end - 3600000 * 12);
   d.setHours(23, 59, 59, 999);
-  //move to next working day
-  while (isHoliday(d)) {
-    d.setDate(d.getDate() + 1);
-  }
-  d.setHours(23, 59, 59, 999);
+  //move to next working day 주석 처리 - 임민석
+//  while (isHoliday(d)) {
+//    d.setDate(d.getDate() + 1);
+//  }
+//  d.setHours(23, 59, 59, 999);
   return d;
 }
 
 function computeEndByDuration(start, duration) {
 //console.debug("computeEndByDuration start ",d,duration)
   var d = new Date(start);
-  var q = duration - 1;
+  // start를 공휴일로 지정 가능하기 위해 수정 - 임민석
+  var q = isHoliday(d) ? duration : duration - 1;
   while (q > 0) {
     d.setDate(d.getDate() + 1);
     if (!isHoliday(d))
