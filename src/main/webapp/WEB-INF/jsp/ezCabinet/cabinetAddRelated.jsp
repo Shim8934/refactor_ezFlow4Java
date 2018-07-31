@@ -188,17 +188,29 @@
 					var contentWd     = messageFrame.contentWindow || messageFrame.contentDocument;
 					var divContent    = contentWd.document.getElementById("div_Content").innerHTML;
 					var doctitle      = contentWd.document.getElementById("doctitle").textContent;
-					var lstAttachLink = window.opener.document.getElementById("lstAttachLink");
-					var lstAttachLinkList = [];
+					var attach        = window.opener.document.getElementById("lstAttachLink");
+					var attachList = [];
 					
-					console.log(lstAttachLink);
+					if (attach){
+						for(var i = 0, len = attach.length; i < len; i++){
+							var aElmt   = attach[i].firstElementChild;
+							var hrefStr = aElmt.getAttribute("docHref");
+							var params  = getAllUrlParams(hrefStr);
+							
+							attach.push({
+								fileHref : pararms,
+								fileName : aElmt.getAttribute("fileName")
+							});
+						}
+					}  
+					console.log(attach);
 					var url          = "/ezCabinet/saveRelatedApproval.do";
 					var data         = {
 						type          : moduleType, 
 						mode          : saveMode, 
 						content       : JSON.stringify(divContent),
 						doctitle      : doctitle,
-						lstAttachLink : JSON.stringify(lstAttachLink)
+						lstAttachLink : JSON.stringify(attachList)
 					};
 					
 					if (saveMode == 1) {data.cabinetId = cabinetId;}
