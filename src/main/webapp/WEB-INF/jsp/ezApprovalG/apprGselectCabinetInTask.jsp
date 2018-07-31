@@ -78,11 +78,14 @@
 		
 		        if (g_InitFlag == "1")
 		        {
+		        	alert("요기")
 		            if (g_bRecAdmin || AdminYN == "TRUE" || g_bDeptCharger) {
-		                trCreateCab.style.display = "";
+// 		                trCreateCab.style.display = "";
+		                $('#trCreateCab').show();
 		            }
 		            else {
-		                trCreateCab.style.display = "none";
+// 		                trCreateCab.style.display = "none";
+		                $('#trCreateCab').hide();
 		            }
 		        }
 		        if (typeof (g_SelCabID) != "undefined") {
@@ -552,7 +555,7 @@
         	<tr>
         		<td>
 					<div class="listview">
-						<div id="CabinetList" style="border:0;HEIGHT: 310px; WIDTH: 380px;overflow:auto;"></div>
+						<div id="CabinetList" style="border:0;HEIGHT: 410px; WIDTH: 380px;overflow:auto;"></div>
 					</div>
         		</td>
         		<td>
@@ -565,7 +568,7 @@
         		</td>
         		<td>
 					<div class="listview">
-						<div id="SelCabinetList" style="border:0; HEIGHT: 310px; WIDTH: 247px;overflow:auto;"></div>
+						<div id="SelCabinetList" style="border:0; HEIGHT: 410px; WIDTH: 372px;overflow:auto;"></div>
 					</div>
         		</td>
         	</tr>
