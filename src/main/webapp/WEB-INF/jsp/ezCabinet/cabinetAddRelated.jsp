@@ -184,23 +184,28 @@
 				}
 				
 				function saveApprovalDocument(saveMode, cabinetId) {
-					var messageFrame  = window.opener.document.getElementById("message");
-					var contentWd     = messageFrame.contentWindow || messageFrame.contentDocument;
-					var divContent    = contentWd.document.getElementById("div_Content").innerHTML;
-					var doctitle      = contentWd.document.getElementById("doctitle").textContent;
-					var attach        = window.opener.document.getElementById("lstAttachLink");
+					var approvalOpener = window.opener;
+					if(!approvalOpener) {alert(CabinetMessages.strSelect); return;}
+					var messageFrame   = approvalOpener.document.getElementById("message");
+					var contentWd      = messageFrame.contentWindow || messageFrame.contentDocument;
+					var divContent     = contentWd.document.getElementById("div_Content").innerHTML;
+					var doctitle       = contentWd.document.getElementById("doctitle").textContent;
+					var attach         = approvalOpener.document.getElementById("lstAttachLink");
 					var attachList = [];
 					
-					if (attach){
-						for(var i = 0, len = attach.length; i < len; i++){
-							var aElmt   = attach[i].firstElementChild;
-							var hrefStr = aElmt.getAttribute("docHref");
+					if (attach.childElementCount > 1){
+						var listChildren = attach.getElementsByTagName("a");
+						for(var i = 0, len = listChildren.length; i < len; i++){
+							var hrefStr = listChildren[i].getAttribute("docHref");
 							var params  = getAllUrlParams(hrefStr);
 							
-							attach.push({
-								fileHref : pararms,
-								fileName : aElmt.getAttribute("fileName")
-							});
+							console.log(hrefStr);
+							 console.log("File path: " + javaURLDecode(params["filePath"]));
+							
+							attachList.push({
+								filePath : javaURLDecode(params["filePath"]),
+								fileName : params["fileName"]
+							}); 
 						}
 					}  
 					console.log(attach);
