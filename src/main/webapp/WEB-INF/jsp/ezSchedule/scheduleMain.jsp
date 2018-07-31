@@ -46,6 +46,20 @@
 		.chk_noneDisplay {
 			display:none;
 		}
+		/* 2018-07-31 구해안 반응형 text-overflow:ellipsis; 위한 css 추가  */
+		.truncate-ellipsis {
+		    display: table;
+		    table-layout: fixed;
+		    width: 100%;
+		    white-space: nowrap;
+		}
+		 
+		.truncate-ellipsis2 {
+		    display: table-cell;
+		    overflow: hidden;
+		    text-overflow: ellipsis;
+		    width: 93%;
+		}
 		</style>
 		<script type="text/javascript">		    
 			var timeZoneStr = "<c:out value='${timeZoneStr}'/>";
