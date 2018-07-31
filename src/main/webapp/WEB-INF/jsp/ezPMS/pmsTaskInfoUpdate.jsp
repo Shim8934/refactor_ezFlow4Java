@@ -19,6 +19,10 @@
 	.textInput {
 		width : 100%;
 	}
+	.textInput[readonly] {
+		cursor : default;
+	}
+	
 	.headerDiv {
 	    width: 150px;
 	    float: right;
@@ -142,6 +146,10 @@ var userRoleId = parent.userRoleId;
 	 applyList();
 	 applyParticipantList();
 	 initpretaskNames();
+	 
+	 if(JSON.parse(weightData).weightInput === 0){
+		 document.getElementById("weight").readOnly = true;
+	 }
 	 document.getElementById("taskName").focus();
  });
  
