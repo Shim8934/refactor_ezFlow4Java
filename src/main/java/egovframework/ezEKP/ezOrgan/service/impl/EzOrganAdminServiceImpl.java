@@ -1179,6 +1179,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     	
     	params.put("tenantID", tenantID);
 		params.put("v_start", startPage);
+		params.put("v_end",   startPage + maxItemPerPage - 1);
 		params.put("pageCount", maxItemPerPage);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);

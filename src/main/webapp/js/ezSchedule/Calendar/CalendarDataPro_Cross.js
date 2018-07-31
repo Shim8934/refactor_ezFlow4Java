@@ -622,11 +622,6 @@ function CalMonthDataBind(oAppointment) {
 
         var oTr = document.createElement("TR");
         var oTd = document.createElement("TD");
-        var oOSpan = document.createElement("SPAN");
-        
-        oOSpan.className = "truncate-ellipsis";
-       
-        
         var oSpan = document.createElement("SPAN");
         
         if (oAppointment.ScheduleType == 3) {
@@ -649,9 +644,8 @@ function CalMonthDataBind(oAppointment) {
             oTd.className = "department";
             oSpan.className = "department";
         }
-        
-        oOSpan.appendChild(oSpan);
-        oTd.appendChild(oOSpan);
+
+        oTd.appendChild(oSpan);
 
         var pTime = "";
         var pSubject;
@@ -715,12 +709,7 @@ function CalMonthDataBind(oAppointment) {
 
         var oText = document.createTextNode(pSubject);        
         //oTd.innerHTML += pSubject;
-        //oTd.appendChild(oText);
-        
-        var tSpan = document.createElement("SPAN");
-        tSpan.className = "truncate-ellipsis2";
-        tSpan.appendChild(oText);
-        oOSpan.appendChild(tSpan);
+        oTd.appendChild(oText);
         
         oTr.appendChild(oTd);
         objElm.appendChild(oTr);
