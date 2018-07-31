@@ -67,7 +67,7 @@ input[name='boardCheckbox']{margin: 0px; padding: 0px; width: 13px; height: 13px
 							<input type="checkbox" id="HeaderAllCheckBox" name="boardCheckbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);">
 						</th>
 						<th id="BoardList_TH_1" onclick="setListOrder(this)" order="PROJECT_NAME" class="h5_center projectNameTh"><spring:message code='ezPMS.t31' /></th>
-						<th id="BoardList_TH_2" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME" class="h5_center headManagerNameTh"><spring:message code='ezPMS.t32' /></th>
+						<th id="BoardList_TH_2" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME" class="h5_center headManagerNameTh"><spring:message code='ezPMS.t330' /></th>
 						<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PLAN_START_DATE" class="h5_center planStartDateTh"><spring:message code='ezPMS.t61' /></th>
 						<th id="BoardList_TH_4" onclick="setListOrder(this)" order="PLAN_END_DATE" class="h5_center planEndDateTh"><spring:message code='ezPMS.t62' /></th>
 						<th id="BoardList_TH_5" onclick="setListOrder(this)" order="STATUS" class="h5_center statusTh"><spring:message code='ezPMS.t38' /></th>
