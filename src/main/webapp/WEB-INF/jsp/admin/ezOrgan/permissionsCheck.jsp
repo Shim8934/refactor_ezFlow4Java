@@ -1038,12 +1038,14 @@
 			                <DATA1>a</DATA1>
 			            </CELL>
 			        </ROW>
+			        <c:if test="${approvalFlag eq 'G'}">
 			        <ROW>
 			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.t294'/></VALUE>
 			                <DATA1>i</DATA1>
 			            </CELL>
 			        </ROW>
+			        </c:if>
 			        <ROW>
 			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.t297'/></VALUE>
@@ -1078,12 +1080,12 @@
 			            </CELL>
 			        </ROW>   
                     </c:if>
-                    <ROW>
+                    <%-- <ROW>
 			            <CELL>            
 			                <VALUE><spring:message code='ezOrgan.t303'/></VALUE>
 			                <DATA1>wf</DATA1>
 			            </CELL>
-			        </ROW>
+			        </ROW>--%>
                     <ROW>
 			            <CELL>            
 			                <VALUE>근태관리자</VALUE>

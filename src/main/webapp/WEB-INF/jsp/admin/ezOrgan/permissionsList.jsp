@@ -525,7 +525,7 @@
 	                <c:if test="${approvalForDoc == 'Y'}">
 	                	<p id="Permission_sub10"><span divname="f" id="1tab10"><spring:message code='ezOrgan.lhj1' /></span></p>
 	                </c:if>
-	                <p id="Permission_sub11"><span divname="wf" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
+	                <%--<p id="Permission_sub11"><span divname="wf" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p> --%>
 	                <p id="Permission_sub12" <c:if test="${use_attitude != 'YES'}">style="display:none;"</c:if>><span divname="wa" id="1tab12">근태관리자</span></p>
 		        </div>
 		    </div>
