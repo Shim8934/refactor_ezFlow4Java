@@ -271,11 +271,11 @@ Insert into TBL_C_CATEGORY (C_CODE,C_CAT,C_NAME,C_ORDER,TENANT_ID) values ('OC',
 Insert into TBL_C_CATEGORY (C_CODE,C_CAT,C_NAME,C_ORDER,TENANT_ID) values ('ZA','c','t1528',9,0);
 
 -- approvalG Insert
-INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZA000001', N'총무행정', N'총무행정', NULL, N'총무행정_Eng','S907000',0);
-INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZB000001', N'경제', N'경제', NULL, N'경제_Eng','S907000',0);
-INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZC000001', N'재무', N'재무', NULL, N'재무_Eng','S907000',0);
-INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000001', N'감사', N'감사', NULL, N'감사_Eng','S907000',0);
-INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000002', N'에너지', N'에너지관리공단테스트용', NULL, N'에너지_Eng','S907000',0);
+--INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZA000001', N'총무행정', N'총무행정', NULL, N'총무행정_Eng','S907000',0);
+--INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZB000001', N'경제', N'경제', NULL, N'경제_Eng','S907000',0);
+--INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZC000001', N'재무', N'재무', NULL, N'재무_Eng','S907000',0);
+--INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000001', N'감사', N'감사', NULL, N'감사_Eng','S907000',0);
+--INSERT INTO TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000002', N'에너지', N'에너지관리공단테스트용', NULL, N'에너지_Eng','S907000',0);
 
 INSERT INTO TBL_LastDocID  (lastDocID, COMPANYID, TENANT_ID) VALUES ('0                ','S907000', 0);
 

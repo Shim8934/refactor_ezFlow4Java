@@ -600,12 +600,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_I3(map1);
 				ezOrganAdminDao.insertCompanyInfo_I4(map1);
 				ezOrganAdminDao.insertCompanyInfo_I5(map1);
-				ezOrganAdminDao.insertCompanyInfo_I6(map1);
+//				ezOrganAdminDao.insertCompanyInfo_I6(map1);
 				ezOrganAdminDao.insertCompanyInfo_I7(map1);
 				ezOrganAdminDao.insertCompanyInfo_I8(map1);
 				ezOrganAdminDao.insertCompanyInfo_I9(map1);
 				ezOrganAdminDao.insertCompanyInfo_I10(map1);
-				ezOrganAdminDao.insertCompanyInfo_I11(map1);
+//				ezOrganAdminDao.insertCompanyInfo_I11(map1);
 				ezOrganAdminDao.insertCompanyInfo_I12(map1);
 				ezOrganAdminDao.insertCompanyInfo_I13(map1);
 				ezOrganAdminDao.insertCompanyInfo_I14(map1);

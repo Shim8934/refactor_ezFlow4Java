@@ -500,7 +500,7 @@
             	</td>
             	<td>&nbsp;</td>
             	<td style="vertical-align: top;">
-                	<table class="popuplist" style="width: 360px; height: 110px; margin-top:39px">
+                	<table class="popuplist" style="width: 360px; height: 110px;">
                     	<tr>
                     		<c:choose>
                     			<c:when test="${approvalFlag == 'S' }">
