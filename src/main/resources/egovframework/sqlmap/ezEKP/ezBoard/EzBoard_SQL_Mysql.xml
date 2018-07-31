@@ -5088,6 +5088,8 @@
 				$v_PWHEREBOARD$ 
 			AND
 				A.TENANT_ID = #v_TENANTID#
+			AND
+				I.COMPANYID = #v_pCompanyID#
 		]]>
 		<isEqual property="v_MODE" compareValue="1">
 			<![CDATA[ 

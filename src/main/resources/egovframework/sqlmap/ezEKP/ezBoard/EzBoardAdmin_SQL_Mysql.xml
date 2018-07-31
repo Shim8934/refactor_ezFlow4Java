@@ -393,8 +393,7 @@
             AND 
             	( AccessID = #v_pUserID#
             	  OR AccessID = #v_pDeptID#
-                  OR AccessID = #v_pCompanyID# 
-                  OR AccessID = 'everyone' )
+                  OR AccessID = #v_pCompanyID# )
             AND 
             	BoardID = IFNULL((SELECT 
             					BoardGroupID 
