@@ -181,6 +181,7 @@
 		var realProgress = document.querySelector("[name='realProgress']").value.trim();
 		var statusSelect = document.querySelector(".taskStatusChgDiv select");
 		var status = statusSelect.options[statusSelect.selectedIndex].value;
+		
 		//날짜 제한
 		var startDateArr = planStartDate.split('-');
 		var endDateArr = planEndDate.split('-');
@@ -189,7 +190,7 @@
 		var endDateComp = new Date(planEndDate);
 		
 		var today = new Date();
-		var todayComp = new Date(today.getFullYear(), today.getMonth()-1, today.getDay());
+// 		var todayComp = new Date(today.getFullYear(), today.getMonth()-1, today.getDay());
 		
 		var projectStartDateComp = new Date(projectStartDate);
 		var projectEndDateComp = new Date(projectEndDate);
@@ -201,7 +202,7 @@
 		}
 		 
 		//2. 종료일 < 현재일일 떄, 지연업무로 넘어갈 것이라는 confirm창 띄우기
-		if (endDateComp.getTime() < todayComp.getTime()) {
+		if (endDateComp.getTime() < today.getTime() && nowStatus !== "L") {
 			var confCheck = confirm("<spring:message code='ezPMS.t93' />");
 			 
 			if (confCheck != true) {
@@ -210,13 +211,12 @@
 		}
 		
 		//업무가 지연 상태일때 오늘날짜보다 종료날짜가 뒤로 변경되면 상태를 진행으로 변경
-		if (status == "L" && (endDateComp.getTime() > todayComp.getTime())) {
+		if (status == "L" && (endDateComp.getTime() > today.getTime())) {
 			status = "P";
 		}
 		
 		//3. 업무의 계획 시작일과 계획 종료일은 프로젝트 시작일과 종료일범위를 벗어날수 없음
 		if (startDateComp.getTime() < projectStartDateComp.getTime()) {
-			alert(startDateComp.getTime() + " <<<<>>>> " + projectStartDateComp.getTime());
 			alert("<spring:message code='ezPMS.t94' />");
 			return;
 		}
