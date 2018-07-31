@@ -548,10 +548,10 @@
         		<td>
         			<h2 class="h2_dot" style="font-weight: normal">
         				<spring:message code='ezApprovalG.t711'/>
-        				<span id="trCreateCab">
-	        				<a class="imgbtn imgbck" style="margin:-4px 0px 0px 228px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
-					  		<a class="imgbtn imgbck" style="display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a>
-        				</span>
+<!--         				<span id="trCreateCab"> -->
+<%-- 	        				<a class="imgbtn imgbck" style="margin:-4px 0px 0px 228px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a> --%>
+<%-- 					  		<a class="imgbtn imgbck" style="display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a> --%>
+<!--         				</span> -->
         			</h2>
         		</td>
         		<td></td>
