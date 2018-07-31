@@ -188,7 +188,7 @@ input[name='boardCheckbox']{margin: 0px; padding: 0px; width: 13px; height: 13px
 							</td>
 							<td class="realProgressTd" onclick="selectedTR(this);">
 								<div style="margin-top: 5px; display: inline-block;">
-									<c:out value="${task.realProgress }"/>%
+									<fmt:formatNumber value="${task.realProgress }" pattern="0.0" />%
 								</div>
 							</td>
 						</tr>
