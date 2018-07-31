@@ -4587,7 +4587,7 @@ public class EzPMSController {
 		ganttSunStyle.setFont(sunFont);
 		ganttSunStyle.setWrapText(true);
 				
-		// 간트 그래프 색칠 o 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
+		// 간트 그래프 업무 색칠 o 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
 		HSSFCellStyle graphStyle = workbook.createCellStyle();
 		graphStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		graphStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
@@ -4595,8 +4595,26 @@ public class EzPMSController {
 		graphStyle.setBorderLeft(HSSFCellStyle.BORDER_NONE);
 		graphStyle.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
 		graphStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-
-		// 간트 그래프 색칠 o 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
+		
+		// 간트 그래프 프로젝트 색칠 o 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
+		HSSFCellStyle projectGraphStyle = workbook.createCellStyle();
+		projectGraphStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		projectGraphStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		projectGraphStyle.setBorderRight(HSSFCellStyle.BORDER_NONE);
+		projectGraphStyle.setBorderLeft(HSSFCellStyle.BORDER_NONE);
+		projectGraphStyle.setFillForegroundColor(IndexedColors.LIME.getIndex());
+		projectGraphStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		
+		// 간트 그래프 그룹 색칠 o 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
+		HSSFCellStyle groupGraphStyle = workbook.createCellStyle();
+		groupGraphStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		groupGraphStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		groupGraphStyle.setBorderRight(HSSFCellStyle.BORDER_NONE);
+		groupGraphStyle.setBorderLeft(HSSFCellStyle.BORDER_NONE);
+		groupGraphStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+		groupGraphStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		
+		// 간트 그래프 색칠 X 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
 		HSSFCellStyle noGraphStyle = workbook.createCellStyle();
 		noGraphStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		noGraphStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
@@ -4992,6 +5010,7 @@ public class EzPMSController {
 		String pName = project.get("headManagerName").toString();
 		JSONArray pProjectMemberList = (JSONArray) project.get("projectMember");
 		int pCount = pProjectMemberList.size() - 1;
+		
 		row.createCell(16).setCellValue(egovMessageSource.getMessageExtend("ezPMS.t349", new Object[] {pName, pCount}, userInfo.getLocale()) );// 담당자
 		row.getCell(16).setCellStyle(projectStyle);
 		row.createCell(17).setCellValue("");// 산출물
@@ -5021,7 +5040,7 @@ public class EzPMSController {
 				// 시작일 부터 처음
 				row.createCell(startCell + i).setCellStyle(noGraphStyle);
 			} else if (i >= monthStartDiff && i <= monthStartDiff + pDateDiff) {
-				row.createCell(startCell + i).setCellStyle(graphStyle);
+				row.createCell(startCell + i).setCellStyle(projectGraphStyle);
 				// ganttStyle.setFillPattern(HSSFCellStyle.NO_FILL);
 			} else {
 				// 색칠이 끝나고 난 다음 부터 끝까지
@@ -5047,12 +5066,14 @@ public class EzPMSController {
 			int workingday = 0;
 			JSONObject content = new JSONObject();
 			String contMemberName = "";
-			
+			String taskOrGroup = "";
 			// 지연율
 			float latePercent = 0;
 			int realWorkingday = 0;
 			
 			if (ganttTaskId.contains("t")) {
+				taskOrGroup = "task";
+				
 				for (int j = 0; j < taskList.size(); j++) {
 					content = (JSONObject) taskList.get(j);
 					String contentTaskId = content.get("taskId").toString();
@@ -5067,7 +5088,7 @@ public class EzPMSController {
 						int taskMemberCount = taskMemberList.size() - 1;
 						
 						if (taskMemberCount != 0) {
-							contMemberName = egovMessageSource.getMessageExtend("ezPMS.t349", new Object[] {taskMember.get("userName").toString(), taskCount}, userInfo.getLocale());// 담당자
+							contMemberName = egovMessageSource.getMessageExtend("ezPMS.t349", new Object[] {taskMember.get("userName").toString(), taskMemberCount}, userInfo.getLocale());// 담당자
 						} else {
 							contMemberName = taskMember.get("userName").toString();
 						}
@@ -5080,7 +5101,9 @@ public class EzPMSController {
 						break;
 					}
 				}
-			} else if (ganttTaskId.contains("g")) {				
+			} else if (ganttTaskId.contains("g")) {	
+				taskOrGroup = "group";
+				
 				for (int j = 0; j < groupList.size(); j++) {
 					content = (JSONObject) groupList.get(j);
 
@@ -5133,7 +5156,7 @@ public class EzPMSController {
 				if (content.get("taskId") == null) {
 					row.createCell(1).setCellValue("■ " + content.get("groupName").toString());
 				} else {
-					row.createCell(1).setCellValue(content.get("taskName").toString());
+					row.createCell(1).setCellValue("■ " + content.get("taskName").toString());
 				}
 
 				row.getCell(1).setCellStyle(upperGroupTaskStyle);
@@ -5251,12 +5274,10 @@ public class EzPMSController {
 				}
 			}
 
-			// 프로젝트 기간에 그래프 색칠
+			// 업무/그룹 기간에 그래프 색칠
 			Date contPlanEndDate = new SimpleDateFormat("yyyy-MM-dd").parse(content.get("planEndDate").toString());
 			Date contPlanStartDate = new SimpleDateFormat("yyyy-MM-dd").parse(content.get("planStartDate").toString());
-			// 프로젝트 시작일 - 해당 월의 1일 차이만큼 띄우고 프로젝트 종료일 차이까지 색칠 (그 외는
-			// noGraphStyle적용)//프로젝트 시작일 - 해당 월의 1일 차이만큼 띄우고 프로젝트 종료일 차이까지 색칠 (그
-			// 외는 noGraphStyle적용)
+		
 			long contStartDiff = (contPlanStartDate.getTime() - monthStartDate.getTime()) / (24 * 60 * 60 * 1000);
 
 			// 두 날짜 차이
@@ -5268,7 +5289,12 @@ public class EzPMSController {
 					// 시작일 부터 처음
 					row.createCell(startCell + j).setCellStyle(noGraphStyle);
 				} else if (j >= contStartDiff && j <= contStartDiff + contDateDiff) {
-					row.createCell(startCell + j).setCellStyle(graphStyle);
+					if (taskOrGroup.equals("task")) {
+						row.createCell(startCell + j).setCellStyle(graphStyle);
+					} else if (taskOrGroup.equals("group")) {
+						row.createCell(startCell + j).setCellStyle(groupGraphStyle);
+					}
+					
 					// ganttStyle.setFillPattern(HSSFCellStyle.NO_FILL);
 				} else {
 					// 색칠이 끝나고 난 다음 부터 끝까지
@@ -5301,9 +5327,6 @@ public class EzPMSController {
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + encodedFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
 
-		System.out.println(projectId);
-		System.out.println(request.getParameter("taskId"));
-		System.out.println(request.getParameter("taskLevel"));
 		workbook.close();
 		LOGGER.debug("ezPMS exportGanttExcel ended.");
 	}
