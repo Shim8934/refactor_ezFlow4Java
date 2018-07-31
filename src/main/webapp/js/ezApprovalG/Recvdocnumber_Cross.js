@@ -179,6 +179,7 @@ function getRecvDocNumber(pDeptID) {
         var name, docnumber;
         var rtnval;
         var result = "";
+        var rtnVal = "";
 
         if (approvalFlag =='G') {
 	        name = "receiptnumber";
@@ -216,40 +217,48 @@ function getRecvDocNumber(pDeptID) {
 	            
 	            return true;
 	        } else {
-	        	var SN = getNodeText(GetChildNodes(result)[0]);
-	        	
-		        if (SN == "") {
-		            pDocNumCode = "";
-		            pDocNo = "";
-		            field.textContent = "";
-		            
-		            return false;
-		        } else {
-		            field.textContent = fractionsymbol + SN;
-		            pDocNo = fractionsymbol + SN;
-		            
-		            var tempNumString = SN;
-		            var templen = tempNumString.length;
-		            
-		            for (var i = 0; i < 6 - templen; i++) {
-		            	tempNumString = "0" + tempNumString;
-		            }
-		            
-		            pDocNumCode = pDeptID + tempNumString;
-		            SaveFile();
-		            
-		            return true;
-		        }
-	        }
-        }
-        
-        var rtnVal = setDocNumFormat();
-        
-        if (!rtnVal) {
-        	return true;
-        }
+	        	rtnVal = setDocNumFormat();
+	            
+	            if (!rtnVal) {
+	            	return true;
+	            }
 
-        fractionsymbol = field.textContent;
+	            fractionsymbol = field.textContent;
+	            
+	            var SN = getNodeText(GetChildNodes(result)[0]);
+	        	
+	        	if (SN == "") {
+	        		pDocNumCode = "";
+	        		pDocNo = "";
+	        		field.textContent = "";
+	        		
+	        		return false;
+	        	} else {
+	        		field.textContent = fractionsymbol + SN;
+	        		pDocNo = fractionsymbol + SN;
+	        		
+	        		var tempNumString = SN;
+	        		var templen = tempNumString.length;
+	        		
+	        		for (var i = 0; i < 6 - templen; i++) {
+	        			tempNumString = "0" + tempNumString;
+	        		}
+	        		
+	        		pDocNumCode = pDeptID + tempNumString;
+	        		SaveFile();
+	        		
+	        		return true;
+	        	}
+	        }
+        } else {
+        	rtnVal = setDocNumFormat();
+            
+            if (!rtnVal) {
+            	return true;
+            }
+
+            fractionsymbol = field.textContent;
+        }
     } catch (e) {
         if (SN != "") {
             field.textContent = fractionsymbol + SN;
