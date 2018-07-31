@@ -29,7 +29,7 @@
 <div id="close"><ul><li id="btnClose" ><span onClick="return btnClose_onclick()"></span></li></ul></div>
 <table class="content">
 	<tr>
-		<th style="padding-right: 83px;"><spring:message code='ezApprovalG.t106'/></th>
+		<th style="padding-right: 82px;"><spring:message code='ezApprovalG.t106'/></th>
 		<td id="tdTitle" colspan=3 >&nbsp;</td>
 	</tr>
 	<tr> 
@@ -43,7 +43,7 @@
 	<tr> 
 		<th><spring:message code='ezApprovalG.t860'/></th>
 		<td id="tdRegNo" style="width:200px;white-space:nowrap">&nbsp;</td>
-		<th style="width:118px"><spring:message code='ezApprovalG.t861'/></th>
+		<th style="width:105px"><spring:message code='ezApprovalG.t861'/></th>
 		<td id="tdSepAttNo" style="width:200px;white-space:nowrap">&nbsp;</td>
 	</tr>
 	<tr> 
@@ -72,7 +72,7 @@
 	<table class="content" style="width:100%; height: 100%;">
 		<tr> 
 			<th><spring:message code='ezApprovalG.t979'/></th>
-			<td id="tdNumOfPage" style="width:200px; padding-right:15px; white-space:nowrap">&nbsp;</td>
+			<td id="tdNumOfPage" style="width:200px; white-space:nowrap">&nbsp;</td>
 			<th><spring:message code='ezApprovalG.t865'/></th>
 			<td id="tdDeliveryNo" style="width:200px; white-space:nowrap;">&nbsp;</td>
 		</tr>
@@ -91,7 +91,7 @@
 		<tr> 
 			<th><spring:message code='ezApprovalG.t836'/></th>
 			<td id="tdModifyFlag" style="width:200px;white-space:nowrap">&nbsp;</td>
-			<th style="width:110px"><spring:message code='ezApprovalG.t870'/></th>
+			<th><spring:message code='ezApprovalG.t870'/></th>
 			<td id="tdOldSN" style="width:200px;white-space:nowrap">&nbsp;</td>
 		</tr>
 		<tr> 
@@ -146,15 +146,15 @@
 		</tr>
 		<tr> 
 			<th style="white-space:nowrap" ><spring:message code='ezApprovalG.t846'/></th>
-			<td id="tdCataTransFlag" style="padding-right:15px;white-space:nowrap;width:177px">&nbsp;</td>
-			<th style="white-space:nowrap; padding-right: 54px;" ><spring:message code='ezApprovalG.t847'/></th>
-			<td id="tdCataTransYear" style="padding-right:15px;white-space:nowrap">&nbsp;</td>
+			<td id="tdCataTransFlag" style="padding-right:15px;white-space:nowrap;width:200px">&nbsp;</td>
+			<th style="white-space:nowrap; padding-right: 35px;" ><spring:message code='ezApprovalG.t847'/></th>
+			<td id="tdCataTransYear" style="padding-right:15px;white-space:nowrap;width:200px">&nbsp;</td>
 		</tr>
 		<tr> 
 			<th style="white-space:nowrap" ><spring:message code='ezApprovalG.t848'/></th>
-			<td id="tdFileTransFlag" style="padding-right:15px;white-space:nowrap;width:177px">&nbsp;</td>
+			<td id="tdFileTransFlag" style="padding-right:15px;white-space:nowrap;width:200px">&nbsp;</td>
 			<th style="white-space:nowrap" ><spring:message code='ezApprovalG.t849'/></th>
-			<td id="tdFileTransYear" style="padding-right:15px;white-space:nowrap">&nbsp;</td>
+			<td id="tdFileTransYear" style="padding-right:15px;white-space:nowrap;width:200px">&nbsp;</td>
 		</tr>
 	</table>
 </div>
