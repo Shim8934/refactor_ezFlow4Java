@@ -3292,7 +3292,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String result = signatureDir + commonUtil.separator + fileName;
 
-		ezCommonService.responseAttach(result, fileName, true, request, response);
+		downImage(result, request, response);
 		
 		logger.debug("approvalGSign ended");
 	}

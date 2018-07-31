@@ -1628,7 +1628,7 @@ function SendDraftMappingSign(ret) {
 
         field = message.GetListItem(fields, psigncell);
         
-//       if (singImageType == "IMAGE") {
+//       if (signImageType == "IMAGE") {
 //       	if (message.GetListItem(fields, "1sign1")) {
 //        		message.GetListItem(fields, "1sign1").height = "65";
 //      	}
@@ -1668,8 +1668,9 @@ function SendDraftMappingSign(ret) {
                     	signHeight = "28";
                     }
                     
-					if (singImageType == "NAME") {
-						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+					if (signImageType == "NAME") {
+//						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 					} else {
 						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 					}
@@ -1727,8 +1728,9 @@ function SendDraftMappingSign(ret) {
                 if (ret != "NAME") {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
-                   	if (singImageType == "NAME") {
-                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+                   	if (signImageType == "NAME") {
+//                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     } else {
                         strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }

@@ -876,7 +876,8 @@
 	
 	        function btnSave_onclick() {
 	            HwpCtrl.SetDocumentInfo(pFormID);
-	            HwpCtrl.SaveFile("");
+	            HwpCtrl.SaveFile("", HwpCtrl.GetFieldText("doctitle"));
+// 	            HwpCtrl.SaveFile("");
 	        }
 	
 	        function btnPrint_onclick() {
