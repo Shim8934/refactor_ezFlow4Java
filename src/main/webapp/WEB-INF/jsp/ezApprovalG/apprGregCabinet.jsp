@@ -196,7 +196,7 @@
         </div>
 		<table style="width:100%">
 			<tr>
-				<td valign="top" style="padding:3px; width:207px; height:100%"><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1039'/></h2>
+				<td valign="top" style="padding:3px; width:250px; height:100%"><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1039'/></h2>
 					<table class="content">
 						<tr>
 							<th><spring:message code='ezApprovalG.t592'/></th>
@@ -232,17 +232,17 @@
 						</tr>
 					</table>
 				</td>
-				<td valign="top" style="padding:3px; width:100%;"><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1018'/></h2>
+				<td valign="top" style="padding:3px;width: 274px;"><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1018'/></h2>
 					<table class="content">
 						<tr>
-							<th><spring:message code='ezApprovalG.t898'/>(<spring:message code='ezApprovalG.t1764'/>)</th>
+							<th><spring:message code='ezApprovalG.t106'/>(<spring:message code='ezApprovalG.t1764'/>)</th>
 							<td>
 								<input type="text" name="txtTitle" id="txtTitle" class="text" style="Width:100%; ">
 							</td>
 						</tr>
 						<!-- 20130311 cpno.63-->
 						<tr>
-							<th ><spring:message code='ezApprovalG.t898'/>(<spring:message code='ezApprovalG.t1765'/>)</th>
+							<th ><spring:message code='ezApprovalG.t106'/>(<spring:message code='ezApprovalG.t1765'/>)</th>
 							<td>
 								<input type="text" name="txtTitle2" id="txtTitle2" class="text" style="Width:100%; ">
 							</td>

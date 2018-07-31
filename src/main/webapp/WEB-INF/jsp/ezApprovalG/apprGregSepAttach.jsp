@@ -613,12 +613,12 @@
 		  <table class="content" style="width:100%">
 		    <tr>
 		      <th style="width:15%;"><spring:message code='ezApprovalG.t1075'/></th>
-		      <td><TextArea style="width:98%; height:70px; resize:none; margin-top:2px;" id=txtSummary name=txtSummary></TextArea>
+		      <td><TextArea style="width:98%; height:70px; resize:none; margin:2px 0px;" id=txtSummary name=txtSummary></TextArea>
 		      </td>
 		    </tr>
 		    <tr >
 		      <th><spring:message code='ezApprovalG.t826'/></th>
-		      <td id=tdAVType><table style="border-collapse:collapse; border-spacing:0;padding:0px;height:140px;width:99%">
+		      <td id=tdAVType><table style="border-collapse:collapse; border-spacing:0;padding:0px;height:140px;width:99.5%">
 		          <tr>
 		            <td id=tdAVType1 style="padding-right:0; padding-left:0;overflow:auto;vertical-align:top"></td>
 		            <td id=tdAVType2 style="padding-right:0; padding-left:0;vertical-align:top"></td>
