@@ -6,10 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
@@ -340,7 +337,7 @@ public class EzCabinetGWController_h {
 	}
 	
 	@RequestMapping(value="/rest/ezCabinet/file-detail/itemId/{itemId}/get", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject getFileDetail(@PathVariable(value="itemId") String itemId,   HttpServletRequest request) throws Exception {
+	public JSONObject getFileDetail(@PathVariable(value="itemId") String itemId, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
 		
@@ -364,38 +361,14 @@ public class EzCabinetGWController_h {
 			
 			if(fileDetail.getItemType() != 0) {
 				//Get related columns
-				List<CabinetColumnVO> columnList = cabinetService.getAllRelatedColumnsOfItem(itemId, primary, tenantId);
+				List<CabinetColumnVO> columnList = cabinetService.getAllRelatedColumnsOfItem(Integer.parseInt(itemId), primary, tenantId);
 				if (columnList != null && columnList.size() > 0) {
 					result.put("columns", columnList);
 				}
 				
 				//Check if is email type
 				if (fileDetail.getItemType() == 1) {
-					CabinetColumnVO sender = columnList.stream().filter(column -> column.getColumnId().equals("sender")).collect(Collectors.toList()).get(0);
-					CabinetColumnVO receivers = columnList.stream().filter(column -> column.getColumnId().equals("receiver")).collect(Collectors.toList()).get(0);
-					
-					if (sender == null || sender.getColumnValue().equals("") || receivers == null || receivers.getColumnValue().equals("")) {
-						logger.debug("Invalid data!");
-						result.put("status", "error");
-						result.put("code", 2);
-					}
-					
-					List<String> senderMail = new ArrayList<>();
-					senderMail.add(sender.getColumnValue());
-					SimpleUserMailVO senderUser = cabinetService.getUserInfoFromEmail(senderMail, primary, tenantId).get(0);
-					result.put("sender", senderUser);
-					
-					List<String> receiverMail           = Arrays.asList(receivers.getColumnValue().split(";"));
-					List<SimpleUserMailVO> listReceiver = cabinetService.getUserInfoFromEmail(receiverMail, primary, tenantId);
-					result.put("receivers", listReceiver);
-					
-					List<CabinetColumnVO> forwards = columnList.stream().filter(column -> column.getColumnId().equals("forward")).collect(Collectors.toList());
-					
-					if (forwards != null && forwards.size() > 0 && !forwards.get(0).getColumnValue().equals("")) {
-						List<String> forwardMail           = Arrays.asList(forwards.get(0).getColumnValue().split(";"));
-						List<SimpleUserMailVO> listForward = cabinetService.getUserInfoFromEmail(forwardMail, primary, tenantId);
-						result.put("forwards", listForward);
-					}
+					getMoreEmailDetail(result, columnList, primary, tenantId);
 				}
 			}
 			
@@ -418,7 +391,7 @@ public class EzCabinetGWController_h {
 	}
 	
 	@RequestMapping(value="/rest/ezCabinet/file-info/itemId/{itemId}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject cabinetItemInfo(@PathVariable(value="itemId") String itemId,   HttpServletRequest request) throws Exception {
+	public JSONObject cabinetItemInfo(@PathVariable(value="itemId") String itemId, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
 		
@@ -436,12 +409,25 @@ public class EzCabinetGWController_h {
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			String primary   = userInfo.getPrimary();
-			int tenantId     = userInfo.getTenantId();
-			String offset    = commonUtil.getMinuteUTC(userInfo.getOffset());
+			int tenantId             = userInfo.getTenantId();
+			String offset            = commonUtil.getMinuteUTC(userInfo.getOffset());
 			
-			CabinetItemVO fileDetail                    = cabinetService_h.getFileDetail(itemId, primary, offset, tenantId);
+			CabinetItemVO fileDetail = cabinetService_h.getFileDetail(itemId, primary, offset, tenantId);
 			
-			result.put("itemType", fileDetail.getItemType());
+			if(fileDetail.getItemType() != 0) {
+				//Get related columns
+				List<CabinetColumnVO> columnList = cabinetService.getAllRelatedColumnsOfItem(Integer.parseInt(itemId), primary, tenantId);
+				if (columnList != null && columnList.size() > 0) {
+					result.put("columns", columnList);
+				}
+				
+				//Check if is email type
+				if (fileDetail.getItemType() == 1) {
+					getMoreEmailDetail(result, columnList, primary, tenantId);
+				}
+			}
+			
+			result.put("item", fileDetail);
 			result.put("status", "ok");
 			result.put("code", 0);
 		} 
@@ -558,5 +544,32 @@ public class EzCabinetGWController_h {
 		}
 		
 		return result;
+	}
+	
+	private void getMoreEmailDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
+		CabinetColumnVO sender = columnList.stream().filter(column -> column.getColumnId().equals("sender")).collect(Collectors.toList()).get(0);
+		CabinetColumnVO receivers = columnList.stream().filter(column -> column.getColumnId().equals("receiver")).collect(Collectors.toList()).get(0);
+		
+		if (sender == null || sender.getColumnValue().equals("") || receivers == null || receivers.getColumnValue().equals("")) {
+			logger.debug("Invalid data!");
+			throw new Exception();
+		}
+		
+		List<String> senderMail = new ArrayList<>();
+		senderMail.add(sender.getColumnValue());
+		SimpleUserMailVO senderUser = cabinetService.getUserInfoFromEmail(senderMail, primary, tenantId).get(0);
+		result.put("sender", senderUser);
+		
+		List<String> receiverMail           = Arrays.asList(receivers.getColumnValue().split(";"));
+		List<SimpleUserMailVO> listReceiver = cabinetService.getUserInfoFromEmail(receiverMail, primary, tenantId);
+		result.put("receivers", listReceiver);
+		
+		List<CabinetColumnVO> forwards = columnList.stream().filter(column -> column.getColumnId().equals("forward")).collect(Collectors.toList());
+		
+		if (forwards != null && forwards.size() > 0 && !forwards.get(0).getColumnValue().equals("")) {
+			List<String> forwardMail           = Arrays.asList(forwards.get(0).getColumnValue().split(";"));
+			List<SimpleUserMailVO> listForward = cabinetService.getUserInfoFromEmail(forwardMail, primary, tenantId);
+			result.put("forwards", listForward);
+		}
 	}
 }

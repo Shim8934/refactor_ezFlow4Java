@@ -17,14 +17,15 @@
 				<tr>
 					<th><spring:message code='ezCabinet.t109'/></th>
 					<td id="creator"></td>
-				<tr>
+				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t110'/></th>
 					<td id="createdDate"></td>
-				<tr>
+				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
 					<td id ="title" class="overfl"></td>
+				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t52'/></th>
 					<td id="summary" class="overfl"></td>

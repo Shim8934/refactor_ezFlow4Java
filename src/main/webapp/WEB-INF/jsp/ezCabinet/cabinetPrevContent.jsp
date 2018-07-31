@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core"   %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -14,18 +15,18 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"                  ></script>
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript">
-			(function() {
+			var CabinetPreview = function() {
 				var currentZoom     = 100;
 				var maxZoom         = 200;
 				var minZoom         = 80;
 				var mozCrrZoom      = 1;
 				var mozMaxZoom      = 2;
 				var mozMinZoom      = 0.8;
-				var documentContent = parent.CabinetItem.getContent();
+				var cabinetVar      = null;
+				var documentContent = null;
 				
-				init();
-				
-				function init() {
+				function initEvents(moduleName) {
+					getContentFromModuleName(moduleName);
 					document.onselectstart = function() {return false;};
 					var previewZoomElmt    = document.querySelector("div[class='zoomDiv']");
 					var imgList            = previewZoomElmt.children;
@@ -82,6 +83,13 @@
 					divMainElmt.className = "cabrltxt";
 					divMainElmt.innerHTML = documentContent.content;
 					document.body.appendChild(divMainElmt);
+				}
+				
+				function getContentFromModuleName(moduleName) {
+					switch (moduleName) {
+						case "mail": documentContent = parent.CabinetEmailFile.getContent(); break;
+						default    : if (parent.CabinetItem) {documentContent = parent.CabinetItem.getContent();}
+					}
 				}
 				
 				function downloadAllFiles(spanElmt) {
@@ -158,7 +166,9 @@
 						txtFieldElmt.style.zoom = currentZoom + "%";
 					}
 				}
-			})();
+				
+				return {init : initEvents};
+			}();
 			
 			function Item_View(vItem, pCItemID, vWriter, pBrdid, vGbnBoard, pBrdnm, brd_Gubun) {
 				var pcurpage = "1", pBrdMod = "WorkBoard", pDeptBoardYN = "N", pAdminFg = "0";
@@ -308,5 +318,6 @@
 				catch (e) {}
 			}
 		</script>
+		<script type="text/javascript">CabinetPreview.init("<c:out value='${module}'/>")</script>
 	</body>
 </html>
