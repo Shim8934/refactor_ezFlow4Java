@@ -715,7 +715,7 @@
 		
 		            settaskchrger_cross_dialogArguments[0] = para;
 		
-		            var OpenWin = window.open(url, "SetTaskChrger_Cross", GetOpenWindowfeature(600, 415));
+		            var OpenWin = window.open(url, "SetTaskChrger_Cross", GetOpenWindowfeature(790, 490));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {

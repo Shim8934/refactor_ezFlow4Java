@@ -25,10 +25,10 @@
 		    
 		    window.onload = function () {
 		        if (CrossYN()) {
-		            document.getElementById("OrgListView").style.width = "400px";
+		            /* document.getElementById("OrgListView").style.width = "400px";
 		            document.getElementById("OrgListView").style.height = "195px";
 		            document.getElementById("SelUserList").style.width = "150px";
-		            document.getElementById("SelUserList").style.height = "195px";
+		            document.getElementById("SelUserList").style.height = "195px"; */
 		        }
 		        try {
 		            RetValue = parent.selectuser_cross_dialogArguments[0];
@@ -322,7 +322,7 @@
 		    <td style="vertical-align:top">
 		    	<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1146'/></h2>
 		      	<div class="listview">
-					<DIV id="OrgListView" style="border:0;HEIGHT: 235px; WIDTH: 290px; overflow:auto;margin:1px 1px 1px 1px;" ></DIV>
+					<DIV id="OrgListView" style="border:0;HEIGHT: 290px; WIDTH: 485px; overflow:auto;margin:1px 1px 1px 1px;" ></DIV>
 		      	</div>
 		    </td>
 		    <td style="width:25px;text-align:center">
@@ -332,7 +332,7 @@
 		    <td style="vertical-align:top">
 	    		<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1147'/></h2>
 		    	<div class="listview">
-					<DIV id="SelUserList" style="border:0;HEIGHT: 235px; WIDTH: 150px;margin:1px 1px 1px 1px;"> </DIV>
+					<DIV id="SelUserList" style="border:0;HEIGHT: 290px; WIDTH: 250px;margin:1px 1px 1px 1px;overflow-x:auto; "> </DIV>
 		    	</div>
 			</td>
 		  </tr>
