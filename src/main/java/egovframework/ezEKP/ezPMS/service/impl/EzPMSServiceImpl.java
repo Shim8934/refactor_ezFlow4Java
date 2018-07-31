@@ -1949,6 +1949,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 		int authority = ezPMSDAO.getUserProjectRole(map);
 
+		int docNo = ezPMSDAO.getMaxDocNo(map) + 1;
+		map.put("docNo", docNo);
+		
 		for (String itemId : itemIds) {
 			map.put("itemId", itemId);
 			ProjectBoardVO boardVO = ezPMSDAO.getBoardDetail(map);

@@ -116,11 +116,11 @@ function replaceString(p_str) {
 }
 
 function popupClose() {
-	if(window.close){
-		window.close();
-	} else {
-		parent.DivPopUpHidden();
-	}
+	parent.DivPopUpHidden();
+}
+
+function windowClose() {
+	window.close();
 }
  
 function showSearchDiv() {	

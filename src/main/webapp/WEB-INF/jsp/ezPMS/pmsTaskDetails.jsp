@@ -74,7 +74,11 @@
 
 	function initProgressBar() {
 		if (taskDetails.status == null) {
-			nowStatus = "P";
+			if(taskDetails.realProgress >= 100){
+				nowStatus = "C";				
+			} else {
+				nowStatus = "P";
+			}
 		} else {
 			nowStatus = taskDetails.status;
 		}

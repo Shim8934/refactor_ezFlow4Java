@@ -213,7 +213,7 @@ function addTask() {
 	 var endDateComp = new Date(planEndDate);
 	 
 	 var today = new Date();
-	 var todayComp = new Date(today.getFullYear(), today.getMonth()-1, today.getDay());
+// 	 var todayComp = new Date(today.getFullYear(), today.getMonth()-1, today.getDay());
 	 
 	 var projectStartDateComp = new Date(projectStartDate);
 	 var projectEndDateComp = new Date(projectEndDate);
@@ -226,18 +226,18 @@ function addTask() {
 		  return;
 	  }
 	  
-	//2. 종료일 < 현재일일 떄, 지연업무로 넘어갈 것이라는 confirm창 띄우기
-	 if (endDateComp.getTime() < todayComp.getTime()) {
-		 var confCheck = confirm("<spring:message code='ezPMS.t93' />");
+	//업무는 무조건 대기상태로 만들어지기 때문에 주석처리.
+// 	//2. 종료일 < 현재일일 떄, 지연업무로 넘어갈 것이라는 confirm창 띄우기
+// 	 if (endDateComp.getTime() < today.getTime()) {
+// 		 var confCheck = confirm("<spring:message code='ezPMS.t93' />");
 		 
-		 if (confCheck != true) {
-			 return;
-		 }
-	 }
+// 		 if (confCheck != true) {
+// 			 return;
+// 		 }
+// 	 }
 
 	//3. 업무의 계획 시작일과 계획 종료일은 프로젝트 시작일과 종료일범위를 벗어날수 없음
 	if (startDateComp.getTime() < projectStartDateComp.getTime()) {
-		alert(startDateComp.getTime() + " <<<<>>>> " + projectStartDateComp.getTime());
 		alert("<spring:message code='ezPMS.t94' />");
 		return;
 	}
@@ -247,7 +247,7 @@ function addTask() {
 		var result = confirm("<spring:message code='ezPMS.t320' />");
 		if (result) {
 			if (endDateComp.getTime() > projectEndDateComp.getTime()) {
-				if (todayComp.getTime() <= endDateComp.getTime()) {
+				if (today.getTime() <= endDateComp.getTime()) {
 					projectStatus = "P";
 					changeDate = formatDate(endDateComp);
 				} else {
@@ -255,9 +255,7 @@ function addTask() {
 					changeDate = formatDate(endDateComp);
 				}
 			} else {
-				console.log(todayComp.getTime());
-				console.log(projectEndDateComp.getTime());
-				if (todayComp.getTime() <= projectEndDateComp.getTime()) {
+				if (today.getTime() <= projectEndDateComp.getTime()) {
 					projectStatus = "P";
 					changeDate = projectEndDate;
 				} else {
@@ -396,7 +394,7 @@ function setDefaultGroup(){
 		<div id="close" style="float:right">
 		<ul>
 			<li>
-				<span id="cancel" onclick="popupClose()"></span>
+				<span id="cancel" onclick="windowClose()"></span>
 			</li>
 		</ul>
 		</div>

@@ -19,6 +19,10 @@
 	.textInput {
 		width : 100%;
 	}
+	.textInput[readonly] {
+		cursor : default;
+	}
+	
 	.headerDiv {
 	    width: 150px;
 	    float: right;
@@ -142,6 +146,10 @@ var userRoleId = parent.userRoleId;
 	 applyList();
 	 applyParticipantList();
 	 initpretaskNames();
+	 
+	 if(JSON.parse(weightData).weightInput === 0){
+		 document.getElementById("weight").readOnly = true;
+	 }
 	 document.getElementById("taskName").focus();
  });
  
@@ -503,7 +511,7 @@ function initPreTask() {
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t267' /></th>
-						<td><input type="text" id="weight" class="textInput" placeholder="<fmt:formatNumber value="${taskDetails.weight}" pattern=".0"/>" value="<fmt:formatNumber value="${taskDetails.weight}" pattern=".0"/>"></td>
+						<td><input type="text" id="weight" class="textInput" placeholder="<fmt:formatNumber value="${taskDetails.weight}" pattern="0.0"/>" value="<fmt:formatNumber value="${taskDetails.weight}" pattern="0.0"/>"></td>
 		<%-- 				<td style="height:30px" id="weight">${taskDetails.weight == null ? "-" : taskDetails.weight}</td> --%>
 					</tr>
 					<tr>

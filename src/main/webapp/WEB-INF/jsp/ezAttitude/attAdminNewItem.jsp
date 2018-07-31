@@ -318,6 +318,15 @@
 					}
 				}
 				
+				//퇴근시 출근여부 확인
+		    	if (selectType == "A03") {
+		    		var returnValue = getIsAttitude("A01");
+		    		if (returnValue == 0) {
+		    			alert("<spring:message code='ezAttitude.t168'/>");
+			    		return;
+		    		}
+		    	}
+				
 				$.ajax({
 		        	type : "POST",
 		        	url : "/ezAttitude/attAdminSave.do",

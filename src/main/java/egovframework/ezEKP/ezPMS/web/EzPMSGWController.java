@@ -3797,7 +3797,7 @@ public class EzPMSGWController {
 			String position = request.getParameter("position");
 			String orderWhat = request.getParameter("orderWhat");
 			String orderHow = request.getParameter("orderHow");
-			String searchByTaskName = request.getParameter("searchByTaskName");
+//			String searchByTaskName = request.getParameter("searchByTaskName");
 			String searchByUser = request.getParameter("searchByUser");
 			String searchByStartDate = request.getParameter("searchByStartDate");
 			String searchByEndDate = request.getParameter("searchByEndDate");
@@ -3813,11 +3813,11 @@ public class EzPMSGWController {
 //				LOGGER.debug(parameterName + " : " + request.getParameter(parameterName));
 //			}
 			
-			if (searchByTaskName != null && !searchByTaskName.equals("")) {
+/*			if (searchByTaskName != null && !searchByTaskName.equals("")) {
 				searchByTaskName = searchByTaskName.replace("\\", "\\\\");
 				searchByTaskName = searchByTaskName.replace("%", "\\%");
 				searchByTaskName = searchByTaskName.replace("_", "\\_");
-			}
+			}*/
 
 			if (searchByUser != null && !searchByUser.equals("")) {
 				searchByUser = searchByUser.replace("\\", "\\\\");
@@ -3849,7 +3849,7 @@ public class EzPMSGWController {
 			// 프로젝트 개요/게시판 검색 시에는 공지사항을 제외한 게시물만 출력
 			if ((position != null && position.equals("overview")) || searchOrNot.equals("true")) {
 				boardList = ezPMSService.getBoardList(tenantId, Long.parseLong(projectId), folderId, userId,
-						startRow, listCnt, lang, position, orderWhat, orderHow, searchByTaskName, searchByUser,
+						startRow, listCnt, lang, position, orderWhat, orderHow, null, searchByUser,
 						searchByStartDate, searchByEndDate, searchByTitle, searchByOverview, searchByContent);
 			} else if (position != null && (position.equals("tab") || position.equals("boardMain"))) {
 
@@ -3863,14 +3863,14 @@ public class EzPMSGWController {
 						listCnt = (startRow + listCnt) - noticeCNT;
 						startRow = 0;
 						boardList.addAll(ezPMSService.getBoardList(tenantId, Long.parseLong(projectId), folderId,
-								userId, startRow, listCnt, lang, position, orderWhat, orderHow, searchByTaskName,
+								userId, startRow, listCnt, lang, position, orderWhat, orderHow, null,
 								searchByUser, searchByStartDate, searchByEndDate, searchByTitle, searchByOverview,
 								searchByContent));
 					}
 				} else {
 					startRow = startRow - noticeCNT;
 					boardList = ezPMSService.getBoardList(tenantId, Long.parseLong(projectId), folderId, userId,
-							startRow, listCnt, lang, position, orderWhat, orderHow, searchByTaskName, searchByUser,
+							startRow, listCnt, lang, position, orderWhat, orderHow, null, searchByUser,
 							searchByStartDate, searchByEndDate, searchByTitle, searchByOverview, searchByContent);
 				}
 			}
@@ -3950,7 +3950,7 @@ public class EzPMSGWController {
 
 			Long folderId = Long.parseLong(request.getParameter("folderId"));
 
-			String searchByTaskName = request.getParameter("searchByTaskName");
+			//String searchByTaskName = request.getParameter("searchByTaskName");
 			String searchByUser = request.getParameter("searchByUser");
 			String searchByStartDate = request.getParameter("searchByStartDate");
 			String searchByEndDate = request.getParameter("searchByEndDate");
@@ -3958,11 +3958,11 @@ public class EzPMSGWController {
 			String searchByOverview = request.getParameter("searchByOverview");
 			String searchByContent = request.getParameter("searchByContent");
 
-			if (searchByTaskName != null && !searchByTaskName.equals("")) {
+			/*if (searchByTaskName != null && !searchByTaskName.equals("")) {
 				searchByTaskName = searchByTaskName.replace("\\", "\\\\");
 				searchByTaskName = searchByTaskName.replace("%", "\\%");
 				searchByTaskName = searchByTaskName.replace("_", "\\_");
-			}
+			}*/
 
 			if (searchByUser != null && !searchByUser.equals("")) {
 				searchByUser = searchByUser.replace("\\", "\\\\");
@@ -3990,7 +3990,7 @@ public class EzPMSGWController {
 
 			int noticeCount = ezPMSService.getBoardNoticeListCount(tenantId, Long.parseLong(projectId), folderId);
 			int boardCount = ezPMSService.getBoardListCount(tenantId, Long.parseLong(projectId), folderId,
-					searchByTaskName, searchByUser, searchByStartDate, searchByEndDate, searchByTitle, searchByOverview,
+					null, searchByUser, searchByStartDate, searchByEndDate, searchByTitle, searchByOverview,
 					searchByContent);
 			int totalCount = noticeCount + boardCount;
 
