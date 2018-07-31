@@ -377,6 +377,7 @@
 	</resultMap>
 	
 	<resultMap id="projectGroupMemberVO" class="ProjectGroupMemberVO">
+<<<<<<< HEAD
     	<result property="memberId"							column="GROUP_MEMBER_ID"			columnIndex="1"/>
     	<result property="userId"							column="USER_ID"					columnIndex="2"/>
     	<result property="userName"							column="USER_NAME"					columnIndex="3"/>
@@ -3684,6 +3685,11 @@
 				REAL_END_DATE = #realEndDate#,
 		]]>
 		</isNotEmpty>
+		<isEmpty property="realEndDate">
+		<![CDATA[
+				REAL_END_DATE = null,
+		]]>
+		</isEmpty>
 		<![CDATA[
 				STATUS = #status#
 			WHERE
@@ -3868,12 +3874,14 @@
 	<select id="EzPMSDAO.getTaskListByGroupId" resultMap="taskListByGroupId">
 	<![CDATA[
 		SELECT 
-			task_id, plan_start_date, plan_end_date
+			task_id, plan_start_date, plan_end_date, real_start_date, real_end_date, status
 		FROM tbl_pms_task
 		WHERE 
 			group_id = #groupId#
 		AND
 			tenant_id = #tenantId#
+		AND 
+			del_status = 0
 	]]>
 	</select>
 	
@@ -4421,4 +4429,44 @@
 			A.PLAN_END_DATE > #planEndDate#
 		]]>
 	</select>
+	
+	<select id="EzPMSDAO.getMinMaxGroupRealDate" parameterClass="map" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT 
+				MIN(real_start_date) AS realStartDate, 
+				max(real_end_date) AS realEndDate
+			FROM tbl_pms_task
+			WHERE 
+				group_id in (select group_id
+							 from tbl_pms_group 
+							 where (group_id = #groupId#
+							 OR upper_group_id = #groupId#
+							 OR UPPER_GROUP_ID IN (SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#)))
+			AND 
+				del_status = 0
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateGroupRealDate" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_PMS_GROUP
+			SET
+				REAL_START_DATE = #realStartDate#
+		]]>
+			<isNotEmpty property="realEndDate">
+				, REAL_END_DATE = #realEndDate#
+			</isNotEmpty>
+			<isEmpty property="realEndDate">
+				, REAL_END_DATE = null
+			</isEmpty>
+		<![CDATA[
+			WHERE
+				GROUP_ID = #groupId#
+			AND
+				TENANT_ID = #tenantId#
+		]]>
+	</update>
 </sqlMap>

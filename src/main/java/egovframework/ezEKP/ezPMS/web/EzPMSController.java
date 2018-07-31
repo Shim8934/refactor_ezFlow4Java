@@ -5369,4 +5369,19 @@ public class EzPMSController {
 		
 		return roleCheck;
 	}
+	
+	@RequestMapping(value="/ezPMS/updateGroupRealStartEndDate.do")
+	public void updateGroupRealStartEndDate(HttpServletRequest request, Model model, @RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie) {
+		LOGGER.debug("ezPMS updateGroupRealStartEndDate started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		param.put("userId", userInfo.getId());
+		
+		int groupId = (Integer)param.get("groupId");
+		
+		String url = "/rest/ezPMS/groups/" + groupId + "/realStartEndDate";
+		commonUtil.getJsonFromRestApi(url, param, request, "put", null);
+		
+		LOGGER.debug("ezPMS updateGroupRealStartEndDate ended");
+	}
 }

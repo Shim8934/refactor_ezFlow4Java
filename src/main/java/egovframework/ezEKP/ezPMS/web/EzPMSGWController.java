@@ -12,7 +12,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Decoder;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
@@ -5344,6 +5346,62 @@ public class EzPMSGWController {
 		}
 
 		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/name/users/" + userId + "] ended.");
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/groups/{groupId}/realStartEndDate", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject updateGroupRealStartEndDate(@PathVariable Long groupId, HttpServletRequest request) throws Exception {
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/groups/" + groupId + "/realStartEndDate] started.");
+		
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			int tenantId = info.getTenantId();
+			
+			String[] groupIds = ezPMSService.getAncesterGroup(groupId, tenantId).split(",");
+			
+			List<ProjectTaskVO> list = new ArrayList<ProjectTaskVO>();
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("tenantId", tenantId);
+			
+			// i = 0인 요소는 프로젝트이므로 배제되야한다.
+			for(int i = groupIds.length - 1; i > 0; i--) {
+				list.addAll(ezPMSService.getTaskListByGroupId(tenantId, Long.parseLong(groupIds[i])));
+				map.put("groupId", groupIds[i]);
+				Map<String, Object> minMaxDates = ezPMSService.getMinMaxGroupRealDate(map);
+				
+				Date realStartDate = (Date) minMaxDates.get("realStartDate");
+				Date realEndDate = (Date) minMaxDates.get("realEndDate");
+				LOGGER.debug("min realStartDate : " + realStartDate);
+				LOGGER.debug("max realEndDate   : " + realEndDate);
+				map.put("realStartDate", realStartDate);
+				
+				int completedTaskCount = (int)list.stream().filter(vo -> vo.getStatus().equals("C")).count();
+				
+				LOGGER.debug("completedTaskCount : " + completedTaskCount + ", list.size() : " + list.size());
+				
+				if(completedTaskCount == list.size()) {
+					map.put("realEndDate", realEndDate);
+				} else {
+					map.remove("realEndDate");
+				}
+				
+				ezPMSService.updateGroupRealDate(map);
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/groups/" + groupId + "/realStartEndDate] ended.");
 		return result;
 	}
 }
