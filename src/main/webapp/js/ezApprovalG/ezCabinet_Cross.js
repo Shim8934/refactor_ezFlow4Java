@@ -1676,7 +1676,7 @@ function makePageSelPage(pTotalCnt) {
 function goToPageByNum(Value) {
     curpage = Value;
     pageNum = curpage;
-    makePageSelPage();
+    makePageSelPage(NodeListLen);
     openergetDocInfo();
 }
 function selbeforeBlock() {
