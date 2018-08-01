@@ -41,6 +41,7 @@
 								<c:when test="${module.moduleType == 'commu' }"><spring:message code="ezCabinet.t43" /></c:when>
 								<c:when test="${module.moduleType == 'projt' }"><spring:message code="ezCabinet.t44" /></c:when>
 								<c:when test="${module.moduleType == 'addrs' }"><spring:message code="ezCabinet.t123"/></c:when>
+								<c:when test="${module.moduleType == 'jounl' }"><spring:message code="ezCabinet.t142"/></c:when>
 							</c:choose>
 						</td>
 						<td>

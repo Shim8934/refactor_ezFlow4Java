@@ -153,38 +153,50 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("companyId", companyId);
 		map.put("tenantId",  tenantId);
 		
-		List<CabinetModuleVO> listModule = ezCabinetDAO.getModuleListForUser(map);
+		List<CabinetModuleVO> listModule       = new ArrayList<>();
+		List<CabinetModuleVO> listActiveModule = new ArrayList<>();
 		
-		if (listModule == null || listModule.size() == 0) {
-			listModule = ezCabinetDAO.getActiveModuleListForUser(map);
+		//Get all admin modules
+		List<CabinetModuleVO> listAllModule = ezCabinetAdminDAO.getModuleListForAdmin(map);
+		
+		if (listAllModule == null  || listAllModule.size() == 0) {
+			//Auto insert data
+			listAllModule.add(new CabinetModuleVO(companyId, "todo"  , 0, tenantId));
+			listAllModule.add(new CabinetModuleVO(companyId, "resrc" , 0, tenantId));
+			listAllModule.add(new CabinetModuleVO(companyId, "projt" , 0, tenantId));
+			listAllModule.add(new CabinetModuleVO(companyId, "option", 0, tenantId));
+			listAllModule.add(new CabinetModuleVO(companyId, "commu" , 0, tenantId));
+			listAllModule.add(new CabinetModuleVO(companyId, "addrs" , 0, tenantId));
+			listAllModule.add(new CabinetModuleVO(companyId, "jounl" , 0, tenantId));
+			listModule.add(new CabinetModuleVO(companyId, "email" , 1, tenantId));
+			listModule.add(new CabinetModuleVO(companyId, "schedl", 1, tenantId));
+			listModule.add(new CabinetModuleVO(companyId, "board" , 1, tenantId));
+			listModule.add(new CabinetModuleVO(companyId, "apprv" , 1, tenantId));
 			
-			if (listModule == null  || listModule.size() == 0) {
-				List<CabinetModuleVO> listAllModule = ezCabinetAdminDAO.getModuleListForAdmin(map);
+			listAllModule.addAll(listModule);
+			map.put("moduleList", listAllModule);
+			ezCabinetAdminDAO.insertModulForAdmin(map);
+		}
+		else {
+			listActiveModule = listAllModule.stream().filter(module -> module.getActiveStatus() == 1).collect(Collectors.toList());
+			
+			if (listActiveModule != null && listActiveModule.size() > 0) {
+				List<String> activeModuleName = listActiveModule.stream().map(CabinetModuleVO::getModuleType).collect(Collectors.toList());
+				listModule                    = ezCabinetDAO.getModuleListForUser(map);
 				
-				if (listAllModule == null  || listAllModule.size() == 0) {
-					//Auto insert data
-					listAllModule.add(new CabinetModuleVO(companyId, "todo"  , 0, tenantId));
-					listAllModule.add(new CabinetModuleVO(companyId, "resrc" , 0, tenantId));
-					listAllModule.add(new CabinetModuleVO(companyId, "projt" , 0, tenantId));
-					listAllModule.add(new CabinetModuleVO(companyId, "option", 0, tenantId));
-					listAllModule.add(new CabinetModuleVO(companyId, "commu" , 0, tenantId));
-					listAllModule.add(new CabinetModuleVO(companyId, "addrs" , 0, tenantId));
-					listAllModule.add(new CabinetModuleVO(companyId, "jounl" , 0, tenantId));
-					listModule.add(new CabinetModuleVO(companyId, "email" , 1, tenantId));
-					listModule.add(new CabinetModuleVO(companyId, "schedl", 1, tenantId));
-					listModule.add(new CabinetModuleVO(companyId, "board" , 1, tenantId));
-					listModule.add(new CabinetModuleVO(companyId, "apprv" , 1, tenantId));
-					
-					listAllModule.addAll(listModule);
-					map.put("moduleList", listAllModule);
-					ezCabinetAdminDAO.insertModulForAdmin(map);
+				if (listModule != null && listModule.size() > 0) {
+					List<CabinetModuleVO> checkList = listModule.stream().filter(md -> activeModuleName.contains(md.getModuleType())).collect(Collectors.toList());
+					return checkList;
+				}
+				else {
+					return listActiveModule;
 				}
 			}
 		}
 		
 		return listModule;
 	}
-
+	
 	@Override
 	public void saveModulesSetting(JSONArray modules, String userId, String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
