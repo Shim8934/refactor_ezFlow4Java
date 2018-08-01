@@ -301,7 +301,7 @@ function addTask() {
 			return;
 		}
 	} else {
-		weight = -1;
+		weight = 0;
 	}
 	
 	var data = {
