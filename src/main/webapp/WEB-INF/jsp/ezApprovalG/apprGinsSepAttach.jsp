@@ -139,7 +139,7 @@
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
 		            
-		            DivPopUpShow(700, 615, url);
+		            DivPopUpShow(880, 615, url);
 		        }
 		        else {
 		            var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
@@ -308,7 +308,7 @@
 		                regsepattach_cross_dialogArguments[0] = para;
 		                regsepattach_cross_dialogArguments[1] = btnModList_onclick_Complete;
 		
-		                DivPopUpShow(700, 615, url);
+		                DivPopUpShow(880, 615, url);
 		            }
 		            else {
 		                var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no ";
@@ -525,7 +525,7 @@
             </ul>
         </div>
 		
-		<h2 style="font-weight: normal;">▒ <spring:message code='ezApprovalG.t1034'/></h2>
+		<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1034'/></h2>
 		<div id="listviewdiv" class="listview" style="Width:100%; Height:225px;">
 		    <div id= "lvList" style="overflow:auto;border:0;Width:100%; Height:225px; font-size:9pt;"></div>
 		</div>

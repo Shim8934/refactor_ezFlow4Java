@@ -1,4 +1,4 @@
-﻿﻿var ListTypeFlag;
+﻿﻿﻿var ListTypeFlag;
 var g_SelCabXml = "";
 var g_TransFlag = "0";
 var g_szParamXml = "";
@@ -132,7 +132,7 @@ function ezCabMunuCtl(MenuType, selRow) {
 
 
             if (typeof (tdSetCharger) != "undefined" && typeof (tdSetCharger) != "unknown") {
-                if (IsUserDeptRec() == "true")
+                if (GetCabChargerRight() == "true")
                     document.getElementById("tdSetCharger").style.display = "";
                 else
                     document.getElementById("tdSetCharger").style.display = "none";
@@ -1029,7 +1029,7 @@ function btnViewCabInfo_onclick() {
         var url = "/ezApprovalG/viewCabInfo.do";
         viewcabinfo_cross_dialogArguments[0] = para;
 
-        var OpenWin = window.open(url, "ViewCabInfo_Cross", GetOpenWindowfeature(640, 630));
+        var OpenWin = window.open(url, "ViewCabInfo_Cross", GetOpenWindowfeature(640, 595));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
@@ -1377,7 +1377,7 @@ function btnSearchRec_onclick(opnOption,opentype) {
         searchrec_cross_dialogArguments[1] = btnSearchRec_onclick_Complete;
 
         if (opentype == "OPEN") {
-            var OpenWin = window.open(url, "SearchRec_Cross", GetOpenWindowfeature(623, 370));
+            var OpenWin = window.open(url, "SearchRec_Cross", GetOpenWindowfeature(800, 460));
             try { OpenWin.focus(); } catch (e) { }
         }
         else
@@ -1461,7 +1461,7 @@ function SetRecUserRole(pRecID, pSepAttNo, pDeptCode) {
 
     setrecuserrole_cross_dialogArguments[0] = para;
 
-    var OpenWin = window.open(url, "SetRecUserRole_Cross", GetOpenWindowfeature(720, 450));
+    var OpenWin = window.open(url, "SetRecUserRole_Cross", GetOpenWindowfeature(909, 450));
     try { OpenWin.focus(); } catch (e) { }
 }
 
@@ -1519,7 +1519,7 @@ function SearchCabinet(pInitFlag) {
     searchcab_cross_dialogArguments[1] = SearchCabinet_Complete;
 
     if (pInitFlag == "0") {
-        var OpenWin = window.open(url, "SearchCab_Cross", GetOpenWindowfeature(815, 455));
+        var OpenWin = window.open(url, "SearchCab_Cross", GetOpenWindowfeature(815, 440));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
@@ -1582,9 +1582,9 @@ function makePageSelPage(pTotalCnt) {
         }
 
         if (!isPeriodYear)
-            document.getElementById("TitleInfo").innerHTML = "-&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + "]";
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + "]";
         else
-            document.getElementById("TitleInfo").innerHTML = "-&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
     }
 
     strtext = "<div class='pagenavi'>";

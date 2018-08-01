@@ -25,10 +25,10 @@
 		    
 		    window.onload = function () {
 		        if (CrossYN()) {
-		            document.getElementById("OrgListView").style.width = "400px";
+		            /* document.getElementById("OrgListView").style.width = "400px";
 		            document.getElementById("OrgListView").style.height = "195px";
 		            document.getElementById("SelUserList").style.width = "150px";
-		            document.getElementById("SelUserList").style.height = "195px";
+		            document.getElementById("SelUserList").style.height = "195px"; */
 		        }
 		        try {
 		            RetValue = parent.selectuser_cross_dialogArguments[0];
@@ -317,17 +317,24 @@
                 <li><span id="btnCancel" onclick="return cmdCancel_onclick()"></span></li>
             </ul>
         </div>
-		<table >
+		<table>
 		  <tr>
-		    <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t1146'/></h2>
-		      <div class="listview">
-					<DIV id="OrgListView" style="border:0;HEIGHT: 235px; WIDTH: 290px; overflow:auto;margin:1px 1px 1px 1px;" ></DIV>
-		      </div></td>
-		    <td style="width:25px;text-align:center"><img id="RecvAdd" onClick="return AddUser_onclick()" src="/images/arr01.gif" width="16" height="16" style="cursor:pointer"><img id="RecvDel" onClick="return DelUser_onclick()" src="/images/arr02.gif" width="16" height="16" style="cursor:pointer"> </td>
-		    <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t1147'/></h2>
-		      <div class="listview">
-				    <DIV id="SelUserList" style="border:0;HEIGHT: 235px; WIDTH: 150px;margin:1px 1px 1px 1px;"> </DIV>
-		      </div></td>
+		    <td style="vertical-align:top">
+		    	<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1146'/></h2>
+		      	<div class="listview">
+					<DIV id="OrgListView" style="border:0;HEIGHT: 290px; WIDTH: 485px; overflow:auto;margin:1px 1px 1px 1px;" ></DIV>
+		      	</div>
+		    </td>
+		    <td style="width:25px;text-align:center">
+		    	<img id="RecvAdd" onClick="return AddUser_onclick()" src="/images/arr_right.gif" width="16" height="16" style="cursor:pointer">
+		    	<img id="RecvDel" onClick="return DelUser_onclick()" src="/images/arr_left.gif" width="16" height="16" style="cursor:pointer"> 
+		    </td>
+		    <td style="vertical-align:top">
+	    		<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1147'/></h2>
+		    	<div class="listview">
+					<DIV id="SelUserList" style="border:0;HEIGHT: 290px; WIDTH: 250px;margin:1px 1px 1px 1px;overflow-x:auto; "> </DIV>
+		    	</div>
+			</td>
 		  </tr>
 		</table>
 		<div class="btnposition btnpositionNew">

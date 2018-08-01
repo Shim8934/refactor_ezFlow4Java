@@ -91,7 +91,7 @@
 		        var pGroupID = nodedata.GetNodeData("DATA2");
 		        var groupName = nodedata.GetNodeData("DATA3");
 
-		        document.getElementById("descript").innerText = groupName;
+		        //document.getElementById("descript").innerText = groupName;
 		        
 		        if (approvalFlag == 'S') {
 		            getGroupItem(pGroupID);
@@ -300,6 +300,8 @@
 		 	                    alert(pAlertContent); */
 			                    
 			                    nodeIdx.DeleteNode(treeview.GetID());
+		 	                    //2018-07-30 김보미 - 삭제완료 후 폴더트리 리프레쉬
+			                    getGroupTree(1, 1, 0, true);
 		            		}
 		            	}
 		        	});
@@ -564,11 +566,11 @@
 		                taskdeptinfomanage_cross_dialogArguments[0] = para;
 		                taskdeptinfomanage_cross_dialogArguments[1] = btnConItem_onclick_Complete;
 	
-		                var TaskDeptInfoManage_Cross = window.open("/admin/ezApprovalG/taskDeptInfoManage.do", "TaskDeptInfoManage", GetOpenWindowfeature(460, 400));
+		                var TaskDeptInfoManage_Cross = window.open("/admin/ezApprovalG/taskDeptInfoManage.do", "TaskDeptInfoManage", GetOpenWindowfeature(550, 600));
 		                try { TaskDeptInfoManage_Cross.focus(); } catch (e) { }
 		            } else {
 		                var url = "/admin/ezApprovalG/taskDeptInfoManage.do";
-		                var retVal = window.showModalDialog(url, para, "dialogWidth:460px;dialogHeight:400px;status:no;help:no;scroll:no;edge:sunken");
+		                var retVal = window.showModalDialog(url, para, "dialogWidth:550px;dialogHeight:600px;status:no;help:no;scroll:no;edge:sunken");
 		                
 		                if (retVal == "TRUE") {
 		                    var pAlertContent = "<spring:message code = 'ezApprovalG.t783' />";
@@ -716,7 +718,7 @@
             		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
             	</c:forEach>
 	        </SELECT>
-			<ul>		        
+			<ul style="margin-top:5px">		        
 		        <c:choose>
 		        	<c:when test="${approvalFlag == 'S'}">
 		        		<li><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApproval.t708' /></span></li>
@@ -746,11 +748,10 @@
 		<table>
 			<tr>
 				<td>
-					<h2></h2>
 					<div style="border:#ddd 1px solid; overflow-y:auto; overflow-x:auto; width:220px;height:400px; background-color:#ffffff"  id="TreeView"></div>
 				</td>
 				<td style="padding-left:5px">
-					<h2 id="descript"></h2>
+					<h2 id="descript" style="display:none"></h2>
 					<div class="listview">
 						<div id="lvtForm" style="border:0; width: 530px; height: 400px; overflow-y:auto; overflow-x:auto;" ></div>
 					</div>

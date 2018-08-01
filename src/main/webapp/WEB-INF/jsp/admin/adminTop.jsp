@@ -132,7 +132,7 @@
 		      			<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li>
 		      			
 		      			<c:if test="${packageType != 'mail'}">      
-			      			<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="main.t14" /></span></li>
+			      			<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="ezSchedule.t1010" /></span></li>
 			      			<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="main.t12" /></span></li>
 		      			</c:if>
 		      			
@@ -149,9 +149,13 @@
 							<%-- 자원관리 --%>
 		      				<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>
 							<%-- 업무일지 --%>
-		      				<li><span id="menu19" onClick="menu_change(690, event)"><spring:message code="ezJournal.t1" /></span></li>
+							<c:if test="${use_journal == 'YES'}">
+								<li><span id="menu19" onClick="menu_change(690, event)"><spring:message code="ezJournal.t1" /></span></li>
+							</c:if>
 		      				<%-- 근태관리 --%>
-		      				<li><span id="menu30" onClick="menu_change(690, event)"><spring:message code="ezAttitude.t1" /></span></li>
+		      				<c:if test="${use_attitude == 'YES'}">
+		      					<li><span id="menu30" onClick="menu_change(690, event)"><spring:message code="ezAttitude.t1" /></span></li>
+		      				</c:if>
 		      			</c:if>
                     	
 		      			<%-- 시스템 --%>          

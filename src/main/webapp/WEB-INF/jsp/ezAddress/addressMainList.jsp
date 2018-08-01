@@ -904,7 +904,7 @@
 		</div>		
 		<div id="addpopup" class="popupwrap1" style="display:none;margin-bottom:60px;">
 			<div class="popupJQLayer">
-				<div class="title"><spring:message code='ezAddress.t2003' /></div>
+				<div class="title"><spring:message code='ezAddress.t2002' /></div>
 				<div id="close">
 		            <ul>
 		                <li><a rel="modal:close"><span onclick="quick_add_close()"></span></a></li>
@@ -965,7 +965,7 @@
 								<option value="S_TITLE"><spring:message code='main.t77' /></option>
 								<option value="S_COMPANY_ADDR"><spring:message code='ezAddress.t295' /></option>
 								<option value="S_HOME_ADDR"><spring:message code='ezAddress.t296' /></option>
-								<option value="S_MEMO"><spring:message code='ezAddress.t259' /></option>
+								<option value="S_MEMO"><spring:message code='ezAddress.t91' /></option>
 								<option value="S_EMAIL"><spring:message code='ezAddress.t264' /></option>
 								<option value="S_COMPANY_PHONE"><spring:message code='ezAddress.t263' /></option>
 								<option value="S_MOBILE"><spring:message code='ezAddress.t189' /></option>

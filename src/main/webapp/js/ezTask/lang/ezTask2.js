@@ -16,7 +16,7 @@ var strLang15 = "Share task"
 var strLang16 = "Error occurred while retrieving organization chart. - "
 var strLang17 = "There is no user."
 var strLang18 = "The user is existed in sharing list already."
-var strLang19 = "본인 선택하지 못하도록 수정."
+var strLang19 = "Modify to prevent personal selection."
 var strLang20 = "Can not add writer."
 var strLang21 = "The attached file size can not exceed 5MB."
 var strLang22 = " - Uploading. "
@@ -41,34 +41,30 @@ var strLang40 = "Next"
 var strLang41 = "Total "
 var strLang42 = "-items"
 var strLang43 = "Persons";
-var strLang44 = "검색결과";
-var strLang45 = "시작일을 종료일보다 빠르게 지정해주십시오."
+var strLang44 = "Search Results";
+var strLang45 = "Please specify start date earlier than end date."
 var strLang48 = "Attachment filename"
 var strLang49 = "Filesize"
 var strLang50 = "Filesize"
-
-var strLang51 ="Can not attach empty file."
-
+var strLang51 = "Can not attach empty file."
 var strLang52 = "The attached file size can not exceed "
 var strLang53 = "MB."
-
 var strLang54 = "Only one person can be a representative.";
 var strLang55 = "are registered in the sharers.";
 var strLang56 = "is representative is registered.";
 var strLang57 = "Please specify the person.";
 var strLang58 = "The extension of the file upload limit.";
-
-var strLang59 = "트리뷰의 ID가 지정되지 않았습니다.";
-var strLang60 = "데이터가 지정되지 않았습니다.";
-var strLang61 = "리스트의 ID가 지정되지 않았습니다.";
-var strLang62 = "데이터가 지정되지 않았습니다.";
-var strLang63 = "노드가 존재하지 않습니다.";
-var strLang64 =	"메모";
-var strLang65 = "저장하였습니다.";
-var strLang66 =	"업무명을 입력해주세요.";
-var strLang67 =	"저장하였습니다.";
-var strLang68 =	"저장하였습니다.";
-var strLang69 =	"저장하였습니다.";
+var strLang59 = "The treeview's ID is not specified.";
+var strLang60 = "No data specified.";
+var strLang61 = "The id of the list is not specified.";
+var strLang62 = "No data specified.";
+var strLang63 = "Node does not exist.";
+var strLang64 =	"Memo";
+var strLang65 = "Saved.";
+var strLang66 =	"Enter business name.";
+var strLang67 =	"Saved.";
+var strLang68 =	"Saved.";
+var strLang69 =	"Saved.";
 var strLang70 =	"Start time must earlier than end time.";
 /*2018-05-24 구해안*/
 var strLang71 = "Period";

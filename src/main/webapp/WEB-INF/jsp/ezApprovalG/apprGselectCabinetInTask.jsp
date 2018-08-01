@@ -79,10 +79,12 @@
 		        if (g_InitFlag == "1")
 		        {
 		            if (g_bRecAdmin || AdminYN == "TRUE" || g_bDeptCharger) {
-		                trCreateCab.style.display = "";
+// 		                trCreateCab.style.display = "";
+		                $('#trCreateCab').show();
 		            }
 		            else {
-		                trCreateCab.style.display = "none";
+// 		                trCreateCab.style.display = "none";
+		                $('#trCreateCab').hide();
 		            }
 		        }
 		        if (typeof (g_SelCabID) != "undefined") {
@@ -538,34 +540,34 @@
         <table>
         	<tr>
         		<td>
-        			<h2 style="font-weight: normal">
-        				▒ <spring:message code='ezApprovalG.t711'/>
+        			<h2 class="h2_dot" style="font-weight: normal">
+        				<spring:message code='ezApprovalG.t711'/>
         				<span id="trCreateCab">
-	        				<a class="imgbtn imgbck" style="margin:-4px 0px 0px 5px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
+	        				<a class="imgbtn imgbck" style="margin:-4px 0px 0px 228px;"><span onClick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
 					  		<a class="imgbtn imgbck" style="display:none;"><span onClick="return btnNewVolume_onclick()" ><spring:message code='ezApprovalG.t894'/></span></a>
         				</span>
         			</h2>
         		</td>
         		<td></td>
-        		<td><h2 style="font-weight: normal">▒ <spring:message code='ezApprovalG.t1120'/></h2></td>
+        		<td><h2 class="h2_dot" style="font-weight: normal"><spring:message code='ezApprovalG.t1120'/></h2></td>
         	</tr>
         	<tr>
         		<td>
 					<div class="listview">
-						<div id="CabinetList" style="border:0;HEIGHT: 310px; WIDTH: 380px;overflow:auto;"></div>
+						<div id="CabinetList" style="border:0;HEIGHT: 410px; WIDTH: 380px;overflow:auto;"></div>
 					</div>
         		</td>
         		<td>
-					<a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image93','','/images/arr_right.gif',1)" style="margin-left: 4px; cursor: pointer;"> 
+					<a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image93','','/images/arr_right.gif',1)" style="margin: 4px; cursor: pointer;"> 
 						<img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" onClick="return AddCabList_onclick()">
 					</a><br>
-					<a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image103','','/images/arr_left.gif',1)" style="margin-left: 4px; cursor: pointer;"> 
+					<a onMouseOut="MM_swapImgRestore()" onMouseOver="MM_swapImage('Image103','','/images/arr_left.gif',1)" style="margin: 4px; cursor: pointer;"> 
 						<img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16"onClick="return DelCabList_onclick()">
 					</a>
         		</td>
         		<td>
 					<div class="listview">
-						<div id="SelCabinetList" style="border:0; HEIGHT: 310px; WIDTH: 247px;overflow:auto;"></div>
+						<div id="SelCabinetList" style="border:0; HEIGHT: 410px; WIDTH: 372px;overflow:auto;"></div>
 					</div>
         		</td>
         	</tr>

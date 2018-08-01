@@ -140,7 +140,7 @@
 		        if (Val == 5 || Val == 6) {
 		            window.dialogHeight = "596px";
 		            if (CrossYN())
-		                window.resizeTo(705, 690);
+		                //window.resizeTo(705, 690);
 		
 		            divAudioVisualDummy.style.display = "none";
 		            divAudioVisual.style.display = "";
@@ -158,7 +158,7 @@
 		        else {
 		            window.dialogHeight = "420px";
 		            if (CrossYN())
-		                window.resizeTo(705, 550);
+		                //window.resizeTo(705, 550);
 		
 		            document.getElementById("divAudioVisualDummy").style.display = "";
 		            document.getElementById("divAudioVisual").style.display = "none";
@@ -445,7 +445,7 @@
 		            selectcabinetintask_cross_dialogArguments[0] = para;
 		            selectcabinetintask_cross_dialogArguments[1] = btnChangeCabinet_onclick_Complete;
 		
-		            DivPopUpShow(675, 450, url);
+		            DivPopUpShow(800, 550, url);
 		        }
 		        else {
 		            var feature = "dialogWidth:475px;dialogHeight:425px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
@@ -564,7 +564,7 @@
                 <li><span id="btnClose" onclick="return btnClose_onclick()"></span></li>
             </ul>
         </div>
-		<h2 style="font-weight: normal;">▒ <spring:message code='ezApprovalG.t1018'/></h2>
+		<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1018'/></h2>
 		<table class="content" style="width:100%">
 		  <tr>
 		    <th style="width:15%;"><spring:message code='ezApprovalG.t1063'/></th>
@@ -584,11 +584,11 @@
 		    <td id="tdCabinetVolNo"  >&nbsp;</td>
 		  </tr>
 		</table>
-		<h2 style="font-weight: normal; margin-top: 10px;">▒ <spring:message code='ezApprovalG.t1089'/></h2>
+		<h2 class="h2_dot" style="font-weight: normal; margin-top: 10px;"><spring:message code='ezApprovalG.t1089'/></h2>
 		<table class="content" style="width:100%">
 		  <tr>
 		    <th style="width:15%;"><spring:message code='ezApprovalG.t859'/></th>
-		    <td><Select id="selRegisterType" style="width:100%; height: 25px;" onChange="return selRegisterType_onchange()"></Select>
+		    <td><Select id="selRegisterType" style="width:150px; height: 25px;" onChange="return selRegisterType_onchange()"></Select>
 		    </td>
 		  </tr>
 		  <tr>
@@ -609,16 +609,16 @@
 		</table>
 		
 		<Div id="divAudioVisual">
-		  <h2 style="font-weight: normal; margin-top: 10px;">▒ <spring:message code='ezApprovalG.t1074'/></h2>
+		  <h2 class="h2_dot" style="font-weight: normal; margin-top: 10px;"><spring:message code='ezApprovalG.t1074'/></h2>
 		  <table class="content" style="width:100%">
 		    <tr>
 		      <th style="width:15%;"><spring:message code='ezApprovalG.t1075'/></th>
-		      <td><TextArea style="width:98%; height:70px; resize:none; margin-top:2px;" id=txtSummary name=txtSummary></TextArea>
+		      <td><TextArea style="width:98%; height:70px; resize:none; margin:2px 0px;" id=txtSummary name=txtSummary></TextArea>
 		      </td>
 		    </tr>
 		    <tr >
 		      <th><spring:message code='ezApprovalG.t826'/></th>
-		      <td id=tdAVType><table border="0" style="border-collapse:collapse; border-spacing:0;padding:0px;height:140px;width:100%">
+		      <td id=tdAVType><table style="border-collapse:collapse; border-spacing:0;padding:0px;height:140px;width:99.5%">
 		          <tr>
 		            <td id=tdAVType1 style="padding-right:0; padding-left:0;overflow:auto;vertical-align:top"></td>
 		            <td id=tdAVType2 style="padding-right:0; padding-left:0;vertical-align:top"></td>

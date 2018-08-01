@@ -153,7 +153,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-
 	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, String searchTitle, int tenantId) throws Exception {						
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -199,13 +198,19 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				Calendar sDate_cal = Calendar.getInstance();
 				Calendar eDate_cal = Calendar.getInstance();
 				Calendar date_cal = Calendar.getInstance();
+				Calendar date_Ecal = Calendar.getInstance();
 				
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
+				SimpleDateFormat csdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				
 				sDate_cal.setTime(sdf.parse(orgStartDate));
 				eDate_cal.setTime(sdf.parse(endDate));
 				date_cal.setTime(sdf.parse(vo.getStartDate()));
+				
+				String tmpEndDateStr = vo.getStartDate().substring(0, 10) + endDate.substring(10);
+				
+				date_Ecal.setTime(sdf.parse(tmpEndDateStr));
 				
 				switch (info[2]) {
 					case "0" :
@@ -245,41 +250,87 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 							}
 						}
 					break;
-					
+					//2018-07-27 구해안 주간반복 반복설정 버그로 인해 수정 
 					case "1" :
-						int weekcount = 6 - date_cal.get(Calendar.DAY_OF_WEEK) - 1;
-						
+						/*int weekcount = 6 - date_cal.get(Calendar.DAY_OF_WEEK) - 1;*/
+						List<Integer> wDay = new ArrayList<Integer>();
+						if(info[4] != null && !info[4].trim().equals("")){
+							char[] yoilArr = new char[info[4].length()]; // 스트링을 담을 배열
+
+							for (int j = 0; j < info[4].length(); j++) {
+								yoilArr[j] = info[4].charAt(j);					
+							}
+							int yoilNum;
+							for (char yoil : yoilArr) {
+								
+								yoilNum = yoil - 48;
+								wDay.add(yoilNum); 
+							}
+						}
+								
+						/*if (wDay != null && wDay.size() > 0) {
+							maxCount = maxCount * wDay.size();
+						}*/
+						count=1;
+						maxCount += 1;
 						while (true) {
 							if (date_cal.compareTo(eDate_cal) > 0) break;
 							if (maxCount == count) break;
 							
-							boolean generated = false;
-
+//							boolean generated = false;
+						/*	logger.debug("몇개를 찍어보는거야 : " + info[4].indexOf((date_cal.get(Calendar.DAY_OF_WEEK) - 1) + ""));
 							if (info[4].indexOf((date_cal.get(Calendar.DAY_OF_WEEK) - 1) + "") > -1) {
+								logger.debug("count : " + count + " ,  여기 진입하니? 4");
 								generated = true;
-							}
+							}*/
 							
-							if (generated) {
-								count++;
-								
+//							if (generated) {
+								//카운트가 늘어나면서
 								String calcuDate = nsdf.format(date_cal.getTime());
 								
 								if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {	
-									//row 추가
-									if (!rList.contains(calcuDate)) {
-										ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
-										resultList.add(rVo);
+									if(info[0].equals("0")){
+										
+												for (Integer yoil : wDay) {
+													
+													date_cal.set(Calendar.DAY_OF_WEEK,yoil+1);
+													calcuDate = nsdf.format(date_cal.getTime());
+													if (!rList.contains(calcuDate)) {
+														if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0 && date_cal.getTime().compareTo(sdf.parse(endDate)) <= 0) {
+														ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
+														resultList.add(rVo);
+													}
+													
+												}
+												date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
+										}
+									}else{
+										
+										//row 추가
+											for (Integer yoil : wDay) {
+												date_cal.set(Calendar.DAY_OF_WEEK,yoil+1);
+												calcuDate = nsdf.format(date_cal.getTime());
+													if (!rList.contains(calcuDate)) {
+													ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
+													resultList.add(rVo);
+													}
+											date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
+											}
 									}
 								}
-							}
+								//요일이 여러개일 경우 하나씩 세팅해줘야된다
+								
+//							}
 							
-							if (weekcount == 0) {
+							/*if (weekcount == 0) {
 								date_cal.add(Calendar.DATE, (Integer.parseInt(info[3]) - 1) * 7 + 1);
 								weekcount = 6;
 							} else {
 								date_cal.add(Calendar.DATE, 1);
 								weekcount--;
-							}
+							}*/
+							date_cal.add(Calendar.DATE, (Integer.parseInt(info[3])) * 7);
+							count++;
 						}						
 					break;	
 					

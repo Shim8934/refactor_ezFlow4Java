@@ -518,7 +518,7 @@
 					<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
 						<input type="checkbox" id="checkAll" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)">
 					</th> 
-					<th width="20px"><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
+<!-- 					<th width="20px"><img src="/images/ImgIcon/view-importance.gif" border="0"></th> -->
 					<th><spring:message code="ezPoll.t106"/></th> 
 					<th width="60px"><spring:message code="ezPoll.t104"/></th> 					
 					<th width="90px"><spring:message code="ezPoll.t107"/></th> 
@@ -531,11 +531,11 @@
 			        <tr id="${list.qstId}" class="white">
 			        	<td style="padding:0"> <input type="checkbox" class="checkBnk" id="qstCheck+<c:out value ="${list.qstId}" />+" value=<c:out value="${list.qstId}" />  onchange="javascript:getChecked(this)"></td>
 			        	
-			        	<td>			        	
-							<c:if test="${list.isHidden == 1}">
-								<img src="/images/ImgIcon/icon-highimportance.gif" border="0">
-							</c:if>						
-			        	</td>
+<!-- 			        	<td>			        	 -->
+<%-- 							<c:if test="${list.isHidden == 1}"> --%>
+<!-- 								<img src="/images/ImgIcon/icon-highimportance.gif" border="0"> -->
+<%-- 							</c:if>						 --%>
+<!-- 			        	</td> -->
 			        	 
 			          	<td id="tlt<c:out value ="${list.qstId}" />" style="overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;" title=<c:out value ="${list.title}"/> onClick="title_OnClick('<c:out value ="${list.qstId}"/>')" >
 				          	<c:out value ="${list.title}"/>

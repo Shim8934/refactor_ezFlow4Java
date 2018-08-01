@@ -206,6 +206,9 @@
 
                 var PublicCode = getNodeText(objXml.documentElement.getElementsByTagName("PUBLICCODE")[0]);
                 InitPublicCode(PublicCode);
+                
+                var PublicCode2 = getNodeText(objXml.documentElement.getElementsByTagName("PUBLICCODE2")[0]);
+                InitPublicCode2(PublicCode2);
 
                 txtLimitRange.value = getNodeText(objXml.documentElement.getElementsByTagName("LIMITRANGE")[0]);
                 g_SCFlag = getNodeText(objXml.documentElement.getElementsByTagName("SPECIALFLAG")[0]);
@@ -353,6 +356,16 @@
         }
         rdoSecType_onclick("");
     }
+    function InitPublicCode2(pCode) {
+        var objCode = new String(pCode);
+		if (objCode == "N") {
+// 			document.getElementsByName("rdoSecType2")[1].checked = true;
+			$("#rdoSecType2N").prop("checked", true)
+		} else {
+// 			document.getElementsByName("rdoSecType2")[0].checked = true;
+			$("#rdoSecType2Y").prop("checked", true)
+		}
+    }
     function GetRecordSimpleInfo(pRecID) {
         var XmlHttp = createXMLHttpRequest();
         var xmlpara = createXmlDom();
@@ -461,6 +474,8 @@
         {
             createNodeAndInsertText(xmlpara, objNode, "SPECIALRECCODE", GetSpecialRecInfo());
             createNodeAndInsertText(xmlpara, objNode, "PUBLICCODE", GetPublicCode());
+            //공개비공개 추가
+            createNodeAndInsertText(xmlpara, objNode, "PUBLICCODE2", GetPublicCode2());
             createNodeAndInsertText(xmlpara, objNode, "LIMITRANGE", txtLimitRange.value);
             createNodeAndInsertText(xmlpara, objNode, "CHANGEREASON", txtChangeReason.value);
             createNodeAndInsertText(xmlpara, objNode, "SCFLAG", g_SCFlag);
@@ -564,14 +579,14 @@
             divBasicInfo.style.display = "";
             divClassInfo.style.display = "none";
 			//팝업창 가로 사이즈 유지, 세로만 변경
-          	window.resizeTo(window.outerWidth, 577);
+          	window.resizeTo(window.outerWidth, 600);
         }
         else if (g_ModifyFlag == "1")
         {
             divBasicInfo.style.display = "none";
             divClassInfo.style.display = "";
             
-          	window.resizeTo(window.outerWidth, 640);
+          	window.resizeTo(window.outerWidth, 650);
         }
     }
     function MM_swapImgRestore() {
@@ -595,6 +610,17 @@
         var i, j = 0, x, a = MM_swapImage.arguments; document.MM_sr = new Array; for (i = 0; i < (a.length - 2) ; i += 3)
             if ((x = MM_findObj(a[i])) != null) { document.MM_sr[j++] = x; if (!x.oSrc) x.oSrc = x.src; x.src = a[i + 2]; }
     }
+    
+    function GetPublicCode2() {
+    	var publicCode2 = "";
+    	if (document.getElementsByName("rdoSecType2")[0].checked) {
+    		publicCode2 = "Y";
+    	} else {
+    		publicCode2 = "N";
+    	}
+    	
+    	return publicCode2;
+    }
 </script>
 </head>
 <body style="margin-left:0px; margin-top:0px;" class="popup">
@@ -606,8 +632,8 @@
 </div>
 <table class="content">
   <tr>
-    <th><spring:message code='ezApprovalG.t963'/></th>
-    <td><Select id="selChangeType" style="width:120px" onChange="return selChangeType_onchange()">
+    <th style="padding-right: 22px;"><spring:message code='ezApprovalG.t963'/></th>
+    <td><Select id="selChangeType" style="width:120px; height: 25px;" onChange="return selChangeType_onchange()">
         <Option value="0"><spring:message code='ezApprovalG.t964'/></Option>
         <Option value="1"><spring:message code='ezApprovalG.t976'/></Option>
       </Select>
@@ -618,49 +644,49 @@
   <table class="content" style="margin-top:10px">
     <tr>
       <th><spring:message code='ezApprovalG.t106'/></th>
-      <td><input type="text" class="text" style="Width:98%;" name="txtTitle" id="txtTitle">
+      <td><input type="text" class="text" style="Width:100%; height: 25px;" name="txtTitle" id="txtTitle">
       </td>
     </tr>
     <tr>
       <th><spring:message code='ezApprovalG.t831'/></th>
-      <td><input type="text" style="Width:40px; height:18px;" name="txtRegY" id="txtRegY" maxlength = "4">
+      <td><input type="text" style="height:25px;" name="txtRegY" id="txtRegY" maxlength = "4" size="4">
         <spring:message code='ezApprovalG.t456'/>
-        <input type="text" style="Width:25px; height:18px;" name="txtRegM"  id="txtRegM" maxlength = "2">
+        <input type="text" style="height:25px;" name="txtRegM"  id="txtRegM" maxlength = "2" size="2">
         <spring:message code='ezApprovalG.t968'/>
-        <input type="text" style="Width:25px; height:18px;" name="txtRegD"  id="txtRegD" maxlength = "2">
+        <input type="text" style="height:25px;" name="txtRegD"  id="txtRegD" maxlength = "2" size="2">
         <spring:message code='ezApprovalG.t662'/>
-        <input type="text" style="Width:25px; height:18px;" name="txtRegH"  id="txtRegH" maxlength = "2">
+        <input type="text" style="height:25px;" name="txtRegH"  id="txtRegH" maxlength = "2" size="2">
         <spring:message code='ezApprovalG.t977'/>
-        <input type="text" style="Width:25px; height:18px;" name="txtRegMi"  id="txtRegMi" maxlength = "2">
+        <input type="text" style="height:25px;" name="txtRegMi"  id="txtRegMi" maxlength = "2" size="2">
         <spring:message code='ezApprovalG.t978'/></td>
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t979'/></th>
-      <td ><input type="text" name="txtTotalPage" id="txtTotalPage" style="Width:60px;">
+      <td ><input type="text" name="txtTotalPage" id="txtTotalPage" style="Width:60px; height: 25px;">
         &nbsp;<spring:message code='ezApprovalG.t980'/></td>
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t862'/></th>
-      <td ><input type="text" name="txtAprMemberTitle" id="txtAprMemberTitle" style="Width:98%;"><input type=hidden name="txtAprMemberTitle2" id="txtAprMemberTitle2" />
+      <td ><input type="text" name="txtAprMemberTitle" id="txtAprMemberTitle" style="Width:100%; height: 25px;"><input type=hidden name="txtAprMemberTitle2" id="txtAprMemberTitle2" />
       </td>
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t445'/></th>
-      <td ><input type="text" name="txtDrafter" id="txtDrafter" class="text" style="Width:98%;"><input type=hidden name="txtDrafter2" id="txtDrafter2" />
+      <td ><input type="text" name="txtDrafter" id="txtDrafter" class="text" style="Width:100%; height: 25px;"><input type=hidden name="txtDrafter2" id="txtDrafter2" />
       </td>
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t863'/></th>
-      <td ><input type="text" style="Width:40px; height:18px;" name="txtExeY" id="txtExeY" maxlength = "4" >
+      <td ><input type="text" style="height:25px;" name="txtExeY" id="txtExeY" maxlength = "4" size="4">
         <spring:message code='ezApprovalG.t456'/>
-        <input type="text" style="Width:25px; height:18px;" name="txtExeM"  id="txtExeM" maxlength = "2">
+        <input type="text" style="height:25px;" name="txtExeM"  id="txtExeM" maxlength = "2" size="2">
         <spring:message code='ezApprovalG.t968'/>
-        <input type="text" style="Width:25px; height:18px;" name="txtExeD"  id="txtExeD" maxlength = "2">
+        <input type="text" style="height:25px;" name="txtExeD"  id="txtExeD" maxlength = "2" size="2">
         <spring:message code='ezApprovalG.t643'/></td>
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t864'/></th>
-      <td ><input type="text" name="txtReceiptMember" id="txtReceiptMember" style="Width:98%;"><input type=hidden name="txtReceiptMember2" id="txtReceiptMember2" />
+      <td ><input type="text" name="txtReceiptMember" id="txtReceiptMember" style="Width:100%; height: 25px;"><input type=hidden name="txtReceiptMember2" id="txtReceiptMember2" />
       </td>
     </tr>
     <tr>
@@ -673,7 +699,7 @@
 <Div id="divClassInfo" style="display:none">
   <table class="content" style="margin-top:10px">
     <tr>
-      <th  ><spring:message code='ezApprovalG.t875'/></th>
+      <th style="padding-right: 34px;"><spring:message code='ezApprovalG.t875'/></th>
       <td><Input type="checkbox" name="special1" id="special1" value="Y">
         <spring:message code='ezApprovalG.t983'/><br/>
         <Input type="checkbox" name="special2" id="special2" value="Y">
@@ -686,7 +712,7 @@
         <spring:message code='ezApprovalG.t987'/></td>
     </tr>
     <tr>
-      <th ><spring:message code='ezApprovalG.t109'/></th>
+      <th ><spring:message code='ezApprovalG.kes06'/></th>
       <td><Input type="radio" name="rdoSecType" value="1" checked onClick="return rdoSecType_onclick(this.value)">
         <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t47'/></span>
         <Input type="radio" name="rdoSecType" value="2" onClick="return rdoSecType_onclick(this.value)">
@@ -718,8 +744,8 @@
     </tr>
     <tr>
       <th  ><spring:message code='ezApprovalG.t876'/></th>
-      <td ><input type="text" name="txtLimitRange" id="txtLimitRange" style="Width:98%;">
-        (<spring:message code='ezApprovalG.t992'/></td>
+      <td ><h2 style="font-weight: normal; padding-top: 0px; height: 25px;"><input type="text" name="txtLimitRange" id="txtLimitRange" style="Width:220px; height: 25px;">
+        (<spring:message code='ezApprovalG.t992'/></h2></td>
     </tr>
     <tr>
       <th ><spring:message code='ezApprovalG.t966'/></th>
@@ -730,11 +756,22 @@
           </tr>
         </table></td>
     </tr>
+    <tr>
+      <th ><spring:message code='ezApprovalG.t109'/></th>
+      <td><Input type="radio" name="rdoSecType2" id="rdoSecType2Y" value="Y" checked >
+        <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t47'/></span>  
+        <Input type="radio"  name="rdoSecType2" id="rdoSecType2N" value="N">
+        <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t988'/></span>
+        <Select id="selSecLevel" style="width:60px;display:none">
+        </Select>
+      </td>
+    </tr>
+    
   </table>
 </Div>
 <table class="content" style="margin-top:10px">
   <tr>
-    <th><spring:message code='ezApprovalG.t626'/></th>
+    <th style="padding-right: 46px;"><spring:message code='ezApprovalG.t626'/></th>
     <td><TextArea style="vertical-align:middle; border: 0; width:97.3%; height:70px; resize:none;" id=txtChangeReason name=txtChangeReason></TextArea></td>
   </tr>
 </table>

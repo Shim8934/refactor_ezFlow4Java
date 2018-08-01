@@ -7,9 +7,11 @@
 		<title><spring:message code='ezEmail.t804' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -119,8 +121,9 @@
 		            case "REDIRECTION":
 		                document.getElementById("ReceiverSelecttd").style.width = "54%";
 		                document.getElementById("ReceiverSelect").style.display = "";
-		                inboxRuleConbtn1.style.display = "";
-		                inboxRuleCon1.focus();
+		                $("#inboxRuleConbtn1").modal();
+		                /* inboxRuleConbtn1.style.display = "";
+		                inboxRuleCon1.focus(); */
 		                break;
 		            case "READ":
 		                _curCellObj.innerHTML = "<span style='vertical-align:middle;margin-top-10px;'><u>" + strLang341 + "</u></span>";
@@ -364,7 +367,8 @@
 		            _curCellObj.innerHTML = "<span onclick='Ruleselectcell(this);' value=''><nobr><u>" + strLang219 + "</u></nobr></span>";
 		            _curCellObj.setAttribute("RuleKind", _RuleKind);
 		            _curCellObj.setAttribute("value", "");
-		            inboxRuleConbtn1.style.display = "none";
+		            /* inboxRuleConbtn1.style.display = "none"; */
+		            $.modal.close();
 		            _curCellObj = null;
 		            _RuleKind = null;
 		            inboxRuleCon1.value = "";
@@ -373,7 +377,8 @@
 		            ConCellRow = null;
 		            return;
 		        }
-		        inboxRuleConbtn1.style.display = "none";
+		        /* inboxRuleConbtn1.style.display = "none"; */
+		        $.modal.close();
 		        inputBtn.textContent = strLang239;
 		        ConCellRow = null;
 		        _curCellObj = null;
@@ -390,7 +395,8 @@
 		            _curCellObj.innerHTML = "<span onclick='Ruleselectcell(this);' value=''><nobr><u>" + strLang219 + "</u></nobr></span>";
 		            _curCellObj.setAttribute("RuleKind", _RuleKind);
 		            _curCellObj.setAttribute("value", "");
-		            inboxRuleConbtn1.style.display = "none";
+		            /* inboxRuleConbtn1.style.display = "none"; */
+		            $.modal.close();
 		            _curCellObj = null;
 		            _RuleKind = null;
 		            inboxRuleCon1.value = "";
@@ -413,7 +419,8 @@
 		            _curCellObj.setAttribute("value", _value);
 		            _curCellObj.setAttribute("RuleKind", _RuleKind);
 		        }
-		        inboxRuleConbtn1.style.display = "none";
+		        /* inboxRuleConbtn1.style.display = "none"; */
+		        $.modal.close();
 		        inputBtn.textContent = strLang239;
 		        ConCellRow = null;
 		        _curCellObj = null;
@@ -493,8 +500,9 @@
 		
 		            // '모든 메시지 포함'일시 조건 추가 버튼을 숨기고 Rules에 값 반영
 		            if (obj.value != "ALLMESSAGES") {
-		                inboxRuleConbtn1.style.display = "";
-		                inboxRuleCon1.focus();
+		            	$("#inboxRuleConbtn1").modal();
+		                /* inboxRuleConbtn1.style.display = "";
+		                inboxRuleCon1.focus(); */
 		                if (obj.name == "Condition")
 		                    document.getElementById("tb_AddRuleCon").style.display = "";
 		            }
@@ -534,8 +542,9 @@
 		            document.getElementById("ReceiverSelecttd").style.width = "60%";
 		            document.getElementById("ReceiverSelect").style.display = "none";
 		        }
-		        inboxRuleConbtn1.style.display = "";
-		        inboxRuleCon1.focus();
+		        $("#inboxRuleConbtn1").modal();
+		        /* inboxRuleConbtn1.style.display = "";
+		        inboxRuleCon1.focus(); */
 		        Commentdsc(_RuleKind)
 		    }
 		    var mail_newreceiverchoose_dialogArguments = new Array();
@@ -589,24 +598,24 @@
 		    function Commentdsc(kind) {
 		        switch (kind) {
 		            case "SENDER":
-		                inboxRuleConbtn1comment.innerHTML = "<img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'> " + strLang226 + "";
+		                inboxRuleConbtn1comment.innerHTML = "▒ " + strLang226 + "";
 		                break;
 		            case "DOMAIN":
-		                inboxRuleConbtn1comment.innerHTML = "<img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'> " + strLang308 + " ex) @kaoni.com" + "";
+		                inboxRuleConbtn1comment.innerHTML = "▒ " + strLang308 + " ex) @kaoni.com" + "";
 		                break;
 		            case "REDIRECTION":
 		            case "FORWARD":
 		            case "RECEIVER":
-		                inboxRuleConbtn1comment.innerHTML = "<img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'> " + strLang227 + "";
+		                inboxRuleConbtn1comment.innerHTML = "▒ " + strLang227 + "";
 		                break;
 		            case "SUBJECT":
-		                inboxRuleConbtn1comment.innerHTML = "<img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'> " + strLang228 + "";
+		                inboxRuleConbtn1comment.innerHTML = "▒ " + strLang228 + "";
 		                break;
 		            case "BODY":
-		                inboxRuleConbtn1comment.innerHTML = "<img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'> " + strLang229 + "";
+		                inboxRuleConbtn1comment.innerHTML = "▒ " + strLang229 + "";
 		                break;
 		            case "SUBJECTORBODY":
-		                inboxRuleConbtn1comment.innerHTML = "<img src='/images/ImgIcon/dot.gif' align='absmiddle' hspace='5'> " + strLang338 + "";
+		                inboxRuleConbtn1comment.innerHTML = "▒ " + strLang338 + "";
 		                break;
 		        }
 		    }
@@ -825,33 +834,37 @@
 			<option value="SUBJECTORBODY"><spring:message code='ezEmail.t835' /></option>
 		</select><span id="ExptS" name="ExptS" style="width:230px;height:20px;border:0px solid #dbdbda;margin-left:8px;margin-top:0px;text-overflow:ellipsis; overflow:hidden;cursor:pointer;vertical-align:middle;color:#6495ED;font-weight:bold;"></span>
 	</div>
-	<div  id="inboxRuleConbtn1" name="inboxRuleConbtn1" style="position:absolute; left:100px; top:65px;border:3px solid #5093d8;width:70%;background-color:#F9F9F9; display:none;">
-		<br>
-		<span style="background-color:#f2f2f2;width:100%; height:30px; padding:8px 0 0 5px; margin:0 10px 0 10px;" class="txt"id="inboxRuleConbtn1comment" name="inboxRuleConbtn1comment"></span>
-		<table style="width:100%;border:0;border-collapse:collapse; border-spacing:0;padding:0px;" >
-			<tr>
-				<td style="width:60%;padding:10px 0 0 10px" id="ReceiverSelecttd" name="ReceiverSelecttd">
-					<INPUT type="text" id="inboxRuleCon1" name="inboxRuleCon1" style="width:100%" onKeyDown="event_keyDown(event);">
-				</td>
-				<td style="width:60%;padding:12px 10px 0 8px;">
-					<div >
-						<img src="/images/email/cntct.gif" align="absmiddle" style="margin-left:5px;cursor:pointer;display:none;" id="ReceiverSelect" name="ReceiverSelect" onclick="SelectReceiver_onClick();" />
-						<a class="imgbtn"><span onClick="pop_addcon();" id="inputBtn"><spring:message code='ezEmail.t308' /></span></a>
-						<a class="imgbtn"><span onClick="pop_delete();"><spring:message code='ezEmail.t95' /></span></a>
-					</div>
-				</td>
-			</tr>
-		</table>
-		<div style="border:1px solid #dddddd; margin:10px 10px 10px 10px; padding:10px 10px 10px 10px; background-color:#f2f2f2;">
-			<div id="Conitems" name="Conitems" style="font-family:<spring:message code='main.t246' />;border:1px solid #dbdbda;width:370px;height:200px;overflow-y:auto;overflow-x:hidden;text-overflow:ellipsis;background-color:#ffffff;">
+	<div  id="inboxRuleConbtn1" name="inboxRuleConbtn1" style="display:none;left:40px">
+		<div class="popupJQLayer" style="padding-top:6px">
+			<div class="title" style="overflow:hidden; text-overflow:ellipsis; width:450px;"><spring:message code="ezEmail.t124" /></div>
+			<div id="close">			
+	            <ul>
+	            	<li><span onclick="pop_cancel()"></span></li>
+	            </ul>
+	        </div>
+			<span style="width:100%; height:30px; margin:0 10px 0 10px;" class="txt" id="inboxRuleConbtn1comment" name="inboxRuleConbtn1comment"></span> 
+			<table style="width:100%;border:0;border-collapse:collapse; border-spacing:0;padding:0px;" >
+				<tr>
+					<td style="width:60%;padding:10px 0 0 10px" id="ReceiverSelecttd" name="ReceiverSelecttd">
+						<INPUT type="text" id="inboxRuleCon1" name="inboxRuleCon1" style="width:100%" onKeyDown="event_keyDown(event);">
+					</td>
+					<td style="width:60%;padding:12px 10px 0 8px;">
+						<div >
+							<img src="/images/email/cntct.gif" align="absmiddle" style="cursor:pointer;display:none;" id="ReceiverSelect" name="ReceiverSelect" onclick="SelectReceiver_onClick();" />
+							<a class="imgbtn imgbck"><span onClick="pop_addcon();" id="inputBtn"><spring:message code='ezEmail.t308' /></span></a>
+							<a class="imgbtn imgbck"><span onClick="pop_delete();"><spring:message code='ezEmail.t95' /></span></a>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div style="border:1px solid #dddddd; margin:10px 10px 10px 10px; padding:10px 10px 10px 10px; background-color:#f2f2f2;">
+				<div id="Conitems" name="Conitems" style="font-family:<spring:message code='main.t246' />;border:1px solid #dbdbda;width:435px;height:200px;overflow-y:auto;overflow-x:hidden;text-overflow:ellipsis;background-color:#ffffff;">
+				</div>
 			</div>
-		</div>
-		<div id="mainmenu" style="margin-left:150px;">
-			<ul id="tb_Parent">
-				<li><span onClick="pop_confrim();"><img src="/images/ImgIcon/mtg-accept.png" height="16" style="margin-top:-3px;text-align:center"  /><spring:message code='ezEmail.t38' /></span></li>
-				<li><span onClick="pop_cancel();"><img src="/images/ImgIcon/mtg-decline.png" height="16" style="margin-top:-3px;text-align:center;"  /><spring:message code='ezEmail.t39' /></span></li>
-			</ul>
-		</div>
+			<div class="btnpositionLayer">
+				<a class="imgbtn"><span onClick="pop_confrim();"><spring:message code='ezEmail.t38' /></span></a>
+			</div>
+		</div>	
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

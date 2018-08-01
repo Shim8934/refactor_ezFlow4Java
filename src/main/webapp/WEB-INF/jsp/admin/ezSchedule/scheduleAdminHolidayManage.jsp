@@ -300,7 +300,7 @@
 		<h1><spring:message code='ezSchedule.t4003' /></h1>
 		<form id="Form1" method="post">
 			<div id="mainmenu">
-		       		<span><b><spring:message code='ezResource.t28' /></b></span>&nbsp;
+		       		<span><b><spring:message code='ezResource.t28' /> : </b></span>
 		            <select id="ListCompany" onchange="schedule_get_holiday()">
 		            	<c:forEach var="item" items="${list}">
             				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>

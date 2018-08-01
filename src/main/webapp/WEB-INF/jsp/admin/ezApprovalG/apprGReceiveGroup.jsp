@@ -9,6 +9,9 @@
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e3'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+		<style>
+			.mainlist tr th { border-top:0px }
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
@@ -490,7 +493,7 @@
         	<tr>
         		<td style="vertical-align: top;">
                 	<div id="mainmenu">	
-						<span><b><spring:message code = 'ezApprovalG.t1566' /></b> :</span> 
+						<span><b><spring:message code = 'ezApprovalG.t1566' /> :</b></span> 
 	                	<select id="SCompID" name="SCompID" onchange="SCompID_onchange()">
 				    		<c:forEach var="item" items="${list}">
 			            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>

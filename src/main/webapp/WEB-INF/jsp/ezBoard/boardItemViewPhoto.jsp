@@ -29,8 +29,8 @@
 			.imgPopup{position: relative; float: left; max-width: 400px; max-height: 400px; zoom: 1; cursor:pointer;}
 			.imgPopupMagnify{position: relative; float: left; cursor: pointer;}
 			.imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px;}
-			.imgPopupBoxMagnify{width: 700px;height: 780px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px; z-index: 5;}
-			.imgPopupDivMagnify{width: 670px; max-width:670px; height:700px; overflow:auto; margin:0px auto;}
+			.imgPopupBoxMagnify{width: 700px;height: 760px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px; z-index: 5;}
+			.imgPopupDivMagnify{width: 670px; max-width:670px; height:680px; overflow:auto; margin:0px auto;}
 			.imgPopupDiv{width:400px; height:400px; margin:0px auto;}
 			.imgPopupBoxOff, .imgPopupOff{display: none;}
 			.imgNotAttached{vertical-align: middle; margin: 0px auto; display: block; border: 1px dotted #cfcfcf; width: 33px; padding: 5px 2px 2px 5px;}
