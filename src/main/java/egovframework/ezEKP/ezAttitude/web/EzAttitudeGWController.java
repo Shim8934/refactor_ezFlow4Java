@@ -136,7 +136,7 @@ public class EzAttitudeGWController {
 			String mode = request.getParameter("mode");
 			String adminId = request.getParameter("adminId");
 			String checkAttitude = "";
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, adminId);
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
 			if (typeId.equals("A01") || typeId.equals("A02") || typeId.equals("A03") || typeId.equals("A08")) {
 				checkAttitude = ezAttitudeService.getIsAttitude(typeId, userId, startDate, info.getOffSet(), info.getCompanyId(), info.getTenantId());
