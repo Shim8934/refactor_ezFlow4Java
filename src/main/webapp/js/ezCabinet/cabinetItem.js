@@ -769,7 +769,7 @@ var CabinetItem = function() {
 			
 			switch(itemType) {
 				case 1 : showMailPreview(data, dlElmt)     ; break;
-				case 2 : showApprovalPreview() ; break;
+				case 2 : showApprovalPreview(data, dlElmt) ; break;
 				case 3 : showBoardPreview()    ; break;
 				case 4 : showSchedulePreview() ; break;
 				case 5 : showTodoPreview()     ; break;
@@ -920,6 +920,33 @@ var CabinetItem = function() {
 		
 		dlElmt.appendChild(fdtElmt);
 		dlElmt.appendChild(fddElmt);
+	}
+	
+	function showApprovalPreview(data, dlElmt){
+		var itemInfo       = data.fileDetail;
+		var attachList     = data.attachFileList;
+		var relatedList    = data.relatedFileList;
+		
+		generateApprovalTitle(itemInfo, dlElmt);
+		generateApprovalContent(itemInfo, attachList);
+	}
+	
+	function generateApprovalTitle(itemInfo, dlElmt) {
+		var creatorName = itemInfo["creatorName"];
+		var creatorId   = itemInfo["creatorId"];
+		//Creator title
+		generateCreatorTitle(dlElmt, creatorName, creatorId);
+	}
+	
+	function generateApprovalContent(itemInfo, attachList){
+		var iframeId          = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
+		var iframeContent     = document.getElementById(iframeId);
+		iframeContent.src     = "/ezCabinet/getPreviewContent.do";
+		documentCont          = {};
+		documentCont.content  = itemInfo["conentPath"];
+		documentCont.size     = itemInfo["itemSize"];
+		documentCont.attach   = attachList;
+		
 	}
 	
 	function generateCreatorTitle(dlElmt, creatorName, creatorId) {

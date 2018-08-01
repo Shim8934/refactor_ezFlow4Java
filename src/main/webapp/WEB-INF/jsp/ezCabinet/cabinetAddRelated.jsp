@@ -233,7 +233,7 @@
 					var data         = {
 						type          : moduleType, 
 						mode          : saveMode, 
-						content       : JSON.stringify(divContent),
+						content       : divContent,
 						doctitle      : doctitle,
 						lstAttachLink : JSON.stringify(attachList),
 						otherAttachLk : JSON.stringify(otherList)
