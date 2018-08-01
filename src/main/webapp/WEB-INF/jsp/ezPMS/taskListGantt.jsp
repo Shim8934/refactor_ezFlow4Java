@@ -1232,17 +1232,9 @@
 	   						if ($("#" + elem.id).find("input[name='depends']").val() == preTaskIndex) {
 	   							var newPreTask = $("#" + selectedPreTask).index() + 1;
 	   							
-	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : newPreTask});
-	   						} else {
-	   							var taskGroupId = 0;
-	   							
-	   							if (element.id.match(/g(\d+)/) == null) {
-	   								taskGroupId = projectGroupId;
-	   							} else {
-	   								taskGroupId = element.id.match(/g(\d+)/)[1];
-	   							}
-	   							
-	   							taskArr.push({"groupId" : taskGroupId, "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : -1});
+	   							taskArr.push({"groupId" : projectGroupId, "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : newPreTask});
+	   						} else {						
+	   							taskArr.push({"groupId" : projectGroupId, "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : -1});
 	   						}
 		   				});
 	   				}
@@ -1391,6 +1383,8 @@
 	   			var taskId = 0;
 	   			var groupId = 0;
 	   			var prevTasks = Array.prototype.slice.call(ge.tasks);
+	   			var planEndDate = new Date(curTask.end);
+	   			var today = new Date();
 	   			
 	   			//선행작업 유효성 체크할 때 어느 함수에서 넘어온건지 확인하기 위해 사용.
 	   			var mode = "update";
@@ -1418,8 +1412,10 @@
    					ge.redraw();
 	   				return;
 	   			}
-				
-	   			if(status == 'C' && newProgress < 100) {
+				  			
+	   			if(status == 'C' && newProgress < 100 && today > planEndDate) {
+	   				status = 'L';
+	   			} else if(status == 'C' && newProgress < 100) {
 	   				status = 'P';
 	   			} else if (newProgress >= 100) {
 	   				status = 'C';

@@ -411,21 +411,32 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public int addFavoriteProject(Long projectId, String userId, int tenantId) {
+		LOGGER.debug("[SERVICE] addFavoriteProject started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
-
+		int isChecked = 0;
+		
 		List<Long> favoriteProjectId = ezPMSDAO.getFavoriteProject(map);
 
 		for (int i = 0; i < favoriteProjectId.size(); i++) {
-			if (projectId == favoriteProjectId.get(i)) {
-				return 1;
+			Long favoriteProject = favoriteProjectId.get(i);
+			
+			if (projectId.compareTo(favoriteProject) == 0) {
+				System.out.println(favoriteProject);
+				isChecked = 1;
+				break;
 			}
 		}
-
-		ezPMSDAO.addFavoriteProject(map);
-		return 0;
+		System.out.println(isChecked);
+		if (isChecked == 0) {
+			ezPMSDAO.addFavoriteProject(map);
+		}
+		
+		LOGGER.debug("isChecked : " + isChecked);
+		LOGGER.debug("[SERVICE] addFavoriteProject ended.");
+		return isChecked;
 	}
 
 	@Override
