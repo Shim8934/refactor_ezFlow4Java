@@ -147,21 +147,26 @@
 					titleTd.setAttribute("title", result["title"]);
 					
 					//Email receiver list
-					var receiverScroll = new CabinetScroll("receivers");
-					var receiverDiv    = document.getElementById("receivers");
+					var receiverDiv       = document.getElementById("receivers");
+					receiverDiv.innerHTML = "";
+					var receiverScroll    = new CabinetScroll("receivers");
 					setScrollElement(receiverDiv, receivers, showUserInfoFromEmail, "userEmail", "userName", "");
 					
 					//Email forward list
 					var forwardDiv = document.getElementById("forwards");
 					if (forwardDiv && forwards && forwards.length > 0) {
+						forwardDiv.innerHTML = "";
 						var forwardScroll = new CabinetScroll("forwards");
 						setScrollElement(forwardDiv, forwards, showUserInfoFromEmail, "userEmail", "userName", "");
 					}
 					
 					//Related list
+					var divElmt       = document.getElementById("fileListDiv");
+					divElmt.innerHTML = "";
+					var relDocDivElmt = divElmt.parentElement;
+					while (relDocDivElmt.childElementCount > 1) {relDocDivElmt.removeChild(relDocDivElmt.lastElementChild);}
+					
 					if (relatedList && relatedList.length > 0) {
-						var divElmt       = document.getElementById("fileListDiv");
-						divElmt.innerHTML = "";
 						var relatedScroll = new CabinetScroll("fileListDiv");
 						setScrollElement(divElmt, relatedList, readRelatedItem, "relatedItemId", "title", "useStatus");
 						
@@ -214,7 +219,6 @@
 				}
 				
 				function getRelatedFiles() {return relatedArr;}
-				
 				function saveRelatedFiles(relatedFile) {relatedArr = JSON.parse(JSON.stringify(relatedFile)); showRelatedFiles();}
 				
 				function closeAllPopups() {
@@ -284,6 +288,64 @@
 					}
 				}
 				
+				function fileModify() {
+					//Set title
+					document.getElementById("fileFileH1").textContent = CabinetMessages.strFileMod;
+					document.title = CabinetMessages.strFileMod;
+					
+					//Set button
+					var fileDivBttn = document.getElementById("fileDivBttn");
+					fileDivBttn.style.display = "none";
+					
+					var fileModifyDivBttn = document.getElementById("fileModifyDivBttn");
+					fileModifyDivBttn.style.display = "";
+					
+					//Set inputBox
+					var titleTdElmt       = document.getElementById("title");
+					var inputElmt1        = document.createElement("input"); 
+					inputElmt1.value      = titleTdElmt.textContent;
+					titleTdElmt.innerHTML = "";
+					inputElmt1.className  = "tblFileInput";
+					
+					inputElmt1.setAttribute("id", "itemTtl");
+					titleTdElmt.appendChild(inputElmt1);
+					
+					//Set relatedBttn
+					var relDocDivElmt         = document.getElementById("rlWrapDiv");
+					var relatedBttn           = document.createElement("a");
+					var relSpanElmt           = document.createElement("span");
+					relSpanElmt.textContent   = CabinetMessages.strSlTxt;
+					relatedBttn.appendChild(relSpanElmt);
+					relatedBttn.onclick       = function(e) {getRelatedPopUp();};
+					relDocDivElmt.appendChild(relatedBttn);
+					
+					//Set delete button in attach file
+					var iframeElmt = document.getElementById("mailIframe");
+					var contentWd  = iframeElmt.contentWindow || iframeElmt.contentDocument;
+					var attachDiv  = contentWd.document.getElementsByClassName("previewmail_addfile cabattach")[0];
+					if (attachDiv) {
+						var liList = attachDiv.lastElementChild.children;
+						if (liList.length > 0) {
+							for (var i = 0, len = liList.length; i < len; i++) {
+								var liElmt = liList[i];
+								var spanElmt = document.createElement("span");
+								spanElmt.className = "icon_rbtn";
+								spanElmt.innerHTML = "<img src='/images/icon_reddelete.gif'>";
+								spanElmt.onclick   = function(e) {removeAttachFile(e);};
+								liElmt.appendChild(spanElmt);
+							}
+						}
+					}
+				}
+				
+				function removeAttachFile(e) {
+					e.stopPropagation();
+					var spanElmt = e.currentTarget;
+					var liElmt   = spanElmt.parentElement;
+					var ulElmt   = liElmt.parentElement;
+					ulElmt.removeChild(liElmt);
+				}
+				
 				function filePrint() {
 					var rltdElmt   = null;
 					var ftdElmt    = null;
@@ -329,6 +391,62 @@
 					if (rltdElmt) {rltdElmt.removeAttribute("style");}
 					if (rtdElmt)  {rtdElmt.removeAttribute("style");}
 					if (ftdElmt)  {ftdElmt.removeAttribute("style");}
+				}
+				
+				function saveItem() {
+					var title   = document.getElementById("itemTtl").value;
+					
+					if (!title.replace(/\s/g,'')) {
+						alert(CabinetMessages.strNoTitle);
+						document.getElementById("itemTtl").value = "";
+						document.getElementById("itemTtl").focus;
+						return;
+					}
+					
+					//Check attach list here
+					var listAttach = [];
+					
+					
+					$.ajax({
+						type: "POST",
+						url: "/ezCabinet/modifyEmailItem.do",
+						data: {
+							"itemId"      : itemId,
+							"title"       : title,
+							"relatedList" : JSON.stringify(relatedArr),
+							"listAttach"  : JSON.stringify(listFiles)
+						},
+						dataType: "JSON",
+						async: false,
+						success : function(data) {
+							var code = data.code;
+							switch(code) {
+								case 0 : afterChangeSuccessfully()         ; break;
+								case 1 : alert(CabinetMessages.strParamErr); break;
+								case 2 : alert(CabinetMessages.strError)   ; break;
+								case 3 : alert(CabinetMessages.strPerm)    ; break;
+								default: alert(CabinetMessages.strError)   ; return; 
+							}
+						},
+						error : function(error) {
+							alert(CabinetMessages.strError);
+						}
+					});
+				}
+				
+				function cancelChanges() {
+					document.getElementById("fileFileH1").textContent = CabinetMessages.strFileDet;
+					document.title = CabinetMessages.strFileDet;
+					
+					document.getElementById("fileDivBttn").style.display       = "";
+					document.getElementById("fileModifyDivBttn").style.display = "none";
+					
+					getFileDetail();
+				}
+				
+				function getRelatedPopUp() {
+					if (rlWindow) {rlWindow.close();}
+					rlWindow = window.open("/ezCabinet/getRelatedFile.do?itemId=" + itemId + "&module=mail", "relatedWd", getOpenWindowfeature(800, 600));
 				}
 				
 				function getIframeContent() {return mailContent;}

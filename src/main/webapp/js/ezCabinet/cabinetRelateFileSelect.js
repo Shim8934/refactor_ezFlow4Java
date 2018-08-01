@@ -4,6 +4,7 @@ var CabinetRlFileSelect = function() {
 	var searchTtl     = "";
 	var searchMode    = "normal";
 	var cabinetNavi   = null;
+	var module        = null;
 	var cabinetTree   = new CabinetTree();
 	var fileTable     = new CabinetTable({
 		normal   : "bnkCabNormal",
@@ -18,7 +19,8 @@ var CabinetRlFileSelect = function() {
 		dblclick : removeFile
 	});
 	
-	function initEvents(itemid) {
+	function initEvents(itemid, moduleName) {
+		module                 = moduleName;
 		cabCrrItemId           = itemid;
 		document.onselectstart = function() {return false;};
 		var closeBttn          = document.getElementById("cabRlClose").firstElementChild.firstElementChild.firstElementChild;
@@ -126,8 +128,12 @@ var CabinetRlFileSelect = function() {
 		}
 		
 		var parentWd = window.opener;
-		if (parentWd && parentWd.CabinetAddFile) {parentWd.CabinetAddFile.save(data);}
-		if (parentWd && parentWd.CabinetItemDetail) {parentWd.CabinetItemDetail.save(data);}
+		
+		switch (module) {
+			case "normal" : if (parentWd && parentWd.CabinetItemDetail) {parentWd.CabinetItemDetail.save(data);} break;
+			case "mail"   : if (parentWd && parentWd.CabinetEmailFile) {parentWd.CabinetEmailFile.save(data);}   break;
+			default       : if (parentWd && parentWd.CabinetAddFile) {parentWd.CabinetAddFile.save(data);}
+		}
 		
 		closeWindow();
 	}
