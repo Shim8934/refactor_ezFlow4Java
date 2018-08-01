@@ -3851,7 +3851,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> accessBoardList, int pMode) throws Exception{
+	public List<HashMap<String, Object>> getSearchAllBoardItemList(LoginVO userInfo, BoardListVO boardListVO, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode) throws Exception{
 		logger.debug("getSearchAllBoardItemList started");
 
 		if (boardListVO.getOrderBySub().length() > 0) {
@@ -3890,7 +3890,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_pDeptID", userInfo.getDeptID());
 		map.put("v_pCompanyID", userInfo.getCompanyID());
 		map.put("v_MODE", pMode); 
-		map.put("v_boardList", accessBoardList);
+		map.put("v_listviewList", listviewTrueList);
+		map.put("v_qnaItemList", qnaItemList);
 		
 		if (boardVO.getSubFlag().equals("A")) { 
 			map.put("v_PWHEREBOARD", " (1=1) ");
@@ -3921,7 +3922,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 	
 	@Override
-	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> accessBoardList, int pMode) throws Exception {
+	public int getSearchAllBoardItemCount(LoginVO userInfo, BoardVO boardVO, ArrayList<String> listviewTrueList, ArrayList<String> qnaItemList, int pMode) throws Exception {
 		logger.debug("getSearchAllBoardItemCount started");
 
 		if (boardVO.getSearchQuery().length() > 0) {
@@ -3935,11 +3936,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		map.put("v_boardList", accessBoardList);
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_pDeptID", userInfo.getDeptID());
 		map.put("v_pCompanyID", userInfo.getCompanyID());
 		map.put("v_MODE", pMode); 
+		map.put("v_listviewList", listviewTrueList);
+		map.put("v_qnaItemList", qnaItemList);
 		
 		if (boardVO.getSubFlag().equals("A")) { 
 			map.put("v_PWHEREBOARD", " (1=1) ");

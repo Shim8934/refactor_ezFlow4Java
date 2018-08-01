@@ -32,7 +32,7 @@
 		<div id="close"><ul><li><span onClick="btnClose_onclick()"></span></li></ul></div>
 		<table class="content">
 			<tr> 
-				<th><spring:message code='ezApprovalG.t106'/></th>
+				<th style="padding-right: 94px;"><spring:message code='ezApprovalG.t106'/></th>
 				<td id="tdTitle" colspan=3>&nbsp;</td>
 			</tr>
 			<tr> 
@@ -120,7 +120,7 @@
 		<span ID="divTabDis2" style="DISPLAY: none;"> 
 		<table class="content">
 			<tr> 
-				<th><spring:message code='ezApprovalG.t841'/></th>
+				<th style="padding-right: 70px;"><spring:message code='ezApprovalG.t841'/></th>
 				<td id="tdEndY"  colspan=3>&nbsp;&nbsp;</td>
 			</tr>
 			<tr> 
@@ -168,7 +168,7 @@
 		<span ID="divTabDis3" style="DISPLAY: none;">
 		<table class="content">
 			<tr> 
-				<th><spring:message code='ezApprovalG.t851'/></th>
+				<th style="padding-right: 40px;"><spring:message code='ezApprovalG.t851'/></th>
 				<td id="tdTransfer" colspan="3">&nbsp;&nbsp;</td>
 			</tr>
 			<tr> 

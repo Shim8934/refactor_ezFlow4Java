@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
@@ -3277,13 +3278,23 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				        	        messageBodyPart.setDataHandler(new DataHandler(source));
 				        	        messageBodyPart.setFileName(imageName);
 				        	        
-				        	        // 이미지 파일의 Default Content-Type은 application/octet-stream 로 설정한다.
-				        	        String contentType = "application/octet-stream";
+				        	        String contentType = null;
+				        	        BufferedInputStream bis = null;
 				        	        
-				        	        // 이미지 파일의 Content-Type을 구한다.
-				        	        if (Files.probeContentType(f.toPath()) != null) {
-				        	        	contentType = Files.probeContentType(f.toPath());
+				        	        try {
+				        		        bis = new BufferedInputStream(new FileInputStream(f));
+				        		        contentType = URLConnection.guessContentTypeFromStream(bis);
+				        	        } catch(Exception e) {
+				        	        } finally {
+				        	        	if (bis != null) {
+				        	        		bis.close();
+				        	        	}
 				        	        }
+				        	        
+				        	        if (contentType == null) {
+			        		        	contentType = "application/octet-stream";
+			        		        }
+				        	        
 				        	        
 				        	        messageBodyPart.setHeader("Content-Type", contentType);
 				        	        String cidWithBrackets = "<" + cid + ">";

@@ -239,7 +239,7 @@
 	                <th style="height:40px;"><spring:message code='ezCommunity.t12' /></th>
 	                <td style="white-space:nowrap;border-right:0px">
 	                    <input type="radio" name="clubConfirmType" value="2" checked><spring:message code='ezCommunity.t13' />
-	                    <input type="radio" name="clubConfirmType" value="3"><spring:message code='ezCommunity.t1015' />
+	                    <input type="radio" name="clubConfirmType" value="3"><spring:message code='ezCommunity.t14' />
 	                </td>
 	                <td style="padding: 5px;white-space:nowrap;border-left:0px">	                
 	                	<div><spring:message code='ezCommunity.t452' /></div>

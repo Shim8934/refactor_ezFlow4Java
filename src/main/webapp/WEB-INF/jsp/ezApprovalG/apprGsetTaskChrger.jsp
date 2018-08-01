@@ -412,19 +412,24 @@
     </ul>
 </div>
 <table>
-        <tr> 
-          <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t1174'/></h2>
-        <div class="listview"  style="HEIGHT: 235px; WIDTH: 370px; overflow:AUTO" id="divList">
-        <div ID="OrgListView"></div></div>
-        </td>
-          <td style="width:25px;text-align:center"><img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" 
-						onClick="return AddUser_onclick()" style="cursor:pointer"><img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16" 
-						onClick="return DelUser_onclick()" style="cursor:pointer"></td>
-
-          <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t1175'/></h2>
-          <div class="listview"  style="HEIGHT: 235px; WIDTH: 180px;overflow-x:hidden;overflow-y:AUTO" id="divList2">
-          <div ID="UserListView"></div></div></td>
-        </tr>
+	<tr> 
+		<td style="vertical-align:top">
+			<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1174'/></h2>
+			<div class="listview"  style="HEIGHT: 350px; WIDTH: 500px; overflow:AUTO" id="divList">
+				<div ID="OrgListView"></div>
+			</div>
+		</td>
+  		<td style="width:25px;text-align:center">
+  			<img id="RecvAdd" border="0" src="/images/arr_right.gif" width="16" height="16" onClick="return AddUser_onclick()" style="cursor:pointer">
+  			<img id="RecvDel" border="0" src="/images/arr_left.gif" width="16" height="16" onClick="return DelUser_onclick()" style="cursor:pointer">
+  		</td>
+		<td style="vertical-align:top">
+			<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1175'/></h2>
+			<div class="listview"  style="HEIGHT: 350px; WIDTH: 240px;overflow-x:hidden;overflow-y:AUTO" id="divList2">
+				<div ID="UserListView"></div>
+			</div>
+		</td>
+	</tr>
 </table>
 
 <div class="btnposition btnpositionNew">

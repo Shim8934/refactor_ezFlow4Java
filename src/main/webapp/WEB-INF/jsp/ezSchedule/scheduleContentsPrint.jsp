@@ -16,7 +16,9 @@
 			    empty-cells: show;
 			    padding:0;margin:0;
 			    font-size:12px;
-			    font-family: Gulim, Meiryo UI;
+			    /* 2018-07-30 김보미 - 폰트 수정 */
+			    /*font-family: Gulim, Meiryo UI;*/
+			    font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 		    }
 		    .printcontent th{
 			    white-space: nowrap;

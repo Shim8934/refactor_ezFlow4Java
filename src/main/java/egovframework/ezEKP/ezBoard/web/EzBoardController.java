@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -46,6 +47,9 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+
+
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -7362,10 +7366,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 접근 가능한 게시판 Method
+	 * 검색 가능한 게시판 Method
 	 */
-	public ArrayList<String> accessBoardList(LoginVO userInfo) throws Exception {
-		logger.debug("accessBoardList started");
+	public Map<String, ArrayList<String>> searchBoardList(LoginVO userInfo) throws Exception {
+		logger.debug("searchBoardList started");
 		
 		String pRootBoardID = "top";
 		String pSubFlag = "1";
@@ -7394,6 +7398,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			accessBoardList.add(nList.item(i).getChildNodes().item(2).getTextContent()); //그룹게시판
 		}
 		
+		//접근가능한 게시판
 		while (accessBoardList.size() != 0) {
 			for (int i = 0; i < accessBoardList.size(); i++) {
 				boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(accessBoardList.get(i), userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
@@ -7420,8 +7425,31 @@ public class EzBoardController extends EgovFileMngUtil{
 			tempBoardList.clear();
 		}
 		
-		logger.debug("accessBoardList ended");
-		return accessAllBoardList;
+		//리스트뷰 true게시판 & qna게시판
+		Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
+		
+		ArrayList<String> listviewTrueList = new ArrayList<String>();
+		ArrayList<String> qnaItemList = new ArrayList<String>();
+		BoardPropertyVO boardInfo;
+		
+		for (int i = 0; i < accessAllBoardList.size(); i++) {
+			boardInfo = getBoardInfo(accessAllBoardList.get(i), userInfo);
+			
+			if (boardInfo.getListView_FG().equals("true")) {
+				if (boardInfo.getGuBun().equals("5") && boardInfo.getBoardAdmin_FG().equals("false")) {
+					qnaItemList.add(accessAllBoardList.get(i));
+				}else{
+					listviewTrueList.add(accessAllBoardList.get(i));
+				}
+			}
+			boardInfo = null;
+		}
+		
+		map.put("listviewTrueList", listviewTrueList);
+		map.put("qnaItemList", qnaItemList);
+		
+		logger.debug("searchBoardList ended");
+		return map;
 	}
 	
 	/**
@@ -7455,21 +7483,28 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		boardVO.setNowDate(commonUtil.getTodayUTCTime(""));
-		ArrayList<String> accessBoardList = null;
+		
+		Map<String, ArrayList<String>> resultmap = null;
+		ArrayList<String> listviewTrueList = null;
+		ArrayList<String> qnaItemList = null;
 		
 		int pMode = 1;
 		if (userInfo.getRollInfo() != null && (userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("n=1") > -1)) {
-			pMode = 0;
+			pMode = 0; //관리자일때
+			listviewTrueList = new ArrayList<String>();
+			qnaItemList = new ArrayList<String>();
 		} else {
-			pMode = 1;
-			accessBoardList = accessBoardList(userInfo);
+			pMode = 1; //관리자가아닐때
+			resultmap = searchBoardList(userInfo);
+			listviewTrueList = resultmap.get("listviewTrueList");
+			qnaItemList = resultmap.get("qnaItemList");
 		}
 		
 		int boardCount;
-		if (pMode == 0 || accessBoardList.size() > 0) {
-			boardCount = ezBoardService.getSearchAllBoardItemCount(userInfo, boardVO, accessBoardList, pMode);
-		} else {
+		if (pMode == 1 && listviewTrueList.size() == 0 && qnaItemList.size() == 0) {
 			boardCount = 0;
+		} else {
+			boardCount = ezBoardService.getSearchAllBoardItemCount(userInfo, boardVO, listviewTrueList, qnaItemList, pMode);
 		}
 		
 		BoardListVO boardListVO = new BoardListVO();
@@ -7500,12 +7535,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		List<HashMap<String, Object>> boardSearchList;
 		int dlength;
-		if (pMode == 0 || accessBoardList.size() > 0) {
-			boardSearchList = ezBoardService.getSearchAllBoardItemList(userInfo, boardListVO, boardVO, accessBoardList, pMode);
-			dlength = boardSearchList.size();
-		} else {
+		
+		if (pMode == 1 && listviewTrueList.size() == 0 && qnaItemList.size() == 0) {
 			boardSearchList = null;
 			dlength = 0;
+		} else {
+			boardSearchList = ezBoardService.getSearchAllBoardItemList(userInfo, boardListVO, boardVO, listviewTrueList, qnaItemList, pMode);
+			dlength = boardSearchList.size();
 		}
 		
 		StringBuffer resultXML = new StringBuffer();

@@ -333,7 +333,6 @@
 				}
 			
 			    var rMatch = SaveFile();
-			    alert(rMatch);
 			    if (rMatch == "SUCCESS") {
 			        var rtnVal = SetSusinState();
 			        if (rtnVal == "TRUE") {

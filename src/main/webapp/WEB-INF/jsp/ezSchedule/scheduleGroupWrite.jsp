@@ -251,14 +251,18 @@
 						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
 						
 						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
-			        		if (result.totalCount == result.totalCount2) {
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang256 + "</span>]";
-			        		} else {
-			        			//2018-07-27 김보미 - [1명/전체 10명]형식으로 수정
-// 			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang256+ "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang256 + "</span>]";
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang256+ "</span>/<spring:message code='ezAddress.t362' /> <span style='color:#017BEC;'>" + result.totalCount2 + strLang256 + "</span>]";
-			        		}
-			            	
+							if (result.containLow == "YES") {
+								var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
+								var strIsLeaf = $("div#" + id + "").attr("isleaf");
+	
+								if (strIsLeaf == "TRUE") { //하위가 없으면
+									SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang256 + "</span>]";
+				        		} else { //하위가 있으면
+				        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang256+ "</span>/<spring:message code='ezAddress.t362' /> <span style='color:#017BEC;'>" + result.totalCount2 + strLang256 + "</span>]";
+				        		}
+							} else {
+								SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang256 + "</span>]";
+							}			            	
 			            	SelectDeptNM.setAttribute("countinfo","1")
 			        	}
 					},
@@ -1434,7 +1438,7 @@
 		                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
 		                        </td>
 		                        <td style="vertical-align: top;">
-		                            <h2 id="ToTitle" class="receiver_tltype01" style="cursor: pointer;">
+		                            <h2 id="ToTitle" class="receiver_tltype01">
 		                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezSchedule.t00001' /></span>
 		                            </h2>
 		                            <div class="receiver_borderbox">

@@ -18,6 +18,11 @@
 <script type="text/javascript"  src="/js/ezApprovalG/TreeViewCtrl_Cross.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
+<style type="text/css">
+	.mainlist tr th {
+		border-top: 0px;
+	}
+</style>
 <script ID="clientEventHandlersJS" type="text/javascript">
 var pDocID;       // DocID Declare Static Variable
 var SusinXML;
@@ -767,45 +772,49 @@ function AprDept_onDblclick()
 			<td style="vertical-align:top; width:300px">
 				<table>
 					<tr>
-	                    <td style="vertical-align:top" colspan="2" ><h2><spring:message code='ezApprovalG.t232'/></h2>									
+	                    <td style="vertical-align:top" colspan="2" ><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t232'/></h2>									
 	                        <div class="box" style="overflow:auto;height:305px;width:300px;" id="TreeView"></div>
 	                    </td>
 					</tr>
 					<tr>
-						<td style="padding-top:5px" ><div class="listview">	
-						<div id="UserList" style="overflow:auto;Border:0;Width:100%; Height:160px;"></div>
-						</div></td>
+						<td style="height:30px; padding-top: 5px;">
+							<h2 class="h2_dot" style="font-weight: normal;">
+								<spring:message code='ezApprovalG.t250'/>
+								<span style="position: absolute; top:403px; left:134px;">
+									<input id="textUser" style="width:100px; height: 22px;" name="textUser" onKeyPress="return textUser_onkeypress()" tabindex="1">
+		                            <a class="imgbtn imgbck">
+		                                <span id="btn_searchUser" onKeyPress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t250'/></span>
+		                            </a>
+								</span>
+							</h2>
+						</td>
 					</tr>
 					<tr>
-						<td style="height:30px; text-align:right">
-							<input id="textUser" style="width:100px" name="textUser" onKeyPress="return textUser_onkeypress()" tabindex="1">
-                            <a class="imgbtn imgbck" style="vertical-align:middle">
-                                <span id="btn_searchUser" onKeyPress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t250'/></span>
-                            </a>
-						</td>
+						<td>
+						<div class="listview">	
+						<div id="UserList" style="overflow:auto;Border:0;Width:100%; Height:163px;"></div>
+						</div></td>
 					</tr>
 				</table>
 			</td>
             <td style="width:50px;text-align:center">
-                <img id="AprDeptAdd"  alt="<spring:message code='ezApprovalG.t251'/>" src="/images/arr_right.gif" width="16"
-		        height="16" onClick="return AprDeptAdd_onclick()"
-		        onmouseover="MM_swapImage('Image10','','/images/arrow_next.gif',1)" onMouseOut="MM_swapImgRestore()" style="CURSOR:pointer"><br>
-		          <img id="AprDeptDel" alt="<spring:message code='ezApprovalG.t252'/>"  src="/images/arr_left.gif"  width="16"
-		        height="16" onClick="return AprDeptDel_onclick()" onMouseOut="MM_swapImgRestore()"
-		        onMouseOver="MM_swapImage('Image11','','/images/arrow_delete1.gif',1)" style="CURSOR:pointer"><br><br><br>
-		          <img id="AprDeptAdd2" alt="<spring:message code='ezApprovalG.t251'/>"  src="/images/arr_right.gif" style="CURSOR:pointer" width="16" height="16" onClick="return AprDeptAdd2_onclick()" onMouseOut="MM_swapImgRestore()"
-		        onmouseover="MM_swapImage('Image10','','/images/arrow_next.gif',1)">
+				<img id="AprDeptAdd" alt="<spring:message code='ezApprovalG.t251'/>" src="/images/arr_right.gif" style="CURSOR:pointer; margin-top:100px;" width="16" height="16" 
+				onClick="return AprDeptAdd_onclick()" onmouseover="MM_swapImage('Image10','','/images/arrow_next.gif',1)" onMouseOut="MM_swapImgRestore()"><br>
+				<img id="AprDeptDel" alt="<spring:message code='ezApprovalG.t252'/>" src="/images/arr_left.gif"  style="CURSOR:pointer" width="16" height="16" 
+				onClick="return AprDeptDel_onclick()" onmouseover="MM_swapImage('Image11','','/images/arrow_delete1.gif',1)" onMouseOut="MM_swapImgRestore()"><br>
+				<img id="AprDeptAdd2"alt="<spring:message code='ezApprovalG.t251'/>" src="/images/arr_right.gif" style="CURSOR:pointer; margin-top: 250px;" width="16" height="16" 
+				onClick="return AprDeptAdd2_onclick()"onmouseover="MM_swapImage('Image10','','/images/arrow_next.gif',1)" onMouseOut="MM_swapImgRestore()">
             </td>
 			<td style="vertical-align:top">
 				<table>
 					<tr>
-					  <td style="white-space:nowrap" ><h2><spring:message code='ezApprovalG.t253'/></h2></td>
+					  <td style="white-space:nowrap" ><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t253'/></h2></td>
 					  <td style="display:none"><a class="imgbtn imgbck"><span onClick="return btn_DeptGroupAdd()" ><spring:message code='ezApprovalG.t254'/></span></a></td>
 				  	</tr>
 					<tr>
 						<td colspan="2" style="vertical-align:top">
                             <div class="listview">									
-							    <div id="APRDEPT" style="overflow:auto;border:0;HEIGHT: 500px; WIDTH: 400px;margin:1px 1px 1px 1px;">
+							    <div id="APRDEPT" style="overflow:auto;border:0;HEIGHT: 505px; WIDTH: 400px;margin:1px 1px 1px 1px;">
 							</div></div>
 						</td>
 					</tr>

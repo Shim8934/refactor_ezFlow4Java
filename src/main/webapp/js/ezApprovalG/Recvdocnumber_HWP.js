@@ -83,7 +83,99 @@ function setDocNumFormat() {
     return true;
 }
 function getRecvDocNumber(pDeptID) {
-    try {
+    /*try {
+        var name, docnumber
+        var rtnval
+
+        name = "receiptnumber"
+        if (!HwpCtrl.CheckFieldExist(name) && LastSignSN == 1) {
+            var DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
+            var result = "";
+        	
+        	$.ajax({
+        		type : "POST",
+        		dataType : "text",
+        		async : false,
+        		url : "/ezApprovalG/getCabinetSN.do",
+        		data : {
+        			docID : pDocID,
+        			deptID : pDeptID
+        		},
+        		success: function(xml){
+        			result = loadXMLString(xml);
+        		}
+        	});
+
+            var SN = getNodeText(GetChildNodes(result)[0]);
+            pDocNo = DeptSymbol + "-" + SN;
+            var tempNumString = SN;
+            var i = 0;
+            var templen = tempNumString.length;
+            for (i = 0; i < 6 - templen; i++)
+                tempNumString = "0" + tempNumString;
+            pDocNumCode = pDeptID + tempNumString;
+            SaveFile();
+            return true;
+        }
+        var rtnVal = setDocNumFormat();
+        if (!rtnVal)
+            return true;
+
+        fractionsymbol = trim(HwpCtrl.GetFieldText(name));
+
+        var result = "";
+        
+		if (LastSignSN == 1) {
+			$.ajax({
+	    		type : "POST",
+	    		dataType : "text",
+	    		async : false,
+	    		url : "/ezApprovalG/getCabinetSN.do",
+	    		data : {
+	    			docID : pDocID,
+	    			deptID : pDeptID
+	    		},
+	    		success: function(xml){
+	    			result = loadXMLString(xml);
+	    		}
+	    	});
+	    	
+	        var SN = getNodeText(GetChildNodes(result)[0]);
+	        if (SN == "") {
+	            pDocNumCode = "";
+	            pDocNo = "";
+	            HwpCtrl.SetFieldText(name, "");
+	            return false;
+	        }
+	        else {
+	        	HwpCtrl.SetFieldText(name, fractionsymbol + SN);
+	            pDocNo = fractionsymbol + SN;
+	            var tempNumString = SN;
+	            var i = 0;
+	            var templen = tempNumString.length;
+	            for (i = 0; i < 6 - templen; i++)
+	                tempNumString = "0" + tempNumString;
+	            pDocNumCode = pDeptID + tempNumString;
+	            SaveFile();
+	            return true;
+	        }
+		} else {
+            return true;
+		}
+        
+    } catch (e) {
+        if (SN != "") {
+            HwpCtrl.SetFieldText(name, fractionsymbol + SN);
+            rollbackDocNumber(pDeptID, pDocID)
+            return false;
+        }
+        else {
+            HwpCtrl.SetFieldText(name, "");
+            pDocNo = "";
+        }
+    }*/
+	
+	try {
         var name, docnumber
         var rtnval
 
