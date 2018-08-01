@@ -1232,17 +1232,9 @@
 	   						if ($("#" + elem.id).find("input[name='depends']").val() == preTaskIndex) {
 	   							var newPreTask = $("#" + selectedPreTask).index() + 1;
 	   							
-	   							taskArr.push({"groupId" : element.id.match(/g(\d+)/)[1], "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : newPreTask});
-	   						} else {
-	   							var taskGroupId = 0;
-	   							
-	   							if (element.id.match(/g(\d+)/) == null) {
-	   								taskGroupId = projectGroupId;
-	   							} else {
-	   								taskGroupId = element.id.match(/g(\d+)/)[1];
-	   							}
-	   							
-	   							taskArr.push({"groupId" : taskGroupId, "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : -1});
+	   							taskArr.push({"groupId" : projectGroupId, "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : newPreTask});
+	   						} else {						
+	   							taskArr.push({"groupId" : projectGroupId, "taskId" : elem.id.match(/t(\d+)/)[1], "order" : idx, "depends" : -1});
 	   						}
 		   				});
 	   				}
