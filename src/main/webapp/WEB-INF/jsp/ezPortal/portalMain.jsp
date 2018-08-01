@@ -129,6 +129,7 @@
 		     
 		        $("#close-button").click(function() {
 		        	$("#layer-popup").css("display", "none")
+		        	$("#open-memo" ).css("display", "");
 		        })
 		        
 		        $("#maskDiv").click(function() {
@@ -194,7 +195,7 @@
 				$(".noteBlock").css("pointer-events", "none");
 	        	$("#open-memo").css("pointer-events", "auto");
 	        	
-	        	$( "#open-memo" ).draggable().on("mouseup", function() {
+	        	$("#open-memo" ).draggable().on("mouseup", function() {
 		        	$(".noteBlock").css("pointer-events", "none");
 		        	$("#open-memo").css("pointer-events", "auto");
 		        	$("#layer-popup").css("pointer-events", "auto");
@@ -203,6 +204,7 @@
 		       	}).on("click", function(event){
 		       		event.preventDefault();
 		       		if ("none" == ($("#layer-popup").css("display"))) {
+		       			$("#open-memo" ).css("display", "none");
 						$("#layer-popup").css("display", "");
 		        	} else {
 						$("#layer-popup").css("display", "none");
@@ -352,7 +354,7 @@
 							<button id="save" onclick="save()">저장</button> 
 							<button onclick="closeMemo()">닫기</button>
 						</div>
-						<textarea id="textarea" cols="50" rows="28"></textarea>
+						<textarea id="textarea" cols="50" rows="28" style="resize:none;"></textarea>
 						<div id="font-btn" style="text-align: right; display: none">
 					        <button id="font-up">폰트+</button> 
 					        <button id="font-down">폰트-</button>
