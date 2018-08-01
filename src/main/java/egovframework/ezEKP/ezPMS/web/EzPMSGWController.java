@@ -527,7 +527,7 @@ public class EzPMSGWController {
 					ezPMSService.updateProjectStatus(Long.parseLong(projectIdList[i]), status, info.getTenantId(),
 							changeDate, planEndDate);
 
-					if (nowStatus.equals("W") && status.equals("P")) {
+					if (status.equals("P")) {
 						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(),
 								changeDate, status, planEndDate, companyId, lang);
 					}
@@ -668,7 +668,8 @@ public class EzPMSGWController {
 			
 			String roleCheck = "";
 			String planEndDate = request.getParameter("planEndDate");
-			int projectListCount  = ezPMSService.getTaskOverProjectEndDate(projectId, tenantId, planEndDate);
+			String planStartDate = request.getParameter("planStartDate");
+			int projectListCount  = ezPMSService.getTaskOverProjectDate(projectId, tenantId, planEndDate, planStartDate);
 			
 			LOGGER.debug("taskOverProjectEndDate Count : " + projectListCount);
 			

@@ -1699,7 +1699,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		map.put("changeDate", changeDate);
 		map.put("status", status);
 		map.put("progress", 100);
-
+		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		try {
@@ -1714,8 +1714,28 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		ezPMSDAO.updateProjectRealDate(map);
+		
+		map.put("lang", lang);
+		
+		ProjectInfoVO projectInfo = ezPMSDAO.getProjectDetails(map);
+		String realStartDate = projectInfo.getRealStartDate();
+		Long projectGroupId = projectInfo.getGroupId();
+		
+		if((status.equals("P") && realStartDate == null)) {
+			ezPMSDAO.updateProjectRealDate(map);
+			
+			map.put("realStartDate", changeDate);
+			map.put("groupId", projectGroupId);
+			ezPMSDAO.updateGroupRealDate(map);
+		} else if(status.equals("C")) {
+			ezPMSDAO.updateProjectRealDate(map);
+			
+			map.put("realStartDate", realStartDate);
+			map.put("realEndDate", changeDate);
+			map.put("groupId", projectGroupId);
+			ezPMSDAO.updateGroupRealDate(map);
+		}
+		
 		LOGGER.debug("[SERVICE] updateProjectRealDate Ended");
 	}
 
@@ -3554,13 +3574,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int getTaskOverProjectEndDate(Long projectId, int tenantId, String planEndDate) {
+	public int getTaskOverProjectDate(Long projectId, int tenantId, String planEndDate, String planStartDate) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
 		map.put("planEndDate", planEndDate);
+		map.put("planStartDate", planStartDate);
 		
-		return ezPMSDAO.getTaskOverProjectEndDate(map);
+		return ezPMSDAO.getTaskOverProjectDate(map);
 	}
 	
 	@Override

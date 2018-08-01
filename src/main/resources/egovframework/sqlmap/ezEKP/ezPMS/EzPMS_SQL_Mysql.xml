@@ -4477,7 +4477,7 @@
 		]]>
 	</update>
 	
-	<select id="EzPMSDAO.getTaskOverProjectEndDate" parameterClass="map" resultClass="Integer">
+	<select id="EzPMSDAO.getTaskOverProjectDate" parameterClass="map" resultClass="Integer">
 		<![CDATA[
 		SELECT	
 			COUNT(DISTINCT A.TASK_ID)	
@@ -4508,7 +4508,10 @@
 		AND
 			A.PROJECT_ID = #projectId#
 		AND
-			A.PLAN_END_DATE > #planEndDate#
+			(A.PLAN_END_DATE > #planEndDate#
+			OR
+			A.PLAN_START_DATE < #planStartDate#
+			)
 		]]>
 	</select>
 	
