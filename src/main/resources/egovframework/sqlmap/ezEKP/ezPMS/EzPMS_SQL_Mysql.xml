@@ -82,6 +82,8 @@
     	<result property="projectName"						column="PROJECT_NAME"				columnIndex="26"/>
     	<result property="upperGroupName"					column="UPPER_GROUP_NAME"			columnIndex="27"/>
     	<result property="weight"							column="WEIGHT"						columnIndex="28"/>
+    	<result property="taskCount"						column="TASKLISTCOUNT"				columnIndex="29"/>
+    	<result property="latePercent"						column="LATEPERCENT"				columnIndex="30"/>
     </resultMap>
     
     <resultMap id="projectGroupVOForDetail" class="ProjectGroupVO">
@@ -2430,7 +2432,55 @@
 							AND
 								GROUP_ID = A.GROUP_ID OR ANCESTER_GROUP LIKE CONCAT('%\,',A.GROUP_ID,',%') OR ANCESTER_GROUP LIKE CONCAT(A.GROUP_ID,',%') 
 					)
-				) AS WEIGHT
+				) AS WEIGHT,
+				(
+					SELECT
+						COUNT(TASK_ID)
+					FROM
+						TBL_PMS_TASK
+					WHERE
+						TENANT_ID = #tenantId#
+					AND
+						DEL_STATUS = 0
+					AND
+						GROUP_ID IN (
+							SELECT 
+								GROUP_ID
+							FROM 
+								TBL_PMS_GROUP
+							WHERE
+								TENANT_ID = #tenantId#
+							AND
+								DEL_STATUS = 0
+							AND
+								GROUP_ID = A.GROUP_ID OR ANCESTER_GROUP LIKE CONCAT('%\,',A.GROUP_ID,',%') OR ANCESTER_GROUP LIKE CONCAT(A.GROUP_ID,',%') 
+					)
+				) AS TASKLISTCOUNT,
+				(
+					SELECT
+						IFNULL(SUM((100 - REAL_PROGRESS) * (WEIGHT / 100)), 0)
+					FROM
+						TBL_PMS_TASK
+					WHERE
+						TENANT_ID = #tenantId#
+					AND
+						DEL_STATUS = 0
+					AND
+						STATUS = 'L'
+					AND
+						GROUP_ID IN (
+							SELECT 
+								GROUP_ID
+							FROM 
+								TBL_PMS_GROUP
+							WHERE
+								TENANT_ID = #tenantId#
+							AND
+								DEL_STATUS = 0
+							AND
+								GROUP_ID = A.GROUP_ID OR ANCESTER_GROUP LIKE CONCAT('%\,',A.GROUP_ID,',%') OR ANCESTER_GROUP LIKE CONCAT(A.GROUP_ID,',%') 
+					)
+				) AS LATEPERCENT
 			FROM
 				TBL_PMS_GROUP A
 			JOIN	

@@ -3438,15 +3438,6 @@ public class EzPMSGWController {
 			for (int i = 0; i < groupList.size(); i++) {
 				Long groupId = groupList.get(i).getGroupId();
 
-				// 그룹 가중치를 얻어옴.
-//				Float weight = ezPMSService.getGroupWeight(groupId, info.getTenantId());
-//				
-//				if (weight == null || weight == 0.0f) {
-//					groupList.get(i).setWeight(0.0f);
-//				} else {
-//					groupList.get(i).setWeight(weight);
-//				}
-
 				// 그룹 멤버를 얻어옴.
 				Iterator<ProjectGroupMemberVO> iter = groupMemberList.iterator();
 				List<ProjectGroupMemberVO> groupMemberListTemp = new ArrayList<ProjectGroupMemberVO>();
@@ -3470,25 +3461,6 @@ public class EzPMSGWController {
 				// endDate, companyId, tenantId));
 
 				groupList.get(i).setGroupMember(groupMemberListTemp);
-				
-				search.setGroupId(groupList.get(i).getGroupId());
-				search.setIsMyTask("A");
-				groupList.get(i).setTaskCount(ezPMSService.getTaskListCount(search, userId, 3, info.getDeptId()));
-				
-				//지연율
-				limit = 0;
-				search.setMemberName("");
-				List<ProjectTaskVO> groupTaskList = ezPMSService.getTaskList(search, userId, limit, startRow, orderWhat, orderHow, location, 3, info.getDeptId());
-				
-				float latePercent = 0;
-				
-				for (int j = 0; j < groupTaskList.size(); j++) {
-					if (groupTaskList.get(j).getStatus().equals("L")) {
-						latePercent += (100 - groupTaskList.get(j).getRealProgress()) * (groupTaskList.get(j).getWeight() / 100);
-					}
-				}
-				
-				groupList.get(i).setLatePercent(latePercent);
 				
 //				//실제 시작일과 종료일 기간 수				
 //				if (groupList.get(i).getRealProgress() == 100f) {
