@@ -5331,6 +5331,13 @@ public class EzPMSGWController {
 		return result;
 	}
 	
+	/**
+	 * 그룹 실제 시작/종료일 업데이트
+	 * 
+	 * @param groupId
+	 * @param request
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/groups/{groupId}/realStartEndDate", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateGroupRealStartEndDate(@PathVariable Long groupId, HttpServletRequest request) throws Exception {

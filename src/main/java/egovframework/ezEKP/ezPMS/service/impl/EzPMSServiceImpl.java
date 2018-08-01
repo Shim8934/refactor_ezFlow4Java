@@ -1426,19 +1426,19 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
-		for (int i = 0; i < holidayList.size(); i++) {
-			if (holidayList.get(i).getIsRepeat() == 1) {
-				if (holidayList.get(i).getIsSolar() == 1) {
-					String solarHoliday = holidayList.get(i).getHoliday();
+		for (ProjectHolidayVO vo : holidayList) {
+			if (vo.getIsRepeat() == 1) {
+				if (vo.getIsSolar() == 1) {
+					String solarHoliday = vo.getHoliday();
 					solarHolidayMap.add(solarHoliday);
 				} else {
-					String lunarHoliday = holidayList.get(i).getHoliday();
+					String lunarHoliday = vo.getHoliday();
 					lunarHolidayMap.add(lunarHoliday);
 				}
 			} else {
 				Calendar cal = GregorianCalendar.getInstance();
 				try {
-					cal.setTime(sdf.parse(holidayList.get(i).getHoliday()));
+					cal.setTime(sdf.parse(vo.getHoliday()));
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
