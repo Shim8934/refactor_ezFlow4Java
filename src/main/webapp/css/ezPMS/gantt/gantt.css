@@ -313,8 +313,9 @@ body{
   border-right: 2px solid #ddd;
 }
 
+/* 투명도 때문에 뒤에 비쳐서 투명도 없앰 */
 .ganttHead2 th.holy{
-  background-color: rgba(236, 195, 176, 0.40);
+  background-color: rgb(245, 218, 206);
 }
 .ganttBodyCell.holy{
   background-color: rgba(255, 245, 230, 0.51);
