@@ -615,7 +615,7 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (int) select("EzPMSDAO.getProjectWorkingdaySum", taskVO);
 	}
 
-	public void updateAllTaskWeight(HashMap<String, Object> map) {
+	public void updateAllTaskWeight(Map<String, Object> map) {
 		update("EzPMSDAO.updateAllTaskWeight", map);
 	}
 
