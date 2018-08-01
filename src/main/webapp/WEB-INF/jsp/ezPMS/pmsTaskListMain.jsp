@@ -361,6 +361,20 @@
 		setContentList();
 	}
 	
+	// 소속 그룹과 소속 그룹의 상위까지 실제 시작일 및 종료일을 업데이트 한다.
+	function updateGroupRealStartEndDate(groupId) {
+		var data = {groupId : groupId};
+		
+		$.ajax({
+			type : "PUT",
+			url : "/ezPMS/updateGroupRealStartEndDate.do",
+			dataType : "json",
+			contentType: "application/json; charset=UTF-8",
+			data : JSON.stringify(data),
+			success : function() {}
+		});
+	}
+	
 	function deleteTask() {
 		var result = getCheckedVal();
 		
@@ -384,7 +398,8 @@
 							
 							for(var i = 0; i < checkedTaskInfo.length; i++) {
 								var logContent = "[" + checkedTaskInfo[i].groupName + "]<spring:message code='ezPMS.t313' /> [" + checkedTaskInfo[i].taskName + "] " + "<spring:message code='ezPMS.t242' />";
-								addTaskLog(projectId, 3, checkedTaskInfo[i].groupId, null, logContent);	
+								addTaskLog(projectId, 3, checkedTaskInfo[i].groupId, null, logContent);
+								updateGroupRealStartEndDate(checkedTaskInfo[i].groupId);
 							}
 							
 							checkedVal = "";

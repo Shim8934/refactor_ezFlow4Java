@@ -320,6 +320,20 @@
 		document.getElementById("progressDiff").innerText = progDiff > 0 ? "+" + progDiff + "%" : progDiff < 0 ? progDiff + "%" : "";
 	}
 	
+	// 소속 그룹과 소속 그룹의 상위까지 실제 시작일 및 종료일을 업데이트 한다.
+	function updateGroupRealStartEndDate(groupId) {
+		var data = {groupId : groupId};
+		
+		$.ajax({
+			type : "PUT",
+			url : "/ezPMS/updateGroupRealStartEndDate.do",
+			dataType : "json",
+			contentType: "application/json; charset=UTF-8",
+			data : JSON.stringify(data),
+			success : function() {}
+		});
+	}
+	
 	function delTaskFunc() {
 		
 		var url = "/ezPMS/deleteTask.do?projectId=" + projectId + "&taskId=" + taskId;
@@ -351,6 +365,7 @@
 					alert("<spring:message code='ezPMS.t242' />");
 					var logContent = "[" + taskDetails.groupName + "]<spring:message code='ezPMS.t313' /> [" + taskDetails.taskName + "] " + "<spring:message code='ezPMS.t242' />";
    					addTaskLog(projectId, 3, groupId, null, logContent);
+   					updateGroupRealStartEndDate(groupId);
    					opener.location.reload();
    					window.close();
 				} else {

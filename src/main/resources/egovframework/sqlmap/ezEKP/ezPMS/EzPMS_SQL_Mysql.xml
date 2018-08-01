@@ -4486,8 +4486,13 @@
 			UPDATE
 				TBL_PMS_GROUP
 			SET
-				REAL_START_DATE = #realStartDate#
 		]]>
+			<isNotEmpty property="realStartDate">
+				REAL_START_DATE = #realStartDate#
+			</isNotEmpty>
+			<isEmpty property="realStartDate">
+				REAL_START_DATE = null
+			</isEmpty>
 			<isNotEmpty property="realEndDate">
 				, REAL_END_DATE = #realEndDate#
 			</isNotEmpty>
@@ -4499,6 +4504,8 @@
 				GROUP_ID = #groupId#
 			AND
 				TENANT_ID = #tenantId#
+			AND
+				DEL_STATUS = 0
 		]]>
 	</update>
 </sqlMap>

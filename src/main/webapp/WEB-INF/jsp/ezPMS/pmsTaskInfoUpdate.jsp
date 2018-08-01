@@ -303,6 +303,7 @@ function updateTaskInfo() {
 				taskId : taskId,
 				projectId : projectId,
 				groupId : groupId,
+				originGroupId : originGroupId,
 				overview	 : overview,
 				headManagerId : headManagerId,
 				managerList : managerList,
@@ -330,7 +331,8 @@ function updateTaskInfo() {
 					
 					var logContent = "[" + taskName + "<spring:message code='ezPMS.t318' />"; 
 					addTaskLog(projectId, 2, groupId, taskId, logContent);
-					
+					updateGroupRealStartEndDate(groupId);
+					updateGroupRealStartEndDate(originGroupId);	
 					parent.location.reload();
 					parent.opener.location.reload();
 				} else {
@@ -415,6 +417,19 @@ function updateTaskInfo() {
 		}); 
 	}
 	
+	//소속 그룹과 소속 그룹의 상위까지 실제 시작일 및 종료일을 업데이트 한다.
+	function updateGroupRealStartEndDate(groupId) {
+		var data = {groupId : groupId};
+		
+		$.ajax({
+			type : "PUT",
+			url : "/ezPMS/updateGroupRealStartEndDate.do",
+			dataType : "json",
+			contentType: "application/json; charset=UTF-8",
+			data : JSON.stringify(data),
+			success : function() {}
+		});
+	}
 	function checkDelGroupMember(managers, participants){
 		//하위 업무들의 담당자가 있는지 확인
 		var delMemberList = [];

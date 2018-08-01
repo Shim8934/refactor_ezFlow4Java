@@ -459,6 +459,7 @@
 							
 							var logContent = "[" + groupName + "]<spring:message code='ezPMS.t313' /> [" + taskName + "] " + "<spring:message code='ezPMS.t242' />";
 		   					addTaskLog(projectId, 3, groupId, null, logContent);
+		   					updateGroupRealStartEndDate(groupId);	
 						} else {
 							alert("<spring:message code='ezPMS.t184' />");
 							return;
@@ -1298,9 +1299,22 @@
 	   						alert("<spring:message code='ezPMS.t184' />");
 	   						return "false";
 	   					} else {
-							location.reload();
-	   						return "true";
+	   						console.log(targetTaskId);
+	   						console.log(toGroupId);
+	   						console.log(fromGroupId);
 	   						
+	   						// 체인지 간트의 대상이 업무일 때
+	   						if(targetTaskId != -1) {
+	   							
+	   							// 그룹안의 순서 변경이 아닌, 그룹의 변경일 때
+	   							if(toGroupId != -1 && fromGroupId != -1 && toGroupId != fromGroupId) {
+	   								updateGroupRealStartEndDate(toGroupId);
+	   								updateGroupRealStartEndDate(fromGroupId);
+	   							}
+	   						}
+	   						
+							location.reload();
+	   						return "true";		
 	   					}
 	   				},
 	   				error : function(jqXHR, textStatus, errorThrown) {
@@ -1407,6 +1421,8 @@
 				
 	   			if(status == 'C' && newProgress < 100) {
 	   				status = 'P';
+	   			} else if (newProgress >= 100) {
+	   				status = 'C';
 	   			}
 	   			
 				var data = {
@@ -1430,12 +1446,31 @@
 						var logContent = "[" + curTask.name + "<spring:message code='ezPMS.t317' /> " + curTask.progress + "%<spring:message code='ezPMS.t313'/> " + new Number(newProgress).toFixed(1) + "%<spring:message code='ezPMS.t314'/>"; 
 	   					addTaskLog(projectId, 2, groupId, taskId, logContent);
 	   					
+	   					// status값이 바뀌었을 때만 실행
+	   					if(curTask.statusPMS != status) {
+	   						updateGroupRealStartEndDate(groupId);
+	   					}
+	   					
 						location.reload();
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
 						alert("<spring:message code='ezPMS.t54' />");
 					}
 				});
+	   		}
+	   		
+	   		// 소속 그룹과 소속 그룹의 상위까지 실제 시작일 및 종료일을 업데이트 한다.
+	   		function updateGroupRealStartEndDate(groupId) {
+	   			var data = {groupId : groupId};
+	   			
+	   			$.ajax({
+	   				type : "PUT",
+	   				url : "/ezPMS/updateGroupRealStartEndDate.do",
+	   				dataType : "json",
+	   				contentType: "application/json; charset=UTF-8",
+	   				data : JSON.stringify(data),
+	   				success : function() {}
+	   			});
 	   		}
 	   		
 	   		//선행작업 관련 유효성 검사.

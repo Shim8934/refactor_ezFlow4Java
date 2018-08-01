@@ -141,10 +141,10 @@ Task.prototype.setPeriod = function (start, end) {
   end=computeEnd(end);
 
   var newDuration = recomputeDuration(start, end);
-  console.log("start : " + new Date(start));
-  console.log("end : " + new Date(end));
-  console.log("orgDuration : " + originalPeriod.duration);
-  console.log("newDuration : " + newDuration);
+//  console.log("start : " + new Date(start));
+//  console.log("end : " + new Date(end));
+//  console.log("orgDuration : " + originalPeriod.duration);
+//  console.log("newDuration : " + newDuration);
   //if are equals do nothing and return true
   if ( start == originalPeriod.start && end == originalPeriod.end && newDuration == originalPeriod.duration) {
     return true;

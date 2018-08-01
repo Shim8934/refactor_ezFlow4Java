@@ -318,8 +318,11 @@
 					updateGroupRealStartEndDate(groupId);
 				}
 				
-				// 대기에서 진행으로 바뀌었거나 완료로 상태가 변경되었을 때만 실행
-				/* if((status == "W" && nowStatus == "P") || (status != "C" && nowStatus == "C")) {
+				console.log('status    : ' + status);
+				console.log('nowStatus : ' + nowStatus);
+				
+				/* // 대기/보류 -> 진행, 특정상태 -> 완료, 완료 -> 특정상태일 때만 실행
+				if(((nowStatus == "W" || nowStatus == "S") && status == "P") || (nowStatus != "C" && status == "C") || (nowStatus == "C" && status != "C")) {
 					// 소속 그룹과 소속 그룹의 상위까지 실제 시작일 및 종료일을 업데이트 한다.
 					updateGroupRealStartEndDate(groupId);
 				} */
