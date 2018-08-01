@@ -112,11 +112,28 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 			file.mkdir();
 		}
 		
+		/*if(!lstAttachLink.equals("")){
+			JSONArray lstAttachLinkList = (JSONArray) jp.parse(lstAttachLink);
+			int totalCnt                = lstAttachLinkList.size();
+			int lstAttachLinkId         = ezCabinetDAO.getMaxAttachId(map) + 1;
+			for(int i = 0; i < totalCnt; i++, lstAttachLinkId++){
+				JSONObject lstAttachLinkInf = (JSONObject) lstAttachLinkList.get(i);
+				saveApprovalFiles(lstAttachLinkInf, lstAttachLinkId, itemId, realPath, cabinetPath, locale, companyId, userId, tenantId);
+			}
+		}*/
+		
 		result.put("status", "ok");
 		result.put("code", 0);
 		return result;
 	}
 	
+	private void saveApprovalFiles(JSONObject lstAttachLinkInf, int lstAttachLinkId, int itemId, String realPath, String cabinetPath, Locale locale, String companyId, String userId, int tenantId) {
+		JSONObject fileHref   = (JSONObject) lstAttachLinkInf.get("fileHref");
+		String fileName       =  lstAttachLinkInf.get("fileName").toString();
+		
+		logger.debug("fileName = " +fileName);
+	}
+
 	private synchronized void saveItem(CabinetItemVO itemVO) {
 		ezCabinetDAO.saveItem(itemVO);
 	}
