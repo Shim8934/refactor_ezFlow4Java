@@ -5,6 +5,8 @@ public class PortalMyPortalListVO {
 	private String uID_;
 	/** 이름*/
 	private String displayName;
+	/** 다국어 이름*/
+	private String displayName2;
 	
 	public String getuID_() {
 		return uID_;
@@ -17,5 +19,11 @@ public class PortalMyPortalListVO {
 	}
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+	public String getDisplayName2() {
+		return displayName2;
+	}
+	public void setDisplayName2(String displayName2) {
+		this.displayName2 = displayName2;
 	}
 }

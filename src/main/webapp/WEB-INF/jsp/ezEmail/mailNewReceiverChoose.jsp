@@ -232,7 +232,7 @@
 	                document.title = " <spring:message code='ezEmail.t99000080' />";
 	                document.getElementById("ToTitleStr").innerHTML = strLang314;
 	                document.getElementById("inputTabButton").style.display = "none";
-	                document.getElementById("dlTabButton").style.display = "none";
+	                //document.getElementById("dlTabButton").style.display = "none";
 	                document.getElementById("ListMsgTo").style.display = "none";
 	                document.getElementById("ListMsgTo").setAttribute("rowspan", "3");
 	                document.getElementById("ListMsgCC").style.display = "none";
@@ -539,6 +539,7 @@
 		    }
 		    function dlTabButton_onClick() {
 		    	methodForTabAction(3);
+		    	selTab = "DistributionList";
 		        m_tabDialogState["org"] = "normal";
 		        m_tabDialogState["contact"] = "normal";
 		        m_tabDialogState["dl"] = "select";
@@ -691,7 +692,7 @@
 	                    return;
 	                }
 	            }
-	            else {
+	            else if (selTab == "AddressListView") {
 	                var pListViewDL = new ListView();
 	                pListViewDL.LoadFromID("Address");
 	                var arrRows = pListViewDL.GetSelectedRows();
@@ -701,6 +702,17 @@
 	                        alert("<spring:message code='ezEmail.t99000076' />");
 	                        return;
 	                    }
+	                }
+	                else {
+	                    alert("<spring:message code='ezEmail.t1014' />");
+	                    return;
+	                }
+	            } else if (selTab == "DistributionList") {
+	            	var pListViewDL = new ListView();
+	                pListViewDL.LoadFromID("pListViewDL");
+	                var arrRows = pListViewDL.GetSelectedRows();
+	                if (arrRows.length > 0) {
+	                    var strEmail = GetAttribute(arrRows[0], "DATA2");
 	                }
 	                else {
 	                    alert("<spring:message code='ezEmail.t1014' />");

@@ -122,7 +122,7 @@ function View_OriginCabInfo() {
     View_OriginCabInfo_dialogArguments[0] = para;
 
     var url = "/ezApprovalG/viewCabInfo.do";
-    var OpenWin = window.open(url, "ViewCabInfo_Cross", GetOpenWindowfeature(672, 600));
+    var OpenWin = window.open(url, "ViewCabInfo_Cross", GetOpenWindowfeature(672, 550));
     try { OpenWin.focus(); } catch (e) { }
 }
 //END

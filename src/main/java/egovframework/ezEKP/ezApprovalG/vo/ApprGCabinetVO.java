@@ -80,6 +80,7 @@ public class ApprGCabinetVO{
 	private String limitRange;
 	private String specialRecordCode;
 	private String publicityCode;
+	private String publicityYn;
 	private String catalogTransferFlag;
 	private String catalogTransferYear;
 	private String docTransferFlag;
@@ -104,6 +105,12 @@ public class ApprGCabinetVO{
 	private String recordID;
 	private String serialNO;
 	
+	public String getPublicityYn() {
+		return publicityYn;
+	}
+	public void setPublicityYn(String publicityYn) {
+		this.publicityYn = publicityYn;
+	}
 	public String getRow_id() {
 		return row_id;
 	}
