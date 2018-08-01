@@ -222,7 +222,7 @@
 			<c:choose>
 				<c:when test="${empty data}">
 					<tr>
-						<td colspan="5" style="text-align : left"> <spring:message code='ezPMS.t30' /> </td>
+						<td colspan="5" style="text-align : center"> <spring:message code='ezPMS.t30' /> </td>
 					</tr>
 				</c:when>
 				<c:otherwise>
