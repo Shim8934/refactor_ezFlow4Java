@@ -176,13 +176,13 @@ $(function(){
 							<th id="BoardList_TH_3" onclick="setListOrder(this)" order="PROGRESS"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 250px"
 								class="h5_center"><spring:message code='ezPMS.t33' /></th>
-							<th id="BoardList_TH_4" onclick="setListOrder(this)" order="COMPLETE_TASK"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 250px"
+							<th id="BoardList_TH_4"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;  width: 250px"
 								class="h5_center"><spring:message code='ezPMS.t34' /></th>
-							<th id="BoardList_TH_5" onclick="setListOrder(this)" order="LATE_TASK"
-								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 250px"
+							<th id="BoardList_TH_5"
+								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 250px"
 								class="h5_center"><spring:message code='ezPMS.t35' /></th>
-							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="REST_DUEDAY"
+							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="PLAN_END_DATE"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px;"
 								class="h5_center"><spring:message code='ezPMS.t36' /></th>
 							<th id="BoardList_TH_7" onclick="setListOrder(this)" order="PLAN_END_DATE"

@@ -348,7 +348,7 @@ function changeBoardStyle() {
 	$("#memoStyle").attr("src", "/images/kr/cm/btn_cardframe.png");
 	$("#boardStyle").attr("src", "/images/kr/cm/btn_listframe_on.png");
 	$("#listcountTR").css("display", "");
-	
+	$("#listcount option[value='"+ listNumber +"']").attr("selected", true);
 }
 
 function changeMainSetting() {
@@ -1164,7 +1164,7 @@ function searchProject() {
 			<tbody>
 				<tr>
 					<th><spring:message code='ezPMS.t31' /> </th>
-					<td><input type="text" id="searchByProjectName" style="width:67%; margin-right:5px;"><a class="imgbtn" onclick="getSearchProject()"><span><spring:message code='ezPMS.t150' /></span></a></td>
+					<td><input type="text" id="searchByProjectName" style="width:100%; margin-right:5px;"><%-- <a class="imgbtn" onclick="getSearchProject()"><span><spring:message code='ezPMS.t150' /></span></a> --%></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezPMS.t63' /></th>
