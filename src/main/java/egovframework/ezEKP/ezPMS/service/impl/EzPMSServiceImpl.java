@@ -2635,12 +2635,17 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 	@Override
 	public void updateTaskWDNW(ProjectTaskVO taskVO, float taskWorkingday) {
+		
 		HashMap<String, Object> map2 = new HashMap<String, Object>();
 		// 가중치 계산
 		String projectId = taskVO.getProjectId().toString();
 		Long taskId = taskVO.getTaskId();
+		
+		map2.put("tenantId", taskVO.getTenantId());
+		map2.put("projectId", projectId);
+		int weightInput = ezPMSDAO.getProjectDetails(map2).getWeightInput();
 
-		if (taskVO.getWeight() == -1) {
+		if (weightInput == 0) {
 			int projectWorkingdaySum = ezPMSDAO.getProjectWorkingdaySum(taskVO);
 			float calWeight = (taskWorkingday / projectWorkingdaySum) * 100;
 			System.out.println(">>>>>>>>>>>>>>" + calWeight + " = (" + taskWorkingday + " / " + projectWorkingdaySum + ") * 100");
@@ -2651,17 +2656,9 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		}
 		map2.put("taskId", taskId);
 		map2.put("workingday", taskWorkingday);
-		map2.put("tenantId", taskVO.getTenantId());
-		map2.put("projectId", projectId);
 
 		ezPMSDAO.updateTaskWDNW(map2);
 		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("tenantId", taskVO.getTenantId());
-		map.put("projectId", projectId);
-		
-		int weightInput = ezPMSDAO.getProjectDetails(map).getWeightInput();
-
 		//프로젝트가 가중치 자동 계산일 경우 모든 업무의 가중치 재계산
 		if (weightInput == 0) {
 			ezPMSDAO.updateAllTaskWeight(map2);
@@ -3577,13 +3574,14 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int getTaskOverProjectEndDate(Long projectId, int tenantId, String planEndDate) {
+	public int getTaskOverProjectDate(Long projectId, int tenantId, String planEndDate, String planStartDate) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
 		map.put("planEndDate", planEndDate);
+		map.put("planStartDate", planStartDate);
 		
-		return ezPMSDAO.getTaskOverProjectEndDate(map);
+		return ezPMSDAO.getTaskOverProjectDate(map);
 	}
 	
 	@Override

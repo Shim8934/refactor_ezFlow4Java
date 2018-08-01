@@ -668,7 +668,8 @@ public class EzPMSGWController {
 			
 			String roleCheck = "";
 			String planEndDate = request.getParameter("planEndDate");
-			int projectListCount  = ezPMSService.getTaskOverProjectEndDate(projectId, tenantId, planEndDate);
+			String planStartDate = request.getParameter("planStartDate");
+			int projectListCount  = ezPMSService.getTaskOverProjectDate(projectId, tenantId, planEndDate, planStartDate);
 			
 			LOGGER.debug("taskOverProjectEndDate Count : " + projectListCount);
 			

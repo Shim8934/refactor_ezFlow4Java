@@ -119,6 +119,7 @@ function ableToChangeStatus() {
 				strHTML += "<spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t19' />";
 				strHTML += "</span></a>";
 				break;
+			case "D" :
 			case "S" :
 				strHTML += "<a class='imgbtn' style='margin-right:5px;'><span id='P' onclick='changeStatus(this)'>";
 				strHTML += "<spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t15' />";
