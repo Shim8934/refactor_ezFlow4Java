@@ -118,6 +118,7 @@
 						case "projt" : saveProjectDocument(saveMode, cabinetId)  ; break;
 						case "resrc" : saveResourceDocument(saveMode, cabinetId) ; break;
 						case "addrs" : saveAddressDocument(saveMode, cabinetId)  ; break;
+						case "jounl" : saveJournalDocument(saveMode, cabinetId)  ; break;
 						default      : alert(CabinetMessages.strError)           ; return;
 					}
 					
@@ -313,6 +314,10 @@
 				}
 				
 				function saveAddressDocument() {
+					//Add code here
+				}
+				
+				function saveJournalDocument() {
 					//Add code here
 				}
 				
