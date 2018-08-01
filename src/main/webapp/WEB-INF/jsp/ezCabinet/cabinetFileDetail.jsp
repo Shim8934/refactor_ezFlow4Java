@@ -113,6 +113,7 @@
 					var result              = fileItem.fileDetail;
 					var attachFile          = fileItem.attachFileList;
 					var relatedFile         = fileItem.relatedFileList;
+					relatedArr              = [];
 					
 					//파일상세
 					var creator             = document.getElementById("creator");
@@ -426,8 +427,9 @@
 					
 					if (!title.replace(/\s/g,'')) {
 						alert(CabinetMessages.strNoTitle);
-						document.getElementById("itemTtl").value = "";
-						document.getElementById("itemTtl").focus;
+						var inputTtl   = document.getElementById("itemTtl");
+						inputTtl.value = "";
+						inputTtl.focus();
 						return;
 					}
 					
@@ -464,7 +466,8 @@
 								case 1 : alert(CabinetMessages.strParamErr); break;
 								case 2 : alert(CabinetMessages.strError)   ; break;
 								case 3 : alert(CabinetMessages.strPerm)    ; break;
-								default: alert(CabinetMessages.strError)   ; return; 
+								case 4 : alert(CabinetMessages.strType)    ; break;
+								default: alert(CabinetMessages.strError)   ; return;
 							}
 						},
 						error : function(error) {

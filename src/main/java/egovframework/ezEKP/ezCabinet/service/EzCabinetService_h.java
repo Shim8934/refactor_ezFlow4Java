@@ -20,6 +20,8 @@ public interface EzCabinetService_h {
 	CabinetItemVO getFileDetail(String itemId, String primary, String offset, int tenantId) throws Exception;
 	List<CabinetAttachFileVO> getAttachFileList(String itemId, int tenantId) throws Exception;
 	List<CabinetRelationItemVO> getRelatedFileList(String itemId, int tenantId) throws Exception;
-	void modifyItem(int itemId, JSONArray attacheFiles, JSONArray relatedFiles, String title, String summary, String realPath, LoginVO userInfo) throws Exception;
+	JSONObject modifyItem(int itemId, JSONArray attacheFiles, JSONArray relatedFiles, String title, String summary, String realPath, LoginVO userInfo) throws Exception;
 	JSONObject saveBoarditem(String realPath, String mode, int parseInt, String title, String writer, String attach, String content, String dateTime, Locale locale, LoginVO userInfo) throws Exception;
+	public void modifyRelatedList(int itemId, JSONArray relatedFiles, LoginVO userInfo) throws Exception;
+	public void modifyAttachList(int itemId, JSONArray attacheFiles, String realPath, LoginVO userInfo) throws Exception;
 }

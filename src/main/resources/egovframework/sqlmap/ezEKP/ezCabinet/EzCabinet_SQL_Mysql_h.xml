@@ -447,9 +447,7 @@
 				update_date = #updatedDate#,
 				update_id   = #updateId#
 			where
-				item_id   = #itemId#
-			and
-				tenant_id = #tenantId#
+				item_id = #itemId# and tenant_id = #tenantId#
 		]]>
 	</update>
 </sqlMap>

@@ -42,7 +42,9 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
+import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetColumnVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
@@ -77,14 +79,20 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
 	
+	@Autowired
+	private EzCabinetService_h cabinetService_h;
+	
 	@Resource(name = "EzCabinetDAO")
 	private EzCabinetDAO ezCabinetDAO;
+	
+	@Resource(name = "EzCabinetDAO_h")
+	private EzCabinetDAO_h ezCabinetDAO_h;
 	
 	@Resource(name = "EzCabinetAdminDAO")
 	private EzCabinetAdminDAO ezCabinetAdminDAO;
 	
 	@Resource(name = "EzCommonService")
-    private EzCommonService ezCommonService;
+	private EzCommonService ezCommonService;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -453,7 +461,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		result.put("code", 0);
 		return result;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject checkPermission(List<Integer> cabinetList, List<Integer> itemList, int mode, LoginVO userInfo) throws Exception {
@@ -1448,21 +1456,21 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	}
 	
 	private void saveEmailAttachFiles(JSONObject attachInf, int attachId, int itemId, String realPath, String cabinetPath, Locale locale, String companyId, String userId, int tenantId) throws Exception{
-		JSONObject fileHref  = (JSONObject) attachInf.get("fileHref");
-		String fileName      = attachInf.get("fileName").toString();
-		String folderPath    = fileHref.get("folderPath").toString();
-		String uId           = fileHref.get("uid").toString();
-		String fname         = fileHref.get("uid").toString();
-		String strIndex      = fileHref.get("index").toString();
-		String password      = commonUtil.getMailPassword();
-		String domainName    = ezCommonService.getTenantConfig("DomainName", tenantId);
-		String userEmail     = userId + "@" + domainName;
-		int dotPos           = fileName.lastIndexOf(".");
-		String extend        = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
-		String newName       = UUID.randomUUID().toString() + "." + extend;
-		String pDirPath      = realPath + cabinetPath;
-		String filePath      = cabinetPath + newName;
-		String newFilePath   = pDirPath + File.separator + newName;
+		JSONObject fileHref = (JSONObject) attachInf.get("fileHref");
+		String fileName     = attachInf.get("fileName").toString();
+		String folderPath   = fileHref.get("folderPath").toString();
+		String uId          = fileHref.get("uid").toString();
+		String fname        = fileHref.get("uid").toString();
+		String strIndex     = fileHref.get("index").toString();
+		String password     = commonUtil.getMailPassword();
+		String domainName   = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String userEmail    = userId + "@" + domainName;
+		int dotPos          = fileName.lastIndexOf(".");
+		String extend       = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
+		String newName      = UUID.randomUUID().toString() + "." + extend;
+		String pDirPath     = realPath + cabinetPath;
+		String filePath     = cabinetPath + newName;
+		String newFilePath  = pDirPath + File.separator + newName;
 		
 		logger.debug("userEmail: " + userEmail);
 		logger.debug("UID: " + uId + " || Folder path: " + folderPath + " || File name: " + fname);
@@ -1481,7 +1489,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			else {
 				f.open(Folder.READ_ONLY);
 				Message message = null;
-				if(f.isOpen() && f instanceof IMAPFolder){
+				if (f.isOpen() && f instanceof IMAPFolder) {
 					message = ((IMAPFolder)f).getMessageByUID(uid);
 				}
 				
@@ -1526,7 +1534,6 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 								try { output.close(); } catch (IOException e4) {throw e4;}
 							}
 						}
-						
 					}
 				}
 			}
@@ -1569,12 +1576,41 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	}
 
 	@Override
-	public List<SimpleUserMailVO> getUserInfoFromEmail(List<String> receiverMail, String primary, int tenantId) {
+	public List<SimpleUserMailVO> getUserInfoFromEmail(List<String> receiverMail, String primary, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("mailList",  receiverMail);
 		map.put("tenantId",  tenantId);
 		map.put("primary",   primary);
 		
 		return ezCabinetDAO.getUserInfoFromEmail(map);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject modifyEmailItem(int itemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception {
+		JSONObject result      = new JSONObject();
+		int tenantId           = userInfo.getTenantId();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("itemId",   itemId);
+		
+		CabinetItemVO itemVO = ezCabinetDAO.getItemById(map);
+		
+		if (itemVO.getItemType() != 1) {
+			logger.debug("Invalid item type!");
+			result.put("status", "error");
+			result.put("code", 4);
+			return result;
+		}
+		
+		itemVO.setTitle(title);
+		ezCabinetDAO_h.modifyItem(itemVO);
+		
+		//modify related files
+		cabinetService_h.modifyRelatedList(itemId, relatedFiles, userInfo);
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
 	}
 }

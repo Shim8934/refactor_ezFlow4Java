@@ -461,7 +461,18 @@ public class EzCabinetGWController_h {
 		}
 		
 		try {
-			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
+			LoginVO userInfo        = commonUtil.getUserForGw(userId, serverName);
+			int currentItemId       = Integer.parseInt(itemId);
+			
+			//Add checking permission here
+			List<Integer> itemList  = new ArrayList<>(Arrays.asList(currentItemId));
+			JSONObject permission   = cabinetService.checkPermission(new ArrayList<>(), itemList, 1, userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
 			
 			JSONArray attacheFiles  = (JSONArray) jp.parse(fileArray);
 			JSONArray relatedFiles  = (JSONArray) jp.parse(relatedArr);
@@ -493,10 +504,7 @@ public class EzCabinetGWController_h {
 				}
 			}
 			
-			cabinetService_h.modifyItem(Integer.parseInt(itemId), attacheFiles, relatedFiles, title, summary, realPath, userInfo);
-			
-			result.put("status", "ok");
-			result.put("code", 0);
+			result = cabinetService_h.modifyItem(currentItemId, attacheFiles, relatedFiles, title, summary, realPath, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
