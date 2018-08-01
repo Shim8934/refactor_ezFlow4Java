@@ -333,6 +333,7 @@ var headManagerObj = {};
 						alert ("<spring:message code='ezPMS.t52' />");
 						parent.projectId = projectId;
 						parent.parent.window.location.reload();
+						popupClose();
 					} else if (result.roleCheck == "rejected") {
 						alert("<spring:message code='ezPMS.t365' />");
 						popupClose();
@@ -343,9 +344,9 @@ var headManagerObj = {};
 					addTaskLog(result.projectId, 1, result.groupId, null, logContent);
 					alert("<spring:message code='ezPMS.t53' />");
 					parent.opener.setProjectList(); 
+					windowClose();
 				}
 				
-				popupClose();
 			
 			} catch (e) {
 				alert("<spring:message code='ezPMS.t224' />");
@@ -358,6 +359,13 @@ var headManagerObj = {};
 	});
  }
  
+ function popupClose() {
+	 if (mode == "edit") {
+			parent.parent.parent.frames["left"].document.getElementById("blockLeft").remove();
+			parent.parent.parent.frames["right"].document.getElementById("blockTop").remove();
+ 		}
+		parent.DivPopUpHidden();
+ }
  function applyList() {
 	 var managerNameList = "";
 	 var participantNameList = "";

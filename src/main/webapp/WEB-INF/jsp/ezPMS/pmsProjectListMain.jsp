@@ -590,6 +590,7 @@ function changeProjectStatus() {
 	var result = getCheckedVal();
 	
 	if (result == 1) {
+		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%;background:none rgba(0, 0, 0, 0.4)'></div>").appendTo(parent.frames["left"].document.body);
 		addProjectPopup(36, 38, 400, 200, "/ezPMS/changeProjectStatus.do");
 	} else {
 		alert("<spring:message code='ezPMS.t29' />");

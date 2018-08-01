@@ -10,6 +10,11 @@
 		<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/ezPMS/ListView_list.js"></script>
+		<script>
+			add_key_event();
+			disable_browser_selection();
+		</script>
 		<style>
 			#selectDeptNM {font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;	}
 			#txtlist_Layer {vertical-align: top; height: 293px; overflow: auto; width: 100%;}
@@ -33,8 +38,8 @@
 					<td style="width: 40%; font-weight: bold;" class="td_gray"><spring:message code='ezPMS.t264' /></td>
 					<td style="width: 60%; font-weight: bold;" class="td_gray"><spring:message code='ezPMS.t115' /></td>
 		        </tr>
-		        <c:forEach items="${memberList}" var="member">
-			        <tr id="${member.userId }" name="${member.userName }"  dept="${member.userDeptname }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
+		        <c:forEach items="${memberList}" var="member" varStatus="status">
+			        <tr id="${member.userId }" name="${member.userName }"  dept="${member.userDeptname }" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover" data-rowidx="${status.index}">
 						<td><c:out value="${member.userName }" /></td>
 						<td><c:out value="${member.userDeptname }" /></td>
 					</tr>

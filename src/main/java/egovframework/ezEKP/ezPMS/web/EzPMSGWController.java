@@ -3438,13 +3438,13 @@ public class EzPMSGWController {
 				Long groupId = groupList.get(i).getGroupId();
 
 				// 그룹 가중치를 얻어옴.
-				Float weight = ezPMSService.getGroupWeight(groupId, info.getTenantId());
-				
-				if (weight == null || weight == 0.0f) {
-					groupList.get(i).setWeight(0.0f);
-				} else {
-					groupList.get(i).setWeight(weight);
-				}
+//				Float weight = ezPMSService.getGroupWeight(groupId, info.getTenantId());
+//				
+//				if (weight == null || weight == 0.0f) {
+//					groupList.get(i).setWeight(0.0f);
+//				} else {
+//					groupList.get(i).setWeight(weight);
+//				}
 
 				// 그룹 멤버를 얻어옴.
 				Iterator<ProjectGroupMemberVO> iter = groupMemberList.iterator();

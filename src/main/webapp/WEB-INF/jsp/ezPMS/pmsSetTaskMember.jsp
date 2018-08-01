@@ -35,13 +35,17 @@
 	   		var selUserDept = "";
 	   		
 	   		var type = "<c:out value='${type}'/>";
-	   		//올른쪽 리스트에서 선택된 유저
+	   		//오른쪽 리스트에서 선택된 유저
 	   		var selMainListUserId="";
 	   		var selMainListUserName="";
 	   		
 	   		var p_title = null;
 	   		var p_selectedWindow = null;
 	   		var authName = null;
+	   		
+	   		//키보드 이벤트 함수용
+	   		var listContentArry = [];
+	   		var selUserList = [];
 	   		
 	   		function close_Click() {
 	   			parent.DivPopUpHidden();
@@ -69,44 +73,93 @@
 	   		
 	   		//오른쪽 리스트에서 클릭이벤트 적용
 	   		function setMainListUserAuthorDept(elem) {
-	   			if ($(elem).parent().attr("id") === "List_TBODY2") {
-	   				$("#List_TBODY2 tr").removeClass("selectTR");
-	   			} else if ($(elem).parent().parent().parent().attr("id") === "managerList"){
-		   			$("#managerList tr").removeClass("selectTR");
-	   			}  else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
-		   			$("#txtlist_Layer tr").removeClass("selectTR");
+	   			var tableId = $(elem).parent().parent().parent().attr("id");
+	   			var rowId = elem.getAttribute("id");
+	   			
+	   			var listTable = document.getElementById(tableId);
+	   			
+	   			if(PressShiftKey){
+	   				tr_selectBlock(rowId, tableId);
+	   				return;
+	   			}
+	   			
+	   			if(!PressCtrlKey){
+	   				cancelSelectTr(elem);
 	   			}
 	   			
 	   			$(elem).addClass("selectTR");
 	   			selMainListUserId = $(elem).attr("id");
 	   			selMainListUserName = $(elem).attr("name");
 	   			selUserDept = $(elem).attr("dept");
-	   			// console.log("selMainListUserId : " + selMainListUserId)
+	   			listTable.setAttribute("lastSelectedRowID", rowId);
 	   		}
 	   		
 	   		// 리스트에서 클릭이벤트 적용
 	   		function setUserAuthorDept(elem) {
-	   			if ($(elem).parent().attr("id") === "List_TBODY2") {
-	   				$("#List_TBODY2 tr").removeClass("selectTR");
-	   			} else if ($(elem).parent().parent().parent().attr("id") === "managerList"){
-		   			$("#managerList tr").removeClass("selectTR");
-	   			} else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
-		   			$("#txtlist_Layer tr").removeClass("selectTR");
-	   			}
+	   			listEventFunc(elem, event);
 	   			
-	   			$(elem).addClass("selectTR");
-	   			selUserId = $(elem).attr("id");
-	   			selUserName = $(elem).attr("name");
-	   			selUserDept = $(elem).attr("dept");
-	   			// console.log("selUserId : " + selMainListUserId)
+	   			selUserList = elem.parentElement.querySelectorAll("tr.selectTR");
+				if(selUserList.length === 1){
+		   			selUserId = $(elem).attr("id");
+		   			selUserName = $(elem).attr("name");
+		   			selUserDept = $(elem).attr("dept");
+		   			selUserList = [];
+				}
 	   		}
 	   		
 	   		// 선택한 사람을 권한 추가
 	   		function setAuthorViewUser() {
-	   			if (selUserId != "" && selUserId != undefined) {
-		   			var receiverId = selUserId;
+	   			if(selUserList && selUserList.length === 1){
+	   				receiverId = selUserList[0].userId;
+	   				userName = selUserList[0].userName;
+		   			userDept = selUserList[0].userDeptname;
+	   				
+	   				selUserId = selUserList[0].userId;
+	   				selUserName = selUserList[0].userName;
+	   				selUserDept = selUserList[0].userDeptname;
+		   			
+		   			if (selUserId != "" && selUserId != undefined) {
+		   				var chkFlag = true;
+		   				
+			   			for(var i = 0; i < authList.length; i++) {
+			   				if (authList[i].userId == receiverId) {
+			   					chkFlag = false;
+			   				}
+			   			}
+			   			
+			   			addUserToList(chkFlag);
+			   			
+		   			} else {
+		   				alert("<spring:message code='ezPMS.t164' />");
+		   			}
+	   			} else if (selUserList && selUserList.length > 1){
+	   				selUserList.forEach(function(elem, idx){
+	   					var chkFlag = true;
+	   					if(!elem.userId){
+		   					receiverId = elem.getAttribute("id");
+				   			userName = elem.getAttribute("name");
+				   			userDept = elem.getAttribute("dept");
+	   					} else {
+		   					receiverId = elem.userId;
+				   			userName = elem.userName;
+				   			userDept = elem.userDeptname;
+	   					}
+			   			userIdType = "user";
+		   				
+			   			for(var i = 0; i < authList.length; i++) {
+			   				if (authList[i].userId == receiverId) {
+			   					chkFlag = false;
+			   					break;
+			   				}
+			   			}
+			   			
+			   			addUserToList(chkFlag);
+	   				})
+	   			} else if(selUserId){
+	   				var chkFlag = true;
+	   				
+	   				receiverId = selUserId;
 		   			userName = selUserName;
-		   			var chkFlag = true;
 		   			userDept = selUserDept;
 		   			
 		   			for(var i = 0; i < authList.length; i++) {
@@ -115,42 +168,59 @@
 		   				}
 		   			}
 		   			
-		   			if (chkFlag) {
-		   				if (parent.originGroupId != undefined || parent.originGroupId != null) {
-		   					managerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : type === "participants" ? 2 : 1, "userDeptname" : userDept, "pctinput" : 100, "userIdType" : "user", "groupId" : parent.originGroupId});
-		   				} else {
-		   					managerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : type === "participants" ? 2 : 1, "userDeptname" : userDept, "pctinput" : 100, "userIdType" : "user"});
-		   				}
+		   			addUserToList(chkFlag);
+	   			}
+	   			drawReceiverList(authName);
+	   			selMainListUserId = "";
+	   			
+	   			function addUserToList(chkFlag){
+	   				if (chkFlag) {
+ 		   				if (parent.originGroupId != undefined || parent.originGroupId != null) {
+ 		   					managerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : type === "participants" ? 2 : 1, "userDeptname" : userDept, "pctinput" : 100, "userIdType" : "user", "groupId" : parent.originGroupId});
+ 		   				} else {
+ 		   					managerArray.push({"userName" : userName, "userId" : receiverId, "memberRoleId" : type === "participants" ? 2 : 1, "userDeptname" : userDept, "pctinput" : 100, "userIdType" : "user"});
+ 		   				}
 		   				
-		   				authList.push({"userName" : userName, "userId" : receiverId});
-		   			} else {
-		   				alert("<spring:message code='ezPMS.t163' />");
-		   			}
-		   			
-		   			drawReceiverList();
-		   			selMainListUserId = "";
-	   			} else {
-	   				alert("<spring:message code='ezPMS.t164' />");
+ 		   				authList.push({"userName" : userName, "userId" : receiverId});
+ 		   			} /* else {
+ 		   				alert("<spring:message code='ezPMS.t163' />");
+ 		   			} */
 	   			}
 	   		}
 	   		
 	   		// 선택된 수신자배열에서 특정 사원 삭제
-		    function deleteReceiver() {
-	   			
-	   			for (var i = 0; i < authList.length; i++) {
-			    	if (authList[i].userId === selMainListUserId) {
-			    		authList.splice(i, 1);
-			    	}
+		    function deleteReceiver(elem) {
+	   			var authName = "manager";
+	   			var tableId = {
+	   					"manager" : "managerList"
 	   			}
-	  
-	   			for(var j = 0; j < managerArray.length; j++) {
-			    	if (managerArray[j].userId === selMainListUserId) {
-			    		managerArray.splice(j, 1);
-			    		selMainListUserId = "";
-			    	}
-			    } 
-			     drawReceiverList();
+	   			var tableObj = document.getElementById(tableId[authName]);
+	   			var selectedList = tableObj.getElementsByClassName("selectTR");
+	   			
+	   			for(var i = 0; i < selectedList.length; i++){
+	   				var elem = selectedList[i];
+	   				var id = elem.getAttribute("id").replace(tableId[authName] + "_", "");
+	   				removeUser(id);
+	   			}
+	   			
+			    function removeUser(selectedUserId){
+			    	for (var i = 0; i < authList.length; i++) {
+				    	if (authList[i].userId === selectedUserId) {
+				    		authList.splice(i, 1);
+				    	}
+		   			}
+			    	
+			    	if (authName == "manager") {
+		   				for(var j = 0; j < managerArray.length; j++) {
+				    		if (managerArray[j].userId === selectedUserId) {
+				    			managerArray.splice(j, 1);
+				    			selMainListUserId = "";
+				    		}
+				    	}
+		   			}
+			    }
 		     	
+			    drawReceiverList();
 		    }
 	   		
 	   		// 선택된 수신자 배열을 토대로 화면에 그리는 곳
@@ -160,7 +230,7 @@
 		    		if(type === "participants"){
 		    			for (var i = 0; i < managerArray.length; i++) {
 				    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
-				    		strHTML += "<tr style='cursor:pointer;' id=" + managerArray[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver()'>";
+				    		strHTML += "<tr style='cursor:pointer;' id=managerList_" + managerArray[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver(this)' data-rowidx=" + i +">";
 				    		strHTML += "<td style='width: 75%;'>";
 				    		strHTML += managerArray[i].userName;
 				    		strHTML += "(" + managerArray[i].userDeptname + ")";
@@ -171,7 +241,7 @@
 		    		} else {
 			    		for (var i = 0; i < managerArray.length; i++) {
 				    		strHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
-				    		strHTML += "<tr style='cursor:pointer;' id=" + managerArray[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver()'>";
+				    		strHTML += "<tr style='cursor:pointer;' id=managerList_" + managerArray[i].userId + " class='hover' onclick='setMainListUserAuthorDept(this)' ondblclick='deleteReceiver(this)' data-rowidx=" + i +">";
 				    		strHTML += "<td style='width: 75%;'>";
 				    	//	strHTML += receiverList[i].userName.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
 				    		strHTML += managerArray[i].userName;
@@ -228,10 +298,10 @@
 	   		function ok_Click() {
 	   			//담당자 지정할 때와 참여자 지정할 때를 구분하여 동작.
 	   			if(type === "participants"){
-	   				if (managerArray.length == 0) {
-		   				alert("<spring:message code='ezPMS.t294' />");
-		   				return;
-		   			}
+// 	   				if (managerArray.length == 0) {
+// 		   				alert("<spring:message code='ezPMS.t294' />");
+// 		   				return;
+// 		   			}
 	   				
 	   				parent.participantList = managerArray;
 	   				parent.applyParticipantList();
@@ -290,18 +360,126 @@
 	   		//기존 담당자 또는 참여자를 초기값으로 넣어준다.
 	   		function setPrevUser(){
 	   			if(type === "participants" && parent.participantList.length > 0){
-		   			$(parent.participantList).each(function(idx, elem){
-		   				$('#' + elem.userId).click().dblclick();
-		   			});
+	   				selUserList = parent.participantList;
 	   			} else if (type !== "participants" && parent.managerList.length > 0){
-	   				$(parent.managerList).each(function(idx, elem){
-	   					$('#' + elem.userId).click().dblclick();
-		   			});
+	   				selUserList = parent.managerList;
 	   			}
+	   			setAuthorViewUser()
 	   			
 	   			//포커스 제거.
 	   			$("#txtlist_Layer .mainlist tr").removeClass("selectTR");
 	   		}
+	   		
+	   		function listEventFunc(obj, event){
+	   			var listEventCheckbox;
+	   			if (!listEventCheckbox) {
+		            if (!PressShiftKey && !PressCtrlKey && listContentArry.length > 0) {
+		                for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
+		                    p_ListOrderObject = document.getElementById(listContentArry[Cnt]);
+		                    
+		                    if (p_ListOrderObject != null) {
+		                    	cancelSelectTr(obj);
+		                    }		
+		                }
+		                listContentArry = new Array();
+		            }
+		            if (PressShiftKey) {
+		                var SelectedPreObj = null;
+		                for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
+		                    p_ListOrderObject = document.getElementById(listContentArry[Cnt]);
+		                    if (Cnt == 0) {
+		                        SelectedPreObj = p_ListOrderObject;
+		                    }
+		                    
+		                    cancelSelectTr(obj);
+		                }
+		                listContentArry = new Array();
+		                if (p_ListOrderObject == null)
+		                    return;
+		
+		                var PrelistContent;
+		                if (SelectedPreObj == null) {
+		                    PrelistContent = p_ListOrderObject;
+		                }
+		                else {
+		                    PrelistContent = SelectedPreObj;
+		                }
+		                p_ListOrderObject = obj;
+		
+		                var CurlistContent = obj;
+		                var PrePoint = PrelistContent.dataset.rowidx;
+		                var CurPoint = CurlistContent.dataset.rowidx;
+		                if (PrePoint < CurPoint) {
+		
+		                    for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) {
+		                        p_ListOrderObject = document.querySelector("tr[data-rowidx='" + Cnt + "']");
+		                        $(p_ListOrderObject).addClass("selectTR");
+		                        listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
+		                    }
+		
+		                }
+		                else if (PrePoint > CurPoint) {
+		                    for (var Cnt = PrePoint; Cnt >= CurPoint; Cnt--) {
+		                    	p_ListOrderObject = document.querySelector("tr[data-rowidx='" + Cnt + "']");
+		                    	$(p_ListOrderObject).addClass("selectTR");
+		                        listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
+		                    }
+		                }
+		                else {
+		                    return;
+		                }
+		
+		            }
+		            else {
+						var insertFlag = true;
+						p_ListOrderObject = obj;
+						for (var i = 0; i < listContentArry.length; i++) {
+		                    if (listContentArry[i] == p_ListOrderObject.getAttribute("id")) {
+		                        insertFlag = false;
+		                        if (PressCtrlKey) {
+		                            listContentArry.splice(i, 1);
+		                            $(obj).removeClass("selectTR");
+		                            if (listContentArry.length == 0)
+		                                p_ListOrderObject = "";
+		                        }
+		                    }
+		                }
+		                if (insertFlag) {
+		                	if (!PressCtrlKey){
+		                		cancelSelectTr(obj);
+		                		listContentArray = [];
+		                		selUserList = [];
+		                	}
+		                	
+		                	$(obj).addClass("selectTR");
+		                	selUserList[selUserList.length] = obj;
+		                    listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
+		                }
+						return;
+		            }
+		        }
+		        else{
+		            listEventCheckbox = false;
+		        }
+	   		}
+	   		
+	   		function cancelSelectTr(elem){
+	   			var tableId = "";
+	   			if ($(elem).parent().attr("id") === "List_TBODY2") {
+	   				$("#List_TBODY2 tr").removeClass("selectTR");
+	   			} else if ($(elem).parent().parent().parent().attr("id") === "managerList"){
+		   			$("#managerList tr").removeClass("selectTR");
+		   			tableId = "managerList";
+	   			} else if ($(elem).parent().parent().parent().attr("id") === "participantList"){
+		   			$("#participantList tr").removeClass("selectTR");
+		   			tableId = "participantList";
+	   			} else if ($(elem).parent().parent().parent().attr("id") === "txtlist_Layer") {
+		   			$("#txtlist_Layer tr").removeClass("selectTR");
+	   			}
+	   			
+	   			return tableId;
+	   		}
+	   		
 		</script>
 		<style>
 			tr.hover:not(.selectTR):hover{background:#eee; color:#fff;}
