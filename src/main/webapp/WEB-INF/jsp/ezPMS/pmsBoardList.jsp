@@ -127,7 +127,9 @@
 			alert("<spring:message code='ezPMS.t292' />");	
 			return;
 		}
-		
+
+		$("<div id='blockLeft' class='blockLeft' style='background:none rgba(0, 0, 0, 0.4)'></div>").appendTo(parent.parent.frames["left"].document.body);
+		$("<div id='blockTop' class='blockTop' style='height:86px;background:none rgba(0, 0, 0, 0.4)'></div>").appendTo(parent.parent.frames["right"].document.body);
 		DivPopUpShow(320, 320, "/ezPMS/goMoveBoards.do?projectId=" + projectId + "&onlyGroup=false");
 	}
 	

@@ -18,7 +18,7 @@ var nowStatus = parent.listProjectStatus;
 var strHTML = "";
 var viewType = parent.viewType;
 
-$(function(){
+$(function(){	
 	strHTML += "<tr><th>";
 	
 	switch(nowStatus) {
@@ -145,6 +145,7 @@ function changeStatus() {
 }
 
 function popupClose() {
+	parent.parent.frames["left"].document.getElementById("blockLeft").remove();
 	parent.DivPopUpHidden();
 }
 

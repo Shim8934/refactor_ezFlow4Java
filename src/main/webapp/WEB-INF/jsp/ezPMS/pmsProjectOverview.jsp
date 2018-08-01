@@ -141,10 +141,14 @@ function ableToChangeStatus() {
 }
 
 function editProjectInfo() {
+	$("<div id='blockLeft' class='blockLeft' style='background:none rgba(0, 0, 0, 0.4)'></div>").appendTo(parent.parent.frames["left"].document.body);
+	$("<div id='blockTop' class='blockTop' style='height:86px;background:none rgba(0, 0, 0, 0.4)'></div>").appendTo(parent.parent.frames["right"].document.body);
 	addProjectPopup(5, 20, 845, 536, "/ezPMS/newProject.do?mode=" + "edit" + "&projectId=" + projectId + "&groupId=" + groupId);
 }
 
 function kanbanSetting() {
+	$("<div id='blockLeft' class='blockLeft' style='background:none rgba(0, 0, 0, 0.4)'></div>").appendTo(parent.parent.frames["left"].document.body);
+	$("<div id='blockTop' class='blockTop' style='height:86px;background:none rgba(0, 0, 0, 0.4)'></div>").appendTo(parent.parent.frames["right"].document.body);
 	addProjectPopup(18, 29, 500, 350, "/ezPMS/kanbanSetting.do?projectId=" + projectId);
 }
 
@@ -422,6 +426,8 @@ function getStatusStr(status) {
 }
 
 function getProjectMember(roleId) {
+	$("<div id='blockLeft' class='blockLeft' style='background:none rgba(0, 0, 0, 0.4)'></div>").appendTo(parent.parent.frames["left"].document.body);
+	$("<div id='blockTop' class='blockTop' style='height:86px;background:none rgba(0, 0, 0, 0.4)'></div>").appendTo(parent.parent.frames["right"].document.body);
 	addProjectPopup(18, 29, 374, 350, "/ezPMS/getProjectMember.do?projectId=" + projectId + "&roleId=" + roleId);
 }
 

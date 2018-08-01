@@ -472,12 +472,7 @@
 	            }
 	        }
 	   		
-	   		function ok_Click() {
-	   			if (managerArray.length == 0) {
-	   				alert("<spring:message code='ezPMS.t169'/>");
-	   				return;
-	   			}
-	   			
+	   		function ok_Click() {	   			
 	   			parent.opener.managerList = JSON.stringify(managerArray);
 		   		parent.opener.participantList = JSON.stringify(participantArray);
 		   		parent.opener.viewerList = JSON.stringify(viewerArray);

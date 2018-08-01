@@ -1689,8 +1689,14 @@
 			INSERT INTO 
 				tbl_pms_favorite 
 				(TENANT_ID,		PROJECT_ID,		USER_ID) 
-			VALUES 
-				(#tenantId#,	#projectId#,	#userId#)
+			SELECT
+				#tenantId#,		#projectId#,	#userId# 
+			FROM DUAL
+			WHERE NOT EXISTS (SELECT TENANT_ID, PROJECT_ID, USER_ID 
+								FROM TBL_PMS_FAVORITE 
+								WHERE PROJECT_ID = #projectId# 
+									AND TENANT_ID = #tenantId# 
+									AND USER_ID = #userId#)
 			
 		]]>
 	</insert>

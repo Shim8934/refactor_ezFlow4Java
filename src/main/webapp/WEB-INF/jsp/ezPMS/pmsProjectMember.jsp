@@ -69,8 +69,10 @@ var roleId = "${roleId}";
 }
  
  function popupClose() {
-	parent.DivPopUpHidden();
- }
+		parent.parent.parent.frames["left"].document.getElementById("blockLeft").remove();
+		parent.parent.parent.frames["right"].document.getElementById("blockTop").remove();
+		parent.DivPopUpHidden();
+}
  
  function sendMail(userId, userIdType) {
 	var pheight = window.screen.availHeight;
