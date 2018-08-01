@@ -55,15 +55,14 @@
         		var typeName = SelectSingleNodeValue(xmlQst, "ANSWERTYPE");
         		
         		//1=객관식, 2=주관식, 4=우선순위 선택형, 5=표형식 (3은 안쓰임)
-        		console.log(typeName);
         		if (typeName == 1) {
-        			typeName = "객관식";
+        			typeName = "<spring:message code='ezQuestion.t487' />";
         		} else if (typeName == 2) {
-        			typeName = "주관식";
+        			typeName = "<spring:message code='ezQuestion.t372' />";
         		} else if (typeName == 4) {
-        			typeName = "우선순위 선택형";
+        			typeName = "<spring:message code='ezQuestion.t373' />";
         		} else if (typeName == 5) {
-        			typeName = "표형식"
+        			typeName = "<spring:message code='ezQuestion.t50003' />"
         		}
         		
         		if (selCnt > 0 ) {
@@ -245,15 +244,14 @@
         		var typeName = SelectSingleNodeValue(xmlQst, "ANSWERTYPE");
         		
         		//1=객관식, 2=주관식, 4=우선순위 선택형, 5=표형식 (3은 안쓰임)
-        		console.log(typeName);
         		if (typeName == 1) {
-        			typeName = "객관식";
+        			typeName = "<spring:message code='ezQuestion.t487' />";
         		} else if (typeName == 2) {
-        			typeName = "주관식";
+        			typeName = "<spring:message code='ezQuestion.t372' />";
         		} else if (typeName == 4) {
-        			typeName = "우선순위 선택형";
+        			typeName = "<spring:message code='ezQuestion.t373' />";
         		} else if (typeName == 5) {
-        			typeName = "표형식"
+        			typeName = "<spring:message code='ezQuestion.t50003' />"
         		}
         		
         		frmCreate.selQues[index].text= "[" + typeName + "]"+ String(parseInt(index)+1) +". " + data;

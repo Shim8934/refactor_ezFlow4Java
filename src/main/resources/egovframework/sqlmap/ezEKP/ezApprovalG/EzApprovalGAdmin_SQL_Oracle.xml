@@ -148,7 +148,7 @@
 		<![CDATA[
 			SELECT 
 				containerid,
-				usedepid,
+				usedepid as usedeptid,
 				(SELECT displayname FROM TBL_DEPTMASTER T1 WHERE T1.tenant_id = #tenantID# AND cn = A.usedepid) as containerTypeName,
 				(SELECT displayname2 FROM TBL_DEPTMASTER T2 WHERE T2.tenant_id = #tenantID# AND cn = A.usedepid) as containerTypeName2
 			FROM

@@ -107,20 +107,20 @@
 		        if(approvalFlag == "G") {
 		        	if(hideCabinet == "0") {
 				        if (g_bRecAdmin || AdminYN == "TRUE") {
-				            document.getElementById("tag07").style.display = "";
-				            document.getElementById("tag08").style.display = "";
+				            /* document.getElementById("tag07").style.display = "";
+				            document.getElementById("tag08").style.display = ""; */
 				            document.getElementById("tag09").style.display = "";
 				            document.getElementById("tag10").style.display = "";
 				        }
 				        else if (g_bDeptCharger) {
-				            document.getElementById("tag07").style.display = "";
-				            document.getElementById("tag08").style.display = "";
-				            document.getElementById("tag09").style.display = "none";
+				            /* document.getElementById("tag07").style.display = "";
+				            document.getElementById("tag08").style.display = ""; */
+				            document.getElementById("tag09").style.display = "";
 				            document.getElementById("tag10").style.display = "none";
 				        }
 				        else {
-				            document.getElementById("tag07").style.display = "none";
-				            document.getElementById("tag08").style.display = "none";
+				            /* document.getElementById("tag07").style.display = "none";
+				            document.getElementById("tag08").style.display = "none"; */
 				            document.getElementById("tag09").style.display = "none";
 				            document.getElementById("tag10").style.display = "none";
 				        }
@@ -1006,7 +1006,7 @@
 		            ${subTitleString}
 				</select>
 			</c:if>
-			<h2><span style="width:100%; display:inline-block;" id="APPROVAL" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t102'/></span></h2>
+			<h2><span style="width:100%; display:inline-block;" id="APPROVAL" onClick="Open_Func(this)"><spring:message code='main.t00018'/></span></h2>
 			<ul id="iconul">
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL1" onClick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1747'/><span id=count1></span></span></li>
 
@@ -1019,6 +1019,11 @@
 				<c:if test="${hideSusin != 'N'}">
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL4" onClick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1749'/><span id=count4></span></span></li>
 				</c:if>
+				<c:if test="${approvalFlag == 'G'}">
+					<c:if test="${hideCabinet == '0'}">
+						<li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t10011'/><span id="count99"></span></li>
+					</c:if>
+				</c:if>		
 				<c:if test="${whoKyulYN == '1'}">
 					<li><span id="MYCONTWHO" style="width: 100%; display: inline-block;" onclick="setPresentValue('<spring:message code='ezApproval.pjj34'/>');Open_Func(this)">
 	                <img src="../../images/ImgIcon/icon_afterapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApproval.pjj34'/><span id="countWHO"></span></span></li>
@@ -1043,15 +1048,6 @@
 				</c:if>
 	            <li><span id="APPROVAL21" onClick="setPresentValue('<spring:message code='ezApprovalG.t3000'/>');convMain('21','')" ><img src="/images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t3000'/></span><span id=count21></span></li>
 			</ul>
-			<c:if test="${approvalFlag == 'G'}">
-				<c:if test="${hideCabinet == '0'}">
-			        <h2><span style="width:100%; display:inline-block" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><spring:message code='ezApprovalG.t10010'/></span></span></h2>
-			         <ul id="iconul">
-					    <li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t10011'/><span id="count99"></span></li>
-					    <li><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><img src="/images/ImgIcon/icon_enddisplaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1787'/><span id="count10"></span></li>
-					</ul>
-				</c:if>
-			</c:if>
 			<c:if test="${approvalFlag == 'S'}">
 				<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span><ul></ul></h2>
 		        <h2><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj03'/>');convMain('10','')"><spring:message code='ezApprovalG.hyj03'/></span></h2>
@@ -1059,7 +1055,16 @@
 				</ul>
 			</c:if>
 			<c:if test="${approvalFlag == 'G'}">
-			<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApprovalG.t1554'/>');Open_Func(this)"><spring:message code='ezApprovalG.t1554'/></span><ul></ul></h2>
+			<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span><ul></ul></h2>
+			</c:if>
+			<c:if test="${approvalFlag == 'G'}">
+				<c:if test="${hideCabinet == '0'}">
+			        <h2><span style="width:100%; display:inline-block" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><spring:message code='ezApprovalG.t1787'/></span><ul></ul></h2>
+			         <%-- <ul id="iconul">
+					    <li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t10011'/><span id="count99"></span></li>
+					    <li><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><spring:message code='ezApprovalG.t1787'/><span id="count10"></span></li>
+					</ul> --%>
+				</c:if>
 			</c:if>
 			<h2><span style="width:100%;display:inline-block;"  id="MYDEPTCONT" onClick="setPresentValue('<spring:message code='ezApprovalG.t1755'/>');Open_Func(this)"><spring:message code='ezApprovalG.t1755'/></span></h2>
 			<ul>
@@ -1101,15 +1106,18 @@
 			<c:if test="${approvalFlag eq 'G'}">
 			<c:if test="${hideCabinet == '0'}">
 			<h2><span style="width:100%;display:inline-block;" id="m01" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t552'/></span><ul></ul></h2>
-			<h2><span style="width:100%;display:inline-block;" id="m02" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span><ul></ul></h2>
 			<h2><span style="width:100%;display:inline-block;" id="m03" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t911'/></span><ul></ul></h2>
+			<h2><span style="width:100%;display:inline-block;" id="m02" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span><ul></ul></h2>
 			<h2><span style="width:100%;display:inline-block;" id="m05" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t905'/></span><ul></ul></h2>
-			<h2><span style="width:100%;display:inline-block;" id="m06" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t906'/></span><ul></ul></h2>
-			<h2 id="tag07"><span style="width:100%;display:inline-block;" id="m07" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t524'/></span><ul></ul></h2>
-			<h2 id="tag08"><span style="width:100%;display:inline-block;" id="m08" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t908'/></span><ul></ul></h2>
-			<h2 id="tag09"><span style="width:100%;display:inline-block;" id="m09" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t909'/></span><ul></ul></h2>
-			<h2 id="tag10"><span style="width:100%;display:inline-block;" id="m10" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t1753'/></span></h2>
+			<h2><span style="width:100%;display:inline-block;" id="m06" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t906'/></span><ul></ul></h2>			
+			<h2 id="tag09"><span style="width:100%;display:inline-block;" id="m07" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t999'/></span></h2>
 			<ul>
+				<li><span style="width:100%;display:inline-block;" id="m07" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t524'/></span></li>
+				<li><span style="width:100%;display:inline-block;" id="m08" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t908'/></span></li>
+			</ul>	
+			<h2 id="tag10"><span style="width:100%;display:inline-block;" id="m09" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t1753'/></span></h2>
+			<ul>
+				<li><span style="width:100%;display:inline-block;" id="m09" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t909'/></span></li>
 				<li><span style="width:100%;display:inline-block;" id="admin_sub01" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.t717'/></span></li>
 				<li><span style="width:100%;display:inline-block;" id="admin_sub02" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.t1754'/></span></li>
 				<li><span style="width:100%;display:inline-block;" id="admin_sub03" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.t524'/></span></li>

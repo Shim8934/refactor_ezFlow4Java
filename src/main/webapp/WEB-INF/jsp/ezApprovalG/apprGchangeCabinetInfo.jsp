@@ -410,7 +410,7 @@
             <td id="tdSpecialFlag">&nbsp;</td>
             <td style="width:70px">
                 <!-- <img src="/images/btn_change.gif"style="display:none;cursor:pointer" name="btnAddSC" id="btnAddSC" onClick="return btnAddSpecialCatalog_onclick()" width="51" height="20"> -->
-                <a class="imgbtn imgbck" style="margin-top: 2px;"><span id="btnAddSC" onClick="return btnAddSpecialCatalog_onclick()"><spring:message code='ezApprovalG.t269'/></span></a>
+                <a class="imgbtn imgbck" id="btnAddSC" style="margin-top: 2px;display:none;"><span onClick="return btnAddSpecialCatalog_onclick()"><spring:message code='ezApprovalG.t269'/></span></a>
             </td>
           </tr>
         </table></td>
