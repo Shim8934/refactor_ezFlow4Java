@@ -335,7 +335,7 @@ function addTask() {
 			var logContent = "[" + upperGroupName + "<spring:message code='ezPMS.t127'/>" + taskName + "<spring:message code='ezPMS.t315'/>"; 
 			addTaskLog(projectId, 1, groupId, null, logContent);
 			updateGroupRealStartEndDate(groupId);
-			parent.opener.location.reload();
+			opener.location.reload();
 			popupClose();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {

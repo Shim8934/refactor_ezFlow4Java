@@ -3282,6 +3282,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ezPMSDAO.updateAllTaskDatesInPrj(map);
 		updateAllTaskWeight(map);
 		ezPMSDAO.updateProjectWorkingdaySum2(map);
+		
+		ProjectTaskVO taskVO = new ProjectTaskVO();
+		taskVO.setTenantId((int) map.get("tenantId"));
+		taskVO.setProjectId((Long) map.get("projectId"));
+		ezPMSDAO.updateProjectProgress(taskVO);
 		LOGGER.debug("[SERVICE] ezPMS updateAllTaskDatesInPrj Ended");
 	}
 

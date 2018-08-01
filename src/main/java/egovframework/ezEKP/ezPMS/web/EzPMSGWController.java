@@ -3247,28 +3247,28 @@ public class EzPMSGWController {
 				
 				// taskId로 해당 date 삭제 후, 추가
 //				ezPMSService.deleteMemberSchedule(null, projectId, tenantId, null,taskId);
-				List<TaskMemberVO> taskMemberList = ezPMSService.getTaskMemberList(tenantId, taskId, lang);
+//				List<TaskMemberVO> taskMemberList = ezPMSService.getTaskMemberList(tenantId, taskId, lang);
 				
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				Date startDate = sdf.parse(planStartDate);
-				Date endDate = sdf.parse(planEndDate);
-
-				Calendar startCal = Calendar.getInstance();
-				Calendar endCal = Calendar.getInstance();
-
-				startCal.setTime(startDate);
-				endCal.setTime(endDate);
-
-				List<String> dateList = new ArrayList<String>();
-
-				while (startCal.compareTo(endCal) != 1) {
-					if (startCal.get(Calendar.DAY_OF_WEEK) == 1 || startCal.get(Calendar.DAY_OF_WEEK) == 7) {
-						startCal.add(Calendar.DATE, 1);
-					} else {
-						dateList.add(sdf.format(startCal.getTime()));
-						startCal.add(Calendar.DATE, 1);
-					}
-				}
+//				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//				Date startDate = sdf.parse(planStartDate);
+//				Date endDate = sdf.parse(planEndDate);
+//
+//				Calendar startCal = Calendar.getInstance();
+//				Calendar endCal = Calendar.getInstance();
+//
+//				startCal.setTime(startDate);
+//				endCal.setTime(endDate);
+//
+//				List<String> dateList = new ArrayList<String>();
+//
+//				while (startCal.compareTo(endCal) != 1) {
+//					if (startCal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || startCal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+//						startCal.add(Calendar.DATE, 1);
+//					} else {
+//						dateList.add(sdf.format(startCal.getTime()));
+//						startCal.add(Calendar.DATE, 1);
+//					}
+//				}
 			
 //				for (int i = 0; i < taskMemberList.size(); i++) {
 //					String memberId = taskMemberList.get(i).getUserId();
