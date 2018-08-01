@@ -287,7 +287,7 @@ public interface EzPMSService {
 	
 	public void updateTaskEndDate (int tenantId, long taskId) throws Exception;
 	
-	public int getTaskOverProjectEndDate(Long projectId, int tenantId, String planEndDate);
+	public int getTaskOverProjectDate(Long projectId, int tenantId, String planEndDate, String planStartDate);
 	
 	public Map<String, Object> getMinMaxGroupRealDate(Map<String, Object> map);
 	

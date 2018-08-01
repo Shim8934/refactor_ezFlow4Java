@@ -678,8 +678,8 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		update ("EzPMSDAO.updateTaskEndDate", map);
 	}
 	
-	public int getTaskOverProjectEndDate(Map<String, Object> map) {
-		return (int) select ("EzPMSDAO.getTaskOverProjectEndDate", map);
+	public int getTaskOverProjectDate(Map<String, Object> map) {
+		return (int) select ("EzPMSDAO.getTaskOverProjectDate", map);
 	}
 	
 	@SuppressWarnings("unchecked")
