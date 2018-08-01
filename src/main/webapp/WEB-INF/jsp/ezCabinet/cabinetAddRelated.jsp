@@ -191,31 +191,52 @@
 					var divContent     = contentWd.document.getElementById("div_Content").innerHTML;
 					var doctitle       = contentWd.document.getElementById("doctitle").textContent;
 					var attach         = approvalOpener.document.getElementById("lstAttachLink");
-					var attachList = [];
-					
+					var attachList     = [];
+					var otherList      = [];
+					console.log(attach);
 					if (attach.childElementCount > 1){
 						var listChildren = attach.getElementsByTagName("a");
 						for(var i = 0, len = listChildren.length; i < len; i++){
-							var hrefStr = listChildren[i].getAttribute("docHref");
-							var params  = getAllUrlParams(hrefStr);
+							var hrefStr  = listChildren[i].getAttribute("href");
+							var hrefStyle = listChildren[i].getAttribute("onclick");
 							
-							console.log(hrefStr);
-							 console.log("File path: " + javaURLDecode(params["filePath"]));
-							
-							attachList.push({
-								filePath : javaURLDecode(params["filePath"]),
-								fileName : params["fileName"]
-							}); 
+							if(hrefStr){
+								var params  = getAllUrlParams(hrefStr);
+								console.log("File path: " + javaURLDecode(params["filePath"]));
+								console.log("File name: " + javaURLDecode(params["fileName"]));
+								attachList.push({
+									filePath : javaURLDecode(params["filePath"]),
+									fileName : params["fileName"]
+								}); 
+								
+							}
+							else if(hrefStyle){
+								var params   = getAllUrlParams(hrefStyle);
+								var orgDocId = javaURLDecode(params["orgDocID"]).split(",")[0];
+								orgDocId     = orgDocId.substring(0, orgDocId.length - 1);
+							    console.log("Doc Id: " + javaURLDecode(params["docID"]));
+							    console.log("Doc Href: " + javaURLDecode(params["docHref"]));
+							    console.log("formID: " + javaURLDecode(params["formID"]));
+							    console.log("orgDocID: " + orgDocId);
+							    
+							    otherList.push({
+									docID    : javaURLDecode(params["docID"]),
+									docHref  : javaURLDecode(params["docHref"]),
+									formID   : javaURLDecode(params["formID"]),
+									orgDocId : orgDocId
+								}); 
+							}
 						}
 					}  
-					console.log(attach);
+					
 					var url          = "/ezCabinet/saveRelatedApproval.do";
 					var data         = {
 						type          : moduleType, 
 						mode          : saveMode, 
 						content       : JSON.stringify(divContent),
 						doctitle      : doctitle,
-						lstAttachLink : JSON.stringify(attachList)
+						lstAttachLink : JSON.stringify(attachList),
+						otherAttachLk : JSON.stringify(otherList)
 					};
 					
 					if (saveMode == 1) {data.cabinetId = cabinetId;}
