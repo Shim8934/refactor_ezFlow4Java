@@ -81,6 +81,7 @@
     	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="25"/>
     	<result property="projectName"						column="PROJECT_NAME"				columnIndex="26"/>
     	<result property="upperGroupName"					column="UPPER_GROUP_NAME"			columnIndex="27"/>
+    	<result property="weight"							column="WEIGHT"						columnIndex="28"/>
     </resultMap>
     
     <resultMap id="projectGroupVOForDetail" class="ProjectGroupVO">
@@ -2400,7 +2401,30 @@
 				A.WORKINGDAY,
 				A.REST_DUEDAY,
 				P.PROJECT_NAME,
-				B.GROUP_NAME AS UPPER_GROUP_NAME
+				B.GROUP_NAME AS UPPER_GROUP_NAME,
+				(
+					SELECT
+						IFNULL(SUM(WEIGHT), 0)
+					FROM
+						TBL_PMS_TASK
+					WHERE
+						TENANT_ID = #tenantId#
+					AND
+						DEL_STATUS = 0
+					AND
+						GROUP_ID IN (
+							SELECT 
+								GROUP_ID
+							FROM 
+								TBL_PMS_GROUP
+							WHERE
+								TENANT_ID = #tenantId#
+							AND
+								DEL_STATUS = 0
+							AND
+								GROUP_ID = A.GROUP_ID OR ANCESTER_GROUP LIKE CONCAT('%\,',A.GROUP_ID,',%') OR ANCESTER_GROUP LIKE CONCAT(A.GROUP_ID,',%') 
+					)
+				) AS WEIGHT
 			FROM
 				TBL_PMS_GROUP A
 			JOIN	
