@@ -147,7 +147,14 @@ public class ApprGRecordVO {
 	private String limitRange;
 	private String manualRegFlag;
 	private String user_Id;
+	private String publicityYn;
 	
+	public String getPublicityYn() {
+		return publicityYn;
+	}
+	public void setPublicityYn(String publicityYn) {
+		this.publicityYn = publicityYn;
+	}
 	public String getUser_Id() {
 		return user_Id;
 	}
