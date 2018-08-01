@@ -78,7 +78,6 @@
 		
 		        if (g_InitFlag == "1")
 		        {
-		        	alert("요기")
 		            if (g_bRecAdmin || AdminYN == "TRUE" || g_bDeptCharger) {
 // 		                trCreateCab.style.display = "";
 		                $('#trCreateCab').show();

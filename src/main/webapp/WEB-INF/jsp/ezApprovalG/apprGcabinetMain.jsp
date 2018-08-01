@@ -817,7 +817,7 @@
 		            endcabproduce_cross_dialogArguments[0] = para;
 		            endcabproduce_cross_dialogArguments[1] = btnEndProduce_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "EndCabProduce_Cross", GetOpenWindowfeature(350, 280));
+		            var OpenWin = window.open(url, "EndCabProduce_Cross", GetOpenWindowfeature(400, 280));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
