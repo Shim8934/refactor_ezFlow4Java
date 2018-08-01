@@ -851,9 +851,11 @@ function addFavorite() {
 		$.ajax({
 			type : "POST",
 			contentType: "application/json; charset=UTF-8",
+			dataType : "text",
 			url : "/ezPMS/addFavoriteProject.do",
 			data :JSON.stringify(data),
 			success : function(result) {
+				console.log(result);
 				if (result == "0") {
 					checkedVal = "";
 

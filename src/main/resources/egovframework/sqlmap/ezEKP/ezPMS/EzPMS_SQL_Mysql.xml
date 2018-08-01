@@ -1715,7 +1715,7 @@
 		]]>
 	</delete>
 	
-	<select id="EzPMSDAO.getFavoriteProject" parameterClass="map" resultClass="Integer">
+	<select id="EzPMSDAO.getFavoriteProject" parameterClass="map" resultClass="Long">
 		<![CDATA[
 			SELECT 
 				PROJECT_ID
