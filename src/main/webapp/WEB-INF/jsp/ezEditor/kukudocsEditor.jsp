@@ -188,8 +188,7 @@
 	            loadingImageURL : '/js/ezEditor/kukudocsEditor/images/load.gif',
 	            errorImageURL : '/js/ezEditor/kukudocsEditor/images/error.png',
 	            imageUploadURL : imageUploadURL,
-	            Editor_Complete : Editor_Complete,
-	            cell_lock_name : 'free'
+	            Editor_Complete : Editor_Complete
 	        });
 		</script>
 	</body>

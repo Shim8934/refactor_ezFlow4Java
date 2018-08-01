@@ -446,7 +446,6 @@
 	            errorImageURL : '/js/ezEditor/kukudocsEditor/images/error.png',
 	            imageUploadURL : imageUploadURL,
 	            Editor_Complete : Editor_Complete,
-	            cell_lock_name : 'free',
 	            Mouse_event : {'keyup' : CellCheckField},
 	            Key_event : {'mouseup' : CellCheckField}
 	        });
