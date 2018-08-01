@@ -109,7 +109,7 @@
 				        if (g_bRecAdmin || AdminYN == "TRUE") {
 				            /* document.getElementById("tag07").style.display = "";
 				            document.getElementById("tag08").style.display = ""; */
-				            document.getElementById("tag09").style.display = "none";
+				            document.getElementById("tag09").style.display = "";
 				            document.getElementById("tag10").style.display = "";
 				        }
 				        else if (g_bDeptCharger) {

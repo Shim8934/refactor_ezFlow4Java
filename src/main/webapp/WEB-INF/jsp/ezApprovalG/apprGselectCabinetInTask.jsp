@@ -79,10 +79,12 @@
 		        if (g_InitFlag == "1")
 		        {
 		            if (g_bRecAdmin || AdminYN == "TRUE" || g_bDeptCharger) {
-		                trCreateCab.style.display = "";
+// 		                trCreateCab.style.display = "";
+		                $('#trCreateCab').show();
 		            }
 		            else {
-		                trCreateCab.style.display = "none";
+// 		                trCreateCab.style.display = "none";
+		                $('#trCreateCab').hide();
 		            }
 		        }
 		        if (typeof (g_SelCabID) != "undefined") {
