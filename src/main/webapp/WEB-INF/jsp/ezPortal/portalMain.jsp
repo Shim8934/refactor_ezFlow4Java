@@ -121,33 +121,10 @@
 		    }
 		    
 		    $(function() {
-		    	$(".noteBlock").css("pointer-events", "none");
-	        	$("#open-memo").css("pointer-events", "auto");
 		    	chagePosition();
 		    	setSizeOfLayer();
-		    	
-		    	$( "#open-memo" ).draggable().on("mouseup", function() {
-		        	$(".noteBlock").css("pointer-events", "none");
-		        	$("#open-memo").css("pointer-events", "auto");
-		        	$("#layer-popup").css("pointer-events", "auto");
-		        }).on("mousedown", function() {
-		        	$(".noteBlock").css("pointer-events", "auto");
-		       	}).on("click", function(event){
-		       		event.preventDefault();
-		       		if ("none" == ($("#layer-popup").css("display"))) {
-						$("#layer-popup").css("display", "");
-		        	} else {
-						$("#layer-popup").css("display", "none");
-		        	}
-		       	});
-		     
-		        $('#layer-popup').on("mouseup", function() {
-		        	$(".noteBlock").css("pointer-events", "none");
-		        	$("#open-memo").css("pointer-events", "auto");
-		        	$("#layer-popup").css("pointer-events", "auto");
-		        }).on("mousedown", function() {
-		        	$(".noteBlock").css("pointer-events", "auto");
-		       	}).draggable();
+		    	setPanelPointer();
+		    	layerPopupOpacity();
 				
 		     
 		        $("#close-button").click(function() {
@@ -167,8 +144,6 @@
 		        $("#memoList").sortable({
 		        	 containment: '.memoListBox'
 		        });
-		        
-		        layerPopupOpacity();
 		        
 		        $("#font-up").click(function() {
 		        	
@@ -211,7 +186,41 @@
 		        });
 
 		     });
-			
+		    
+		    /**
+		     * noteBlock(노트패널), layer-popup(노트판), open-memo(노트 아이콘)의 포인터 set
+		     */
+			function setPanelPointer() {
+				$(".noteBlock").css("pointer-events", "none");
+	        	$("#open-memo").css("pointer-events", "auto");
+	        	
+	        	$( "#open-memo" ).draggable().on("mouseup", function() {
+		        	$(".noteBlock").css("pointer-events", "none");
+		        	$("#open-memo").css("pointer-events", "auto");
+		        	$("#layer-popup").css("pointer-events", "auto");
+		        }).on("mousedown", function() {
+		        	$(".noteBlock").css("pointer-events", "auto");
+		       	}).on("click", function(event){
+		       		event.preventDefault();
+		       		if ("none" == ($("#layer-popup").css("display"))) {
+						$("#layer-popup").css("display", "");
+		        	} else {
+						$("#layer-popup").css("display", "none");
+		        	}
+		       	});
+		     
+		        $('#layer-popup').on("mouseup", function() {
+		        	$(".noteBlock").css("pointer-events", "none");
+		        	$("#open-memo").css("pointer-events", "auto");
+		        	$("#layer-popup").css("pointer-events", "auto");
+		        }).on("mousedown", function() {
+		        	$(".noteBlock").css("pointer-events", "auto");
+		       	}).draggable();
+			}
+		    
+		    /**
+		     * layer-popup(노트판)의 투명도 조절
+		     */
 		    function layerPopupOpacity(){
 		    	$("#slider-range").slider({
 		            step: 1,
@@ -246,6 +255,7 @@
 		            }
 		        });
 		    }
+		    
 		    function newMemo() {
 		        $("#maskDiv").css("display", "");
 		        $("#selected-memo").css("display", "");
