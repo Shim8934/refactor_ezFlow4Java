@@ -36,6 +36,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.tomcat.jni.Status;
+import org.hsqldb.result.Result;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -1583,10 +1584,18 @@ public class EzPMSController {
 						}
 					}
 				} else {
+					String userRoleUrl = "/rest/ezPMS/projects/" + projectId + "/users/" + userId + "/role";
+					JSONObject roleResult = commonUtil.getJsonFromRestApi(userRoleUrl, param, request, "get", null);
+					String roleStatus = roleResult.get("status").toString();
+					
+					if (roleStatus.equals("ok")) {
+						model.addAttribute("userRole", roleResult.get("data"));
+					}
+					
 					if (param.get("groupId") != null) {
 						long groupId = Long.parseLong(param.get("groupId").toString());
 						String groupUrl = "/rest/ezPMS/groups/" + groupId + "/users/" + userId;
-
+						
 						param.put("projectId", projectId);
 
 						JSONObject result = commonUtil.getJsonFromRestApi(groupUrl, param, request, "get", null);

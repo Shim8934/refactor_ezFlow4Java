@@ -3463,18 +3463,18 @@ public class EzPMSGWController {
 
 				groupList.get(i).setGroupMember(groupMemberListTemp);
 				
-//				//실제 시작일과 종료일 기간 수				
-//				if (groupList.get(i).getRealProgress() == 100f) {
-//					
-//					Date realStartDate = new SimpleDateFormat("yyyy-MM-dd").parse(groupList.get(i).getRealStartDate());
-//					Date realEndDate = new SimpleDateFormat("yyyy-MM-dd").parse(groupList.get(i).getRealEndDate());
-//					
-//					int realWorkingday = ezPMSService.getWorkingDays(realStartDate, realEndDate, companyId, tenantId, lang);
-//					
-//					groupList.get(i).setRealStartEndDiff(realWorkingday);
-//				} else {
+				//실제 시작일과 종료일 기간 수				
+				if (groupList.get(i).getRealProgress() == 100f && groupList.get(i).getRealStartDate() != null && groupList.get(i).getRealEndDate() != null) {
+					
+					Date realStartDate = new SimpleDateFormat("yyyy-MM-dd").parse(groupList.get(i).getRealStartDate());
+					Date realEndDate = new SimpleDateFormat("yyyy-MM-dd").parse(groupList.get(i).getRealEndDate());
+					
+					int realWorkingday = ezPMSService.getWorkingDays(realStartDate, realEndDate, companyId, tenantId, lang);
+									
+					groupList.get(i).setRealStartEndDiff(realWorkingday);
+				} else {
 					groupList.get(i).setRealStartEndDiff(0);
-//				}
+				}
 			}
 
 			result.put("status", "ok");
