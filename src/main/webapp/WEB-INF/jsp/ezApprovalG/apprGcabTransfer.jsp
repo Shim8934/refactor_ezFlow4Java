@@ -433,7 +433,7 @@
 	                                <tr>
 	                                    <td id="tdSTaskCode">&nbsp;</td>
 	                                    <td style="width: 45px;">
-	                                        <a class="imgbtn"><span onclick="return btnChangeSTask_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
+	                                        <a class="imgbtn imgbck"><span onclick="return btnChangeSTask_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -465,7 +465,7 @@
 	                                <tr>
 	                                    <td id="tdDDeptName">&nbsp;</td>
 	                                    <td style="width: 45px;">
-	                                        <a class="imgbtn"><span onclick="return btnChangeDDept_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
+	                                        <a class="imgbtn imgbck"><span onclick="return btnChangeDDept_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -478,7 +478,7 @@
 	                                <tr>
 	                                    <td id="tdDTaskCode">&nbsp;</td>
 	                                    <td style="width: 45px;">
-	                                        <a class="imgbtn"><span onclick="return btnChangeDTask_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
+	                                        <a class="imgbtn imgbck"><span onclick="return btnChangeDTask_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
 	                                    </td>
 	                                </tr>
 	                            </table>

@@ -415,7 +415,7 @@
 	<tr> 
 		<td style="vertical-align:top">
 			<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1174'/></h2>
-			<div class="listview"  style="HEIGHT: 275px; WIDTH: 370px; overflow:AUTO" id="divList">
+			<div class="listview"  style="HEIGHT: 350px; WIDTH: 500px; overflow:AUTO" id="divList">
 				<div ID="OrgListView"></div>
 			</div>
 		</td>
@@ -425,7 +425,7 @@
   		</td>
 		<td style="vertical-align:top">
 			<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1175'/></h2>
-			<div class="listview"  style="HEIGHT: 275px; WIDTH: 180px;overflow-x:hidden;overflow-y:AUTO" id="divList2">
+			<div class="listview"  style="HEIGHT: 350px; WIDTH: 240px;overflow-x:hidden;overflow-y:AUTO" id="divList2">
 				<div ID="UserListView"></div>
 			</div>
 		</td>

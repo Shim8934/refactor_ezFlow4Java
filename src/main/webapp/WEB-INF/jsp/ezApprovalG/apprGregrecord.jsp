@@ -476,6 +476,17 @@
         var i, j = 0, x, a = MM_swapImage.arguments; document.MM_sr = new Array; for (i = 0; i < (a.length - 2) ; i += 3)
             if ((x = MM_findObj(a[i])) != null) { document.MM_sr[j++] = x; if (!x.oSrc) x.oSrc = x.src; x.src = a[i + 2]; }
     }
+    
+    function GetPublicCode2() {
+    	var publicCode2 = "";
+    	if (document.getElementsByName("rdoSecType2")[0].checked) {
+    		publicCode2 = "Y";
+    	} else {
+    		publicCode2 = "N";
+    	}
+    	
+    	return publicCode2;
+    }
 </SCRIPT>
 </head>
 <body class="popup">
@@ -627,10 +638,10 @@
                 <td><a class="imgbtn imgbck" style="height: 21px; margin-top: 2px;"><span id="btnAddSepAttach" onClick="return btnAddSepAttach_onclick()" style="line-height: 22px;" ><spring:message code='ezApprovalG.t949'/></span></a></td>
               </tr>
               <tr>
-             	<td id="blank_1" colspan="2" style="display: none">&nbsp;</td>
+             	<td id="blank_1" colspan="2" style="display: none;background-color: #f8f8fa;">&nbsp;</td>
               </tr>
               <tr>
-              	<td id="blank_2" colspan="2" style="display: none">&nbsp;</td>
+              	<td id="blank_2" colspan="2" style="display: none;background-color: #f8f8fa;">&nbsp;</td>
               </tr>
             </table></td>
           <td style="vertical-align:top" ><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1071'/></h2>
@@ -645,7 +656,7 @@
                   <input type="checkbox" name="special5" value="checkbox" style="height:13px;width:13px;padding:0px;margin:1.5px;"><span>&nbsp;<spring:message code='ezApprovalG.t987'/></span></td>
               </tr>
               <tr>
-                <th style="border-left: 0px;"><spring:message code='ezApprovalG.t109'/></th>
+                <th style="border-left: 0px;"><spring:message code='ezApprovalG.kes06'/></th>
                 <td><input type="radio" name="rdoSecType" value="1" checked onClick="return rdoSecType_onclick(this.value)"  style="height:13px;width:13px;padding:0px;margin:0px;">
                   <span><spring:message code='ezApprovalG.t47'/></span>
                   <input type="radio" name="rdoSecType" value="2" onClick="return rdoSecType_onclick(this.value)"  style="height:13px;width:13px;padding:0px;margin:0px;">
@@ -666,6 +677,16 @@
                   <input type="checkbox" name="selSecLevel6" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"><span>&nbsp;6<spring:message code='ezApprovalG.t1768'/></span>
                   <input type="checkbox" name="selSecLevel7" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"><span>&nbsp;7<spring:message code='ezApprovalG.t1768'/></span>
                   <input type="checkbox" name="selSecLevel8" value="checkbox" style="height:13px;width:13px;padding:0px;margin:3px 0px 3px 3px;"><span>&nbsp;8<spring:message code='ezApprovalG.t1768'/></span></td>
+              </tr>
+               <tr>
+                <th style="border-left: 0px;"><spring:message code='ezApprovalG.t109'/></th>
+                <td><input type="radio" name="rdoSecType2" value="Y" checked onClick="return rdoSecType2_onclick(this.value)" checked  style="height:13px;width:13px;padding:0px;margin:0px;">
+                  <span><spring:message code='ezApprovalG.t47'/></span>
+                  <input type="radio" name="rdoSecType2" value="N" onClick="return rdoSecType2_onclick(this.value)"  style="height:13px;width:13px;padding:0px;margin:0px;">
+                  <span><spring:message code='ezApprovalG.t1072'/></span>
+                  <select id="selSecLevel" style="width:60px;display:none" name="select2">
+                  </select>
+                </td>
               </tr>
               <tr>
                 <th style="border-left: 0px;"><spring:message code='ezApprovalG.t876'/></th>
@@ -699,10 +720,10 @@
                 <table class="file">
 	                <tr>
 		                <th id="btn_Attach" style="font-weight: normal; text-align: left; padding-right: 58px;"><spring:message code='ezApprovalG.t65'/></th>
-		                <td ><div id="lstAttachLink"></div></td>
-	                    <td >
-                            <a href="#" class="imgbtn imgbck">
-                                <span onclick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t268'/></span>
+		                <td style="border-right: 0px;"><div id="lstAttachLink"></div></td>
+	                    <td style="border-left: 0px;">
+                            <a href="#" class="imgbtn imgbck" style="height: 44px; margin: 0px;">
+                                <span onclick="return btnFileAttach_onclick()" style="line-height: 45px;"><spring:message code='ezApprovalG.t268'/></span>
                             </a>
                         </td>
 	                </tr>
