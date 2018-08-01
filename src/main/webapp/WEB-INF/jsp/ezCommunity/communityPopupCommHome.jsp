@@ -310,7 +310,7 @@
 	                    sConfirmType = "<spring:message code='ezCommunity.t699' />";
 	                break;
 	            case "3":
-	                sConfirmType = "<spring:message code='ezCommunity.t1015' />";
+	                sConfirmType = "<spring:message code='ezCommunity.t14' />";
 	                break;
 	        	}
 	            

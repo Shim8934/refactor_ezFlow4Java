@@ -2047,7 +2047,7 @@ function setbuttonenable() {
     if (oArrRows.length != 0) {
         if (pListTypeValue == 4 && tr.getAttribute("DATA7") != "" && tr.getAttribute("DATA9") == "011") {
             if (approvalFlag == 'G') {
-            	document.getElementById("tDocInfo").style.display = "";
+            	document.getElementById("tDocInfo").style.display = "none";
             }
         } else if (pListTypeValue != 4 && tr.getAttribute("DATA2") != "" && tr.getAttribute("DATA12") == "011") {
         	if (approvalFlag == 'G') {
