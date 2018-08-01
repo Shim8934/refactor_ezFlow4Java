@@ -553,7 +553,7 @@ public class EzCabinetGWController_h {
 	}
 	
 	private void getMoreEmailDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
-		CabinetColumnVO sender = columnList.stream().filter(column -> column.getColumnId().equals("sender")).collect(Collectors.toList()).get(0);
+		CabinetColumnVO sender    = columnList.stream().filter(column -> column.getColumnId().equals("sender")).collect(Collectors.toList()).get(0);
 		CabinetColumnVO receivers = columnList.stream().filter(column -> column.getColumnId().equals("receiver")).collect(Collectors.toList()).get(0);
 		
 		if (sender == null || sender.getColumnValue().equals("") || receivers == null || receivers.getColumnValue().equals("")) {
@@ -561,9 +561,21 @@ public class EzCabinetGWController_h {
 			throw new Exception();
 		}
 		
-		List<String> senderMail = new ArrayList<>();
-		senderMail.add(sender.getColumnValue());
-		SimpleUserMailVO senderUser = cabinetService.getUserInfoFromEmail(senderMail, primary, tenantId).get(0);
+		List<String> senderMail     = new ArrayList<>();
+		SimpleUserMailVO senderUser = new SimpleUserMailVO();
+		String senderEmail          = sender.getColumnValue();
+		senderMail.add(senderEmail);
+		List<SimpleUserMailVO> listSender = cabinetService.getUserInfoFromEmail(senderMail, primary, tenantId);
+		
+		if (listSender != null && listSender.size() > 0) {
+			senderUser = listSender.get(0);
+		}
+		else {
+			//Cannot find this sender user
+			senderUser.setUserEmail(senderEmail);
+			senderUser.setUserName(senderEmail);
+		}
+		
 		result.put("sender", senderUser);
 		
 		List<String> receiverMail           = Arrays.asList(receivers.getColumnValue().split(";"));
