@@ -1426,19 +1426,19 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
-		for (int i = 0; i < holidayList.size(); i++) {
-			if (holidayList.get(i).getIsRepeat() == 1) {
-				if (holidayList.get(i).getIsSolar() == 1) {
-					String solarHoliday = holidayList.get(i).getHoliday();
+		for (ProjectHolidayVO vo : holidayList) {
+			if (vo.getIsRepeat() == 1) {
+				if (vo.getIsSolar() == 1) {
+					String solarHoliday = vo.getHoliday();
 					solarHolidayMap.add(solarHoliday);
 				} else {
-					String lunarHoliday = holidayList.get(i).getHoliday();
+					String lunarHoliday = vo.getHoliday();
 					lunarHolidayMap.add(lunarHoliday);
 				}
 			} else {
 				Calendar cal = GregorianCalendar.getInstance();
 				try {
-					cal.setTime(sdf.parse(holidayList.get(i).getHoliday()));
+					cal.setTime(sdf.parse(vo.getHoliday()));
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
@@ -2412,7 +2412,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			
 			map1.replace("realWorkingday", taskVO.getRealWorkingday() - calWorkingDays);
 			//업무수정하면서 워킹데이합계 재계산
-			ezPMSDAO.updateProjectWorkingdaySum(map1);
+			ezPMSDAO.updateProjectWorkingdaySum2(map1);
 			// 가중치 계산
 			updateTaskWDNW(task, calWorkingDays);
 			
@@ -3281,6 +3281,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] ezPMS updateAllTaskDatesInPrj Started");
 		ezPMSDAO.updateAllTaskDatesInPrj(map);
 		updateAllTaskWeight(map);
+		ezPMSDAO.updateProjectWorkingdaySum2(map);
 		LOGGER.debug("[SERVICE] ezPMS updateAllTaskDatesInPrj Ended");
 	}
 
@@ -3324,7 +3325,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			
 			int projectWorkingdaySum = ezPMSDAO.getProjectWorkingdaySum(taskVO);
 			map.put("workingdaySum", projectWorkingdaySum);
-			ezPMSDAO.updateAllTaskWeight((HashMap<String, Object>)map);
+			ezPMSDAO.updateAllTaskWeight(map);
 		}
 	}
 

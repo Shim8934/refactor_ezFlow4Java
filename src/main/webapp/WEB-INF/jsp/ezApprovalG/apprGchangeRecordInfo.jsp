@@ -206,6 +206,9 @@
 
                 var PublicCode = getNodeText(objXml.documentElement.getElementsByTagName("PUBLICCODE")[0]);
                 InitPublicCode(PublicCode);
+                
+                var PublicCode2 = getNodeText(objXml.documentElement.getElementsByTagName("PUBLICCODE2")[0]);
+                InitPublicCode2(PublicCode2);
 
                 txtLimitRange.value = getNodeText(objXml.documentElement.getElementsByTagName("LIMITRANGE")[0]);
                 g_SCFlag = getNodeText(objXml.documentElement.getElementsByTagName("SPECIALFLAG")[0]);
@@ -353,6 +356,16 @@
         }
         rdoSecType_onclick("");
     }
+    function InitPublicCode2(pCode) {
+        var objCode = new String(pCode);
+		if (objCode == "N") {
+// 			document.getElementsByName("rdoSecType2")[1].checked = true;
+			$("#rdoSecType2N").prop("checked", true)
+		} else {
+// 			document.getElementsByName("rdoSecType2")[0].checked = true;
+			$("#rdoSecType2Y").prop("checked", true)
+		}
+    }
     function GetRecordSimpleInfo(pRecID) {
         var XmlHttp = createXMLHttpRequest();
         var xmlpara = createXmlDom();
@@ -461,6 +474,8 @@
         {
             createNodeAndInsertText(xmlpara, objNode, "SPECIALRECCODE", GetSpecialRecInfo());
             createNodeAndInsertText(xmlpara, objNode, "PUBLICCODE", GetPublicCode());
+            //공개비공개 추가
+            createNodeAndInsertText(xmlpara, objNode, "PUBLICCODE2", GetPublicCode2());
             createNodeAndInsertText(xmlpara, objNode, "LIMITRANGE", txtLimitRange.value);
             createNodeAndInsertText(xmlpara, objNode, "CHANGEREASON", txtChangeReason.value);
             createNodeAndInsertText(xmlpara, objNode, "SCFLAG", g_SCFlag);
@@ -564,14 +579,14 @@
             divBasicInfo.style.display = "";
             divClassInfo.style.display = "none";
 			//팝업창 가로 사이즈 유지, 세로만 변경
-          	window.resizeTo(window.outerWidth, 550);
+          	window.resizeTo(window.outerWidth, 605);
         }
         else if (g_ModifyFlag == "1")
         {
             divBasicInfo.style.display = "none";
             divClassInfo.style.display = "";
             
-          	window.resizeTo(window.outerWidth, 585);
+          	window.resizeTo(window.outerWidth, 605);
         }
     }
     function MM_swapImgRestore() {
@@ -594,6 +609,17 @@
     function MM_swapImage() {
         var i, j = 0, x, a = MM_swapImage.arguments; document.MM_sr = new Array; for (i = 0; i < (a.length - 2) ; i += 3)
             if ((x = MM_findObj(a[i])) != null) { document.MM_sr[j++] = x; if (!x.oSrc) x.oSrc = x.src; x.src = a[i + 2]; }
+    }
+    
+    function GetPublicCode2() {
+    	var publicCode2 = "";
+    	if (document.getElementsByName("rdoSecType2")[0].checked) {
+    		publicCode2 = "Y";
+    	} else {
+    		publicCode2 = "N";
+    	}
+    	
+    	return publicCode2;
     }
 </script>
 </head>
@@ -674,19 +700,19 @@
   <table class="content" style="margin-top:10px">
     <tr>
       <th style="padding-right: 34px;"><spring:message code='ezApprovalG.t875'/></th>
-      <td><Input type="checkbox" name="special1" id="special1" value="Y">
+      <td><Input type="checkbox" name="special1" id="special1" value="Y" style="height:17px">
         <spring:message code='ezApprovalG.t983'/><br/>
-        <Input type="checkbox" name="special2" id="special2" value="Y">
+        <Input type="checkbox" name="special2" id="special2" value="Y" style="height:17px">
         <spring:message code='ezApprovalG.t984'/><br/>
-        <Input type="checkbox" name="special3" id="special3" value="Y">
+        <Input type="checkbox" name="special3" id="special3" value="Y" style="height:17px">
         <spring:message code='ezApprovalG.t985'/><br/>
-        <Input type="checkbox" name="special4" id="special4" value="Y">
+        <Input type="checkbox" name="special4" id="special4" value="Y" style="height:17px">
         <spring:message code='ezApprovalG.t986'/><br/>
-        <Input type="checkbox" name="special5" id="special5" value="Y">
+        <Input type="checkbox" name="special5" id="special5" value="Y" style="height:17px">
         <spring:message code='ezApprovalG.t987'/></td>
     </tr>
     <tr>
-      <th ><spring:message code='ezApprovalG.t109'/></th>
+      <th ><spring:message code='ezApprovalG.kes06'/></th>
       <td><Input type="radio" name="rdoSecType" value="1" checked onClick="return rdoSecType_onclick(this.value)">
         <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t47'/></span>
         <Input type="radio" name="rdoSecType" value="2" onClick="return rdoSecType_onclick(this.value)">
@@ -730,6 +756,17 @@
           </tr>
         </table></td>
     </tr>
+    <tr>
+      <th ><spring:message code='ezApprovalG.t109'/></th>
+      <td><Input type="radio" name="rdoSecType2" id="rdoSecType2Y" value="Y" checked >
+        <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t47'/></span>  
+        <Input type="radio"  name="rdoSecType2" id="rdoSecType2N" value="N">
+        <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t988'/></span>
+        <Select id="selSecLevel" style="width:60px;display:none">
+        </Select>
+      </td>
+    </tr>
+    
   </table>
 </Div>
 <table class="content" style="margin-top:10px">

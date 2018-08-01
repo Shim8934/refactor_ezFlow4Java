@@ -1,4 +1,4 @@
-﻿﻿var g_CabListXml;
+﻿﻿﻿var g_CabListXml;
 var bSpecialFlag = "0";
 var g_szSCListXml = "";
 var g_arrSCName = new Array();
@@ -181,6 +181,7 @@ function RegisterRecord() {
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "CABINETID", trim_Cross(g_CabID));
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "SPECIALREC", GetSpecialRecInfo());
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "PUBLICCODE", GetPublicCode());
+    objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "PUBLICCODE2", GetPublicCode2());
     objNode = createNodeAndAppandNodeText(xmlpara, objRoot, objNode, "LIMITRANGE", txtLimitRange.value);
     if (ListTypeFlag == "1") {
         if (pRegType == "2" || pRegType == "4")
