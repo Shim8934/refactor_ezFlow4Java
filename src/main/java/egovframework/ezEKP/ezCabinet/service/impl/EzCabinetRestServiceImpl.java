@@ -571,4 +571,17 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject modifyRelatedEmail(HttpServletRequest request, String userId, String itemId, String title, String relatedList) throws Exception {
+		String url                = "/rest/ezcabinet/relate-item/modify/email";
+		JSONObject jsonBody       = new JSONObject();
+		jsonBody.put("userId", userId);
+		jsonBody.put("title",  title);
+		jsonBody.put("itemId", itemId);
+		jsonBody.put("relate", relatedList);
+		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
+		return resultBody;
+	}
 }

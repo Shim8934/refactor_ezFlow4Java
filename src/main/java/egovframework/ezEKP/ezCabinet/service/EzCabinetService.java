@@ -89,6 +89,9 @@ public interface EzCabinetService {
 	//Save related item functions
 	JSONObject saveEmailItem(String realPath, int parseInt, String title, String sender, String attach, String mode, String content, String receiver, String forward, String dateTime, Locale locale, LoginVO userInfo) throws Exception;
 	
-	//Get mail information functions
-	List<SimpleUserMailVO> getUserInfoFromEmail(List<String> receiverMail, String primary, int tenantId);
+	//Get email information functions
+	List<SimpleUserMailVO> getUserInfoFromEmail(List<String> receiverMail, String primary, int tenantId) throws Exception;
+	
+	//Modify related email item function 
+	JSONObject modifyEmailItem(int currentItemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception;
 }

@@ -733,6 +733,28 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
+	@RequestMapping(value="/ezCabinet/modifyEmailItem.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonModyfyRelatedEmail(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonModyfyRelatedEmail is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String itemId          = request.getParameter("itemId")      != null ? request.getParameter("itemId")      : "";
+		String title           = request.getParameter("title")       != null ? request.getParameter("title")       : "";
+		String relatedList     = request.getParameter("relatedList") != null ? request.getParameter("relatedList") : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		if (itemId.equals("") || title.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.modifyRelatedEmail(request, userInfo.getId(), itemId, title, relatedList);
+		
+		logger.debug("jsonModyfyRelatedEmail finishes!");
+		return resultObj.toString();
+	}
+	
 	private String getFileSize(long fileSize) {
 		String fileSize_ = "";
 		

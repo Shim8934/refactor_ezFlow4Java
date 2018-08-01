@@ -249,7 +249,7 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 	public List<CabinetColumnVO> getAllRelatedColumnsOfItem(Map<String, Object> map) {
 		return (List<CabinetColumnVO>)list("EzCabinetDAO.getAllRelatedColumnsOfItem", map);
 	}
-
+	
 	public List<SimpleUserMailVO> getUserInfoFromEmail(Map<String, Object> map) {
 		return (List<SimpleUserMailVO>)list("EzCabinetDAO.getUserInfoFromEmail", map);
 	}

@@ -137,6 +137,7 @@
 					var sender      = fileItem.sender;
 					var receivers   = fileItem.receivers;
 					var forwards    = fileItem.forwards;
+					relatedArr      = [];
 					
 					//파일상세
 					document.getElementById("creator").onclick    = function(e) {showUserInfoFromId(result["creatorId"]);};
@@ -249,6 +250,13 @@
 					}
 				}
 				
+				function readRelatedItem(itemId, useStatus) {
+					if(useStatus && useStatus == 0) {alert(CabinetMessages.strNoRelated); return;}
+					
+					if(itemPopup) {itemPopup.close();}
+					itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "itemDetail", getOpenWindowfeature(600, 565));
+				}
+				
 				function getOpenWindowfeature(popUpW, popUpH) {
 					var heigth   = window.screen.availHeight;
 					var width    = window.screen.availWidth;
@@ -318,32 +326,6 @@
 					relatedBttn.appendChild(relSpanElmt);
 					relatedBttn.onclick       = function(e) {getRelatedPopUp();};
 					relDocDivElmt.appendChild(relatedBttn);
-					
-					//Set delete button in attach file
-					var iframeElmt = document.getElementById("mailIframe");
-					var contentWd  = iframeElmt.contentWindow || iframeElmt.contentDocument;
-					var attachDiv  = contentWd.document.getElementsByClassName("previewmail_addfile cabattach")[0];
-					if (attachDiv) {
-						var liList = attachDiv.lastElementChild.children;
-						if (liList.length > 0) {
-							for (var i = 0, len = liList.length; i < len; i++) {
-								var liElmt = liList[i];
-								var spanElmt = document.createElement("span");
-								spanElmt.className = "icon_rbtn";
-								spanElmt.innerHTML = "<img src='/images/icon_reddelete.gif'>";
-								spanElmt.onclick   = function(e) {removeAttachFile(e);};
-								liElmt.appendChild(spanElmt);
-							}
-						}
-					}
-				}
-				
-				function removeAttachFile(e) {
-					e.stopPropagation();
-					var spanElmt = e.currentTarget;
-					var liElmt   = spanElmt.parentElement;
-					var ulElmt   = liElmt.parentElement;
-					ulElmt.removeChild(liElmt);
 				}
 				
 				function filePrint() {
@@ -398,14 +380,11 @@
 					
 					if (!title.replace(/\s/g,'')) {
 						alert(CabinetMessages.strNoTitle);
-						document.getElementById("itemTtl").value = "";
-						document.getElementById("itemTtl").focus;
+						var inputTtl   = document.getElementById("itemTtl");
+						inputTtl.value = "";
+						inputTtl.focus();
 						return;
 					}
-					
-					//Check attach list here
-					var listAttach = [];
-					
 					
 					$.ajax({
 						type: "POST",
@@ -413,8 +392,7 @@
 						data: {
 							"itemId"      : itemId,
 							"title"       : title,
-							"relatedList" : JSON.stringify(relatedArr),
-							"listAttach"  : JSON.stringify(listFiles)
+							"relatedList" : JSON.stringify(relatedArr)
 						},
 						dataType: "JSON",
 						async: false,
@@ -425,13 +403,21 @@
 								case 1 : alert(CabinetMessages.strParamErr); break;
 								case 2 : alert(CabinetMessages.strError)   ; break;
 								case 3 : alert(CabinetMessages.strPerm)    ; break;
-								default: alert(CabinetMessages.strError)   ; return; 
+								case 4 : alert(CabinetMessages.strType)    ; break;
+								default: alert(CabinetMessages.strError)   ; return;
 							}
 						},
 						error : function(error) {
 							alert(CabinetMessages.strError);
 						}
 					});
+				}
+				
+				function afterChangeSuccessfully() {
+					alert(CabinetMessages.strModify);
+					var parentWd = window.opener;
+					if (parentWd && parentWd.CabinetItem) {parentWd.CabinetItem.reload();}
+					closeWindow();
 				}
 				
 				function cancelChanges() {

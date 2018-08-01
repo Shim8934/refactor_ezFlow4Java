@@ -99,8 +99,9 @@
 					
 					if (!title.replace(/\s/g,'')) {
 						alert(CabinetMessages.strNoTitle);
-						document.getElementById("itemTtl").value = "";
-						document.getElementById("itemTtl").focus;
+						var inputTtl   = document.getElementById("itemTtl");
+						inputTtl.value = "";
+						inputTtl.focus();
 						return;
 					}
 					
