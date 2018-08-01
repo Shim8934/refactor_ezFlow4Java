@@ -10,20 +10,20 @@ function SelectTask(pDeptCode, pDeptName, pInitFlag, pMultiSelect, opentype, Com
     selecttask_cross_dialogArguments[0] = para;
     if (opentype == undefined && CompleteFunction == undefined) {
         selecttask_cross_dialogArguments[1] = SelectTask_Complete;
-        DivPopUpShow(790, 430, url);
+        DivPopUpShow(850, 430, url);
     }
     else if (opentype == undefined && CompleteFunction != undefined) {
         selecttask_cross_dialogArguments[1] = CompleteFunction;
-        DivPopUpShow(790, 430, url);
+        DivPopUpShow(850, 430, url);
     }
     else if (opentype != undefined && CompleteFunction == undefined) {
         selecttask_cross_dialogArguments[1] = SelectTask_Complete;
-        var OpenWin = window.open(url, "SelectTask_Cross", GetOpenWindowfeature(790, 430));
+        var OpenWin = window.open(url, "SelectTask_Cross", GetOpenWindowfeature(850, 430));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
         selecttask_cross_dialogArguments[1] = CompleteFunction;
-        var OpenWin = window.open(url, "SelectTask_Cross", GetOpenWindowfeature(790, 430));
+        var OpenWin = window.open(url, "SelectTask_Cross", GetOpenWindowfeature(850, 430));
         try { OpenWin.focus(); } catch (e) { }
     }
     return rtn;
