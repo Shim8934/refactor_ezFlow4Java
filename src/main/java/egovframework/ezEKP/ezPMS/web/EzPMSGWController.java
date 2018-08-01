@@ -527,7 +527,7 @@ public class EzPMSGWController {
 					ezPMSService.updateProjectStatus(Long.parseLong(projectIdList[i]), status, info.getTenantId(),
 							changeDate, planEndDate);
 
-					if (nowStatus.equals("W") && status.equals("P")) {
+					if (status.equals("P")) {
 						ezPMSService.updateProjectRealDate(Long.parseLong(projectIdList[i]), info.getTenantId(),
 								changeDate, status, planEndDate, companyId, lang);
 					}
