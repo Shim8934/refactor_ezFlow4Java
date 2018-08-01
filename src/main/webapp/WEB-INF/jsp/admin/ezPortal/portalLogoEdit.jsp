@@ -403,7 +403,7 @@
 		                        <input type="hidden" name="mailgubun" id="mailgubun" />
 		                    </form>
 		
-		                    <td width="100%" align="center" nowrap><a class="imgbtn imgbck"><span onclick="changeNormalImage()"><spring:message code='ezPortal.t66'/></span></a><a class="imgbtn imgbck"><span onclick="removeNormalImage()"><spring:message code='ezPortal.t67'/></span></a></td>
+		                    <td width="100%" align="center" nowrap><a class="imgbtn imgbck" style="margin-right: 3px;"><span onclick="changeNormalImage()"><spring:message code='ezPortal.t66'/></span></a><a class="imgbtn imgbck"><span onclick="removeNormalImage()"><spring:message code='ezPortal.t67'/></span></a></td>
 						</tr> 
 					</table>
 				</td> 
