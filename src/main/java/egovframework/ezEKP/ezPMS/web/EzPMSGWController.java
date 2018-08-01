@@ -2368,13 +2368,14 @@ public class EzPMSGWController {
 		JSONObject result = new JSONObject();
 
 		try {
-			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
-			int tenantId = info.getTenantId();
-			String companyId = info.getCompanyId();
-			Long groupId = Long.parseLong(request.getParameter("groupId"));
-			String projectId = request.getParameter("projectId");
+			String serverName 	= request.getHeader("x-user-host");
+			MCommonVO info 		= mOptionService.commonInfoWeb(serverName, userId);
+			String lang 		= commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			int tenantId 		= info.getTenantId();
+			String companyId 	= info.getCompanyId();
+			Long groupId 		= Long.parseLong(request.getParameter("groupId"));
+			Long originGroupId 	= Long.parseLong(request.getParameter("originGroupId"));
+			String projectId 	= request.getParameter("projectId");
 
 			List<Map<String, Object>> taskMemberList1 = (List<Map<String, Object>>) jsonParam.get("managerList");
 			List<TaskMemberVO> taskMemberList2 = new ArrayList<TaskMemberVO>();
@@ -2564,6 +2565,11 @@ public class EzPMSGWController {
 
 			}
 
+			if(groupId != originGroupId) {
+				ezPMSService.updateGroupLatestInfo(Long.parseLong(projectId), groupId, tenantId, lang);
+				ezPMSService.updateGroupLatestInfo(Long.parseLong(projectId), originGroupId, tenantId, lang);
+			}
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", roleCheck);
@@ -3220,7 +3226,7 @@ public class EzPMSGWController {
 				String planEndDate = request.getParameter("planEndDate");
 				Date start = new SimpleDateFormat("yyyy-MM-dd").parse(planStartDate);
 				Date end = new SimpleDateFormat("yyyy-MM-dd").parse(planEndDate);
-
+				
 				projectTaskVO.setTenantId(tenantId);
 				projectTaskVO.setTaskId(taskId);
 				projectTaskVO.setProjectId(projectId);
@@ -3261,7 +3267,7 @@ public class EzPMSGWController {
 						startCal.add(Calendar.DATE, 1);
 					}
 				}
-
+			
 //				for (int i = 0; i < taskMemberList.size(); i++) {
 //					String memberId = taskMemberList.get(i).getUserId();
 //					LOGGER.debug(memberId);
@@ -3363,6 +3369,8 @@ public class EzPMSGWController {
 //					}
 //
 //				}
+				
+				
 			}
 
 			result.put("status", "ok");
@@ -5377,13 +5385,18 @@ public class EzPMSGWController {
 				Date realEndDate = (Date) minMaxDates.get("realEndDate");
 				LOGGER.debug("min realStartDate : " + realStartDate);
 				LOGGER.debug("max realEndDate   : " + realEndDate);
-				map.put("realStartDate", realStartDate);
+				
+				if(realStartDate != null) {
+					map.put("realStartDate", realStartDate);
+				} else {
+					map.remove("realStartDate");
+				}
 				
 				int completedTaskCount = (int)list.stream().filter(vo -> vo.getStatus().equals("C")).count();
 				
 				LOGGER.debug("completedTaskCount : " + completedTaskCount + ", list.size() : " + list.size());
 				
-				if(completedTaskCount == list.size()) {
+				if(realEndDate != null && completedTaskCount == list.size()) {
 					map.put("realEndDate", realEndDate);
 				} else {
 					map.remove("realEndDate");
