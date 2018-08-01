@@ -695,12 +695,12 @@
               </tr>
             </table>
             <div id="divAudioVisualDummy" style="display:none"> </div>
-            <div id="divAudioVisual" style="height: 180px;">
+            <div id="divAudioVisual" style="height: 144px;">
              <%--  <h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1074'/></h2> --%>
               <table style="width:100%; height:100%; border-left: 0px;border-top: 0px;" class="content">
                 <tr>
-                  <th style="border-left: 0px;border-top: 0px;height: 85px"><spring:message code='ezApprovalG.t1183'/></th>
-                  <td style="border-top: 0px;"><TextArea style="width:97%; height:72px; margin-top: 1px; resize:none; overflow: auto" id=txtSummary name=txtSummary></TextArea>
+                  <th style="border-left: 0px;border-top: 0px;height: 55px"><spring:message code='ezApprovalG.t1183'/></th>
+                  <td style="border-top: 0px;"><TextArea style="width:97%; height:43px; margin:1px 0px 0px 0px; resize:none; overflow: auto" id=txtSummary name=txtSummary></TextArea>
                   </td>
                 </tr>
                 <tr>
