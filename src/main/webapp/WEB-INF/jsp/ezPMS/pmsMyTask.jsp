@@ -69,6 +69,7 @@ $(function() {
 		$("#taskSearch").css("display", "");
 		$("#projectSearch").css("display", "none")
 		searchClear();
+		clearValue();
 		setMyTaskList("myTask");
 	});
 	
@@ -94,6 +95,7 @@ $(function() {
 		}
 
 		searchClear();
+		clearValue();
 		setMyTaskList("myGroup");
 	});
 	
@@ -116,6 +118,7 @@ $(function() {
 		}
 
 		searchClear();
+		clearValue();
 		setMyTaskList("myProject")
 	});
 	
@@ -170,6 +173,31 @@ function searchClear() {
 	$("#PEdatepicker").val("");
 	$("#PsearchByOverview").val("");
 	
+}
+
+function clearValue() {
+	//업무 및 그룹 검색 초기화
+	if (nowPosition == "myTask") {
+		searchByTaskName = "";
+		searchByUpperGroupName = "";
+	} else if (nowPosition == "myGroup") {
+		searchByGroupName = "";
+		searchByUpperGroupName = "";
+	}
+	
+
+	searchByUser = "";
+	searchByProjectName = "";
+	Sdatepicker = "";
+	Edatepicker = "";
+	searchByOverview = "";
+	
+	//프로젝트 관련 검색 초기화
+	PsearchByProjectName = "";
+	PsearchByUser = "";
+	PSdatepicker = "";
+	PEdatepicker = "";
+	PsearchByOverview = "";
 }
 
 $(document).ready(function() {
@@ -339,6 +367,7 @@ function setMyTaskList(position) {
 
 function searchStatus(statusValue) {
 	status = statusValue;
+	currentPage = 1;
 	
 	setMyTaskList(nowPosition);
 }
