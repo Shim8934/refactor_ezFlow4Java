@@ -123,6 +123,7 @@
 		    $(function() {
 		    	chagePosition();
 		    	setSizeOfLayer();
+		    	defaultPointer();
 		    	setPanelPointer();
 		    	layerPopupOpacity();
 				
@@ -188,14 +189,21 @@
 
 		     });
 		    
+		    // 초기 pointet-event set
+		    function defaultPointer() {
+		    	$(".noteBlock").css("pointer-events", "none");
+	        	$("#open-memo").css("pointer-events", "auto");
+		    }
 		    /**
 		     * noteBlock(노트패널), layer-popup(노트판), open-memo(노트 아이콘)의 포인터 set
 		     */
 			function setPanelPointer() {
-				$(".noteBlock").css("pointer-events", "none");
-	        	$("#open-memo").css("pointer-events", "auto");
-	        	
-	        	$("#open-memo" ).draggable().on("mouseup", function() {
+	        	$("#open-memo" ).draggable({
+	        		containment:".noteBlock",
+	        		stop:function(){
+	        			defaultPointer();		
+	        		}
+	        	}).on("mouseup", function() {
 		        	$(".noteBlock").css("pointer-events", "none");
 		        	$("#open-memo").css("pointer-events", "auto");
 		        	$("#layer-popup").css("pointer-events", "auto");
@@ -217,7 +225,14 @@
 		        	$("#layer-popup").css("pointer-events", "auto");
 		        }).on("mousedown", function() {
 		        	$(".noteBlock").css("pointer-events", "auto");
-		       	}).draggable();
+		       	}).draggable({
+		       		containment:".noteBlock",
+	        		stop:function(){
+	        			$(".noteBlock").css("pointer-events", "none");
+			        	$("#open-memo").css("pointer-events", "auto");
+			        	$("#layer-popup").css("pointer-events", "auto");		
+	        		} 
+		       	});
 			}
 		    
 		    /**
