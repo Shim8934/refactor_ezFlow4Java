@@ -273,7 +273,7 @@ public interface EzPMSService {
 
 	public HashSet<String> getHolidayList(String planStartDate, String planEndDate, int tenantId, String companyId, String lang);
 	
-	public List<ProjectBoardFolderVO> getBoardFolderList (long projectId, int tenantId, String lang);
+	public List<ProjectBoardFolderVO> getBoardFolderList (long projectId, int tenantId, String lang, String location);
 	
 	public ProjectBoardFolderVO getBoardFolder (long projectId, int tenantId, String lang, long folderId);
 	

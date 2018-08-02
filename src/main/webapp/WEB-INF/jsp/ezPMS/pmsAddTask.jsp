@@ -8,10 +8,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezPMS.t89' /></title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
+<link rel="stylesheet" href="/css/ezPMS/default/style.css"
+	type="text/css" />
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-<script type="text/javascript" src="/js/dist/jstree.js"></script>
+<script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <!-- date picker -->
 <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
@@ -335,7 +337,13 @@ function addTask() {
 			var logContent = "[" + upperGroupName + "<spring:message code='ezPMS.t127'/>" + taskName + "<spring:message code='ezPMS.t315'/>"; 
 			addTaskLog(projectId, 1, groupId, null, logContent);
 			updateGroupRealStartEndDate(groupId);
-			opener.location.reload();
+			
+			if (typeof(opener.setContentList()) == undefined) {
+				opener.location.reload();
+			} else {
+				opener.getTaskTree();
+			}
+			
 			popupClose();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {

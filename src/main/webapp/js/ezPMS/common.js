@@ -1,8 +1,11 @@
 /**
  * 프로젝트 업무트리 가져오기
  */
-function getProjectTaskTree(containerId, data, location) {
-	$("#"+containerId).jstree({
+function getProjectTaskTree(containerId, data, location, idx) {
+	$("#" + containerId).jstree('destroy');
+	console.log(data);
+	console.log(idx);
+	$("#" + containerId).jstree({
 		'core' : {
 			'data' : data,
 			'multiple' : false,
@@ -42,12 +45,11 @@ function getProjectTaskTree(containerId, data, location) {
 	})
 	.bind("ready.jstree", function (event, data) {
 		$(this).jstree("open_all");
-		var firstNode = $(this).find(".jstree-anchor");
+		var firstNode = $(".jstree-anchor");
+		var firstNodeId = firstNode[idx].id;
 		
-		$("#" + firstNode[0].id).addClass("jstree-clicked");
-		$("#" + firstNode[0].id).prev().prev().addClass("jstree-wholerow-clicked");
-		
-		var firstNodeId = firstNode[0].id;
+		$("#" + firstNodeId).addClass("jstree-clicked");
+		$("#" + firstNodeId).prev().prev().addClass("jstree-wholerow-clicked");
 		
 		firstNodeId = firstNodeId.substring(0, firstNodeId.indexOf("_"));
 		
@@ -58,6 +60,7 @@ function getProjectTaskTree(containerId, data, location) {
 	
 	})
 	.on("select_node.jstree", function(e, data) {
+		$(this).jstree("open_all");
 		if (location == "taskLog" || location == "taskList") {
 			if (data.node.id.indexOf("t") != -1) {
 				taskId = data.node.id.substring(1);

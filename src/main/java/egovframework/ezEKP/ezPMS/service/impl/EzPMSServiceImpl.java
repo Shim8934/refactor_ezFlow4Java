@@ -3465,7 +3465,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectBoardFolderVO> getBoardFolderList(long projectId, int tenantId, String lang) {
+	public List<ProjectBoardFolderVO> getBoardFolderList(long projectId, int tenantId, String lang, String location) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
@@ -3480,9 +3480,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map.put("folderId", vo.getId());
 			
 			int taskGroupCount = ezPMSDAO.getBoardListCount(map);
-
-			if (taskGroupCount != 0) {
-				vo.setText(vo.getText() + " (" + taskGroupCount + ")");
+			
+			if (location == null || !location.equals("folderSetting")) {
+				if (taskGroupCount != 0) {
+					vo.setText(vo.getText() + " (" + taskGroupCount + ")");
+				}
 			}
 		}
 		

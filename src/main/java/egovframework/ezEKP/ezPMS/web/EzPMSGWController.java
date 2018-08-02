@@ -5015,8 +5015,9 @@ public class EzPMSGWController {
 
 			int tenantId = info.getTenantId();
 			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
+			String location = request.getParameter("location");
 			
-			List<ProjectBoardFolderVO> folderList = ezPMSService.getBoardFolderList(projectId, tenantId, lang);
+			List<ProjectBoardFolderVO> folderList = ezPMSService.getBoardFolderList(projectId, tenantId, lang, location);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

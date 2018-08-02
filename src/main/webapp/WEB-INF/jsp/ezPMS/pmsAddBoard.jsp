@@ -254,6 +254,7 @@
 					}
 					
 					if(typeof opener.getBoardList == 'function') {
+						opener.getFolderTree();
 						opener.getBoardList();
 					}
 					

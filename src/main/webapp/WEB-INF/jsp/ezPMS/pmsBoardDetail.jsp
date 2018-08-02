@@ -110,6 +110,11 @@
 						//addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + title.trim() + "<spring:message code='ezPMS.t207' />");
 						window.close();
 						opener.getBoardList();
+						
+						if (typeof(opener.getFolderTree() != undefined)) {
+							opener.getFolderTree();
+						}
+						
 					} else {
 						alert("<spring:message code='ezPMS.t108' />");
 					}

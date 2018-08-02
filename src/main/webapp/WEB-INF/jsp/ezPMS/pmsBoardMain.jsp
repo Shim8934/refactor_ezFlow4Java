@@ -66,7 +66,7 @@
 		treeData = ${data};
 		treeData = JSON.parse(JSON.stringify(treeData));
 		
-		getProjectTaskTree("taskTreeArea", treeData, "board");
+		getProjectTaskTree("taskTreeArea", treeData, "board", 0);
 		getDatePicker();
 		
 		$("#taskTreeArea").on("click", ".jstree-anchor", function() {		
@@ -97,6 +97,23 @@
 		var feature = GetOpenPosition(790, 800);
 		window.open("/ezPMS/goAddBoard.do?projectId=" + projectId + "&folderId=" + folderId + "&mode=new", 
 					"", "width=790, height=800, resizable=no, scrollbars=no, status=no" + feature);
+	}
+	
+	function getFolderTree() {
+		$.ajax({
+			type : "POST",
+			dataType : "json",
+			async: false,
+			data : {"projectId" : projectId},
+			url : "/ezPMS/getFolderList.do",
+			success : function(data) {
+				treeData = JSON.parse(JSON.stringify(data));
+				var clickedData = $(".jstree-clicked");
+				var idx = $(".jstree-anchor").index(clickedData);
+				
+				getProjectTaskTree("taskTreeArea", treeData, "board", idx);
+			}
+		});
 	}
 	
 	function getBoardList() {
@@ -221,6 +238,7 @@
 						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + title.trim() + "<spring:message code='ezPMS.t207' />");
 					}
 					
+					getFolderTree();
 					getBoardList();
 				} else {
 					alert("<spring:message code='ezPMS.t108' />");

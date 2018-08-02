@@ -50,7 +50,6 @@
 			data : JSON.stringify(data),
 			success : function(result) {
 				if(result.data == 'success') {
-					alert("<spring:message code='ezPMS.t223' />");
 					doubleSubmitFlag = false;
 					currentPage = 1;
 					
@@ -68,7 +67,8 @@
 					}
 										
 					addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t127' />" + commentContent.trim() +"<spring:message code='ezPMS.t126' />");
-					getCommentList();
+
+					getTaskTree();
 				} else {
 					alert("<spring:message code='ezPMS.t224' />");
 					doubleSubmitFlag = false;
@@ -108,8 +108,8 @@
 						var taskId = selectedTR.attr("data-taskId");
 												
 						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + content.trim() + "<spring:message code='ezPMS.t225' />");
-							
-						getCommentList();
+
+						getTaskTree();
 					} else {
 						alert("<spring:message code='ezPMS.t108' />");
 					}	
@@ -165,8 +165,8 @@
 					var taskId = selectedTR.attr("data-taskId");
 						
 					addTaskLog(projectId, 2, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + content.trim() + "<spring:message code='ezPMS.t226' />" + commentContent.trim() +  "<spring:message code='ezPMS.t227' />");
-						
-					getCommentList();
+
+					getTaskTree();
 				} else {
 					alert("<spring:message code='ezPMS.t128' />");
 				}	
