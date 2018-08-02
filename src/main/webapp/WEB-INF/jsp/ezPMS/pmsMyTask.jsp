@@ -69,6 +69,7 @@ $(function() {
 		$("#taskSearch").css("display", "");
 		$("#projectSearch").css("display", "none")
 		searchClear();
+		clearValue();
 		setMyTaskList("myTask");
 	});
 	
@@ -94,6 +95,7 @@ $(function() {
 		}
 
 		searchClear();
+		clearValue();
 		setMyTaskList("myGroup");
 	});
 	
@@ -116,6 +118,7 @@ $(function() {
 		}
 
 		searchClear();
+		clearValue();
 		setMyTaskList("myProject")
 	});
 	
@@ -170,6 +173,31 @@ function searchClear() {
 	$("#PEdatepicker").val("");
 	$("#PsearchByOverview").val("");
 	
+}
+
+function clearValue() {
+	//업무 및 그룹 검색 초기화
+	if (nowPosition == "myTask") {
+		searchByTaskName = "";
+		searchByUpperGroupName = "";
+	} else if (nowPosition == "myGroup") {
+		searchByGroupName = "";
+		searchByUpperGroupName = "";
+	}
+	
+
+	searchByUser = "";
+	searchByProjectName = "";
+	Sdatepicker = "";
+	Edatepicker = "";
+	searchByOverview = "";
+	
+	//프로젝트 관련 검색 초기화
+	PsearchByProjectName = "";
+	PsearchByUser = "";
+	PSdatepicker = "";
+	PEdatepicker = "";
+	PsearchByOverview = "";
 }
 
 $(document).ready(function() {
@@ -339,6 +367,7 @@ function setMyTaskList(position) {
 
 function searchStatus(statusValue) {
 	status = statusValue;
+	currentPage = 1;
 	
 	setMyTaskList(nowPosition);
 }
@@ -577,10 +606,6 @@ function goGroupDetails(elem) {
 			</tr>
 		</tbody>
 		<tbody id="projectSearch">
-				<tr>
-					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;
-					<spring:message code='ezPMS.t13'/> <spring:message code='ezPMS.t1'/></th>
-				</tr>
 				<tr>
 					<th><spring:message code='ezPMS.t31' /> </th>
 					<td><input type="text" id="PsearchByProjectName" style="width:100%; margin-right:5px;"></td></tr>

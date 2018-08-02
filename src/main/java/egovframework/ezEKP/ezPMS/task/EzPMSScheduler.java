@@ -188,7 +188,7 @@ public class EzPMSScheduler {
 					content += "<a href='#' target='' onclick='goProjectDetails(\"" + projectList.get(i).getProjectId() + "\")'>[" + projectList.get(i).getProjectName() + egovMessageSource.getMessage("ezPMS.t201", locale) + "</a><br/><br/>";
 					content += "===================================================================<br/>";
 					content += "<p style='font-size:14px'><strong>[" + projectList.get(i).getProjectName() + "]</strong></p>";
-					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t250", locale) + " : " + projectList.get(i).getProgress() + "</p>";
+					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t250", locale) + " : " + (Math.round(projectList.get(i).getProgress()*10)/10.0) + "%</p>";
 					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t61", locale) + " : " + projectList.get(i).getPlanStartDate() + "</p>";
 					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t62", locale) + " : " + projectList.get(i).getPlanEndDate() + "</p>";
 					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t66", locale) + " : " + projectList.get(i).getOverview() + "</p>";
