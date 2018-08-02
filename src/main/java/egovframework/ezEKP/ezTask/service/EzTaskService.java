@@ -19,13 +19,13 @@ public interface EzTaskService {
 	
 	List<TaskInfoVO> getTaskList(String userID, String startDate, String endDate, String offset, String type, String filter, String chkValue, String searchClass, String taskStatusCount, String primary, String pSelectTab, int tenantID, String companyID) throws Exception;
 	
-	Map<String, Integer> getDatesOfRepTask(String taskID, String offset, String primary, String endDate, String startDate, String selectDate, int tenantID) throws Exception;
+	Map<String, Integer> getDatesOfRepTask(String taskID, String offset, String primary, String endDate, String startDate, String selectDate, int tenantID, String companyID) throws Exception;
 	
 	List<TaskInfoVO> getRepTaskList(String taskID, String offset, String primary, String date, int tenantID) throws Exception;
 	
 	void setRepTaskInfo(TaskInfoVO vo) throws Exception;
 	
-	Map<String, Integer> getRepTaskInfo(String date, String taskID, String offset, String primary, int tenantID, TaskInfoVO taskInfoVO) throws Exception;
+	Map<String, Integer> getRepTaskInfo(String date, String taskID, String offset, String primary, int tenantID, TaskInfoVO taskInfoVO, String companyID) throws Exception;
 
 	TaskGeneralVO getTaskGeneral(String userID, int tenantID) throws Exception;
 
@@ -53,7 +53,7 @@ public interface EzTaskService {
 	
 	void taskUpdateConfig(String memberID, String delayColor, String completeColor, String originColor, String originColor2, int tenantID) throws Exception;
 	
-	void taskDelete(String taskIDList, String pDirPath, String offset, String primary, String memberID, int tenantID) throws Exception;
+	void taskDelete(String taskIDList, String pDirPath, String offset, String primary, String memberID, int tenantID, String companyID) throws Exception;
 
 	void taskSaveGeneral(String userID, int listCount, String selectTaskStatus, int tenantID) throws Exception;
 
