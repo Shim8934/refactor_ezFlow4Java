@@ -689,5 +689,9 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	
 	public void updateGroupRealDate(Map<String, Object> map) {
 		update ("EzPMSDAO.updateGroupRealDate", map);
-	}	
+	}
+	
+	public float getProjectRealProgress(Map<String, Object> map) {
+		return (float) select ("EzPMSDAO.getProjectRealProgress", map);
+	}
 } 

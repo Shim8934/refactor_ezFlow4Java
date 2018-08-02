@@ -1689,7 +1689,6 @@ public class EzPMSController {
 	 * 프로젝트 관리 업무 삭제 실행 함수
 	 */
 	@RequestMapping(value = "/ezPMS/deleteTask.do")
-	@ResponseBody
 	public String deleteTask(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
 		LOGGER.debug("ezPMS deleteTask started");
 
@@ -1710,12 +1709,15 @@ public class EzPMSController {
 
 		if (status.equals("ok")) {
 			checkPermission = result.get("data").toString();
+			model.addAttribute("checkPermission", checkPermission);
+			double projectProgress = (double) result.get("projectProgress");
+			model.addAttribute("projectProgress", projectProgress);
+			LOGGER.debug("projectProgress : " + projectProgress);
 		}
 
-		LOGGER.debug("===============================" + checkPermission);
 		LOGGER.debug("ezPMS deleteTask ended");
 
-		return checkPermission;
+		return "json";
 	}
 
 	/**
@@ -2243,7 +2245,9 @@ public class EzPMSController {
 
 		if (status.equals("ok")) {
 			String taskId = (String) resultBody.get("data");
+			double projectProgress = (double) resultBody.get("projectProgress"); 
 			model.addAttribute("data", taskId);
+			model.addAttribute("projectProgress", projectProgress);
 		}
 
 		LOGGER.debug("ezPMS addTask ended");
@@ -2672,9 +2676,15 @@ public class EzPMSController {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String taskId = (String) param.get("taskId");
-
-		commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId() + "/status", param,
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/users/" + userInfo.getId() + "/status", param,
 				request, "put", null);
+		String status = resultBody.get("status").toString();
+		
+		if (status.equals("ok")) {
+			double projectProgress = (double) resultBody.get("projectProgress");
+			model.addAttribute("projectProgress", projectProgress);
+		}
 
 		LOGGER.debug("ezPMS updateTaskStatus ended");
 
@@ -2894,7 +2904,13 @@ public class EzPMSController {
 
 			param.put("userId", userId);
 
-			commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/progress/", param, request, "put", null);
+			JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/tasks/" + taskId + "/progress/", param, request, "put", null);
+			String status = resultBody.get("status").toString();
+
+			if (status.equals("ok")) {
+				double projectProgress = (double) resultBody.get("projectProgress");
+				model.addAttribute("projectProgress", projectProgress);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -4160,7 +4176,15 @@ public class EzPMSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String url = "/rest/ezPMS/allSchedules/users/" + userInfo.getId();
-		commonUtil.getJsonFromRestApi(url, null, request, "put", jsonParam);
+		
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi(url, null, request, "put", jsonParam);
+		String status = resultBody.get("status").toString();
+
+		if (status.equals("ok")) {
+			double projectProgress = (double) resultBody.get("data");
+			model.addAttribute("projectProgress", projectProgress);
+		}
 
 		LOGGER.debug("ezPMS updateAllSchedules ended");
 		return "json";

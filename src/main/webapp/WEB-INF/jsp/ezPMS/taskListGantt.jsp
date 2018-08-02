@@ -450,16 +450,17 @@
 	   			$.ajax({
 	   				type : "POST",
 	   				url : url,
-	   				dataType : "text",
+	   				dataType : "json",
 	   				contentType: "application/json; charset=UTF-8",
 	   				data : JSON.stringify(data),
 	   				success : function(result) {
-	   					if (result == "permitted") {
+	   					if (result.checkPermission == "permitted") {
 							alert("<spring:message code='ezPMS.t242' />");
 							
 							var logContent = "[" + groupName + "]<spring:message code='ezPMS.t313' /> [" + taskName + "] " + "<spring:message code='ezPMS.t242' />";
 		   					addTaskLog(projectId, 3, groupId, null, logContent);
-		   					updateGroupRealStartEndDate(groupId);	
+		   					updateGroupRealStartEndDate(groupId);
+		   					$("#projectProgress", parent.document).text(result.projectProgress.toFixed(1) + '%');
 						} else {
 							alert("<spring:message code='ezPMS.t184' />");
 							return;
@@ -954,14 +955,14 @@
 		  			this.start = start;
 		  			this.end = end;
 		  			this.duration = duration;
-		  		} 
+		  		}; 
 		  		
 		  		function GroupSchedule(groupId, start, end, duration) {
 		  			this.groupId = groupId;
 		  			this.start = start;
 		  			this.end = end;
 		  			this.duration = duration;
-		  		} 
+		  		}; 
 		  		
 		  		for(var i = 0; i < allGanttItems.length; i++) {
 		  			
@@ -986,15 +987,18 @@
 		  			allTasks : allTasks,
 		  			allGroups : allGroups,
 		  			projectId : projectId
-		  		}
+		  		};
 		  		
 		  		$.ajax({
   			  		type : "PUT",
   					url : "/ezPMS/updateAllSchedules.do",
   					async : false,
+  					dataType : "json",
   					contentType : "application/json; charset=UTF-8",
   					data : JSON.stringify(data),
-  					success : function() {}
+  					success : function(result) {
+  						$("#projectProgress", parent.document).text(result.projectProgress.toFixed(1) + '%');
+  					}
 		  		});
 	   		}
 	   		
@@ -1447,6 +1451,7 @@
 	   						updateGroupRealStartEndDate(groupId);
 	   					}
 	   					
+	   					$("#projectProgress", parent.document).text(data.projectProgress.toFixed(1) + '%');
 						location.reload();
 					},
 					error : function(jqXHR, textStatus, errorThrown) {

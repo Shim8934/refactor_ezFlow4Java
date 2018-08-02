@@ -336,6 +336,7 @@ function addTask() {
 			addTaskLog(projectId, 1, groupId, null, logContent);
 			updateGroupRealStartEndDate(groupId);
 			opener.location.reload();
+			$("#projectProgress", opener.parent.document).text(data.projectProgress.toFixed(1) + '%');
 			popupClose();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {

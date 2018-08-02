@@ -383,14 +383,14 @@
 			if (response == true) {
 				$.ajax({
 					type : "POST",
-					dataType: "text",
+					dataType: "json",
 					url : "/ezPMS/deleteTask.do",
 					data : {
 						taskId : checkedVal,
 						projectId : projectId
 					},
 					success : function(result) {
-						if (result == "permitted") {
+						if (result.checkPermission == "permitted") {
 							alert("<spring:message code='ezPMS.t242' />");
 							
 							var checkedTaskInfo = getCheckedTaskInfo();
@@ -403,6 +403,7 @@
 							}
 							
 							checkedVal = "";
+							$("#projectProgress", parent.document).text(result.projectProgress.toFixed(1) + '%');
 							setContentList();
 						} else {
 							alert("<spring:message code='ezPMS.t184' />");

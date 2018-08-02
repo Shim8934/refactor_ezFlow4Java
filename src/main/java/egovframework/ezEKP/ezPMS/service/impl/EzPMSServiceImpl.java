@@ -3603,4 +3603,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		ezPMSDAO.updateGroupRealDate(map);
 		LOGGER.debug("[SERVICE] ezPMS updateGroupRealDate ended");
 	}
+
+	@Override
+	public float getProjectRealProgress(Map<String, Object> map) {
+		LOGGER.debug("[SERVICE] ezPMS getProjectRealProgress started");	
+		LOGGER.debug("[SERVICE] ezPMS getProjectRealProgress ended");
+		return ezPMSDAO.getProjectRealProgress(map);
+	}
 }
