@@ -552,7 +552,7 @@ function deleteOpinion(pSelectedRow) {
             }
             else {
                 var pInformationContent = "" + strLang406 + "";
-                var Rtnval = OpenInformationUI(pInformationContent, deleteOpinion_Complete);
+                var Rtnval = OpenInformationUI2(pInformationContent, deleteOpinion_Complete);
                 if (Rtnval) {
                     var selIdx = GetAttribute(tr, "id");
                     OpinionList.DeleteRow(selIdx);
@@ -1035,4 +1035,23 @@ function GetOpinionTypeName(strOType) {
             return strLangOpinionType1;
             break;
     }
+}
+// 2018-08-02 강민수92 다른곳에서  OpenInformationUI 를 쓸 수 있을 수도 있기때문에 OpenInformationUI2를 새로추가
+function OpenInformationUI2(pInformationContent, CompleteFunction) {
+    var parameter = pInformationContent;
+    var url = "/ezApprovalG/ezAprOpinion.do";
+
+    if (CrossYN() && ext != 'hwp') {
+        ezapropinion_cross_dialogArguments[0] = parameter;
+        if (CompleteFunction != undefined)
+            ezapropinion_cross_dialogArguments[1] = CompleteFunction;
+        else
+            ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+        DivPopUpShow(330, 205, url);
+    } else {
+        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+        feature = feature + GetShowModalPosition(330, 205);
+        var RtnVal = window.showModalDialog(url, parameter, feature);
+    }
+    return RtnVal;
 }
