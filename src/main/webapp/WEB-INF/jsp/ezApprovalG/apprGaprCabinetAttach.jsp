@@ -254,7 +254,7 @@
 	                </div>
 	            </td>
 	            <td style="width: 25px; text-align: center;">
-	                <img id="arrow_right" onclick="return btnIns_onclick()" src="/images/arr01.gif" width="16" height="16" style="cursor: pointer"><img id="arrow_left" onclick="return btndel_onclick()" src="/images/arr02.gif" width="16" height="16" style="cursor: pointer"></td>
+	                <img id="arrow_right" onclick="return btnIns_onclick()" src="/images/arr01.gif" style="cursor: pointer"><img id="arrow_left" onclick="return btndel_onclick()" src="/images/arr02.gif" style="cursor: pointer"></td>
 	            <td>
 	                <div class="listview">
 	                    <div id="lvTDoc" style="border: 0; width: 320px; height: 360px; overflow: auto; "></div>

@@ -1083,12 +1083,14 @@
 			                <DATA1>wf</DATA1>
 			            </CELL>
 			        </ROW>
+			        <c:if test="${use_attitude == 'YES'}">
                     <ROW>
 			            <CELL>            
-			                <VALUE>근태관리자</VALUE>
+			                <VALUE><spring:message code='ezOrgan.kbm01' /></span></VALUE>
 			                <DATA1>wa</DATA1>
 			            </CELL>
 			        </ROW>
+			        </c:if>
 				</ROWS>
 			</LISTVIEWDATA>
 		</xml>

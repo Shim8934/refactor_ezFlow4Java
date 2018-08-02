@@ -579,14 +579,14 @@
             divBasicInfo.style.display = "";
             divClassInfo.style.display = "none";
 			//팝업창 가로 사이즈 유지, 세로만 변경
-          	window.resizeTo(window.outerWidth, 600);
+          	window.resizeTo(window.outerWidth, 605);
         }
         else if (g_ModifyFlag == "1")
         {
             divBasicInfo.style.display = "none";
             divClassInfo.style.display = "";
             
-          	window.resizeTo(window.outerWidth, 650);
+          	window.resizeTo(window.outerWidth, 605);
         }
     }
     function MM_swapImgRestore() {
@@ -700,15 +700,15 @@
   <table class="content" style="margin-top:10px">
     <tr>
       <th style="padding-right: 34px;"><spring:message code='ezApprovalG.t875'/></th>
-      <td><Input type="checkbox" name="special1" id="special1" value="Y">
+      <td><Input type="checkbox" name="special1" id="special1" value="Y" style="height:17px">
         <spring:message code='ezApprovalG.t983'/><br/>
-        <Input type="checkbox" name="special2" id="special2" value="Y">
+        <Input type="checkbox" name="special2" id="special2" value="Y" style="height:17px">
         <spring:message code='ezApprovalG.t984'/><br/>
-        <Input type="checkbox" name="special3" id="special3" value="Y">
+        <Input type="checkbox" name="special3" id="special3" value="Y" style="height:17px">
         <spring:message code='ezApprovalG.t985'/><br/>
-        <Input type="checkbox" name="special4" id="special4" value="Y">
+        <Input type="checkbox" name="special4" id="special4" value="Y" style="height:17px">
         <spring:message code='ezApprovalG.t986'/><br/>
-        <Input type="checkbox" name="special5" id="special5" value="Y">
+        <Input type="checkbox" name="special5" id="special5" value="Y" style="height:17px">
         <spring:message code='ezApprovalG.t987'/></td>
     </tr>
     <tr>

@@ -2253,6 +2253,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
+		//2018-07-31 김보미 - 근태 추가
+		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", user.getTenantId());
+		if (use_attitude == null || use_attitude.equals("")) {
+			use_attitude = "YES";
+		}
 		
 		model.addAttribute("userID", userID);
 		model.addAttribute("companyID", selCompany);
@@ -2261,6 +2266,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("approvalForDoc", approvalForDoc);
+		model.addAttribute("use_attitude", use_attitude);
 		
 		logger.debug("permissionsCheck ended.");
 		
