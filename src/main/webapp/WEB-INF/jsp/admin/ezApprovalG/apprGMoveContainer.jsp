@@ -9,11 +9,17 @@
 	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 	    <style>
 	    
-	    table, td {
+		/* 2018-08-02 김보미 - 검색 테이블 ui수정 */
+	    /*table, td {
 			white-space: nowrap;
 			/* overflow-x: hidden; */
+		/*	text-overflow: ellipsis;
+		} */
+		.mainlist, .mainlist th, .mainlist td {
+			white-space: nowrap;
+			overflow: hidden;
 			text-overflow: ellipsis;
-		}
+		}		
 		td {
 			padding: 8px 5px;
 		}
@@ -780,7 +786,8 @@
 			    </select><br /><br />
 			</span>
 		</div>
-		<table style="width:100%;">		
+	<!-- 2018-08-02 김보미 - 검색테이블 ui 수정 -->	
+	<!-- <table style="width:100%;">		
 			<tr>
 				<table id = "t1" style="width:100%;border-top:1px solid #e8e8e8">
 					<tr>
@@ -858,7 +865,79 @@
 				</tr>
 			</table>
 			</tr>
+		</table> -->
+		<table style="width:100%;">		
+			<tr>
+				<table id = "t1" style="width:100%;border-top:1px solid #e8e8e8">
+					<tr>
+						<td style="width:4%;">
+							<spring:message code='ezApprovalG.kes04'/>  
+						</td>
+						<td style="width:20%;">
+							<input type="text" id="SDeptName" name="SDeptName" style="width: 72%; height: 23px;" readonly="readonly" />
+			 	            <a class="imgbtn" name="SDeptSelect"><span onclick="bt_SDeptSelect_onclick()"><spring:message code='ezApprovalG.t105'/></span></a>
+						</td>
+						<td style="width:4%;">
+							<spring:message code='ezApproval.t611'/>
+						</td>
+						<td style="width:17%;">
+							<select name="selSContName" style="width:84%; height: 23px;" onchange="return bt_selSContName_onclick()"></select>
+						</td>
+						<td style="width:5%;">
+							<spring:message code='ezApproval.t434'/> 
+						</td>
+						<td style="width:18%;">
+							<input type="text" id="DocNumber" name="DocNumber" style="width: 80%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)" />
+						</td>
+						<td style="width:4%;">
+							<spring:message code='ezApproval.t435'/> 
+						</td>
+						<td style="width:27%;">
+							<input type="text" id="DocTitle" name="DocTitle" style="width: 51%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<spring:message code='ezApproval.t437'/>
+						</td>
+						<td>
+							<input type="text" id="drafterdept" name="drafterdept" style="width: 72%; height: 23px;" maxlength="50" readonly="readonly"/>
+							<a class="imgbtn" name="TDeptSelect"><span id = "spandept" onclick="bt_TDeptSelect_onclick(this)"><spring:message code='ezApprovalG.t105'/></span></a>
+						</td>
+						<td>
+							<spring:message code='ezApproval.t436'/> 
+						</td>
+						<td>
+							<input type="text" id="drafter" name="drafter" style="width:84%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>
+						</td>
+						<td>
+							<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/></label>
+						</td>
+						<td>
+							<span id="topmenu" style="width: 500px">
+								<input type="text" id="startDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />&nbsp; ~ &nbsp;
+								<input type="text" id="endDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />
+							</span>						
+						</td>
+						<td colspan="2">
+							<a class="imgbtn" >
+								<span onclick="javascript:search(1);"><spring:message code="ezApproval.t236"></spring:message></span>
+							</a>&nbsp;
+							<a class="imgbtn">
+								<span onClick="reload()"><spring:message code='ezApprovalG.t165' /></span>
+							</a>&nbsp;
+							<a class="imgbtn">
+								<span onClick="bt_OK_onclick()"><spring:message code='ezApproval.t25005' /></span>
+							</a>&nbsp;
+							<a class="imgbtn">
+									<span onClick="bt_All_onclick()"><spring:message code='ezApprovalG.t1679' /></span>
+							</a>
+						</td>
+					</tr>
+				</table>
+			</tr>
 		</table>
+		
 		<table class="mainlist" style="width:100%; height:100%;">
 			<thead>
 				<tr id = "doclist">
