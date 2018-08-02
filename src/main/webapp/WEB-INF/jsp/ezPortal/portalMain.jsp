@@ -30,16 +30,18 @@
 
 			#open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;}
 			.individual-memo { width:200px; height:200px; background:url('/images/ezMemo/background.gif') repeat-x; background-size:200px 190px;text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 3px 3px 3px 38px;}
-			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);}
+			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);overflow:hidden;}
 			#selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;}
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
 			#maskDiv { position:absolute; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);}
 			.selected-memoWrapper {display:table-cell;vertical-align:middle;}
-			#memo-btn{text-align:right;margin:0 auto;}
-			#font-btn{text-align:right;margin:0 auto; width:367px;}
+			#memo-btn{text-align:right;margin:0 auto;width:300px;}
+			#font-btn{text-align:right;margin:0 auto; width:300px;}
 			#slider-range{width:100px;float:left; margin-left:15px;}
 			.ui-widget-header{background: #0470e4}
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
+			#textarea{padding-left:10px;padding-right:10px;width:94%;height:98%;margin-left:-3px;}
+			.detailMemo{background: url(/images/ezMemo/background.gif) repeat-x;background-size: 300px 290px;border: 1px solid black;width: 300px;center;height: 300px;float: center;margin: 0 auto; padding-top: 30px;overflow:hidden;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -147,7 +149,7 @@
 		        	 containment: '.memoListBox'
 		        });
 		        
-		        $("#font-up").click(function() {
+		        /* $("#font-up").click(function() {
 		        	
 		        	var textarea = $("#font-up").parent().parent().find("textarea");
 		        	var thisWidth = textarea.css("width");
@@ -185,7 +187,7 @@
 		        	}
 		        	textarea.css("width", thisWidth);
 		        	textarea.css("height", thisHeight);
-		        });
+		        }); */
 
 		     });
 		    
@@ -273,13 +275,11 @@
 		        });
 		    }
 		    
-		    function newMemo() {
+		    /* function newMemo() {
 		        $("#maskDiv").css("display", "");
 		        $("#selected-memo").css("display", "");
 		        var textareaW = $(textarea).css("width");
-		        
-		        $("#memo-btn").css("width", textareaW);
-		    }
+		    } */
 		    
 		    function save() {
 		    	if(memoIndex != -1) {		// 수정일때
@@ -322,10 +322,9 @@
 		        	var currText = $(this).children(".memo-text").val();
 		        	$("#maskDiv").css("display", "");
 			        $("#selected-memo").css("display", "");
-			        $("#textarea").css("font-size", "15px");
+					$("#textarea").css("font-size", "15px");
 			        $("#font-btn").css("display", "");
-			        $("#textarea").val(currText);
-			        
+			        $("#textarea").val(currText);		
 		        });
 		    }
 		    
@@ -352,7 +351,7 @@
 					<div style="text-align: right">
 						<div id="slider-range"></div>
 						<button id="change-mode">모드</button>
-						<button id="new-memo" onclick="newMemo()">추가</button>
+						<button id="new-memo" onclick="save()">추가</button>
 						<button id="close-button">닫기</button>
 					</div>
 										
@@ -369,11 +368,13 @@
 							<button id="save" onclick="save()">저장</button> 
 							<button onclick="closeMemo()">닫기</button>
 						</div>
-						<textarea id="textarea" cols="50" rows="28" style="resize:none;"></textarea>
-						<div id="font-btn" style="text-align: right; display: none">
-					        <button id="font-up">폰트+</button> 
-					        <button id="font-down">폰트-</button>
+						<div class="detailMemo">
+							<textarea id="textarea" style="resize:none;"></textarea>
 			        	</div>
+			        	<div id="font-btn" style="text-align: right; display: none">
+							<button id="font-up">폰트+</button> 
+						    <button id="font-down">폰트-</button>
+				        </div>
 					</div>
 				</div>
 			</div>
