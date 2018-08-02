@@ -2908,7 +2908,7 @@ public class EzPMSController {
 			String status = resultBody.get("status").toString();
 
 			if (status.equals("ok")) {
-				double projectProgress = (double) resultBody.get("projectProgress");
+				double projectProgress = (double) resultBody.get("data");
 				model.addAttribute("projectProgress", projectProgress);
 			}
 

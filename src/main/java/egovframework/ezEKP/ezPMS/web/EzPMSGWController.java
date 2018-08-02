@@ -3601,8 +3601,7 @@ public class EzPMSGWController {
 
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", "");
-			result.put("projectProgress", projectProgress);
+			result.put("data", projectProgress);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
