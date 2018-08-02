@@ -35,7 +35,7 @@ public interface EzOrganService {
 
 	public String getUserAddjobInfo(String id, String pDeptID, String primary, int tenantID) throws Exception;	
 	
-	public String getOrganTreeInfo(String strFilter, int intScope, String strBaseDN) throws Exception;
+	public String getOrganTreeInfo(String strFilter, int intScope) throws Exception;
 	
 	public String getEncPassword(String dUserID, int tenantID) throws Exception;
 	
@@ -67,9 +67,9 @@ public interface EzOrganService {
 
 	public String getOrganSubTreeInfo(String strFilter, String strBaseDN, int intScope) throws Exception;
 
-	public String getOrgInfo(String strBaseDN, String strFilter, int intScope) throws Exception;
+	public String getOrgInfo(String strFilter, int intScope) throws Exception;
 
-	public String searchOuterOrgan(String strFilter, int intScope, String strBaseDN) throws Exception;
+	public String searchOuterOrgan(String strFilter, int intScope) throws Exception;
 
 	public List<OrganDeptVO> getExtensionAttr4ID(String strReceiveID) throws Exception;
 	

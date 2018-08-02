@@ -543,7 +543,7 @@
 											</span>
 										</a>
 										<a class="imgbtn imgbck">
-											<span onclick="removeNormalImage()" style="width: 20px">
+											<span onclick="removeNormalImage()">
 												<spring:message code='ezPortal.t67'/>
 											</span>
 										</a>
@@ -575,7 +575,7 @@
 											</span>
 										</a>
 										<a class="imgbtn imgbck">
-											<span onclick="removeOverImage()" style="width: 20px">
+											<span onclick="removeOverImage()">
 												<spring:message code='ezPortal.t67'/>
 											</span>
 										</a>
@@ -627,7 +627,7 @@
 											</span>
 										</a>
 										<a class="imgbtn imgbck">
-											<span onclick="removeNormalImage()" style="width: 20px">
+											<span onclick="removeNormalImage()">
 												<spring:message code='ezPortal.t67'/>
 											</span>
 										</a>
@@ -653,7 +653,7 @@
 											</span>
 										</a>
 										<a class="imgbtn imgbck">
-											<span onclick="removeOverImage()" style="width: 20px">
+											<span onclick="removeOverImage()">
 												<spring:message code='ezPortal.t67'/>
 											</span>
 										</a>
@@ -788,7 +788,7 @@
     				<td align="center">
     					<div class="btnpositionJsp">
 							<a class="imgbtn">
-								<span onclick="DeleteRight('${item.accessID}')" style="width: 20px">
+								<span onclick="DeleteRight('${item.accessID}')">
 									<spring:message code='ezPortal.t67'/>
 								</span>
 							</a>

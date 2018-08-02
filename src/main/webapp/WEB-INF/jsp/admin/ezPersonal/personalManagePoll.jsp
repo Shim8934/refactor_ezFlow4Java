@@ -26,6 +26,7 @@
 	        var strLang2 = "<spring:message code = 'ezPersonal.t10000' />";
 	        var strLang3 = "<spring:message code = 'ezPersonal.t10001' />";
 	        var strLang4 = "<spring:message code = 'ezPersonal.t223' />";
+	        var strLang5 = "<spring:message code = 'ezPersonal.t20005' />";
 	
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -83,6 +84,12 @@
 		            //listview.DataSource(xmldom);
 		            listview.RowDataBind();
 		            xmldomNode = null;
+		            
+		            //2018-08-02 김보미 - 데이터가 없을 때
+		            if (parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT")) == 0) {
+		            	var html = "<tr id='Poll_TR_noItems'><td style='text-align: center;' colspan='5'>" + strLang5 + "</td></tr>";
+		            	$("#AccessListView tbody").html(html);
+		            }
 		
 		            if (CrossYN() && navigator.userAgent.indexOf("Trident/7.0") < 0) {
 						TotalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
@@ -236,6 +243,12 @@
 		            }
 		        }
 		        
+		        //2018-08-02 김보미 - 데이터가 하나도 없을때 디폴트 페이징
+	            if (i == 1) {
+	            	strtext = "<span class='on'>" + i + "</span>";
+                    PagingHTML += strtext;
+	            }
+		        
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "";
@@ -366,7 +379,6 @@
 	        <table class="mainlist" style="width: 100%;">
 	            <div id="AccessList" style="BORDER: 0; WIDTH: 100%"></div>
 	        </table>
-	        
 	        <div id="tblPageRayer" style="margin-bottom: 10px;"></div>
 	    </form>
 	</body>

@@ -2706,6 +2706,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String endDir = "";
 		String signCheck = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -2804,7 +2805,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docState", docState);
 		model.addAttribute("whoKyulCount", whoKyulCount);
 		model.addAttribute("checkPwdFlag", checkPwdFlag);
+<<<<<<< HEAD
 		model.addAttribute("orgCompanyID", orgCompanyID);
+=======
+		model.addAttribute("signImageType", signImageType);
+>>>>>>> master
 
 		logger.debug("contDocView ended.");
 		

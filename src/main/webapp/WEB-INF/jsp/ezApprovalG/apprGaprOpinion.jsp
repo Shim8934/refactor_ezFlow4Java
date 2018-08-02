@@ -133,6 +133,15 @@
 		        }
 		    }
 		    function btn_OpinionCancel_onclick() {
+	            if (ReturnFunction != null) {
+	                ReturnFunction("cancel");
+	                window.close();
+	            } else {
+	                window.returnValue = "cancel";
+	                window.close();
+	            }
+		    }
+		    function btn_OpinionOK_onclick() {
 		        if (ChkFlag) {
 		            btn_OpinionSave_onclick();
 		        } else {
@@ -276,7 +285,7 @@
 	    <div class="btnposition btnpositionNew">
 		    <a class="imgbtn" id="bbtn_OpinionAdd"><span id="btn_OpinionAdd" onClick="return btn_OpinionAdd_onclick()" ><spring:message code='ezApprovalG.t268'/></span></a>
 		    <a class="imgbtn" id="bbtn_OpinionDel"><span id="btn_OpinionDel" onClick="return btn_OpinionDel_onclick()" ><spring:message code='ezApprovalG.t266'/></span></a>
-		    <a class="imgbtn" id="bbtn_OpinionCancel" style="display:none"><span id="btn_OpinionCancel" onClick="return btn_OpinionCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
+		    <a class="imgbtn" id="bbtn_OpinionCancel" style="display:none"><span id="btn_OpinionCancel" onClick="return btn_OpinionOK_onclick()"><spring:message code='ezApprovalG.t1760'/></span></a>
 	    </div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

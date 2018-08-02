@@ -142,8 +142,7 @@ function ApprovMappingSign(ret) {
                 strimg = strimg + " width=" + signWidth;
                 
                 if (signImageType == "NAME") {
-//                	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
-                	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+                	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
 				} else {
 				    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 				}
@@ -357,8 +356,7 @@ function ApprovMappingSign(ret) {
                         strimg = strimg + " width=" + signWidth;
                         
                         if (signImageType == "NAME") {
-//                        	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
-                        	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
+                        	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
 						} else {
 						    strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
 						}
@@ -566,8 +564,7 @@ function ApprovMappingSign(ret) {
                     strimg = strimg + " width=" + signWidth;
                     
                     if (signImageType == "NAME") {
-//                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
-                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
                     } else {
                         strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
@@ -673,8 +670,7 @@ function ApprovMappingSign(ret) {
                     strimg = strimg + " width=" + signWidth;
                     
                     if (signImageType == "NAME") {
-//                    	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
-                    	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
+                    	strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>" + "<br>" + arr_userinfo[2];
 					} else {
 					    strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
 					}
@@ -3011,6 +3007,8 @@ function putSignXML(SignXML) {
                 var SignName = getNodeText(SelectSingleNode(NodeList[i], "SIGNNAME"));
                 var SignCont = getNodeText(SelectSingleNode(NodeList[i], "CONTENT"));
                 
+                var aprMemberName = getNodeText(SelectSingleNode(NodeList[i], "APRMEMBERNAME"));
+                
                 //2018-07-11 천성준 -전자결재G 중간결재자 부재설정 시, 부재내용 서명란에 표기안되서 주석
 //                if (!(SignName.indexOf("habyui") > -1)) {
 //                	continue;
@@ -3054,9 +3052,10 @@ function putSignXML(SignXML) {
                             var filename = img[0].split("/")[img[0].split("/").length - 1];
                             strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
                             strimg = strimg + " width=" + signWidth;
-                            if (signImage = "NAME") {
+                            if (signImageType = "NAME") {
+                            	//이효진 signImageType Name일때 반복문으로 앞쪽 이미지 서명까지 전부 새로 입력중이라 userInfo 말고 DB에서 꺼내쓰도록 수정
 //                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + arr_userinfo[2] ;
-                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
+                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + aprMemberName;
                             } else {
                                 strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
                             }

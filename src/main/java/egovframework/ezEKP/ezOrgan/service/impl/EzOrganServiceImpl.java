@@ -1467,44 +1467,44 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getOrganTreeInfo(String strFilter, int intScope, String strBaseDN) throws Exception {
+	public String getOrganTreeInfo(String strFilter, int intScope) throws Exception {
 		List<String[]> ou = new ArrayList<String[]>();
-		ou = ldapSearch(strFilter,strBaseDN, intScope);
+		ou = ldapSearch(strFilter, intScope);
             
-            StringBuilder nodeInfo = new StringBuilder("");
+        StringBuilder nodeInfo = new StringBuilder("");
 
-            nodeInfo.append("<TREEVIEWDATA>");
+        nodeInfo.append("<TREEVIEWDATA>");
 
-            nodeInfo.append("<TEXTCOLOR>");
-            nodeInfo.append("<NAME>GRAY</NAME>");
+        nodeInfo.append("<TEXTCOLOR>");
+        nodeInfo.append("<NAME>GRAY</NAME>");
 
-            nodeInfo.append("<DEFAULTTEXTCOLOR>gray</DEFAULTTEXTCOLOR>");
-            nodeInfo.append("<SELECTEDTEXTCOLOR>gray</SELECTEDTEXTCOLOR>");
-            nodeInfo.append("</TEXTCOLOR>");
+        nodeInfo.append("<DEFAULTTEXTCOLOR>gray</DEFAULTTEXTCOLOR>");
+        nodeInfo.append("<SELECTEDTEXTCOLOR>gray</SELECTEDTEXTCOLOR>");
+        nodeInfo.append("</TEXTCOLOR>");
 
-            nodeInfo.append("<NODEICONIMAGE>");
-            nodeInfo.append("<NAME>ICONGROUP</NAME>");
-            nodeInfo.append("<DEFAULT></DEFAULT>");
+        nodeInfo.append("<NODEICONIMAGE>");
+        nodeInfo.append("<NAME>ICONGROUP</NAME>");
+        nodeInfo.append("<DEFAULT></DEFAULT>");
 
-            nodeInfo.append("<LEAFDEFAULTICON>images/ic-close.gif</LEAFDEFAULTICON>");
-            nodeInfo.append("<LEAFSELECTEDICON>images/ic-open.gif</LEAFSELECTEDICON>");
-            nodeInfo.append("<BRANCHDEFAULTICON>images/ic-close.gif</BRANCHDEFAULTICON>");
-            nodeInfo.append("<BRANCHSELECTEDICON>images/ic-close.gif</BRANCHSELECTEDICON>");
-            nodeInfo.append("</NODEICONIMAGE>");
+        nodeInfo.append("<LEAFDEFAULTICON>images/ic-close.gif</LEAFDEFAULTICON>");
+        nodeInfo.append("<LEAFSELECTEDICON>images/ic-open.gif</LEAFSELECTEDICON>");
+        nodeInfo.append("<BRANCHDEFAULTICON>images/ic-close.gif</BRANCHDEFAULTICON>");
+        nodeInfo.append("<BRANCHSELECTEDICON>images/ic-close.gif</BRANCHSELECTEDICON>");
+        nodeInfo.append("</NODEICONIMAGE>");
 
-            nodeInfo.append("<NODEICONIMAGE>");
-            nodeInfo.append("<NAME>ICONGROUP</NAME>");
+        nodeInfo.append("<NODEICONIMAGE>");
+        nodeInfo.append("<NAME>ICONGROUP</NAME>");
 
-            nodeInfo.append("<BRANCHDEFAULTICON>images/ic-company.gif</BRANCHDEFAULTICON>");
-            nodeInfo.append("<BRANCHSELECTEDICON>images/ic-company.gif</BRANCHSELECTEDICON>");
-            nodeInfo.append("</NODEICONIMAGE>");
+        nodeInfo.append("<BRANCHDEFAULTICON>images/ic-company.gif</BRANCHDEFAULTICON>");
+        nodeInfo.append("<BRANCHSELECTEDICON>images/ic-company.gif</BRANCHSELECTEDICON>");
+        nodeInfo.append("</NODEICONIMAGE>");
 
-            nodeInfo.append("<NODE>");
-            nodeInfo.append("<VALUE>조직도</VALUE>");
-            nodeInfo.append("<ISLEAF>FALSE</ISLEAF>");
-            nodeInfo.append("<SETNODEICONBYNAME>ICONCOMP</SETNODEICONBYNAME>");
-            nodeInfo.append("<EXPANDED>TRUE</EXPANDED>");
-            nodeInfo.append("<NODES>");
+        nodeInfo.append("<NODE>");
+        nodeInfo.append("<VALUE>조직도</VALUE>");
+        nodeInfo.append("<ISLEAF>FALSE</ISLEAF>");
+        nodeInfo.append("<SETNODEICONBYNAME>ICONCOMP</SETNODEICONBYNAME>");
+        nodeInfo.append("<EXPANDED>TRUE</EXPANDED>");
+        nodeInfo.append("<NODES>");
             
         for (int i = 0; i < ou.size(); i++) {
             String pORGANIZATIONUNITNAME = ou.get(i)[0];
@@ -1543,62 +1543,65 @@ public class EzOrganServiceImpl implements EzOrganService {
         nodeInfo.append("</NODES>");
         nodeInfo.append("</NODE>");
         nodeInfo.append("</TREEVIEWDATA>");
+        
         return nodeInfo.toString();
 	}
 
 	@SuppressWarnings("rawtypes")
-	private List<String[]> ldapSearch(String strFilter, String strBaseDN, int intScope) throws Exception {
+	private List<String[]> ldapSearch(String strFilter, int intScope) throws Exception {
 		List<String[]> ou = new ArrayList<String[]>();
-
 		Hashtable<String, String> env = new Hashtable<String, String>(5, 0.75f); 
         NamingEnumeration m_ne = null;
-        String[] attrIDs = { "ucOrgFullName", "ou", "topOUCode", "ouCode", "parentOUCode", "ouLevel", "ouSendOutDocumentYN", "ouReceiveDocumentYN", "ucChiefTitle", "ouSMTPAddress", "ouDocumentRecipientSymbol", "repoUCCode", "ouOrder"}; 
+        String[] attrIDs = { "ucOrgFullName", "ou", "topOUCode", "ouCode", "parentOUCode", "ouLevel", "ouSendOutDocumentYN", "ouReceiveDocumentYN", "ucChiefTitle", "ouSMTPAddress", "ouDocumentRecipientSymbol", "repoUCCode", "ouOrder"};
        
-        try {   
-            env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory"); 
-            env.put(Context.PROVIDER_URL, config.getProperty("R_LServer")); 
-            DirContext dirCtx = new InitialDirContext(env); 
-            SearchControls constraints = new SearchControls();
-    		
-    		if(intScope == 0) {
+        env.put(Context.PROVIDER_URL, config.getProperty("R_LServer")); 
+        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory"); 
+        DirContext dirCtx = new InitialDirContext(env); 
+        SearchControls constraints = new SearchControls();
+		
+		if (intScope == 0) {
+            constraints.setSearchScope(SearchControls.SUBTREE_SCOPE); 
+		} else {
+			if (intScope == 1) {
+	            constraints.setSearchScope(SearchControls.ONELEVEL_SCOPE); 
+			} else {
 	            constraints.setSearchScope(SearchControls.SUBTREE_SCOPE); 
-    		} else {
-    			if (intScope == 1) {
-    	            constraints.setSearchScope(SearchControls.ONELEVEL_SCOPE); 
-    			} else {
-    	            constraints.setSearchScope(SearchControls.SUBTREE_SCOPE); 
-    			}
-    		}
-    		
-            if (attrIDs != null) {
-                constraints.setReturningAttributes(attrIDs); 
-            }
-            m_ne = dirCtx.search(strBaseDN + config.getProperty("R_LBaseDN"), strFilter, constraints); 
+			}
+		}
+		
+        if (attrIDs != null) {
+            constraints.setReturningAttributes(attrIDs);
+        }
+        
+        m_ne = dirCtx.search(config.getProperty("R_LBaseDN"), strFilter, constraints); 
+        
+        dirCtx.close(); 
+        
+        while (m_ne.hasMoreElements()) {
+        	SearchResult sr = (SearchResult)m_ne.next(); 
+            String str[] = new String[13];
             
-            dirCtx.close(); 
-        } catch (Exception e) { 
-            e.printStackTrace(); 
-        } 
-            SearchResult sr = null; 
-            while(m_ne.hasMoreElements()){ 
-                sr = (SearchResult)m_ne.next(); 
-                String str[] = new String[13];
-                for (int i=0; i< attrIDs.length; i++) { 
-                	if (sr.getAttributes().get(attrIDs[i]) == null || sr.getAttributes().get(attrIDs[i]).get().equals("")) {
-                		str[i] = " ";
-                	} else {
-                		str[i] = (String)sr.getAttributes().get(attrIDs[i]).get();
-                	}
-                } 
-                ou.add(str); 
+            for (int i = 0; i < attrIDs.length; i++) { 
+            	if (sr.getAttributes().get(attrIDs[i]) == null || sr.getAttributes().get(attrIDs[i]).get().equals("")) {
+            		if (attrIDs[i].equals("ouSendOutDocumentYN") || attrIDs[i].equals("ouReceiveDocumentYN")) {
+            			str[i] = "N";
+            		} else {
+            			str[i] = " ";
+            		}
+            	} else {
+            		str[i] = (String)sr.getAttributes().get(attrIDs[i]).get();
+            	}
+            } 
+            ou.add(str); 
+        }
+  
+        Collections.sort(ou, new Comparator<String[]>(){
+        	@Override
+            public int compare(String[] o1, String[] o2) {
+                return  o1[2].compareTo(o2[2]);
             }
-      
-            Collections.sort(ou, new Comparator<String[]>(){
-            	@Override
-                public int compare(String[] o1, String[] o2) {
-                    return  o1[2].compareTo(o2[2]);
-                }
-            });
+        });
+        
 		return ou;
 	}
 	
@@ -1759,7 +1762,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		logger.debug("getOrganSubTreeInfo started");
 		
 		List<String[]> ou = new ArrayList<String[]>();
-		ou = ldapSearch(strFilter, strBaseDN, intScope);
+		ou = ldapSearch(strFilter, intScope);
 		
 		StringBuilder str = new StringBuilder();
 		
@@ -1797,10 +1800,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 
 	@Override
-	public String getOrgInfo(String strBaseDN, String strFilter, int intScope) throws Exception {
+	public String getOrgInfo(String strFilter, int intScope) throws Exception {
 		logger.debug("getOrgInfo started");
 		List<String[]> ou = new ArrayList<String[]>();
-		ou = ldapSearch(strFilter , "" ,intScope);
+		ou = ldapSearch(strFilter, intScope);
 	
 		StringBuffer str = new StringBuffer();
 		str.append("<ORGAN>");
@@ -1830,7 +1833,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String searchOuterOrgan(String strFilter, int intScope, String strBaseDN) throws Exception {
+	public String searchOuterOrgan(String strFilter, int intScope) throws Exception {
 		logger.debug("getOrgInfo started");
 		StringBuilder str = new StringBuilder();
 		str.append("<LISTVIEWDATA>");
@@ -1847,8 +1850,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 		str.append("<COLNAME>" + "OuFullName" + "</COLNAME>");
 		str.append("</HEADER>");
 		str.append("</HEADERS>");
+		
 		List<String[]> ou = new ArrayList<String[]>();
-		ou = ldapSearch(strFilter , "",intScope );
+		
+		ou = ldapSearch(strFilter, intScope);
 		
 		str.append("<ROWS>");
 		for (int i=0; i<ou.size(); i++) {

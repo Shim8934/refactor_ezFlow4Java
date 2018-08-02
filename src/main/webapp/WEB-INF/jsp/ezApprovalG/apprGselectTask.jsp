@@ -282,7 +282,7 @@
 		<table>
 		  <tr>
 		    <td style="vertical-align:top"><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t591'/></h2>
-		      <table class="content" style="WIDTH:202px; margin-bottom:3px;margin-top:5px;">
+		      <table class="content" style="WIDTH:232px; margin-bottom:3px;margin-top:5px;">
 		        <tr>
 		          <th><spring:message code='ezApprovalG.t592'/></th>
 		          <td><Select id="selTaskCategory" style="width:100%" onChange="return selTaskCategory_onchange()">
@@ -295,7 +295,7 @@
 		          </td>
 		        </tr>
 		      </table>
-		      <div class="listview"  style="WIDTH:200px;HEIGHT:228px; OVERFLOW-Y:AUTO;" id="divTaskSCateList2">
+		      <div class="listview"  style="WIDTH:230px;HEIGHT:228px; OVERFLOW-Y:AUTO;" id="divTaskSCateList2">
 		          <div id="TaskSCateList" style="margin: 0PX"></div>
 		        </div>        
 		     </td>
@@ -321,7 +321,7 @@
 		        <img id="RecvDel" name="Image103" border="0" src="/images/arr_left.gif" width="16" height="16" onClick="return Del_onclick()" style="cursor:pointer" >
 		    </td>
 		    <td style="vertical-align:top"><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1132'/></h2>
-		    <div class="listview"  style="WIDTH:210px;HEIGHT:292px; margin-top: 5px; OVERFLOW-Y:AUTO;" id="divSelTaskList2">
+		    <div class="listview"  style="WIDTH:235px;HEIGHT:292px; margin-top: 5px; OVERFLOW-Y:AUTO;" id="divSelTaskList2">
 		          <div id="SelTaskList"></div>
 		        </div> 
 		     </td>

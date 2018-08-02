@@ -48,6 +48,14 @@ public class ApprGCabinetRecVO {
 	/** 결재자이름 (다국어)**/
 	private String aprMemberName2;
 	
+	private String publicityYn;
+	
+	public String getPublicityYn() {
+		return publicityYn;
+	}
+	public void setPublicityYn(String publicityYn) {
+		this.publicityYn = publicityYn;
+	}
 	public String getAprMemberName2() {
 		return aprMemberName2;
 	}

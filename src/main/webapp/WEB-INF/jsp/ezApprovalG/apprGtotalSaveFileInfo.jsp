@@ -225,8 +225,8 @@
 	            <th><spring:message code='ezApprovalG.t00010'/></th>
 	        </tr>                
 	    </table>
-	    <div style="overflow-y:auto; overflow-x:auto; height:250px;">
-	        <table class="mainlist" id="table_filelist" style="width: 550px; margin-left: 5px;">
+	    <div style="overflow-y:auto; overflow-x:auto; height:250px; width: 555px;">
+	        <table class="mainlist" id="table_filelist" style="width: 99%; margin-left: 5px;">
 	        </table>
 	    </div>
 	    <br />

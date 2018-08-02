@@ -1007,8 +1007,7 @@ function SendDraftMappingSign(ret) {
                     }
                    
                     if (signImageType == "NAME") {
-//                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
-                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
                     } else {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
@@ -1075,8 +1074,7 @@ function SendDraftMappingSign(ret) {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
                     if (signImageType == "NAME") {
-//                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
-                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
                     } else {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
@@ -2635,6 +2633,8 @@ function putSignXML(SignXML) {
                 var SignType = getNodeText(GetChildNodes(NodeList[i])[2]);
                 var SignName = getNodeText(GetChildNodes(NodeList[i])[3]);
                 var SignCont = getNodeText(GetChildNodes(NodeList[i])[4]);
+                
+                var aprMemberName = getNodeText(SelectSingleNode(NodeList[i], "APRMEMBERNAME"));
 
                 var field = message.GetListItem(fields, SignName);
                 if (field) {
@@ -2665,7 +2665,15 @@ function putSignXML(SignXML) {
                         if (img.length >= 1) {
                             strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
                             strimg = strimg + " width=" + signWidth;
-                            strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
+                            
+                            if (signImage = "NAME") {
+                            	//2018-08-02 이효진 signImage Name 사용시 결재때만 정상동작하고 수신쪽은 처리되어있지 않아 추가 
+                            	//2018-08-02 이효진 signImage Name일때 반복문으로 앞쪽 이미지 서명까지 전부 새로 입력중이라 userInfo 말고 DB에서 꺼내쓰도록 수정
+//                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + arr_userinfo[2] ;
+                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + aprMemberName;
+                            } else {
+                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
+                            }
                         }
                         
                         if (seumyung) {

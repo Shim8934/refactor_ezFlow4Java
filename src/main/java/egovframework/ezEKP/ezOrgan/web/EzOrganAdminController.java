@@ -195,6 +195,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
+		model.addAttribute("locale", user.getLocale());
 		
 		return "admin/ezOrgan/organRight";
 	}
@@ -472,6 +473,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("primary", primary);
         model.addAttribute("secondary", secondary);
+        model.addAttribute("locale", userInfo.getLocale());
         
         logger.debug("deptInfo ended");
         
@@ -784,6 +786,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
+		model.addAttribute("locale", userInfo.getLocale());
 				
 		logger.debug("userInfo ended");
 		
@@ -2274,6 +2277,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
+		//2018-07-31 김보미 - 근태 추가
+		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", user.getTenantId());
+		if (use_attitude == null || use_attitude.equals("")) {
+			use_attitude = "YES";
+		}
 		
 		model.addAttribute("userID", userID);
 		model.addAttribute("companyID", selCompany);
@@ -2282,6 +2290,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("approvalForDoc", approvalForDoc);
+		model.addAttribute("use_attitude", use_attitude);
 		model.addAttribute("deptTreeTopId", deptTreeTopId);
 		
 		logger.debug("permissionsCheck ended.");
