@@ -97,7 +97,8 @@ function setFolderList() {
 		async: false,
 		url: "/ezPMS/getFolderList.do",
 		data: {
-			"projectId": projectId
+			"projectId": projectId,
+			"location" : "folderSetting"
 		},
 		dataType: "json",
 		success: function(data) {

@@ -2162,6 +2162,130 @@ public class EzPMSGWController {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId + "/users/" + userId + "] ended.");
 		return result;
 	}
+	
+	/**
+	 * 프로젝트관리 업무 리스트 테스트
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/test/task-list/{projectId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getTaskList2(@PathVariable long projectId, @PathVariable String userId, HttpServletRequest request)
+			throws Exception {
+		LOGGER.debug("ezPMS G/W [GET /rest/test/ezPMS/task-list/" + projectId + "/users/" + userId + "] started.");
+		Long startMillis = System.currentTimeMillis();
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			String isMyTask = request.getParameter("isMyTask") == null ? "A" : request.getParameter("isMyTask");
+			int tenantId = info.getTenantId();
+			int limit = 0;
+			int startRow = 0;
+			String orderWhat = request.getParameter("orderWhat");
+			String orderHow = request.getParameter("orderHow");
+			String position = request.getParameter("position");
+			String companyId = info.getCompanyId();
+			String deptId = info.getDeptId();
+			int roleId = 0;
+			long groupId = 0;
+			
+			if (projectId != 0) {
+				roleId = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
+			}
+			
+			if (orderWhat == null) {
+				orderWhat = "init";
+			}
+			
+			if (request.getParameter("limit") != null) {
+				limit = Integer.parseInt(request.getParameter("limit"));
+			}
+			
+			if (request.getParameter("startRow") != null) {
+				startRow = Integer.parseInt(request.getParameter("startRow"));
+			}
+			
+			SearchVO search = new SearchVO();
+			search.setTenantId(info.getTenantId());
+			search.setProjectId(projectId);
+			search.setStatus(request.getParameter("status"));
+			
+			if (request.getParameter("groupId") != null) {
+				groupId = Long.parseLong(request.getParameter("groupId"));
+				search.setGroupId(groupId);
+				
+			} else {
+				groupId = 0;
+				search.setGroupId(groupId);
+			}
+			
+			search.setMemberId(request.getParameter("headManagerName"));
+			search.setIsMyTask(isMyTask);
+			search.setTenantId(tenantId);
+			
+			// 추가
+			search.setTaskName(request.getParameter("searchByTaskName"));
+			search.setMemberName(request.getParameter("searchByUser"));
+			search.setPlanStartDate(request.getParameter("searchByStartDate"));
+			search.setPlanEndDate(request.getParameter("searchByEndDate"));
+			search.setUpperGroupName(request.getParameter("searchByUpperGroupName"));
+			search.setOverview(request.getParameter("searchByOverview"));
+			search.setProjectName(request.getParameter("searchByProjectName"));
+			
+			ProjectInfoVO projectDetails = ezPMSService.getProjectDetails(projectId, userId, tenantId, null, lang, info.getDeptId(), info.getCompanyId());
+			HashSet<String> holiday = ezPMSService.getHolidayList(projectDetails.getPlanStartDate(), projectDetails.getPlanEndDate(), tenantId, companyId, lang);
+			ArrayList<String> holidayList = new ArrayList<String>();
+			holidayList.addAll(holiday);
+			
+			List<ProjectTaskVO> taskList = ezPMSService.getTaskListForGantt(search, userId, limit, startRow, orderWhat, orderHow, position, roleId, deptId, holidayList);
+			
+			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			
+			for (ProjectTaskVO vo : taskList) {
+				vo.setTaskMember(
+						ezPMSService.getTaskMemberList(info.getTenantId(), vo.getTaskId(), lang));
+				
+				//지연율
+				if (vo.getStatus().equals("L")) {
+					vo.setLatePercent(100 - vo.getRealProgress());
+				} else {
+					vo.setLatePercent(0);
+				}
+				
+				//실제 시작일과 종료일 (완료일 경우)
+//				if (vo.getStatus().equals("C")) {
+//					Date realStartDate = sdf.parse(vo.getRealStartDate());
+//					Date realEndDate = sdf.parse(vo.getRealEndDate());
+//					
+//					int realWorkingday = ezPMSService.getWorkingDays(realStartDate, realEndDate, companyId, tenantId, lang);
+//					
+//					vo.setRealStartEndDiff(realWorkingday);
+//				} else {
+//					vo.setRealStartEndDiff(0);
+//				}
+			}
+			
+			JSONObject data = new JSONObject();
+			data.put("taskList", taskList);
+			data.put("userRoleId", roleId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		Long endMillis = System.currentTimeMillis();
+		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0) + " sec");
+		LOGGER.debug("ezPMS G/W [GET /rest/test/ezPMS/task-list/" + projectId + "/users/" + userId + "] ended.");
+		return result;
+	}
 
 	/**
 	 * 프로젝트관리 업무 등록
@@ -5039,8 +5163,9 @@ public class EzPMSGWController {
 
 			int tenantId = info.getTenantId();
 			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
+			String location = request.getParameter("location");
 			
-			List<ProjectBoardFolderVO> folderList = ezPMSService.getBoardFolderList(projectId, tenantId, lang);
+			List<ProjectBoardFolderVO> folderList = ezPMSService.getBoardFolderList(projectId, tenantId, lang, location);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

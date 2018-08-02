@@ -38,7 +38,7 @@ $(function(){
 	logData = ${data};
 	logData = JSON.parse(JSON.stringify(logData));
 	
-	getProjectTaskTree("taskTree", logData, "taskLog");
+	getProjectTaskTree("taskTree", logData, "taskLog", 0);
 	
 	$("#searchStatus").css("display", "none");
 	

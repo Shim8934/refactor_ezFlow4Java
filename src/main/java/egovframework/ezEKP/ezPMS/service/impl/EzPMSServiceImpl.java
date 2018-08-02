@@ -622,6 +622,47 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] getTaskList ended");
 		return list;
 	}
+	
+	@Override
+	public List<ProjectTaskVO> getTaskListForGantt(SearchVO search, String userId, int limit, int startRow, String orderWhat, String orderHow, String location, int roleId, String deptId, ArrayList<String> holidayList) {
+		LOGGER.debug("[SERVICE] getTaskList started");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		param.put("projectId", search.getProjectId());
+		param.put("taskName", search.getTaskName());
+		param.put("upperGroupName", search.getUpperGroupName());
+		param.put("headManagerName", search.getMemberName());
+		param.put("overview", search.getOverview());
+		param.put("searhByStartDate", search.getPlanStartDate());
+		param.put("searchByEndDate", search.getPlanEndDate());
+		param.put("lang", ""); // 파라미터로 받아와야함.
+		param.put("status", search.getStatus());
+		param.put("tenantId", search.getTenantId());
+		param.put("limit", limit);
+		param.put("startRow", startRow);
+		param.put("groupId", search.getGroupId());
+		param.put("isMyTask", search.getIsMyTask());
+		param.put("roleId", roleId);
+		param.put("deptId", deptId);
+		
+		// 정렬
+		param.put("orderWhat", orderWhat);
+		param.put("orderHow", orderHow);
+		param.put("location", location);
+		
+		// 검색
+		param.put("searchByOverview", search.getOverview());
+		param.put("searchByUser", search.getMemberName());
+		param.put("taskName", search.getTaskName());
+		param.put("searchByProjectName", search.getProjectName());
+		param.put("holidayList", holidayList);
+		
+		List<ProjectTaskVO> list = ezPMSDAO.getTaskListForGantt(param);
+		
+		LOGGER.debug("[SERVICE] getTaskList ended");
+		return list;
+	}
 
 	@Override
 	public List<ProjectGroupVO> getGroupList(SearchVO search, String orderWhat, String orderHow, int startRow,
@@ -3465,7 +3506,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectBoardFolderVO> getBoardFolderList(long projectId, int tenantId, String lang) {
+	public List<ProjectBoardFolderVO> getBoardFolderList(long projectId, int tenantId, String lang, String location) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("projectId", projectId);
 		map.put("tenantId", tenantId);
@@ -3480,9 +3521,11 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			map.put("folderId", vo.getId());
 			
 			int taskGroupCount = ezPMSDAO.getBoardListCount(map);
-
-			if (taskGroupCount != 0) {
-				vo.setText(vo.getText() + " (" + taskGroupCount + ")");
+			
+			if (location == null || !location.equals("folderSetting")) {
+				if (taskGroupCount != 0) {
+					vo.setText(vo.getText() + " (" + taskGroupCount + ")");
+				}
 			}
 		}
 		

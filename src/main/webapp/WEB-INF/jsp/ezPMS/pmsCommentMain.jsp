@@ -64,7 +64,7 @@
 		treeData = ${data};
 		treeData = JSON.parse(JSON.stringify(treeData));
 		
-		getProjectTaskTree("taskTree", treeData, false);
+		getProjectTaskTree("taskTree", treeData, "comment", 0);
 		
 		$("#taskTree").on("click", ".jstree-anchor", function() {
 			if($(this).parent().attr("id").charAt(0) == 't') { 
@@ -165,6 +165,24 @@
 		});
 
 		projectListScroll();
+	}
+	
+	function getTaskTree() {
+		$.ajax({
+			type : "POST",
+			dataType : "json",
+			async: false,
+			data : {"projectId" : projectId, "onlyGroup" : false, "location" : "comment"},
+			url : "/ezPMS/projectTaskTree.do",
+			success : function(data) {
+				treeData = JSON.parse(JSON.stringify(data));
+				var clickedData = $(".jstree-clicked");
+				var idx = $(".jstree-anchor").index(clickedData);
+				
+				getProjectTaskTree("taskTree", treeData.data, "comment", idx);
+				getCommentList();
+			}
+		});
 	}
 	
 	//헤더 리스트 셋팅

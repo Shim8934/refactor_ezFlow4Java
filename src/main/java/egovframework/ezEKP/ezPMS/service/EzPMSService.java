@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezPMS.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -69,6 +70,8 @@ public interface EzPMSService {
 	public List<String> getProjectNameList(String userId, int tenantId);
 	
 	public List<ProjectTaskVO> getTaskList(SearchVO search, String userId, int limit, int startRow, String orderWhat, String orderHow, String location, int roleId, String deptId);
+	
+	public List<ProjectTaskVO> getTaskListForGantt(SearchVO search, String userId, int limit, int startRow, String orderWhat, String orderHow, String location, int roleId, String deptId, ArrayList<String> holidayList);
 	
 	public List<ProjectGroupVO> getGroupList(SearchVO search, String orderWhat, String orderHow, int startRow, int limit, String lang, String location);
 	
@@ -273,7 +276,7 @@ public interface EzPMSService {
 
 	public HashSet<String> getHolidayList(String planStartDate, String planEndDate, int tenantId, String companyId, String lang);
 	
-	public List<ProjectBoardFolderVO> getBoardFolderList (long projectId, int tenantId, String lang);
+	public List<ProjectBoardFolderVO> getBoardFolderList (long projectId, int tenantId, String lang, String location);
 	
 	public ProjectBoardFolderVO getBoardFolder (long projectId, int tenantId, String lang, long folderId);
 	

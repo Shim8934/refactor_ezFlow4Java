@@ -8,12 +8,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezPMS.t155' /></title>
+<link rel="stylesheet" href="/css/ezPMS/default/style.css"
+	type="text/css" />
 <script type="text/javascript" src="/js/mouseeffect.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
+<script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
 <script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript">

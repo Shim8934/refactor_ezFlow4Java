@@ -715,7 +715,6 @@
 .jstree-default-small .jstree-folder {
   background: url("/images/OrganTree_cross/fldr.gif");
   background-repeat: no-repeat;
-  margin-top : 3px;
 }
 .jstree-default-small > .jstree-container-ul > .jstree-node {
   margin-left: 0;

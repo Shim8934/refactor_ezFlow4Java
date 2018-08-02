@@ -60,7 +60,7 @@
 		taskData = ${data};
 		taskData = JSON.parse(JSON.stringify(taskData));
 		
-		getProjectTaskTree("taskTree", taskData, "taskList");
+		getProjectTaskTree("taskTree", taskData, "taskList", 0);
 		getDatePicker();
 		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	});
@@ -121,7 +121,24 @@
 			}
 		});
 	}
-
+	
+	function getTaskTree() {
+		$.ajax({
+			type : "POST",
+			dataType : "json",
+			async: false,
+			data : {"projectId" : projectId, "onlyGroup" : true, "location" : "taskList"},
+			url : "/ezPMS/projectTaskTree.do",
+			success : function(data) {
+				taskData = JSON.parse(JSON.stringify(data));
+				var clickedData = $(".jstree-clicked");
+				var idx = $(".jstree-anchor").index(clickedData);
+				
+				getProjectTaskTree("taskTree", taskData.data, "taskList", idx);
+			}
+		});
+	}
+	
 	function setInitOrder() {
 		$("#BoardList_TH th").each(function() {
 			if (orderWhat == $(this).attr("order")) {
@@ -404,7 +421,7 @@
 							
 							checkedVal = "";
 							$("#projectProgress", parent.document).text(result.projectProgress.toFixed(1) + '%');
-							setContentList();
+							getTaskTree();
 						} else {
 							alert("<spring:message code='ezPMS.t184' />");
 							return;

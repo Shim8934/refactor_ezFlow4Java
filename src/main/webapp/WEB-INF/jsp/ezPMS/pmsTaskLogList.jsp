@@ -13,6 +13,8 @@
 <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
+<script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
 <link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
 <script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 <script type="text/javascript">
