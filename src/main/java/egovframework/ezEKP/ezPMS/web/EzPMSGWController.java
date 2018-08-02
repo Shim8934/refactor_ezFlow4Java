@@ -1187,7 +1187,7 @@ public class EzPMSGWController {
 			long groupId = 0;
 			int roleId = 0;
 
-			if (projectId != 0) {
+			if (projectId.compareTo(0L) != 0) {
 				roleId = ezPMSService.getUserProjectRole(userId, info.getTenantId(), projectId, info.getDeptId());
 			}
 
@@ -2022,7 +2022,7 @@ public class EzPMSGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/task-list/{projectId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject getTaskList(@PathVariable long projectId, @PathVariable String userId, HttpServletRequest request)
+	public JSONObject getTaskList(@PathVariable Long projectId, @PathVariable String userId, HttpServletRequest request)
 			throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId + "/users/" + userId + "] started.");
 		Long startMillis = System.currentTimeMillis();
@@ -2044,8 +2044,8 @@ public class EzPMSGWController {
 			String deptId = info.getDeptId();
 			int roleId = 0;
 			long groupId = 0;
-
-			if (projectId != 0) {
+			System.out.println(projectId.compareTo(0L));
+			if (projectId.compareTo(0L) != 0) {
 				roleId = ezPMSService.getUserProjectRole(userId, tenantId, projectId, info.getDeptId());
 			}
 
@@ -4618,13 +4618,15 @@ public class EzPMSGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-
-			int viewerCount = ezPMSService.getBoardViewerCount(info.getTenantId(), itemId);
+			Long projectId = Long.parseLong(request.getParameter("projectId"));
+			
+			int viewerCount = ezPMSService.getBoardViewerCount(info.getTenantId(), itemId, projectId);
 
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", viewerCount + "");
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
@@ -4659,7 +4661,7 @@ public class EzPMSGWController {
 
 			param.put("lang", lang);
 			param.put("itemId", itemId);
-
+			
 			Enumeration<String> parameterNames = request.getParameterNames();
 
 			while (parameterNames.hasMoreElements()) {

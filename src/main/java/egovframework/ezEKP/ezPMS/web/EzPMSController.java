@@ -990,7 +990,7 @@ public class EzPMSController {
 
 						if (status.equals("ok")) {
 							JSONObject taskDetails = (JSONObject) result.get("data");
-							model.addAttribute("taskDetails", taskDetails);
+							model.addAttribute("taskDetails", taskDetails.get("taskDetails"));
 							model.addAttribute("groupDetails", "{}");
 						}
 					}
@@ -3721,10 +3721,11 @@ public class EzPMSController {
 		int countPage = 10;
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
+		
 		String itemId = request.getParameter("itemId");
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
+		param.put("projectId", request.getParameter("projectId"));
 
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/boards/" + itemId + "/viewer-count", param,
 				request, "get", null);

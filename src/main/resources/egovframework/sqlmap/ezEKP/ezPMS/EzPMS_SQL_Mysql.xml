@@ -2635,6 +2635,8 @@
 				U.title AS position, 	R.user_id
 			FROM tbl_pms_item_read R
 			LEFT JOIN tbl_usermaster U
+			ON
+				U.CN = R.USER_ID
 			AND R.tenant_id = U.tenant_id
 			WHERE 
 				item_id = #itemId#
