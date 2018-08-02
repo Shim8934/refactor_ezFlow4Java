@@ -371,7 +371,7 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
-				function saveNormalAddress(addressDocument, saveMode, cabinetId) {
+				function saveNormalAddress(addressOpener, saveMode, cabinetId) {
 					var addressDocument = addressOpener.document;
 					var title           = addressDocument.getElementById("TextName").textContent;
 					var createUser      = addressOpener.creatorid;

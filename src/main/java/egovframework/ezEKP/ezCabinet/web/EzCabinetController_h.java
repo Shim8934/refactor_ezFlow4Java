@@ -353,10 +353,14 @@ public class EzCabinetController_h {
 			model.addAttribute(columnId, column);
 		}
 		
+		logger.debug("HERERRRR");
+		
 		if (addressType.equals("group")) {
+			logger.debug("HERERRRR1");
 			jspPageName = "ezCabinet/cabinetGroupAddress";
 		}
 		else {
+			logger.debug("HERERRRR222");
 			jspPageName = "ezCabinet/cabinetNormalAddress";
 		}
 		

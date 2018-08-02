@@ -586,15 +586,9 @@ public class EzCabinetGWController_h {
 			modifier = new SimpleUserInfoVO(modifierId, modifierId);
 		}
 		
-		result.put("creator" , creator);
-		result.put("modifier", modifier);
-		
-		if (addressType.equals("normal")) {
-			result.put("addresstype", "normal");
-		}
-		else {
-			result.put("addresstype", "group");
-		}
+		result.put("creator" ,    creator);
+		result.put("modifier",    modifier);
+		result.put("addresstype", addressType.getColumnValue());
 	}
 	
 	private void getMoreEmailDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {

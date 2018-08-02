@@ -35,6 +35,12 @@
 					<td class="nowrap"><c:out value="${fn:substring(modifydate.columnValue, 0, 19)}"/></td>
 				</tr>
 				<tr>
+					<th><c:out value="${company.columnName}"/></th>
+					<td id="addrMod" class="overfl" title="<c:out value="${company.columnValue}"/>"><c:out value="${company.columnValue}"/></td>
+					<th><c:out value="${department.columnName}"/></th>
+					<td class="nowrap overfl" title="<c:out value="${department.columnValue}"/>"><c:out value="${department.columnValue}"/></td>
+				</tr>
+				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
 					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
 				</tr>
@@ -43,9 +49,39 @@
 					<td colspan="3"><div id="rlWrapDiv" class="rlFileDiv"><div id="fileListDiv" class="rlDocDiv"></div></div></td>
 				</tr>
 			</table>
+			<table class="tblEmailInf">
+				<tr>
+					<th><c:out value="${compnumber.columnName}"/></th>
+					<td id="addrMod" class="overfl" title="<c:out value="${compnumber.columnValue}"/>"><c:out value="${compnumber.columnValue}"/></td>
+					<th><c:out value="${usernumber.columnName}"/></th>
+					<td class="nowrap overfl" title="<c:out value="${usernumber.columnValue}"/>"><c:out value="${usernumber.columnValue}"/></td>
+				</tr>
+				<tr>
+					<th><c:out value="${faxnumber.columnName}"/></th>
+					<td id="addrMod" class="overfl" title="<c:out value="${faxnumber.columnValue}"/>"><c:out value="${faxnumber.columnValue}"/></td>
+					<th><c:out value="${homepage.columnName}"/></th>
+					<td class="nowrap overfl" title="<c:out value="${homepage.columnValue}"/>"><c:out value="${homepage.columnValue}"/></td>
+				</tr>
+				<tr>
+					<th rowspan="2" ><c:out value="${compaddr.columnName}"/></th>
+					<td colspan="3" class="overfl"><c:out value="${companyzip.columnValue}"/></td>
+				</tr>
+				<tr>
+					<td colspan="3" class="overfl" title="<c:out value="${compaddr.columnValue}"/>"><c:out value="${compaddr.columnValue}"/></td>
+				</tr>
+				<tr>
+					<th rowspan="2" ><c:out value="${homeaddr.columnName}"/></th>
+					<td colspan="3" class="overfl"><c:out value="${homezip.columnValue}"/></td>
+				</tr>
+				<tr>
+					<td colspan="3" class="overfl" title="<c:out value="${homeaddr.columnValue}"/>"><c:out value="${homeaddr.columnValue}"/></td>
+				</tr>
+				<tr>
+					<th><c:out value="${memo.columnName}"/></th>
+					<td colspan="3"><div class="cabmemo"><c:out value="${memo.columnValue}"/></div></td>
+				</tr>
+			</table>
 		</div>
-		
-		<div class="addressContDiv">${item.contentPath}</div>
 		
 		<div class="cabBttnDiv" id="fileDivBttn">
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
@@ -64,7 +100,7 @@
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
 		<script type="text/javascript">
-			var CabinetGroupAddress = function() {
+			var CabinetNormalAddress = function() {
 				var rlWindow    = null;
 				var userWindow  = null;
 				var itemPopup   = null;
@@ -355,7 +391,7 @@
 				
 				function getRelatedPopUp() {
 					if (rlWindow) {rlWindow.close();}
-					rlWindow = window.open("/ezCabinet/getRelatedFile.do?itemId=" + itemId + "&module=gaddr", "relatedWd", getOpenWindowfeature(800, 600));
+					rlWindow = window.open("/ezCabinet/getRelatedFile.do?itemId=" + itemId + "&module=naddr", "relatedWd", getOpenWindowfeature(800, 600));
 				}
 				
 				function closeWindow() {window.close();}
@@ -367,6 +403,6 @@
 				};
 			}();
 		</script>
-		<script type="text/javascript">CabinetGroupAddress.init("<c:out value='${itemId}'/>");</script>
+		<script type="text/javascript">CabinetNormalAddress.init("<c:out value='${itemId}'/>");</script>
 	</body>
 </html>

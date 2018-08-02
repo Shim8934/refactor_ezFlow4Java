@@ -18,29 +18,30 @@
 			<table class="tblEmailInf">
 				<tr>
 					<th><spring:message code='ezCabinet.t109'/></th>
-					<td id="creator" class="cursor wide"><c:out value="${item.creatorName}"/></td>
+					<td id="creator" class="overfl cursor wide" title="<c:out value="${item.creatorName}"/>"><c:out value="${item.creatorName}"/></td>
 					<th><spring:message code='ezCabinet.t110'/></th>
 					<td id="createdDate" class="nowrap"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
-				<tr>
+				</tr>
 				<tr>
 					<th><c:out value="${sender.columnName}"/></th>
-					<td id="senderMail" class="cursor wide"><c:out value="${senderUser.userName}"/></td>
+					<td id="senderMail" class="overfl cursor wide" title="<c:out value="${senderUser.userName}"/>"><c:out value="${senderUser.userName}"/></td>
 					<th><c:out value="${emailTime.columnName}"/></th>
 					<td class="nowrap"><c:out value="${fn:substring(emailTime.columnValue, 0, 19)}"/></td>
-				<tr>
+				</tr>
 				<tr>
 					<th><c:out value="${receiver.columnName}"/></th>
 					<td colspan="3"><div id="receivers" class="cabemailDiv"></div></td>
-				<tr>
+				</tr>
 				<c:if test="${not empty forwardList}">
 					<tr>
 						<th><c:out value="${forward.columnName}"/></th>
 						<td colspan="3"><div id="forwards" class="cabemailDiv"></div></td>
-					<tr>
+					</tr>
 				</c:if>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
 					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
+				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t94'/></th>
 					<td colspan="3"><div id="rlWrapDiv" class="rlFileDiv"><div id="fileListDiv" class="rlDocDiv"></div></div></td>
@@ -447,6 +448,13 @@
 				function afterChangeSuccessfully() {
 					alert(CabinetMessages.strModify);
 					var parentWd = window.opener;
+					if (parentWd && parentWd.CabinetItem) {parentWd.CabinetItem.reload();}
+					closeWindow();
+				}
+				
+				function afterDeleteSuccessfully() {
+					alert(CabinetMessages.strDel);
+					var parentWd    = window.opener;
 					if (parentWd && parentWd.CabinetItem) {parentWd.CabinetItem.reload();}
 					closeWindow();
 				}
