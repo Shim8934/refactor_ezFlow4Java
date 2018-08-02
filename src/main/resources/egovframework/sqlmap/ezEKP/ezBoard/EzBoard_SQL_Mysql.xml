@@ -4089,7 +4089,11 @@
 		        			  WHERE
 		        					TENANT_ID = #tenantID#
 		        			  AND  
-		        					BOARDID = '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' )
+		        					BOARDID = '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}'
+		        			  AND
+		        			  		(COMPANYID = #companyID#
+		        			  		OR
+		        			  		COMPANYID = ''))
 		    WHERE
 		    	TENANT_ID = #tenantID#
 		    AND
