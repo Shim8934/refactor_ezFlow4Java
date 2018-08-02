@@ -94,7 +94,7 @@ public interface EzCabinetService {
 	SimpleUserInfoVO getSimpleUserInfo(String columnValue, String primary, int tenantId) throws Exception;
 	
 	//Modify related email item function 
-	JSONObject modifyEmailItem(int currentItemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception;
+	JSONObject modifyRelatedItem(int currentItemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception;
 	
 	//Save related address item functions
 	JSONObject saveGroupAddressItem(String realPath, int dstCabinetId, String title, String mode, String content, String createUser, String createDate, String changeUser, String changeDate, LoginVO userInfo) throws Exception;

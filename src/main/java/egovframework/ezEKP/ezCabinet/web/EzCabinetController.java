@@ -735,8 +735,8 @@ public class EzCabinetController {
 	
 	@RequestMapping(value="/ezCabinet/modifyEmailItem.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String jsonModyfyRelatedEmail(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
-		logger.debug("jsonModyfyRelatedEmail is running!");
+	public String jsonModifyRelatedEmail(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonModifyRelatedEmail is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String itemId          = request.getParameter("itemId")      != null ? request.getParameter("itemId")      : "";
 		String title           = request.getParameter("title")       != null ? request.getParameter("title")       : "";
@@ -749,9 +749,9 @@ public class EzCabinetController {
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.modifyRelatedEmail(request, userInfo.getId(), itemId, title, relatedList);
+		resultObj = cabinetRestService.modifyRelatedItem(request, userInfo.getId(), itemId, title, relatedList);
 		
-		logger.debug("jsonModyfyRelatedEmail finishes!");
+		logger.debug("jsonModifyRelatedEmail finishes!");
 		return resultObj.toString();
 	}
 	
@@ -783,6 +783,29 @@ public class EzCabinetController {
 		logger.debug("jsonSaveRelatedGroupAddress finishes!");
 		return resultObj.toString();
 	}
+	
+	@RequestMapping(value="/ezCabinet/modifyGroupAddress.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonModifyGroupAddress(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonModifyGroupAddress is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String itemId          = request.getParameter("itemId")      != null ? request.getParameter("itemId")      : "";
+		String title           = request.getParameter("title")       != null ? request.getParameter("title")       : "";
+		String relatedList     = request.getParameter("relatedList") != null ? request.getParameter("relatedList") : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		if (itemId.equals("") || title.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.modifyRelatedItem(request, userInfo.getId(), itemId, title, relatedList);
+		
+		logger.debug("jsonModifyGroupAddress finishes!");
+		return resultObj.toString();
+	}
+	
 	
 	private String getFileSize(long fileSize) {
 		String fileSize_ = "";

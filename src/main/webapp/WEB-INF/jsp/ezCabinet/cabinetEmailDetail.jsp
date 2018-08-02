@@ -106,9 +106,6 @@
 					listBttns[1].onclick    = function(e) {fileDelete();};
 					listBttns[2].onclick    = function(e) {filePrint();}
 					listBttns[3].onclick    = function(e) {closeWindow();};
-					
-					document.getElementById("fileListDiv").onscroll = function(e) {scrollListOfItem(this);}
-					
 					var cabBttnElmt         = document.getElementById("fileModifyDivBttn");
 					var listBttns           = cabBttnElmt.children;
 					listBttns[0].onclick    = function(e) {saveItem();};
@@ -362,13 +359,28 @@
 					}
 					
 					var iframeElmt = document.getElementById("mailIframe");
-					var doc        = iframeElmt.contentDocument? iframeElmt.contentDocument: iframeElmt.contentWindow.document;
-					var height     = Math.max(doc.body.scrollHeight, doc.body.offsetHeight, doc.documentElement.clientHeight, doc.documentElement.scrollHeight, doc.documentElement.offsetHeight)
-					iframeElmt.style.height = height + 4 + "px";
+					var parentDiv  = iframeElmt.parentElement;
+					var iframeCont = iframeElmt.contentWindow? iframeElmt.contentWindow: iframeElmt.contentDocument;
+					
+					var printWrapDiv   = document.createElement("div");
+					var divInfo        = document.querySelector("div[class='divInfo']");
+					var cloneDivInf    = divInfo.cloneNode(true);
+					var divText        = iframeCont.document.getElementById("txtField");
+					var cloneDivText   = divText.cloneNode(true);
+					var txtWrDiv       = document.createElement("div");
+					txtWrDiv.className = "cabtxtPrint";
+					txtWrDiv.appendChild(cloneDivText);
+					printWrapDiv.appendChild(cloneDivInf);
+					printWrapDiv.appendChild(txtWrDiv);
+					divInfo.style.display   = "none";
+					parentDiv.style.display = "none";
+					document.body.appendChild(printWrapDiv);
 					
 					window.print();
 					
-					iframeElmt.removeAttribute("style");
+					parentDiv.removeAttribute("style");
+					divInfo.removeAttribute("style");
+					document.body.removeChild(printWrapDiv);
 					if (rltdElmt) {rltdElmt.removeAttribute("style");}
 					if (rtdElmt)  {rtdElmt.removeAttribute("style");}
 					if (ftdElmt)  {ftdElmt.removeAttribute("style");}

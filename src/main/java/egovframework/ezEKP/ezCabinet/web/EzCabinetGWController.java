@@ -1571,13 +1571,12 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/relate-item/modify/email", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject modifyEmailItem(@RequestBody JSONObject emailItemInf, Locale locale, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezcabinet/relate-item/modify/id/{itemid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject modifyEmailItem(@RequestBody JSONObject emailItemInf, @PathVariable(value="itemid") String itemId, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName  = request.getHeader("host-name") != null ? request.getHeader("host-name")        : "";
 		String title       = emailItemInf.get("title")      != null ? emailItemInf.get("title").toString()  : "";
 		String relatedList = emailItemInf.get("relate")     != null ? emailItemInf.get("relate").toString() : "";
 		String userId      = emailItemInf.get("userId")     != null ? emailItemInf.get("userId").toString() : "";
-		String itemId      = emailItemInf.get("itemId")     != null ? emailItemInf.get("itemId").toString() : "";
 		JSONObject result  = new JSONObject();
 		JSONParser jp      = new JSONParser();
 		
@@ -1605,7 +1604,7 @@ public class EzCabinetGWController {
 			}
 			
 			JSONArray relatedFiles = (JSONArray) jp.parse(relatedList);
-			result                 = cabinetService.modifyEmailItem(currentItemId, title, relatedFiles, userInfo);
+			result                 = cabinetService.modifyRelatedItem(currentItemId, title, relatedFiles, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1645,6 +1644,51 @@ public class EzCabinetGWController {
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
 			String realPath  = request.getServletContext().getRealPath("");
 			result           = cabinetService.saveGroupAddressItem(realPath, dstCabinetId, title, mode, content, createUser, createDate, changeUser, changeDate, userInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/relate-item/modify/", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject modifyGroupAddress(@RequestBody JSONObject addressItemInf, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName  = request.getHeader("host-name") != null ? request.getHeader("host-name")          : "";
+		String title       = addressItemInf.get("title")    != null ? addressItemInf.get("title").toString()  : "";
+		String relatedList = addressItemInf.get("relate")   != null ? addressItemInf.get("relate").toString() : "";
+		String userId      = addressItemInf.get("userId")   != null ? addressItemInf.get("userId").toString() : "";
+		String itemId      = addressItemInf.get("itemId")   != null ? addressItemInf.get("itemId").toString() : "";
+		JSONObject result  = new JSONObject();
+		JSONParser jp      = new JSONParser();
+		
+		logger.debug("ServerName: " + serverName + " || title: " + title + " || userId: " + userId + " || itemId: " + itemId + " || relatedList: " + relatedList);
+		
+		if (serverName.equals("") || userId.equals("") || title.equals("") || itemId.equals("") ) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo       = commonUtil.getUserForGw(userId, serverName);
+			int currentItemId      = Integer.parseInt(itemId);
+			
+			//Add checking permission here
+			List<Integer> itemList = new ArrayList<>(Arrays.asList(currentItemId));
+			JSONObject permission  = cabinetService.checkPermission(new ArrayList<>(), itemList, 1, userInfo);
+			
+			if ((int)permission.get("code") == 1) {
+				result.put("status", "error");
+				result.put("code", 3);
+				return result;
+			}
+			
+			JSONArray relatedFiles = (JSONArray) jp.parse(relatedList);
+			result                 = cabinetService.modifyRelatedItem(currentItemId, title, relatedFiles, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

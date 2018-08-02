@@ -346,8 +346,8 @@
 					var createDate      = addressDocument.getElementById("TextCreateDate").textContent;
 					var changeUser      = addressOpener.modifierid;
 					var changeDate      = addressDocument.getElementById("TextModifyDate").textContent;
-					var selectBox       = addressDocument.getElementById("ListMember");
-					var addressCont     = selectBox.parentElement.innerHTML;
+					var listAddress     = addressDocument.getElementById("ListMember");
+					var addressCont     = listAddress.innerHTML;
 					
 					var url  = "/ezCabinet/saveRelatedGroupAddress.do";
 					var data = {

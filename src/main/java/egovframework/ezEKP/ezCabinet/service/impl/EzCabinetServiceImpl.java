@@ -1555,7 +1555,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject modifyEmailItem(int itemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception {
+	public JSONObject modifyRelatedItem(int itemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -1563,13 +1563,6 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("itemId",   itemId);
 		
 		CabinetItemVO itemVO = ezCabinetDAO.getItemById(map);
-		
-		if (itemVO.getItemType() != 1) {
-			logger.debug("Invalid item type!");
-			result.put("status", "error");
-			result.put("code", 4);
-			return result;
-		}
 		
 		itemVO.setTitle(title);
 		ezCabinetDAO_h.modifyItem(itemVO);

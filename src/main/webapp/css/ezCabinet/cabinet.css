@@ -265,8 +265,8 @@
 .divInfo {width: 100%;}
 .tblFileInf, .cabShareInf, .tblEmailInf, .tblBoardInf {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse; table-layout: fixed;}
 .tblFileInf tr td, .tblEmailInf tr td, .tblFileInf tr th, .cabShareInf tr td, .cabShareInf tr th, .tblEmailInf tr th, .tblBoardInf tr th, .tblBoardInf tr td {border: 1px solid #ddd;}
-.tblFileInf tr th {width: 120px;}
-.tblEmailInf tr th, .tblBoardInf tr th {text-align: left; max-width: 100px; width: 80px;}
+.tblFileInf tr th {width: 80px; font-weight: normal; text-align: left;}
+.tblEmailInf tr th, .tblBoardInf tr th {text-align: left; max-width: 100px; width: 80px; font-weight: normal;}
 .tblFileInf tr td, .cabShareInf, .tblEmailInf tr td, .tblBoardInf tr td {padding: 0px 5px; background: #fff; height: 29px; word-break: break-all;}
 .tblFileInf tr td >input[type='text'] {width: 100%; border: 0px; padding: 5px; outline: none;}
 .tblFileInf .overfl, .tblEmailInf .overfl {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
@@ -384,5 +384,6 @@
 .title_btn:hover, .cabSpanAttach:hover >span, .cursor:hover {color: #164aad;}
 .cursor {cursor: pointer;}
 .icon_rbtn img {width: 16px; height: 16px;}
+.cabtxtPrint {padding: 8px; border: 1px solid #ddd; margin-top: 10px;}
 
-@media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2, .addressContDiv {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;}  .ulFiles li, .addressContDiv {page-break-inside: avoid;}}
+@media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2, .addressContDiv {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;} .ulFiles li {page-break-inside: avoid;}}

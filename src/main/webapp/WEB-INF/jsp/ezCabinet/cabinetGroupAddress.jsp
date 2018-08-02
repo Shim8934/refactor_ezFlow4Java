@@ -128,17 +128,25 @@
 					var relDocDivElmt = divElmt.parentElement;
 					while (relDocDivElmt.childElementCount > 1) {relDocDivElmt.removeChild(relDocDivElmt.lastElementChild);}
 					
-					if (relatedList && relatedList.length > 0) {
-						var relatedScroll = new CabinetScroll("fileListDiv");
-						setScrollElement(divElmt, relatedList, readRelatedItem, "relatedItemId", "title", "useStatus");
+					for (var i = 0, len = relatedList.length; i < len; i++) {
+						var spanElmt = document.createElement("span");
+						spanElmt.setAttribute("role", relatedList[i]["relatedItemId"]);
+						spanElmt.textContent = relatedList[i]["title"];
+						spanElmt.className   = "rlSpanBnk";
+						spanElmt.onclick = (function(status, itemId){return function() {readRelatedItem(itemId, status);}; })(relatedList[i]["useStatus"], relatedList[i]["relatedItemId"]);
+						divElmt.appendChild(spanElmt);
 						
-						for (var i = 0, len = relatedList.length; i < len; i++) {
-							relatedArr.push({
-								itemType  : relatedList[i]["itemType"],
-								itemId    : relatedList[i]["relatedItemId"],
-								itemTitle : relatedList[i]["title"]
-							})
+						if (i != len - 1) {
+							var divideEm         = document.createElement("em");
+							divideEm.textContent = ";";
+							divElmt.appendChild(divideEm);
 						}
+						
+						relatedArr.push({
+							itemType  : relatedList[i]["itemType"],
+							itemId    : relatedList[i]["relatedItemId"],
+							itemTitle : relatedList[i]["title"]
+						})
 					}
 				}
 				
@@ -200,6 +208,15 @@
 					return feature;
 				}
 				
+				function scrollListOfItem(divElmt) {
+					if (scrolled) {
+						scrolled = false;
+						var distance      = divElmt.scrollTop < lastScrollY ? -20 : 20;
+						divElmt.scrollTop = lastScrollY + distance;
+						setTimeout(function () {scrolled = true; lastScrollY = divElmt.scrollTop;}, 500);
+					}
+				}
+				
 				function fileDelete() {
 					if (confirm(CabinetMessages.strDelete)) {
 						var itemArr = [];
@@ -259,50 +276,18 @@
 				}
 				
 				function filePrint() {
-					var rltdElmt   = null;
-					var ftdElmt    = null;
-					var rtdElmt    = null;
-					
-					var forwardDiv = document.getElementById("forwards");
-					if (forwardDiv) {
-						var fclientHeight = forwardDiv.clientHeight;
-						var fscrollHeight = forwardDiv.scrollHeight;
-						
-						if (fscrollHeight > fclientHeight) {
-							ftdElmt = relatedFileList.parentElement;
-							ftdElmt.setAttribute("style", "vertical-align: top; height: " + (fscrollHeight) + "px;");
-						}
-					}
-					
-					var receiverDiv   = document.getElementById("receivers");
-					var rclientHeight = receiverDiv.clientHeight;
-					var rscrollHeight = receiverDiv.scrollHeight;
-					
-					if (rscrollHeight > rclientHeight) {
-						rtdElmt = receiverDiv.parentElement;
-						rtdElmt.setAttribute("style", "vertical-align: top; height: " + (rscrollHeight) + "px;");
-					}
-					
 					var relatedFileList = document.getElementById("fileListDiv");
-					var rlclientHeight  = relatedFileList.clientHeight;
-					var rlscrollHeight  = relatedFileList.scrollHeight;
+					var clientHeight    = relatedFileList.clientHeight;
+					var scrollHeight    = relatedFileList.scrollHeight;
 					
-					if (rlscrollHeight > rlclientHeight) {
-						rltdElmt = relatedFileList.parentElement.parentElement;
-						rltdElmt.setAttribute("style", "vertical-align: top; height: " + (rlscrollHeight) + "px;");
+					if (scrollHeight > clientHeight) {
+						var tdElmt = relatedFileList.parentElement.parentElement;
+						tdElmt.setAttribute("style", "vertical-align: top; height: " + (scrollHeight) + "px;");
 					}
-					
-					var iframeElmt = document.getElementById("mailIframe");
-					var doc        = iframeElmt.contentDocument? iframeElmt.contentDocument: iframeElmt.contentWindow.document;
-					var height     = Math.max(doc.body.scrollHeight, doc.body.offsetHeight, doc.documentElement.clientHeight, doc.documentElement.scrollHeight, doc.documentElement.offsetHeight)
-					iframeElmt.style.height = height + 4 + "px";
 					
 					window.print();
 					
-					iframeElmt.removeAttribute("style");
-					if (rltdElmt) {rltdElmt.removeAttribute("style");}
-					if (rtdElmt)  {rtdElmt.removeAttribute("style");}
-					if (ftdElmt)  {ftdElmt.removeAttribute("style");}
+					tdElmt.removeAttribute("style");
 				}
 				
 				function saveItem() {
@@ -318,7 +303,7 @@
 					
 					$.ajax({
 						type: "POST",
-						url: "/ezCabinet/modifyEmailItem.do",
+						url: "/ezCabinet/modifyGroupAddress.do",
 						data: {
 							"itemId"      : itemId,
 							"title"       : title,

@@ -574,12 +574,11 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject modifyRelatedEmail(HttpServletRequest request, String userId, String itemId, String title, String relatedList) throws Exception {
-		String url                = "/rest/ezcabinet/relate-item/modify/email";
+	public JSONObject modifyRelatedItem(HttpServletRequest request, String userId, String itemId, String title, String relatedList) throws Exception {
+		String url                = "/rest/ezcabinet/relate-item/modify/id/" + itemId;
 		JSONObject jsonBody       = new JSONObject();
 		jsonBody.put("userId", userId);
 		jsonBody.put("title",  title);
-		jsonBody.put("itemId", itemId);
 		jsonBody.put("relate", relatedList);
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
@@ -587,7 +586,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveRelatedGroupAdress(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String content, String createUser, String createDate, String changeUser, String changeDate) {
+	public JSONObject saveRelatedGroupAdress(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String content, String createUser, String createDate, String changeUser, String changeDate) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/address-group";
 		JSONObject jsonBody       = new JSONObject();
 		jsonBody.put("userId",     userId);
