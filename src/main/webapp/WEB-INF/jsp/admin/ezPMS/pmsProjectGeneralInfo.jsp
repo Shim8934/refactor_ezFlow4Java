@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE>
 <html>
@@ -25,6 +26,7 @@
 	var overview = "${project.overview}";
 	var endAlamStatus = "${project.alamMailStatus}"
 	var headManagerId = '${project.headManagerId}';
+	var headManagerName = '${project.headManagerName}';
 	var groupId = '${project.groupId}';
 	
 	var nowStatus = '${project.status}';
@@ -40,8 +42,8 @@
 	var beforeParticipantList = [];
 	var beforeViewerList = [];
 	
+	
 	$(function() {
-		
 		managerList = [];
 		participantList = [];
 		viewerList = [];	
@@ -53,7 +55,7 @@
 			switch (level) {
 			case 1:
 				managerList.push(member);
-				beforeManagerList.push(member);
+				beforeManagerList.push(member);		
 				break;
 			case 2:
 				participantList.push(member);
@@ -76,16 +78,13 @@
 		 var participantNameList = "";
 		 var viewerNameList = "";
 		 
-		 for (var i = 0; i < managerList.length; i++) {
+		 for (var i = 0; i < managerList.length; i++) {	
 			if(headManagerId == managerList[i].userId) {
-				managerNameList += "<b>"
-				managerNameList += managerList[i].userName;
-				managerNameList += "(" + managerList[i].userDeptname + ")</b>, ";
+				$("#headManager").html(managerList[i].userName + '(' + managerList[i].userDeptname + ')');
 			} else {
 				managerNameList += managerList[i].userName;
 				managerNameList += "(" + managerList[i].userDeptname + "), ";
 			}
-			
 		 }
 		 
 		 for (var i = 0; i < participantList.length; i++) {
@@ -272,6 +271,12 @@
 						<td colspan="3"><c:out value="${project.creatorName}(${project.creatorDeptname})"/></td>
 					</tr>
 					<tr>
+						<th><a class="imgbtn" onclick=""><span><spring:message code='ezPMS.t330' /></span></a></th>
+						<td colspan="3" style="height: 58px;">
+							<div style="overflow-y:auto; max-height:100%; width:100%" id="headManager"></div>
+						</td>
+					</tr>
+					<tr>
 						<th><a class="imgbtn" onclick="openOrganTree(managers)"><span><spring:message code='ezPMS.t63' /></span></a></th>
 						<td colspan="3" style="height: 58px;">
 							<div style="overflow-y:auto; max-height:100%; width:100%" id="managers"></div>
@@ -332,7 +337,7 @@
 									</c:when>
 								</c:choose>
 							</select>
-							&nbsp;<c:out value="${project.progress}%"/>
+							&nbsp;<fmt:formatNumber value="${project.progress}" pattern="0.0"/>%
 						</td>
 					</tr>
 				</table>

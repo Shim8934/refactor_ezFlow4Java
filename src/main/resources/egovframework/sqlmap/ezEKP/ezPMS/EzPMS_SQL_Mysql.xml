@@ -221,6 +221,42 @@
     	<result property="pretask"							column="PRETASK"					columnIndex="32"/>
     </resultMap>
     
+     <resultMap id="projectTaskVOForList2" class="ProjectTaskVO">
+    	<result property="taskId"							column="TASK_ID"					columnIndex="1"/>
+    	<result property="tenantId"							column="TENANT_ID"					columnIndex="2"/>
+    	<result property="projectId"						column="PROJECT_ID"					columnIndex="3"/>
+    	<result property="groupId"							column="GROUP_ID"					columnIndex="4"/>
+    	<result property="taskName"							column="TASK_NAME"					columnIndex="5"/>
+    	<result property="status"							column="STATUS"						columnIndex="6"/>
+    	<result property="planStartDate"					column="PLAN_START_DATE"			columnIndex="7"/>
+    	<result property="planEndDate"						column="PLAN_END_DATE"				columnIndex="8"/>
+    	<result property="realStartDate"					column="REAL_START_DATE"			columnIndex="9"/>
+    	<result property="realEndDate"						column="REAL_END_DATE"				columnIndex="10"/>
+    	<result property="realProgress"						column="REAL_PROGRESS"				columnIndex="11"/>
+    	<result property="weight"							column="WEIGHT"						columnIndex="12"/>
+    	<result property="overview"							column="OVERVIEW"					columnIndex="13"/>
+    	<result property="memberCount"						column="MEMBER_COUNT"				columnIndex="14"/>
+    	<result property="headManagerId"					column="HEAD_MANAGER_ID"			columnIndex="15"/>
+    	<result property="headManagerName"					column="HEAD_MANAGER_NAME"			columnIndex="16"/>
+    	<result property="headManagerDeptname"				column="HEAD_MANAGER_DEPTNAME"		columnIndex="17"/>
+    	<result property="writerId"							column="WRITER_ID"					columnIndex="18"/>
+    	<result property="writeDate"						column="WRITE_DATE"					columnIndex="19"/>
+    	<result property="writerName"						column="WRITER_NAME"				columnIndex="20"/>
+    	<result property="writerDeptname"					column="WRITER_DEPTNAME"			columnIndex="21"/>    	
+    	<result property="treeDepth"						column="TREE_DEPTH"					columnIndex="22"/>
+    	<result property="ancesterGroup"					column="ANCESTER_GROUP"				columnIndex="23"/>
+    	<result property="sortOrder"						column="SORT_ORDER"					columnIndex="24"/>
+    	<result property="workingday"						column="WORKINGDAY"					columnIndex="25"/>
+    	<result property="restDueday"						column="REST_DUEDAY"				columnIndex="26"/>
+    	<result property="linkTaskId"						column="LINK_TASK_ID"				columnIndex="27"/>
+    	<result property="delStatus"						column="DEL_STATUS"					columnIndex="28"/>
+    	<result property="groupName"						column="UPPER_GROUP_NAME"			columnIndex="29"/>
+    	<result property="projectName"						column="PROJECT_NAME"				columnIndex="30"/>
+    	<result property="realWorkingday"					column="REAL_WORKINGDAY"			columnIndex="31"/>
+    	<result property="pretask"							column="PRETASK"					columnIndex="32"/>
+    	<result property="planProgress"						column="PLAN_PROGRESS"				columnIndex="33"/>
+    </resultMap>
+    
     <resultMap class="ProjectTaskVO" id="taskScheduleVO">
     	<result property="planStartDate"					column="PLAN_START_DATE"			columnIndex="7"/>
     	<result property="planEndDate"						column="PLAN_END_DATE"				columnIndex="8"/>
@@ -1638,6 +1674,252 @@
 		</isNotEqual>
 	</select>
 	
+	<select id="EzPMSDAO.getTaskListForGantt" parameterClass="Map" resultMap="projectTaskVOForList2">
+		<![CDATA[
+			SELECT DISTINCT
+				A.TASK_ID,
+				A.TENANT_ID,
+				A.PROJECT_ID,
+				A.GROUP_ID,
+				A.TASK_NAME,
+				A.STATUS,
+				A.PLAN_START_DATE,
+				A.PLAN_END_DATE,
+				A.REAL_START_DATE,
+				A.REAL_END_DATE,
+				A.REAL_PROGRESS,
+				A.WEIGHT,
+				A.OVERVIEW,
+				A.MEMBER_COUNT,
+				A.HEAD_MANAGER_ID,
+				A.HEAD_MANAGER_NAME$lang$ AS HEAD_MANAGER_NAME,
+				A.HEAD_MANAGER_DEPTNAME$lang$ AS HEAD_MANAGER_DEPTNAME,
+				A.WRITER_ID,
+				A.WRITE_DATE,
+				A.WRITER_NAME$lang$ AS WRITER_NAME,
+				A.WRITER_DEPTNAME$lang$ AS WRITER_DEPTNAME,
+				A.TREE_DEPTH,
+				A.ANCESTER_GROUP,
+				A.SORT_ORDER,
+				IFNULL(A.REST_DUEDAY, 0) AS REST_DUEDAY,
+				IFNULL(A.LINK_TASK_ID, 0) AS LINK_TASK_ID,
+				A.DEL_STATUS,
+				D.GROUP_NAME AS UPPER_GROUP_NAME,
+				B.PROJECT_NAME,
+				A.REAL_WORKINGDAY,
+				R.PRETASK,
+				A.WORKINGDAY,
+				(
+				CASE
+				WHEN A.PLAN_START_DATE <= CURDATE() && TW.RESTDUEDAY > 0
+				THEN (TW.WORKINGDAY - TW.RESTDUEDAY) / TW.WORKINGDAY * 100
+				WHEN A.PLAN_START_DATE > CURDATE()
+				THEN 0
+				ELSE 100
+				END
+				) AS PLAN_PROGRESS
+			FROM 
+				tbl_pms_task A
+			JOIN 
+				tbl_pms_project B
+			ON
+				A.PROJECT_ID = B.PROJECT_ID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			JOIN
+				tbl_pms_member C
+			ON	
+				A.PROJECT_ID = C.PROJECT_ID
+			JOIN
+				tbl_pms_group D
+			ON
+				A.GROUP_ID = D.GROUP_ID
+			JOIN	
+				tbl_pms_taskmember E
+			ON
+				A.TASK_ID = E.TASK_ID
+			LEFT JOIN
+				(	
+					SELECT task_id, group_concat(pretask separator ',') AS pretask
+					FROM tbl_pms_pretaskrel
+					GROUP BY task_id
+				) R
+			ON
+				A.TASK_ID = R.TASK_ID
+		]]>
+		<isEmpty property="holidayList">
+			JOIN
+			(
+				SELECT
+					TASK_ID,
+					(LENGTH(REPLACE(RPAD(SUBSTR('~23456~', DAYOFWEEK(plan_start_date)), DATEDIFF(plan_end_date, plan_start_date) + 1, '~23456~'), '~', ''))) AS WORKINGDAY,
+					(LENGTH(REPLACE(RPAD(SUBSTR('~23456~', DAYOFWEEK(ADDDATE(CURDATE(), 1))), DATEDIFF(plan_end_date, ADDDATE(CURDATE(), 1)) + 1, '~23456~'), '~', ''))) AS RESTDUEDAY
+				FROM
+					TBL_PMS_TASK
+				WHERE
+					project_id = #projectId#
+			) TW
+			ON
+				A.TASK_ID = TW.TASK_ID
+		</isEmpty>
+		<isNotEmpty property="holidayList">
+			JOIN
+			(
+				SELECT
+					TASK_ID,
+					(
+						IFNULL((
+						(LENGTH(REPLACE(RPAD(SUBSTR('~23456~', DAYOFWEEK(plan_start_date)), DATEDIFF(plan_end_date, plan_start_date) + 1, '~23456~'), '~', '')))
+						-
+						(SELECT
+							COUNT(a.holiday) 
+						FROM 
+							(
+							<iterate property="holidayList" conjunction="union all">
+							select #holidayList[]# holiday from dual 
+							</iterate>  
+							) a 
+						WHERE 
+							DAYOFWEEK(a.holiday) NOT IN (1,7) 
+						AND 
+							a.holiday BETWEEN plan_start_date AND plan_end_date
+						)
+						), 0)
+					) AS WORKINGDAY,
+					(
+						IFNULL((
+						(LENGTH(REPLACE(RPAD(SUBSTR('~23456~', DAYOFWEEK(ADDDATE(CURDATE(), 1))), DATEDIFF(plan_end_date, ADDDATE(CURDATE(), 1)) + 1, '~23456~'), '~', '')))
+						-
+						(SELECT
+							COUNT(a.holiday) 
+						FROM 
+							(
+							<iterate property="holidayList" conjunction="union all">
+							select #holidayList[]# holiday from dual 
+							</iterate>  
+							) a 
+						WHERE 
+							DAYOFWEEK(a.holiday) NOT IN (1,7) 
+						AND 
+							a.holiday BETWEEN ADDDATE(CURDATE(), 1) AND plan_end_date
+						)
+						), 0)
+					) AS RESTDUEDAY
+				FROM
+					TBL_PMS_TASK
+				WHERE
+					project_id = #projectId#
+			) TW
+			ON
+				A.TASK_ID = TW.TASK_ID
+		</isNotEmpty>
+		<![CDATA[
+			WHERE
+				A.TENANT_ID = #tenantId#
+			AND
+				A.DEL_STATUS = 0
+		]]>
+		<isNotEqual property="roleId" compareValue="3">
+			AND
+				(C.USER_ID = #userId#
+				OR
+				C.USER_ID = #deptId#
+				)
+		</isNotEqual>
+		<isNotEqual property="projectId" compareValue="0">
+			AND  
+				A.PROJECT_ID = #projectId#
+		</isNotEqual>
+		<isEqual property="isMyTask" compareValue="M">
+			AND
+				E.USER_ID = #userId#
+		</isEqual>
+		<isNotNull property="status">
+			<isNotEqual property="status" compareValue="A">
+				AND
+				A.STATUS LIKE CONCAT('%',#status#,'%')
+			</isNotEqual>
+		</isNotNull>
+		<isNotEmpty property="taskName">
+			AND
+				A.TASK_NAME LIKE CONCAT('%',#taskName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="upperGroupName">
+			AND
+                D.GROUP_NAME LIKE CONCAT('%',#upperGroupName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="headManagerName">
+			AND
+				A.HEAD_MANAGER_NAME LIKE CONCAT('%',#headManagerName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searhByStartDate">
+		<![CDATA[
+			AND
+				A.PLAN_START_DATE >= #searhByStartDate#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="searchByUser">
+			AND
+				E.USER_NAME LIKE CONCAT('%',#searchByUser#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByOverview">
+			AND
+				A.OVERVIEW LIKE CONCAT('%',#searchByOverview#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByProjectName">
+			AND
+				B.PROJECT_NAME LIKE CONCAT('%',#searchByProjectName#,'%')
+		</isNotEmpty>
+		<isNotEmpty property="searchByEndDate">
+		<![CDATA[
+			AND
+				A.PLAN_END_DATE <= #searchByEndDate#
+		]]>
+		</isNotEmpty>
+		<isNotEmpty property="groupId">
+			<isNotEqual property="groupId" compareValue="0">
+			AND 
+				(A.GROUP_ID = #groupId# 
+				OR D.UPPER_GROUP_ID = #groupId#
+				OR D.UPPER_GROUP_ID IN (
+							SELECT GROUP_ID FROM TBL_PMS_GROUP WHERE UPPER_GROUP_ID = #groupId#
+				)
+			)
+			</isNotEqual>
+		</isNotEmpty>
+		<isNotEqual property="orderWhat" compareValue="init">
+			ORDER BY
+				$orderWhat$ $orderHow$
+		</isNotEqual>
+		<isEqual property="orderWhat" compareValue="init">
+		<isEmpty property="location">
+			ORDER BY 
+				PLAN_END_DATE
+		</isEmpty>
+		<isNotEmpty property="location">
+		<isEqual property="location" compareValue="gantt">
+			ORDER BY
+				GROUP_ID, SORT_ORDER
+		</isEqual>
+		<isNotEqual property="location" compareValue="gantt">
+			ORDER BY(
+				CASE A.STATUS
+				WHEN 'P' THEN 1
+				WHEN 'W' THEN 2
+				WHEN 'L' THEN 3
+				WHEN 'S' THEN 4
+				WHEN 'C' THEN 5
+				END
+			), PLAN_END_DATE
+		</isNotEqual>
+		</isNotEmpty>
+		</isEqual>
+		<isNotEqual property="limit" compareValue="0">
+			LIMIT 
+				#startRow#, #limit#
+		</isNotEqual>
+	</select>
+	
 	<select id="EzPMSDAO.getUserProjectRole"  parameterClass="map" resultClass="Integer">
 	<![CDATA[
 		SELECT 
@@ -2288,7 +2570,6 @@
 				U.title AS position, 	R.user_id
 			FROM tbl_pms_item_read R
 			LEFT JOIN tbl_usermaster U
-			ON R.user_id = U.cn 
 			AND R.tenant_id = U.tenant_id
 			WHERE 
 				item_id = #itemId#
