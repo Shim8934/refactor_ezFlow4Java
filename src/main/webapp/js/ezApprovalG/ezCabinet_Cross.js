@@ -1381,7 +1381,8 @@ function btnSearchRec_onclick(opnOption,opentype) {
             try { OpenWin.focus(); } catch (e) { }
         }
         else
-            DivPopUpShow(470, 350, url);
+            //DivPopUpShow(470, 350, url);
+        	DivPopUpShow(800, 460, url);
     }
     else {
         var feature;

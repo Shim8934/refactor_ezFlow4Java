@@ -192,9 +192,9 @@
 	       		<div class="portlet_tabpart01_top">
 	       			<p id="tab1"><span onclick="swapTab('totalComment')" class="tabon"><spring:message code='ezCircular.t141' /></span></p>
 	       			<p id="tab2"><span onclick="swapTab('myComment')"><spring:message code='ezCircular.t142' /></span></p>
-	       			<div id="menu">
-	       				<div id="commentSendMail"><ul><li><span onclick="commentSendMail();"><spring:message code='ezCircular.t83'/></span></li></ul></div>
-					</div>	
+	       			<div id="commentSendMail">
+	       				<a id="" class="imgbtn imgbck"><span onclick="commentSendMail();"><spring:message code='ezCircular.t83'/></span></a>
+	       			</div>
 	       		</div>
       	 	</div>			
 			<table id="circularUserList" style="width:99.5%;margin-top:0px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225);margin-top:10px"></table>
