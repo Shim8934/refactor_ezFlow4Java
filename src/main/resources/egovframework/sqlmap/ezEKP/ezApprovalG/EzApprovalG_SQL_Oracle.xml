@@ -5676,7 +5676,8 @@
 	              	  C.AprMemberName2 ,                      
                       B.SeperateAttachXML ,
                       B.DocNumCode ,
-                      B.OrgDocNumCode 
+                      B.OrgDocNumCode,
+                      B.PublicityYn
         		FROM 
         			  TBL_APRDOCINFO A
                 JOIN 
@@ -5732,7 +5733,8 @@
 	             B.SeperateAttachXML ,
 	             B.DocNumCode ,
 	             B.OrgDocNumCode ,
-	             C.sn 
+	             C.sn,
+	             B.PublicityYn
 	        FROM 
 	        	 TBL_APRDOCINFO A
 	        JOIN 
@@ -8264,7 +8266,8 @@
                 'Return a document' APRMEMBERJOBTITLE2  ,
                 B.SeperateAttachXML ,
                 B.DocNumCode ,
-                B.OrgDocNumCode 
+                B.OrgDocNumCode,
+                B.PublicityYn
            FROM 
            		TBL_APRDOCINFO A
            JOIN 
@@ -19147,10 +19150,10 @@
    		INSERT INTO 
    			TBL_RECORD
    		(RecordID,     DocID,     ProcessDeptName, ProcessDeptName2, ProcessDeptCode, RegisterYear,       RegisterDate,                             RegisterNo,     AprMemberTitle,    AprMemberTitle2,        DrafterName,     DrafterName2,           ExecuteDate,                              
-   		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID, COMPANYID) 
+   		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID, COMPANYID, PUBLICITYYN) 
    		VALUES 
    		(#v_RECORDID#, #v_DOCID#,  #v_DEPTNAME#,     #v_DEPTNAME2#,   #v_DEPTCODE#,    #v_REGYEAR#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  #v_DRAFTERNAME#, #v_DRAFTERNAME2#, TO_DATE(#v_EXECUTEDATE#,'YYYY-MM-DD HH24:MI:SS'),  
-   		#v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      NULL,                 NULL,      #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, #v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#,    NULL,     #v_DELFLAG#,  #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REJECTFLAG#, #v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#)
+   		#v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      NULL,                 NULL,      #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, #v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#,    NULL,     #v_DELFLAG#,  #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REJECTFLAG#, #v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#, #v_PUBLICITYYN#)
    </insert>
    
    <insert id="EzApprovalG.insertRegSeperateAttach" parameterClass="Map">
@@ -23509,7 +23512,8 @@
                 'Return a document' APRMEMBERJOBTITLE2  ,
                 B.SeperateAttachXML ,
                 B.DocNumCode ,
-                B.OrgDocNumCode 
+                B.OrgDocNumCode,
+                B.PublicityYn
            FROM 
            		TBL_APRDOCINFO A
            JOIN 
