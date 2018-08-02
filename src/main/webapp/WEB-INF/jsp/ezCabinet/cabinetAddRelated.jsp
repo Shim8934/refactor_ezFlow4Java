@@ -335,8 +335,56 @@
 					//Add code here
 				}
 				
-				function saveJournalDocument() {
-					//Add code here
+				function saveJournalDocument(saveMode, cabinetId) {
+					var journalOpener = window.opener;
+					if (!journalOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var jList        = journalOpener.document.getElementsByClassName("content2")[0];
+					var title        = journalOpener.document.getElementById("cTitle").textContent;
+					var content      = journalOpener.document.getElementById("pad1").innerHTML;
+					var attach       = journalOpener.document.getElementById("lstAttachLink");
+					var attachList   = [];
+					
+					var totalRows    = jList.rows;
+					var firtRow      = totalRows[0];
+					var createDate   = firtRow.children[1].firstElementChild.textContent;
+					var creator      = firtRow.children[3].getAttribute("onclick");
+					
+					console.log("createDate: " + createDate);
+					console.log("creator: " + creator);
+					
+					//console.log(jList);
+					if(attach.childElementCount > 1){
+						var listChildren1 = attach.getElementsByTagName("a");
+						var listChildren2 = attach.getElementsByTagName("input");
+						
+						for (var i = 0, len = listChildren1.length; i < len; i++) {
+							var hrefStr  = listChildren1[i].getAttribute("href");
+							var params   = getAllUrlParams(hrefStr);
+							var fileName = listChildren2[i].getAttribute("value");
+							
+							console.log("File path: " + javaURLDecode(params["filePath"]) + " || File Name: " + fileName);
+							
+							attachList.push({
+								filePath : javaURLDecode(params["filePath"]),
+								fileName : fileName
+							});
+						}
+					}
+					
+					console.log(content);
+					var url  = "/ezCabinet/saveRelatedJournal.do";
+					var data = {
+						mode     : saveMode,
+						jList    : jList,
+						title    : title,
+						content  : content,
+						attach   : JSON.stringify(attachList)
+					};
+					console.log(data);
+					if (saveMode == 1) {data.cabinetId = cabinetId;}
+					
+					//makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
 				function saveGroupAddress(addressOpener, saveMode, cabinetId) {
