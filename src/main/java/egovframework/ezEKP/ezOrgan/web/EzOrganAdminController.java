@@ -462,6 +462,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("primary", primary);
         model.addAttribute("secondary", secondary);
+        model.addAttribute("locale", userInfo.getLocale());
         
         logger.debug("deptInfo ended");
         
