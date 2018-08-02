@@ -57,8 +57,11 @@
 			
 			switch (level) {
 			case 1:
-				managerList.push(member);
-				beforeManagerList.push(member);		
+				// managerList에 관리자를 제외하고 집어넣는다
+				if(member.userId != headManagerId) {
+					managerList.push(member);
+					beforeManagerList.push(member);
+				}
 				break;
 			case 2:
 				participantList.push(member);
@@ -193,6 +196,8 @@
 		} else {
 			response = true;
 		}
+		
+		managerList.push({"userName" : headManagerName, "userId" : headManagerId, "memberRoleId" : 1, "userDeptname" : replaceString(headManagerDept), "userIdType" : "user"});
 		
 		if(response == true) {
 			$.ajax({

@@ -664,7 +664,11 @@ public class EzPMSGWController {
 			project.setAlamMailStatus(Integer.parseInt(request.getParameter("endAlamStatus")));
 			project.setHeadManagerId(request.getParameter("headManagerId"));
 			project.setCreateDate(request.getParameter("createDate"));
-			project.setMailRepeat(Integer.parseInt(request.getParameter("mailRepeat")));
+			
+			if(request.getParameter("mailRepeat") != null) {
+				project.setMailRepeat(Integer.parseInt(request.getParameter("mailRepeat")));
+			}
+			
 			
 			String roleCheck = "";
 			String planEndDate = request.getParameter("planEndDate");
