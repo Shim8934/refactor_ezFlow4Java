@@ -185,6 +185,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
+		model.addAttribute("locale", user.getLocale());
 		
 		return "admin/ezOrgan/organRight";
 	}
@@ -462,6 +463,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         model.addAttribute("approvalFlag", approvalFlag);
         model.addAttribute("primary", primary);
         model.addAttribute("secondary", secondary);
+        model.addAttribute("locale", userInfo.getLocale());
         
         logger.debug("deptInfo ended");
         
@@ -774,6 +776,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
+		model.addAttribute("locale", userInfo.getLocale());
 				
 		logger.debug("userInfo ended");
 		
