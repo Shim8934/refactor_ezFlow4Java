@@ -84,11 +84,12 @@ var CabinetRlFileSelect = function() {
 		var selectedArr = null;
 		
 		switch (module) {
-			case "normal" : if (parentWd && parentWd.CabinetItemDetail)   {selectedArr = parentWd.CabinetItemDetail.get();   } break;
-			case "mail"   : if (parentWd && parentWd.CabinetEmailFile)    {selectedArr = parentWd.CabinetEmailFile.get();    } break;
-			case "board"  : if (parentWd && parentWd.CabinetBoardFile)    {selectedArr = parentWd.CabinetBoardFile.get();    } break;
-			case "gaddr"  : if (parentWd && parentWd.CabinetGroupAddress) {selectedArr = parentWd.CabinetGroupAddress.get(); } break;
-			default       : if (parentWd && parentWd.CabinetAddFile)      {selectedArr = parentWd.CabinetAddFile.get();      }
+			case "normal" : if (parentWd && parentWd.CabinetItemDetail)    {selectedArr = parentWd.CabinetItemDetail.get();    } break;
+			case "mail"   : if (parentWd && parentWd.CabinetEmailFile)     {selectedArr = parentWd.CabinetEmailFile.get();     } break;
+			case "board"  : if (parentWd && parentWd.CabinetBoardFile)     {selectedArr = parentWd.CabinetBoardFile.get();     } break;
+			case "gaddr"  : if (parentWd && parentWd.CabinetGroupAddress)  {selectedArr = parentWd.CabinetGroupAddress.get();  } break;
+			case "naddr"  : if (parentWd && parentWd.CabinetNormalAddress) {selectedArr = parentWd.CabinetNormalAddress.get(); } break;
+			default       : if (parentWd && parentWd.CabinetAddFile)       {selectedArr = parentWd.CabinetAddFile.get();       }
 		}
 		
 		if (selectedArr != null && selectedArr.length != 0) {
@@ -136,11 +137,12 @@ var CabinetRlFileSelect = function() {
 		var parentWd = window.opener;
 		
 		switch (module) {
-			case "normal" : if (parentWd && parentWd.CabinetItemDetail)   {parentWd.CabinetItemDetail.save(data)  ;} break;
-			case "mail"   : if (parentWd && parentWd.CabinetEmailFile)    {parentWd.CabinetEmailFile.save(data)   ;} break;
-			case "board"  : if (parentWd && parentWd.CabinetBoardFile) {parentWd.CabinetBoardFile.save(data);}   break;
-			case "gaddr"  : if (parentWd && parentWd.CabinetGroupAddress) {parentWd.CabinetGroupAddress.save(data);} break;
-			default       : if (parentWd && parentWd.CabinetAddFile)      {parentWd.CabinetAddFile.save(data)     ;}
+			case "normal" : if (parentWd && parentWd.CabinetItemDetail)    {parentWd.CabinetItemDetail.save(data)   ;} break;
+			case "mail"   : if (parentWd && parentWd.CabinetEmailFile)     {parentWd.CabinetEmailFile.save(data)    ;} break;
+			case "board"  : if (parentWd && parentWd.CabinetBoardFile)     {parentWd.CabinetBoardFile.save(data)    ;} break;
+			case "gaddr"  : if (parentWd && parentWd.CabinetGroupAddress)  {parentWd.CabinetGroupAddress.save(data) ;} break;
+			case "naddr"  : if (parentWd && parentWd.CabinetNormalAddress) {parentWd.CabinetNormalAddress.save(data);} break;
+			default       : if (parentWd && parentWd.CabinetAddFile)       {parentWd.CabinetAddFile.save(data)      ;}
 		}
 		
 		closeWindow();

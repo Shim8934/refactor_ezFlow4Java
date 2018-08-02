@@ -1665,10 +1665,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveNormalAddressItem(int cabinetId, String title, String mode,
-			String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position,
-			String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip,
-			String compAddr, String homeZip, String homeAddr, String memo, LoginVO userInfo) throws Exception {
+	public JSONObject saveNormalAddressItem(int cabinetId, String title, String mode, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo, LoginVO userInfo) throws Exception {
 		JSONObject result          = new JSONObject();
 		String userId              = userInfo.getId();
 		int tenantId               = userInfo.getTenantId();

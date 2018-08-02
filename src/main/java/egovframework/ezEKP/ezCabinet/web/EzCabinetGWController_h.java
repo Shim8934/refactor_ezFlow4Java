@@ -6,8 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
@@ -546,12 +549,26 @@ public class EzCabinetGWController_h {
 		
 		//Check file type
 		switch(itemType) {
-			case 1: getMoreEmailDetail(result, columnList, primary, tenantId); break;
-			case 8: getMoreAddressDetaail(result, columnList, primary, tenantId); break;
+			case 1: getMoreEmailDetail(result, columnList, primary, tenantId);    break;
+			case 3: getMoreBoardDetail(result, columnList, primary, tenantId);    break;
+			case 8: getMoreAddressDetail(result, columnList, primary, tenantId); break;
 		}
 	}
 	
-	private void getMoreAddressDetaail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
+	private void getMoreBoardDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
+		CabinetColumnVO writerColumn = columnList.stream().filter(column -> column.getColumnId().equals("writer")).collect(Collectors.toList()).get(0);
+		
+		String writerId              = writerColumn.getColumnValue();
+		SimpleUserInfoVO writerVO    = cabinetService.getSimpleUserInfo(writerId, primary, tenantId);
+		
+		if (writerVO == null) {
+			writerVO = new SimpleUserInfoVO(writerId, writerId);
+		}
+		
+		result.put("writerVO" , writerVO);
+	}
+	
+	private void getMoreAddressDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
 		CabinetColumnVO addressType   = columnList.stream().filter(column -> column.getColumnId().equals("addresstype")).collect(Collectors.toList()).get(0);
 		CabinetColumnVO creatorColumn = columnList.stream().filter(column -> column.getColumnId().equals("creator")).collect(Collectors.toList()).get(0);
 		CabinetColumnVO modifyColumn  = columnList.stream().filter(column -> column.getColumnId().equals("modifier")).collect(Collectors.toList()).get(0);
@@ -569,15 +586,9 @@ public class EzCabinetGWController_h {
 			modifier = new SimpleUserInfoVO(modifierId, modifierId);
 		}
 		
-		result.put("creator" , creator);
-		result.put("modifier", modifier);
-		
-		if (addressType.equals("normal")) {
-			result.put("addresstype", "normal");
-		}
-		else {
-			result.put("addresstype", "group");
-		}
+		result.put("creator" ,    creator);
+		result.put("modifier",    modifier);
+		result.put("addresstype", addressType.getColumnValue());
 	}
 	
 	private void getMoreEmailDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {

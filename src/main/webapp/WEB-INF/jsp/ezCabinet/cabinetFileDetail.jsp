@@ -559,7 +559,7 @@
 					window.print();
 					
 					divElmt.removeAttribute("style");
-					tdElmt.removeAttribute("style");
+					if (tdElmt) {tdElmt.removeAttribute("style");}
 				}
 				
 				function closeWindow() {window.close();}

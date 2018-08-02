@@ -249,18 +249,24 @@
 					var boardOpener   = window.opener;
 					if (!boardOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					var writerTd     = window.opener.document.getElementById("WriteUserNM");
-					var postTd       = window.opener.document.getElementById("PostDate");
-					var titleTd      = window.opener.document.getElementById("cTitle");
+					var writerTd      = window.opener.document.getElementById("WriteUserNM");
+					var postTd        = window.opener.document.getElementById("PostDate");
+					var titleTd       = window.opener.document.getElementById("cTitle");
 					
-					var boardWriter  = writerTd.getElementsByTagName("div")[0].getElementsByTagName("span")[0].textContent;
-					var postDate     = postTd.getElementsByTagName("div")[0].textContent;
-					var boardTitle   = titleTd.getElementsByTagName("div")[0].textContent;
-					var messageFrame = window.opener.document.getElementById("message");
-					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
-					var boardContent = contentWd.document.querySelector("div[class='contentDiv']").innerHTML;
-					var attach       = window.opener.document.getElementById("lstAttachLink");
-					var attachList   = [];
+					//var boardWriter   = writerTd.getElementsByTagName("div")[0].getElementsByTagName("span")[0].textContent;
+					
+					var writerSpan    = writerTd.getElementsByTagName("div")[0].getElementsByTagName("span")[0].getAttribute("onclick");
+					var start         = writerSpan.indexOf("'");
+					var end           = writerSpan.lastIndexOf("'");
+					var boardWriter   = writerSpan.substring(start + 1, end);
+					
+					var postDate      = postTd.getElementsByTagName("div")[0].textContent;
+					var boardTitle    = titleTd.getElementsByTagName("div")[0].textContent;
+					var messageFrame  = window.opener.document.getElementById("message");
+					var contentWd     = messageFrame.contentWindow || messageFrame.contentDocument;
+					var boardContent  = contentWd.document.querySelector("div[class='contentDiv']").innerHTML;
+					var attach        = window.opener.document.getElementById("lstAttachLink");
+					var attachList    = [];
 					
 					if (attach.childElementCount > 1) {
 						var listChildren1 = attach.getElementsByTagName("a");
@@ -413,7 +419,7 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
-				function saveNormalAddress(addressDocument, saveMode, cabinetId) {
+				function saveNormalAddress(addressOpener, saveMode, cabinetId) {
 					var addressDocument = addressOpener.document;
 					var title           = addressDocument.getElementById("TextName").textContent;
 					var createUser      = addressOpener.creatorid;

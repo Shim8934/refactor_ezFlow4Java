@@ -73,16 +73,16 @@
 
 .cabSelectConf {width: 50px;}
 .cabPreviewMode {width: 100px;}
-.cabDivPrevW {height: 100%; overflow: hidden; vertical-align: top; flex: 1; display: flex;}
-.cabMainPrevW {height: 100%; width: 100%; position: relative; padding-left: 5px;}
+.cabDivPrevW {height: 100%; overflow: hidden; vertical-align: top; flex: 1; display: flex; margin-left: 5px;}
+.cabMainPrevW {height: 100%; width: 100%; position: relative;}
 .cabMainPrevW >div {width: 100%; height: 100%; display: flex; flex-flow: column;}
-.cabPrevTitle {width: 100%; color: #333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px; clear: both; padding: 0px; height: 36px; line-height: 36px;}
+.cabPrevTitle {width: 100%; color: #333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px; clear: both; padding: 0px; height: 36px; line-height: 36px; display: flex;}
 .cabPrevTitle .cabPrevIcon {background-image: url('/images/kr/cm/btn_newpopup.gif'); background-repeat: no-repeat; background-position: center left; margin-left: 14px; padding-right: 5px; display: inline-block; float: left; cursor: pointer; height: 100%; width: 27px;}
 .prevHeaderCabW {border-top: 1px solid #ddd;}
 .prevHeaderCabW >div, .prevHeaderCabH >div {background-color: #f8f8fa; border-bottom: solid 1px #e8e8e8; position: relative;}
 .prevHeaderCabW >span, .prevHeaderCabH >span {margin-top: 50px;height: 10px; display: inline-block; text-align: center; width: 100%;}
-.cabPrevTitle .cabTitleTxt {width: 70%; height: 100%; color: #333; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block;}
-.cabPreDate {display: inline-block; position: absolute; top: 12px; right: 20px; text-align: right; width: 150px; font-size: 12px; color: #333;}
+.cabPrevTitle .cabTitleTxt {height: 100%; color: #333; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; flex: 1;}
+.cabPreDate {display: inline-block; width: 150px; font-size: 12px; color: #333; text-align: center;}
 .cabPrevItem {margin: 0px; padding: 4px 10px 2px 14px; font-size: 12px; color: #666;}
 .cabPrevItem dt {font-weight: normal; margin: 0px 10px 0px 0px; line-height: 18px; padding: 0px 0px 2px 0px; color: #919293;}
 .cabPrevItem dd {margin: -19px 0px 0px 0px; padding: 0px 0px 2px 65px; line-height: 18px; word-break: break-all;}
@@ -264,13 +264,15 @@
 
 .divInfo {width: 100%;}
 .divInfo ul {list-style: none; padding: 8px;}
+.divInfo table + table {margin-top: 15px;}
+.divInfo .cabmemo {height: 64px; overflow: auto; margin: 8px 0px;}
 .tblFileInf, .cabShareInf, .tblEmailInf, .tblBoardInf {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse; table-layout: fixed;}
 .tblFileInf tr td, .tblEmailInf tr td, .tblFileInf tr th, .cabShareInf tr td, .cabShareInf tr th, .tblEmailInf tr th, .tblBoardInf tr th, .tblBoardInf tr td {border: 1px solid #ddd;}
 .tblFileInf tr th {width: 80px; font-weight: normal; text-align: left;}
 .tblEmailInf tr th, .tblBoardInf tr th {text-align: left; max-width: 100px; width: 80px; font-weight: normal;}
 .tblFileInf tr td, .cabShareInf, .tblEmailInf tr td, .tblBoardInf tr td {padding: 0px 5px; background: #fff; height: 29px; word-break: break-all;}
 .tblFileInf tr td >input[type='text'] {width: 100%; border: 0px; padding: 5px; outline: none;}
-.tblFileInf .overfl, .tblEmailInf .overfl {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.tblFileInf .overfl, .tblEmailInf .overfl, .tblBoardInf .overfl {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 .tblFileInput {width: 100%; height: 24px; padding: 5px;}
 .rlFileDiv {display: flex; align-items: center;}
 .rlDocDiv {flex: 1; border: none; margin-right: 8px; outline: none; padding: 0px 5px; max-height: 30px; height: 20px; overflow-y: auto;}
@@ -297,7 +299,7 @@
 .mailContDiv1 {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 260px; height: 260px; overflow: auto;}
 .mailContDiv2 {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 290px; height: 290px; overflow: auto;}
 .boardContDiv {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 325px; height: 325px; overflow: auto;}
-.addressContDiv {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 290px; height: 290px; overflow: auto;}
+.addressContDiv {margin: 10px 0px; padding: 2.5px 2.5px 8px; border: 1px solid #ddd; min-height: 290px; height: 290px; overflow: auto;}
 .addressContDiv >select {background: none; border: none !important; outline: none !important; padding-right: .1em !important; height: 100%!important;}
 
 .cabDivFile {display: flex; border: 1px solid #ddd; width: 100%; height: 100%;}
@@ -387,4 +389,4 @@
 .icon_rbtn img {width: 16px; height: 16px;}
 .cabtxtPrint {padding: 8px; border: 1px solid #ddd; margin-top: 10px;}
 
-@media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2, .addressContDiv {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;} .ulFiles li {page-break-inside: avoid;}}
+@media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2, .addressContDiv, .divInfo .cabmemo {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;} .ulFiles li {page-break-inside: avoid;}}
