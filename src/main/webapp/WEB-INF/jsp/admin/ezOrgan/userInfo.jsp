@@ -685,6 +685,7 @@
 	            <th style="width: 80px; text-align:center"></th>
 	            <td style="width: 190px"></td>
 	        </tr>
+	        <c:if test="${locale eq 'ko'}">
 	        <tr>
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t286' /></th>
 	            <td colspan="5">
@@ -704,6 +705,7 @@
                     </c:if>
 	            </td>
 	        </tr>
+	        </c:if>
 	        <tr>
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t287' /></th>
 	            <td colspan="5">
