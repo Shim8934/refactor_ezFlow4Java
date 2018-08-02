@@ -2109,7 +2109,7 @@ public class EzPMSGWController {
 				}
 				
 				//실제 시작일과 종료일 (완료일 경우)
-				if (vo.getStatus().equals("C")) {
+				if (vo.getStatus().equals("C") && vo.getRealStartDate() != null && vo.getRealEndDate() != null) {
 					Date realStartDate = sdf.parse(vo.getRealStartDate());
 					Date realEndDate = sdf.parse(vo.getRealEndDate());
 					

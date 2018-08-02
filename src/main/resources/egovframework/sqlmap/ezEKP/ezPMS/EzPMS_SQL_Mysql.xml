@@ -1570,10 +1570,6 @@
 			AND
                 D.GROUP_NAME LIKE CONCAT('%',#upperGroupName#,'%')
 		</isNotEmpty>
-		<isNotEmpty property="headManagerName">
-			AND
-				A.HEAD_MANAGER_NAME LIKE CONCAT('%',#headManagerName#,'%')
-		</isNotEmpty>
 		<isNotEmpty property="searhByStartDate">
 		<![CDATA[
 			AND
@@ -2683,10 +2679,6 @@
 		<isNotEmpty property="upperGroupName">
 			AND
                D.GROUP_NAME LIKE CONCAT('%',#upperGroupName#,'%')
-		</isNotEmpty>
-		<isNotEmpty property="headManagerName">
-			AND
-				A.HEAD_MANAGER_NAME LIKE CONCAT('%',#headManagerName#,'%')
 		</isNotEmpty>
 		<isNotEmpty property="taskName">
 			AND
