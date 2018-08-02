@@ -2380,7 +2380,12 @@ public class EzPMSController {
 
 		JSONObject resultBodyTask = commonUtil.getJsonFromRestApi(
 				"/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		
+//		JSONObject resultBodyTask = commonUtil.getJsonFromRestApi(
+//				"/rest/ezPMS/test/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		
 		String status = resultBodyTask.get("status").toString();
+		
 
 		if (status.equals("ok")) {
 			JSONObject taskList = (JSONObject) resultBodyTask.get("data");
@@ -2391,6 +2396,7 @@ public class EzPMSController {
 		JSONObject resultBodyProject = commonUtil.getJsonFromRestApi(
 				"/rest/ezPMS/projects/" + projectId + "/users/" + userInfo.getId() + "/gantt", param, request, "get",
 				null);
+		
 		status = resultBodyProject.get("status").toString();
 
 		if (status.equals("ok")) {
