@@ -2244,9 +2244,6 @@ public class EzPMSGWController {
 			holidayList.addAll(holiday);
 			
 			List<ProjectTaskVO> taskList = ezPMSService.getTaskListForGantt(search, userId, limit, startRow, orderWhat, orderHow, position, roleId, deptId, holidayList);
-			
-			DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			
 			for (ProjectTaskVO vo : taskList) {
 				vo.setTaskMember(
 						ezPMSService.getTaskMemberList(info.getTenantId(), vo.getTaskId(), lang));
@@ -2257,18 +2254,6 @@ public class EzPMSGWController {
 				} else {
 					vo.setLatePercent(0);
 				}
-				
-				//실제 시작일과 종료일 (완료일 경우)
-//				if (vo.getStatus().equals("C")) {
-//					Date realStartDate = sdf.parse(vo.getRealStartDate());
-//					Date realEndDate = sdf.parse(vo.getRealEndDate());
-//					
-//					int realWorkingday = ezPMSService.getWorkingDays(realStartDate, realEndDate, companyId, tenantId, lang);
-//					
-//					vo.setRealStartEndDiff(realWorkingday);
-//				} else {
-//					vo.setRealStartEndDiff(0);
-//				}
 			}
 			
 			JSONObject data = new JSONObject();
@@ -3632,6 +3617,92 @@ public class EzPMSGWController {
 		Long endMillis = System.currentTimeMillis();
 		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0) + " sec");
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId + "/groups/users/" + userId + "] ended.");
+		return result;
+	}
+	
+	/**
+	 * 프로젝트관리 그룹 리스트(간트차트 용) 테스트
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/rest/ezPMS/test/projects/{projectId}/groups/users/{userId}/gantt", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getGroupListForGantt2(@PathVariable String projectId, @PathVariable String userId,
+			HttpServletRequest request) throws Exception {
+		LOGGER.debug(
+				"ezPMS G/W [GET /rest/ezPMS/test/projects/" + projectId + "/groups/users/" + userId + "/gantt] started.");
+		Long startMillis = System.currentTimeMillis();
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
+			String orderWhat = request.getParameter("orderWhat");
+			String orderHow = request.getParameter("orderHow");
+			int startRow = Integer
+					.parseInt(request.getParameter("startRow") != null ? request.getParameter("startRow") : "-1");
+			int limit = Integer.parseInt(request.getParameter("limit") != null ? request.getParameter("limit") : "-1");
+			String companyId = info.getCompanyId();
+			int tenantId = info.getTenantId();
+			String location = "gantt";
+			
+			if (orderWhat == null || orderWhat.equals("")) {
+				orderWhat = "init";
+			}
+			
+			SearchVO search = new SearchVO();
+			search.setTenantId(info.getTenantId());
+			search.setProjectId(Long.parseLong(projectId));
+			search.setUpperGroupName(request.getParameter("searchByUpperGroupName"));
+			search.setMemberName(request.getParameter("searchByUser"));
+			search.setPlanStartDate(request.getParameter("searchByStartDate"));
+			search.setPlanEndDate(request.getParameter("searchByEndDate"));
+			search.setGroupName(request.getParameter("searchByGroupName"));
+			search.setOverview(request.getParameter("searchByOverview"));
+			search.setProjectName(request.getParameter("searchByProjectName"));
+			search.setMemberId(userId);
+			
+			ProjectInfoVO projectDetails = ezPMSService.getProjectDetails(Long.parseLong(projectId), userId, tenantId, null, lang, info.getDeptId(), info.getCompanyId());
+			HashSet<String> holiday = ezPMSService.getHolidayList(projectDetails.getPlanStartDate(), projectDetails.getPlanEndDate(), tenantId, companyId, lang);
+			ArrayList<String> holidayList = new ArrayList<String>();
+			holidayList.addAll(holiday);
+			
+			List<ProjectGroupVO> groupList = ezPMSService.getGroupListForGantt(search, orderWhat, orderHow, startRow, limit,
+					lang, location, holidayList);
+			List<ProjectGroupMemberVO> groupMemberList = ezPMSService.getGroupMemberList(Long.parseLong(projectId),
+					info.getTenantId(), null);
+			
+			for (int i = 0; i < groupList.size(); i++) {
+				Long groupId = groupList.get(i).getGroupId();
+				
+				// 그룹 멤버를 얻어옴.
+				Iterator<ProjectGroupMemberVO> iter = groupMemberList.iterator();
+				List<ProjectGroupMemberVO> groupMemberListTemp = new ArrayList<ProjectGroupMemberVO>();
+				while (iter.hasNext()) {
+					ProjectGroupMemberVO groupMember = iter.next();
+					if (groupId.equals(groupMember.getGroupId())) {
+						groupMemberListTemp.add(groupMember);
+						iter.remove();
+					}
+				}
+				
+				groupList.get(i).setGroupMember(groupMemberListTemp);
+				
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", groupList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		Long endMillis = System.currentTimeMillis();
+		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0) + " sec");
+		LOGGER.debug("ezPMS G/W [GET /rest/test/ezPMS/projects/" + projectId + "/groups/users/" + userId + "] ended.");
 		return result;
 	}
 
