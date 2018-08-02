@@ -401,7 +401,7 @@
 						<option value="searchByWriteDate"><spring:message code='ezPMS.t119' /></option>
 					</select>
 					<input type="text" id="searchKeyword" onkeypress="if(event.keyCode==13) {searchComment(); return false;}" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: baseline">
-					<span id="searchDate" style="display: none;">
+					<span id="searchDate" style="display: none; margin-right : 10px;">
 						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ 
 						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
 					</span>

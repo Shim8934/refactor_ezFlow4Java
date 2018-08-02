@@ -172,7 +172,7 @@ public interface EzPMSService {
 
 	public int getUserGroupRole(String userId, int tenantId, long projectId, long groupId);
 
-	public int getBoardViewerCount(int tenantId, String itemId);
+	public int getBoardViewerCount(int tenantId, String itemId, long projectId);
 
 	public List<BoardViewerVO> getBoardViewerList(int tenantId, Map<String, Object> param);
 

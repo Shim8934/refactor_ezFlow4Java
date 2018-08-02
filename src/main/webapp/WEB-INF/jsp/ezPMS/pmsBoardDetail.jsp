@@ -25,7 +25,7 @@
 		var projectId = '${board.projectId}';	
 		var title = '${board.title}';
 		var folderId = '${board.folderId}';
-		var taskName;
+		var folderName = "";
 		var projectName = '<c:out value = "${board.projectName}"/>';
 		var itemIds = new Array(itemId); // 메인화면에서 여러개의 게시물을 한 번에 이동하는 함수를 재사용하기 위함
 		
@@ -42,7 +42,8 @@
 				$("#ReplyBtn").css("display", "none");
 			}
 			
-			taskName = $("#taskName").text();
+			var folderName = '${board.folderName}';
+			$("#folderName").text(replaceString(folderName));
 		})
 		// 첨부파일 모두 선택
 		function attach_SelectAll() {
@@ -173,7 +174,8 @@
 	        var width = window.screen.availWidth;
 	        var left = (width - 500) / 2;
 	        var top = (heigth - 300) / 2;
-	        DivPopUpShow(600, 437, "/ezPMS/getBoardViewerList.do?itemId=" + itemId + "&currentPage=" + currentPage);
+	        console.log(projectId);
+	        DivPopUpShow(600, 437, "/ezPMS/getBoardViewerList.do?itemId=" + itemId + "&currentPage=" + currentPage + "&projectId=" + projectId);
 		}
 		
 		function fromPMSBoardToMail() {
@@ -315,9 +317,7 @@
 					</tr>
 					<tr>
 						<th><spring:message code='ezPMS.t340' /></th>
-						<td id="folderName">
-							<c:out value="${board.folderName}"></c:out>
-						</td>
+						<td id="folderName"></td>
 						<th><spring:message code='ezPMS.t119' /></th>
 						<td><c:out value="${fn:substring(board.writeDate, 0, 19)}"/></td>
 						

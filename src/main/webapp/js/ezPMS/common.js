@@ -3,8 +3,7 @@
  */
 function getProjectTaskTree(containerId, data, location, idx) {
 	$("#" + containerId).jstree('destroy');
-	console.log(data);
-	console.log(idx);
+	
 	$("#" + containerId).jstree({
 		'core' : {
 			'data' : data,
@@ -60,6 +59,8 @@ function getProjectTaskTree(containerId, data, location, idx) {
 	
 	})
 	.on("select_node.jstree", function(e, data) {
+		$(this).jstree("open_all");
+		
 		if (location == "taskLog" || location == "taskList") {
 			if (data.node.id.indexOf("t") != -1) {
 				taskId = data.node.id.substring(1);
@@ -110,6 +111,7 @@ function replaceString(p_str) {
      p_str = ReplaceText(p_str, "&gt;", ">");
      p_str = ReplaceText(p_str, "&apos;", "\'");
      p_str = ReplaceText(p_str, "&#039;", "\'");
+     p_str = ReplaceText(p_str, "&#39;", "\'");
      p_str = ReplaceText(p_str, "&quot;", "\"");
      p_str = ReplaceText(p_str, "&#034;", "\"");
      p_str = ReplaceText(p_str, "&amp;", "&");

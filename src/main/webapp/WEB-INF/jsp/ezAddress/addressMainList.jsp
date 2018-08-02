@@ -70,6 +70,11 @@
 	            	document.getElementById("address_wordmenu_japan").style.display = "none";
 	            }
 	            
+	            //일본어일 경우 초성 검색 숨김 (한자까지 지원할 수 없어서)
+	            if (uLang == "3") {
+	            	document.getElementById("address_wordmenu").style.display = "none";
+	            }
+	            
 	            if (CrossYN() || (pNoneActiveX == "YES")) {
 	                document.getElementById("importaddress").style.display = "none";
 	                document.getElementById("exportaddress").style.display = "none";
@@ -786,7 +791,7 @@
 				</li>
 			</ul>
 		</div>
-		<ul class="address_wordmenu" id="address_wordmenu" style="margin-bottom:0px;">
+		<ul class="address_wordmenu" id="address_wordmenu" style="margin-bottom:15px;">
 			<c:choose>
 				<c:when test="${userInfo.lang eq '1'}">
 					<li style="width:40px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
@@ -876,7 +881,6 @@
 			<li><span onClick="pFilter=&quot;KIND,IPM.DistList&quot;;pOrderOption='SNAME:0';pCurrentPage='1';Get_AddressList()">Group</span></li>
 			--%>
 		</ul>
-		<br />
 		<div style="vertical-align:top;border:0px solid red; white-space:nowrap;" id="list_Layer">
 			<table class="mainlist" id="DetailList_header" style="table-layout: fixed;width:100%">
 			    <tr>

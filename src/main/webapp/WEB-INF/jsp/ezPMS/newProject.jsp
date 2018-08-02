@@ -79,7 +79,6 @@ var headManagerObj = {};
 			var member = memberList[i];
 			
 			if (member.memberRoleId == 1) {
-				
 				// managerList에 관리자를 제외하고 집어넣는다
 				if(member.userId != headManagerId) {
 					managerList.push(member);
