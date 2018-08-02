@@ -213,8 +213,8 @@ function ListView() {
     //헤더 더블클릭 이벤트 핸들러 지정
     function SetHeaderOnDblClick(pHeaderOnDblClick) {
         _headerondblclick = pHeaderOnDblClick;
-    }    
-    
+    }
+
     //로우 클릭 이벤트 핸들러 지정
     function SetRowOnClick(pRowOnClick) {
         _rowonclick = pRowOnClick;
@@ -749,7 +749,6 @@ function ListView() {
                         oInput.id = oDatas[0].text + ";";
 
                     oInput.type = "checkbox";
-
                     //2018-07-13 구해안 _rowonclick 이벤트 삭제 후 Input 박스에 이벤트 별도로 연결
                     /*if (_rowonclick != null)
                         oInput.onclick = new Function("chk_onselect(this);tr_select(this.id, \"" + _thisID + "\", " + _rowonclick + ");");
@@ -1239,32 +1238,11 @@ function ListView() {
 
 // 리스트 클래스 끝
 //###########################################################################################
-//chk한번더 바꾸는 함수
-function chk_reverse(pRowID) {
-	console.log(pRowID);
-	var test = pRowID.checked;
-	console.log(test);
-	if(!test){		
-		$(pRowID).prop("checked",true);
-	}else{
-		$(pRowID).prop("checked",false);
-	}
-}
 
 //ROW 선택 함수
-function tr_select(pRowID, pTableID, callbackFunc) {
-	console.log('pRowID : ' + pRowID);
-	/*if(pRowID.substring(0,13) == 'GroupListView'){		
-		if(!document.getElementById(pRowID).childNodes[0].childNodes[0].checked){
-			document.getElementById(pRowID).childNodes[0].childNodes[0].checked = true;
-		}else{
-			document.getElementById(pRowID).childNodes[0].childNodes[0].checked = false;
-		}
-	}*/
 /*function td_select(pRowID, pTableID, callbackFunc) {
 	
     if (!listEventCheckbox) {
-    	console.log('listEventCheckbox : ' + listEventCheckbox);
         var oList = document.getElementById(pTableID);
         if (!oList)
             return;
@@ -1278,6 +1256,7 @@ function tr_select(pRowID, pTableID, callbackFunc) {
         if (strAttribute == "true") {
             bMultiSelectable = true;
         }
+
         //멀티선택이 가능한 리스트이고 쉬프트키가 눌려져 있으면
         //구간을 모두 선택한다.
         if (bMultiSelectable && PressShiftKey) {
@@ -1294,14 +1273,12 @@ function tr_select(pRowID, pTableID, callbackFunc) {
         //strAttribute = GetAttribute(oSourceTr, "selected");
 
         if (oSourceTr.childNodes[0].childNodes[0].checked) {
-        	console.log('췍췍3 : ' + oSourceTr.childNodes[0].childNodes[0].checked);
             oSourceTr.setAttribute("selected", "false");
             oSourceTr.childNodes[0].childNodes[0].checked = false;
             oSourceTr.style.backgroundColor = m_strColorDefault;
             strListInfo = ReplaceText(strListInfo, oSourceTr.childNodes[0].childNodes[0].id, "");
         }
         else {
-        	console.log('췍췍4 : ' + oSourceTr.childNodes[0].childNodes[0].checked);
             oSourceTr.setAttribute("selected", "true");
             oSourceTr.childNodes[0].childNodes[0].checked = true;
             oSourceTr.style.backgroundColor = m_strColorSelect;
@@ -1764,9 +1741,9 @@ function event_HeaderCheckBoxClick(obj) {
     	SelList.GetSelectedRows()[0].childNodes[0].childNodes[0].checked = false;
     }
     
-    console.log('selList : ' + SelList);
-    console.log('obj : ' + obj);
-    console.log('obj.checked : ' + obj.checked); 
+    console.log(SelList);
+    console.log(obj);
+    console.log(obj.checked); 
     
     if (obj.checked) {
     	
@@ -1786,10 +1763,8 @@ function event_HeaderCheckBoxClick(obj) {
     }
     else {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
-        	/*console.log('돌기전 인덱스 : ' + i + ' ,   각 리스트의 체크박스  : ' + SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked);*/
             SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
-            /*console.log('돌고난 후 인덱스 : ' + i + ' ,   각 리스트의 체크박스  : ' + SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked);*/
         }
     }*/
 	
@@ -1811,28 +1786,12 @@ function event_HeaderCheckBoxClick(obj) {
 	    }
 }
 
-function chk_onselect(obj) {	
+function chk_onselect(obj) {
+
     if (obj.checked) {
-    	console.log('strListInfo : ' + strListInfo);
-        /*strListInfo += obj.id;*/
-        console.log('strListInfo이후 : ' + strListInfo);
+        strListInfo += obj.id;
     } else {
-    	console.log('strListInfoElse : ' + strListInfo);
         strListInfo = ReplaceText(strListInfo, obj.id, "");
-        console.log('strListInfoElse이후 : ' + strListInfo);
     }
     listEventCheckbox = true;
- /* //체크박스 해제하는 함수
-	  //td클릭 시 체크박스 선택/해제
-    console.log('너 이거 타니?? 그리고 this는 뭐지? : ' + $(this).is(":checked"));
-	  $(document).on('change', "#GroupListView tbody tr td input[type='checkbox']:not(#HeaderAllCheckBox)", function() {
-	  	var checkValue = "";
-	  	if ($(this).is(":checked") == true) {
-	  		checkValue = false;
-	  	} else {
-	  		checkValue = true;
-	  	}
-	  	$(this).prop("checked", checkValue);
-	  })*/
 }
-

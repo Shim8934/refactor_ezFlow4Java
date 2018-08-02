@@ -191,11 +191,11 @@ public class EzTaskController extends EgovFileMngUtil {
 			        calendar2.setTime(taskEndDate);         
 			        
 			        if (calendar1.compareTo(calendar2) >= 0) {	        	
-			        	result = ezTaskService.getRepTaskInfo(endDate.substring(0, 10), taskID, offset, primary, tenantID, taskInfoVO);
+			        	result = ezTaskService.getRepTaskInfo(endDate.substring(0, 10), taskID, offset, primary, tenantID, taskInfoVO, companyID);
 			        	date = endDate.substring(0, 10);
 			        }
 			        else {		        	
-			        	result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
+			        	result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO, companyID);
 			        	
 			        	for (String d: result.keySet()) {	        			        		
 			        		Date dDate = sdf.parse(d + " 00:00:00"); 
@@ -210,7 +210,7 @@ public class EzTaskController extends EgovFileMngUtil {
 			        }		        		        
 				}
 				else {				
-					result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
+					result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO, companyID);
 					
 		        	for (String d: result.keySet()) {
 		        		Date dDate = sdf.parse(d + " 00:00:00"); 
@@ -226,7 +226,7 @@ public class EzTaskController extends EgovFileMngUtil {
 			}
 			else {
 				//In search mode
-				result = ezTaskService.getRepTaskInfo(date, taskID, offset, primary, tenantID, taskInfoVO);
+				result = ezTaskService.getRepTaskInfo(date, taskID, offset, primary, tenantID, taskInfoVO, companyID);
 			}
 			
 			for (Map.Entry<String, Integer> entry : result.entrySet()) {
@@ -457,6 +457,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String offset = userInfo.getOffset();
 		String primary = userInfo.getPrimary();
 		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
 		List<String> rateList = new ArrayList<String>();
 		List<String> statusList = new ArrayList<String>();
 		List<String> repeatCntList = new ArrayList<String>();
@@ -478,7 +479,7 @@ public class EzTaskController extends EgovFileMngUtil {
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";  
 		
-        Map<String, Integer> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, "", tenantID);
+        Map<String, Integer> result = ezTaskService.getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, "", tenantID, companyID);
         
         for (Map.Entry<String, Integer> entry : result.entrySet()) {
             String key = entry.getKey();
@@ -1347,6 +1348,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	String primary = userInfo.getPrimary();
     	String offset = userInfo.getOffset();
     	int tenantID = userInfo.getTenantId();    	
+    	String companyID = userInfo.getCompanyID();
 
     	String date = request.getParameter("currentDate");
     	String taskID = request.getParameter("taskID");
@@ -1364,7 +1366,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		int completionPercentage = ezTaskService.selectCompletionOfRepTask(taskID, realStartDate, tenantID);
 		taskInfoVO.setCompleteRate(completionPercentage);    
 		
-		Map<String, Integer> result = ezTaskService.getRepTaskInfo(date, taskID, offset, primary, tenantID, taskInfoVO);
+		Map<String, Integer> result = ezTaskService.getRepTaskInfo(date, taskID, offset, primary, tenantID, taskInfoVO, companyID);
 		taskInfoVO.setRepeatCount(result.get(date));		
     	
     	StringBuffer resultXML = new StringBuffer();
@@ -1437,7 +1439,7 @@ public class EzTaskController extends EgovFileMngUtil {
         	pDirPath = pDirPath + commonUtil.separator;
         }
 
-        ezTaskService.taskDelete(taskIDList, pDirPath, offset, primary, userInfo.getId(), userInfo.getTenantId());
+        ezTaskService.taskDelete(taskIDList, pDirPath, offset, primary, userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 
 		logger.debug("taskDelete ended.");
 

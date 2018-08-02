@@ -284,7 +284,7 @@
 				AND
 					A.TENANT_ID = C.TENANT_ID         
                 WHERE
-                	A.TENANT_ID = 6
+                	A.TENANT_ID = #v_TENANTID#
                 AND
                 (
                 	(A.COMPANYID = #v_COMPANYID# 			AND 			C.COMPANYID = #v_COMPANYID#)

@@ -925,7 +925,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public void taskDelete(String taskIDList, String pDirPath, String offset, String primary, String memberID, int tenantID) throws Exception {
+	public void taskDelete(String taskIDList, String pDirPath, String offset, String primary, String memberID, int tenantID, String companyID) throws Exception {
 		logger.debug("taskDelete started.");
 		logger.debug("memberID = " + memberID + " | taskIDList : " + taskIDList + " | pDirPath : " + pDirPath + " | offset : " + offset + " | primary : " + primary);
 
@@ -933,6 +933,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("primary", primary);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 
 		for (String taskID : taskIDList.split(";")) {
 			if (taskID.equals("")) {
@@ -1245,7 +1246,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public Map<String, Integer> getDatesOfRepTask(String taskID, String offset,	String primary, String endDate, String startDate, String selectDate, int tenantID) throws Exception {
+	public Map<String, Integer> getDatesOfRepTask(String taskID, String offset,	String primary, String endDate, String startDate, String selectDate, int tenantID, String companyID) throws Exception {
 		logger.debug("getDatesOfRepTask started.");
 		logger.debug("taskID : " + taskID + " | startDate : " + startDate + " | endDate : " + endDate + " | Select Date: " + selectDate);
 		//String currentPos = "";
@@ -1255,6 +1256,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 		map.put("taskID", taskID);
+		map.put("companyID", companyID);
 		
 		TaskInfoVO vo = ezTaskDAO.getTaskInfo(map);
 		
@@ -1934,7 +1936,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	}
 
 	@Override
-	public Map<String, Integer> getRepTaskInfo(String date, String taskID, String offset, String primary, int tenantID, TaskInfoVO taskInfoVO) throws Exception {		
+	public Map<String, Integer> getRepTaskInfo(String date, String taskID, String offset, String primary, int tenantID, TaskInfoVO taskInfoVO, String companyID) throws Exception {		
 		SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");	
 		int flag = 0;
 		
@@ -1950,7 +1952,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";       	              
 		
-        Map<String, Integer> result = getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);	
+        Map<String, Integer> result = getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID, companyID);	
 		
 		while (flag == 0) {
 			if (result.size() > 0) {
@@ -1980,7 +1982,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	        calendar.set(Calendar.DAY_OF_MONTH, 1);  
 	        calendar.add(Calendar.DATE, -1); 
 	        lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 		        
-	        result = getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID);			
+	        result = getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID, companyID);			
 			result.remove(result.size() - 1);
 			calendar.set(Calendar.DAY_OF_MONTH, 1);
 		}			
