@@ -44,6 +44,7 @@ var headManagerDept = "${project.headManagerDeptname}";
 var mode = "${mode}"
 var projectId = "${project.projectId}";
 //비교하여 새로 추가된 사용자에게 메일 보냄
+var beforeHeadManagerId = "${project.headManagerId}";
 var beforeManagerList = [];
 var beforeParticipantList = [];
 var beforeViewerList = [];
@@ -298,6 +299,10 @@ var headManagerObj = {};
 	
 	if(mode === "new"){
 		managerList.push({"userName" : headManagerName, "userId" : headManagerId, "memberRoleId" : 1, "userDeptname" : replaceString(headManagerDept), "userIdType" : "user"});
+	} else {
+		if(headManagerId != beforeHeadManagerId) {
+			managerList.push({"userName" : headManagerName, "userId" : headManagerId, "memberRoleId" : 1, "userDeptname" : replaceString(headManagerDept), "userIdType" : "user"});
+		}
 	}
 	
 	var data = {
@@ -415,16 +420,18 @@ var headManagerObj = {};
  
  function sendNotiMail(projectId, projectName) {
 	 var data = {
-			 projectName : projectName,
-			 managerList : managerList,
-			 participantList : participantList,
-			 viewerList : viewerList,
-			 projectId : projectId,
-			 beforeManagerList : beforeManagerList,
-			 beforeParticipantList : beforeParticipantList,
-			 beforeViewerList : beforeViewerList,
-			 mode : mode
-		 }
+		 projectName : projectName,
+		 headManagerId : headManagerId,
+		 managerList : managerList,
+		 participantList : participantList,
+		 viewerList : viewerList,
+		 projectId : projectId,
+		 beforeHeadManagerId : beforeHeadManagerId,
+		 beforeManagerList : beforeManagerList,
+		 beforeParticipantList : beforeParticipantList,
+		 beforeViewerList : beforeViewerList,
+		 mode : mode
+	 }
 	 
 	 $.ajax({
 		 type : "POST",

@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <style>
 	table.mainlist th, table.mainlist td {
@@ -9,7 +10,6 @@
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		cursor: pointer;
-		text-align: center;
 	}
 </style>
 
@@ -17,7 +17,7 @@
 	<table cellspacing="0" cellpadding="0" multiselectable="false" useocs="false" width="100%" border="0" class="mainlist" style="overflow:hidden">
 		<thead id="tableHeader">
 			<tr style="height: 37px;" id="BoardList_TH">
-				<th onclick="setListOrder(this)" data-order='PROJECT_ID' style="width:60px;">NO</th>
+				<th onclick="setListOrder(this)" data-order='PROJECT_ID' style="width:60px; text-align: center;">NO</th>
 				<th onclick="setListOrder(this)" data-order='PROJECT_NAME' style="width:23%;"><spring:message code="ezPMS.t31"/></th>
 				<th onclick="setListOrder(this)" data-order='OVERVIEW'><spring:message code="ezPMS.t236"/></th>
 				<th onclick="setListOrder(this)" data-order='CREATOR_NAME' style="width:100px;"><spring:message code="ezPMS.t57"/></th>
@@ -36,7 +36,7 @@
 				<c:otherwise>
 					<c:forEach items="${projectList}" var="projectVO">
 						<tr ondblclick="getProjectGeneralInfo(${projectVO.projectId})">
-							<td><c:out value="${projectVO.projectId}"/></td>
+							<td style="text-align: center;"><c:out value="${projectVO.projectId}"/></td>
 							<td><c:out value="${projectVO.projectName}"/></td>
 							<td><c:out value="${projectVO.overview}"/></td>
 							<td><c:out value="${projectVO.creatorName}"/></td>
@@ -44,11 +44,11 @@
 							<td><c:out value="${fn:substring(projectVO.planEndDate, 0, 19)}"/></td>
 							<td>
 								<c:choose>
-									<c:when test="${projectVO.status eq 'P'}"><spring:message code="ezPMS.t15"/>(<c:out value="${projectVO.progress}"/>%)</c:when>
+									<c:when test="${projectVO.status eq 'P'}"><spring:message code="ezPMS.t15"/>(<fmt:formatNumber value="${projectVO.progress}" pattern="0.0"/>%)</c:when>
 									<c:when test="${projectVO.status eq 'W'}"><spring:message code="ezPMS.t16"/></c:when>
 									<c:when test="${projectVO.status eq 'C'}"><spring:message code="ezPMS.t17"/></c:when>
-									<c:when test="${projectVO.status eq 'L'}"><spring:message code="ezPMS.t18"/>(<c:out value="${projectVO.progress}"/>%)</c:when>
-									<c:when test="${projectVO.status eq 'S'}"><spring:message code="ezPMS.t19"/>(<c:out value="${projectVO.progress}"/>%)</c:when>
+									<c:when test="${projectVO.status eq 'L'}"><spring:message code="ezPMS.t18"/>(<fmt:formatNumber value="${projectVO.progress}" pattern="0.0"/>%)</c:when>
+									<c:when test="${projectVO.status eq 'S'}"><spring:message code="ezPMS.t19"/>(<fmt:formatNumber value="${projectVO.progress}" pattern="0.0"/>%)</c:when>
 									<c:when test="${projectVO.status eq 'D'}"><spring:message code="ezPMS.t11"/></c:when>
 								</c:choose>
 							</td>

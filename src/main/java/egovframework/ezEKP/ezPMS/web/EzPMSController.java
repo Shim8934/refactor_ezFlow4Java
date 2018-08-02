@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -1161,10 +1162,14 @@ public class EzPMSController {
 		String mode = param.get("mode").toString();
 		String projectName = (String) param.get("projectName");
 		long projectId = Long.parseLong(param.get("projectId").toString());
-
+		String headManagerId = param.get("headManagerId").toString();
+		String beforeHeadManagerId = param.get("beforeHeadManagerId").toString();
+		
+		List<Map<String, Object>> headManager = null;
 		List<Map<String, Object>> managerList = null;
 		List<Map<String, Object>> participantList = null;
 		List<Map<String, Object>> viewerList = null;
+		List<Map<String, Object>> beforeHeadManager = null;
 		List<Map<String, Object>> beforeManagerList = null;
 		List<Map<String, Object>> beforeParticipantList = null;
 		List<Map<String, Object>> beforeViewerList = null;
@@ -1174,12 +1179,16 @@ public class EzPMSController {
 		try {
 			// 프로젝트 담당자
 			if (param.get("managerList") != null) {
-				managerList = (List<Map<String, Object>>) param.get("managerList");
+				managerList = ((List<Map<String, Object>>) param.get("managerList"));
+				
+				headManager = managerList.stream().filter(o -> o.get("userId").equals(headManagerId)).collect(Collectors.toList());
+				managerList = managerList.stream().filter(o -> !o.get("userId").equals(headManagerId)).collect(Collectors.toList());
 
 				// 이전 member의 집합
 				if (mode.equals("edit")) {
 					if (param.get("beforeManagerList") != null) {
 						beforeManagerList = (List<Map<String, Object>>) param.get("beforeManagerList");
+						beforeManagerList = beforeManagerList.stream().filter(o -> !o.get("userId").equals(beforeHeadManagerId)).collect(Collectors.toList());
 
 						if (managerList.size() > 0 || managerList != null) {
 							Iterator<Map<String, Object>> managerIter = managerList.iterator();
@@ -1193,8 +1202,15 @@ public class EzPMSController {
 							}
 						}
 					}
+					
+					if(headManagerId.equals(beforeHeadManagerId)) {
+						headManager.remove(0);
+					}	
 				}
-
+				
+				getToArrMailList(headManager, param, request, projectName, projectId,
+						egovMessageSource.getMessage("ezPMS.t330", userInfo.getLocale()), loginCookie);
+	
 				getToArrMailList(managerList, param, request, projectName, projectId,
 						egovMessageSource.getMessage("ezPMS.t63", userInfo.getLocale()), loginCookie);
 			}
