@@ -1968,17 +1968,17 @@ public class EzPortalController extends EgovFileMngUtil {
 		String[] arrayID = new String[1000];
 		StringBuilder result = new StringBuilder("<DATA>");
 		
-		String deptFullPath = ezOrganService.getDeptFullPath(userInfo.getDeptID(), userInfo.getTenantId());
+//		String deptFullPath = ezOrganService.getDeptFullPath(userInfo.getDeptID(), userInfo.getTenantId());
+//		
+//		String[] splitDeptPath = new String[deptFullPath.split("\\,").length];
+//		String reversePath = "";
+//		splitDeptPath = deptFullPath.split("\\,");
+//		
+//		for (int i=0; i<splitDeptPath.length; i++) {
+//			reversePath += splitDeptPath[splitDeptPath.length - i - 1] + ",";
+//		}
 		
-		String[] splitDeptPath = new String[deptFullPath.split("\\,").length];
-		String reversePath = "";
-		splitDeptPath = deptFullPath.split("\\,");
-		
-		for (int i=0; i<splitDeptPath.length; i++) {
-			reversePath += splitDeptPath[splitDeptPath.length - i - 1] + ",";
-		}
-		
-		String pAccessID = userInfo.getId() + "," + reversePath + "everyone";
+		String pAccessID = userInfo.getId() + "," + userInfo.getDeptID() + "," + userInfo.getCompanyID() + "," + "everyone";
 		
 		for (int j=0; j<pAccessID.split("\\,").length; j++) {
 			List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu = ezPersonalService.getQuickLinkMenu(pAccessID.split("\\,")[j].trim(), userInfo.getTenantId());
