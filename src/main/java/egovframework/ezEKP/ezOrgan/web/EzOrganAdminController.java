@@ -185,6 +185,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
+		model.addAttribute("locale", user.getLocale());
 		
 		return "admin/ezOrgan/organRight";
 	}
