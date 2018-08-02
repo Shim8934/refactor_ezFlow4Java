@@ -21,6 +21,7 @@
 	        var attachxml = "";
 	        var isCrossBrowser = "${isCrossBrowser}";
 	        var ReturnFunction;
+	        var maxAllowMailMsg = "<spring:message code='ezEmail.jje04'/>";
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
@@ -187,7 +188,15 @@
 	        }
 	        function btn_AttachAdd_onclick() {
         		var cnt = document.getElementById("form").file1.files.length;
-	            for (var i = 0; i < cnt; i++) {
+        		
+        		if (cnt > 100) {
+        			alert(maxAllowMailMsg);
+        			document.getElementById("mailCount").innerText = "";
+        			return;
+        		}
+        		
+        		document.getElementById("mailCount").innerText = "[" + cnt + "] <spring:message code='ezBoard.t339'/>";
+        		for (var i = 0; i < cnt; i++) {
 	                var tempname = document.getElementById("form").file1.files[i].name;
 	                var last = tempname.split(".").length;
 	                var extension = tempname.split(".")[last - 1];
@@ -223,7 +232,7 @@
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden">
-	    <h1><spring:message code='ezEmail.t400' /></h1>
+	    <h1><spring:message code='ezEmail.t400' />&nbsp;&nbsp;<span id="mailCount"></span></h1>
 	    <div id="close">
             <ul>
                 <li><span onclick="window_Close()"></span></li>

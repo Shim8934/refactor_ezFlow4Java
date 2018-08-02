@@ -423,6 +423,8 @@
 		    	    window.returnValue = rtn;
 		    	    window.close();
 		    	}
+		    	
+		    	
 		    }
 	
 		    function getPickerDate()
@@ -908,6 +910,52 @@
 		    	
 		    	
 		    }
+		    //2018-07-31 구해안 두 날짜 사이 날짜들 구하는 함수
+		   /*  function getDateRange(startDate, endDate, listDate) {
+		        var dateMove = new Date(startDate);
+		        var strDate = startDate;
+
+			        if (startDate == endDate) {
+			            var strDate = dateMove.toISOString().slice(0,10);
+			            listDate.push(strDate);
+			       	}else{
+
+		            while (strDate < endDate) {
+		                var strDate = dateMove.toISOString().slice(0, 10);
+		                listDate.push(strDate);
+		                dateMove.setDate(dateMove.getDate() + 1);
+		            }
+		        }
+		        return listDate;
+		    };
+		    
+		    function checkRangeRepe(){
+		    	var listDate = [];
+		    	
+		    	var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		    	var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+
+		        getDateRange(startDate, endDate, listDate);
+		        
+
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					traditional : true,
+					async : false,
+					url : "/ezSchedule/scheduleCheckRange.do",
+					data : { 
+						startDate  : startDate,
+						endDate    : endDate,
+						listDate   : listDate
+					},
+					success: function(result){
+						
+					}
+				});
+	            
+		    } */
+
 		</script>
 	</head>
 	<body class="popup">
