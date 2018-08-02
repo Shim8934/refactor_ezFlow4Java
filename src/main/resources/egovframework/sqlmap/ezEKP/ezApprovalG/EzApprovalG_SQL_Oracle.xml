@@ -8312,7 +8312,8 @@
                          C.AprMemberJobTitle2 ,
                          B.SeperateAttachXML ,
                          B.DocNumCode ,
-                         B.OrgDocNumCode 
+                         B.OrgDocNumCode ,
+                         B.PublicityYn
            			FROM 
            				 TBL_APRDOCINFO A
                     JOIN 
