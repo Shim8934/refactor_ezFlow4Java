@@ -426,23 +426,13 @@ public class EzCabinetController_h {
 	}
 	
 	private String getBoardColumnInfo(Model model, JSONObject iteminfo) {
-		JSONArray columnList = new JSONArray();
 		String jspPageName   = "ezCabinet/cabinetBoardDetail";
-		
-		if (iteminfo.get("columns") != null) {
-			columnList = (JSONArray) iteminfo.get("columns");
-		}
+		JSONArray columnList = (JSONArray) iteminfo.get("columns");
 		
 		for (int i = 0, totalColumn = columnList.size(); i < totalColumn; i++) {
 			JSONObject column = (JSONObject) columnList.get(i);
 			String columnId   = column.get("columnId").toString();
-			if (columnId.equals("writer")) {
-				model.addAttribute("writerColumn", column);
-			}
-			
-			if (columnId.equals("boardTime")) {
-				model.addAttribute("timeColumn", column);
-			}
+			model.addAttribute(columnId, column);
 		}
 		
 		return jspPageName;

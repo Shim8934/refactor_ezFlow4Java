@@ -18,19 +18,19 @@
 			<table class="tblBoardInf">
 				<tr>
 					<th><spring:message code='ezCabinet.t109'/></th>
-					<td><c:out value="${item.creatorName}"/></td>
+					<td id="fileCreator" class="cursor"><c:out value="${item.creatorName}"/></td>
 					<th><spring:message code='ezCabinet.t110'/></th>
 					<td><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
+				</tr>
 				<tr>
-				<tr>
-					<th><c:out value="${writerColumn.columnName}"/></th>
-					<td><c:out value="${writerColumn.columnValue}"/></td>
-					<th><c:out value="${timeColumn.columnName}"/></th>
-					<td><c:out value="${fn:substring(timeColumn.columnValue, 0, 19)}"/></td>
-				<tr>
+					<th><c:out value="${writer.columnName}"/></th>
+					<td id="boardCreator" class="cursor"></td>
+					<th><c:out value="${boardTime.columnName}"/></th>
+					<td><c:out value="${fn:substring(boardTime.columnValue, 0, 19)}"/></td>
+				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
-					<td id="title" colspan="3"><c:out value="${item.title}"/></td>
+					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t94'/></th>
@@ -56,6 +56,27 @@
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
 		<script type="text/javascript">
+			var CabinetScroll = function() {
+				return function(elementId) {
+					var scrolled    = true;
+					var lastScrollY = 0;
+					var divElmt     = document.getElementById(elementId);
+					
+					if (!divElmt) {alert("Cannot find element with this id: " + elementId); return;}
+					
+					divElmt.onscroll = function(e) {scrollListOfItem(this);}
+					
+					function scrollListOfItem() {
+						if (scrolled) {
+							scrolled = false;
+							var distance      = divElmt.scrollTop < lastScrollY ? -20 : 20;
+							divElmt.scrollTop = lastScrollY + distance;
+							setTimeout(function () {scrolled = true; lastScrollY = divElmt.scrollTop;}, 500);
+						}
+					}
+				}
+			}();
+			
 			var CabinetBoardFile = function() {
 				var rlWindow     = null;
 				var itemId       = null;
@@ -65,6 +86,7 @@
 				function initEvents(itemID) {
 					itemId                  = itemID;
 					document.onselectstart  = function () { return false;}
+					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 					var cabBttnElmt         = document.getElementById("fileDivBttn");
 					var listBttns           = cabBttnElmt.children;
 					listBttns[0].onclick    = function(e) {fileModify();};
@@ -99,15 +121,30 @@
 						dataType: "JSON",
 						async: false,
 						success : function(data) {
+							console.log(data);
 							processFileDetail(data);},
 						error : function(error) {alert(CabinetMessages.strError);}
 					});
 				}
 				
 				function processFileDetail(fileItem) {
-					var result      = fileItem.fileDetail;
-					var attachList  = fileItem.attachFileList;
-					var relatedList = fileItem.relatedFileList;
+					var result       = fileItem.fileDetail;
+					var boardWriter  = fileItem.writerVO;
+					var attachList   = fileItem.attachFileList;
+					var relatedList  = fileItem.relatedFileList;
+					
+					//File Creator
+					document.getElementById("fileCreator").onclick  = function(e) {showUserInfoFromId(result["creatorId"]);};
+					
+					//Board Creator
+					var boardCreator         = document.getElementById("boardCreator");
+					boardCreator.textContent = boardWriter["userName"];
+					boardCreator.onclick     = function(e) {showUserInfoFromId(boardWriter["userId"]);};
+					
+					//Title
+					var titleTd         = document.getElementById("title");
+					titleTd.textContent = result["title"];
+					titleTd.setAttribute("title", result["title"]);
 					
 					//Related list
 					var divElmt       = document.getElementById("fileListDiv");
@@ -128,23 +165,6 @@
 						}
 					}
 					
-					function setScrollElement(divElmt, listObj, handlerCallBack, roleName, titleName, statusName) {
-						for (var i = 0, len = listObj.length; i < len; i++) {
-							var spanElmt = document.createElement("span");
-							spanElmt.setAttribute("role", listObj[i][roleName]);
-							spanElmt.textContent = listObj[i][titleName];
-							spanElmt.className   = "rlSpanBnk";
-							spanElmt.onclick = (function(itemId, status){return function() {handlerCallBack(itemId, status);}; })(listObj[i][roleName], listObj[i][statusName]);
-							divElmt.appendChild(spanElmt);
-							
-							if (i != len - 1) {
-								var divideEm         = document.createElement("em");
-								divideEm.textContent = ";";
-								divElmt.appendChild(divideEm);
-							}
-						}
-					}
-					
 					//Attach List and content
 					var iframeElmt       = document.getElementById("boardIframe");
 					iframeElmt.src       = "/ezCabinet/getPreviewContent.do?module=board";
@@ -153,6 +173,30 @@
 					boardContent.size    = result["itemSize"];
 					boardContent.attach  = attachList;
 					
+				}
+				
+				function setScrollElement(divElmt, listObj, handlerCallBack, roleName, titleName, statusName) {
+					for (var i = 0, len = listObj.length; i < len; i++) {
+						var spanElmt = document.createElement("span");
+						spanElmt.setAttribute("role", listObj[i][roleName]);
+						spanElmt.textContent = listObj[i][titleName];
+						spanElmt.className   = "rlSpanBnk";
+						spanElmt.onclick = (function(itemId, status){return function() {handlerCallBack(itemId, status);}; })(listObj[i][roleName], listObj[i][statusName]);
+						divElmt.appendChild(spanElmt);
+						
+						if (i != len - 1) {
+							var divideEm         = document.createElement("em");
+							divideEm.textContent = ";";
+							divElmt.appendChild(divideEm);
+						}
+					}
+				}
+				
+				function showUserInfoFromId(userId) {
+					var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
+					feature = feature + getOpenWindowfeature(420, 500);
+					
+					userWindow = window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
 				}
 				
 				function fileModify() {
@@ -192,6 +236,13 @@
 					rlWindow = window.open("/ezCabinet/getRelatedFile.do?itemId=" + itemId + "&module=board", "relatedWd", getOpenWindowfeature(800, 600));
 				}
 				
+				function readRelatedItem(itemId, useStatus) {
+					if(useStatus && useStatus == 0) {alert(CabinetMessages.strNoRelated); return;}
+					
+					if(itemPopup) {itemPopup.close();}
+					itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "itemDetail", getOpenWindowfeature(600, 565));
+				}
+				
 				function getOpenWindowfeature(popUpW, popUpH) {
 					var heigth   = window.screen.availHeight;
 					var width    = window.screen.availWidth;
@@ -218,7 +269,7 @@
 					
 					$.ajax({
 						type: "POST",
-						url: "/ezCabinet/modifyBoardItem.do",
+						url: "/ezCabinet/modifyRelatedItem.do",
 						data: {
 							"itemId"      : itemId,
 							"title"       : title,
@@ -245,6 +296,12 @@
 				
 				function getRelatedFiles() {return relatedArr;}
 				function saveRelatedFiles(relatedFile) {relatedArr = JSON.parse(JSON.stringify(relatedFile)); showRelatedFiles();}
+				
+				function closeAllPopups() {
+					if (rlWindow)  {rlWindow.close();}
+					if(itemPopup)  {itemPopup.close();}
+					if(userWindow) {userWindow.close();}
+				}
 				
 				function showRelatedFiles() {
 					var divElmt = document.getElementById("fileListDiv");
@@ -273,6 +330,106 @@
 					var parentWd = window.opener;
 					if (parentWd && parentWd.CabinetItem) {parentWd.CabinetItem.reload();}
 					closeWindow();
+				}
+			
+				function fileDelete() {
+					if (confirm(CabinetMessages.strDelete)) {
+						var itemArr = [];
+						itemArr.push(itemId);
+						var data = {itemList : itemArr.toString()};
+						$.ajax({
+							type: "POST",
+							url: "/ezCabinet/deleteItems.do",
+							data: {itemList : itemArr.toString()},
+							dataType: "JSON",
+							async: false,
+							success : function(data) {
+								var code = data.code;
+								switch(code) {
+									case 0 : afterDeleteSuccessfully()         ; break;
+									case 1 : alert(CabinetMessages.strParamErr); break;
+									case 2 : alert(CabinetMessages.strError)   ; break;
+									case 3 : alert(CabinetMessages.strPerm)    ; break;
+									default: alert(CabinetMessages.strError)   ; return; 
+								}
+							},
+							error : function(error) {alert(CabinetMessages.strError);}
+						});
+					}
+				}
+				
+				function afterDeleteSuccessfully() {
+					alert(CabinetMessages.strDel);
+					var parentWd    = window.opener;
+					if (parentWd && parentWd.CabinetItem) {parentWd.CabinetItem.reload();}
+					closeWindow();
+				}
+				
+				function filePrint() { 
+					var rltdElmt      = null;
+					var relatedFileList = document.getElementById("fileListDiv");
+					var rlclientHeight  = relatedFileList.clientHeight;
+					var rlscrollHeight  = relatedFileList.scrollHeight;
+					
+					if (rlscrollHeight > rlclientHeight) {
+						rltdElmt = relatedFileList.parentElement.parentElement;
+						rltdElmt.setAttribute("style", "vertical-align: top; height: " + (rlscrollHeight) + "px;");
+					}
+					
+					var iframeElmt = document.getElementById("boardIframe");
+					var parentDiv  = iframeElmt.parentElement;
+					var iframeCont = iframeElmt.contentWindow? iframeElmt.contentWindow: iframeElmt.contentDocument;
+					
+					var printWrapDiv   = document.createElement("div");
+					var divInfo        = document.querySelector("div[class='divInfo']");
+					var cloneDivInf    = divInfo.cloneNode(true);
+					var divText        = iframeCont.document.getElementById("txtField");
+					var cloneDivText   = divText.cloneNode(true);
+					var attachDiv      = iframeCont.document.getElementsByClassName("previewmail_addfile cabattach")[0];
+					
+					//Check if attach files exist
+					if (attachDiv) {
+						var ulElmt = attachDiv.lastElementChild;
+						if (ulElmt.childElementCount > 0) {
+							var cloneUlEmt     = ulElmt.cloneNode(true);
+							var trElmt         = document.createElement("tr");
+							var thElmt         = document.createElement("th");
+							var tdElmt         = document.createElement("td");
+							thElmt.textContent = CabinetMessages.strAttach5;
+							tdElmt.setAttribute("colspan", 3);
+							tdElmt.appendChild(cloneUlEmt);
+							trElmt.appendChild(thElmt);
+							trElmt.appendChild(tdElmt);
+							cloneDivInf.firstElementChild.appendChild(trElmt);
+						}
+					}
+					
+					var txtWrDiv       = document.createElement("div");
+					txtWrDiv.className = "cabtxtPrint";
+					txtWrDiv.appendChild(cloneDivText);
+					printWrapDiv.appendChild(cloneDivInf);
+					printWrapDiv.appendChild(txtWrDiv);
+					divInfo.style.display   = "none";
+					parentDiv.style.display = "none";
+					document.body.appendChild(printWrapDiv);
+					
+					window.focus();
+					window.print();
+					
+					parentDiv.removeAttribute("style");
+					divInfo.removeAttribute("style");
+					document.body.removeChild(printWrapDiv);
+					if (rltdElmt) {rltdElmt.removeAttribute("style");}
+				}
+				
+				function cancelChanges() {
+					document.getElementById("fileFileH1").textContent = CabinetMessages.strFileDet;
+					document.title = CabinetMessages.strFileDet;
+					
+					document.getElementById("fileDivBttn").style.display       = "";
+					document.getElementById("fileModifyDivBttn").style.display = "none";
+					
+					getFileDetail();
 				}
 				
 				function getIframeContent() {return boardContent;}
