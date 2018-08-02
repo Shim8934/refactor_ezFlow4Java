@@ -2805,11 +2805,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docState", docState);
 		model.addAttribute("whoKyulCount", whoKyulCount);
 		model.addAttribute("checkPwdFlag", checkPwdFlag);
-<<<<<<< HEAD
-		model.addAttribute("orgCompanyID", orgCompanyID);
-=======
 		model.addAttribute("signImageType", signImageType);
->>>>>>> master
+		model.addAttribute("orgCompanyID", orgCompanyID);
 
 		logger.debug("contDocView ended.");
 		
