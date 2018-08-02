@@ -275,7 +275,11 @@
 					<ul>
 						<li><span onclick="saveProject()"><spring:message code='ezPMS.t265' /></span></li>
 						<li><span onclick="deletePermanently()"><spring:message code='ezPMS.t12' /></span></li>
-						<li style="float: right;"><span onclick="window.close()"><spring:message code='ezPMS.t76' /></span></li>
+					</ul>
+				</div>
+				<div id="close" style="float: right;">
+					<ul>
+						<li><span id="cancel" onclick="window.close()"></span></li>
 					</ul>
 				</div>
 			</td>

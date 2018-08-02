@@ -16,7 +16,7 @@
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>
 <script type="text/javascript">
 	var currentPage = 1;
-	var listNumber = 10;
+	var listNumber = 20;
 	var projectSort = 0;
 	var orderWhat = "init";
 	var orderHow = "";

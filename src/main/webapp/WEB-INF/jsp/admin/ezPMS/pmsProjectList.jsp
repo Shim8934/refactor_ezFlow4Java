@@ -47,7 +47,7 @@
 									<c:when test="${projectVO.status eq 'P'}"><spring:message code="ezPMS.t15"/>(<fmt:formatNumber value="${projectVO.progress}" pattern="0.0"/>%)</c:when>
 									<c:when test="${projectVO.status eq 'W'}"><spring:message code="ezPMS.t16"/></c:when>
 									<c:when test="${projectVO.status eq 'C'}"><spring:message code="ezPMS.t17"/></c:when>
-									<c:when test="${projectVO.status eq 'L'}"><spring:message code="ezPMS.t18"/>(<fmt:formatNumber value="${projectVO.progress}" pattern="0.0"/>%)</c:when>
+									<c:when test="${projectVO.status eq 'L'}"><spring:message code="ezPMS.t15"/>/<spring:message code="ezPMS.t18"/>(<fmt:formatNumber value="${projectVO.progress}" pattern="0.0"/>%)</c:when>
 									<c:when test="${projectVO.status eq 'S'}"><spring:message code="ezPMS.t19"/>(<fmt:formatNumber value="${projectVO.progress}" pattern="0.0"/>%)</c:when>
 									<c:when test="${projectVO.status eq 'D'}"><spring:message code="ezPMS.t11"/></c:when>
 								</c:choose>
