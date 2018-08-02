@@ -137,15 +137,21 @@ public class EzAttitudeGWController {
 			String adminId = request.getParameter("adminId");
 			String checkAttitude = "";
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			String offSet = info.getOffSet();
+			
+			if (adminId != null && !adminId.equals("")) { //관리자가 등록시 등록하는 사람의 offset이 필요함
+				MCommonVO adminInfo = mOptionService.commonInfoWeb(serverName, adminId);
+				offSet = adminInfo.getOffSet();
+			}
 			
 			if (typeId.equals("A01") || typeId.equals("A02") || typeId.equals("A03") || typeId.equals("A08")) {
-				checkAttitude = ezAttitudeService.getIsAttitude(typeId, userId, startDate, info.getOffSet(), info.getCompanyId(), info.getTenantId());
+				checkAttitude = ezAttitudeService.getIsAttitude(typeId, userId, startDate, offSet, info.getCompanyId(), info.getTenantId());
 			}
 			
 			if (!checkAttitude.equals("") && !checkAttitude.equals("0")) {
 				checkAttitude = "dupl";
 			} else {
-				ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, info.getOffSet(), info.getCompanyId(), info.getTenantId(), mode, adminId);
+				ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, offSet, info.getCompanyId(), info.getTenantId(), mode, adminId);
 			}
 			
 			result.put("status", "ok");
@@ -1096,7 +1102,7 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
 			
-			List<HolidayVO> holidayList = ezAttitudeService.getHolidayList("", companyId, tenantId);
+			List<HolidayVO> holidayList = ezAttitudeService.getHolidayList("rest", companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

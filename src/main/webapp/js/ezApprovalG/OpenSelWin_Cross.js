@@ -10,20 +10,20 @@ function SelectTask(pDeptCode, pDeptName, pInitFlag, pMultiSelect, opentype, Com
     selecttask_cross_dialogArguments[0] = para;
     if (opentype == undefined && CompleteFunction == undefined) {
         selecttask_cross_dialogArguments[1] = SelectTask_Complete;
-        DivPopUpShow(790, 430, url);
+        DivPopUpShow(850, 430, url);
     }
     else if (opentype == undefined && CompleteFunction != undefined) {
         selecttask_cross_dialogArguments[1] = CompleteFunction;
-        DivPopUpShow(790, 430, url);
+        DivPopUpShow(850, 430, url);
     }
     else if (opentype != undefined && CompleteFunction == undefined) {
         selecttask_cross_dialogArguments[1] = SelectTask_Complete;
-        var OpenWin = window.open(url, "SelectTask_Cross", GetOpenWindowfeature(790, 430));
+        var OpenWin = window.open(url, "SelectTask_Cross", GetOpenWindowfeature(850, 430));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
         selecttask_cross_dialogArguments[1] = CompleteFunction;
-        var OpenWin = window.open(url, "SelectTask_Cross", GetOpenWindowfeature(790, 430));
+        var OpenWin = window.open(url, "SelectTask_Cross", GetOpenWindowfeature(850, 430));
         try { OpenWin.focus(); } catch (e) { }
     }
     return rtn;
@@ -75,7 +75,7 @@ function SelectUser(pCabClassNo, pDeptCode) {
         selectuser_cross_dialogArguments[0] = para;
         selectuser_cross_dialogArguments[1] = SelectUsert_Complete;
 
-        DivPopUpShow(600, 340, url);
+        DivPopUpShow(790, 430, url);
     } else {
         var feature = "dialogWidth:512px;dialogHeight:415px;scroll:no;resizable:no;status:no;help:no;edge:sunken ";
         feature = feature + GetShowModalPosition(495, 360);

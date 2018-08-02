@@ -244,12 +244,18 @@
 						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
 						
 						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
-			        		if (result.totalCount == result.totalCount2) {
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang24 + "</span>]";
-			        		} else {
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang24 + "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang24 + "</span>]";
-			        		}
-			            	
+							if (result.containLow == "YES") {
+								var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
+								var strIsLeaf = $("div#" + id + "").attr("isleaf");
+	
+								if (strIsLeaf == "TRUE") { //하위가 없으면
+				        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang24 + "</span>]";
+				        		} else { //하위가 있으면
+				        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang24 + "</span>/<spring:message code='ezAddress.t362' /> <span style='color:#017BEC;'>" + result.totalCount2 + strLang24 + "</span>]";
+				        		}
+							} else {
+								SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang24 + "</span>]";
+							}			            	
 			            	SelectDeptNM.setAttribute("countinfo","1")
 			        	}
 					},
@@ -1077,12 +1083,14 @@
 			                <DATA1>wf</DATA1>
 			            </CELL>
 			        </ROW>
+			        <c:if test="${use_attitude == 'YES'}">
                     <ROW>
 			            <CELL>            
-			                <VALUE>근태관리자</VALUE>
+			                <VALUE><spring:message code='ezOrgan.kbm01' /></span></VALUE>
 			                <DATA1>wa</DATA1>
 			            </CELL>
 			        </ROW>
+			        </c:if>
 				</ROWS>
 			</LISTVIEWDATA>
 		</xml>

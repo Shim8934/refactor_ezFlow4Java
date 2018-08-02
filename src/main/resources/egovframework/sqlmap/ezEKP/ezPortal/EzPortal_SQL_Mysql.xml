@@ -1507,7 +1507,8 @@
 		<![CDATA[
 			SELECT
 				DISTINCT A.UID_ ,
-                      		  A.DisplayName 
+				A.DisplayName,
+				A.DisplayName2 
         	FROM
         		TBL_PORTALPAGE_GENERAL A, TBL_PORTAL_ACL companyACL
        		WHERE  

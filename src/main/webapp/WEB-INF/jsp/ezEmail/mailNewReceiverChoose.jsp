@@ -232,7 +232,7 @@
 	                document.title = " <spring:message code='ezEmail.t99000080' />";
 	                document.getElementById("ToTitleStr").innerHTML = strLang314;
 	                document.getElementById("inputTabButton").style.display = "none";
-	                document.getElementById("dlTabButton").style.display = "none";
+	                //document.getElementById("dlTabButton").style.display = "none";
 	                document.getElementById("ListMsgTo").style.display = "none";
 	                document.getElementById("ListMsgTo").setAttribute("rowspan", "3");
 	                document.getElementById("ListMsgCC").style.display = "none";
@@ -539,6 +539,7 @@
 		    }
 		    function dlTabButton_onClick() {
 		    	methodForTabAction(3);
+		    	selTab = "DistributionList";
 		        m_tabDialogState["org"] = "normal";
 		        m_tabDialogState["contact"] = "normal";
 		        m_tabDialogState["dl"] = "select";
@@ -691,7 +692,7 @@
 	                    return;
 	                }
 	            }
-	            else {
+	            else if (selTab == "AddressListView") {
 	                var pListViewDL = new ListView();
 	                pListViewDL.LoadFromID("Address");
 	                var arrRows = pListViewDL.GetSelectedRows();
@@ -701,6 +702,17 @@
 	                        alert("<spring:message code='ezEmail.t99000076' />");
 	                        return;
 	                    }
+	                }
+	                else {
+	                    alert("<spring:message code='ezEmail.t1014' />");
+	                    return;
+	                }
+	            } else if (selTab == "DistributionList") {
+	            	var pListViewDL = new ListView();
+	                pListViewDL.LoadFromID("pListViewDL");
+	                var arrRows = pListViewDL.GetSelectedRows();
+	                if (arrRows.length > 0) {
+	                    var strEmail = GetAttribute(arrRows[0], "DATA2");
 	                }
 	                else {
 	                    alert("<spring:message code='ezEmail.t1014' />");
@@ -1429,12 +1441,18 @@
 						var deptName = document.getElementsByClassName("node_selected")[0].innerHTML;
 						
 						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
-			        		if (result.totalCount == result.totalCount2) {
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang300 + "</span>]";
-			        		} else {
-			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang300 + "</span>]&nbsp;" + deptName + "&nbsp;<spring:message code='ezAddress.t362' />-[<span style='color:#017BEC;'>" + result.totalCount2 + strLang300 + "</span>]";
-			        		}
-			            	
+			            	if (result.containLow == "YES") {
+								var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
+								var strIsLeaf = $("div#" + id + "").attr("isleaf");
+	
+								if (strIsLeaf == "TRUE") { //하위가 없으면
+									SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang300 + "</span>]";
+				        		} else { //하위가 있으면
+				        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang300 + "</span>/<spring:message code='ezAddress.t362' /> <span style='color:#017BEC;'>" + result.totalCount2 + strLang300 + "</span>]";
+				        		}
+							} else {
+								SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + result.totalCount + strLang300 + "</span>]";
+							}
 			            	SelectDeptNM.setAttribute("countinfo","1")
 			        	}
 					},
