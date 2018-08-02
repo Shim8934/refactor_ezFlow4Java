@@ -78,6 +78,7 @@ var CabinetMessages = {
 	strSame      : "같은 파일은 연관문서로 선택할 수 없습니다.",
 	strAttach3   : "일반 첨부파일",
 	strAttach4   : "모두저장",
+	strAttach5   : "첨부파일",
 	strDelete2   : "게시물이 삭제되었습니다.",
 	strType      : "타입이 다릅니다."
 }

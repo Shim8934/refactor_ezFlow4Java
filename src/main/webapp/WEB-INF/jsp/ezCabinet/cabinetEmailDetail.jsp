@@ -365,6 +365,25 @@
 					var printWrapDiv   = document.createElement("div");
 					var divInfo        = document.querySelector("div[class='divInfo']");
 					var cloneDivInf    = divInfo.cloneNode(true);
+					var attachDiv      = iframeCont.document.getElementsByClassName("previewmail_addfile cabattach")[0];
+					
+					//Check if attach files exist
+					if (attachDiv) {
+						var ulElmt = attachDiv.lastElementChild;
+						if (ulElmt.childElementCount > 0) {
+							var cloneUlEmt     = ulElmt.cloneNode(true);
+							var trElmt         = document.createElement("tr");
+							var thElmt         = document.createElement("th");
+							var tdElmt         = document.createElement("td");
+							thElmt.textContent = CabinetMessages.strAttach5;
+							tdElmt.setAttribute("colspan", 3);
+							tdElmt.appendChild(cloneUlEmt);
+							trElmt.appendChild(thElmt);
+							trElmt.appendChild(tdElmt);
+							cloneDivInf.firstElementChild.appendChild(trElmt);
+						}
+					}
+					
 					var divText        = iframeCont.document.getElementById("txtField");
 					var cloneDivText   = divText.cloneNode(true);
 					var txtWrDiv       = document.createElement("div");
@@ -376,6 +395,7 @@
 					parentDiv.style.display = "none";
 					document.body.appendChild(printWrapDiv);
 					
+					window.focus();
 					window.print();
 					
 					parentDiv.removeAttribute("style");
@@ -399,7 +419,7 @@
 					
 					$.ajax({
 						type: "POST",
-						url: "/ezCabinet/modifyEmailItem.do",
+						url: "/ezCabinet/modifyRelatedItem.do",
 						data: {
 							"itemId"      : itemId,
 							"title"       : title,

@@ -552,17 +552,7 @@ public class EzCabinetGWController_h {
 	}
 	
 	private void getMoreAddressDetaail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
-		CabinetColumnVO addressType = columnList.stream().filter(column -> column.getColumnId().equals("addresstype")).collect(Collectors.toList()).get(0);
-		
-		if (addressType.equals("normal")) {
-			getNormalAddressDetail(result, columnList, primary, tenantId);
-		}
-		else {
-			getGroupAddressDetail(result, columnList, primary, tenantId);
-		}
-	}
-	
-	private void getGroupAddressDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
+		CabinetColumnVO addressType   = columnList.stream().filter(column -> column.getColumnId().equals("addresstype")).collect(Collectors.toList()).get(0);
 		CabinetColumnVO creatorColumn = columnList.stream().filter(column -> column.getColumnId().equals("creator")).collect(Collectors.toList()).get(0);
 		CabinetColumnVO modifyColumn  = columnList.stream().filter(column -> column.getColumnId().equals("modifier")).collect(Collectors.toList()).get(0);
 		
@@ -579,14 +569,15 @@ public class EzCabinetGWController_h {
 			modifier = new SimpleUserInfoVO(modifierId, modifierId);
 		}
 		
-		result.put("creator"    , creator);
-		result.put("modifier"   , modifier);
-		result.put("addresstype", "group");
-	}
-	
-	private void getNormalAddressDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) {
-		//Add code here
-		result.put("addresstype", "normal");
+		result.put("creator" , creator);
+		result.put("modifier", modifier);
+		
+		if (addressType.equals("normal")) {
+			result.put("addresstype", "normal");
+		}
+		else {
+			result.put("addresstype", "group");
+		}
 	}
 	
 	private void getMoreEmailDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {

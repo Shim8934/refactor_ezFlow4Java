@@ -97,6 +97,7 @@ public interface EzCabinetService {
 	JSONObject modifyRelatedItem(int currentItemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception;
 	
 	//Save related address item functions
-	JSONObject saveGroupAddressItem(String realPath, int dstCabinetId, String title, String mode, String content, String createUser, String createDate, String changeUser, String changeDate, LoginVO userInfo) throws Exception;
+	JSONObject saveGroupAddressItem(int dstCabinetId, String title, String mode, String content, String createUser, String createDate, String changeUser, String changeDate, LoginVO userInfo) throws Exception;
+	JSONObject saveNormalAddressItem(int dstCabinetId, String title, String mode, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo, LoginVO userInfo) throws Exception;
 	
 }

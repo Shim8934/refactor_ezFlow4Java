@@ -366,16 +366,47 @@
 				}
 				
 				function saveNormalAddress(addressDocument, saveMode, cabinetId) {
+					var addressDocument = addressOpener.document;
+					var title           = addressDocument.getElementById("TextName").textContent;
+					var createUser      = addressOpener.creatorid;
+					var createDate      = addressDocument.getElementById("TextCreateDate").textContent;
+					var changeUser      = addressOpener.modifierid;
+					var changeDate      = addressDocument.getElementById("TextModifyDate").textContent;
+					var companyName     = addressDocument.getElementById("TextCompany").textContent;
+					var deptName        = addressDocument.getElementById("TextDept").textContent;
+					var position        = addressDocument.getElementById("TextTitle").textContent;
+					var emailAddress    = addressDocument.getElementById("TextEmail").textContent;
+					var companyPhone    = addressDocument.getElementById("TextCompanyPhone").textContent;
+					var userPhone       = addressDocument.getElementById("TextMobile").textContent;
+					var faxNumber       = addressDocument.getElementById("TextFax").textContent;
+					var homePage        = addressDocument.getElementById("TextHomePage").textContent;
+					var companyZip      = addressDocument.getElementById("TextComZip").textContent;
+					var companyAddress  = addressDocument.getElementById("TextComAddr").textContent;
+					var homeZip         = addressDocument.getElementById("TextHomeZip").textContent;
+					var homeAddress     = addressDocument.getElementById("TextHomeAddr").textContent;
+					var memoText        = addressDocument.getElementById("TextMemo").textContent;
+					
 					var url  = "/ezCabinet/saveRelatedNormalAddress.do";
 					var data = {
-						mode      : saveMode,
-						title     : mailSubject,
-						sender    : senderEmail,
-						receiver  : JSON.stringify(receiveList),
-						crdDate   : mailDate,
-						forward   : JSON.stringify(forwardList),
-						attach    : JSON.stringify(normalList),
-						content   : emailContent
+						mode       : saveMode,
+						title      : title,
+						createDate : createDate,
+						createUser : createUser,
+						changeUser : changeUser,
+						changeDate : changeDate,
+						company    : companyName,
+						department : deptName,
+						position   : position,
+						email      : emailAddress,
+						compNumber : companyPhone,
+						userNumber : userPhone,
+						faxNumber  : faxNumber,
+						homePage   : homePage,
+						companyZip : companyZip,
+						compAddr   : companyAddress,
+						homeZip    : homeZip,
+						homeAddr   : homeAddress,
+						memo       : memoText
 					};
 					
 					if (saveMode == 1) {data.cabinet = cabinetId;}

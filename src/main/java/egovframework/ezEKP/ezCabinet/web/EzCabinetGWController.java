@@ -1642,8 +1642,7 @@ public class EzCabinetGWController {
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
-			String realPath  = request.getServletContext().getRealPath("");
-			result           = cabinetService.saveGroupAddressItem(realPath, dstCabinetId, title, mode, content, createUser, createDate, changeUser, changeDate, userInfo);
+			result           = cabinetService.saveGroupAddressItem(dstCabinetId, title, mode, content, createUser, createDate, changeUser, changeDate, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1654,19 +1653,36 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/relate-item/modify/", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject modifyGroupAddress(@RequestBody JSONObject addressItemInf, Locale locale, HttpServletRequest request) throws Exception {
-		String serverName  = request.getHeader("host-name") != null ? request.getHeader("host-name")          : "";
-		String title       = addressItemInf.get("title")    != null ? addressItemInf.get("title").toString()  : "";
-		String relatedList = addressItemInf.get("relate")   != null ? addressItemInf.get("relate").toString() : "";
-		String userId      = addressItemInf.get("userId")   != null ? addressItemInf.get("userId").toString() : "";
-		String itemId      = addressItemInf.get("itemId")   != null ? addressItemInf.get("itemId").toString() : "";
-		JSONObject result  = new JSONObject();
-		JSONParser jp      = new JSONParser();
+	@RequestMapping(value="/rest/ezcabinet/relate-item/save/address-normal", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveNormalAddressItem(@RequestBody JSONObject addressItemInf, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")              : "";
+		String title      = addressItemInf.get("title")      != null ? addressItemInf.get("title").toString()      : "";
+		String mode       = addressItemInf.get("mode")       != null ? addressItemInf.get("mode").toString()       : "";
+		String cabinetId  = addressItemInf.get("cabinet")    != null ? addressItemInf.get("cabinet").toString()    : "";
+		String createUser = addressItemInf.get("createUser") != null ? addressItemInf.get("createUser").toString() : "";
+		String createDate = addressItemInf.get("createDate") != null ? addressItemInf.get("createDate").toString() : "";
+		String userId     = addressItemInf.get("userId")     != null ? addressItemInf.get("userId").toString()     : "";
+		String changeUser = addressItemInf.get("changeUser") != null ? addressItemInf.get("changeUser").toString() : "";
+		String changeDate = addressItemInf.get("changeDate") != null ? addressItemInf.get("changeDate").toString() : "";
+		String company    = addressItemInf.get("company")    != null ? addressItemInf.get("company").toString()    : "";
+		String department = addressItemInf.get("department") != null ? addressItemInf.get("department").toString() : "";
+		String position   = addressItemInf.get("position")   != null ? addressItemInf.get("position").toString()   : "";
+		String email      = addressItemInf.get("email")      != null ? addressItemInf.get("email").toString()      : "";
+		String compNumber = addressItemInf.get("compNumber") != null ? addressItemInf.get("compNumber").toString() : "";
+		String userNumber = addressItemInf.get("userNumber") != null ? addressItemInf.get("userNumber").toString() : "";
+		String faxNumber  = addressItemInf.get("faxNumber")  != null ? addressItemInf.get("faxNumber").toString()  : "";
+		String homePage   = addressItemInf.get("homePage")   != null ? addressItemInf.get("homePage").toString()   : "";
+		String companyZip = addressItemInf.get("companyZip") != null ? addressItemInf.get("companyZip").toString() : "";
+		String compAddr   = addressItemInf.get("compAddr")   != null ? addressItemInf.get("compAddr").toString()   : "";
+		String homeZip    = addressItemInf.get("homeZip")    != null ? addressItemInf.get("homeZip").toString()    : "";
+		String homeAddr   = addressItemInf.get("homeAddr")   != null ? addressItemInf.get("homeAddr").toString()   : "";
+		String memo       = addressItemInf.get("memo")       != null ? addressItemInf.get("memo").toString()       : "";
 		
-		logger.debug("ServerName: " + serverName + " || title: " + title + " || userId: " + userId + " || itemId: " + itemId + " || relatedList: " + relatedList);
+		JSONObject result = new JSONObject();
 		
-		if (serverName.equals("") || userId.equals("") || title.equals("") || itemId.equals("") ) {
+		logger.debug("ServerName: " + serverName + " || title: " + title + " || createUser: " + createUser + " || createDate: " + createDate + " || changeUser: " + changeUser + " || userId: " + userId + " || changeDate: " + changeDate + " || mode: " + mode + " || cabinetId: " + cabinetId + " || company: " + company + " || department: " + department + " || position: " + position + " || email: " + email + " || compNumber: " + compNumber + " || userNumber: " + userNumber + " || faxNumber: " + faxNumber + " || homePage: " + homePage + " || companyZip: " + companyZip + " || compAddr: " + compAddr + " || homeZip: " + homeZip + " || homeAddr: " + homeAddr + " || memo: " + memo);
+		
+		if (serverName.equals("") || userId.equals("") || title.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createDate.equals("") || changeUser.equals("") || changeDate.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1674,21 +1690,9 @@ public class EzCabinetGWController {
 		}
 		
 		try {
-			LoginVO userInfo       = commonUtil.getUserForGw(userId, serverName);
-			int currentItemId      = Integer.parseInt(itemId);
-			
-			//Add checking permission here
-			List<Integer> itemList = new ArrayList<>(Arrays.asList(currentItemId));
-			JSONObject permission  = cabinetService.checkPermission(new ArrayList<>(), itemList, 1, userInfo);
-			
-			if ((int)permission.get("code") == 1) {
-				result.put("status", "error");
-				result.put("code", 3);
-				return result;
-			}
-			
-			JSONArray relatedFiles = (JSONArray) jp.parse(relatedList);
-			result                 = cabinetService.modifyRelatedItem(currentItemId, title, relatedFiles, userInfo);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
+			result           = cabinetService.saveNormalAddressItem(dstCabinetId, title, mode, createUser, createDate, changeUser, changeDate, company, department, position, email, compNumber, userNumber, faxNumber, homePage, companyZip, compAddr, homeZip, homeAddr, memo, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

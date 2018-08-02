@@ -601,4 +601,35 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject saveRelatedNormalAdress(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo) throws Exception {
+		String url                = "/rest/ezcabinet/relate-item/save/address-normal";
+		JSONObject jsonBody       = new JSONObject();
+		jsonBody.put("userId",     userId);
+		jsonBody.put("title",      title);
+		jsonBody.put("mode",       mode);
+		jsonBody.put("cabinet",    cabinetId);
+		jsonBody.put("createUser", createUser);
+		jsonBody.put("createDate", createDate);
+		jsonBody.put("changeUser", changeUser);
+		jsonBody.put("changeDate", changeDate);
+		jsonBody.put("company",    company);
+		jsonBody.put("department", department);
+		jsonBody.put("position",   position);
+		jsonBody.put("email",      email);
+		jsonBody.put("compNumber", compNumber);
+		jsonBody.put("userNumber", userNumber);
+		jsonBody.put("faxNumber",  faxNumber);
+		jsonBody.put("homePage",   homePage);
+		jsonBody.put("companyZip", companyZip);
+		jsonBody.put("compAddr",   compAddr);
+		jsonBody.put("homeZip",    homeZip);
+		jsonBody.put("homeAddr",   homeAddr);
+		jsonBody.put("memo",       memo);
+		
+		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
+		return resultBody;
+	}
 }

@@ -303,7 +303,7 @@
 					
 					$.ajax({
 						type: "POST",
-						url: "/ezCabinet/modifyGroupAddress.do",
+						url: "/ezCabinet/modifyRelatedItem.do",
 						data: {
 							"itemId"      : itemId,
 							"title"       : title,
