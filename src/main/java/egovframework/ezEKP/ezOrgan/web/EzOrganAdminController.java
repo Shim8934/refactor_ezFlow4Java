@@ -775,6 +775,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useBizmekaSpambox", useBizmekaSpambox);
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
+		model.addAttribute("locale", userInfo.getLocale());
 				
 		logger.debug("userInfo ended");
 		
