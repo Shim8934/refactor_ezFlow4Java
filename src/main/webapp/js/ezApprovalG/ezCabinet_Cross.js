@@ -1029,7 +1029,7 @@ function btnViewCabInfo_onclick() {
         var url = "/ezApprovalG/viewCabInfo.do";
         viewcabinfo_cross_dialogArguments[0] = para;
 
-        var OpenWin = window.open(url, "ViewCabInfo_Cross", GetOpenWindowfeature(640, 595));
+        var OpenWin = window.open(url, "ViewCabInfo_Cross", GetOpenWindowfeature(640, 550));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
@@ -1381,7 +1381,8 @@ function btnSearchRec_onclick(opnOption,opentype) {
             try { OpenWin.focus(); } catch (e) { }
         }
         else
-            DivPopUpShow(470, 350, url);
+            //DivPopUpShow(470, 350, url);
+        	DivPopUpShow(800, 460, url);
     }
     else {
         var feature;
@@ -1676,7 +1677,7 @@ function makePageSelPage(pTotalCnt) {
 function goToPageByNum(Value) {
     curpage = Value;
     pageNum = curpage;
-    makePageSelPage();
+    makePageSelPage(NodeListLen);
     openergetDocInfo();
 }
 function selbeforeBlock() {
