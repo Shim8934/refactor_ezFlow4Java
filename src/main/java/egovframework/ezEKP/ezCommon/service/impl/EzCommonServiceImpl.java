@@ -1121,4 +1121,22 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.insertUserConfigInfo(map);
 	}
 	
+	@Override
+	 public String getCompanyConfig(int tenantID, String companyID, String property) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("property", property.toUpperCase());
+        map.put("companyID", companyID);
+        map.put("tenantID", tenantID);
+        
+        String propertyValue = ezCommonDAO.getCompanyConfig(map);
+		
+		logger.debug("PROPERTY NAME : " + property + "||" + "TENANTID : " + tenantID + "||" + "COMPANYID : " + companyID);
+		logger.debug("PROPERTY VALUE : " + propertyValue);
+        
+        if (propertyValue == null) {
+            propertyValue = "";
+        }
+        
+        return propertyValue;
+    }
 }

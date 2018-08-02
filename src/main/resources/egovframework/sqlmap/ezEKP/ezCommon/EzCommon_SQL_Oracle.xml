@@ -167,4 +167,19 @@
 		]]>
 	</delete>
 	
+	<select id="EzCommonDAO.getCompanyConfig" parameterClass="map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				property_value
+			FROM 
+				TBL_COMPANY_CONFIG
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANY_ID = #companyID#
+			AND
+				UPPER(property_name) = #property#
+		]]>
+	</select>
+	
 </sqlMap>

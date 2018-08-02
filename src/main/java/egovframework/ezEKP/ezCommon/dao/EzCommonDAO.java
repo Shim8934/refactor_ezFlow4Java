@@ -213,4 +213,8 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		insert("EzCommonDAO.insertUserConfigInfo", map);
 	}
 	
+	public String getCompanyConfig(Map<String, Object> map) throws Exception{
+		return (String) select("EzCommonDAO.getCompanyConfig", map);
+	}
+	
 }
