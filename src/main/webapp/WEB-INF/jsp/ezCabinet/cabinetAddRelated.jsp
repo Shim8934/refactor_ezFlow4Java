@@ -249,9 +249,13 @@
 					var boardOpener   = window.opener;
 					if (!boardOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					var boardWriter  = window.opener.document.getElementById("WriteUserNM").textContent;
-					var postDate     = window.opener.document.getElementById("PostDate").textContent;
-					var boardTitle   = window.opener.document.getElementById("cTitle").textContent;
+					var writerTd     = window.opener.document.getElementById("WriteUserNM");
+					var postTd       = window.opener.document.getElementById("PostDate");
+					var titleTd      = window.opener.document.getElementById("cTitle");
+					
+					var boardWriter  = writerTd.getElementsByTagName("div")[0].getElementsByTagName("span")[0].textContent;
+					var postDate     = postTd.getElementsByTagName("div")[0].textContent;
+					var boardTitle   = titleTd.getElementsByTagName("div")[0].textContent;
 					var messageFrame = window.opener.document.getElementById("message");
 					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
 					var boardContent = contentWd.document.querySelector("div[class='contentDiv']").innerHTML;
@@ -259,16 +263,19 @@
 					var attachList   = [];
 					
 					if (attach.childElementCount > 1) {
-						var listChildren = attach.getElementsByTagName("a");
-						for (var i = 0, len = listChildren.length; i < len; i++) {
-							var hrefStr = listChildren[i].getAttribute("href");
-							var params  = getAllUrlParams(hrefStr);
+						var listChildren1 = attach.getElementsByTagName("a");
+						var listChildren2 = attach.getElementsByTagName("input");
+						
+						for (var i = 0, len = listChildren1.length; i < len; i++) {
+							var hrefStr  = listChildren1[i].getAttribute("href");
+							var params   = getAllUrlParams(hrefStr);
+							var fileName = listChildren2[i].getAttribute("value");
 							
-							console.log("File path: " + javaURLDecode(params["filePath"]));
+							console.log("File path: " + javaURLDecode(params["filePath"]) + " || File Name: " + fileName);
 							
 							attachList.push({
 								filePath : javaURLDecode(params["filePath"]),
-								fileName : params["fileName"]
+								fileName : fileName
 							});
 						}
 					}

@@ -263,11 +263,11 @@
 .popup .cabBttnDiv {text-align: center; margin: 10px auto;}
 
 .divInfo {width: 100%;}
-.tblFileInf, .cabShareInf, .tblEmailInf {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse; table-layout: fixed;}
-.tblFileInf tr td, .tblEmailInf tr td, .tblFileInf tr th, .cabShareInf tr td, .cabShareInf tr th, .tblEmailInf tr th {border: 1px solid #ddd;}
+.tblFileInf, .cabShareInf, .tblEmailInf, .tblBoardInf {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse; table-layout: fixed;}
+.tblFileInf tr td, .tblEmailInf tr td, .tblFileInf tr th, .cabShareInf tr td, .cabShareInf tr th, .tblEmailInf tr th, .tblBoardInf tr th, .tblBoardInf tr td {border: 1px solid #ddd;}
 .tblFileInf tr th {width: 120px;}
-.tblEmailInf tr th {text-align: left; max-width: 100px; width: 80px;}
-.tblFileInf tr td, .cabShareInf, .tblEmailInf tr td {padding: 0px 5px; background: #fff; height: 29px; word-break: break-all;}
+.tblEmailInf tr th, .tblBoardInf tr th {text-align: left; max-width: 100px; width: 80px;}
+.tblFileInf tr td, .cabShareInf, .tblEmailInf tr td, .tblBoardInf tr td {padding: 0px 5px; background: #fff; height: 29px; word-break: break-all;}
 .tblFileInf tr td >input[type='text'] {width: 100%; border: 0px; padding: 5px; outline: none;}
 .tblFileInf .overfl, .tblEmailInf .overfl {white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 .tblFileInput {width: 100%; height: 24px; padding: 5px;}
@@ -295,6 +295,7 @@
 .ulFiles li:lastChild {padding-bottom: 5px;}
 .mailContDiv1 {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 260px; height: 260px; overflow: auto;}
 .mailContDiv2 {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 290px; height: 290px; overflow: auto;}
+.boardContDiv {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 325px; height: 325px; overflow: auto;}
 .addressContDiv {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 290px; height: 290px; overflow: auto;}
 .addressContDiv >select {background: none; border: none !important; outline: none !important; padding-right: .1em !important; height: 100%!important;}
 

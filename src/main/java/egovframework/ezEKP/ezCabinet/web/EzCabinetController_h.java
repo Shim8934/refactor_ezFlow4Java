@@ -1,8 +1,10 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
@@ -305,7 +308,7 @@ public class EzCabinetController_h {
 		
 		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + " || dateTime: " + dateTime + " || attach: " + attach + " || content : " + content);
 		
-		if (title.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || writer.equals("") ||content.equals("") || dateTime.equals("")) {
+		if (mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || writer.equals("") || dateTime.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
@@ -326,6 +329,7 @@ public class EzCabinetController_h {
 		switch(itemType) {
 			case 0  : jspPageName = "ezCabinet/cabinetFileDetail"         ; break;
 			case 1  : jspPageName = getEmailColumnInfo(model, iteminfo)   ; break;
+			case 3  : jspPageName = getBoardColumnInfo(model, iteminfo)   ; break;
 			case 8  : jspPageName = getAddressColumnInfo(model, iteminfo) ; break;
 			default : break;
 		}
@@ -422,5 +426,50 @@ public class EzCabinetController_h {
 		}
 		
 		return jspPageName;
+	}
+	
+	private String getBoardColumnInfo(Model model, JSONObject iteminfo) {
+		JSONArray columnList = new JSONArray();
+		String jspPageName   = "ezCabinet/cabinetBoardDetail";
+		
+		if (iteminfo.get("columns") != null) {
+			columnList = (JSONArray) iteminfo.get("columns");
+		}
+		
+		for (int i = 0, totalColumn = columnList.size(); i < totalColumn; i++) {
+			JSONObject column = (JSONObject) columnList.get(i);
+			String columnId   = column.get("columnId").toString();
+			if (columnId.equals("writer")) {
+				model.addAttribute("writerColumn", column);
+			}
+			
+			if (columnId.equals("boardTime")) {
+				model.addAttribute("timeColumn", column);
+			}
+		}
+		
+		return jspPageName;
+	}
+	
+	@RequestMapping(value="/ezCabinet/modifyBoardItem.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonModyfyRelatedBoard(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonModyfyRelatedBoard is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String itemId          = request.getParameter("itemId")      != null ? request.getParameter("itemId")      : "";
+		String title           = request.getParameter("title")       != null ? request.getParameter("title")       : "";
+		String relatedList     = request.getParameter("relatedList") != null ? request.getParameter("relatedList") : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		if (itemId.equals("") || title.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService_h.modifyRelatedBoard(request, userInfo.getId(), itemId, title, relatedList);
+		
+		logger.debug("jsonModyfyRelatedBoard finishes!");
+		return resultObj.toString();
 	}
 }

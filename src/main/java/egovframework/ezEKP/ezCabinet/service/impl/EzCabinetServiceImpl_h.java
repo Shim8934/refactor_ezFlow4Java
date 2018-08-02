@@ -1,6 +1,11 @@
 package egovframework.ezEKP.ezCabinet.service.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,7 +16,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
@@ -280,6 +288,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 	}
 	
 	@SuppressWarnings("unchecked")
+	@Override
 	public JSONObject saveBoarditem(String realPath, String mode, int cabinetId, String title, String writer, String attach, String content, String dateTime, Locale locale, LoginVO userInfo) throws Exception {
 		JSONObject result          = new JSONObject();
 		String userId              = userInfo.getId();
@@ -296,7 +305,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 		int itemId     = ezCabinetDAO.getMaxItem(map) + 1;
 		int moduleType = 3; //board module
 		
-		if (mode.equals(0)) {
+		if (mode.equals("0")) {
 			map.put("userId",   userId);
 			map.put("tenantId", tenantId);
 			map.put("type",     moduleType);
@@ -332,6 +341,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 		
 		//Save board columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
+		
 		String writerColName1          = egovMessageSource.getMessage("ezBoard.t223", new Locale(config.getProperty("config.cabinetPrimary")));
 		String writerColName2          = egovMessageSource.getMessage("ezBoard.t223", new Locale(config.getProperty("config.cabinetSecondary")));
 		CabinetColumnVO writerColumn   = new CabinetColumnVO("writer", itemId, writerColName1, writerColName2, writer, companyId, tenantId);
@@ -367,12 +377,15 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 		return result;
 	}
 	
-	private void saveBoardAttachFiles(JSONObject attachInf, int attachId, int itemId, String realPath, String cabinetPath, Locale locale, String companyId, String userId, int tenantId) {
+	private void saveBoardAttachFiles(JSONObject attachInf, int attachId, int itemId, String realPath, String cabinetPath, Locale locale, String companyId, String userId, int tenantId) throws Exception {
 		String fileName      = attachInf.get("fileName").toString();
 		String filePath      = attachInf.get("filePath").toString();
-		String newName       = UUID.randomUUID().toString();
+		int dotPos           = fileName.lastIndexOf(".");
+		String extend        = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
+		String newName       = UUID.randomUUID().toString() + "." + extend;
 		String pDirPath      = realPath + cabinetPath;
 		String newFilePath   = pDirPath + File.separator + newName;
+		String pfilePath     = cabinetPath + newName;
 		
 		logger.debug("file path: " + filePath + " || file name : " + fileName);
 		
@@ -380,15 +393,44 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 		
 		try {
 			if(!file.exists()) {
-				logger.error("file not found.");
+				logger.error("File not found.");
+			}else{
+				InputStream input   = null;
+				OutputStream output = null;
+				
+				try {
+					input              = new FileInputStream(file);
+					File newAttachFile = new File(newFilePath);
+					output             = new FileOutputStream(newAttachFile);
+					byte[] buffer      = new byte[4096];
+					int byteRead       = 0;
+					
+					while ((byteRead = input.read(buffer)) != -1) {
+						output.write(buffer, 0, byteRead);
+					}
+					
+				} catch (IOException e1) {
+					throw e1;
+				} finally {
+					if (input != null) {
+						try { input.close(); } catch (IOException e2) {throw e2;}
+					}
+					if (output != null) {
+						try { output.flush(); } catch (IOException e3) {throw e3;}
+						try { output.close(); } catch (IOException e4) {throw e4;}
+					}
+				}
 			}
-			
-		} catch (Exception e) {
-			// TODO: handle exception
+		} catch(Exception e5) {
+			throw e5;
 		}
 		
+		//Save Attach to database
+		File readfile = new File(newFilePath);
+		long fileSize = readfile.length();
 		
-		
+		CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, pfilePath, fileName, fileSize, companyId, tenantId);
+		saveAttachFile(attachFile);
 	}
 	
 	public synchronized void modifyRelatedList(int itemId, JSONArray relatedFiles, LoginVO userInfo) throws Exception {
@@ -482,6 +524,40 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 	}
 	
 	private String getCabinetDirPath(int tenantId) {
-		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "cabinet" + commonUtil.separator;
+		return commonUtil.getUploadPath("upload_cabinet.ROOT", tenantId) + commonUtil.separator;
+	}
+	
+	private synchronized void saveAttachFile(CabinetAttachFileVO attachFile) {
+		ezCabinetDAO.saveAttachFile(attachFile);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject modifyBoardItem(int itemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception {
+		JSONObject result      = new JSONObject();
+		int tenantId           = userInfo.getTenantId();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("itemId",   itemId);
+		
+		CabinetItemVO itemVO = ezCabinetDAO.getItemById(map);
+		
+		if (itemVO.getItemType() != 1) {
+			logger.debug("Invalid item type!");
+			result.put("status", "error");
+			result.put("code", 4);
+			return result;
+		}
+		
+		itemVO.setTitle(title);
+		ezCabinetDAO_h.modifyItem(itemVO);
+		
+		//modify related files
+		modifyRelatedList(itemId, relatedFiles, userInfo);
+				
+		result.put("status", "ok");
+		result.put("code", 0);
+		
+		return result;
 	}
 }

@@ -2,8 +2,10 @@ package egovframework.ezEKP.ezCabinet.service;
 
 import java.util.List;
 import java.util.Locale;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationItemVO;
@@ -24,4 +26,5 @@ public interface EzCabinetService_h {
 	JSONObject saveBoarditem(String realPath, String mode, int parseInt, String title, String writer, String attach, String content, String dateTime, Locale locale, LoginVO userInfo) throws Exception;
 	public void modifyRelatedList(int itemId, JSONArray relatedFiles, LoginVO userInfo) throws Exception;
 	public void modifyAttachList(int itemId, JSONArray attacheFiles, String realPath, LoginVO userInfo) throws Exception;
+	JSONObject modifyBoardItem(int currentItemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception;
 }

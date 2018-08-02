@@ -3,7 +3,9 @@ package egovframework.ezEKP.ezCabinet.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -194,6 +196,19 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		param.put("content",  content);
 		
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		return resultBody;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject modifyRelatedBoard(HttpServletRequest request, String userId, String itemId, String title, String relatedList) throws Exception {
+		String url                = "/rest/ezcabinet/relate-item/modify/board";
+		JSONObject jsonBody       = new JSONObject();
+		jsonBody.put("userId", userId);
+		jsonBody.put("title",  title);
+		jsonBody.put("itemId", itemId);
+		jsonBody.put("relate", relatedList);
+		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
 }
