@@ -446,7 +446,6 @@ function searchContent() {
 		searchByOverview = $("#PsearchByOverview").val();
 	} else {
 		searchByTaskName = $("#searchByTaskName").val();
-		searchByUser = $("#searchByUser").val();
 		searchByPlanStartDate = $("#Sdatepicker").val();
 		searchByPlanEndDate = $("#Edatepicker").val();
 		searchByGroupName = $("#searchByGroupName").val();
@@ -466,7 +465,7 @@ function goProjectDetails(elem) {
 
 function goTaskDetails(elem) {
 	var taskId = elem.id;
-	var taskProjectId = $("#" + elem.id).find(".projectName").attr("projectId");
+	var taskProjectId = $("#" + elem.id).find(".projectNameTd").attr("projectId");
 	var feature = GetOpenPosition(835, 810);
 	
 	window.open("/ezPMS/getTaskDetails.do?projectId=" + taskProjectId + "&taskId=" + taskId + "&userIdType=user",
@@ -476,7 +475,7 @@ function goTaskDetails(elem) {
 function goGroupDetails(elem) {
 	var groupId = elem.id;
 	var feature = GetOpenPosition(835, 810);
-	var groupProjectId = $("#" + elem.id).find(".projectName").attr("projectId");
+	var groupProjectId = $("#" + elem.id).find(".projectNameTd").attr("projectId");
 	
 	window.open("/ezPMS/getGroupDetails.do?projectId=" + groupProjectId + "&groupId=" + groupId,
 				"", "width=835, height=810, resizable=no, scrollbars=no, status=no" + feature);
@@ -555,10 +554,6 @@ function goGroupDetails(elem) {
 			<tr>
 				<th id="taskName"><spring:message code='ezPMS.t98' /> </th>
 				<td><input type="text" id="searchByTaskName" style="width:100%; margin-right:5px;"></td>
-			</tr>
-			<tr>
-				<th><spring:message code='ezPMS.t63' /></th>
-				<td><input type="text" style="width:100%" id="searchByUser"></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezPMS.t61' /> </th>

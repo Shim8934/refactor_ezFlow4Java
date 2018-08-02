@@ -2509,12 +2509,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public int getBoardViewerCount(int tenantId, String itemId) {
+	public int getBoardViewerCount(int tenantId, String itemId, long projectId) {
 		LOGGER.debug("[SERVICE] getBoardViewerCount started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("itemId", itemId);
+		map.put("projectId", projectId);
 		
 		ProjectBoardVO boardVO = ezPMSDAO.getBoardDetail(map);
 		map.put("writerId", boardVO.getWriterId());

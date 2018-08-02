@@ -24,7 +24,8 @@ var contentTitle = $(".jstree-clicked").text();
 $(function() {
 	var groupDetails = ${groupDetails};
 	var taskDetails = ${taskDetails};
-	
+	console.log(groupDetails);
+	console.log(taskDetails);
 	if (groupDetails.groupName == undefined) {
 		contentTitle = taskDetails.taskName;
 	} else {
@@ -87,7 +88,7 @@ $(function() {
 							<c:choose>
 								<c:when test="${empty logList}">
 									<tr>
-										<td colspan="5" style="text-align : left"> <spring:message code='ezPMS.t30' /> </td>
+										<td colspan="5" style="text-align : center"> <spring:message code='ezPMS.t30' /> </td>
 									</tr>
 								</c:when>
 							<c:otherwise>
