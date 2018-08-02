@@ -213,7 +213,7 @@
 			<tr>
 		    	<th><spring:message code='ezOrgan.t245' /></th>
 		    	<td width="100%">		    
-		    		<input id=imagefile name=imagefile style=" WIDTH: 253px" readonly="readonly" />
+		    		<input id=imagefile name=imagefile style=" WIDTH: 247px" readonly="readonly" />
 		    		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		    		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" >
 		  				<input type="file" name="file1" id="file1" style="width: 1px; height: 1px; display:none;" onchange="imgtemp_onclick()" multiple="false"/>

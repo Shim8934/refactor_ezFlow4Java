@@ -168,10 +168,11 @@
 		    
 		    function cancel() {
 		        if (ReturnFunction != null) {
-		            if (deliverySend.checked == true && RetValue["replyReadTime"] == "2") {
-		                deliverySend.checked = false;
-		                alert("<spring:message code='ezEmail.t354' />");
-		            }
+		        	// 2018.08.02 외부용 메일은 예약발송 안되게 하는 로직 삭제
+		            // if (deliverySend.checked == true && RetValue["replyReadTime"] == "2") {
+		            //    deliverySend.checked = false;
+		            //    alert("<spring:message code='ezEmail.t354' />");
+		            // }
 		            if (!isDivPopUp)
 		                window.close();
 		            else
@@ -275,11 +276,12 @@
 	            }
 	            else
 	                RetValue["delaySendDate"] = "";
-	
-	            if (deliverySend.checked == true && RetValue["replyReadTime"] == "2") {
-	                alert("<spring:message code='ezEmail.t354' />");
-	                return;
-	            }
+	            
+	            // 2018.08.02 외부용 메일은 예약발송 안되게 하는 로직 삭제
+	            // if (deliverySend.checked == true && RetValue["replyReadTime"] == "2") {
+	            //    alert("<spring:message code='ezEmail.t354' />");
+	            //    return;
+	            // }
 		
 	            if (individualMailUser > 0) {
 	            	

@@ -1669,8 +1669,7 @@ function SendDraftMappingSign(ret) {
                     }
                     
 					if (signImageType == "NAME") {
-//						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
-						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
 					} else {
 						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
 					}
@@ -1729,8 +1728,7 @@ function SendDraftMappingSign(ret) {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
                    	if (signImageType == "NAME") {
-//                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
-                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
                     } else {
                         strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
@@ -2504,6 +2502,7 @@ function openAaprDocAttachUI_Complete(ret) {
 function SaveDraftDocInfo() {
     var rtnVal;
     SaveFile();
+    SignSave();
     rtnVal = SaveDraftDocInfo_ilban("002");
     if (rtnVal.toUpperCase() == "FALSE") {
     	 return rtnVal;
