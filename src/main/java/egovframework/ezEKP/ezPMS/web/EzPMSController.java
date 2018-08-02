@@ -2423,6 +2423,9 @@ public class EzPMSController {
 		JSONObject resultBodyGroup = commonUtil.getJsonFromRestApi(
 				"/rest/ezPMS/projects/" + projectId + "/groups/users/" + userInfo.getId() + "/gantt", param, request,
 				"get", null);
+//		JSONObject resultBodyGroup = commonUtil.getJsonFromRestApi(
+//				"/rest/ezPMS/test/projects/" + projectId + "/groups/users/" + userInfo.getId() + "/gantt", param, request,
+//				"get", null);
 		status = resultBodyGroup.get("status").toString();
 
 		if (status.equals("ok")) {
