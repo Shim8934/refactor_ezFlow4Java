@@ -274,7 +274,7 @@
 		        <th><spring:message code='ezApprovalG.t827'/></th>
 		        <td style="vertical-align:middle">
 		            <input class="text" style=" WIDTH: 215px" name="txtDeptName" id=txtDeptName disabled>
-		            <a class="imgbtn" ><span onclick="return SelectDept_OnClick()" id="btnSelDept"><spring:message code='ezApprovalG.t105'/></span></a>
+		            <a class="imgbtn imgbck" ><span onclick="return SelectDept_OnClick()" id="btnSelDept"><spring:message code='ezApprovalG.t105'/></span></a>
 		        </td>
 		    </tr>
 		</c:if>
@@ -288,7 +288,7 @@
 		        <th><spring:message code='ezApprovalG.t1093'/></th>
 		        <td>
 		            <input class="text" style=" WIDTH: 215px" name="txtTaskName" id=txtTaskName disabled>
-		            <a class="imgbtn"><span onClick="return SelectTask_OnClick()" id="btnSelTask"><spring:message code='ezApprovalG.t105'/></span></a>
+		            <a class="imgbtn imgbck"><span onClick="return SelectTask_OnClick()" id="btnSelTask"><spring:message code='ezApprovalG.t105'/></span></a>
 		        </td>
 		    </tr>
 		    <tr> 
@@ -334,13 +334,25 @@
 		        <th> <spring:message code='ezApprovalG.t1101'/></th>
 		        <td>
 		            <input class="text" style=" WIDTH: 215px" name="txtCharger" id=txtCharger disabled>
-		            <a class="imgbtn"><span onClick="return SelectUser_OnClick()" id="btnSelUser" ><spring:message code='ezApprovalG.t105'/></span></a>
+		            <a class="imgbtn imgbck"><span onClick="return SelectUser_OnClick()" id="btnSelUser" ><spring:message code='ezApprovalG.t105'/></span></a>
 		        </td>
+		    </tr>
+		    <tr id="trTransExp">
+		    	<th><spring:message code='ezApprovalG.t1102'/></th>
+		    	<td>
+		    		<input type="checkbox" name="chkTransExp" id="chkTransExp" value="1" style="vertical-align:middle;">
+		    	</td>
+		    </tr>
+		    <tr id="trRejectCab" style="display:none">
+		    	<th><spring:message code='ezApprovalG.t1103'/></th>
+		    	<td>
+		    		<input type="checkbox" name="chkRejectCab" id="chkRejectCab" value="1">
+		    	</td>
 		    </tr>
 		  </table>
 		  
-		<h2 id="trTransExp"><input type="checkbox" name="chkTransExp" id="chkTransExp" value="1" style="vertical-align:middle;"><spring:message code='ezApprovalG.t1102'/></h2>
-		<h2 id="trRejectCab" style="display:none"><input type="checkbox" name="chkRejectCab" id="chkRejectCab" value="1"><spring:message code='ezApprovalG.t1103'/></h2>
+		<%-- <h2 id="trTransExp"><input type="checkbox" name="chkTransExp" id="chkTransExp" value="1" style="vertical-align:middle;"><spring:message code='ezApprovalG.t1102'/></h2>
+		<h2 id="trRejectCab" style="display:none"><input type="checkbox" name="chkRejectCab" id="chkRejectCab" value="1"><spring:message code='ezApprovalG.t1103'/></h2> --%>
 		
 		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn"><span id="btnReset" onclick="return reset_onclick()"><spring:message code='ezApprovalG.t621'/></span></a>

@@ -48,17 +48,34 @@
             		}			
         		}
         		var v_ques =  vdata;
+        		
+        		//2018-07-27 배현상, 전자설문 질문 추가 시 어떤 유형의 질문인지 표시하는 기능 추가
+        		var xmlQst = SelectSingleNode(loadXMLString(QstXML), "ROW");
+        		
+        		var typeName = SelectSingleNodeValue(xmlQst, "ANSWERTYPE");
+        		
+        		//1=객관식, 2=주관식, 4=우선순위 선택형, 5=표형식 (3은 안쓰임)
+        		if (typeName == 1) {
+        			typeName = "<spring:message code='ezQuestion.t487' />";
+        		} else if (typeName == 2) {
+        			typeName = "<spring:message code='ezQuestion.t372' />";
+        		} else if (typeName == 4) {
+        			typeName = "<spring:message code='ezQuestion.t373' />";
+        		} else if (typeName == 5) {
+        			typeName = "<spring:message code='ezQuestion.t50003' />"
+        		}
+        		
         		if (selCnt > 0 ) {
             		if (frmCreate.selQues[0].text == "") {
             			i = 0;
             		} else {
             			i = frmCreate.selQues.length;
             		}
-            		var TmpOption= new Option((i+1) + "." + v_ques, QstXML,true);
+            		var TmpOption= new Option("[" + typeName + "]" + (i+1) + ". " + v_ques, QstXML,true);
             		frmCreate.selQues.options[i] = TmpOption;
             		frmCreate.selQues.options[i].AttachYN = vAttachYN;
         		} else {
-            		var TmpOption= new Option((1) + "." + v_ques, QstXML,true);
+            		var TmpOption= new Option("[" + typeName + "]" + (1) + ". " + v_ques, QstXML,true);
             		frmCreate.selQues.options[0] = TmpOption;
             		frmCreate.selQues.options[0].AttachYN = vAttachYN;
         		}
@@ -221,7 +238,23 @@
         		}
     		}
     		function EditQues(data, index, vAttachYN, QstXML) {
-        		frmCreate.selQues[index].text=String(parseInt(index)+1) +"." + data;
+    			//2018-07-27 배현상, 전자설문 질문 추가 시 어떤 유형의 질문인지 표시하는 기능 추가
+        		var xmlQst = SelectSingleNode(loadXMLString(QstXML), "ROW");
+        		
+        		var typeName = SelectSingleNodeValue(xmlQst, "ANSWERTYPE");
+        		
+        		//1=객관식, 2=주관식, 4=우선순위 선택형, 5=표형식 (3은 안쓰임)
+        		if (typeName == 1) {
+        			typeName = "<spring:message code='ezQuestion.t487' />";
+        		} else if (typeName == 2) {
+        			typeName = "<spring:message code='ezQuestion.t372' />";
+        		} else if (typeName == 4) {
+        			typeName = "<spring:message code='ezQuestion.t373' />";
+        		} else if (typeName == 5) {
+        			typeName = "<spring:message code='ezQuestion.t50003' />"
+        		}
+        		
+        		frmCreate.selQues[index].text= "[" + typeName + "]"+ String(parseInt(index)+1) +". " + data;
         		frmCreate.selQues[index].value = QstXML;
         		frmCreate.selQues[index].AttachYN = vAttachYN;
     		}

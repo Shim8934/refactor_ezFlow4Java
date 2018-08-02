@@ -819,7 +819,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			String filePath = commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + fileName.split("_")[0] + commonUtil.separator + fileName;
 			
 			if (fileName != null && !fileName.equals("")) {
-				ezCommonService.responseAttach(filePath, "", true, request, response);
+				downImage(filePath, request, response);
 			}
 		}	
 	}
@@ -1558,7 +1558,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("filePath=" + filePath);
 		
 		if (fileName != null && !fileName.equals("")) {
-			ezCommonService.responseAttach(filePath, fileName, false, request, response);
+			downImage(filePath, request, response);
 		}
 		
 		logger.debug("getPersonalInfo ended");
@@ -2113,6 +2113,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", user.getTenantId()); //baonk added (2018-06-07)
 		
+		//2018-07-31 김보미 - 근태 추가
+		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", user.getTenantId());
+		if (use_attitude == null || use_attitude.equals("")) {
+			use_attitude = "YES";
+		}
+		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
@@ -2132,6 +2138,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("approvalForDoc", approvalForDoc);
 		model.addAttribute("cabinetFlag", use_cabinet); //baonk added (2018-06-07)
+		//2018-07-31 김보미 - 근태 추가
+		model.addAttribute("use_attitude", use_attitude);
 		
 		logger.debug("permissionsList ended.");
 		
@@ -2241,6 +2249,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", user.getTenantId());
 		String approvalForDoc = ezCommonService.getTenantConfig("approvalForDoc", user.getTenantId());
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", user.getTenantId()); //baonk added (2018-06-07)
+		//2018-07-31 김보미 - 근태 추가
+		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", user.getTenantId());
+		if (use_attitude == null || use_attitude.equals("")) {
+			use_attitude = "YES";
+		}
 		
 		model.addAttribute("userID", userID);
 		model.addAttribute("companyID", selCompany);
@@ -2250,6 +2263,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("approvalForDoc", approvalForDoc);
 		model.addAttribute("cabinetFlag", use_cabinet); //baonk added (2018-06-07)
+		model.addAttribute("use_attitude", use_attitude);
 		
 		logger.debug("permissionsCheck ended.");
 		

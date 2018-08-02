@@ -73,7 +73,7 @@
     }
     function SwapRoleList() {
     
-         if (document.getElementsByName("rdoRecRole")[0].checked) {
+        if (document.getElementsByName("rdoRecRole")[0].checked) {
         	 $('#txtKeyword').prop("disabled",true);
         	 $('.listview').prop("disabled",true);
         	 $('#trRecUserRole').css("display","none");
@@ -119,7 +119,7 @@
         listview.DataSource(LVXml);
         listview.RowDataBind("SelUserList");
         listview.SetSelectFlag(false);
-        SwapRoleList();
+        //SwapRoleList();
     }
     function GetRecViewerInfo(pRecID, pSepAttNo) {
         var xmlhttp = createXMLHttpRequest();
@@ -524,13 +524,14 @@
 		<td style="vertical-align:top">
 		<h2 class="h2_dot" style="font-weight: normal; margin-top: 0px;">
 			<spring:message code='ezApprovalG.t1166'/>
-			<span>
-				<select id="selSearchType" style="height:22px; margin-left: 82px;">
+			<span style="margin-left:145px;">
+				<select id="selSearchType" style="height:22px;">
 					<option selected value="displayname"><spring:message code='ezApprovalG.t379'/></option>
 					<option value="description"><spring:message code='ezApprovalG.t108'/></option>
 					<option value="title"><spring:message code='ezApprovalG.t230'/></option>
 				</select>
-				<input id="txtKeyword" value="" onKeyPress="txtKeyword_onKeyPress()" style="width:90px;height:22px;">&nbsp;<a class="imgbtn imgbck"><span onClick="btnSearch_Click()" style="width:25px" ><spring:message code='ezApprovalG.t111'/></span></a>
+				<input id="txtKeyword" value="" onKeyPress="txtKeyword_onKeyPress()" style="width:90px;height:22px;">
+				<a class="imgbtn imgbck"><span onClick="btnSearch_Click()" style="width:25px" ><spring:message code='ezApprovalG.t111'/></span></a>
 			</span>
 		</h2>
 			<table>
@@ -539,7 +540,7 @@
 				</tr>
 				<tr> 
 					<td><div class="listview">
-					<div id="OrgListView" style="overflow:auto; border:0;HEIGHT: 240px; WIDTH: 370px;"></div>
+					<div id="OrgListView" style="overflow:auto; border:0;HEIGHT: 240px; WIDTH: 434px;"></div>
 					</div></td>
 				</tr>
 			</table>
@@ -554,7 +555,7 @@
 
 		<td style="width:200px;vertical-align:top"><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1167'/></h2>
 		<div class="listview">
-		<div id="SelUserList" style="overflow:auto; border:0;HEIGHT: 240px; WIDTH: 300px;"></div>
+		<div id="SelUserList" style="overflow:auto; border:0;HEIGHT: 240px; WIDTH: 430px;"></div>
 		</div></td>
 	</tr>
 </table>

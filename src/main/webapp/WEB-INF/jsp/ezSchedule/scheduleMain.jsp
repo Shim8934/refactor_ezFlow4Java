@@ -46,6 +46,7 @@
 		.chk_noneDisplay {
 			display:none;
 		}
+		
 		</style>
 		<script type="text/javascript">		    
 			var timeZoneStr = "<c:out value='${timeZoneStr}'/>";

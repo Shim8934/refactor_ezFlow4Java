@@ -29,8 +29,6 @@
 		    var ReturnFunction;
 		    
 			window.onload = function () {
-				window.resizeTo(370,560);
-				
 				try {
 					ReturnFunction = parent.address_group_edit_dialogArguments[0];
 			    } catch (e) {
@@ -39,6 +37,12 @@
 			        } catch (e) {
 			        }
 			    }
+			    
+			    document.getElementById("ListMember").style.height = document.documentElement.clientHeight - 165 + "px";
+			}
+			
+			window.onresize = function () {
+				document.getElementById("ListMember").style.height = document.documentElement.clientHeight - 165 + "px";
 			}
 			
 			function show_personinfo(whoto) {
@@ -164,28 +168,38 @@
 		    <table  class="content">
 		      <tr>
 		        <th><spring:message code='ezAddress.t304' /></th>
-		        <td><span id="TextName"><c:out value='${addressInfo.sName}' /></span></td>
+		        <td colspan="3"><span id="TextName"><c:out value='${addressInfo.sName}' /></span></td>
 		      </tr>
 		      <tr>
 		        <th><spring:message code='ezAddress.t286' /></th>
-		        <td title="<spring:message code='ezAddress.t287' />" style="CURSOR:pointer" onClick="show_personinfo(0)"><span id="TextCreator"><c:out value='${addressInfo.creatorName}' /></span></td>
+		        <td title="<spring:message code='ezAddress.t287' />" style="cursor:pointer;width:50%;" onClick="show_personinfo(0)"><span id="TextCreator"><c:out value='${addressInfo.creatorName}' /></span></td>
+		        <th><spring:message code='ezAddress.t289' /></th>
+		        <td title="<spring:message code='ezAddress.t287' />" style="cursor:pointer" onClick="show_personinfo(1)"><span id="TextModifier"><c:out value='${addressInfo.modifierName}' /></span></td>
 		      </tr>
 		      <tr>
 		        <th><spring:message code='ezAddress.t288' /></th>
-		        <td><span id="TextCreateDate"><c:out value='${addressInfo.createDate}' /></span></td>
-		      </tr>
-		      <tr>
-		        <th><spring:message code='ezAddress.t289' /></th>
-		        <td title="<spring:message code='ezAddress.t287' />" style="CURSOR:pointer" onClick="show_personinfo(1)"><span id="TextModifier"><c:out value='${addressInfo.modifierName}' /></span></td>
-		      </tr>
-		      <tr>
+		        <td style="width:50%;"><span id="TextCreateDate"><c:out value='${addressInfo.createDate}' /></span></td>
 		        <th><spring:message code='ezAddress.t290' /></th>
-		        <td><span id="TextModifyDate"><c:out value='${addressInfo.modifyDate}' /></span></td>
+		        <td style="width:50%;"><span id="TextModifyDate"><c:out value='${addressInfo.modifyDate}' /></span></td>
+		      </tr>
+		      <tr>
+		        
+		      </tr>
+		      <tr>
+		        
 		      </tr>
 		    </table>
-		    <div class="nobox" style="margin-top:10px;">
-		    	     <select id="ListMember" name="ListMember" style="width:100%;height:258px;overflow:auto" size="4">${listMember}</select>
-		  	</div>
+		    
+		    <div id="ListMember" style="width:100%;height:415px;margin-top:10px;padding:0;overflow:auto;border:1px solid #d2d2d2;">
+			    <table style="width:100%;">
+			    	<c:forEach items="${listMember}" var="member">
+				    	<tr onmouseover="" style="height:20px;border-bottom:1px solid #d2d2d2;">
+				    		<td style="padding:6px;" title="${member}">${member}</td>
+				    	</tr>
+			    	</c:forEach>
+			    </table>
+		    </div>
+		    
 		  </div>
 		  <div id="printScreen" style="DISPLAY: none">
 		    <table class="content">

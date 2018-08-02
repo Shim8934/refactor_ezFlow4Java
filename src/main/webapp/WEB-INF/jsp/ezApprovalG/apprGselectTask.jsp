@@ -281,8 +281,8 @@
         </div>
 		<table>
 		  <tr>
-		    <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t591'/></h2>
-		      <table class="content" style="WIDTH:202px; margin-bottom:3px;">
+		    <td style="vertical-align:top"><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t591'/></h2>
+		      <table class="content" style="WIDTH:232px; margin-bottom:3px;margin-top:5px;">
 		        <tr>
 		          <th><spring:message code='ezApprovalG.t592'/></th>
 		          <td><Select id="selTaskCategory" style="width:100%" onChange="return selTaskCategory_onchange()">
@@ -295,27 +295,33 @@
 		          </td>
 		        </tr>
 		      </table>
-		      <div class="listview"  style="WIDTH:200px;HEIGHT:231px; OVERFLOW-Y:AUTO;" id="divTaskSCateList2">
+		      <div class="listview"  style="WIDTH:230px;HEIGHT:228px; OVERFLOW-Y:AUTO;" id="divTaskSCateList2">
 		          <div id="TaskSCateList" style="margin: 0PX"></div>
 		        </div>        
 		     </td>
-		    <td style="padding-left:5px; vertical-align:top;" ><h2><spring:message code='ezApprovalG.t1040'/></h2>
+		    <td style="padding-left:5px; vertical-align:top;" >
+		     <h2 class="h2_dot" style="font-weight: normal;">
+		     	<spring:message code='ezApprovalG.t1040'/>
+		     	<span style="margin-left: 190px;">
+		     		<a class="imgbtn imgbck"><span onClick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t111'/></span></a>
+		     	</span>
+		     </h2>
 		      <table style="width:332px; margin-bottom:3px;">
-		        <tr>
-		          <th style="text-align:left; padding-left:3px;"><a class="imgbtn"><span onClick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t111'/></span></a></th>
-		        </tr>
+		        <%-- <tr>
+		          <th style="text-align:left; padding-left:3px;"><a class="imgbtn imgbck"><span onClick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t111'/></span></a></th>
+		        </tr> --%>
 		      </table>
-		      	<div class="listview"  style="WIDTH:330px;HEIGHT:264px; OVERFLOW-Y:AUTO;" id="divTaskList2">
+		      	<div class="listview"  style="WIDTH:330px;HEIGHT:292px; OVERFLOW-Y:AUTO;" id="divTaskList2">
 		          <div id="TaskList"></div>
 		        </div> 
 		      </td>
 		
 		    <td style="width:25px; text-align:center">
-		        <img id="RecvAdd" name="Image93" border="0" src="/images/arr_right.gif" width="16" height="16" onClick="return Add_onclick()" style="cursor:pointer" >
+		        <img id="RecvAdd" name="Image93" border="0" src="/images/arr_right.gif" width="16" height="16" onClick="return Add_onclick()" style="cursor:pointer; margin: 40px 0px 0px" >
 		        <img id="RecvDel" name="Image103" border="0" src="/images/arr_left.gif" width="16" height="16" onClick="return Del_onclick()" style="cursor:pointer" >
 		    </td>
-		    <td style="vertical-align:top"><h2><spring:message code='ezApprovalG.t1132'/></h2>
-		    <div class="listview"  style="WIDTH:210px;HEIGHT:294px; OVERFLOW-Y:AUTO;" id="divSelTaskList2">
+		    <td style="vertical-align:top"><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1132'/></h2>
+		    <div class="listview"  style="WIDTH:235px;HEIGHT:292px; margin-top: 5px; OVERFLOW-Y:AUTO;" id="divSelTaskList2">
 		          <div id="SelTaskList"></div>
 		        </div> 
 		     </td>

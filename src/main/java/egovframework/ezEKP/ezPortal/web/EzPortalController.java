@@ -2811,6 +2811,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		int recordCnt = 0;
 		int intPage = 1;
 		int totalPage = 1;
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").equals("")) {
 			parentPageID = req.getParameter("parentPageID");
@@ -2847,7 +2848,7 @@ public class EzPortalController extends EgovFileMngUtil {
 					if (uID != null && uID.equals(newPortalParentUID)) {
 						sb.append("<ROW>");
 						sb.append("<UID_>" + commonUtil.cleanValue(tempNewMyPortalPageList.get(t).getuID_()) + "</UID_>");
-						sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(myPortalList.get(i).getDisplayName()) + "</DISPLAYNAME>");
+						sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(userInfo.getLang().equals(sysLang) ? myPortalList.get(i).getDisplayName() : myPortalList.get(i).getDisplayName2()) + "</DISPLAYNAME>");
 						sb.append("<USEFLAG>" + commonUtil.cleanValue(tempNewMyPortalPageList.get(t).getUseFlag()) + "</USEFLAG>");
 						sb.append("</ROW>");
 					}
@@ -2900,7 +2901,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				resultHTML	+= "<div class='onimg'></div>";
 				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='175' height='140'>";
 				resultHTML+= "</dt>";
-				resultHTML += "<dd>"+xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent()+"</dd>";		
+				resultHTML += "<dd>"+commonUtil.cleanValue(userInfo.getLang().equals(sysLang) ? xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent() : xmlDom.getElementsByTagName("DISPLAYNAME2").item(i).getTextContent())+"</dd>";		
 				resultHTML += "</dl>";
 			} else {
 				resultHTML += "<dl id='"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"' onclick=\"setValueNew('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim()+"', this)\" ondblclick=\"selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\">";
@@ -2908,7 +2909,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				resultHTML	+= "<div>";
 				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='175' height='140'>";
 				resultHTML+= "</dt>";
-				resultHTML += "<dd>"+xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent()+"</dd>";		
+				resultHTML += "<dd>"+commonUtil.cleanValue(userInfo.getLang().equals(sysLang) ? xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent() : xmlDom.getElementsByTagName("DISPLAYNAME2").item(i).getTextContent())+"</dd>";		
 				resultHTML += "</dl>";
 			}
 		}

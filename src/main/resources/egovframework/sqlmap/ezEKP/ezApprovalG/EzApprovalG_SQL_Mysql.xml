@@ -4190,6 +4190,7 @@
 			 TBL_RECORD.SpecialRecordCode ,
              TBL_RECORD.PublicityCode ,
              TBL_RECORD.LimitRange ,
+             TBL_RECORD.PublicityYn ,
              TBSEPATT.CatalogTransferFlag ,
              TBSEPATT.CatalogTransferYear ,
              TBSEPATT.DocTransferFlag ,
@@ -5639,7 +5640,8 @@
 	              C.AprMemberName2 ,
 	              B.SeperateAttachXML ,
 	              B.DocNumCode ,
-	              B.OrgDocNumCode 
+	              B.OrgDocNumCode ,
+	              B.PublicityYn
 			FROM 
 				TBL_APRDOCINFO A
 	        JOIN 
@@ -8175,7 +8177,8 @@
                 'Return a document' APRMEMBERJOBTITLE2  ,
                 B.SeperateAttachXML ,
                 B.DocNumCode ,
-                B.OrgDocNumCode 
+                B.OrgDocNumCode ,
+                B.PublicityYn
            FROM 
            		TBL_APRDOCINFO A
            JOIN 
@@ -8469,18 +8472,34 @@
 	
 	<select id ="EzApprovalG.getAccessYNG" parameterClass="Map" resultClass="String" remapResults="true">
 		<isEqual property="v_FLAG" compareValue="001">
-			<![CDATA[
-				SELECT 
-					PUBLICITYCODE 
-		        FROM 
-		        	TBL_EXPENDAPRDOCINFO 
-		        WHERE  
-		        	DOCID = #v_DOCID#
-		        AND
-					TENANT_ID = #v_TENANTID#
-				AND
-	      			COMPANYID = #companyID#
-			]]>
+			<isEqual property="approvalFlag" compareValue="G">
+				<![CDATA[
+					SELECT 
+						PUBLICITYYN 
+			        FROM 
+			        	TBL_EXPENDAPRDOCINFO 
+			        WHERE  
+			        	DOCID = #v_DOCID#
+			        AND
+						TENANT_ID = #v_TENANTID#
+					AND
+		      			COMPANYID = #companyID#					
+				]]>
+			</isEqual>
+			<isNotEqual property="approvalFlag" compareValue="G">
+				<![CDATA[
+					SELECT 
+						PUBLICITYCODE 
+			        FROM 
+			        	TBL_EXPENDAPRDOCINFO 
+			        WHERE  
+			        	DOCID = #v_DOCID#
+			        AND
+						TENANT_ID = #v_TENANTID#
+					AND
+		      			COMPANYID = #companyID#					
+				]]>
+			</isNotEqual>
 		</isEqual>
 		
 		<isEqual property="v_FLAG" compareValue="002">
@@ -16151,6 +16170,7 @@
              ELECTRONICRECFLAG ,
              SPECIALRECORDCODE ,
              PUBLICITYCODE ,
+             PUBLICITYYN ,
              LIMITRANGE ,
              MANUALREGFLAG ,
              REGISTERDATE ,
@@ -17997,6 +18017,7 @@
    		SET 
    			SpecialRecordCode = #v_SPECIALREC#,
 			PublicityCode = #v_PUBCODE#,
+			PublicityYn = #v_PUBCODE2#,
 			LimitRange = #v_LIMITRANGE# 
 		WHERE 
 			RecordID = #v_RECORDID#
@@ -18012,6 +18033,7 @@
    		SET 
    			SpecialRecordCode = #v_SPECIALREC#,
 			PublicityCode = #v_PUBCODE#,
+			PublicityYn = #v_PUBCODE2#,
 			LimitRange = #v_LIMITRANGE# 
         WHERE 
         	DOCID = (	
@@ -18933,10 +18955,10 @@
    		INSERT INTO 
    			TBL_RECORD
    		(RecordID,     DocID,     ProcessDeptName, ProcessDeptName2, ProcessDeptCode, RegisterYear,       RegisterDate,                             RegisterNo,     AprMemberTitle,    AprMemberTitle2,        DrafterName,     DrafterName2,           ExecuteDate,                              
-   		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID, COMPANYID) 
+   		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID, COMPANYID, PUBLICITYYN) 
    		VALUES 
    		(#v_RECORDID#, #v_DOCID#,  #v_DEPTNAME#,     #v_DEPTNAME2#,   #v_DEPTCODE#,    #v_REGYEAR#, #v_SYSDATE#, #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  #v_DRAFTERNAME#, #v_DRAFTERNAME2#, #v_EXECUTEDATE#,  
-   		#v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      NULL,                 NULL,      #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, #v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#,    NULL,     #v_DELFLAG#,  #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, #v_SYSDATE#, #v_REJECTFLAG#, #v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#)
+   		#v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      NULL,                 NULL,      #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, #v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#,    NULL,     #v_DELFLAG#,  #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, #v_SYSDATE#, #v_REJECTFLAG#, #v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#, #v_PUBLICITYYN#)
    </insert>
    
    <insert id="EzApprovalG.insertRegSeperateAttach" parameterClass="Map">
@@ -20378,9 +20400,9 @@
 	<insert id="EzApprovalG.insertRegRecord" parameterClass="Map">
 		Insert Into 
 			TBL_RECORD
-		(RecordID,          DocID,  ProcessDeptName,      ProcessDeptName2,      ProcessDeptCode,    RegisterYear,    RegisterDate,                                    RegisterNo,    AprMemberTitle,     AprMemberTitle2,      DrafterName,      DrafterName2,     ExecuteDate,                                      ReceiptMemberName,          ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo,         ElectronicRecFlag, SpecialRecordCode,        PublicityCode,     LimitRange,      OldRecordFlag, DeleteDate, DelFlag,       SpecialCatalogFlag, AttachFlag,         CreateDate,                                RejectFlag, ManualRegFlag, DocType, TENANT_ID, COMPANYID)
+		(RecordID,          DocID,  ProcessDeptName,      ProcessDeptName2,      ProcessDeptCode,    RegisterYear,    RegisterDate,                                    RegisterNo,    AprMemberTitle,     AprMemberTitle2,      DrafterName,      DrafterName2,     ExecuteDate,                                      ReceiptMemberName,          ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo,         ElectronicRecFlag, SpecialRecordCode,        PublicityCode,     LimitRange,      OldRecordFlag, DeleteDate, DelFlag,       SpecialCatalogFlag, AttachFlag,         CreateDate,                                RejectFlag, ManualRegFlag, DocType, TENANT_ID, COMPANYID, PUBLICITYYN)
 		VALUES 
-		(#v_RecordID# , #v_DocID#, #v_ProcessDeptName#, #v_ProcessDeptName2#, #v_ProcessDeptCode#, #v_RegisterYear#, #v_SYSDATE#, #v_RegisterNo#, #v_AprMemberTitle#, #v_AprMemberTitle2#,  #v_DrafterName#,  #v_DrafterName2#,  STR_TO_DATE(#v_ExecuteDate#,'%Y-%m-%d %H:%i:%s'),  #v_ReceiptMemberName#,  #v_ReceiptMemberName2#,  NULL,                NULL  ,         #v_DeliveryNo#, #v_ProduceDeptRegNo#, #v_ElectronicRecFlag#,  #v_SpecialRecordCode#, #v_PublicityCode#, #v_LimitRange#, #v_OldRecordFlag#, NULL,     #v_DelFlag#, #v_SpecialCatalogFlag#, #v_AttachFlag#, #v_SYSDATE#, #v_RejectFlag#, #v_ManualRegFlag#, #v_DocType#, #v_TENANTID#, #companyID#)
+		(#v_RecordID# , #v_DocID#, #v_ProcessDeptName#, #v_ProcessDeptName2#, #v_ProcessDeptCode#, #v_RegisterYear#, #v_SYSDATE#, #v_RegisterNo#, #v_AprMemberTitle#, #v_AprMemberTitle2#,  #v_DrafterName#,  #v_DrafterName2#,  STR_TO_DATE(#v_ExecuteDate#,'%Y-%m-%d %H:%i:%s'),  #v_ReceiptMemberName#,  #v_ReceiptMemberName2#,  NULL,                NULL  ,         #v_DeliveryNo#, #v_ProduceDeptRegNo#, #v_ElectronicRecFlag#,  #v_SpecialRecordCode#, #v_PublicityCode#, #v_LimitRange#, #v_OldRecordFlag#, NULL,     #v_DelFlag#, #v_SpecialCatalogFlag#, #v_AttachFlag#, #v_SYSDATE#, #v_RejectFlag#, #v_ManualRegFlag#, #v_DocType#, #v_TENANTID#, #companyID#, #v_PublicityCode2#)
 	</insert>
 	
 	<insert id="EzApprovalG.insertRegEndAttachInfo" parameterClass="Map">
@@ -23246,7 +23268,8 @@
                 'Return a document' APRMEMBERJOBTITLE2  ,
                 B.SeperateAttachXML ,
                 B.DocNumCode ,
-                B.OrgDocNumCode 
+                B.OrgDocNumCode ,
+                B.PublicityYn
            FROM 
            		TBL_APRDOCINFO A
            JOIN 
