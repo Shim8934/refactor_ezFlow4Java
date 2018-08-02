@@ -1169,7 +1169,6 @@ public class EzPMSController {
 		List<Map<String, Object>> managerList = null;
 		List<Map<String, Object>> participantList = null;
 		List<Map<String, Object>> viewerList = null;
-		List<Map<String, Object>> beforeHeadManager = null;
 		List<Map<String, Object>> beforeManagerList = null;
 		List<Map<String, Object>> beforeParticipantList = null;
 		List<Map<String, Object>> beforeViewerList = null;
@@ -2394,11 +2393,11 @@ public class EzPMSController {
 		param.put("position", "gantt");
 		param.put("status", taskStatus);
 
-		JSONObject resultBodyTask = commonUtil.getJsonFromRestApi(
-				"/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
-		
 //		JSONObject resultBodyTask = commonUtil.getJsonFromRestApi(
-//				"/rest/ezPMS/test/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+//				"/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+		
+		JSONObject resultBodyTask = commonUtil.getJsonFromRestApi(
+				"/rest/ezPMS/test/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		
 		String status = resultBodyTask.get("status").toString();
 		
@@ -2421,8 +2420,11 @@ public class EzPMSController {
 			model.addAttribute("holidayList", data.get("holidayList"));
 		}
 
+//		JSONObject resultBodyGroup = commonUtil.getJsonFromRestApi(
+//				"/rest/ezPMS/projects/" + projectId + "/groups/users/" + userInfo.getId() + "/gantt", param, request,
+//				"get", null);
 		JSONObject resultBodyGroup = commonUtil.getJsonFromRestApi(
-				"/rest/ezPMS/projects/" + projectId + "/groups/users/" + userInfo.getId() + "/gantt", param, request,
+				"/rest/ezPMS/test/projects/" + projectId + "/groups/users/" + userInfo.getId() + "/gantt", param, request,
 				"get", null);
 		status = resultBodyGroup.get("status").toString();
 

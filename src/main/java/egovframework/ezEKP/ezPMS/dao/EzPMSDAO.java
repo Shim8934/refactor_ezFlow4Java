@@ -323,6 +323,11 @@ public class EzPMSDAO extends EgovAbstractDAO {
 		return (List<ProjectGroupVO>) list ("EzPMSDAO.getGroupList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ProjectGroupVO> getGroupListForGantt(Map<String, Object> map){
+		return (List<ProjectGroupVO>) list ("EzPMSDAO.getGroupListForGantt", map);
+	}
+	
 	public ProjectTaskVO getTaskDetails(Map<String, Object> map){
 		return (ProjectTaskVO) select ("EzPMSDAO.getTaskDetails", map);
 	}

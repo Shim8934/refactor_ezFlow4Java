@@ -79,8 +79,12 @@ var headManagerObj = {};
 			var member = memberList[i];
 			
 			if (member.memberRoleId == 1) {
-				managerList.push(member);
-				beforeManagerList.push(member);
+				
+				// managerList에 관리자를 제외하고 집어넣는다
+				if(member.userId != headManagerId) {
+					managerList.push(member);
+					beforeManagerList.push(member);
+				}
 			} else if (member.memberRoleId == 2) {
 				participantList.push(member);
 				beforeParticipantList.push(member);
@@ -89,6 +93,7 @@ var headManagerObj = {};
 				beforeViewerList.push(member);
 			}
 		}
+		
 		
 		var calcType = "";
 		if (weightInput == 0) {
@@ -297,13 +302,7 @@ var headManagerObj = {};
 		return;
 	}
 	
-	if(mode === "new"){
-		managerList.push({"userName" : headManagerName, "userId" : headManagerId, "memberRoleId" : 1, "userDeptname" : replaceString(headManagerDept), "userIdType" : "user"});
-	} else {
-		if(headManagerId != beforeHeadManagerId) {
-			managerList.push({"userName" : headManagerName, "userId" : headManagerId, "memberRoleId" : 1, "userDeptname" : replaceString(headManagerDept), "userIdType" : "user"});
-		}
-	}
+	managerList.push({"userName" : headManagerName, "userId" : headManagerId, "memberRoleId" : 1, "userDeptname" : replaceString(headManagerDept), "userIdType" : "user"});
 	
 	var data = {
 			mode : mode,

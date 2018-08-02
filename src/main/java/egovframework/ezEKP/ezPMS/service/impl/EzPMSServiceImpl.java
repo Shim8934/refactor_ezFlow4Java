@@ -625,7 +625,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	
 	@Override
 	public List<ProjectTaskVO> getTaskListForGantt(SearchVO search, String userId, int limit, int startRow, String orderWhat, String orderHow, String location, int roleId, String deptId, ArrayList<String> holidayList) {
-		LOGGER.debug("[SERVICE] getTaskList started");
+		LOGGER.debug("[SERVICE] getTaskListForGantt started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
@@ -660,7 +660,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		List<ProjectTaskVO> list = ezPMSDAO.getTaskListForGantt(param);
 		
-		LOGGER.debug("[SERVICE] getTaskList ended");
+		LOGGER.debug("[SERVICE] getTaskListForGantt ended");
 		return list;
 	}
 
@@ -690,6 +690,36 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		List<ProjectGroupVO> list = ezPMSDAO.getGroupList(param);
 
 		LOGGER.debug("[SERVICE] getGroupList ended.");
+		return list;
+	}
+	
+	@Override
+	public List<ProjectGroupVO> getGroupListForGantt(SearchVO search, String orderWhat, String orderHow, int startRow,
+			int limit, String lang, String location, ArrayList<String> holidayList) {
+		LOGGER.debug("[SERVICE] getGroupListForGantt started.");
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("projectId", search.getProjectId());
+		param.put("tenantId", search.getTenantId());
+		param.put("lang", lang);
+		param.put("orderWhat", orderWhat);
+		param.put("orderHow", orderHow);
+		param.put("startRow", startRow);
+		param.put("limit", limit);
+		param.put("searchByUpperGroupName", search.getUpperGroupName());
+		param.put("searchByUser", search.getMemberName());
+		param.put("searchByStartDate", search.getPlanStartDate());
+		param.put("searchByEndDate", search.getPlanEndDate());
+		param.put("searchByGroupName", search.getGroupName());
+		param.put("searchByOverview", search.getOverview());
+		param.put("searchByProjectName", search.getProjectName());
+		param.put("userId", search.getMemberId());
+		param.put("location", location);
+		param.put("holidayList", holidayList);
+		
+		List<ProjectGroupVO> list = ezPMSDAO.getGroupListForGantt(param);
+		
+		LOGGER.debug("[SERVICE] getGroupListForGantt ended.");
 		return list;
 	}
 

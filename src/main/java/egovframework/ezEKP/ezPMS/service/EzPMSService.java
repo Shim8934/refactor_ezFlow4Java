@@ -75,6 +75,8 @@ public interface EzPMSService {
 	
 	public List<ProjectGroupVO> getGroupList(SearchVO search, String orderWhat, String orderHow, int startRow, int limit, String lang, String location);
 	
+	public List<ProjectGroupVO> getGroupListForGantt(SearchVO search, String orderWhat, String orderHow, int startRow, int limit, String lang, String location, ArrayList<String> holidayList);
+	
 	public int addTask(ProjectTaskVO taskVO, List<TaskMemberVO> taskMemberList, String companyId, int tenantId, String lang);
 	
 	public List<ProjectMemberScheduleVO> getMemberScheduleList(Long projectId, String startDate, String endDate);
