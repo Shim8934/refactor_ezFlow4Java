@@ -27,6 +27,7 @@
 	var endAlamStatus = "${project.alamMailStatus}"
 	var headManagerId = '${project.headManagerId}';
 	var headManagerName = '${project.headManagerName}';
+	var headManagerDept = "${project.headManagerDeptname}";
 	var groupId = '${project.groupId}';
 	
 	var nowStatus = '${project.status}';
@@ -38,9 +39,11 @@
 	var participantList = null;
 	var viewerList = null;
 	//비교하여 새로 추가된 사용자에게 메일 보냄
+	var beforeHeadManagerId = "${project.headManagerId}";
 	var beforeManagerList = [];
 	var beforeParticipantList = [];
 	var beforeViewerList = [];
+	var headManagerObj = {};
 	
 	
 	$(function() {
@@ -68,20 +71,36 @@
 			}
 		}
 		
+		applyHeadManager();
 		applyList();
 		
 		$("#status").val(nowStatus);
 	})
+	
+	function applyHeadManager(){
+		var headManagerStr = headManagerObj.userName + "(" + headManagerObj.userDept + ")";
+		
+		if(!headManagerObj.userName){
+			headManagerStr = headManagerName + "(" + headManagerDept + ")";
+		}
+	 
+		$("#headManager").html(headManagerStr);
+ 	}
 	
 	function applyList() {
 		 var managerNameList = "";
 		 var participantNameList = "";
 		 var viewerNameList = "";
 		 
+		 // 조직도에서는 stringify해서 넘어옴
+		 if(typeof managerList != 'object' && typeof participantList != 'object' && typeof viewerList != 'object') {
+			 managerList = JSON.parse(managerList);
+			 participantList = JSON.parse(participantList);
+			 viewerList = JSON.parse(viewerList);
+		 }
+		 
 		 for (var i = 0; i < managerList.length; i++) {	
-			if(headManagerId == managerList[i].userId) {
-				$("#headManager").html(managerList[i].userName + '(' + managerList[i].userDeptname + ')');
-			} else {
+			if (managerList[i].userId !== headManagerId) {
 				managerNameList += managerList[i].userName;
 				managerNameList += "(" + managerList[i].userDeptname + "), ";
 			}
@@ -138,11 +157,12 @@
 		}	
 	}
 	
-	function openOrganTree(type) {
-		var url = "/ezPMS/pmsSelectAuth.do?type=" + type.id;
-		//	url += "?companyId=" + companyId;
-		GetOpenWindow(url, "pmsSelectAuth", 980, 610);
-	}
+	 function openOrganTree(type) {
+		 var url = "/ezPMS/pmsSelectAuth.do?type=" + type.id;
+		 //	url += "?companyId=" + companyId;
+		 var width = type.id === "headManager" ? 700 : 980;
+		 GetOpenWindow(url, "pmsSelectAuth", width, 630);
+	 }
 	
 	function saveProject() {
 		
@@ -207,10 +227,12 @@
 	function sendNotiMail(projectId, projectName) {
 		 var data = {
 			 projectName : projectName,
+			 headManagerId : headManagerId,
 			 managerList : managerList,
 			 participantList : participantList,
 			 viewerList : viewerList,
 			 projectId : projectId,
+			 beforeHeadManagerId : beforeHeadManagerId,
 			 beforeManagerList : beforeManagerList,
 			 beforeParticipantList : beforeParticipantList,
 			 beforeViewerList : beforeViewerList,
@@ -271,7 +293,7 @@
 						<td colspan="3"><c:out value="${project.creatorName}(${project.creatorDeptname})"/></td>
 					</tr>
 					<tr>
-						<th><a class="imgbtn" onclick=""><span><spring:message code='ezPMS.t330' /></span></a></th>
+						<th><a class="imgbtn" onclick="openOrganTree(headManager)"><span><spring:message code='ezPMS.t330' /></span></a></th>
 						<td colspan="3" style="height: 58px;">
 							<div style="overflow-y:auto; max-height:100%; width:100%" id="headManager"></div>
 						</td>

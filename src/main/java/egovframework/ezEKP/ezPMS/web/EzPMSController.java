@@ -1169,7 +1169,6 @@ public class EzPMSController {
 		List<Map<String, Object>> managerList = null;
 		List<Map<String, Object>> participantList = null;
 		List<Map<String, Object>> viewerList = null;
-		List<Map<String, Object>> beforeHeadManager = null;
 		List<Map<String, Object>> beforeManagerList = null;
 		List<Map<String, Object>> beforeParticipantList = null;
 		List<Map<String, Object>> beforeViewerList = null;
