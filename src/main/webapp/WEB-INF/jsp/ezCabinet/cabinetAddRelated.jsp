@@ -194,13 +194,13 @@
 					var attach         = approvalOpener.document.getElementById("lstAttachLink");
 					var attachList     = [];
 					var otherList      = [];
-					console.log(attach);
+					
 					if (attach.childElementCount > 1){
 						var listChildren = attach.getElementsByTagName("a");
 						for(var i = 0, len = listChildren.length; i < len; i++){
 							var hrefStr  = listChildren[i].getAttribute("href");
 							var hrefStyle = listChildren[i].getAttribute("onclick");
-							
+							console.log(hrefStyle);
 							if(hrefStr){
 								var params  = getAllUrlParams(hrefStr);
 								console.log("File path: " + javaURLDecode(params["filePath"]));

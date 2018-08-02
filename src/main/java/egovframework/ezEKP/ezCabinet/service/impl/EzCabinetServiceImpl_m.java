@@ -24,6 +24,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_m;
+import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -53,7 +54,7 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 	private EgovMessageSource egovMessageSource;
 
 	@Override
-	public JSONObject saveApprovalItem(String realPath, int cabinetId, String approvalContent, String mode, String doctitle, String lstAttachLink, Locale locale, LoginVO userInfo)throws Exception {
+	public JSONObject saveApprovalItem(String realPath, int cabinetId, String approvalContent, String mode, String doctitle, String lstAttachLink, String otherAttachLk, Locale locale, LoginVO userInfo)throws Exception {
 		JSONObject result          = new JSONObject();
 		String userId              = userInfo.getId();
 		int tenantId               = userInfo.getTenantId();
@@ -112,15 +113,27 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 			file.mkdir();
 		}
 		
-		/*if(!lstAttachLink.equals("")){
+		if(!lstAttachLink.equals("")){
 			JSONArray lstAttachLinkList = (JSONArray) jp.parse(lstAttachLink);
 			int totalCnt                = lstAttachLinkList.size();
 			int lstAttachLinkId         = ezCabinetDAO.getMaxAttachId(map) + 1;
+			
 			for(int i = 0; i < totalCnt; i++, lstAttachLinkId++){
 				JSONObject lstAttachLinkInf = (JSONObject) lstAttachLinkList.get(i);
 				saveApprovalFiles(lstAttachLinkInf, lstAttachLinkId, itemId, realPath, cabinetPath, locale, companyId, userId, tenantId);
 			}
-		}*/
+		}
+		
+		if(!otherAttachLk.equals("")){
+			JSONArray otherAttachList   = (JSONArray) jp.parse(otherAttachLk);
+			int totalCnt                = otherAttachList.size();
+			int otherAttachId           = ezCabinetDAO.getMaxAttachId(map) + 1;
+			
+			for(int i = 0; i < totalCnt; i++, otherAttachId++){
+				JSONObject otherAttachLinkInf = (JSONObject) otherAttachList.get(i);
+				saveApprovalOtherFiles(otherAttachLinkInf, otherAttachId, itemId, realPath, cabinetPath, locale, companyId, userId, tenantId);
+			}
+		}
 		
 		result.put("status", "ok");
 		result.put("code", 0);
@@ -128,10 +141,29 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 	}
 	
 	private void saveApprovalFiles(JSONObject lstAttachLinkInf, int lstAttachLinkId, int itemId, String realPath, String cabinetPath, Locale locale, String companyId, String userId, int tenantId) {
-		JSONObject fileHref   = (JSONObject) lstAttachLinkInf.get("fileHref");
-		String fileName       =  lstAttachLinkInf.get("fileName").toString();
+		String fileName = lstAttachLinkInf.get("fileName").toString();
+		String filePath = lstAttachLinkInf.get("filePath").toString();
 		
-		logger.debug("fileName = " +fileName);
+		logger.debug("fileName: " + fileName + " || filePath: " + filePath);
+		
+		File file = new File(filePath + fileName);
+		
+		try{
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void saveApprovalOtherFiles(JSONObject otherAttachLinkInf, int otherAttachId, int itemId, String realPath, String cabinetPath, Locale locale, String companyId, String userId, int tenantId){
+		String otherAttachLinkInfList = otherAttachLinkInf.toString();
+		logger.debug("otherAttachLinkInf : " + otherAttachLinkInf);
+		
+		File file     = new File(otherAttachLinkInfList);
+		long fileSize = file.length();
+		
+		//CabinetAttachFileVO attachFile = new CabinetAttachFileVO(otherAttachId, itemId, realPath, name, size, companyId, tenantId);
 	}
 
 	private synchronized void saveItem(CabinetItemVO itemVO) {

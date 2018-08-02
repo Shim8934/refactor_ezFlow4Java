@@ -61,12 +61,13 @@ public class EzCabinetGWController_m {
 		String mode            = apprContent.get("mode").toString()         != null ? apprContent.get("mode").toString()           : "";
 		String doctitle        = apprContent.get("doctitle").toString()     != null ? apprContent.get("doctitle").toString()       : "";
 		String lstAttachLink   = apprContent.get("lstAttachLink").toString()!= null ? apprContent.get("lstAttachLink").toString()  : "";
+		String otherAttachLk   = apprContent.get("otherAttachLk").toString()!= null ? apprContent.get("otherAttachLk").toString()  : "";
 		String cabinetId       = apprContent.get("cabinetId").toString()    != null ? apprContent.get("cabinetId").toString()      : "";
 		JSONObject result      = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " || Content: " + approvalContent + " || userId: " + userId + " || mode: " +mode+ " ||  cabinetId: " + cabinetId+ " || doctitle: " +doctitle+ " || lstAttachLink: " +lstAttachLink);
+		logger.debug("ServerName: " + serverName + " || Content: " + approvalContent + " || userId: " + userId + " || mode: " +mode+ " ||  cabinetId: " + cabinetId+ " || doctitle: " +doctitle+ " || lstAttachLink: " +lstAttachLink+ " || otherAttachLk: " +otherAttachLk);
 		
-		if (serverName.equals("") || approvalContent.equals("") || userId.equals("") || cabinetId.equals("") || mode.equals("") || doctitle.equals("") || lstAttachLink.equals("")) {
+		if (serverName.equals("") || approvalContent.equals("") || userId.equals("") || cabinetId.equals("") || mode.equals("") || doctitle.equals("") || lstAttachLink.equals("") || otherAttachLk.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -80,7 +81,7 @@ public class EzCabinetGWController_m {
 			
 			//Save receiver list
 			
-			result                 = cabinetService_m.saveApprovalItem(realPath, dstCabinetId, approvalContent, mode, doctitle, lstAttachLink, locale, userInfo);
+			result                 = cabinetService_m.saveApprovalItem(realPath, dstCabinetId, approvalContent, mode, doctitle, lstAttachLink, otherAttachLk, locale, userInfo);
 			
 		}
 		catch (Exception e) {

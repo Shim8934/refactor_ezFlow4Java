@@ -21,34 +21,12 @@
 					<td id="creator" class="cursor wide"><c:out value="${item.creatorName}"/></td>
 					<th><spring:message code='ezCabinet.t110'/></th>
 					<td id="createdDate" class="nowrap"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
-				<tr>
-				<tr>
-					<th><c:out value="${senderColumn.columnName}"/></th>
-					<td id="senderMail" class="cursor wide"><c:out value="${sender.userName}"/></td>
-					<th><c:out value="${timeColumn.columnName}"/></th>
-					<td class="nowrap"><c:out value="${fn:substring(timeColumn.columnValue, 0, 19)}"/></td>
-				<tr>
-				<tr>
-					<th><c:out value="${receiverColumn.columnName}"/></th>
-					<td colspan="3"><div id="receivers" class="cabemailDiv"></div></td>
-				<tr>
-				<c:if test="${not empty forwardList}">
-					<tr>
-						<th><c:out value="${forwardColumn.columnName}"/></th>
-						<td colspan="3"><div id="forwards" class="cabemailDiv"></div></td>
-					<tr>
-				</c:if>
-				<tr>
-					<th><spring:message code='ezCabinet.t51'/></th>
-					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
-				<tr>
-					<th><spring:message code='ezCabinet.t94'/></th>
-					<td colspan="3"><div id="rlWrapDiv" class="rlFileDiv"><div id="fileListDiv" class="rlDocDiv"></div></div></td>
 				</tr>
+				
 			</table>
 		</div>
 		
-		<div class="${not empty forwardList ? 'mailContDiv1' : 'mailContDiv2'}"><iframe id="mailIframe" class="cabrlframe2"></iframe></div>
+		<div class=><iframe id="approvalIframe" class="cabrlframe2"></iframe></div>
 		
 		<div class="cabBttnDiv" id="fileDivBttn">
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
@@ -69,6 +47,6 @@
 		<script type="text/javascript">
 			
 		</script>
-		<script type="text/javascript">CabinetEmailFile.init("<c:out value='${itemId}'/>");</script>
+		<script type="text/javascript">CabinetApprovalFile.init("<c:out value='${itemId}'/>");</script>
 	</body>
 </html>

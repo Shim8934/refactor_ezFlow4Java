@@ -23,18 +23,18 @@
 					<td id="createdDate" class="nowrap"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				<tr>
 				<tr>
-					<th><c:out value="${senderColumn.columnName}"/></th>
-					<td id="senderMail" class="cursor wide"><c:out value="${sender.userName}"/></td>
-					<th><c:out value="${timeColumn.columnName}"/></th>
-					<td class="nowrap"><c:out value="${fn:substring(timeColumn.columnValue, 0, 19)}"/></td>
+					<th><c:out value="${sender.columnName}"/></th>
+					<td id="senderMail" class="cursor wide"><c:out value="${senderUser.userName}"/></td>
+					<th><c:out value="${emailTime.columnName}"/></th>
+					<td class="nowrap"><c:out value="${fn:substring(emailTime.columnValue, 0, 19)}"/></td>
 				<tr>
 				<tr>
-					<th><c:out value="${receiverColumn.columnName}"/></th>
+					<th><c:out value="${receiver.columnName}"/></th>
 					<td colspan="3"><div id="receivers" class="cabemailDiv"></div></td>
 				<tr>
 				<c:if test="${not empty forwardList}">
 					<tr>
-						<th><c:out value="${forwardColumn.columnName}"/></th>
+						<th><c:out value="${forward.columnName}"/></th>
 						<td colspan="3"><div id="forwards" class="cabemailDiv"></div></td>
 					<tr>
 				</c:if>

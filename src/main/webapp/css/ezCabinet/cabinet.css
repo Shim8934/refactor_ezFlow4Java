@@ -76,13 +76,13 @@
 .cabDivPrevW {height: 100%; overflow: hidden; vertical-align: top; flex: 1; display: flex;}
 .cabMainPrevW {height: 100%; width: 100%; position: relative; padding-left: 5px;}
 .cabMainPrevW >div {width: 100%; height: 100%; display: flex; flex-flow: column;}
-.cabPrevTitle {width: 100%; color: #333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px; clear: both; padding: 0px; height: 36px; line-height: 36px;}
+.cabPrevTitle {width: 100%; color: #333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px; clear: both; padding: 0px; height: 36px; line-height: 36px; display: flex;}
 .cabPrevTitle .cabPrevIcon {background-image: url('/images/kr/cm/btn_newpopup.gif'); background-repeat: no-repeat; background-position: center left; margin-left: 14px; padding-right: 5px; display: inline-block; float: left; cursor: pointer; height: 100%; width: 27px;}
 .prevHeaderCabW {border-top: 1px solid #ddd;}
 .prevHeaderCabW >div, .prevHeaderCabH >div {background-color: #f8f8fa; border-bottom: solid 1px #e8e8e8; position: relative;}
 .prevHeaderCabW >span, .prevHeaderCabH >span {margin-top: 50px;height: 10px; display: inline-block; text-align: center; width: 100%;}
-.cabPrevTitle .cabTitleTxt {width: 70%; height: 100%; color: #333; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block;}
-.cabPreDate {display: inline-block; position: absolute; top: 12px; right: 20px; text-align: right; width: 150px; font-size: 12px; color: #333;}
+.cabPrevTitle .cabTitleTxt {height: 100%; color: #333; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; flex: 1;}
+.cabPreDate {display: inline-block; width: 150px; font-size: 12px; color: #333; text-align: center;}
 .cabPrevItem {margin: 0px; padding: 4px 10px 2px 14px; font-size: 12px; color: #666;}
 .cabPrevItem dt {font-weight: normal; margin: 0px 10px 0px 0px; line-height: 18px; padding: 0px 0px 2px 0px; color: #919293;}
 .cabPrevItem dd {margin: -19px 0px 0px 0px; padding: 0px 0px 2px 65px; line-height: 18px; word-break: break-all;}
