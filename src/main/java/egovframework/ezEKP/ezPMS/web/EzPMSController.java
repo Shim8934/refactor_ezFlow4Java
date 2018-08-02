@@ -604,6 +604,7 @@ public class EzPMSController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String userId = userInfo.getId();
 		String projectId = request.getParameter("projectId");
+		
 		// 멤버의 권한에 따라 정보를 조회
 		String roleId = request.getParameter("roleId");
 
@@ -1178,17 +1179,17 @@ public class EzPMSController {
 		try {
 			// 프로젝트 담당자
 			if (param.get("managerList") != null) {
+				headManager = ((List<Map<String, Object>>) param.get("managerList"));
+				headManager.removeIf(o -> !o.get("userId").equals(headManagerId));
 				managerList = ((List<Map<String, Object>>) param.get("managerList"));
-				
-				headManager = managerList.stream().filter(o -> o.get("userId").equals(headManagerId)).collect(Collectors.toList());
-				managerList = managerList.stream().filter(o -> !o.get("userId").equals(headManagerId)).collect(Collectors.toList());
+				managerList.removeIf(o -> o.get("userId").equals(headManagerId));
 
 				// 이전 member의 집합
 				if (mode.equals("edit")) {
 					if (param.get("beforeManagerList") != null) {
 						beforeManagerList = (List<Map<String, Object>>) param.get("beforeManagerList");
-						beforeManagerList = beforeManagerList.stream().filter(o -> !o.get("userId").equals(beforeHeadManagerId)).collect(Collectors.toList());
-
+						beforeManagerList.removeIf(o -> o.get("userId").equals(beforeHeadManagerId));
+						
 						if (managerList.size() > 0 || managerList != null) {
 							Iterator<Map<String, Object>> managerIter = managerList.iterator();
 

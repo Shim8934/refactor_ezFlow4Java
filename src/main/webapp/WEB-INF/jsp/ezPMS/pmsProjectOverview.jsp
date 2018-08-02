@@ -39,6 +39,7 @@ var startCount = 0;
 var listNumber = 3;
 var position = "overview";
 var groupId = "${project.groupId}";
+var headManagerId = "${project.headManagerId}";
 
 //내가 담당인 업무 완료/보류/진행 시키기 위한 변수
 var beforePosition = "";

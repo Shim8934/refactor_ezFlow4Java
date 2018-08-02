@@ -23,7 +23,12 @@ var roleId = "${roleId}";
 	 var memberCount = "${memberCount}";
 	 
 	 if (roleId == "1") {
-		roleName = "<spring:message code='ezPMS.t63' />"; 
+		roleName = "<spring:message code='ezPMS.t63' />";
+		// 담당자에서 관리자를 뺀다
+		memberList = memberList.filter(function(member) {
+			return member.userId != parent.headManagerId;
+		});
+		memberCount--;
 	 } else if (roleId == "2") {
 		 roleName = "<spring:message code='ezPMS.t64' />";
 	 } else {
