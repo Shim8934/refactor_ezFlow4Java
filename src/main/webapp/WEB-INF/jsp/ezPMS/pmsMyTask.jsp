@@ -578,10 +578,6 @@ function goGroupDetails(elem) {
 		</tbody>
 		<tbody id="projectSearch">
 				<tr>
-					<th class="layerHeader" colspan="2"><img src="/images/kr/left/left_mail.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;
-					<spring:message code='ezPMS.t13'/> <spring:message code='ezPMS.t1'/></th>
-				</tr>
-				<tr>
 					<th><spring:message code='ezPMS.t31' /> </th>
 					<td><input type="text" id="PsearchByProjectName" style="width:100%; margin-right:5px;"></td></tr>
 				</tr>
