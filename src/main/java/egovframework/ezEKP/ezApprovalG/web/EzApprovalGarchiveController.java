@@ -2127,10 +2127,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
         String keyword = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
-        String strBaseDn = "ou=*" + keyword + "*,";
-        String strFilter = "(&(ou=*" + keyword + "*)(objectclass=ucorg2)(docsysteminfo=*))";
+        String strFilter = "(&(ou=*" + keyword + "*)(objectclass=ucorg2))";
         int intScope = 3;
-        String strXML = ezOrganService.searchOuterOrgan(strFilter, intScope, strBaseDn);
+        String strXML = ezOrganService.searchOuterOrgan(strFilter, intScope);
         
 		logger.debug("searchOrganGListData ended");
 		return strXML;

@@ -514,6 +514,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("locale", userInfo.getLocale());
 		
 		logger.debug("formMainOther ended.");
 		
