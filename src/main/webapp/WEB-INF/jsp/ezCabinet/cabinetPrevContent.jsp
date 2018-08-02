@@ -35,7 +35,7 @@
 					
 					var attachSize  = documentContent.size;
 					var attachList  = documentContent.attach;
-					var totalFiles  = attachList.length;
+					var totalFiles  = attachList ? attachList.length : 0;
 					
 					if (totalFiles > 0) {
 						var divElmt    = document.createElement("div");

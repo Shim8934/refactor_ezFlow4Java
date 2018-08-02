@@ -82,4 +82,20 @@ public class CabinetModuleVO {
 		
 		return mdlType;
 	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof CabinetModuleVO) {
+			CabinetModuleVO obj = (CabinetModuleVO) object;
+			return moduleType.equals(obj.getModuleType()) && companyId.equals(obj.getCompanyId()) && tenantId == obj.tenantId;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	@Override
+	public int hashCode() {
+		return  50 + moduleType.hashCode() + companyId.hashCode() + tenantId;
+	}
 }

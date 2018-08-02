@@ -73,7 +73,10 @@ public interface EzCabinetRestService {
 	public JSONObject deleteItems(HttpServletRequest request, String userId, List<String> itemList) throws Exception;
 	public JSONObject moveItems(HttpServletRequest request, String userId, String cabinetId, String mode, List<String> itemList) throws Exception;
 	
-	//Save related documents
+	//Save/modify related email document
 	public JSONObject saveRelatedEmail(HttpServletRequest request, String userId, String title, String sender, String attach, String mode, String cabinetId, String content, String receiver, String forwarder, String dateTime) throws Exception;
-	public JSONObject modifyRelatedEmail(HttpServletRequest request, String id, String itemId, String title, String relatedList) throws Exception;
+	public JSONObject modifyRelatedEmail(HttpServletRequest request, String userId, String itemId, String title, String relatedList) throws Exception;
+	
+	//Save/modify related adress document
+	public JSONObject saveRelatedGroupAdress(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String content, String createUser, String createDate, String changeUser, String changeDate);
 }

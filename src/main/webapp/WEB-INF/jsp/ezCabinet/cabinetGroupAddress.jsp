@@ -23,21 +23,17 @@
 					<td id="createdDate" class="nowrap"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				<tr>
 				<tr>
-					<th><c:out value="${senderColumn.columnName}"/></th>
-					<td id="senderMail" class="cursor wide"><c:out value="${sender.userName}"/></td>
-					<th><c:out value="${timeColumn.columnName}"/></th>
-					<td class="nowrap"><c:out value="${fn:substring(timeColumn.columnValue, 0, 19)}"/></td>
+					<th><c:out value="${creatorColumn.columnName}"/></th>
+					<td id="addrCreator" class="cursor wide"><c:out value="${creator.userName}"/></td>
+					<th><c:out value="${crdDateColumn.columnName}"/></th>
+					<td class="nowrap"><c:out value="${fn:substring(crdDateColumn.columnValue, 0, 19)}"/></td>
 				<tr>
 				<tr>
-					<th><c:out value="${receiverColumn.columnName}"/></th>
-					<td colspan="3"><div id="receivers" class="cabemailDiv"></div></td>
+					<th><c:out value="${modifierColumn.columnName}"/></th>
+					<td id="addrMod" class="cursor wide"><c:out value="${modifier.userName}"/></td>
+					<th><c:out value="${modDateColumn.columnName}"/></th>
+					<td class="nowrap"><c:out value="${fn:substring(modDateColumn.columnValue, 0, 19)}"/></td>
 				<tr>
-				<c:if test="${not empty forwardList}">
-					<tr>
-						<th><c:out value="${forwardColumn.columnName}"/></th>
-						<td colspan="3"><div id="forwards" class="cabemailDiv"></div></td>
-					<tr>
-				</c:if>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
 					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
@@ -48,7 +44,7 @@
 			</table>
 		</div>
 		
-		<div class="${not empty forwardList ? 'mailContDiv1' : 'mailContDiv2'}"><iframe id="mailIframe" class="cabrlframe2"></iframe></div>
+		<div class="addressContDiv">${item.contentPath}</div>
 		
 		<div class="cabBttnDiv" id="fileDivBttn">
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
@@ -67,32 +63,13 @@
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
 		<script type="text/javascript">
-			var CabinetScroll = function() {
-				return function(elementId) {
-					var scrolled    = true;
-					var lastScrollY = 0;
-					var divElmt     = document.getElementById(elementId);
-					
-					if (!divElmt) {alert("Cannot find element with this id: " + elementId); return;}
-					
-					divElmt.onscroll = function(e) {scrollListOfItem(this);}
-					
-					function scrollListOfItem() {
-						if (scrolled) {
-							scrolled = false;
-							var distance      = divElmt.scrollTop < lastScrollY ? -20 : 20;
-							divElmt.scrollTop = lastScrollY + distance;
-							setTimeout(function () {scrolled = true; lastScrollY = divElmt.scrollTop;}, 500);
-						}
-					}
-				}
-			}();
-			
-			var CabinetEmailFile = function() {
+			var CabinetGroupAddress = function() {
 				var rlWindow    = null;
 				var userWindow  = null;
 				var itemPopup   = null;
 				var itemId      = null;
+				var scrolled    = true;
+				var lastScrollY = 0;
 				var mailContent = null;
 				var relatedArr  = [];
 				
@@ -131,34 +108,19 @@
 				
 				function processFileDetail(fileItem) {
 					var result      = fileItem.fileDetail;
-					var attachList  = fileItem.attachFileList;
 					var relatedList = fileItem.relatedFileList;
-					var sender      = fileItem.sender;
-					var receivers   = fileItem.receivers;
-					var forwards    = fileItem.forwards;
+					var creator     = fileItem.creator;
+					var modifier    = fileItem.modifier;
 					relatedArr      = [];
 					
 					//파일상세
-					document.getElementById("creator").onclick    = function(e) {showUserInfoFromId(result["creatorId"]);};
-					document.getElementById("senderMail").onclick = function(e) {showUserInfoFromEmail(sender["userEmail"]);};
+					document.getElementById("creator").onclick     = function(e) {showUserInfoFromId(result["creatorId"]);};
+					document.getElementById("addrCreator").onclick = function(e) {showUserInfoFromId(creator["userId"]);};
+					document.getElementById("addrMod").onclick     = function(e) {showUserInfoFromId(modifier["userId"]);};
 					
 					var titleTd         = document.getElementById("title");
 					titleTd.textContent = result["title"];
 					titleTd.setAttribute("title", result["title"]);
-					
-					//Email receiver list
-					var receiverDiv       = document.getElementById("receivers");
-					receiverDiv.innerHTML = "";
-					var receiverScroll    = new CabinetScroll("receivers");
-					setScrollElement(receiverDiv, receivers, showUserInfoFromEmail, "userEmail", "userName", "");
-					
-					//Email forward list
-					var forwardDiv = document.getElementById("forwards");
-					if (forwardDiv && forwards && forwards.length > 0) {
-						forwardDiv.innerHTML = "";
-						var forwardScroll = new CabinetScroll("forwards");
-						setScrollElement(forwardDiv, forwards, showUserInfoFromEmail, "userEmail", "userName", "");
-					}
 					
 					//Related list
 					var divElmt       = document.getElementById("fileListDiv");
@@ -178,31 +140,6 @@
 							})
 						}
 					}
-					
-					//Attach List and content
-					var iframeElmt      = document.getElementById("mailIframe");
-					iframeElmt.src      = "/ezCabinet/getPreviewContent.do?module=mail";
-					mailContent         = {};
-					mailContent.content = result["contentPath"];;
-					mailContent.size    = result["itemSize"];
-					mailContent.attach  = attachList;
-				}
-				
-				function setScrollElement(divElmt, listObj, handlerCallBack, roleName, titleName, statusName) {
-					for (var i = 0, len = listObj.length; i < len; i++) {
-						var spanElmt = document.createElement("span");
-						spanElmt.setAttribute("role", listObj[i][roleName]);
-						spanElmt.textContent = listObj[i][titleName];
-						spanElmt.className   = "rlSpanBnk";
-						spanElmt.onclick = (function(itemId, status){return function() {handlerCallBack(itemId, status);}; })(listObj[i][roleName], listObj[i][statusName]);
-						divElmt.appendChild(spanElmt);
-						
-						if (i != len - 1) {
-							var divideEm         = document.createElement("em");
-							divideEm.textContent = ";";
-							divElmt.appendChild(divideEm);
-						}
-					}
 				}
 				
 				function showUserInfoFromId(userId) {
@@ -210,12 +147,6 @@
 					feature = feature + getOpenWindowfeature(420, 500);
 					
 					userWindow = window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
-				}
-				
-				function showUserInfoFromEmail(userMail) {
-					var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
-					feature = feature + getOpenWindowfeature(420, 500);
-					userWindow = window.open("/ezCommon/showPersonInfo.do?email=" + encodeURIComponent(userMail), "userInfo", feature);
 				}
 				
 				function getRelatedFiles() {return relatedArr;}
@@ -431,20 +362,18 @@
 				
 				function getRelatedPopUp() {
 					if (rlWindow) {rlWindow.close();}
-					rlWindow = window.open("/ezCabinet/getRelatedFile.do?itemId=" + itemId + "&module=mail", "relatedWd", getOpenWindowfeature(800, 600));
+					rlWindow = window.open("/ezCabinet/getRelatedFile.do?itemId=" + itemId + "&module=gaddr", "relatedWd", getOpenWindowfeature(800, 600));
 				}
 				
-				function getIframeContent() {return mailContent;}
 				function closeWindow() {window.close();}
 				
 				return {
-					init       : initEvents,
-					get        : getRelatedFiles,
-					save       : saveRelatedFiles,
-					getContent : getIframeContent
+					init : initEvents,
+					get  : getRelatedFiles,
+					save : saveRelatedFiles
 				};
 			}();
 		</script>
-		<script type="text/javascript">CabinetEmailFile.init("<c:out value='${itemId}'/>");</script>
+		<script type="text/javascript">CabinetGroupAddress.init("<c:out value='${itemId}'/>");</script>
 	</body>
 </html>

@@ -15,6 +15,7 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetShareVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezCabinet.vo.SimpleUserInfoVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleUserMailVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -252,5 +253,9 @@ public class EzCabinetDAO extends EgovAbstractDAO {
 	
 	public List<SimpleUserMailVO> getUserInfoFromEmail(Map<String, Object> map) {
 		return (List<SimpleUserMailVO>)list("EzCabinetDAO.getUserInfoFromEmail", map);
+	}
+
+	public SimpleUserInfoVO getSimpleUserInfo(Map<String, Object> map) {
+		return (SimpleUserInfoVO)select("EzCabinetDAO.getSimpleUserInfo", map);
 	}
 }

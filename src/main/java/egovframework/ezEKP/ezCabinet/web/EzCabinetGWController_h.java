@@ -26,6 +26,7 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetColumnVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationItemVO;
+import egovframework.ezEKP.ezCabinet.vo.SimpleUserInfoVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleUserMailVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -360,16 +361,8 @@ public class EzCabinetGWController_h {
 			CabinetItemVO fileDetail = cabinetService_h.getFileDetail(itemId, primary, offset, tenantId);
 			
 			if(fileDetail.getItemType() != 0) {
-				//Get related columns
-				List<CabinetColumnVO> columnList = cabinetService.getAllRelatedColumnsOfItem(Integer.parseInt(itemId), primary, tenantId);
-				if (columnList != null && columnList.size() > 0) {
-					result.put("columns", columnList);
-				}
-				
-				//Check if is email type
-				if (fileDetail.getItemType() == 1) {
-					getMoreEmailDetail(result, columnList, primary, tenantId);
-				}
+				//Get more information
+				getColumnInformation(result, Integer.parseInt(itemId), fileDetail.getItemType(), primary, tenantId);
 			}
 			
 			List<CabinetAttachFileVO> attachFileList    = cabinetService_h.getAttachFileList(itemId, tenantId);
@@ -415,16 +408,8 @@ public class EzCabinetGWController_h {
 			CabinetItemVO fileDetail = cabinetService_h.getFileDetail(itemId, primary, offset, tenantId);
 			
 			if(fileDetail.getItemType() != 0) {
-				//Get related columns
-				List<CabinetColumnVO> columnList = cabinetService.getAllRelatedColumnsOfItem(Integer.parseInt(itemId), primary, tenantId);
-				if (columnList != null && columnList.size() > 0) {
-					result.put("columns", columnList);
-				}
-				
-				//Check if is email type
-				if (fileDetail.getItemType() == 1) {
-					getMoreEmailDetail(result, columnList, primary, tenantId);
-				}
+				//Get more columns information
+				getColumnInformation(result, Integer.parseInt(itemId), fileDetail.getItemType(), primary, tenantId);
 			}
 			
 			result.put("item", fileDetail);
@@ -550,6 +535,58 @@ public class EzCabinetGWController_h {
 		}
 		
 		return result;
+	}
+	
+	private void getColumnInformation(JSONObject result, int itemId, int itemType, String primary, int tenantId) throws Exception {
+		//Get related columns
+		List<CabinetColumnVO> columnList = cabinetService.getAllRelatedColumnsOfItem(itemId, primary, tenantId);
+		if (columnList != null && columnList.size() > 0) {
+			result.put("columns", columnList);
+		}
+		
+		//Check file type
+		switch(itemType) {
+			case 1: getMoreEmailDetail(result, columnList, primary, tenantId); break;
+			case 8: getMoreAddressDetaail(result, columnList, primary, tenantId); break;
+		}
+	}
+	
+	private void getMoreAddressDetaail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
+		CabinetColumnVO addressType = columnList.stream().filter(column -> column.getColumnId().equals("addresstype")).collect(Collectors.toList()).get(0);
+		
+		if (addressType.equals("normal")) {
+			getNormalAddressDetail(result, columnList, primary, tenantId);
+		}
+		else {
+			getGroupAddressDetail(result, columnList, primary, tenantId);
+		}
+	}
+	
+	private void getGroupAddressDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
+		CabinetColumnVO creatorColumn = columnList.stream().filter(column -> column.getColumnId().equals("creator")).collect(Collectors.toList()).get(0);
+		CabinetColumnVO modifyColumn  = columnList.stream().filter(column -> column.getColumnId().equals("modifier")).collect(Collectors.toList()).get(0);
+		
+		String creatorId              = creatorColumn.getColumnValue();
+		String modifierId             = modifyColumn.getColumnValue();
+		SimpleUserInfoVO creator      = cabinetService.getSimpleUserInfo(creatorId, primary, tenantId);
+		SimpleUserInfoVO modifier     = cabinetService.getSimpleUserInfo(modifierId, primary, tenantId);
+		
+		if (creator == null) {
+			creator = new SimpleUserInfoVO(creatorId, creatorId);
+		}
+		
+		if (modifier == null) {
+			modifier = new SimpleUserInfoVO(modifierId, modifierId);
+		}
+		
+		result.put("creator"    , creator);
+		result.put("modifier"   , modifier);
+		result.put("addresstype", "group");
+	}
+	
+	private void getNormalAddressDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) {
+		//Add code here
+		result.put("addresstype", "normal");
 	}
 	
 	private void getMoreEmailDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {

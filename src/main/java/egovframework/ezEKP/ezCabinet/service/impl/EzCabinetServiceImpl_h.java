@@ -319,7 +319,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 		itemVO.setDepartmentId(userInfo.getDeptID());
 		itemVO.setDepartmentName1(userInfo.getDeptName1());
 		itemVO.setDepartmentName2(userInfo.getDeptName2());
-		itemVO.setConentPath(content);
+		itemVO.setContentPath(content);
 		itemVO.setCreatedDate(timeUTC);
 		itemVO.setUpdatedDate(timeUTC);
 		itemVO.setUseStatus(1);

@@ -295,6 +295,8 @@
 .ulFiles li:lastChild {padding-bottom: 5px;}
 .mailContDiv1 {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 260px; height: 260px; overflow: auto;}
 .mailContDiv2 {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 290px; height: 290px; overflow: auto;}
+.addressContDiv {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 290px; height: 290px; overflow: auto;}
+.addressContDiv >select {background: none; border: none !important; outline: none !important; padding-right: .1em !important; height: 100%!important;}
 
 .cabDivFile {display: flex; border: 1px solid #ddd; width: 100%; height: 100%;}
 .cabDivFile .cabImgAva {height: 40px; width: 40px; min-width: 40px; margin: 10px 5px;}
@@ -382,4 +384,4 @@
 .cursor {cursor: pointer;}
 .icon_rbtn img {width: 16px; height: 16px;}
 
-@media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2 {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;}  .ulFiles li {page-break-inside: avoid;}}
+@media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2, .addressContDiv {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;}  .ulFiles li, .addressContDiv {page-break-inside: avoid;}}

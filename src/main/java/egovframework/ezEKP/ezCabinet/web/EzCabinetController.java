@@ -755,6 +755,35 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
+	@RequestMapping(value="/ezCabinet/saveRelatedGroupAddress.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonSaveRelatedGroupAddress(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSaveRelatedGroupAddress is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String title           = request.getParameter("title")      != null ? request.getParameter("title")      : "";
+		String mode            = request.getParameter("mode")       != null ? request.getParameter("mode")       : "";
+		String cabinetId       = request.getParameter("cabinet")    != null ? request.getParameter("cabinet")    : "";
+		String content         = request.getParameter("content")    != null ? request.getParameter("content")    : "";
+		String createUser      = request.getParameter("createUser") != null ? request.getParameter("createUser") : "";
+		String createDate      = request.getParameter("createDate") != null ? request.getParameter("createDate") : "";
+		String changeUser      = request.getParameter("changeUser") != null ? request.getParameter("changeUser") : "";
+		String changeDate      = request.getParameter("changeDate") != null ? request.getParameter("changeDate") : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		logger.debug("Title: " + title + " || createUser: " + createUser + " || createDate: " + createDate + " || changeUser: " + changeUser + " || changeDate: " + changeDate + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content);
+		
+		if (title.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || createUser.equals("") || createDate.equals("")  || changeUser.equals("") || changeDate.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.saveRelatedGroupAdress(request, userInfo.getId(), title, mode, cabinetId, content, createUser, createDate, changeUser, changeDate);
+		
+		logger.debug("jsonSaveRelatedGroupAddress finishes!");
+		return resultObj.toString();
+	}
+	
 	private String getFileSize(long fileSize) {
 		String fileSize_ = "";
 		

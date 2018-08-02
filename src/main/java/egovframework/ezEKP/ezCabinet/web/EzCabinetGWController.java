@@ -1616,6 +1616,45 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
+	@RequestMapping(value="/rest/ezcabinet/relate-item/save/address-group", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveGroupAddressItem(@RequestBody JSONObject addressItemInf, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")              : "";
+		String title      = addressItemInf.get("title")      != null ? addressItemInf.get("title").toString()      : "";
+		String mode       = addressItemInf.get("mode")       != null ? addressItemInf.get("mode").toString()       : "";
+		String cabinetId  = addressItemInf.get("cabinet")    != null ? addressItemInf.get("cabinet").toString()    : "";
+		String content    = addressItemInf.get("content")    != null ? addressItemInf.get("content").toString()    : "";
+		String createUser = addressItemInf.get("createUser") != null ? addressItemInf.get("createUser").toString() : "";
+		String createDate = addressItemInf.get("createDate") != null ? addressItemInf.get("createDate").toString() : "";
+		String userId     = addressItemInf.get("userId")     != null ? addressItemInf.get("userId").toString()     : "";
+		String changeUser = addressItemInf.get("changeUser") != null ? addressItemInf.get("changeUser").toString() : "";
+		String changeDate = addressItemInf.get("changeDate") != null ? addressItemInf.get("changeDate").toString() : "";
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || title: " + title + " || createUser: " + createUser + " || createDate: " + createDate + " || changeUser: " + changeUser + " || userId: " + userId + " || changeDate: " + changeDate + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content);
+		
+		if (serverName.equals("") || userId.equals("") || title.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || createDate.equals("") || changeUser.equals("") || changeDate.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
+			String realPath  = request.getServletContext().getRealPath("");
+			result           = cabinetService.saveGroupAddressItem(realPath, dstCabinetId, title, mode, content, createUser, createDate, changeUser, changeDate, userInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
 	private boolean isCabinetAdmin(LoginVO user) {
 		return user.getRollInfo().contains("cb=1");
 	}

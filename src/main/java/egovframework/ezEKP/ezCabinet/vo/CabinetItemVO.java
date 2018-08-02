@@ -13,7 +13,7 @@ public class CabinetItemVO {
 	private String departmentId;
 	private String departmentName1;
 	private String departmentName2;
-	private String conentPath;
+	private String contentPath;
 	private String createdDate;
 	private String updatedDate;
 	private int    useStatus;
@@ -111,12 +111,12 @@ public class CabinetItemVO {
 		this.departmentName2 = departmentName2;
 	}
 	
-	public String getConentPath() {
-		return conentPath;
+	public String getContentPath() {
+		return contentPath;
 	}
 	
-	public void setConentPath(String conentPath) {
-		this.conentPath = conentPath;
+	public void setContentPath(String contentPath) {
+		this.contentPath = contentPath;
 	}
 	
 	public String getCreatedDate() {

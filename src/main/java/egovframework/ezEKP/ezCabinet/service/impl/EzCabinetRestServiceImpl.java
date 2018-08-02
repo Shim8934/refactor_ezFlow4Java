@@ -584,4 +584,22 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject saveRelatedGroupAdress(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String content, String createUser, String createDate, String changeUser, String changeDate) {
+		String url                = "/rest/ezcabinet/relate-item/save/address-group";
+		JSONObject jsonBody       = new JSONObject();
+		jsonBody.put("userId",     userId);
+		jsonBody.put("title",      title);
+		jsonBody.put("mode",       mode);
+		jsonBody.put("content",    content);
+		jsonBody.put("createUser", createUser);
+		jsonBody.put("createDate", createDate);
+		jsonBody.put("changeUser", changeUser);
+		jsonBody.put("changeDate", changeDate);
+		jsonBody.put("cabinet",    cabinetId);
+		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
+		return resultBody;
+	}
 }

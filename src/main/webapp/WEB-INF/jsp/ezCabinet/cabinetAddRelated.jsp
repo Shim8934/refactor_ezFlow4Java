@@ -256,7 +256,7 @@
 					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
 					var boardContent = contentWd.document.querySelector("div[class='contentDiv']").innerHTML;
 					var attach       = window.opener.document.getElementById("lstAttachLink");
-					var attachList = [];
+					var attachList   = [];
 					
 					if (attach.childElementCount > 1) {
 						var listChildren = attach.getElementsByTagName("a");
@@ -289,6 +289,21 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
+				function saveAddressDocument(saveMode, cabinetId) {
+					var addressOpener = window.opener;
+					if (!addressOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var listMembers = addressOpener.document.getElementById("ListMember");
+					var addressType = listMembers ? "group" : "normal";
+					
+					if (listMembers) {
+						saveGroupAddress(addressOpener, saveMode, cabinetId);
+					}
+					else {
+						saveNormalAddress(addressOpener, saveMode, cabinetId);
+					}
+				}
+				
 				function saveScheduleDocument() {
 					//Add code here
 				}
@@ -313,12 +328,52 @@
 					//Add code here
 				}
 				
-				function saveAddressDocument() {
+				function saveJournalDocument() {
 					//Add code here
 				}
 				
-				function saveJournalDocument() {
-					//Add code here
+				function saveGroupAddress(addressOpener, saveMode, cabinetId) {
+					var addressDocument = addressOpener.document;
+					var title           = addressDocument.getElementById("TextName").textContent;
+					var createUser      = addressOpener.creatorid;
+					var createDate      = addressDocument.getElementById("TextCreateDate").textContent;
+					var changeUser      = addressOpener.modifierid;
+					var changeDate      = addressDocument.getElementById("TextModifyDate").textContent;
+					var selectBox       = addressDocument.getElementById("ListMember");
+					var addressCont     = selectBox.parentElement.innerHTML;
+					
+					var url  = "/ezCabinet/saveRelatedGroupAddress.do";
+					var data = {
+						mode       : saveMode,
+						title      : title,
+						createDate : createDate,
+						createUser : createUser,
+						changeUser : changeUser,
+						changeDate : changeDate,
+						content    : addressCont
+					};
+					
+					if (saveMode == 1) {data.cabinet = cabinetId;}
+					
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
+				}
+				
+				function saveNormalAddress(addressDocument, saveMode, cabinetId) {
+					var url  = "/ezCabinet/saveRelatedNormalAddress.do";
+					var data = {
+						mode      : saveMode,
+						title     : mailSubject,
+						sender    : senderEmail,
+						receiver  : JSON.stringify(receiveList),
+						crdDate   : mailDate,
+						forward   : JSON.stringify(forwardList),
+						attach    : JSON.stringify(normalList),
+						content   : emailContent
+					};
+					
+					if (saveMode == 1) {data.cabinet = cabinetId;}
+					
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
 				function afterSaveDocument(data) {
