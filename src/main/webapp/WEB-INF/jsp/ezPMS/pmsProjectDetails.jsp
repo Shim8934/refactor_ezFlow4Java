@@ -158,12 +158,15 @@ function deleteFavorite(projectId) {
 		float: left;
 	}
 	
+	#projectInfo, #projectInfo span{
+		font-size: 15px;
+	}
 </style>
 </head>
 <body class="mainbody" style="height: 95%; overflow: hidden; margin-left:0px; margin-right: 0px;" marginwidth="0" marginheight="0" >
 	<div id="test" style="padding-left:10px">
 	<h1 id="projectName">
-		<span id="pjName" style=""><c:out value="${project.projectName}"/></span> 
+		<span id="pjName"><c:out value="${project.projectName}"/></span> 
 		<c:choose>
 			<c:when test="${project.isFavorite eq 0}">
 				<img class="star" style="cursor: pointer; width:17px; vertical-align:text-top;" draggable="false" src="/images/ImgIcon/view-flag.gif"
@@ -174,9 +177,15 @@ function deleteFavorite(projectId) {
 					onclick="deleteFavorite(${project.projectId })">
 			</c:otherwise>
 		</c:choose>
-		(<fmt:formatNumber value="${project.progress}" pattern="0.0"/>%, 
-		D<c:out value="${project.restDueday - 1 < 0 ? '+'.concat(-(project.restDueday - 1)) : '-'.concat(project.restDueday - 1) }"/>, 
-		<c:out value="${project.planStartDate}"/> ~ <c:out value="${project.planEndDate}"/>)
+		<span id="projectInfo">
+			(
+			<span id="projectProgress"><fmt:formatNumber value="${project.progress}" pattern="0.0"/>%</span>, 
+			<span>
+				D<c:out value="${project.restDueday - 1 < 0 ? '+'.concat(-(project.restDueday - 1)) : '-'.concat(project.restDueday - 1) }"/>, 
+				<c:out value="${project.planStartDate}"/> ~ <c:out value="${project.planEndDate}"/>
+			</span>
+			)
+		</span>
 	</h1>
 	<div class="portlet_tabpart01">
 	   <div class="portlet_tabpart01_top" id="tab1">

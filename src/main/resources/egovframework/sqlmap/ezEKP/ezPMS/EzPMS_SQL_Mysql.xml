@@ -4553,4 +4553,19 @@
 				DEL_STATUS = 0
 		]]>
 	</update>
+	
+	<select id="EzPMSDAO.getProjectRealProgress" parameterClass="map" resultClass="Float">
+	<![CDATA[
+		select
+			progress 
+		from 
+			tbl_pms_project
+		where 
+			project_id = #projectId#
+		AND 
+			TENANT_ID = #tenantId#
+		AND 
+			del_status = 0
+	]]>
+	</select>
 </sqlMap>

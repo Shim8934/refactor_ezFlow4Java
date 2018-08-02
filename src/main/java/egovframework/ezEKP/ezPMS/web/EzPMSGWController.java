@@ -1628,10 +1628,16 @@ public class EzPMSGWController {
 //					ezPMSService.deleteMemberSchedule(null, projectId, tenantId, null, Long.parseLong(taskIdList[i]));
 				}
 			}
-
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("projectId", projectId);
+			map.put("tenantId", tenantId);
+			float projectProgress = ezPMSService.getProjectRealProgress(map);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", roleCheck);
+			result.put("projectProgress", projectProgress);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -2200,7 +2206,7 @@ public class EzPMSGWController {
 			}
 
 			ProjectTaskVO projectTaskVO = new ProjectTaskVO();
-			projectTaskVO.setTenantId(Integer.parseInt(request.getParameter("tenantId")));
+			projectTaskVO.setTenantId(tenantId);
 			projectTaskVO.setProjectId(Long.parseLong(projectId));
 			projectTaskVO.setGroupId(Long.parseLong(request.getParameter("groupId")));
 			projectTaskVO.setTaskName(request.getParameter("taskName"));
@@ -2239,7 +2245,7 @@ public class EzPMSGWController {
 //					startCal.add(Calendar.DATE, 1);
 //				}
 //			}
-			List<String> dateList = ezPMSService.getDateList(planStartDate, planEndDate);
+//			List<String> dateList = ezPMSService.getDateList(planStartDate, planEndDate);
 
 //			for (int i = 0; i < taskMemberList2.size(); i++) {
 //				String memberId = taskMemberList2.get(i).getUserId();
@@ -2267,12 +2273,17 @@ public class EzPMSGWController {
 				ezPMSService.updateProject(project, tenantId, companyId, lang);
 				ezPMSService.updateProjectGroupEndDate(Long.parseLong(projectId), projectChangeDate, tenantId,
 						projectDetails.getGroupId());
-
 			}
-
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("projectId", projectId);
+			map.put("tenantId", tenantId);
+			float projectProgress = ezPMSService.getProjectRealProgress(map);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", taskId + "");
+			result.put("projectProgress", projectProgress);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -3244,7 +3255,6 @@ public class EzPMSGWController {
 				projectTaskVO.setWorkingday(workingday);
 
 				ezPMSService.updateTaskStatus(projectTaskVO, companyId, tenantId, lang);
-				
 				// taskId로 해당 date 삭제 후, 추가
 //				ezPMSService.deleteMemberSchedule(null, projectId, tenantId, null,taskId);
 //				List<TaskMemberVO> taskMemberList = ezPMSService.getTaskMemberList(tenantId, taskId, lang);
@@ -3370,14 +3380,18 @@ public class EzPMSGWController {
 //
 //					}
 //
-//				}
-				
-				
+//				}			
 			}
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("projectId", projectId);
+			map.put("tenantId", tenantId);
+			float projectProgress = ezPMSService.getProjectRealProgress(map);
 
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
+			result.put("projectProgress", projectProgress);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -3548,12 +3562,14 @@ public class EzPMSGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-
+			Long projectId = Long.parseLong(request.getParameter("projectId"));
+			int tenantId = info.getTenantId();
+			
 			ProjectTaskVO taskVO = new ProjectTaskVO();
 
 			float realProgress = Float.parseFloat(request.getParameter("progress"));
 			taskVO.setTaskId(Long.parseLong(taskId));
-			taskVO.setProjectId(Long.parseLong(request.getParameter("projectId")));
+			taskVO.setProjectId(projectId);
 
 			String groupId = request.getParameter("groupId") != "" ? request.getParameter("groupId") : "";
 			if (!groupId.equals("")) {
@@ -3577,10 +3593,15 @@ public class EzPMSGWController {
 			}
 
 			ezPMSService.updateTaskProgress(taskVO);
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("projectId", projectId);
+			map.put("tenantId", tenantId);
+			float projectProgress = ezPMSService.getProjectRealProgress(map);
 
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", "");
+			result.put("data", projectProgress);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);
@@ -4934,15 +4955,18 @@ public class EzPMSGWController {
 			map.put("taskSchedules", taskSchedules);
 
 			ezPMSService.updateAllTaskDatesInPrj(map);
-
-			map.remove("taskSchedules");
-			map.put("groupSchedules", groupSchedules);
-
-			ezPMSService.updateAllGroupDatesInPrj(map);
-
+			
+			if(groupSchedules.size() > 0) {
+				map.remove("taskSchedules");
+				map.put("groupSchedules", groupSchedules);
+				ezPMSService.updateAllGroupDatesInPrj(map);
+			}
+			
+			float projectProgress = ezPMSService.getProjectRealProgress(map);
+			
 			result.put("status", "ok");
 			result.put("code", 0);
-			result.put("data", "");
+			result.put("data", projectProgress);
 		} catch (Exception e) {
 			result.put("status", "error");
 			result.put("code", 1);

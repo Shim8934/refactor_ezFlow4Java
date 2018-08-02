@@ -356,17 +356,18 @@
 		$.ajax({
 			type : "POST",
 			url : url,
-			dataType : "text",
+			dataType : "json",
 			contentType: "application/json; charset=UTF-8",
 			data : JSON.stringify(data),
 			success : function(result) {
 				
-				if (result == "permitted") {
+				if (result.checkPermission == "permitted") {
 					alert("<spring:message code='ezPMS.t242' />");
 					var logContent = "[" + taskDetails.groupName + "]<spring:message code='ezPMS.t313' /> [" + taskDetails.taskName + "] " + "<spring:message code='ezPMS.t242' />";
    					addTaskLog(projectId, 3, groupId, null, logContent);
    					updateGroupRealStartEndDate(groupId);
    					opener.location.reload();
+   					$("#projectProgress", opener.parent.document).text(result.projectProgress.toFixed(1) + '%');
    					window.close();
 				} else {
 					alert("<spring:message code='ezPMS.t184' />");

@@ -339,6 +339,7 @@
 				
 				parent.location.reload();
 				parent.opener.location.reload();
+				$("#projectProgress", parent.opener.parent.document).text(data.projectProgress.toFixed(1) + '%');
 				popupClose();
 			},
 			error : function(jqXHR, textStatus, errorThrown) {

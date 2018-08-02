@@ -344,6 +344,8 @@ function addTask() {
 				opener.getTaskTree();
 			}
 			
+			$("#projectProgress", opener.parent.document).text(data.projectProgress.toFixed(1) + '%');
+
 			popupClose();
 		},
 		error : function(jqXHR, textStatus, errorThrown) {

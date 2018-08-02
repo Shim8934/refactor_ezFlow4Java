@@ -292,4 +292,6 @@ public interface EzPMSService {
 	public Map<String, Object> getMinMaxGroupRealDate(Map<String, Object> map);
 	
 	public void updateGroupRealDate(Map<String, Object> map);
+	
+	public float getProjectRealProgress(Map<String, Object> map);
 }
