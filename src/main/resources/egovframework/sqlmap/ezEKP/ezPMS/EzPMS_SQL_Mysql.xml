@@ -2101,6 +2101,38 @@
 		</isNotEmpty>
 	</select>
 	
+	<select id="EzPMSDAO.getTaskMemberListForGantt" parameterClass="map" resultMap="projectTaskMemberVO">
+		<![CDATA[
+			SELECT 
+				T.TASK_MEMBER_ID,
+				T.TENANT_ID,
+				T.TASK_ID,
+				T.USER_ID,
+				T.USER_NAME$lang$ AS USER_NAME,
+				T.USER_DEPTNAME$lang$ AS USER_DEPTNAME,
+				T.PCTINPUT,
+				U.MAIL AS USER_MAIL
+			FROM	
+				tbl_pms_taskmember T
+			LEFT JOIN
+				TBL_USERMASTER U
+			ON
+				U.CN = T.USER_ID
+			JOIN
+				TBL_PMS_TASK A
+			ON
+				T.TASK_ID = A.TASK_ID
+			AND
+				A.PROJECT_ID = #projectId#
+			AND
+				A.DEL_STATUS = 0
+			AND
+				U.TENANT_ID = T.TENANT_ID
+			WHERE	
+				T.TENANT_ID = #tenantId#
+		]]>
+	</select>
+	
 	<delete id="EzPMSDAO.deleteProjectMember" parameterClass="map">
 		<![CDATA[
 			DELETE	FROM

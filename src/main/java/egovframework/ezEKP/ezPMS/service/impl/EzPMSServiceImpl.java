@@ -1747,6 +1747,19 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] ezPMS getTaskMemberList Ended");
 		return taskMemberList;
 	}
+	
+	@Override
+	public List<TaskMemberVO> getTaskMemberListForGantt(int tenantId, long projectId, String lang) {
+		LOGGER.debug("[SERVICE] ezPMS getTaskMemberListForGantt Started");
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		map.put("lang", lang);
+		
+		List<TaskMemberVO> taskMemberList = ezPMSDAO.getTaskMemberListForGantt(map);
+		LOGGER.debug("[SERVICE] ezPMS getTaskMemberListForGantt Ended");
+		return taskMemberList;
+	}
 
 	@Override
 	public void deleteProjectMember(Long projectId, int tenantId) {

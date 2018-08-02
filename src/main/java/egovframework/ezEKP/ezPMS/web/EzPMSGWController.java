@@ -2240,9 +2240,22 @@ public class EzPMSGWController {
 			holidayList.addAll(holiday);
 			
 			List<ProjectTaskVO> taskList = ezPMSService.getTaskListForGantt(search, userId, limit, startRow, orderWhat, orderHow, position, roleId, deptId, holidayList);
+			List<TaskMemberVO> taskMemberList = ezPMSService.getTaskMemberListForGantt(info.getTenantId(), projectId, lang);
 			for (ProjectTaskVO vo : taskList) {
-				vo.setTaskMember(
-						ezPMSService.getTaskMemberList(info.getTenantId(), vo.getTaskId(), lang));
+				Long taskId = vo.getTaskId();
+				
+				// 그룹 멤버를 얻어옴.
+				Iterator<TaskMemberVO> iter = taskMemberList.iterator();
+				List<TaskMemberVO> taskMemberListTemp = new ArrayList<TaskMemberVO>();
+				while (iter.hasNext()) {
+					TaskMemberVO taskMember = iter.next();
+					if (taskId.equals(taskMember.getTaskId())) {
+						taskMemberListTemp.add(taskMember);
+						iter.remove();
+					}
+				}
+				
+				vo.setTaskMember(taskMemberListTemp);
 				
 				//지연율
 				if (vo.getStatus().equals("L")) {

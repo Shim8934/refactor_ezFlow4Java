@@ -122,6 +122,8 @@ public interface EzPMSService {
 	public int getUserProjectRole(String userId, int tenantId, Long projectId, String deptId);
 	
 	public List<TaskMemberVO> getTaskMemberList(int tenantId, long taskId, String lang);
+	
+	public List<TaskMemberVO> getTaskMemberListForGantt(int tenantId, long projectId, String lang);
 
 	public void deleteProjectMember(Long projectId, int tenantId);
 	
