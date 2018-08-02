@@ -720,8 +720,8 @@ var CabinetItem = function() {
 		
 		pElmt.appendChild(pSpanElmt1);
 		pElmt.appendChild(pSpanElmt2);
+		pElmt.appendChild(spanElmt);
 		divChild.appendChild(pElmt);
-		divChild.appendChild(spanElmt);
 		divChild.appendChild(dlElmt);
 		divElmt.appendChild(divChild);
 	}
@@ -744,6 +744,7 @@ var CabinetItem = function() {
 		spanIcon.onclick        = function(e) {openFileDetail(itemInfo["itemId"]);};
 		spanSubject.textContent = itemInfo["title"];
 		spanDate.textContent    = itemInfo["createdDate"].substring(0, 19);
+		spanSubject.setAttribute("title", itemInfo["title"]);
 		
 		while(dlElmt.firstElementChild) {dlElmt.removeChild(dlElmt.firstElementChild);}
 		
@@ -782,7 +783,7 @@ var CabinetItem = function() {
 			}
 		}
 		else {
-			showGeneralItemPreview(parentDiv);
+			showGeneralItemPreview(data, dlElmt, itemInfo, parentDiv);
 		}
 	}
 	
@@ -809,18 +810,16 @@ var CabinetItem = function() {
 	}
 	
 	function showGeneralItemPreview(data, dlElmt, itemInfo, parentDiv) {
-		var prevCont = document.createElement("div");
+		var prevId   = crrPreMode == "w" ? "itemContentW" : "itemContentH";
+		var prevCont = document.getElementById(prevId);
 		
-		if (crrPreMode == "w") {
-			prevCont.setAttribute("id", "itemContentW");
-			prevCont.className = "itemContentW";
-		}
-		else {
-			prevCont.setAttribute("id", "itemContentH");
-			prevCont.className = "itemContentH";
+		if (!prevCont) {
+			prevCont           = document.createElement("div");
+			prevCont.id        = prevId;
+			prevCont.className = prevId;
+			parentDiv.appendChild(prevCont);
 		}
 		
-		parentDiv.appendChild(prevCont);
 		var attachList  = data.attachFileList;
 		var relatedList = data.relatedFileList;
 		generalItemTitle(relatedList,  itemInfo["creatorName"], itemInfo["creatorId"], itemInfo["summary"], dlElmt);
@@ -1041,7 +1040,7 @@ var CabinetItem = function() {
 	function generalItemTitle(relatedList, creatorName, creatorId, summary, dlElmt) {
 		generateCreatorTitle(dlElmt, creatorName, creatorId);
 		
-		if (summary.replace(/\s/g,'')) {
+		if (summary && summary.replace(/\s/g,'')) {
 			var sDtElmt         = document.createElement("dt");
 			var sDdElmt         = document.createElement("dd");
 			sDtElmt.textContent = CabinetMessages.strSummary + ": ";

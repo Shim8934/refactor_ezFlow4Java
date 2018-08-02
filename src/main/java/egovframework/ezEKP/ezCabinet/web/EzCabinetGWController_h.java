@@ -547,11 +547,11 @@ public class EzCabinetGWController_h {
 		//Check file type
 		switch(itemType) {
 			case 1: getMoreEmailDetail(result, columnList, primary, tenantId); break;
-			case 8: getMoreAddressDetaail(result, columnList, primary, tenantId); break;
+			case 8: getMoreAddressDetail(result, columnList, primary, tenantId); break;
 		}
 	}
 	
-	private void getMoreAddressDetaail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
+	private void getMoreAddressDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
 		CabinetColumnVO addressType   = columnList.stream().filter(column -> column.getColumnId().equals("addresstype")).collect(Collectors.toList()).get(0);
 		CabinetColumnVO creatorColumn = columnList.stream().filter(column -> column.getColumnId().equals("creator")).collect(Collectors.toList()).get(0);
 		CabinetColumnVO modifyColumn  = columnList.stream().filter(column -> column.getColumnId().equals("modifier")).collect(Collectors.toList()).get(0);

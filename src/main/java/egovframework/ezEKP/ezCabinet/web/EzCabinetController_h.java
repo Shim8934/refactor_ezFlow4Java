@@ -340,54 +340,26 @@ public class EzCabinetController_h {
 	private String getAddressColumnInfo(Model model, JSONObject iteminfo) {
 		String jspPageName   = "";
 		String addressType   = iteminfo.get("addresstype").toString();
-		
-		if (addressType.equals("group")) {
-			jspPageName = getGroupAddressColumnInfo(model, iteminfo);
-		}
-		else {
-			jspPageName = getNormalAddressColumnInfo(model, iteminfo);
-		}
-		
-		return jspPageName;
-	}
-	
-	private  String getGroupAddressColumnInfo(Model model, JSONObject iteminfo) {
-		String jspPageName   = "ezCabinet/cabinetGroupAddress";
-		JSONArray columnList = (JSONArray) iteminfo.get("columns");
-		
 		JSONObject creator   = (JSONObject) iteminfo.get("creator");
 		JSONObject modifier  = (JSONObject) iteminfo.get("modifier");
+		JSONArray columnList = (JSONArray) iteminfo.get("columns");
 		
-		model.addAttribute("creator",  creator);
-		model.addAttribute("modifier", modifier);
+		model.addAttribute("creatorUser",  creator);
+		model.addAttribute("modifierUser", modifier);
 		
 		for (int i = 0, totalColumn = columnList.size(); i < totalColumn; i++) {
 			JSONObject column = (JSONObject) columnList.get(i);
 			String columnId   = column.get("columnId").toString();
-			if (columnId.equals("creator")) {
-				model.addAttribute("creatorColumn", column);
-			}
-			
-			if (columnId.equals("createdate")) {
-				model.addAttribute("crdDateColumn", column);
-			}
-			
-			if (columnId.equals("modifier")) {
-				model.addAttribute("modifierColumn", column);
-			}
-			
-			if (columnId.equals("modifydate")) {
-				model.addAttribute("modDateColumn", column);
-			}
+			model.addAttribute(columnId, column);
 		}
 		
-		return jspPageName;
-	}
-	
-	private String getNormalAddressColumnInfo(Model model, JSONObject iteminfo) {
-		//Add more code here
-		JSONArray columnList = new JSONArray();
-		String jspPageName   = "ezCabinet/cabinetGroupAddress";
+		if (addressType.equals("group")) {
+			jspPageName = "ezCabinet/cabinetGroupAddress";
+		}
+		else {
+			jspPageName = "ezCabinet/cabinetNormalAddress";
+		}
+		
 		return jspPageName;
 	}
 	
@@ -398,7 +370,7 @@ public class EzCabinetController_h {
 		JSONArray receiverList = (JSONArray) iteminfo.get("receivers");
 		
 		model.addAttribute("receiverList", receiverList);
-		model.addAttribute("sender", senderUser);
+		model.addAttribute("senderUser", senderUser);
 		
 		if (iteminfo.get("forwards") != null) {
 			JSONArray forwardList = (JSONArray) iteminfo.get("forwards");
@@ -408,21 +380,7 @@ public class EzCabinetController_h {
 		for (int i = 0, totalColumn = columnList.size(); i < totalColumn; i++) {
 			JSONObject column = (JSONObject) columnList.get(i);
 			String columnId   = column.get("columnId").toString();
-			if (columnId.equals("sender")) {
-				model.addAttribute("senderColumn", column);
-			}
-			
-			if (columnId.equals("receiver")) {
-				model.addAttribute("receiverColumn", column);
-			}
-			
-			if (columnId.equals("forward")) {
-				model.addAttribute("forwardColumn", column);
-			}
-			
-			if (columnId.equals("emailTime")) {
-				model.addAttribute("timeColumn", column);
-			}
+			model.addAttribute(columnId, column);
 		}
 		
 		return jspPageName;
@@ -436,9 +394,8 @@ public class EzCabinetController_h {
 }
 	
 	private String getBoardColumnInfo(Model model, JSONObject iteminfo) {
-		JSONArray columnList = new JSONArray();
 		String jspPageName   = "ezCabinet/cabinetBoardDetail";
-		
+		JSONArray columnList = new JSONArray();
 		if (iteminfo.get("columns") != null) {
 			columnList = (JSONArray) iteminfo.get("columns");
 		}
