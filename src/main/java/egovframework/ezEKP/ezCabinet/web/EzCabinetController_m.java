@@ -39,16 +39,17 @@ public class EzCabinetController_m {
 		String divContent      = request.getParameter("content")          != null ? request.getParameter("content")       : "";
 		String doctitle        = request.getParameter("doctitle")         != null ? request.getParameter("doctitle")      : "";
 		String lstAttachLink   = request.getParameter("lstAttachLink")    != null ? request.getParameter("lstAttachLink") : "";
+		String otherAttachLk   = request.getParameter("otherAttachLk")    != null ? request.getParameter("otherAttachLk") : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		if (divContent.equals("") || (mode.equals("1") && cabinetId.equals("")) || (doctitle.equals("")) || (lstAttachLink.equals(""))) {
+		if (divContent.equals("") || (mode.equals("1") && cabinetId.equals("")) || (doctitle.equals("")) || (lstAttachLink.equals("")) || (otherAttachLk.equals(""))) {
 			logger.debug("Invalid parameter!");
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService_m.saveRelatedApproval(request, userInfo.getId(), mode, cabinetId, divContent, doctitle, lstAttachLink);
+		resultObj = cabinetRestService_m.saveRelatedApproval(request, userInfo.getId(), mode, cabinetId, divContent, doctitle, lstAttachLink, otherAttachLk);
 		
 		logger.debug("jsonSaveRelatedApproval finishes!");
 		return resultObj.toString();

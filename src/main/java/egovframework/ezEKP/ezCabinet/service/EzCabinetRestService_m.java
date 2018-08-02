@@ -6,5 +6,5 @@ import org.json.simple.JSONObject;
 
 public interface EzCabinetRestService_m {
 	//Save related documents
-	JSONObject saveRelatedApproval(HttpServletRequest request, String userId, String mode, String cabinetId, String divContent, String doctitle, String lstAttachLink)throws Exception;
+	JSONObject saveRelatedApproval(HttpServletRequest request, String userId, String mode, String cabinetId, String divContent, String doctitle, String lstAttachLink, String otherAttachLk)throws Exception;
 }

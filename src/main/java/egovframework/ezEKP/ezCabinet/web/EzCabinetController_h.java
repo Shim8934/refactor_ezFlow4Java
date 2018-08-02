@@ -1,8 +1,10 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
@@ -326,6 +329,7 @@ public class EzCabinetController_h {
 		switch(itemType) {
 			case 0  : jspPageName = "ezCabinet/cabinetFileDetail"                   ; break;
 			case 1  : jspPageName = getEmailColumnInfo(model, iteminfo) ; break;
+			case 2  : jspPageName = getApprovalColumnInfo(model, iteminfo) ; break;
 			default : break;
 		}
 		
@@ -373,6 +377,17 @@ public class EzCabinetController_h {
 			if (columnId.equals("emailTime")) {
 				model.addAttribute("timeColumn", column);
 			}
+		}
+		
+		return jspPageName;
+	}
+	
+	private String getApprovalColumnInfo(Model model, JSONObject iteminfo) {
+		JSONArray columnList = new JSONArray();
+		String jspPageName   = "ezCabinet/cabinetApprovalDetail";
+		
+		if (iteminfo.get("columns") != null) {
+			columnList = (JSONArray) iteminfo.get("columns");
 		}
 		
 		return jspPageName;
