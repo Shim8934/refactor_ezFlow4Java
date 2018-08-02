@@ -199,7 +199,7 @@
 			totalCount = contentCount;
 		}
 		
-		taskName = convertString(taskName);
+		taskName = replaceString(taskName);
 		
 		contentTitle = taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span><spring:message code='ezPMS.t4' />";
 

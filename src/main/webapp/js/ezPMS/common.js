@@ -60,7 +60,6 @@ function getProjectTaskTree(containerId, data, location, idx) {
 	
 	})
 	.on("select_node.jstree", function(e, data) {
-		$(this).jstree("open_all");
 		if (location == "taskLog" || location == "taskList") {
 			if (data.node.id.indexOf("t") != -1) {
 				taskId = data.node.id.substring(1);

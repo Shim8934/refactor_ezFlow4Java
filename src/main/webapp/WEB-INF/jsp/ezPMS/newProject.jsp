@@ -419,18 +419,18 @@ var headManagerObj = {};
  
  function sendNotiMail(projectId, projectName) {
 	 var data = {
-		 projectName : projectName,
-		 headManagerId : headManagerId,
-		 managerList : managerList,
-		 participantList : participantList,
-		 viewerList : viewerList,
-		 projectId : projectId,
-		 beforeHeadManagerId : beforeHeadManagerId,
-		 beforeManagerList : beforeManagerList,
-		 beforeParticipantList : beforeParticipantList,
-		 beforeViewerList : beforeViewerList,
-		 mode : mode
-	 }
+			 headManagerId : headManagerId,
+			 projectName : projectName,
+			 managerList : managerList,
+			 participantList : participantList,
+			 viewerList : viewerList,
+			 projectId : projectId,
+			 beforeHeadManagerId : beforeHeadManagerId,
+			 beforeManagerList : beforeManagerList,
+			 beforeParticipantList : beforeParticipantList,
+			 beforeViewerList : beforeViewerList,
+			 mode : mode
+		 }
 	 
 	 $.ajax({
 		 type : "POST",
