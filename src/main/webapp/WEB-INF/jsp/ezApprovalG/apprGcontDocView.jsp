@@ -66,6 +66,7 @@
 		    var checkPwdFlag = "${checkPwdFlag}";
 		    var opinionFlag;
 		    var includeOpinion = false;
+		    var signImageType = "${signImageType}";
 		    
 		    $(function () {
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && abtnReusedmin != 'Y') {
@@ -702,7 +703,13 @@
 		                        //strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?filepath=" + escape(RtnVal) + "' border=0  embedding='1' ";
 		                        strimg = "<img src='" + escape(RtnVal) + "' border=0 embedding='1' ";
 		                        strimg = strimg + " width=" + signWidth;
-		                        strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'  imglock >";
+		                        
+		                        
+		                        if (signImageType = "NAME") {
+	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'  imglock >" + "<br>" + arr_userinfo[2];
+	                            } else {
+	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'  imglock >";
+	                            }
 
 		                        field.innerHTML = strimg;
 
