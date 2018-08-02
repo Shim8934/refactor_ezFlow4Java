@@ -35,7 +35,7 @@
 					
 					var attachSize  = documentContent.size;
 					var attachList  = documentContent.attach;
-					var totalFiles  = attachList.length;
+					var totalFiles  = attachList ? attachList.length : 0;
 					
 					if (totalFiles > 0) {
 						var divElmt    = document.createElement("div");
@@ -87,8 +87,9 @@
 				
 				function getContentFromModuleName(moduleName) {
 					switch (moduleName) {
-						case "mail": documentContent = parent.CabinetEmailFile.getContent(); break;
-						default    : if (parent.CabinetItem) {documentContent = parent.CabinetItem.getContent();}
+						case "mail"  : documentContent = parent.CabinetEmailFile.getContent(); break;
+						case "board" : documentContent = parent.CabinetBoardFile.getContent(); break;
+						default      : if (parent.CabinetItem) {documentContent = parent.CabinetItem.getContent();}
 					}
 				}
 				

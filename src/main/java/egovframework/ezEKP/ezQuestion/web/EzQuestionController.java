@@ -1509,6 +1509,8 @@ public class EzQuestionController extends EgovFileMngUtil {
         pAnsNo = request.getParameter("ansNo");
         pAttID = request.getParameter("attID");
         
+        String realPath = commonUtil.getRealPath(request);
+        
         if(request.getParameter("fileName") != null && !request.getParameter("fileName").equals("")){
         	pFileName = request.getParameter("fileName");
         }
@@ -1525,7 +1527,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             pFileName = URLDecoder.decode(pFileName, "utf-8");
             
             if (pFilePath != null && !pFilePath.equals("")){
-                ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
+                downFile(request, response, realPath + pFilePath, pFileName);
             }
         }
         logger.debug("getPollAttachInfo ended.");
@@ -1556,6 +1558,8 @@ public class EzQuestionController extends EgovFileMngUtil {
         pAnsNo = request.getParameter("ansNo");
         pAttID = request.getParameter("attID");
         
+        String realPath = commonUtil.getRealPath(request);
+        
         if (request.getParameter("fileName") != null && !request.getParameter("fileName").equals("")) {
         	pFileName = request.getParameter("fileName");
         }
@@ -1578,7 +1582,9 @@ public class EzQuestionController extends EgovFileMngUtil {
             		//2018-07-13 김보미 - 파일명 깨지는 버그 수정
             		pFileName = URLDecoder.decode(pFileName, "utf-8");
             	}
-                ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
+            	
+                downFile(request, response, realPath + pFilePath, pFileName);
+                
             }
         }
         logger.debug("getPollAttachInfo ended.");
@@ -3715,8 +3721,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 			itemNo = Integer.parseInt(req.getParameter("itemID"));
 		}
 		
-		ezQuestionService.questionDelete2(5, itemNo, loginVO.getTenantId());
-		ezQuestionService.questionDelete2_D(5, itemNo, loginVO.getTenantId());
+		//2018-07-30 배현상, 재사용 시 기존 데이터 삭제하는 로직 제거
+		//ezQuestionService.questionDelete2(5, itemNo, loginVO.getTenantId());
+		//ezQuestionService.questionDelete2_D(5, itemNo, loginVO.getTenantId());
 		
 		strQuestion = objXML.getChildNodes().item(0).getTextContent().trim();
 		arrQuestion = strQuestion.trim().split("\\;\\;");
@@ -3750,7 +3757,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 				
 				if(!strQstNo.trim().equals(lastItemNo.trim())) {
 					ansNo = 0;
-					strResult = strResult.replace("| "+arrLine[1], "");
+					//2018-07-30 배현상, 재사용 시 replace사용으로 질문이 같을 경우 공백으로 치환되어 등록이 안되는 현상 발생
+					//strResult = strResult.replace("| "+arrLine[1], "");
 					strResult = strResult + "| "+arrLine[1]+";"+arrLine[5];
 					
 					node = resultXML.createElement("ROW");
@@ -3838,12 +3846,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 							node.appendChild(nodeData2);
 							
 							Node nodeTitle2 = resultXML.createElement("ANSWER_TITLE");
-							nodeTitle2.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ANSWER_ANSWERCONTENT").item(j).getTextContent())));
+							//nodeTitle2.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ANSWER_ANSWERCONTENT").item(j).getTextContent())));
+							nodeTitle2.setTextContent(String.valueOf(xmlTemp.getElementsByTagName("ANSWER_ANSWERCONTENT").item(j).getTextContent()));
 							nodeData2.appendChild(nodeTitle2);
 						}
 					}
 					
-					ezQuestionService.questionDelete1(5, itemNo, Integer.parseInt(arrLine[0]), loginVO.getTenantId());
+					//ezQuestionService.questionDelete1(5, itemNo, Integer.parseInt(arrLine[0]), loginVO.getTenantId());
 					
 					QstCompleteVO qstCompleteVO = new QstCompleteVO();
 					qstCompleteVO.setQuesContent(arrLine[1]);
@@ -3859,7 +3868,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 						qstCompleteVO.setAnswerContent(arrLine[8].replace("'", "''"));
 					}
 					
-					ezQuestionService.insertQuestion(qstCompleteVO, loginVO.getTenantId());
+					//ezQuestionService.insertQuestion(qstCompleteVO, loginVO.getTenantId());
 				}
 				
 				QstCompleteVO qstCompleteVO = new QstCompleteVO();
@@ -3875,7 +3884,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 					qstCompleteVO.setAnswerContent(arrLine[8].replace("'", "''"));
 				}
 				
-				ezQuestionService.insertAnswerContent(qstCompleteVO, loginVO.getTenantId());
+				//ezQuestionService.insertAnswerContent(qstCompleteVO, loginVO.getTenantId());
 				
 				nodeData = resultXML.createElement("ANSWER");
 				node.appendChild(nodeData);

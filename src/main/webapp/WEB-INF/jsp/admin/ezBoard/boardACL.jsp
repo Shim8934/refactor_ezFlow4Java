@@ -8,8 +8,11 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
 	    <style>
-	    <%-- 2018-07-19 홍승비 - 관리자 > 게시판 권한설정 헤더 겹치는 부분 수정 --%>
-	    	#AccessListView_TH th{
+	    <%-- 2018-07-26 홍승비 - 관리자 > 게시판 권한설정 헤더 겹치는 부분, 가로 축소 시 스크롤 수정 --%>
+	    	#AccessListView {
+	    		min-width: 800px;
+	    	}
+	    	#AccessListView_TH th {
 	    		overflow: hidden;
     			text-overflow: ellipsis;
 	    	} 
@@ -628,7 +631,7 @@
 	            pwidth = parseInt(pwidth) / 2;
 	            pheigth = pheigth - 192;
 	            pwidth = pwidth - 260;
-	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=170,width=350px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
+	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=170,width=420px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 	        }
 	    </script>
 		</head>
@@ -636,7 +639,7 @@
 			<body class="mainbody">
 		</c:if>
 		<c:if test="${pParentNeed != 'Y'}">
-			<body class="tabbody">
+			<body class="tabbody" style="overflow-y:auto;">
 		</c:if>
 		<xml id="listviewheader" style="display: none">
 		  <LISTVIEWDATA>

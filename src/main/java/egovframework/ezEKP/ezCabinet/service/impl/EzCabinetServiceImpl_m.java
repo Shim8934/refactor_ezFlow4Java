@@ -93,7 +93,7 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 		itemVO.setDepartmentId(userInfo.getDeptID());
 		itemVO.setDepartmentName1(userInfo.getDeptName1());
 		itemVO.setDepartmentName2(userInfo.getDeptName2());
-		itemVO.setConentPath(approvalContent);
+		itemVO.setContentPath(approvalContent);
 		itemVO.setCreatedDate(timeUTC);
 		itemVO.setUpdatedDate(timeUTC);
 		itemVO.setUseStatus(1);
@@ -194,7 +194,7 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 		itemVO.setDepartmentId(userInfo.getDeptID());
 		itemVO.setDepartmentName1(userInfo.getDeptName1());
 		itemVO.setDepartmentName2(userInfo.getDeptName2());
-		itemVO.setConentPath(null);
+		itemVO.setContentPath(null);
 		itemVO.setCreatedDate(timeUTC);
 		itemVO.setUpdatedDate(timeUTC);
 		itemVO.setUseStatus(1);

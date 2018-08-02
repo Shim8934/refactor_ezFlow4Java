@@ -733,10 +733,10 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/modifyEmailItem.do", method = RequestMethod.POST)
+	@RequestMapping(value="/ezCabinet/modifyRelatedItem.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String jsonModyfyRelatedEmail(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
-		logger.debug("jsonModyfyRelatedEmail is running!");
+	public String jsonModifyRelatedItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonModifyRelatedItem is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String itemId          = request.getParameter("itemId")      != null ? request.getParameter("itemId")      : "";
 		String title           = request.getParameter("title")       != null ? request.getParameter("title")       : "";
@@ -749,9 +749,80 @@ public class EzCabinetController {
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.modifyRelatedEmail(request, userInfo.getId(), itemId, title, relatedList);
+		resultObj = cabinetRestService.modifyRelatedItem(request, userInfo.getId(), itemId, title, relatedList);
 		
-		logger.debug("jsonModyfyRelatedEmail finishes!");
+		logger.debug("jsonModifyRelatedItem finishes!");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/saveRelatedGroupAddress.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonSaveRelatedGroupAddress(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSaveRelatedGroupAddress is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String title           = request.getParameter("title")      != null ? request.getParameter("title")      : "";
+		String mode            = request.getParameter("mode")       != null ? request.getParameter("mode")       : "";
+		String cabinetId       = request.getParameter("cabinet")    != null ? request.getParameter("cabinet")    : "";
+		String content         = request.getParameter("content")    != null ? request.getParameter("content")    : "";
+		String createUser      = request.getParameter("createUser") != null ? request.getParameter("createUser") : "";
+		String createDate      = request.getParameter("createDate") != null ? request.getParameter("createDate") : "";
+		String changeUser      = request.getParameter("changeUser") != null ? request.getParameter("changeUser") : "";
+		String changeDate      = request.getParameter("changeDate") != null ? request.getParameter("changeDate") : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		logger.debug("Title: " + title + " || createUser: " + createUser + " || createDate: " + createDate + " || changeUser: " + changeUser + " || changeDate: " + changeDate + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content);
+		
+		if (title.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || createUser.equals("") || createDate.equals("")  || changeUser.equals("") || changeDate.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.saveRelatedGroupAdress(request, userInfo.getId(), title, mode, cabinetId, content, createUser, createDate, changeUser, changeDate);
+		
+		logger.debug("jsonSaveRelatedGroupAddress finishes!");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/saveRelatedNormalAddress.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonSaveRelatedNormalAddress(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSaveRelatedNormalAddress is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String title           = request.getParameter("title")      != null ? request.getParameter("title")      : "";
+		String mode            = request.getParameter("mode")       != null ? request.getParameter("mode")       : "";
+		String cabinetId       = request.getParameter("cabinet")    != null ? request.getParameter("cabinet")    : "";
+		String createUser      = request.getParameter("createUser") != null ? request.getParameter("createUser") : "";
+		String createDate      = request.getParameter("createDate") != null ? request.getParameter("createDate") : "";
+		String changeUser      = request.getParameter("changeUser") != null ? request.getParameter("changeUser") : "";
+		String changeDate      = request.getParameter("changeDate") != null ? request.getParameter("changeDate") : "";
+		String company         = request.getParameter("company")    != null ? request.getParameter("company")    : "";
+		String department      = request.getParameter("department") != null ? request.getParameter("department") : "";
+		String position        = request.getParameter("position")   != null ? request.getParameter("position")   : "";
+		String email           = request.getParameter("email")      != null ? request.getParameter("email")      : "";
+		String compNumber      = request.getParameter("compNumber") != null ? request.getParameter("compNumber") : "";
+		String userNumber      = request.getParameter("userNumber") != null ? request.getParameter("userNumber") : "";
+		String faxNumber       = request.getParameter("faxNumber")  != null ? request.getParameter("faxNumber")  : "";
+		String homePage        = request.getParameter("homePage")   != null ? request.getParameter("homePage")   : "";
+		String companyZip      = request.getParameter("companyZip") != null ? request.getParameter("companyZip") : "";
+		String compAddr        = request.getParameter("compAddr")   != null ? request.getParameter("compAddr")   : "";
+		String homeZip         = request.getParameter("homeZip")    != null ? request.getParameter("homeZip")    : "";
+		String homeAddr        = request.getParameter("homeAddr")   != null ? request.getParameter("homeAddr")   : "";
+		String memo            = request.getParameter("memo")       != null ? request.getParameter("memo")       : "";
+		
+		JSONObject resultObj   = new JSONObject();
+		
+		logger.debug("Title: " + title + " || createUser: " + createUser + " || createDate: " + createDate + " || changeUser: " + changeUser + " || changeDate: " + changeDate + " || mode: " + mode + " || cabinetId: " + cabinetId);
+		
+		if (title.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("")  || changeUser.equals("") || changeDate.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.saveRelatedNormalAdress(request, userInfo.getId(), title, mode, cabinetId, createUser, createDate, changeUser, changeDate, company, department, position, email, compNumber, userNumber, faxNumber, homePage, companyZip, compAddr, homeZip, homeAddr, memo);
+		
+		logger.debug("jsonSaveRelatedNormalAddress finishes!");
 		return resultObj.toString();
 	}
 	

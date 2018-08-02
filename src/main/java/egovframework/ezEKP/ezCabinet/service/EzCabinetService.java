@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
-
 import egovframework.ezEKP.ezCabinet.vo.CabinetColumnVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO;
@@ -16,6 +15,7 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezCabinet.vo.SimpleUserInfoVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleUserMailVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleUserVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
@@ -86,12 +86,18 @@ public interface EzCabinetService {
 	//Get all related item columns function
 	List<CabinetColumnVO> getAllRelatedColumnsOfItem(int itemId, String primary, int tenantId) throws Exception;
 	
-	//Save related item functions
+	//Save related email item function
 	JSONObject saveEmailItem(String realPath, int parseInt, String title, String sender, String attach, String mode, String content, String receiver, String forward, String dateTime, Locale locale, LoginVO userInfo) throws Exception;
 	
-	//Get email information functions
+	//Get user information functions
 	List<SimpleUserMailVO> getUserInfoFromEmail(List<String> receiverMail, String primary, int tenantId) throws Exception;
+	SimpleUserInfoVO getSimpleUserInfo(String columnValue, String primary, int tenantId) throws Exception;
 	
 	//Modify related email item function 
-	JSONObject modifyEmailItem(int currentItemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception;
+	JSONObject modifyRelatedItem(int currentItemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception;
+	
+	//Save related address item functions
+	JSONObject saveGroupAddressItem(int dstCabinetId, String title, String mode, String content, String createUser, String createDate, String changeUser, String changeDate, LoginVO userInfo) throws Exception;
+	JSONObject saveNormalAddressItem(int dstCabinetId, String title, String mode, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo, LoginVO userInfo) throws Exception;
+	
 }

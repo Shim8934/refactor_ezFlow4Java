@@ -413,6 +413,12 @@ function processRowClick(tr) {
         DocID = GetAttribute(tr,"DATA1");
         pURL = GetAttribute(tr,"DATA2");
         WriterID = GetAttribute(tr,"DATA19");
+        
+        //기록물등록대장에서 재발송버튼 보이기위해 추가 2018-07-27 강민수92
+        if (WriterID == "") {
+        	WriterID = GetAttribute(tr, "DATA3");
+        }
+        
 
         if (typeof (SendOfferCheckBtn) != "undefined")
             SendOfferCheckBtn(DocID, UserID);
@@ -429,7 +435,6 @@ function processRowClick(tr) {
         if (WriterID == arr_userinfo[1]) {
             try {
                 if (typeof (tr.cells[12].innerHTML) == "string") {
-                    
                     if (tr.cells[12].innerHTML == strLang597 && tr.cells[11].innerHTML == "") {
                     
                         if (typeof (tdReSend) != "undefined" && typeof (tdReSend) != "unknown") {

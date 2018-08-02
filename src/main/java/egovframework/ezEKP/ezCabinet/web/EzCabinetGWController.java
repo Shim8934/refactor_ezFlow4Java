@@ -1571,13 +1571,12 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="/rest/ezcabinet/relate-item/modify/email", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject modifyEmailItem(@RequestBody JSONObject emailItemInf, Locale locale, HttpServletRequest request) throws Exception {
+	@RequestMapping(value="/rest/ezcabinet/relate-item/modify/id/{itemid}", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject modifyEmailItem(@RequestBody JSONObject emailItemInf, @PathVariable(value="itemid") String itemId, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName  = request.getHeader("host-name") != null ? request.getHeader("host-name")        : "";
 		String title       = emailItemInf.get("title")      != null ? emailItemInf.get("title").toString()  : "";
 		String relatedList = emailItemInf.get("relate")     != null ? emailItemInf.get("relate").toString() : "";
 		String userId      = emailItemInf.get("userId")     != null ? emailItemInf.get("userId").toString() : "";
-		String itemId      = emailItemInf.get("itemId")     != null ? emailItemInf.get("itemId").toString() : "";
 		JSONObject result  = new JSONObject();
 		JSONParser jp      = new JSONParser();
 		
@@ -1605,7 +1604,95 @@ public class EzCabinetGWController {
 			}
 			
 			JSONArray relatedFiles = (JSONArray) jp.parse(relatedList);
-			result                 = cabinetService.modifyEmailItem(currentItemId, title, relatedFiles, userInfo);
+			result                 = cabinetService.modifyRelatedItem(currentItemId, title, relatedFiles, userInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/relate-item/save/address-group", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveGroupAddressItem(@RequestBody JSONObject addressItemInf, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")              : "";
+		String title      = addressItemInf.get("title")      != null ? addressItemInf.get("title").toString()      : "";
+		String mode       = addressItemInf.get("mode")       != null ? addressItemInf.get("mode").toString()       : "";
+		String cabinetId  = addressItemInf.get("cabinet")    != null ? addressItemInf.get("cabinet").toString()    : "";
+		String content    = addressItemInf.get("content")    != null ? addressItemInf.get("content").toString()    : "";
+		String createUser = addressItemInf.get("createUser") != null ? addressItemInf.get("createUser").toString() : "";
+		String createDate = addressItemInf.get("createDate") != null ? addressItemInf.get("createDate").toString() : "";
+		String userId     = addressItemInf.get("userId")     != null ? addressItemInf.get("userId").toString()     : "";
+		String changeUser = addressItemInf.get("changeUser") != null ? addressItemInf.get("changeUser").toString() : "";
+		String changeDate = addressItemInf.get("changeDate") != null ? addressItemInf.get("changeDate").toString() : "";
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || title: " + title + " || createUser: " + createUser + " || createDate: " + createDate + " || changeUser: " + changeUser + " || userId: " + userId + " || changeDate: " + changeDate + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content);
+		
+		if (serverName.equals("") || userId.equals("") || title.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || createDate.equals("") || changeUser.equals("") || changeDate.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
+			result           = cabinetService.saveGroupAddressItem(dstCabinetId, title, mode, content, createUser, createDate, changeUser, changeDate, userInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/relate-item/save/address-normal", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveNormalAddressItem(@RequestBody JSONObject addressItemInf, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")              : "";
+		String title      = addressItemInf.get("title")      != null ? addressItemInf.get("title").toString()      : "";
+		String mode       = addressItemInf.get("mode")       != null ? addressItemInf.get("mode").toString()       : "";
+		String cabinetId  = addressItemInf.get("cabinet")    != null ? addressItemInf.get("cabinet").toString()    : "";
+		String createUser = addressItemInf.get("createUser") != null ? addressItemInf.get("createUser").toString() : "";
+		String createDate = addressItemInf.get("createDate") != null ? addressItemInf.get("createDate").toString() : "";
+		String userId     = addressItemInf.get("userId")     != null ? addressItemInf.get("userId").toString()     : "";
+		String changeUser = addressItemInf.get("changeUser") != null ? addressItemInf.get("changeUser").toString() : "";
+		String changeDate = addressItemInf.get("changeDate") != null ? addressItemInf.get("changeDate").toString() : "";
+		String company    = addressItemInf.get("company")    != null ? addressItemInf.get("company").toString()    : "";
+		String department = addressItemInf.get("department") != null ? addressItemInf.get("department").toString() : "";
+		String position   = addressItemInf.get("position")   != null ? addressItemInf.get("position").toString()   : "";
+		String email      = addressItemInf.get("email")      != null ? addressItemInf.get("email").toString()      : "";
+		String compNumber = addressItemInf.get("compNumber") != null ? addressItemInf.get("compNumber").toString() : "";
+		String userNumber = addressItemInf.get("userNumber") != null ? addressItemInf.get("userNumber").toString() : "";
+		String faxNumber  = addressItemInf.get("faxNumber")  != null ? addressItemInf.get("faxNumber").toString()  : "";
+		String homePage   = addressItemInf.get("homePage")   != null ? addressItemInf.get("homePage").toString()   : "";
+		String companyZip = addressItemInf.get("companyZip") != null ? addressItemInf.get("companyZip").toString() : "";
+		String compAddr   = addressItemInf.get("compAddr")   != null ? addressItemInf.get("compAddr").toString()   : "";
+		String homeZip    = addressItemInf.get("homeZip")    != null ? addressItemInf.get("homeZip").toString()    : "";
+		String homeAddr   = addressItemInf.get("homeAddr")   != null ? addressItemInf.get("homeAddr").toString()   : "";
+		String memo       = addressItemInf.get("memo")       != null ? addressItemInf.get("memo").toString()       : "";
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || title: " + title + " || createUser: " + createUser + " || createDate: " + createDate + " || changeUser: " + changeUser + " || userId: " + userId + " || changeDate: " + changeDate + " || mode: " + mode + " || cabinetId: " + cabinetId + " || company: " + company + " || department: " + department + " || position: " + position + " || email: " + email + " || compNumber: " + compNumber + " || userNumber: " + userNumber + " || faxNumber: " + faxNumber + " || homePage: " + homePage + " || companyZip: " + companyZip + " || compAddr: " + compAddr + " || homeZip: " + homeZip + " || homeAddr: " + homeAddr + " || memo: " + memo);
+		
+		if (serverName.equals("") || userId.equals("") || title.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createDate.equals("") || changeUser.equals("") || changeDate.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
+			result           = cabinetService.saveNormalAddressItem(dstCabinetId, title, mode, createUser, createDate, changeUser, changeDate, company, department, position, email, compNumber, userNumber, faxNumber, homePage, companyZip, compAddr, homeZip, homeAddr, memo, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

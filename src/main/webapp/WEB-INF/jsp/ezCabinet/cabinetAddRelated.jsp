@@ -249,26 +249,33 @@
 					var boardOpener   = window.opener;
 					if (!boardOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					var boardWriter  = window.opener.document.getElementById("WriteUserNM").textContent;
-					var postDate     = window.opener.document.getElementById("PostDate").textContent;
-					var boardTitle   = window.opener.document.getElementById("cTitle").textContent;
+					var writerTd     = window.opener.document.getElementById("WriteUserNM");
+					var postTd       = window.opener.document.getElementById("PostDate");
+					var titleTd      = window.opener.document.getElementById("cTitle");
+					
+					var boardWriter  = writerTd.getElementsByTagName("div")[0].getElementsByTagName("span")[0].textContent;
+					var postDate     = postTd.getElementsByTagName("div")[0].textContent;
+					var boardTitle   = titleTd.getElementsByTagName("div")[0].textContent;
 					var messageFrame = window.opener.document.getElementById("message");
 					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
 					var boardContent = contentWd.document.querySelector("div[class='contentDiv']").innerHTML;
 					var attach       = window.opener.document.getElementById("lstAttachLink");
-					var attachList = [];
+					var attachList   = [];
 					
 					if (attach.childElementCount > 1) {
-						var listChildren = attach.getElementsByTagName("a");
-						for (var i = 0, len = listChildren.length; i < len; i++) {
-							var hrefStr = listChildren[i].getAttribute("href");
-							var params  = getAllUrlParams(hrefStr);
+						var listChildren1 = attach.getElementsByTagName("a");
+						var listChildren2 = attach.getElementsByTagName("input");
+						
+						for (var i = 0, len = listChildren1.length; i < len; i++) {
+							var hrefStr  = listChildren1[i].getAttribute("href");
+							var params   = getAllUrlParams(hrefStr);
+							var fileName = listChildren2[i].getAttribute("value");
 							
-							console.log("File path: " + javaURLDecode(params["filePath"]));
+							console.log("File path: " + javaURLDecode(params["filePath"]) + " || File Name: " + fileName);
 							
 							attachList.push({
 								filePath : javaURLDecode(params["filePath"]),
-								fileName : params["fileName"]
+								fileName : fileName
 							});
 						}
 					}
@@ -287,6 +294,21 @@
 					if (saveMode == 1) {data.cabinet = cabinetId;}
 					
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
+				}
+				
+				function saveAddressDocument(saveMode, cabinetId) {
+					var addressOpener = window.opener;
+					if (!addressOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var listMembers = addressOpener.document.getElementById("ListMember");
+					var addressType = listMembers ? "group" : "normal";
+					
+					if (listMembers) {
+						saveGroupAddress(addressOpener, saveMode, cabinetId);
+					}
+					else {
+						saveNormalAddress(addressOpener, saveMode, cabinetId);
+					}
 				}
 				
 				function saveScheduleDocument() {
@@ -313,12 +335,83 @@
 					//Add code here
 				}
 				
-				function saveAddressDocument() {
+				function saveJournalDocument() {
 					//Add code here
 				}
 				
-				function saveJournalDocument() {
-					//Add code here
+				function saveGroupAddress(addressOpener, saveMode, cabinetId) {
+					var addressDocument = addressOpener.document;
+					var title           = addressDocument.getElementById("TextName").textContent;
+					var createUser      = addressOpener.creatorid;
+					var createDate      = addressDocument.getElementById("TextCreateDate").textContent;
+					var changeUser      = addressOpener.modifierid;
+					var changeDate      = addressDocument.getElementById("TextModifyDate").textContent;
+					var listAddress     = addressDocument.getElementById("ListMember");
+					var addressCont     = listAddress.innerHTML;
+					
+					var url  = "/ezCabinet/saveRelatedGroupAddress.do";
+					var data = {
+						mode       : saveMode,
+						title      : title,
+						createDate : createDate,
+						createUser : createUser,
+						changeUser : changeUser,
+						changeDate : changeDate,
+						content    : addressCont
+					};
+					
+					if (saveMode == 1) {data.cabinet = cabinetId;}
+					
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
+				}
+				
+				function saveNormalAddress(addressDocument, saveMode, cabinetId) {
+					var addressDocument = addressOpener.document;
+					var title           = addressDocument.getElementById("TextName").textContent;
+					var createUser      = addressOpener.creatorid;
+					var createDate      = addressDocument.getElementById("TextCreateDate").textContent;
+					var changeUser      = addressOpener.modifierid;
+					var changeDate      = addressDocument.getElementById("TextModifyDate").textContent;
+					var companyName     = addressDocument.getElementById("TextCompany").textContent;
+					var deptName        = addressDocument.getElementById("TextDept").textContent;
+					var position        = addressDocument.getElementById("TextTitle").textContent;
+					var emailAddress    = addressDocument.getElementById("TextEmail").textContent;
+					var companyPhone    = addressDocument.getElementById("TextCompanyPhone").textContent;
+					var userPhone       = addressDocument.getElementById("TextMobile").textContent;
+					var faxNumber       = addressDocument.getElementById("TextFax").textContent;
+					var homePage        = addressDocument.getElementById("TextHomePage").textContent;
+					var companyZip      = addressDocument.getElementById("TextComZip").textContent;
+					var companyAddress  = addressDocument.getElementById("TextComAddr").textContent;
+					var homeZip         = addressDocument.getElementById("TextHomeZip").textContent;
+					var homeAddress     = addressDocument.getElementById("TextHomeAddr").textContent;
+					var memoText        = addressDocument.getElementById("TextMemo").textContent;
+					
+					var url  = "/ezCabinet/saveRelatedNormalAddress.do";
+					var data = {
+						mode       : saveMode,
+						title      : title,
+						createDate : createDate,
+						createUser : createUser,
+						changeUser : changeUser,
+						changeDate : changeDate,
+						company    : companyName,
+						department : deptName,
+						position   : position,
+						email      : emailAddress,
+						compNumber : companyPhone,
+						userNumber : userPhone,
+						faxNumber  : faxNumber,
+						homePage   : homePage,
+						companyZip : companyZip,
+						compAddr   : companyAddress,
+						homeZip    : homeZip,
+						homeAddr   : homeAddress,
+						memo       : memoText
+					};
+					
+					if (saveMode == 1) {data.cabinet = cabinetId;}
+					
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
 				function afterSaveDocument(data) {

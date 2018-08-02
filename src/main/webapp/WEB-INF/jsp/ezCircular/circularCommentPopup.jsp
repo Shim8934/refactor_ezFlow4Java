@@ -73,6 +73,10 @@
 			textarea:-ms-input-placeholder {
 				color: #b4b4b4;
 			}
+			
+			#commentSendMail{
+				float: right;
+			}
 }
 		</style>
 		
@@ -149,11 +153,11 @@
 				<li><span onclick="closePopup();"></span></li>
 			</ul>
 		</div>
-		<div id="menu" style="position:absolute;right:12px;top:60px">
+<%-- 		<div id="menu" style="position:absolute;right:12px;top:60px">
 			<ul>				
 				<li><span onclick="commentSendMail();" style="border:1px solid #d2d2d2"><spring:message code='ezCircular.t83'/></span></li>
 			</ul>
-		</div>		
+		</div> --%>
 		
 		<!-- 18-05-24 김민성 - 회람판 > 상세정보 > 의견목록 검색 부분 UI 수정 -->
 		<c:choose>
@@ -188,6 +192,9 @@
 	       		<div class="portlet_tabpart01_top">
 	       			<p id="tab1"><span onclick="swapTab('totalComment')" class="tabon"><spring:message code='ezCircular.t141' /></span></p>
 	       			<p id="tab2"><span onclick="swapTab('myComment')"><spring:message code='ezCircular.t142' /></span></p>
+	       			<div id="commentSendMail">
+	       				<a id="" class="imgbtn imgbck"><span onclick="commentSendMail();"><spring:message code='ezCircular.t83'/></span></a>
+	       			</div>
 	       		</div>
       	 	</div>			
 			<table id="circularUserList" style="width:99.5%;margin-top:0px;table-layout: fixed; overflow:auto;border:1px solid rgb(225,225,225);margin-top:10px"></table>

@@ -93,7 +93,6 @@
 				var userWindow  = null;
 				var itemPopup   = null;
 				var itemId      = null;
-				var scrolled    = true;
 				var mailContent = null;
 				var relatedArr  = [];
 				
@@ -107,9 +106,6 @@
 					listBttns[1].onclick    = function(e) {fileDelete();};
 					listBttns[2].onclick    = function(e) {filePrint();}
 					listBttns[3].onclick    = function(e) {closeWindow();};
-					
-					document.getElementById("fileListDiv").onscroll = function(e) {scrollListOfItem(this);}
-					
 					var cabBttnElmt         = document.getElementById("fileModifyDivBttn");
 					var listBttns           = cabBttnElmt.children;
 					listBttns[0].onclick    = function(e) {saveItem();};
@@ -184,7 +180,7 @@
 					var iframeElmt      = document.getElementById("mailIframe");
 					iframeElmt.src      = "/ezCabinet/getPreviewContent.do?module=mail";
 					mailContent         = {};
-					mailContent.content = result["conentPath"];;
+					mailContent.content = result["contentPath"];;
 					mailContent.size    = result["itemSize"];
 					mailContent.attach  = attachList;
 				}
@@ -363,13 +359,48 @@
 					}
 					
 					var iframeElmt = document.getElementById("mailIframe");
-					var doc        = iframeElmt.contentDocument? iframeElmt.contentDocument: iframeElmt.contentWindow.document;
-					var height     = Math.max(doc.body.scrollHeight, doc.body.offsetHeight, doc.documentElement.clientHeight, doc.documentElement.scrollHeight, doc.documentElement.offsetHeight)
-					iframeElmt.style.height = height + 4 + "px";
+					var parentDiv  = iframeElmt.parentElement;
+					var iframeCont = iframeElmt.contentWindow? iframeElmt.contentWindow: iframeElmt.contentDocument;
 					
+					var printWrapDiv   = document.createElement("div");
+					var divInfo        = document.querySelector("div[class='divInfo']");
+					var cloneDivInf    = divInfo.cloneNode(true);
+					var attachDiv      = iframeCont.document.getElementsByClassName("previewmail_addfile cabattach")[0];
+					
+					//Check if attach files exist
+					if (attachDiv) {
+						var ulElmt = attachDiv.lastElementChild;
+						if (ulElmt.childElementCount > 0) {
+							var cloneUlEmt     = ulElmt.cloneNode(true);
+							var trElmt         = document.createElement("tr");
+							var thElmt         = document.createElement("th");
+							var tdElmt         = document.createElement("td");
+							thElmt.textContent = CabinetMessages.strAttach5;
+							tdElmt.setAttribute("colspan", 3);
+							tdElmt.appendChild(cloneUlEmt);
+							trElmt.appendChild(thElmt);
+							trElmt.appendChild(tdElmt);
+							cloneDivInf.firstElementChild.appendChild(trElmt);
+						}
+					}
+					
+					var divText        = iframeCont.document.getElementById("txtField");
+					var cloneDivText   = divText.cloneNode(true);
+					var txtWrDiv       = document.createElement("div");
+					txtWrDiv.className = "cabtxtPrint";
+					txtWrDiv.appendChild(cloneDivText);
+					printWrapDiv.appendChild(cloneDivInf);
+					printWrapDiv.appendChild(txtWrDiv);
+					divInfo.style.display   = "none";
+					parentDiv.style.display = "none";
+					document.body.appendChild(printWrapDiv);
+					
+					window.focus();
 					window.print();
 					
-					iframeElmt.removeAttribute("style");
+					parentDiv.removeAttribute("style");
+					divInfo.removeAttribute("style");
+					document.body.removeChild(printWrapDiv);
 					if (rltdElmt) {rltdElmt.removeAttribute("style");}
 					if (rtdElmt)  {rtdElmt.removeAttribute("style");}
 					if (ftdElmt)  {ftdElmt.removeAttribute("style");}
@@ -388,7 +419,7 @@
 					
 					$.ajax({
 						type: "POST",
-						url: "/ezCabinet/modifyEmailItem.do",
+						url: "/ezCabinet/modifyRelatedItem.do",
 						data: {
 							"itemId"      : itemId,
 							"title"       : title,

@@ -2,12 +2,15 @@ package egovframework.ezEKP.ezStatistics.web;
 
 import java.util.Properties;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -31,6 +34,9 @@ public class EzStatisticsLeftMenuController {
     
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
     
 	/**
 	 * 통계 좌측 메뉴 화면 표시 함수
@@ -46,6 +52,16 @@ public class EzStatisticsLeftMenuController {
         String packageType = commonUtil.getPackageType(userInfo.getTenantId());
         
         model.addAttribute("packageType", packageType);
+        
+        //2018-07-26 김보미 - 근태 추가
+	    String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", userInfo.getTenantId());
+	    
+	    model.addAttribute("use_attitude", use_attitude);
+	    
+		//애티튜드 널일때 처리
+		if (use_attitude == null || use_attitude.equals("")) {
+			model.addAttribute("use_attitude", "YES");
+		}
 	    
 		return "ezStatistics/statisticsLeftMenu";
 	}

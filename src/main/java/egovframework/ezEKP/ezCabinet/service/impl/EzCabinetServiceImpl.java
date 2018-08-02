@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -57,6 +58,7 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetShareVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetSimpleVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleDeptVO;
+import egovframework.ezEKP.ezCabinet.vo.SimpleUserInfoVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleUserMailVO;
 import egovframework.ezEKP.ezCabinet.vo.SimpleUserVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
@@ -178,19 +180,29 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			ezCabinetAdminDAO.insertModulForAdmin(map);
 		}
 		else {
-			listActiveModule = listAllModule.stream().filter(module -> module.getActiveStatus() == 1).collect(Collectors.toList());
-			
+			listActiveModule      = listAllModule.stream().filter(module -> module.getActiveStatus() == 1).collect(Collectors.toList());
+			List<String> typeList = listActiveModule.stream().map(CabinetModuleVO::getModuleType).collect(Collectors.toList());
 			if (listActiveModule != null && listActiveModule.size() > 0) {
-				List<String> activeModuleName = listActiveModule.stream().map(CabinetModuleVO::getModuleType).collect(Collectors.toList());
-				listModule                    = ezCabinetDAO.getModuleListForUser(map);
+				map.put("typeList", typeList);
+				listModule = ezCabinetDAO.getModuleListForUser(map);
 				
 				if (listModule != null && listModule.size() > 0) {
-					List<CabinetModuleVO> checkList = listModule.stream().filter(md -> activeModuleName.contains(md.getModuleType())).collect(Collectors.toList());
-					return checkList;
+					if (listModule.size() == listActiveModule.size()) {
+						return listModule;
+					}
+					
+					Iterator<CabinetModuleVO> iterator = listActiveModule.iterator();
+					while (iterator.hasNext()) {
+						CabinetModuleVO module = iterator.next();
+						if(listModule.contains(module)){
+							iterator.remove();
+						}
+					}
+					
+					listActiveModule.addAll(listModule);
 				}
-				else {
-					return listActiveModule;
-				}
+				
+				return listActiveModule;
 			}
 		}
 		
@@ -861,7 +873,6 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	@Override
 	public synchronized void saveItem(int cabinetId, JSONArray attacheFiles, JSONArray relatedFiles, String title, String summary, String realPath, LoginVO userInfo) throws Exception {
 		String companyId           = userInfo.getCompanyID();
-		String userId              = userInfo.getId();
 		int tenantId               = userInfo.getTenantId();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date                  = new Date();
@@ -870,29 +881,8 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("tenantId", tenantId);
 		
 		//Save item
-		int itemId           = ezCabinetDAO.getMaxItem(map) + 1;
-		CabinetItemVO itemVO = new CabinetItemVO();
-		itemVO.setCabinetId(cabinetId);
-		itemVO.setItemId(itemId);
-		itemVO.setItemType(0);
-		itemVO.setTitle(title);
-		itemVO.setSummary(summary);
-		itemVO.setCreatorId(userId);
-		itemVO.setCreatorName1(userInfo.getDisplayName1());
-		itemVO.setCreatorName2(userInfo.getDisplayName2());
-		itemVO.setDepartmentId(userInfo.getDeptID());
-		itemVO.setDepartmentName1(userInfo.getDeptName1());
-		itemVO.setDepartmentName2(userInfo.getDeptName2());
-		itemVO.setConentPath(null);
-		itemVO.setCreatedDate(timeUTC);
-		itemVO.setUpdatedDate(timeUTC);
-		itemVO.setUseStatus(1);
-		itemVO.setUpdateId(userId);
-		itemVO.setDeleterId(null);
-		itemVO.setCompanyId(companyId);
-		itemVO.setTenantId(tenantId);
-		
-		saveItem(itemVO);
+		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
+		addNewItem(cabinetId, itemId, 0, title, null, timeUTC, userInfo);
 		
 		int attachSize  = attacheFiles.size();
 		int relatedSize = relatedFiles.size();
@@ -1391,56 +1381,22 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			itemCabinetId = cabinetId;
 		}
 		
-		CabinetItemVO itemVO = new CabinetItemVO();
-		itemVO.setCabinetId(itemCabinetId);
-		itemVO.setItemId(itemId);
-		itemVO.setItemType(moduleType);
-		itemVO.setTitle(title);
-		itemVO.setCreatorId(userId);
-		itemVO.setCreatorName1(userInfo.getDisplayName1());
-		itemVO.setCreatorName2(userInfo.getDisplayName2());
-		itemVO.setDepartmentId(userInfo.getDeptID());
-		itemVO.setDepartmentName1(userInfo.getDeptName1());
-		itemVO.setDepartmentName2(userInfo.getDeptName2());
-		itemVO.setConentPath(content);
-		itemVO.setCreatedDate(timeUTC);
-		itemVO.setUpdatedDate(timeUTC);
-		itemVO.setUseStatus(1);
-		itemVO.setUpdateId(userId);
-		itemVO.setDeleterId(null);
-		itemVO.setCompanyId(companyId);
-		itemVO.setTenantId(tenantId);
-		
-		saveItem(itemVO);
+		//Save item
+		addNewItem(itemCabinetId, itemId, moduleType, title, content, timeUTC, userInfo);
 		
 		//Save email columns information
-		List<CabinetColumnVO> listColm = new ArrayList<>();
-		
-		String senderColName1          = egovMessageSource.getMessage("ezEmail.t161", new Locale(config.getProperty("config.cabinetPrimary")));
-		String senderColName2          = egovMessageSource.getMessage("ezEmail.t161", new Locale(config.getProperty("config.cabinetSecondary")));
-		CabinetColumnVO senderColumn   = new CabinetColumnVO("sender", itemId, senderColName1, senderColName2, sender, companyId, tenantId);
-		listColm.add(senderColumn);
-		
 		List<String> receiverList      = (List<String>) jp.parse(receiver);
-		String receiveColName1         = egovMessageSource.getMessage("ezEmail.t66", new Locale(config.getProperty("config.cabinetPrimary")));
-		String receiveColName2         = egovMessageSource.getMessage("ezEmail.t66", new Locale(config.getProperty("config.cabinetSecondary")));
-		CabinetColumnVO receiverColumn = new CabinetColumnVO("receiver", itemId, receiveColName1, receiveColName2, String.join(";", receiverList), companyId, tenantId);
-		listColm.add(receiverColumn);
+		List<CabinetColumnVO> listColm = new ArrayList<>();
+		listColm.add(createNewRelatedColumn("sender"   , itemId, "ezEmail.t161", sender, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("emailTime", itemId, dateColumn, dateTime, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("receiver" , itemId, "ezEmail.t66", String.join(";", receiverList), companyId, tenantId));
 		
 		if (!forward.equals("")) {
 			List<String> forwardList = (List<String>) jp.parse(forward);
 			if (forwardList.size() > 0) {
-				String forwardColName1        = egovMessageSource.getMessage("ezEmail.t555", new Locale(config.getProperty("config.cabinetPrimary")));
-				String forwardColName2        = egovMessageSource.getMessage("ezEmail.t555", new Locale(config.getProperty("config.cabinetSecondary")));
-				CabinetColumnVO forwardColumn = new CabinetColumnVO("forward", itemId, forwardColName1, forwardColName2, String.join(";", forwardList), companyId, tenantId);
-				listColm.add(forwardColumn);
+				listColm.add(createNewRelatedColumn("forward", itemId, "ezEmail.t555", String.join(";", forwardList), companyId, tenantId));
 			}
 		}
-		
-		String dateColName1            = egovMessageSource.getMessage(dateColumn, new Locale(config.getProperty("config.cabinetPrimary")));
-		String dateColName2            = egovMessageSource.getMessage(dateColumn, new Locale(config.getProperty("config.cabinetSecondary")));
-		CabinetColumnVO dateTimeColumn = new CabinetColumnVO("emailTime", itemId, dateColName1, dateColName2, dateTime, companyId, tenantId);
-		listColm.add(dateTimeColumn);
 		
 		saveAllColumns(listColm);
 		
@@ -1599,7 +1555,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject modifyEmailItem(int itemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception {
+	public JSONObject modifyRelatedItem(int itemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -1608,18 +1564,162 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		CabinetItemVO itemVO = ezCabinetDAO.getItemById(map);
 		
-		if (itemVO.getItemType() != 1) {
-			logger.debug("Invalid item type!");
-			result.put("status", "error");
-			result.put("code", 4);
-			return result;
-		}
-		
 		itemVO.setTitle(title);
 		ezCabinetDAO_h.modifyItem(itemVO);
 		
 		//modify related files
 		cabinetService_h.modifyRelatedList(itemId, relatedFiles, userInfo);
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject saveGroupAddressItem(int cabinetId, String title, String mode, String content, String createUser, String createDate, String changeUser, String changeDate, LoginVO userInfo) throws Exception {
+		JSONObject result          = new JSONObject();
+		String userId              = userInfo.getId();
+		int tenantId               = userInfo.getTenantId();
+		String companyId           = userInfo.getCompanyID();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(new Date()), userInfo.getOffset(), true);
+		int itemCabinetId          = -1;
+		Map<String,Object> map     = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//Save item
+		int itemId     = ezCabinetDAO.getMaxItem(map) + 1;
+		int moduleType = 8; //address module
+		
+		if (mode.equals("0")) {
+			map.put("userId",   userId);
+			map.put("tenantId", tenantId);
+			map.put("type",     moduleType);
+			
+			CabinetVO cabinet = ezCabinetDAO.getRootCabinetByType(map);
+			itemCabinetId     = cabinet.getCabinetId();
+		}
+		else {
+			itemCabinetId = cabinetId;
+		}
+		
+		//Add item
+		addNewItem(itemCabinetId, itemId, moduleType, title, content, timeUTC, userInfo);
+		
+		//Save group columns information
+		List<CabinetColumnVO> listColm = new ArrayList<>();
+		listColm.add(createNewRelatedColumn("creator"    , itemId, "ezAddress.t286", createUser, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("createdate" , itemId, "ezAddress.t288", createDate, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("modifier"   , itemId, "ezAddress.t289", changeUser, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("modifydate" , itemId, "ezAddress.t290", changeDate, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("addresstype", itemId, "ezAddress.t290", "group"  , companyId, tenantId));
+		
+		saveAllColumns(listColm);
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
+	
+	private CabinetColumnVO createNewRelatedColumn(String columnId, int itemId, String messageName, String columnValue, String companyId, int tenantId) {
+		String columnName1 = egovMessageSource.getMessage(messageName, new Locale(config.getProperty("config.cabinetPrimary")));
+		String columnName2 = egovMessageSource.getMessage(messageName, new Locale(config.getProperty("config.cabinetPrimary")));
+		return new CabinetColumnVO(columnId, itemId, columnName1, columnName2, columnValue, companyId, tenantId);
+	}
+	
+	private void addNewItem(int cabinetId, int itemId, int moduleType, String title, String content, String timeUTC, LoginVO userInfo) {
+		String userId        = userInfo.getId();
+		CabinetItemVO itemVO = new CabinetItemVO();
+		itemVO.setCabinetId(cabinetId);
+		itemVO.setItemId(itemId);
+		itemVO.setItemType(moduleType);
+		itemVO.setTitle(title);
+		itemVO.setCreatorId(userId);
+		itemVO.setCreatorName1(userInfo.getDisplayName1());
+		itemVO.setCreatorName2(userInfo.getDisplayName2());
+		itemVO.setDepartmentId(userInfo.getDeptID());
+		itemVO.setDepartmentName1(userInfo.getDeptName1());
+		itemVO.setDepartmentName2(userInfo.getDeptName2());
+		itemVO.setContentPath(content);
+		itemVO.setCreatedDate(timeUTC);
+		itemVO.setUpdatedDate(timeUTC);
+		itemVO.setUseStatus(1);
+		itemVO.setUpdateId(userId);
+		itemVO.setDeleterId(null);
+		itemVO.setCompanyId(userInfo.getCompanyID());
+		itemVO.setTenantId(userInfo.getTenantId());
+		
+		saveItem(itemVO);
+	}
+
+	@Override
+	public SimpleUserInfoVO getSimpleUserInfo(String userId, String primary, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",   userId);
+		map.put("tenantId", tenantId);
+		map.put("primary",  primary);
+		
+		return ezCabinetDAO.getSimpleUserInfo(map);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject saveNormalAddressItem(int cabinetId, String title, String mode,
+			String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position,
+			String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip,
+			String compAddr, String homeZip, String homeAddr, String memo, LoginVO userInfo) throws Exception {
+		JSONObject result          = new JSONObject();
+		String userId              = userInfo.getId();
+		int tenantId               = userInfo.getTenantId();
+		String companyId           = userInfo.getCompanyID();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(new Date()), userInfo.getOffset(), true);
+		int itemCabinetId          = -1;
+		Map<String,Object> map     = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//Save item
+		int itemId     = ezCabinetDAO.getMaxItem(map) + 1;
+		int moduleType = 8; //address module
+		
+		if (mode.equals("0")) {
+			map.put("userId",   userId);
+			map.put("tenantId", tenantId);
+			map.put("type",     moduleType);
+			
+			CabinetVO cabinet = ezCabinetDAO.getRootCabinetByType(map);
+			itemCabinetId     = cabinet.getCabinetId();
+		}
+		else {
+			itemCabinetId = cabinetId;
+		}
+		
+		//Add item
+		addNewItem(itemCabinetId, itemId, moduleType, title, null, timeUTC, userInfo);
+		
+		//Save normal columns information
+		List<CabinetColumnVO> listColm = new ArrayList<>();
+		listColm.add(createNewRelatedColumn("creator"    , itemId, "ezAddress.t286", createUser, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("createdate" , itemId, "ezAddress.t288", createDate, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("modifier"   , itemId, "ezAddress.t289", changeUser, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("modifydate" , itemId, "ezAddress.t290", changeDate, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("company"    , itemId, "ezAddress.t51" , company   , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("department" , itemId, "ezAddress.t54" , department, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("position"   , itemId, "main.t77"      , position  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("email"      , itemId, "ezAddress.t291", email     , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("compnumber" , itemId, "ezAddress.t192", compNumber, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("usernumber" , itemId, "ezAddress.t189", userNumber, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("faxnumber"  , itemId, "ezAddress.t292", faxNumber , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("homepage"   , itemId, "ezAddress.t293", homePage  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("companyzip" , itemId, "ezAddress.t295", companyZip, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("compaddr"   , itemId, "ezAddress.t295", compAddr  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("homezip"    , itemId, "ezAddress.t296", homeZip   , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("homeaddr"   , itemId, "ezAddress.t296", homeAddr  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("memo"       , itemId, "ezAddress.t91" , memo      , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("addresstype", itemId, "ezAddress.t290", "normal"  , companyId, tenantId));
+		
+		saveAllColumns(listColm);
 		
 		result.put("status", "ok");
 		result.put("code", 0);

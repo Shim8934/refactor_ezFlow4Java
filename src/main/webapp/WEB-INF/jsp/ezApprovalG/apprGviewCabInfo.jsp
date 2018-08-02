@@ -9,6 +9,12 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<style>
+			.content td {width:0}
+			.mainlist tr th {border-top:0px !important;border-left:0px !important}
+			.mainlist tr td {border-left:0px !important}
+			.listview {margin:5px}
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -32,7 +38,7 @@
 		<div id="close"><ul><li><span onClick="btnClose_onclick()"></span></li></ul></div>
 		<table class="content">
 			<tr> 
-				<th><spring:message code='ezApprovalG.t106'/></th>
+				<th style="padding-right: 94px;"><spring:message code='ezApprovalG.t106'/></th>
 				<td id="tdTitle" colspan=3>&nbsp;</td>
 			</tr>
 			<tr> 
@@ -49,9 +55,9 @@
 			</tr>
 			<tr> 
 				<th><spring:message code='ezApprovalG.t828'/></th>
-				<td id="tdTaskName" width="200" nowrap style="padding-right:15px">&nbsp;</td>
-				<th><spring:message code='ezApprovalG.t829'/></th>
-				<td id="tdProduceY" nowrap style="padding-right:15px">&nbsp;</td>
+				<td id="tdTaskName" nowrap style="padding-right:15px;width:250px">&nbsp;</td>
+				<th style="width:80px"><spring:message code='ezApprovalG.t829'/></th>
+				<td id="tdProduceY" nowrap style="padding-right:15px;width:120px">&nbsp;</td>
 			</tr>
 			<tr> 
 				<th><spring:message code='ezApprovalG.t831'/></th>
@@ -89,7 +95,7 @@
 		<table class="content">
 			<tr> 
 				<th><spring:message code='ezApprovalG.t1180'/></th>
-				<td id="tdNumOfRec">&nbsp;&nbsp;</td>
+				<td id="tdNumOfRec" style="width:100%">&nbsp;&nbsp;</td>
 			</tr>
 			<tr> 
 				<th><spring:message code='ezApprovalG.t834'/></th>
@@ -120,12 +126,10 @@
 		<span ID="divTabDis2" style="DISPLAY: none;"> 
 		<table class="content">
 			<tr> 
-				<th><spring:message code='ezApprovalG.t841'/></th>
-				<td id="tdEndY"  colspan=3>&nbsp;&nbsp;</td>
-			</tr>
-			<tr> 
-				<th><spring:message code='ezApprovalG.t117'/></th>
-				<td id="tdKeepPeriod" colspan=3>&nbsp;</td>
+				<th style="padding-right: 70px;"><spring:message code='ezApprovalG.t841'/></th>
+				<td id="tdEndY" nowrap style="width:250px">&nbsp;&nbsp;</td>
+				<th style="width:80px"><spring:message code='ezApprovalG.t117'/></th>
+				<td nowrap style="width:120px" id="tdKeepPeriod">&nbsp;</td>
 			</tr>
 			<tr> 
 				<th><spring:message code='ezApprovalG.t599'/></th>
@@ -145,17 +149,15 @@
 			</tr>
 			<tr> 
 				<th><spring:message code='ezApprovalG.t844'/></th>
-				<td id="tdCharger" colspan=3>&nbsp;</td>
-			</tr>
-			<tr> 
-				<th><spring:message code='ezApprovalG.t845'/></th>
-				<td id="tdConfirm" colspan=3>&nbsp;</td>
+				<td id="tdCharger" nowrap style="width:250px">&nbsp;</td>
+				<th style="width:80px"><spring:message code='ezApprovalG.t845'/></th>
+				<td nowrap style="width:120px" id="tdConfirm">&nbsp;</td>
 			</tr>
 			<tr> 
 				<th><spring:message code='ezApprovalG.t846'/></th>
-				<td id="tdCataTransFlag" width="200" nowrap style="padding-right:15px">&nbsp;</td>
-				<th><spring:message code='ezApprovalG.t847'/></th>
-				<td id="tdCataTransYear" nowrap style="padding-right:15px">&nbsp;</td>
+				<td id="tdCataTransFlag" nowrap style="padding-right:15px;width:250px">&nbsp;</td>
+				<th style="width:80px"><spring:message code='ezApprovalG.t847'/></th>
+				<td id="tdCataTransYear" nowrap style="padding-right:15px;width:120px">&nbsp;</td>
 			</tr>
 			<tr> 
 				<th><spring:message code='ezApprovalG.t848'/></th>
@@ -168,8 +170,8 @@
 		<span ID="divTabDis3" style="DISPLAY: none;">
 		<table class="content">
 			<tr> 
-				<th><spring:message code='ezApprovalG.t851'/></th>
-				<td id="tdTransfer" colspan="3">&nbsp;&nbsp;</td>
+				<th style="padding-right: 40px;"><spring:message code='ezApprovalG.t851'/></th>
+				<td id="tdTransfer" colspan="3" style="width:100%">&nbsp;&nbsp;</td>
 			</tr>
 			<tr> 
 				<th><spring:message code='ezApprovalG.t854'/></th>
@@ -177,9 +179,9 @@
 			</tr>
 			<tr> 
 				<th><spring:message code='ezApprovalG.t855'/></th>
-				<td id="tdTDeptName" width="200" nowrap style="padding-right:15px">&nbsp;</td>
-				<th><spring:message code='ezApprovalG.t856'/></th>
-				<td id="tdTDeptCode" nowrap style="padding-right:15px">&nbsp;</td>
+				<td id="tdTDeptName" nowrap style="padding-right:15px;width:250px">&nbsp;</td>
+				<th style="width:80px"><spring:message code='ezApprovalG.t856'/></th>
+				<td id="tdTDeptCode" nowrap style="padding-right:15px;width:120px">&nbsp;</td>
 			</tr>
 			<tr> 
 				<th><spring:message code='ezApprovalG.t577'/></th>

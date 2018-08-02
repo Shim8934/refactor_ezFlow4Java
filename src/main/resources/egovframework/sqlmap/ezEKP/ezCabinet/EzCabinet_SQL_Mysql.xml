@@ -16,6 +16,7 @@
 	<typeAlias alias="CabinetShareVO"       type="egovframework.ezEKP.ezCabinet.vo.CabinetShareVO"     />
 	<typeAlias alias="CabinetColumnVO"      type="egovframework.ezEKP.ezCabinet.vo.CabinetColumnVO"    />
 	<typeAlias alias="SimpleUserMailVO"     type="egovframework.ezEKP.ezCabinet.vo.SimpleUserMailVO"   />
+	<typeAlias alias="SimpleUserInfoVO"     type="egovframework.ezEKP.ezCabinet.vo.SimpleUserInfoVO"   />
 	
 	<!-- SimpleDept resultMap -->
 	<resultMap id="simpleDeptVO" class="cabinetSimpleDeptVO">
@@ -165,7 +166,7 @@
 		<result property="departmentId"     column="department_id"       columnIndex="9" />
 		<result property="departmentName1"  column="department_name1"    columnIndex="10"/>
 		<result property="departmentName2"  column="department_name2"    columnIndex="11"/>
-		<result property="conentPath"       column="content_path"        columnIndex="12"/>
+		<result property="contentPath"      column="content_path"        columnIndex="12"/>
 		<result property="createdDate"      column="create_date"         columnIndex="13"/>
 		<result property="updatedDate"      column="update_date"         columnIndex="14"/>
 		<result property="useStatus"        column="use_status"          columnIndex="15"/>
@@ -187,7 +188,7 @@
 		<result property="departmentId"     column="department_id"       columnIndex="9" />
 		<result property="departmentName1"  column="department_name1"    columnIndex="10"/>
 		<result property="departmentName2"  column="department_name2"    columnIndex="11"/>
-		<result property="conentPath"       column="content_path"        columnIndex="12"/>
+		<result property="contentPath"      column="content_path"        columnIndex="12"/>
 		<result property="createdDate"      column="create_date"         columnIndex="13"/>
 		<result property="updatedDate"      column="update_date"         columnIndex="14"/>
 		<result property="useStatus"        column="use_status"          columnIndex="15"/>
@@ -252,11 +253,18 @@
 		<result property="tenantId"           column="tenant_id"            columnIndex="8"/>
 	</resultMap>
 	
-		<!-- CabinetRelatedColumn resultMap -->
+	<!-- Simple Email User resultMap -->
 	<resultMap id="simpleUserMailVO" class="SimpleUserMailVO">
 		<result property="userName"           column="user_name"            columnIndex="1"/>
 		<result property="userEmail"          column="user_email"           columnIndex="2"/>
 	</resultMap>
+	
+	<!-- Simple User Information resultMap -->
+	<resultMap id="simpleUserInfoVO" class="SimpleUserInfoVO">
+		<result property="userName"           column="user_name"            columnIndex="1"/>
+		<result property="userId"             column="user_id"              columnIndex="2"/>
+	</resultMap>
+	
 	
 	<sql id="cabinetTreeSelect">
 		<![CDATA[
@@ -376,7 +384,9 @@
 	</select>
 	
 	<select id="EzCabinetDAO.getModuleListForUser" resultMap="userModuleVO">
-		<![CDATA[select * from tbl_cb_user_module where user_id = #userId# and company_id = #companyId# and tenant_id = #tenantId# order by module_type desc]]>
+		<![CDATA[select * from tbl_cb_user_module where user_id = #userId# and company_id = #companyId# and tenant_id = #tenantId# and module_type in]]>
+			<iterate property="typeList" open="(" close=")" conjunction=",">#typeList[]#</iterate>
+		<![CDATA[order by module_type desc]]>
 	</select>
 	
 	<insert id="EzCabinetDAO.saveModulesSetting" parameterClass="Map">
@@ -760,8 +770,8 @@
 				use_status,     update_id,      delete_id,         company_id,        tenant_id
 			)
 			values (
-				#itemId#,       #cabinetId#,    #itemType#,        #title#,           #summary#,    #creatorId#,   #creatorName1#,
-				#creatorName2#, #departmentId#, #departmentName1#, #departmentName2#, #conentPath#, #createdDate#, #updatedDate#,
+				#itemId#,       #cabinetId#,    #itemType#,        #title#,           #summary#,     #creatorId#,   #creatorName1#,
+				#creatorName2#, #departmentId#, #departmentName1#, #departmentName2#, #contentPath#, #createdDate#, #updatedDate#,
 				#useStatus#,    #updateId#,     #deleterId#,       #companyId#,       #tenantId#
 			)
 		]]>
@@ -1026,7 +1036,7 @@
 	</select>
 	
 	<!--***********************************************************************************
-	**                              Cabinet email infor process                          **
+	**                           Cabinet user information process                        **
 	************************************************************************************-->
 	
 	<select id="EzCabinetDAO.getUserInfoFromEmail" resultMap="simpleUserMailVO">
@@ -1047,4 +1057,12 @@
 						<iterate property="mailList" open="(" close=")" conjunction=",">#mailList[]#</iterate>
 				) a
 	</select>
+	
+	<select id="EzCabinetDAO.getSimpleUserInfo" resultMap="simpleUserInfoVO">
+		select
+			case when #primary# = '1' then u.displayname else u.displayname2 end as user_name,
+			u.cn                                                                 as user_id
+		from tbl_usermaster u where u.tenant_id = #tenantId# and u.cn = #userId#
+	</select>
+	
 </sqlMap>
