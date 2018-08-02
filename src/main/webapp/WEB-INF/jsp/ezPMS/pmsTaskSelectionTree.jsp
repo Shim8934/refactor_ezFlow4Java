@@ -18,7 +18,7 @@
 		treeData = ${data};
 		treeData = JSON.parse(JSON.stringify(treeData));
 		
-		getProjectTaskTree("taskTree", treeData, false);
+		getProjectTaskTree("taskTree", treeData, "");
 		
 		$("#taskTree").on("dblclick", ".jstree-anchor", function(evt) {
 			evt.preventDefault();
@@ -31,10 +31,10 @@
 		var chosenTask = $("a.jstree-clicked");
 		var folderName = chosenTask.text();
 		
-		// 작업명 옆에 게시판 갯수가 표시되었을 때 그것을 잘라냄
+		/* // 작업명 옆에 게시판 갯수가 표시되었을 때 그것을 잘라냄
 		if (folderName.lastIndexOf('(') != -1) {
-			folderName = taskName.substr(0, taskName.indexOf('('));
-		}
+			folderName = folderName.substr(0, folderName.indexOf('('));
+		} */
 		
 		parent.document.getElementById("folderName").innerHTML = folderName;
 		parent.folderName = folderName;

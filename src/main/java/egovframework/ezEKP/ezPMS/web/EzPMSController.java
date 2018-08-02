@@ -3166,7 +3166,7 @@ public class EzPMSController {
 		String projectId = request.getParameter("projectId");
 
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("location", "board");
+		param.put("location", "folderSetting");
 		param.put("userId", userInfo.getId());
 
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/board/folders",
@@ -3270,7 +3270,7 @@ public class EzPMSController {
 
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		param.put("location", "board");
+		param.put("location", "folderSetting");
 		param.put("userId", userInfo.getId());
 
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezPMS/projects/" + projectId + "/board/folders",

@@ -20,7 +20,7 @@
 		var treeData = ${data};
 		treeData = JSON.parse(JSON.stringify(treeData));
 		
-		getProjectTaskTree("taskTree", treeData, false);
+		getProjectTaskTree("taskTree", treeData, "", 0);
 		
 		$("#taskTree").on("dblclick", ".jstree-anchor", function(evt) {
 			evt.preventDefault();
@@ -68,10 +68,12 @@
 						} */
 						
 						parent.getBoardList();
+						parent.getFolderTree();
 					} else {
-						var beforeTaskName = parent.taskName;
+						var beforeTaskName = parent.folderName;
 						/* addTaskLog(parent.projectId, 2, groupId, taskId, "[" + beforeTaskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + parent.title.trim() + "<spring:message code='ezPMS.t233' />" + taskName.trim() +  "<spring:message code='ezPMS.t234' />"); */
 						parent.location.reload();
+						parent.opener.location.reload();
 					}
 					
 				} else {
@@ -85,8 +87,12 @@
 	}
 	
 	function popupClose() {
-		parent.parent.parent.frames["left"].document.getElementById("blockLeft").remove();
-		parent.parent.parent.frames["right"].document.getElementById("blockTop").remove();
+		console.log(parent.window.location.href);
+		if (parent.window.location.href.indexOf("Detail") == -1) {
+			parent.parent.parent.frames["left"].document.getElementById("blockLeft").remove();
+			parent.parent.parent.frames["right"].document.getElementById("blockTop").remove();
+		}
+		
 		parent.DivPopUpHidden();
 	}
 </script>

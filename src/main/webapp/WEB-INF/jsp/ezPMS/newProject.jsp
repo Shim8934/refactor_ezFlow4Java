@@ -415,6 +415,7 @@ var headManagerObj = {};
  
  function sendNotiMail(projectId, projectName) {
 	 var data = {
+			 headManagerId : headManagerId,
 			 projectName : projectName,
 			 managerList : managerList,
 			 participantList : participantList,
