@@ -311,9 +311,7 @@
            		FROM
            			TBL_PS_LIGHTPOLL 
           		WHERE
-          			( COMPANYID = #v_pCompanyID#
-                OR
-                	COMPANYID = 'Top' )
+          			COMPANYID = #v_pCompanyID#
                 AND
                 	TENANT_ID = #tenantID#	
 			]]>
@@ -433,8 +431,6 @@
           			TENANT_ID = #tenantID#
        			AND
           			COMPANYID = #v_pCompanyID#
-                OR
-                	COMPANYID = 'Top'
 			]]>
 		</isNotEqual>
 	</select>
@@ -559,9 +555,7 @@
         	FROM
         		TBL_PS_POPUP 
        		WHERE
-       			( 	COMPANYID = 'Top'
-                OR
-                	COMPANYID = #v_pCompanyID# )
+               	COMPANYID = #v_pCompanyID# 
             AND
             	STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
             AND
@@ -716,9 +710,7 @@
                                   FROM
                                       TBL_PS_NOTICE 
                                   WHERE
-                                      (COMPANYID = 'Top'
-                                  OR
-                                      COMPANYID = #v_pCompanyID#)
+                                      COMPANYID = #v_pCompanyID#
                                   AND
                                       TENANT_ID = #tenantID#    
                                   ORDER BY
@@ -773,9 +765,7 @@
                                                         WHERE
                                                             TENANT_ID = #tenantID#
                                                         AND    
-                                                            (COMPANYID = 'Top'
-                                                        OR
-                                                            COMPANYID = #v_pCompanyID#)
+                                                            COMPANYID = #v_pCompanyID#
                                                         ORDER BY
                                                             ITEMSEQ ASC ) A
                                             LIMIT
