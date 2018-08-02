@@ -16,9 +16,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -26,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
@@ -529,35 +526,5 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 	
 	private synchronized void saveAttachFile(CabinetAttachFileVO attachFile) {
 		ezCabinetDAO.saveAttachFile(attachFile);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public JSONObject modifyBoardItem(int itemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception {
-		JSONObject result      = new JSONObject();
-		int tenantId           = userInfo.getTenantId();
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("tenantId", tenantId);
-		map.put("itemId",   itemId);
-		
-		CabinetItemVO itemVO = ezCabinetDAO.getItemById(map);
-		
-		if (itemVO.getItemType() != 1) {
-			logger.debug("Invalid item type!");
-			result.put("status", "error");
-			result.put("code", 4);
-			return result;
-		}
-		
-		itemVO.setTitle(title);
-		ezCabinetDAO_h.modifyItem(itemVO);
-		
-		//modify related files
-		modifyRelatedList(itemId, relatedFiles, userInfo);
-				
-		result.put("status", "ok");
-		result.put("code", 0);
-		
-		return result;
 	}
 }

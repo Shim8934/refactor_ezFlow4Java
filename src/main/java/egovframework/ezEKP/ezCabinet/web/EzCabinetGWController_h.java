@@ -6,10 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,11 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
@@ -630,50 +626,5 @@ public class EzCabinetGWController_h {
 			List<SimpleUserMailVO> listForward = cabinetService.getUserInfoFromEmail(forwardMail, primary, tenantId);
 			result.put("forwards", listForward);
 		}
-	}
-	
-	@RequestMapping(value="/rest/ezcabinet/relate-item/modify/board", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject modifyEmailItem(@RequestBody JSONObject boardItemInf, Locale locale, HttpServletRequest request) throws Exception {
-		String serverName  = request.getHeader("host-name") != null ? request.getHeader("host-name")        : "";
-		String title       = boardItemInf.get("title")      != null ? boardItemInf.get("title").toString()  : "";
-		String relatedList = boardItemInf.get("relate")     != null ? boardItemInf.get("relate").toString() : "";
-		String userId      = boardItemInf.get("userId")     != null ? boardItemInf.get("userId").toString() : "";
-		String itemId      = boardItemInf.get("itemId")     != null ? boardItemInf.get("itemId").toString() : "";
-		JSONObject result  = new JSONObject();
-		JSONParser jp      = new JSONParser();
-		
-		logger.debug("ServerName: " + serverName + " || title: " + title + " || userId: " + userId + " || itemId: " + itemId + " || relatedList: " + relatedList);
-		
-		if (serverName.equals("") || userId.equals("") || title.equals("") || itemId.equals("") ) {
-			logger.debug("Parameter error!");
-			result.put("status", "error");
-			result.put("code", 1);
-			return result;
-		}
-		
-		try {
-			LoginVO userInfo       = commonUtil.getUserForGw(userId, serverName);
-			int currentItemId      = Integer.parseInt(itemId);
-			
-			//Add checking permission here
-			List<Integer> itemList = new ArrayList<>(Arrays.asList(currentItemId));
-			JSONObject permission  = cabinetService.checkPermission(new ArrayList<>(), itemList, 1, userInfo);
-			
-			if ((int)permission.get("code") == 1) {
-				result.put("status", "error");
-				result.put("code", 3);
-				return result;
-			}
-			
-			JSONArray relatedFiles = (JSONArray) jp.parse(relatedList);
-			result                 = cabinetService_h.modifyBoardItem(currentItemId, title, relatedFiles, userInfo);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			result.put("status", "error");
-			result.put("code", 2);
-		}
-		
-		return result;
 	}
 }

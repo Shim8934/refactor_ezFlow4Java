@@ -149,7 +149,7 @@
 					var iframeElmt       = document.getElementById("boardIframe");
 					iframeElmt.src       = "/ezCabinet/getPreviewContent.do?module=board";
 					boardContent         = {};
-					boardContent.content = result["conentPath"];
+					boardContent.content = result["contentPath"];
 					boardContent.size    = result["itemSize"];
 					boardContent.attach  = attachList;
 					

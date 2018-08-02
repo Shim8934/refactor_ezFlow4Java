@@ -1,10 +1,8 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
@@ -449,27 +446,5 @@ public class EzCabinetController_h {
 		}
 		
 		return jspPageName;
-	}
-	
-	@RequestMapping(value="/ezCabinet/modifyBoardItem.do", method = RequestMethod.POST)
-	@ResponseBody
-	public String jsonModyfyRelatedBoard(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
-		logger.debug("jsonModyfyRelatedBoard is running!");
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String itemId          = request.getParameter("itemId")      != null ? request.getParameter("itemId")      : "";
-		String title           = request.getParameter("title")       != null ? request.getParameter("title")       : "";
-		String relatedList     = request.getParameter("relatedList") != null ? request.getParameter("relatedList") : "";
-		JSONObject resultObj   = new JSONObject();
-		
-		if (itemId.equals("") || title.equals("")) {
-			resultObj.put("code", 1);
-			resultObj.put("status", "error");
-			return resultObj.toString();
-		}
-		
-		resultObj = cabinetRestService_h.modifyRelatedBoard(request, userInfo.getId(), itemId, title, relatedList);
-		
-		logger.debug("jsonModyfyRelatedBoard finishes!");
-		return resultObj.toString();
 	}
 }
