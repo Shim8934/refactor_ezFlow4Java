@@ -182,7 +182,7 @@ $(function(){
 							<th id="BoardList_TH_5"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 250px"
 								class="h5_center"><spring:message code='ezPMS.t35' /></th>
-							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="PLAN_END_DATE"
+							<th id="BoardList_TH_6" onclick="setListOrder(this)" order="REST_DUEDAY"
 								style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; width: 70px;"
 								class="h5_center"><spring:message code='ezPMS.t36' /></th>
 							<th id="BoardList_TH_7" onclick="setListOrder(this)" order="PLAN_END_DATE"

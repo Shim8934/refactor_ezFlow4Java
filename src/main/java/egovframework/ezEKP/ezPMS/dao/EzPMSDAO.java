@@ -709,4 +709,13 @@ public class EzPMSDAO extends EgovAbstractDAO {
 	public float getProjectRealProgress(Map<String, Object> map) {
 		return (float) select ("EzPMSDAO.getProjectRealProgress", map);
 	}
+
+	public void updateProjectRestDueday(Map<String, Object> map) {
+		update ("EzPMSDAO.updateProjectRestDueday", map);
+		
+	}
+
+	public String getuserCompanyId(Map<String, Object> map) {
+		return (String) select("EzPMSDAO.getUserCompanyId", map);
+	}
 } 

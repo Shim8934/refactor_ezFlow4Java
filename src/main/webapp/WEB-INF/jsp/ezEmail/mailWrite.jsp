@@ -996,7 +996,7 @@
 
 		// 180517 : 메일 mailsign div에 메일을 작성 후 서명 등록 또는 변경 시 본문 사라지는 현상 수정
 	    function mailSignInnerHtml() {
-			if (mailsel == 0) {
+			if (mailsel == 0 && gg_cmd != "RESEND") {
 				if (pUse_Editor == "KUKUDOCS") {
 					setTimeout(function() {
 							message.EditorElementSetHtml("MailSign", "");
@@ -1810,7 +1810,7 @@
 	    	var appPtag = "";
 	    	
 	    	for (var i = 0; i < editorBodyChild.length; i++) {
-            	if ( editorBodyChild[i].tagName.toLowerCase() == "p" && message.GetEditorContent() != ""){
+            	if (editorBodyChild[i].nodeName.indexOf("text") == 1 || editorBodyChild[i].tagName.toLowerCase() == "p" && message.GetEditorContent() != ""){
             		break;
             	}
             	
