@@ -104,7 +104,7 @@
 	    </script>
 	    <title><spring:message code='ezEmail.t904' /></title>
 	</head>
-	<body class="mainbody">
+	<body class="mainbody" style="min-width: 835px">
 	    <h1><spring:message code='ezEmail.t10010' /></h1>
 	        <div class="portlet_tabpart01">
 		        <div class="portlet_tabpart01_top" id="tab1">

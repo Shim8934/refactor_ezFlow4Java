@@ -539,7 +539,7 @@
 		        
 		        if (xmlhttp.responseText == "OK") {
 		            xmlhttp = null;
-		            xmldom = null;
+		            xmlDom = null;
 		            if (document.getElementById("chk_reservation").checked == false) {
 		            	/* 2016-05-16 이효진 메일 알림기능
 		                if (strItemID == "") {
@@ -578,7 +578,7 @@
 		        }
 		        
 		        xmlhttp = null;
-		        xmldom = null;
+		        xmlDom = null;
 		        clickFlag = true;
 		    }
 	
