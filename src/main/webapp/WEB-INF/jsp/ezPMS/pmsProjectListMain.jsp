@@ -819,10 +819,6 @@ function deleteFavoriteMemo(projectId) {
 					startRow = 0;
 					listNumber = $(".project_list").length;
 				}
-				
-				if (listProjectStatus == "F") {
-					setProjectList("new");
-				}
 
 				setProjectList("new");
 			},
