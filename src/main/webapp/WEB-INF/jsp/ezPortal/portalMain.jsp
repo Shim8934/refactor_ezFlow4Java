@@ -30,19 +30,20 @@
 
 			#open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;}
 /* 			.individual-memo { width:200px; height:200px; background:url('/images/ezMemo/background.gif') repeat-x; background-size:200px 190px;text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 20px 55px 20px 55px;} */
-			.individual-memo { width:250px; height:250px; background:url('/images/ezMemo/background.gif') repeat-x; background-size:200px 190px;text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 15px 30px 15px 30px;}
+			.individual-memo { width:250px; height:250px; background-color:#0470e4; text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 15px 30px 15px 30px; overflow:hidden;}
 			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);overflow:hidden;}
 			#selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;}
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
 			#maskDiv { position:absolute; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);}
 			.selected-memoWrapper {display:table-cell;vertical-align:middle;}
-			#memo-btn{text-align:right;margin:0 auto;width:300px;}
-			#font-btn{text-align:right;margin:0 auto; width:300px;}
+			#memo-btn{text-align:right;margin:0 auto;width:400px;}
+			#font-btn{text-align:right;margin:0 auto; width:400px;}
 			#slider-range{width:100px;float:left; margin-left:15px;}
 			.ui-widget-header{background: #0470e4}
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
-			#textarea{padding-left:10px;padding-right:10px;width:94%;height:98%;margin-left:-3px;}
-			.detailMemo{background: url(/images/ezMemo/background.gif) repeat-x;background-size: 300px 290px;border: 1px solid black;width: 300px;center;height: 300px;float: center;margin: 0 auto; padding-top: 30px;overflow:hidden;}
+			#textarea{padding-left:10px;padding-right:10px;width:95.5%;height:99%;margin-left:-3px;overflow-y:auto;}
+			.detailMemo{background-color:#0470e4; border: 1px solid black;width: 400px;center;height: 400px;float: center;margin: 0 auto; padding-top: 30px;overflow:hidden;}
+			.memo-text{margin-top:10px; padding-left:15px; padding-right:10px; border:0px; width:90%; height:89%; resize:none; overflow-y:auto;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -289,7 +290,7 @@
 		    	
 		    	var text = $("#textarea").val();
 		    	/* $("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right;'><textarea class='memo-text' style='margin-top:5px; padding-left:10px; padding-right:10px; border:0px; width:90%; height:87%; resize:none; overflow-y:auto;'>" + text + "</textarea></div>"); */
-		    	$("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right;'><textarea class='memo-text' style='margin-top:10px; padding-left:15px; padding-right:10px; border:0px; width:90%; height:87%; resize:none; overflow-y:auto;'>" + text + "</textarea></div>");
+		    	$("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right;'><textarea class='memo-text'>" + text + "</textarea></div>");
 		    	$("#textarea").val('');
 		    	$("#maskDiv").css("display", "none");
 		    	$("#selected-memo").css("display", "none");
