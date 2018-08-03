@@ -227,6 +227,15 @@ public class EzBoardController extends EgovFileMngUtil{
         else {
         	ladderFlag = "NO";
         }
+        
+        // 2018-08-03 황윤호 추가
+        String memoFlag = "";
+        if (ezCommonService.getTenantConfig("useMemo", tenantID).equalsIgnoreCase("YES")) {
+        	memoFlag = "YES";
+        }
+        else {	// 개발시에만 YES로 추후 NO로 변경
+        	memoFlag = "YES";
+        }
 		
 		if (request.getParameter("photoType") != null && !request.getParameter("photoType").equals("")) {
 			photoType  = request.getParameter("photoType");
@@ -317,6 +326,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("useQuestion", useQuestion);
         modelMap.addAttribute("pollFlag", pollFlag);
         modelMap.addAttribute("ladderFlag", ladderFlag);
+        modelMap.addAttribute("memoFlag", memoFlag);
         
 		logger.debug("boardLeft ended");
 
