@@ -364,7 +364,7 @@
 									<c:when test="${project.status eq 'D'}">
 										<option value="P"><spring:message code='ezPMS.t15' /></option>
 										<option value="S"><spring:message code='ezPMS.t19' /></option>
-										<option value="D"><spring:message code='ezPMS.t11' /><option>
+										<option value="D"><spring:message code='ezPMS.t11' /></option>
 									</c:when>
 								</c:choose>
 							</select>
