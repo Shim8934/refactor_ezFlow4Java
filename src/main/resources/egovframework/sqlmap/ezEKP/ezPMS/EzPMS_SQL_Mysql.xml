@@ -2303,13 +2303,13 @@
 				tenant_id,			writer_id,			title,				write_overview,			write_type,
 				write_content,		write_date,			write_update_date,	read_count,				folder_id,
 				writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
-				writer_position,	writer_position2,	doc_no
+				writer_position,	writer_position2,	doc_no,					ROOT_ITEM_ID
 			)
 			VALUES (
 				#tenantId#,			#writerId#,			#title#,				#writeOverview#,		#writeType#,
 				#writeContent#,		#writeDate#,		#writeUpdateDate#,		#readCount#,			#folderId#,
 				#writerName#,		#writerName2#,		#writerDeptName#,		#writerDeptName2#,
-				#writerPosition#,	#writerPosition2#,	#docNo#
+				#writerPosition#,	#writerPosition2#,	#docNo#,				#rootItemId#
 			)
 		]]>
 		<selectKey keyProperty="itemId" resultClass="Integer">
@@ -2337,7 +2337,7 @@
 	<update id="EzPMSDAO.updateRootItemId" parameterClass="Integer">
 		<![CDATA[
 			UPDATE tbl_pms_item_list 
-			SET root_item_id = #itemId# 
+			SET root_item_id = #docNo# 
 			WHERE item_id = #itemId#
 		]]>
 	</update>
@@ -2381,7 +2381,7 @@
 		<![CDATA[
 			UPDATE tbl_pms_item_list 
 			SET 
-				root_item_id = #itemId#,	upper_item_id = null,	item_level = 0
+				root_item_id = #rootItemId#,	upper_item_id = null,	item_level = 0
 			WHERE 
 				item_id = #itemId#
 			AND
@@ -2395,7 +2395,8 @@
 			SET 
 				folder_id = #folderId#,
 				doc_no = #docNo#,
-				write_date = #writeDate#
+				write_date = #writeDate#,
+				root_item_id = #rootItemId#
 			WHERE 
 				item_id = #itemId#
 			AND
