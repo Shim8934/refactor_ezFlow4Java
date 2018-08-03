@@ -27,7 +27,8 @@
 		    var RetValue;
 	    	var useAddressOpenAPI = "${useAddressOpenAPI}"
 	    	var useBizmekaSpambox = "${useBizmekaSpambox}";
-		    
+	    	var locale = "<c:out value='${locale}'/>";
+	    	
 			$(document).ready(function(){
 				var toYear = new Date().getFullYear();
 				var sYear = parseInt(toYear-70);
@@ -182,6 +183,9 @@
 			                }
 						}
 		            });
+		        }
+		        if (locale != 'ko') {
+		        	$(".onlyUseKo").css("display", "none");
 		        }
 			});
 			
@@ -632,7 +636,9 @@
 	            <td style="width: 240px;">
 	                <input type="text" id="txtBirth" style="width:80px;text-align:center;" readonly="readonly"/>	                
 	                <input type="radio" id="birth_S" name="BirthType" Checked /><spring:message code='ezOrgan.t00001' />
+	                <c:if test="${locale eq 'ko'}">
 	                <input type="radio" id="birth_N" name="BirthType" /><spring:message code='ezOrgan.t00002' />
+	                </c:if>
 	            </td>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t283' /></th>
 	            <td style="width: 240px;" >
@@ -683,7 +689,7 @@
 	            <th style="width: 80px; text-align:center"></th>
 	            <td style="width: 190px"></td>
 	        </tr>
-	        <tr>
+	        <tr class="onlyUseKo">
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t286' /></th>
 	            <td colspan="5">
                     <c:if test="${primaryLang == '1'}">

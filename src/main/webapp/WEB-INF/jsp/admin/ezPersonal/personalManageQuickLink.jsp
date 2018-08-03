@@ -74,7 +74,9 @@
 	              //크롬일때 alert창 크기때문에 크롬일때 구별
 		            var agent = navigator.userAgent.toLowerCase();
 		            if (agent.indexOf("chrome") != -1) {
-		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(450, 682));	
+		            	//2018-08-03 김보미 - alert창 크기때문에 팝업 사이즈 조정
+		            	//var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(450, 682));	
+		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(460, 682));	
 		            } else {
 		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(415, 670));
 		            }

@@ -307,11 +307,34 @@
 			    	return;
 			    }
 	        	
-	            if (document.getElementById("Title1").value.trim() == "") {
+	        	//2018-08-03 김보미 - 한국어가 아닌 다른 언어설정일 경우 해당 언어에 맞게 필수입력되게끔 수정
+	            /*if (document.getElementById("Title1").value.trim() == "") {
 	                document.getElementById("Title1").focus();
 	                alert("<spring:message code = 'ezPersonal.t1027' />");
 	                return;
+	            }*/
+				var mainTitle = "";
+				
+				if (lang == "1") {
+					mainTitle = "Title1";
+					subTitle1 = "Title2";
+					subTitle2 = "Title3";
+				} else if (lang == "2") {
+					mainTitle = "Title2";
+					subTitle1 = "Title1";
+					subTitle2 = "Title3";
+				} else {
+					mainTitle = "Title3";
+					subTitle1 = "Title1";
+					subTitle2 = "Title2";
+				}
+				
+	            if (document.getElementById(mainTitle).value.trim() == "") {
+	                document.getElementById(mainTitle).focus();
+	                alert("<spring:message code = 'ezPersonal.t1027' />");
+	                return;
 	            }
+
 	
 	            if (document.getElementById("txtURL").value.trim() == "") {
 	                document.getElementById("txtURL").focus();
@@ -319,12 +342,20 @@
 	                return;
 	            }
 	
-	            if (document.getElementById("Title2").value.trim() == "") {
+	            //2018-08-03 김보미 - 한국어가 아닌 다른 언어설정일 경우 해당 언어에 맞게 필수입력되게끔 수정
+	            /*if (document.getElementById("Title2").value.trim() == "") {
 	                document.getElementById("Title2").value = document.getElementById("Title1").value;
 	            }
 	            
 	            if (document.getElementById("Title3").value.trim() == "") {
 	                document.getElementById("Title3").value = document.getElementById("Title1").value;
+	            }*/
+	            if (document.getElementById(subTitle1).value.trim() == "") {
+	                document.getElementById(subTitle1).value = document.getElementById(mainTitle).value;
+	            }
+	            
+	            if (document.getElementById(subTitle2).value.trim() == "") {
+	                document.getElementById(subTitle2).value = document.getElementById(mainTitle).value;
 	            }
 	
 	            SaveQuickLink();

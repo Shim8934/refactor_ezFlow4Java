@@ -200,7 +200,7 @@ function TreeNode() {
         spnNode.name = "spn_" + strTreeID;
         spnNode.className = TreeClasses["normal"];
 
-        if (SelectSingleNode(pNodeData, "SETTEXTCOLORBYNAME") != null && $("#1tab1").attr("class") != "tabon") {
+        if (SelectSingleNode(pNodeData, "SETTEXTCOLORBYNAME") != null && ($("#1tab1").attr("class") != "tabon" || pRequestHandler == "RequestDataG")) {
             spnNode.style.color = "#bbbbbb";
         }
 
