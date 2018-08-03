@@ -140,7 +140,7 @@
 	                modeflag = false;
 	                beforeHtml = message.Get_EditorBodyHTML();
 	                message.SetEditable(true);
-	                setNodeText(btnEdit.childNodes.item(0) , "<spring:message code='ezApproval.t44'/>");
+	                setNodeText(btnEdit.childNodes.item(0) , "<spring:message code='main.sp09'/>");
 	            }
 	            else {
 	                var pInformationContent = "<spring:message code='ezApproval.t45'/>";

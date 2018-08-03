@@ -1174,8 +1174,7 @@ function SendDraftMappingSign(ret) {
                     }
                    
                     if (signImageType == "NAME") {
-//                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
-                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
                     } else {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
@@ -1242,8 +1241,7 @@ function SendDraftMappingSign(ret) {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
                     if (signImageType == "NAME") {
-//                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
-                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+                    	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
                     } else {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
                     }
@@ -2891,71 +2889,82 @@ function putSignXML(SignXML) {
     var retVal = false;
     try {
         var NodeList;
+        
         if (ext == "mht") {
-	        var fields = message.GetFieldsList();
-	        var field;
-	
-	        NodeList = SelectNodes(SignXML, "SIGNINFOS/SIGNINFO");
-	        if (NodeList.length > 0) {
-	            for (i = 0; i < NodeList.length; i++) {
-	                var SignType = getNodeText(GetChildNodes(NodeList[i])[2]);
-	                var SignName = getNodeText(GetChildNodes(NodeList[i])[3]);
-	                var SignCont = getNodeText(GetChildNodes(NodeList[i])[4]);
-	
-	                var field = message.GetListItem(fields, SignName);
-	                if (field) {
-	                    retVal = true;
-	                    if (SignType == "TEXT" || SignType == "HTML") {
-	                        field.innerHTML = SignCont;
-	                    } else {
-	                    	var seumyung = message.GetListItem(fields, "seumyungdate" + (i + 1));
-	                        var img = SignCont.split("::");
-	                        var signWidth = parseInt(field.offsetWidth) - 4 - 15;
-	                        var signHeight = parseInt(field.offsetHeight) - 4
-	                        signWidth = 50;
-	                        if (seumyung) {
-	                        	if (img[1] != null) {
-		                        	if (img[1].indexOf(strLang7) > -1) {
-		                        		signHeight = 28;
-		                        	} else {
-		                        		signHeight = 50;
-		                        	}
-	                        	} else {
-	                        		signHeight = 50;
-	                        	}
-	                        } else {
-	                        	signHeight = 28;
-	                        }
-	
-	                        var strimg;
-	                        if (img.length >= 1) {
-	                            strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
-	                            strimg = strimg + " width=" + signWidth;
-	                            strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
-	                        }
-	                        
-	                        if (seumyung) {
-	                        	if (img[1].indexOf(strLang7) > -1) {
-	                        		if (img.length >= 2 && img[1] != "") {
-	                                    field.innerHTML = img[1] + strimg;
-	                                } else {
-	                                    field.innerHTML = strimg;
-	                                }
-	                        	} else {
-	                        		field.innerHTML = strimg;
-	                        	}
-	                        } else {
-	                        	if (img.length >= 2 && img[1] != "") {
-	                        		field.innerHTML = img[1] + "<br>" + strimg;
-	                        	}
-	                        	else {
-	                        		field.innerHTML = strimg;
-	                        	}
-	                        }
-	                    }
-	                }
-	            }
-	        }
+        	 var fields = message.GetFieldsList();
+             var field;
+
+             NodeList = SelectNodes(SignXML, "SIGNINFOS/SIGNINFO");
+             if (NodeList.length > 0) {
+                 for (i = 0; i < NodeList.length; i++) {
+                     var SignType = getNodeText(GetChildNodes(NodeList[i])[2]);
+                     var SignName = getNodeText(GetChildNodes(NodeList[i])[3]);
+                     var SignCont = getNodeText(GetChildNodes(NodeList[i])[4]);
+                     
+                     var aprMemberName = getNodeText(SelectSingleNode(NodeList[i], "APRMEMBERNAME"));
+
+                     var field = message.GetListItem(fields, SignName);
+                     if (field) {
+                         retVal = true;
+                         if (SignType == "TEXT" || SignType == "HTML") {
+                             field.innerHTML = SignCont;
+                         } else {
+                         	var seumyung = message.GetListItem(fields, "seumyungdate" + (i + 1));
+                             var img = SignCont.split("::");
+                             var signWidth = parseInt(field.offsetWidth) - 4 - 15;
+                             var signHeight = parseInt(field.offsetHeight) - 4
+                             signWidth = 50;
+                             if (seumyung) {
+                             	if (img[1] != null) {
+     	                        	if (img[1].indexOf(strLang7) > -1) {
+     	                        		signHeight = 28;
+     	                        	} else {
+     	                        		signHeight = 50;
+     	                        	}
+                             	} else {
+                             		signHeight = 50;
+                             	}
+                             } else {
+                             	signHeight = 28;
+                             }
+
+                             var strimg;
+                             if (img.length >= 1) {
+                                 strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
+                                 strimg = strimg + " width=" + signWidth;
+                                 
+                                 if (signImage = "NAME") {
+                                 	//2018-08-02 이효진 signImage Name 사용시 결재때만 정상동작하고 수신쪽은 처리되어있지 않아 추가 
+                                 	//2018-08-02 이효진 signImage Name일때 반복문으로 앞쪽 이미지 서명까지 전부 새로 입력중이라 userInfo 말고 DB에서 꺼내쓰도록 수정
+//                                 	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + arr_userinfo[2] ;
+                                 	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + aprMemberName;
+                                 } else {
+                                 	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
+                                 }
+                             }
+                             
+                             if (seumyung) {
+                             	if (img[1].indexOf(strLang7) > -1) {
+                             		if (img.length >= 2 && img[1] != "") {
+                                         field.innerHTML = img[1] + strimg;
+                                     } else {
+                                         field.innerHTML = strimg;
+                                     }
+                             	} else {
+                             		field.innerHTML = strimg;
+                             	}
+                             } else {
+                             	if (img.length >= 2 && img[1] != "") {
+                             		field.innerHTML = img[1] + "<br>" + strimg;
+                             	}
+                             	else {
+                             		field.innerHTML = strimg;
+                             	}
+                             }
+                         }
+                     }
+                 }
+             }
         } else if (ext == "hwp") {
         	NodeList = SignXML.selectNodes("SIGNINFOS/SIGNINFO");
         	if (NodeList.length > 0) 

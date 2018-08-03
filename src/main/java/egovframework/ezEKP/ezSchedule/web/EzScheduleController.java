@@ -1660,6 +1660,7 @@ public class EzScheduleController extends EgovFileMngUtil {
     	enddate = commonUtil.getDateStringInUTC(enddate, loginVO.getOffset(), true);
         
         String repetition	= doc.getElementsByTagName("REPETITION").item(0).getTextContent();
+        logger.debug("repetition : " + repetition);
         String title		= doc.getElementsByTagName("TITLE").item(0).getTextContent();
         String location		= doc.getElementsByTagName("LOCATION").item(0).getTextContent();
         String content		= doc.getElementsByTagName("CONTENT").item(0).getTextContent();
@@ -1691,6 +1692,9 @@ public class EzScheduleController extends EgovFileMngUtil {
         	//updateSchedule
         	result = ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, defaultPath, loginVO.getTenantId());
         }
+	    
+	    //2018-08-01 구해안 반복설정 날짜 체크
+	    
         
         return Integer.toString(result);
 	}
@@ -2627,5 +2631,5 @@ public class EzScheduleController extends EgovFileMngUtil {
 			}
 		}		
 		return cDate;
-    }
+    }   
 }

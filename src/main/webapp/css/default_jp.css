@@ -1906,7 +1906,7 @@ form{display:inline;margin:0}
 .address_onboxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
 .address_onboxlist .back { border: 1px solid #888; height:138px; vertical-align:top; border-radius:5px;}
 .address_onboxlist .topinfo {background-color:white; height:24px; margin:0px 0px 8px 0px; padding:2px 5px 0px; color:#333; line-height:24px; font-size:12px;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.address_onboxlist ul { margin:12px 10px 0px 19px; padding:0px; list-style:none;}
+.address_onboxlist ul { margin:0px 0px 0px 19px; padding:0px; list-style:none;}
 .address_onboxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_onboxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
 .address_onboxlist ul .company { color:#393939; margin-bottom: 10px;}
