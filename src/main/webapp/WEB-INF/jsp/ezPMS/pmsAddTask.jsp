@@ -338,7 +338,7 @@ function addTask() {
 			addTaskLog(projectId, 1, groupId, null, logContent);
 			updateGroupRealStartEndDate(groupId);
 			
-			if (typeof(opener.setContentList()) == undefined) {
+			if (typeof(opener.setContentList) == undefined) {
 				opener.location.reload();
 			} else {
 				opener.getTaskTree();
