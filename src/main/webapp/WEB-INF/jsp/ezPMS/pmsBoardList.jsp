@@ -166,6 +166,19 @@
 		searchByContent = $("#searchByContent").val();
 		searchOrNot = "true";
 		
+		//날짜 제한
+		 var startDateArr = searchByStartDate.split('-');
+		 var endDateArr = searchByEndDate.split('-');
+		 
+		 var startDateComp = new Date(startDateArr[0], parseInt(startDateArr[1])-1, startDateArr[2]);
+		 var endDateComp = new Date(endDateArr[0], parseInt(endDateArr[1])-1, endDateArr[2]);
+		 
+		//시작일 > 종료일은 불가능
+		 if (startDateComp.getTime() > endDateComp.getTime()) {
+			  alert("<spring:message code='ezPMS.t49' />");
+			  return;
+		 }
+		
 		/* // 검색 시에는 tree 클릭을 통해 설정되었던 taskId와 groupId를 초기화 한다.
 		$("li[role='treeitem'][aria-level='1']").last().children("a").click(); */
 		

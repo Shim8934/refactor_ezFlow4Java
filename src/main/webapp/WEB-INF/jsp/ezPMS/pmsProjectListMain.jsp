@@ -952,6 +952,14 @@ function searchProject() {
 	searchByEndDate = $("#Edatepicker").val();
 	searchByOverview = $("#searchByOverview").val();
 	
+	var startDate = new Date(searchByStartDate);
+	var endDate = new Date(searchByEndDate);
+	//시작일 > 종료일은 불가능
+	if (startDate.getTime() > endDate.getTime()) {
+		 alert("<spring:message code='ezPMS.t49' />");
+		 return;
+	}
+	
 	if (viewType == 0) {
 		listNumber = 20;
 		startRow = 0;
