@@ -68,7 +68,11 @@
 										
 					addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t127' />" + commentContent.trim() +"<spring:message code='ezPMS.t126' />");
 
-					getTaskTree();
+					if(typeof(getTaskTree) !== "undefined"){
+						getTaskTree();
+					} else {
+						location.reload();
+					}
 				} else {
 					alert("<spring:message code='ezPMS.t224' />");
 					doubleSubmitFlag = false;
@@ -109,7 +113,11 @@
 												
 						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + content.trim() + "<spring:message code='ezPMS.t225' />");
 
-						getTaskTree();
+						if(typeof(getTaskTree) !== "undefined"){
+							getTaskTree();
+						} else {
+							location.reload();
+						}
 					} else {
 						alert("<spring:message code='ezPMS.t108' />");
 					}	
@@ -166,7 +174,11 @@
 						
 					addTaskLog(projectId, 2, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + content.trim() + "<spring:message code='ezPMS.t226' />" + commentContent.trim() +  "<spring:message code='ezPMS.t227' />");
 
-					getTaskTree();
+					if(typeof(getTaskTree) !== "undefined"){
+						getTaskTree();
+					} else {
+						location.reload();
+					}
 				} else {
 					alert("<spring:message code='ezPMS.t128' />");
 				}	
@@ -187,8 +199,8 @@
 		}
 	}
 	
-	function cmtKeyEvent() {
-		if (event.keyCode == 13) {
+	function cmtKeyEvent(e) {
+		if (e.keyCode == 13) {
 			addComment();
 		}
 	}
@@ -267,7 +279,7 @@
 	<div id="sendComment" class="voteComment" style="width:100%; border-bottom: 1px solid #dddddd; border-left: none; border-right: none; margin-top: 10px;">
 		<div class="sendComment_layout">
 			<div class="comment_input_layout" style="border: none; width: 86%;">
-				<input id="comment_input" type="text" oninput="auto_grow(this)" maxlength="500" onkeydown="cmtKeyEvent()" style="width: 100%;"></input>
+				<input id="comment_input" type="text" oninput="auto_grow(this)" maxlength="500" onkeydown="cmtKeyEvent(event)" style="width: 100%;"></input>
 			</div>
 			<div class="commentBtn">
 				<button id="sendBttn" onclick="addComment()" disabled="disabled" style="display:inline-block; width: 96px; cursor:pointer; height:45px; border:none; border-radius:5px; background:#d0d0d0; color:#FFF; margin:0px; padding:0px; text-align: center; vertical-align: middle;"><spring:message code='ezPMS.t40' /></button>						

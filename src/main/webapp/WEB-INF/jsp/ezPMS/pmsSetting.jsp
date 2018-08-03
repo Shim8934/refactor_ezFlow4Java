@@ -108,6 +108,22 @@ function manyColorShow(statusId) {
     } */
 }
 
+function restoreColor(statusId) {
+	var colorId = "";
+	
+	if (statusId == "progressColor") {
+		colorId = "#438ddd";
+	} else if (statusId == "completeColor") {
+		colorId = "#63c449";
+	} else if (statusId == "overdueColor") {
+		colorId = "#dd7238";
+	} else if (statusId == "holdColor") {
+		colorId = "#57c7b6";
+	}
+	
+	$("#" + statusId + "Display").css("background-color", colorId);
+	$("#" + statusId).text(colorId);
+}
 </script>
 <style type="text/css">
 #contentArea {
@@ -124,7 +140,7 @@ function manyColorShow(statusId) {
 	   </div>
 	</div>
     <div id="contentArea" style="overflow:auto;">
-    	<table class="content" style="width:303px;margin-left:15px;">
+    	<table class="content" style="width:400px;margin-left:15px;">
 		       <tr>
 					<th><spring:message code='ezPMS.t173' /></th>
 					<td>
@@ -160,6 +176,7 @@ function manyColorShow(statusId) {
 								<td><div id="progressColorDisplay" style="background-color:${setting.progressColor}; height:21px; border:1px inset gray"></div></td>
 								<td id="progressColor" style="display:none;">${setting.progressColor}</td>
 								<td style="width:100px"><a class="imgbtn"><span onClick="manyColorShow('progressColor')"><spring:message code='ezTask.t91' /></span></a></td>
+								<td style="width:100px"><a class="imgbtn"><span onClick="restoreColor('progressColor')"><spring:message code='ezPMS.t366' /></span></a></td>
 							</tr>
 						</table>
 					</td>
@@ -172,6 +189,7 @@ function manyColorShow(statusId) {
 								<td><div id="completeColorDisplay" style="background-color:${setting.completeColor}; height:21px; border:1px inset gray"></div></td>
 								<td id="completeColor" style="display:none;">${setting.completeColor}</td>
 								<td style="width:100px"><a class="imgbtn"><span onClick="manyColorShow('completeColor')"><spring:message code='ezTask.t91' /></span></a></td>
+								<td style="width:100px"><a class="imgbtn"><span onClick="restoreColor('completeColor')"><spring:message code='ezPMS.t366' /></span></a></td>
 							</tr>
 						</table>
 					</td>
@@ -184,6 +202,7 @@ function manyColorShow(statusId) {
 								<td><div id="overdueColorDisplay" style="background-color:${setting.overdueColor}; height:21px; border:1px inset gray"></div></td>
 								<td id="overdueColor" style="display:none;">${setting.overdueColor}</td>
 								<td style="width:100px"><a class="imgbtn"><span onClick="manyColorShow('overdueColor')"><spring:message code='ezTask.t91' /></span></a></td>
+								<td style="width:100px"><a class="imgbtn"><span onClick="restoreColor('overdueColor')"><spring:message code='ezPMS.t366' /></span></a></td>
 							</tr>
 						</table>
 					</td>
@@ -196,6 +215,7 @@ function manyColorShow(statusId) {
 								<td><div id="holdColorDisplay" style="background-color:${setting.holdColor}; height:21px; border:1px inset gray"></div></td>
 								<td id="holdColor" style="display:none;">${setting.holdColor}</td>
 								<td style="width:100px"><a class="imgbtn"><span onClick="manyColorShow('holdColor')"><spring:message code='ezTask.t91' /></span></a></td>
+								<td style="width:100px"><a class="imgbtn"><span onClick="restoreColor('holdColor')"><spring:message code='ezPMS.t366' /></span></a></td>
 							</tr>
 						</table>
 					</td>
