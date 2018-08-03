@@ -113,6 +113,7 @@
 		listProjectStatus = elem;
 		searchByProjectName = "";
 		searchByOverview = "";
+		currentPage = 1;
 		
 		getProjectList();
 	}
@@ -130,6 +131,7 @@
 			searchByOverview = searchKeyword;
 		}
 		
+		currentPage = 1;
 		getProjectList();
 	}
 	

@@ -2393,7 +2393,9 @@
 		<![CDATA[
 			UPDATE tbl_pms_item_list 
 			SET 
-				folder_id = #folderId#
+				folder_id = #folderId#,
+				doc_no = #docNo#,
+				write_date = #writeDate#
 			WHERE 
 				item_id = #itemId#
 			AND
@@ -2504,7 +2506,7 @@
 		</isNotEmpty>
 		B.root_item_id DESC, 
 		B.item_level ASC,
-		B.item_id DESC
+		B.DOC_NO DESC
 		
 		LIMIT #startRow#, #listCnt#
 	</select>

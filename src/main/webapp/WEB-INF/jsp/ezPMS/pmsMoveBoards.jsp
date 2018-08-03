@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-<!DOCTYPE>
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -87,10 +87,10 @@
 	}
 	
 	function popupClose() {
-		console.log(parent.window.location.href);
+		
 		if (parent.window.location.href.indexOf("Detail") == -1) {
-			parent.parent.parent.frames["left"].document.getElementById("blockLeft").remove();
-			parent.parent.parent.frames["right"].document.getElementById("blockTop").remove();
+			$("#blockLeft", parent.parent.parent.frames["left"].document).remove();
+			$("#blockTop", parent.parent.parent.frames["right"].document).remove();
 		}
 		
 		parent.DivPopUpHidden();
