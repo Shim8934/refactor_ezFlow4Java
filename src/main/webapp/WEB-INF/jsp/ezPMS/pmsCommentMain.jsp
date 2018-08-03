@@ -82,6 +82,9 @@
 			searchByEndDate = "";
 			searchByContent = "";
 			
+			orderWhat = "";
+			orderHow = "";
+			
 			getCommentList();
 		});
 		

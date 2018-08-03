@@ -82,6 +82,9 @@
 			searchByContent = "";
 			searchOrNot = "";
 			
+			orderWhat = "";
+			orderHow = "";
+			
 			getBoardList();
 		});
 		
