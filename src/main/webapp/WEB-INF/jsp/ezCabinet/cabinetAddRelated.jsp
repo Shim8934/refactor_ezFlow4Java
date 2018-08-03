@@ -259,7 +259,6 @@
 					var start         = writerSpan.indexOf("'");
 					var end           = writerSpan.lastIndexOf("'");
 					var boardWriter   = writerSpan.substring(start + 1, end);
-					
 					var postDate      = postTd.getElementsByTagName("div")[0].textContent;
 					var boardTitle    = titleTd.getElementsByTagName("div")[0].textContent;
 					var messageFrame  = window.opener.document.getElementById("message");
@@ -345,22 +344,30 @@
 					var journalOpener = window.opener;
 					if (!journalOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					var jList        = journalOpener.document.getElementsByClassName("content2")[0];
-					var title        = journalOpener.document.getElementById("cTitle").textContent;
-					var content      = journalOpener.document.getElementById("pad1").innerHTML;
-					var attach       = journalOpener.document.getElementById("lstAttachLink");
-					var attachList   = [];
+					var jList          = journalOpener.document.getElementsByClassName("content2")[0];
+					var totalRows      = jList.rows;
+					var firtRow        = totalRows[0];
+					var createDate     = firtRow.children[1].firstElementChild.textContent;
+					var creator        = firtRow.children[3].firstElementChild.getAttribute("onclick");
+					var journalType    = totalRows[1].children[1].firstElementChild.textContent;
+					var formName       = totalRows[1].children[3].firstElementChild.textContent; 
+					var start          = creator.indexOf("(");
+					var end            = creator.lastIndexOf(")");
+					var journalWriter  = creator.substring(start + 2, end - 1);
+					var title          = journalOpener.document.getElementById("cTitle").textContent;
 					
-					var totalRows    = jList.rows;
-					var firtRow      = totalRows[0];
-					var createDate   = firtRow.children[1].firstElementChild.textContent;
-					var creator      = firtRow.children[3].getAttribute("onclick");
+					var messageFrame   = window.opener.document.getElementById("message");
+					var contentWd      = messageFrame.contentWindow || messageFrame.contentDocument;
+					var content        = contentWd.document.getElementById("journalContent").innerHTML;
+					var attach         = journalOpener.document.getElementById("lstAttachLink");
+					var attachList     = [];
 					
 					console.log("createDate: " + createDate);
-					console.log("creator: " + creator);
-					
-					//console.log(jList);
-					if(attach.childElementCount > 1){
+					console.log("journalWriter: " + journalWriter);
+					console.log("journalType: " + journalType);
+					console.log("content: " + content);
+					console.log(attach);
+					if (attach.childElementCount >= 1) {
 						var listChildren1 = attach.getElementsByTagName("a");
 						var listChildren2 = attach.getElementsByTagName("input");
 						
@@ -369,28 +376,30 @@
 							var params   = getAllUrlParams(hrefStr);
 							var fileName = listChildren2[i].getAttribute("value");
 							
-							console.log("File path: " + javaURLDecode(params["filePath"]) + " || File Name: " + fileName);
+							console.log("File path: " + javaURLDecode(params["filePath"]) + " || File Name: " + javaURLDecode(params["fileName"]));
 							
 							attachList.push({
 								filePath : javaURLDecode(params["filePath"]),
-								fileName : fileName
+								fileName : javaURLDecode(params["fileName"])
 							});
 						}
 					}
 					
-					console.log(content);
 					var url  = "/ezCabinet/saveRelatedJournal.do";
 					var data = {
-						mode     : saveMode,
-						jList    : jList,
-						title    : title,
-						content  : content,
-						attach   : JSON.stringify(attachList)
+						mode          : saveMode,
+						createDate    : createDate,
+						journalWriter : journalWriter,
+						journalType   : journalType,
+						formName      : formName,
+						title         : title,
+						content       : content,
+						attach        : JSON.stringify(attachList)
 					};
 					console.log(data);
 					if (saveMode == 1) {data.cabinetId = cabinetId;}
 					
-					//makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
 				function saveGroupAddress(addressOpener, saveMode, cabinetId) {

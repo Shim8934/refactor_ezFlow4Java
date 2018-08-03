@@ -171,6 +171,82 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 	}
 
 	@Override
+	public JSONObject saveJournalItem(String realPath, int cabinetId, String journalContent, String mode, String title, String createDate, String journalWriter, String journalType, String formName, String attach, Locale locale, LoginVO userInfo) throws Exception {
+		JSONObject result          = new JSONObject();
+		String userId              = userInfo.getId();
+		int tenantId               = userInfo.getTenantId();
+		String companyId           = userInfo.getCompanyID();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(new Date()), userInfo.getOffset(), true);
+		JSONParser jp              = new JSONParser();
+		int itemCabinetId          = -1;
+		Map<String,Object> map     = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//Save Item
+		int itemId     = ezCabinetDAO.getMaxItem(map) + 1;
+		int moduleType = 9; //Journal module
+		
+		if(mode.equals("0")){
+			map.put("userId",   userId);
+			map.put("tenantId", tenantId);
+			map.put("type",     moduleType);
+			
+			CabinetVO cabinet = ezCabinetDAO.getRootCabinetByType(map);
+			itemCabinetId     = cabinet.getCabinetId();
+		}
+		else{
+			itemCabinetId = cabinetId;
+		}
+		
+		CabinetItemVO itemVO = new CabinetItemVO();
+		itemVO.setCabinetId(itemCabinetId);
+		itemVO.setItemId(itemId);
+		itemVO.setItemType(moduleType);
+		itemVO.setTitle(title);
+		itemVO.setCreatorId(userId);
+		itemVO.setCreatorName1(userInfo.getDisplayName1());
+		itemVO.setCreatorName2(userInfo.getDisplayName2());
+		itemVO.setDepartmentId(userInfo.getDeptID());
+		itemVO.setDepartmentName1(userInfo.getDeptName1());
+		itemVO.setDepartmentName2(userInfo.getDeptName2());
+		itemVO.setContentPath(journalContent);
+		itemVO.setCreatedDate(timeUTC);
+		itemVO.setUpdatedDate(timeUTC);
+		itemVO.setUseStatus(1);
+		itemVO.setUpdateId(userId);
+		itemVO.setDeleterId(null);
+		itemVO.setCompanyId(companyId);
+		itemVO.setTenantId(tenantId);
+		
+        saveItem(itemVO);
+		
+		//Save Journal attach files
+		
+		String cabinetPath = getCabinetDirPath(tenantId);
+		File file          = new File(realPath + cabinetPath);
+		
+		if(!file.exists()){
+			file.mkdir();
+		}
+		
+		if(!attach.equals("")){
+			JSONArray attachList = (JSONArray) jp.parse(attach);
+			int totalCnt                = attachList.size();
+			int attachLinkId         = ezCabinetDAO.getMaxAttachId(map) + 1;
+			
+			for(int i = 0; i < totalCnt; i++, attachLinkId++){
+				JSONObject attachLinkInf = (JSONObject) attachList.get(i);
+				saveApprovalFiles(attachLinkInf, attachLinkId, itemId, realPath, cabinetPath, locale, companyId, userId, tenantId);
+			}
+		}
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
+	
+	@Override
 	public void saveItem(int cabinetId, JSONArray attacheFiles, JSONArray relatedFiles, String doctitle, String realPath, LoginVO userInfo) throws Exception {
 		String companyId           = userInfo.getCompanyID();
 		String userId              = userInfo.getId();
@@ -212,6 +288,5 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 	private String getCabinetDirPath(int tenantId) {
 		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "cabinet" + commonUtil.separator;
 	}
-	
-	
+
 }

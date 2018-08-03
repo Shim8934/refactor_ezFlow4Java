@@ -777,7 +777,7 @@ var CabinetItem = function() {
 				case 6 : showOptionPreview()   ; break;
 				case 7 : showCommunityPreview(); break;
 				case 8 : showAddressPreview(data, dlElmt)  ; break;
-				case 9 : showJournalPreview()  ; break;
+				case 9 : showJournalPreview(data, dlElmt)  ; break;
 				case 10: showProjectPreview()  ; break;
 				case 11: showResourcePreview() ; break;
 			}
@@ -806,7 +806,30 @@ var CabinetItem = function() {
 		var ifameContent     = document.getElementById(iframeId);
 		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
 		documentCont         = {};
-		documentCont.content = itemInfo["contentPath"] ? itemInfo["contentPath"] : "";
+	}
+	
+	function showJournalPreview(data, dlElmt){
+		var itemInfo    = data.fileDetail;
+		
+		generateJournalTitle(itemInfo, dlElmt);
+		generateJournalContent(itemInfo);
+	}
+	
+	function generateJournalTitle(itemInfo, dlElmt){
+		var creatorName = itemInfo["creatorName"];
+		var creatorId   = itemInfo["creatorId"];
+		//Creator title
+		generateCreatorTitle(dlElmt, creatorName, creatorId);
+	}
+	
+	function generateJournalContent(itemInfo){
+		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
+		var ifameContent     = document.getElementById(iframeId);
+		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
+		documentCont         = {};
+		documentCont.content = itemInfo["contentPath"];
+		documentCont.size    = itemInfo["itemSize"];
+		documentCont.attach  = attachList;
 	}
 	
 	function showGeneralItemPreview(data, dlElmt, itemInfo, parentDiv) {

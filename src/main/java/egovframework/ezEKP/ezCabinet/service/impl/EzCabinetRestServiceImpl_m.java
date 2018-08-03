@@ -45,6 +45,25 @@ public class EzCabinetRestServiceImpl_m implements EzCabinetRestService_m {
 		return resultBody;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject saveRelatedJournal(HttpServletRequest request, String userId, String cabinetId, String mode, String title, String createDate, String journalWriter, String journalType, String formName, String content, String attach) throws Exception {
+		String url                = "/rest/ezcabinet/relate-item/save/jounl";
+		JSONObject jsonParam      = new JSONObject();
+		jsonParam.put("userId",        userId);
+		jsonParam.put("cabinetId",     cabinetId);
+		jsonParam.put("mode",          mode);
+		jsonParam.put("title",         title);
+		jsonParam.put("createDate",    createDate);
+		jsonParam.put("journalWriter", journalWriter);
+		jsonParam.put("journalType",   journalType);
+		jsonParam.put("formName",      formName);
+		jsonParam.put("content",       content);
+		jsonParam.put("attach",        attach);
+		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonParam);
+		return resultBody;
+	}
+	
 	public JSONObject getJsonResult(String restUrl, Map<String, Object> param, HttpServletRequest request, String methodType, JSONObject jsonParam){
 		String gwServerUrl = config.getProperty("config.cabinetGwServerURL");
 		restUrl            = gwServerUrl + restUrl;
