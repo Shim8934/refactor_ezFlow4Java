@@ -1093,7 +1093,7 @@
     		VALUES 
     			('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, #tenantID# ,#companyID#)
 	  ]]>
-<!-- 	  	('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '最新一覧', 'New BoardItem', -1, #tenantID# ,#companyID#) -->
+<!-- 	  	('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, #tenantID# ,#companyID#) -->
     </insert>
     
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I6" parameterClass="Map">
