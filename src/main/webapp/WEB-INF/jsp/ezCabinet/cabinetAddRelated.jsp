@@ -325,7 +325,7 @@
 					//Add code here
 				}
 				
-				function saveOptionDocument() {
+				function saveOptionDocument(saveMode, cabinetId) {
 					var optionOpener   = window.opener;
 					if (!optionOpener) {alert(CabinetMessages.strSelect); return;}
 					
@@ -338,30 +338,44 @@
 					var statusNum    = optionOpener.document.getElementById("statusNum").textContent;
 					var status       = optionOpener.document.getElementById("status").textContent;
 					var confirm      = optionOpener.document.querySelector("td[class='confirmStatus']").innerHTML;
-					var endDateDiv   = optionOpener.document.getElementById("endDate");
-					var endDate      = "";
+					var endDate      = optionOpener.document.getElementById("endDate").textContent;
 					var content      = optionOpener.document.getElementById("divCross").innerHTML;
-					
 					var attach       = optionOpener.document.getElementById("attachedfileDIV");
 					var attachList   = [];
 					
-					if (endDateDiv) {
-						endDate = endDateDiv.textContent; 
-					}
-					
-					var listChildren    = optionAttach.children;
+					var listChildren    = attach.children;
 					for (var i = 0, len = listChildren.length; i < len; i++) {
 						var inputElmt   = listChildren[i].firstElementChild;
-						var filepath    = inputElmt.getAttribute("filepath");
-						var filename    = inputElmt.getAttribute("filename");
+						var filePath    = inputElmt.getAttribute("filepath");
+						var fileName    = inputElmt.getAttribute("filename");
 					
-						console.log("File path: " + filepath + " || File Name: " + javaURLDecode(filename));
+						console.log("File path: " + filePath + " || File Name: " + javaURLDecode(fileName));
 						
 						attachList.push({
-							filePath : filepath,
-							fileName : javaURLDecode(filename)
+							filePath : filePath,
+							fileName : javaURLDecode(fileName)
 						});
 					}
+					
+					var url  = "/ezCabinet/saveRelatedOption.do";
+					var data = {
+						mode       : saveMode,
+						title      : title,
+						writer     : writer,
+						date       : date,
+						importance : importance,
+						option     : option,
+						statusNum  : statusNum,
+						status     : status,
+						confirm    : confirm,
+						endDate    : endDate,
+						content    : content,
+						attach     : JSON.stringify(attachList)
+					};
+					
+					if (saveMode == 1) {data.cabinet = cabinetId;}
+					
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
 				function saveProjectDocument() {

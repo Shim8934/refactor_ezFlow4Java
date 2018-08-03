@@ -529,7 +529,7 @@ public class EzCabinetGWController_h {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = cabinetService_h.saveBoarditem(realPath, mode, dstCabinetId, title, writer, attach, content, dateTime, locale, userInfo);
+			result           = cabinetService_h.saveBoardItem(realPath, mode, dstCabinetId, title, writer, attach, content, dateTime, locale, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -628,5 +628,49 @@ public class EzCabinetGWController_h {
 			List<SimpleUserMailVO> listForward = cabinetService.getUserInfoFromEmail(forwardMail, primary, tenantId);
 			result.put("forwards", listForward);
 		}
+	}
+	
+	@RequestMapping(value="/rest/ezcabinet/relate-item/save/option", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveOptionitem(Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
+		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
+		String mode       = request.getParameter("mode")       != null ? request.getParameter("mode")       : "";
+		String cabinetId  = request.getParameter("cabinet")    != null ? request.getParameter("cabinet")    : "";
+		String title      = request.getParameter("title")      != null ? request.getParameter("title")      : "";
+		String writer     = request.getParameter("writer")     != null ? request.getParameter("writer")     : "";
+		String date       = request.getParameter("date")       != null ? request.getParameter("date")       : "";
+		String importance = request.getParameter("importance") != null ? request.getParameter("importance") : "";
+		String option     = request.getParameter("option")     != null ? request.getParameter("option")     : "";
+		String statusNum  = request.getParameter("statusNum")  != null ? request.getParameter("statusNum")  : "";
+		String status     = request.getParameter("status")     != null ? request.getParameter("status")     : "";
+		String confirm    = request.getParameter("confirm")    != null ? request.getParameter("confirm")    : "";
+		String endDate    = request.getParameter("endDate")    != null ? request.getParameter("endDate")    : "";
+		String content    = request.getParameter("content")    != null ? request.getParameter("content")    : "";
+		String attach     = request.getParameter("attach")     != null ? request.getParameter("attach")     : "";
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + " || date: "  + date +" || importance: " + importance + " || option: " + option + " || statusNum : " + statusNum + " || status: " + status + " || confirm: " + confirm + " || endDate: " + endDate + " || content : " + content +  " || attach: " + attach);
+		
+		if (serverName.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals(""))|| title.equals("") || writer.equals("") || date.equals("") || importance.equals("") || option.equals("") || statusNum.equals("") || status.equals("") || confirm.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
+			String realPath  = request.getServletContext().getRealPath("");
+			result           = cabinetService_h.saveOptionItem(realPath, mode, dstCabinetId, title, writer, date, importance, option, statusNum, status, confirm, endDate, content, attach, locale, userInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
 	}
 }

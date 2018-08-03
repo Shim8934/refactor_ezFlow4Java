@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCabinet.service;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -29,5 +30,8 @@ public interface EzCabinetRestService_h {
 	
 	//Save boardModules
 	JSONObject saveRelatedBoard(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String dateTime, String attach, String content) throws Exception;
+
+	//Save optionModules
+	JSONObject saveRelatedOption(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach) throws Exception;
 
 }

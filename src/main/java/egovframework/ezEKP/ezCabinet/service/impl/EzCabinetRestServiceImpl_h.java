@@ -3,7 +3,9 @@ package egovframework.ezEKP.ezCabinet.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
 
 @Service
@@ -191,6 +194,29 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		param.put("dateTime", dateTime);
 		param.put("attach",   attach);
 		param.put("content",  content);
+		
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		return resultBody;
+	}
+
+	@Override
+	public JSONObject saveRelatedOption(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach) throws Exception {
+		String url                = "/rest/ezcabinet/relate-item/save/option";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",     userId);
+		param.put("mode",       mode);
+		param.put("cabinet",    cabinetId);
+		param.put("title",      title);
+		param.put("writer",     writer);
+		param.put("date",       date);
+		param.put("importance", importance);
+		param.put("option",     option);
+		param.put("statusNum",  statusNum);
+		param.put("status",     status);
+		param.put("confirm",    confirm);
+		param.put("endDate",    endDate);
+		param.put("content",    content);
+		param.put("attach",     attach);
 		
 		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
 		return resultBody;

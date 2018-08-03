@@ -320,6 +320,40 @@ public class EzCabinetController_h {
 		return resultObj.toString();
 	}
 	
+	@RequestMapping(value="/ezCabinet/saveRelatedOption.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonSaveRelatedOption(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSaveRelatedOption is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String mode            = request.getParameter("mode")       != null ? request.getParameter("mode")       : "";
+		String cabinetId       = request.getParameter("cabinet")    != null ? request.getParameter("cabinet")    : "";
+		String title           = request.getParameter("title")      != null ? request.getParameter("title")      : "";
+		String writer          = request.getParameter("writer")     != null ? request.getParameter("writer")     : "";
+		String date            = request.getParameter("date")       != null ? request.getParameter("date")       : "";
+		String importance      = request.getParameter("importance") != null ? request.getParameter("importance") : "";
+		String option          = request.getParameter("option")     != null ? request.getParameter("option")     : "";
+		String statusNum       = request.getParameter("statusNum")  != null ? request.getParameter("statusNum")  : "";
+		String status          = request.getParameter("status")     != null ? request.getParameter("status")     : "";
+		String confirm         = request.getParameter("confirm")    != null ? request.getParameter("confirm")    : "";
+		String endDate         = request.getParameter("endDate")    != null ? request.getParameter("endDate")    : "";
+		String content         = request.getParameter("content")    != null ? request.getParameter("content")    : "";
+		String attach          = request.getParameter("attach")     != null ? request.getParameter("attach")     : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + "date: " + date +" || importance: " + importance + " || option: " + option + " || statusNum : " + statusNum + " || status: " + status + " || confirm: " + confirm + " || endDate: " + endDate + " || content : " + content +  " || attach: " + attach);
+		
+		if (mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || writer.equals("") || date.equals("") || importance.equals("") || option.equals("") || statusNum.equals("") || status.equals("") || confirm.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService_h.saveRelatedOption(request, userInfo.getId(), mode, cabinetId, title, writer, date, importance, option, statusNum, status, confirm, endDate, content, attach);
+		
+		logger.debug("jsonSaveRelatedOption finishes!");
+		return resultObj.toString();
+	}
+	
 	private String getModuleHandler(Model model, JSONObject iteminfo) {
 		String jspPageName   = "";
 		JSONObject item      = (JSONObject) iteminfo.get("item");
@@ -330,6 +364,7 @@ public class EzCabinetController_h {
 			case 0  : jspPageName = "ezCabinet/cabinetFileDetail"         ; break;
 			case 1  : jspPageName = getEmailColumnInfo(model, iteminfo)   ; break;
 			case 3  : jspPageName = getBoardColumnInfo(model, iteminfo)   ; break;
+			case 6  : jspPageName = getOptionColumnInfo(model, iteminfo)  ; break;
 			case 8  : jspPageName = getAddressColumnInfo(model, iteminfo) ; break;
 			default : break;
 		}
@@ -392,6 +427,22 @@ public class EzCabinetController_h {
 	
 	private String getBoardColumnInfo(Model model, JSONObject iteminfo) {
 		String jspPageName   = "ezCabinet/cabinetBoardDetail";
+		JSONArray columnList = new JSONArray();
+		if (iteminfo.get("columns") != null) {
+			columnList = (JSONArray) iteminfo.get("columns");
+		}
+		
+		for (int i = 0, totalColumn = columnList.size(); i < totalColumn; i++) {
+			JSONObject column = (JSONObject) columnList.get(i);
+			String columnId   = column.get("columnId").toString();
+			model.addAttribute(columnId, column);
+		}
+		
+		return jspPageName;
+	}
+	
+	private String getOptionColumnInfo(Model model, JSONObject iteminfo) {
+		String jspPageName   = "ezCabinet/cabinetOptionDetail";
 		JSONArray columnList = new JSONArray();
 		if (iteminfo.get("columns") != null) {
 			columnList = (JSONArray) iteminfo.get("columns");
