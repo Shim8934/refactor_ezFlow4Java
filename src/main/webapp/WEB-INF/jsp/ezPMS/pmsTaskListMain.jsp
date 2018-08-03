@@ -434,6 +434,9 @@
 					}
 				});
 			}
+		} else {
+			alert("<spring:message code='ezPMS.t247' />");
+   			return;
 		}
 	}
 	
