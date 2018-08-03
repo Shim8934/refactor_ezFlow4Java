@@ -53,6 +53,7 @@
 		    var realPath = "<c:out value = '${realPath}' />";
 		    //박대리 ext 넘기는부분없어서 걍 내가만듬 
 		    var ext = "${ext}";
+		    var locale = "<c:out value = '${locale}' />";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -196,6 +197,11 @@
 	            }
 		        
 		        add_doc_maker();
+		        
+		        if (locale != "ko") {
+		        	document.getElementById("ApvForm_sub3").style.display = "none";
+		        	document.getElementById("ApvForm_sub4").style.display = "none";
+		        }
 		    }
 		
 		    function Attribute_Write(value) {
@@ -825,10 +831,8 @@
 	        <div class="portlet_tabpart01_top" id="tab1">
                 <p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code='ezApprovalG.t00004'/></span></p>
                 <p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code='ezApprovalG.t1456'/></span></p>
-                <c:if test="${locale eq 'ko'}">
-	                <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code='ezApprovalG.t00005'/></span></p>
-	                <p id = "ApvForm_sub4" <c:if test="${useEditor == 'HWP'}"> style="display:none;"</c:if>><span divname="ApvForm_div4" id="1tab4">WORKFLOW</span></p>
-                </c:if>
+                <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code='ezApprovalG.t00005'/></span></p>
+                <p id = "ApvForm_sub4"><span divname="ApvForm_div4" id="1tab4">WORKFLOW</span></p>
                 <p id = "ApvForm_sub5"><span divname="ApvForm_div5" id="1tab5"><spring:message code='ezApprovalG.t1629'/></span></p>
                 <p id = "ApvForm_sub6" style = 'display:none;'><span divname="ApvForm_div6" id="1tab6"><spring:message code='ezApproval.t990012'/></span></p>
 	        </div>
