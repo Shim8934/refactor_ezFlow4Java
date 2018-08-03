@@ -270,7 +270,7 @@
 
 		            if (ischeck) {
 		                if (ConCellRow != null) {
-		                    ConCellRow.outerHTML = "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr></nobr><div>";
+		                    ConCellRow.outerHTML = "<div style='font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr></nobr><div>";
 		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  nobr").text(inboxRuleCon1.value);
 		                    inboxRuleCon1.value = "";
 		                    inboxRuleCon1.focus();
@@ -278,7 +278,7 @@
 		                    ConCellRow = null;
 		                }
 		                else {
-		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr></nobr><div>";
+		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr></nobr><div>";
 		                    $("div#Conitems div:nth-child(" + Conitems.children.length + ")  nobr").text(inboxRuleCon1.value);
 		                    inboxRuleCon1.value = "";
 		                    inboxRuleCon1.focus();
@@ -300,14 +300,14 @@
 		            if (rulekind == "SENDER" || rulekind == "RECEIVER" || rulekind == "FORWARD" || rulekind == "REDIRECTION") {
 		                if (value.split("<").length > 1) {
 		                    var mailaddress = value.split("<")[1].replace(">", "");
-		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + mailaddress + "'><nobr>" + MakeXMLString(value) + "</nobr><div>";
+		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + mailaddress + "'><nobr>" + MakeXMLString(value) + "</nobr><div>";
 		                }
 		                else {
-		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr>" + value + "</nobr><div>";
+		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr>" + value + "</nobr><div>";
 		                }
 		            }
 		            else {
-		                Conitems.innerHTML += "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr></nobr><div>";
+		                Conitems.innerHTML += "<div style='font-size:small;height:18px;line-height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;padding:1px;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr></nobr><div>";
 		                $("div#Conitems div:nth-child(" + i + ")  nobr").text(value);
 		            }
 		        }
@@ -386,7 +386,7 @@
 		        inboxRuleCon1.value = "";
 		        Conitems.innerHTML = "";
 		    }
-		    function pop_confrim() {
+		    function pop_confirm() {
 		        var _exp = "";
 		        var _value = "";
 		        var _displaynames = "";
@@ -862,7 +862,7 @@
 				</div>
 			</div>
 			<div class="btnpositionLayer">
-				<a class="imgbtn"><span onClick="pop_confrim();"><spring:message code='ezEmail.t38' /></span></a>
+				<a class="imgbtn"><span onClick="pop_confirm();"><spring:message code='ezEmail.t38' /></span></a>
 			</div>
 		</div>	
 	</div>
