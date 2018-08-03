@@ -1381,7 +1381,9 @@
 			ON
 				A.PROJECT_ID = F.PROJECT_ID 
 			AND
-				A.TENANT_ID = F.TENANT_ID	
+				A.TENANT_ID = F.TENANT_ID
+			AND 
+				F.USER_ID = #userId#
 		</isEqual> 
 		<isNotEmpty property="searchByUser">
 			JOIN	
@@ -5044,6 +5046,19 @@
 			TENANT_ID = #tenantId#
 	</update>
 	
+	<update id="EzPMSDAO.deleteBoardFolder" parameterClass="map">
+		UPDATE 
+			TBL_PMS_BOARD_FOLDER
+		SET
+			DEL_STATUS = 1
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			FOLDER_ID = #folderId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
+
 	<update id="EzPMSDAO.updateTaskName" parameterClass="map">
 		<![CDATA[
 			UPDATE
