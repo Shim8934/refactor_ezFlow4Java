@@ -121,7 +121,7 @@
 		   			if (selUserId != "" && selUserId != undefined) {
 		   				var chkFlag = true;
 		   				
-			   			for(var i = 0; i < authList.length; i++) {
+			   			for (var i = 0; i < authList.length; i++) {
 			   				if (authList[i].userId == receiverId) {
 			   					chkFlag = false;
 			   				}
@@ -133,28 +133,30 @@
 		   				alert("<spring:message code='ezPMS.t164' />");
 		   			}
 	   			} else if (selUserList && selUserList.length > 1){
-	   				selUserList.forEach(function(elem, idx){
+	   				for (var i = 0; i < selUserList.length; i++) {
 	   					var chkFlag = true;
-	   					if(!elem.userId){
-		   					receiverId = elem.getAttribute("id");
-				   			userName = elem.getAttribute("name");
-				   			userDept = elem.getAttribute("dept");
-	   					} else {
-		   					receiverId = elem.userId;
-				   			userName = elem.userName;
-				   			userDept = elem.userDeptname;
-	   					}
-			   			userIdType = "user";
-		   				
-			   			for(var i = 0; i < authList.length; i++) {
-			   				if (authList[i].userId == receiverId) {
-			   					chkFlag = false;
-			   					break;
-			   				}
-			   			}
-			   			
-			   			addUserToList(chkFlag);
-	   				})
+	   					
+   						if(!selUserList[i].userId){
+	   						receiverId = selUserList[i].getAttribute("id");
+			   				userName = selUserList[i].getAttribute("name");
+			   				userDept = selUserList[i].getAttribute("dept");
+   						} else {
+	   						receiverId = selUserList[i].userId;
+			   				userName = selUserList[i].userName;
+			 	  			userDept = selUserList[i].userDeptname;
+   						}
+		   				userIdType = "user";
+	   					
+		   				for(var j = 0; j < authList.length; j++) {
+		   					if (authList[j].userId == receiverId) {
+		   						chkFlag = false;
+		   						break;
+		   					}
+		   				}
+		   			
+		   				addUserToList(chkFlag);
+	   				}
+	   					
 	   			} else if(selUserId){
 	   				var chkFlag = true;
 	   				
@@ -170,6 +172,7 @@
 		   			
 		   			addUserToList(chkFlag);
 	   			}
+	   			
 	   			drawReceiverList(authName);
 	   			selMainListUserId = "";
 	   			
