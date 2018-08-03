@@ -348,9 +348,9 @@
 				<!-- 메모 리스트 -->
 				<div style="text-align: center">
 					
-					<div style="text-align: right">
+					<div style="text-align: right; margin:8px;">
+						<button id="change-mode" style="float: left">모드</button>
 						<div id="slider-range"></div>
-						<button id="change-mode">모드</button>
 						<button id="new-memo" onclick="save()">추가</button>
 						<button id="close-button">닫기</button>
 					</div>
