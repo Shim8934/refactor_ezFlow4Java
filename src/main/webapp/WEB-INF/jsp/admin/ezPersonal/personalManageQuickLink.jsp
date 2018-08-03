@@ -71,7 +71,7 @@
 	                addquicklink_dialogArguments[0] = "";
 	                addquicklink_dialogArguments[1] = btn_Select_Complete;
 	                
-	              //크롬일때 alert창 크기때문에 크롬일때 구별
+	                //크롬일때 alert창 크기때문에 크롬일때 구별
 		            var agent = navigator.userAgent.toLowerCase();
 		            if (agent.indexOf("chrome") != -1) {
 		            	//2018-08-03 김보미 - alert창 크기때문에 팝업 사이즈 조정
@@ -105,9 +105,18 @@
 	            if (CrossYN()) {
 	                addquicklink_dialogArguments[0] = listviewSelected[0].getAttribute("data1");
 	                addquicklink_dialogArguments[1] = btn_Select_Complete;
-	                var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(415, 680));
+	                
+		            //2018-08-03 김보미 - alert창 크기때문에 팝업 사이즈 조정
+ 	                //var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(415, 680));
+		            var agent = navigator.userAgent.toLowerCase();
+		            if (agent.indexOf("chrome") != -1) {
+		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(460, 682));	
+		            } else {
+		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(415, 670));
+		            }
 	                try { AddQuickLink.focus(); } catch (e) {
 	                }
+	                
 	            } else {
 	                var rtnValue = window.showModalDialog("/admin/ezPersonal/addQuickLink.do?mode=modify", listviewSelected[0].getAttribute("data1"), "dialogHeight:620px;dialogwidth:400px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(415, 625));
 	                window.location.reload();
