@@ -87,10 +87,10 @@
 	}
 	
 	function popupClose() {
-		console.log(parent.window.location.href);
+		
 		if (parent.window.location.href.indexOf("Detail") == -1) {
-			parent.parent.parent.frames["left"].document.getElementById("blockLeft").remove();
-			parent.parent.parent.frames["right"].document.getElementById("blockTop").remove();
+			$("#blockLeft", parent.parent.parent.frames["left"].document).remove();
+			$("#blockTop", parent.parent.parent.frames["right"].document).remove();
 		}
 		
 		parent.DivPopUpHidden();

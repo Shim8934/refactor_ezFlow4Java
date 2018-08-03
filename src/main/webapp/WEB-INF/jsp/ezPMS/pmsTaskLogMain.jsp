@@ -47,10 +47,14 @@ $(function(){
 			$("#searchByContent").css("display", "none");
 			$("#searchButton").css("display", "none");
 			$("#searchStatus").css("display", "");
+			
+			searchContent = "";
 		} else {
 			$("#searchByContent").css("display", "");
 			$("#searchButton").css("display", "");
 			$("#searchStatus").css("display", "none");
+			
+			searchStatus = "";
 		}
 	});
 
