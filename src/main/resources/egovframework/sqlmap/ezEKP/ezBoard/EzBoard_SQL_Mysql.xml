@@ -5017,7 +5017,7 @@
 			ON 
 				A.TENANT_ID = I.TENANT_ID
 			AND
-				A.WRITERCOMPANYID = I.COMPANYID
+				I.COMPANYID = #v_pCompanyID#
 		 	AND
 				A.BOARDID = I.BOARDID
 			WHERE
@@ -5025,7 +5025,7 @@
 			AND
 				A.TENANT_ID = #v_TENANTID#
 			AND
-   					A.WRITERCOMPANYID = #v_pCompanyID#
+   				(A.WRITERCOMPANYID = #v_pCompanyID# OR TRIM(A.WRITERCOMPANYID) = '')
 		]]>
 		<isEqual property="v_MODE" compareValue="1">
 			<![CDATA[ 
