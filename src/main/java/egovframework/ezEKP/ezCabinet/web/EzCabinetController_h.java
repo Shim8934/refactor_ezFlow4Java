@@ -327,11 +327,28 @@ public class EzCabinetController_h {
 		model.addAttribute("item", item);
 		
 		switch(itemType) {
-			case 0  : jspPageName = "ezCabinet/cabinetFileDetail"         ; break;
-			case 1  : jspPageName = getEmailColumnInfo(model, iteminfo)   ; break;
-			case 3  : jspPageName = getBoardColumnInfo(model, iteminfo)   ; break;
-			case 8  : jspPageName = getAddressColumnInfo(model, iteminfo) ; break;
+			case 0  : jspPageName = "ezCabinet/cabinetFileDetail"          ; break;
+			case 1  : jspPageName = getEmailColumnInfo(model, iteminfo)    ; break;
+			case 3  : jspPageName = getBoardColumnInfo(model, iteminfo)    ; break;
+			case 8  : jspPageName = getAddressColumnInfo(model, iteminfo)  ; break;
+			case 11 : jspPageName = getResourceColumnInfo(model, iteminfo) ; break;
 			default : break;
+		}
+		
+		return jspPageName;
+	}
+	
+	private String getResourceColumnInfo(Model model, JSONObject iteminfo) {
+		String jspPageName   = "ezCabinet/cabinetResourceDetail";
+		JSONObject creator   = (JSONObject) iteminfo.get("creator");
+		JSONArray columnList = (JSONArray) iteminfo.get("columns");
+		
+		model.addAttribute("creatorUser", creator);
+		
+		for (int i = 0, totalColumn = columnList.size(); i < totalColumn; i++) {
+			JSONObject column = (JSONObject) columnList.get(i);
+			String columnId   = column.get("columnId").toString();
+			model.addAttribute(columnId, column);
 		}
 		
 		return jspPageName;
@@ -353,14 +370,10 @@ public class EzCabinetController_h {
 			model.addAttribute(columnId, column);
 		}
 		
-		logger.debug("HERERRRR");
-		
 		if (addressType.equals("group")) {
-			logger.debug("HERERRRR1");
 			jspPageName = "ezCabinet/cabinetGroupAddress";
 		}
 		else {
-			logger.debug("HERERRRR222");
 			jspPageName = "ezCabinet/cabinetNormalAddress";
 		}
 		
@@ -392,10 +405,7 @@ public class EzCabinetController_h {
 	
 	private String getBoardColumnInfo(Model model, JSONObject iteminfo) {
 		String jspPageName   = "ezCabinet/cabinetBoardDetail";
-		JSONArray columnList = new JSONArray();
-		if (iteminfo.get("columns") != null) {
-			columnList = (JSONArray) iteminfo.get("columns");
-		}
+		JSONArray columnList = (JSONArray) iteminfo.get("columns");
 		
 		for (int i = 0, totalColumn = columnList.size(); i < totalColumn; i++) {
 			JSONObject column = (JSONObject) columnList.get(i);

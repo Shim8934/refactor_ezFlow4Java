@@ -87,8 +87,9 @@
 				
 				function getContentFromModuleName(moduleName) {
 					switch (moduleName) {
-						case "mail"  : documentContent = parent.CabinetEmailFile.getContent(); break;
-						case "board" : documentContent = parent.CabinetBoardFile.getContent(); break;
+						case "mail"  : documentContent = parent.CabinetEmailFile.getContent()   ; break;
+						case "board" : documentContent = parent.CabinetBoardFile.getContent()   ; break;
+						case "resrc" : documentContent = parent.CabinetResourceFile.getContent(); break;
 						default      : if (parent.CabinetItem) {documentContent = parent.CabinetItem.getContent();}
 					}
 				}

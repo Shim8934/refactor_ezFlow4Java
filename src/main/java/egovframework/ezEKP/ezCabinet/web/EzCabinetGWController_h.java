@@ -549,10 +549,24 @@ public class EzCabinetGWController_h {
 		
 		//Check file type
 		switch(itemType) {
-			case 1: getMoreEmailDetail(result, columnList, primary, tenantId);    break;
-			case 3: getMoreBoardDetail(result, columnList, primary, tenantId);    break;
-			case 8: getMoreAddressDetail(result, columnList, primary, tenantId); break;
+			case 1 : getMoreEmailDetail(result, columnList, primary, tenantId)   ; break;
+			case 3 : getMoreBoardDetail(result, columnList, primary, tenantId)   ; break;
+			case 8 : getMoreAddressDetail(result, columnList, primary, tenantId) ; break;
+			case 11: getMoreResourceDetail(result, columnList, primary, tenantId); break;
 		}
+	}
+	
+	private void getMoreResourceDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
+		CabinetColumnVO creatorColumn = columnList.stream().filter(column -> column.getColumnId().equals("creator")).collect(Collectors.toList()).get(0);
+		
+		String creatorId              = creatorColumn.getColumnValue();
+		SimpleUserInfoVO creatorVO    = cabinetService.getSimpleUserInfo(creatorId, primary, tenantId);
+		
+		if (creatorVO == null) {
+			creatorVO = new SimpleUserInfoVO(creatorId, creatorId);
+		}
+		
+		result.put("creator", creatorVO);
 	}
 	
 	private void getMoreBoardDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
@@ -565,7 +579,7 @@ public class EzCabinetGWController_h {
 			writerVO = new SimpleUserInfoVO(writerId, writerId);
 		}
 		
-		result.put("writerVO" , writerVO);
+		result.put("writerVO", writerVO);
 	}
 	
 	private void getMoreAddressDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
