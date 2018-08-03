@@ -146,9 +146,10 @@ var userRoleId = parent.userRoleId;
 	 applyList();
 	 applyParticipantList();
 	 initpretaskNames();
-	 
-	 if(JSON.parse(weightData).weightInput === 0){
-		 document.getElementById("weight").readOnly = true;
+	 if(weightData){
+		 if(JSON.parse(weightData).weightInput === 0){
+			 document.getElementById("weight").readOnly = true;
+		 }
 	 }
 	 document.getElementById("taskName").focus();
  });
