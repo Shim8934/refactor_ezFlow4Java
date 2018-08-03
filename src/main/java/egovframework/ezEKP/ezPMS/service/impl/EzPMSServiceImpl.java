@@ -300,12 +300,20 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			project.setProjectMember(member);
 
 			if (!project.getStatus().equals("C")) {
+				Date startDate = sdf.parse(project.getPlanStartDate());
 				Date endDate = sdf.parse(project.getPlanEndDate());
 				Date today = new Date();
 				String simpToday = sdf.format(today);
 				Date now = sdf.parse(simpToday);
-
-				int restDueday = getWorkingDays(now, endDate, companyId, tenantId, lang);
+				
+				int restDueday;
+				
+				if (startDate.before(now)) {
+					restDueday = getWorkingDays(now, endDate, companyId, tenantId, lang);
+				} else {
+					restDueday = getWorkingDays(startDate, endDate, companyId, tenantId, lang);
+				}
+				
 				project.setRestDueday(restDueday);
 			}
 
