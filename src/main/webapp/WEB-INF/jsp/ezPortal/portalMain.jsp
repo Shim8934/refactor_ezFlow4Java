@@ -30,7 +30,7 @@
 
 			#open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;}
 /* 			.individual-memo { width:200px; height:200px; background:url('/images/ezMemo/background.gif') repeat-x; background-size:200px 190px;text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 20px 55px 20px 55px;} */
-			.individual-memo { width:250px; height:250px; background-color:#0470e4; text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 15px 30px 15px 30px; overflow:hidden;}
+			.individual-memo { /* width:250px; height:250px; */ background-color:#0470e4; text-align:left; border:1px solid black; float: left; /* margin: 10px 30px 10px 30px; */ overflow:hidden; padding-top:5px;}
 			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);overflow:hidden;}
 			#selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;}
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
@@ -122,6 +122,24 @@
 	        		opendMemo.css({"top":20, "left": 20, "width" : winWidth - 90, "height":winHeight - 56 - 90})
 	        	}
 				$(".memoListBox").css("height",winHeight - 56 - 60);
+				setSizeOfMemo();
+		    }
+		    
+		    function setSizeOfMemo() {
+		    	console.log("메모지 사이즈");
+		    	var userWidth = screen.width;
+		    	var userHeight = screen.height;
+		    	
+		    	if (userWidth > 1536) {
+		    		console.log("1920 초과");
+		    		$(".individual-memo").css({"width" : "250px", "height" : "250px", "margin" : "10px 30px 10px 30px"} );
+		    		
+		    	} else {
+		    		console.log("1536 이하");
+		    		$(".individual-memo").css({"width" : "200px", "height" : "200px", "margin" : "10px 25px 10px 25px"} );
+		    		
+		    	}
+			    	
 		    }
 		    
 		    $(function() {
@@ -130,7 +148,6 @@
 		    	defaultPointer();
 		    	setPanelPointer();
 		    	layerPopupOpacity();
-				
 		     
 		        $("#close-button").click(function() {
 		        	$("#layer-popup").css("display", "none")
@@ -289,11 +306,21 @@
 		    	}
 		    	
 		    	var text = $("#textarea").val();
-		    	$("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right; height:20px;'><img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:5px;'><textarea class='memo-text'>" + text + "</textarea></div>");
+		    	/* $("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right; height:20px;'><img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:5px;'><textarea class='memo-text'>" + text + "</textarea></div>"); */
+		    	var html = "";
+		    	html += "<div class='individual-memo'>";
+		    	html += "<span sylte='padding-left: 10px'>2018-08-03</span>";
+		    	html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>";
+		    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
+		    	html += "<textarea class='memo-text'>";
+		    	html += text;
+		    	html += "</textarea>";
+		    	html += "</div>"
+		    	$("#memoList").prepend(html);
 		    	$("#textarea").val('');
 		    	$("#maskDiv").css("display", "none");
 		    	$("#selected-memo").css("display", "none");
-		    	
+		    	setSizeOfMemo();
 		    	memoIndex = -1;
 		    	
 		    	addremove();
