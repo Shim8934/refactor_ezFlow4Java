@@ -113,7 +113,11 @@
 												
 						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + content.trim() + "<spring:message code='ezPMS.t225' />");
 
-						getTaskTree();
+						if(typeof(getTaskTree) !== "undefined"){
+							getTaskTree();
+						} else {
+							location.reload();
+						}
 					} else {
 						alert("<spring:message code='ezPMS.t108' />");
 					}	
@@ -170,7 +174,11 @@
 						
 					addTaskLog(projectId, 2, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + content.trim() + "<spring:message code='ezPMS.t226' />" + commentContent.trim() +  "<spring:message code='ezPMS.t227' />");
 
-					getTaskTree();
+					if(typeof(getTaskTree) !== "undefined"){
+						getTaskTree();
+					} else {
+						location.reload();
+					}
 				} else {
 					alert("<spring:message code='ezPMS.t128' />");
 				}	
