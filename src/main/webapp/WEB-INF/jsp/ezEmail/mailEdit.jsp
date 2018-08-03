@@ -59,7 +59,7 @@
 			var g_font = "<spring:message code='ezEmail.t409' />";
 			var g_showdisplay = "${showDisplay}";
 			var g_simplemimeencoding = "7bit";
-			var g_simplemime = "";
+			var g_simplemime = "0";
 			var g_xmldoc = createXMLHttpRequest();
 			var useMultiLangMail = "${useMultiLangMail}";
 			var g_isFormat = false;
@@ -122,7 +122,7 @@
 	                ezUtil.UseUTF8 = true;              
 	            }
 			    
-				if (useMultiLangMail == "1") LoadLanguageConfig();
+				//if (useMultiLangMail == "1") LoadLanguageConfig();
 				
 				if (g_unread == "1")
 				{
