@@ -78,8 +78,11 @@ public interface EzCabinetRestService {
 	
 	//Save related address document
 	public JSONObject saveRelatedGroupAdress(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String content, String createUser, String createDate, String changeUser, String changeDate) throws Exception;
+	public JSONObject saveRelatedNormalAdress(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo) throws Exception;
 	
 	//Modify related item
 	public JSONObject modifyRelatedItem(HttpServletRequest request, String userId, String itemId, String title, String relatedList) throws Exception;
-	public JSONObject saveRelatedNormalAdress(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo) throws Exception;
+	
+	//Save related resource document
+	public JSONObject saveRelatedResource(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String content, String createUser, String resDate, String priority, String resItem) throws Exception;
 }

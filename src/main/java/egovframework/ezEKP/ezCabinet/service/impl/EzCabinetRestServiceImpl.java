@@ -632,4 +632,23 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject saveRelatedResource(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String content, String createUser, String resDate, String priority, String resItem) throws Exception {
+		String url                = "/rest/ezcabinet/relate-item/save/resource";
+		JSONObject jsonBody       = new JSONObject();
+		jsonBody.put("userId",     userId);
+		jsonBody.put("title",      title);
+		jsonBody.put("mode",       mode);
+		jsonBody.put("cabinet",    cabinetId);
+		jsonBody.put("createUser", createUser);
+		jsonBody.put("resDate",    resDate);
+		jsonBody.put("priority",   priority);
+		jsonBody.put("resItem",    resItem);
+		jsonBody.put("content",    content);
+		
+		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
+		return resultBody;
+	}
 }
