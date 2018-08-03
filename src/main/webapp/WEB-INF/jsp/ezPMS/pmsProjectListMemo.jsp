@@ -143,9 +143,7 @@ $(function(){
 					<table>
 						<tr>
 							<th width="42"><input type="checkbox" name="memoCheckbox" onchange="checkedCheckboxMemo(this);"></th>
-							<th class="projectNameArea">
-								<span class="projectName"><c:out value="${project.projectName }"/></span>
-							</th>
+							<th class="projectNameArea"><span class="projectName"><c:out value="${project.projectName }"/></span></th>
 							<th width="42"><c:choose>
 							<c:when test="${project.isFavorite eq 0}">
 								<img class="star" draggable="false" src="/images/ImgIcon/view-flag.gif"

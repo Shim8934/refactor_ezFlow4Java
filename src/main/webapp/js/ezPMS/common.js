@@ -247,8 +247,11 @@ function getCheckedProjectInfo() {
 			var groupId		= $(this).parents("tr:eq(0)").attr("data-groupid");
 			var headManagerId	= $(this).parents("tr:eq(0)").attr("data-headmanagerid");
 		} else {
-			var projectName = $(this).parent().siblings(".projectNameArea").children(".projectName").text();
-			projectName = projectName.substring(2);
+			var projectContents = $(this).parent().siblings(".projectNameArea").children(".projectName").contents();
+			var projectName = projectContents[projectContents.length - 1].textContent;
+			console.log(projectContents);
+			console.log(projectName);
+			//projectName = projectName.substring(2);
 			var projectId 	= $(this).parents("li:eq(0)").attr("id");
 			var groupId		= $(this).parents("li:eq(0)").attr("data-groupid");
 			var headManagerId	= $(this).parents("li:eq(0)").attr("data-headmanagerid");
