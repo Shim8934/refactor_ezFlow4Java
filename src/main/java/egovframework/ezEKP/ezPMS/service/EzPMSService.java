@@ -158,7 +158,7 @@ public interface EzPMSService {
 	
 	public ProjectBoardVO getBoardDetail(int tenantId, Map<String, Object> param);
 
-	List<ProjectInfoVO> getProgressProject(String status) throws Exception;
+	List<ProjectInfoVO> getProgressProject(String status, String mode) throws Exception;
 
 	public String getUserTaskRole(String userId, int tenantId, long taskId);
 	
@@ -301,4 +301,8 @@ public interface EzPMSService {
 	public void updateGroupRealDate(Map<String, Object> map);
 	
 	public float getProjectRealProgress(Map<String, Object> map);
+
+	public void updateProjectRestDueday(int restDueday, long projectId, int tenantId);
+
+	public String getUserCompanyId(String userId, int tenantId);
 }

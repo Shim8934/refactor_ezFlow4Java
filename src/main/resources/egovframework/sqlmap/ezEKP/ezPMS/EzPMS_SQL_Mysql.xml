@@ -3528,7 +3528,15 @@
 		FROM
 			TBL_PMS_PROJECT
 		WHERE
+			DEL_STATUS = 0
+		<isEqual property="mode" compareValue="P">
+		AND
 			STATUS = #status#
+		</isEqual>
+		<isNotEqual property="mode" compareValue="P">
+		AND
+			STATUS != 'C'
+		</isNotEqual>
 	</select>
 	
 	<select id="EzPMSDAO.getStatusCount" parameterClass="Map" resultMap="StatusCount">
@@ -5215,6 +5223,52 @@
 			TENANT_ID = #tenantId#
 		AND 
 			del_status = 0
+	]]>
+	</select>
+	
+	<update id="EzPMSDAO.updateProjectRestDueday" parameterClass="map">
+	<![CDATA[
+		UPDATE
+			TBL_PMS_PROJECT
+		SET
+			REST_DUEDAY = #restDueday#
+		WHERE
+			PROJECT_ID = #projectId#
+		AND
+			TENANT_ID = #tenantId#
+	]]>
+	</update>
+	
+	<select id="EzPMSDAO.getUserCompanyId" parameterClass="map" resultClass="String">
+	<![CDATA[
+		SELECT
+			PHYSICALDELIVERYOFFICENAME
+		FROM 
+			TBL_USERMASTER
+		WHERE
+			CN = #userId#
+		AND
+			TENANT_ID = #tenantId#
+		
+		UNION 
+		SELECT
+			PHYSICALDELIVERYOFFICENAME
+		FROM 
+			TBL_USERMASTER_DELETE
+		WHERE
+			CN = #userId#
+		AND
+			TENANT_ID = #tenantId#
+			
+		UNION 
+		SELECT
+			PHYSICALDELIVERYOFFICENAME
+		FROM 
+			TBL_USERMASTER_RETIRE
+		WHERE
+			CN = #userId#
+		AND
+			TENANT_ID = #tenantId#
 	]]>
 	</select>
 </sqlMap>
