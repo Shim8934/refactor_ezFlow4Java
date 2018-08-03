@@ -3948,9 +3948,10 @@ public class EzPMSGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, (String) jsonParam.get("userId"));
+			String today = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), info.getOffSet(), false);
 			
 			jsonParam.put("tenantId", info.getTenantId());
-			
+			jsonParam.put("writeDate", today);
 			ezPMSService.moveBoard(jsonParam);
 		
 			result.put("status", "ok");

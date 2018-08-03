@@ -230,6 +230,9 @@
 		searchByOverview = "";
 		searchByStatus = "";
 		
+		orderWhat = "";
+		orderHow = "";
+		currentPage = 1;
 	}
 	
 	function searchPopup() {
