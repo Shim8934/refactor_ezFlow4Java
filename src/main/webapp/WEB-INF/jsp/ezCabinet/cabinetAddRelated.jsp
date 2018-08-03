@@ -396,7 +396,7 @@
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
-				function saveOptionDocument() {
+				function saveOptionDocument(saveMode, cabinetId) {
 					var optionOpener   = window.opener;
 					if (!optionOpener) {alert(CabinetMessages.strSelect); return;}
 					
