@@ -43,7 +43,7 @@
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
 			#textarea{padding-left:10px;padding-right:10px;width:95.5%;height:99%;margin-left:-3px;overflow-y:auto;}
 			.detailMemo{background-color:#0470e4; border: 1px solid black;width: 400px;center;height: 400px;float: center;margin: 0 auto; padding-top: 30px;overflow:hidden;}
-			.memo-text{margin-top:10px; padding-left:15px; padding-right:10px; border:0px; width:90%; height:89%; resize:none; overflow-y:auto;}
+			.memo-text{margin-top:10px; padding-left:15px; padding-right:10px; border:0px; width:90%; height:88%; resize:none; overflow-y:auto;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -289,14 +289,7 @@
 		    	}
 		    	
 		    	var text = $("#textarea").val();
-<<<<<<< HEAD
-		    	/* $("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right;'><textarea class='memo-text' style='margin-top:5px; padding-left:10px; padding-right:10px; border:0px; width:90%; height:87%; resize:none; overflow-y:auto;'>" + text + "</textarea></div>"); */
-		    	$("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right;'><textarea class='memo-text'>" + text + "</textarea></div>");
-=======
-		    	/* $("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right;'><textarea class='memo-text' style='margin-top:5px; padding-left:10px; padding-right:10px; border:0px; width:90%; height:87%; resize:none; overflow-y:auto;'>" + text + "</textarea></div>"); 
-		    	$("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right;'><textarea class='memo-text' style='margin-top:10px; padding-left:15px; padding-right:10px; border:0px; width:90%; height:87%; resize:none; overflow-y:auto;'>" + text + "</textarea></div>"); */
-		    	$("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right; height:20px;'><img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:5px;'><textarea class='memo-text' style='margin-top:10px; padding-left:15px; padding-right:10px; border:0px; width:90%; height:86%; resize:none; overflow-y:auto;'>" + text + "</textarea></div>");
->>>>>>> 8f67ba791416aa2549231549c2ac7ed6f67fea76
+		    	$("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right; height:20px;'><img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:5px;'><textarea class='memo-text'>" + text + "</textarea></div>");
 		    	$("#textarea").val('');
 		    	$("#maskDiv").css("display", "none");
 		    	$("#selected-memo").css("display", "none");
