@@ -1703,6 +1703,44 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
+	@RequestMapping(value="/rest/ezcabinet/relate-item/save/resource", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveResourceItem(@RequestBody JSONObject resourceItemInf, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")    != null ? request.getHeader("host-name")               : "";
+		String title      = resourceItemInf.get("title")      != null ? resourceItemInf.get("title").toString()      : "";
+		String mode       = resourceItemInf.get("mode")       != null ? resourceItemInf.get("mode").toString()       : "";
+		String cabinetId  = resourceItemInf.get("cabinet")    != null ? resourceItemInf.get("cabinet").toString()    : "";
+		String createUser = resourceItemInf.get("createUser") != null ? resourceItemInf.get("createUser").toString() : "";
+		String resDate    = resourceItemInf.get("resDate")    != null ? resourceItemInf.get("resDate").toString()    : "";
+		String userId     = resourceItemInf.get("userId")     != null ? resourceItemInf.get("userId").toString()     : "";
+		String priority   = resourceItemInf.get("priority")   != null ? resourceItemInf.get("priority").toString()   : "";
+		String resItem    = resourceItemInf.get("resItem")    != null ? resourceItemInf.get("resItem").toString()    : "";
+		String content    = resourceItemInf.get("content")    != null ? resourceItemInf.get("content").toString()    : "";
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " || title: " + title + " || createUser: " + createUser + " || Resource Date: " + resDate + " || priority: " + priority + " || userId: " + userId + " || resItem: " + resItem + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content);
+		
+		if (serverName.equals("") || userId.equals("") || title.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || resDate.equals("") || priority.equals("") || resItem.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
+			result           = cabinetService.saveResourceItem(dstCabinetId, content, title, mode, createUser, resDate, priority, resItem, userInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
 	private boolean isCabinetAdmin(LoginVO user) {
 		return user.getRollInfo().contains("cb=1");
 	}

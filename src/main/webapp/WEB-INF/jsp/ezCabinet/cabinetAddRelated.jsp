@@ -79,7 +79,7 @@
 				function autoSelect(){
 					var cabinetMainDiv                   = document.getElementById("cabMgTreeId");
 					var fogPanel                         = document.getElementById("fogPanel");
-					fogPanel.style.display               = "";
+					fogPanel.style.display               = "block";
 					cabinetMainDiv.style.backgroundColor = "#f1f1f1";
 				}
 				
@@ -228,7 +228,7 @@
 								}); 
 							}
 						}
-					}  
+					}
 					
 					var url          = "/ezCabinet/saveRelatedApproval.do";
 					var data         = {
@@ -249,19 +249,19 @@
 					var boardOpener   = window.opener;
 					if (!boardOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					var writerTd      = window.opener.document.getElementById("WriteUserNM");
-					var postTd        = window.opener.document.getElementById("PostDate");
-					var titleTd       = window.opener.document.getElementById("cTitle");
+					var writerTd      = boardOpener.document.getElementById("WriteUserNM");
+					var postTd        = boardOpener.document.getElementById("PostDate");
+					var titleTd       = boardOpener.document.getElementById("cTitle");
 					var writerSpan    = writerTd.getElementsByTagName("div")[0].getElementsByTagName("span")[0].getAttribute("onclick");
 					var start         = writerSpan.indexOf("'");
 					var end           = writerSpan.lastIndexOf("'");
 					var boardWriter   = writerSpan.substring(start + 1, end);
 					var postDate      = postTd.getElementsByTagName("div")[0].textContent;
 					var boardTitle    = titleTd.getElementsByTagName("div")[0].textContent;
-					var messageFrame  = window.opener.document.getElementById("message");
+					var messageFrame  = boardOpener.document.getElementById("message");
 					var contentWd     = messageFrame.contentWindow || messageFrame.contentDocument;
 					var boardContent  = contentWd.document.querySelector("div[class='contentDiv']").innerHTML;
-					var attach        = window.opener.document.getElementById("lstAttachLink");
+					var attach        = boardOpener.document.getElementById("lstAttachLink");
 					var attachList    = [];
 					
 					if (attach.childElementCount > 1) {
@@ -368,12 +368,41 @@
 					//Add code here
 				}
 				
-				function saveResourceDocument() {
+				function saveJournalDocument() {
 					//Add code here
 				}
 				
-				function saveJournalDocument() {
-					//Add code here
+				function saveResourceDocument(saveMode, cabinetId) {
+					var resourceOpener = window.opener;
+					if (!resourceOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var resWriter    = resourceOpener.writerIDVal;
+					var resDate      = resourceOpener.document.getElementById("AllDayDisplay").textContent;
+					var resPriority  = resourceOpener.document.getElementById("importanceDIV").textContent.replace(/\s/g,'');
+					var resItem      = resourceOpener.document.getElementById("itemList").textContent;
+					var resTitle     = resourceOpener.document.getElementById("titleDIV").textContent;
+					var messageFrame = resourceOpener.document.getElementById("message");
+					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
+					var resContent   = contentWd.document.body.innerHTML;
+					console.log("resWriter: " + resWriter + " || resDate: " + resDate + " || resPriority: " + resPriority + " || resItem: " + resItem
+							 + " || resTitle: " + resTitle);
+					
+					console.log("resContent: " + resContent);
+					
+					var url  = "/ezCabinet/saveRelatedResource.do";
+					var data = {
+						mode      : saveMode,
+						writer    : resWriter,
+						title     : resTitle,
+						date      : resDate,
+						priority  : resPriority,
+						resItem   : resItem,
+						content   : resContent
+					};
+					
+					if (saveMode == 1) {data.cabinet = cabinetId;}
+					
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
 				function saveGroupAddress(addressOpener, saveMode, cabinetId) {
