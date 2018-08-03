@@ -459,7 +459,6 @@
 		        para[0] = g_TaskCode;
 		        para[1] = g_CabinetID;
 		        var url = "/ezApprovalG/selectCabinetInTask.do";
-		
 		        if (CrossYN()) {
 		            selectcabinetintask_cross_dialogArguments[0] = para;
 		            selectcabinetintask_cross_dialogArguments[1] = btnChangeCabinet_onclick_Complete;

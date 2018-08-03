@@ -1064,7 +1064,7 @@
 					para[3] = ext;
 					
 				    var url = "/ezApprovalG/insSepAttach.do";
-				    var feature = "dialogWidth:730px;dialogHeight:630px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
+				    var feature = "dialogWidth:930px;dialogHeight:630px;scroll:no;resizable:no;status:no; help:no;edge:sunken ";
 			        var rtn = window.showModalDialog(url, para, feature);
 
 				    if (rtn[0] == "TRUE") {
