@@ -328,6 +328,8 @@ function changeMemoStyle() {
 	listNumber = 20;
 	startRow = 0;
 	currentPage = 1;
+	orderWhat = "";
+	orderHow = "";
 
 	setProjectList("new");
 	changeMainSetting();
