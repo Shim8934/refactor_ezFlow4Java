@@ -671,7 +671,7 @@ var CabinetItem = function() {
 	
 	function openFileDetail(itemId) {
 		if(itemPopup) {itemPopup.close();}
-		itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(600, 565));
+		itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(780, 750));
 	}
 	
 	function getSelectedItems() {
