@@ -2248,7 +2248,7 @@ public class EzPMSGWController {
 			for (ProjectTaskVO vo : taskList) {
 				Long taskId = vo.getTaskId();
 				
-				// 그룹 멤버를 얻어옴.
+				// 업무 멤버를 얻어옴.
 				Iterator<TaskMemberVO> iter = taskMemberList.iterator();
 				List<TaskMemberVO> taskMemberListTemp = new ArrayList<TaskMemberVO>();
 				while (iter.hasNext()) {
