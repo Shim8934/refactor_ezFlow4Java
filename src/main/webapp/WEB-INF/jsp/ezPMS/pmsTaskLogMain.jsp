@@ -137,6 +137,9 @@ function searchClear() {
 	searchContent = "";
 	$("#searchByContent").val("");
 	searchStatus = "";
+	orderWhat = "";
+	orderHow = "";
+	currentPage = 1;
 }
 
 //페이지 번호에 의한 셋팅
