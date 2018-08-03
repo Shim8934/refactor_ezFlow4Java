@@ -341,7 +341,7 @@ var strLang488 = "생산종료, 1:종료취소"
 var strLang489 = "기록물철 업무담당자 여부를 조사하는데 실패하였습니다."
 // ezCabinet\CabUser.js
 // ezCabinet\DocListView.js
-var strLang490 = "저장하였습니다."
+var strLang490 = "保存しました。"
 var strLang491 = "저장에 실패하였습니다."
 // ezCabinet\ezCabinet.js
 var strLang492 = "편철확정 여부"
