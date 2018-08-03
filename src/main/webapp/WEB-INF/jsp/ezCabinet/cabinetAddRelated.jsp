@@ -482,14 +482,12 @@
 					console.log(attach);
 					if (attach.childElementCount >= 1) {
 						var listChildren1 = attach.getElementsByTagName("a");
-						var listChildren2 = attach.getElementsByTagName("input");
 						
 						for (var i = 0, len = listChildren1.length; i < len; i++) {
 							var hrefStr  = listChildren1[i].getAttribute("href");
 							var params   = getAllUrlParams(hrefStr);
-							//var fileName = listChildren2[i].getAttribute("value");
 							
-							console.log("hrefStr : "+hrefStr+ " || File path: " + javaURLDecode(params["filePath"]) + " || File Name: " + javaURLDecode(params["fileName"]));
+							console.log(" File path: " + javaURLDecode(params["filePath"]) + " || File Name: " + javaURLDecode(params["fileName"]));
 							
 							attachList.push({
 								filePath : javaURLDecode(params["filePath"]),
