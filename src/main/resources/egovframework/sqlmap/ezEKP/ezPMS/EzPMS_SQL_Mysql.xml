@@ -1521,11 +1521,13 @@
 		AND	
 			A.TENANT_ID = M.TENANT_ID
 		LEFT JOIN 
-				tbl_pms_favorite F 
-			ON
-				A.PROJECT_ID = F.PROJECT_ID 
-			AND
-				A.TENANT_ID = F.TENANT_ID
+			tbl_pms_favorite F 
+		ON
+			A.PROJECT_ID = F.PROJECT_ID 
+		AND
+			A.TENANT_ID = F.TENANT_ID
+		AND 
+			F.USER_ID = #userId#
 		LEFT JOIN	
 			TBL_PMS_GROUP G
 		ON
