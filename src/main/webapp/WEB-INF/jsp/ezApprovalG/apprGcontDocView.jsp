@@ -66,6 +66,7 @@
 		    var checkPwdFlag = "${checkPwdFlag}";
 		    var opinionFlag;
 		    var includeOpinion = false;
+		    var signImageType = "${signImageType}";
 		    
 		    $(function () {
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && abtnReusedmin != 'Y') {
@@ -317,7 +318,7 @@
 		    var writeboardselect_modal_dialogArguments = new Array();
 		    function NewItem_onclick() {
 		        writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
+		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(458, 660));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -702,7 +703,13 @@
 		                        //strimg = "<img src='" + document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?filepath=" + escape(RtnVal) + "' border=0  embedding='1' ";
 		                        strimg = "<img src='" + escape(RtnVal) + "' border=0 embedding='1' ";
 		                        strimg = strimg + " width=" + signWidth;
-		                        strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'  imglock >";
+		                        
+		                        
+		                        if (signImageType = "NAME") {
+	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'  imglock >" + "<br>" + arr_userinfo[2];
+	                            } else {
+	                            	strimg = strimg + " height=" + signHeight + " spath='" + escape(RtnVal) + "'  imglock >";
+	                            }
 
 		                        field.innerHTML = strimg;
 

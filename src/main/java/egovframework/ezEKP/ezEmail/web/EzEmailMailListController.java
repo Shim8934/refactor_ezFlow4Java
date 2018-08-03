@@ -456,12 +456,6 @@ public class EzEmailMailListController {
 					nameLength = Integer.parseInt(returnValue1.split(";")[0]);
 					
 					if (nameLength > 1) {
-//						if (readCount == 0) {
-//							name = String.format(egovMessageSource.getMessage("ezEmail.jje02", locale), Integer.toString(nameLength));
-//						} else {
-//							name = String.format(egovMessageSource.getMessage("ezEmail.jje03", locale), Integer.toString(nameLength), returnValue1.split(";")[1]);
-//						}
-						
 						readDate = "";
 					} else {
 						readDate = returnValue1.split(";")[1];

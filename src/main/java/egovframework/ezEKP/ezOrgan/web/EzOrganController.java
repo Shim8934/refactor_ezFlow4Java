@@ -315,11 +315,10 @@ public class EzOrganController {
 	@ResponseBody
 	public String getOrganTreeInfo() throws Exception{
 		logger.debug("getOrganTreeInfo Started.(Outer Rec.)");
-		String strFilter = "(&(objectclass=ucorg2)(ouLevel=1)(docsysteminfo=*))";
-		String strBaseDN = "";
+		String strFilter = "(&(objectclass=ucorg2)(ouLevel=1))";
 		int intScope = 1;
 
-		String strXML = ezOrganService.getOrganTreeInfo(strFilter, intScope, strBaseDN);
+		String strXML = ezOrganService.getOrganTreeInfo(strFilter, intScope);
 
 		logger.debug("getOrganTreeInfo Ended.(Outer Rec.)");
 		return strXML;
@@ -351,7 +350,7 @@ public class EzOrganController {
 		userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
         String strBaseDN = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
-		String strFilter = "(&(objectclass=ucOrg2)(docsysteminfo=*))";
+		String strFilter = "(&(objectclass=ucOrg2))";
 
         int intScope = 1;
         String strXML = ezOrganService.getOrganSubTreeInfo(strFilter, strBaseDN, intScope);
@@ -368,7 +367,7 @@ public class EzOrganController {
 	public String insertAllOrganSubTreeInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo , String deptID) throws Exception{
 		logger.debug("insertAllOrganSubTreeInfo Started (outer)");
 		userInfo = commonUtil.userInfo(loginCookie);
-		String strFilter = "(&(objectclass=ucOrg2)(docsysteminfo=*))";
+		String strFilter = "(&(objectclass=ucOrg2))";
 		
 		int intScope = 1;
 		String strXML = ezOrganService.getOrganSubTreeInfo(strFilter, deptID, intScope);
@@ -395,7 +394,6 @@ public class EzOrganController {
 	 * 외부 수신처 정보 가져오기
 	 * @throws Exception 
 	 */
-//	 * 
 	@RequestMapping(value = "/ezOrgan/getOrgInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getOrgInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
@@ -405,7 +403,7 @@ public class EzOrganController {
 		String strBaseDN = request.getParameter("orgID") ;
 		String strFilter = "(&(objectclass=ucOrg2)(ouCode=" + strBaseDN + "))";
 		int intScope = 0;
-		String strXML = ezOrganService.getOrgInfo(strBaseDN, strFilter, intScope);
+		String strXML = ezOrganService.getOrgInfo(strFilter, intScope);
 		
 		logger.debug("getOrgInfo ended");
 		return strXML;
