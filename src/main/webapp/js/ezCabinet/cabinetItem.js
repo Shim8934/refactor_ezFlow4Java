@@ -771,7 +771,7 @@ var CabinetItem = function() {
 			switch(itemType) {
 				case 1 : showMailPreview(data, dlElmt)     ; break;
 				case 2 : showApprovalPreview(data, dlElmt) ; break;
-				case 3 : showBoardPreview()    ; break;
+				case 3 : showBoardPreview(data, dlElmt)    ; break;
 				case 4 : showSchedulePreview() ; break;
 				case 5 : showTodoPreview()     ; break;
 				case 6 : showOptionPreview()   ; break;
@@ -968,6 +968,38 @@ var CabinetItem = function() {
 		documentCont.size     = itemInfo["itemSize"];
 		documentCont.attach   = attachList;
 		
+	}
+	
+	function showBoardPreview(data, dlElmt) {
+		var itemInfo       = data.fileDetail;
+		var attachList     = data.attachFileList;
+		var relatedList    = data.relatedFileList;
+		var writer    = data.writerVO;
+		
+		generateBoardTitle(itemInfo, relatedList, dlElmt);
+		generateBoardContent(attachList, itemInfo);
+	}
+	
+	function generateBoardTitle(itemInfo, relatedList, dlElmt) {
+		var creatorName = itemInfo["creatorName"];
+		var creatorId   = itemInfo["creatorId"];
+		
+		//Creator title
+		generateCreatorTitle(dlElmt, creatorName, creatorId);
+		
+		//Related documents title
+		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
+	}
+	
+	function generateBoardContent(attachList, itemInfo) {
+		var totalFiles       = attachList.length;
+		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
+		var ifameContent     = document.getElementById(iframeId);
+		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
+		documentCont         = {};
+		documentCont.content = itemInfo["contentPath"];
+		documentCont.size    = itemInfo["itemSize"];
+		documentCont.attach  = attachList;
 	}
 	
 	function generateCreatorTitle(dlElmt, creatorName, creatorId) {

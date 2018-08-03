@@ -252,14 +252,10 @@
 					var writerTd      = window.opener.document.getElementById("WriteUserNM");
 					var postTd        = window.opener.document.getElementById("PostDate");
 					var titleTd       = window.opener.document.getElementById("cTitle");
-					
-					//var boardWriter   = writerTd.getElementsByTagName("div")[0].getElementsByTagName("span")[0].textContent;
-					
 					var writerSpan    = writerTd.getElementsByTagName("div")[0].getElementsByTagName("span")[0].getAttribute("onclick");
 					var start         = writerSpan.indexOf("'");
 					var end           = writerSpan.lastIndexOf("'");
 					var boardWriter   = writerSpan.substring(start + 1, end);
-					
 					var postDate      = postTd.getElementsByTagName("div")[0].textContent;
 					var boardTitle    = titleTd.getElementsByTagName("div")[0].textContent;
 					var messageFrame  = window.opener.document.getElementById("message");
@@ -330,7 +326,42 @@
 				}
 				
 				function saveOptionDocument() {
-					//Add code here
+					var optionOpener   = window.opener;
+					if (!optionOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var title        = optionOpener.document.getElementById("titleTd").textContent;
+					var writer       = optionOpener.document.getElementById("writer").textContent;
+					var date         = optionOpener.document.getElementById("printStatus").textContent;
+					var importanceTd = optionOpener.document.getElementById("Td_Importance");
+					var importance   = importanceTd.querySelector("span").textContent;
+					var option       = optionOpener.document.getElementById("option").textContent;
+					var statusNum    = optionOpener.document.getElementById("statusNum").textContent;
+					var status       = optionOpener.document.getElementById("status").textContent;
+					var confirm      = optionOpener.document.querySelector("td[class='confirmStatus']").innerHTML;
+					var endDateDiv   = optionOpener.document.getElementById("endDate");
+					var endDate      = "";
+					var content      = optionOpener.document.getElementById("divCross").innerHTML;
+					
+					var attach       = optionOpener.document.getElementById("attachedfileDIV");
+					var attachList   = [];
+					
+					if (endDateDiv) {
+						endDate = endDateDiv.textContent; 
+					}
+					
+					var listChildren    = optionAttach.children;
+					for (var i = 0, len = listChildren.length; i < len; i++) {
+						var inputElmt   = listChildren[i].firstElementChild;
+						var filepath    = inputElmt.getAttribute("filepath");
+						var filename    = inputElmt.getAttribute("filename");
+					
+						console.log("File path: " + filepath + " || File Name: " + javaURLDecode(filename));
+						
+						attachList.push({
+							filePath : filepath,
+							fileName : javaURLDecode(filename)
+						});
+					}
 				}
 				
 				function saveProjectDocument() {

@@ -18,13 +18,13 @@
 			<table class="tblBoardInf">
 				<tr>
 					<th><spring:message code='ezCabinet.t109'/></th>
-					<td id="fileCreator" class="cursor"><c:out value="${item.creatorName}"/></td>
+					<td id="fileCreator" class="cursor overfl"><c:out value="${item.creatorName}"/></td>
 					<th><spring:message code='ezCabinet.t110'/></th>
 					<td><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${writer.columnName}"/></th>
-					<td id="boardCreator" class="cursor"></td>
+					<td id="boardCreator" class="cursor overfl"></td>
 					<th><c:out value="${boardTime.columnName}"/></th>
 					<td><c:out value="${fn:substring(boardTime.columnValue, 0, 19)}"/></td>
 				</tr>
@@ -79,6 +79,7 @@
 			
 			var CabinetBoardFile = function() {
 				var rlWindow     = null;
+				var itemPopup    = null;
 				var itemId       = null;
 				var boardContent = null;
 				var relatedArr   = [];
