@@ -1898,15 +1898,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		vo.setDocNo(docNo);
 
 		if (mode.equals("reply")) {
-			vo.setRootItemId(Integer.parseInt((String) jsonParam.get("rootItemId")));
+			vo.setRootItemId(Integer.parseInt((String)jsonParam.get("rootItemId")));
 			vo.setUpperItemId(Integer.parseInt((String)jsonParam.get("itemId")));
 			// 답변을 쓰는 글의 level보다 1이 증가
 			vo.setItemLevel(Integer.parseInt((String) jsonParam.get("itemLevel")) + 1);
 			lastInsertId = ezPMSDAO.addBoardReplay(vo);
 		} else {
+			vo.setRootItemId(docNo);
 			// 게시물의 id가 rootId가 됨
 			lastInsertId = ezPMSDAO.addBoard(vo);
-			ezPMSDAO.updateRootItemId(lastInsertId);
+			//ezPMSDAO.updateRootItemId(docNo);
 		}
 
 		String fileList = jsonParam.get("fileList").toString();
@@ -2074,6 +2075,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 		int docNo = ezPMSDAO.getMaxDocNo(map) + 1;
 		map.put("docNo", docNo);
+		map.put("rootItemId", docNo);
 		
 		for (String itemId : itemIds) {
 			map.put("itemId", itemId);
