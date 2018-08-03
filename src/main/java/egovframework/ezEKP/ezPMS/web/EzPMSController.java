@@ -1179,17 +1179,17 @@ public class EzPMSController {
 		try {
 			// 프로젝트 담당자
 			if (param.get("managerList") != null) {
-				headManager = ((List<Map<String, Object>>) param.get("managerList"));
-				headManager.removeIf(o -> !o.get("userId").equals(headManagerId));
 				managerList = ((List<Map<String, Object>>) param.get("managerList"));
-				managerList.removeIf(o -> o.get("userId").equals(headManagerId));
+				
+				headManager = managerList.stream().filter(o -> o.get("userId").equals(headManagerId)).collect(Collectors.toList());
+				managerList = managerList.stream().filter(o -> !o.get("userId").equals(headManagerId)).collect(Collectors.toList());
 
 				// 이전 member의 집합
 				if (mode.equals("edit")) {
 					if (param.get("beforeManagerList") != null) {
 						beforeManagerList = (List<Map<String, Object>>) param.get("beforeManagerList");
-						beforeManagerList.removeIf(o -> o.get("userId").equals(beforeHeadManagerId));
-						
+						beforeManagerList = beforeManagerList.stream().filter(o -> !o.get("userId").equals(beforeHeadManagerId)).collect(Collectors.toList());
+
 						if (managerList.size() > 0 || managerList != null) {
 							Iterator<Map<String, Object>> managerIter = managerList.iterator();
 
@@ -1268,7 +1268,7 @@ public class EzPMSController {
 				getToArrMailList(viewerList, param, request, projectName, projectId,
 						egovMessageSource.getMessage("ezPMS.t65", userInfo.getLocale()), loginCookie);
 			}
-
+			
 		} catch (Exception e) {
 			LOGGER.debug("sendNotiMail ERROR : " + e.getMessage());
 			e.printStackTrace();

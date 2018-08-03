@@ -145,7 +145,7 @@ function changeStatus() {
 }
 
 function popupClose() {
-	parent.parent.frames["left"].document.getElementById("blockLeft").remove();
+	$("#blockLeft", parent.parent.frames["left"].document).remove();
 	parent.DivPopUpHidden();
 }
 
