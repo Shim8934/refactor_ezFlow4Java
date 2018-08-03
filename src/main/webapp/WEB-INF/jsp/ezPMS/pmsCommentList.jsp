@@ -68,7 +68,11 @@
 										
 					addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t127' />" + commentContent.trim() +"<spring:message code='ezPMS.t126' />");
 
-					getTaskTree();
+					if(typeof(getTaskTree) !== "undefined"){
+						getTaskTree();
+					} else {
+						location.reload();
+					}
 				} else {
 					alert("<spring:message code='ezPMS.t224' />");
 					doubleSubmitFlag = false;
