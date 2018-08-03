@@ -273,8 +273,6 @@
 							var params   = getAllUrlParams(hrefStr);
 							var fileName = listChildren2[i].getAttribute("value");
 							
-							console.log("File path: " + javaURLDecode(params["filePath"]) + " || File Name: " + fileName);
-							
 							attachList.push({
 								filePath : javaURLDecode(params["filePath"]),
 								fileName : fileName
@@ -291,7 +289,6 @@
 						attach    : JSON.stringify(attachList),
 						content   : boardContent
 					};
-					
 					
 					if (saveMode == 1) {data.cabinet = cabinetId;}
 					
@@ -313,10 +310,6 @@
 					}
 				}
 				
-				function saveScheduleDocument() {
-					//Add code here
-				}
-				
 				function saveTodoDocument() {
 					//Add code here
 				}
@@ -325,7 +318,85 @@
 					//Add code here
 				}
 				
-				function saveOptionDocument(saveMode, cabinetId) {
+				function saveScheduleDocument(saveMode, cabinetId) {
+					var scheduleOpener = window.opener;
+					if (!scheduleOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var scheduleGroup    = "";
+					var scheduleAttList  = [];
+					var attachList       = [];
+					var scheduleType     = scheduleOpener.scheduletype;
+					var scheduleCreator  = scheduleOpener.creatorid;
+					var createDate       = trimStr(scheduleOpener.document.getElementById("LabelCreateDate").textContent);
+					var schedulePublic   = trimStr(scheduleOpener.document.getElementById("LabelPublic").textContent);
+					var schedulePriority = trimStr(scheduleOpener.document.getElementById("LabelImportance").textContent);
+					var scheduleDate     = trimStr(scheduleOpener.document.getElementById("LabelDate").textContent);
+					var scheduleLocation = trimStr(scheduleOpener.document.getElementById("LabelLocation").textContent);
+					var scheduleTitle    = trimStr(scheduleOpener.document.getElementById("LabelSubject").textContent);
+					
+					if (scheduleType == 7) {
+						var normalElmt = scheduleOpener.document.getElementById("normalScreen");
+						var tableElmt  = normalElmt.querySelector("table[class='popuplist']");
+						scheduleGroup  = tableElmt.rows[0].cells[1].firstElementChild.textContent;
+						scheduleGroup  = trimStr(scheduleGroup);
+					}
+					
+					if (scheduleType == 1 || scheduleType == 6) {
+						var divAttElmt = scheduleOpener.document.getElementById("LabelAttendant");
+						var listUser   = divAttElmt.children;
+						if (listUser && listUser.length > 0) {
+							for (var i = 0, len = listUser.length; i < len; i++) {
+								var attendantId = getUserIdFromInline(listUser[i]);
+								console.log("attendantId: " + attendantId);
+								scheduleAttList.push(attendantId);
+							}
+						}
+					}
+					
+					var messageFrame    = scheduleOpener.document.getElementById("message");
+					var contentWd       = messageFrame.contentWindow || messageFrame.contentDocument;
+					var scheduleContent = contentWd.document.body.innerHTML;
+					
+					//Attach list
+					var attachDivElmt   = scheduleOpener.document.getElementById("attachedfileDIV");
+					var listAttach      = attachDivElmt.children;
+					if (listAttach && listAttach.length > 0) {
+						for (var i = 0, len = listAttach.length; i < len; i++) {
+							var inputElmt = listAttach[i].firstElementChild;
+							var filePath  = inputElmt.getAttribute("filepath");
+							var fileName  = javaURLDecode(inputElmt.getAttribute("filename"));
+							
+							attachList.push({
+								filePath : filePath,
+								fileName : fileName
+							});
+						}
+					}
+					
+					
+					var url  = "/ezCabinet/saveRelatedSchedule.do";
+					var data = {
+						mode         : saveMode,
+						creator      : scheduleCreator,
+						title        : scheduleTitle,
+						createdate   : createDate,
+						scheduledate : scheduleDate,
+						priority     : schedulePriority,
+						location     : scheduleLocation,
+						publicstatus : schedulePublic,
+						groupname    : scheduleGroup,
+						attendant    : JSON.stringify(scheduleAttList),
+						scheduletype : getScheduleTypeName(parseInt(scheduleType)),
+						attach       : JSON.stringify(attachList),
+						content      : scheduleContent
+					};
+					
+					if (saveMode == 1) {data.cabinet = cabinetId;}
+					
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
+				}
+				
+				function saveOptionDocument() {
 					var optionOpener   = window.opener;
 					if (!optionOpener) {alert(CabinetMessages.strSelect); return;}
 					
@@ -382,8 +453,64 @@
 					//Add code here
 				}
 				
-				function saveJournalDocument() {
-					//Add code here
+				function saveJournalDocument(saveMode, cabinetId) {
+					var journalOpener = window.opener;
+					if (!journalOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var jList          = journalOpener.document.getElementsByClassName("content2")[0];
+					var totalRows      = jList.rows;
+					var firtRow        = totalRows[0];
+					var createDate     = firtRow.children[1].firstElementChild.textContent;
+					var creator        = firtRow.children[3].firstElementChild.getAttribute("onclick");
+					var journalType    = totalRows[1].children[1].firstElementChild.textContent;
+					var formName       = totalRows[1].children[3].firstElementChild.textContent; 
+					var start          = creator.indexOf("(");
+					var end            = creator.lastIndexOf(")");
+					var journalWriter  = creator.substring(start + 2, end - 1);
+					var title          = journalOpener.document.getElementById("cTitle").textContent;
+					
+					var messageFrame   = window.opener.document.getElementById("message");
+					var contentWd      = messageFrame.contentWindow || messageFrame.contentDocument;
+					var content        = contentWd.document.getElementById("journalContent").innerHTML;
+					var attach         = journalOpener.document.getElementById("lstAttachLink");
+					var attachList     = [];
+					
+					console.log("createDate: " + createDate);
+					console.log("journalWriter: " + journalWriter);
+					console.log("journalType: " + journalType);
+					console.log("content: " + content);
+					console.log(attach);
+					if (attach.childElementCount >= 1) {
+						var listChildren1 = attach.getElementsByTagName("a");
+						var listChildren2 = attach.getElementsByTagName("input");
+						
+						for (var i = 0, len = listChildren1.length; i < len; i++) {
+							var hrefStr  = listChildren1[i].getAttribute("href");
+							var params   = getAllUrlParams(hrefStr);
+							var fileName = listChildren2[i].getAttribute("value");
+							
+							console.log("File path: " + javaURLDecode(params["filePath"]) + " || File Name: " + javaURLDecode(params["fileName"]));
+							
+							attachList.push({
+								filePath : javaURLDecode(params["filePath"]),
+								fileName : javaURLDecode(params["fileName"])
+							});
+						}
+					}
+					
+					var url  = "/ezCabinet/saveRelatedJournal.do";
+					var data = {
+						mode          : saveMode,
+						createDate    : createDate,
+						journalWriter : journalWriter,
+						journalType   : journalType,
+						formName      : formName,
+						title         : title,
+						content       : content,
+						attach        : JSON.stringify(attachList)
+					};
+					console.log(data);
+					if (saveMode == 1) {data.cabinetId = cabinetId;}
 				}
 				
 				function saveResourceDocument(saveMode, cabinetId) {
@@ -392,16 +519,12 @@
 					
 					var resWriter    = resourceOpener.writerIDVal;
 					var resDate      = resourceOpener.document.getElementById("AllDayDisplay").textContent;
-					var resPriority  = resourceOpener.document.getElementById("importanceDIV").textContent.replace(/\s/g,'');
+					var resPriority  = trimStr(resourceOpener.document.getElementById("importanceDIV").textContent);
 					var resItem      = resourceOpener.document.getElementById("itemList").textContent;
 					var resTitle     = resourceOpener.document.getElementById("titleDIV").textContent;
 					var messageFrame = resourceOpener.document.getElementById("message");
 					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
 					var resContent   = contentWd.document.body.innerHTML;
-					console.log("resWriter: " + resWriter + " || resDate: " + resDate + " || resPriority: " + resPriority + " || resItem: " + resItem
-							 + " || resTitle: " + resTitle);
-					
-					console.log("resContent: " + resContent);
 					
 					var url  = "/ezCabinet/saveRelatedResource.do";
 					var data = {
@@ -560,6 +683,32 @@
 						.replace("%28", /\(/g)
 						.replace("%29", /\)/g)
 						.replace("%7E", /~/g);
+				}
+				
+				function getUserIdFromInline(spanObj) {
+					var clickStr    = spanObj.getAttribute("onclick");
+					var start       = clickStr.indexOf("'");
+					var end         = clickStr.lastIndexOf("'");
+					return clickStr.substring(start + 1, end);
+				}
+				
+				function getScheduleTypeName(schType) {
+					var returnStr = "";
+					
+					switch (schType) {
+						case 1: 
+						case 6: returnStr = CabinetMessages.strSchedule1; break;
+						case 2: 
+						case 4: returnStr = CabinetMessages.strSchedule2; break;
+						case 3: 
+						case 5: returnStr = CabinetMessages.strSchedule3; break;
+						case 7: returnStr = CabinetMessages.strSchedule4; break;
+					}
+				}
+				
+				function trimStr(str) {
+					if(str == null) {return str;}
+					return str.replace(/^\s+|\s+$/g, '');
 				}
 				
 				function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {

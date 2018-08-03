@@ -23,21 +23,19 @@
 					<td id="createdDate" class="nowrap cabdatetd"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
-					<th><c:out value="${sender.columnName}"/></th>
-					<td id="senderMail" class="overfl cursor wide" title="<c:out value="${senderUser.userName}"/>"><c:out value="${senderUser.userName}"/></td>
-					<th><c:out value="${emailTime.columnName}"/></th>
-					<td class="nowrap cabdatetd"><c:out value="${fn:substring(emailTime.columnValue, 0, 19)}"/></td>
+					<th><c:out value="${resourceitem.columnName}"/></th>
+					<td class="overfl" title="<c:out value="${resourceitem.columnValue}"/>"><c:out value="${resourceitem.columnValue}"/></td>
+					<th><c:out value="${priority.columnName}"/></th>
+					<td class="nowrap cabdatetd"><c:out value="${priority.columnValue}"/></td>
 				</tr>
 				<tr>
-					<th><c:out value="${receiver.columnName}"/></th>
-					<td colspan="3"><div id="receivers" class="cabemailDiv"></div></td>
+					<th><c:out value="${creator.columnName}"/></th>
+					<td id="resCreator" colspan="3" class="overfl cursor wide" title="<c:out value="${creatorUser.userName}"/>"><c:out value="${creatorUser.userName}"/></td>
 				</tr>
-				<c:if test="${not empty forwardList}">
-					<tr>
-						<th><c:out value="${forward.columnName}"/></th>
-						<td colspan="3"><div id="forwards" class="cabemailDiv"></div></td>
-					</tr>
-				</c:if>
+				<tr>
+					<th><c:out value="${resourcedate.columnName}"/></th>
+					<td class="overfl" colspan="3" title="<c:out value="${resourcedate.columnValue}"/>"><c:out value="${resourcedate.columnValue}"/></td>
+				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
 					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
@@ -49,7 +47,7 @@
 			</table>
 		</div>
 		
-		<div class="${not empty forwardList ? 'mailContDiv1' : 'mailContDiv2'}"><iframe id="mailIframe" class="cabrlframe2"></iframe></div>
+		<div class="resContDiv"><iframe id="resIframe" class="cabrlframe2"></iframe></div>
 		
 		<div class="cabBttnDiv" id="fileDivBttn">
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
@@ -68,33 +66,12 @@
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
 		<script type="text/javascript">
-			var CabinetScroll = function() {
-				return function(elementId) {
-					var scrolled    = true;
-					var lastScrollY = 0;
-					var divElmt     = document.getElementById(elementId);
-					
-					if (!divElmt) {alert("Cannot find element with this id: " + elementId); return;}
-					
-					divElmt.onscroll = function(e) {scrollListOfItem(this);}
-					
-					function scrollListOfItem() {
-						if (scrolled) {
-							scrolled = false;
-							var distance      = divElmt.scrollTop < lastScrollY ? -20 : 20;
-							divElmt.scrollTop = lastScrollY + distance;
-							setTimeout(function () {scrolled = true; lastScrollY = divElmt.scrollTop;}, 500);
-						}
-					}
-				}
-			}();
-			
-			var CabinetEmailFile = function() {
+			var CabinetResourceFile = function() {
 				var rlWindow    = null;
 				var userWindow  = null;
 				var itemPopup   = null;
 				var itemId      = null;
-				var mailContent = null;
+				var resContent  = null;
 				var relatedArr  = [];
 				
 				function initEvents(itemID) {
@@ -107,6 +84,9 @@
 					listBttns[1].onclick    = function(e) {fileDelete();};
 					listBttns[2].onclick    = function(e) {filePrint();}
 					listBttns[3].onclick    = function(e) {closeWindow();};
+					
+					document.getElementById("fileListDiv").onscroll = function(e) {scrollListOfItem(this);}
+					
 					var cabBttnElmt         = document.getElementById("fileModifyDivBttn");
 					var listBttns           = cabBttnElmt.children;
 					listBttns[0].onclick    = function(e) {saveItem();};
@@ -129,34 +109,17 @@
 				
 				function processFileDetail(fileItem) {
 					var result      = fileItem.fileDetail;
-					var attachList  = fileItem.attachFileList;
 					var relatedList = fileItem.relatedFileList;
-					var sender      = fileItem.sender;
-					var receivers   = fileItem.receivers;
-					var forwards    = fileItem.forwards;
+					var creator     = fileItem.creator;
 					relatedArr      = [];
 					
 					//파일상세
 					document.getElementById("creator").onclick    = function(e) {showUserInfoFromId(result["creatorId"]);};
-					document.getElementById("senderMail").onclick = function(e) {showUserInfoFromEmail(sender["userEmail"]);};
+					document.getElementById("resCreator").onclick = function(e) {showUserInfoFromId(creator["userId"]);};
 					
 					var titleTd         = document.getElementById("title");
 					titleTd.textContent = result["title"];
 					titleTd.setAttribute("title", result["title"]);
-					
-					//Email receiver list
-					var receiverDiv       = document.getElementById("receivers");
-					receiverDiv.innerHTML = "";
-					var receiverScroll    = new CabinetScroll("receivers");
-					setScrollElement(receiverDiv, receivers, showUserInfoFromEmail, "userEmail", "userName", "");
-					
-					//Email forward list
-					var forwardDiv = document.getElementById("forwards");
-					if (forwardDiv && forwards && forwards.length > 0) {
-						forwardDiv.innerHTML = "";
-						var forwardScroll = new CabinetScroll("forwards");
-						setScrollElement(forwardDiv, forwards, showUserInfoFromEmail, "userEmail", "userName", "");
-					}
 					
 					//Related list
 					var divElmt       = document.getElementById("fileListDiv");
@@ -164,35 +127,12 @@
 					var relDocDivElmt = divElmt.parentElement;
 					while (relDocDivElmt.childElementCount > 1) {relDocDivElmt.removeChild(relDocDivElmt.lastElementChild);}
 					
-					if (relatedList && relatedList.length > 0) {
-						var relatedScroll = new CabinetScroll("fileListDiv");
-						setScrollElement(divElmt, relatedList, readRelatedItem, "relatedItemId", "title", "useStatus");
-						
-						for (var i = 0, len = relatedList.length; i < len; i++) {
-							relatedArr.push({
-								itemType  : relatedList[i]["itemType"],
-								itemId    : relatedList[i]["relatedItemId"],
-								itemTitle : relatedList[i]["title"]
-							})
-						}
-					}
-					
-					//Attach List and content
-					var iframeElmt      = document.getElementById("mailIframe");
-					iframeElmt.src      = "/ezCabinet/getPreviewContent.do?module=mail";
-					mailContent         = {};
-					mailContent.content = result["contentPath"];
-					mailContent.size    = result["itemSize"];
-					mailContent.attach  = attachList;
-				}
-				
-				function setScrollElement(divElmt, listObj, handlerCallBack, roleName, titleName, statusName) {
-					for (var i = 0, len = listObj.length; i < len; i++) {
+					for (var i = 0, len = relatedList.length; i < len; i++) {
 						var spanElmt = document.createElement("span");
-						spanElmt.setAttribute("role", listObj[i][roleName]);
-						spanElmt.textContent = listObj[i][titleName];
+						spanElmt.setAttribute("role", relatedList[i]["relatedItemId"]);
+						spanElmt.textContent = relatedList[i]["title"];
 						spanElmt.className   = "rlSpanBnk";
-						spanElmt.onclick = (function(itemId, status){return function() {handlerCallBack(itemId, status);}; })(listObj[i][roleName], listObj[i][statusName]);
+						spanElmt.onclick = (function(status, itemId){return function() {readRelatedItem(itemId, status);}; })(relatedList[i]["useStatus"], relatedList[i]["relatedItemId"]);
 						divElmt.appendChild(spanElmt);
 						
 						if (i != len - 1) {
@@ -200,6 +140,29 @@
 							divideEm.textContent = ";";
 							divElmt.appendChild(divideEm);
 						}
+						
+						relatedArr.push({
+							itemType  : relatedList[i]["itemType"],
+							itemId    : relatedList[i]["relatedItemId"],
+							itemTitle : relatedList[i]["title"]
+						})
+					}
+					
+					//Attach List and content
+					var iframeElmt     = document.getElementById("resIframe");
+					iframeElmt.src     = "/ezCabinet/getPreviewContent.do?module=resrc";
+					resContent         = {};
+					resContent.content = result["contentPath"];
+					resContent.size    = result["itemSize"];
+					resContent.attach  = [];
+				}
+				
+				function scrollListOfItem(divElmt) {
+					if (scrolled) {
+						scrolled = false;
+						var distance      = divElmt.scrollTop < lastScrollY ? -20 : 20;
+						divElmt.scrollTop = lastScrollY + distance;
+						setTimeout(function () {scrolled = true; lastScrollY = divElmt.scrollTop;}, 500);
 					}
 				}
 				
@@ -208,12 +171,6 @@
 					feature = feature + getOpenWindowfeature(420, 500);
 					
 					userWindow = window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
-				}
-				
-				function showUserInfoFromEmail(userMail) {
-					var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
-					feature = feature + getOpenWindowfeature(420, 500);
-					userWindow = window.open("/ezCommon/showPersonInfo.do?email=" + encodeURIComponent(userMail), "userInfo", feature);
 				}
 				
 				function getRelatedFiles() {return relatedArr;}
@@ -326,30 +283,7 @@
 				}
 				
 				function filePrint() {
-					var rltdElmt   = null;
-					var ftdElmt    = null;
-					var rtdElmt    = null;
-					
-					var forwardDiv = document.getElementById("forwards");
-					if (forwardDiv) {
-						var fclientHeight = forwardDiv.clientHeight;
-						var fscrollHeight = forwardDiv.scrollHeight;
-						
-						if (fscrollHeight > fclientHeight) {
-							ftdElmt = relatedFileList.parentElement;
-							ftdElmt.setAttribute("style", "vertical-align: top; height: " + (fscrollHeight) + "px;");
-						}
-					}
-					
-					var receiverDiv   = document.getElementById("receivers");
-					var rclientHeight = receiverDiv.clientHeight;
-					var rscrollHeight = receiverDiv.scrollHeight;
-					
-					if (rscrollHeight > rclientHeight) {
-						rtdElmt = receiverDiv.parentElement;
-						rtdElmt.setAttribute("style", "vertical-align: top; height: " + (rscrollHeight) + "px;");
-					}
-					
+					var rltdElmt        = null;
 					var relatedFileList = document.getElementById("fileListDiv");
 					var rlclientHeight  = relatedFileList.clientHeight;
 					var rlscrollHeight  = relatedFileList.scrollHeight;
@@ -359,7 +293,7 @@
 						rltdElmt.setAttribute("style", "vertical-align: top; height: " + (rlscrollHeight) + "px;");
 					}
 					
-					var iframeElmt = document.getElementById("mailIframe");
+					var iframeElmt = document.getElementById("resIframe");
 					var parentDiv  = iframeElmt.parentElement;
 					var iframeCont = iframeElmt.contentWindow? iframeElmt.contentWindow: iframeElmt.contentDocument;
 					
@@ -367,23 +301,6 @@
 					var divInfo        = document.querySelector("div[class='divInfo']");
 					var cloneDivInf    = divInfo.cloneNode(true);
 					var attachDiv      = iframeCont.document.getElementsByClassName("previewmail_addfile cabattach")[0];
-					
-					//Check if attach files exist
-					if (attachDiv) {
-						var ulElmt = attachDiv.lastElementChild;
-						if (ulElmt.childElementCount > 0) {
-							var cloneUlEmt     = ulElmt.cloneNode(true);
-							var trElmt         = document.createElement("tr");
-							var thElmt         = document.createElement("th");
-							var tdElmt         = document.createElement("td");
-							thElmt.textContent = CabinetMessages.strAttach5;
-							tdElmt.setAttribute("colspan", 3);
-							tdElmt.appendChild(cloneUlEmt);
-							trElmt.appendChild(thElmt);
-							trElmt.appendChild(tdElmt);
-							cloneDivInf.firstElementChild.appendChild(trElmt);
-						}
-					}
 					
 					var divText        = iframeCont.document.getElementById("txtField");
 					var cloneDivText   = divText.cloneNode(true);
@@ -403,8 +320,6 @@
 					divInfo.removeAttribute("style");
 					document.body.removeChild(printWrapDiv);
 					if (rltdElmt) {rltdElmt.removeAttribute("style");}
-					if (rtdElmt)  {rtdElmt.removeAttribute("style");}
-					if (ftdElmt)  {ftdElmt.removeAttribute("style");}
 				}
 				
 				function saveItem() {
@@ -471,10 +386,10 @@
 				
 				function getRelatedPopUp() {
 					if (rlWindow) {rlWindow.close();}
-					rlWindow = window.open("/ezCabinet/getRelatedFile.do?itemId=" + itemId + "&module=mail", "relatedWd", getOpenWindowfeature(800, 600));
+					rlWindow = window.open("/ezCabinet/getRelatedFile.do?itemId=" + itemId + "&module=resrc", "relatedWd", getOpenWindowfeature(800, 600));
 				}
 				
-				function getIframeContent() {return mailContent;}
+				function getIframeContent() {return resContent;}
 				function closeWindow() {window.close();}
 				
 				return {
@@ -485,6 +400,6 @@
 				};
 			}();
 		</script>
-		<script type="text/javascript">CabinetEmailFile.init("<c:out value='${itemId}'/>");</script>
+		<script type="text/javascript">CabinetResourceFile.init("<c:out value='${itemId}'/>");</script>
 	</body>
 </html>

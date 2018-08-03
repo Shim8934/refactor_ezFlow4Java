@@ -80,5 +80,9 @@ var CabinetMessages = {
 	strAttach4   : "모두저장",
 	strAttach5   : "첨부파일",
 	strDelete2   : "게시물이 삭제되었습니다.",
-	strType      : "타입이 다릅니다."
+	strType      : "타입이 다릅니다.",
+	strSchedule1 : "개인일정",
+	strSchedule2 : "부서일정",
+	strSchedule3 : "회사일정",
+	strSchedule4 : "나의 일정"
 }

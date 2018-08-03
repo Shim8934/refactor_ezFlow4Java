@@ -450,11 +450,12 @@ var CabinetItem = function() {
 			case 3 : result = "게시판"    ; break;
 			case 4 : result = "일정관리"   ; break;
 			case 5 : result = "업무관리"   ; break;
-			case 6 : result = "회람판"    ; break;
+			case 6 : result = "회람판"     ; break;
 			case 7 : result = "커뮤니티"   ; break;
-			case 8 : result = "주소록"    ; break;
+			case 8 : result = "주소록"     ; break;
 			case 9 : result = "업무일지"   ; break;
 			case 10: result = "프로젝트 관리"; break;
+			case 11: result = "자원관리"   ; break;
 		}
 		
 		return result;
@@ -670,7 +671,7 @@ var CabinetItem = function() {
 	
 	function openFileDetail(itemId) {
 		if(itemPopup) {itemPopup.close();}
-		itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(600, 565));
+		itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(780, 750));
 	}
 	
 	function getSelectedItems() {
@@ -772,14 +773,14 @@ var CabinetItem = function() {
 				case 1 : showMailPreview(data, dlElmt)     ; break;
 				case 2 : showApprovalPreview(data, dlElmt) ; break;
 				case 3 : showBoardPreview(data, dlElmt)    ; break;
-				case 4 : showSchedulePreview() ; break;
-				case 5 : showTodoPreview()     ; break;
-				case 6 : showOptionPreview()   ; break;
-				case 7 : showCommunityPreview(); break;
+				case 4 : showSchedulePreview(data, dlElmt) ; break;
+				case 5 : showTodoPreview(data, dlElmt)     ; break;
+				case 6 : showOptionPreview(data, dlElmt)   ; break;
+				case 7 : showCommunityPreview(data, dlElmt); break;
 				case 8 : showAddressPreview(data, dlElmt)  ; break;
-				case 9 : showJournalPreview()  ; break;
-				case 10: showProjectPreview()  ; break;
-				case 11: showResourcePreview() ; break;
+				case 9 : showJournalPreview(data, dlElmt)  ; break;
+				case 10: showProjectPreview(data, dlElmt)  ; break;
+				case 11: showResourcePreview(data, dlElmt) ; break;
 			}
 		}
 		else {
@@ -789,16 +790,21 @@ var CabinetItem = function() {
 	
 	function showAddressPreview(data, dlElmt) {
 		var itemInfo    = data.fileDetail;
+		var relatedList = data.relatedFileList;
 		
-		generateAddressTitle(itemInfo, dlElmt);
+		generateAddressTitle(itemInfo, relatedList, dlElmt);
 		generateAddressContent(itemInfo);
 	}
 	
-	function generateAddressTitle(itemInfo, dlElmt) {
+	function generateAddressTitle(itemInfo, relatedList, dlElmt) {
 		var creatorName = itemInfo["creatorName"];
 		var creatorId   = itemInfo["creatorId"];
+		
 		//Creator title
 		generateCreatorTitle(dlElmt, creatorName, creatorId);
+		
+		//Related documents title
+		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
 	}
 	
 	function generateAddressContent(itemInfo) {
@@ -806,7 +812,30 @@ var CabinetItem = function() {
 		var ifameContent     = document.getElementById(iframeId);
 		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
 		documentCont         = {};
-		documentCont.content = itemInfo["contentPath"] ? itemInfo["contentPath"] : "";
+	}
+	
+	function showJournalPreview(data, dlElmt){
+		var itemInfo    = data.fileDetail;
+		
+		generateJournalTitle(itemInfo, dlElmt);
+		generateJournalContent(itemInfo);
+	}
+	
+	function generateJournalTitle(itemInfo, dlElmt){
+		var creatorName = itemInfo["creatorName"];
+		var creatorId   = itemInfo["creatorId"];
+		//Creator title
+		generateCreatorTitle(dlElmt, creatorName, creatorId);
+	}
+	
+	function generateJournalContent(itemInfo){
+		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
+		var ifameContent     = document.getElementById(iframeId);
+		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
+		documentCont         = {};
+		documentCont.content = itemInfo["contentPath"];
+		documentCont.size    = itemInfo["itemSize"];
+		documentCont.attach  = attachList;
 	}
 	
 	function showGeneralItemPreview(data, dlElmt, itemInfo, parentDiv) {
@@ -943,6 +972,38 @@ var CabinetItem = function() {
 		dlElmt.appendChild(fddElmt);
 	}
 	
+	function showResourcePreview(data, dlElmt) {
+		var itemInfo      = data.fileDetail;
+		var relatedList   = data.relatedFileList;
+		var columnList    = data.columns;
+		var resItemColumn = columnList.filter(function(col) {return col["columnId"] == "resourceitem";})[0];
+		
+		generateResourceTitle(itemInfo, relatedList, resItemColumn, dlElmt);
+		generateResourceContent(itemInfo);
+	}
+	
+	function generateResourceTitle(itemInfo, relatedList, resItemColumn, dlElmt) {
+		var creatorName = itemInfo["creatorName"];
+		var creatorId   = itemInfo["creatorId"];
+		
+		//Creator title
+		generateCreatorTitle(dlElmt, creatorName, creatorId);
+		
+		//Resource name
+		generateColumnTitle(dlElmt, resItemColumn);
+		
+		//Related documents title
+		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
+	}
+	
+	function generateResourceContent(itemInfo) {
+		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
+		var ifameContent     = document.getElementById(iframeId);
+		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
+		documentCont         = {};
+		documentCont.content = itemInfo["contentPath"] ? itemInfo["contentPath"] : "";
+	}
+	
 	function showApprovalPreview(data, dlElmt){
 		var itemInfo       = data.fileDetail;
 		var attachList     = data.attachFileList;
@@ -971,10 +1032,10 @@ var CabinetItem = function() {
 	}
 	
 	function showBoardPreview(data, dlElmt) {
-		var itemInfo       = data.fileDetail;
-		var attachList     = data.attachFileList;
-		var relatedList    = data.relatedFileList;
-		var writer    = data.writerVO;
+		var itemInfo    = data.fileDetail;
+		var attachList  = data.attachFileList;
+		var relatedList = data.relatedFileList;
+		var writer      = data.writerVO;
 		
 		generateBoardTitle(itemInfo, relatedList, dlElmt);
 		generateBoardContent(attachList, itemInfo);
@@ -1010,6 +1071,17 @@ var CabinetItem = function() {
 		spanElmt.className   = "txtSpan";
 		spanElmt.textContent = creatorName;
 		spanElmt.addEventListener("click", function(e) {showUserInfoFromId(creatorId);}, false);
+		ddElmt.appendChild(spanElmt);
+		dlElmt.appendChild(dtElmt);
+		dlElmt.appendChild(ddElmt);
+	}
+	
+	function generateColumnTitle(dlElmt, itemColumn) {
+		var dtElmt           = document.createElement("dt");
+		var ddElmt           = document.createElement("dd");
+		var spanElmt         = document.createElement("span");
+		dtElmt.textContent   = itemColumn["columnName"] + ": ";
+		spanElmt.textContent = itemColumn["columnValue"];
 		ddElmt.appendChild(spanElmt);
 		dlElmt.appendChild(dtElmt);
 		dlElmt.appendChild(ddElmt);
