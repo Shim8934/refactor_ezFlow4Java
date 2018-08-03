@@ -876,7 +876,7 @@
 	
 	        function btnSave_onclick() {
 	            HwpCtrl.SetDocumentInfo(pFormID);
-	            HwpCtrl.SaveFile("", HwpCtrl.GetFieldText("doctitle"));
+	            HwpCtrl.SaveFile("", HwpCtrl.GetFieldText("doctitle").replace(/\r\n/g, " "));
 // 	            HwpCtrl.SaveFile("");
 	        }
 	
