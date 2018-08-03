@@ -234,6 +234,7 @@
 		      		</table>
 		      	</td> 
 		  	</tr>
+		  	<c:if test="${locale eq 'ko'}">
 		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t221' /></th> 
 		    	<td><input type="text" id=SimpleName style="width:97%" maxlength="50"></td> 
@@ -254,6 +255,7 @@
 		    	<th><spring:message code='ezOrgan.t225' /></th> 
 		    	<td><input type="text" id=Manager style="width:97%" maxlength="50"></td> 
 		  	</tr> 
+		  	</c:if>
 		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t226' /></th> 
 		    	<td><input type="text" id=SortNum style="width:97%" maxlength="10"></td> 
