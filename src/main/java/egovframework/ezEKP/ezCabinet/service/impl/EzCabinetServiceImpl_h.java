@@ -1,11 +1,7 @@
 package egovframework.ezEKP.ezCabinet.service.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,9 +12,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
-
+import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -26,10 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
@@ -38,6 +33,7 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationItemVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetRelationVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetVO;
+import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
@@ -46,7 +42,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service
-public class EzCabinetServiceImpl_h implements EzCabinetService_h{
+public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetServiceImpl_h.class);
 
@@ -64,6 +60,9 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 	
 	@Resource(name="loginService")
 	private LoginService loginService;
+	
+	@Autowired
+	private EzCabinetAdminService cabinetAdminService;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -291,7 +290,6 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 	@Override
 	public JSONObject saveBoardItem(String realPath, String mode, int cabinetId, String title, String writer, String attach, String content, String dateTime, Locale locale, LoginVO userInfo) throws Exception {
 		JSONObject result          = new JSONObject();
-		String userId              = userInfo.getId();
 		int tenantId               = userInfo.getTenantId();
 		String companyId           = userInfo.getCompanyID();
 		JSONParser jp              = new JSONParser();
@@ -304,89 +302,22 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 		
 		//Save board columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("writer"    , itemId, "ezBoard.t223", writer, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("writer"    , itemId, "ezBoard.t223", writer  , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("boardTime" , itemId, "ezBoard.t223", dateTime, companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		
 		//Save attach files
-		String cabinetPath = getCabinetDirPath(tenantId);
-		File file          = new File(realPath + cabinetPath);
-		
-		if (!file.exists()) {
-			file.mkdir();
-		}
-		
 		if (!attach.equals("")) {
 			JSONArray attachList = (JSONArray) jp.parse(attach);
-			int totalCnt         = attachList.size();
-			int attachId         = ezCabinetDAO.getMaxAttachId(map) + 1;
-			for (int i = 0; i < totalCnt; i++, attachId++) {
-				JSONObject attachInf = (JSONObject) attachList.get(i);
-				saveBoardAttachFiles(attachInf, attachId, itemId, realPath, cabinetPath, locale, companyId, userId, tenantId);
-			}
+			result               = saveListAttachFiles(attachList, itemId, realPath, "", "", locale, userInfo);
+		}
+		else {
+			result.put("status", "ok");
+			result.put("code", 0);
 		}
 		
-		result.put("status", "ok");
-		result.put("code", 0);
 		return result;
-	}
-	
-	private void saveBoardAttachFiles(JSONObject attachInf, int attachId, int itemId, String realPath, String cabinetPath, Locale locale, String companyId, String userId, int tenantId) throws Exception {
-		String fileName      = attachInf.get("fileName").toString();
-		String filePath      = attachInf.get("filePath").toString();
-		int dotPos           = fileName.lastIndexOf(".");
-		String extend        = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
-		String newName       = UUID.randomUUID().toString() + "." + extend;
-		String pDirPath      = realPath + cabinetPath;
-		String newFilePath   = pDirPath + File.separator + newName;
-		String pfilePath     = cabinetPath + newName;
-		
-		logger.debug("file path: " + filePath + " || file name : " + fileName);
-		
-		File file = new File(realPath + filePath);
-		
-		try {
-			if(!file.exists()) {
-				logger.error("File not found.");
-			}
-			else {
-				InputStream input   = null;
-				OutputStream output = null;
-				
-				try {
-					input              = new FileInputStream(file);
-					File newAttachFile = new File(newFilePath);
-					output             = new FileOutputStream(newAttachFile);
-					byte[] buffer      = new byte[4096];
-					int byteRead       = 0;
-					
-					while ((byteRead = input.read(buffer)) != -1) {
-						output.write(buffer, 0, byteRead);
-					}
-					
-				} catch (IOException e1) {
-					throw e1;
-				} finally {
-					if (input != null) {
-						try { input.close(); } catch (IOException e2) {throw e2;}
-					}
-					if (output != null) {
-						try { output.flush(); } catch (IOException e3) {throw e3;}
-						try { output.close(); } catch (IOException e4) {throw e4;}
-					}
-				}
-			}
-		} catch(Exception e5) {
-			throw e5;
-		}
-		
-		//Save Attach to database
-		File readfile = new File(newFilePath);
-		long fileSize = readfile.length();
-		
-		CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, pfilePath, fileName, fileSize, companyId, tenantId);
-		saveAttachFile(attachFile);
 	}
 	
 	public synchronized void modifyRelatedList(int itemId, JSONArray relatedFiles, LoginVO userInfo) throws Exception {
@@ -492,11 +423,8 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 	public JSONObject saveOptionItem(String realPath, String mode, int cabinetId, String title, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
-		String userId          = userInfo.getId();
 		String companyId       = userInfo.getCompanyID();
 		JSONParser jp          = new JSONParser();
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("tenantId", tenantId);
 		
 		//Add option item
 		int moduleType = 6; //option module
@@ -504,44 +432,104 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 		
 		//Save option columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("optionWriter", itemId, "ezBoard.t5007"  , date, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("optionTime"  , itemId, "ezBoard.t5007"  , date, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("optionWriter", itemId, "ezBoard.t5007"  , writer    , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("optionTime"  , itemId, "ezBoard.t5007"  , date      , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("importance"  , itemId, "ezCircular.t115", importance, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("option"      , itemId, "ezCircular.t118", option, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("statusNum"   , itemId, "ezCircular.t74" , statusNum, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("status"      , itemId, "ezCircular.t124", status, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("confirm"     , itemId, "ezCircular.t86" , confirm, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("endDate"     , itemId, "ezPoll.t161"    , endDate, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("option"      , itemId, "ezCircular.t118", option    , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("statusNum"   , itemId, "ezCircular.t74" , statusNum , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("status"      , itemId, "ezCircular.t124", status    , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("confirm"     , itemId, "ezCircular.t86" , confirm   , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("endDate"     , itemId, "ezPoll.t161"    , endDate   , companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		
 		//Save attach files
-		String cabinetPath = getCabinetDirPath(tenantId);
-		File file          = new File(realPath + cabinetPath);
+		if (!attach.equals("")) {
+			JSONArray attachList  = (JSONArray) jp.parse(attach);
+			result = saveListAttachFiles(attachList, itemId, realPath, "upload_circular.ROOT", "uploadFile", locale, userInfo);
+		}
+		else {
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public JSONObject saveListAttachFiles(JSONArray attachList, int itemId, String realPath, String modulePath, String uploadPath, Locale locale, LoginVO userInfo) throws Exception {
+		JSONObject result                  = new JSONObject();
+		int tenantId                       = userInfo.getTenantId();
+		UserCapacityVO capacity            = cabinetAdminService.getUserCapacity(userInfo.getId(), userInfo.getCompanyID(), userInfo.getPrimary(), tenantId);
+		String cabinetPath                 = getCabinetDirPath(tenantId);
+		long remainStorage                 = -1;
+		long totalAttachSize               = 0;
+		List<CabinetAttachFileVO> fileList = new ArrayList<>();
+		Map<String,Object> map             = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		int totalCnt                       = attachList.size();
+		int attachId                       = ezCabinetDAO.getMaxAttachId(map) + 1;
+		File file                          = new File(realPath + cabinetPath);
 		
 		if (!file.exists()) {
 			file.mkdir();
 		}
 		
-		if (!attach.equals("")) {
-			JSONArray attachList = (JSONArray) jp.parse(attach);
-			int totalCnt         = attachList.size();
-			int attachId         = ezCabinetDAO.getMaxAttachId(map) + 1;
-			for (int i = 0; i < totalCnt; i++, attachId++) {
-				JSONObject attachInf = (JSONObject) attachList.get(i);
-				saveOptionAttachFiles(attachInf, attachId, itemId, realPath, cabinetPath, locale, companyId, userId, tenantId);
+		for (int i = 0; i < totalCnt; i++, attachId++) {
+			JSONObject attachInf = (JSONObject) attachList.get(i);
+			copyRelatedItemAttachFiles(attachInf, attachId, itemId, realPath, cabinetPath, locale, userInfo, modulePath, uploadPath, fileList);
+		}
+		
+		if (capacity.getCapacityType() == 1) {
+			long totalUsed  = Long.parseLong(capacity.getTotalUsed());
+			long totalCap   = capacity.getTotalCapacity() * 1048576;
+			remainStorage   = totalCap - totalUsed;
+			totalAttachSize = fileList.stream().mapToLong(CabinetAttachFileVO::getFileSize).sum();
+			
+			if (totalAttachSize > remainStorage) {
+				//Delete temp files
+				try {
+					for (CabinetAttachFileVO fileAttach : fileList) {
+						File tempFile = new File(realPath + fileAttach.getFilePath());
+						tempFile.delete();
+					}
+					
+					logger.debug("Not enough storage to upload these files!");
+					result.put("status", "error");
+					result.put("code", 4);
+					return result;
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+					logger.debug("Not enough storage to upload these files!");
+					result.put("status", "error");
+					result.put("code", 4);
+					return result;
+				}
 			}
+		}
+		
+		//Save information to database
+		for (CabinetAttachFileVO fileAttach : fileList) {
+			saveAttachFile(fileAttach);
 		}
 		
 		result.put("status", "ok");
 		result.put("code", 0);
 		return result;
 	}
-
-	private void saveOptionAttachFiles(JSONObject attachInf, int attachId, int itemId, String realPath, String cabinetPath, Locale locale, String companyId, String userId, int tenantId) throws Exception {
-		String fileName      = attachInf.get("fileName").toString();
-		String folderPath    = commonUtil.getUploadPath("upload_circular.ROOT", tenantId) + commonUtil.separator + "uploadFile";
-		String filePath      = folderPath + attachInf.get("filePath").toString() + fileName;
+	
+	public void copyRelatedItemAttachFiles(JSONObject attachInf, int attachId, int itemId, String realPath, String cabinetPath, Locale locale, LoginVO userInfo, String modulePath, String uploadPath, List<CabinetAttachFileVO> attachFileList) throws Exception {
+		String companyId  = userInfo.getCompanyID();
+		int tenantId      = userInfo.getTenantId();
+		String fileName   = attachInf.get("fileName").toString();
+		String folderPath = "";
+		
+		if (!modulePath.equals("")) {
+			folderPath = commonUtil.getUploadPath(modulePath, tenantId) + commonUtil.separator + uploadPath;
+		}
+		
+		String filePath      = folderPath + attachInf.get("filePath").toString();
 		int dotPos           = fileName.lastIndexOf(".");
 		String extend        = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
 		String newName       = UUID.randomUUID().toString() + "." + extend;
@@ -553,49 +541,27 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 		
 		File file = new File(realPath + filePath);
 		
-		try {
-			if(!file.exists()) {
-				logger.error("File not found.");
+		if(!file.exists()) {
+			logger.error("File not found.");
+			throw new FileNotFoundException();
+		}
+		else {
+			File newAttachFile = new File(newFilePath);
+			try {
+				FileUtils.copyFile(file, newAttachFile);
 			}
-			else {
-				InputStream input   = null;
-				OutputStream output = null;
-				
-				try {
-					input              = new FileInputStream(file);
-					File newAttachFile = new File(newFilePath);
-					output             = new FileOutputStream(newAttachFile);
-					byte[] buffer      = new byte[4096];
-					int byteRead       = 0;
-					
-					while ((byteRead = input.read(buffer)) != -1) {
-						output.write(buffer, 0, byteRead);
-					}
-					
-				} catch (IOException e1) {
-					throw e1;
-				} finally {
-					if (input != null) {
-						try { input.close(); } catch (IOException e2) {throw e2;}
-					}
-					if (output != null) {
-						try { output.flush(); } catch (IOException e3) {throw e3;}
-						try { output.close(); } catch (IOException e4) {throw e4;}
-					}
-				}
+			catch (Exception e) {
+				throw e;
 			}
-		} catch(Exception e5) {
-			throw e5;
 		}
 		
-		//Save Attach to database
 		File readfile = new File(newFilePath);
 		long fileSize = readfile.length();
 		
 		CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, pfilePath, fileName, fileSize, companyId, tenantId);
-		saveAttachFile(attachFile);
+		attachFileList.add(attachFile);
 	}
-
+	
 	private synchronized int addRelatedItem(int moduleType, int cabinetId, String title, String content, String mode, LoginVO userInfo) throws Exception {
 		String userId              = userInfo.getId();
 		int tenantId               = userInfo.getTenantId();

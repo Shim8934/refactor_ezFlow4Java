@@ -44,6 +44,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService_h;
 import egovframework.ezEKP.ezCabinet.vo.CabinetAttachFileVO;
@@ -83,6 +84,9 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	@Autowired
 	private EzCabinetService_h cabinetService_h;
+	
+	@Autowired
+	private EzCabinetAdminService cabinetAdminService;
 	
 	@Resource(name = "EzCabinetDAO")
 	private EzCabinetDAO ezCabinetDAO;
@@ -1359,8 +1363,6 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		String companyId       = userInfo.getCompanyID();
 		JSONParser jp          = new JSONParser();
 		String dateColumn      = userInfo.getEmail().equals(sender) ? "ezEmail.t704" : "ezEmail.t657";
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("tenantId", tenantId);
 		
 		//Add email item
 		int moduleType = 1; //mail module
@@ -1383,20 +1385,60 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		saveAllColumns(listColm);
 		
 		//Save attach files
-		String cabinetPath = getCabinetDirPath(tenantId);
-		File file          = new File(realPath + cabinetPath);
-		
-		if (!file.exists()) {
-			file.mkdir();
-		}
-		
 		if (!attach.equals("")) {
-			JSONArray attachList = (JSONArray) jp.parse(attach);
-			int totalCnt         = attachList.size();
-			int attachId         = ezCabinetDAO.getMaxAttachId(map) + 1;
+			JSONArray attachList               = (JSONArray) jp.parse(attach);
+			long remainStorage                 = -1;
+			long totalAttachSize               = 0;
+			List<CabinetAttachFileVO> fileList = new ArrayList<>();
+			String cabinetPath                 = getCabinetDirPath(tenantId);
+			Map<String,Object> map             = new HashMap<String, Object>();
+			map.put("tenantId", tenantId);
+			File file                          = new File(realPath + cabinetPath);
+			UserCapacityVO capacity            = cabinetAdminService.getUserCapacity(userInfo.getId(), userInfo.getCompanyID(), userInfo.getPrimary(), tenantId);
+			int totalCnt                       = attachList.size();
+			int attachId                       = ezCabinetDAO.getMaxAttachId(map) + 1;
+			
+			if (!file.exists()) {
+				file.mkdir();
+			}
+			
 			for (int i = 0; i < totalCnt; i++, attachId++) {
 				JSONObject attachInf = (JSONObject) attachList.get(i);
-				saveEmailAttachFiles(attachInf, attachId, itemId, realPath, cabinetPath, locale, companyId, userId, tenantId);
+				copyEmailAttachFiles(fileList, attachInf, attachId, itemId, realPath, cabinetPath, locale, companyId, userId, tenantId);
+			}
+			
+			if (capacity.getCapacityType() == 1) {
+				long totalUsed  = Long.parseLong(capacity.getTotalUsed());
+				long totalCap   = capacity.getTotalCapacity() * 1048576;
+				remainStorage   = totalCap - totalUsed;
+				totalAttachSize = fileList.stream().mapToLong(CabinetAttachFileVO::getFileSize).sum();
+				
+				if (totalAttachSize > remainStorage) {
+					//Delete temp files
+					try {
+						for (CabinetAttachFileVO fileAttach : fileList) {
+							File tempFile = new File(realPath + fileAttach.getFilePath());
+							tempFile.delete();
+						}
+						
+						logger.debug("Not enough storage to upload these files!");
+						result.put("status", "error");
+						result.put("code", 4);
+						return result;
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+						logger.debug("Not enough storage to upload these files!");
+						result.put("status", "error");
+						result.put("code", 4);
+						return result;
+					}
+				}
+			}
+			
+			//Save information to database
+			for (CabinetAttachFileVO fileAttach : fileList) {
+				saveAttachFile(fileAttach);
 			}
 		}
 		
@@ -1405,7 +1447,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		return result;
 	}
 	
-	private void saveEmailAttachFiles(JSONObject attachInf, int attachId, int itemId, String realPath, String cabinetPath, Locale locale, String companyId, String userId, int tenantId) throws Exception{
+	private void copyEmailAttachFiles(List<CabinetAttachFileVO> attachFileList, JSONObject attachInf, int attachId, int itemId, String realPath, String cabinetPath, Locale locale, String companyId, String userId, int tenantId) throws Exception{
 		JSONObject fileHref = (JSONObject) attachInf.get("fileHref");
 		String fileName     = attachInf.get("fileName").toString();
 		String folderPath   = fileHref.get("folderPath").toString();
@@ -1480,8 +1522,8 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 								try { input.close(); } catch (IOException e2) {throw e2;}
 							}
 							if (output != null) {
-								try { output.flush(); } catch (IOException e3) {throw e3;}
-								try { output.close(); } catch (IOException e4) {throw e4;}
+								try {output.flush();} catch (IOException e3) {throw e3;}
+								try {output.close();} catch (IOException e4) {throw e4;}
 							}
 						}
 					}
@@ -1502,7 +1544,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		long fileSize = readfile.length();
 		
 		CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, filePath, fileName, fileSize, companyId, tenantId);
-		saveAttachFile(attachFile);
+		attachFileList.add(attachFile);
 	}
 	
 	private synchronized void saveAttachFile(CabinetAttachFileVO attachFile) {
@@ -1716,5 +1758,55 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		addNewItem(itemCabinetId, itemId, moduleType, title, content, timeUTC, userInfo);
 		
 		return itemId;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject saveScheduleItem(int cabinetId, String realPath, String title, String mode, String createUser,
+			String createDate, String scheduleDate, String priority, String location, String publicstatus,
+			String groupname, String attendant, String scheduletype, String attach, String content, Locale locale, LoginVO userInfo)
+			throws Exception {
+		JSONObject result      = new JSONObject();
+		int tenantId           = userInfo.getTenantId();
+		String companyId       = userInfo.getCompanyID();
+		JSONParser jp          = new JSONParser();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//Add schedule item
+		int moduleType = 4; //schedule module
+		int itemId     = addRelatedItem(moduleType, cabinetId, title, content, mode, userInfo);
+		
+		//Save schedule columns information
+		List<CabinetColumnVO> listColm = new ArrayList<>();
+		listColm.add(createNewRelatedColumn("creator"     , itemId, "ezSchedule.t161", createUser  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("createdate"  , itemId, "ezSchedule.t306", createDate  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("priority"    , itemId, "ezSchedule.t310", priority    , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("publicstatus", itemId, "ezSchedule.t309", publicstatus, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("scheduledate", itemId, "ezSchedule.t318", scheduleDate, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("location"    , itemId, "ezSchedule.t273", location    , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("groupname"   , itemId, "ezSchedule.t159", groupname   , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("scheduletype", itemId, "ezCabinet.t143" , scheduletype, companyId, tenantId));
+		
+		if (!attendant.equals("")) {
+			List<String> attendantList = (List<String>) jp.parse(attendant);
+			if (attendantList.size() > 0) {
+				listColm.add(createNewRelatedColumn("attendant", itemId, "ezSchedule.t163", String.join(";", attendantList), companyId, tenantId));
+			}
+		}
+		
+		saveAllColumns(listColm);
+		
+		//Save attach files
+		if (!attach.equals("")) {
+			JSONArray attachList = (JSONArray) jp.parse(attach);
+			result               = cabinetService_h.saveListAttachFiles(attachList, itemId, realPath, "upload_schedule.ROOT", "", locale, userInfo);
+		}
+		else {
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		
+		return result;
 	}
 }

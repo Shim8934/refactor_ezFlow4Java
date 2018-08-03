@@ -373,7 +373,6 @@
 						}
 					}
 					
-					
 					var url  = "/ezCabinet/saveRelatedSchedule.do";
 					var data = {
 						mode         : saveMode,
@@ -704,6 +703,8 @@
 						case 5: returnStr = CabinetMessages.strSchedule3; break;
 						case 7: returnStr = CabinetMessages.strSchedule4; break;
 					}
+					
+					return returnStr;
 				}
 				
 				function trimStr(str) {

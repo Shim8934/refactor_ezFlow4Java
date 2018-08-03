@@ -238,7 +238,7 @@
 					var liElmt      = imgElmt.parentElement.parentElement.parentElement;
 					var fileName    = liElmt.getAttribute("fname");
 					var filePath    = liElmt.getAttribute("path");
-					var downloadUrl = "/ezCabinet/downloadAttachFile?filePath=" + filePath + "&fileName=" + fileName;
+					var downloadUrl = "/ezCabinet/downloadAttachFile?filePath=" + encodeURIComponent(filePath) + "&fileName=" + encodeURIComponent(fileName);
 					var attachFrame = document.getElementById("attachFrame");
 					attachFrame.src = downloadUrl;
 				}

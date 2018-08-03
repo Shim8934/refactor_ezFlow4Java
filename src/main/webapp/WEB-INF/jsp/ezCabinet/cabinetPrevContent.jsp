@@ -64,11 +64,13 @@
 							var liElmt             = document.createElement("li");
 							var liSpanChild1       = document.createElement("span");
 							var liSpanChild2       = document.createElement("span");
+							var spanChild          = document.createElement("span");
 							liElmt.onclick         = (function(name, path) {return function() {downloadFileAttach(name, path);}; })(attachList[i]["fileName"], attachList[i]["filePath"]);
 							liSpanChild1.className = "cabSpanAttach";
 							liSpanChild2.className = "cabSpanAttach";
 							liSpanChild1.innerHTML = "<img src='/images/icon_adddownload.gif'>";
-							liSpanChild2.innerHTML = "<span>" + attachList[i]["fileName"] + " (" + getFileSize(attachList[i]["fileSize"]) + ")" + "</span>";
+							spanChild.textContent  = attachList[i]["fileName"] + " (" + getFileSize(attachList[i]["fileSize"]) + ")";
+							liSpanChild2.appendChild(spanChild);
 							liElmt.appendChild(liSpanChild1);
 							liElmt.appendChild(liSpanChild2);
 							ulElmt.appendChild(liElmt);
@@ -101,7 +103,7 @@
 				}
 				
 				function downloadFileAttach(fileName, filePath) {
-					var downloadUrl = "/ezCabinet/downloadAttachFile?filePath=" + filePath + "&fileName=" + fileName;
+					var downloadUrl = "/ezCabinet/downloadAttachFile?filePath=" + encodeURIComponent(filePath) + "&fileName=" + encodeURIComponent(fileName);
 					var attachFrame = document.getElementById("attachFrame");
 					attachFrame.src = downloadUrl;
 				}

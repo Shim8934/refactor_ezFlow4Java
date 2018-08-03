@@ -655,7 +655,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveRelatedSchedule(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content) throws Exception {
-		String url                = "/rest/ezcabinet/relate-item/save/resource";
+		String url                = "/rest/ezcabinet/relate-item/save/schedule";
 		JSONObject jsonBody       = new JSONObject();
 		jsonBody.put("userId",       userId);
 		jsonBody.put("title",        title);

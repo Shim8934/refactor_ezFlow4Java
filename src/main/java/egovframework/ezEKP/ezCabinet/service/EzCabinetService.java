@@ -103,4 +103,6 @@ public interface EzCabinetService {
 	//Save related resource item function
 	JSONObject saveResourceItem(int dstCabinetId, String content, String title, String mode, String createUser, String resDate, String priority, String resItem, LoginVO userInfo) throws Exception;
 	
+	//Save related schedule item function
+	JSONObject saveScheduleItem(int dstCabinetId, String realPath, String title, String mode, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content, Locale locale, LoginVO userInfo) throws Exception;
 }
