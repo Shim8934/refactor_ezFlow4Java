@@ -816,9 +816,11 @@ var CabinetItem = function() {
 	
 	function showJournalPreview(data, dlElmt){
 		var itemInfo    = data.fileDetail;
+		var attachList     = data.attachFileList;
+		var relatedList    = data.relatedFileList;
 		
 		generateJournalTitle(itemInfo, dlElmt);
-		generateJournalContent(itemInfo);
+		generateJournalContent(itemInfo, attachList);
 	}
 	
 	function generateJournalTitle(itemInfo, dlElmt){
@@ -828,7 +830,7 @@ var CabinetItem = function() {
 		generateCreatorTitle(dlElmt, creatorName, creatorId);
 	}
 	
-	function generateJournalContent(itemInfo){
+	function generateJournalContent(itemInfo, attachList){
 		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
 		var ifameContent     = document.getElementById(iframeId);
 		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
@@ -836,6 +838,7 @@ var CabinetItem = function() {
 		documentCont.content = itemInfo["contentPath"];
 		documentCont.size    = itemInfo["itemSize"];
 		documentCont.attach  = attachList;
+		
 	}
 	
 	function showGeneralItemPreview(data, dlElmt, itemInfo, parentDiv) {

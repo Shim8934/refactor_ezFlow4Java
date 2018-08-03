@@ -358,8 +358,8 @@
 						console.log("File path: " + filepath + " || File Name: " + javaURLDecode(filename));
 						
 						attachList.push({
-							filePath : filepath,
-							fileName : javaURLDecode(filename)
+							filePath : javaURLDecode(params["filePath"]),
+							fileName : fileName
 						});
 					}
 				}
@@ -402,9 +402,9 @@
 						for (var i = 0, len = listChildren1.length; i < len; i++) {
 							var hrefStr  = listChildren1[i].getAttribute("href");
 							var params   = getAllUrlParams(hrefStr);
-							var fileName = listChildren2[i].getAttribute("value");
+							//var fileName = listChildren2[i].getAttribute("value");
 							
-							console.log("File path: " + javaURLDecode(params["filePath"]) + " || File Name: " + javaURLDecode(params["fileName"]));
+							console.log("hrefStr : "+hrefStr+ " || File path: " + javaURLDecode(params["filePath"]) + " || File Name: " + javaURLDecode(params["fileName"]));
 							
 							attachList.push({
 								filePath : javaURLDecode(params["filePath"]),
@@ -426,6 +426,8 @@
 					};
 					console.log(data);
 					if (saveMode == 1) {data.cabinetId = cabinetId;}
+					
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
 				function saveResourceDocument(saveMode, cabinetId) {
