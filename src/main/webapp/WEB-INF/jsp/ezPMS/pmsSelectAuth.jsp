@@ -193,20 +193,21 @@
 		   				alert("<spring:message code='ezPMS.t164' />");
 		   			}
 	   			} else if (selUserList && selUserList.length > 1){
-	   				selUserList.forEach(function(elem, idx){
+	   				
+	   				for(var i = 0; i < selUserList.length; i++) {
 	   					var chkFlag = true;
-	   					receiverId = elem.getAttribute("id");
-			   			userName = elem.getAttribute("name");
-			   			userDept = elem.getAttribute("dept");
+	   					receiverId = selUserList[i].getAttribute("id");
+			   			userName = selUserList[i].getAttribute("name");
+			   			userDept = selUserList[i].getAttribute("dept");
 			   			userIdType = "user";
-		   				
+			   			
 			   			var headManagerId = parent.opener.headManagerId;
 			   			if(receiverId === headManagerId){
 			   				chkFlag = false;
 			   			}
 			   			
-			   			for(var i = 0; i < authList.length; i++) {
-			   				if (authList[i].userId == receiverId) {
+			   			for(var j = 0; j < authList.length; j++) {
+			   				if (authList[j].userId == receiverId) {
 			   					chkFlag = false;
 			   					break;
 			   				}
@@ -215,7 +216,8 @@
 			   			if(chkFlag){
 				   			userAddToList(chkFlag);
 			   			}
-	   				})
+	   				}
+	   					
 		   			drawReceiverList(authName);
 		   			selMainListUserId = "";
 	   			}
