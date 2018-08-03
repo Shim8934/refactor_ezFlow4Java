@@ -69,6 +69,9 @@
 		})
 		
 		$(document).on("dblclick", "a.jstree-anchor", function(e){
+			if(getTreeDepth(e.target) === false) {
+				return;
+			};
 			ok_Click();
 		})
 	});
