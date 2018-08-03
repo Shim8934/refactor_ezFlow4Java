@@ -460,8 +460,8 @@
 		}
 		
 		$("input[type='checkbox']:checked:not('#HeaderAllCheckBox')").each(function() {
-			var groupName = $(this).parent().siblings(".groupName").text();
-			var taskName  = $(this).parent().siblings(".taskName").text();
+			var groupName = $(this).parent().siblings(".groupNameTd").text();
+			var taskName  = $(this).parent().siblings(".taskNameTd").text();
 			var groupId   = $(this).parents("tr:eq(0)").attr("data-groupid");
 			var taskId    = $(this).parents("tr:eq(0)").attr("id");
 			

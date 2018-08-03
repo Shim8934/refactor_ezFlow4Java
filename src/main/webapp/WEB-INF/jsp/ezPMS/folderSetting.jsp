@@ -77,6 +77,7 @@ function deleteFolder() {
 			success : function(data) {
 				if (data == "permitted") {
 					setFolderList();
+					parent.opener.location.reload();
 				} else {
 					alert('<spring:message code="ezPMS.t344"/>');
 					return;

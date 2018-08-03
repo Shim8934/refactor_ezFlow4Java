@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezPMS.task;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -24,6 +25,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.task.EzEmailScheduler;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
@@ -56,6 +58,9 @@ public class EzPMSScheduler {
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
+	@Resource(name = "EzOrganService")
+	private EzOrganService ezOrganService;
+	
 	@Resource(name = "jspw")
     private String jspw;
 	
@@ -74,7 +79,7 @@ public class EzPMSScheduler {
 		
 		String searchStatus = "P";
 		
-		List<ProjectInfoVO> projectList = ezPMSService.getProgressProject(searchStatus);
+		List<ProjectInfoVO> projectList = ezPMSService.getProgressProject(searchStatus, "P");
 		LOGGER.debug("projectList : " + projectList);
 		
 		Date nowDate = new SimpleDateFormat("yyyy-MM-dd").parse(commonUtil.getTodayUTCTime(""));
@@ -106,7 +111,7 @@ public class EzPMSScheduler {
 		
 		String searchStatus = "P";
 		
-		List<ProjectInfoVO> projectList = ezPMSService.getProgressProject(searchStatus);
+		List<ProjectInfoVO> projectList = ezPMSService.getProgressProject(searchStatus, "P");
 		LOGGER.debug("projectList : " + projectList);
 		
 		Date nowDate = new SimpleDateFormat("yyyy-MM-dd").parse(commonUtil.getTodayUTCTime(""));
@@ -223,5 +228,61 @@ public class EzPMSScheduler {
 		ezPMSService.updateTaskStatusScheduler(UTCTimeStr);
 		
 		LOGGER.debug("updateLateTaskStatus ended.");
+	}
+	
+	//프로젝트의 남은 기간 계산 (완료인 프로젝트 제외)
+	@Scheduled(cron = "${config.crone.pmsUpdateLateStatus}")
+	public void updateProjectRestDueday() throws Exception {
+		LOGGER.debug("updateProjectRestDueday started.");
+		
+		//choose scheduler running server
+		if (!ezEmailScheduler.preScheduler("pmsUpdateLateStatus")) {
+			LOGGER.debug("updateProjectRestDueday scheduler ended.");
+			return;
+		}
+		
+		String today = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+		
+		List<ProjectInfoVO> projectList = ezPMSService.getProgressProject("", "notC");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		for (int i = 0; i < projectList.size(); i++) {
+			ProjectInfoVO project = projectList.get(i);
+
+			if (!project.getStatus().equals("C")) {
+				Date endDate = sdf.parse(project.getPlanEndDate());
+				Date now = sdf.parse(today);
+				Date startDate = sdf.parse(project.getPlanStartDate());
+				int restDueday = 0;
+				ProjectMainSettingVO headManager = ezPMSService.getProjectMainSetting(project.getHeadManagerId(), project.getTenantId(), "user");
+				
+				String userAccount = headManager.getUserMail();
+				String password = jspw;
+				
+				String userId = userAccount.split("@")[0];
+				String domainName = userAccount.split("@")[1];						
+				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
+				String lang = ezCommonService.selectUserGetLang(userId, tenantId);
+				String companyId = ezPMSService.getUserCompanyId(userId, tenantId);
+				
+				if (lang.equals("1")) {
+					lang = "";
+				}
+				
+				LOGGER.debug("companyId : " + companyId);
+				
+				if (startDate.before(now)) {
+					restDueday = ezPMSService.getWorkingDays(now, endDate, companyId, tenantId, lang);
+				} else {
+					restDueday = ezPMSService.getWorkingDays(startDate, endDate, companyId, tenantId, lang);
+				}
+				 
+				ezPMSService.updateProjectRestDueday(restDueday, project.getProjectId(), project.getTenantId());
+			}
+		}
+
+		
+		
+		LOGGER.debug("updateProjectRestDueday ended.");
 	}
 }

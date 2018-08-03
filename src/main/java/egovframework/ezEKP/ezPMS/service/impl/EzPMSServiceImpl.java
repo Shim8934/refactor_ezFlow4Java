@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ibm.icu.util.ChineseCalendar;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezPMS.dao.EzPMSDAO;
 import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.BoardViewerVO;
@@ -63,6 +64,12 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	@Resource(name = "EzPMSDAO")
 	private EzPMSDAO ezPMSDAO;
 
+	@Resource(name = "jspw")
+    private String jspw;
+
+	@Autowired
+	private EzCommonService ezCommonService;
+	
 	@Override
 	public List<ProjectInfoVO> getProjectList(int tenantId, String userId, String deptId, Map<String, Object> search, String lang, String position, String companyId) {
 		LOGGER.debug("[SERVICE] getProjectList started.");
@@ -1495,6 +1502,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		//고정공휴일 & 사용자 정의 공휴일 불러오기
 		map.put("lang", lang); //parameter추가
+		
 		if (lang.equals("3")) {
 			map.put("country", "jap");
 		} else {
@@ -2271,11 +2279,13 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 	}
 
 	@Override
-	public List<ProjectInfoVO> getProgressProject(String status) throws Exception {
+	public List<ProjectInfoVO> getProgressProject(String status, String mode) throws Exception {
 		LOGGER.debug("getProgressProject Started");
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("status", "P");
-		map.put("lang", ""); // 수정 필요
+		map.put("lang", ""); // 수정 필요'
+		map.put("mode", mode);
+		
 		List<ProjectInfoVO> projectList = ezPMSDAO.getProgressProject(map);
 
 		LOGGER.debug("getProgressProject Ended");
@@ -3706,5 +3716,31 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		LOGGER.debug("[SERVICE] ezPMS getProjectRealProgress started");	
 		LOGGER.debug("[SERVICE] ezPMS getProjectRealProgress ended");
 		return ezPMSDAO.getProjectRealProgress(map);
+	}
+
+	@Override
+	public void updateProjectRestDueday(int restDueday, long projectId, int tenantId) {
+		LOGGER.debug("[SERVICE] ezPMS updateProjectRestDueday started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("restDueday", restDueday);
+		map.put("projectId", projectId);
+		map.put("tenantId", tenantId);
+		
+		ezPMSDAO.updateProjectRestDueday(map);
+		
+		LOGGER.debug("[SERVICE] ezPMS updateProjectRestDueday ended");
+		
+	}
+
+	@Override
+	public String getUserCompanyId(String userId, int tenantId) {
+		LOGGER.debug("[SERVICE] ezPMS getUserCompanyId started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		
+		LOGGER.debug("[SERVICE] ezPMS getUserCompanyId ended");
+		return ezPMSDAO.getuserCompanyId(map);
 	}
 }

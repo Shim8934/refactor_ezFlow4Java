@@ -328,6 +328,8 @@ function changeMemoStyle() {
 	listNumber = 20;
 	startRow = 0;
 	currentPage = 1;
+	orderWhat = "";
+	orderHow = "";
 
 	setProjectList("new");
 	changeMainSetting();
@@ -816,10 +818,6 @@ function deleteFavoriteMemo(projectId) {
 				if (viewType == 0) {
 					startRow = 0;
 					listNumber = $(".project_list").length;
-				}
-				
-				if (listProjectStatus == "F") {
-					setProjectList("new");
 				}
 
 				setProjectList("new");
