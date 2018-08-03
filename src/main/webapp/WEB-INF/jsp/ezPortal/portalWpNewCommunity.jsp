@@ -11,7 +11,7 @@
 		<style>
 			.listtype_photo {
 				margin : 0px;
-				padding : 12px 0px 12px 0px;
+				padding : 14px 0px 14px 0px;
 			}
 		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>

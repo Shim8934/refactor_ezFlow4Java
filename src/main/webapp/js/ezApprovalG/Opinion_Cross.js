@@ -1,4 +1,4 @@
-﻿﻿function getOpinionList() {
+﻿﻿﻿﻿﻿function getOpinionList() {
     try {
     	var result = "";
         
@@ -247,8 +247,16 @@ function CheckOpinionExist() {
         	document.getElementById("bbtn_OpinionCancel").style.display = "";
             for (var i = 0 ; i < pTotalRowsLen ; i++) {
                 if (pUserID == trim_Cross(GetAttribute(pTotalRows[i], "DATA2"))) {
-                    document.getElementById("btn_OpinionAdd").textContent = strLang390;
-                    OpinionAddFlag = 1;
+                	document.getElementById("btn_OpinionAdd").textContent = strLang390;
+                	
+                	if (pDisplay != "BanSong") {  
+                		document.getElementById("bbtn_OpinionAdd").style.display = "none";
+                	} else {
+                		document.getElementById("btn_OpinionAdd").textContent = strLang389;
+//                		document.getElementById("txt_OpinionContent").value = "";
+                	}
+                    
+                	OpinionAddFlag = 1;
                     break;
                 }
 
@@ -471,7 +479,8 @@ function InitOpinionInfo() {
 
         for (var x = 0; x < opCountLen; x++) {
             if (GetAttribute(opCount[x], "DATA2") == arr_userinfo[1] && pDisplay == "BanSong") {
-            	document.getElementById("txt_OpinionContent").value = GetAttribute(opCount[x], "DATA3") != null ? GetAttribute(opCount[x], "DATA3") : "";
+//            	document.getElementById("txt_OpinionContent").value = GetAttribute(opCount[x], "DATA3") != null ? GetAttribute(opCount[x], "DATA3") : "";
+            	document.getElementById("txt_OpinionContent").value = "";
             }
         }
 
