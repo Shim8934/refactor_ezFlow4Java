@@ -20,13 +20,13 @@
 					<th><spring:message code='ezCabinet.t109'/></th>
 					<td id="creator" class="overfl cursor wide" title="<c:out value="${item.creatorName}"/>"><c:out value="${item.creatorName}"/></td>
 					<th><spring:message code='ezCabinet.t110'/></th>
-					<td id="createdDate" class="nowrap"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
+					<td id="createdDate" class="nowrap cabdatetd"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${resourceitem.columnName}"/></th>
 					<td class="overfl" title="<c:out value="${resourceitem.columnValue}"/>"><c:out value="${resourceitem.columnValue}"/></td>
 					<th><c:out value="${priority.columnName}"/></th>
-					<td class="nowrap"><c:out value="${priority.columnValue}"/></td>
+					<td class="nowrap cabdatetd"><c:out value="${priority.columnValue}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${creator.columnName}"/></th>

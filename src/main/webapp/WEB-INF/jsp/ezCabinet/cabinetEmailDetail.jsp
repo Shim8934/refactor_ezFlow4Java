@@ -20,13 +20,13 @@
 					<th><spring:message code='ezCabinet.t109'/></th>
 					<td id="creator" class="overfl cursor wide" title="<c:out value="${item.creatorName}"/>"><c:out value="${item.creatorName}"/></td>
 					<th><spring:message code='ezCabinet.t110'/></th>
-					<td id="createdDate" class="nowrap"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
+					<td id="createdDate" class="nowrap cabdatetd"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${sender.columnName}"/></th>
 					<td id="senderMail" class="overfl cursor wide" title="<c:out value="${senderUser.userName}"/>"><c:out value="${senderUser.userName}"/></td>
 					<th><c:out value="${emailTime.columnName}"/></th>
-					<td class="nowrap"><c:out value="${fn:substring(emailTime.columnValue, 0, 19)}"/></td>
+					<td class="nowrap cabdatetd"><c:out value="${fn:substring(emailTime.columnValue, 0, 19)}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${receiver.columnName}"/></th>

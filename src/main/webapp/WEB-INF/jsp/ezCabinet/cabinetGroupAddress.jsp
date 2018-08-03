@@ -20,19 +20,19 @@
 					<th><spring:message code='ezCabinet.t109'/></th>
 					<td id="creator" class="overfl cursor wide" title="<c:out value="${item.creatorName}"/>"><c:out value="${item.creatorName}"/></td>
 					<th><spring:message code='ezCabinet.t110'/></th>
-					<td id="createdDate" class="nowrap"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
+					<td id="createdDate" class="nowrap cabdatetd"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${creator.columnName}"/></th>
 					<td id="addrCreator" class="overfl cursor wide" title="<c:out value="${creatorUser.userName}"/>"><c:out value="${creatorUser.userName}"/></td>
 					<th><c:out value="${createdate.columnName}"/></th>
-					<td class="nowrap"><c:out value="${fn:substring(createdate.columnValue, 0, 19)}"/></td>
+					<td class="nowrap cabdatetd"><c:out value="${fn:substring(createdate.columnValue, 0, 19)}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${modifier.columnName}"/></th>
 					<td id="addrMod" class="overfl cursor wide" title="<c:out value="${modifierUser.userName}"/>"><c:out value="${modifierUser.userName}"/></td>
 					<th><c:out value="${modifydate.columnName}"/></th>
-					<td class="nowrap"><c:out value="${fn:substring(modifydate.columnValue, 0, 19)}"/></td>
+					<td class="nowrap cabdatetd"><c:out value="${fn:substring(modifydate.columnValue, 0, 19)}"/></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>

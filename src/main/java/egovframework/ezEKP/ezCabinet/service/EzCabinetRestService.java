@@ -85,4 +85,7 @@ public interface EzCabinetRestService {
 	
 	//Save related resource document
 	public JSONObject saveRelatedResource(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String content, String createUser, String resDate, String priority, String resItem) throws Exception;
+	
+	//Save related schedule document
+	public JSONObject saveRelatedSchedule(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content) throws Exception;
 }

@@ -18,27 +18,35 @@
 			<table class="tblEmailInf">
 				<tr>
 					<th><spring:message code='ezCabinet.t109'/></th>
-					<td id="creator" class="overfl cursor wide" title="<c:out value="${item.creatorName}"/>"><c:out value="${item.creatorName}"/></td>
+					<td id="creator" colspan="3" class="overfl cursor wide" title="<c:out value="${item.creatorName}"/>"><c:out value="${item.creatorName}"/></td>
+				</tr>
+				<tr>
 					<th><spring:message code='ezCabinet.t110'/></th>
-					<td id="createdDate" class="nowrap"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
+					<td id="createdDate" colspan="3" class="nowrap cabdatetd"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${creator.columnName}"/></th>
-					<td id="addrCreator" class="overfl cursor wide" title="<c:out value="${creatorUser.userName}"/>"><c:out value="${creatorUser.userName}"/></td>
+					<td id="addrCreator" colspan="3" class="overfl cursor wide" title="<c:out value="${creatorUser.userName}"/>"><c:out value="${creatorUser.userName}"/></td>
+				</tr>
+				<tr>
 					<th><c:out value="${createdate.columnName}"/></th>
-					<td class="nowrap"><c:out value="${fn:substring(createdate.columnValue, 0, 19)}"/></td>
+					<td colspan="3" class="nowrap cabdatetd"><c:out value="${fn:substring(createdate.columnValue, 0, 19)}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${modifier.columnName}"/></th>
-					<td id="addrMod" class="overfl cursor wide" title="<c:out value="${modifierUser.userName}"/>"><c:out value="${modifierUser.userName}"/></td>
+					<td id="addrMod" colspan="3" class="overfl cursor wide" title="<c:out value="${modifierUser.userName}"/>"><c:out value="${modifierUser.userName}"/></td>
+				</tr>
+				<tr>
 					<th><c:out value="${modifydate.columnName}"/></th>
-					<td class="nowrap"><c:out value="${fn:substring(modifydate.columnValue, 0, 19)}"/></td>
+					<td colspan="3" class="nowrap cabdatetd"><c:out value="${fn:substring(modifydate.columnValue, 0, 19)}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${company.columnName}"/></th>
-					<td id="addrMod" class="overfl" title="<c:out value="${company.columnValue}"/>"><c:out value="${company.columnValue}"/></td>
+					<td id="addrMod" colspan="3" class="overfl" title="<c:out value="${company.columnValue}"/>"><c:out value="${company.columnValue}"/></td>
+				</tr>
+				<tr>
 					<th><c:out value="${department.columnName}"/></th>
-					<td class="nowrap overfl" title="<c:out value="${department.columnValue}"/>"><c:out value="${department.columnValue}"/></td>
+					<td class="nowrap overfl cabdatetd" colspan="3" title="<c:out value="${department.columnValue}"/>"><c:out value="${department.columnValue}"/></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
@@ -52,15 +60,19 @@
 			<table class="tblEmailInf">
 				<tr>
 					<th><c:out value="${compnumber.columnName}"/></th>
-					<td id="addrMod" class="overfl" title="<c:out value="${compnumber.columnValue}"/>"><c:out value="${compnumber.columnValue}"/></td>
+					<td id="addrMod" colspan="3" class="overfl" title="<c:out value="${compnumber.columnValue}"/>"><c:out value="${compnumber.columnValue}"/></td>
+				</tr>
+				<tr>
 					<th><c:out value="${usernumber.columnName}"/></th>
-					<td class="nowrap overfl" title="<c:out value="${usernumber.columnValue}"/>"><c:out value="${usernumber.columnValue}"/></td>
+					<td class="nowrap overfl" colspan="3" title="<c:out value="${usernumber.columnValue}"/>"><c:out value="${usernumber.columnValue}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${faxnumber.columnName}"/></th>
-					<td id="addrMod" class="overfl" title="<c:out value="${faxnumber.columnValue}"/>"><c:out value="${faxnumber.columnValue}"/></td>
+					<td id="addrMod" colspan="3" class="overfl" title="<c:out value="${faxnumber.columnValue}"/>"><c:out value="${faxnumber.columnValue}"/></td>
+				</tr>
+				<tr>
 					<th><c:out value="${homepage.columnName}"/></th>
-					<td class="nowrap overfl" title="<c:out value="${homepage.columnValue}"/>"><c:out value="${homepage.columnValue}"/></td>
+					<td colspan="3" class="nowrap overfl" title="<c:out value="${homepage.columnValue}"/>"><c:out value="${homepage.columnValue}"/></td>
 				</tr>
 				<tr>
 					<th rowspan="2" ><c:out value="${compaddr.columnName}"/></th>

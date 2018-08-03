@@ -16,7 +16,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -24,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
@@ -286,68 +289,23 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveBoarditem(String realPath, String mode, int cabinetId, String title, String writer, String attach, String content, String dateTime, Locale locale, LoginVO userInfo) throws Exception {
+	public JSONObject saveBoardItem(String realPath, String mode, int cabinetId, String title, String writer, String attach, String content, String dateTime, Locale locale, LoginVO userInfo) throws Exception {
 		JSONObject result          = new JSONObject();
 		String userId              = userInfo.getId();
 		int tenantId               = userInfo.getTenantId();
 		String companyId           = userInfo.getCompanyID();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(new Date()), userInfo.getOffset(), true);
 		JSONParser jp              = new JSONParser();
-		int itemCabinetId          = -1;
 		Map<String,Object> map     = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		
 		//Save item
-		int itemId     = ezCabinetDAO.getMaxItem(map) + 1;
 		int moduleType = 3; //board module
-		
-		if (mode.equals("0")) {
-			map.put("userId",   userId);
-			map.put("tenantId", tenantId);
-			map.put("type",     moduleType);
-			
-			CabinetVO cabinet = ezCabinetDAO.getRootCabinetByType(map);
-			itemCabinetId     = cabinet.getCabinetId();
-		}
-		else { 
-			itemCabinetId = cabinetId;
-		}
-		
-		CabinetItemVO itemVO = new CabinetItemVO();
-		itemVO.setCabinetId(itemCabinetId);
-		itemVO.setItemId(itemId);
-		itemVO.setItemType(moduleType);
-		itemVO.setTitle(title);
-		itemVO.setCreatorId(userId);
-		itemVO.setCreatorName1(userInfo.getDisplayName1());
-		itemVO.setCreatorName2(userInfo.getDisplayName2());
-		itemVO.setDepartmentId(userInfo.getDeptID());
-		itemVO.setDepartmentName1(userInfo.getDeptName1());
-		itemVO.setDepartmentName2(userInfo.getDeptName2());
-		itemVO.setContentPath(content);
-		itemVO.setCreatedDate(timeUTC);
-		itemVO.setUpdatedDate(timeUTC);
-		itemVO.setUseStatus(1);
-		itemVO.setUpdateId(userId);
-		itemVO.setDeleterId(null);
-		itemVO.setCompanyId(companyId);
-		itemVO.setTenantId(tenantId);
-		
-		saveItem(itemVO);
+		int itemId     = addRelatedItem(moduleType, cabinetId, title, content, mode, userInfo);
 		
 		//Save board columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		
-		String writerColName1          = egovMessageSource.getMessage("ezBoard.t223", new Locale(config.getProperty("config.cabinetPrimary")));
-		String writerColName2          = egovMessageSource.getMessage("ezBoard.t223", new Locale(config.getProperty("config.cabinetSecondary")));
-		CabinetColumnVO writerColumn   = new CabinetColumnVO("writer", itemId, writerColName1, writerColName2, writer, companyId, tenantId);
-		listColm.add(writerColumn);
-		
-		String dateColName1            = egovMessageSource.getMessage("ezBoard.t224", new Locale(config.getProperty("config.cabinetPrimary")));
-		String dateColName2            = egovMessageSource.getMessage("ezBoard.t224", new Locale(config.getProperty("config.cabinetSecondary")));
-		CabinetColumnVO dateTimeColumn = new CabinetColumnVO("boardTime", itemId, dateColName1, dateColName2, dateTime, companyId, tenantId);
-		listColm.add(dateTimeColumn);
+		listColm.add(createNewRelatedColumn("writer"    , itemId, "ezBoard.t223", writer, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardTime" , itemId, "ezBoard.t223", dateTime, companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		
@@ -391,7 +349,8 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 		try {
 			if(!file.exists()) {
 				logger.error("File not found.");
-			}else{
+			}
+			else {
 				InputStream input   = null;
 				OutputStream output = null;
 				
@@ -527,4 +486,175 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h{
 	private synchronized void saveAttachFile(CabinetAttachFileVO attachFile) {
 		ezCabinetDAO.saveAttachFile(attachFile);
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject saveOptionItem(String realPath, String mode, int cabinetId, String title, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception {
+		JSONObject result      = new JSONObject();
+		int tenantId           = userInfo.getTenantId();
+		String userId          = userInfo.getId();
+		String companyId       = userInfo.getCompanyID();
+		JSONParser jp          = new JSONParser();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//Add option item
+		int moduleType = 6; //option module
+		int itemId     = addRelatedItem(moduleType, cabinetId, title, content, mode, userInfo);
+		
+		//Save option columns information
+		List<CabinetColumnVO> listColm = new ArrayList<>();
+		listColm.add(createNewRelatedColumn("optionWriter", itemId, "ezBoard.t5007"  , date, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("optionTime"  , itemId, "ezBoard.t5007"  , date, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("importance"  , itemId, "ezCircular.t115", importance, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("option"      , itemId, "ezCircular.t118", option, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("statusNum"   , itemId, "ezCircular.t74" , statusNum, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("status"      , itemId, "ezCircular.t124", status, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("confirm"     , itemId, "ezCircular.t86" , confirm, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("endDate"     , itemId, "ezPoll.t161"    , endDate, companyId, tenantId));
+		
+		saveAllColumns(listColm);
+		
+		//Save attach files
+		String cabinetPath = getCabinetDirPath(tenantId);
+		File file          = new File(realPath + cabinetPath);
+		
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		
+		if (!attach.equals("")) {
+			JSONArray attachList = (JSONArray) jp.parse(attach);
+			int totalCnt         = attachList.size();
+			int attachId         = ezCabinetDAO.getMaxAttachId(map) + 1;
+			for (int i = 0; i < totalCnt; i++, attachId++) {
+				JSONObject attachInf = (JSONObject) attachList.get(i);
+				saveOptionAttachFiles(attachInf, attachId, itemId, realPath, cabinetPath, locale, companyId, userId, tenantId);
+			}
+		}
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
+
+	private void saveOptionAttachFiles(JSONObject attachInf, int attachId, int itemId, String realPath, String cabinetPath, Locale locale, String companyId, String userId, int tenantId) throws Exception {
+		String fileName      = attachInf.get("fileName").toString();
+		String folderPath    = commonUtil.getUploadPath("upload_circular.ROOT", tenantId) + commonUtil.separator + "uploadFile";
+		String filePath      = folderPath + attachInf.get("filePath").toString() + fileName;
+		int dotPos           = fileName.lastIndexOf(".");
+		String extend        = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
+		String newName       = UUID.randomUUID().toString() + "." + extend;
+		String pDirPath      = realPath + cabinetPath;
+		String newFilePath   = pDirPath + File.separator + newName;
+		String pfilePath     = cabinetPath + newName;
+		
+		logger.debug("file path: " + filePath + " || file name : " + fileName);
+		
+		File file = new File(realPath + filePath);
+		
+		try {
+			if(!file.exists()) {
+				logger.error("File not found.");
+			}
+			else {
+				InputStream input   = null;
+				OutputStream output = null;
+				
+				try {
+					input              = new FileInputStream(file);
+					File newAttachFile = new File(newFilePath);
+					output             = new FileOutputStream(newAttachFile);
+					byte[] buffer      = new byte[4096];
+					int byteRead       = 0;
+					
+					while ((byteRead = input.read(buffer)) != -1) {
+						output.write(buffer, 0, byteRead);
+					}
+					
+				} catch (IOException e1) {
+					throw e1;
+				} finally {
+					if (input != null) {
+						try { input.close(); } catch (IOException e2) {throw e2;}
+					}
+					if (output != null) {
+						try { output.flush(); } catch (IOException e3) {throw e3;}
+						try { output.close(); } catch (IOException e4) {throw e4;}
+					}
+				}
+			}
+		} catch(Exception e5) {
+			throw e5;
+		}
+		
+		//Save Attach to database
+		File readfile = new File(newFilePath);
+		long fileSize = readfile.length();
+		
+		CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, pfilePath, fileName, fileSize, companyId, tenantId);
+		saveAttachFile(attachFile);
+	}
+
+	private synchronized int addRelatedItem(int moduleType, int cabinetId, String title, String content, String mode, LoginVO userInfo) throws Exception {
+		String userId              = userInfo.getId();
+		int tenantId               = userInfo.getTenantId();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(new Date()), userInfo.getOffset(), true);
+		int itemCabinetId          = -1;
+		Map<String,Object> map     = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//Save item
+		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
+		
+		if (mode.equals("0")) {
+			map.put("userId",   userId);
+			map.put("tenantId", tenantId);
+			map.put("type",     moduleType);
+			
+			CabinetVO cabinet = ezCabinetDAO.getRootCabinetByType(map);
+			itemCabinetId     = cabinet.getCabinetId();
+		}
+		else {
+			itemCabinetId = cabinetId;
+		}
+		
+		//Add item
+		addNewItem(itemCabinetId, itemId, moduleType, title, content, timeUTC, userInfo);
+		
+		return itemId;
+	}
+
+	private void addNewItem(int cabinetId, int itemId, int moduleType, String title, String content, String timeUTC, LoginVO userInfo) {
+		String userId        = userInfo.getId();
+		CabinetItemVO itemVO = new CabinetItemVO();
+		itemVO.setCabinetId(cabinetId);
+		itemVO.setItemId(itemId);
+		itemVO.setItemType(moduleType);
+		itemVO.setTitle(title);
+		itemVO.setCreatorId(userId);
+		itemVO.setCreatorName1(userInfo.getDisplayName1());
+		itemVO.setCreatorName2(userInfo.getDisplayName2());
+		itemVO.setDepartmentId(userInfo.getDeptID());
+		itemVO.setDepartmentName1(userInfo.getDeptName1());
+		itemVO.setDepartmentName2(userInfo.getDeptName2());
+		itemVO.setContentPath(content);
+		itemVO.setCreatedDate(timeUTC);
+		itemVO.setUpdatedDate(timeUTC);
+		itemVO.setUseStatus(1);
+		itemVO.setUpdateId(userId);
+		itemVO.setDeleterId(null);
+		itemVO.setCompanyId(userInfo.getCompanyID());
+		itemVO.setTenantId(userInfo.getTenantId());
+		
+		saveItem(itemVO);
+	}
+	
+	private CabinetColumnVO createNewRelatedColumn(String columnId, int itemId, String messageName, String columnValue, String companyId, int tenantId) {
+		String columnName1 = egovMessageSource.getMessage(messageName, new Locale(config.getProperty("config.cabinetPrimary")));
+		String columnName2 = egovMessageSource.getMessage(messageName, new Locale(config.getProperty("config.cabinetPrimary")));
+		return new CabinetColumnVO(columnId, itemId, columnName1, columnName2, columnValue, companyId, tenantId);
+	}
+	
 }
