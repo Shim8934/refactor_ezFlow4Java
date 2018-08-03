@@ -1162,6 +1162,8 @@
 				A.PROJECT_ID = F.PROJECT_ID 
 			AND
 				A.TENANT_ID = F.TENANT_ID	
+			AND 
+				F.USER_ID = #userId#
 		</isNotEqual>
 		<isEqual property="listProjectStatus" compareValue="F">
 			JOIN 
@@ -1169,7 +1171,9 @@
 			ON
 				A.PROJECT_ID = F.PROJECT_ID 
 			AND
-				A.TENANT_ID = F.TENANT_ID	
+				A.TENANT_ID = F.TENANT_ID
+			AND 
+				F.USER_ID = #userId#
 		</isEqual>	
 			WHERE	
 		<isNotEmpty property="searchByUser">
