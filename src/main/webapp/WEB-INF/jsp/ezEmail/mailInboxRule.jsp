@@ -787,10 +787,10 @@
 			<span class="txt">▒ <img src="/images/ImgIcon/prev.gif"   height="16" style="margin-top:-3px;vertical-align:middle;text-align:center;" alt="<spring:message code='ezEmail.t833' />"/><img src="/images/ImgIcon/next.gif" align="absmiddle"  height="16" style="margin-top:-3px;" alt="<spring:message code='ezEmail.t834' />" /><spring:message code='ezEmail.t807' /></span><br /><br /><br />
 		    <div id="mainmenu">
 		        <ul id="tb_Parent">
-		          <li><span onclick="New_InboxRule();"><img src="/images/ImgIcon/rul-sml.gif"  style="margin-top:-2px;" /><spring:message code='ezEmail.t804' /></span></li>
-		          <li><span onclick="Detail_InboxRule();"><img src="/images/ImgIcon/options.gif"   style="margin-top:-2px;"  /><spring:message code='ezEmail.t805' /></span></li>
-		          <li><span onclick="event_DeleteRule();"><img src="/images/ImgIcon/delete.gif"   style="margin-top:-2px;"  /><spring:message code='ezEmail.t95' /></span></li>
-		          <li><span onclick="Rule_Reload();"><img src="/images/ImgIcon/recur.gif"    style="margin-top:-2px;"  /><spring:message code='ezEmail.t515' /></span></li>
+		          <li><span onclick="New_InboxRule();"><spring:message code='ezEmail.t804' /></span></li>
+		          <li><span onclick="Detail_InboxRule();"><spring:message code='ezEmail.t805' /></span></li>
+		          <li><span onclick="event_DeleteRule();"><spring:message code='ezEmail.t95' /></span></li>
+		          <li><span onclick="Rule_Reload();"><spring:message code='ezEmail.t515' /></span></li>
 		          <li class="prevLi"><span onclick="Priority_UP();"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code='ezEmail.t833' />"/></span></li>
 		          <li class="prevLi"><span onclick="Priority_DOWN();"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code='ezEmail.t834' />" /></span></li>
 		          </ul>        
