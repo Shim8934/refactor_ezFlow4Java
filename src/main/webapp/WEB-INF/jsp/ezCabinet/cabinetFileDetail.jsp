@@ -16,7 +16,7 @@
 			<table class="tblFileInf">
 				<tr>
 					<th><spring:message code='ezCabinet.t109'/></th>
-					<td id="creator"></td>
+					<td id="creator" class="cursor overfl"></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t110'/></th>

@@ -79,7 +79,7 @@
 				function autoSelect(){
 					var cabinetMainDiv                   = document.getElementById("cabMgTreeId");
 					var fogPanel                         = document.getElementById("fogPanel");
-					fogPanel.style.display               = "";
+					fogPanel.style.display               = "block";
 					cabinetMainDiv.style.backgroundColor = "#f1f1f1";
 				}
 				
@@ -228,7 +228,7 @@
 								}); 
 							}
 						}
-					}  
+					}
 					
 					var url          = "/ezCabinet/saveRelatedApproval.do";
 					var data         = {
@@ -249,22 +249,19 @@
 					var boardOpener   = window.opener;
 					if (!boardOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					var writerTd      = window.opener.document.getElementById("WriteUserNM");
-					var postTd        = window.opener.document.getElementById("PostDate");
-					var titleTd       = window.opener.document.getElementById("cTitle");
-					
-					//var boardWriter   = writerTd.getElementsByTagName("div")[0].getElementsByTagName("span")[0].textContent;
-					
+					var writerTd      = boardOpener.document.getElementById("WriteUserNM");
+					var postTd        = boardOpener.document.getElementById("PostDate");
+					var titleTd       = boardOpener.document.getElementById("cTitle");
 					var writerSpan    = writerTd.getElementsByTagName("div")[0].getElementsByTagName("span")[0].getAttribute("onclick");
 					var start         = writerSpan.indexOf("'");
 					var end           = writerSpan.lastIndexOf("'");
 					var boardWriter   = writerSpan.substring(start + 1, end);
 					var postDate      = postTd.getElementsByTagName("div")[0].textContent;
 					var boardTitle    = titleTd.getElementsByTagName("div")[0].textContent;
-					var messageFrame  = window.opener.document.getElementById("message");
+					var messageFrame  = boardOpener.document.getElementById("message");
 					var contentWd     = messageFrame.contentWindow || messageFrame.contentDocument;
 					var boardContent  = contentWd.document.querySelector("div[class='contentDiv']").innerHTML;
-					var attach        = window.opener.document.getElementById("lstAttachLink");
+					var attach        = boardOpener.document.getElementById("lstAttachLink");
 					var attachList    = [];
 					
 					if (attach.childElementCount > 1) {
@@ -329,14 +326,45 @@
 				}
 				
 				function saveOptionDocument() {
-					//Add code here
+					var optionOpener   = window.opener;
+					if (!optionOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var title        = optionOpener.document.getElementById("titleTd").textContent;
+					var writer       = optionOpener.document.getElementById("writer").textContent;
+					var date         = optionOpener.document.getElementById("printStatus").textContent;
+					var importanceTd = optionOpener.document.getElementById("Td_Importance");
+					var importance   = importanceTd.querySelector("span").textContent;
+					var option       = optionOpener.document.getElementById("option").textContent;
+					var statusNum    = optionOpener.document.getElementById("statusNum").textContent;
+					var status       = optionOpener.document.getElementById("status").textContent;
+					var confirm      = optionOpener.document.querySelector("td[class='confirmStatus']").innerHTML;
+					var endDateDiv   = optionOpener.document.getElementById("endDate");
+					var endDate      = "";
+					var content      = optionOpener.document.getElementById("divCross").innerHTML;
+					
+					var attach       = optionOpener.document.getElementById("attachedfileDIV");
+					var attachList   = [];
+					
+					if (endDateDiv) {
+						endDate = endDateDiv.textContent; 
+					}
+					
+					var listChildren    = optionAttach.children;
+					for (var i = 0, len = listChildren.length; i < len; i++) {
+						var inputElmt   = listChildren[i].firstElementChild;
+						var filepath    = inputElmt.getAttribute("filepath");
+						var filename    = inputElmt.getAttribute("filename");
+					
+						console.log("File path: " + filepath + " || File Name: " + javaURLDecode(filename));
+						
+						attachList.push({
+							filePath : filepath,
+							fileName : javaURLDecode(filename)
+						});
+					}
 				}
 				
 				function saveProjectDocument() {
-					//Add code here
-				}
-				
-				function saveResourceDocument() {
 					//Add code here
 				}
 				
@@ -398,6 +426,37 @@
 					};
 					console.log(data);
 					if (saveMode == 1) {data.cabinetId = cabinetId;}
+				}
+				
+				function saveResourceDocument(saveMode, cabinetId) {
+					var resourceOpener = window.opener;
+					if (!resourceOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var resWriter    = resourceOpener.writerIDVal;
+					var resDate      = resourceOpener.document.getElementById("AllDayDisplay").textContent;
+					var resPriority  = resourceOpener.document.getElementById("importanceDIV").textContent.replace(/\s/g,'');
+					var resItem      = resourceOpener.document.getElementById("itemList").textContent;
+					var resTitle     = resourceOpener.document.getElementById("titleDIV").textContent;
+					var messageFrame = resourceOpener.document.getElementById("message");
+					var contentWd    = messageFrame.contentWindow || messageFrame.contentDocument;
+					var resContent   = contentWd.document.body.innerHTML;
+					console.log("resWriter: " + resWriter + " || resDate: " + resDate + " || resPriority: " + resPriority + " || resItem: " + resItem
+							 + " || resTitle: " + resTitle);
+					
+					console.log("resContent: " + resContent);
+					
+					var url  = "/ezCabinet/saveRelatedResource.do";
+					var data = {
+						mode      : saveMode,
+						writer    : resWriter,
+						title     : resTitle,
+						date      : resDate,
+						priority  : resPriority,
+						resItem   : resItem,
+						content   : resContent
+					};
+					
+					if (saveMode == 1) {data.cabinet = cabinetId;}
 					
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}

@@ -721,7 +721,7 @@ public class EzCabinetController {
 		String dateTime        = request.getParameter("crdDate")   != null ? request.getParameter("crdDate")   : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		if (title.equals("") || sender.equals("") || (mode.equals("1") && cabinetId.equals("")) || content.equals("") || mode.equals("") || receiver.equals("") || dateTime.equals("")) {
+		if (title.equals("") || sender.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || receiver.equals("") || dateTime.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
@@ -823,6 +823,35 @@ public class EzCabinetController {
 		resultObj = cabinetRestService.saveRelatedNormalAdress(request, userInfo.getId(), title, mode, cabinetId, createUser, createDate, changeUser, changeDate, company, department, position, email, compNumber, userNumber, faxNumber, homePage, companyZip, compAddr, homeZip, homeAddr, memo);
 		
 		logger.debug("jsonSaveRelatedNormalAddress finishes!");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezCabinet/saveRelatedResource.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonSaveRelatedResource(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSaveRelatedResource is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String title           = request.getParameter("title")      != null ? request.getParameter("title")      : "";
+		String mode            = request.getParameter("mode")       != null ? request.getParameter("mode")       : "";
+		String cabinetId       = request.getParameter("cabinet")    != null ? request.getParameter("cabinet")    : "";
+		String content         = request.getParameter("content")    != null ? request.getParameter("content")    : "";
+		String createUser      = request.getParameter("writer")     != null ? request.getParameter("writer")     : "";
+		String resDate         = request.getParameter("date")       != null ? request.getParameter("date")       : "";
+		String priority        = request.getParameter("priority")   != null ? request.getParameter("priority")   : "";
+		String resItem         = request.getParameter("resItem")    != null ? request.getParameter("resItem")    : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		logger.debug("Title: " + title + " || createUser: " + createUser + " || Resource Date: " + resDate + " || priority: " + priority + " || resItem: " + resItem + " || mode: " + mode + " || cabinetId: " + cabinetId + " || content: " + content);
+		
+		if (title.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || resDate.equals("")  || priority.equals("") || resItem.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.saveRelatedResource(request, userInfo.getId(), title, mode, cabinetId, content, createUser, resDate, priority, resItem);
+		
+		logger.debug("jsonSaveRelatedResource finishes!");
 		return resultObj.toString();
 	}
 	
