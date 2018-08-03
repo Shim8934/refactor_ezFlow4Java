@@ -14,6 +14,7 @@
 <script type="text/javascript" src="/js/ezPMS/common.js"></script>	
 <script type="text/javascript">
 var listProjectStatus = '<c:out value="${setting.listProjectStatus}"/>';
+var defaultStatus = '<c:out value="${setting.listProjectStatus}"/>';
 var progressColor = '<c:out value="${setting.progressColor}"/>';
 var completeColor = '<c:out value="${setting.completeColor}"/>';
 var overdueColor = '<c:out value="${setting.overdueColor}"/>';
@@ -28,6 +29,11 @@ $(function() {
 	$("#1tab0").addClass("tabon");
 	$("#listcount option[value='" + listNumber + "']").attr("selected", true);
 	$("#defaultStatus option[value='" + listProjectStatus + "']").attr("selected", true);
+	
+	// IE에서는 $("#defaultStatus").val() 방식으로 하면 에러남
+	$("#defaultStatus").change(function() {
+		defaultStatus = $("#defaultStatus").val();
+	})
 });
 
 function save_info() {
@@ -36,7 +42,8 @@ function save_info() {
 	overdueColor = $("#overdueColor").text();
 	holdColor = $("#holdColor").text();
 	listCount = $("#listcount").val();
-	defaultStatus = $("#defaultStatus").val();
+	
+	console.log("defaultStatus : " + defaultStatus);
 	
 	var data = {
 		projectSort : projectSort,
@@ -132,18 +139,18 @@ function manyColorShow(statusId) {
 				</tr>
             	<tr>
                 	<th><spring:message code='ezPMS.t174' /></th>
-                		<td>
-                			<select id="defaultStatus" style="width: 120px">
-                				<option value="A"><spring:message code='ezPMS.t271' /></option>
-                				<option value="P"><spring:message code='ezPMS.t258' /></option>
-                				<option value="W"><spring:message code='ezPMS.t260' /></option>
-                				<option value="C"><spring:message code='ezPMS.t261' /></option>
-                				<option value="L"><spring:message code='ezPMS.t262' /></option>
-                				<option value="S"><spring:message code='ezPMS.t259' /></option>
-                				<option value="D"><spring:message code='ezPMS.t263' /></option>
-                				<option value="F"><spring:message code='ezPMS.t20' /></option>
-                			</select>
-                		</td>
+               		<td>
+               			<select id="defaultStatus" style="width: 120px">
+               				<option value="A"><spring:message code='ezPMS.t271' /></option>
+               				<option value="P"><spring:message code='ezPMS.t258' /></option>
+               				<option value="W"><spring:message code='ezPMS.t260' /></option>
+               				<option value="C"><spring:message code='ezPMS.t261' /></option>
+               				<option value="L"><spring:message code='ezPMS.t262' /></option>
+               				<option value="S"><spring:message code='ezPMS.t259' /></option>
+               				<option value="D"><spring:message code='ezPMS.t263' /></option>
+               				<option value="F"><spring:message code='ezPMS.t20' /></option>
+               			</select>
+               		</td>
             	</tr>
 				<tr> 
 					<th><spring:message code='ezPMS.t138' /></th>
