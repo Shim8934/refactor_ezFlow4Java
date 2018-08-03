@@ -151,7 +151,7 @@
 	   		
 	   		// 리스트에서 클릭이벤트 적용
 	   		function setUserAuthorDept(elem) {
-	   			listEventFunc(elem, event);
+	   			listEventFunc(elem);
 	   			
 				selUserList = elem.parentElement.querySelectorAll("tr.selectTR");
 				if(selUserList.length === 1){
