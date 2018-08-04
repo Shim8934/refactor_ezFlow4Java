@@ -51,6 +51,7 @@
 		    var useEditor = "${useEditor}";
 		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
 		    var realPath = "<c:out value = '${realPath}' />";
+		    var locale = "<c:out value = '${locale}' />";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -195,6 +196,11 @@
 	            }
 		        
 		        add_doc_maker();
+		        
+		        if (locale != "ko") {
+		        	document.getElementById("ApvForm_sub3").style.display = "none";
+		        	document.getElementById("ApvForm_sub4").style.display = "none";
+		        }
 		    }
 		
 		    function Attribute_Write(value) {

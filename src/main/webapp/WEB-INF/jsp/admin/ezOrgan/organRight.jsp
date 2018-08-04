@@ -1510,9 +1510,11 @@
 							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></a></td>
 						</tr>		                
 						<c:if test="${useBizmekaTalk == 'YES'}">			
-						<tr>
-		                	<td><a class="imgbtn" id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></a></td>
-		                </tr>
+							<c:if test="${locale eq 'ko'}">
+							<tr>
+			                	<td><a class="imgbtn" id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></a></td>
+			                </tr>
+							</c:if>
 		                </c:if>
 		                <c:if test="${useDisablePopImap == 'YES'}">
 							<tr>

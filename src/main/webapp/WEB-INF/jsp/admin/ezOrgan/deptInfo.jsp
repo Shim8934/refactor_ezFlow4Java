@@ -92,7 +92,11 @@
 			        }
 			    }
 			    catch (e){ }
-			    */
+			   */
+			   
+			   if(approvalFlag === "S") {
+			   	$(".onlyUseG").css("display", "none");
+			   }
 			});
 			
 			function Check_ID(pValue){
@@ -234,23 +238,23 @@
 		      		</table>
 		      	</td> 
 		  	</tr>
-		  	<tr> 
+		  	<tr class="onlyUseG"> 
 		    	<th><spring:message code='ezOrgan.t221' /></th> 
 		    	<td><input type="text" id=SimpleName style="width:97%" maxlength="50"></td> 
 		  	</tr>
-		  	<tr> 
+		  	<tr class="onlyUseG"> 
 		    	<th><spring:message code='ezOrgan.t222' /></th> 
 		    	<td><input type="text" id=SusinSymbol style="width:97%" maxlength="50"></td> 
 		  	</tr> 
-		  	<tr>
+		  	<tr class="onlyUseG">
 		    	<th><spring:message code='ezOrgan.t223' /></th> 
 		    	<td><input type="text" id=BalsinPerson style="width:97%" maxlength="50"></td> 
 		  	</tr> 
-		  	<tr> 
+		  	<tr class="onlyUseG"> 
 		    	<th><spring:message code='ezOrgan.t224' /></th> 
 		    	<td><input type="text" id=DocManage style="width:97%" maxlength="50"></td>		    	 
 		  	</tr> 
-		  	<tr> 
+		  	<tr class="onlyUseG"> 
 		    	<th><spring:message code='ezOrgan.t225' /></th> 
 		    	<td><input type="text" id=Manager style="width:97%" maxlength="50"></td> 
 		  	</tr> 
