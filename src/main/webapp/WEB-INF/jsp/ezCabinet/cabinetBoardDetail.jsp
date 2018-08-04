@@ -133,6 +133,7 @@
 					var boardWriter  = fileItem.writerVO;
 					var attachList   = fileItem.attachFileList;
 					var relatedList  = fileItem.relatedFileList;
+					relatedArr       = [];
 					
 					//File Creator
 					document.getElementById("fileCreator").onclick  = function(e) {showUserInfoFromId(result["creatorId"]);};
@@ -173,7 +174,6 @@
 					boardContent.content = result["contentPath"];
 					boardContent.size    = result["itemSize"];
 					boardContent.attach  = attachList;
-					
 				}
 				
 				function setScrollElement(divElmt, listObj, handlerCallBack, roleName, titleName, statusName) {
@@ -195,9 +195,8 @@
 				
 				function showUserInfoFromId(userId) {
 					var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
-					feature = feature + getOpenWindowfeature(420, 500);
-					
-					userWindow = window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
+					feature     = feature + getOpenWindowfeature(420, 500);
+					userWindow  = window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
 				}
 				
 				function fileModify() {

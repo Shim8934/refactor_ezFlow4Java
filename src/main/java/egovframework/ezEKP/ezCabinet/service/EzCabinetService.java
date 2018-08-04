@@ -92,6 +92,7 @@ public interface EzCabinetService {
 	//Get user information functions
 	List<SimpleUserMailVO> getUserInfoFromEmail(List<String> receiverMail, String primary, int tenantId) throws Exception;
 	SimpleUserInfoVO getSimpleUserInfo(String columnValue, String primary, int tenantId) throws Exception;
+	List<SimpleUserInfoVO> getUsersInfoFromIdList(List<String> attendIds, String primary, int tenantId) throws Exception;
 	
 	//Modify related email item function 
 	JSONObject modifyRelatedItem(int currentItemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception;

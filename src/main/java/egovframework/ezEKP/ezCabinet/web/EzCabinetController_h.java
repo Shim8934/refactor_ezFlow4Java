@@ -1,10 +1,8 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
@@ -69,16 +66,15 @@ public class EzCabinetController_h {
 	@RequestMapping(value="/ezCabinet/shareCabinet.do")
 	public String jspGetShareCabinetPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetShareCabinetPage started");
-		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		String cabinetId     = request.getParameter("cabId");
-		
+		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId      = request.getParameter("cabId");
 		JSONObject permission = cabinetRestService_h.checkPermission(request, user.getId(), "", cabinetId, 1);
 		
 		if ((long)permission.get("code") == 1) {
 			return "ezCabinet/cabinetAccessDenied";
 		}
 		
-		JSONObject result    = cabinetRestService_h.getUserListType(request, user.getId());
+		JSONObject result = cabinetRestService_h.getUserListType(request, user.getId());
 		if (result.get("status").toString().equals("ok")) {
 			String listType = (String)result.get("listType");
 			model.addAttribute("listType", listType);
@@ -194,7 +190,7 @@ public class EzCabinetController_h {
 		logger.debug("jsonGetSearchMember started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String srchOption  = request.getParameter("srchOption") != null  ? request.getParameter("srchOption")  : "";
-		String srchValue   = request.getParameter("srchValue") != null   ? request.getParameter("srchValue")   : "";
+		String srchValue   = request.getParameter("srchValue")  != null  ? request.getParameter("srchValue")   : "";
 		String currentPage = request.getParameter("currentPage") != null ? request.getParameter("currentPage") : "";
 		
 		logger.debug("srchOption: " + srchOption + " || srchValue: " + srchValue + " || currentPage: " + currentPage);
@@ -218,9 +214,9 @@ public class EzCabinetController_h {
 	@ResponseBody
 	public String jsonSaveShareUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jsonSaveShareUserList started");
-		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
-		String cabinetId    = request.getParameter("cabinetId")  != null ? request.getParameter("cabinetId")   : "";
-		String userList     = request.getParameter("userList")   != null ? request.getParameter("userList")    : "";
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String cabinetId   = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
+		String userList    = request.getParameter("userList")  != null ? request.getParameter("userList")  : "";
 		
 		logger.debug("CabinetId: " + cabinetId + " || userList" + userList);
 		
@@ -243,7 +239,7 @@ public class EzCabinetController_h {
 	public String jsonGetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jsonGetFileDetail started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		String itemId      = request.getParameter("itemId") != null  ? request.getParameter("itemId")  : "";
+		String itemId      = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
 		
 		logger.debug("itemId: " + itemId);
 		
@@ -357,13 +353,21 @@ public class EzCabinetController_h {
 	private String getModuleHandler(Model model, JSONObject iteminfo) {
 		String jspPageName   = "";
 		JSONObject item      = (JSONObject) iteminfo.get("item");
+		JSONArray columnList = (JSONArray) iteminfo.get("columns");
 		int itemType         = ((Long)item.get("itemType")).intValue();
 		model.addAttribute("item", item);
+		
+		for (int i = 0, totalColumn = columnList.size(); i < totalColumn; i++) {
+			JSONObject column = (JSONObject) columnList.get(i);
+			String columnId   = column.get("columnId").toString();
+			model.addAttribute(columnId, column);
+		}
 		
 		switch(itemType) {
 			case 0  : jspPageName = "ezCabinet/cabinetFileDetail"          ; break;
 			case 1  : jspPageName = getEmailColumnInfo(model, iteminfo)    ; break;
 			case 3  : jspPageName = getBoardColumnInfo(model, iteminfo)    ; break;
+			case 4  : jspPageName = getScheduleColumnInfo(model, iteminfo) ; break;
 			case 6  : jspPageName = getOptionColumnInfo(model, iteminfo)   ; break;
 			case 8  : jspPageName = getAddressColumnInfo(model, iteminfo)  ; break;
 			case 11 : jspPageName = getResourceColumnInfo(model, iteminfo) ; break;
@@ -373,37 +377,30 @@ public class EzCabinetController_h {
 		return jspPageName;
 	}
 	
-	private String getResourceColumnInfo(Model model, JSONObject iteminfo) {
-		String jspPageName   = "ezCabinet/cabinetResourceDetail";
-		JSONObject creator   = (JSONObject) iteminfo.get("creator");
-		JSONArray columnList = (JSONArray) iteminfo.get("columns");
-		
+	private String getScheduleColumnInfo(Model model, JSONObject iteminfo) {
+		String jspPageName = "ezCabinet/cabinetScheduleDetail";
+		JSONObject creator = (JSONObject) iteminfo.get("creator");
 		model.addAttribute("creatorUser", creator);
-		
-		for (int i = 0, totalColumn = columnList.size(); i < totalColumn; i++) {
-			JSONObject column = (JSONObject) columnList.get(i);
-			String columnId   = column.get("columnId").toString();
-			model.addAttribute(columnId, column);
-		}
 		
 		return jspPageName;
 	}
 	
+	private String getResourceColumnInfo(Model model, JSONObject iteminfo) {
+		String jspPageName = "ezCabinet/cabinetResourceDetail";
+		JSONObject creator = (JSONObject) iteminfo.get("creator");
+		
+		model.addAttribute("creatorUser", creator);
+		return jspPageName;
+	}
+	
 	private String getAddressColumnInfo(Model model, JSONObject iteminfo) {
-		String jspPageName   = "";
-		String addressType   = iteminfo.get("addresstype").toString();
-		JSONObject creator   = (JSONObject) iteminfo.get("creator");
-		JSONObject modifier  = (JSONObject) iteminfo.get("modifier");
-		JSONArray columnList = (JSONArray) iteminfo.get("columns");
+		String jspPageName  = "";
+		String addressType  = iteminfo.get("addresstype").toString();
+		JSONObject creator  = (JSONObject) iteminfo.get("creator");
+		JSONObject modifier = (JSONObject) iteminfo.get("modifier");
 		
 		model.addAttribute("creatorUser",  creator);
 		model.addAttribute("modifierUser", modifier);
-		
-		for (int i = 0, totalColumn = columnList.size(); i < totalColumn; i++) {
-			JSONObject column = (JSONObject) columnList.get(i);
-			String columnId   = column.get("columnId").toString();
-			model.addAttribute(columnId, column);
-		}
 		
 		if (addressType.equals("group")) {
 			jspPageName = "ezCabinet/cabinetGroupAddress";
@@ -417,7 +414,6 @@ public class EzCabinetController_h {
 	
 	private String getEmailColumnInfo(Model model, JSONObject iteminfo) {
 		String jspPageName     = "ezCabinet/cabinetEmailDetail";
-		JSONArray columnList   = (JSONArray) iteminfo.get("columns");
 		JSONObject senderUser  = (JSONObject) iteminfo.get("sender");
 		JSONArray receiverList = (JSONArray) iteminfo.get("receivers");
 		
@@ -429,41 +425,16 @@ public class EzCabinetController_h {
 			model.addAttribute("forwardList", forwardList);
 		}
 		
-		for (int i = 0, totalColumn = columnList.size(); i < totalColumn; i++) {
-			JSONObject column = (JSONObject) columnList.get(i);
-			String columnId   = column.get("columnId").toString();
-			model.addAttribute(columnId, column);
-		}
-		
 		return jspPageName;
 	}
 	
 	private String getBoardColumnInfo(Model model, JSONObject iteminfo) {
-		String jspPageName   = "ezCabinet/cabinetBoardDetail";
-		JSONArray columnList = (JSONArray) iteminfo.get("columns");
-		
-		for (int i = 0, totalColumn = columnList.size(); i < totalColumn; i++) {
-			JSONObject column = (JSONObject) columnList.get(i);
-			String columnId   = column.get("columnId").toString();
-			model.addAttribute(columnId, column);
-		}
-		
+		String jspPageName = "ezCabinet/cabinetBoardDetail";
 		return jspPageName;
 	}
 	
 	private String getOptionColumnInfo(Model model, JSONObject iteminfo) {
-		String jspPageName   = "ezCabinet/cabinetOptionDetail";
-		JSONArray columnList = new JSONArray();
-		if (iteminfo.get("columns") != null) {
-			columnList = (JSONArray) iteminfo.get("columns");
-		}
-		
-		for (int i = 0, totalColumn = columnList.size(); i < totalColumn; i++) {
-			JSONObject column = (JSONObject) columnList.get(i);
-			String columnId   = column.get("columnId").toString();
-			model.addAttribute(columnId, column);
-		}
-		
+		String jspPageName = "ezCabinet/cabinetOptionDetail";
 		return jspPageName;
 	}
 }

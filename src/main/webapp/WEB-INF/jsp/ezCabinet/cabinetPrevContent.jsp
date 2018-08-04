@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"                  ></script>
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript">
-			var CabinetPreview = function() {
+			var CabinetContentPreview = function() {
 				var currentZoom     = 100;
 				var maxZoom         = 200;
 				var minZoom         = 80;
@@ -89,10 +89,11 @@
 				
 				function getContentFromModuleName(moduleName) {
 					switch (moduleName) {
-						case "mail"  : documentContent = parent.CabinetEmailFile.getContent()   ; break;
-						case "board" : documentContent = parent.CabinetBoardFile.getContent()   ; break;
-						case "resrc" : documentContent = parent.CabinetResourceFile.getContent(); break;
-						default      : if (parent.CabinetItem) {documentContent = parent.CabinetItem.getContent();}
+						case "mail"   : documentContent = parent.CabinetEmailFile.getContent()   ; break;
+						case "board"  : documentContent = parent.CabinetBoardFile.getContent()   ; break;
+						case "resrc"  : documentContent = parent.CabinetResourceFile.getContent(); break;
+						case "schedl" : documentContent = parent.CabinetScheduleFile.getContent(); break;
+						default       : if (parent.CabinetItem) {documentContent = parent.CabinetItem.getContent();}
 					}
 				}
 				
@@ -322,6 +323,6 @@
 				catch (e) {}
 			}
 		</script>
-		<script type="text/javascript">CabinetPreview.init("<c:out value='${module}'/>")</script>
+		<script type="text/javascript">CabinetContentPreview.init("<c:out value='${module}'/>")</script>
 	</body>
 </html>

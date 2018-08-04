@@ -265,7 +265,6 @@
 		<result property="userId"             column="user_id"              columnIndex="2"/>
 	</resultMap>
 	
-	
 	<sql id="cabinetTreeSelect">
 		<![CDATA[
 			select
@@ -341,9 +340,11 @@
 		from
 			tbl_cb_item
 	</sql>
+	
 	<!--***********************************************************************************
 	**                            Organization tree process                              **
 	************************************************************************************-->
+	
 	<select id="EzCabinetDAO.getDeptPath" parameterClass="Map" resultClass="String">
 		<![CDATA[ select dept_cd_path from tbl_deptmaster where cn = #deptId# and tenant_id = #tenantId# ]]> 
 	</select>
@@ -379,6 +380,7 @@
 	<!--***********************************************************************************
 	**                                User config process                                **
 	************************************************************************************-->
+	
 	<select id="EzCabinetDAO.getActiveModuleListForUser" resultMap="companyModuleVO">
 		<![CDATA[select * from tbl_cb_admin_module where company_id = #companyId# and tenant_id = #tenantId# and active_status = 1 order by module_type desc]]>
 	</select>
@@ -572,6 +574,7 @@
 	<!--***********************************************************************************
 	**                                Cabinet tree process                               **
 	************************************************************************************-->
+	
 	<select id="EzCabinetDAO.getRootCabinetTree" resultMap="cabinetSimpleVO2">
 		<include refid="cabinetTreeSelect"/>
 		<![CDATA[
@@ -627,9 +630,7 @@
 			where
 				c1.creator_id = #userId# and c1.tenant_id = #tenantId# and c1.cabinet_level = 0 and c1.use_status = 1 and c1.cabinet_type in
 		]]>
-		<iterate property="listType" open="(" close=")" conjunction=",">
-			#listType[]#
-		</iterate>
+		<iterate property="listType" open="(" close=")" conjunction=",">#listType[]#</iterate>
 	</select>
 	
 	<select id="EzCabinetDAO.getSharedUserList" resultMap="deptMemberInfo">
@@ -744,7 +745,6 @@
 				<isNotEmpty property="permMode">
 					<isEqual property="permMode" compareValue="1">and s.permission = 1</isEqual>
 				</isNotEmpty>
-				
 			) c3
 	</select>
 	
@@ -965,6 +965,7 @@
 	<!--***********************************************************************************
 	**                                  Cabinet share process                            **
 	************************************************************************************-->
+	
 	<select id="EzCabinetDAO.getSharedCabinetListById" resultMap="cabinetShareVO">
 		select
 			s.*
@@ -1063,6 +1064,14 @@
 			case when #primary# = '1' then u.displayname else u.displayname2 end as user_name,
 			u.cn                                                                 as user_id
 		from tbl_usermaster u where u.tenant_id = #tenantId# and u.cn = #userId#
+	</select>
+	
+	<select id="EzCabinetDAO.getUsersInfoFromIdList" resultMap="simpleUserInfoVO">
+		select
+			case when #primary# = '1' then u.displayname else u.displayname2 end as user_name,
+			u.cn                                                                 as user_id
+		from tbl_usermaster u where u.tenant_id = #tenantId# and u.cn in
+		<iterate property="attendIds" open="(" close=")" conjunction=",">#attendIds[]#</iterate>
 	</select>
 	
 </sqlMap>

@@ -71,7 +71,6 @@
 				var itemId      = null;
 				var scrolled    = true;
 				var lastScrollY = 0;
-				var mailContent = null;
 				var relatedArr  = [];
 				
 				function initEvents(itemID) {

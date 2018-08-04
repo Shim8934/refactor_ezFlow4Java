@@ -90,6 +90,7 @@ var CabinetRlFileSelect = function() {
 			case "gaddr"  : if (parentWd && parentWd.CabinetGroupAddress)  {selectedArr = parentWd.CabinetGroupAddress.get()  ;} break;
 			case "naddr"  : if (parentWd && parentWd.CabinetNormalAddress) {selectedArr = parentWd.CabinetNormalAddress.get() ;} break;
 			case "resrc"  : if (parentWd && parentWd.CabinetResourceFile)  {selectedArr = parentWd.CabinetResourceFile.get()  ;} break;
+			case "schedl" : if (parentWd && parentWd.CabinetScheduleFile)  {selectedArr = parentWd.CabinetScheduleFile.get()  ;} break;
 			default       : if (parentWd && parentWd.CabinetAddFile)       {selectedArr = parentWd.CabinetAddFile.get()       ;}
 		}
 		
@@ -144,6 +145,7 @@ var CabinetRlFileSelect = function() {
 			case "gaddr"  : if (parentWd && parentWd.CabinetGroupAddress)  {parentWd.CabinetGroupAddress.save(data) ;} break;
 			case "naddr"  : if (parentWd && parentWd.CabinetNormalAddress) {parentWd.CabinetNormalAddress.save(data);} break;
 			case "resrc"  : if (parentWd && parentWd.CabinetResourceFile)  {parentWd.CabinetResourceFile.save(data) ;} break;
+			case "schedl" : if (parentWd && parentWd.CabinetScheduleFile)  {parentWd.CabinetScheduleFile.save(data) ;} break;
 			default       : if (parentWd && parentWd.CabinetAddFile)       {parentWd.CabinetAddFile.save(data)      ;}
 		}
 		

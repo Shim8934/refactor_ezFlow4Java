@@ -71,6 +71,8 @@
 				var userWindow  = null;
 				var itemPopup   = null;
 				var itemId      = null;
+				var scrolled    = true;
+				var lastScrollY = 0;
 				var resContent  = null;
 				var relatedArr  = [];
 				

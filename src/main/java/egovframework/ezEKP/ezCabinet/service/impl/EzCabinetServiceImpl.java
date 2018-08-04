@@ -1567,16 +1567,6 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		return ezCabinetDAO.getAllRelatedColumnsOfItem(map);
 	}
 	
-	@Override
-	public List<SimpleUserMailVO> getUserInfoFromEmail(List<String> receiverMail, String primary, int tenantId) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("mailList",  receiverMail);
-		map.put("tenantId",  tenantId);
-		map.put("primary",   primary);
-		
-		return ezCabinetDAO.getUserInfoFromEmail(map);
-	}
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject modifyRelatedItem(int itemId, String title, JSONArray relatedFiles, LoginVO userInfo) throws Exception {
@@ -1656,26 +1646,16 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		saveItem(itemVO);
 	}
 	
-	@Override
-	public SimpleUserInfoVO getSimpleUserInfo(String userId, String primary, int tenantId) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("userId",   userId);
-		map.put("tenantId", tenantId);
-		map.put("primary",  primary);
-		
-		return ezCabinetDAO.getSimpleUserInfo(map);
-	}
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveNormalAddressItem(int cabinetId, String title, String mode, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo, LoginVO userInfo) throws Exception {
-		JSONObject result          = new JSONObject();
-		int tenantId               = userInfo.getTenantId();
-		String companyId           = userInfo.getCompanyID();
+		JSONObject result = new JSONObject();
+		int tenantId      = userInfo.getTenantId();
+		String companyId  = userInfo.getCompanyID();
 		
 		//Add normal address item
 		int moduleType = 8; //address module
-		int itemId = addRelatedItem(moduleType, cabinetId, title, null, mode, userInfo);
+		int itemId     = addRelatedItem(moduleType, cabinetId, title, null, mode, userInfo);
 		
 		//Save normal columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
@@ -1762,10 +1742,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveScheduleItem(int cabinetId, String realPath, String title, String mode, String createUser,
-			String createDate, String scheduleDate, String priority, String location, String publicstatus,
-			String groupname, String attendant, String scheduletype, String attach, String content, Locale locale, LoginVO userInfo)
-			throws Exception {
+	public JSONObject saveScheduleItem(int cabinetId, String realPath, String title, String mode, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content, Locale locale, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
@@ -1808,5 +1785,35 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		}
 		
 		return result;
+	}
+	
+	@Override
+	public List<SimpleUserMailVO> getUserInfoFromEmail(List<String> receiverMail, String primary, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("mailList",  receiverMail);
+		map.put("tenantId",  tenantId);
+		map.put("primary",   primary);
+		
+		return ezCabinetDAO.getUserInfoFromEmail(map);
+	}
+	
+	@Override
+	public SimpleUserInfoVO getSimpleUserInfo(String userId, String primary, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId",   userId);
+		map.put("tenantId", tenantId);
+		map.put("primary",  primary);
+		
+		return ezCabinetDAO.getSimpleUserInfo(map);
+	}
+	
+	@Override
+	public List<SimpleUserInfoVO> getUsersInfoFromIdList(List<String> attendIds, String primary, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("attendIds", attendIds);
+		map.put("tenantId",  tenantId);
+		map.put("primary",   primary);
+		
+		return ezCabinetDAO.getUsersInfoFromIdList(map);
 	}
 }

@@ -133,9 +133,9 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 	@SuppressWarnings("unchecked")
 	@Override
 	public synchronized JSONObject saveShareUserList(JSONArray listUsers, String cabinetId, LoginVO userInfo) throws Exception {
-		JSONObject result = new JSONObject();
-		String userId     = userInfo.getId();
-		int tenantId      = userInfo.getTenantId();
+		JSONObject result       = new JSONObject();
+		String userId           = userInfo.getId();
+		int tenantId            = userInfo.getTenantId();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("cabinetId",   cabinetId);
 		map.put("userId",      userId);
@@ -379,7 +379,6 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 				}
 				
 				String fileName    = (String)fileObj.get("name");
-				
 				File file          = new File(realPath + filePath);
 				long fileSize      = file.length();
 				
@@ -421,10 +420,10 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveOptionItem(String realPath, String mode, int cabinetId, String title, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception {
-		JSONObject result      = new JSONObject();
-		int tenantId           = userInfo.getTenantId();
-		String companyId       = userInfo.getCompanyID();
-		JSONParser jp          = new JSONParser();
+		JSONObject result = new JSONObject();
+		int tenantId      = userInfo.getTenantId();
+		String companyId  = userInfo.getCompanyID();
+		JSONParser jp     = new JSONParser();
 		
 		//Add option item
 		int moduleType = 6; //option module
@@ -446,7 +445,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		//Save attach files
 		if (!attach.equals("")) {
 			JSONArray attachList  = (JSONArray) jp.parse(attach);
-			result = saveListAttachFiles(attachList, itemId, realPath, "upload_circular.ROOT", "uploadFile", locale, userInfo);
+			result                = saveListAttachFiles(attachList, itemId, realPath, "upload_circular.ROOT", "uploadFile", locale, userInfo);
 		}
 		else {
 			result.put("status", "ok");
@@ -622,5 +621,4 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		String columnName2 = egovMessageSource.getMessage(messageName, new Locale(config.getProperty("config.cabinetPrimary")));
 		return new CabinetColumnVO(columnId, itemId, columnName1, columnName2, columnValue, companyId, tenantId);
 	}
-	
 }
