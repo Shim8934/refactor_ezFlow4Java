@@ -788,8 +788,7 @@
             	( status = 0 or status = 3 )
             and
             	tenant_id = #v_TENANTID#
-            and
-        		companyid = #v_COMPANYID#
+            
             
 		]]>			
 	</select>
@@ -823,8 +822,7 @@
 	       		scheduleid = #v_SCHEDULEID#
 	       	and
 	       		tenant_id = #v_TENANTID#	 
-	       	and
-        		companyid = #v_COMPANYID#
+	       	
 	       	       
 		]]>			
 	</select>
