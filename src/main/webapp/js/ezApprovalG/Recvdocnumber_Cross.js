@@ -217,6 +217,14 @@ function getRecvDocNumber(pDeptID) {
 	            
 	            return true;
 	        } else {
+	        	var rtnVal = setDocNumFormat();
+	            
+	            if (!rtnVal) {
+	            	return true;
+	            }
+	            
+	            fractionsymbol = field.textContent;
+	            
 	        	var SN = getNodeText(GetChildNodes(result)[0]);
 	        	
 		        if (SN == "") {
@@ -242,15 +250,16 @@ function getRecvDocNumber(pDeptID) {
 		            return true;
 		        }
 	        }
+        } else {
+        	var rtnVal = setDocNumFormat();
+        	
+        	if (!rtnVal) {
+        		return true;
+        	}
+        	
+        	fractionsymbol = field.textContent;
         }
         
-        var rtnVal = setDocNumFormat();
-        
-        if (!rtnVal) {
-        	return true;
-        }
-
-        fractionsymbol = field.textContent;
     } catch (e) {
         if (SN != "") {
             field.textContent = fractionsymbol + SN;

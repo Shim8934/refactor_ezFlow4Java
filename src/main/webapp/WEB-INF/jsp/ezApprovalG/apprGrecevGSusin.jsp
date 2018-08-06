@@ -435,7 +435,8 @@
 		            TaskCode_Save();
 		        }
 		    }
-		
+		    
+		    //편철시 철지정
 		    function TaskCode_Save() {
 		        if (cabinetID == "") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t134'/>";
