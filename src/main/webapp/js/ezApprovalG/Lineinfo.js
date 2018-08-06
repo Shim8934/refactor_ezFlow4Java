@@ -888,7 +888,7 @@ function APRLINESNDownFunction() {
     			if (p_NextSelRow != null) {
     				var p_NextAprStat = GetAttribute(p_NextSelRow, "DATA12");
     				if ((pSelAprLineState == "003" || p_NextAprStat == "003") && pReDraftFlag == "DRAFT") {
-    					var pAlertContent = strLang237;
+    					var pAlertContent = strLang306;
     					OpenAlertUI(pAlertContent);
     					return;
     				}
@@ -908,7 +908,7 @@ function APRLINESNDownFunction() {
     				else {
     					if (pReDraftAprLineFlag) {
     						if (((p_NextAprStat == "002" || p_NextAprStat == "005") && GetAttribute(p_NextSelRow, "DATA4") == pUserID || p_NextAprStat == "003")) {
-    							var pAlertContent = strLang239;
+    							var pAlertContent = strLang310;
     							OpenAlertUI(pAlertContent);
     							return;
     						}
