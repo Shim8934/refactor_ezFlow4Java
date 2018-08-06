@@ -397,7 +397,17 @@ public class EzBoardController extends EgovFileMngUtil{
         }
         //end
         
+        // 2018-08-06 황윤호 추가
+        String memoFlag = "";
+        if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+        	memoFlag = "YES";
+        }
+        else {	// 개발 끝나면 NO로 변경
+        	memoFlag = "YES";
+        }
+        
         modelMap.addAttribute("pollFlag", pollFlag);
+        modelMap.addAttribute("memoFlag", memoFlag);
 
 		return "ezBoard/boardConfig";
 	}
