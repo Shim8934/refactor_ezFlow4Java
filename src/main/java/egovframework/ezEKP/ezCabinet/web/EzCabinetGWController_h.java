@@ -552,6 +552,7 @@ public class EzCabinetGWController_h {
 			case 1 : getMoreEmailDetail(result, columnList, primary, tenantId)   ; break;
 			case 3 : getMoreBoardDetail(result, columnList, primary, tenantId)   ; break;
 			case 4 : getMoreScheduleDetail(result, columnList, primary, tenantId); break;
+			case 6 : getMoreOptionDetail(result, columnList, primary, tenantId)  ; break;
 			case 8 : getMoreAddressDetail(result, columnList, primary, tenantId) ; break;
 			case 11: getMoreResourceDetail(result, columnList, primary, tenantId); break;
 		}
@@ -576,6 +577,20 @@ public class EzCabinetGWController_h {
 		result.put("creator", creatorVO);
 	}
 	
+	private void getMoreOptionDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
+		CabinetColumnVO writerColumn = columnList.stream().filter(column -> column.getColumnId().equals("optionWriter")).collect(Collectors.toList()).get(0);
+		
+		String writerId              = writerColumn.getColumnValue();
+		SimpleUserInfoVO writerVO    = cabinetService.getSimpleUserInfo(writerId, primary, tenantId);
+		
+		if (writerVO == null) {
+			writerVO = new SimpleUserInfoVO(writerId, writerId);
+		}
+		
+		result.put("writerVO", writerVO);
+		
+	}
+	
 	private void getMoreResourceDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
 		CabinetColumnVO creatorColumn = columnList.stream().filter(column -> column.getColumnId().equals("creator")).collect(Collectors.toList()).get(0);
 		
@@ -590,7 +605,7 @@ public class EzCabinetGWController_h {
 	}
 	
 	private void getMoreBoardDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
-		CabinetColumnVO writerColumn = columnList.stream().filter(column -> column.getColumnId().equals("writer")).collect(Collectors.toList()).get(0);
+		CabinetColumnVO writerColumn = columnList.stream().filter(column -> column.getColumnId().equals("boardWriter")).collect(Collectors.toList()).get(0);
 		
 		String writerId              = writerColumn.getColumnValue();
 		SimpleUserInfoVO writerVO    = cabinetService.getSimpleUserInfo(writerId, primary, tenantId);

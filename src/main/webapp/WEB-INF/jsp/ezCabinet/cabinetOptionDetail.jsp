@@ -23,7 +23,7 @@
 					<td><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
-					<th><c:out value="${writer.columnName}"/></th>
+					<th><c:out value="${optionWriter.columnName}"/></th>
 					<td id="optionCreator" class="cursor overfl"></td>
 					<th><c:out value="${optionTime.columnName}"/></th>
 					<td><c:out value="${fn:substring(optionTime.columnValue, 0, 19)}"/></td>
@@ -48,10 +48,15 @@
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a>
 		</div>
 		
+		<div class="cabBttnDiv" id="fileModifyDivBttn" style="display: none;">
+			<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
+			<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
+		</div>
+		
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
 		<script type="text/javascript">
-			var CabinetBoardFile = function() {
+			var CabinetOptionFile = function() {
 				var itemId       = null;
 				
 				function initEvents(itemID) {
@@ -96,6 +101,54 @@
 							processFileDetail(data);},
 						error : function(error) {alert(CabinetMessages.strError);}
 					});
+				}
+				
+				function processFileDetail(fileItem) {
+					var result       = fileItem.fileDetail;
+					var boardWriter  = fileItem.writerVO;
+					var attachList   = fileItem.attachFileList;
+					var relatedList  = fileItem.relatedFileList;
+					
+					//File Creator
+					document.getElementById("fileCreator").onclick  = function(e) {showUserInfoFromId(result["creatorId"]);};
+					
+					//Board Creator
+					var boardCreator         = document.getElementById("boardCreator");
+					boardCreator.textContent = boardWriter["userName"];
+					boardCreator.onclick     = function(e) {showUserInfoFromId(boardWriter["userId"]);};
+					
+					//Title
+					var titleTd         = document.getElementById("title");
+					titleTd.textContent = result["title"];
+					titleTd.setAttribute("title", result["title"]);
+					
+					//Related list
+					var divElmt       = document.getElementById("fileListDiv");
+					divElmt.innerHTML = "";
+					var relDocDivElmt = divElmt.parentElement;
+					while (relDocDivElmt.childElementCount > 1) {relDocDivElmt.removeChild(relDocDivElmt.lastElementChild);}
+					
+					if (relatedList && relatedList.length > 0) {
+						var relatedScroll = new CabinetScroll("fileListDiv");
+						setScrollElement(divElmt, relatedList, readRelatedItem, "relatedItemId", "title", "useStatus");
+						
+						for (var i = 0, len = relatedList.length; i < len; i++) {
+							relatedArr.push({
+								itemType  : relatedList[i]["itemType"],
+								itemId    : relatedList[i]["relatedItemId"],
+								itemTitle : relatedList[i]["title"]
+							})
+						}
+					}
+					
+					//Attach List and content
+					var iframeElmt       = document.getElementById("boardIframe");
+					iframeElmt.src       = "/ezCabinet/getPreviewContent.do?module=board";
+					boardContent         = {};
+					boardContent.content = result["contentPath"];
+					boardContent.size    = result["itemSize"];
+					boardContent.attach  = attachList;
+					
 				}
 			}();
 		</script>

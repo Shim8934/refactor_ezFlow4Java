@@ -314,8 +314,8 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		//Save board columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("writer"    , itemId, "ezBoard.t223", writer  , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("boardTime" , itemId, "ezBoard.t223", dateTime, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardWriter", itemId, "ezBoard.t223", writer, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardTime"  , itemId, "ezBoard.t223", dateTime, companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		
@@ -449,7 +449,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		//Save option columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("optionWriter", itemId, "ezBoard.t5007"  , writer    , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("optionWriter", itemId, "ezCircular.t122", writer    , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("optionTime"  , itemId, "ezBoard.t5007"  , date      , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("importance"  , itemId, "ezCircular.t115", importance, companyId, tenantId));
 		listColm.add(createNewRelatedColumn("option"      , itemId, "ezCircular.t118", option    , companyId, tenantId));
