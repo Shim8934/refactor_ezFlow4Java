@@ -565,7 +565,7 @@
         </table>
 		<table style="margin-top : 5px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 			<tr>
-				<td><a class="imgbtn" id="submit" onclick="ok_Click()"><span><spring:message code='ezPMS.t265' /></span></a></td>
+				<td><div class="btnpositionNew"><a class="imgbtn" id="submit" onclick="ok_Click()"><span><spring:message code='ezPMS.t265' /></span></a></div></td>
 			</tr>
 		</table>
         <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
