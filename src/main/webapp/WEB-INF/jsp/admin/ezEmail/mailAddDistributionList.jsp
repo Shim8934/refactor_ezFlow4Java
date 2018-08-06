@@ -1958,7 +1958,7 @@
 		                                    </table>
 		                                </div>
 		                            </div>
-		                            <div style="width: 668px; height: 474px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
+		                            <div style="width: 668px; height: 446px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
 		                            </div>
 		                        </td>
 		                    </tr>
