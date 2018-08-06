@@ -15202,7 +15202,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			logger.debug("update");
 			ezApprovalGDAO.updateSerialNo(map);
-			result = Integer.toString((Integer.parseInt(result) + 1));
+			result = Integer.toString((Integer.parseInt(result)));
 		}
 		
 		logger.debug("getSerialNum ended.");
