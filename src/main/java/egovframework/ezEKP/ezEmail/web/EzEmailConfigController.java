@@ -195,6 +195,15 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		return "ezEmail/mailGeneral";
 	}
+	
+	/**
+	 * 메일 보내는 사람이름을 수정하는 팝업 
+	 */
+	@RequestMapping(value="/ezEmail/mailExtSenderNM.do")
+	public String mailExtSenderNM(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model) throws Exception{
+		return "ezEmail/mailExtSenderNM";
+	}
+
 
 	/**
 	 * 메일 환경 설정 저장 함수
