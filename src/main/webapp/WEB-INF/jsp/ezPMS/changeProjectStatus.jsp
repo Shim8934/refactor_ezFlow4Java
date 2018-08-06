@@ -191,9 +191,10 @@ function getStatusStr(status) {
 		<table id="statusList" class="content" style="margin-top:10px">
 		</table>
 	</div>
-		<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
+	<br/>
+		<table style="width:100%;">
 			<tr>
-				<td><a class="imgbtn" id="submit" onclick="changeStatus()"><span><spring:message code='ezPMS.t40' /></span></a></td>
+				<td><div class="btnposition btnpositionNew"><a class="imgbtn" id="submit" onclick="changeStatus()"><span><spring:message code='ezPMS.t40' /></span></a></div></td>
 			</tr>
 		</table>
 </div>

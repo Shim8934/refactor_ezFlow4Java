@@ -629,12 +629,13 @@ function goGroupDetails(elem) {
 			</tbody>
 	</table>
 	<!-- /내용 -->
-		<br />
 		<table style="width:100%">
 			<tr>
 			<td style="text-align:center;">
+				<div class="btnpositionLayer">
 				<a class="imgbtn" onclick="searchContent()"><span><spring:message code='ezPMS.t1' /></span></a>
 				<a class="imgbtn" rel="modal:close"><span onclick="layerHidden();"><spring:message code='ezAttitude.t34'/></span></a>
+				</div>
 		    </td>
 		    </tr>
 	    </table>

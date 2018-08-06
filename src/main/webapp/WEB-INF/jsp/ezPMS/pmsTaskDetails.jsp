@@ -246,11 +246,11 @@
 			taskId = "${taskDetails.taskId}";
 			target = "task";
 			
-			DivPopUpShow(760, 432, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
+			DivPopUpShow(760, 452, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
 		} else {
 			taskId = "${taskDetails.groupId}";
 			
-			DivPopUpShow(760, 456, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
+			DivPopUpShow(760, 476, "/ezPMS/goUpdateTaskInfo.do?projectId=" + projectId + "&taskId=" + taskId + "&target=" + target);
 		}
 	}
 	
@@ -441,8 +441,8 @@ button.PHBtn {
 .mainBodyTop{margin-top:8px;width:818px;}
 .mainBodyMid{height:510px;}
 .statusDivBrd{width:165px;height:168px;float:left;border: 1px solid #ccc;border-right:0px;}
-.statusChgBtn{float:left;margin:3px 25px;border:1px solid #ddd;border-radius:5px; padding:0px 7px; cursor:pointer;}
-.taskUpdateBtn{display:inline-block;width:100px;height:16px;float:right;margin-top:6px;position:relative;font-size:12px;text-align:center;border:1px solid #ddd;border-radius:6px;cursor:pointer;z-index:101;}
+.statusChgBtn{float:left !important; margin-left:35px; margin-top:2px !important;}
+.imgbtn {float:right; margin-top:1px;}
 </style>
 </head>
 <body class="popup">
@@ -465,7 +465,7 @@ button.PHBtn {
 						<strong style="top:30px;"></strong>
 					</div>
 					<c:if test="${empty target }">
-					<div id="statusChgBtn" class="statusChgBtn"><spring:message code='ezPMS.t175' /></div>
+					<a id="statusChgBtn" class="imgbtn imgbck statusChgBtn"><span><spring:message code='ezPMS.t175' /></span></a>
 					</c:if>
 			</div>
 			<table class="detailsTable" style="clear:none">
@@ -529,12 +529,13 @@ button.PHBtn {
 		<div class="mainBodyMid">
 			<div class="portlet_tabpart01" style="margin-bottom: 10px">
 			<c:if test="${userRoleId eq 1 }">
-			<div id="taskUpdateBtn" class="taskUpdateBtn">
-				<c:choose>
+			<a id="taskUpdateBtn" class="imgbtn imgbck">
+				<span><c:choose>
 					<c:when test="${target eq 'group'}"><spring:message code='ezPMS.t279' /></c:when>
 					<c:otherwise><spring:message code='ezPMS.t179' /></c:otherwise>
 				</c:choose>
-			</div>
+				</span>
+			</a>
 			</c:if>
 			<c:if test="${userRoleId ne 3 }">
 				<div id="addBoardBtn" class="taskUpdateBtn" style="display: none;"><spring:message code='ezPMS.t278' /></div>

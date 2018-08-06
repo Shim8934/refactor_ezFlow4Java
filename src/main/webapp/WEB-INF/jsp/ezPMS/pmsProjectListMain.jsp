@@ -63,9 +63,9 @@ function goProjectDetails(elem) {
 }
 
 function addNewProject() { 
-	var feature = GetOpenPosition(845, 625);
+	var feature = GetOpenPosition(845, 645);
 	
-	window.open("/ezPMS/newProject.do?mode=" + "new", "", "width=845, height=625, resizable=no, scrollbars=no, status=no" + feature);
+	window.open("/ezPMS/newProject.do?mode=" + "new", "", "width=845, height=645, resizable=no, scrollbars=no, status=no" + feature);
 // 	addProjectPopup(10, 20, 845, 555, "/ezPMS/newProject.do?mode=" + "new");
 }
 
@@ -201,6 +201,10 @@ $(function() {
 		$("#addFavorite").css("display", "none");
 	}
 	
+	if (listProjectStatus == "D") {
+		$("#deleteProject").text("<spring:message code='ezPMS.t13'/> <spring:message code='ezPMS.t12' />");
+	}
+	
 	$("#listSort option[value='"+ projectSort +"']").attr("selected", true);
 	$("#listcount option[value='"+ listNumber +"']").attr("selected", true);
 	$("#listByStatus option[value='" + listProjectStatus + "']").attr("selected", true);
@@ -285,6 +289,7 @@ function setTotalCount(totalCount) {
 	if (!totalCount) {
 		totalCount = 0;
 	}
+	
 	$("#totalCount").text(totalCount);
 }
 
@@ -593,7 +598,7 @@ function changeProjectStatus() {
 	
 	if (result == 1) {
 		$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%;background:none rgba(0, 0, 0, 0.4)'></div>").appendTo(parent.frames["left"].document.body);
-		addProjectPopup(36, 38, 400, 200, "/ezPMS/changeProjectStatus.do");
+		addProjectPopup(36, 38, 400, 220, "/ezPMS/changeProjectStatus.do");
 	} else {
 		alert("<spring:message code='ezPMS.t29' />");
 		return;	
@@ -632,9 +637,9 @@ function viewListByStatus(status) {
 	}
 	
 	if (listProjectStatus == "D") {
-		$("#deleteProject").text("<spring:message code='ezPMS.t12' />");
+		$("#deleteProject").text("<spring:message code='ezPMS.t13'/> <spring:message code='ezPMS.t12' />");
 	} else {
-		$("#deleteProject").text("<spring:message code='ezPMS.t11' />");
+		$("#deleteProject").text("<spring:message code='ezPMS.t13'/> <spring:message code='ezPMS.t11' />");
 	}
 	
 	setProjectList("new");
@@ -774,7 +779,6 @@ function addFavoriteMemo(projectId) {
 			data :JSON.stringify(data),
 			success : function(result) {
 				if (result == "0") {
-					alert("<spring:message code='ezPMS.t25' />");
 					$("#"+projectId).find("img").attr("src", "/images/ImgIcon/icon-flag.gif");
 					$("#"+projectId).find("img").attr("onclick", "deleteFavoriteMemo(this)");
 					
@@ -811,7 +815,6 @@ function deleteFavoriteMemo(projectId) {
 			url : "/ezPMS/deleteFavoriteProject.do",
 			data :JSON.stringify(data),
 			success : function(result) {
-				alert("<spring:message code='ezPMS.t28' />");
 				$("#"+projectId).find("img").attr("src", "/images/ImgIcon/view-flag.gif");
 				$("#"+projectId).find("img").attr("onclick", "addFavoriteMemo(this)");
 
@@ -862,8 +865,7 @@ function addFavorite() {
 						listNumber = $(".project_list").length;
 					}
 					
-					setProjectList("new"); 
-					alert("<spring:message code='ezPMS.t25' />");
+					setProjectList("new");
 				} else {
 					alert("<spring:message code='ezPMS.t26' />");
 					return;
@@ -922,7 +924,6 @@ function deleteFavorite() {
 			url : "/ezPMS/deleteFavoriteProject.do",
 			data :JSON.stringify(data),
 			success : function() {
-				alert("<spring:message code='ezPMS.t28' />");
 				checkedVal = "";
 				
 				if (viewType == 0) {
@@ -1101,7 +1102,7 @@ function searchProject() {
 			</select>
 		</li>
 		<li><span id="newProject" onclick="addNewProject()"><spring:message code='ezPMS.t55' /></span></li>
-		<li><span id="deleteProject" onclick="deleteProject()"><spring:message code='ezPMS.t11' /></span></li>
+		<li><span id="deleteProject" onclick="deleteProject()"><spring:message code='ezPMS.t13'/> <spring:message code='ezPMS.t11' /></span></li>
 		<li><span id="changeProjectStatus" onclick="changeProjectStatus()"><spring:message code='ezPMS.t92' /></span></li>
 		<li><span id="deleteFavorite" onclick="deleteFavorite()"><spring:message code='ezPMS.t6' /></span></li>
 		<li><span id="addFavorite" onclick="addFavorite()"><spring:message code='ezPMS.t7' /></span></li>
@@ -1191,12 +1192,13 @@ function searchProject() {
 			</tbody>
 		</table>
 				<!-- /내용 -->
-				<br />
 				<table style="width:100%">
 				<tr>
 				<td style="text-align:center;">
+					<div class="btnpositionLayer">
 					<a class="imgbtn" onclick="searchProject()"><span><spring:message code='ezPMS.t1' /></span></a>
 					<a class="imgbtn" rel="modal:close"><span onclick="layerHidden();"><spring:message code='ezAttitude.t34'/></span></a>
+					</div>
 			    </td>
 			    </tr>
 			    </table>
