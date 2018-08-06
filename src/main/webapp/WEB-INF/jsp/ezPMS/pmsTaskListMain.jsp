@@ -50,8 +50,8 @@
 	var searchByOverview = "";
 	
 	function goAddTask() {
-		var feature = GetOpenPosition(845, 482);
-		window.open("/ezPMS/goAddTask.do?projectId=" + projectId, "", "width=845, height=482, resizable=no, scrollbars=no, status=no" + feature);
+		var feature = GetOpenPosition(845,502);
+		window.open("/ezPMS/goAddTask.do?projectId=" + projectId, "", "width=845, height=502, resizable=no, scrollbars=no, status=no" + feature);
 		
 // 		DivPopUpShow(845, 482, "/ezPMS/goAddTask.do?projectId=" + projectId);
 	};
@@ -629,12 +629,13 @@
 				</tr>
 			</tbody>
 		</table>
-		<br />
 		<table style="width:100%">
 				<tr>
 				<td style="text-align:center;">
+					<div class="btnpositionLayer">
 					<a class="imgbtn" onclick="searchTask()"><span><spring:message code='ezPMS.t1' /></span></a>
 					<a class="imgbtn" rel="modal:close"><span onclick="layerHidden();"><spring:message code='ezAttitude.t34'/></span></a>
+					</div>
 			    </td>
 			    </tr>
 		</table>

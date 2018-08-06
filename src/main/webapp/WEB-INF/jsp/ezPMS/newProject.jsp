@@ -224,7 +224,7 @@ var headManagerObj = {};
 	 var url = "/ezPMS/pmsSelectAuth.do?type=" + type.id;
 	 //	url += "?companyId=" + companyId;
 	 var width = type.id === "headManager" ? 700 : 980;
-	 GetOpenWindow(url, "pmsSelectAuth", width, 630);
+	 GetOpenWindow(url, "pmsSelectAuth", width, 650);
  }
  
  function addNewProject() {
@@ -523,9 +523,9 @@ var headManagerObj = {};
 				</td>
 			</tr>
 		</table>
-		<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
+		<table style="width:100%;">
 			<tr>
-				<td><a class="imgbtn" id="submit" onclick="addNewProject()"><span><spring:message code='ezPMS.t40' /></span></a></td>
+				<td><div class="btnpositionNew"><a class="imgbtn" id="submit" onclick="addNewProject()"><span><spring:message code='ezPMS.t40' /></span></a></div></td>
 			</tr>
 		</table>
 	</div>

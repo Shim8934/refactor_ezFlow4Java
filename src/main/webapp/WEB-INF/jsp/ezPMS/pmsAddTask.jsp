@@ -473,9 +473,9 @@ function setDefaultGroup(){
 				<td colspan="3"><textarea id="overview" style="height:100px; width:98.5%; margin-top:2px; resize:none;"></textarea></td>
 			</tr>
 		</table>
-		<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
+		<table style="width:100%;">
 			<tr>
-				<td><a class="imgbtn" id="submit" onclick="addTask()"><span><spring:message code='ezPMS.t40' /></span></a></td>
+				<td><div class="btnpositionNew"><a class="imgbtn" id="submit" onclick="addTask()"><span><spring:message code='ezPMS.t40' /></span></a></div></td>
 			</tr>
 		</table>
 	</div>

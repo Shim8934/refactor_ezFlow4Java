@@ -403,8 +403,8 @@
 	   		
 	   		//업무 추가
 	   		function goAddTask() {
-   				var feature = GetOpenPosition(845, 482);
-   				window.open("/ezPMS/goAddTask.do?projectId=" + projectId, "", "width=845, height=482, resizable=no, scrollbars=no, status=no" + feature);
+   				var feature = GetOpenPosition(845, 502);
+   				window.open("/ezPMS/goAddTask.do?projectId=" + projectId, "", "width=845, height=502, resizable=no, scrollbars=no, status=no" + feature);
    			 
 //    				DivPopUpShow(845, 485, "/ezPMS/goAddTask.do?projectId=" + projectId);
 	   		}
@@ -477,8 +477,8 @@
 	   		
 	   		//그룹 추가
 	   		function goAddGroup() {
-				var feature = GetOpenPosition(700, 447);
-   				window.open("/ezPMS/goAddGroup.do?projectId=" + projectId, "", "width=700, height=447, resizable=no, scrollbars=no, status=no" + feature);
+				var feature = GetOpenPosition(700, 467);
+   				window.open("/ezPMS/goAddGroup.do?projectId=" + projectId, "", "width=700, height=467, resizable=no, scrollbars=no, status=no" + feature);
    			 
 //    				DivPopUpShow(700, 447, "/ezPMS/goAddGroup.do?projectId=" + projectId);
 	   		}

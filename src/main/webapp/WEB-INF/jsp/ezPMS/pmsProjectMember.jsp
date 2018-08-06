@@ -111,9 +111,9 @@ var roleId = "${roleId}";
 	</div>
 	<div style="height:250px; overflow-y:auto; overflow-x:hidden;" id="divTbl">
 	</div>
-	<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
+	<table style="width:100%; margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
 		<tr>
-			<td><a class="imgbtn" onclick="popupClose()"><span><spring:message code='ezPMS.t43' /></span></a></td>
+			<td><div class="btnpositionNew"><a class="imgbtn" onclick="popupClose()"><span><spring:message code='ezPMS.t43' /></span></a></div></td>
 			<td>
 		</tr>
 	</table>

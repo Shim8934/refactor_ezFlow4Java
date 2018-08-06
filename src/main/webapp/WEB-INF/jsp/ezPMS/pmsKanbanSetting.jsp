@@ -255,9 +255,9 @@ body {
 	                </td>
 	           </tr>
 	         </table>
-			<table style="margin-top : 5px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
+			<table style="width:100%;">
 			<tr>
-				<td><a class="imgbtn" id="submit" onclick="updateKanbanStatus()"><span><spring:message code='ezPMS.t265' /></span></a></td>
+				<td><div class="btnpositionNew"><a class="imgbtn" id="submit" onclick="updateKanbanStatus()"><span><spring:message code='ezPMS.t265' /></span></a></div></td>
 			</tr>
 		</table>	
 	</form>

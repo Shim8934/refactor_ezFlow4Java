@@ -273,6 +273,9 @@ function selectedTR(elem) {
 	margin-right: 20px;
 }
 
+#searchArea input, #searchArea select {
+	height : 27px;
+}
 </style>
 </head>
 <body style="margin : 10px 10px 0px 10px">
@@ -286,8 +289,8 @@ function selectedTR(elem) {
 				<option value="1" selected><spring:message code='ezPMS.t186' /></option>
 				<option value="2"><spring:message code='ezPMS.t188' /></option>
 			</select>
-			<input type="text" id="searchByContent" onkeypress="if(event.keyCode==13) {searchLogContent(); return false;}" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: baseline">
-                <a id="searchButton" href="#" style="float:right; margin-top:1px;"><img src="/images/sub/bsearch.gif" border="0" onclick="searchLogContent()"></a>
+			<input type="text" id="searchByContent" onkeypress="if(event.keyCode==13) {searchLogContent(); return false;}" style="width:150px;ime-mode: active;border-right:0px;vertical-align: baseline"/>
+                <a id="searchButton" href="#" style="float:right;"><img src="/images/bsearch_new.gif" border="0" onclick="searchLogContent()"></a>
 			<select id="searchStatus" onchange="searchLogStatus(this.value)">
 				<option value="0"><spring:message code='ezPMS.t14' /></option>
 				<option value="1"><spring:message code='ezPMS.t40' /></option>

@@ -388,6 +388,10 @@
 	.col4 {width: 12%;}
 	.col5 {width: 10%}
 	.commentContent {width: 80%;}
+	
+	#searchArea input, #searchArea select {
+		height : 27px;
+	}
 </style>
 
 </head>
@@ -403,12 +407,12 @@
 						<option value="searchByContent"><spring:message code='ezPMS.t130' /></option>
 						<option value="searchByWriteDate"><spring:message code='ezPMS.t119' /></option>
 					</select>
-					<input type="text" id="searchKeyword" onkeypress="if(event.keyCode==13) {searchComment(); return false;}" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: baseline">
+					<input type="text" id="searchKeyword" onkeypress="if(event.keyCode==13) {searchComment(); return false;}" style="width:150px;ime-mode: active;border-right:0px;vertical-align: baseline">
 					<span id="searchDate" style="display: none; margin-right : 10px;">
 						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ 
 						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
 					</span>
-					<a id="searchButton" href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onclick="searchComment()" style="margin-top:1px;"></a>
+					<a id="searchButton" href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onclick="searchComment()"></a>
 				</span>
 				</h1>
 			</div>
