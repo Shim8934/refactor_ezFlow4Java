@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -504,16 +505,16 @@ public class EzCabinetGWController_h {
 	}
 	
 	@RequestMapping(value="/rest/ezcabinet/relate-item/save/board", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject saveBoarditem(Locale locale, HttpServletRequest request) throws Exception {
+	public JSONObject saveBoarditem(@RequestBody JSONObject boardItemInf, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
-		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
-		String mode       = request.getParameter("mode")     != null ? request.getParameter("mode")     : "";
-		String cabinetId  = request.getParameter("cabinet")  != null ? request.getParameter("cabinet")  : "";
-		String title      = request.getParameter("title")    != null ? request.getParameter("title")    : "";
-		String writer     = request.getParameter("writer")   != null ? request.getParameter("writer")   : "";
-		String dateTime   = request.getParameter("dateTime") != null ? request.getParameter("dateTime") : "";
-		String attach     = request.getParameter("attach")   != null ? request.getParameter("attach")   : "";
-		String content    = request.getParameter("content")  != null ? request.getParameter("content")  : "";
+		String userId     = boardItemInf.get("userId")   != null ? boardItemInf.get("userId").toString()   : "";
+		String mode       = boardItemInf.get("mode")     != null ? boardItemInf.get("mode").toString()     : "";
+		String cabinetId  = boardItemInf.get("cabinet")  != null ? boardItemInf.get("cabinet").toString()  : "";
+		String title      = boardItemInf.get("title")    != null ? boardItemInf.get("title").toString()    : "";
+		String writer     = boardItemInf.get("writer")   != null ? boardItemInf.get("writer").toString()   : "";
+		String dateTime   = boardItemInf.get("dateTime") != null ? boardItemInf.get("dateTime").toString() : "";
+		String attach     = boardItemInf.get("attach")   != null ? boardItemInf.get("attach").toString()   : "";
+		String content    = boardItemInf.get("content")  != null ? boardItemInf.get("content").toString()  : "";
 		JSONObject result = new JSONObject();
 		
 		logger.debug("ServerName: " + serverName + " || userId: " + userId + " || mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + " || dateTime: " + dateTime + " || attach: " + attach  + " || content: " + content);
@@ -717,22 +718,22 @@ public class EzCabinetGWController_h {
 	}
 	
 	@RequestMapping(value="/rest/ezcabinet/relate-item/save/option", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
-	public JSONObject saveOptionitem(Locale locale, HttpServletRequest request) throws Exception {
+	public JSONObject saveOptionitem(@RequestBody JSONObject optionItemInf, Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
-		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
-		String mode       = request.getParameter("mode")       != null ? request.getParameter("mode")       : "";
-		String cabinetId  = request.getParameter("cabinet")    != null ? request.getParameter("cabinet")    : "";
-		String title      = request.getParameter("title")      != null ? request.getParameter("title")      : "";
-		String writer     = request.getParameter("writer")     != null ? request.getParameter("writer")     : "";
-		String date       = request.getParameter("date")       != null ? request.getParameter("date")       : "";
-		String importance = request.getParameter("importance") != null ? request.getParameter("importance") : "";
-		String option     = request.getParameter("option")     != null ? request.getParameter("option")     : "";
-		String statusNum  = request.getParameter("statusNum")  != null ? request.getParameter("statusNum")  : "";
-		String status     = request.getParameter("status")     != null ? request.getParameter("status")     : "";
-		String confirm    = request.getParameter("confirm")    != null ? request.getParameter("confirm")    : "";
-		String endDate    = request.getParameter("endDate")    != null ? request.getParameter("endDate")    : "";
-		String content    = request.getParameter("content")    != null ? request.getParameter("content")    : "";
-		String attach     = request.getParameter("attach")     != null ? request.getParameter("attach")     : "";
+		String userId     = optionItemInf.get("userId")     != null ? optionItemInf.get("userId").toString()     : "";
+		String mode       = optionItemInf.get("mode")       != null ? optionItemInf.get("mode").toString()       : "";
+		String cabinetId  = optionItemInf.get("cabinet")    != null ? optionItemInf.get("cabinet").toString()    : "";
+		String title      = optionItemInf.get("title")      != null ? optionItemInf.get("title").toString()      : "";
+		String writer     = optionItemInf.get("writer")     != null ? optionItemInf.get("writer").toString()     : "";
+		String date       = optionItemInf.get("date")       != null ? optionItemInf.get("date").toString()       : "";
+		String importance = optionItemInf.get("importance") != null ? optionItemInf.get("importance").toString() : "";
+		String option     = optionItemInf.get("option")     != null ? optionItemInf.get("option").toString()     : "";
+		String statusNum  = optionItemInf.get("statusNum")  != null ? optionItemInf.get("statusNum").toString()  : "";
+		String status     = optionItemInf.get("status")     != null ? optionItemInf.get("status").toString()     : "";
+		String confirm    = optionItemInf.get("confirm")    != null ? optionItemInf.get("confirm").toString()    : "";
+		String endDate    = optionItemInf.get("endDate")    != null ? optionItemInf.get("endDate").toString()    : "";
+		String content    = optionItemInf.get("content")    != null ? optionItemInf.get("content").toString()    : "";
+		String attach     = optionItemInf.get("attach")     != null ? optionItemInf.get("attach").toString()     : "";
 		
 		JSONObject result = new JSONObject();
 		
@@ -759,4 +760,43 @@ public class EzCabinetGWController_h {
 		
 		return result;
 	}
+	@RequestMapping(value="/rest/ezcabinet/relate-item/save/community", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveCommunityitem(@RequestBody JSONObject commuItemInf, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
+		String userId     = commuItemInf.get("userId")     != null ? commuItemInf.get("userId").toString()     : "";
+		String mode       = commuItemInf.get("mode")       != null ? commuItemInf.get("mode").toString()       : "";
+		String cabinetId  = commuItemInf.get("cabinet")    != null ? commuItemInf.get("cabinet").toString()    : "";
+		String title      = commuItemInf.get("title")      != null ? commuItemInf.get("title").toString()      : "";
+		String writer     = commuItemInf.get("writer")     != null ? commuItemInf.get("writer").toString()     : "";
+		String date       = commuItemInf.get("date")       != null ? commuItemInf.get("date").toString()       : "";
+		String endDate    = commuItemInf.get("endDate")    != null ? commuItemInf.get("endDate").toString()    : "";
+		String content    = commuItemInf.get("content")    != null ? commuItemInf.get("content").toString()    : "";
+		String attach     = commuItemInf.get("attach")     != null ? commuItemInf.get("attach").toString()     : "";
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + " || date: "  + date + " || endDate: " + endDate + " || content : " + content +  " || attach: " + attach);
+		
+		if (serverName.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals(""))|| title.equals("") || writer.equals("") || date.equals("") || endDate.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
+			String realPath  = request.getServletContext().getRealPath("");
+			result           = cabinetService_h.saveCommunityItem(realPath, mode, dstCabinetId, title, writer, date, endDate, content, attach, locale, userInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
 }

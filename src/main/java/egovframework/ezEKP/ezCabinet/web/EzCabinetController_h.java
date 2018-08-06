@@ -350,6 +350,35 @@ public class EzCabinetController_h {
 		return resultObj.toString();
 	}
 	
+	@RequestMapping(value="/ezCabinet/saveRelatedCommunity.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonSaveRelatedCommunity(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSaveRelatedCommunity is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String mode            = request.getParameter("mode")       != null ? request.getParameter("mode")       : "";
+		String cabinetId       = request.getParameter("cabinet")    != null ? request.getParameter("cabinet")    : "";
+		String title           = request.getParameter("title")      != null ? request.getParameter("title")      : "";
+		String writer          = request.getParameter("writer")     != null ? request.getParameter("writer")     : "";
+		String date            = request.getParameter("date")       != null ? request.getParameter("date")       : "";
+		String endDate         = request.getParameter("endDate")    != null ? request.getParameter("endDate")    : "";
+		String content         = request.getParameter("content")    != null ? request.getParameter("content")    : "";
+		String attach          = request.getParameter("attach")     != null ? request.getParameter("attach")     : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + "date: " + date +" || endDate: " + endDate + " || content: " + content + " || attach: " + attach);
+		
+		if (mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || writer.equals("") || date.equals("") || endDate.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService_h.saveRelatedCommunity(request, userInfo.getId(), mode, cabinetId, title, writer, date, endDate, content, attach);
+		
+		logger.debug("jsonSaveRelatedCommunity finishes!");
+		return resultObj.toString();
+	}
+	
 	private String getModuleHandler(Model model, JSONObject iteminfo) {
 		String jspPageName   = "";
 		JSONObject item      = (JSONObject) iteminfo.get("item");
