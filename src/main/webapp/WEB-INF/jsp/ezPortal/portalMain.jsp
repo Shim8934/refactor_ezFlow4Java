@@ -30,7 +30,7 @@
 
 			#open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;}
 /* 			.individual-memo { width:200px; height:200px; background:url('/images/ezMemo/background.gif') repeat-x; background-size:200px 190px;text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 20px 55px 20px 55px;} */
-			.individual-memo { /* width:250px; height:250px; */ background-color:#0470e4; text-align:left; border:1px solid black; float: left; /* margin: 10px 30px 10px 30px; */ overflow:hidden; padding-top:5px;}
+			.individual-memo { /* width:250px; height:250px; */ background-color:#0470e4; text-align:left; border:1px solid black; float: left; /* margin: 10px 30px 10px 30px; */ overflow:hidden; padding-top:5px; position:relative; }
 			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);overflow:hidden;}
 			#selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;}
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
@@ -44,6 +44,8 @@
 			#textarea{padding-left:10px;padding-right:10px;width:95.5%;height:99%;margin-left:-3px;overflow-y:auto;}
 			.detailMemo{background-color:#0470e4; border: 1px solid black;width: 400px;center;height: 400px;float: center;margin: 0 auto; padding-top: 30px;overflow:hidden;}
 			.memo-text{margin-top:10px; padding-left:15px; padding-right:10px; border:0px; width:90%; height:88%; resize:none; overflow-y:auto;}
+			.memo-color{ padding:0px; margin-left:1px; margin-right:1px; box-sizing:border-box; width: 250px; height: 35px; position:absolute; top:0px; left:0px; visibility:hidden;}
+			.memo-color-list { display:inline-block; width:16.5%; height:100%; text-align:center; float:left;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -309,7 +311,9 @@
 		    	/* $("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right; height:20px;'><img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:5px;'><textarea class='memo-text'>" + text + "</textarea></div>"); */
 		    	var html = "";
 		    	html += "<div class='individual-memo'>";
-		    	html += "<span sylte='padding-left: 10px'>2018-08-03</span>";
+		    	html += "<div class='memo-color'>";
+		    	html += "<div class='memo-color-list' style='background-color:red;'></div><div class='memo-color-list' style='background-color:blue;'></div><div class='memo-color-list' style='background-color:yellow;'></div><div class='memo-color-list' style='background-color:white;'></div><div class='memo-color-list' style='background-color:green;'></div><div class='memo-color-list' style='background-color:purple;'></div></div>";
+		    	html += "<span style='padding-left: 10px'>2018-08-03</span>";
 		    	html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>";
 		    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
 		    	html += "<textarea class='memo-text'>";
@@ -337,8 +341,11 @@
 		    function addremove() {
 			    $(".individual-memo").mouseenter(function(){
 			    	$(this).children("img").css("visibility", "visible");
-			    	$(this).children("img").click(function(){
+			    	$(this).children("img:first").click(function(){
 			    		$(this).parent().remove();
+			    	})
+			    	$(this).children("img:last").click(function(){
+			    		$(this).prevAll("div").css("visibility", "visible");
 			    	})
 		        });
 		        
@@ -354,6 +361,18 @@
 					$("#textarea").css("font-size", "15px");
 			        $("#font-btn").css("display", "");
 			        $("#textarea").val(currText);		
+		        });
+		        
+		        $(".memo-color-list").click(function(){
+		        	var color = $(this).css("background-color");
+		        	$(this).parent().parent().css("background-color", color);
+		        	$(this).parent().css("visibility", "hidden");
+		        })
+		        
+		        $(".memo-color").mouseleave(function(){
+		        	if($(this).css("visibility") == "visible") {
+		        		$(this).css("visibility", "hidden");
+		        	}
 		        });
 		    }
 		    
