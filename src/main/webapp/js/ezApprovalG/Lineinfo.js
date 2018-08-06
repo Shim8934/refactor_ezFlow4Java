@@ -1,4 +1,4 @@
-﻿﻿
+﻿﻿﻿
 //#############################################################################################################################################사용자리스트 원클릭 이벤트 list2_onSel_Click()
 function list2_onSel_Click() {
 }
@@ -859,7 +859,7 @@ function APRLINESNDownFunction() {
     		if (pSelectedRow.length != 0) {
     			var p_NextSelRow = pAPRLINE.GetDataRows()[Number(pAPRLINE.GetSelectedIndexes().split(',')[0]) + 1];
     			
-    			if(p_NextSelRow.getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && p_NextSelRow.childNodes[0].innerHTML == "1") {
+    			if(p_NextSelRow == undefined || p_NextSelRow.getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && p_NextSelRow.childNodes[0].innerHTML == "1") {
     				OpenAlertUI(strLangS576);
     				return;
     			} 
