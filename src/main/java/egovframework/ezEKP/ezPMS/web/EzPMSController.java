@@ -648,6 +648,7 @@ public class EzPMSController {
 			@RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse resp, Model model)
 			throws Exception {
 		LOGGER.debug("ezPMS getTaskList started");
+		Long startMillis = System.currentTimeMillis();
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		long projectId = Long.parseLong(param.get("projectId").toString());
@@ -733,6 +734,8 @@ public class EzPMSController {
 				}
 			}
 		}
+		Long endMillis = System.currentTimeMillis();
+		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0) + " sec");
 		LOGGER.debug("ezPMS getTaskList ended");
 		return json;
 	}
@@ -1549,7 +1552,12 @@ public class EzPMSController {
 		param.put("userId", userId);
 
 		String countUrl = "/rest/ezPMS/projects/" + projectId + "/tasks/count";
-		String url = "/rest/ezPMS/task-list/" + projectId + "/users/" + userId;
+		String url = "";
+		if(projectId == 0){
+			url = "/rest/ezPMS/task-list/" + projectId + "/users/" + userId;
+		} else {
+			url = "/rest/ezPMS/task-list/" + projectId + "/users/" + userId + "/gantt";
+		}
 
 		JSONObject countResult = commonUtil.getJsonFromRestApi(countUrl, param, request, "get", null);
 		String countStatus = countResult.get("status").toString();
