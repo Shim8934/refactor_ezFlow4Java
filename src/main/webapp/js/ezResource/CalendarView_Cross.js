@@ -1046,7 +1046,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         var dTr = document.createElement("TR")
         var dTd = document.createElement("TD")
         dTd.className = "calendar_t_time";
-        dTd.setAttribute("ondblclick", "newSchedule_onclick(this)");
+        dTd.setAttribute("ondblclick", "newSchedule_onclick(event)");
         dTd.setAttribute("dispDate", divID);
         var dDiv = document.createElement("DIV")
         dDiv.setAttribute("id", divID + "ALL");
