@@ -23,7 +23,7 @@
 					<td><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
-					<th><c:out value="${writer.columnName}"/></th>
+					<th><c:out value="${boardWriter.columnName}"/></th>
 					<td id="boardCreator" class="cursor overfl"></td>
 					<th><c:out value="${boardTime.columnName}"/></th>
 					<td><c:out value="${fn:substring(boardTime.columnValue, 0, 19)}"/></td>
