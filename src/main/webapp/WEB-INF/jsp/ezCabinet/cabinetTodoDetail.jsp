@@ -8,8 +8,10 @@
 	<head>
 		<title><spring:message code='ezCabinet.t138'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css">
-		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>"    type="text/css">
+		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"                type="text/css">
+		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css"       type="text/css"/>
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css"/>
 	</head>
 	<body class="popup cabDetail">
 		<h1 id="fileFileH1"><spring:message code='ezCabinet.t108'/></h1>
@@ -105,9 +107,25 @@
 				}
 				
 				function filePrint(scrollPrint, unsetAllScrollTd, displayIframePrint, removeIframePrint) {
-					var listElmtId = ["fileListDiv", "attend"];
+					var listElmtId = ["fileListDiv", "shares"];
 					scrollPrint(listElmtId);
 					displayIframePrint();
+					
+					//Copy canvas
+					var iframeElmt  = document.getElementById("todoIframe");
+					var iframeCont  = iframeElmt.contentWindow? iframeElmt.contentWindow: iframeElmt.contentDocument;
+					var canvasElmt  = iframeCont.document.querySelector("canvas");
+					var divPrint    = document.querySelector("div[class='cabtxtPrint']");
+					var printCanvas = divPrint.querySelector("canvas");
+					var parentElmt  = printCanvas.parentElement;
+					var newCanvas   = document.createElement('canvas');
+					var context     = newCanvas.getContext('2d');
+					
+					newCanvas.width  = canvasElmt.width;
+					newCanvas.height = canvasElmt.height;
+					context.drawImage(canvasElmt, 0, 0);
+					parentElmt.replaceChild(newCanvas, printCanvas);
+					
 					window.focus();
 					window.print();
 					removeIframePrint();

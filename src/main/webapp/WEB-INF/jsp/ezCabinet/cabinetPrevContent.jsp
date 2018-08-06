@@ -6,11 +6,11 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title></title>
-		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>"    type="text/css">
-		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"                type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>"    type="text/css"/>
+		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"                type="text/css"/>
 		<link rel="stylesheet" href="/css/previewmail.css"                      type="text/css"/>
-		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css"       type="text/css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
+		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css"       type="text/css"/>
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css"/>
 	</head>
 	<body>
 		<div class="zoomDiv"><img src="/images/minus.png"><img src="/images/plus.png"></div>

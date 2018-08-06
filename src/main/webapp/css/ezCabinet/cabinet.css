@@ -397,5 +397,6 @@
 .cabtaskTtl img {width: 14px; height: 14px; padding: 3px 5px 3px 0px;}
 
 .wrap_progress .ui-datepicker-year, .wrap_progress .ui-datepicker-month, .wrap_progress .ui-datepicker-calendar td {pointer-events: none;}
+.cabrltxt .layout tr {background-color: transparent !important;}
 
 @media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2, .addressContDiv, .divInfo .cabmemo {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;} .ulFiles li {page-break-inside: avoid;} .overfl {white-space: pre-wrap !important;}}
