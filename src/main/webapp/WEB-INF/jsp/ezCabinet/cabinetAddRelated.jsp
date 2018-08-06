@@ -198,9 +198,9 @@
 					if (attach.childElementCount > 1){
 						var listChildren = attach.getElementsByTagName("a");
 						for(var i = 0, len = listChildren.length; i < len; i++){
-							var hrefStr  = listChildren[i].getAttribute("href");
+							var hrefStr   = listChildren[i].getAttribute("href");
 							var hrefStyle = listChildren[i].getAttribute("onclick");
-							console.log(hrefStyle);
+							
 							if(hrefStr){
 								var params  = getAllUrlParams(hrefStr);
 								console.log("File path: " + javaURLDecode(params["filePath"]));
@@ -215,12 +215,7 @@
 								var params   = getAllUrlParams(hrefStyle);
 								var orgDocId = javaURLDecode(params["orgDocID"]).split(",")[0];
 								orgDocId     = orgDocId.substring(0, orgDocId.length - 1);
-							    console.log("Doc Id: " + javaURLDecode(params["docID"]));
-							    console.log("Doc Href: " + javaURLDecode(params["docHref"]));
-							    console.log("formID: " + javaURLDecode(params["formID"]));
-							    console.log("orgDocID: " + orgDocId);
-							    
-							    otherList.push({
+								otherList.push({
 									docID    : javaURLDecode(params["docID"]),
 									docHref  : javaURLDecode(params["docHref"]),
 									formID   : javaURLDecode(params["formID"]),
@@ -248,14 +243,25 @@
 				function saveBoardDocument(saveMode, cabinetId) {
 					var boardOpener   = window.opener;
 					if (!boardOpener) {alert(CabinetMessages.strSelect); return;}
+					var messageFrame  =  boardOpener.document.getElementById("message");
+					if (messageFrame) {
+						saveNormalBoard(boardOpener, saveMode, cabinetId);
+					}
+					else {
+						savePhotoBoard(boardOpener, saveMode, cabinetId);
+					}
+				}
+				
+				function savePhotoBoard(boardOpener, saveMode, cabinetId) {
 					
+				}
+				
+				function saveNormalBoard(boardOpener, saveMode, cabinetId) {
 					var writerTd      = boardOpener.document.getElementById("WriteUserNM");
 					var postTd        = boardOpener.document.getElementById("PostDate");
 					var titleTd       = boardOpener.document.getElementById("cTitle");
-					var writerSpan    = writerTd.getElementsByTagName("div")[0].getElementsByTagName("span")[0].getAttribute("onclick");
-					var start         = writerSpan.indexOf("'");
-					var end           = writerSpan.lastIndexOf("'");
-					var boardWriter   = writerSpan.substring(start + 1, end);
+					var writerSpan    = writerTd.getElementsByTagName("div")[0].getElementsByTagName("span")[0];
+					var boardWriter   = getUserIdFromInline(writerSpan, "'");
 					var postDate      = postTd.getElementsByTagName("div")[0].textContent;
 					var boardTitle    = titleTd.getElementsByTagName("div")[0].textContent;
 					var messageFrame  = boardOpener.document.getElementById("message");
@@ -315,7 +321,44 @@
 				}
 				
 				function saveCommunityDocument(saveMode, cabinetId) {
-					//Add code here
+					var commuOpener   = window.opener;
+					if (!commuOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var title         = trimStr(commuOpener.document.getElementById("title").textContent);
+					var writerDiv     = commuOpener.document.getElementById("Div1");
+					var writer        = getUserIdFromInline(writerDiv, '"');
+					var date          = trimStr(commuOpener.document.getElementById("Div3").textContent);
+					var endDate       = trimStr(commuOpener.document.getElementById("Div4").textContent);
+					var messageFrame  = commuOpener.document.getElementById("message");
+					var contentWd     = messageFrame.contentWindow || messageFrame.contentDocument;
+					var content       = contentWd.document.body.innerHTML;
+					var attach        = commuOpener.document.getElementById("lstAttachLink");
+					var attachList    = [];
+					
+					var listChildren    = attach.getElementsByTagName("input");
+					for (var i = 0, len = listChildren.length; i < len; i++) {
+						var hrefStr = listChildren[i].getAttribute("filehref");
+						var params  = getAllUrlParams(hrefStr);
+						
+						attachList.push({
+							filePath : javaURLDecode(params["filePath"]),
+							fileName : javaURLDecode(params["fileName"])
+						});
+					}
+					
+					var url  = "/ezCabinet/saveRelatedCommunity.do";
+					var data = {
+						mode      : saveMode,
+						title     : boardTitle,
+						writer    : boardWriter,
+						date      : postDate,
+						attach    : JSON.stringify(attachList),
+						content   : boardContent
+					};
+					
+					if (saveMode == 1) {data.cabinet = cabinetId;}
+					
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
 				function saveTodoDocument(saveMode, cabinetId) {
@@ -326,11 +369,23 @@
 					var taskContent      = document.createElement("div");
 					
 					//1: Task title + status + repeate information
-					var taskTtlDiv       = todoOpener.document.querySelector("div[class='wrap_progress']");
-					var h4TtlElmt        = taskTtlDiv.querySelector("h4");
-					var taskTtl          = h4TtlElmt.getAttribute("title");
-					var taskUpdateStatus = taskTtlDiv.querySelector("a[id='updateStatus']");
-					taskTtlDiv.removeChild(taskUpdateStatus);
+					var taskstatus          = todoOpener.taskstatus;
+					var taskcompleterate    = todoOpener.completerate;
+					var tskDelayColor       = todoOpener.delayColor;
+					var tskCompleteColor    = todoOpener.completeColor;
+					var tskStatusInf        = {status : taskstatus, completerate: taskcompleterate, delaycolor: tskDelayColor, completecolor: tskCompleteColor};
+					var maintaskDiv         = todoOpener.document.querySelector("div[class='wrap_progress']");
+					var taskTtlDiv          = maintaskDiv.cloneNode(true);
+					taskTtlDiv.style.height = "auto";
+					var h4TtlElmt           = taskTtlDiv.querySelector("h4");
+					var taskTtl             = h4TtlElmt.getAttribute("title");
+					var taskUpdateStatus    = taskTtlDiv.querySelector("a[id='updateStatus']");
+					var graphDiv            = taskTtlDiv.querySelector("div[class='circle progress_graph']");
+					graphDiv.style.width    = "";
+					graphDiv.innerHTML      = "<strong></strong>";
+					var taskUpdateParent    = taskUpdateStatus.parentElement;
+					
+					taskUpdateParent.removeChild(taskUpdateStatus);
 					taskTtlDiv.removeChild(h4TtlElmt);
 					taskContent.appendChild(taskTtlDiv);
 					
@@ -343,7 +398,7 @@
 					var taskTypeName     = trimStr(taskInfTable.querySelector("span[class='taskType']").textContent);
 					var taskPriority     = trimStr(tableRows[3].lastElementChild.firstElementChild.textContent);
 					var executorDiv      = tableRows[4].lastElementChild.firstElementChild;
-					var taskExecutor     = getUserIdFromInline(executorDiv);
+					var taskExecutor     = getUserIdFromInline(executorDiv, "'");
 					var taskMemo         = trimStr(tableRows[6].lastElementChild.firstElementChild.textContent);
 					var taskShareList    = [];
 					var taskShareDiv     = taskInfTable.querySelector("div[id='taskShareList']");
@@ -351,37 +406,49 @@
 					
 					if (listShareUsers && listShareUsers.length > 0) {
 						for (var i = 0, len = listShareUsers.length; i < len; i++) {
-							var shareId = getUserIdFromInline(listShareUsers[i]);
-							taskShareDiv.push(shareId);
+							var shareId = getUserIdFromInline(listShareUsers[i], "'");
+							taskShareList.push(shareId);
 						}
 					}
 					
 					//3. Task Content and attach List
-					var message1     = todoOpener.document.getElementById("message");
-					var message1Wd   = message1.contentWindow || message1.contentDocument;
-					var message1Body = message1Wd.document.body.innerHTML;
-					var taskChisi    = todoOpener.document.getElementById("1tab1");
-					var taskNormal   = todoOpener.document.getElementById("1tab2");
-					var taskComment  = todoOpener.document.getElementById("1tab3");
+					var message1      = todoOpener.document.getElementById("message");
+					var message1Wd    = message1.contentWindow || message1.contentDocument;
+					var message1Body  = message1Wd.document.body;
+					var message1Clone = message1Body.cloneNode(true);
+					var taskChisi     = todoOpener.document.getElementById("1tab1");
+					var taskNormal    = todoOpener.document.getElementById("1tab2");
+					var taskComment   = todoOpener.document.getElementById("1tab3");
 					
 					if (taskChisi) {
-						var message2     = todoOpener.document.getElementById("message");
-						var message2Wd   = message2.contentWindow || message2.contentDocument;
-						var message2Body = message2Wd.document.body.innerHTML;
+						var message2      = todoOpener.document.getElementById("message2");
+						var message2Wd    = message2.contentWindow || message2.contentDocument;
+						var message2Body  = message2Wd.document.body;
+						var message2Clone = message2Body.cloneNode(true);
 						
 						createTodoTitle(taskContent, taskChisi.textContent);
-						taskContent.appendChild(message1Body);
+						taskContent.appendChild(message1Clone);
 						createTodoTitle(taskContent, taskNormal.textContent);
-						taskContent.appendChild(message2Body);
+						taskContent.appendChild(message2Clone);
 					}
 					else {
 						createTodoTitle(taskContent, taskNormal.textContent);
-						taskContent.appendChild(message1Body);
+						taskContent.appendChild(message1Clone);
 					}
 					
 					//4. Comments
-					var divComment        = todoOpener.document.getElementById("tablecomment2");
+					var tableCmt          = todoOpener.document.getElementById("tablecomment2");
+					var divComment        = tableCmt.parentElement;
 					var cloneCmt          = divComment.cloneNode(true);
+					var trList            = cloneCmt.querySelectorAll("tr");
+					
+					//Remove all img elements in comments
+					for (var i = 0, len = trList.length; i < len; i++) {
+						var secondTd = trList[i].children[1];
+						var imgElmt  = secondTd.querySelector("img");
+						if (imgElmt) {secondTd.removeChild(imgElmt);}
+					}
+					
 					cloneCmt.style.height = "auto";
 					createTodoTitle(taskContent, taskComment.textContent);
 					taskContent.appendChild(cloneCmt);
@@ -418,14 +485,25 @@
 						}
 					}
 					
-					console.log("taskTtl     : " + taskTtl);
-					console.log("taskTypeName: " + taskTypeName);
-					console.log("taskCreator: " + taskCreator);
-					console.log("taskExecutor: " + taskExecutor);
-					console.log("taskMemo: " + taskMemo);
-					console.log("taskPriority: " + taskPriority);
-					console.log("listShareUsers: " + JSON.stringify(listShareUsers));
-					console.log("taskContent: " + taskContent.innerHTML);
+					var url  = "/ezCabinet/saveRelatedTodo.do";
+					var data = {
+						mode      : saveMode,
+						title     : taskTtl,
+						creator   : taskCreator,
+						date      : taskCreateDate,
+						priority  : taskPriority,
+						memo      : taskMemo,
+						tasktype  : taskTypeName,
+						executor  : taskExecutor,
+						share     : JSON.stringify(taskShareList),
+						attach    : JSON.stringify(attachList),
+						status    : JSON.stringify(tskStatusInf),
+						content   : taskContent.innerHTML
+					};
+					
+					if (saveMode == 1) {data.cabinet = cabinetId;}
+					
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
 				function saveScheduleDocument(saveMode, cabinetId) {
@@ -456,7 +534,7 @@
 						var listUser   = divAttElmt.children;
 						if (listUser && listUser.length > 0) {
 							for (var i = 0, len = listUser.length; i < len; i++) {
-								var attendantId = getUserIdFromInline(listUser[i]);
+								var attendantId = getUserIdFromInline(listUser[i], "'");
 								scheduleAttList.push(attendantId);
 							}
 						}
@@ -508,17 +586,17 @@
 					var optionOpener   = window.opener;
 					if (!optionOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					var title        = optionOpener.document.getElementById("titleTd").textContent;
-					var writer       = optionOpener.document.getElementById("writer").textContent;
-					var date         = optionOpener.document.getElementById("printStatus").textContent;
+					var title        = trimStr(optionOpener.document.getElementById("titleTd").textContent);
+					var writer       = trimStr(optionOpener.circularUserID);
+					var date         = trimStr(optionOpener.document.getElementById("printStatus").textContent);
 					var importanceTd = optionOpener.document.getElementById("Td_Importance");
-					var importance   = importanceTd.querySelector("span").textContent;
-					var option       = optionOpener.document.getElementById("option").textContent;
-					var statusNum    = optionOpener.document.getElementById("statusNum").textContent;
-					var status       = optionOpener.document.getElementById("status").textContent;
-					var confirm      = optionOpener.document.querySelector("td[class='confirmStatus']").innerHTML;
-					var endDate      = optionOpener.document.getElementById("endDate").textContent;
-					var content      = optionOpener.document.getElementById("divCross").innerHTML;
+					var importance   = trimStr(importanceTd.querySelector("span").textContent);
+					var option       = trimStr(optionOpener.document.getElementById("option").textContent);
+					var statusNum    = trimStr(optionOpener.document.getElementById("statusNum").textContent);
+					var status       = trimStr(optionOpener.document.getElementById("status").textContent);
+					var confirm      = trimStr(optionOpener.document.querySelector("td[class='confirmStatus']").innerHTML);
+					var endDate      = trimStr(optionOpener.document.getElementById("endDate").textContent);
+					var content      = trimStr(optionOpener.document.getElementById("divCross").innerHTML);
 					var attach       = optionOpener.document.getElementById("attachedfileDIV");
 					var attachList   = [];
 					
@@ -609,7 +687,7 @@
 						content       : content,
 						attach        : JSON.stringify(attachList)
 					};
-					console.log(data);
+					
 					if (saveMode == 1) {data.cabinetId = cabinetId;}
 					
 					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
@@ -727,7 +805,8 @@
 						case 1 : alert(CabinetMessages.strParamErr) ; break;
 						case 2 : alert(CabinetMessages.strError)    ; break;
 						case 3 : alert(CabinetMessages.strPerm)     ; break;
-						case 4 : alert(CabinetMessages.strError)    ; break;
+						case 4 : alert(CabinetMessages.strCapacity) ; break;
+						case 5 : alert(CabinetMessages.strAttach6)  ; break;
 						default: alert(CabinetMessages.strError)    ; return;
 					}
 				}
@@ -787,10 +866,10 @@
 						.replace("%7E", /~/g);
 				}
 				
-				function getUserIdFromInline(elmtObj) {
+				function getUserIdFromInline(elmtObj, divide) {
 					var clickStr    = elmtObj.getAttribute("onclick");
-					var start       = clickStr.indexOf("'");
-					var end         = clickStr.lastIndexOf("'");
+					var start       = clickStr.indexOf(divide);
+					var end         = clickStr.lastIndexOf(divide);
 					return clickStr.substring(start + 1, end);
 				}
 				
@@ -816,15 +895,15 @@
 				}
 				
 				function createTodoTitle(taskContent, textCont) {
-					var chisiTtl = document.createElement("div");
-					chisiTtl.setAttribute("style", "display: flex;");
-					var imgElmt       = document.createElement("img");
-					imgElmt.src       = "/images/popup_title_icon.gif";
-					imgElmt.className = "popup_title_img";
-					var spanElmt      = document.createElement("span");
+					var chisiTtl         = document.createElement("div");
+					chisiTtl.className   = "cabtaskTtl";
+					var imgElmt          = document.createElement("img");
+					imgElmt.src          = "/images/popup_title_icon.gif";
+					imgElmt.className    = "popup_title_img";
+					var spanElmt         = document.createElement("span");
 					spanElmt.textContent = trimStr(textCont);
 					chisiTtl.appendChild(imgElmt);
-					imgElmt.appendChild(spanElmt);
+					chisiTtl.appendChild(spanElmt);
 					taskContent.appendChild(chisiTtl);
 				}
 				

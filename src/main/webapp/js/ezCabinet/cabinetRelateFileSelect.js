@@ -87,10 +87,12 @@ var CabinetRlFileSelect = function() {
 			case "normal" : if (parentWd && parentWd.CabinetItemDetail)    {selectedArr = parentWd.CabinetItemDetail.get()    ;} break;
 			case "mail"   : if (parentWd && parentWd.CabinetEmailFile)     {selectedArr = parentWd.CabinetEmailFile.get()     ;} break;
 			case "board"  : if (parentWd && parentWd.CabinetBoardFile)     {selectedArr = parentWd.CabinetBoardFile.get()     ;} break;
+			case "option" : if (parentWd && parentWd.CabinetOptionFile)    {selectedArr = parentWd.CabinetOptionFile.get()    ;} break;
 			case "gaddr"  : if (parentWd && parentWd.CabinetGroupAddress)  {selectedArr = parentWd.CabinetGroupAddress.get()  ;} break;
 			case "naddr"  : if (parentWd && parentWd.CabinetNormalAddress) {selectedArr = parentWd.CabinetNormalAddress.get() ;} break;
 			case "resrc"  : if (parentWd && parentWd.CabinetResourceFile)  {selectedArr = parentWd.CabinetResourceFile.get()  ;} break;
 			case "schedl" : if (parentWd && parentWd.CabinetScheduleFile)  {selectedArr = parentWd.CabinetScheduleFile.get()  ;} break;
+			case "todo"   : if (parentWd && parentWd.CabinetTodoFile)      {selectedArr = parentWd.CabinetTodoFile.get()      ;} break;
 			default       : if (parentWd && parentWd.CabinetAddFile)       {selectedArr = parentWd.CabinetAddFile.get()       ;}
 		}
 		
@@ -142,10 +144,12 @@ var CabinetRlFileSelect = function() {
 			case "normal" : if (parentWd && parentWd.CabinetItemDetail)    {parentWd.CabinetItemDetail.save(data)   ;} break;
 			case "mail"   : if (parentWd && parentWd.CabinetEmailFile)     {parentWd.CabinetEmailFile.save(data)    ;} break;
 			case "board"  : if (parentWd && parentWd.CabinetBoardFile)     {parentWd.CabinetBoardFile.save(data)    ;} break;
+			case "option" : if (parentWd && parentWd.CabinetOptionFile)    {parentWd.CabinetOptionFile.save(data)   ;} break;
 			case "gaddr"  : if (parentWd && parentWd.CabinetGroupAddress)  {parentWd.CabinetGroupAddress.save(data) ;} break;
 			case "naddr"  : if (parentWd && parentWd.CabinetNormalAddress) {parentWd.CabinetNormalAddress.save(data);} break;
 			case "resrc"  : if (parentWd && parentWd.CabinetResourceFile)  {parentWd.CabinetResourceFile.save(data) ;} break;
 			case "schedl" : if (parentWd && parentWd.CabinetScheduleFile)  {parentWd.CabinetScheduleFile.save(data) ;} break;
+			case "todo"   : if (parentWd && parentWd.CabinetTodoFile)      {parentWd.CabinetTodoFile.save(data)     ;} break;
 			default       : if (parentWd && parentWd.CabinetAddFile)       {parentWd.CabinetAddFile.save(data)      ;}
 		}
 		

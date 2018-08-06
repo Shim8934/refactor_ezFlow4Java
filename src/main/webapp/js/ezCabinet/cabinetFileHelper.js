@@ -104,7 +104,7 @@ var CabinetFileHelper = function() {
 				mailContent.attach  = attachList;
 			}
 			
-			genCallback(fileItem, displayUserInforPopup, showUserInfoFromId, showUserInfoFromEmail, genderScrollForElmt);
+			genCallback(fileItem, displayUserInforPopup, showUserInfoFromId, showUserInfoFromEmail, genderScrollForElmt, mailContent);
 		}
 		
 		function displayUserInforPopup(elementId, userId, displayFunct) {document.getElementById(elementId).onclick = function(e) {displayFunct(userId);};}
@@ -242,8 +242,8 @@ var CabinetFileHelper = function() {
 			inputElmt1.value      = titleTdElmt.textContent;
 			titleTdElmt.innerHTML = "";
 			inputElmt1.className  = "tblFileInput";
-			
 			inputElmt1.setAttribute("id", "itemTtl");
+			inputElmt1.setAttribute("maxlength", "150");
 			titleTdElmt.appendChild(inputElmt1);
 			
 			//Set relatedBttn
@@ -343,6 +343,14 @@ var CabinetFileHelper = function() {
 			
 			if (!title.replace(/\s/g,'')) {
 				alert(CabinetMessages.strNoTitle);
+				var inputTtl   = document.getElementById("itemTtl");
+				inputTtl.value = "";
+				inputTtl.focus();
+				return;
+			}
+			
+			if (title.length > 150) {
+				alert(CabinetMessages.strTitleLen);
 				var inputTtl   = document.getElementById("itemTtl");
 				inputTtl.value = "";
 				inputTtl.focus();

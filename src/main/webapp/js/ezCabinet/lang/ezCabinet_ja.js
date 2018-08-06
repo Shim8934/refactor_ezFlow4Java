@@ -79,10 +79,12 @@ var CabinetMessages = {
 	strAttach3   : "일반 첨부파일",
 	strAttach4   : "모두저장",
 	strAttach5   : "첨부파일",
+	strAttach6   : "첨부파일 저장 중 오류가 발생했습니다.",
 	strDelete2   : "게시물이 삭제되었습니다.",
 	strType      : "타입이 다릅니다.",
 	strSchedule1 : "개인일정",
 	strSchedule2 : "부서일정",
 	strSchedule3 : "회사일정",
-	strSchedule4 : "나의 일정"
+	strSchedule4 : "나의 일정",
+	strTitleLen  : "제목은 150 글자 이내이어야 합니다."
 }

@@ -23,7 +23,7 @@
 					<td><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
-					<th><c:out value="${writer.columnName}"/></th>
+					<th><c:out value="${optionWriter.columnName}"/></th>
 					<td id="optionCreator" class="cursor overfl"></td>
 					<th><c:out value="${optionTime.columnName}"/></th>
 					<td><c:out value="${fn:substring(optionTime.columnValue, 0, 19)}"/></td>
@@ -33,13 +33,31 @@
 					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
 				</tr>
 				<tr>
+					<th><c:out value="${importance.columnName}"/></th>
+					<td><c:out value="${importance.columnValue}"/></td>
+					<th><c:out value="${option.columnName}"/></th>
+					<td><c:out value="${option.columnValue}"/></td>
+				</tr>
+				<tr>
+					<th><c:out value="${statusNum.columnName}"/></th>
+					<td><c:out value="${statusNum.columnValue}"/></td>
+					<th><c:out value="${status.columnName}"/></th>
+					<td><c:out value="${status.columnValue}"/></td>
+				</tr>
+				<tr>
+					<th><c:out value="${confirm.columnName}"/></th>
+					<td id="confirmTd"></td>
+					<th><c:out value="${endDate.columnName}"/></th>
+					<td><c:out value="${endDate.columnValue}"/></td>
+				</tr>
+				<tr>
 					<th><spring:message code='ezCabinet.t94'/></th>
 					<td colspan="3"><div id="rlWrapDiv" class="rlFileDiv"><div id="fileListDiv" class="rlDocDiv"></div></div></td>
 				</tr>
 			</table>
 		</div>
 		
-		<div class="boardContDiv"><iframe id="boardIframe" class="cabrlframe2"></iframe></div>
+		<div class="optionContDiv"><iframe id="optionIframe" class="cabrlframe2"></iframe></div>
 		
 		<div class="cabBttnDiv" id="fileDivBttn">
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
@@ -48,57 +66,67 @@
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a>
 		</div>
 		
+		<div class="cabBttnDiv" id="fileModifyDivBttn" style="display: none;">
+			<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
+			<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
+		</div>
+		
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetFileHelper.js"     ></script>
 		<script type="text/javascript">
-			var CabinetBoardFile = function() {
-				var itemId       = null;
-				
+			var CabinetOptionFile = function() {
+				var cabinetHelper = null;
 				function initEvents(itemID) {
-					itemId                  = itemID;
-					document.onselectstart  = function () { return false;}
-					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
-					var cabBttnElmt         = document.getElementById("fileDivBttn");
-					var listBttns           = cabBttnElmt.children;
-					listBttns[0].onclick    = function(e) {fileModify();};
-					listBttns[1].onclick    = function(e) {fileDelete();};
-					listBttns[2].onclick    = function(e) {filePrint();}
-					listBttns[3].onclick    = function(e) {closeWindow();};
-					
-					document.getElementById("fileListDiv").onscroll = function(e) {scrollListOfItem(this);}
-					
-					var cabBttnElmt         = document.getElementById("fileModifyDivBttn");
-					var listBttns           = cabBttnElmt.children;
-					listBttns[0].onclick    = function(e) {saveItem();};
-					listBttns[1].onclick    = function(e) {cancelChanges()};
-					
-					getFileDetail();
-				}
-				
-				function scrollListOfItem(divElmt) {
-					if (scrolled) {
-						scrolled = false;
-						var distance      = divElmt.scrollTop < lastScrollY ? -20 : 20;
-						divElmt.scrollTop = lastScrollY + distance;
-						setTimeout(function () {scrolled = true; lastScrollY = divElmt.scrollTop;}, 500);
-					}
-				}
-				
-				function getFileDetail() {
-					$.ajax({
-						type: "GET",
-						url: "/ezCabinet/getFileDetail.do",
-						data: {"itemId" : itemId},
-						dataType: "JSON",
-						async: false,
-						success : function(data) {
-							console.log(data);
-							processFileDetail(data);},
-						error : function(error) {alert(CabinetMessages.strError);}
+					cabinetHelper = new CabinetFileHelper({
+						itemid   : itemID,
+						callback : genderInformation,
+						print    : filePrint,
+						module   : "option",
+						iframe   : "optionIframe",
+						type     : "content"
 					});
+					cabinetHelper.start();
 				}
+				
+				function genderInformation(fileItem, displayUserInforPopup, showInfoId, showInfoEmail, scrollHandler) {
+					var result       = fileItem.fileDetail;
+					var optionWriter = fileItem.writerVO;
+					var confirm      = fileItem.confirmVO;
+					
+					//Display option creator name
+					document.getElementById("optionCreator").textContent = optionWriter["userName"];
+					
+					//Display confirmation
+					document.getElementById("confirmTd").innerHTML = confirm;
+					
+					//Display popup
+					displayUserInforPopup("fileCreator" , result["creatorId"]  , showInfoId);
+					displayUserInforPopup("optionCreator", optionWriter["userId"], showInfoId);
+				}
+				
+				function filePrint(scrollPrint, unsetAllScrollTd, displayIframePrint, removeIframePrint) {
+					var listElmtId = ["fileListDiv"];
+					scrollPrint(listElmtId);
+					displayIframePrint();
+					window.focus();
+					window.print();
+					removeIframePrint();
+					unsetAllScrollTd(listElmtId);
+				}
+				
+				function getRelatedFiles()       {return cabinetHelper.get();}
+				function saveRelatedFiles(files) {cabinetHelper.save(files);}
+				function getIframeContent()      {return cabinetHelper.getContent();}
+				
+				return {
+					init       : initEvents,
+					get        : getRelatedFiles,
+					save       : saveRelatedFiles,
+					getContent : getIframeContent
+				};
 			}();
 		</script>
-		
+		<script type="text/javascript">CabinetOptionFile.init("<c:out value='${itemId}'/>");</script>
 	</body>
 </html>

@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezCabinet.service.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -314,8 +313,8 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		//Save board columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("writer"    , itemId, "ezBoard.t223", writer  , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("boardTime" , itemId, "ezBoard.t223", dateTime, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardWriter", itemId, "ezBoard.t223", writer, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardTime"  , itemId, "ezBoard.t223", dateTime, companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		
@@ -449,7 +448,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		//Save option columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("optionWriter", itemId, "ezBoard.t5007"  , writer    , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("optionWriter", itemId, "ezCircular.t122", writer    , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("optionTime"  , itemId, "ezBoard.t5007"  , date      , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("importance"  , itemId, "ezCircular.t115", importance, companyId, tenantId));
 		listColm.add(createNewRelatedColumn("option"      , itemId, "ezCircular.t118", option    , companyId, tenantId));
@@ -486,7 +485,10 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		for (int i = 0; i < totalCnt; i++, attachId++) {
 			JSONObject attachInf = (JSONObject) attachList.get(i);
-			copyRelatedItemAttachFiles(attachInf, attachId, itemId, realPath, cabinetPath, locale, userInfo, modulePath, uploadPath, fileList);
+			result = copyRelatedItemAttachFiles(attachInf, attachId, itemId, realPath, cabinetPath, locale, userInfo, modulePath, uploadPath, fileList);
+			if (!result.get("status").equals("ok")) {
+				return result;
+			}
 		}
 		
 		if (capacity.getCapacityType() == 1) {
@@ -528,7 +530,9 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		return result;
 	}
 	
-	public void copyRelatedItemAttachFiles(JSONObject attachInf, int attachId, int itemId, String realPath, String cabinetPath, Locale locale, LoginVO userInfo, String modulePath, String uploadPath, List<CabinetAttachFileVO> attachFileList) throws Exception {
+	@SuppressWarnings("unchecked")
+	public JSONObject copyRelatedItemAttachFiles(JSONObject attachInf, int attachId, int itemId, String realPath, String cabinetPath, Locale locale, LoginVO userInfo, String modulePath, String uploadPath, List<CabinetAttachFileVO> attachFileList) throws Exception {
+		JSONObject result = new JSONObject();
 		String companyId  = userInfo.getCompanyID();
 		int tenantId      = userInfo.getTenantId();
 		String fileName   = attachInf.get("fileName").toString();
@@ -546,13 +550,20 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		String newFilePath   = pDirPath + File.separator + newName;
 		String pfilePath     = cabinetPath + newName;
 		
+		if (modulePath.equals("upload_circular.ROOT")) {
+			filePath = filePath + fileName;
+		}
+		
 		logger.debug("file path: " + filePath + " || file name : " + fileName);
 		
 		File file = new File(realPath + filePath);
 		
 		if(!file.exists()) {
 			logger.error("File not found.");
-			throw new FileNotFoundException();
+			//throw new FileNotFoundException();
+			result.put("status", "error");
+			result.put("code", 5);
+			return result;
 		}
 		else {
 			File newAttachFile = new File(newFilePath);
@@ -560,7 +571,10 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 				FileUtils.copyFile(file, newAttachFile);
 			}
 			catch (Exception e) {
-				throw e;
+				//throw e;
+				result.put("status", "error");
+				result.put("code", 2);
+				return result;
 			}
 		}
 		
@@ -569,6 +583,10 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, pfilePath, fileName, fileSize, companyId, tenantId);
 		attachFileList.add(attachFile);
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
 	}
 	
 	public synchronized void addRelatedItem(int itemId, int moduleType, int cabinetId, String title, String content, String mode, LoginVO userInfo) throws Exception {
