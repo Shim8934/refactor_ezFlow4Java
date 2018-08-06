@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +49,9 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 	
 	@Autowired
 	private Properties config;
+	
+	@Autowired
+	private EzCabinetServiceImpl_h ezCabinetService_h;
 	
 	@Resource(name = "EzCabinetDAO")
 	private EzCabinetDAO ezCabinetDAO;
@@ -178,9 +182,10 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 		ezCabinetDAO.saveItem(itemVO);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveJournalItem(String realPath, int cabinetId, String journalContent, String mode, String title, String createDate, String journalWriter, String journalType, String formName, String attach, Locale locale, LoginVO userInfo) throws Exception {
-		JSONObject result          = new JSONObject();
+		/*JSONObject result          = new JSONObject();
 		String userId              = userInfo.getId();
 		int tenantId               = userInfo.getTenantId();
 		String companyId           = userInfo.getCompanyID();
@@ -207,6 +212,25 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 			itemCabinetId = cabinetId;
 		}
 		
+		//Save Journal attach files
+		
+		String cabinetPath = getCabinetDirPath(tenantId);
+		File file          = new File(realPath + cabinetPath);
+		
+		if(!file.exists()){
+			file.mkdir();
+		}
+		
+		if(!attach.equals("")){
+			JSONArray attachList = (JSONArray) jp.parse(attach);
+			int totalCnt         = attachList.size();
+			int attachId         = ezCabinetDAO.getMaxAttachId(map) + 1;
+			for (int i = 0; i < totalCnt; i++, attachId++) {
+				JSONObject attachInf = (JSONObject) attachList.get(i);
+				saveAttachFiles(attachInf, attachId, itemId, realPath, cabinetPath, locale, companyId, userId, tenantId);
+			}
+		}
+		
 		CabinetItemVO itemVO = new CabinetItemVO();
 		itemVO.setCabinetId(itemCabinetId);
 		itemVO.setItemId(itemId);
@@ -229,85 +253,47 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 		
         saveItem(itemVO);
 		
-		//Save Journal attach files
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;*/
+		JSONObject result          = new JSONObject();
+		int tenantId               = userInfo.getTenantId();
+		String companyId           = userInfo.getCompanyID();
+		JSONParser jp              = new JSONParser();
+		Map<String,Object> map     = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
 		
-		String cabinetPath = getCabinetDirPath(tenantId);
-		File file          = new File(realPath + cabinetPath);
+		//Get itemId
+		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
 		
-		if(!file.exists()){
-			file.mkdir();
-		}
-		
-		if(!attach.equals("")){
+		logger.debug("real path: " + realPath );
+		//Save attach files
+		if (!attach.equals("")) {
 			JSONArray attachList = (JSONArray) jp.parse(attach);
-			int totalCnt         = attachList.size();
-			int attachId         = ezCabinetDAO.getMaxAttachId(map) + 1;
-			for (int i = 0; i < totalCnt; i++, attachId++) {
-				JSONObject attachInf = (JSONObject) attachList.get(i);
-				saveJournalFiles(attachInf, attachId, itemId, realPath, cabinetPath, locale, companyId, userId, tenantId);
+			result               = ezCabinetService_h.saveListAttachFiles(attachList, itemId, realPath, "upload_journal.ROOT", "uploadFile", locale, userInfo);
+			if (!result.get("status").equals("ok")) {
+				return result;
 			}
 		}
+		
+		//Save Item
+		int moduleType = 9; //Journal module
+		ezCabinetService_h.addRelatedItem(itemId, moduleType, cabinetId, title, journalContent, mode, userInfo);
+		
+		//Save board columns information
+		List<CabinetColumnVO> listColm = new ArrayList<>();
+		listColm.add(createNewRelatedColumn("writer"  , itemId, "ezJournal.t34", journalWriter, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("date"    , itemId, "ezJournal.t35", createDate   , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("formname", itemId, "ezJournal.t22", formName     , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("type"    , itemId, "ezJournal.t12", journalType  , companyId, tenantId));
+		
+		saveAllColumns(listColm);
 		
 		result.put("status", "ok");
 		result.put("code", 0);
 		return result;
 	}
 	
-	private void saveJournalFiles(JSONObject attachInf, int attachId, int itemId, String realPath, String cabinetPath, Locale locale, String companyId, String userId, int tenantId) throws Exception {
-		String fileName      = attachInf.get("fileName").toString();
-		String filePath      = attachInf.get("filePath").toString();
-		int dotPos           = fileName.lastIndexOf(".");
-		String extend        = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
-		String newName       = UUID.randomUUID().toString() + "." + extend;
-		String pDirPath      = realPath + cabinetPath;
-		String newFilePath   = pDirPath + File.separator + newName;
-		String pfilePath     = cabinetPath + newName;
-		
-		logger.debug("file path: " + filePath + " || file name : " + fileName + " newFilePath : " +newFilePath);
-		
-		File file = new File(realPath + filePath);
-		
-		try{
-			if(!file.exists()){
-				logger.error("File not found");
-			}else{
-				InputStream input   = null;
-				OutputStream output = null;
-				
-				try{
-					input              = new FileInputStream(file);
-					File newAttachFile = new File(newFilePath);
-					output             = new FileOutputStream(newAttachFile);
-					byte[] buffer      = new byte[4096];
-					int byteRead       = 0;
-					
-					while ((byteRead = input.read(buffer)) != -1) {
-						output.write(buffer, 0, byteRead);
-					}
-				}catch (IOException e1){
-					throw e1;
-				}finally{
-					if (input != null) {
-						try { input.close(); } catch (IOException e2) {throw e2;}
-					}
-					if (output != null) {
-						try { output.flush(); } catch (IOException e3) {throw e3;}
-						try { output.close(); } catch (IOException e4) {throw e4;}
-					}
-				}
-			}
-		}catch(Exception e5){
-			throw e5;
-		}
-		
-		//Save Attach to database
-				File readfile = new File(newFilePath);
-				long fileSize = readfile.length();
-				logger.error("fileSize: " + fileSize);
-				CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, pfilePath, fileName, fileSize, companyId, tenantId);
-				saveAttachFile(attachFile);
-	}
-
 	@Override
 	public void saveItem(int cabinetId, JSONArray attacheFiles, JSONArray relatedFiles, String doctitle, String realPath, LoginVO userInfo) throws Exception {
 		String companyId           = userInfo.getCompanyID();
@@ -360,5 +346,10 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 	private synchronized void saveAttachFile(CabinetAttachFileVO attachFile) {
 		ezCabinetDAO.saveAttachFile(attachFile);
 	}
-
+	
+	private CabinetColumnVO createNewRelatedColumn(String columnId, int itemId, String messageName, String columnValue, String companyId, int tenantId) {
+		String columnName1 = egovMessageSource.getMessage(messageName, new Locale(config.getProperty("config.cabinetPrimary")));
+		String columnName2 = egovMessageSource.getMessage(messageName, new Locale(config.getProperty("config.cabinetPrimary")));
+		return new CabinetColumnVO(columnId, itemId, columnName1, columnName2, columnValue, companyId, tenantId);
+	}
 }

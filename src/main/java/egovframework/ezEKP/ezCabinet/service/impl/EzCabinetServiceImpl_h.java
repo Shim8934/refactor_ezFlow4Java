@@ -571,7 +571,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		attachFileList.add(attachFile);
 	}
 	
-	private synchronized void addRelatedItem(int itemId, int moduleType, int cabinetId, String title, String content, String mode, LoginVO userInfo) throws Exception {
+	public synchronized void addRelatedItem(int itemId, int moduleType, int cabinetId, String title, String content, String mode, LoginVO userInfo) throws Exception {
 		String userId              = userInfo.getId();
 		int tenantId               = userInfo.getTenantId();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

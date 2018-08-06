@@ -582,7 +582,7 @@
 					console.log("journalType: " + journalType);
 					console.log("content: " + content);
 					console.log(attach);
-					if (attach.childElementCount >= 1) {
+					if (attach.childElementCount > 1) {
 						var listChildren1 = attach.getElementsByTagName("a");
 						
 						for (var i = 0, len = listChildren1.length; i < len; i++) {
