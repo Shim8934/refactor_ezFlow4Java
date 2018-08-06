@@ -317,7 +317,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		//Save board columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
 		listColm.add(createNewRelatedColumn("boardWriter", itemId, "ezBoard.t223", writer, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("boardTime"  , itemId, "ezBoard.t223", dateTime, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardTime"  , itemId, "ezBoard.t224", dateTime, companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		
