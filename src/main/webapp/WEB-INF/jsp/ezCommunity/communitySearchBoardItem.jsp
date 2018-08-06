@@ -773,7 +773,7 @@
 				pheigth = pheigth - 200;
 				pwidth = pwidth - 127;
 
-				window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID +"&code=" + code, "", "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth,"");		
+				window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID +"&code=" + code, "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth,"");		
 			}
 
 			function BoardItemList() {

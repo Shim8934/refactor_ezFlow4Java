@@ -76,6 +76,7 @@
 		    var selectNode;
 		    var addCheck = 0;
 		    
+		    var letterStr20 = "<spring:message code='ezEmail.letter20'/>"; 
 		    var letterStr22 = "<spring:message code='ezEmail.letter22'/>"; 
 		    var letterStr23 = "<spring:message code='ezEmail.letter23'/>";
 		    var letterStr24 = "<spring:message code='ezEmail.letter24'/>";
