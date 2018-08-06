@@ -105,6 +105,14 @@
 						return;
 					}
 					
+					if (title.length > 150) {
+						alert(CabinetMessages.strTitleLen);
+						var inputTtl   = document.getElementById("itemTtl");
+						inputTtl.value = "";
+						inputTtl.focus();
+						return;
+					}
+					
 					var fileDivElmt  = document.getElementById("fileDiv");
 					var ulElmt       = fileDivElmt.querySelector("ul[class='ulFiles']");
 					var liChildren   = ulElmt.children;

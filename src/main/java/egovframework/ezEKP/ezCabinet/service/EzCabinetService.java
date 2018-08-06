@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
+
+import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetColumnVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetGeneralVO;
 import egovframework.ezEKP.ezCabinet.vo.CabinetItemSearchVO;
@@ -109,4 +111,10 @@ public interface EzCabinetService {
 	
 	//Save related todo item function
 	JSONObject saveTodoItem(int dstCabinetId, String realPath, String title, String mode, String createUser, String createDate, String priority, String memo, String tasktype, String executor, String status, String shareList, String attach, String content, Locale locale, LoginVO userInfo) throws Exception;
+	
+	//Save related photo board item function
+	JSONObject savePhotoBoard(int dstCabinetId, String realPath, String title, String mode, String createUser, String createDate, String descript, String boardId, String itemId, Locale locale, LoginVO userInfo) throws Exception;
+	
+	//Get all board photo
+	List<BoardAttachVO> getAllPhoto(String columnValue, String columnValue2, int tenantId) throws Exception;
 }

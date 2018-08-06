@@ -41,6 +41,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sun.mail.imap.IMAPFolder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
+import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
@@ -96,6 +98,9 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	@Resource(name = "EzCabinetAdminDAO")
 	private EzCabinetAdminDAO ezCabinetAdminDAO;
+	
+	@Resource(name="EzBoardDAO")
+	private EzBoardDAO ezBoardDAO;
 	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
@@ -902,7 +907,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 				File file          = new File(realPath + filePath);
 				long fileSize      = file.length();
 				
-				CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, filePath, fileName, fileSize, companyId, tenantId);
+				CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, filePath, fileName, fileSize, "", companyId, tenantId);
 				saveAttachFile(attachFile);
 			}
 		}
@@ -1546,7 +1551,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		File readfile = new File(newFilePath);
 		long fileSize = readfile.length();
 		
-		CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, filePath, fileName, fileSize, companyId, tenantId);
+		CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, filePath, fileName, fileSize, "", companyId, tenantId);
 		attachFileList.add(attachFile);
 	}
 	
@@ -1884,5 +1889,63 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("primary",   primary);
 		
 		return ezCabinetDAO.getUsersInfoFromIdList(map);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject savePhotoBoard(int cabinetId, String realPath, String title, String mode, String createUser, String createDate, String descript, String boardId, String boardItemId, Locale locale, LoginVO userInfo) throws Exception {
+		JSONObject result      = new JSONObject();
+		int tenantId           = userInfo.getTenantId();
+		String companyId       = userInfo.getCompanyID();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//Get itemId
+		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
+		
+		List<BoardAttachVO> photoViewList = getAllPhoto(boardItemId, boardId, tenantId);
+		JSONArray attachList = new JSONArray();
+		
+		for (BoardAttachVO boardPhoto : photoViewList) {
+			JSONObject photo = new JSONObject();
+			photo.put("fileName", boardPhoto.getImageName());
+			photo.put("filePath", boardPhoto.getFilePath());
+			photo.put("fileDesc", boardPhoto.getFileContent());
+			attachList.add(photo);
+		}
+		
+		//Save attach files
+		result = cabinetService_h.saveListAttachFiles(attachList, itemId, realPath, "", "", locale, userInfo);
+		if (!result.get("status").equals("ok")) {
+			return result;
+		}
+		
+		//Add board item
+		int moduleType = 3; //board module
+		addRelatedItem(itemId, moduleType, cabinetId, title, null, mode, userInfo);
+		
+		//Save board columns information
+		List<CabinetColumnVO> listColm = new ArrayList<>();
+		listColm.add(createNewRelatedColumn("boardWriter", itemId, "ezBoard.t223" , createUser , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardTime"  , itemId, "ezBoard.t224" , createDate , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardId"    , itemId, "ezBoard.t224" , boardId    , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardDesc"  , itemId, "ezBoard.t1008", descript   , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardItemId", itemId, "ezBoard.t224" , boardItemId, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardType"  , itemId, "ezBoard.t224" , "photo"    , companyId, tenantId));
+		
+		saveAllColumns(listColm);
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
+	
+	public List<BoardAttachVO> getAllPhoto(String boardItemId, String boardId, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_pItemID",  boardItemId);
+		map.put("v_pBoardID", boardId);
+		map.put("v_TENANTID", tenantId);
+		
+		return ezBoardDAO.photoViewDBAll(map);
 	}
 }
