@@ -44,7 +44,7 @@
 			#textarea{padding-left:10px;padding-right:10px;width:95.5%;height:99%;margin-left:-3px;overflow-y:auto;}
 			.detailMemo{border: 1px solid black;width: 400px;center;height: 400px;float: center;margin: 0 auto; padding-top: 30px;overflow:hidden;}
 			.memo-text{margin-top:10px; padding-left:15px; padding-right:10px; border:0px; width:90%; height:88%; resize:none; overflow-y:auto;}
-			.memo-color{ padding:0px; margin-left:1px; margin-right:1px; box-sizing:border-box; width: 200px; height: 35px; position:absolute; top:0px; left:0px; visibility:hidden;}
+			.memo-color{ padding:0px; /* margin-left:1px; margin-right:1px;  */box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;}
 			.memo-color-list { display:inline-block; width:16.5%; height:100%; text-align:center; float:left;}
     	</style>
 		<script type="text/javascript">
@@ -58,6 +58,8 @@
 			var memoColor = [
 			  "rgb(159, 212, 246)", "rgb(244, 232, 182)",  "rgb(246, 201, 159)", "rgb(165, 241, 197)", "rgb(233, 193, 250)", "rgb(255, 255, 255)"              
 			];
+			var headerColor;
+	    	var textColor;
 			
 			
 			topHeight = "56";
@@ -293,12 +295,9 @@
 		    } */
 		    
 		    function save() {
-		    	var headerColor = memoBColor[0];
-		    	var textColor = memoColor[0];
-		    
-		    	if($(".individual-memo").index() != -1) {			// 메모지 존재하는 경우
-			    	headerColor = $(".individual-memo").first().css("background-color");
-			    	textColor = $(".memo-text").first().css("background-color");
+		    	if(headerColor == null) {			// 지정색 없을 때
+		    		headerColor = memoBColor[0];
+			    	textColor = memoColor[0];
 		    	}
 		    	
 		    	if(memoIndex != -1) {		// 수정일때
@@ -370,10 +369,10 @@
 		        });
 		        
 		        $(".memo-color-list").click(function(){
-		        	var color = $(this).css("background-color");
-		        	var index = $(this).index();
-		        	$(this).parent().parent().css("background-color", color);
-		        	$(this).parent().nextAll("textarea").css("background-color", memoColor[index]);
+		        	headerColor = $(this).css("background-color");
+		        	textColor = memoColor[$(this).index()];
+		        	$(this).parent().parent().css("background-color", headerColor);
+		        	$(this).parent().nextAll("textarea").css("background-color", textColor);
 		        	$(this).parent().css("visibility", "hidden");
 		        })
 		        
