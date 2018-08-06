@@ -43,7 +43,7 @@
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
 			#textarea{padding-left:10px;padding-right:10px;width:95.5%;height:99%;margin-left:-3px;overflow-y:auto;}
 			.detailMemo{border: 1px solid black;width: 400px;center;height: 400px;float: center;margin: 0 auto; padding-top: 30px;overflow:hidden;}
-			.memo-text{margin-top:10px; padding-left:15px; padding-right:10px; border:0px; width:90%; height:88%; resize:none; overflow-y:auto;}
+			.memo-text{margin-top:10px; padding-left:11px; padding-right:10px; border:0px; width:90%; height:88%; resize:none; overflow-y:auto;}
 			.memo-color{ padding:0px; margin-left:1px; margin-right:1px; box-sizing:border-box; width: 200px; height: 35px; position:absolute; top:0px; left:0px; visibility:hidden;}
 			.memo-color-list { display:inline-block; width:16.5%; height:100%; text-align:center; float:left;}
     	</style>
