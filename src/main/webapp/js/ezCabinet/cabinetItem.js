@@ -863,7 +863,7 @@ var CabinetItem = function() {
 		var attachList  = data.attachFileList;
 		var relatedList = data.relatedFileList;
 		
-		generateJournalTitle(itemInfo, dlElmt);
+		generateJournalTitle(itemInfo, relatedList, dlElmt);
 		generateRelatedModuleContent(itemInfo, attachList, null, null);
 	}
 	

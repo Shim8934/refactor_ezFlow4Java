@@ -243,14 +243,25 @@
 				function saveBoardDocument(saveMode, cabinetId) {
 					var boardOpener   = window.opener;
 					if (!boardOpener) {alert(CabinetMessages.strSelect); return;}
+					var messageFrame  =  boardOpener.document.getElementById("message");
+					if (messageFrame) {
+						saveNormalBoard(boardOpener, saveMode, cabinetId);
+					}
+					else {
+						savePhotoBoard(boardOpener, saveMode, cabinetId);
+					}
+				}
+				
+				function savePhotoBoard(boardOpener, saveMode, cabinetId) {
 					
+				}
+				
+				function saveNormalBoard(boardOpener, saveMode, cabinetId) {
 					var writerTd      = boardOpener.document.getElementById("WriteUserNM");
 					var postTd        = boardOpener.document.getElementById("PostDate");
 					var titleTd       = boardOpener.document.getElementById("cTitle");
-					var writerSpan    = writerTd.getElementsByTagName("div")[0].getElementsByTagName("span")[0].getAttribute("onclick");
-					var start         = writerSpan.indexOf("'");
-					var end           = writerSpan.lastIndexOf("'");
-					var boardWriter   = writerSpan.substring(start + 1, end);
+					var writerSpan    = writerTd.getElementsByTagName("div")[0].getElementsByTagName("span")[0];
+					var boardWriter   = getUserIdFromInline(writerSpan, "'");
 					var postDate      = postTd.getElementsByTagName("div")[0].textContent;
 					var boardTitle    = titleTd.getElementsByTagName("div")[0].textContent;
 					var messageFrame  = boardOpener.document.getElementById("message");
@@ -314,10 +325,8 @@
 					if (!commuOpener) {alert(CabinetMessages.strSelect); return;}
 					
 					var title         = trimStr(commuOpener.document.getElementById("title").textContent);
-					var writerDiv     = commuOpener.document.getElementById("Div1").getAttribute("onclick");
-					var start         = writerDiv.indexOf('"');
-					var end           = writerDiv.lastIndexOf('"');
-					var writer        = writerDiv.substring(start + 1, end);
+					var writerDiv     = commuOpener.document.getElementById("Div1");
+					var writer        = getUserIdFromInline(writerDiv, '"');
 					var date          = trimStr(commuOpener.document.getElementById("Div3").textContent);
 					var endDate       = trimStr(commuOpener.document.getElementById("Div4").textContent);
 					var messageFrame  = commuOpener.document.getElementById("message");
@@ -393,7 +402,7 @@
 					var taskTypeName     = trimStr(taskInfTable.querySelector("span[class='taskType']").textContent);
 					var taskPriority     = trimStr(tableRows[3].lastElementChild.firstElementChild.textContent);
 					var executorDiv      = tableRows[4].lastElementChild.firstElementChild;
-					var taskExecutor     = getUserIdFromInline(executorDiv);
+					var taskExecutor     = getUserIdFromInline(executorDiv, "'");
 					var taskMemo         = trimStr(tableRows[6].lastElementChild.firstElementChild.textContent);
 					var taskShareList    = [];
 					var taskShareDiv     = taskInfTable.querySelector("div[id='taskShareList']");
@@ -401,7 +410,7 @@
 					
 					if (listShareUsers && listShareUsers.length > 0) {
 						for (var i = 0, len = listShareUsers.length; i < len; i++) {
-							var shareId = getUserIdFromInline(listShareUsers[i]);
+							var shareId = getUserIdFromInline(listShareUsers[i], "'");
 							taskShareList.push(shareId);
 						}
 					}
@@ -529,7 +538,7 @@
 						var listUser   = divAttElmt.children;
 						if (listUser && listUser.length > 0) {
 							for (var i = 0, len = listUser.length; i < len; i++) {
-								var attendantId = getUserIdFromInline(listUser[i]);
+								var attendantId = getUserIdFromInline(listUser[i], "'");
 								scheduleAttList.push(attendantId);
 							}
 						}
@@ -655,7 +664,7 @@
 					console.log("journalType: " + journalType);
 					console.log("content: " + content);
 					console.log(attach);
-					if (attach.childElementCount >= 1) {
+					if (attach.childElementCount > 1) {
 						var listChildren1 = attach.getElementsByTagName("a");
 						
 						for (var i = 0, len = listChildren1.length; i < len; i++) {
@@ -861,10 +870,10 @@
 						.replace("%7E", /~/g);
 				}
 				
-				function getUserIdFromInline(elmtObj) {
+				function getUserIdFromInline(elmtObj, divide) {
 					var clickStr    = elmtObj.getAttribute("onclick");
-					var start       = clickStr.indexOf("'");
-					var end         = clickStr.lastIndexOf("'");
+					var start       = clickStr.indexOf(divide);
+					var end         = clickStr.lastIndexOf(divide);
 					return clickStr.substring(start + 1, end);
 				}
 				
@@ -900,19 +909,6 @@
 					chisiTtl.appendChild(imgElmt);
 					chisiTtl.appendChild(spanElmt);
 					taskContent.appendChild(chisiTtl);
-				}
-				
-				function cloneCanvas(oldCanvas) {
-					//create a new canvas
-					var newCanvas    = document.createElement('canvas');
-					var context      = newCanvas.getContext('2d');
-					newCanvas.width  = oldCanvas.width;
-					newCanvas.height = oldCanvas.height;
-					
-					//apply the old canvas to the new one
-					context.drawImage(oldCanvas, 0, 0);
-					
-					return newCanvas;
 				}
 				
 				function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {
