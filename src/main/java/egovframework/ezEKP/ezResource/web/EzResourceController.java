@@ -1521,7 +1521,7 @@ public class EzResourceController extends EgovFileMngUtil {
 					cDate = cDate.substring(0, 10);
 					startDateTime = selSd + " " + cTime + ":00:00";
 					endDateTime = selEd + " " + cTime + ":30:00";
-
+					allDay = "1";				// 2018-08-06 김민성 - 종일일정 클릭 시 기간 하루종일로 변경
 				} else {
 					startDateTime = selSd;
 					endDateTime = selEd;

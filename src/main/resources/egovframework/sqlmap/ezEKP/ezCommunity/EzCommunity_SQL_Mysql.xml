@@ -733,6 +733,8 @@
 					userid = #v_PUSERID#
 				AND
 					boardid = #v_PBOARDID# 
+				AND
+					tenant_id = #tenantID#
 				GROUP BY
 					itemid,
 					tenant_id
@@ -741,12 +743,14 @@
 				A.itemid = D.itemid
 			AND
 				A.tenant_id = D.tenant_id
- 				WHERE 
+ 			WHERE 
 				boardid = #v_PBOARDID#
 			AND
-				startdate < #v_pNow#
+				startdate <= #v_pNow#
 			AND
 				enddate > #v_pNow#
+			AND
+				A.tenant_id = #tenantID#
 		]]>
 		
 		<isEqual property="v_PSORTBY" compareValue="">

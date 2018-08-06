@@ -65,7 +65,17 @@
 			    -ms-transform: rotate(45deg);
 			    transform: rotate(45deg);
 			}
-			
+			/* 2018-08-03 김보미 - 그룹명이 길 경우 처리 */
+			.IDcontainer {
+			    white-space: nowrap;
+			    overflow: hidden;
+			    text-overflow: ellipsis;
+			    height: 17px;
+			}
+			/* 2018-08-03 김보미 - 클릭시마다 앞의 체크박스 ui 틀어지는 현상 막기 */
+			.IDcontainer .checkSelect {
+				display: none;
+			}
 	    </style>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/Holiday.js"></script>

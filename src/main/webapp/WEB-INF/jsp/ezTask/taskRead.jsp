@@ -163,7 +163,7 @@
 		            //setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
 		            //setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
 		            $(".taskType").html("<spring:message code='ezTask.t2000' />");
-		        } else if (tasktype == "2") {
+		        } else if (tasktype == "2" || tasktype == "5") {
 		        	$(".taskType").html("<spring:message code='ezTask.t2001' />");
 		        } else {
 		        	$(".taskType").html("<spring:message code='ezTask.t2002' />");
@@ -1656,7 +1656,7 @@
 		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
 		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />"); */
 		            $(".taskType").html("<spring:message code='ezTask.t2000' />");
-		        } else if (tasktype == "2") {
+		        } else if (tasktype == "2" || tasktype == "5") {
 		        	$(".taskType").html("<spring:message code='ezTask.t2001' />");
 		        } else {
 		        	$(".taskType").html("<spring:message code='ezTask.t2002' />");
