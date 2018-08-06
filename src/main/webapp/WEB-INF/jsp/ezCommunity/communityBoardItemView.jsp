@@ -110,13 +110,14 @@
 	    	    rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 	    	}
 			
+	    	/* 2018-08-03 홍승비 - 커뮤니티 게시물(포토게시물 제외) 리사이즈 수정*/
 		    window.onresize = function () {
 		        if (gubun != "3") { 
 		            var contentHeight;
 		            if (gubun == "2") {
-		                contentHeight = document.documentElement.clientHeight - 338;
+		                contentHeight = document.documentElement.clientHeight - 261;
 		            } else {
-		                contentHeight = document.documentElement.clientHeight - 363;
+		                contentHeight = document.documentElement.clientHeight - 281;
 		            }
 		            if(contentHeight < 40){
 		            	contentHeight = 40;

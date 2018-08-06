@@ -88,6 +88,7 @@
 			var lengthMsg = "<spring:message code='ezEmail.letter14'/>"; // 자 이하로 입력 가능합니다.
 			var contentMsg = "<spring:message code='ezEmail.letter11'/>"; // 이름을 입력해주세요.
 			var letterBoxNameMsg = "<spring:message code='ezEmail.letter31'/>"; // 이름은
+			var letterBoxDelMsg = "<spring:message code='ezBoard.t54'/>"; // 삭제되었습니다.
 		    
 		    window.onload = window_onload;
 		    

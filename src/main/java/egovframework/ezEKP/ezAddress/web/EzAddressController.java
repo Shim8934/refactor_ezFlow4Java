@@ -1962,6 +1962,7 @@ public class EzAddressController{
 			csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, "\r\n");
 			
 	        String[] headerArray = egovMessageSource.getMessage("ezAddress." + format, locale).split(";");
+	        int headerLength = headerArray.length;
 	        
 	        csvWriter.writeNext(headerArray);
 	        csvWriter.flush();
@@ -1969,7 +1970,7 @@ public class EzAddressController{
 	        List<AddressVO> addressList = ezAddressService.getAllAddressList(userInfo.getTenantId(), folderId, ownerId, "", null);
 	        
 	        for (AddressVO address : addressList) {
-	        	String[] valueArray = new String[87];
+	        	String[] valueArray = new String[headerLength];
 	        	Arrays.fill(valueArray, "");
 	        	
 	        	if (format.equals("outlookCSV")) {

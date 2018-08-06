@@ -52,6 +52,7 @@
 
         DisplayOrganSearchList(pSearchList, pCellList, pPropList, pClass);
         InitRecViewerInfo();
+        SwapRoleList();
 
         MM_preloadimages('./images/arrow_add1.gif', './images/arrow_delete1.gif');
     }

@@ -2096,6 +2096,17 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		logger.debug("getMainMenuHTML started");
 
 		List<PortalGetMainMenuHtmlVO> result = getMainMenuHtml(pUID, pCallingMenuID, Integer.parseInt(userInfo.getSkinNum()), userInfo.getTenantId());
+
+		//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
+		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", userInfo.getTenantId());
+		String use_journal = ezCommonService.getTenantConfig("USE_JOURNAL", userInfo.getTenantId());
+		
+		if (use_attitude == null || use_attitude.equals("")) {
+			use_attitude = "YES";
+		}
+		if (use_journal == null || use_journal.equals("")) {
+			use_journal = "YES";
+		}
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -2126,6 +2137,14 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			/*String menuitemLinkLocation = result.get(i).getLinkLocation();*/
 			String menuitemWindowOption = result.get(i).getWindowOption();
 			/*String menuitemNormalImagePath = result.get(i).getNormalImagePath();*/
+			
+			//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
+			if (menuitemLinkURL.equals("/ezJournal/journalMain.do") && use_journal.equals("NO")) {
+				continue;
+			}
+			if (menuitemLinkURL.equals("/ezAttitude/attitudeMain.do") && use_attitude.equals("NO")) {
+				continue;
+			}
 			
 			/* 2018-03-06 장진혁 탑메뉴 이미지 제거 후 text로 변경 */
 			sb.append("<li ");
