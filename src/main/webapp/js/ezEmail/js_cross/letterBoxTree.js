@@ -257,7 +257,7 @@ function deleteLetterBox() {
 					}
 				});
 				
-				alert("삭제를 완료하였습니다.");
+				alert(letterBoxDelMsg);
 				refreshLetterBox();
 			},
 			error : function(data) {
