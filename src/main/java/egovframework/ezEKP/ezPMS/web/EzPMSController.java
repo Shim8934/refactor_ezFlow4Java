@@ -654,7 +654,7 @@ public class EzPMSController {
 		String userId = userInfo.getId();
 		String kanbanOrder = param.get("kanbanOrder").toString();
 
-		String url = "/rest/ezPMS/task-list/" + projectId + "/users/" + userId;
+		String url = "/rest/ezPMS/task-list/" + projectId + "/users/" + userId + "/gantt";
 		String countUrl = "/rest/ezPMS/projects/" + projectId + "/tasks/count";
 		JSONObject json = new JSONObject();
 
@@ -2398,7 +2398,7 @@ public class EzPMSController {
 //				"/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
 		
 		JSONObject resultBodyTask = commonUtil.getJsonFromRestApi(
-				"/rest/ezPMS/test/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+				"/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId() + "/gantt/", param, request, "get", null);
 		
 		String status = resultBodyTask.get("status").toString();
 		
@@ -2421,11 +2421,8 @@ public class EzPMSController {
 			model.addAttribute("holidayList", data.get("holidayList"));
 		}
 
-//		JSONObject resultBodyGroup = commonUtil.getJsonFromRestApi(
-//				"/rest/ezPMS/projects/" + projectId + "/groups/users/" + userInfo.getId() + "/gantt", param, request,
-//				"get", null);
 		JSONObject resultBodyGroup = commonUtil.getJsonFromRestApi(
-				"/rest/ezPMS/test/projects/" + projectId + "/groups/users/" + userInfo.getId() + "/gantt", param, request,
+				"/rest/ezPMS/projects/" + projectId + "/groups/users/" + userInfo.getId() + "/gantt", param, request,
 				"get", null);
 		status = resultBodyGroup.get("status").toString();
 
@@ -4241,7 +4238,7 @@ public class EzPMSController {
 		param.put("status", taskStatus);
 
 		JSONObject resultBodyTask = commonUtil.getJsonFromRestApi(
-				"/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+				"/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId() + "/gantt", param, request, "get", null);
 		String status = resultBodyTask.get("status").toString();
 
 		if (status.equals("ok")) {
@@ -4546,7 +4543,7 @@ public class EzPMSController {
 		param.put("isMyTask", "A");
 
 		JSONObject resultBodyTask = commonUtil.getJsonFromRestApi(
-				"/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId(), param, request, "get", null);
+				"/rest/ezPMS/task-list/" + projectId + "/users/" + userInfo.getId() + "/gantt", param, request, "get", null);
 		String status = resultBodyTask.get("status").toString();
 
 		if (status.equals("ok")) {
