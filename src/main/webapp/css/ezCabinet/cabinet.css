@@ -302,6 +302,7 @@
 .resContDiv   {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 444px; height: 444px; overflow: auto;}
 .schContDiv1  {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 388px; height: 388px; overflow: auto;}
 .schContDiv2  {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 418px; height: 418px; overflow: auto;}
+.todoContDiv  {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 418px; height: 418px; overflow: auto;}
 .addressContDiv {margin: 10px 0px; padding: 2.5px 2.5px 8px; border: 1px solid #ddd; min-height: 468px; height: 468px; overflow: auto;}
 .addressContDiv >select {background: none; border: none !important; outline: none !important; padding-right: .1em !important; height: 100%!important;}
 
@@ -392,5 +393,9 @@
 .icon_rbtn img {width: 16px; height: 16px;}
 .cabtxtPrint {padding: 8px; border: 1px solid #ddd; margin-top: 10px; overflow-x: hidden;}
 .cabdatetd {width: 150px;}
+.cabtaskTtl {display: flex; margin: 5px 0px;}
+.cabtaskTtl img {width: 14px; height: 14px; padding: 3px 5px 3px 0px;}
+
+.wrap_progress .ui-datepicker-year, .wrap_progress .ui-datepicker-month, .wrap_progress .ui-datepicker-calendar td {pointer-events: none;}
 
 @media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2, .addressContDiv, .divInfo .cabmemo {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;} .ulFiles li {page-break-inside: avoid;} .overfl {white-space: pre-wrap !important;}}

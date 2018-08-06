@@ -890,6 +890,41 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
+	@RequestMapping(value="/ezCabinet/saveRelatedTodo.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonSaveRelatedTodo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSaveRelatedTodo is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String title           = request.getParameter("title")    != null ? request.getParameter("title")    : "";
+		String mode            = request.getParameter("mode")     != null ? request.getParameter("mode")     : "";
+		String cabinetId       = request.getParameter("cabinet")  != null ? request.getParameter("cabinet")  : "";
+		String createUser      = request.getParameter("creator")  != null ? request.getParameter("creator")  : "";
+		String createDate      = request.getParameter("date")     != null ? request.getParameter("date")     : "";
+		String priority        = request.getParameter("priority") != null ? request.getParameter("priority") : "";
+		String memo            = request.getParameter("memo")     != null ? request.getParameter("memo")     : "";
+		String tasktype        = request.getParameter("tasktype") != null ? request.getParameter("tasktype") : "";
+		String executor        = request.getParameter("executor") != null ? request.getParameter("executor") : "";
+		String shareList       = request.getParameter("share")    != null ? request.getParameter("share")    : "";
+		String attach          = request.getParameter("attach")   != null ? request.getParameter("attach")   : "";
+		String content         = request.getParameter("content")  != null ? request.getParameter("content")  : "";
+		String status          = request.getParameter("status")   != null ? request.getParameter("status")   : "";
+		
+		JSONObject resultObj   = new JSONObject();
+		
+		logger.debug("Title: " + title + " || mode: " + mode + " || cabinetId: " + cabinetId + " || createUser: " + createUser + " || createDate: " + createDate + " || priority: " + priority + " || memo: " + memo + " || tasktype: " + tasktype + " || executor: " + executor + " || shareList: " + shareList + " || attach: " + attach + " || content: " + content + " || status: " + status);
+		
+		if (title.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("") || priority.equals("") || tasktype.equals("") || executor.equals("") || content.equals("") || status.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.saveRelatedTodo(request, userInfo.getId(), title, mode, cabinetId, createUser, createDate, priority, memo, tasktype, executor, status, shareList, attach, content);
+		
+		logger.debug("jsonSaveRelatedTodo finishes!");
+		return resultObj.toString();
+	}
+	
 	private String getFileSize(long fileSize) {
 		String fileSize_ = "";
 		

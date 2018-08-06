@@ -79,6 +79,7 @@ var CabinetMessages = {
 	strAttach3   : "일반 첨부파일",
 	strAttach4   : "모두저장",
 	strAttach5   : "첨부파일",
+	strAttach6   : "첨부파일 저장 중 오류가 발생했습니다.",
 	strDelete2   : "게시물이 삭제되었습니다.",
 	strType      : "타입이 다릅니다.",
 	strSchedule1 : "개인일정",

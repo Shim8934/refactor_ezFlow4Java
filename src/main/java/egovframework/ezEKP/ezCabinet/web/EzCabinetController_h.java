@@ -357,10 +357,12 @@ public class EzCabinetController_h {
 		int itemType         = ((Long)item.get("itemType")).intValue();
 		model.addAttribute("item", item);
 		
-		for (int i = 0, totalColumn = columnList.size(); i < totalColumn; i++) {
-			JSONObject column = (JSONObject) columnList.get(i);
-			String columnId   = column.get("columnId").toString();
-			model.addAttribute(columnId, column);
+		if (columnList != null) {
+			for (int i = 0, totalColumn = columnList.size(); i < totalColumn; i++) {
+				JSONObject column = (JSONObject) columnList.get(i);
+				String columnId   = column.get("columnId").toString();
+				model.addAttribute(columnId, column);
+			}
 		}
 		
 		switch(itemType) {
@@ -368,11 +370,20 @@ public class EzCabinetController_h {
 			case 1  : jspPageName = getEmailColumnInfo(model, iteminfo)    ; break;
 			case 3  : jspPageName = getBoardColumnInfo(model, iteminfo)    ; break;
 			case 4  : jspPageName = getScheduleColumnInfo(model, iteminfo) ; break;
+			case 5  : jspPageName = getTodoColumnInfo(model, iteminfo)     ; break;
 			case 6  : jspPageName = getOptionColumnInfo(model, iteminfo)   ; break;
 			case 8  : jspPageName = getAddressColumnInfo(model, iteminfo)  ; break;
 			case 11 : jspPageName = getResourceColumnInfo(model, iteminfo) ; break;
 			default : break;
 		}
+		
+		return jspPageName;
+	}
+	
+	private String getTodoColumnInfo(Model model, JSONObject iteminfo) {
+		String jspPageName = "ezCabinet/cabinetTodoDetail";
+		JSONObject creator = (JSONObject) iteminfo.get("creator");
+		model.addAttribute("creatorUser", creator);
 		
 		return jspPageName;
 	}
