@@ -111,301 +111,42 @@
 		
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetFileHelper.js"     ></script>
 		<script type="text/javascript">
 			var CabinetNormalAddress = function() {
-				var rlWindow    = null;
-				var userWindow  = null;
-				var itemPopup   = null;
-				var itemId      = null;
-				var scrolled    = true;
-				var lastScrollY = 0;
-				var relatedArr  = [];
-				
+				var cabinetHelper = null;
 				function initEvents(itemID) {
-					itemId                  = itemID;
-					document.onselectstart  = function () { return false;}
-					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
-					var cabBttnElmt         = document.getElementById("fileDivBttn");
-					var listBttns           = cabBttnElmt.children;
-					listBttns[0].onclick    = function(e) {fileModify();};
-					listBttns[1].onclick    = function(e) {fileDelete();};
-					listBttns[2].onclick    = function(e) {filePrint();}
-					listBttns[3].onclick    = function(e) {closeWindow();};
-					
-					document.getElementById("fileListDiv").onscroll = function(e) {scrollListOfItem(this);}
-					
-					var cabBttnElmt         = document.getElementById("fileModifyDivBttn");
-					var listBttns           = cabBttnElmt.children;
-					listBttns[0].onclick    = function(e) {saveItem();};
-					listBttns[1].onclick    = function(e) {cancelChanges()};
-					
-					getFileDetail();
-				}
-				
-				function getFileDetail() {
-					$.ajax({
-						type: "GET",
-						url: "/ezCabinet/getFileDetail.do",
-						data: {"itemId" : itemId},
-						dataType: "JSON",
-						async: false,
-						success : function(data) {processFileDetail(data);},
-						error : function(error) {alert(CabinetMessages.strError);}
+					cabinetHelper = new CabinetFileHelper({
+						itemid   : itemID,
+						callback : genderInformation,
+						print    : filePrint,
+						module   : "naddr",
+						type     : "normal"
 					});
+					cabinetHelper.start();
 				}
 				
-				function processFileDetail(fileItem) {
-					var result      = fileItem.fileDetail;
-					var relatedList = fileItem.relatedFileList;
-					var creator     = fileItem.creator;
-					var modifier    = fileItem.modifier;
-					relatedArr      = [];
+				function genderInformation(fileItem, displayUserInforPopup, showInfoId, showInfoEmail, scrollHandler) {
+					var result   = fileItem.fileDetail;
+					var creator  = fileItem.creator;
+					var modifier = fileItem.modifier;
 					
-					//파일상세
-					document.getElementById("creator").onclick     = function(e) {showUserInfoFromId(result["creatorId"]);};
-					document.getElementById("addrCreator").onclick = function(e) {showUserInfoFromId(creator["userId"]);};
-					document.getElementById("addrMod").onclick     = function(e) {showUserInfoFromId(modifier["userId"]);};
-					
-					var titleTd         = document.getElementById("title");
-					titleTd.textContent = result["title"];
-					titleTd.setAttribute("title", result["title"]);
-					
-					//Related list
-					var divElmt       = document.getElementById("fileListDiv");
-					divElmt.innerHTML = "";
-					var relDocDivElmt = divElmt.parentElement;
-					while (relDocDivElmt.childElementCount > 1) {relDocDivElmt.removeChild(relDocDivElmt.lastElementChild);}
-					
-					for (var i = 0, len = relatedList.length; i < len; i++) {
-						var spanElmt = document.createElement("span");
-						spanElmt.setAttribute("role", relatedList[i]["relatedItemId"]);
-						spanElmt.textContent = relatedList[i]["title"];
-						spanElmt.className   = "rlSpanBnk";
-						spanElmt.onclick = (function(status, itemId){return function() {readRelatedItem(itemId, status);}; })(relatedList[i]["useStatus"], relatedList[i]["relatedItemId"]);
-						divElmt.appendChild(spanElmt);
-						
-						if (i != len - 1) {
-							var divideEm         = document.createElement("em");
-							divideEm.textContent = ";";
-							divElmt.appendChild(divideEm);
-						}
-						
-						relatedArr.push({
-							itemType  : relatedList[i]["itemType"],
-							itemId    : relatedList[i]["relatedItemId"],
-							itemTitle : relatedList[i]["title"]
-						})
-					}
+					//Display popup
+					displayUserInforPopup("creator"    , result["creatorId"], showInfoId);
+					displayUserInforPopup("addrCreator", creator["userId"]  , showInfoId);
+					displayUserInforPopup("addrMod"    , modifier["userId"] , showInfoId);
 				}
 				
-				function showUserInfoFromId(userId) {
-					var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
-					feature = feature + getOpenWindowfeature(420, 500);
-					
-					userWindow = window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
-				}
-				
-				function getRelatedFiles() {return relatedArr;}
-				function saveRelatedFiles(relatedFile) {relatedArr = JSON.parse(JSON.stringify(relatedFile)); showRelatedFiles();}
-				
-				function closeAllPopups() {
-					if (rlWindow)  {rlWindow.close();}
-					if(itemPopup)  {itemPopup.close();}
-					if(userWindow) {userWindow.close();}
-				}
-				
-				function showRelatedFiles() {
-					var divElmt = document.getElementById("fileListDiv");
-					while(divElmt.firstElementChild) {
-						divElmt.removeChild(divElmt.firstElementChild);
-					}
-					
-					for (var i = 0, len = relatedArr.length; i < len; i++) {
-						var spanElmt = document.createElement("span");
-						spanElmt.setAttribute("role", relatedArr[i]["itemId"]);
-						spanElmt.textContent = relatedArr[i]["itemTitle"];
-						spanElmt.className   = "rlSpanBnk";
-						spanElmt.onclick = (function(itemId){return function() {readRelatedItem(itemId);}; })(relatedArr[i]["itemId"]);
-						divElmt.appendChild(spanElmt);
-						
-						if (i != len - 1) {
-							var divideEm         = document.createElement("em");
-							divideEm.textContent = ";";
-							divElmt.appendChild(divideEm);
-						}
-					}
-				}
-				
-				function readRelatedItem(itemId, useStatus) {
-					if(useStatus && useStatus == 0) {alert(CabinetMessages.strNoRelated); return;}
-					
-					if(itemPopup) {itemPopup.close();}
-					itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "itemDetail", getOpenWindowfeature(600, 565));
-				}
-				
-				function getOpenWindowfeature(popUpW, popUpH) {
-					var heigth   = window.screen.availHeight;
-					var width    = window.screen.availWidth;
-					var left     = 0;
-					var top      = 0;
-					var pleftpos = parseInt(width) - popUpW;
-					heigth       = parseInt(heigth) - popUpH;
-					left         = pleftpos / 2;
-					top          = heigth / 2;
-					var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
-					return feature;
-				}
-				
-				function scrollListOfItem(divElmt) {
-					if (scrolled) {
-						scrolled = false;
-						var distance      = divElmt.scrollTop < lastScrollY ? -20 : 20;
-						divElmt.scrollTop = lastScrollY + distance;
-						setTimeout(function () {scrolled = true; lastScrollY = divElmt.scrollTop;}, 500);
-					}
-				}
-				
-				function fileDelete() {
-					if (confirm(CabinetMessages.strDelete)) {
-						var itemArr = [];
-						itemArr.push(itemId);
-						var data = {itemList : itemArr.toString()};
-						$.ajax({
-							type: "POST",
-							url: "/ezCabinet/deleteItems.do",
-							data: {itemList : itemArr.toString()},
-							dataType: "JSON",
-							async: false,
-							success : function(data) {
-								var code = data.code;
-								switch(code) {
-									case 0 : afterDeleteSuccessfully()         ; break;
-									case 1 : alert(CabinetMessages.strParamErr); break;
-									case 2 : alert(CabinetMessages.strError)   ; break;
-									case 3 : alert(CabinetMessages.strPerm)    ; break;
-									default: alert(CabinetMessages.strError)   ; return; 
-								}
-							},
-							error : function(error) {alert(CabinetMessages.strError);}
-						});
-					}
-				}
-				
-				function fileModify() {
-					//Set title
-					document.getElementById("fileFileH1").textContent = CabinetMessages.strFileMod;
-					document.title = CabinetMessages.strFileMod;
-					
-					//Set button
-					var fileDivBttn = document.getElementById("fileDivBttn");
-					fileDivBttn.style.display = "none";
-					
-					var fileModifyDivBttn = document.getElementById("fileModifyDivBttn");
-					fileModifyDivBttn.style.display = "";
-					
-					//Set inputBox
-					var titleTdElmt       = document.getElementById("title");
-					var inputElmt1        = document.createElement("input"); 
-					inputElmt1.value      = titleTdElmt.textContent;
-					titleTdElmt.innerHTML = "";
-					inputElmt1.className  = "tblFileInput";
-					
-					inputElmt1.setAttribute("id", "itemTtl");
-					titleTdElmt.appendChild(inputElmt1);
-					
-					//Set relatedBttn
-					var relDocDivElmt         = document.getElementById("rlWrapDiv");
-					var relatedBttn           = document.createElement("a");
-					var relSpanElmt           = document.createElement("span");
-					relSpanElmt.textContent   = CabinetMessages.strSlTxt;
-					relatedBttn.appendChild(relSpanElmt);
-					relatedBttn.onclick       = function(e) {getRelatedPopUp();};
-					relDocDivElmt.appendChild(relatedBttn);
-				}
-				
-				function filePrint() {
-					var relatedFileList = document.getElementById("fileListDiv");
-					var clientHeight    = relatedFileList.clientHeight;
-					var scrollHeight    = relatedFileList.scrollHeight;
-					
-					if (scrollHeight > clientHeight) {
-						var tdElmt = relatedFileList.parentElement.parentElement;
-						tdElmt.setAttribute("style", "vertical-align: top; height: " + (scrollHeight) + "px;");
-					}
-					
+				function filePrint(scrollPrint, unsetAllScrollTd, displayIframePrint, removeIframePrint) {
+					var listElmtId = ["fileListDiv"];
+					scrollPrint(listElmtId);
+					window.focus();
 					window.print();
-					
-					if (tdElmt) {tdElmt.removeAttribute("style");}
+					unsetAllScrollTd(listElmtId);
 				}
 				
-				function saveItem() {
-					var title   = document.getElementById("itemTtl").value;
-					
-					if (!title.replace(/\s/g,'')) {
-						alert(CabinetMessages.strNoTitle);
-						var inputTtl   = document.getElementById("itemTtl");
-						inputTtl.value = "";
-						inputTtl.focus();
-						return;
-					}
-					
-					$.ajax({
-						type: "POST",
-						url: "/ezCabinet/modifyRelatedItem.do",
-						data: {
-							"itemId"      : itemId,
-							"title"       : title,
-							"relatedList" : JSON.stringify(relatedArr)
-						},
-						dataType: "JSON",
-						async: false,
-						success : function(data) {
-							var code = data.code;
-							switch(code) {
-								case 0 : afterChangeSuccessfully()         ; break;
-								case 1 : alert(CabinetMessages.strParamErr); break;
-								case 2 : alert(CabinetMessages.strError)   ; break;
-								case 3 : alert(CabinetMessages.strPerm)    ; break;
-								case 4 : alert(CabinetMessages.strType)    ; break;
-								default: alert(CabinetMessages.strError)   ; return;
-							}
-						},
-						error : function(error) {
-							alert(CabinetMessages.strError);
-						}
-					});
-				}
-				
-				function afterChangeSuccessfully() {
-					alert(CabinetMessages.strModify);
-					var parentWd = window.opener;
-					if (parentWd && parentWd.CabinetItem) {parentWd.CabinetItem.reload();}
-					closeWindow();
-				}
-				
-				function afterDeleteSuccessfully() {
-					alert(CabinetMessages.strDel);
-					var parentWd    = window.opener;
-					if (parentWd && parentWd.CabinetItem) {parentWd.CabinetItem.reload();}
-					closeWindow();
-				}
-				
-				function cancelChanges() {
-					document.getElementById("fileFileH1").textContent = CabinetMessages.strFileDet;
-					document.title = CabinetMessages.strFileDet;
-					
-					document.getElementById("fileDivBttn").style.display       = "";
-					document.getElementById("fileModifyDivBttn").style.display = "none";
-					
-					getFileDetail();
-				}
-				
-				function getRelatedPopUp() {
-					if (rlWindow) {rlWindow.close();}
-					rlWindow = window.open("/ezCabinet/getRelatedFile.do?itemId=" + itemId + "&module=naddr", "relatedWd", getOpenWindowfeature(800, 600));
-				}
-				
-				function closeWindow() {window.close();}
+				function getRelatedFiles()       {return cabinetHelper.get();}
+				function saveRelatedFiles(files) {cabinetHelper.save(files);}
 				
 				return {
 					init : initEvents,

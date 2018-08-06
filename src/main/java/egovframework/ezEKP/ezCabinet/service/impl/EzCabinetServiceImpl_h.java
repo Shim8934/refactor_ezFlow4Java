@@ -106,7 +106,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		return ezCabinetDAO_h.getTotalDeptMembers(map);
 	}
-
+	
 	@Override
 	public List<SimpleUserVO> getSearchMemberList(String primary, int startPoint, int listCount, String srchOption, String srchValue, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -119,7 +119,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		return ezCabinetDAO_h.getSearchMemberList(map);
 	}
-
+	
 	@Override
 	public int getTotalSearchMembers(String sqlQuery, String srchValue, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -129,7 +129,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		return ezCabinetDAO_h.getTotalSearchMembers(map);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public synchronized JSONObject saveShareUserList(JSONArray listUsers, String cabinetId, LoginVO userInfo) throws Exception {
@@ -229,7 +229,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		return ezCabinetDAO_h.getFileDetail(map);
 	}
-
+	
 	@Override
 	public List<CabinetAttachFileVO> getAttachFileList(String itemId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -238,7 +238,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		return ezCabinetDAO.getAllAttachFilesOfItem(map);
 	}
-
+	
 	@Override
 	public List<CabinetRelationItemVO> getRelatedFileList(String itemId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -247,7 +247,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		return ezCabinetDAO_h.getRelatedFileList(map);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public synchronized JSONObject modifyItem(int itemId, JSONArray attacheFiles, JSONArray relatedFiles, String title, String summary, String realPath, LoginVO userInfo) throws Exception {
@@ -296,9 +296,21 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		Map<String,Object> map     = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		
+		//Get itemId
+		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
+		
+		//Save attach files
+		if (!attach.equals("")) {
+			JSONArray attachList = (JSONArray) jp.parse(attach);
+			result               = saveListAttachFiles(attachList, itemId, realPath, "", "", locale, userInfo);
+			if (!result.get("status").equals("ok")) {
+				return result;
+			}
+		}
+		
 		//Save item
 		int moduleType = 3; //board module
-		int itemId     = addRelatedItem(moduleType, cabinetId, title, content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
 		
 		//Save board columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
@@ -307,16 +319,8 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		saveAllColumns(listColm);
 		
-		//Save attach files
-		if (!attach.equals("")) {
-			JSONArray attachList = (JSONArray) jp.parse(attach);
-			result               = saveListAttachFiles(attachList, itemId, realPath, "", "", locale, userInfo);
-		}
-		else {
-			result.put("status", "ok");
-			result.put("code", 0);
-		}
-		
+		result.put("status", "ok");
+		result.put("code", 0);
 		return result;
 	}
 	
@@ -416,18 +420,32 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 	private synchronized void saveAttachFile(CabinetAttachFileVO attachFile) {
 		ezCabinetDAO.saveAttachFile(attachFile);
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveOptionItem(String realPath, String mode, int cabinetId, String title, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception {
-		JSONObject result = new JSONObject();
-		int tenantId      = userInfo.getTenantId();
-		String companyId  = userInfo.getCompanyID();
-		JSONParser jp     = new JSONParser();
+		JSONObject result      = new JSONObject();
+		int tenantId           = userInfo.getTenantId();
+		String companyId       = userInfo.getCompanyID();
+		JSONParser jp          = new JSONParser();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//Get itemId
+		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
+		
+		//Save attach files
+		if (!attach.equals("")) {
+			JSONArray attachList  = (JSONArray) jp.parse(attach);
+			result                = saveListAttachFiles(attachList, itemId, realPath, "upload_circular.ROOT", "uploadFile", locale, userInfo);
+			if (!result.get("status").equals("ok")) {
+				return result;
+			}
+		}
 		
 		//Add option item
 		int moduleType = 6; //option module
-		int itemId     = addRelatedItem(moduleType, cabinetId, title, content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
 		
 		//Save option columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
@@ -441,16 +459,8 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		listColm.add(createNewRelatedColumn("endDate"     , itemId, "ezPoll.t161"    , endDate   , companyId, tenantId));
 		
 		saveAllColumns(listColm);
-		
-		//Save attach files
-		if (!attach.equals("")) {
-			JSONArray attachList  = (JSONArray) jp.parse(attach);
-			result                = saveListAttachFiles(attachList, itemId, realPath, "upload_circular.ROOT", "uploadFile", locale, userInfo);
-		}
-		else {
-			result.put("status", "ok");
-			result.put("code", 0);
-		}
+		result.put("status", "ok");
+		result.put("code", 0);
 		
 		return result;
 	}
@@ -561,19 +571,15 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		attachFileList.add(attachFile);
 	}
 	
-	private synchronized int addRelatedItem(int moduleType, int cabinetId, String title, String content, String mode, LoginVO userInfo) throws Exception {
+	private synchronized void addRelatedItem(int itemId, int moduleType, int cabinetId, String title, String content, String mode, LoginVO userInfo) throws Exception {
 		String userId              = userInfo.getId();
 		int tenantId               = userInfo.getTenantId();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(new Date()), userInfo.getOffset(), true);
 		int itemCabinetId          = -1;
-		Map<String,Object> map     = new HashMap<String, Object>();
-		map.put("tenantId", tenantId);
-		
-		//Save item
-		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
 		
 		if (mode.equals("0")) {
+			Map<String,Object> map = new HashMap<String, Object>();
 			map.put("userId",   userId);
 			map.put("tenantId", tenantId);
 			map.put("type",     moduleType);
@@ -587,10 +593,8 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		//Add item
 		addNewItem(itemCabinetId, itemId, moduleType, title, content, timeUTC, userInfo);
-		
-		return itemId;
 	}
-
+	
 	private void addNewItem(int cabinetId, int itemId, int moduleType, String title, String content, String timeUTC, LoginVO userInfo) {
 		String userId        = userInfo.getId();
 		CabinetItemVO itemVO = new CabinetItemVO();

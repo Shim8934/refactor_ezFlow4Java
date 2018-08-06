@@ -108,7 +108,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		List<SimpleDeptVO> deptList = getAllSimpleSubDepts(companyId, level, primary, tenantId);
 		return deptList;
 	}
-
+	
 	@Override
 	public String getDeptPath(String deptId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -116,7 +116,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("tenantId",   tenantId);
 		return ezCabinetDAO.getDeptPath(map);
 	}
-
+	
 	@Override
 	public SimpleDeptVO getSimpleCompany(String deptId, int level, String primary, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -127,7 +127,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		return ezCabinetDAO.getSimpleCompany(map);
 	}
-
+	
 	@Override
 	public void getAllDepts(SimpleDeptVO sDept, String[] path, String primary, int tenantId, int order, int level) throws Exception {
 		if (sDept.getHasSub().equals("1")) {
@@ -230,7 +230,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			ezCabinetDAO.saveModulesSetting(map);
 		}
 	}
-
+	
 	@Override
 	public CabinetGeneralVO getUserPreviewConfig(String userId, String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -240,7 +240,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		return ezCabinetDAO.getUserPreviewConfig(map);
 	}
-
+	
 	@Override
 	public void saveUserConfig(String prevMode, int listCount, int contentWPrev, int contentHPrev, String userId, String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -407,7 +407,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		return cabinet;
 	}
-
+	
 	@Override
 	public List<CabinetSimpleVO> getCabinetSubTree(String cabinetId, LoginVO userInfo) throws Exception {
 		int tenantId           = userInfo.getTenantId();
@@ -548,7 +548,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		return result;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject moveCabinet(int cabinetId, int parentId, String mode, String realPath, LoginVO userInfo) throws Exception {
@@ -705,7 +705,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("tenantId", tenantId);
 		return ezCabinetDAO.getAllSubCabinet(map);
 	}
-
+	
 	private void moveCabinet(CabinetVO cabinet, CabinetVO parent, LoginVO userInfo) throws Exception {
 		String oldPath             = cabinet.getCabinetPath();
 		String newPath             = parent.getCabinetPath() + cabinet.getCabinetId() + "|";
@@ -1363,26 +1363,11 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		String companyId       = userInfo.getCompanyID();
 		JSONParser jp          = new JSONParser();
 		String dateColumn      = userInfo.getEmail().equals(sender) ? "ezEmail.t704" : "ezEmail.t657";
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
 		
-		//Add email item
-		int moduleType = 1; //mail module
-		int itemId     = addRelatedItem(moduleType, cabinetId, title, content, mode, userInfo);
-		
-		//Save email columns information
-		List<String> receiverList      = (List<String>) jp.parse(receiver);
-		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("sender"   , itemId, "ezEmail.t161", sender, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("emailTime", itemId, dateColumn, dateTime, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("receiver" , itemId, "ezEmail.t66", String.join(";", receiverList), companyId, tenantId));
-		
-		if (!forward.equals("")) {
-			List<String> forwardList = (List<String>) jp.parse(forward);
-			if (forwardList.size() > 0) {
-				listColm.add(createNewRelatedColumn("forward", itemId, "ezEmail.t555", String.join(";", forwardList), companyId, tenantId));
-			}
-		}
-		
-		saveAllColumns(listColm);
+		//Get itemId
+		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
 		
 		//Save attach files
 		if (!attach.equals("")) {
@@ -1391,8 +1376,6 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			long totalAttachSize               = 0;
 			List<CabinetAttachFileVO> fileList = new ArrayList<>();
 			String cabinetPath                 = getCabinetDirPath(tenantId);
-			Map<String,Object> map             = new HashMap<String, Object>();
-			map.put("tenantId", tenantId);
 			File file                          = new File(realPath + cabinetPath);
 			UserCapacityVO capacity            = cabinetAdminService.getUserCapacity(userInfo.getId(), userInfo.getCompanyID(), userInfo.getPrimary(), tenantId);
 			int totalCnt                       = attachList.size();
@@ -1441,6 +1424,26 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 				saveAttachFile(fileAttach);
 			}
 		}
+		
+		//Add email item
+		int moduleType = 1; //mail module
+		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
+		
+		//Save email columns information
+		List<String> receiverList      = (List<String>) jp.parse(receiver);
+		List<CabinetColumnVO> listColm = new ArrayList<>();
+		listColm.add(createNewRelatedColumn("sender"   , itemId, "ezEmail.t161", sender  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("emailTime", itemId, dateColumn    , dateTime, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("receiver" , itemId, "ezEmail.t66" , String.join(";", receiverList), companyId, tenantId));
+		
+		if (!forward.equals("")) {
+			List<String> forwardList = (List<String>) jp.parse(forward);
+			if (forwardList.size() > 0) {
+				listColm.add(createNewRelatedColumn("forward", itemId, "ezEmail.t555", String.join(";", forwardList), companyId, tenantId));
+			}
+		}
+		
+		saveAllColumns(listColm);
 		
 		result.put("status", "ok");
 		result.put("code", 0);
@@ -1592,13 +1595,18 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveGroupAddressItem(int cabinetId, String title, String mode, String content, String createUser, String createDate, String changeUser, String changeDate, LoginVO userInfo) throws Exception {
-		JSONObject result = new JSONObject();
-		int tenantId      = userInfo.getTenantId();
-		String companyId  = userInfo.getCompanyID();
+		JSONObject result      = new JSONObject();
+		int tenantId           = userInfo.getTenantId();
+		String companyId       = userInfo.getCompanyID();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//Get itemId
+		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
 		
 		//Add group address item
 		int moduleType = 8; //address module
-		int itemId     = addRelatedItem(moduleType, cabinetId, title, content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
 		
 		//Save group columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
@@ -1649,13 +1657,18 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveNormalAddressItem(int cabinetId, String title, String mode, String createUser, String createDate, String changeUser, String changeDate, String company, String department, String position, String email, String compNumber, String userNumber, String faxNumber, String homePage, String companyZip, String compAddr, String homeZip, String homeAddr, String memo, LoginVO userInfo) throws Exception {
-		JSONObject result = new JSONObject();
-		int tenantId      = userInfo.getTenantId();
-		String companyId  = userInfo.getCompanyID();
+		JSONObject result      = new JSONObject();
+		int tenantId           = userInfo.getTenantId();
+		String companyId       = userInfo.getCompanyID();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//Get itemId
+		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
 		
 		//Add normal address item
 		int moduleType = 8; //address module
-		int itemId     = addRelatedItem(moduleType, cabinetId, title, null, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, null, mode, userInfo);
 		
 		//Save normal columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
@@ -1688,13 +1701,18 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveResourceItem(int cabinetId, String content, String title, String mode, String createUser, String resDate, String priority, String resItem, LoginVO userInfo) throws Exception {
-		JSONObject result = new JSONObject();
-		int tenantId      = userInfo.getTenantId();
-		String companyId  = userInfo.getCompanyID();
+		JSONObject result      = new JSONObject();
+		int tenantId           = userInfo.getTenantId();
+		String companyId       = userInfo.getCompanyID();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//Get itemId
+		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
 		
 		//Add resource item
 		int moduleType = 11; //resource module
-		int itemId     = addRelatedItem(moduleType, cabinetId, title, content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
 		
 		//Save resource columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
@@ -1710,19 +1728,15 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		return result;
 	}
 	
-	private synchronized int addRelatedItem(int moduleType, int cabinetId, String title, String content, String mode, LoginVO userInfo) throws Exception {
+	private synchronized void addRelatedItem(int itemId, int moduleType, int cabinetId, String title, String content, String mode, LoginVO userInfo) throws Exception {
 		String userId              = userInfo.getId();
 		int tenantId               = userInfo.getTenantId();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(new Date()), userInfo.getOffset(), true);
 		int itemCabinetId          = -1;
-		Map<String,Object> map     = new HashMap<String, Object>();
-		map.put("tenantId", tenantId);
-		
-		//Save item
-		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
 		
 		if (mode.equals("0")) {
+			Map<String,Object> map = new HashMap<String, Object>();
 			map.put("userId",   userId);
 			map.put("tenantId", tenantId);
 			map.put("type",     moduleType);
@@ -1736,10 +1750,8 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		//Add item
 		addNewItem(itemCabinetId, itemId, moduleType, title, content, timeUTC, userInfo);
-		
-		return itemId;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveScheduleItem(int cabinetId, String realPath, String title, String mode, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content, Locale locale, LoginVO userInfo) throws Exception {
@@ -1750,9 +1762,21 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		
+		//Get itemId
+		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
+		
+		//Save attach files
+		if (!attach.equals("")) {
+			JSONArray attachList = (JSONArray) jp.parse(attach);
+			result               = cabinetService_h.saveListAttachFiles(attachList, itemId, realPath, "upload_schedule.ROOT", "", locale, userInfo);
+			if (!result.get("status").equals("ok")) {
+				return result;
+			}
+		}
+		
 		//Add schedule item
 		int moduleType = 4; //schedule module
-		int itemId     = addRelatedItem(moduleType, cabinetId, title, content, mode, userInfo);
+		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
 		
 		//Save schedule columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
@@ -1762,8 +1786,11 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		listColm.add(createNewRelatedColumn("publicstatus", itemId, "ezSchedule.t309", publicstatus, companyId, tenantId));
 		listColm.add(createNewRelatedColumn("scheduledate", itemId, "ezSchedule.t318", scheduleDate, companyId, tenantId));
 		listColm.add(createNewRelatedColumn("location"    , itemId, "ezSchedule.t273", location    , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("groupname"   , itemId, "ezSchedule.t159", groupname   , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("scheduletype", itemId, "ezCabinet.t143" , scheduletype, companyId, tenantId));
+		
+		if (!groupname.equals("")) {
+			listColm.add(createNewRelatedColumn("groupname"   , itemId, "ezSchedule.t159", groupname   , companyId, tenantId));
+		}
 		
 		if (!attendant.equals("")) {
 			List<String> attendantList = (List<String>) jp.parse(attendant);
@@ -1774,16 +1801,8 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		saveAllColumns(listColm);
 		
-		//Save attach files
-		if (!attach.equals("")) {
-			JSONArray attachList = (JSONArray) jp.parse(attach);
-			result               = cabinetService_h.saveListAttachFiles(attachList, itemId, realPath, "upload_schedule.ROOT", "", locale, userInfo);
-		}
-		else {
-			result.put("status", "ok");
-			result.put("code", 0);
-		}
-		
+		result.put("status", "ok");
+		result.put("code", 0);
 		return result;
 	}
 	
