@@ -4780,6 +4780,8 @@ public class EzPMSController {
 			//IE 11 이상 
 			//IE 버전 별 체크 >> Trident/6.0(IE 10) , Trident/5.0(IE 9) , Trident/4.0(IE 8)
 			browser = "MSIE"; 
+		} else {
+			browser = "Firefox";
 		}
 
 		String encodedFileName = "";
@@ -4787,9 +4789,9 @@ public class EzPMSController {
 		if (browser.equals("MSIE")) { 
 			encodedFileName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20"); 
 		} else if (browser.equals("Firefox")) { 
-			encodedFileName = "\"" + new String(fileName.getBytes("UTF-8"), "8859_1") + "\"";
+			encodedFileName = new String(fileName.getBytes("UTF-8"), "8859_1");
 		} else if (browser.equals("Opera")) {
-			encodedFileName = "\"" + new String(fileName.getBytes("UTF-8"), "8859_1") + "\""; 
+			encodedFileName = new String(fileName.getBytes("UTF-8"), "8859_1"); 
 		} else if (browser.equals("Chrome")) { 
 			StringBuffer sb = new StringBuffer(); 
 			
@@ -4806,7 +4808,7 @@ public class EzPMSController {
 			
 			encodedFileName = sb.toString(); 
 		} else { 
-			fileName = URLEncoder.encode(project.get("projectName").toString() + "_gantt", "UTF-8").replaceAll("\\+", "%20"); 
+			encodedFileName = URLEncoder.encode(project.get("projectName").toString() + "_gantt", "UTF-8").replaceAll("\\+", "%20"); 
 		}
 
 		// 프로젝트 제목
@@ -5389,7 +5391,8 @@ public class EzPMSController {
 		sheet.setColumnWidth(16, 4000);
 		sheet.setColumnWidth(17, 8000);
 		sheet.setColumnWidth(18, 2000);
-
+		
+		response.setContentType("application/vnd.ms-excel");
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + encodedFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
 
