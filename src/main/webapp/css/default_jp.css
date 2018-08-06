@@ -1928,7 +1928,7 @@ form{display:inline;margin:0}
 .textbox { border:1px solid #dddada; background:#fafafa; padding:15px 10px; margin:0px 0px 15px 0px ; font-size:12px;}
 .select_themebox {clear:both; overflow:hidden;}
 .select_themebox dl { float:left; display:inline-block; width:191px; height:200px; margin:0px 25px 25px 0px; background:url(../images/sub/sc_themebg1.gif) no-repeat; cursor: pointer;}
-.select_themebox dl dt {position:relative ;margin:7px; padding:0px; border:1px solid #d7d5d5; width:175px; height:140px; cursor: pointer;z-index:1; overflow:hidden; display:block;}
+.select_themebox dl dt {position:relative ;margin:9px; padding:0px; border:1px solid #d7d5d5; width:170px; height:140px; cursor: pointer;z-index:1; overflow:hidden; display:block;}
 .select_themebox dl dd { margin:20px 0px 0px 0px; padding:0px; text-align:center; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 
 .select_themebox .on {position:relative ; background:url(../images/sub/sc_themebg2.gif) no-repeat;}
