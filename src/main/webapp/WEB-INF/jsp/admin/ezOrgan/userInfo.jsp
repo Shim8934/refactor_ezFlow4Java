@@ -27,6 +27,7 @@
 		    var RetValue;
 	    	var useAddressOpenAPI = "${useAddressOpenAPI}"
 	    	var useBizmekaSpambox = "${useBizmekaSpambox}";
+	    	var locale = "<c:out value='${locale}'/>";
 	    	
 			$(document).ready(function(){
 				var toYear = new Date().getFullYear();
@@ -182,6 +183,9 @@
 			                }
 						}
 		            });
+		        }
+		        if (locale != 'ko') {
+		        	$(".onlyUseKo").css("display", "none");
 		        }
 			});
 			
@@ -685,8 +689,7 @@
 	            <th style="width: 80px; text-align:center"></th>
 	            <td style="width: 190px"></td>
 	        </tr>
-	        <c:if test="${locale eq 'ko'}">
-	        <tr>
+	        <tr class="onlyUseKo">
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t286' /></th>
 	            <td colspan="5">
                     <c:if test="${primaryLang == '1'}">
@@ -705,7 +708,6 @@
                     </c:if>
 	            </td>
 	        </tr>
-	        </c:if>
 	        <tr>
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t287' /></th>
 	            <td colspan="5">

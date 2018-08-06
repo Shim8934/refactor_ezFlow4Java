@@ -72,6 +72,9 @@
 				} else if (Func == "4") {
 					WebPartToggle(level1El.item(level1El.length - 1));
 					ladder_Func(1);
+				} else if (Func == "5") {
+					WebPartToggle(level1El.item(level1El.length - 1));
+					memo_Func(1);
 				}
 		        else if (RedirectBoardID == "" || RedirectBoardGroupID == "") {
 		            ShowMyBoardItem();
@@ -577,6 +580,19 @@
 		        }
 	            SetTreeviewUnSelect("");
 			}
+			
+			function memo_Func(idx) {
+				$(".on").attr("class", "off");
+				$(".memo h2").attr("class", "on");
+				$(".memo").next().attr("class", "on");
+				
+				if (CrossYN()) {
+					window.parent.frames["right"].location.href = "/ezMemo/memoMain.do";
+		        } else {
+		        	window.parent.frames["right"].location.href = "/ezMemo/memoMain.do";
+		        }
+	            SetTreeviewUnSelect("");
+			}
 
 		    function toggleQuestionList() {
 		    	if( prevSelMenu != null )
@@ -760,6 +776,13 @@
 			 <c:if test="${ladderFlag == 'YES'}">
 			<div class="ladder" onclick="ladder_Func(1)">
 				<h2><span><spring:message code="ezBoard.l001" /></span></h2>
+			</div>
+			</c:if>
+			<ul></ul>
+			
+			<c:if test="${memoFlag == 'YES'}">
+			<div class="memo" onclick="memo_Func(1)">
+				<h2><span><spring:message code="ezMemo.t001" /></span></h2>
 			</div>
 			</c:if>
 			<ul></ul>
