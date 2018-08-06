@@ -4305,14 +4305,6 @@
 				   AND 
 				   		TBL_RECORD.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
 			  </isEqual>
-		  			LEFT JOIN 
-				   			TBL_ENDAPRLINEINFO 
-				   ON 
-				   			TBL_ENDAPRLINEINFO.TENANT_ID = TBL_RECORD.TENANT_ID
-	               AND 
-	               			TBL_ENDAPRLINEINFO.DOCID = TBL_RECORD.DOCID
-	               AND 
-	               			TBL_ENDAPRLINEINFO.COMPANYID = TBL_RECORD.COMPANYID
 				   Inner Join 
 				   		( Select 
 				   				ProcessDeptCode, 
