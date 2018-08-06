@@ -6,13 +6,18 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title></title>
-		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>"    type="text/css"/>
+		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"                type="text/css"/>
 		<link rel="stylesheet" href="/css/previewmail.css"                      type="text/css"/>
+		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css"       type="text/css"/>
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css"/>
 	</head>
 	<body>
 		<div class="zoomDiv"><img src="/images/minus.png"><img src="/images/plus.png"></div>
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"                  ></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
+		<script type="text/javascript" src="/js/ezTask/circularProgressBar.js"      ></script>
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript">
 			var CabinetContentPreview = function() {
@@ -36,6 +41,7 @@
 					var attachSize  = documentContent.size;
 					var attachList  = documentContent.attach;
 					var totalFiles  = attachList ? attachList.length : 0;
+					var moduleType  = documentContent.type;
 					
 					if (totalFiles > 0) {
 						var divElmt    = document.createElement("div");
@@ -85,6 +91,11 @@
 					divMainElmt.className = "cabrltxt";
 					divMainElmt.innerHTML = documentContent.content;
 					document.body.appendChild(divMainElmt);
+					
+					if (moduleType && moduleType == "todo") {
+						var taskJsonInfo = JSON.parse(documentContent.param);
+						initProgressBar(taskJsonInfo);
+					}
 				}
 				
 				function getContentFromModuleName(moduleName) {
@@ -94,6 +105,7 @@
 						case "option" : documentContent = parent.CabinetOptionFile.getContent()  ; break;
 						case "resrc"  : documentContent = parent.CabinetResourceFile.getContent(); break;
 						case "schedl" : documentContent = parent.CabinetScheduleFile.getContent(); break;
+						case "todo"   : documentContent = parent.CabinetTodoFile.getContent()    ; break;
 						default       : if (parent.CabinetItem) {documentContent = parent.CabinetItem.getContent();}
 					}
 				}
@@ -170,6 +182,46 @@
 					else {
 						if (currentZoom > minZoom) {currentZoom -= 10;} else {return;}
 						txtFieldElmt.style.zoom = currentZoom + "%";
+					}
+				}
+				
+				function initProgressBar(taskInfo) {
+					var taskstatus    = taskInfo.status;
+					var completerate  = taskInfo.completerate;
+					var delayColor    = taskInfo.delaycolor;
+					var completeColor = taskInfo.completecolor;
+					
+					if (taskstatus == '4') {
+						$('.progress_graph').circleProgress({
+							value: ((completerate * 1) / 100),
+							fill: {color: delayColor},
+							size: 135
+						}).on('circle-animation-progress', function(event, progress) {
+							$(this).find('strong').html(completerate + '%');
+							if (completerate == 0) {
+								$(this).find('strong').css("color", delayColor);
+							} else {
+								$(this).find('strong').css("color", "");
+							}
+						});
+					} else if (taskstatus == '3' || completerate == '100') {	
+						$('.progress_graph').circleProgress({
+							value: ((completerate * 1) / 100),
+							fill: {color: completeColor},
+							size: 135
+						}).on('circle-animation-progress', function(event, progress) {
+							$(this).find('strong').html(completerate + '%');
+							$(this).find('strong').css("color", "");
+						});
+					} else {
+						$('.progress_graph').circleProgress({
+							value: ((completerate * 1) / 100),
+							fill: {color: '#3498db'},
+							size: 135
+						}).on('circle-animation-progress', function(event, progress) {
+							$(this).find('strong').html(completerate + '%');
+							$(this).find('strong').css("color", "");
+						});
 					}
 				}
 				

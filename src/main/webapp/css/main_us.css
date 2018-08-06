@@ -270,7 +270,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 
 
 /*------------ community ------------*/
-.communitybox { width:328px; float:right; background:#FFF;}
+.communitybox { width:328px; height:228px; float:right; background:#FFF;}
 .communitycont{ height:169px; padding:10px 15px 10px;}
 
 

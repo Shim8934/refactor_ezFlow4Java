@@ -104,7 +104,7 @@ var CabinetFileHelper = function() {
 				mailContent.attach  = attachList;
 			}
 			
-			genCallback(fileItem, displayUserInforPopup, showUserInfoFromId, showUserInfoFromEmail, genderScrollForElmt);
+			genCallback(fileItem, displayUserInforPopup, showUserInfoFromId, showUserInfoFromEmail, genderScrollForElmt, mailContent);
 		}
 		
 		function displayUserInforPopup(elementId, userId, displayFunct) {document.getElementById(elementId).onclick = function(e) {displayFunct(userId);};}

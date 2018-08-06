@@ -1786,6 +1786,50 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
+	@RequestMapping(value="/rest/ezcabinet/relate-item/save/todo", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveTodoItem(@RequestBody JSONObject todoItemInf, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name")           : "";
+		String userId     = todoItemInf.get("userId")      != null ? todoItemInf.get("userId").toString()     : "";
+		String title      = todoItemInf.get("title")       != null ? todoItemInf.get("title").toString()      : "";
+		String mode       = todoItemInf.get("mode")        != null ? todoItemInf.get("mode").toString()       : "";
+		String cabinetId  = todoItemInf.get("cabinet")     != null ? todoItemInf.get("cabinet").toString()    : "";
+		String createUser = todoItemInf.get("createUser")  != null ? todoItemInf.get("createUser").toString() : "";
+		String createDate = todoItemInf.get("createDate")  != null ? todoItemInf.get("createDate").toString() : "";
+		String priority   = todoItemInf.get("priority")    != null ? todoItemInf.get("priority").toString()   : "";
+		String memo       = todoItemInf.get("memo")        != null ? todoItemInf.get("memo").toString()       : "";
+		String tasktype   = todoItemInf.get("tasktype")    != null ? todoItemInf.get("tasktype").toString()   : "";
+		String executor   = todoItemInf.get("executor")    != null ? todoItemInf.get("executor").toString()   : "";
+		String shareList  = todoItemInf.get("shareList")   != null ? todoItemInf.get("shareList").toString()  : "";
+		String attach     = todoItemInf.get("attach")      != null ? todoItemInf.get("attach").toString()     : "";
+		String content    = todoItemInf.get("content")     != null ? todoItemInf.get("content").toString()    : "";
+		String status     = todoItemInf.get("status")      != null ? todoItemInf.get("status").toString()     : "";
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName +  "userId: " + userId +  "Title: " + title + " || mode: " + mode + " || cabinetId: " + cabinetId + " || createUser: " + createUser + " || createDate: " + createDate + " || priority: " + priority + " || memo: " + memo + " || tasktype: " + tasktype + " || executor: " + executor + " || shareList: " + shareList + " || attach: " + attach + " || content: " + content + " || status: " + status);
+		
+		if (serverName.equals("") || userId.equals("") || title.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("") || priority.equals("") || tasktype.equals("") || executor.equals("") || content.equals("") || status.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
+			String realPath  = request.getServletContext().getRealPath("");
+			result           = cabinetService.saveTodoItem(dstCabinetId, realPath, title, mode, createUser, createDate, priority, memo, tasktype, executor, status, shareList, attach, content, locale, userInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
 	private boolean isCabinetAdmin(LoginVO user) {
 		return user.getRollInfo().contains("cb=1");
 	}

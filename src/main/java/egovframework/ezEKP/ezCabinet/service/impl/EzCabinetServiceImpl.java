@@ -1806,6 +1806,56 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject saveTodoItem(int cabinetId, String realPath, String title, String mode, String createUser, String createDate, String priority, String memo, String tasktype, String executor, String status, String shareList, String attach, String content, Locale locale, LoginVO userInfo) throws Exception {
+		JSONObject result      = new JSONObject();
+		int tenantId           = userInfo.getTenantId();
+		String companyId       = userInfo.getCompanyID();
+		JSONParser jp          = new JSONParser();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//Get itemId
+		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
+		
+		//Save attach files
+		if (!attach.equals("")) {
+			JSONArray attachList = (JSONArray) jp.parse(attach);
+			result               = cabinetService_h.saveListAttachFiles(attachList, itemId, realPath, "", "", locale, userInfo);
+			if (!result.get("status").equals("ok")) {
+				return result;
+			}
+		}
+		
+		//Add todo item
+		int moduleType = 5; //todo module
+		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
+		
+		//Save todo columns information
+		List<CabinetColumnVO> listColm = new ArrayList<>();
+		listColm.add(createNewRelatedColumn("creator"   , itemId, "ezTask.t117" , createUser, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("createdate", itemId, "ezTask.t155" , createDate, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("priority"  , itemId, "ezTask.t156" , priority  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("memo"      , itemId, "ezTask.t170" , memo      , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("tasktype"  , itemId, "ezTask.t2003", tasktype  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("executor"  , itemId, "ezTask.t2005", executor  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("status"    , itemId, "ezTask.t2005", status    , companyId, tenantId));
+		
+		if (!shareList.equals("")) {
+			List<String> shareUsers = (List<String>) jp.parse(shareList);
+			if (shareUsers.size() > 0) {
+				listColm.add(createNewRelatedColumn("sharelist", itemId, "ezTask.t157", String.join(";", shareUsers), companyId, tenantId));
+			}
+		}
+		
+		saveAllColumns(listColm);
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
+	
 	@Override
 	public List<SimpleUserMailVO> getUserInfoFromEmail(List<String> receiverMail, String primary, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
