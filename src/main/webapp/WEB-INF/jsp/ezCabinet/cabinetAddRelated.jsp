@@ -335,21 +335,25 @@
 							filePath : javaURLDecode(params["filePath"]),
 							fileName : javaURLDecode(params["fileName"])
 						});
+						
+						console.log("file path: " + javaURLDecode(params["filePath"]));
+						console.log("file name: " + javaURLDecode(params["fileName"]));
 					}
 					
 					var url  = "/ezCabinet/saveRelatedCommunity.do";
 					var data = {
-						mode      : saveMode,
-						title     : boardTitle,
-						writer    : boardWriter,
-						date      : postDate,
-						attach    : JSON.stringify(attachList),
-						content   : boardContent
+							mode       : saveMode,
+							title      : title,
+							writer     : writer,
+							date       : date,
+							endDate    : endDate,
+							content    : content,
+							attach     : JSON.stringify(attachList)
 					};
 					
 					if (saveMode == 1) {data.cabinet = cabinetId;}
 					
-					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
+					//makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
 				function saveTodoDocument(saveMode, cabinetId) {

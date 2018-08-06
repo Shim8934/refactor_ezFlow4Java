@@ -182,43 +182,64 @@ public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h{
 		return resultBody;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveRelatedBoard(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String dateTime, String attach, String content) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/board";
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userId",   userId);
-		param.put("mode",     mode);
-		param.put("cabinet",  cabinetId);
-		param.put("title",    title);
-		param.put("writer",   writer);
-		param.put("dateTime", dateTime);
-		param.put("attach",   attach);
-		param.put("content",  content);
+		JSONObject jsonBody       = new JSONObject();
+		jsonBody.put("userId",   userId);
+		jsonBody.put("mode",     mode);
+		jsonBody.put("cabinet",  cabinetId);
+		jsonBody.put("title",    title);
+		jsonBody.put("writer",   writer);
+		jsonBody.put("dateTime", dateTime);
+		jsonBody.put("attach",   attach);
+		jsonBody.put("content",  content);
 		
-		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveRelatedOption(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String date, String importance, String option, String statusNum, String status, String confirm, String endDate, String content, String attach) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/option";
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userId",     userId);
-		param.put("mode",       mode);
-		param.put("cabinet",    cabinetId);
-		param.put("title",      title);
-		param.put("writer",     writer);
-		param.put("date",       date);
-		param.put("importance", importance);
-		param.put("option",     option);
-		param.put("statusNum",  statusNum);
-		param.put("status",     status);
-		param.put("confirm",    confirm);
-		param.put("endDate",    endDate);
-		param.put("content",    content);
-		param.put("attach",     attach);
+		JSONObject jsonBody       = new JSONObject();
+		jsonBody.put("userId",     userId);
+		jsonBody.put("mode",       mode);
+		jsonBody.put("cabinet",    cabinetId);
+		jsonBody.put("title",      title);
+		jsonBody.put("writer",     writer);
+		jsonBody.put("date",       date);
+		jsonBody.put("importance", importance);
+		jsonBody.put("option",     option);
+		jsonBody.put("statusNum",  statusNum);
+		jsonBody.put("status",     status);
+		jsonBody.put("confirm",    confirm);
+		jsonBody.put("endDate",    endDate);
+		jsonBody.put("content",    content);
+		jsonBody.put("attach",     attach);
 		
-		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
+		return resultBody;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject saveRelatedCommunity(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String date, String endDate, String content, String attach) throws Exception {
+		String url                = "/rest/ezcabinet/relate-item/save/community";
+		JSONObject jsonBody       = new JSONObject();
+		jsonBody.put("userId",     userId);
+		jsonBody.put("mode",       mode);
+		jsonBody.put("cabinet",    cabinetId);
+		jsonBody.put("title",      title);
+		jsonBody.put("writer",     writer);
+		jsonBody.put("date",       date);
+		jsonBody.put("endDate",    endDate);
+		jsonBody.put("content",    content);
+		jsonBody.put("attach",     attach);
+		
+		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonBody);
 		return resultBody;
 	}
 }
