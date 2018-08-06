@@ -76,6 +76,7 @@
 		    var selectNode;
 		    var addCheck = 0;
 		    
+		    var letterStr20 = "<spring:message code='ezEmail.letter20'/>"; 
 		    var letterStr22 = "<spring:message code='ezEmail.letter22'/>"; 
 		    var letterStr23 = "<spring:message code='ezEmail.letter23'/>";
 		    var letterStr24 = "<spring:message code='ezEmail.letter24'/>";
@@ -88,6 +89,7 @@
 			var lengthMsg = "<spring:message code='ezEmail.letter14'/>"; // 자 이하로 입력 가능합니다.
 			var contentMsg = "<spring:message code='ezEmail.letter11'/>"; // 이름을 입력해주세요.
 			var letterBoxNameMsg = "<spring:message code='ezEmail.letter31'/>"; // 이름은
+			var letterBoxDelMsg = "<spring:message code='ezBoard.t54'/>"; // 삭제되었습니다.
 		    
 		    window.onload = window_onload;
 		    
