@@ -242,8 +242,8 @@ var CabinetFileHelper = function() {
 			inputElmt1.value      = titleTdElmt.textContent;
 			titleTdElmt.innerHTML = "";
 			inputElmt1.className  = "tblFileInput";
-			
 			inputElmt1.setAttribute("id", "itemTtl");
+			inputElmt1.setAttribute("maxlength", "150");
 			titleTdElmt.appendChild(inputElmt1);
 			
 			//Set relatedBttn
