@@ -368,11 +368,13 @@ public class EzCabinetController_h {
 		switch(itemType) {
 			case 0  : jspPageName = "ezCabinet/cabinetFileDetail"          ; break;
 			case 1  : jspPageName = getEmailColumnInfo(model, iteminfo)    ; break;
+			case 2  : jspPageName = getApprovalColumnInfo(model, iteminfo) ; break;
 			case 3  : jspPageName = getBoardColumnInfo(model, iteminfo)    ; break;
 			case 4  : jspPageName = getScheduleColumnInfo(model, iteminfo) ; break;
 			case 5  : jspPageName = getTodoColumnInfo(model, iteminfo)     ; break;
 			case 6  : jspPageName = getOptionColumnInfo(model, iteminfo)   ; break;
 			case 8  : jspPageName = getAddressColumnInfo(model, iteminfo)  ; break;
+			case 9  : jspPageName = getJournalColumnInfo(model, iteminfo)  ; break;
 			case 11 : jspPageName = getResourceColumnInfo(model, iteminfo) ; break;
 			default : break;
 		}
@@ -384,7 +386,11 @@ public class EzCabinetController_h {
 		String jspPageName = "ezCabinet/cabinetTodoDetail";
 		JSONObject creator = (JSONObject) iteminfo.get("creator");
 		model.addAttribute("creatorUser", creator);
+		return jspPageName;
+	}
 		
+	private String getApprovalColumnInfo(Model model, JSONObject iteminfo){
+		String jspPageName = "ezCabinet/cabinetApprovalDetail";
 		return jspPageName;
 	}
 	
@@ -441,11 +447,19 @@ public class EzCabinetController_h {
 	
 	private String getBoardColumnInfo(Model model, JSONObject iteminfo) {
 		String jspPageName = "ezCabinet/cabinetBoardDetail";
+		JSONObject creator = (JSONObject) iteminfo.get("creator");
+		
+		model.addAttribute("creatorUser",  creator);
 		return jspPageName;
 	}
 	
 	private String getOptionColumnInfo(Model model, JSONObject iteminfo) {
 		String jspPageName = "ezCabinet/cabinetOptionDetail";
+		return jspPageName;
+	}
+	
+	private String getJournalColumnInfo(Model model, JSONObject iteminfo){
+		String jspPageName = "ezCabinet/cabinetJournalDetail";
 		return jspPageName;
 	}
 }

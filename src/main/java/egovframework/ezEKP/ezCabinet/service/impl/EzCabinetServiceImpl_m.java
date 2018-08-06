@@ -185,77 +185,6 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject saveJournalItem(String realPath, int cabinetId, String journalContent, String mode, String title, String createDate, String journalWriter, String journalType, String formName, String attach, Locale locale, LoginVO userInfo) throws Exception {
-		/*JSONObject result          = new JSONObject();
-		String userId              = userInfo.getId();
-		int tenantId               = userInfo.getTenantId();
-		String companyId           = userInfo.getCompanyID();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(new Date()), userInfo.getOffset(), true);
-		JSONParser jp              = new JSONParser();
-		int itemCabinetId          = -1;
-		Map<String,Object> map     = new HashMap<String, Object>();
-		map.put("tenantId", tenantId);
-		
-		//Save Item
-		int itemId     = ezCabinetDAO.getMaxItem(map) + 1;
-		int moduleType = 9; //Journal module
-		
-		if(mode.equals("0")){
-			map.put("userId",   userId);
-			map.put("tenantId", tenantId);
-			map.put("type",     moduleType);
-			
-			CabinetVO cabinet = ezCabinetDAO.getRootCabinetByType(map);
-			itemCabinetId     = cabinet.getCabinetId();
-		}
-		else{
-			itemCabinetId = cabinetId;
-		}
-		
-		//Save Journal attach files
-		
-		String cabinetPath = getCabinetDirPath(tenantId);
-		File file          = new File(realPath + cabinetPath);
-		
-		if(!file.exists()){
-			file.mkdir();
-		}
-		
-		if(!attach.equals("")){
-			JSONArray attachList = (JSONArray) jp.parse(attach);
-			int totalCnt         = attachList.size();
-			int attachId         = ezCabinetDAO.getMaxAttachId(map) + 1;
-			for (int i = 0; i < totalCnt; i++, attachId++) {
-				JSONObject attachInf = (JSONObject) attachList.get(i);
-				saveAttachFiles(attachInf, attachId, itemId, realPath, cabinetPath, locale, companyId, userId, tenantId);
-			}
-		}
-		
-		CabinetItemVO itemVO = new CabinetItemVO();
-		itemVO.setCabinetId(itemCabinetId);
-		itemVO.setItemId(itemId);
-		itemVO.setItemType(moduleType);
-		itemVO.setTitle(title);
-		itemVO.setCreatorId(userId);
-		itemVO.setCreatorName1(userInfo.getDisplayName1());
-		itemVO.setCreatorName2(userInfo.getDisplayName2());
-		itemVO.setDepartmentId(userInfo.getDeptID());
-		itemVO.setDepartmentName1(userInfo.getDeptName1());
-		itemVO.setDepartmentName2(userInfo.getDeptName2());
-		itemVO.setContentPath(journalContent);
-		itemVO.setCreatedDate(timeUTC);
-		itemVO.setUpdatedDate(timeUTC);
-		itemVO.setUseStatus(1);
-		itemVO.setUpdateId(userId);
-		itemVO.setDeleterId(null);
-		itemVO.setCompanyId(companyId);
-		itemVO.setTenantId(tenantId);
-		
-        saveItem(itemVO);
-		
-		result.put("status", "ok");
-		result.put("code", 0);
-		return result;*/
 		JSONObject result          = new JSONObject();
 		int tenantId               = userInfo.getTenantId();
 		String companyId           = userInfo.getCompanyID();
@@ -280,12 +209,12 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 		int moduleType = 9; //Journal module
 		ezCabinetService_h.addRelatedItem(itemId, moduleType, cabinetId, title, journalContent, mode, userInfo);
 		
-		//Save board columns information
+		//Save journal columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("writer"  , itemId, "ezJournal.t34", journalWriter, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("date"    , itemId, "ezJournal.t35", createDate   , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("formname", itemId, "ezJournal.t22", formName     , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("type"    , itemId, "ezJournal.t12", journalType  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("writer"     , itemId, "ezJournal.t34", journalWriter, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("date"       , itemId, "ezJournal.t35", createDate   , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("formName"   , itemId, "ezJournal.t22", formName     , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("journalType", itemId, "ezJournal.t12", journalType  , companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		
@@ -327,10 +256,7 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 		itemVO.setCompanyId(companyId);
 		itemVO.setTenantId(tenantId);
 		
-        saveItem(itemVO);
-		
-		int attachSize  = attacheFiles.size();
-		int relatedSize = relatedFiles.size();
+		saveItem(itemVO);
 	}
 	
 	private String getCabinetDirPath(int tenantId) {
@@ -341,10 +267,6 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 		for (CabinetColumnVO column : listColm) {
 			ezCabinetDAO.saveRelatedColumn(column);
 		}
-	}
-	
-	private synchronized void saveAttachFile(CabinetAttachFileVO attachFile) {
-		ezCabinetDAO.saveAttachFile(attachFile);
 	}
 	
 	private CabinetColumnVO createNewRelatedColumn(String columnId, int itemId, String messageName, String columnValue, String companyId, int tenantId) {

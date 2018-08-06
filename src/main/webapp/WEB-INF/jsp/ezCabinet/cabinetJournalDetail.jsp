@@ -15,18 +15,24 @@
 		<h1 id="fileFileH1"><spring:message code='ezCabinet.t108'/></h1>
 		
 		<div class="divInfo">
-			<table class="tblBoardInf">
+			<table class="tblEmailInf">
 				<tr>
 					<th><spring:message code='ezCabinet.t109'/></th>
-					<td id="fileCreator" class="cursor overfl"><c:out value="${item.creatorName}"/></td>
+					<td id="creator" class="overfl cursor wide" title="<c:out value="${item.creatorName}"/>"><c:out value="${item.creatorName}"/></td>
 					<th><spring:message code='ezCabinet.t110'/></th>
-					<td><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
+					<td id="createdDate" class="nowrap cabdatetd"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${writer.columnName}"/></th>
-					<td id="boardCreator" class="cursor overfl"></td>
-					<th><c:out value="${boardTime.columnName}"/></th>
-					<td><c:out value="${fn:substring(boardTime.columnValue, 0, 19)}"/></td>
+					<td id="journalCreator" class="overfl cursor wide" title="<c:out value="${creatorUser}"/>"><c:out value="${creatorUser.userName}"/></td>
+					<th><c:out value="${date.columnName}"/></th>
+					<td class="overfl" title="<c:out value="${date.columnValue}"/>"><c:out value="${date.columnValue}"/></td>
+				</tr>
+				<tr>
+					<th><c:out value="${formName.columnName}"/></th>
+					<td class="overfl" title="<c:out value="${formName.columnValue}"/>"><c:out value="${formName.columnValue}"/></td>
+					<th><c:out value="${journalType.columnName}"/></th>
+					<td class="nowrap cabdatetd"><c:out value="${journalType.columnValue}"/></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
@@ -55,8 +61,52 @@
 		
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
+		<script type="text/javascript" src="/js/ezCabinet/cabinetFileHelper.js"     ></script>
 		<script type="text/javascript">
+		var CabinetJournalFile = function(){
+			var cabinetHelper = null;
+			function initEvents(itemID){
+				cabinetHelper = new CabinetFileHelper({
+					itemid   : itemID,
+					callback : genderInformation,
+					print    : printJournal,
+					module   : "journal",
+					iframe   : "content"
+				});
+				cabinetHelper.start();
+			}
+			
+			function genderInformation(fileItem, displayUserInforPopup, showInfoId, showInfoJournal, scrollHandler){
+				var result      = fileItem.fileDetail;
+				var writer      = fileItem.creator;
+				
+				//Display popup
+				displayUserInforPopup("creator"       , result["creatorId"], showInfoId);
+				displayUserInforPopup("journalCreator", creator["userId"]  , showInfoId);
+			}
+			
+			function printJournal(scrollPrint, unsetAllScrollTd, displayIframePrint, removeIframePrint){
+				var listElmtId = ["fileListDiv"];
+				scrollPrint(listElmtId);
+				displayIframePrint();
+				window.focus();
+				window.print();
+				removeIframePrint();
+				unsetAllScrollTd(listElmtId);
+			}
+			
+			function getRelatedFiles()       {return cabinetHelper.get();}
+			function saveRelatedFiles(files) {cabinetHelper.save(files);}
+			function getIframeContent()      {return cabinetHelper.getContent();}
+			
+			return{
+				init       : initEvents,
+				get        : getRelatedFiles,
+				save       : saveRelatedFiles,
+				getContent : getIframeContent
+			};
+		}();
 		</script>
-		<script type="text/javascript">CabinetBoardFile.init("<c:out value='${itemId}'/>");</script>
+		<script type="text/javascript">CabinetJournalFile.init("<c:out value='${itemId}'/>");</script>
 	</body>
 </html>
