@@ -2570,7 +2570,7 @@ public class EzPMSGWController {
 		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0)
 				+ " sec");
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId
-				+ "/users/gantt" + userId + "] ended.");
+				+ "/users/" + userId + "/gantt] ended.");
 		return result;
 	}
 
