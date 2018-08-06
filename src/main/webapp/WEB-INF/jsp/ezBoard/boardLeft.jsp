@@ -587,9 +587,9 @@
 				$(".memo").next().attr("class", "on");
 				
 				if (CrossYN()) {
-					window.parent.frames["right"].location.href = "/ezMemo/memoMain.do";
+					window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8";
 		        } else {
-		        	window.parent.frames["right"].location.href = "/ezMemo/memoMain.do";
+		        	window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8";
 		        }
 	            SetTreeviewUnSelect("");
 			}
