@@ -349,6 +349,14 @@ var CabinetFileHelper = function() {
 				return;
 			}
 			
+			if (title.length > 150) {
+				alert(CabinetMessages.strTitleLen);
+				var inputTtl   = document.getElementById("itemTtl");
+				inputTtl.value = "";
+				inputTtl.focus();
+				return;
+			}
+			
 			$.ajax({
 				type: "POST",
 				url: "/ezCabinet/modifyRelatedItem.do",

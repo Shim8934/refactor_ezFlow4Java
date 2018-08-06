@@ -85,5 +85,6 @@ var CabinetMessages = {
 	strSchedule1 : "개인일정",
 	strSchedule2 : "부서일정",
 	strSchedule3 : "회사일정",
-	strSchedule4 : "나의 일정"
+	strSchedule4 : "나의 일정",
+	strTitleLen  : "제목은 150 글자 이내이어야 합니다."
 }
