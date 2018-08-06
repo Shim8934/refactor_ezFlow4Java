@@ -139,11 +139,11 @@
 		</div>
 	</h1>
 	<div id="test" class="tree"></div>
-	<div style="margin-top: 8px; text-align: center;">
-		<a class="imgbtn" onclick="ok_Click()">
-			<span><spring:message code='ezPMS.t40' /></span>
-		</a>
-	</div>
+	<table style="width:100%;">
+		<tr>
+			<td><div class="btnpositionNew"><a class="imgbtn" id="submit" onclick="ok_Click()"><span><spring:message code='ezPMS.t40' /></span></a></div></td>
+		</tr>
+	</table>
 </body>
 </html>
 
