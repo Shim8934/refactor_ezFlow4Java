@@ -315,7 +315,46 @@
 				}
 				
 				function saveCommunityDocument(saveMode, cabinetId) {
-					//Add code here
+					var commuOpener   = window.opener;
+					if (!commuOpener) {alert(CabinetMessages.strSelect); return;}
+					
+					var title         = trimStr(commuOpener.document.getElementById("title").textContent);
+					var writerDiv     = commuOpener.document.getElementById("Div1").getAttribute("onclick");
+					var start         = writerDiv.indexOf('"');
+					var end           = writerDiv.lastIndexOf('"');
+					var writer        = writerDiv.substring(start + 1, end);
+					var date          = trimStr(commuOpener.document.getElementById("Div3").textContent);
+					var endDate       = trimStr(commuOpener.document.getElementById("Div4").textContent);
+					var messageFrame  = commuOpener.document.getElementById("message");
+					var contentWd     = messageFrame.contentWindow || messageFrame.contentDocument;
+					var content       = contentWd.document.body.innerHTML;
+					var attach        = commuOpener.document.getElementById("lstAttachLink");
+					var attachList    = [];
+					
+					var listChildren    = attach.getElementsByTagName("input");
+					for (var i = 0, len = listChildren.length; i < len; i++) {
+						var hrefStr = listChildren[i].getAttribute("filehref");
+						var params  = getAllUrlParams(hrefStr);
+						
+						attachList.push({
+							filePath : javaURLDecode(params["filePath"]),
+							fileName : javaURLDecode(params["fileName"])
+						});
+					}
+					
+					var url  = "/ezCabinet/saveRelatedCommunity.do";
+					var data = {
+						mode      : saveMode,
+						title     : boardTitle,
+						writer    : boardWriter,
+						date      : postDate,
+						attach    : JSON.stringify(attachList),
+						content   : boardContent
+					};
+					
+					if (saveMode == 1) {data.cabinet = cabinetId;}
+					
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
 				function saveTodoDocument(saveMode, cabinetId) {
@@ -508,17 +547,17 @@
 					var optionOpener   = window.opener;
 					if (!optionOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					var title        = optionOpener.document.getElementById("titleTd").textContent;
-					var writer       = optionOpener.document.getElementById("writer").textContent;
-					var date         = optionOpener.document.getElementById("printStatus").textContent;
+					var title        = trimStr(optionOpener.document.getElementById("titleTd").textContent);
+					var writer       = trimStr(optionOpener.circularUserID);
+					var date         = trimStr(optionOpener.document.getElementById("printStatus").textContent);
 					var importanceTd = optionOpener.document.getElementById("Td_Importance");
-					var importance   = importanceTd.querySelector("span").textContent;
-					var option       = optionOpener.document.getElementById("option").textContent;
-					var statusNum    = optionOpener.document.getElementById("statusNum").textContent;
-					var status       = optionOpener.document.getElementById("status").textContent;
-					var confirm      = optionOpener.document.querySelector("td[class='confirmStatus']").innerHTML;
-					var endDate      = optionOpener.document.getElementById("endDate").textContent;
-					var content      = optionOpener.document.getElementById("divCross").innerHTML;
+					var importance   = trimStr(importanceTd.querySelector("span").textContent);
+					var option       = trimStr(optionOpener.document.getElementById("option").textContent);
+					var statusNum    = trimStr(optionOpener.document.getElementById("statusNum").textContent);
+					var status       = trimStr(optionOpener.document.getElementById("status").textContent);
+					var confirm      = trimStr(optionOpener.document.querySelector("td[class='confirmStatus']").innerHTML);
+					var endDate      = trimStr(optionOpener.document.getElementById("endDate").textContent);
+					var content      = trimStr(optionOpener.document.getElementById("divCross").innerHTML);
 					var attach       = optionOpener.document.getElementById("attachedfileDIV");
 					var attachList   = [];
 					

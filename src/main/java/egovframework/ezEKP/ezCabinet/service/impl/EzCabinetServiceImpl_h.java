@@ -546,6 +546,10 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		String newFilePath   = pDirPath + File.separator + newName;
 		String pfilePath     = cabinetPath + newName;
 		
+		if (modulePath.equals("upload_circular.ROOT")) {
+			filePath = filePath + fileName;
+		}
+		
 		logger.debug("file path: " + filePath + " || file name : " + fileName);
 		
 		File file = new File(realPath + filePath);

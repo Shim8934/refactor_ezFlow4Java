@@ -1105,6 +1105,38 @@ var CabinetItem = function() {
 		documentCont.attach  = attachList;
 	}
 	
+	function showOptionPreview(data, dlElmt) {
+		var itemInfo    = data.fileDetail;
+		var attachList  = data.attachFileList;
+		var relatedList = data.relatedFileList;
+		var writer      = data.writerVO;
+		
+		generateOptionTitle(itemInfo, relatedList, dlElmt);
+		generateOptionContent(attachList, itemInfo);
+	}
+	
+	function generateOptionTitle(itemInfo, relatedList, dlElmt) {
+		var creatorName = itemInfo["creatorName"];
+		var creatorId   = itemInfo["creatorId"];
+		
+		//Creator title
+		generateCreatorTitle(dlElmt, creatorName, creatorId);
+		
+		//Related documents title
+		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
+	}
+	
+	function generateOptionContent(attachList, itemInfo) {
+		var totalFiles       = attachList.length;
+		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
+		var ifameContent     = document.getElementById(iframeId);
+		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
+		documentCont         = {};
+		documentCont.content = itemInfo["contentPath"];
+		documentCont.size    = itemInfo["itemSize"];
+		documentCont.attach  = attachList;
+	}
+	
 	function generateCreatorTitle(dlElmt, creatorName, creatorId) {
 		var dtElmt       = document.createElement("dt");
 		var ddElmt       = document.createElement("dd");
