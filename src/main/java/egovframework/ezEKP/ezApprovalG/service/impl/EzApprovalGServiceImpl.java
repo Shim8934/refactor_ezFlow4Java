@@ -7669,6 +7669,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
+		logger.debug("extraSelectClause = " + extraSelectClause);
+		
 		recordListVO.setExtraSelectClause(extraSelectClause);
 		recordListVO.setTempDeptCode(recordListVO.getDeptCode());
 
