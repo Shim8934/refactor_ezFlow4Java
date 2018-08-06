@@ -845,7 +845,7 @@
 					MEMBER_ROLE_ID IN (1,2,3)
 				</isEqual>
 				AND
-					A.TENANT_ID = 1) C
+					A.TENANT_ID = #tenantId#) C
 				ON
 					D.DEPARTMENT = C.DEPARTMENT
 				WHERE
@@ -4748,7 +4748,7 @@
 			    WHERE 
 			    	(GROUP_ID = #groupId# OR ANCESTER_GROUP LIKE CONCAT('%,', #groupId#, ',%') OR ANCESTER_GROUP LIKE CONCAT(#groupId#, ',%'))
 			    AND 
-			    	TENANT_ID = 1
+			    	TENANT_ID = #tenantId#
 		    ) g
 		ON
 			t.GROUP_ID = g.GROUP_ID;
