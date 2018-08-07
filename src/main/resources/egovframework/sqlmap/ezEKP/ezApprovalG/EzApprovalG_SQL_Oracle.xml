@@ -3435,7 +3435,7 @@
 		             APRMEMBERDEPTID ,
 		             MEMBERDEPTNAME APRMEMBERDEPTNAME  ,
 		             MEMBERDEPTNAME2 APRMEMBERDEPTNAME2  ,
-		             #v_COMPANYID# APRMEMBERLDAPPATH  ,
+		             #companyID# APRMEMBERLDAPPATH  ,
 		             NULL RECEIVEDDATE  ,
 		             NULL PROCESSDATE  ,
 		             NULL REASONDONOTAPPROV  ,
