@@ -1680,6 +1680,29 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 전자결재G 기록물철 소기능 이하 모두 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/getTaskSubCategoryAll.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getTaskSubCategoryAll(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getTaskSubCategoryAll started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String deptCode = request.getParameter("deptCode");
+		String companyID = request.getParameter("companyID");
+		String cateCode = request.getParameter("cateCode");
+		String strType = request.getParameter("strType");
+		String initFlag = request.getParameter("initFlag");
+		
+		String result = ezApprovalGService.getTaskSubCategoryAll(deptCode, companyID, cateCode, strType, initFlag, userInfo.getTenantId());
+		
+		logger.debug("getTaskSubCategoryAll ended.");
+		
+		return result;
+	}
+	
+	/**
 	 * 전자결재G 기록물철 소기능 표출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/getTaskSubCategory.do", produces = "text/xml;charset=utf-8")
