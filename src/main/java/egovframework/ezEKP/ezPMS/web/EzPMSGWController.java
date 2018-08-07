@@ -2268,15 +2268,15 @@ public class EzPMSGWController {
 
 	// 홍대표 작성
 	/**
-	 * 프로젝트관리 업무 리스트
+	 * 프로젝트관리 업무 리스트(나의 업무일 때)
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/task-list/{projectId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPMS/task-list/{projectId}/users/{userId}/myTask", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getTaskList(@PathVariable Long projectId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId
-				+ "/users/" + userId + "] started.");
+				+ "/users/" + userId + "/myTask] started.");
 		Long startMillis = System.currentTimeMillis();
 
 		JSONObject result = new JSONObject();
@@ -2435,20 +2435,20 @@ public class EzPMSGWController {
 		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0)
 				+ " sec");
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId
-				+ "/users/" + userId + "] ended.");
+				+ "/users/" + userId + "/myTask] ended.");
 		return result;
 	}
 
 	/**
-	 * 프로젝트관리 업무 리스트(간트차트 용)
+	 * 프로젝트관리 업무 리스트(나의 업무가 아닐 때)
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPMS/task-list/{projectId}/users/{userId}/gantt", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPMS/task-list/{projectId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getTaskList2(@PathVariable long projectId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId
-				+ "/users/" + userId + "/gantt] started.");
+				+ "/users/" + userId + "] started.");
 		Long startMillis = System.currentTimeMillis();
 
 		JSONObject result = new JSONObject();
@@ -2581,7 +2581,7 @@ public class EzPMSGWController {
 		LOGGER.debug("lead time : " + ((endMillis - startMillis) / 1000.0)
 				+ " sec");
 		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/task-list/" + projectId
-				+ "/users/" + userId + "/gantt] ended.");
+				+ "/users/" + userId + "] ended.");
 		return result;
 	}
 
