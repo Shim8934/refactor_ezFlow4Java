@@ -1557,6 +1557,7 @@ public class EzPMSController {
 
 		String countUrl = "/rest/ezPMS/projects/" + projectId + "/tasks/count";
 		String url = "";
+		
 		if(projectId == 0){
 			url = "/rest/ezPMS/task-list/" + projectId + "/users/" + userId;
 		} else {

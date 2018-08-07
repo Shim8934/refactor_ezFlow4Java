@@ -2298,7 +2298,7 @@ public class EzPMSGWController {
 			String deptId = info.getDeptId();
 			int roleId = 0;
 			long groupId = 0;
-			System.out.println(projectId.compareTo(0L));
+			
 			if (projectId.compareTo(0L) != 0) {
 				roleId = ezPMSService.getUserProjectRole(userId, tenantId,
 						projectId, info.getDeptId());
@@ -2554,8 +2554,16 @@ public class EzPMSGWController {
 					vo.setLatePercent(0);
 				}
 			}
-
+		
 			JSONObject data = new JSONObject();
+			
+			if (groupId != 0) {
+				// 그룹정보 불러오기
+				ProjectGroupVO groupDetail = ezPMSService.getGroupDetails(
+						groupId, tenantId, projectId);
+				data.put("groupDetail", groupDetail);
+			}
+			
 			data.put("taskList", taskList);
 			data.put("userRoleId", roleId);
 
