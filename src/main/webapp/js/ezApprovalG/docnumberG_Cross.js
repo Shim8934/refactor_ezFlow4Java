@@ -24,7 +24,8 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
     	var result = "";
     	var SN = ""; 
     	var dataNodes = "";
-    	if (isHWP == "Y" && nonElecRec != "Y") {
+    /* if (isHWP == "Y" && nonElecRec != "Y") { */ //mht양식 채번이 안되서 주석처리
+		if (nonElecRec != "Y") { // 비전자문서는 채번안함
 	    	$.ajax({
 	    		type : "POST",
 	    		dataType : "text",
