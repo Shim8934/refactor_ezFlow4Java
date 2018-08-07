@@ -276,7 +276,11 @@
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
-					}        			
+					},
+					/* 2018-08-07 홍승비 - 포토게시판 안읽은게시물 정렬 시 500에러 확인용 콘솔 로그 */
+					error:function(request, status, error){
+						alert("code : " + request.status + "\n" + "message : " + request.responseText + "\n" + "error : " + error);
+					}
 				});	
 		    }
 		
