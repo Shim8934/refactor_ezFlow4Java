@@ -1565,7 +1565,7 @@ function hideTooltip() {
     document.getElementById('tooltip').style.visibility = 'hidden';
 }//자원 클릭이벤트시 툴팁
 
-
+//2018-08-07 김민성 - 자원관리 tooltip 윈도우 사이즈 별 위치 수정
 function getMouseXLocation(e) {
     if (e)
         var E = e;
