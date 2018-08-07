@@ -926,7 +926,8 @@
 			<div class="portlet_tabpart01_top" id="tab1">
 			    <p><span id="tagsub1"><spring:message code='ezApprovalG.t1769'/></span></p>
 			    <c:if test="${approvalFlag == 'S'}">
-			    	<p><span id="tagsub2"><spring:message code = 'ezApprovalG.t999932' /></span></p>
+			    	<%-- <p><span id="tagsub2"><spring:message code = 'ezApprovalG.t999932' /></span></p> --%>
+			    	<p><span id="tagsub2"><spring:message code = 'ezApprovalG.t950' /></span></p>
 			    </c:if>
 			    <c:if test="${approvalFlag != 'S'}">
 			    	<p><span id="tagsub2"><spring:message code = 'ezApprovalG.t950' /></span></p>

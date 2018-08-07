@@ -35,7 +35,7 @@
 			    //if (CrossYN()) {
 		        boardmoveselect_cross_dialogArguments[0] = parameter;
 		        boardmoveselect_cross_dialogArguments[1] = MoveSelect_Complete;
-		        var BoardMoveSelect_Cross = window.open("/admin/ezBoard/boardMoveSelect.do", "boardMoveSelect", GetOpenWindowfeature(340, 656));
+		        var BoardMoveSelect_Cross = window.open("/admin/ezBoard/boardMoveSelect.do", "boardMoveSelect", GetOpenWindowfeature(355, 600));
 		        try { 
 		        	BoardMoveSelect_Cross.focus(); 
 		        }catch (e) {}

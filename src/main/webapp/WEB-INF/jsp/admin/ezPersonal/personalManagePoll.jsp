@@ -26,7 +26,7 @@
 	        var strLang2 = "<spring:message code = 'ezPersonal.t10000' />";
 	        var strLang3 = "<spring:message code = 'ezPersonal.t10001' />";
 	        var strLang4 = "<spring:message code = 'ezPersonal.t223' />";
-	        var strLang5 = "<spring:message code = 'ezPersonal.t20005' />";
+	        var strLang5 = "<spring:message code = 'ezQuestion.t312' />";
 	
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -44,6 +44,8 @@
 // 	                document.getElementById("ListCompany").selectedIndex = 0;
 	            }
 	            makelist();
+	            //2018-08-06 김보미 - 페이지 위치 고정
+	            windowResize();
 	        });
 			
 	        function makelist() {
@@ -84,12 +86,6 @@
 		            //listview.DataSource(xmldom);
 		            listview.RowDataBind();
 		            xmldomNode = null;
-		            
-		            //2018-08-02 김보미 - 데이터가 없을 때
-		            if (parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT")) == 0) {
-		            	var html = "<tr id='Poll_TR_noItems'><td style='text-align: center;' colspan='5'>" + strLang5 + "</td></tr>";
-		            	$("#AccessListView tbody").html(html);
-		            }
 		
 		            if (CrossYN() && navigator.userAgent.indexOf("Trident/7.0") < 0) {
 						TotalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
@@ -101,6 +97,12 @@
 		            } else {
 		                TotalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
 		                pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
+		            }
+		            
+		            //2018-08-02 김보미 - 데이터가 없을 때
+		            if (TotalCount == null || TotalCount == 0) { 
+		            	var TR_noItems = "<tr id='Poll_TR_noItems'><td style='text-align: center;' colspan='5'>" + strLang5 + "</td></tr>";
+		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
 		            }
 		            
 		            totalPage = Math.ceil(new Number(TotalCount / PageSize));
@@ -327,6 +329,20 @@
 		    function td_Create(strtext) {
 		        tblPageNum.innerHTML = tblPageNum.innerHTML + strtext;
 		    }
+		    
+            //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 122 - document.getElementById("mainmenu").clientHeight;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
 		</script>
 	</head>
 	<body class = "mainbody">
@@ -375,11 +391,12 @@
 	        <script type="text/javascript">
 	            selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	        </script>
-	        
-	        <table class="mainlist" style="width: 100%;">
-	            <div id="AccessList" style="BORDER: 0; WIDTH: 100%"></div>
-	        </table>
-	        <div id="tblPageRayer" style="margin-bottom: 10px;"></div>
+	        <div id="contentlist" style="width:100%; overflow: auto;">
+		        <table class="mainlist" style="width: 100%;">
+		            <div id="AccessList" style="BORDER: 0; WIDTH: 100%"></div>
+		        </table>
+		    </div>
+	        <div id="tblPageRayer"></div>
 	    </form>
 	</body>
 </html>

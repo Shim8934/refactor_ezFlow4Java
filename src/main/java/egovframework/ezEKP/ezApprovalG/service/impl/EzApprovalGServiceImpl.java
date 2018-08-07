@@ -4248,6 +4248,102 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
+	public String getTaskSubCategoryAll(String deptCode, String companyID, String cateCode, String strType, String initFlag, int tenantID) throws Exception {
+		// TODO Auto-generated method stub
+		logger.debug("getTaskSubCategoryAll started");
+		
+		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, strType, tenantID);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("cateCode", cateCode);
+		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
+		map.put("deptCode", deptCode);
+		map.put("accountYear", accountYear);
+		map.put("initFlag", initFlag);
+		
+		List<ApprGTaskVO> apprGTaskVOList = ezApprovalGDAO.getTaskSubCategoryAll(map);
+		int dlength = apprGTaskVOList.size();
+		
+		StringBuffer resultXML = new StringBuffer();
+		
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<ROWS>");
+		
+		String primaryData = commonUtil.getPrimaryData(strType, tenantID);
+		
+		for (int k = 0; k < dlength; k++) {
+			resultXML.append("<ROW>");
+			resultXML.append("<CELL>");
+			
+			if (apprGTaskVOList.get(k).getTitle() == null || apprGTaskVOList.get(k).getTitle().equals("")) {
+				resultXML.append("<VALUE>-</VALUE>");
+			} else {
+				if (primaryData.equals("1")) {
+					resultXML.append("<VALUE><![CDATA[" + apprGTaskVOList.get(k).getTitle() + "]]></VALUE>");
+				} else {
+					resultXML.append("<VALUE><![CDATA[" + apprGTaskVOList.get(k).getTitle2() + "]]></VALUE>");
+				}
+			}
+			
+			resultXML.append("<DATA1>" + apprGTaskVOList.get(k).getCabinetID() + "</DATA1>");
+			resultXML.append("<DATA2>" + apprGTaskVOList.get(k).getTaskCode() + "</DATA2>");
+			resultXML.append("<DATA3>" + apprGTaskVOList.get(k).getCabinetClassNo() + "</DATA3>");
+			resultXML.append("<DATA4>" + apprGTaskVOList.get(k).getOwnerID() + "</DATA4>");
+			resultXML.append("<DATA5><![CDATA[" + apprGTaskVOList.get(k).getTitle() + "]]></DATA5>");
+			resultXML.append("<DATA6><![CDATA[" + apprGTaskVOList.get(k).getTitle2() + "]]></DATA6>");
+			resultXML.append("<DATA7><![CDATA[" + apprGTaskVOList.get(k).getTaskCode() + "]]></DATA7>");
+			resultXML.append("<DATA8><![CDATA[" + apprGTaskVOList.get(k).getKeepingPeriod() + "]]></DATA8>");
+			resultXML.append("<DATA9><![CDATA[" + apprGTaskVOList.get(k).getTempFlag() + "]]></DATA9>");
+			resultXML.append("<DATA10><![CDATA[" + apprGTaskVOList.get(k).getDisplayRecFlag() + "]]></DATA10>");
+			resultXML.append("<DATA11><![CDATA[" + apprGTaskVOList.get(k).getSpecialCatalogFlag() + "]]></DATA11>");
+			resultXML.append("<DATA12><![CDATA[" + apprGTaskVOList.get(k).getSc1() + "]]></DATA12>");
+			resultXML.append("<DATA13><![CDATA[" + apprGTaskVOList.get(k).getSc2() + "]]></DATA13>");
+			resultXML.append("<DATA14><![CDATA[" + apprGTaskVOList.get(k).getSc3() + "]]></DATA14>");
+			resultXML.append("<DATA15><![CDATA[" + apprGTaskVOList.get(k).getKeepingMethod() + "]]></DATA15>");
+			resultXML.append("<DATA16><![CDATA[" + apprGTaskVOList.get(k).getKeepingPlace() + "]]></DATA16>");
+			resultXML.append("<DATA17><![CDATA[" + apprGTaskVOList.get(k).getTaskName() + "]]></DATA17>");
+			resultXML.append("<DATA18><![CDATA[" + apprGTaskVOList.get(k).getTaskName2() + "]]></DATA18>");
+			resultXML.append("</CELL>");
+			resultXML.append("<CELL>");
+			
+			if (primaryData.equals("1")) {
+				resultXML.append("<VALUE><![CDATA[" + apprGTaskVOList.get(k).getScName() + "(" + apprGTaskVOList.get(k).getSubCategoryCode() + ")" + "]]></VALUE>");
+			} else {
+				resultXML.append("<VALUE><![CDATA[" + apprGTaskVOList.get(k).getScName2() + "(" + apprGTaskVOList.get(k).getSubCategoryCode() + ")" + "]]></VALUE>");
+			}
+			resultXML.append("<DATA1>" + apprGTaskVOList.get(k).getSubCategoryCode() + "</DATA1>");
+			resultXML.append("</CELL>");
+			resultXML.append("<CELL>");
+			
+			if (primaryData.equals("1")) {
+				resultXML.append("<VALUE><![CDATA[" + apprGTaskVOList.get(k).getTaskName() + "(" + apprGTaskVOList.get(k).getTaskCode() + ")" + "]]></VALUE>");
+			} else {
+				resultXML.append("<VALUE><![CDATA[" + apprGTaskVOList.get(k).getTaskName2() + "(" + apprGTaskVOList.get(k).getTaskCode() + ")" + "]]></VALUE>");
+			}
+			resultXML.append("</CELL>");
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE><![CDATA[" + getRecordTypeString(apprGTaskVOList.get(k).getRecTypeCode(), companyID, strType, tenantID) + "]]></VALUE>");
+			resultXML.append("</CELL>");
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>" + apprGTaskVOList.get(k).getRegSerialNo() + "</VALUE>");
+			resultXML.append("</CELL>");
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE>" + apprGTaskVOList.get(k).getVolumeNo() + "</VALUE>");
+			resultXML.append("</CELL>");
+			resultXML.append("</ROW>");
+        }
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+
+		logger.debug("getTaskSubCategoryAll ended");
+		
+		return resultXML.toString();
+	}
+
+	@Override
 	public String getTaskInSubCategory(String deptCode, String companyID, String cateCode, String strType, String langType, int tenantID, String approvalFlag) throws Exception {
 		logger.debug("getTaskInSubCategory started");
 

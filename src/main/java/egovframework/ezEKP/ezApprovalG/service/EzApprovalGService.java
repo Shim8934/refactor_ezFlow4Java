@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -123,6 +122,8 @@ public interface EzApprovalGService {
 	public String getTaskMiddleCategory(String deptCode, String companyID, String cateCode, int tenantID) throws Exception;
 	
 	public String getTaskSubCategory(String deptCode, String companyID, String cateCode, String strType, int tenantID) throws Exception;
+	
+	public String getTaskSubCategoryAll(String deptCode, String companyID, String cateCode, String strType, String initFlag, int tenantID) throws Exception;
 	
 	public String getTaskInSubCategory(String deptCode, String companyID, String cateCode, String strType, String langType, int tenantID, String approvalFlag) throws Exception;
 	
