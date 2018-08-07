@@ -91,6 +91,13 @@
 				        PagingHTML += strtext;
 				    }
 				}
+				
+		        //2018-08-07 김보미 - 데이터가 하나도 없을때 디폴트 페이징
+	            if (i == 1) {
+	            	strtext = "<span class='on'>" + i + "</span>";
+                    PagingHTML += strtext;
+	            }
+		        
 				if (totalPage > BlockSize) {
 				    if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 				        strtext = "";
@@ -174,6 +181,12 @@
                 						<td> ${item.endDate} </td> 
               						</tr> 	
             					</c:forEach>
+            				</c:if>
+            				<!-- 2018-08-07 김보미 - 데이터가 없을 때 -->
+            				<c:if test="${isPollEmpty == true}">
+            					<tr> 
+                					<td style='text-align: center;' colspan='4'><spring:message code = 'ezQuestion.t312' /></td>
+                				</tr>
             				</c:if>
         				</table>
         			</td> 

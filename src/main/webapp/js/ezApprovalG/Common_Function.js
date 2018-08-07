@@ -40,7 +40,7 @@ function OpenAlertUI_SUB(pAlertContent) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
-    if (CrossYN() || pNoneActiveX == "YES") {
+    if (CrossYN()) {
         ezapralert_cross_dialogArgument[0] = parameter;
         ezapralert_cross_dialogArgument[1] = OpenAlertUI_SUB_Complete;
         ezapralert_cross_dialogArgument[2] = "";

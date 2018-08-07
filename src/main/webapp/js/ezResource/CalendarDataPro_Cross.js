@@ -1239,17 +1239,36 @@ function hideTooltip() {
 //    return locationY
 //}
 
+//2018-08-07 김민성 - 자원관리 tooltip 윈도우 사이즈 별 위치 수정
 function getMouseXLocation(e) {
     if (e)
         var E = e;
     else
         var E = window.event;
 
-    if (E.clientX > 1000) {
-        var tTip = document.getElementById("tooltip");
-        var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
-    } else
-        var locationX = E.clientX + document.body.scrollLeft + 20;
+    var tTip = document.getElementById("tooltip");
+    if (navigator.userAgent.indexOf('Firefox') != -1) {
+        if (E.clientX > 1000) {
+            var locationX = E.clientX + document.documentElement.scrollLeft - tTip.clientWidth;
+        } else {
+            if (E.clientX > 300) {
+                var locationX = E.clientX + document.documentElement.scrollLeft - tTip.clientWidth;
+            }
+            else
+                var locationX = E.clientX + document.documentElement.scrollLeft;
+        }
+    }
+    else {
+        if (E.clientX > 1000) {
+            var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
+        } else {
+            if (E.clientX > 300) {
+                var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
+            }
+            else
+                var locationX = E.clientX + document.body.scrollLeft;
+        }
+    }
 
     return locationX
 }
@@ -1264,12 +1283,13 @@ function getMouseYLocation(e) {
     if (navigator.userAgent.indexOf('Firefox') != -1) {
         if (E.clientY > 500) {
             var locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
+            locationY -= 12;
         }
         else {
             if (document.documentElement.scrollTop > 0) {
-                //var locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
+                
                 var locationY
-                //이벤트 발생 Y좌표보다 toolTip의 높이가 더 크면
+                
                 if (tTip.clientHeight > E.clientY) {
                     locationY = E.clientY + document.documentElement.scrollTop;
                 } else {
@@ -1279,16 +1299,18 @@ function getMouseYLocation(e) {
             else {
                 var locationY = E.clientY + document.documentElement.scrollTop;
             }
+            locationY += 12;
         }
     }
     else {
         if (E.clientY > 500) {
             var locationY = E.clientY + document.body.scrollTop - tTip.clientHeight;
+            locationY -= 12;
         }
         else {
             if (document.body.scrollTop > 0) {
                 var locationY
-                //이벤트 발생 Y좌표보다 toolTip의 높이가 더 크면
+                
                 if (tTip.clientHeight > E.clientY) {
                     locationY = E.clientY + document.body.scrollTop;
                 } else {
@@ -1298,6 +1320,7 @@ function getMouseYLocation(e) {
             else {
                 var locationY = E.clientY + document.body.scrollTop;
             }
+            locationY += 12;
         }
     }
 
