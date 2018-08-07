@@ -23,18 +23,6 @@
 					<td id="createdDate" class="nowrap cabdatetd"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
-<<<<<<< HEAD
-					<th><c:out value="${writer.columnName}"/></th>
-					<td id="journalCreator" class="overfl cursor wide" title="<c:out value="${writer.columnValue}"/>"></td>
-					<th><c:out value="${date.columnName}"/></th>
-					<td class="overfl" title="<c:out value="${date.columnValue}"/>"><c:out value="${date.columnValue}"/></td>
-				</tr>
-				<tr>
-					<th><c:out value="${formName.columnName}"/></th>
-					<td class="overfl" title="<c:out value="${formName.columnValue}"/>"><c:out value="${formName.columnValue}"/></td>
-					<th><c:out value="${journalType.columnName}"/></th>
-					<td class="nowrap cabdatetd"><c:out value="${journalType.columnValue}"/></td>
-=======
 					<th><c:out value="${jourWriter.columnName}"/></th>
 					<td id="journalCreator" class="cursor overfl"></td>
 					<th><c:out value="${jourDate.columnName}"/></th>
@@ -45,7 +33,6 @@
 					<td><c:out value="${jourType.columnValue}"/></td>
 					<th><c:out value="${formname.columnName}"/></th>
 					<td><c:out value="${formname.columnValue}"/></td>
->>>>>>> 42e90daab7806f107aeafe28605883290dee87f6
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
@@ -58,11 +45,7 @@
 			</table>
 		</div>
 		
-<<<<<<< HEAD
-		<div class="journalContDiv"><iframe id ="journalIframe" class="cabrlframe2"></iframe></div>
-=======
 		<div class="journalContDiv"><iframe id="journalIframe" class="cabrlframe2"></iframe></div>
->>>>>>> 42e90daab7806f107aeafe28605883290dee87f6
 		
 		<div class="cabBttnDiv" id="fileDivBttn">
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
