@@ -1715,16 +1715,12 @@
 	   			}
 	   			document.querySelector("#pmsGanttZoomBtn select").value = ganttData.zoom;
 	   			
-	   			
 	   			if (userRoleId == 1) {
 	   				$("#pmsGanttRowNewBtn").css("display", "");
 	   				$("#pmsGanttAddGroup").css("display", "");
 	   				$("#pmsGanttRowDelBtn").css("display", "");
 	   				$("#pmsGanttDelGroup").css("display", "");
 	   				
-	   			} else if (userRoleId == 2) {
-	   				$("#pmsGanttRowNewBtn").css("display", "");
-	   				$("#pmsGanttRowDelBtn").css("display", "");
 	   			}
 	   		})
 
