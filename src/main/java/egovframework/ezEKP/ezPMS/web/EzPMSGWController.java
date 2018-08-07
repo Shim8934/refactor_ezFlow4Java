@@ -238,7 +238,7 @@ public class EzPMSGWController {
 			project.put("weightInput", request.getParameter("weightInput"));
 			project.put("planStartDate", request.getParameter("planStartDate"));
 			project.put("planEndDate", request.getParameter("planEndDate"));
-			project.put("overview", request.getParameter("overview"));
+			project.put("overview", json.get("overview").toString());
 			project.put("endAlamStatus", request.getParameter("endAlamStatus"));
 			project.put("headManagerId", request.getParameter("headManagerId"));
 			project.put("writerName", info.getUserName());
@@ -736,7 +736,7 @@ public class EzPMSGWController {
 					.getParameter("weightInput")));
 			project.setPlanEndDate(request.getParameter("planEndDate"));
 			project.setPlanStartDate(request.getParameter("planStartDate"));
-			project.setOverview(request.getParameter("overview"));
+			project.setOverview(json.get("overview").toString());
 			project.setAlamMailStatus(Integer.parseInt(request
 					.getParameter("endAlamStatus")));
 			project.setHeadManagerId(request.getParameter("headManagerId"));
@@ -2644,7 +2644,7 @@ public class EzPMSGWController {
 			projectTaskVO.setPlanEndDate(planEndDate);
 			projectTaskVO.setWeight(Float.parseFloat(request
 					.getParameter("weight")));
-			projectTaskVO.setOverview(request.getParameter("overview"));
+			projectTaskVO.setOverview(jsonParam.get("overview").toString());
 			projectTaskVO.setHeadManagerId(request
 					.getParameter("headManagerId"));
 			projectTaskVO.setWriterId(request.getParameter("writerId"));
@@ -3012,7 +3012,7 @@ public class EzPMSGWController {
 				projectTaskVO.setTaskName(request.getParameter("taskName"));
 				projectTaskVO.setWeight(Float.parseFloat(request
 						.getParameter("weight")));
-				projectTaskVO.setOverview(request.getParameter("overview"));
+				projectTaskVO.setOverview(jsonParam.get("overview").toString());
 				projectTaskVO.setHeadManagerId(request
 						.getParameter("headManagerId"));
 				projectTaskVO.setPlanStartDate(planStartDate);
@@ -3190,7 +3190,7 @@ public class EzPMSGWController {
 			Map<String, Object> project = new HashMap<String, Object>();
 			project.put("planStartDate", request.getParameter("planStartDate"));
 			project.put("planEndDate", request.getParameter("planEndDate"));
-			project.put("overview", request.getParameter("overview"));
+			project.put("overview", jsonParam.get("overview").toString());
 			project.put("headManagerId", request.getParameter("headManagerId"));
 			project.put("creatorId", userId);
 			project.put("creatorName", info.getUserName());
@@ -3556,7 +3556,7 @@ public class EzPMSGWController {
 				groupInfo.setProjectId(Long.parseLong(request
 						.getParameter("projectId")));
 				groupInfo.setGroupMember(groupMemberList);
-				groupInfo.setOverview(request.getParameter("overview"));
+				groupInfo.setOverview(jsonParam.get("overview").toString());
 				groupInfo.setTenantId(info.getTenantId());
 				groupInfo.setUpperGroupId(Long.parseLong(request
 						.getParameter("upperGroupId")));

@@ -315,6 +315,7 @@ public class EzPMSController {
 	/**
 	 * 프로젝트 등록/수정 화면 호출
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezPMS/newProject.do")
 	public String newProject(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model) throws Exception {
@@ -345,7 +346,10 @@ public class EzPMSController {
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("mode", mode);
 
-			JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", null);
+			JSONObject jsonList = new JSONObject();
+			jsonList.put("overview", param.get("overview"));
+			
+			JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "get", jsonList);
 			String status = result.get("status").toString();
 
 			if (status.equals("ok")) {
@@ -398,11 +402,13 @@ public class EzPMSController {
 			jsonList.put("managerList", param.get("managerList"));
 			jsonList.put("participantList", param.get("participantList"));
 			jsonList.put("viewerList", param.get("viewerList"));
+			jsonList.put("overview", param.get("overview"));
 
 			// header가 overflow하지 않게 지워줌
 			param.remove("managerList");
 			param.remove("participantList");
 			param.remove("viewerList");
+			param.remove("overview");
 
 			JSONObject result = new JSONObject();
 
@@ -2051,12 +2057,14 @@ public class EzPMSController {
 		jsonList.put("participantList", param.get("participantList"));
 		jsonList.put("addMemberList", param.get("addMemberList"));
 		jsonList.put("delMemberList", param.get("delMemberList"));
+		jsonList.put("overview", param.get("overview"));
 
 		// param에서 member list 제거
 		param.remove("managerList");
 		param.remove("participantList");
 		param.remove("addMemberList");
 		param.remove("delMemberList");
+		param.remove("overview");
 
 		String url = "/rest/ezPMS/groups/" + groupId + "/users/" + userId;
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", jsonList);
@@ -2267,8 +2275,10 @@ public class EzPMSController {
 
 		JSONObject jsonList = new JSONObject();
 		jsonList.put("managerList", param.get("managerList"));
+		jsonList.put("overview", param.get("overview"));
 
 		param.remove("managerList");
+		param.remove("overview");
 		JSONObject resultBody = commonUtil.getJsonFromRestApi(
 				"/rest/ezPMS/tasks/" + projectId + "/users/" + userInfo.getId(), param, request, "post", jsonList);
 		String status = resultBody.get("status").toString();
@@ -2661,6 +2671,10 @@ public class EzPMSController {
 
 		JSONObject jsonList = new JSONObject();
 		jsonList.put("managerList", param.get("managerList"));
+		jsonList.put("overview", param.get("overview"));
+		
+		param.remove("managerList");
+		param.remove("overview");
 
 		String url = "/rest/ezPMS/tasks/" + taskId + "/users/" + userId;
 
@@ -2837,9 +2851,11 @@ public class EzPMSController {
 			JSONObject jsonList = new JSONObject();
 			jsonList.put("managerList", param.get("managerList"));
 			jsonList.put("participantList", param.get("participantList"));
+			jsonList.put("overview", param.get("overview"));
 
 			param.remove("managerList");
 			param.remove("participantList");
+			param.remove("overview");
 
 			commonUtil.getJsonFromRestApi(url, param, request, "post", jsonList);
 		} catch (Exception e) {
@@ -4517,7 +4533,7 @@ public class EzPMSController {
 		return roleCheck;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "static-access" })
 	@RequestMapping(value = "/ezPMS/exportGanttExcel.do")
 	@ResponseBody
 	public void exportGanttExcel(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response,

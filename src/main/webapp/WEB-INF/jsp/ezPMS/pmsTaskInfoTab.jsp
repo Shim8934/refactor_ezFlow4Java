@@ -98,7 +98,7 @@
 	
 	.managers, .participants{max-height: 100%;overflow-y: auto;}
 	.memberTd{height:29px;}
-	.overviewDiv{max-height: 100%; overflow-y: auto;}
+	.overviewDiv{max-height: 100%; overflow-y: auto; word-break: break-all; width: 100%;}
 </style>
 </head>
 <body class="taskInfoTabBody">
