@@ -517,18 +517,16 @@
 	                if (!isIE()) {
 	                    alert("<spring:message code='main.t3000' />");
 	                    return;
+	                } else {
+	                    var openLocation = "/ezApprovalG/draftuiHWP.do";
 	                }
-	                else {
-	                    //var openLocation = "/myoffice/ezApproval" + gb + "/ezViewHWP/ezDraftUI_HWP.aspx";
-	                    var openLocation = "/ezApprovalG/draftui.do";
-	                }
-	            }
-	            else {
+	            } else {
                 	var openLocation = "/ezApprovalG/draftui.do";
-	                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
-	                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
-	                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7])
 	            }
+	            
+                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
+                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
 	            openwindow(openLocation, "", 890, 620);
 		    }
 
