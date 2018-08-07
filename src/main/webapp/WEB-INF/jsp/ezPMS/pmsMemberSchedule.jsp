@@ -39,13 +39,20 @@ function setMemberScheduleList() {
 	var sDate = $("#Sdatepicker").val() != "" ? $("#Sdatepicker").val() : planStartDate;
 	var eDate = $("#Edatepicker").val() != "" ? $("#Edatepicker").val() : planEndDate;
 	
+	var sDateParsed = Date.parse(sDate);
+	var eDateParsed = Date.parse(eDate);
+	
+	if(sDateParsed > eDateParsed) {
+		alert("<spring:message code='ezPMS.t49'/>");
+		return;
+	}
+	
 	$("#dateListHeader1").empty();
 	$("#dateListHeader2").empty();
 	$(".dateList").empty();
 	$("#memberCNT").empty();
 	
-	var sDateParsed = Date.parse(sDate);
-	var eDateParsed = Date.parse(eDate);
+	
 	// 사용자가 설정한 기간으로 dateList를 필터링
 	for(var i = 0; i < dateList.length; i++) {
 		

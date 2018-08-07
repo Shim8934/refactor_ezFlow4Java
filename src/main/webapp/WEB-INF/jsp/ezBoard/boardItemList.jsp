@@ -114,7 +114,12 @@
 		        var height = parseInt(document.documentElement.clientHeight - 200);
 		        
 		        MailOptionHidden();
-		        Window_resize();
+		        //보미
+		        if (pAdminType == 'y') {
+		        	windowResize();
+		        } else {
+			        Window_resize();
+		        }
 		    };
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -336,6 +341,10 @@
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
+			            //보미 페이징 위치 조정
+			            if (pAdminType == 'y') {
+			            	windowResize();
+			            }
 					}        			
 				});	
 		    }
@@ -388,7 +397,7 @@
 		            DocList.DataSource(xmlDoc);
 		            DocList.DataBind("lvBoardList");
 		            DocList = null;
-		
+		            
 		            strListInfo = "";
 		            var tempno = 0;
 		            for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
@@ -909,9 +918,9 @@
 		        pwidth = parseInt(pwidth) / 2;
 		        pheigth = pheigth - 200;
 		        pwidth = pwidth - 127;
-		        var feature = "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
-		        feature = feature += GetOpenPosition(340,656);
-		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun + "&mode=COPY", "", feature, "");
+		        var feature = "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
+		        feature = feature += GetOpenPosition(355,600);
+		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "", feature, "");
 		    }
 		
 		    var moveboarditem_cross_dialogArguments = new Array();
@@ -949,7 +958,7 @@
 		
 		        if (CrossYN()) {
 		            moveboarditem_cross_dialogArguments[1] = MoveItem_onclick_Complete;
-		            OpenWin = GetOpenWindow("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "MoveBoardItem", 340, 600);
+		            var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "MoveBoardItem", GetOpenWindowfeature(355, 600));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            var pheigth = window.screen.availHeight;
@@ -958,7 +967,7 @@
 		            pwidth = parseInt(pwidth) / 2;
 		            pheigth = pheigth - 200;
 		            pwidth = pwidth - 127;
-		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "", "DialogHeight:656px;DialogWidth:340px;status:no;help:no;edge:sunken;scroll:no");
+		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
 		
 		            if (typeof (ret) != "undefined") {
 		                if (ret == "OK") {
@@ -1203,6 +1212,30 @@
 		            alert("ERROR");
 		        }
 		    }
+		    
+            //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+		    	if ( pAdminType == 'y') {
+		            windowResize();
+		    	}
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 48 - document.getElementById("mainmenu").clientHeight;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+                document.getElementById("MailListRayer").style.height = height + "px";
+                document.getElementById("MailListRayer").style.width = "100%";
+                
+                if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    document.getElementById("divList").style.height = (height - 41) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (height - 100) + "px";
+                } else {
+                    document.getElementById("divList").style.height = (height - 41) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (height - 100) + "px";
+                }
+	        }
 		</script>
 	</head>
 	<c:choose>

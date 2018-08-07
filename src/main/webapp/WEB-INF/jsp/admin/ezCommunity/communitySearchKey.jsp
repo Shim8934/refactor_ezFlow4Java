@@ -20,6 +20,7 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
 			var sCurPage = "<c:out value = '${curPage}' />";
@@ -223,6 +224,24 @@
 	            }
 	        }
 	        //########################################페이지네이션 변경 ##############################################
+	        
+	        //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 170;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
+		    
+		    $(function(){
+	    		windowResize();
+		    });
 		</script>
 	</head>
 	<body class="mainbody" onload = "makePageSelPage()">
@@ -250,28 +269,35 @@
 			<img src="/images/page_next.gif" width="15" height="16" align="absmiddle" id="Img1"  onClick="nextPage_onclick()"></div>--%>
 			
 			<br />
-			<div style="border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
-			<table class="mainlist" style="width:100%">
-				<tr>
-					<th style="width:70px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
-					<th style="width:250px;"><spring:message code = 'ezCommunity.t9991' /></th>
-					<th><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></th>
-					<th style="width:100px;"><spring:message code = 'ezCommunity.t33' /></th>
-					<th style="width:80px;"><spring:message code = 'ezCommunity.t78' /></th>
-				</tr>
-
-				<c:forEach var = "club" items = "${clubList }" varStatus="status">
-					<tr>
-						<td style="width:50px; height:23px"><c:out value='${totalCount - ((curPage -1) * 10) - status.index }' /></td>
-						<!--// 20100108 : 보안 처리, 관련 추가작업(XSS)-->
-						<td style="cursor:pointer; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><nobr ><c:out value = '${club.c_ClubName }' /></nobr></td>
-						<td style="cursor:pointer; width:300px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><c:out value = '${club.c_ClubDesc}' /></td>
-						<td style="cursor:pointer; width:80px" onClick="openinfo_userinfo('${club.c_SysopID}')"><c:out value = '${club.userName }' /></td>
-						<td style="width:80px"><c:out value = '${fn:substring(club.c_RegDate, 0, 10) }' /></td>
-					</tr>
-				</c:forEach>
-				
-			</table>
+			<div id="contentlist" style="width:100%; overflow: auto;">
+				<div style="border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
+					<table class="mainlist" style="width:100%">
+						<tr>
+							<th style="width:70px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
+							<th style="width:250px;"><spring:message code = 'ezCommunity.t9991' /></th>
+							<th><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></th>
+							<th style="width:100px;"><spring:message code = 'ezCommunity.t33' /></th>
+							<th style="width:80px;"><spring:message code = 'ezCommunity.t78' /></th>
+						</tr>
+						<c:if test="${clubList ne null && clubList ne ''}">
+							<c:forEach var = "club" items = "${clubList }" varStatus="status">
+								<tr>
+									<td style="width:50px; height:23px"><c:out value='${totalCount - ((curPage -1) * 10) - status.index }' /></td>
+									<!--// 20100108 : 보안 처리, 관련 추가작업(XSS)-->
+									<td style="cursor:pointer; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><nobr ><c:out value = '${club.c_ClubName }' /></nobr></td>
+									<td style="cursor:pointer; width:300px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><c:out value = '${club.c_ClubDesc}' /></td>
+									<td style="cursor:pointer; width:80px" onClick="openinfo_userinfo('${club.c_SysopID}')"><c:out value = '${club.userName }' /></td>
+									<td style="width:80px"><c:out value = '${fn:substring(club.c_RegDate, 0, 10) }' /></td>
+								</tr>
+							</c:forEach>
+						</c:if>
+						<c:if test="${clubList eq null || clubList eq ''}">
+							<tr>
+								<td colspan="5"><spring:message code = 'main.t00026' /></td>
+							</tr>
+						</c:if>	
+					</table>
+				</div>
 			</div>
 			<br />
 			<div id="tblPageRayer"></div>

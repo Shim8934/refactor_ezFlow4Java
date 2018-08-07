@@ -23,13 +23,12 @@
 var CurrentHeight = document.documentElement.clientHeight - 100;
 var contentTitle = $(".jstree-clicked").text();
 var position = "${position}";
-var groupDetail = "";
 
 $(function() {
 	groupDetail = ${groupDetail};
 	
 	if (position == null || position == "") {	
-		setContentTitle(groupDetail.groupName, "${taskListCount}");
+		setContentTitle("<c:out value='${groupDetail.groupName}'/>", "${taskListCount}");
 	} else { 
 		CurrentHeight = $(window).height() - 100;
 		$("MailListRayer").css("height", CurrentHeight + "px");

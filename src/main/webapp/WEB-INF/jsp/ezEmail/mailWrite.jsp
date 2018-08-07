@@ -41,7 +41,7 @@
 				padding-right: 5px;
 			}
 			.viewtxt > span > span {
-				font-size: 14px;
+				font-size: 12px;
 			}	
 			
 			#menu > ul:nth-child(2) > li {

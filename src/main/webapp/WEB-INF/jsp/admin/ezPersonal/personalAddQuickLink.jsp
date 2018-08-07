@@ -7,6 +7,7 @@
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
+		<link rel="stylesheet" href="/js/jquery/jquery-ui.min.css"/>
 		<style>
 		.listview, .popuplist .listview table, .popuplist .listview th, .popuplist .listview td, .content .listview table, .content .listview th, .content .listview td {
 			border: 0px;
@@ -17,6 +18,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezPersonal/controls/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-ui.min.js"></script>
 		
 		<script type="text/javascript">
 			var userLang = "<c:out value = '${strUserLang}' />";
@@ -32,6 +34,10 @@
 	        var ReturnFunction;
 	        var RetValue;
 	        var lang = "${lang}";
+	        
+	        $(function() {
+	        	$(document).tooltip();
+	        });
 	        
 	        $(document).ready(function () {
 	            LinkTypeURL = document.getElementById(checkValue).getAttribute("src");
@@ -718,7 +724,7 @@
                             </table>
                         </td>
                         <td width="100%" align="center" nowrap>
-                            <a class="imgbtn imgbck"><span onclick="CreateType()">Type<spring:message code = 'ezPersonal.t105'/>
+                            <a class="imgbtn imgbck"><span onclick="CreateType()" title="40x39 (jpg,gif,png)">Type<spring:message code = 'ezPersonal.t105'/>
                             </span></a>
                         </td>
                     </tr>
@@ -762,6 +768,6 @@
 	        <input type="hidden" name="cnt" id="cnt" />
 	        <input type="hidden" name="guid" id="guid"  />
 	        <input type="hidden" name="mailgubun" id="mailgubun" />
-    </form>
+    	</form>
 	</body>
 </html>
