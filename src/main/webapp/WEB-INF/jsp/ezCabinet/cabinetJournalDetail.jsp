@@ -24,7 +24,7 @@
 				</tr>
 				<tr>
 					<th><c:out value="${writer.columnName}"/></th>
-					<td id="journalCreator" class="overfl cursor wide" title="<c:out value="${creatorUser}"/>"><c:out value="${creatorUser.userName}"/></td>
+					<td id="journalCreator" class="overfl cursor wide" title="<c:out value="${writer.columnValue}"/>"></td>
 					<th><c:out value="${date.columnName}"/></th>
 					<td class="overfl" title="<c:out value="${date.columnValue}"/>"><c:out value="${date.columnValue}"/></td>
 				</tr>
@@ -45,7 +45,7 @@
 			</table>
 		</div>
 		
-		<div class="boardContDiv"><iframe id="boardIframe" class="cabrlframe2"></iframe></div>
+		<div class="journalContDiv"><iframe id ="journalIframe" class="cabrlframe2"></iframe></div>
 		
 		<div class="cabBttnDiv" id="fileDivBttn">
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
@@ -70,8 +70,9 @@
 					itemid   : itemID,
 					callback : genderInformation,
 					print    : printJournal,
-					module   : "journal",
-					iframe   : "content"
+					module   : "jourl",
+					iframe   : "journalIframe",
+					type     : "content"
 				});
 				cabinetHelper.start();
 			}

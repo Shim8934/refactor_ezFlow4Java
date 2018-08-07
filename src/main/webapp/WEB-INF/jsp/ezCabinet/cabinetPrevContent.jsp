@@ -106,6 +106,7 @@
 						case "resrc"  : documentContent = parent.CabinetResourceFile.getContent(); break;
 						case "schedl" : documentContent = parent.CabinetScheduleFile.getContent(); break;
 						case "todo"   : documentContent = parent.CabinetTodoFile.getContent()    ; break;
+						case "jourl"  : documentContent = parent.CabinetJournalFile.getContent() ; break;
 						default       : if (parent.CabinetItem) {documentContent = parent.CabinetItem.getContent();}
 					}
 				}
