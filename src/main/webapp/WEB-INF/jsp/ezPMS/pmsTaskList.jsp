@@ -23,7 +23,6 @@
 var CurrentHeight = document.documentElement.clientHeight - 100;
 var contentTitle = $(".jstree-clicked").text();
 var position = "${position}";
-var groupDetail = "";
 
 $(function() {
 	groupDetail = ${groupDetail};
