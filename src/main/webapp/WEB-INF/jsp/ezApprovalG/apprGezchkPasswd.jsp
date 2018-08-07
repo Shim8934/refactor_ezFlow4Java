@@ -73,7 +73,7 @@
 		                ezapralert_cross_dialogArguments[1] = CompleteFunction;
 		            else
 		                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-		            DivPopUpShow(330, 205, url);
+		            DivPopUpShow(325, 200, url);
 		        }
 		        else {
 		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
