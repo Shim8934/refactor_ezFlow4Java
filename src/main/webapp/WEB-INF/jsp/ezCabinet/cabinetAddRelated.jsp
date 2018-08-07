@@ -328,7 +328,12 @@
 					var writerDiv     = commuOpener.document.getElementById("Div1");
 					var writer        = getUserIdFromInline(writerDiv, '"');
 					var date          = trimStr(commuOpener.document.getElementById("Div3").textContent);
-					var endDate       = trimStr(commuOpener.document.getElementById("Div4").textContent);
+					
+					var commuInfTable = commuOpener.document.querySelector("table[class='content']");
+					var tableRows     = commuInfTable.rows;
+					var thridRow      = tableRows[2];
+					var endDate       = trimStr(thridRow.children[3].firstElementChild.textContent);
+					
 					var messageFrame  = commuOpener.document.getElementById("message");
 					var contentWd     = messageFrame.contentWindow || messageFrame.contentDocument;
 					var content       = contentWd.document.body.innerHTML;

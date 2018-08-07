@@ -100,12 +100,13 @@
 				
 				function getContentFromModuleName(moduleName) {
 					switch (moduleName) {
-						case "mail"   : documentContent = parent.CabinetEmailFile.getContent()   ; break;
-						case "board"  : documentContent = parent.CabinetBoardFile.getContent()   ; break;
-						case "option" : documentContent = parent.CabinetOptionFile.getContent()  ; break;
-						case "resrc"  : documentContent = parent.CabinetResourceFile.getContent(); break;
-						case "schedl" : documentContent = parent.CabinetScheduleFile.getContent(); break;
-						case "todo"   : documentContent = parent.CabinetTodoFile.getContent()    ; break;
+						case "mail"   : documentContent = parent.CabinetEmailFile.getContent()    ; break;
+						case "board"  : documentContent = parent.CabinetBoardFile.getContent()    ; break;
+						case "option" : documentContent = parent.CabinetOptionFile.getContent()   ; break;
+						case "commu"  : documentContent = parent.CabinetCommunityFile.getContent(); break;
+						case "resrc"  : documentContent = parent.CabinetResourceFile.getContent() ; break;
+						case "schedl" : documentContent = parent.CabinetScheduleFile.getContent() ; break;
+						case "todo"   : documentContent = parent.CabinetTodoFile.getContent()     ; break;
 						default       : if (parent.CabinetItem) {documentContent = parent.CabinetItem.getContent();}
 					}
 				}

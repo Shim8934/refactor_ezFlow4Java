@@ -663,14 +663,14 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		//Save attach files
 		if (!attach.equals("")) {
 			JSONArray attachList  = (JSONArray) jp.parse(attach);
-			result                = saveListAttachFiles(attachList, itemId, realPath, "upload_circular.ROOT", "uploadFile", locale, userInfo);
+			result                = saveListAttachFiles(attachList, itemId, realPath, "upload_community.ROOT", "", locale, userInfo);
 			if (!result.get("status").equals("ok")) {
 				return result;
 			}
 		}
 		
-		//Add option item
-		int moduleType = 6; //option module
+		//Add community item
+		int moduleType = 7; //community module
 		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
 		
 		//Save option columns information

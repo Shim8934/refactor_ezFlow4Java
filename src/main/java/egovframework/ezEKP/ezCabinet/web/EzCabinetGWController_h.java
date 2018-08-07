@@ -550,16 +550,30 @@ public class EzCabinetGWController_h {
 		
 		//Check file type
 		switch(itemType) {
-			case 1 : getMoreEmailDetail(result, columnList, primary, tenantId)   ; break;
-			case 3 : getMoreBoardDetail(result, columnList, primary, tenantId)   ; break;
-			case 4 : getMoreScheduleDetail(result, columnList, primary, tenantId); break;
-			case 5 : getMoreTodoDetail(result, columnList, primary, tenantId)    ; break;
-			case 6 : getMoreOptionDetail(result, columnList, primary, tenantId)  ; break;
-			case 8 : getMoreAddressDetail(result, columnList, primary, tenantId) ; break;
-			case 11: getMoreResourceDetail(result, columnList, primary, tenantId); break;
+			case 1 : getMoreEmailDetail(result, columnList, primary, tenantId)    ; break;
+			case 3 : getMoreBoardDetail(result, columnList, primary, tenantId)    ; break;
+			case 4 : getMoreScheduleDetail(result, columnList, primary, tenantId) ; break;
+			case 5 : getMoreTodoDetail(result, columnList, primary, tenantId)     ; break;
+			case 6 : getMoreOptionDetail(result, columnList, primary, tenantId)   ; break;
+			case 7 : getMoreCommuintyDetail(result, columnList, primary, tenantId); break;
+			case 8 : getMoreAddressDetail(result, columnList, primary, tenantId)  ; break;
+			case 11: getMoreResourceDetail(result, columnList, primary, tenantId) ; break;
 		}
 	}
 	
+	private void getMoreCommuintyDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
+		CabinetColumnVO writerColumn = columnList.stream().filter(column -> column.getColumnId().equals("commuWriter")).collect(Collectors.toList()).get(0);
+		
+		String writerId              = writerColumn.getColumnValue();
+		SimpleUserInfoVO writerVO    = cabinetService.getSimpleUserInfo(writerId, primary, tenantId);
+		
+		if (writerVO == null) {
+			writerVO = new SimpleUserInfoVO(writerId, writerId);
+		}
+		
+		result.put("writerVO", writerVO);
+	}
+
 	private void getMoreTodoDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
 		CabinetColumnVO creatorColumn = columnList.stream().filter(column -> column.getColumnId().equals("creator")).collect(Collectors.toList()).get(0);
 		CabinetColumnVO statusColumn  = columnList.stream().filter(column -> column.getColumnId().equals("status")).collect(Collectors.toList()).get(0);
