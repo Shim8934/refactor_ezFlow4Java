@@ -6,10 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
@@ -644,6 +641,7 @@ public class EzCabinetGWController_h {
 	
 	private void getMoreBoardDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
 		CabinetColumnVO writerColumn = columnList.stream().filter(column -> column.getColumnId().equals("boardWriter")).collect(Collectors.toList()).get(0);
+		CabinetColumnVO typeColumn   = columnList.stream().filter(column -> column.getColumnId().equals("boardType")).collect(Collectors.toList()).get(0);
 		
 		String writerId              = writerColumn.getColumnValue();
 		SimpleUserInfoVO writerVO    = cabinetService.getSimpleUserInfo(writerId, primary, tenantId);
@@ -652,7 +650,8 @@ public class EzCabinetGWController_h {
 			writerVO = new SimpleUserInfoVO(writerId, writerId);
 		}
 		
-		result.put("writerVO", writerVO);
+		result.put("boardType", typeColumn.getColumnValue());
+		result.put("writerVO" , writerVO);
 	}
 	
 	private void getMoreAddressDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {

@@ -925,6 +925,36 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
+	@RequestMapping(value="/ezCabinet/saveRelatedPhotoBoard.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonSavePhotoBoard(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSavePhotoBoard is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String title           = request.getParameter("title")    != null ? request.getParameter("title")    : "";
+		String mode            = request.getParameter("mode")     != null ? request.getParameter("mode")     : "";
+		String cabinetId       = request.getParameter("cabinet")  != null ? request.getParameter("cabinet")  : "";
+		String createUser      = request.getParameter("writer")   != null ? request.getParameter("writer")   : "";
+		String createDate      = request.getParameter("date")     != null ? request.getParameter("date")     : "";
+		String descript        = request.getParameter("descript") != null ? request.getParameter("descript") : "";
+		String boardId         = request.getParameter("boardid")  != null ? request.getParameter("boardid")  : "";
+		String itemId          = request.getParameter("itemid")   != null ? request.getParameter("itemid")   : "";
+		
+		JSONObject resultObj   = new JSONObject();
+		
+		logger.debug("Title: " + title + " || mode: " + mode + " || cabinetId: " + cabinetId + " || createUser: " + createUser + " || createDate: " + createDate + " || BoardId: " + boardId + " || ItemId: " + itemId + " || Description: " + descript);
+		
+		if (title.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("") || boardId.equals("") || itemId.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService.savePhotoBoard(request, userInfo.getId(), title, mode, cabinetId, createUser, createDate, descript, boardId, itemId);
+		
+		logger.debug("jsonSavePhotoBoard finishes!");
+		return resultObj.toString();
+	}
+	
 	private String getFileSize(long fileSize) {
 		String fileSize_ = "";
 		

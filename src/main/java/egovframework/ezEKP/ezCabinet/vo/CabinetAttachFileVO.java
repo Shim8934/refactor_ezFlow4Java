@@ -6,20 +6,22 @@ public class CabinetAttachFileVO {
 	private String filePath;
 	private String fileName;
 	private long   fileSize;
+	private String fileDescription;
 	private String companyId;
 	private int    tenantId;
 	private int    temp;
 	
 	public CabinetAttachFileVO() {}
 	
-	public CabinetAttachFileVO(int attachId, int itemId, String path, String name, long size, String companyId, int tenantId) {
-		this.attachId  = attachId;
-		this.itemId    = itemId;
-		this.filePath  = path;
-		this.fileName  = name;
-		this.fileSize  = size;
-		this.companyId = companyId;
-		this.tenantId  = tenantId;
+	public CabinetAttachFileVO(int attachId, int itemId, String path, String name, long size, String description, String companyId, int tenantId) {
+		this.attachId        = attachId;
+		this.itemId          = itemId;
+		this.filePath        = path;
+		this.fileName        = name;
+		this.fileSize        = size;
+		this.companyId       = companyId;
+		this.tenantId        = tenantId;
+		this.fileDescription = description;
 	}
 	
 	public int getAttachId() {
@@ -86,4 +88,11 @@ public class CabinetAttachFileVO {
 		this.temp = temp;
 	}
 	
+	public String getFileDescription() {
+		return fileDescription;
+	}
+	
+	public void setFileDescription(String fileDescription) {
+		this.fileDescription = fileDescription;
+	}
 }
