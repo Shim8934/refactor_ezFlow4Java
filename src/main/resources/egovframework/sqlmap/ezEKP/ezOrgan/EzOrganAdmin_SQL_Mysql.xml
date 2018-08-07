@@ -614,7 +614,7 @@
             ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
           VALUES
             ( #portalItemUID9#,'top',1,#portalItemUID9#,null,#userID#,#userName#,#nowDate#,null,-1,225,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
-            ( #portalUUID#,'top',1,'표준포탈페이지 A 테마','en_표준포탈페이지 A 테마',#userID#,#userName#,#nowDate#,null,-1,500,0,1,null,'9999;','1','Y         ',#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf','Y','D',#tenantID# ),
+            ( #portalUUID#,'top',1,'標準ポータルページテーマA','標準ポータルページテーマA',#userID#,#userName#,#nowDate#,null,-1,500,0,1,null,'9999;','1','Y         ',#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf','Y','D',#tenantID# ),
             ( #portalItemUID0#,'top',1,#portalItemUID0#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
             ( #portalItemUID1#,'top',1,#portalItemUID1#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
             ( #portalItemUID2#,'top',1,#portalItemUID2#,null,#userID#,#userName#,#nowDate#,null,-1,110,0,2,null,'500;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# ),
@@ -817,20 +817,20 @@
           TBL_PORTLET_GENERAL
             ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
           VALUES
-            (#portalItemUID10#,'포토게시판_포틀릿','en_포토게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID10#),null,'0','1',225,'0',#companyID#,null,null,548,'iFrame',#tenantID# ),
-            (#portalItemUID11#,'공지게시판_포틀릿','en_공지게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID11#),' ','0','1',225,'0',#companyID#,null,null,280,null,#tenantID# ),
-            (#portalItemUID12#,'배너_우수사원_포틀릿','en_배너_우수사원_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID12#),' ','0','1',225,'0',#companyID#,null,null,330,null,#tenantID# ),
-            (#portalItemUID14#,'우수커뮤니티_포틀릿','en_우수커뮤니티_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID14#),' ','0','1',235,'0',#companyID#,null,null,330,null,#tenantID# ),
-            (#portalItemUID4#,'슬라이드이미지_포틀릿','en_슬라이드이미지_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID4#),' ','0','1',225,'0',#companyID#,null,null,517,null,#tenantID# ),
-            (#portalItemUID17#,'포토_생일 통합 포틀릿','포토_생일 통합 포틀릿_en',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID17#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
-            (#portalItemUID18#,'공지_슬라이드_이모저모 통합 포틀릿','공지_슬라이드_이모저모 통합 포틀릿_en',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID18#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
-            (#portalItemUID15#,'결재사용현황_포틀릿','en_결재사용현황_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID15#),' ','0','1',225,'0',#companyID#,null,null,348,null,#tenantID# ),
-            (#portalItemUID5#,'결재_메일 통합 포틀릿','en_결재_메일 통합 포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID5#),' ','0','1',235,'0',#companyID#,null,null,797,null,#tenantID# ),
-            (#portalItemUID6#,'설문통계_포틀릿','en_설문통계_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID6#),' ','0','1',225,'0',#companyID#,null,null,265,null,#tenantID# ),
-            (#portalItemUID16#,'마이게시판_포틀릿','en_마이게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID16#),' ','0','1',225,'0',#companyID#,null,null,512,null,#tenantID# ),
-            (#portalItemUID7#,'활용하기_포틀릿','en_활용하기_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID7#),'2345235','0','1',225,'0',#companyID#,null,null,240,'DIV',#tenantID# ),
-            (#portalItemUID13#,'직원생일_포틀릿','en_직원생일_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID13#),null,'0','1',225,'0',#companyID#,null,null,338,'DIV',#tenantID# ),
-            (#portalItemUID8#,'사용자정보통합_포틀릿','en_사용자정보통합_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID8#),' ','0','1',220,'0',#companyID#,null,null,1150,null,#tenantID# )
+            (#portalItemUID10#,'PhotoBoard_Portlet','en_포토게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID10#),null,'0','1',225,'0',#companyID#,null,null,548,'iFrame',#tenantID# ),
+            (#portalItemUID11#,'Notice_portlet','en_공지게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID11#),' ','0','1',225,'0',#companyID#,null,null,280,null,#tenantID# ),
+            (#portalItemUID12#,'Banner_TopUser_Portlet','en_배너_우수사원_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID12#),' ','0','1',225,'0',#companyID#,null,null,330,null,#tenantID# ),
+            (#portalItemUID14#,'Community_Portlet','en_우수커뮤니티_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID14#),' ','0','1',235,'0',#companyID#,null,null,330,null,#tenantID# ),
+            (#portalItemUID4#,'SlideImage_Portlet','en_슬라이드이미지_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID4#),' ','0','1',225,'0',#companyID#,null,null,517,null,#tenantID# ),
+            (#portalItemUID17#,'Photo_Birthday_Total_Portlet','포토_생일 통합 포틀릿_en',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID17#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
+            (#portalItemUID18#,'Notice_Slide_Total_Portlet','공지_슬라이드_이모저모 통합 포틀릿_en',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID18#),' ','0','1',240,'0',#companyID#,null,null,1150,null,#tenantID# ),
+            (#portalItemUID15#,'ApprovalUse_Portlet','en_결재사용현황_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID15#),' ','0','1',225,'0',#companyID#,null,null,348,null,#tenantID# ),
+            (#portalItemUID5#,'Approval_Mail_Total_Portlet','en_결재_메일 통합 포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID5#),' ','0','1',235,'0',#companyID#,null,null,797,null,#tenantID# ),
+            (#portalItemUID6#,'QuestionStatistic_Portlet','en_설문통계_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID6#),' ','0','1',225,'0',#companyID#,null,null,265,null,#tenantID# ),
+            (#portalItemUID16#,'MyBoard_Portlet','en_마이게시판_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID16#),' ','0','1',225,'0',#companyID#,null,null,512,null,#tenantID# ),
+            (#portalItemUID7#,'Using_Portlet','en_활용하기_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID7#),'2345235','0','1',225,'0',#companyID#,null,null,240,'DIV',#tenantID# ),
+            (#portalItemUID13#,'Birthday_Portlet','en_직원생일_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID13#),null,'0','1',225,'0',#companyID#,null,null,338,'DIV',#tenantID# ),
+            (#portalItemUID8#,'UserInfo_Portlet','en_사용자정보통합_포틀릿',1,CONCAT('/ezPortal/urlPortlet.do?uID=', #portalItemUID8#),' ','0','1',220,'0',#companyID#,null,null,1150,null,#tenantID# )
       ]]>
     </insert>
     
@@ -840,7 +840,7 @@
           TBL_THEME_GENERAL
             ( UID_,DISPLAYNAME,DISPLAYNAME2,DISPLAYNAME3,DISPLAYNAME4,IMAGEURL,TOPURL,MAINURL,COMPANAYID,CREATORID,CREATORNM,CREATEDATE,MODIFYDATE,TOPHEIGHT,TENANT_ID )
           VALUES
-            ( 'f2de22b9-9a3f-49a9-884b-2e179e564cbf','표준모듈 A 테마 ','표준모듈 A 테마 _en','표준모듈 A 테마 _ja','표준모듈 A 테마 _zh','/files/upload_portal/S907000/Theme/08c5179c-1c9d-46e8-bea3-9c4495fa3704.jpg','/ezPortal/topMenu.do','/ezPortal/portalPage.do',#companyID#,#userID#,#userName#,#nowDate#,#nowDate#,100,#tenantID# )
+            ( 'f2de22b9-9a3f-49a9-884b-2e179e564cbf','標準ポータルページテーマA ','標準ポータルページテーマA','標準ポータルページテーマA','標準ポータルページテーマA','/files/upload_portal/S907000/Theme/08c5179c-1c9d-46e8-bea3-9c4495fa3704.jpg','/ezPortal/topMenu.do','/ezPortal/portalPage.do',#companyID#,#userID#,#userName#,#nowDate#,#nowDate#,100,#tenantID# )
       ]]>
     </insert>
     
@@ -850,13 +850,13 @@
           TBL_TOPMENU_GENERAL
             ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,USEFLAG,COMPANYID,LANG,TOPMNID,BASETYPE,THEMEUID,TENANT_ID )
           VALUES
-            ( #topMenuJaUUID#,'top',1,'표준메뉴_일본','표준메뉴_일본',#userID#,#userName#,#nowDate#,null,-1,200,0,1,' ',';','Y',#companyID#,'3',null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
-            ( #topMenuKoUUID#,'top',1,'표준메뉴_한국','표준메뉴_한국',#userID#,#userName#,#nowDate#,null,-1,57,0,1,null,';','Y',#companyID#,'1',null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
+            ( #topMenuJaUUID#,'top',1,'Standard Menu_Ja','Standard Menu_Ja',#userID#,#userName#,#nowDate#,null,-1,200,0,1,' ',';','Y',#companyID#,'3',null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
+            ( #topMenuKoUUID#,'top',1,'Standard Menu_Ko','Standard Menu_Ko',#userID#,#userName#,#nowDate#,null,-1,57,0,1,null,';','Y',#companyID#,'1',null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
             ( #topMenuEnSubUUID#,'top',1,#topMenuEnSubUUID#,#topMenuEnSubUUID#,#userID#,#userName#,#nowDate#,null,-1,110,0,4,' ','100;280;500;;',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
             ( #topMenuKoSub2UUID#,'top',1,#topMenuKoSub2UUID#,#topMenuKoSub2UUID#,#userID#,#userName#,#nowDate#,null,-1,110,0,1,null,';',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
             ( #topMenuJaSubUUID#,'top',1,#topMenuJaSubUUID#,#topMenuJaSubUUID#,#userID#,#userName#,#nowDate#,null,-1,110,0,4,' ','100;280;500;;',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
             ( #topMenuJaSub2UUID#,'top',1,#topMenuJaSub2UUID#,#topMenuJaSub2UUID#,#userID#,#userName#,#nowDate#,null,-1,110,0,1,' ',';',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
-            ( #topMenuEnUUID#,'top',1,'표준메뉴_영어','표준메뉴_영어',#userID#,#userName#,#nowDate#,null,-1,200,0,1,' ',';','Y',#companyID#,'2',null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
+            ( #topMenuEnUUID#,'top',1,'Standard Menu_En','Standard Menu_En',#userID#,#userName#,#nowDate#,null,-1,200,0,1,' ',';','Y',#companyID#,'2',null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
             ( #topMenuKoSubUUID#,'top',1,#topMenuKoSubUUID#,#topMenuKoSubUUID#,#userID#,#userName#,#nowDate#,null,-1,110,0,3,null,'100;280;;',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# ),
             ( #topMenuEnSub2UUID#,'top',1,#topMenuEnSub2UUID#,#topMenuEnSub2UUID#,#userID#,#userName#,#nowDate#,null,-1,110,0,1,' ',';',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# )
       ]]>
@@ -903,18 +903,18 @@
 			(#portalItemUID2#,#portalUUID#,'top',#portalUUID#,1,#portalUUID#,0,110,30000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
 			(#portalItemUID3#,#portalUUID#,'top',#portalUUID#,1,#portalUUID#,0,110,40000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
 			(#portalItemUID9#,#portalUUID#,'top',#portalUUID#,1,#portalUUID#,0,225,20000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
-			(#portalItemUID4#,#portalItemUID9#,'top',#portalUUID#,0,'슬라이드이미지_포틀릿',517,225,10000,2,1,1,1,null,null,null,null,null,null,null,#tenantID#),
-			(#portalItemUID5#,#portalItemUID2#,'top',#portalUUID#,0,'결재_메일 통합 포틀릿',797,235,10000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
-			(#portalItemUID6#,#portalItemUID3#,'top',#portalUUID#,0,'설문통계_포틀릿',265,235,10000,2,1,1,0,null,null,null,null,null,null,null,#tenantID#),
-			(#portalItemUID7#,#portalItemUID1#,'top',#portalUUID#,0,'활용하기_포틀릿',230,225,110000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
-			(#portalItemUID8#,#portalItemUID0#,'top',#portalUUID#,0,'사용자정보통합_포틀릿',1150,220,10000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
-			(#portalItemUID10#,#portalItemUID1#,'top',#portalUUID#,0,'포토게시판_포틀릿',558,225,10000,2,1,1,1,null,null,null,null,null,null,'2         ',#tenantID#),
-			(#portalItemUID11#,#portalItemUID9#,'top',#portalUUID#,0,'공지게시판_포틀릿',280,225,20000,1,1,1,1,null,null,null,null,null,null,null,#tenantID#),
-			(#portalItemUID12#,#portalItemUID9#,'top',#portalUUID#,0,'배너_우수사원_포틀릿',330,225,10000,3,1,1,0,null,null,null,null,null,null,null,#tenantID#),
-			(#portalItemUID13#,#portalItemUID1#,'top',#portalUUID#,0,'직원생일_포틀릿',338,225,10000,3,1,1,1,null,null,null,null,null,null,null,#tenantID#),
-			(#portalItemUID14#,#portalItemUID2#,'top',#portalUUID#,0,'우수커뮤니티_포틀릿',330,235,10000,2,1,1,1,null,null,null,null,null,null,null,#tenantID#),
-			(#portalItemUID15#,#portalItemUID3#,'top',#portalUUID#,0,'결재사용현황_포틀릿',348,235,10000,3,1,1,1,null,null,null,null,null,null,null,#tenantID#),
-			(#portalItemUID16#,#portalItemUID3#,'top',#portalUUID#,0,'마이게시판_포틀릿',512,235,70000,1,1,1,1,null,null,null,null,null,null,null,#tenantID#)
+			(#portalItemUID4#,#portalItemUID9#,'top',#portalUUID#,0,'SlideImage_Portlet',517,225,10000,2,1,1,1,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID5#,#portalItemUID2#,'top',#portalUUID#,0,'Approval_Mail_Total_Portlet',797,235,10000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID6#,#portalItemUID3#,'top',#portalUUID#,0,'QuestionStatistic_Portlet',265,235,10000,2,1,1,0,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID7#,#portalItemUID1#,'top',#portalUUID#,0,'Using_Portlet',230,225,110000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID8#,#portalItemUID0#,'top',#portalUUID#,0,'UserInfo_Portlet',1150,220,10000,1,1,1,0,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID10#,#portalItemUID1#,'top',#portalUUID#,0,'PhotoBoard_Portlet',558,225,10000,2,1,1,1,null,null,null,null,null,null,'2         ',#tenantID#),
+			(#portalItemUID11#,#portalItemUID9#,'top',#portalUUID#,0,'Notice_portlet',280,225,20000,1,1,1,1,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID12#,#portalItemUID9#,'top',#portalUUID#,0,'Banner_TopUser_Portlet',330,225,10000,3,1,1,0,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID13#,#portalItemUID1#,'top',#portalUUID#,0,'Birthday_Portlet',338,225,10000,3,1,1,1,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID14#,#portalItemUID2#,'top',#portalUUID#,0,'Community_Portlet',330,235,10000,2,1,1,1,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID15#,#portalItemUID3#,'top',#portalUUID#,0,'ApprovalUse_Portlet',348,235,10000,3,1,1,1,null,null,null,null,null,null,null,#tenantID#),
+			(#portalItemUID16#,#portalItemUID3#,'top',#portalUUID#,0,'MyBoard_Portlet',512,235,70000,1,1,1,1,null,null,null,null,null,null,null,#tenantID#)
       ]]>
     </insert>
     
@@ -1079,9 +1079,9 @@
       		TBL_MENUITEM_ITEMS_IMAGE 
       			(UID_,OWNERPAGEID,SKINNUM,DISPLAYNAME,DISPLAYNAME2,IMAGETYPE,NORMALIMAGEPATH,OVERIMAGEPATH,IMAGEWIDTH,IMAGEHEIGHT,LINKURL,LINKLOCATION,WINDOWOPTION,TENANT_ID) 
       		VALUES 
-      			(#topMenuLogoKoUUID#,#topMenuKoUUID#,1,'로고아이템','LogoItem',null,'/files/upload_portal/S907000/Logo/logo.gif',null,106,42,' ',' ',' ',#tenantID#),
-      			(#topMenuLogoJaUUID#,#topMenuJaUUID#,1,'로고아이템','LogoItem',null,'/files/upload_portal/S907000/Logo/logo.gif',null,106,42,' ',' ',' ',#tenantID#),
-      			(#topMenuLogoEnUUID#,#topMenuEnUUID#,1,'로고아이템','LogoItem',null,'/files/upload_portal/S907000/Logo/logo.gif',null,106,42,' ',' ',' ',#tenantID#)
+      			(#topMenuLogoKoUUID#,#topMenuKoUUID#,1,'LogoItem','LogoItem',null,'/files/upload_portal/S907000/Logo/logo.gif',null,106,42,' ',' ',' ',#tenantID#),
+      			(#topMenuLogoJaUUID#,#topMenuJaUUID#,1,'LogoItem','LogoItem',null,'/files/upload_portal/S907000/Logo/logo.gif',null,106,42,' ',' ',' ',#tenantID#),
+      			(#topMenuLogoEnUUID#,#topMenuEnUUID#,1,'LogoItem','LogoItem',null,'/files/upload_portal/S907000/Logo/logo.gif',null,106,42,' ',' ',' ',#tenantID#)
       ]]>
     </insert>
     
