@@ -375,6 +375,8 @@
 		                if (isIE) {
 							url = "/admin/ezApprovalG/formMainOther.do";
 		                } else {
+	                		var pAlertContent = "한글양식은 IE에서만 수정할 수 있습니다.";
+	                        alert(pAlertContent);
 							return;
 		                }
 		                parameter = parameter + HWP;
