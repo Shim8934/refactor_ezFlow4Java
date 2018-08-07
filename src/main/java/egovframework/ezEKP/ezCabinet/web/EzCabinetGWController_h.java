@@ -560,6 +560,7 @@ public class EzCabinetGWController_h {
 	
 	private void getMoreCommuintyDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
 		CabinetColumnVO writerColumn = columnList.stream().filter(column -> column.getColumnId().equals("commuWriter")).collect(Collectors.toList()).get(0);
+		CabinetColumnVO typeColumn   = columnList.stream().filter(column -> column.getColumnId().equals("commuType")).collect(Collectors.toList()).get(0);
 		
 		String writerId              = writerColumn.getColumnValue();
 		SimpleUserInfoVO writerVO    = cabinetService.getSimpleUserInfo(writerId, primary, tenantId);
@@ -568,6 +569,7 @@ public class EzCabinetGWController_h {
 			writerVO = new SimpleUserInfoVO(writerId, writerId);
 		}
 		
+		result.put("commuType", typeColumn.getColumnValue());
 		result.put("writerVO", writerVO);
 	}
 
@@ -797,5 +799,40 @@ public class EzCabinetGWController_h {
 		
 		return result;
 	}
-	
+
+	@RequestMapping(value="/rest/ezcabinet/relate-item/save/photo-community", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject savePhotoCommunityitem(@RequestBody JSONObject commuItemInf, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
+		String userId     = commuItemInf.get("userId")     != null ? commuItemInf.get("userId").toString()     : "";
+		String mode       = commuItemInf.get("mode")       != null ? commuItemInf.get("mode").toString()       : "";
+		String cabinetId  = commuItemInf.get("cabinet")    != null ? commuItemInf.get("cabinet").toString()    : "";
+		String title      = commuItemInf.get("title")      != null ? commuItemInf.get("title").toString()      : "";
+		String writer     = commuItemInf.get("writer")     != null ? commuItemInf.get("writer").toString()     : "";
+		String content    = commuItemInf.get("content")    != null ? commuItemInf.get("content").toString()    : "";
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + " || content : " + content);
+		
+		if (serverName.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals(""))|| title.equals("") || writer.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
+			String realPath  = request.getServletContext().getRealPath("");
+			result           = cabinetService_h.savePhotoCommunityitem(realPath, mode, dstCabinetId, title, writer, content, locale, userInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
 }

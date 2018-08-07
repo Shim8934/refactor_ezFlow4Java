@@ -40,10 +40,18 @@ var CabinetFileHelper = function() {
 			window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 			var cabBttnElmt         = document.getElementById("fileDivBttn");
 			var listBttns           = cabBttnElmt.children;
-			listBttns[0].onclick    = function(e) {fileModify();};
-			listBttns[1].onclick    = function(e) {fileDelete();};
-			listBttns[2].onclick    = function(e) {filePrint();}
-			listBttns[3].onclick    = function(e) {closeWindow();};
+			var totalBttn           = listBttns.length;
+			if (totalBttn == 4) {
+				listBttns[0].onclick    = function(e) {fileModify();};
+				listBttns[1].onclick    = function(e) {fileDelete();};
+				listBttns[2].onclick    = function(e) {filePrint();}
+				listBttns[3].onclick    = function(e) {closeWindow();};
+			}
+			else if (totalBttn == 3) {
+				listBttns[0].onclick    = function(e) {fileModify();};
+				listBttns[1].onclick    = function(e) {fileDelete();};
+				listBttns[2].onclick    = function(e) {closeWindow();};
+			}
 			
 			var cabBttnElmt         = document.getElementById("fileModifyDivBttn");
 			var listBttns           = cabBttnElmt.children;

@@ -11,9 +11,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
-
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetDAO_h;
@@ -677,9 +674,38 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		//Save option columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("commuWriter" , itemId, "ezCommunity.t138", writer , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("commuTime"   , itemId, "ezCommunity.t209", date   , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("commuEndDate", itemId, "ezCommunity.t931", endDate, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("commuWriter" , itemId, "ezCommunity.t138", writer  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("commuTime"   , itemId, "ezCommunity.t209", date    , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("commuEndDate", itemId, "ezCommunity.t931", endDate , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("commuType"   , itemId, "ezCommunity.t931", "normal", companyId, tenantId));
+		
+		saveAllColumns(listColm);
+		result.put("status", "ok");
+		result.put("code", 0);
+		
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject savePhotoCommunityitem(String realPath, String mode, int cabinetId, String title, String writer, String content, Locale locale, LoginVO userInfo) throws Exception {
+		JSONObject result      = new JSONObject();
+		int tenantId           = userInfo.getTenantId();
+		String companyId       = userInfo.getCompanyID();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		
+		//Get itemId
+		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
+		
+		//Add community item
+		int moduleType = 7; //community module
+		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
+		
+		//Save option columns information
+		List<CabinetColumnVO> listColm = new ArrayList<>();
+		listColm.add(createNewRelatedColumn("commuWriter", itemId, "ezCommunity.t138", writer , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("commuType"  , itemId, "ezCommunity.t931", "photo", companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		result.put("status", "ok");

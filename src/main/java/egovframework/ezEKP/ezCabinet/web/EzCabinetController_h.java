@@ -382,6 +382,32 @@ public class EzCabinetController_h {
 		return resultObj.toString();
 	}
 	
+	@RequestMapping(value="/ezCabinet/saveRelatedPhotoCommunity.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String jsonSaveRelatedPhotoCommunity(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("jsonSaveRelatedPhotoCommunity is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String mode            = request.getParameter("mode")       != null ? request.getParameter("mode")       : "";
+		String cabinetId       = request.getParameter("cabinet")    != null ? request.getParameter("cabinet")    : "";
+		String title           = request.getParameter("title")      != null ? request.getParameter("title")      : "";
+		String writer          = request.getParameter("writer")     != null ? request.getParameter("writer")     : "";
+		String content         = request.getParameter("content")    != null ? request.getParameter("content")    : "";
+		JSONObject resultObj   = new JSONObject();
+		
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer);
+		
+		if (mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || writer.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = cabinetRestService_h.saveRelatedPhotoCommunity(request, userInfo.getId(), mode, cabinetId, title, writer, content);
+		
+		logger.debug("jsonSaveRelatedPhotoCommunity finishes!");
+		return resultObj.toString();
+	}
+	
 	private String getModuleHandler(Model model, JSONObject iteminfo) {
 		String jspPageName   = "";
 		JSONObject item      = (JSONObject) iteminfo.get("item");
@@ -414,7 +440,17 @@ public class EzCabinetController_h {
 	}
 	
 	private String getCommunityColumnInfo(Model model, JSONObject iteminfo) {
-		String jspPageName = "ezCabinet/cabinetCommunityDetail";
+		String jspPageName =  "";
+		logger.debug("commu" + iteminfo.get("commuType").toString());
+		String commuType  = iteminfo.get("commuType").toString();
+		
+		if (commuType.equals("normal")) {
+			jspPageName = "ezCabinet/cabinetCommunityDetail";
+		}
+		else {
+			jspPageName = "ezCabinet/cabinetPhotoCommunityDetail";
+		}
+		
 		return jspPageName;
 	}
 

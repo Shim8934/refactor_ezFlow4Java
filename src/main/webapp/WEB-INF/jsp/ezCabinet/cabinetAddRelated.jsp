@@ -344,6 +344,16 @@
 					var commuOpener   = window.opener;
 					if (!commuOpener) {alert(CabinetMessages.strSelect); return;}
 					
+					var postdate = commuOpener.document.getElementById("PostDate");
+					if (postdate) {
+						saveNormalCommu(commuOpener, saveMode, cabinetId);
+					}
+					else {
+						savePhotoCommu(commuOpener, saveMode, cabinetId);
+					}
+				}
+				
+				function saveNormalCommu(commuOpener, saveMode, cabinetId) {
 					var title         = trimStr(commuOpener.document.getElementById("title").textContent);
 					var writerDiv     = commuOpener.document.getElementById("Div1");
 					var writer        = getUserIdFromInline(writerDiv, '"');
@@ -387,7 +397,29 @@
 					
 					if (saveMode == 1) {data.cabinet = cabinetId;}
 					
-					//makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
+				}
+				
+				function savePhotoCommu(commuOpener, saveMode, cabinetId) {
+					var title         = trimStr(commuOpener.document.getElementById("Div1").textContent);
+					var writerDiv     = commuOpener.document.getElementById("title");
+					var writer        = getUserIdFromInline(writerDiv, '"');
+					
+					var messageFrame  = commuOpener.document.getElementById("message");
+					var contentWd     = messageFrame.contentWindow || messageFrame.contentDocument;
+					var content       = contentWd.document.body.innerHTML;
+					
+					var url  = "/ezCabinet/saveRelatedPhotoCommunity.do";
+					var data = {
+							mode       : saveMode,
+							title      : title,
+							writer     : writer,
+							content    : content
+					};
+					
+					if (saveMode == 1) {data.cabinet = cabinetId;}
+					
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
 				function saveTodoDocument(saveMode, cabinetId) {

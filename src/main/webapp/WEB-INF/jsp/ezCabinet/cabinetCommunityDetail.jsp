@@ -29,12 +29,12 @@
 					<td><c:out value="${fn:substring(commuTime.columnValue, 0, 19)}"/></td>
 				</tr>
 				<tr>
-					<th><spring:message code='ezCabinet.t51'/></th>
-					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
-				</tr>
-				<tr>
 					<th><c:out value="${commuEndDate.columnName}"/></th>
 					<td colspan="3"><c:out value="${commuEndDate.columnValue}"/></td>
+				</tr>
+				<tr>
+					<th><spring:message code='ezCabinet.t51'/></th>
+					<td id="title" class="overfl" colspan="3"><c:out value="${item.title}"/></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t94'/></th>
