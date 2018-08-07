@@ -1824,9 +1824,12 @@ public class EzPMSGWController {
 			if (roleCheck.equals("permitted")) {
 				for (int i = 0; i < taskIdList.length; i++) {
 					// 삭제
-					ezPMSService.deleteTask(Long.parseLong(taskIdList[i]),
-							projectId, tenantId, companyId, lang);
-
+					try {
+						ezPMSService.deleteTask(Long.parseLong(taskIdList[i]),
+								projectId, tenantId, companyId, lang);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					// 해당 task관련 삭제
 					// ezPMSService.deleteMemberSchedule(null, projectId,
 					// tenantId, null, Long.parseLong(taskIdList[i]));

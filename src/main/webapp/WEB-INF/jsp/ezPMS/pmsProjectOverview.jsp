@@ -383,11 +383,11 @@ function changeStatus(status) {
 							alert("<spring:message code='ezPMS.t10' />");
 						}
 						
-						var projectName = $("#projectName", parent.document).text().trim();
+						var projectName = $("#pjName", parent.document).text().trim();
 						var nowStatusStr = getStatusStr(nowStatus);
 						var statusStr 	 = getStatusStr(changeStatus);
 						
-						var logContent = "[" + projectName + "<spring:message code='ezPMS.t283' />" + nowStatusStr + "<spring:message code='ezPMS.t313' />" + statusStr + "<spring:message code='ezPMS.t314' />" 
+						var logContent = "[" + projectName + "<spring:message code='ezPMS.t283' />" + nowStatusStr + "]<spring:message code='ezPMS.t313' /> [" + statusStr + "]<spring:message code='ezPMS.t314' />" 
 						addTaskLog(projectId, 2, groupId, null, logContent);
 						
 						window.location.reload();
