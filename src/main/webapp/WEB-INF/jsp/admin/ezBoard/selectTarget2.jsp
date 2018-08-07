@@ -455,10 +455,12 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : pMode + "::" + cnkeyword.value,
+		        	data : {
+		        		search : pMode + "::" + cnkeyword.value,
 		        		cell : 'company;description;title;displayName;mail',
 		        		prop : 'department',
-		        		type : 'user'},
+		        		type : 'user'
+		        	},
 		        	success : function(result){	
 		        		xmlDOM = loadXMLString(result);
 		                adCount = xmlDOM.getElementsByTagName("ROW").length;
@@ -488,7 +490,7 @@
 		                var checkName2_Cross = window.open("/admin/ezBoard/checkName.do", "checkName2_Cross", GetOpenWindowfeature(900, 430));
 		                try { checkName2_Cross.focus(); } catch (e) { }
 		            } else {
-		                var feature = "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken";
+		                var feature = "dialogHeight:430px; dialogWidth:900px; status:no;scroll:no; help:no; edge:sunken";
 		                feature = feature + GetShowModalPosition(900, 430);
 		                window.showModalDialog("/admin/ezBoard/checkName.do", rgParams, feature);
 
