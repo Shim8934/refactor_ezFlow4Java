@@ -253,7 +253,27 @@
 				}
 				
 				function savePhotoBoard(boardOpener, saveMode, cabinetId) {
+					var boardWriter   = boardOpener.strWriterID;
+					var boardTitle    = boardOpener.document.getElementById("title").textContent;
+					var boardDate     = trimStr(boardOpener.document.getElementById("User_WriteDate").textContent);
+					var boardDescript = boardOpener.document.getElementById("Div2").textContent;
+					var boardId       = boardOpener.pBoardID;
+					var boardItemId   = boardOpener.pItemID;
 					
+					var url  = "/ezCabinet/saveRelatedPhotoBoard.do";
+					var data = {
+						mode     : saveMode,
+						title    : boardTitle,
+						writer   : boardWriter,
+						date     : boardDate,
+						descript : boardDescript,
+						boardid  : boardId,
+						itemid   : boardItemId
+					};
+					
+					if (saveMode == 1) {data.cabinet = cabinetId;}
+					
+					makeAjaxCall(data, "POST", url, afterSaveDocument, null, true, null);
 				}
 				
 				function saveNormalBoard(boardOpener, saveMode, cabinetId) {

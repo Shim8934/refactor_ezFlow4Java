@@ -1046,9 +1046,20 @@ var CabinetItem = function() {
 		var attachList  = data.attachFileList;
 		var relatedList = data.relatedFileList;
 		var writer      = data.writerVO;
+		var boardType   = data.boardType;
 		
-		generateBoardTitle(itemInfo, relatedList, dlElmt);
-		generateRelatedModuleContent(itemInfo, attachList, null, null);
+		if (boardType == "normal") {
+			generateBoardTitle(itemInfo, relatedList, dlElmt);
+			generateRelatedModuleContent(itemInfo, attachList, null, null);
+		}
+		else {
+			generateBoardTitle(itemInfo, relatedList, dlElmt);
+			generatePhotoContent(itemInfo, attachList);
+		}
+	}
+	
+	function generatePhotoContent(itemInfo, attachList) {
+		
 	}
 	
 	function generateBoardTitle(itemInfo, relatedList, dlElmt) {

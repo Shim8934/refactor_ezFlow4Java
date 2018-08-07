@@ -1830,6 +1830,45 @@ public class EzCabinetGWController {
 		return result;
 	}
 	
+	@RequestMapping(value="/rest/ezcabinet/relate-item/save/photo-board", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject savePhotoBoard(@RequestBody JSONObject boardItemInf, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name")            : "";
+		String userId     = boardItemInf.get("userId")     != null ? boardItemInf.get("userId").toString()     : "";
+		String title      = boardItemInf.get("title")      != null ? boardItemInf.get("title").toString()      : "";
+		String mode       = boardItemInf.get("mode")       != null ? boardItemInf.get("mode").toString()       : "";
+		String cabinetId  = boardItemInf.get("cabinet")    != null ? boardItemInf.get("cabinet").toString()    : "";
+		String createUser = boardItemInf.get("createUser") != null ? boardItemInf.get("createUser").toString() : "";
+		String createDate = boardItemInf.get("createDate") != null ? boardItemInf.get("createDate").toString() : "";
+		String descript   = boardItemInf.get("descript")   != null ? boardItemInf.get("descript").toString()   : "";
+		String boardId    = boardItemInf.get("boardId")    != null ? boardItemInf.get("boardId").toString()    : "";
+		String itemId     = boardItemInf.get("itemId")     != null ? boardItemInf.get("itemId").toString()     : "";
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName +  "userId: " + userId +  "Title: " + title + " || mode: " + mode + " || cabinetId: " + cabinetId + " || createUser: " + createUser + " || createDate: " + createDate + " || boardId: " + boardId + " || itemId: " + itemId + " || Description: " + descript);
+		
+		if (serverName.equals("") || userId.equals("") || title.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("") || boardId.equals("") || itemId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
+			String realPath  = request.getServletContext().getRealPath("");
+			result           = cabinetService.savePhotoBoard(dstCabinetId, realPath, title, mode, createUser, createDate, descript, boardId, itemId, locale, userInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
 	private boolean isCabinetAdmin(LoginVO user) {
 		return user.getRollInfo().contains("cb=1");
 	}

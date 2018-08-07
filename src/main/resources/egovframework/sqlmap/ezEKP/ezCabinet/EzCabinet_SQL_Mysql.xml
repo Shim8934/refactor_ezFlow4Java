@@ -216,8 +216,9 @@
 		<result property="filePath"         column="file_path"           columnIndex="3"/>
 		<result property="fileName"         column="file_name"           columnIndex="4"/>
 		<result property="fileSize"         column="file_size"           columnIndex="5"/>
-		<result property="companyId"        column="company_id"          columnIndex="6"/>
-		<result property="tenantId"         column="tenant_id"           columnIndex="7"/>
+		<result property="fileDescription"  column="file_description"    columnIndex="6"/>
+		<result property="companyId"        column="company_id"          columnIndex="7"/>
+		<result property="tenantId"         column="tenant_id"           columnIndex="8"/>
 	</resultMap>
 	
 	<!-- cabinet relation file resultMap -->
@@ -915,7 +916,7 @@
 			<![CDATA[ select 1 from dual where not exists (select item_id, attach_id from tbl_cb_attach_file where item_id = #itemId# and file_path = #filePath# and file_name = #fileName# and file_size = #fileSize# and tenant_id = #tenantId#) ]]>
 		</selectKey>
 		<isEqual property="temp" compareValue="1">
-			<![CDATA[insert into tbl_cb_attach_file (attach_id, item_id, file_path, file_name, file_size, company_id, tenant_id) values (#attachId#, #itemId#, #filePath#, #fileName#, #fileSize#, #companyId#, #tenantId#)]]>
+			<![CDATA[insert into tbl_cb_attach_file (attach_id, item_id, file_path, file_name, file_size, file_description, company_id, tenant_id) values (#attachId#, #itemId#, #filePath#, #fileName#, #fileSize#, #fileDescription#, #companyId#, #tenantId#)]]>
 		</isEqual>
 	</insert>
 	

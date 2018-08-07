@@ -316,8 +316,9 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		//Save board columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("boardWriter", itemId, "ezBoard.t223", writer, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardWriter", itemId, "ezBoard.t223", writer  , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("boardTime"  , itemId, "ezBoard.t224", dateTime, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("boardType"  , itemId, "ezBoard.t224", "normal", companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		
@@ -384,11 +385,11 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 					continue;
 				}
 				
-				String fileName    = (String)fileObj.get("name");
-				File file          = new File(realPath + filePath);
-				long fileSize      = file.length();
+				String fileName = (String)fileObj.get("name");
+				File file       = new File(realPath + filePath);
+				long fileSize   = file.length();
 				
-				CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, filePath, fileName, fileSize, companyId, tenantId);
+				CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, filePath, fileName, fileSize, "", companyId, tenantId);
 				ezCabinetDAO.saveAttachFile(attachFile);
 			}
 		}
@@ -545,6 +546,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 			folderPath = commonUtil.getUploadPath(modulePath, tenantId) + commonUtil.separator + uploadPath;
 		}
 		
+		String fileDesc      = attachInf.get("fileDesc") != null ? attachInf.get("fileDesc").toString() : "";
 		String filePath      = folderPath + attachInf.get("filePath").toString();
 		int dotPos           = fileName.lastIndexOf(".");
 		String extend        = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
@@ -584,7 +586,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		File readfile = new File(newFilePath);
 		long fileSize = readfile.length();
 		
-		CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, pfilePath, fileName, fileSize, companyId, tenantId);
+		CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, pfilePath, fileName, fileSize, fileDesc, companyId, tenantId);
 		attachFileList.add(attachFile);
 		
 		result.put("status", "ok");
