@@ -2989,5 +2989,4 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(Map<String, Object> map) {
 		return (List<PortalTopOtherCompanyAddJobVO>) list("EzApprovalG.getAllCompanyList", map);
 	}
-	
 }

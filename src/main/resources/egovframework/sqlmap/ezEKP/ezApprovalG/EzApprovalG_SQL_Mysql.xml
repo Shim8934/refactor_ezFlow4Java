@@ -23981,7 +23981,7 @@
    											COMPANYID = #companyID#
    											) 
    						AND 
-	   						TENANT_ID = 6) 
+	   						TENANT_ID = #v_TENANTID#) 
    		AND
    			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
    		AND
@@ -24106,7 +24106,7 @@
    											COMPANYID = #companyID#
    											) 
    						AND 
-	   						TENANT_ID = 6) 
+	   						TENANT_ID = #v_TENANTID#) 
    		AND 
    			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL
    		AND
