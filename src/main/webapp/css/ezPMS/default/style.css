@@ -421,10 +421,12 @@
 .jstree-default .jstree-open > .jstree-ocl {
   background : url("/images/OrganTree_cross/minus_normal.gif");
   background-repeat : no-repeat;
+  padding-bottom : 3px;
 }
 .jstree-default .jstree-closed > .jstree-ocl {
   background : url("/images/OrganTree_cross/plus_normal.gif");
   background-repeat : no-repeat;
+  padding-bottom : 3px;
 }
 .jstree-default .jstree-leaf > .jstree-ocl {
   background-position: -68px -4px;
@@ -526,6 +528,7 @@
   background: url("/images/OrganTree_cross/fldr.gif");
   background-repeat: no-repeat;
   margin-top : 3px;
+  padding-bottom : 2px;
 }
 .jstree-default > .jstree-container-ul > .jstree-node {
   margin-left: 0;
@@ -601,6 +604,8 @@
   background: url("/images/OrganTree_cross/fldr.gif");
   background-repeat: no-repeat;
   margin-top : 3px;
+  padding-bottom : 1px;
+  margin-right : 3px;
 }
 .jstree-default-small .jstree-node {
   background-position: -295px -7px;
