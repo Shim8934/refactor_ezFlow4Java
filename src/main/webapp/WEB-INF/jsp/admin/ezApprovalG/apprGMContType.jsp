@@ -162,8 +162,8 @@
                 <li><span onclick="return btncancel_onclick()"></span></li>
             </ul>
         </div>
-		<div class="listview" style="width:272px;height:210px;overflow-y:auto;overflow-x:hidden;">
-			<div id="lvDocTypeList" style="BORDER:0; HEIGHT: 200px; WIDTH: 250px"></div>
+		<div class="listview" style="width:480px;height:310px;overflow-y:auto;overflow-x:hidden;">
+			<div id="lvDocTypeList" style="BORDER:0; HEIGHT: 300px; WIDTH: 470px"></div>
 		</div>
 		<table class="content" style="margin-top:5px">
 			<tr>
