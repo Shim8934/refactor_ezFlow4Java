@@ -184,4 +184,44 @@
 		]]>
 	</select>
 	
+	<insert id="EzCommonDAO.insertCompanyConfig" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_COMPANY_CONFIG (
+				TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE 
+			)
+			VALUES (
+				#tenantID#, #companyID#, #propertyName#, #propertyValue#, #description#, #SYSDATE# 
+			)
+		]]>
+	</insert>
+	
+	<update id="EzCommonDAO.updateCompanyConfig" parameterClass="map">
+		<![CDATA[
+			UPDATE
+				TBL_COMPANY_CONFIG
+			SET
+				PROPERTY_VALUE = #propertyValue#
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANY_ID = #companyID#
+			AND
+				PROPERTY_NAME = #propertyName#	
+		]]>
+	</update>
+	
+	<update id="EzCommonDAO.deleteCompanyConfig" parameterClass="map">
+		<![CDATA[
+			DELETE
+			FROM
+				TBL_COMPANY_CONFIG
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANY_ID = #companyID#
+			AND
+				PROPERTY_NAME = #propertyName#	
+		]]>
+	</update>
+	
 </sqlMap>
