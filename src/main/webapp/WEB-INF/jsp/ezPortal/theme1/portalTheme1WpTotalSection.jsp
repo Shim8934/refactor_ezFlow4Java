@@ -10,7 +10,6 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 		    var pUse_Editor = "${useEditor}";
-		    var pNoneActiveX = "YES";
 		    
 		    window.onload = function () {
 	            getnewapprovalcount();
@@ -217,38 +216,17 @@
 		                break;
 
 		            case "schedulewrite":
+	                    var wWeight = "790";
+	                    var wHeight = "830";
 
-		                if (CrossYN() || pNoneActiveX == "YES") {
-		                    var wWeight = "790";
-		                    var wHeight = "830";
+	                    var heigth = window.screen.availHeight;
+	                    var width = window.screen.availWidth;
 
-		                    var heigth = window.screen.availHeight;
-		                    var width = window.screen.availWidth;
-
-		                    var left = (width - wWeight) / 2;
-		                    var top = (heigth - wHeight) / 2;
-		                    
-		                        window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                        "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                }
-		                else {
-		                    var wWeight = "790";
-		                    var wHeight = "760";
-
-		                    var heigth = window.screen.availHeight;
-		                    var width = window.screen.availWidth;
-
-		                    var left = (width - wWeight) / 2;
-		                    var top = (heigth - wHeight) / 2;
-		                    if (CrossYN() || pNoneActiveX == "YES") {
-		                        window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                        	"height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                    }
-		                    else {
-	                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-	                                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                    }
-		                }
+	                    var left = (width - wWeight) / 2;
+	                    var top = (heigth - wHeight) / 2;
+	                    
+                        window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
+                        "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		                break;
 
 		            case "addresswrite":
@@ -265,7 +243,7 @@
 		                break;
 
 		            case "resourcewrite":
-		                if (CrossYN() || pNoneActiveX == "YES") {
+		                if (CrossYN()) {
 		                    var url = "/ezResource/scheduleAddSelect.do";
 
 		                    schedule_add_select_cross_dialogArguments[0] = "";
@@ -474,11 +452,7 @@
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
 
-		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-		        } else {
-	                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-		        }
+	            window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		    }
 
 		    var formURL = "";
@@ -496,7 +470,7 @@
 		            url = "/ezApproval/getFormCont.do";
 		        }
 		        
-		        if (CrossYN() || pNoneActiveX == "YES") {
+		        if (CrossYN()) {
 		            getformcont_cross_dialogArguments[0] = parameter;
 		            getformcont_cross_dialogArguments[1] = openForm_Complete;
 		            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
@@ -529,42 +503,32 @@
 		        if ("${userApprovalG}" == ("YES"))
 		            gb = "G";
 		        
-		        	pArgument[0] = "${userInfo.id}";
-		            pArgument[1] = formURL;
-		            pArgument[2] = "DRAFT";
-		            pArgument[3] = formDocType;
-		            pArgument[4] = "0"
-		            pArgument[5] = ""
-		            pArgument[6] = ""
-		            pArgument[7] = "";
+	        	pArgument[0] = "${userInfo.id}";
+	            pArgument[1] = formURL;
+	            pArgument[2] = "DRAFT";
+	            pArgument[3] = formDocType;
+	            pArgument[4] = "0"
+	            pArgument[5] = ""
+	            pArgument[6] = ""
+	            pArgument[7] = "";
 
-		            var openLocation = "";
-		            if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-		                if (CrossYN() || pNoneActiveX == "YES") {
-		                    alert("<spring:message code='main.t3000' />");
-		                    return;
-		                }
-		                else {
-		                    //var openLocation = "/myoffice/ezApproval" + gb + "/ezViewHWP/ezDraftUI_HWP.aspx";
-		                    var openLocation = "/ezApprovalG/draftui.do";
-		                }
-		            }
-		            else {
-		                if (CrossYN() || pNoneActiveX == "YES") {
-		                    //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/DraftUI_Cross.aspx";
-		                	var openLocation = "/ezApprovalG/draftui.do";
-		                }
-		                else {
-		                	var openLocation = "/ezApprovalG/draftui.do";
-		                }
-		                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
-		                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
-		                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7])
-		            }
-		            openwindow(openLocation, "", 890, 620);
-
-
-		        }
+	            var openLocation = "";
+	            if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+	                if (!isIE()) {
+	                    alert("<spring:message code='main.t3000' />");
+	                    return;
+	                } else {
+	                    var openLocation = "/ezApprovalG/draftuiHWP.do";
+	                }
+	            } else {
+                	var openLocation = "/ezApprovalG/draftui.do";
+	            }
+	            
+                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
+                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
+	            openwindow(openLocation, "", 890, 620);
+		    }
 
 
 		    function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
