@@ -410,8 +410,8 @@
 		                p_ListOrderObject = obj;
 		
 		                var CurlistContent = obj;
-		                var PrePoint = PrelistContent.getAttribute("data-rowidx");
-		                var CurPoint = CurlistContent.getAttribute("data-rowidx");	
+		                var PrePoint = PrelistContent.getAttribute("data-rowidx") * 1;
+		                var CurPoint = CurlistContent.getAttribute("data-rowidx") * 1;	
 		                if (PrePoint < CurPoint) {
 		
 		                    for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) {
@@ -563,7 +563,7 @@
 	      		</td> 
 			</tr>
         </table>
-		<table style="margin-top : 5px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
+		<table style="width:100%;">
 			<tr>
 				<td><div class="btnpositionNew"><a class="imgbtn" id="submit" onclick="ok_Click()"><span><spring:message code='ezPMS.t265' /></span></a></div></td>
 			</tr>
