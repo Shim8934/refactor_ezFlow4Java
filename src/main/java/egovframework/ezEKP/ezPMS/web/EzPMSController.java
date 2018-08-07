@@ -4532,7 +4532,7 @@ public class EzPMSController {
 		return roleCheck;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "static-access" })
 	@RequestMapping(value = "/ezPMS/exportGanttExcel.do")
 	@ResponseBody
 	public void exportGanttExcel(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response,
