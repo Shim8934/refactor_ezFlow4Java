@@ -318,7 +318,7 @@
 		    var writeboardselect_modal_dialogArguments = new Array();
 		    function NewItem_onclick() {
 		        writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(458, 660));
+		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -581,7 +581,7 @@
 		            parameter[0] = arr_userinfo[4];
 		            parameter[1] = "A01000";
 
-		            if (CrossYN() || pNoneActiveX == "YES") {
+		            if (CrossYN()) {
 		            	getformcont_cross_dialogArguments[0] = parameter;
 		            	getformcont_cross_dialogArguments[1] = AprManage_B_Complete;
 		                var getFormCont = GetOpenWindow("/ezApprovalG/getFormCont.do", "getFormCont", 713, 570, "NO");
@@ -641,7 +641,7 @@
 		        pListTypeValue = "1";
 		        
 		        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-		            if (CrossYN() || pNoneActiveX == "YES") {
+		            if (CrossYN()) {
 		                alert(strLang1103);
 		                return;
 		            } else {
