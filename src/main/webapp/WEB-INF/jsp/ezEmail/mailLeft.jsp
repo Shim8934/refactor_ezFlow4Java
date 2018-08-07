@@ -33,6 +33,7 @@
 	      	var useBottomFrameOnly = "${useBottomFrameOnly}";
 	      	var useMailBoxBackUp = "${useMailBoxBackUp}";
 	      	var useMailReceiveScreen = "${useMailReceiveScreen}";
+	      	var operatorMailId = "${operatorMailId}";
 	      	
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
@@ -1003,6 +1004,23 @@
 	            get_unreadcount();
 			}
 			
+			  function operatorSendMail() {
+		            var pheight = window.screen.availHeight;
+		            var conHeight = pheight * 0.8;
+		            var pwidth = window.screen.availWidth;
+		            var conWidth = pwidth * 0.8;
+		            if (conWidth > 890)
+		                conWidth = 890;
+		            var pTop = (pheight - conHeight) / 2;
+		            var pLeft = (pwidth - 890) / 2;
+		            var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+		            if (CrossYN() || pNoneActiveX == "YES") {
+		                window.open("/ezEmail/mailWrite.do?cmd=NEW&operatorMailId=" + operatorMailId, "", feature);
+		            }
+		            else {
+	                    window.open("/ezEmail/mailWrite.do?cmd=NEW&operatorMailId=" + operatorMailId, "", feature);
+		            }          
+		        }
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -1077,6 +1095,9 @@
 		            <dd id="usePer"></dd>
 		        </dl>
 		    </div>
+		    <c:if test="${operatorMailId ne null && operatorMailId != ''}">
+		    <h4><span onclick="operatorSendMail()"><spring:message code="ezEmail.0hun01" /></span></h4>
+		    </c:if>
 	        <h3 style="border-top:0px"><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
 	        <c:if test="${isDotNetAdmin == true}">
   			<h2>

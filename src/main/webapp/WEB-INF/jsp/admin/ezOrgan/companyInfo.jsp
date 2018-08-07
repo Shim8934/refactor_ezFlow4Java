@@ -61,6 +61,7 @@
      						} else {
      							ParentID.value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE1").trim();
      						}
+		     				getCompanyInfo();
      					}
      				});
 			    }
@@ -133,7 +134,7 @@
 		        	dataType : "text",
 		        	url : "/admin/ezOrgan/saveCompanyInfo.do",
 		        	async : false,
-		        	data : {parentCn : parentCn, cn : CompanyID.value, displayName : CompanyName.value, displayName2 : CompanyName2.value, mailId : mailId},
+		        	data : {parentCn : parentCn, cn : CompanyID.value, displayName : CompanyName.value, displayName2 : CompanyName2.value, mailId : mailId , operatorId: operatorID.value},
 		        	success : function(result){
 		        		 var retVal = result;
 		        		 
@@ -202,6 +203,21 @@
 		        DivPopUpHidden();
 		    }
 		    
+		    function getCompanyInfo () {
+		    	$.ajax({
+						type : "POST",
+						dataType : "text",
+						url : "/admin/ezOrgan/getComanyConfig.do",
+						async : false,
+						data : {cn : CompanyID.value},
+						success : function(result) {
+							if (!result == "") {
+	    						operatorID.value = result;
+							}
+						}
+					});	
+		    }
+		    
 	    </script>
 	</head>
 	<body class="popup">
@@ -219,6 +235,10 @@
 		  	<tr> 
 		  		<th id="parentHeader"><spring:message code='ezOrgan.t122' /></th> 
 		    	<td> <input id=ParentID style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" readonly="readonly"></td> 
+		  	</tr> 
+		  	<tr> 
+		  		<th><spring:message code='ezEmail.0hun02' /></th> 
+		    	<td> <input id = operatorID style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="50"></td> 
 		  	</tr> 
 		  	<tr>
 			    <th><spring:message code='ezOrgan.t123' /></th>

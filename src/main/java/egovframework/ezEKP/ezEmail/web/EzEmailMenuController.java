@@ -280,6 +280,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("useOnlyInnerMail", ezCommonService.getTenantConfig("UseOnlyInnerMail", loginInfo.getTenantId()));
+		model.addAttribute("operatorMailId", ezCommonService.getCompanyConfig("operatorMailId", loginInfo.getTenantId(), loginInfo.getCompanyID()));
 		
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", loginInfo.getTenantId());
 		boolean isDotNetAdmin = false;
