@@ -2270,7 +2270,7 @@ function SaveDraftDocInfo()
         ezchkpasswd_cross_dialogArguments[0] = parameter;
         ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-        DivPopUpShow(330, 200, url);
+        DivPopUpShow(350, 225, url);
     }
 
     function getLastOpinon()
