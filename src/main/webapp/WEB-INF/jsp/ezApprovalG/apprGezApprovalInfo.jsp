@@ -1664,13 +1664,13 @@
 	                                  
 	                                        <c:if test="${approvalFlag == 'G' }">
 		                                        <div class="border_gray" style="margin-top:7px">
-		                                        <div id="APRLINE" style="Width: 723px; Height: 488px; overflow: auto; border: 0; font-size: 9pt; margin: auto; padding-top: 0px;">
+		                                        <div id="APRLINE" style="Width: 723px; Height: 488px; overflow: auto; overflow-x:hidden; border: 0; font-size: 9pt; margin: auto; padding-top: 0px;">
 		                                        </div>
 		                                        </div>
 	                                        </c:if>
 	                                        <c:if test="${approvalFlag == 'S' }">
 		                                        <div class="border_gray" style="margin-top:7px; margin-left:4px;">
-		                                        <div id="APRLINE" style="Width: 717px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+		                                        <div id="APRLINE" style="Width: 717px; Height: 518px; overflow: auto; overflow-x:hidden; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                        	</div>
 	                                        	</div>
                                         	</c:if>
@@ -2346,7 +2346,7 @@
 			                <h2 class="h2_dot"><spring:message code='ezApprovalG.hyj20'/>
 			                </h2>
 			                <div class="border_gray" style="margin-top:7px; margin-left:4px;">
-                                <div id="APRLINECC" style="Width: 717px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+                                <div id="APRLINECC" style="Width: 717px; Height: 518px; overflow: auto; overflow-x:hidden; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
                               	</div>
                             </div>
 			                <div style="text-align: right;">

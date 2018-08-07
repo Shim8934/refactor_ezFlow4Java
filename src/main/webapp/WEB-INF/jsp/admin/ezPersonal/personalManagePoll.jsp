@@ -86,12 +86,6 @@
 		            //listview.DataSource(xmldom);
 		            listview.RowDataBind();
 		            xmldomNode = null;
-		            
-		            //2018-08-02 김보미 - 데이터가 없을 때
-		            if (parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT")) == 0) {
-		            	var html = "<tr id='Poll_TR_noItems'><td style='text-align: center;' colspan='5'>" + strLang5 + "</td></tr>";
-		            	$("#AccessListView tbody").html(html);
-		            }
 		
 		            if (CrossYN() && navigator.userAgent.indexOf("Trident/7.0") < 0) {
 						TotalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
@@ -103,6 +97,12 @@
 		            } else {
 		                TotalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
 		                pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
+		            }
+		            
+		            //2018-08-02 김보미 - 데이터가 없을 때
+		            if (TotalCount == null || TotalCount == 0) { 
+		            	var TR_noItems = "<tr id='Poll_TR_noItems'><td style='text-align: center;' colspan='5'>" + strLang5 + "</td></tr>";
+		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
 		            }
 		            
 		            totalPage = Math.ceil(new Number(TotalCount / PageSize));
@@ -336,7 +336,7 @@
 	        });
 		    
 		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 121 - document.getElementById("mainmenu").clientHeight;
+	        	var height = document.documentElement.clientHeight - 122 - document.getElementById("mainmenu").clientHeight;
 	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 	        		height = height - 30;
 	        	}
@@ -396,7 +396,7 @@
 		            <div id="AccessList" style="BORDER: 0; WIDTH: 100%"></div>
 		        </table>
 		    </div>
-	        <div id="tblPageRayer" style="margin-bottom: 10px;"></div>
+	        <div id="tblPageRayer"></div>
 	    </form>
 	</body>
 </html>

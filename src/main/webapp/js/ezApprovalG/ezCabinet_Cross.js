@@ -1232,7 +1232,7 @@ function chk_Passwd(pUserID, CompleteFunction) {
         ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
     var url = "/ezApprovalG/ezchkPasswd.do";
-    var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(330, 200));
+    var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(350, 225));
     try { OpenWin.focus(); } catch (e) { }
 }
 //END
