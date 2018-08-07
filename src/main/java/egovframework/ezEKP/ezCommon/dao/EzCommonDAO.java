@@ -217,4 +217,16 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		return (String) select("EzCommonDAO.getCompanyConfig", map);
 	}
 	
+	public void insertCompanyConfig(Map<String, Object> map) throws Exception{
+		insert ("EzCommonDAO.insertCompanyConfig", map);
+	}
+	
+	public int updateCompanyConfig(Map<String, Object> map) throws Exception{
+		return update ("EzCommonDAO.updateCompanyConfig", map);
+	}
+	
+	public int deleteCompanyConfig(Map<String, Object> map) throws Exception{
+		return delete ("EzCommonDAO.deleteCompanyConfig", map);
+	}
+	
 }

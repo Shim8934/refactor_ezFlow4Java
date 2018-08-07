@@ -1122,8 +1122,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	@Override
-	 public String getCompanyConfig(int tenantID, String companyID, String property) throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
+	public String getCompanyConfig(String property, int tenantID, String companyID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
         map.put("property", property.toUpperCase());
         map.put("companyID", companyID);
         map.put("tenantID", tenantID);
@@ -1139,4 +1139,61 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         
         return propertyValue;
     }
+	
+	@Override
+	public void insertCompanyConfig (int tenantId, String companyId, String propertyName, String propertyValue, String descriptrion) throws Exception{
+		logger.debug("insertCompanyConfig started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("tenantID", tenantId);
+		map.put("companyID", companyId);
+		map.put("propertyName", propertyName);
+		map.put("propertyValue", propertyValue);
+		map.put("description", descriptrion);
+		map.put("SYSDATE", commonUtil.getTodayUTCTime(""));
+		
+		logger.debug("PROPERTY NAME : " + "operatorMailId" + "||" + "TENANTID : " + tenantId + "||" + "COMPANYID : " + companyId);
+		logger.debug("PROPERTY VALUE : " + propertyValue);
+		
+		ezCommonDAO.insertCompanyConfig(map);
+		
+		logger.debug("insertCompanyConfig ended");
+	}
+	
+	@Override
+	public void updateCompanyConfig (int tenantId, String companyId, String propertyName, String propertyValue) throws Exception{
+		logger.debug("updateCompanyConfig started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantId);
+		map.put("companyID", companyId);
+		map.put("propertyName", propertyName);
+		map.put("propertyValue", propertyValue);
+		
+		logger.debug("PROPERTY NAME : " + "operatorMailId" + "||" + "TENANTID : " + tenantId + "||" + "COMPANYID : " + companyId);
+		logger.debug("PROPERTY VALUE : " + propertyValue);
+		
+		ezCommonDAO.updateCompanyConfig(map);
+		
+		logger.debug("updateCompanyConfig ended");
+	}
+	
+	@Override
+	public void deleteCompanyConfig (int tenantId, String companyId, String propertyName) throws Exception{
+		logger.debug("deleteCompanyConfig started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantId);
+		map.put("companyID", companyId);
+		map.put("propertyName", propertyName);
+		
+		logger.debug("PROPERTY NAME : " + "operatorMailId" + "||" + "TENANTID : " + tenantId + "||" + "COMPANYID : " + companyId);
+		
+		ezCommonDAO.deleteCompanyConfig(map);
+		
+		logger.debug("deleteCompanyConfig ended");
+	}
 }
