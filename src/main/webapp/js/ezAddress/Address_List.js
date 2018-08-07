@@ -615,7 +615,7 @@ function Window_onresize() {
     if (searchFlag) {
         if (document.getElementById("ListViewType").value == "list") {
             document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 283) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 313) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 312) + "px";
         }
         else {
             document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 245) + "px";
@@ -625,7 +625,7 @@ function Window_onresize() {
     else {
         if (document.getElementById("ListViewType").value == "list") {
             document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 243) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 272) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 271) + "px";
         }
         else {
             document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 205) + "px";

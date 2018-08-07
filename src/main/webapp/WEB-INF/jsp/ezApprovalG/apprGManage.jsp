@@ -275,6 +275,8 @@
 		        var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYaer);
 				
 		        var cell = document.getElementById("sel_year");
+
+		        var selectedCell = $("#sel_year option:selected").val();
 		        
 		        while(cell.hasChildNodes()) {
 		        	cell.removeChild(cell.firstChild);	
@@ -287,7 +289,10 @@
 		        for (var i = toDayYear; i >= toDayYear - minusYear ; i--) {
 		            AddOption(sel_year, i, i);
 		        }
-		            checkBujaeInfo();
+		        if(selectedCell !== undefined) {
+		        	document.getElementById("sel_year").value = selectedCell;
+		        }
+		        checkBujaeInfo();
 		        } catch (e) {
 		            hideProgress();
 		        }
