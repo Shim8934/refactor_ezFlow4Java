@@ -565,8 +565,8 @@
 		                p_ListOrderObject = obj;
 		
 		                var CurlistContent = obj;
-		                var PrePoint = PrelistContent.getAttribute("data-rowidx");
-		                var CurPoint = CurlistContent.getAttribute("data-rowidx");	
+		                var PrePoint = PrelistContent.getAttribute("data-rowidx") * 1;
+		                var CurPoint = CurlistContent.getAttribute("data-rowidx") * 1;	
 		                
 		                if (PrePoint < CurPoint) {
 		
