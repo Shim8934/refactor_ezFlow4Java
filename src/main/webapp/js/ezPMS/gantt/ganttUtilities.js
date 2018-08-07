@@ -263,8 +263,13 @@ $.splittify = {
         $("body").removeClass("gdfHResizing");
 
         storePosition();
-      });
+      });   
     });
+    
+    // splitterBar 상단을 클릭했을 때, 부모 div이벤트와 충돌을 방지하기 위해 추가
+    splitterBar.children(".toLeft").on("mousedown.gdf", function (e) {e.stopPropagation();});
+    splitterBar.children(".toCenter").on("mousedown.gdf", function (e) {e.stopPropagation();});
+    splitterBar.children(".toRight").on("mousedown.gdf", function (e) {e.stopPropagation();});
 
 
     // keep both side in synch when scroll
