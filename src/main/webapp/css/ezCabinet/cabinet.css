@@ -299,12 +299,15 @@
 
 .mailContDiv1  {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 445px; height: 445px; overflow: auto;}
 .mailContDiv2  {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 475px; height: 475px; overflow: auto;}
-.boardContDiv  {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 325px; height: 325px; overflow: auto;}
+.boardContDiv  {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 510px; height: 510px; overflow: auto;}
 .optionContDiv {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 420px; height: 420px; overflow: auto;}
 .resContDiv    {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 444px; height: 444px; overflow: auto;}
 .schContDiv1   {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 388px; height: 388px; overflow: auto;}
 .schContDiv2   {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 418px; height: 418px; overflow: auto;}
 .todoContDiv   {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 418px; height: 418px; overflow: auto;}
+.commuContDiv  {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 480px; height: 480px; overflow: auto;}
+.commuPhotoContDiv {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 510px; height: 510px; overflow: auto;}
+.journalContDiv    {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 480px; height: 480px; overflow: auto;}
 
 .addressContDiv {margin: 10px 0px; padding: 2.5px 2.5px 8px; border: 1px solid #ddd; min-height: 468px; height: 468px; overflow: auto;}
 .addressContDiv >select {background: none; border: none !important; outline: none !important; padding-right: .1em !important; height: 100%!important;}

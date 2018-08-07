@@ -23,28 +23,14 @@
 					<td><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
-					<th><c:out value="${optionWriter.columnName}"/></th>
-					<td id="optionCreator" class="cursor overfl"></td>
-					<th><c:out value="${optionTime.columnName}"/></th>
-					<td><c:out value="${fn:substring(optionTime.columnValue, 0, 19)}"/></td>
+					<th><c:out value="${commuWriter.columnName}"/></th>
+					<td id="commuCreator" class="cursor overfl"></td>
+					<th><c:out value="${commuTime.columnName}"/></th>
+					<td><c:out value="${fn:substring(commuTime.columnValue, 0, 19)}"/></td>
 				</tr>
 				<tr>
-					<th><c:out value="${importance.columnName}"/></th>
-					<td><c:out value="${importance.columnValue}"/></td>
-					<th><c:out value="${option.columnName}"/></th>
-					<td><c:out value="${option.columnValue}"/></td>
-				</tr>
-				<tr>
-					<th><c:out value="${statusNum.columnName}"/></th>
-					<td><c:out value="${statusNum.columnValue}"/></td>
-					<th><c:out value="${status.columnName}"/></th>
-					<td><c:out value="${status.columnValue}"/></td>
-				</tr>
-				<tr>
-					<th><c:out value="${confirm.columnName}"/></th>
-					<td id="confirmTd"></td>
-					<th><c:out value="${endDate.columnName}"/></th>
-					<td><c:out value="${endDate.columnValue}"/></td>
+					<th><c:out value="${commuEndDate.columnName}"/></th>
+					<td colspan="3"><c:out value="${commuEndDate.columnValue}"/></td>
 				</tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t51'/></th>
@@ -57,7 +43,7 @@
 			</table>
 		</div>
 		
-		<div class="optionContDiv"><iframe id="optionIframe" class="cabrlframe2"></iframe></div>
+		<div class="commuContDiv"><iframe id="commuIframe" class="cabrlframe2"></iframe></div>
 		
 		<div class="cabBttnDiv" id="fileDivBttn">
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>
@@ -75,34 +61,30 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetFileHelper.js"     ></script>
 		<script type="text/javascript">
-			var CabinetOptionFile = function() {
+			var CabinetCommunityFile = function() {
 				var cabinetHelper = null;
 				function initEvents(itemID) {
 					cabinetHelper = new CabinetFileHelper({
 						itemid   : itemID,
 						callback : genderInformation,
 						print    : filePrint,
-						module   : "option",
-						iframe   : "optionIframe",
+						module   : "commu",
+						iframe   : "commuIframe",
 						type     : "content"
 					});
 					cabinetHelper.start();
 				}
 				
 				function genderInformation(fileItem, displayUserInforPopup, showInfoId, showInfoEmail, scrollHandler) {
-					var result       = fileItem.fileDetail;
-					var optionWriter = fileItem.writerVO;
-					var confirm      = fileItem.confirmVO;
+					var result      = fileItem.fileDetail;
+					var commuWriter = fileItem.writerVO;
 					
 					//Display option creator name
-					document.getElementById("optionCreator").textContent = optionWriter["userName"];
-					
-					//Display confirmation
-					document.getElementById("confirmTd").innerHTML = confirm;
+					document.getElementById("commuCreator").textContent = commuWriter["userName"];
 					
 					//Display popup
 					displayUserInforPopup("fileCreator" , result["creatorId"]  , showInfoId);
-					displayUserInforPopup("optionCreator", optionWriter["userId"], showInfoId);
+					displayUserInforPopup("commuCreator", commuWriter["userId"], showInfoId);
 				}
 				
 				function filePrint(scrollPrint, unsetAllScrollTd, displayIframePrint, removeIframePrint) {
@@ -127,6 +109,6 @@
 				};
 			}();
 		</script>
-		<script type="text/javascript">CabinetOptionFile.init("<c:out value='${itemId}'/>");</script>
+		<script type="text/javascript">CabinetCommunityFile.init("<c:out value='${itemId}'/>");</script>
 	</body>
 </html>

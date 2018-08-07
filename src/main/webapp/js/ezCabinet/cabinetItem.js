@@ -864,17 +864,29 @@ var CabinetItem = function() {
 		var relatedList = data.relatedFileList;
 		
 		generateJournalTitle(itemInfo, relatedList, dlElmt);
-		generateRelatedModuleContent(itemInfo, attachList, null, null);
+		generateJournalContent(attachList, itemInfo);
 	}
 	
 	function generateJournalTitle(itemInfo, relatedList, dlElmt){
 		var creatorName = itemInfo["creatorName"];
 		var creatorId   = itemInfo["creatorId"];
+		
 		//Creator title
 		generateCreatorTitle(dlElmt, creatorName, creatorId);
 		
 		//Related documents title
 		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
+	}
+	
+	function generateJournalContent(attachList, itemInfo) {
+		var totalFiles       = attachList.length;
+		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
+		var ifameContent     = document.getElementById(iframeId);
+		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
+		documentCont         = {};
+		documentCont.content = itemInfo["contentPath"];
+		documentCont.size    = itemInfo["itemSize"];
+		documentCont.attach  = attachList;
 	}
 	
 	function showGeneralItemPreview(data, dlElmt, itemInfo, parentDiv) {
@@ -1109,6 +1121,38 @@ var CabinetItem = function() {
 	}
 	
 	function generateOptionContent(attachList, itemInfo) {
+		var totalFiles       = attachList.length;
+		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
+		var ifameContent     = document.getElementById(iframeId);
+		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
+		documentCont         = {};
+		documentCont.content = itemInfo["contentPath"];
+		documentCont.size    = itemInfo["itemSize"];
+		documentCont.attach  = attachList;
+	}
+	
+	function showCommunityPreview(data, dlElmt) {
+		var itemInfo    = data.fileDetail;
+		var attachList  = data.attachFileList;
+		var relatedList = data.relatedFileList;
+		var writer      = data.writerVO;
+		
+		generateCommunityTitle(itemInfo, relatedList, dlElmt);
+		generateCommunityContent(attachList, itemInfo);
+	}
+	
+	function generateCommunityTitle(itemInfo, relatedList, dlElmt) {
+		var creatorName = itemInfo["creatorName"];
+		var creatorId   = itemInfo["creatorId"];
+		
+		//Creator title
+		generateCreatorTitle(dlElmt, creatorName, creatorId);
+		
+		//Related documents title
+		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
+	}
+	
+	function generateCommunityContent(attachList, itemInfo) {
 		var totalFiles       = attachList.length;
 		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
 		var ifameContent     = document.getElementById(iframeId);

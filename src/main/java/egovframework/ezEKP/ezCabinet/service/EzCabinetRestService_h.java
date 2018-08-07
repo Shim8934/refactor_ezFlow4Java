@@ -37,4 +37,7 @@ public interface EzCabinetRestService_h {
 	//Save communityModules
 	JSONObject saveRelatedCommunity(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String date, String endDate, String content, String attach) throws Exception;
 
+	//Save communityPhotoModules
+	JSONObject saveRelatedPhotoCommunity(HttpServletRequest request, String userId, String mode, String cabinetId, String title, String writer, String content) throws Exception;
+
 }

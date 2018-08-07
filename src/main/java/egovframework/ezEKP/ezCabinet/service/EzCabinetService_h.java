@@ -30,4 +30,5 @@ public interface EzCabinetService_h {
 	public JSONObject copyRelatedItemAttachFiles(JSONObject attachInf, int attachId, int itemId, String realPath, String cabinetPath, Locale locale, LoginVO userInfo, String modulePath, String uploadPath, List<CabinetAttachFileVO> attachFileList) throws Exception;
 	public JSONObject saveListAttachFiles(JSONArray attachList, int itemId, String realPath, String modulePath, String uploadPath, Locale locale, LoginVO userInfo) throws Exception;
 	JSONObject saveCommunityItem(String realPath, String mode, int parseInt, String title, String writer, String date, String endDate, String content, String attach, Locale locale, LoginVO userInfo) throws Exception;
+	JSONObject savePhotoCommunityitem(String realPath, String mode, int parseInt, String title, String writer, String content, Locale locale, LoginVO userInfo) throws Exception;
 }

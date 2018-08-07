@@ -142,6 +142,23 @@
 	            document.getElementById("message").style.height = contentHeight + "PX";
 	            document.getElementById("messagePad").style.height = contentHeight + "PX";
 		    };
+		    
+			function addRelatedCabinet() {
+				window.open("/ezCabinet/cabinetAddRelated.do?module=commu", "addRelated", getOpenWindowfeature(480, 370));
+			}
+			
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+				return feature;
+			}
 		</script>	
 	</head>
 	<body class="popup" style ="overflow:hidden; height:100%">
@@ -156,6 +173,7 @@
 									<li><span onclick='btn_Delete_Onclick()'><spring:message code = 'ezCommunity.t208' /></span></li>
 					         		<li><span onclick='ReaderList()'><spring:message code = 'ezCommunity.t952' /></span></li>
 					       		</c:if>
+							<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
 				 	   	</ul>
 					</div>				
 		        	<div id="close">

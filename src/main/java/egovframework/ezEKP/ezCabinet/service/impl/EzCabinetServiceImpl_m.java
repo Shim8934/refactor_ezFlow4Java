@@ -211,10 +211,10 @@ public class EzCabinetServiceImpl_m implements EzCabinetService_m{
 		
 		//Save journal columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
-		listColm.add(createNewRelatedColumn("writer"     , itemId, "ezJournal.t34", journalWriter, companyId, tenantId));
-		listColm.add(createNewRelatedColumn("date"       , itemId, "ezJournal.t35", createDate   , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("formName"   , itemId, "ezJournal.t22", formName     , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("journalType", itemId, "ezJournal.t12", journalType  , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("jourWriter", itemId, "ezJournal.t34", journalWriter, companyId, tenantId));
+		listColm.add(createNewRelatedColumn("jourDate"  , itemId, "ezJournal.t35", createDate   , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("formname"  , itemId, "ezJournal.t22", formName     , companyId, tenantId));
+		listColm.add(createNewRelatedColumn("jourType"  , itemId, "ezJournal.t12", journalType  , companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		

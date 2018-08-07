@@ -6,8 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
@@ -547,17 +550,46 @@ public class EzCabinetGWController_h {
 		
 		//Check file type
 		switch(itemType) {
-			case 1 : getMoreEmailDetail(result, columnList, primary, tenantId)   ; break;
-			case 3 : getMoreBoardDetail(result, columnList, primary, tenantId)   ; break;
-			case 4 : getMoreScheduleDetail(result, columnList, primary, tenantId); break;
-			case 5 : getMoreTodoDetail(result, columnList, primary, tenantId)    ; break;
-			case 6 : getMoreOptionDetail(result, columnList, primary, tenantId)  ; break;
-			case 8 : getMoreAddressDetail(result, columnList, primary, tenantId) ; break;
-			case 9 : getMoreJournalDetail(result, columnList, primary, tenantId) ; break;
-			case 11: getMoreResourceDetail(result, columnList, primary, tenantId); break;
+			case 1 : getMoreEmailDetail(result, columnList, primary, tenantId)    ; break;
+			case 3 : getMoreBoardDetail(result, columnList, primary, tenantId)    ; break;
+			case 4 : getMoreScheduleDetail(result, columnList, primary, tenantId) ; break;
+			case 5 : getMoreTodoDetail(result, columnList, primary, tenantId)     ; break;
+			case 6 : getMoreOptionDetail(result, columnList, primary, tenantId)   ; break;
+			case 7 : getMoreCommuintyDetail(result, columnList, primary, tenantId); break;
+			case 8 : getMoreAddressDetail(result, columnList, primary, tenantId)  ; break;
+			case 9 : getMoreJournalDetail(result, columnList, primary, tenantId)  ; break;
+			case 11: getMoreResourceDetail(result, columnList, primary, tenantId) ; break;
 		}
 	}
 	
+	private void getMoreJournalDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
+		CabinetColumnVO writerColumn = columnList.stream().filter(column -> column.getColumnId().equals("jourWriter")).collect(Collectors.toList()).get(0);
+		
+		String writerId              = writerColumn.getColumnValue();
+		SimpleUserInfoVO writerVO    = cabinetService.getSimpleUserInfo(writerId, primary, tenantId);
+		
+		if (writerVO == null) {
+			writerVO = new SimpleUserInfoVO(writerId, writerId);
+		}
+		
+		result.put("writerVO", writerVO);
+	}
+
+	private void getMoreCommuintyDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
+		CabinetColumnVO writerColumn = columnList.stream().filter(column -> column.getColumnId().equals("commuWriter")).collect(Collectors.toList()).get(0);
+		CabinetColumnVO typeColumn   = columnList.stream().filter(column -> column.getColumnId().equals("commuType")).collect(Collectors.toList()).get(0);
+		
+		String writerId              = writerColumn.getColumnValue();
+		SimpleUserInfoVO writerVO    = cabinetService.getSimpleUserInfo(writerId, primary, tenantId);
+		
+		if (writerVO == null) {
+			writerVO = new SimpleUserInfoVO(writerId, writerId);
+		}
+		
+		result.put("commuType", typeColumn.getColumnValue());
+		result.put("writerVO", writerVO);
+	}
+
 	private void getMoreTodoDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
 		CabinetColumnVO creatorColumn = columnList.stream().filter(column -> column.getColumnId().equals("creator")).collect(Collectors.toList()).get(0);
 		CabinetColumnVO statusColumn  = columnList.stream().filter(column -> column.getColumnId().equals("status")).collect(Collectors.toList()).get(0);
@@ -662,19 +694,6 @@ public class EzCabinetGWController_h {
 		result.put("creator" ,    creator);
 		result.put("modifier",    modifier);
 		result.put("addresstype", addressType.getColumnValue());
-	}
-	
-	private void getMoreJournalDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception{
-		CabinetColumnVO creatorColumn = columnList.stream().filter(column -> column.getColumnId().equals("writer")).collect(Collectors.toList()).get(0);
-		
-		String creatorId              = creatorColumn.getColumnValue();
-		SimpleUserInfoVO creatorVO    = cabinetService.getSimpleUserInfo(creatorId, primary, tenantId);
-		
-		if (creatorVO == null) {
-			creatorVO = new SimpleUserInfoVO(creatorId, creatorId);
-		}
-		
-		result.put("creator", creatorVO);
 	}
 	
 	private void getMoreEmailDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
@@ -797,5 +816,40 @@ public class EzCabinetGWController_h {
 		
 		return result;
 	}
-	
+
+	@RequestMapping(value="/rest/ezcabinet/relate-item/save/photo-community", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject savePhotoCommunityitem(@RequestBody JSONObject commuItemInf, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
+		String userId     = commuItemInf.get("userId")     != null ? commuItemInf.get("userId").toString()     : "";
+		String mode       = commuItemInf.get("mode")       != null ? commuItemInf.get("mode").toString()       : "";
+		String cabinetId  = commuItemInf.get("cabinet")    != null ? commuItemInf.get("cabinet").toString()    : "";
+		String title      = commuItemInf.get("title")      != null ? commuItemInf.get("title").toString()      : "";
+		String writer     = commuItemInf.get("writer")     != null ? commuItemInf.get("writer").toString()     : "";
+		String content    = commuItemInf.get("content")    != null ? commuItemInf.get("content").toString()    : "";
+		
+		JSONObject result = new JSONObject();
+		
+		logger.debug("mode: " + mode + " || cabinetId: " + cabinetId + " || title: " + title + " || writer: " + writer + " || content : " + content);
+		
+		if (serverName.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals(""))|| title.equals("") || writer.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
+			String realPath  = request.getServletContext().getRealPath("");
+			result           = cabinetService_h.savePhotoCommunityitem(realPath, mode, dstCabinetId, title, writer, content, locale, userInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
 }
