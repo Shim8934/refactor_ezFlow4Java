@@ -1104,6 +1104,9 @@
 		            if (/msie/i.test(navigator.userAgent)) {
 		                alert(strLang1103);
 		                return;
+		            } else if (!isIE()) {
+						alert("한글양식은 IE에서만 발송할 수 있습니다.");
+						return;
 		            } else {
 		                openLocation = "/ezApprovalG/ezSimsaG_HWP.do";
 		            }
