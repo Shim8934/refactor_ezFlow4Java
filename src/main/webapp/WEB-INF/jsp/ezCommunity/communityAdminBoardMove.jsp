@@ -69,7 +69,7 @@
 				url = "/ezCommunity/boardMoveSelect.do";
 				boardmoveselect_cross_dialogArguments[0] = parameter;
 		        boardmoveselect_cross_dialogArguments[1] = MoveSelect_Complete;
-		        var BoardMoveSelect_Cross = window.open(url, "boardMoveSelect", GetOpenWindowfeature(340, 656));
+		        var BoardMoveSelect_Cross = window.open(url, "boardMoveSelect", GetOpenWindowfeature(355, 600));
 		        try { 
 		        	BoardMoveSelect_Cross.focus(); 
 		        }catch (e) {}

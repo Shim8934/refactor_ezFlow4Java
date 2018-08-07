@@ -341,7 +341,7 @@ var strLang488 = "생산종료, 1:종료취소"
 var strLang489 = "기록물철 업무담당자 여부를 조사하는데 실패하였습니다."
 // ezCabinet\CabUser.js
 // ezCabinet\DocListView.js
-var strLang490 = "저장하였습니다."
+var strLang490 = "保存しました。"
 var strLang491 = "저장에 실패하였습니다."
 // ezCabinet\ezCabinet.js
 var strLang492 = "편철확정 여부"
@@ -616,7 +616,7 @@ var strLang879 = "差し戻し"
 var strLang880 = "コメント情報"
 var strLang888 = "공람문서"
 var strLang891 = "決裁文書をキャンセルしました。 "
-var strLang892 = "決裁する文書より、もう一度決裁することができます。"
+var strLang892 = "承認・決裁待ちフォルダから文書を<br>再利用または削除することができます。"
 var strLang893 = "起案文書を引き戻ししました。 "
 var strLang894 = "引き戻しした文書を再起案することができます。"
 var strLang895 = "決裁方法が決裁、確認、合議の場合のみ可能です。"

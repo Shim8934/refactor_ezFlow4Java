@@ -7,6 +7,7 @@
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
+		<link rel="stylesheet" href="/js/jquery/jquery-ui.min.css"/>
 		<style>
 		.listview, .popuplist .listview table, .popuplist .listview th, .popuplist .listview td, .content .listview table, .content .listview th, .content .listview td {
 			border: 0px;
@@ -17,6 +18,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezPersonal/controls/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-ui.min.js"></script>
 		
 		<script type="text/javascript">
 			var userLang = "<c:out value = '${strUserLang}' />";
@@ -32,6 +34,10 @@
 	        var ReturnFunction;
 	        var RetValue;
 	        var lang = "${lang}";
+	        
+	        $(function() {
+	        	$(document).tooltip();
+	        });
 	        
 	        $(document).ready(function () {
 	            LinkTypeURL = document.getElementById(checkValue).getAttribute("src");
@@ -307,11 +313,34 @@
 			    	return;
 			    }
 	        	
-	            if (document.getElementById("Title1").value.trim() == "") {
+	        	//2018-08-03 김보미 - 한국어가 아닌 다른 언어설정일 경우 해당 언어에 맞게 필수입력되게끔 수정
+	            /*if (document.getElementById("Title1").value.trim() == "") {
 	                document.getElementById("Title1").focus();
 	                alert("<spring:message code = 'ezPersonal.t1027' />");
 	                return;
+	            }*/
+				var mainTitle = "";
+				
+				if (lang == "1") {
+					mainTitle = "Title1";
+					subTitle1 = "Title2";
+					subTitle2 = "Title3";
+				} else if (lang == "2") {
+					mainTitle = "Title2";
+					subTitle1 = "Title1";
+					subTitle2 = "Title3";
+				} else {
+					mainTitle = "Title3";
+					subTitle1 = "Title1";
+					subTitle2 = "Title2";
+				}
+				
+	            if (document.getElementById(mainTitle).value.trim() == "") {
+	                document.getElementById(mainTitle).focus();
+	                alert("<spring:message code = 'ezPersonal.t1027' />");
+	                return;
 	            }
+
 	
 	            if (document.getElementById("txtURL").value.trim() == "") {
 	                document.getElementById("txtURL").focus();
@@ -319,12 +348,20 @@
 	                return;
 	            }
 	
-	            if (document.getElementById("Title2").value.trim() == "") {
+	            //2018-08-03 김보미 - 한국어가 아닌 다른 언어설정일 경우 해당 언어에 맞게 필수입력되게끔 수정
+	            /*if (document.getElementById("Title2").value.trim() == "") {
 	                document.getElementById("Title2").value = document.getElementById("Title1").value;
 	            }
 	            
 	            if (document.getElementById("Title3").value.trim() == "") {
 	                document.getElementById("Title3").value = document.getElementById("Title1").value;
+	            }*/
+	            if (document.getElementById(subTitle1).value.trim() == "") {
+	                document.getElementById(subTitle1).value = document.getElementById(mainTitle).value;
+	            }
+	            
+	            if (document.getElementById(subTitle2).value.trim() == "") {
+	                document.getElementById(subTitle2).value = document.getElementById(mainTitle).value;
 	            }
 	
 	            SaveQuickLink();
@@ -687,7 +724,7 @@
                             </table>
                         </td>
                         <td width="100%" align="center" nowrap>
-                            <a class="imgbtn imgbck"><span onclick="CreateType()">Type<spring:message code = 'ezPersonal.t105'/>
+                            <a class="imgbtn imgbck"><span onclick="CreateType()" title="40x39 (jpg,gif,png)">Type<spring:message code = 'ezPersonal.t105'/>
                             </span></a>
                         </td>
                     </tr>
@@ -731,6 +768,6 @@
 	        <input type="hidden" name="cnt" id="cnt" />
 	        <input type="hidden" name="guid" id="guid"  />
 	        <input type="hidden" name="mailgubun" id="mailgubun" />
-    </form>
+    	</form>
 	</body>
 </html>

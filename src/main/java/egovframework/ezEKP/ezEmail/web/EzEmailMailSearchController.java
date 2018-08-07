@@ -379,10 +379,6 @@ public class EzEmailMailSearchController {
 		String returnData = "OK";
 		
 		IMAPAccess ia = null;
-        boolean isNewUserQuotaNeeded = false;	
-        boolean isThereUserLevelQuota = false;
-        Double userQuota = 0.0;
-        Double userWarn = 0.0;
         
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -393,8 +389,6 @@ public class EzEmailMailSearchController {
 				folderId = folderAndMsgId.split("/")[0];
 				String msgId = folderAndMsgId.split("/")[1];
 				long uid = Long.parseLong(msgId);
-				isNewUserQuotaNeeded = false; 
-				isThereUserLevelQuota = false; 
 				
 				IMAPFolder sourceFolder = (IMAPFolder)ia.getFolder(folderId);		
 				sourceFolder.open(Folder.READ_WRITE);		
@@ -414,20 +408,6 @@ public class EzEmailMailSearchController {
 						}
 					} else {
 						if (cmd.equalsIgnoreCase("BMOVE")) {
-							// 지운 편지함으로 보낼 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
-							Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(deleteMsgs, userEmail, domainName, ia);
-							
-							if (adjustQuotaData[0] != null) {
-								isNewUserQuotaNeeded = true;
-								
-								userQuota = adjustQuotaData[0];
-								userWarn = adjustQuotaData[1];
-							}
-	
-							if (adjustQuotaData[2] != null) {
-								isThereUserLevelQuota = true;
-							}
-											
 							sourceFolder.copyUIDMessages(deleteMsgs, deletedFolder);
 						}
 						
@@ -445,16 +425,6 @@ public class EzEmailMailSearchController {
 		} finally {
 			if (ia != null) {
 				ia.close();
-			}
-			
-			// 사용자 Quota를 변경시켰다면 원래 값으로 복원시킨다.			
-			if (isNewUserQuotaNeeded) {
-				if (isThereUserLevelQuota) {
-					ezEmailUtil.setUserQuota(userEmail, String.valueOf(userQuota), String.valueOf(userWarn));
-				// 사용자 레벨 Quota 설정값이 없었던 경유에는 해당 설정값을 삭제한다.
-				} else {
-					ezEmailUtil.deleteUserQuota(userEmail);
-				}
 			}
 		}
 				

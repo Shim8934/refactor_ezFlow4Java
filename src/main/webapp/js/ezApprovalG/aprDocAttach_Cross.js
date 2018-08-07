@@ -34,7 +34,7 @@ function Add_ContType(Name, ID) {
     setNodeText(oOption , Name);
     oOption.value = ID;
 
-    if (CrossYN() || pNoneActiveX == "YES")
+    if (CrossYN())
         document.getElementById("selSContName").appendChild(oOption);
     else
         document.getElementById("selSContName").add(oOption);

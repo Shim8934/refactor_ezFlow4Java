@@ -1593,8 +1593,8 @@ function makePageSelPage() {
     var period;
     if (document.getElementById("sel_year").value.toLowerCase() == "all") {
     	var nowyear = nowDate.substring(0,4);
-        var nowmonth = nowDate.substring(5,7);
-        var nowday = nowDate.substring(8,10);
+        var nowmonth = parseInt(nowDate.substring(5,7));
+        var nowday = parseInt(nowDate.substring(8,10));
         
     	if (SearchCond[5] != null && SearchCond[5] != "" ) {
     		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + SearchCond[5].substring(5, 7) + strLang1029 + " " + SearchCond[5].substring(8, 10) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + SearchCond[6].substring(5, 7) + strLang1029 + " " + SearchCond[6].substring(8, 10) + strLang1030;

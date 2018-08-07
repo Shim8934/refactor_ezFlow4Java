@@ -54,6 +54,9 @@
 		            type = 'k=1';
 		            Permissions_List();			        
 			    }
+			    
+			    //2018-08-06 김보미 - 페이지 위치 고정
+			    windowResize();
 			});
 			
 			function searchList() {
@@ -429,6 +432,20 @@
 		    function clearSearchVal () {
 		    	$("#searchValue").val("");
 		    }
+		    
+            //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 170 - document.getElementById("mainmenu").clientHeight;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -526,13 +543,18 @@
 	                	<p id="Permission_sub10"><span divname="f" id="1tab10"><spring:message code='ezOrgan.lhj1' /></span></p>
 	                </c:if>
 	                <p id="Permission_sub11"><span divname="wf" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
-	                <p id="Permission_sub12" <c:if test="${use_attitude != 'YES'}">style="display:none;"</c:if>><span divname="wa" id="1tab12">근태관리자</span></p>
+	                <p id="Permission_sub12" <c:if test="${use_attitude != 'YES'}">style="display:none;"</c:if>><span divname="wa" id="1tab12"><spring:message code='ezOrgan.kbm01' /></span></p>
 		        </div>
 		    </div>
-		
-		    <div class="listview" style="Width:100%;">
-		        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:540px; /* overflow-x: auto; */ BACKGROUND-COLOR: white; /* overflow-y:auto; */"></div>
-		    </div>
+		    <!-- 2018-08-06 김보미 - 페이지 위치 고정 -->
+<!-- 		    <div class="listview" style="Width:100%;"> -->
+<!-- 		        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:540px; /* overflow-x: auto; */ BACKGROUND-COLOR: white; /* overflow-y:auto; */"></div> -->
+<!-- 		    </div> -->
+			<div id="contentlist" style="width:100%; overflow: auto;">
+			    <div class="listview">
+			        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:540px; /* overflow-x: auto; */ BACKGROUND-COLOR: white; /* overflow-y:auto; */"></div>
+			    </div>
+			</div>
 		    <div id="tblPageRayer" style="Width:100%;text-align:center;margin-top:10px"></div>
 		</form>         
 	</body>

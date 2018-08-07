@@ -21,6 +21,7 @@
 	        var attachxml = "";
 	        var isCrossBrowser = "${isCrossBrowser}";
 	        var ReturnFunction;
+	        var maxAllowMailMsg = "<spring:message code='ezEmail.jje04'/>";
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
@@ -187,7 +188,15 @@
 	        }
 	        function btn_AttachAdd_onclick() {
         		var cnt = document.getElementById("form").file1.files.length;
-	            for (var i = 0; i < cnt; i++) {
+        		
+        		if (cnt > 100) {
+        			alert(maxAllowMailMsg);
+        			document.getElementById("mailCount").innerText = "";
+        			return;
+        		}
+        		
+        		document.getElementById("mailCount").innerText = "[" + cnt + "] <spring:message code='ezBoard.t339'/>";
+        		for (var i = 0; i < cnt; i++) {
 	                var tempname = document.getElementById("form").file1.files[i].name;
 	                var last = tempname.split(".").length;
 	                var extension = tempname.split(".")[last - 1];
@@ -223,7 +232,7 @@
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden">
-	    <h1><spring:message code='ezEmail.t400' /></h1>
+	    <h1><spring:message code='ezEmail.t400' />&nbsp;&nbsp;<span id="mailCount"></span></h1>
 	    <div id="close">
             <ul>
                 <li><span onclick="window_Close()"></span></li>
@@ -234,14 +243,14 @@
 	            <th><spring:message code='ezEmail.t148' /></th>
 	            <td>
 	                <input id="foldername" type="text" name="textfield" style="width: 100%" disabled></td>
-	            <td><a class="imgbtn imgbck" style="margin-top:2px"><span onclick="selectFolder()" id="folderfindbutton"><spring:message code='ezEmail.t99000078' /></span></a></td>
+	            <td style="text-align:center;"><a class="imgbtn imgbck" style="margin-top:2px"><span onclick="selectFolder()" id="folderfindbutton"><spring:message code='ezEmail.t99000078' /></span></a></td>
 	        </tr>
 	        <tr style="height: 40px">
 	            <th><spring:message code='ezEmail.t405' /></th>
 	            <td>
 	                <div id="filepath" style="overflow: auto; width: 310px; height: 260px; padding-top:5px"></div>
 	            </td>
-	            <td><a class="imgbtn imgbck"><span onclick="selectMail()" id="filefindbutton"><spring:message code='ezEmail.t99000079' /></span></a></td>
+	            <td style="text-align:center;"><a class="imgbtn imgbck"><span onclick="selectMail()" id="filefindbutton"><spring:message code='ezEmail.t99000079' /></span></a></td>
 	        </tr>
 	    </table>
 	    <div class="btnposition btnpositionNew">

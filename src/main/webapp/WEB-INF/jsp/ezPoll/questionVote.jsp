@@ -3177,13 +3177,13 @@
 							</ul>
 							<ul class="voteIcon_ul">
 								<li class="voteIconImg_li icon">
-									<img id="reuseVoteImg" src="/images/poll/reuseVote.png" class="voteIconImg nosecret" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code = 'ezCircular.t183'/>" onmouseover="this.src = '/images/poll/reuseVote_hover.png'" onmouseout="this.src = '/images/poll/reuseVote.png'" />
+									<img id="reuseVoteImg" src="/images/poll/reuseVote.png" class="voteIconImg nosecret" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/><spring:message code = 'ezCircular.t183'/>" onmouseover="this.src = '/images/poll/reuseVote_hover.png'" onmouseout="this.src = '/images/poll/reuseVote.png'" />
 								</li>
 							</ul>
 							<c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
 								<ul class="voteIcon_ul">
 									<li class="voteIconImg_li icon">
-										<img src="/images/poll/icon_voteDelete.png" class="voteIconImg nosecret" onclick="voteDelete()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code="ezPoll.t202"/>" onmouseover="this.src = '/images/poll/icon_voteDelete_hover.png'" onmouseout="this.src = '/images/poll/icon_voteDelete.png'" />
+										<img src="/images/poll/icon_voteDelete.png" class="voteIconImg nosecret" onclick="voteDelete()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/><spring:message code="ezPoll.t202"/>" onmouseover="this.src = '/images/poll/icon_voteDelete_hover.png'" onmouseout="this.src = '/images/poll/icon_voteDelete.png'" />
 									</li>
 								</ul>
 							</c:if>

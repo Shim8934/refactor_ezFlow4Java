@@ -323,19 +323,19 @@
 		            <c:if test="${dotNetIntegration == 'YES'}">
 		            // IE가 window.postMessage를 Cross Origin에서 지원하지 않는 관계로 동일 사이트의 윈도우를
 		            // 띄운 후 그 안에서 iframe으로 처리해야 한다.
-		            var OpenWin = window.open("/ezBoard/writeBoardSelectModalDotNet.do", "WriteBoardSelect_Modal", GetOpenWindowfeatureNoScrollbar(345, 660));		            
+		            var OpenWin = window.open("/ezBoard/writeBoardSelectModalDotNet.do", "WriteBoardSelect_Modal", GetOpenWindowfeatureNoScrollbar(355, 660));		            
 		            </c:if>
 		            
 		            <c:if test="${dotNetIntegration != 'YES'}">
 		            // 자체 게시판 선택 모듈을 호출하는 경우
-		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
+		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
 		            </c:if>
 		            
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
-		            var wWeight = "345";
-		            var wHeight = "660";
+		            var wWeight = "355";
+		            var wHeight = "600";
 		
 		            var heigth = window.screen.availHeight;
 		            var width = window.screen.availWidth;
@@ -343,7 +343,7 @@
 		            var left = (width - wWeight) / 2;
 		            var top = (heigth - wHeight) / 2;
 		            var ret = window.showModalDialog("/ezBoard/writeBoardSelectModal.do", "",
-		                "DialogHeight:660px;DialogWidth:345px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
+		                "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
 		
 		            if (typeof (ret) != "undefined") {
 		

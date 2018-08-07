@@ -809,8 +809,8 @@
 	            pwidth = parseInt(pwidth) / 2;
 	            pheigth = pheigth - 200;
 	            pwidth = pwidth - 127;
-	            var feature = "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
-	            feature = feature += GetOpenPosition(340, 656);
+	            var feature = "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
+	            feature = feature += GetOpenPosition(355, 600);
 	            window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + strBoardItemList + "&mode=COPY" + "&guBun=" + guBun, "", feature, "");
 	        }
 	        var moveboarditem_cross_dialogArguments = new Array();
@@ -843,7 +843,7 @@
 	
 	            if (CrossYN()) {
 	                moveboarditem_cross_dialogArguments[1] = MoveItem_onclick_Complete;
-	                var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + strBoardItemList + "&guBun=" + guBun, "MoveBoardItem_Cross", GetOpenWindowfeature(340, 600));
+	                var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + strBoardItemList + "&guBun=" + guBun, "MoveBoardItem_Cross", GetOpenWindowfeature(355, 600));
 	                try { OpenWin.focus(); } catch (e) { }
 	            }
 	            else {
@@ -853,7 +853,7 @@
 	                pwidth = parseInt(pwidth) / 2;
 	                pheigth = pheigth - 200;
 	                pwidth = pwidth - 127;
-	                var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + strBoardItemList + "&guBun=" + guBun, "", "DialogHeight:656px;DialogWidth:340px;status:no;help:no;edge:sunken;scroll:no");
+	                var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + strBoardItemList + "&guBun=" + guBun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
 	
 	                if (typeof (ret) != "undefined") {
 	                    if (ret == "OK") {
@@ -1018,12 +1018,12 @@
 	        function NewItem_onclick() {
 	            if (CrossYN()) {
 	                writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-	                var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
+	                var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
 	                try { OpenWin.focus(); } catch (e) { }
 	            }
 	            else {
-	                var wWeight = "345";
-	                var wHeight = "660";
+	                var wWeight = "355";
+	                var wHeight = "600";
 	
 	                var heigth = window.screen.availHeight;
 	                var width = window.screen.availWidth;
@@ -1031,7 +1031,7 @@
 	                var left = (width - wWeight) / 2;
 	                var top = (heigth - wHeight) / 2;
 	                var ret = window.showModalDialog("/ezBoard/writeBoardSelectModal.do", "",
-	                    "DialogHeight:660px;DialogWidth:345px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
+	                    "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
 	
 	                if (typeof (ret) != "undefined") {
 	

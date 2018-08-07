@@ -642,7 +642,7 @@
 		            		</td>
 		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezPoll.t161' /></th>
 		            		<td>
-		            			<div id="status" style="padding-left: 4px;">${fn:substring(result.endDate,0,16) }</div>
+		            			<div id="endDate" style="padding-left: 4px;">${fn:substring(result.endDate,0,16) }</div>
 		            		</td>
 		        		</tr>
 	        		</table>
@@ -799,7 +799,7 @@
 		            		</td>
 		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezPoll.t161' /></th>
 		            		<td>
-		            			<div id="status" style="padding-left: 4px;">${fn:substring(result.endDate,0,16) }</div>
+		            			<div id="endDate" style="padding-left: 4px;">${fn:substring(result.endDate,0,16) }</div>
 		            		</td>
 						</tr>
 					</table>

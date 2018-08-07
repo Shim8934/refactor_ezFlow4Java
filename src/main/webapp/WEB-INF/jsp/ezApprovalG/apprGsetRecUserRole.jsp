@@ -52,6 +52,7 @@
 
         DisplayOrganSearchList(pSearchList, pCellList, pPropList, pClass);
         InitRecViewerInfo();
+        SwapRoleList();
 
         MM_preloadimages('./images/arrow_add1.gif', './images/arrow_delete1.gif');
     }
@@ -98,16 +99,16 @@
         alert("<spring:message code='ezApprovalG.t1156'/>");
             return "";
         }
-
-   
-        if (AllAllowed == "0") {
+        
+   		/* 2018-08-07 천성준 - 디폴트 체크 변경으로 인한 주석처리 */
+        /* if (AllAllowed == "0") {
             document.getElementsByName("rdoRecRole")[0].checked = false;
             document.getElementsByName("rdoRecRole")[1].checked = true;
         }
         else {
             document.getElementsByName("rdoRecRole")[0].checked = true;
             document.getElementsByName("rdoRecRole")[1].checked = false;
-        }
+        } */
         var LVXml = createXmlDom();
         LVXml = SelectSingleNode(SelectSingleNode(rtnXml,"ROLEINFO"),"LISTVIEWDATA");
         var listview = new ListView();
@@ -295,9 +296,9 @@
 
         var totalRows = userlist.GetDataRows();
         if (document.getElementsByName("rdoRecRole")[1].checked) {
-            if (totalRows.length < 1) {
+            if (totalRows.length < 1 || totalRows[0].id.indexOf("noItems") > -1) {
                 alert("<spring:message code='ezApprovalG.t1158'/>");
-                return;
+   	            return;
             }
         }
         if (SaveRecUserRole()) {
@@ -515,8 +516,8 @@
 <table class="content">
 	<tr>
 	<th><spring:message code='ezApprovalG.t1163'/></th>
-		<td><Input Type="radio" name="rdoRecRole" id="rdoRecRole1" value="0" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()" checked>&nbsp<spring:message code='ezApprovalG.t1164'/><br />
-			<Input Type="radio" name="rdoRecRole" id="rdoRecRole2" value="1" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()">&nbsp<spring:message code='ezApprovalG.t1165'/></td>
+		<td><Input Type="radio" name="rdoRecRole" id="rdoRecRole1" value="0" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()">&nbsp<spring:message code='ezApprovalG.t1164'/><br />
+			<Input Type="radio" name="rdoRecRole" id="rdoRecRole2" value="1" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()" checked>&nbsp<spring:message code='ezApprovalG.t1165'/></td>
 	</tr>
 </table>
 <table id="DataLayout" style="margin-top:5px; display: none;">

@@ -273,6 +273,8 @@
 		        var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYaer);
 				
 		        var cell = document.getElementById("sel_year");
+
+		        var selectedCell = $("#sel_year option:selected").val();
 		        
 		        while(cell.hasChildNodes()) {
 		        	cell.removeChild(cell.firstChild);	
@@ -285,7 +287,10 @@
 		        for (var i = toDayYear; i >= toDayYear - minusYear ; i--) {
 		            AddOption(sel_year, i, i);
 		        }
-		            checkBujaeInfo();
+		        if(selectedCell !== undefined) {
+		        	document.getElementById("sel_year").value = selectedCell;
+		        }
+		        checkBujaeInfo();
 		        } catch (e) {
 		            hideProgress();
 		        }
@@ -298,8 +303,8 @@
 		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + GetSelectVal("sel_year") + "-01-01</APRSTARTDATE><APRENDDATE>" + GetSelectVal("sel_year") + "-12-31</APRENDDATE></DATA></ROOT>";
 		        else {
 		            var nowyear = nowDate.substring(0,4);
-		            var nowmonth = nowDate.substring(5,7);
-		            var nowday = nowDate.substring(8,10);        
+		            var nowmonth = parseInt(nowDate.substring(5,7));
+		            var nowday = parseInt(nowDate.substring(8,10));        
 		
 		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";		            
 

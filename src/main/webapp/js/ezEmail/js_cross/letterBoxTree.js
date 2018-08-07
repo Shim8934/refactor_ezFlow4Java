@@ -59,7 +59,7 @@ function treeOnclick() {
     		if (!(nodeId.indexOf('temp'))) { // 편지지함이 임시 추가라면
     			if (addCheck == -1) {return;}
     			
-    			setDisplay("편지지함", "letterbox_temp");
+    			setDisplay(letterStr20, "letterbox_temp");
     		} else { 
     			selectBox(nodeId);
     		}
@@ -178,7 +178,7 @@ function addLetterBox() {
 		putParent = parent;
 	}
 
-	var text = "편지지함";
+	var text = letterStr20;
 	if (userLang != '1') {
 		text = "letterbox_temp";
 	}
@@ -257,7 +257,7 @@ function deleteLetterBox() {
 					}
 				});
 				
-				alert("삭제를 완료하였습니다.");
+				alert(letterBoxDelMsg);
 				refreshLetterBox();
 			},
 			error : function(data) {

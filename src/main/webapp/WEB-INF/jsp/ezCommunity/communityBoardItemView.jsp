@@ -110,13 +110,14 @@
 	    	    rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 	    	}
 			
+	    	/* 2018-08-03 홍승비 - 커뮤니티 게시물(포토게시물 제외) 리사이즈 수정*/
 		    window.onresize = function () {
 		        if (gubun != "3") { 
 		            var contentHeight;
 		            if (gubun == "2") {
-		                contentHeight = document.documentElement.clientHeight - 338;
+		                contentHeight = document.documentElement.clientHeight - 261;
 		            } else {
-		                contentHeight = document.documentElement.clientHeight - 363;
+		                contentHeight = document.documentElement.clientHeight - 281;
 		            }
 		            if(contentHeight < 40){
 		            	contentHeight = 40;
@@ -365,15 +366,17 @@
 				    return;
 				}
 	            
+	            var wWeight = "355";
+    			var wHeight = "600";
+
 	            var pheigth = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
-	            pheigth = parseInt(pheigth) / 2;
-	            pwidth = parseInt(pwidth) / 2;
-	            pheigth = pheigth - 200;
-	            pwidth = pwidth - 127;
+	            
+	        	var left = (pwidth - wWeight) / 2;
+    			var top = (pheigth - wHeight) / 2;
 				//2018-07-13 김보미 - 파라메터 추가
-// 	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code, "", "height=656,width=440px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
-	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code + "&treeCtrl=" + treeCtrl, "", "height=656,width=440px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
+// 	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code, "", "height=600,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
+	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code + "&treeCtrl=" + treeCtrl, "", "height=600,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
 	        }
 
 	        function btnClose_onclick() {

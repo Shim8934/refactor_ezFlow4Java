@@ -31,6 +31,7 @@
 			window.onload = function(){
 				getUserList(1);
 				makePageSelPage();
+				windowResize();
 			}
 			
 			// 검색값 입력 후 엔터키 입력 시 검색 호출
@@ -319,6 +320,19 @@
 			    window.open("/admin/ezOrgan/configUserQuota.do?id=" + res, "", specs);
 		    }
 
+            //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 152;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
 		</script>
 		<!-- 용량상태 Progress Bar -->
 		<style type="text/css" >
@@ -386,21 +400,23 @@
 			</tr>
 		</table>
 		</div>
-		<div style="width:100%; border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
-		<table class="mainlist" style="width:100%;">
-			<thead style="">
-				<tr>
-					<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
-					<th width="15%;"><spring:message code="ezEmail.lsd04"></spring:message></th>
-					<th width="15%;"><spring:message code="ezStatistics.t113"></spring:message></th>
-					<th width="15%;"><spring:message code="ezEmail.lsd02"></spring:message></th>
-					<th width="15%;"><spring:message code="ezEmail.lsd03"></spring:message></th>
-					<th><spring:message code="main.t00011"></spring:message></th>
-					<th style="width:140px;"><spring:message code="ezOrgan.t92"></spring:message></th>
-				</tr>
-			</thead>
-			<tbody id="userListBody" style="overflow: auto;"></tbody>
-		</table>
+		<div id="contentlist" style="width:100%; overflow: auto;">
+			<div style="border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
+				<table class="mainlist" style="width:100%;">
+					<thead style="">
+						<tr>
+							<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
+							<th width="15%;"><spring:message code="ezEmail.lsd04"></spring:message></th>
+							<th width="15%;"><spring:message code="ezStatistics.t113"></spring:message></th>
+							<th width="15%;"><spring:message code="ezEmail.lsd02"></spring:message></th>
+							<th width="15%;"><spring:message code="ezEmail.lsd03"></spring:message></th>
+							<th><spring:message code="main.t00011"></spring:message></th>
+							<th style="width:140px;"><spring:message code="ezOrgan.t92"></spring:message></th>
+						</tr>
+					</thead>
+					<tbody id="userListBody" style="overflow: auto;"></tbody>
+				</table>
+			</div>
 		</div>
 		<div id="tblPageRayer" style="width:100%;"></div>
 		<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
