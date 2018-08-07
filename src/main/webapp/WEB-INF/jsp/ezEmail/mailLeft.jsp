@@ -292,22 +292,24 @@
 	        
 	        function selectnode(event) {
 	        	if (!event) event = window.event;
-	        	
-	        	if (event.which != 3) {
-	        		var nodeIdx = PostTreeView.selectedIndex();
-		            var href = PostTreeView.getvalue(nodeIdx, "href");
-		            var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
-		            
-		            try {
-		                if (typeof (parent.frames["right"]) != "undefined")
-		                    parent.frames["right"].Window_onunload();
-		            } catch (e) { }
-		            if (g_firstOpen)
-		                g_firstOpen = false;
-		            else
-		                window.open(url, "right");
-		            get_unreadcount();
-	        	}        	
+				/* 2018-08-06 장진혁 스크립트 오류로 undefined 걸름 */
+	        	if (event != undefined) {
+		        	if (event.which != 3) {
+		        		var nodeIdx = PostTreeView.selectedIndex();
+			            var href = PostTreeView.getvalue(nodeIdx, "href");
+			            var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
+			            
+			            try {
+			                if (typeof (parent.frames["right"]) != "undefined")
+			                    parent.frames["right"].Window_onunload();
+			            } catch (e) { }
+			            if (g_firstOpen)
+			                g_firstOpen = false;
+			            else
+			                window.open(url, "right");
+			            get_unreadcount();
+		        	}
+	        	}
 	        }
 	        
 	        function email_dragdrop(event) {

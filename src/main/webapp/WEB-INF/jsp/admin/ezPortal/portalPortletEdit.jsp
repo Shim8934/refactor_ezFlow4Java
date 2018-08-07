@@ -899,7 +899,7 @@
 
 // 		        boardmoveselect_cross_dialogArguments[0] = parameter;
 		        boardmoveselect_cross_dialogArguments[0] = MoveSelect_Complete;
-		        var BoardMoveSelect_Cross = window.open("/admin/ezPortal/portalBoardSelect.do", "portalBoardSelect", GetOpenWindowfeature(360, 656));
+		        var BoardMoveSelect_Cross = window.open("/admin/ezPortal/portalBoardSelect.do", "portalBoardSelect", GetOpenWindowfeature(355, 600));
 		        try { 
 		        	BoardMoveSelect_Cross.focus(); 
 		        }catch (e) {}	   

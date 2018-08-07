@@ -56,7 +56,7 @@ public class EzEmailLetterController {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = userInfo.getCompanyID();
-		String userLang = userInfo.getLang();
+		String userLang = userInfo.getPrimary();
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pageType", "letter_user");
@@ -84,7 +84,7 @@ public class EzEmailLetterController {
 		logger.debug("search=" + search);
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String userLang = userInfo.getLang();
+		String userLang = userInfo.getPrimary();
 		String companyId = userInfo.getCompanyID();
 		String tenantId = Integer.toString(userInfo.getTenantId());
 
@@ -138,7 +138,7 @@ public class EzEmailLetterController {
 
 		JSONObject json = null;
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String userLang = userInfo.getLang();
+		String userLang = userInfo.getPrimary();
 		
 		logger.debug("userLang=" + userLang);
 
