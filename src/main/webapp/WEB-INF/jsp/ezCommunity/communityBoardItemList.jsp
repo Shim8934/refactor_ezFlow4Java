@@ -572,8 +572,8 @@
     			
     			arrList = null;		
     			
-    			var wWeight = "340";
-    			var wHeight = "656";
+    			var wWeight = "355";
+    			var wHeight = "600";
 
     			var heigth = window.screen.availHeight;
     			var width = window.screen.availWidth;
@@ -581,8 +581,8 @@
     			var left = (width - wWeight) / 2;
     			var top = (heigth - wHeight) / 2;
     			//2018-07-13 김보미 - 파라메터 추가    			
-//     			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code), "", "height=656,width=440, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
-    			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code) + "&treeCtrl=" + treeCtrl, "", "height=656,width=440, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
+//     			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code), "", "height=600,width=355, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
+    			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code) + "&treeCtrl=" + treeCtrl, "", "height=600,width=355, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
     		}
     		
     		function SetRead_onclick() {

@@ -971,61 +971,57 @@
 				</table>
 			</tr>
 		</table>  -->
- 	<table style="width: 100%; background-color: #fcfcfc;">
+		<table style="width:100%; background-color: #fcfcfc; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8;">
 			<tr>
-				<table style="width:100%; background-color: #fcfcfc; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8;">
-					<tr>
-						<td style="width:3%;">
-							<spring:message code='ezApproval.t434'/> 
-						</td>
-						<td style="width:12%;">
-							<input type="text" id="DocNumber" name="DocNumber" style="width:82%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)" />
-						</td>
-						<td style="width:3%;">
-							<spring:message code='ezApproval.t435'/> 
-						</td>
-						<td style="width:11%;">
-							<input type="text" id="DocTitle" name="DocTitle" style="width:85%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>
-						</td>
-						<td style="width:4%; margin-bottom: 10px;">
-							<span id="topmenu" style="width: 500px">
-								<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/></label>&nbsp;
-							</span>
-						</td>
-						<td style="width:18%; margin-bottom: 10px;">
-							<span id="topmenu" style="width: 500px">
-								<input type="text" id="startDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />&nbsp; ~ &nbsp;
-								<input type="text" id="endDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />
-							</span>
-						</td>
-					</tr>
-					<tr>
-						<td style="width:3%;">
-							 <spring:message code='ezApproval.t437'/>
-						</td>
-						<td style="width:12%;">
-							<input type="text" id="drafterdept" name="drafterdept" style="width:82%; height: 23px;" maxlength="50" readonly="readonly"/>
-							<a class="imgbtn" name="TDeptSelect"><span id = "spandept" onclick="bt_TDeptSelect_onclick()"><spring:message code='ezApprovalG.t105'/></span></a>
-						</td>
-						<td style="width:3%;">
-						    <spring:message code='ezApproval.t436'/> 
-						</td>
-						<td style="width:11%;">
-							<input type="text" id="drafter" name="drafter" style="width:85%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>&nbsp;
-						</td>
-						<td style="width:*; margin-bottom: 10px;" colspan="2">
-							<a class="imgbtn" >
-								<span onclick="javascript:search(1);"><spring:message code="ezApproval.t236"></spring:message></span>
-							</a>&nbsp; 
-							<a class="imgbtn">
-								<span onClick="reload()"><spring:message code='ezApprovalG.t165' /></span>
-							</a>&nbsp;
-							<a class="imgbtn" id ="delbtn">
-								<span onClick="DeleteDoc()"><spring:message code='ezApprovalG.t266' /></span>
-							</a>&nbsp;
-						</td>
-					</tr>
-				</table>
+				<td style="width:3%;">
+					<spring:message code='ezApproval.t434'/> 
+				</td>
+				<td style="width:12%;">
+					<input type="text" id="DocNumber" name="DocNumber" style="width:82%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)" />
+				</td>
+				<td style="width:3%;">
+					<spring:message code='ezApproval.t435'/> 
+				</td>
+				<td style="width:11%;">
+					<input type="text" id="DocTitle" name="DocTitle" style="width:85%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>
+				</td>
+				<td style="width:4%; margin-bottom: 10px;">
+					<span id="topmenu" style="width: 500px">
+						<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/></label>&nbsp;
+					</span>
+				</td>
+				<td style="width:18%; margin-bottom: 10px;">
+					<span id="topmenu" style="width: 500px">
+						<input type="text" id="startDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />&nbsp; ~ &nbsp;
+						<input type="text" id="endDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:3%;">
+					 <spring:message code='ezApproval.t437'/>
+				</td>
+				<td style="width:12%;">
+					<input type="text" id="drafterdept" name="drafterdept" style="width:82%; height: 23px;" maxlength="50" readonly="readonly"/>
+					<a class="imgbtn" name="TDeptSelect"><span id = "spandept" onclick="bt_TDeptSelect_onclick()"><spring:message code='ezApprovalG.t105'/></span></a>
+				</td>
+				<td style="width:3%;">
+				    <spring:message code='ezApproval.t436'/> 
+				</td>
+				<td style="width:11%;">
+					<input type="text" id="drafter" name="drafter" style="width:85%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>&nbsp;
+				</td>
+				<td style="width:*; margin-bottom: 10px;" colspan="2">
+					<a class="imgbtn" >
+						<span onclick="javascript:search(1);"><spring:message code="ezApproval.t236"></spring:message></span>
+					</a>&nbsp; 
+					<a class="imgbtn">
+						<span onClick="reload()"><spring:message code='ezApprovalG.t165' /></span>
+					</a>&nbsp;
+					<a class="imgbtn" id ="delbtn">
+						<span onClick="DeleteDoc()"><spring:message code='ezApprovalG.t266' /></span>
+					</a>&nbsp;
+				</td>
 			</tr>
 		</table>
 		

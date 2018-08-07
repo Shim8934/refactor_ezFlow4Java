@@ -2899,7 +2899,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				resultHTML += "<dl id='"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"' onclick=\"setValueNew('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim()+"', this)\" ondblclick=\"selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\">";
 				resultHTML	+= "<dt>";
 				resultHTML	+= "<div class='onimg'></div>";
-				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='175' height='140'>";
+				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='170' height='140'>";
 				resultHTML+= "</dt>";
 				resultHTML += "<dd>"+commonUtil.cleanValue(userInfo.getLang().equals(sysLang) ? xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent() : xmlDom.getElementsByTagName("DISPLAYNAME2").item(i).getTextContent())+"</dd>";		
 				resultHTML += "</dl>";
@@ -2907,7 +2907,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				resultHTML += "<dl id='"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"' onclick=\"setValueNew('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim()+"', this)\" ondblclick=\"selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\">";
 				resultHTML	+= "<dt>";
 				resultHTML	+= "<div>";
-				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='175' height='140'>";
+				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='170' height='140'>";
 				resultHTML+= "</dt>";
 				resultHTML += "<dd>"+commonUtil.cleanValue(userInfo.getLang().equals(sysLang) ? xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent() : xmlDom.getElementsByTagName("DISPLAYNAME2").item(i).getTextContent())+"</dd>";		
 				resultHTML += "</dl>";

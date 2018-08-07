@@ -52,6 +52,7 @@
 
         DisplayOrganSearchList(pSearchList, pCellList, pPropList, pClass);
         InitRecViewerInfo();
+        SwapRoleList();
 
         MM_preloadimages('./images/arrow_add1.gif', './images/arrow_delete1.gif');
     }
@@ -295,9 +296,9 @@
 
         var totalRows = userlist.GetDataRows();
         if (document.getElementsByName("rdoRecRole")[1].checked) {
-            if (totalRows.length < 1) {
+            if (totalRows.length < 1 || totalRows[0].id.indexOf("noItems") > -1) {
                 alert("<spring:message code='ezApprovalG.t1158'/>");
-                return;
+   	            return;
             }
         }
         if (SaveRecUserRole()) {
