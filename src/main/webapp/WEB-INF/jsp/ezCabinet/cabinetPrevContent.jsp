@@ -6,11 +6,21 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title></title>
-		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>"    type="text/css"/>
+		<c:if test="${module != 'jounl'}">
+			<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css"> 
+		</c:if>
 		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"                type="text/css"/>
 		<link rel="stylesheet" href="/css/previewmail.css"                      type="text/css"/>
 		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css"       type="text/css"/>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css"/>
+		<c:if test="${module == 'jounl'}">
+			<style type="text/css">
+			p {
+				margin-top: 0px;
+				margin-bottom: 0px;
+			}
+			</style>
+		</c:if>
 	</head>
 	<body>
 		<div class="zoomDiv"><img src="/images/minus.png"><img src="/images/plus.png"></div>
@@ -107,6 +117,7 @@
 						case "resrc"  : documentContent = parent.CabinetResourceFile.getContent() ; break;
 						case "schedl" : documentContent = parent.CabinetScheduleFile.getContent() ; break;
 						case "todo"   : documentContent = parent.CabinetTodoFile.getContent()     ; break;
+						case "jounl"  : documentContent = parent.CabinetJournalFile.getContent()  ; break;
 						default       : if (parent.CabinetItem) {documentContent = parent.CabinetItem.getContent();}
 					}
 				}

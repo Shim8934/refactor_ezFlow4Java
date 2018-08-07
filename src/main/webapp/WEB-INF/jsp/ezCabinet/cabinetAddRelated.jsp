@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css"> 
 		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">
 	</head>
 	<body class="popup cabAddRelated" style="overflow: hidden;">
@@ -358,12 +358,10 @@
 					var writerDiv     = commuOpener.document.getElementById("Div1");
 					var writer        = getUserIdFromInline(writerDiv, '"');
 					var date          = trimStr(commuOpener.document.getElementById("Div3").textContent);
-					
 					var commuInfTable = commuOpener.document.querySelector("table[class='content']");
 					var tableRows     = commuInfTable.rows;
 					var thridRow      = tableRows[2];
 					var endDate       = trimStr(thridRow.children[3].firstElementChild.textContent);
-					
 					var messageFrame  = commuOpener.document.getElementById("message");
 					var contentWd     = messageFrame.contentWindow || messageFrame.contentDocument;
 					var content       = contentWd.document.body.innerHTML;
@@ -698,51 +696,42 @@
 					var journalOpener = window.opener;
 					if (!journalOpener) {alert(CabinetMessages.strSelect); return;}
 					
-					var jList          = journalOpener.document.getElementsByClassName("content2")[0];
-					var totalRows      = jList.rows;
-					var firtRow        = totalRows[0];
-					var createDate     = firtRow.children[1].firstElementChild.textContent;
-					var creator        = firtRow.children[3].firstElementChild.getAttribute("onclick");
-					var journalType    = totalRows[1].children[1].firstElementChild.textContent;
-					var formName       = totalRows[1].children[3].firstElementChild.textContent; 
-					var start          = creator.indexOf("(");
-					var end            = creator.lastIndexOf(")");
-					var journalWriter  = creator.substring(start + 2, end - 1);
-					var title          = journalOpener.document.getElementById("cTitle").textContent;
+					var title         = trimStr(journalOpener.document.getElementById("cTitle").textContent);
+					var jounlInfTable = journalOpener.document.querySelector("table[class='content2']");
+					var tableRows     = jounlInfTable.rows;
+					var firstRow      = tableRows[0];
+					var secondRow     = tableRows[1];
+					var date          = trimStr(firstRow.children[1].firstElementChild.textContent);
+					var writerTd      = firstRow.children[3].firstElementChild
+					var writer        = getUserIdFromInline(writerTd, '"');
+					var type          = trimStr(secondRow.children[1].firstElementChild.textContent);
+					var formName      = trimStr(secondRow.children[3].firstElementChild.textContent);
+					var messageFrame  = journalOpener.document.getElementById("message");
+					var contentWd     = messageFrame.contentWindow || messageFrame.contentDocument;
+					var content       = contentWd.document.getElementById("journalContent").innerHTML;
+					var attach        = journalOpener.document.getElementById("lstAttachLink");
+					var attachList    = [];
 					
-					var messageFrame   = window.opener.document.getElementById("message");
-					var contentWd      = messageFrame.contentWindow || messageFrame.contentDocument;
-					var content        = contentWd.document.getElementById("journalContent").innerHTML;
-					var attach         = journalOpener.document.getElementById("lstAttachLink");
-					var attachList     = [];
-					
-					console.log("createDate: " + createDate);
-					console.log("journalWriter: " + journalWriter);
-					console.log("journalType: " + journalType);
-					console.log("content: " + content);
-					console.log(attach);
-					if (attach.childElementCount > 1) {
-						var listChildren1 = attach.getElementsByTagName("a");
+					var listChildren    = attach.getElementsByTagName("a");
+					for (var i = 0, len = listChildren.length; i < len; i++) {
+						var hrefStr = listChildren[i].getAttribute("href");
+						var params  = getAllUrlParams(hrefStr);
 						
-						for (var i = 0, len = listChildren1.length; i < len; i++) {
-							var hrefStr  = listChildren1[i].getAttribute("href");
-							var params   = getAllUrlParams(hrefStr);
-							
-							console.log(" File path: " + javaURLDecode(params["filePath"]) + " || File Name: " + javaURLDecode(params["fileName"]));
-							
-							attachList.push({
-								filePath : javaURLDecode(params["filePath"]),
-								fileName : javaURLDecode(params["fileName"])
-							});
-						}
+						attachList.push({
+							filePath : javaURLDecode(params["filePath"]),
+							fileName : javaURLDecode(params["fileName"])
+						});
+						
+						console.log("file path: " + javaURLDecode(params["filePath"]));
+						console.log("file name: " + javaURLDecode(params["fileName"]));
 					}
 					
 					var url  = "/ezCabinet/saveRelatedJournal.do";
 					var data = {
 						mode          : saveMode,
-						createDate    : createDate,
-						journalWriter : journalWriter,
-						journalType   : journalType,
+						createDate    : date,
+						journalWriter : writer,
+						journalType   : type,
 						formName      : formName,
 						title         : title,
 						content       : content,

@@ -432,6 +432,7 @@ public class EzCabinetController_h {
 			case 6  : jspPageName = getOptionColumnInfo(model, iteminfo)   ; break;
 			case 7  : jspPageName = getCommunityColumnInfo(model, iteminfo); break;
 			case 8  : jspPageName = getAddressColumnInfo(model, iteminfo)  ; break;
+			case 9  : jspPageName = getJournalColumnInfo(model, iteminfo)  ; break;
 			case 11 : jspPageName = getResourceColumnInfo(model, iteminfo) ; break;
 			default : break;
 		}
@@ -439,9 +440,13 @@ public class EzCabinetController_h {
 		return jspPageName;
 	}
 	
+	private String getJournalColumnInfo(Model model, JSONObject iteminfo) {
+		String jspPageName = "ezCabinet/cabinetJournalDetail";
+		return jspPageName;
+	}
+
 	private String getCommunityColumnInfo(Model model, JSONObject iteminfo) {
 		String jspPageName =  "";
-		logger.debug("commu" + iteminfo.get("commuType").toString());
 		String commuType  = iteminfo.get("commuType").toString();
 		
 		if (commuType.equals("normal")) {

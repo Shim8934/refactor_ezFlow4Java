@@ -6,8 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetService;
@@ -554,10 +557,24 @@ public class EzCabinetGWController_h {
 			case 6 : getMoreOptionDetail(result, columnList, primary, tenantId)   ; break;
 			case 7 : getMoreCommuintyDetail(result, columnList, primary, tenantId); break;
 			case 8 : getMoreAddressDetail(result, columnList, primary, tenantId)  ; break;
+			case 9 : getMoreJournalDetail(result, columnList, primary, tenantId)  ; break;
 			case 11: getMoreResourceDetail(result, columnList, primary, tenantId) ; break;
 		}
 	}
 	
+	private void getMoreJournalDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
+		CabinetColumnVO writerColumn = columnList.stream().filter(column -> column.getColumnId().equals("jourWriter")).collect(Collectors.toList()).get(0);
+		
+		String writerId              = writerColumn.getColumnValue();
+		SimpleUserInfoVO writerVO    = cabinetService.getSimpleUserInfo(writerId, primary, tenantId);
+		
+		if (writerVO == null) {
+			writerVO = new SimpleUserInfoVO(writerId, writerId);
+		}
+		
+		result.put("writerVO", writerVO);
+	}
+
 	private void getMoreCommuintyDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
 		CabinetColumnVO writerColumn = columnList.stream().filter(column -> column.getColumnId().equals("commuWriter")).collect(Collectors.toList()).get(0);
 		CabinetColumnVO typeColumn   = columnList.stream().filter(column -> column.getColumnId().equals("commuType")).collect(Collectors.toList()).get(0);

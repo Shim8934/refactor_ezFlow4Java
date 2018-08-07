@@ -123,7 +123,7 @@
 							</c:if>
 							<!-- 		        	인쇄 -->
 							<li><span onclick='printJournal();'> <spring:message code='main.t73' /></span></li>
-							<!--                    캐비넷 -->
+							<!-- 캐비넷  -->
 							<li><span onclick='addRelatedCabinet()'><spring:message code='ezCabinet.t01' /></span></li>
 							<c:set var="userAgentInfo" value="${fn:toLowerCase(header['User-Agent'])}" />
 <%-- 							<c:if test="${fn:indexOf(userAgentInfo,'trident') eq -1}"> --%>
@@ -445,7 +445,7 @@
 		    	return true;
 		    }
 		    
-		    function addRelatedCabinet() {
+			function addRelatedCabinet() {
 				//* moon 2018.07.26
 				window.open("/ezCabinet/cabinetAddRelated.do?module=jounl", "addRelated", getOpenWindowfeature(480, 370));
 			}
