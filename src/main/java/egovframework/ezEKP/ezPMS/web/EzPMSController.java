@@ -36,6 +36,10 @@ import org.apache.poi.ss.formula.functions.Index;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tomcat.jni.Status;
 import org.hsqldb.result.Result;
 import org.json.simple.JSONArray;
@@ -4578,38 +4582,39 @@ public class EzPMSController {
 		if (status.equals("ok")) {
 			groupList = (JSONArray) resultBodyGroup.get("data");
 		}
-		HSSFWorkbook workbook = new HSSFWorkbook();
-		HSSFSheet sheet;
+		
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet;
 
 		// 1행 타이틀 font (bold, 맑은고딕, 크기 12pt)
-		HSSFFont titleFont = workbook.createFont();
+		XSSFFont titleFont = workbook.createFont();
 		titleFont.setBoldweight((short) titleFont.BOLDWEIGHT_BOLD);
 		titleFont.setFontHeight((short) 240);
 		titleFont.setFontName("맑은 고딕");
 
 		// header font (bold, 맑은고딕)
-		HSSFFont headerFont = workbook.createFont();
+		XSSFFont headerFont = workbook.createFont();
 		headerFont.setBoldweight((short) headerFont.BOLDWEIGHT_BOLD);
 		headerFont.setFontName("맑은 고딕");
 
 		// 기본 font(맑은고딕)
-		HSSFFont basicFont = workbook.createFont();
+		XSSFFont basicFont = workbook.createFont();
 		basicFont.setFontName("맑은 고딕");
 		
 		//토요일일 경우 font
-		HSSFFont satFont = workbook.createFont();
+		XSSFFont satFont = workbook.createFont();
 		satFont.setBoldweight((short) satFont.BOLDWEIGHT_BOLD);
 		satFont.setFontName("맑은 고딕");
 		satFont.setColor(HSSFColor.BLUE.index);
 		
 		//일요일/공휴일일 경우  font
-		HSSFFont sunFont = workbook.createFont();
+		XSSFFont sunFont = workbook.createFont();
 		sunFont.setBoldweight((short) sunFont.BOLDWEIGHT_BOLD);
 		sunFont.setFontName("맑은 고딕");
 		sunFont.setColor(HSSFColor.RED.index);
 		
 		// 헤더 스타일(회색 배경, border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
-		HSSFCellStyle headerStyle = workbook.createCellStyle();
+		XSSFCellStyle headerStyle = workbook.createCellStyle();
 		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
 		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
@@ -4622,7 +4627,7 @@ public class EzPMSController {
 		headerStyle.setWrapText(true);
 
 		// 간트쪽 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
-		HSSFCellStyle ganttStyle = workbook.createCellStyle();
+		XSSFCellStyle ganttStyle = workbook.createCellStyle();
 		ganttStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		ganttStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		ganttStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
@@ -4633,7 +4638,7 @@ public class EzPMSController {
 		ganttStyle.setWrapText(true);
 		
 		// 간트쪽 토요일 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
-		HSSFCellStyle ganttSatStyle = workbook.createCellStyle();
+		XSSFCellStyle ganttSatStyle = workbook.createCellStyle();
 		ganttSatStyle.setFillForegroundColor(HSSFColor.LIGHT_YELLOW.index);
 		ganttSatStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		ganttSatStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
@@ -4646,7 +4651,7 @@ public class EzPMSController {
 		ganttSatStyle.setWrapText(true);		
 		
 		// 간트쪽 일요일 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
-		HSSFCellStyle ganttSunStyle = workbook.createCellStyle();
+		XSSFCellStyle ganttSunStyle = workbook.createCellStyle();
 		ganttSunStyle.setFillForegroundColor(HSSFColor.LIGHT_YELLOW.index);
 		ganttSunStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		ganttSunStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
@@ -4659,7 +4664,7 @@ public class EzPMSController {
 		ganttSunStyle.setWrapText(true);
 				
 		// 간트 그래프 업무 색칠 o 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
-		HSSFCellStyle graphStyle = workbook.createCellStyle();
+		XSSFCellStyle graphStyle = workbook.createCellStyle();
 		graphStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		graphStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		graphStyle.setBorderRight(HSSFCellStyle.BORDER_NONE);
@@ -4668,7 +4673,7 @@ public class EzPMSController {
 		graphStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		
 		// 간트 그래프 프로젝트 색칠 o 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
-		HSSFCellStyle projectGraphStyle = workbook.createCellStyle();
+		XSSFCellStyle projectGraphStyle = workbook.createCellStyle();
 		projectGraphStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		projectGraphStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		projectGraphStyle.setBorderRight(HSSFCellStyle.BORDER_NONE);
@@ -4677,7 +4682,7 @@ public class EzPMSController {
 		projectGraphStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		
 		// 간트 그래프 그룹 색칠 o 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
-		HSSFCellStyle groupGraphStyle = workbook.createCellStyle();
+		XSSFCellStyle groupGraphStyle = workbook.createCellStyle();
 		groupGraphStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		groupGraphStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		groupGraphStyle.setBorderRight(HSSFCellStyle.BORDER_NONE);
@@ -4686,7 +4691,7 @@ public class EzPMSController {
 		groupGraphStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		
 		// 간트 그래프 색칠 X 스타일(border 얇은 라인(위아래좌우), 가로세로 텍스트 중앙정렬)
-		HSSFCellStyle noGraphStyle = workbook.createCellStyle();
+		XSSFCellStyle noGraphStyle = workbook.createCellStyle();
 		noGraphStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		noGraphStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		noGraphStyle.setBorderRight(HSSFCellStyle.BORDER_NONE);
@@ -4695,20 +4700,20 @@ public class EzPMSController {
 		noGraphStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 
 		// 작업 이름 border스타일(좌우 라인 없음, 왼쪽정렬)
-		HSSFCellStyle taskNameStyle = workbook.createCellStyle();
+		XSSFCellStyle taskNameStyle = workbook.createCellStyle();
 		taskNameStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		taskNameStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		taskNameStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 		taskNameStyle.setFont(basicFont);
 
 		// 1행 타이틀 스타일
-		HSSFCellStyle titleStyle = workbook.createCellStyle();
+		XSSFCellStyle titleStyle = workbook.createCellStyle();
 		titleStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 		titleStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
 		titleStyle.setFont(titleFont);
 
 		// project 이름 라인 style
-		HSSFCellStyle projectStyle = workbook.createCellStyle();
+		XSSFCellStyle projectStyle = workbook.createCellStyle();
 		projectStyle.setFont(headerFont);
 		projectStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		projectStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
@@ -4719,7 +4724,7 @@ public class EzPMSController {
 		projectStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 
 		// 프로젝트 아래 그룹/업무 라인 style
-		HSSFCellStyle upperGroupTaskStyle = workbook.createCellStyle();
+		XSSFCellStyle upperGroupTaskStyle = workbook.createCellStyle();
 		upperGroupTaskStyle.setFont(headerFont);
 		upperGroupTaskStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		upperGroupTaskStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
@@ -4730,7 +4735,7 @@ public class EzPMSController {
 		upperGroupTaskStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 
 		// 그룹 아래 그룹/업무 라인 style
-		HSSFCellStyle lowerGroupTaskStyle = workbook.createCellStyle();
+		XSSFCellStyle lowerGroupTaskStyle = workbook.createCellStyle();
 		lowerGroupTaskStyle.setFont(headerFont);
 		lowerGroupTaskStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		lowerGroupTaskStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
@@ -4739,7 +4744,7 @@ public class EzPMSController {
 		lowerGroupTaskStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 
 		// 최하위 그룹 아래 업무 stlye
-		HSSFCellStyle taskStyle = workbook.createCellStyle();
+		XSSFCellStyle taskStyle = workbook.createCellStyle();
 		taskStyle.setFont(basicFont);
 		taskStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		taskStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
@@ -4748,7 +4753,7 @@ public class EzPMSController {
 		taskStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 
 		// 경계라인 style
-		HSSFCellStyle delimiterStyle = workbook.createCellStyle();
+		XSSFCellStyle delimiterStyle = workbook.createCellStyle();
 		delimiterStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		delimiterStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 		delimiterStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
@@ -5398,7 +5403,7 @@ public class EzPMSController {
 		sheet.setColumnWidth(18, 2000);
 		
 		response.setContentType("application/vnd.ms-excel");
-		response.setHeader("Content-Disposition", "attachment; fileName=\"" + encodedFileName + ".xls\"");
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + encodedFileName + ".xlsx\"");
 		workbook.write(response.getOutputStream());
 
 		workbook.close();
