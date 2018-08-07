@@ -706,17 +706,14 @@
 	
 	<!-- 2018-07-12 홍승비 - PRI 제약을 가지는 CompanyID 칼럼의 데이터 삽입 판단용 쿼리 -->
 	<select id="EzBoardAdminDAO.checkCompanyIDCol" resultClass="Integer">
-		SELECT EXISTS (
-			SELECT 1
+		SELECT
+			COUNT(*)
 		FROM
-			Information_schema.columns
+			ALL_TAB_COLUMNS
 		WHERE
-			table_schema = 'jmocha' 
+			TABLE_NAME = 'TBL_BOARD_MYBOARDS'
 		AND
-			table_name = 'TBL_Board_MyBoards' 
-		AND
-			column_name = 'COMPANYID'
-		)
+			COLUMN_NAME = 'COMPANYID'
 	</select>
 	
 	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl_I" parameterClass="Map">

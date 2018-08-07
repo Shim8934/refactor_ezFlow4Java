@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezApprovalG.dao;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -216,6 +215,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<ApprGTaskVO> getTaskSubCategory(Map<String, Object> map) throws Exception{
 		return (List<ApprGTaskVO>) list("EzApprovalG.getTaskSubCategory", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskVO> getTaskSubCategoryAll(Map<String, Object> map) throws Exception {
+		return (List<ApprGTaskVO>) list("EzApprovalG.getTaskSubCategoryAll", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -520,7 +524,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<ApprGRecordVO> getRecordInfo(Map<String, Object> map) throws Exception{
-		// TODO Auto-generated method stub
 		return (List<ApprGRecordVO>) list("EzApprovalG.getRecordInfo", map);
 	}
 
@@ -531,13 +534,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	@SuppressWarnings("unchecked")
 	public List<ApprGHistoryDocVO> getRecReadHistory(Map<String, Object> map) throws Exception{
-		// TODO Auto-generated method stub
 		return (List<ApprGHistoryDocVO>) list("EzApprovalG.getRecReadHistory", map);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<ApprGCabinetVO> getRecordClassInfo(Map<String, Object> map) throws Exception{
-		// TODO Auto-generated method stub
 		return (List<ApprGCabinetVO>) list("EzApprovalG.getRecordClassInfo", map);
 	}
 	
@@ -2988,4 +2989,5 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(Map<String, Object> map) {
 		return (List<PortalTopOtherCompanyAddJobVO>) list("EzApprovalG.getAllCompanyList", map);
 	}
+	
 }

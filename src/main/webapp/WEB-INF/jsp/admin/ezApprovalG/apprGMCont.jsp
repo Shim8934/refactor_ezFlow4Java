@@ -113,7 +113,7 @@
 		        } else {
 		            para["P_companyID"] = CompanyID;
 		            mconttype_cross_dialogArguments[0] = para;
-		            var OpenWin = window.open("/admin/ezApprovalG/apprGMContType.do", "MContType_Cross", GetOpenWindowfeature(290, 390));
+		            var OpenWin = window.open("/admin/ezApprovalG/apprGMContType.do", "MContType_Cross", GetOpenWindowfeature(500, 500));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		    }

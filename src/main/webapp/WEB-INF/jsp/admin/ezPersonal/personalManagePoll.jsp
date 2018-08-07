@@ -26,7 +26,7 @@
 	        var strLang2 = "<spring:message code = 'ezPersonal.t10000' />";
 	        var strLang3 = "<spring:message code = 'ezPersonal.t10001' />";
 	        var strLang4 = "<spring:message code = 'ezPersonal.t223' />";
-	        var strLang5 = "<spring:message code = 'ezPersonal.t20005' />";
+	        var strLang5 = "<spring:message code = 'ezQuestion.t312' />";
 	
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -44,6 +44,8 @@
 // 	                document.getElementById("ListCompany").selectedIndex = 0;
 	            }
 	            makelist();
+	            //2018-08-06 김보미 - 페이지 위치 고정
+	            windowResize();
 	        });
 			
 	        function makelist() {
@@ -327,6 +329,20 @@
 		    function td_Create(strtext) {
 		        tblPageNum.innerHTML = tblPageNum.innerHTML + strtext;
 		    }
+		    
+            //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 121 - document.getElementById("mainmenu").clientHeight;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
 		</script>
 	</head>
 	<body class = "mainbody">
@@ -375,10 +391,11 @@
 	        <script type="text/javascript">
 	            selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	        </script>
-	        
-	        <table class="mainlist" style="width: 100%;">
-	            <div id="AccessList" style="BORDER: 0; WIDTH: 100%"></div>
-	        </table>
+	        <div id="contentlist" style="width:100%; overflow: auto;">
+		        <table class="mainlist" style="width: 100%;">
+		            <div id="AccessList" style="BORDER: 0; WIDTH: 100%"></div>
+		        </table>
+		    </div>
 	        <div id="tblPageRayer" style="margin-bottom: 10px;"></div>
 	    </form>
 	</body>
