@@ -141,100 +141,63 @@ function GetTaskMiddleCategory(pCode)
 }
 function GetTaskSubCategory(pCode, pSubCategoryCode)
 {	    
-	var result = "";
+	var GetXml = "";
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
-		url : "/ezApprovalG/getTaskSubCategory.do",
+		url : "/ezApprovalG/getTaskSubCategoryAll.do",
 		data : {
 			cateCode   : pCode,
 			companyID  : CompanyID,
 			deptCode   : g_DeptCode,
-			strType    : UserLang
+			strType    : UserLang,
+			initFlag   : g_InitFlag
 		},
 		success: function(xml){
-			result = xml;
+			GetXml = xml;
 		}        			
 	});
+
+    var xmldoc = loadXMLString(GetXml);
+    var headerData = createXmlDom();
+    headerData = loadXMLString(Category_h.innerHTML.toUpperCase());
     
-	var rtnXml = loadXMLString(result);
-	var dataNodes = GetChildNodes(rtnXml); 
-	var rtnValue = getNodeText(dataNodes[0]);
+    if (CrossYN()) {
+        var xmlRtn = xmldoc.documentElement.getElementsByTagName("ROWS")[0];
+        var Node = headerData.importNode(xmlRtn, true);
+        headerData.documentElement.appendChild(Node);
+    }
+    else {
+        var xmlRtn = xmldoc.documentElement.getElementsByTagName("ROWS")[0];
+        headerData.documentElement.appendChild(xmlRtn);
+    }
+
+    if (document.getElementById("TaskSCateList").innerHTML != "") document.getElementById("TaskSCateList").innerHTML = "";
+	var DocList = new ListView();                           
+	DocList.SetID("DivTaskSCateList");                      
+	DocList.SetMulSelectable(false);                       
+	DocList.SetSelectFlag(false);
+	DocList.SetRowOnClick("TaskSCateList_onclick");
+    DocList.SetTitleIdx(0);                           
+    DocList.DataSource(headerData);                   
+    DocList.DataBind("TaskSCateList");                
 	
-	var iSeledtedIdx=0;
-	
-	if (rtnValue =="FALSE")
+	var len = DocList.GetRowCount();
+	if (len > 0 && g_SelCabID != "")
 	{
-		alert(strLang474);
-	}
-	else
-	{
-	    var headerData = createXmlDom();
-	    headerData = loadXMLString(Category_h.innerHTML.toUpperCase());
-
-	    var GetXml = "<LISTVIEWDATA>";
-        GetXml += "<ROWS>";
-        var CateCnt = GetChildNodes(GetChildNodes(rtnXml.childNodes[0])[1]).length;
-	    for (var i = 0; i < CateCnt; i++) {
-	        var pcode = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(rtnXml, "LISTVIEWDATA/ROWS/ROW").item(i))[0])[0]);
-	        var SubXml = GetListInSubCateList(pcode);
-	        var CateSubcnt = GetChildNodes(GetChildNodes(SubXml.childNodes[0])[1]).length;
-
-	        for (var y = 0; y < CateSubcnt; y++) {
-	            var simpleCode = getNodeText(SelectSingleNode(GetChildNodes(SelectNodes(SubXml, "LISTVIEWDATA/ROWS/ROW")[y])[0], "DATA1"));  //철코드
-	            var simpleXml = GetSimpleList(arr_userinfo[4], "", simpleCode, g_SelCabID, g_InitFlag);
-	            var simpleCnt = SelectNodes(simpleXml, "LISTVIEWDATA/ROWS/ROW").length;
-
-	            var curCategory = SelectNodes(rtnXml, "LISTVIEWDATA/ROWS/ROW")[i];
-	            var curSubCategory = SelectNodes(SubXml, "LISTVIEWDATA/ROWS/ROW")[y];
-	            if (!simpleCnt) {
-	                GetXml += GetmakeXml(curCategory, curSubCategory, false, false);
-	            }
-	            for (var z = 0; z < simpleCnt; z++) {
-	                var curSimple = SelectNodes(simpleXml, "LISTVIEWDATA/ROWS/ROW")[z];
-	                GetXml += GetmakeXml(curCategory, curSubCategory, curSimple, false);
-	            }
-	        }
-	    }
-	    GetXml += "</ROWS></LISTVIEWDATA>";
-
-	    var xmldoc = loadXMLString(GetXml);
-	    if (CrossYN()) {
-	        var xmlRtn = xmldoc.documentElement.getElementsByTagName("ROWS")[0];
-	        var Node = headerData.importNode(xmlRtn, true);
-	        headerData.documentElement.appendChild(Node);
-	    }
-	    else {
-	        var xmlRtn = xmldoc.documentElement.getElementsByTagName("ROWS")[0];
-	        headerData.documentElement.appendChild(xmlRtn);
-	    }
-
-        if (document.getElementById("TaskSCateList").innerHTML != "") document.getElementById("TaskSCateList").innerHTML = "";
-		var DocList = new ListView();                           
-		DocList.SetID("DivTaskSCateList");                      
-		DocList.SetMulSelectable(false);                       
-		DocList.SetSelectFlag(false);
-		DocList.SetRowOnClick("TaskSCateList_onclick");
-        DocList.SetTitleIdx(0);                           
-        DocList.DataSource(headerData);                   
-        DocList.DataBind("TaskSCateList");                
-		
-		var len = DocList.GetRowCount();
-		if (len > 0 && g_SelCabID != "")
+		if(typeof(pSubCategoryCode)!="undefined")
 		{
-			if(typeof(pSubCategoryCode)!="undefined")
+			if(pSubCategoryCode != "")
 			{
-				if(pSubCategoryCode != "")
-				{
-				    iSeledtedIdx = GetSelIdxForSubCate(DocList.GetDataRows(), len, g_SelCabID);
-				}
+			    iSeledtedIdx = GetSelIdxForSubCate(DocList.GetDataRows(), len, g_SelCabID);
 			}
-			selectRow("DivTaskSCateList", iSeledtedIdx);
 		}
-		
-		DocList = null;
+		selectRow("DivTaskSCateList", iSeledtedIdx);
 	}
+	
+	DocList = null;
 }
 
 function TaskSCateList_onclick()
