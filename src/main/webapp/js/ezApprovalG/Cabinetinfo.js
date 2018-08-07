@@ -539,7 +539,7 @@ function MyCabinet_ini(xml) {
     SelListView.SetID("DivMyTaskSCateList");
     SelListView.SetSelectFlag(false);
     SelListView.SetMulSelectable(false);
-    SelListView.SetRowOnClick("MyTaskSCateList_onclick");
+    //SelListView.SetRowOnClick("MyTaskSCateList_onclick"); 2018-08-07 천성준 - .aspx 오류나서 주석처리함 
     SelListView.DataSource(headerData);
     SelListView.DataBind("MyTaskSCateList");
 
