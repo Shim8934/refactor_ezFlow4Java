@@ -192,7 +192,6 @@
         			</td> 
     			</tr> 
   			</table> 
-			<br />
 			<div id="tblPageRayer"></div>
 		</form> 
 	</body>

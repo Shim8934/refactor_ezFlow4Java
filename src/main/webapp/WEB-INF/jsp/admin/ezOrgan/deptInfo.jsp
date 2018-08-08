@@ -254,7 +254,7 @@
 		    	<th><spring:message code='ezOrgan.t224' /></th> 
 		    	<td><input type="text" id=DocManage style="width:97%" maxlength="50"></td>		    	 
 		  	</tr> 
-		  	<tr class="onlyUseG"> 
+		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t225' /></th> 
 		    	<td><input type="text" id=Manager style="width:97%" maxlength="50"></td> 
 		  	</tr> 
