@@ -219,7 +219,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String attitudeId = "";
 		
 		//운영자에게 메일 보내기
-		String operatorMailId = request.getParameter("operatorMailId") !=null ? request.getParameter("operatorMailId") : "";
+		String operatorMailAddress = request.getParameter("operatorMailAddress") !=null ? request.getParameter("operatorMailAddress") : "";
 		
 		// check if parameter is valid
 		String tempStr = "";
@@ -456,9 +456,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         // in case of new
         if (_url.equals("") && _cmd.equals("NEW")) {
         	to = msgto;
-        	if (operatorMailId != null && !operatorMailId.equals("")) {
-        		int idx = loginInfo.getEmail().indexOf("@");
-        		String operatorMailAddress = operatorMailId + loginInfo.getEmail().substring(idx);
+        	if (operatorMailAddress != null && !operatorMailAddress.equals("")) {
         		to =  egovMessageSource.getMessage("ezEmail.0hun03", locale) + " <" + operatorMailAddress + ">";
         	}
         	logger.debug("to=" + to);
