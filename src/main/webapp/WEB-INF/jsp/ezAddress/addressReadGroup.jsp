@@ -80,7 +80,7 @@
 				window.close();
 			}
 		    function write_letter() {
-			    if(document.getElementById("ListMember").length > 0){
+			    if(document.getElementById("ListMember").getElementsByTagName("tr").length > 0){
 			                
 			        var xmlHTTP = createXMLHttpRequest();
 			        var xmlDom = createXmlDom();
