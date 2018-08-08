@@ -10,6 +10,7 @@ function CabinetTable(data) {
 	this.setRenderFunct   = setRenderFunct;
 	this.setClickHandler  = setClickHandler;
 	this.resetEvents      = resetRowEvents;
+	this.getSelectedRow   = getSelectedRow;
 	
 	//private variables
 	var _tableElmt       = null;
@@ -34,6 +35,7 @@ function CabinetTable(data) {
 	function setTableMode(tableMode) {_tableMode = tableMode;}
 	function setCallBack(callBackName) {_callBackSearch = callBackName;}
 	function setTableType(tableType) {_tableType = tableType;}
+	function getSelectedRow() {return _lastSelectedRow;}
 	
 	function setTableElement(identify, type) {
 		switch(type.toLowerCase()) {

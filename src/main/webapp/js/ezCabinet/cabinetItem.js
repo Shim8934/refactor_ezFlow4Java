@@ -53,6 +53,8 @@ var CabinetItem = function() {
 	
 	function changePreview(mode) {
 		if (mode == crrPreMode) {return;}
+		var slTrElmt = cabinetTable.getSelectedRow();
+		crrPreMode   = mode;
 		
 		switch(mode) {
 			case "off":
@@ -66,18 +68,18 @@ var CabinetItem = function() {
 				document.getElementById("preViewBottom").src = "/images/kr/cm/btn_bottomframe.gif";
 				document.getElementById("preViewleft").src   = "/images/kr/cm/btn_onleftframe.gif";
 				cabinetPreview.resizeByWidth();
+				if (slTrElmt) {itemClickHandler(slTrElmt);}
 				break;
 			case "h":
 				document.getElementById("preViewNone").src   = "/images/kr/cm/btn_noframe.gif";
 				document.getElementById("preViewBottom").src = "/images/kr/cm/btn_onbottomframe.gif";
 				document.getElementById("preViewleft").src   = "/images/kr/cm/btn_leftframe.gif";
 				cabinetPreview.resizeByHeight();
+				if (slTrElmt) {itemClickHandler(slTrElmt);}
 				break;
 			default:
 				return;
 		}
-		
-		crrPreMode = mode;
 	}
 	/* Preview option end */
 	
@@ -750,7 +752,11 @@ var CabinetItem = function() {
 		while(dlElmt.firstElementChild) {dlElmt.removeChild(dlElmt.firstElementChild);}
 		
 		if (itemType != 0) {
-			var iframeId     = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
+			var iframeId    = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
+			var prevId      = crrPreMode == "w" ? "itemContentW" : "itemContentH";
+			var prevCont    = document.getElementById(prevId);
+			if (prevCont) {parentDiv.removeChild(prevCont);}
+			
 			var ifameContent = document.getElementById(iframeId);
 			
 			if (!ifameContent) {
@@ -889,8 +895,12 @@ var CabinetItem = function() {
 	}
 	
 	function showGeneralItemPreview(data, dlElmt, itemInfo, parentDiv) {
-		var prevId   = crrPreMode == "w" ? "itemContentW" : "itemContentH";
-		var prevCont = document.getElementById(prevId);
+		var prevId       = crrPreMode == "w" ? "itemContentW" : "itemContentH";
+		var prevCont     = document.getElementById(prevId);
+		var iframeId     = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
+		var ifameContent = document.getElementById(iframeId);
+		
+		if (ifameContent) {parentDiv.removeChild(ifameContent);}
 		
 		if (!prevCont) {
 			prevCont           = document.createElement("div");
