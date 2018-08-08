@@ -282,14 +282,21 @@ var CabinetFileHelper = function() {
 				iframeElmt.addEventListener("load", function(e) {cloneIframeContent();}, false);
 			}
 			
-			var printWrapDiv = document.createElement("div");
+			var printWrapDiv = document.getElementById("cabwrapPrint");
+			if (!printWrapDiv) {
+				printWrapDiv = document.createElement("div");
+				document.body.appendChild(printWrapDiv);
+			}
+			else {
+				printWrapDiv.innerHTML = "";
+			}
+			
 			var divInfo            = document.querySelector("div[class='divInfo']");
 			var cloneDivInf        = divInfo.cloneNode(true);
 			printWrapDiv.id        = "cabwrapPrint";
 			printWrapDiv.className = "cabwrapPrintoff";
 			
 			printWrapDiv.appendChild(cloneDivInf);
-			document.body.appendChild(printWrapDiv);
 		}
 		
 		function cloneIframeContent() {
@@ -316,9 +323,12 @@ var CabinetFileHelper = function() {
 				}
 			}
 			
-			var divText      = iframeCont.document.getElementById("txtField");
-			var cloneDivText = divText.cloneNode(true);
-			var txtWrDiv     = document.createElement("div");
+			var currentDiv     = printWrapDiv.querySelector("div[class='cabtxtPrint']");
+			if (currentDiv) {printWrapDiv.removeChild(currentDiv);}
+			
+			var divText        = iframeCont.document.getElementById("txtField");
+			var cloneDivText   = divText.cloneNode(true);
+			var txtWrDiv       = document.createElement("div");
 			
 			txtWrDiv.className = "cabtxtPrint";
 			txtWrDiv.appendChild(cloneDivText);
