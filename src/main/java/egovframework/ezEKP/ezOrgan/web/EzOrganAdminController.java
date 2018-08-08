@@ -230,7 +230,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",displayName=" + displayName
 				+ ",displayName2=" + displayName2 + ",mailId=" + mailId
-				+ ",extensionAttribute15=" + extensionAttribute15 + ",skipInitData=" + skipInitData);
+				+ ",extensionAttribute15=" + extensionAttribute15 + ",skipInitData=" + skipInitData + ",operatorId=" + operatorId);
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -267,14 +267,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         	ezOrganAdminService.updateDBData_company(cn, displayName, displayName2, mailAddr, tenantID);
         	
         	if (operatorId != null && !operatorId.equals("")) {
-				String operatorMailId = ezCommonService.getCompanyConfig("operatorMailId", tenantID, cn);
+				String operatorMailId = ezCommonService.getCompanyConfig(propertyName, tenantID, cn);
 				if (!operatorMailId.equals("")) {
 					ezCommonService.updateCompanyConfig(tenantID, companyId, propertyName, operatorId);
 				} else {
 					ezCommonService.insertCompanyConfig(tenantID, companyId, propertyName, operatorId, descriptrion);
 				}
         	} else {
-        		String operatorMailId = ezCommonService.getCompanyConfig("operatorMailId", tenantID, cn);
+        		String operatorMailId = ezCommonService.getCompanyConfig(propertyName, tenantID, cn);
         		if (!operatorMailId.equals("")) {
         			ezCommonService.deleteCompanyConfig(tenantID, companyId, propertyName);
         		}

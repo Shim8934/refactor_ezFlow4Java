@@ -1151,7 +1151,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("propertyName", propertyName);
 		map.put("propertyValue", propertyValue);
 		map.put("description", descriptrion);
-		map.put("SYSDATE", commonUtil.getTodayUTCTime(""));
 		
 		logger.debug("PROPERTY NAME : " + "operatorMailId" + "||" + "TENANTID : " + tenantId + "||" + "COMPANYID : " + companyId);
 		logger.debug("PROPERTY VALUE : " + propertyValue);
