@@ -39,7 +39,7 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 	}
 
 	@Override
-	public void saveCompanyCapacity(int type, String newValue, String companyId, int tenantId) throws Exception {
+	public void saveCompanyCapacity(int type, int newValue, String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("type",      type);
 		map.put("capacity",  newValue);

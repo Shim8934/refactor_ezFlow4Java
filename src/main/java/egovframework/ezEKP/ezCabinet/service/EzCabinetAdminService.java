@@ -9,7 +9,7 @@ import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
 public interface EzCabinetAdminService {
 	//Company capacity functions
 	CompanyCapacityVO getCompanyCapacity(String companyId, int tenantId) throws Exception;
-	void saveCompanyCapacity(int type, String newValue, String companyId, int tenantId) throws Exception;
+	void saveCompanyCapacity(int type, int newValue, String companyId, int tenantId) throws Exception;
 	
 	//Admin capacity functions
 	List<UserCapacityVO> getListUserCapacity(String realColmn, String order, String companyId, String searchStr, String searchOpt, int startPoint, int listCnt, int tenantId, String primary) throws Exception;

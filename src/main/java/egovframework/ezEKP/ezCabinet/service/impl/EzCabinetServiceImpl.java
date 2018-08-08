@@ -1818,6 +1818,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
 		JSONParser jp          = new JSONParser();
+		String shareStr        = "";
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		
@@ -1837,6 +1838,14 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		int moduleType = 5; //todo module
 		addRelatedItem(itemId, moduleType, cabinetId, title, content, mode, userInfo);
 		
+		if (!shareList.equals("")) {
+			List<String> shareUsers = (List<String>) jp.parse(shareList);
+			
+			if (shareUsers.size() > 0) {
+				shareStr = String.join(";", shareUsers);
+			}
+		}
+		
 		//Save todo columns information
 		List<CabinetColumnVO> listColm = new ArrayList<>();
 		listColm.add(createNewRelatedColumn("creator"   , itemId, "ezTask.t117" , createUser, companyId, tenantId));
@@ -1846,13 +1855,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		listColm.add(createNewRelatedColumn("tasktype"  , itemId, "ezTask.t2003", tasktype  , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("executor"  , itemId, "ezTask.t2005", executor  , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("status"    , itemId, "ezTask.t2005", status    , companyId, tenantId));
-		
-		if (!shareList.equals("")) {
-			List<String> shareUsers = (List<String>) jp.parse(shareList);
-			if (shareUsers.size() > 0) {
-				listColm.add(createNewRelatedColumn("sharelist", itemId, "ezTask.t157", String.join(";", shareUsers), companyId, tenantId));
-			}
-		}
+		listColm.add(createNewRelatedColumn("sharelist" , itemId, "ezTask.t157" , shareStr  , companyId, tenantId));
 		
 		saveAllColumns(listColm);
 		

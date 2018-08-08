@@ -275,8 +275,13 @@ public class EzCabinetGWController {
 		}
 		
 		try {
-			int tenantId = loginService.getTenantId(serverName);
-			cabinetAdminService.saveCompanyCapacity(type, newValue, companyId, tenantId);
+			int tenantId    = loginService.getTenantId(serverName);
+			int newCapacity = 0;
+			
+			if (type == 1) {
+				newCapacity = Integer.parseInt(newValue);
+			}
+			cabinetAdminService.saveCompanyCapacity(type, newCapacity, companyId, tenantId);
 			result.put("status", "ok");
 			result.put("code", 0);
 		}

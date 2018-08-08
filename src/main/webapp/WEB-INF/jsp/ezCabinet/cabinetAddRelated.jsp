@@ -434,6 +434,8 @@
 					var taskUpdateStatus    = taskTtlDiv.querySelector("a[id='updateStatus']");
 					var graphDiv            = taskTtlDiv.querySelector("div[class='circle progress_graph']");
 					graphDiv.style.width    = "";
+					var datePicker          = taskTtlDiv.querySelector("div[class='hasDatepicker']");
+					if (!datePicker) {graphDiv.style.top = "";}
 					graphDiv.innerHTML      = "<strong></strong>";
 					var taskUpdateParent    = taskUpdateStatus.parentElement;
 					
@@ -489,21 +491,23 @@
 					}
 					
 					//4. Comments
+					createTodoTitle(taskContent, taskComment.textContent);
 					var tableCmt          = todoOpener.document.getElementById("tablecomment2");
 					var divComment        = tableCmt.parentElement;
 					var cloneCmt          = divComment.cloneNode(true);
 					var trList            = cloneCmt.querySelectorAll("tr");
-					
-					//Remove all img elements in comments
-					for (var i = 0, len = trList.length; i < len; i++) {
-						var secondTd = trList[i].children[1];
-						var imgElmt  = secondTd.querySelector("img");
-						if (imgElmt) {secondTd.removeChild(imgElmt);}
+					if (trList.length > 0) {
+						//Remove all img elements in comments
+						for (var i = 0, len = trList.length; i < len; i++) {
+							var secondTd = trList[i].children[1];
+							var imgElmt  = secondTd.querySelector("img");
+							if (imgElmt) {secondTd.removeChild(imgElmt);}
+						}
+						
+						cloneCmt.style.height       = "auto";
+						cloneCmt.style.borderBottom = "none";
+						taskContent.appendChild(cloneCmt);
 					}
-					
-					cloneCmt.style.height = "auto";
-					createTodoTitle(taskContent, taskComment.textContent);
-					taskContent.appendChild(cloneCmt);
 					
 					//Attach list1
 					var attachDivElmt = todoOpener.document.getElementById("attachedfileDIV");
