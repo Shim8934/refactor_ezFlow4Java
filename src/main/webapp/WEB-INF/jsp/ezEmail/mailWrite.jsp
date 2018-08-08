@@ -1732,10 +1732,17 @@
 					var resultHtml = "";
 					
 					if (ezPMSType == "group") {
-						result.list.forEach(function(vo, index) {
-				    		resultHtml += "\"" + vo.userName + "\"";
-				    		resultHtml += " <" + vo.userMail + ">, ";
-				    	});
+						var memberList = result.list;
+						var headManagerId = result.project.headManagerId;
+						
+						for (var i = 0; i < memberList.length; i++) {
+							var userId = memberList[i].userId;
+							
+							if (headManagerId != userId) {
+					    		resultHtml += "\"" + memberList[i].userName + "\"";
+					    		resultHtml += " <" + memberList[i].userMail + ">, ";	
+							}
+						}
 						
 						resultHtml = resultHtml.slice(0, -2);
 					} else if (ezPMSType == "one") {

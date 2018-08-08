@@ -431,8 +431,7 @@ public class EzPMSGWController {
 			String userIdType = request.getParameter("userIdType");
 			int tenantId = info.getTenantId();
 
-			ProjectMainSettingVO projectSetting = ezPMSService
-					.getProjectMainSetting(userId, tenantId, userIdType);
+			ProjectMainSettingVO projectSetting = ezPMSService.getProjectMainSetting(userId, tenantId, userIdType);
 
 			LOGGER.debug("projectSetting : " + projectSetting.getViewType());
 			result.put("status", "ok");
