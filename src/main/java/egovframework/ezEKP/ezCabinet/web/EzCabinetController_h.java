@@ -1,10 +1,8 @@
 package egovframework.ezEKP.ezCabinet.web;
 
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO;
@@ -524,10 +521,16 @@ public class EzCabinetController_h {
 	}
 	
 	private String getBoardColumnInfo(Model model, JSONObject iteminfo) {
-		String jspPageName = "ezCabinet/cabinetBoardDetail";
-		JSONObject creator = (JSONObject) iteminfo.get("creator");
+		String jspPageName = "";
+		String boardType   = iteminfo.get("boardType").toString();
 		
-		model.addAttribute("creatorUser",  creator);
+		if (boardType.equals("photo")) {
+			jspPageName = "ezCabinet/cabinetBoardPhotoDetail";
+		}
+		else {
+			jspPageName = "ezCabinet/cabinetBoardDetail";
+		}
+		
 		return jspPageName;
 	}
 	

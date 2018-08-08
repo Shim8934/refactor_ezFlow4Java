@@ -882,7 +882,7 @@ var CabinetItem = function() {
 		var totalFiles       = attachList.length;
 		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
 		var ifameContent     = document.getElementById(iframeId);
-		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
+		ifameContent.src     = "/ezCabinet/getPreviewContent.do?module=mjounl";
 		documentCont         = {};
 		documentCont.content = itemInfo["contentPath"];
 		documentCont.size    = itemInfo["itemSize"];
@@ -1071,7 +1071,12 @@ var CabinetItem = function() {
 	}
 	
 	function generatePhotoContent(itemInfo, attachList) {
-		
+		var totalFiles       = attachList.length;
+		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
+		var ifameContent     = document.getElementById(iframeId);
+		ifameContent.src     = "/ezCabinet/getPreviewPhoto.do";
+		documentCont         = {};
+		documentCont.attach  = attachList;
 	}
 	
 	function generateBoardTitle(itemInfo, relatedList, dlElmt) {
@@ -1106,7 +1111,7 @@ var CabinetItem = function() {
 		var writer      = data.writerVO;
 		
 		generateOptionTitle(itemInfo, relatedList, dlElmt);
-		generateOptionContent(attachList, itemInfo);
+		generateRelatedModuleContent(attachList, itemInfo);
 	}
 	
 	function generateOptionTitle(itemInfo, relatedList, dlElmt) {
@@ -1120,17 +1125,6 @@ var CabinetItem = function() {
 		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
 	}
 	
-	function generateOptionContent(attachList, itemInfo) {
-		var totalFiles       = attachList.length;
-		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
-		var ifameContent     = document.getElementById(iframeId);
-		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
-		documentCont         = {};
-		documentCont.content = itemInfo["contentPath"];
-		documentCont.size    = itemInfo["itemSize"];
-		documentCont.attach  = attachList;
-	}
-	
 	function showCommunityPreview(data, dlElmt) {
 		var itemInfo    = data.fileDetail;
 		var attachList  = data.attachFileList;
@@ -1138,7 +1132,7 @@ var CabinetItem = function() {
 		var writer      = data.writerVO;
 		
 		generateCommunityTitle(itemInfo, relatedList, dlElmt);
-		generateCommunityContent(attachList, itemInfo);
+		generateRelatedModuleContent(attachList, itemInfo);
 	}
 	
 	function generateCommunityTitle(itemInfo, relatedList, dlElmt) {
@@ -1150,17 +1144,6 @@ var CabinetItem = function() {
 		
 		//Related documents title
 		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
-	}
-	
-	function generateCommunityContent(attachList, itemInfo) {
-		var totalFiles       = attachList.length;
-		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
-		var ifameContent     = document.getElementById(iframeId);
-		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
-		documentCont         = {};
-		documentCont.content = itemInfo["contentPath"];
-		documentCont.size    = itemInfo["itemSize"];
-		documentCont.attach  = attachList;
 	}
 	
 	function generateCreatorTitle(dlElmt, creatorName, creatorId) {

@@ -26,9 +26,11 @@ var CabinetFileHelper = function() {
 		var itemPopup   = null;
 		var scrolled    = true;
 		var lastScrollY = 0;
+		var isphoto     = data.photo ? true : false;
 		var itemId      = data.itemid;
 		var genCallback = data.callback;
 		var printCall   = data.print;
+		var dloadCall   = data.download;
 		var module      = data.module ? data.module : "";
 		var iframeId    = data.iframe ? data.iframe : "";
 		var viewType    = data.type   ? data.type   : "normal";
@@ -44,7 +46,12 @@ var CabinetFileHelper = function() {
 			if (totalBttn == 4) {
 				listBttns[0].onclick    = function(e) {fileModify();};
 				listBttns[1].onclick    = function(e) {fileDelete();};
-				listBttns[2].onclick    = function(e) {filePrint();}
+				if (isphoto) {
+					listBttns[2].onclick = function(e) {fileDownloadAll();}
+				}
+				else {
+					listBttns[2].onclick = function(e) {filePrint();}
+				}
 				listBttns[3].onclick    = function(e) {closeWindow();};
 			}
 			else if (totalBttn == 3) {
@@ -105,7 +112,8 @@ var CabinetFileHelper = function() {
 			//Attach List and content
 			if (viewType == "content") {
 				var iframeElmt      = document.getElementById(iframeId);
-				iframeElmt.src      = "/ezCabinet/getPreviewContent.do?module=" + module;
+				var iframUrl        = isphoto ? "/ezCabinet/getPreviewPhoto.do" : "/ezCabinet/getPreviewContent.do?module=" + module;
+				iframeElmt.src      = iframUrl;
 				mailContent         = {};
 				mailContent.content = result["contentPath"];
 				mailContent.size    = result["itemSize"];
@@ -113,6 +121,7 @@ var CabinetFileHelper = function() {
 			}
 			
 			genCallback(fileItem, displayUserInforPopup, showUserInfoFromId, showUserInfoFromEmail, genderScrollForElmt, mailContent);
+			addIframePrintScreen();
 		}
 		
 		function displayUserInforPopup(elementId, userId, displayFunct) {document.getElementById(elementId).onclick = function(e) {displayFunct(userId);};}
@@ -266,61 +275,78 @@ var CabinetFileHelper = function() {
 		
 		function filePrint() {printCall(setAllScrollElmt, unsetAllScrollTd, displayIframePrintScreen, removeIframePrintScreen);}
 		
-		function displayIframePrintScreen() {
+		function addIframePrintScreen() {
 			//Check if iframe exists
 			if (viewType == "content") {
-				var iframeElmt = document.getElementById(iframeId);
-				var parentDiv  = iframeElmt.parentElement;
-				var iframeCont = iframeElmt.contentWindow? iframeElmt.contentWindow: iframeElmt.contentDocument;
+				var iframeElmt         = document.getElementById(iframeId);
+				var printWrapDiv       = document.createElement("div");
+				var divInfo            = document.querySelector("div[class='divInfo']");
+				var cloneDivInf        = divInfo.cloneNode(true);
+				printWrapDiv.id        = "cabwrapPrint";
+				printWrapDiv.className = "cabwrapPrintoff";
 				
-				var printWrapDiv   = document.createElement("div");
-				var divInfo        = document.querySelector("div[class='divInfo']");
-				var cloneDivInf    = divInfo.cloneNode(true);
-				var attachDiv      = iframeCont.document.getElementsByClassName("previewmail_addfile cabattach")[0];
-				
-				//Check if attach files exist
-				if (attachDiv) {
-					var ulElmt = attachDiv.lastElementChild;
-					if (ulElmt.childElementCount > 0) {
-						var cloneUlEmt     = ulElmt.cloneNode(true);
-						var trElmt         = document.createElement("tr");
-						var thElmt         = document.createElement("th");
-						var tdElmt         = document.createElement("td");
-						thElmt.textContent = CabinetMessages.strAttach5;
-						tdElmt.setAttribute("colspan", 3);
-						tdElmt.appendChild(cloneUlEmt);
-						trElmt.appendChild(thElmt);
-						trElmt.appendChild(tdElmt);
-						cloneDivInf.firstElementChild.appendChild(trElmt);
-					}
-				}
-				
-				var divText        = iframeCont.document.getElementById("txtField");
-				var cloneDivText   = divText.cloneNode(true);
-				var txtWrDiv       = document.createElement("div");
-				txtWrDiv.className = "cabtxtPrint";
-				txtWrDiv.appendChild(cloneDivText);
 				printWrapDiv.appendChild(cloneDivInf);
-				printWrapDiv.appendChild(txtWrDiv);
-				divInfo.style.display   = "none";
-				parentDiv.style.display = "none";
 				document.body.appendChild(printWrapDiv);
+				iframeElmt.addEventListener("load", function(e) {cloneIframeContent();}, false);
 			}
 		}
 		
-		function removeIframePrintScreen() {
-			var bodyElmt     = document.body;
-			var printWrapDiv = bodyElmt.lastElementChild;
-			bodyElmt.removeChild(printWrapDiv);
+		function cloneIframeContent() {
+			var printWrapDiv = document.getElementById("cabwrapPrint");
 			var iframeElmt   = document.getElementById(iframeId);
-			var parentDiv    = iframeElmt.parentElement;
-			var divInfo      = document.querySelector("div[class='divInfo']");
+			var iframeCont   = iframeElmt.contentWindow? iframeElmt.contentWindow: iframeElmt.contentDocument;
+			var attachDiv    = iframeCont.document.getElementsByClassName("previewmail_addfile cabattach")[0];
+			var divInfo      = printWrapDiv.querySelector("div[class='divInfo']");
+			
+			//Check if attach files exist
+			if (attachDiv) {
+				var ulElmt = attachDiv.lastElementChild;
+				if (ulElmt.childElementCount > 0) {
+					var cloneUlEmt     = ulElmt.cloneNode(true);
+					var trElmt         = document.createElement("tr");
+					var thElmt         = document.createElement("th");
+					var tdElmt         = document.createElement("td");
+					thElmt.textContent = CabinetMessages.strAttach5;
+					tdElmt.setAttribute("colspan", 3);
+					tdElmt.appendChild(cloneUlEmt);
+					trElmt.appendChild(thElmt);
+					trElmt.appendChild(tdElmt);
+					divInfo.firstElementChild.appendChild(trElmt);
+				}
+			}
+			
+			var divText      = iframeCont.document.getElementById("txtField");
+			var cloneDivText = divText.cloneNode(true);
+			var txtWrDiv     = document.createElement("div");
+			
+			txtWrDiv.className = "cabtxtPrint";
+			txtWrDiv.appendChild(cloneDivText);
+			printWrapDiv.appendChild(txtWrDiv);
+		}
+		
+		function displayIframePrintScreen() {
+			var printWrapDiv        = document.getElementById("cabwrapPrint");
+			var iframeElmt          = document.getElementById(iframeId);
+			var parentDiv           = iframeElmt.parentElement;
+			var divInfo             = document.querySelector("div[class='divInfo']");
+			parentDiv.style.display = "none";
+			divInfo.style.display   = "none";
+			printWrapDiv.className  = "cabwrapPrinton";
+		}
+		
+		function removeIframePrintScreen() {
+			var printWrapDiv       = document.getElementById("cabwrapPrint");
+			var iframeElmt         = document.getElementById(iframeId);
+			var parentDiv          = iframeElmt.parentElement;
+			var divInfo            = document.querySelector("div[class='divInfo']");
+			printWrapDiv.className = "cabwrapPrintoff";
 			parentDiv.removeAttribute("style");
 			divInfo.removeAttribute("style");
 		}
 		
 		function displayPrintScreenForScrollTd(divElmtId) {
-			var divElmt = document.getElementById(divElmtId);
+			var printWrapDiv = document.getElementById("cabwrapPrint");
+			var divElmt      = printWrapDiv.querySelector("div[id='" + divElmtId + "']");
 			
 			if (divElmt) {
 				var dclientHeight = divElmt.clientHeight;
@@ -345,6 +371,8 @@ var CabinetFileHelper = function() {
 				if (divElmt) {var tdElmt = divElmt.parentElement; tdElmt.removeAttribute("style");}
 			}
 		}
+		
+		function fileDownloadAll() {dloadCall();}
 		
 		function saveItem() {
 			var title   = document.getElementById("itemTtl").value;

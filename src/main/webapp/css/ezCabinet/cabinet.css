@@ -300,6 +300,7 @@
 .mailContDiv1  {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 445px; height: 445px; overflow: auto;}
 .mailContDiv2  {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 475px; height: 475px; overflow: auto;}
 .boardContDiv  {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 510px; height: 510px; overflow: auto;}
+.boardContDiv2 {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 480px; height: 480px; overflow: auto;}
 .optionContDiv {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 420px; height: 420px; overflow: auto;}
 .resContDiv    {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 444px; height: 444px; overflow: auto;}
 .schContDiv1   {margin: 10px 0px; padding: 2.5px; border: 1px solid #ddd; min-height: 388px; height: 388px; overflow: auto;}
@@ -320,7 +321,7 @@
 .cabDivFile .cabFileInf >span:last-child {padding: 2px 4px 4px 0px;}
 
 .popup.cabFileDelon, .popup.cabFileDeloff {overflow: hidden; width: 450px; height: 180px; position: fixed; z-index: 2000;}
-.popup.cabFileDeloff, .popup.cabFileMoveoff, .popup.cabAddoff, .popup.cabMoveoff, .popup.cabDeloff, .fileList.off, .cabSearchPanel.off, .perSettingOff, .cabSearchPanel2.off, .popup.cabChgoff {display: none;}
+.popup.cabFileDeloff, .popup.cabFileMoveoff, .popup.cabAddoff, .popup.cabMoveoff, .popup.cabDeloff, .fileList.off, .cabSearchPanel.off, .perSettingOff, .cabSearchPanel2.off, .popup.cabChgoff, .popup.cabPhotooff {display: none;}
 .popup .cabfdTop {margin: 0px; margin-top: 2px; padding-left: 0px;}
 .popup .delTxt {margin: 0px; height: 62px; border: 1px solid #ddd; padding: 15px; font-size: 12px;}
 .popup.cabFileMoveoff, .popup.cabFileMoveon {overflow: hidden; width: 320px; height: 380px; position: fixed; z-index: 2000;}
@@ -336,6 +337,12 @@
 .popup >h3 {font-size: 11pt; font-weight: bold; color: black; height: 44px; margin-left: 1px; margin-bottom: 8px; line-height: 36px;}
 .popup.cabChgoff, .popup.cabChgon {overflow: hidden; width: 320px; height: 186px; position: fixed; z-index: 2000;}
 .popup .addRlWrapper {min-height: 250px; height: 250px; display: flex; flex-flow: column;}
+.popup.cabPhotooff, .popup.cabPhotoon {overflow: hidden; width: 410px; height: 450px; position: fixed; z-index: 2000;}
+.cabphoselect {padding: 10px 0px; overflow-y: auto; background-color: #fff; margin: 0px; border: none; height: 340px;}
+.ptdownloadwrap {display:inline-block;}
+.ptdownloadwrap input[type='checkbox'] {vertical-align: top; position: relative; z-index: 1; left: 8px;}
+.ptdownloadwrap img {cursor:pointer; position: relative; right: 13px; width: 100px; height: 100px;}
+
 .addRelatedConfig {height: 42px;}
 .cabMgRelTree {position: relative; margin: 10px 5px; padding: 0px; border: 1px solid #ddd; overflow: hidden; flex: 1;}
 .cabMgRelTree .mdlRelTree {height: 100%; z-index: 1; white-space: nowrap; overflow: auto;}
@@ -398,11 +405,32 @@
 .cursor {cursor: pointer;}
 .icon_rbtn img {width: 16px; height: 16px;}
 .cabtxtPrint {padding: 8px; border: 1px solid #ddd; margin-top: 10px; overflow-x: hidden;}
+.cabwrapPrintoff, .cabwrapPrinton {pointer-events: none;}
+.cabwrapPrintoff {display: none;}
 .cabdatetd {width: 150px;}
 .cabtaskTtl {display: flex; margin: 5px 0px;}
 .cabtaskTtl img {width: 14px; height: 14px; padding: 3px 5px 3px 0px;}
 
 .wrap_progress .ui-datepicker-year, .wrap_progress .ui-datepicker-month, .wrap_progress .ui-datepicker-calendar td {pointer-events: none;}
 .cabrltxt .layout tr {background-color: transparent !important;}
+
+/* photo css */
+.cabphotoul {list-style: none; margin: 0px; padding: 0px; overflow: hidden; display: flex; flex: 1; flex-wrap: wrap; height: 60px;}
+.cabphotoul li {width: 20%; min-width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;}
+.cabphotoul li img {height: 40px; width: 60px; cursor: pointer; opacity: 0.35;}
+.cabphotoul .selectedImg, .cabphotoul li img:hover {opacity: 1 !important;}
+.cabphotobttn {width: 45px; min-width: 45px; display: flex; justify-content: center; align-items: center;}
+.cabphotobttn img {width: 30px; height: 30px; cursor: pointer;}
+.cabphotobttn2 {width: 60px; min-width: 60px; display: flex; justify-content: center; align-items: center;}
+.cabphotobttn2 img {width: 50px; height: 50px; cursor: pointer;}
+.cabmainphoto {max-width: 100%; max-height: 100%; min-height: 10px; width: auto; height: auto; position: absolute; top: 0px; bottom: 0px; right: 0px; left: 0px; margin: auto;}
+.cabphotfull {height: 100%; width: 100%;}
+.cabphotowrap {display: flex; flex-flow: column; height: 100%; width: 100%;}
+.cabphotomain {flex: 1; display: flex; margin: 20px 0px;}
+.cabphotslide {flex: 1; justify-content: center; align-items: center; position: relative;}
+.cabphotodes {height: 40px; min-height: 40px; text-align: center; word-break: break-all; font-size: 14px;}
+.cabphotoprev {height: 80px; min-height: 80px; display: flex; background:#f8f8fa; border:1px solid #ddd;}
+.cabphotoprevmain {display: flex; flex: 1; align-items: center; justify-content: center;}
+.cabphotooff {display: none;}
 
 @media print {.cabBttnDiv {display: none;} .mailContDiv1, .mailContDiv2 {padding-bottom: 13px;} .fileDetailDiv, .mailContDiv1, .mailContDiv2, .addressContDiv, .divInfo .cabmemo {height: auto; overflow: visible;} .rlDocDiv, .cabemailDiv {overflow: visible;} .ulFiles li {page-break-inside: avoid;} .overfl {white-space: normal !important;}}

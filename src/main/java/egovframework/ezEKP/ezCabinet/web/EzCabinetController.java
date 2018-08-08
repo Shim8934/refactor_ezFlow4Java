@@ -228,6 +228,30 @@ public class EzCabinetController {
 		return "ezCabinet/cabinetPrevContent";
 	}
 	
+	@RequestMapping(value = "/ezCabinet/getPreviewPhoto.do")
+	public String jspGetPreviewPhotoPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model)  throws Exception {
+		logger.debug("jspGetPreviewPhotoPage started");
+		
+		logger.debug("jspGetPreviewPhotoPage ended");
+		return "ezCabinet/cabinetPrevPhoto";
+	}
+	
+	@RequestMapping(value="/ezCabinet/downloadAttachFile", produces="application/zip")
+	public void responeDownloadFile(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("responeDownloadFile is running!");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String filePath        = request.getParameter("filePath") != null ? request.getParameter("filePath") : "";
+		String fileName        = request.getParameter("fileName") != null ? request.getParameter("fileName") : "";
+		
+		if (filePath.equals("") || fileName.equals("")) {
+			logger.debug("Invalid arguments!!!");
+			return;
+		}
+		
+		cabinetRestService.downloadAttachFile(request, response, userInfo.getId(), filePath, fileName);
+		
+		logger.debug("responeDownloadFile finishes!");
+	}
 	
 	@RequestMapping(value="/ezCabinet/getCompanyTree.do")
 	@ResponseBody
@@ -301,23 +325,6 @@ public class EzCabinetController {
 		
 		logger.debug("Delete file finishes!");
 		return resultObj.toString();
-	}
-	
-	@RequestMapping(value="/ezCabinet/downloadAttachFile", produces="application/zip")
-	public void responeDownloadFile(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
-		logger.debug("responeDownloadFile is running!");
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String filePath        = request.getParameter("filePath") != null ? request.getParameter("filePath") : "";
-		String fileName        = request.getParameter("fileName") != null ? request.getParameter("fileName") : "";
-		
-		if (filePath.equals("") || fileName.equals("")) {
-			logger.debug("Invalid arguments!!!");
-			return;
-		}
-		
-		cabinetRestService.downloadAttachFile(request, response, userInfo.getId(), filePath, fileName);
-		
-		logger.debug("responeDownloadFile finishes!");
 	}
 	
 	@RequestMapping(value="/ezCabinet/saveItem.do", method = RequestMethod.POST)
