@@ -338,10 +338,12 @@
 .popup.cabChgoff, .popup.cabChgon {overflow: hidden; width: 320px; height: 186px; position: fixed; z-index: 2000;}
 .popup .addRlWrapper {min-height: 250px; height: 250px; display: flex; flex-flow: column;}
 .popup.cabPhotooff, .popup.cabPhotoon {overflow: hidden; width: 410px; height: 450px; position: fixed; z-index: 2000;}
-.cabphoselect {padding: 10px 0px; overflow-y: auto; background-color: #fff; margin: 0px; border: none; height: 340px;}
+.cabphoselect {padding: 0px 10px; overflow-y: auto; background-color: #fff; margin: 0px; border: none; height: 360px; list-style: none;}
+.cabphoselect li {float: left; width: 33.33%; display: flex; height: 120px; justify-content: center; align-items: center;}
+.cabphoselect li >div {position: relative; height: 100px; width: 100px; margin: 0px; padding: 0px; line-height: 0px;}
 .ptdownloadwrap {display:inline-block;}
-.ptdownloadwrap input[type='checkbox'] {vertical-align: top; position: relative; z-index: 1; left: 8px;}
-.ptdownloadwrap img {cursor:pointer; position: relative; right: 13px; width: 100px; height: 100px;}
+.ptdownloadwrap input[type='checkbox'] {vertical-align: top; position: absolute; z-index: 1; left: 2px; top: 2px; margin: 0px;}
+.ptdownloadwrap img {cursor:pointer; width: 100px; height: 100px;}
 
 .addRelatedConfig {height: 42px;}
 .cabMgRelTree {position: relative; margin: 10px 5px; padding: 0px; border: 1px solid #ddd; overflow: hidden; flex: 1;}

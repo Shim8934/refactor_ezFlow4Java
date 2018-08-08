@@ -59,6 +59,7 @@
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
 		</div>
 		
+		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetFileHelper.js"     ></script>
@@ -96,26 +97,36 @@
 					listMgBttns[2].onclick   = function(e) {closeDownloadPopup();};
 					
 					//Add list of images
-					var cabPhotoDiv = document.getElementById("photoSelect");
+					var cabPhotoUl = document.getElementById("photoSelect");
 					var attachList  = getIframeContent().attach;
 					for (var i = 0, len = attachList.length; i < len; i++) {
+						var liElmt    = document.createElement("li");
 						var divElmt   = document.createElement("div");
 						var inputElmt = document.createElement("input");
 						var imgElmt   = document.createElement("img");
 						inputElmt.setAttribute("type", "checkbox");
 						inputElmt.setAttribute("filePath", attachList[i]["filePath"]);
+						inputElmt.setAttribute("fileName", attachList[i]["fileName"]);
 						imgElmt.src   = attachList[i]["filePath"];
-						divElmt.className = "ptdownloadwrap";
+						liElmt.className = "ptdownloadwrap";
 						divElmt.appendChild(inputElmt);
 						divElmt.appendChild(imgElmt);
-						cabPhotoDiv.appendChild(divElmt);
+						liElmt.appendChild(divElmt);
+						cabPhotoUl.appendChild(liElmt);
 					}
 				}
 				
-				function closeDownloadPopup(mode) {
+				function closeDownloadPopup() {
 					var cabPhotoDiv       = document.getElementById("cabPhotoDiv");
 					cabPhotoDiv.className = "popup cabPhotooff";
 					removeFogPanel();
+					
+					//Unselect all inputs
+					var cabPhotoUl = document.getElementById("photoSelect");
+					var inputList   = cabPhotoUl.querySelectorAll("input[type='checkbox']");
+					for (var i = 0, len = inputList.length; i < len; i++) {
+						inputList[i].checked = false;
+					}
 				}
 				
 				function removeFogPanel() {
@@ -141,14 +152,35 @@
 				}
 				
 				function downloadPhotoList() {
-					var cabPhotoDiv = document.getElementById("photoSelect");
-					var listAttach  = [];
-					var inputList   = cabPhotoDiv.querySelectorAll("input[type='checkbox']:checked");
+					var cabPhotoDiv  = document.getElementById("photoSelect");
+					var inputList    = cabPhotoDiv.querySelectorAll("input[type='checkbox']:checked");
+					
+					if (inputList.length == 0) {alert(CabinetMessages.strSelect3); return;}
+					
+					var listSelected = [];
+					
 					for (var i = 0, len = inputList.length; i < len; i++) {
-						listAttach.push(inputList[i].getAttribute("filePath"));
+						var inputELmt   = inputList[i];
+						listSelected.push({
+							filePath : inputELmt.getAttribute("filePath"),
+							fileName : inputELmt.getAttribute("fileName")
+						});
 					}
 					
-					console.log("ListAttach: " + JSON.stringify(listAttach));
+					closeDownloadPopup();
+					
+					var counter = 0;
+					downloadOneFile(listSelected, 0);
+				}
+				
+				function downloadOneFile(listSelected, index) {
+					if (index >= listSelected.length) {return;}
+					var photoItem   = listSelected[index];
+					var downloadUrl = "/ezCabinet/downloadAttachFile?filePath=" + encodeURIComponent( photoItem["filePath"]) + "&fileName=" + encodeURIComponent(photoItem["fileName"]);
+					var attachFrame = document.getElementById("attachFrame");
+					attachFrame.src = downloadUrl;
+					
+					setTimeout(function() {downloadOneFile(listSelected, index + 1);}, 2000);
 				}
 				
 				function getPosition(popUpW, popUpH) {

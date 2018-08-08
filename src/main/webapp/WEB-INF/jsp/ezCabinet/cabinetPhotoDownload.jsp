@@ -3,7 +3,7 @@
 
 <div class="popup cabPhotooff" id="cabPhotoDiv">
 	<h1><spring:message code='ezCabinet.t145'/></h1>
-	<div id="photoSelect" class="cabphoselect"></div>
+	<ul id="photoSelect" class="cabphoselect"></ul>
 	<div class="cabdivBttn" id="cabPhotoBttn">
 		<a class="cabBttn"><span><spring:message code='ezCabinet.t146'/></span></a>
 		<a class="cabBttn"><span><spring:message code='ezCabinet.t79' /></span></a>

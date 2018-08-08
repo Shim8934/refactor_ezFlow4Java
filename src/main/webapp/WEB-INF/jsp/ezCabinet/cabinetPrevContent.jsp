@@ -134,9 +134,7 @@
 					var liList = ulElmt.children;
 					if (index >= liList.length) {return;}
 					ulElmt.children[index].click();
-					setTimeout(function() {
-						downloadOneFile(ulElmt, index + 1);
-					}, 2000);
+					setTimeout(function() {downloadOneFile(ulElmt, index + 1);}, 2000);
 				}
 				
 				function toggleAttachFileView(spanObj) {

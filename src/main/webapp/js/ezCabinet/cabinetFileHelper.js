@@ -121,7 +121,7 @@ var CabinetFileHelper = function() {
 			}
 			
 			genCallback(fileItem, displayUserInforPopup, showUserInfoFromId, showUserInfoFromEmail, genderScrollForElmt, mailContent);
-			addIframePrintScreen();
+			if (printCall) {addIframePrintScreen();}
 		}
 		
 		function displayUserInforPopup(elementId, userId, displayFunct) {document.getElementById(elementId).onclick = function(e) {displayFunct(userId);};}
