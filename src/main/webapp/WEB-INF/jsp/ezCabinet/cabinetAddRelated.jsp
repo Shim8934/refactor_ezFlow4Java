@@ -119,10 +119,8 @@
 						case "resrc" : saveResourceDocument(saveMode, cabinetId) ; break;
 						case "addrs" : saveAddressDocument(saveMode, cabinetId)  ; break;
 						case "jounl" : saveJournalDocument(saveMode, cabinetId)  ; break;
-						case "mjounl" : saveJournalDocument(saveMode, cabinetId) ; break;
 						default      : alert(CabinetMessages.strError)           ; return;
 					}
-					
 				}
 				
 				function saveEmailDocument(saveMode, cabinetId) {
@@ -203,9 +201,7 @@
 							var hrefStyle = listChildren[i].getAttribute("onclick");
 							
 							if(hrefStr){
-								var params  = getAllUrlParams(hrefStr);
-								console.log("File path: " + javaURLDecode(params["filePath"]));
-								console.log("File name: " + javaURLDecode(params["fileName"]));
+								var params = getAllUrlParams(hrefStr);
 								attachList.push({
 									filePath : javaURLDecode(params["filePath"]),
 									fileName : params["fileName"]
@@ -378,9 +374,6 @@
 							filePath : javaURLDecode(params["filePath"]),
 							fileName : javaURLDecode(params["fileName"])
 						});
-						
-						console.log("file path: " + javaURLDecode(params["filePath"]));
-						console.log("file name: " + javaURLDecode(params["fileName"]));
 					}
 					
 					var url  = "/ezCabinet/saveRelatedCommunity.do";
@@ -722,9 +715,6 @@
 							filePath : javaURLDecode(params["filePath"]),
 							fileName : javaURLDecode(params["fileName"])
 						});
-						
-						console.log("file path: " + javaURLDecode(params["filePath"]));
-						console.log("file name: " + javaURLDecode(params["fileName"]));
 					}
 					
 					var url  = "/ezCabinet/saveRelatedJournal.do";
