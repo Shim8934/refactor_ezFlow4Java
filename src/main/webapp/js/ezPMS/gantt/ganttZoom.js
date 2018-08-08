@@ -201,7 +201,7 @@
       start.setDate(1);
       start.setMonth(Math.floor(start.getMonth() / 6) * 6 -6);
       end.setDate(1);
-      end.setMonth(Math.floor(end.getMonth() / 6) * 6 + 12);
+      end.setMonth(Math.floor(end.getMonth() / 6) * 6 + 18);
       end.setDate(end.getDate() - 1);
     },
     row1:        function (date, tr1) {
