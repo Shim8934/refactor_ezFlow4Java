@@ -16639,10 +16639,11 @@
 				   		AND
 	        				COMPANYID = #companyID#
 				   		$v_SUBQUERY$
-				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE">
-				   			AND 
-				   				SN BETWEEN #iv_PAGESIZE2#  AND  #iv_PAGESIZE#
-				   		</isEqual>
+<!-- 				   		2018-08-08 강민수 기록물배부대장 목록출력 모든 리스트 안나와서 주석처리 강민수92 -->
+<!-- 				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE"> -->
+<!-- 				   			AND  -->
+<!-- 				   				SN BETWEEN #iv_PAGESIZE2#  AND  #iv_PAGESIZE# -->
+<!-- 				   		</isEqual> -->
 				   		<isNotEmpty property="v_MANAGEDEPTID" >
 				   		 	AND 
 				   		 		MANAGEDEPTID = #v_MANAGEDEPTID#

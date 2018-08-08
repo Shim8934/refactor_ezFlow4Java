@@ -1,4 +1,4 @@
-﻿﻿﻿var ListTypeFlag;
+﻿﻿﻿﻿var ListTypeFlag;
 var g_SelCabXml = "";
 var g_TransFlag = "0";
 var g_szParamXml = "";
@@ -1250,7 +1250,7 @@ function chk_Passwd(pUserID, CompleteFunction) {
     ezchkpasswd_cross_dialogArguments[2] = true;
     
     var url = "/ezApprovalG/ezchkPasswd.do";
-    var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(330, 210));
+    var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(350, 225));
     try { OpenWin.focus(); } catch (e) { }
 }
 //END
@@ -1539,7 +1539,7 @@ function SearchCabinet(pInitFlag) {
     searchcab_cross_dialogArguments[1] = SearchCabinet_Complete;
 
     if (pInitFlag == "0") {
-        var OpenWin = window.open(url, "SearchCab_Cross", GetOpenWindowfeature(815, 440));
+        var OpenWin = window.open(url, "SearchCab_Cross", GetOpenWindowfeature(880, 500));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {

@@ -37,6 +37,7 @@
 			td {
 				padding: 8px 5px;
 			}
+			.mainlist tr th {border-top:0px}
 		</style>
 		<SCRIPT type="text/javascript" ID="clientEventHandlersJS" >
 		    var Check = false, PeriodDocList;
@@ -1006,7 +1007,7 @@
 				</table>
 			</tr>
 		</table>  -->
-		<table style="width:100%; background-color: #fcfcfc; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8;">
+		<table style="width:100%; background-color: #fcfcfc; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8; border-bottom:1px solid #e8e8e8">
 			<tr>
 				<td style="width:3%;">
 					<spring:message code='ezApproval.t434'/> 
@@ -1049,13 +1050,13 @@
 				<td style="width:*; margin-bottom: 10px;" colspan="2">
 					<a class="imgbtn" >
 						<span onclick="javascript:search(1);"><spring:message code="ezApproval.t236"></spring:message></span>
-					</a>&nbsp; 
+					</a> 
 					<a class="imgbtn">
 						<span onClick="reload()"><spring:message code='ezApprovalG.t165' /></span>
-					</a>&nbsp;
+					</a>
 					<a class="imgbtn" id ="delbtn">
 						<span onClick="DeleteDoc()"><spring:message code='ezApprovalG.t266' /></span>
-					</a>&nbsp;
+					</a>
 				</td>
 			</tr>
 		</table>

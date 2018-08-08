@@ -439,8 +439,11 @@
 	                                <div style="overflow-y: auto; height: 30px; padding-top: 2px" id="LabelAttendant">	                                
 	                                	<c:forEach var="item" items="${attendantList}" varStatus="status">	                                		  		
 	                                	 	<span title="<spring:message code='ezSchedule.t162'/>" style="cursor:pointer" onclick="show_personinfo('${item.attendantId}')">
-	                                	 		<c:if test="${lang == '1'}"><c:out value="${item.attendantName}" /></c:if>
-	                                	 		<c:if test="${lang != '1'}"><c:out value="${item.attendantName2}" /></c:if>
+	                                	 		<!-- 2018-08-08 김보미 -->
+	                                	 		<!--<c:if test="${lang == '1'}"><c:out value="${item.attendantName}" /></c:if>
+	                                	 		<c:if test="${lang != '1'}"><c:out value="${item.attendantName2}" /></c:if>-->
+	                                	 		<c:if test="${primary == '1'}"><c:out value="${item.attendantName}" /></c:if>
+	                                	 		<c:if test="${primary != '1'}"><c:out value="${item.attendantName2}" /></c:if>
                                     			<c:if test="${item.status == '1'}">(<spring:message code='ezSchedule.t251' />)</c:if>
 	                                			<c:if test="${item.status == '2'}">(<spring:message code='ezSchedule.t168' />)</c:if>
 	                                			<c:if test="${item.status == '3'}">(<spring:message code='ezSchedule.t169' />)</c:if>

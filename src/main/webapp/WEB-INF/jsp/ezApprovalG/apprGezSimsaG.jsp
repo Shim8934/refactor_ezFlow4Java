@@ -221,7 +221,7 @@
 		        ezchkpasswd_cross_dialogArguments[0] = parameter;
 		        ezchkpasswd_cross_dialogArguments[1] = Complete_Function;
 		
-		        DivPopUpShow(330, 205, "/ezApprovalG/ezchkPasswd.do");
+		        DivPopUpShow(350, 225, "/ezApprovalG/ezchkPasswd.do");
 		    }
 		    function setArrAttachInfo() {
 		        // lstAttachLink.getElementsByTagName("a").length
