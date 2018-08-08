@@ -1934,6 +1934,9 @@ public class EzScheduleController extends EgovFileMngUtil {
         String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
         int tenantId = loginVO.getTenantId();
         
+        //baonk 추가 2018-08-08
+        String use_cabinet = ezCommonService.getTenantConfig("useCabinet", loginVO.getTenantId());
+        
         //일정 상세정보
         ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, tenantId);
          
@@ -2011,6 +2014,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("resourceCnt", resourceCnt);
         model.addAttribute("_admin", _admin);
         model.addAttribute("_editPosible", _editPosible);
+        model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
         
 		return "ezSchedule/scheduleRead";
 	}

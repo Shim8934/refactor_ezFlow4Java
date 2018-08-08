@@ -124,7 +124,9 @@
 							<!-- 		        	인쇄 -->
 							<li><span onclick='printJournal();'> <spring:message code='main.t73' /></span></li>
 							<!-- 캐비넷  -->
-							<li><span onclick='addRelatedCabinet()'><spring:message code='ezCabinet.t01' /></span></li>
+							<c:if test="${useCabinet == 'YES'}">
+								<li><span onclick='addRelatedCabinet()'><spring:message code='ezCabinet.t01' /></span></li>
+							</c:if>
 							<c:set var="userAgentInfo" value="${fn:toLowerCase(header['User-Agent'])}" />
 <%-- 							<c:if test="${fn:indexOf(userAgentInfo,'trident') eq -1}"> --%>
 <!-- 									        		엑셀저장 -->

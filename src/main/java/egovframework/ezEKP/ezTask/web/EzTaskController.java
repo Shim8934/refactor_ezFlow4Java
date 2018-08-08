@@ -130,6 +130,9 @@ public class EzTaskController extends EgovFileMngUtil {
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
 		String folderPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
 		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		
 		String taskID = request.getParameter("taskID");		
 		String date = request.getParameter("date");
 		String type = (request.getParameter("type") == null ? "" : request.getParameter("type"));
@@ -283,6 +286,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("completeRateList", completeRateList);
 		model.addAttribute("statusList", statusList);	
 		model.addAttribute("repeatCntList", repeatCntList);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		
 		return "/ezTask/taskRead";
 	}

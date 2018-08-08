@@ -48,6 +48,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezJournal.vo.JournalPagination;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -71,6 +72,9 @@ public class EzJournalController extends EgovFileMngUtil {
 	
 	@Resource(name="EzEmailService")
 	private EzEmailService ezEmailService;
+	
+	@Resource(name = "EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	/**
 	 * 업무일지 메인화면 호출
@@ -1211,9 +1215,10 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @param model
 	 * @param loginCookie
 	 * @return
+	 * @throws Exception 
 	 */
 	@RequestMapping(value="/ezJournal/journalDetail.do")
-	public String getJournalDetail(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) {
+	public String getJournalDetail(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("getJournalDetail started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1225,6 +1230,10 @@ public class EzJournalController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		*/
+		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userInfo.getId());
 //		param.put("viewDate", viewDate);
@@ -1243,6 +1252,8 @@ public class EzJournalController extends EgovFileMngUtil {
 		//	journal.put("journalDate", journalDate);
 			model.addAttribute("journal",journal);
 		}
+		
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		
 		logger.debug("getJournalDetail ended");
 		

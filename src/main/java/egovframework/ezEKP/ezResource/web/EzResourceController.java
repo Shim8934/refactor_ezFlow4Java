@@ -1152,7 +1152,10 @@ public class EzResourceController extends EgovFileMngUtil {
 		if (req.getParameter("brdName") != null) {
 			brdName = req.getParameter("brdName");
 		}
-
+		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		
 		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "", userInfo.getTenantId());
 		String brdApproveFlag = ezResourceService.getBrdApproveFlag(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		
@@ -1303,6 +1306,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("entryList", entryList);
 		model.addAttribute("checkSDT", checkSDT);
 		model.addAttribute("checkEDT", checkEDT);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		
 		if (reFlag.equals("1")) {
 			model.addAttribute("strTmpReFlagVal", "2");

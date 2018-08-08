@@ -443,7 +443,9 @@
 									</c:choose>
 								</c:if>
 							</c:if>
-							<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+							<c:if test="${useCabinet == 'YES'}">
+								<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+							</c:if>
                     	</ul>
                 	</div>
                 	<div id="close">

@@ -2586,7 +2586,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String signCheck = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
-
+		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
 		} else {
@@ -2684,6 +2687,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("whoKyulCount", whoKyulCount);
 		model.addAttribute("checkPwdFlag", checkPwdFlag);
 		model.addAttribute("signImageType", signImageType);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 
 		logger.debug("contDocView ended.");
 		
@@ -3478,6 +3482,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String susinAdmin = "";
 		String hideCabinet = config.getProperty("config.hideCabinet");
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
+		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		
 		// a=1 수발신담당자
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -3594,6 +3602,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("agreeReturnType", agreeReturnType);
 		model.addAttribute("draftDeptID", draftDeptID);
 		model.addAttribute("docState", docState);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		
 		logger.debug("approvui ended");
 		
@@ -4667,7 +4676,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 		String forceCallBackYN = ezCommonService.getTenantConfig("forceCallBack_YN", userInfo.getTenantId());
-
+		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		
 		String susinAdmin = "";
 		String hasOpinionYN = "";
 		String realPath = commonUtil.getRealPath(request);
@@ -4769,6 +4781,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("forceCallBackYN", forceCallBackYN);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		
 		logger.debug("aprDocView ended.");
 		

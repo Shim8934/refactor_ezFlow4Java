@@ -1721,7 +1721,9 @@
 					<li id="delete"><SPAN onClick="check_delete()"><spring:message code='ezTask.t115' /></SPAN></li>
 				</c:if>
 				<li><span onClick="beforeprint()"><spring:message code='ezTask.t153' /></span></li>
-				<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+				<c:if test="${useCabinet == 'YES'}">
+					<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+				</c:if>
 			</ul>
 		</div>
 		<div id="close">
