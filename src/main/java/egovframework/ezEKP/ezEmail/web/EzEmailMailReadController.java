@@ -149,6 +149,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String useReSend = ezCommonService.getTenantConfig("useReSend", loginInfo.getTenantId());
 		logger.debug("userEmail=" + userEmail);
 		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", loginInfo.getTenantId());
+		
 		// retrieve the passed in parameters
 		String url = request.getParameter("iptURL");
 		if (url == null) {
@@ -510,6 +513,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("dotNetUrl", dotNetUrl);
 		model.addAttribute("useReSend", useReSend);
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간 
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		
 		logger.debug("readMail ended.");
 		

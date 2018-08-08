@@ -477,7 +477,9 @@
 		                    <li id="HolderSent"><span id="btnReceiveList" onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
 		                    <li><span id="btnBookmark" onClick="toggle_flag()"><spring:message code="ezEmail.t550" /></span></li>
 		                    <li id="HolderElse"><span id="btnViewWeb" onClick="view_original()"><spring:message code="ezEmail.t551" /></span></li>          
-		                    <li><span id="addCabinet" onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+		                    <c:if test="${useCabinet == 'YES'}">
+		                    	<li><span id="addCabinet" onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+		                    </c:if>
 		                    <c:if test="${isSecureMail == true}">
 		                    	<li><span id="btnSecureInfo" onClick="secureInfo_onClick()"><spring:message code="ezEmail.lhm44" /></span></li>
 		                    </c:if>
