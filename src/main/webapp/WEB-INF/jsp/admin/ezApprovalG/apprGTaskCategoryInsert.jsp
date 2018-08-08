@@ -349,14 +349,14 @@
 					</c:otherwise>
 				</c:choose>
 				
-					<th><spring:message code = 'ezApprovalG.t729' /><span style="color:red">*</span></th>
+					<th><spring:message code = 'ezApprovalG.t729' /><span style="color:red"> *</span></th>
 					<td>
 						<input type="text" id="tbCateCode" name="tbCateCode" style="wigth:206px" maxlength="8">
 						<a class="imgbtn imgbck"><span onClick="return btnDuplicate_onclick()"><spring:message code = 'ezApprovalG.t730' /></span></a>
 					</td>
 				</tr>
 				<tr>
-					<th><spring:message code = 'ezApprovalG.t731' />(<spring:message code = 'ezApprovalG.t1764' />)<span style="color:red">*</span></th>
+					<th><spring:message code = 'ezApprovalG.t731' />(<spring:message code = 'ezApprovalG.t1764' />)<span style="color:red"> *</span></th>
 					<td><input type="text" id="tbCateName" name="tbCateName" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="10"/></td>
 				</tr>
 				<tr>
