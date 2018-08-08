@@ -85,6 +85,10 @@
             obj.className = "tabon";
             Tab3_SelectID = obj.id;
             ChangeReceptTab(obj);
+            
+            if(approvalFlag == "G") {
+            	checkOuterReceiver();
+            }
         }
     }
     function Tab3_NewTabIni(pTabNodeID) {
