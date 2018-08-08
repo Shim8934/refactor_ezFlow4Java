@@ -487,7 +487,7 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 				kanbanHTML += "<p class='overview_list_title'>" + revertString(taskList[i].title) + "</p>";
 
 				if (taskList[i].imageFilePath == null) {
-					kanbanHTML += "<div class='boardArea_new'>" + revertString(taskList[i].writeContent) + "</div>";
+					kanbanHTML += "<div class='boardArea_new'>" + taskList[i].writeContent + "</div>";
 				} else {
 					kanbanHTML += "<div class='boardArea_new'><img style='width:100%; height:100%;' src='" + taskList[i].imageFilePath + "'></div>";
 				}

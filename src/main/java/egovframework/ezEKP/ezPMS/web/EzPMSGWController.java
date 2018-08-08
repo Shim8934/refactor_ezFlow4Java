@@ -227,14 +227,12 @@ public class EzPMSGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String lang = commonUtil.getMultiData(info.getLang(),
-					info.getTenantId());
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 
 			Map<String, Object> project = new HashMap<String, Object>();
-			project.put("projectName", request.getParameter("projectName")
-					.replaceAll("\"", "&quot;").replaceAll("\'", "&#39;"));
+			project.put("projectName", request.getParameter("projectName"));
 			project.put("weightInput", request.getParameter("weightInput"));
 			project.put("planStartDate", request.getParameter("planStartDate"));
 			project.put("planEndDate", request.getParameter("planEndDate"));
@@ -264,37 +262,27 @@ public class EzPMSGWController {
 
 			LOGGER.debug("addNewProject projectId : " + projectId);
 
-			List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) json
-					.get("managerList");
-			projectMemberList.addAll((List<Map<String, Object>>) json
-					.get("participantList"));
-			projectMemberList.addAll((List<Map<String, Object>>) json
-					.get("viewerList"));
+			List<Map<String, Object>> projectMemberList = (List<Map<String, Object>>) json.get("managerList");
+			projectMemberList.addAll((List<Map<String, Object>>) json.get("participantList"));
+			projectMemberList.addAll((List<Map<String, Object>>) json.get("viewerList"));
 
 			project.put("projectId", projectId);
 			project.put("memberCount", projectMemberList.size());
 
 			// 기본 게시판 생성
-			String projectName = request.getParameter("projectName")
-					.replaceAll("\"", "&quot;").replaceAll("\'", "&#39;");
-			ezPMSService.addBoardFolder(tenantId, projectName, projectName,
-					projectId, userId, 0);
+			String projectName = request.getParameter("projectName");
+			ezPMSService.addBoardFolder(tenantId, projectName, projectName,	projectId, userId, 0);
 
-			Locale locale = new Locale(
-					commonUtil.getTwoLetterLangFromLangNum(lang));
-			String issueList = egovMessageSource.getMessage("ezPMS.t203",
-					locale);
-			ezPMSService.addBoardFolder(tenantId, issueList, issueList,
-					projectId, userId, 1);
+			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(lang));
+			String issueList = egovMessageSource.getMessage("ezPMS.t203", locale);
+			ezPMSService.addBoardFolder(tenantId, issueList, issueList, projectId, userId, 1);
 			// project.put("groupName", "이슈 리스트");
 			// ezPMSService.addGroup(project, "Y", companyId, tenantId, lang);
 
 			// 그룹 생성
 			project.put("sortOrder", 0);
-			project.put("groupName", request.getParameter("projectName")
-					.replaceAll("\"", "&quot;").replaceAll("\'", "&#39;"));
-			long groupId = ezPMSService.addGroup(project, "N", companyId,
-					tenantId, lang);
+			project.put("groupName", request.getParameter("projectName"));
+			long groupId = ezPMSService.addGroup(project, "N", companyId, tenantId, lang);
 			LOGGER.debug("addNewProject groupId : " + groupId);
 
 			data.put("projectId", projectId);
@@ -302,15 +290,11 @@ public class EzPMSGWController {
 
 			// 프로젝트 멤버 테이블에 추가
 			for (int i = 0; i < projectMemberList.size(); i++) {
-				String memberId = projectMemberList.get(i).get("userId")
-						.toString();
-				String userIdType = projectMemberList.get(i).get("userIdType")
-						.toString();
+				String memberId = projectMemberList.get(i).get("userId").toString();
+				String userIdType = projectMemberList.get(i).get("userIdType").toString();
 
-				ProjectMemberVO member = ezPMSService.getUserInfo(memberId,
-						tenantId, userIdType);
-				member.setMemberRoleId((int) projectMemberList.get(i).get(
-						"memberRoleId"));
+				ProjectMemberVO member = ezPMSService.getUserInfo(memberId,	tenantId, userIdType);
+				member.setMemberRoleId((int) projectMemberList.get(i).get("memberRoleId"));
 				member.setProjectId(projectId);
 				member.setUserIdType(userIdType);
 
@@ -3227,8 +3211,7 @@ public class EzPMSGWController {
 			project.put("memberCount", projectMemberList.size());
 
 			// 그룹 생성
-			project.put("groupName", request.getParameter("groupName")
-					.replaceAll("\"", "&quot;").replaceAll("\'", "&#39;"));
+			project.put("groupName", request.getParameter("groupName"));
 			Long groupId = ezPMSService.addGroup(project, "N", companyId,
 					tenantId, lang);
 

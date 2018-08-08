@@ -116,6 +116,16 @@ function revertString(str) {
 	return str;
 }
 
+function convertQuotation(p_str) {
+    p_str = ReplaceText(p_str, "&apos;", "\'");
+    p_str = ReplaceText(p_str, "&#039;", "\'");
+    p_str = ReplaceText(p_str, "&#39;", "\'");
+    p_str = ReplaceText(p_str, "&quot;", "\"");
+    p_str = ReplaceText(p_str, "&#034;", "\"");
+
+    return p_str;
+}
+
 function replaceString(p_str) {
      p_str = ReplaceText(p_str, "&lt;", "<");
      p_str = ReplaceText(p_str, "&gt;", ">");
