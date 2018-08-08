@@ -115,7 +115,7 @@
 		        
 		        MailOptionHidden();
 		        
-		        windowResize();
+		        Window_resize();
 		    };
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
