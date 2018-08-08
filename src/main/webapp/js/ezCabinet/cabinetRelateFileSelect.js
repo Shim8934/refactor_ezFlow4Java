@@ -86,6 +86,7 @@ var CabinetRlFileSelect = function() {
 		switch (module) {
 			case "normal" : if (parentWd && parentWd.CabinetItemDetail)    {selectedArr = parentWd.CabinetItemDetail.get()    ;} break;
 			case "mail"   : if (parentWd && parentWd.CabinetEmailFile)     {selectedArr = parentWd.CabinetEmailFile.get()     ;} break;
+			case "apprv"  : if (parentWd && parentWd.CabinetApprovalFile)  {selectedArr = parentWd.CabinetApprovalFile.get()  ;} break;
 			case "board"  : if (parentWd && parentWd.CabinetBoardFile)     {selectedArr = parentWd.CabinetBoardFile.get()     ;} break;
 			case "option" : if (parentWd && parentWd.CabinetOptionFile)    {selectedArr = parentWd.CabinetOptionFile.get()    ;} break;
 			case "commu"  : if (parentWd && parentWd.CabinetCommunityFile) {selectedArr = parentWd.CabinetCommunityFile.get() ;} break;
@@ -146,6 +147,7 @@ var CabinetRlFileSelect = function() {
 		switch (module) {
 			case "normal" : if (parentWd && parentWd.CabinetItemDetail)    {parentWd.CabinetItemDetail.save(data)   ;} break;
 			case "mail"   : if (parentWd && parentWd.CabinetEmailFile)     {parentWd.CabinetEmailFile.save(data)    ;} break;
+			case "apprv"  : if (parentWd && parentWd.CabinetApprovalFile)  {parentWd.CabinetApprovalFile.save(data) ;} break;
 			case "board"  : if (parentWd && parentWd.CabinetBoardFile)     {parentWd.CabinetBoardFile.save(data)    ;} break;
 			case "option" : if (parentWd && parentWd.CabinetOptionFile)    {parentWd.CabinetOptionFile.save(data)   ;} break;
 			case "commu"  : if (parentWd && parentWd.CabinetCommunityFile) {parentWd.CabinetCommunityFile.save(data);} break;

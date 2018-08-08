@@ -17,7 +17,7 @@
 			<style type="text/css">p {margin-top: 0px; margin-bottom: 0px;}</style>
 		</c:if>
 	</head>
-	<body>
+	<body style="padding: 8px; margin: 0px;">
 		<div class="zoomDiv"><img src="/images/minus.png"><img src="/images/plus.png"></div>
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"                  ></script>
@@ -76,7 +76,14 @@
 							var liSpanChild1       = document.createElement("span");
 							var liSpanChild2       = document.createElement("span");
 							var spanChild          = document.createElement("span");
-							liElmt.onclick         = (function(name, path) {return function() {downloadFileAttach(name, path);}; })(attachList[i]["fileName"], attachList[i]["filePath"]);
+							
+							if (moduleType == "apprv" && attachList[i]["filePath"].includes("openAttachView")) {
+								liElmt.setAttribute("onclick", attachList[i]["filePath"]);
+							}
+							else {
+								liElmt.onclick = (function(name, path) {return function() {downloadFileAttach(name, path);}; })(attachList[i]["fileName"], attachList[i]["filePath"]);
+							}
+							
 							liSpanChild1.className = "cabSpanAttach";
 							liSpanChild2.className = "cabSpanAttach";
 							liSpanChild1.innerHTML = "<img src='/images/icon_adddownload.gif'>";
@@ -106,6 +113,7 @@
 				function getContentFromModuleName(moduleName) {
 					switch (moduleName) {
 						case "mail"   : documentContent = parent.CabinetEmailFile.getContent()    ; break;
+						case "apprv"  : documentContent = parent.CabinetApprovalFile.getContent() ; break;
 						case "board"  : documentContent = parent.CabinetBoardFile.getContent()    ; break;
 						case "option" : documentContent = parent.CabinetOptionFile.getContent()   ; break;
 						case "commu"  : documentContent = parent.CabinetCommunityFile.getContent(); break;
@@ -233,6 +241,32 @@
 				
 				return {init : initEvents};
 			}();
+			
+			function openAttachView(wfileLocation, wName, wWeigth, wHeigth) {
+				try {
+					var heigth = window.screen.availHeight;
+					var width  = window.screen.availWidth;
+					var left   = 0;
+					var top    = 0;
+					
+					if (window.screen.width > 800) {
+						var pleftpos = parseInt(width) - wWeigth;
+						heigth       = parseInt(heigth) - 30;
+						width        = parseInt(width) - pleftpos;
+						left         = (pleftpos / 2) + 30;
+						top          = 30;
+					}
+					else {
+						heigth = parseInt(heigth) - 30;
+						width = parseInt(width) - 10;
+					}
+					
+					window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+				}
+				catch (e) {
+					alert("openAttachView :: " + e.description);
+				}
+			}
 			
 			function Item_View(vItem, pCItemID, vWriter, pBrdid, vGbnBoard, pBrdnm, brd_Gubun) {
 				var pcurpage = "1", pBrdMod = "WorkBoard", pDeptBoardYN = "N", pAdminFg = "0";

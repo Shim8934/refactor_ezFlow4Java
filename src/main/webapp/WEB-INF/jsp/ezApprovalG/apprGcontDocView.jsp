@@ -757,6 +757,24 @@
 		    	window.opener.parent.frames["left"].getAprCountWHO();
                 window.close();
 		    }
+			
+			function addRelatedCabinet() {
+				//* moon 2018.07.26
+				window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 370));
+			}
+			
+			function getOpenWindowfeature(popUpW, popUpH) {
+				var heigth   = window.screen.availHeight;
+				var width    = window.screen.availWidth;
+				var left     = 0;
+				var top      = 0;
+				var pleftpos = parseInt(width) - popUpW;
+				heigth       = parseInt(heigth) - popUpH;
+				left         = pleftpos / 2;
+				top          = heigth / 2;
+				var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+				return feature;
+			}
 		</script>
 	</head>
 	<body class="popup" style="OVERFLOW:hidden;height:100%">
@@ -775,6 +793,7 @@
    				  <c:if test="${approvalFlag != 'G'}">
 		          <li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 				  </c:if>
+				  <li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
 		        </ul>
 		      </div>
 		      <div id="close">
