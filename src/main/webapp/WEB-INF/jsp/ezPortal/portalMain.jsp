@@ -31,7 +31,7 @@
 			#open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;}
 /* 			.individual-memo { width:200px; height:200px; background:url('/images/ezMemo/background.gif') repeat-x; background-size:200px 190px;text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 20px 55px 20px 55px;} */
 			.individual-memo { width:200px; height:200px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }
-			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);overflow:hidden;}
+			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);overflow:hidden; height: 50%; }
 			#selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;}
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
 			#maskDiv { position:absolute; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);}
@@ -91,7 +91,7 @@
 				//opendMemo.css({"top": 50, "left": 50});
 		    }
 		    
-		    function changSizeOfLayer() {
+		    /* function changSizeOfLayer() {
 		    	var winHeight = window.innerHeight;
 				var winWidth = window.innerWidth;
 		    	
@@ -111,7 +111,7 @@
 	        	}
 				setSizeOfLayer();
 				$(".memoListBox").css("height",winHeight - 56 - 60);
-		    }
+		    } */
 		    
 		    function setSizeOfLayer() {
 		    	var winHeight = window.innerHeight;
@@ -123,7 +123,7 @@
 				var className = $("#layer-popup").attr("class");
 	        	var opendMemo = $("#selected-memo");
 
-				if (className.indexOf("layer-half") != -1) {
+				/* if (className.indexOf("layer-half") != -1) {
 	        		layerHalf.css({"top":65, "left": winWidth/2, "right" : 10, "width" : winWidth/2 - 20, "height":winHeight - 56 - 30});
 	        		maskDiv.css({"top":0, "left":0, "width" : winWidth/2 - 20, "height":winHeight - 56 - 30});
 	        		opendMemo.css({"top":10, "left":10, "width" : winWidth/2 - 50, "height":winHeight - 56 - 50})
@@ -131,7 +131,7 @@
 	        		layerWhole.css({"top":65, "left": 10, "right" : 20, "width" : winWidth - 30, "height":winHeight - 56 - 30});
 	        		maskDiv.css({"top":0, "left": 0, "width" : winWidth - 30, "height":winHeight - 56 - 30});
 	        		opendMemo.css({"top":20, "left": 20, "width" : winWidth - 90, "height":winHeight - 56 - 90})
-	        	}
+	        	} */
 				$(".memoListBox").css("height",winHeight - 56 - 60);
 				
 		    }
@@ -153,10 +153,10 @@
 		        	$("#selected-memo").css("display", "none");
 		        });
 
-		        $("#change-mode").click(function() {
+		        /* $("#change-mode").click(function() {
 		        	
 		        	changSizeOfLayer();
-		        });
+		        }); */
 		        
 		        $("#memoList").sortable({
 		        	 containment: '.memoListBox'
@@ -202,6 +202,13 @@
 		        	textarea.css("height", thisHeight);
 		        }); */
 
+		        
+		        $("#layer-popup").resizable({
+		        	handles : "n, e, s, w, ne, se, sw, nw"
+		        });
+		        $("#layer-popup").mouseenter(function() {
+		        	console.log("클릭");
+		        })
 		     });
 		    
 		    // 초기 pointet-event set
@@ -410,8 +417,8 @@
 						<button id="close-button">닫기</button>
 					</div>
 										
-					<div class="memoListBox" style="overflow:hidden;">
-						<div id="memoList" style="height: 100%; overflow-y:scroll;  position:relative; margin-right:-25px;"></div>
+					<div class="memoListBox" style="overflow:auto;">
+						<div id="memoList" style=" overflow-y:scroll;  position:relative; margin-right:-25px;"></div>
 					</div>
 					
 				</div>
