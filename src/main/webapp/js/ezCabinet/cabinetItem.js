@@ -1043,7 +1043,7 @@ var CabinetItem = function() {
 		var relatedList    = data.relatedFileList;
 		
 		generateApprovalTitle(itemInfo, dlElmt);
-		generateRelatedModuleContent(itemInfo, attachList, null, null);
+		generateRelatedModuleContent(itemInfo, attachList, null, "apprv");
 	}
 	
 	function generateApprovalTitle(itemInfo, dlElmt) {

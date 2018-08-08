@@ -34,22 +34,24 @@ public class EzCabinetController_m {
 	public String jsonSaveRelatedApproval(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveRelatedApproval is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String mode            = request.getParameter("mode")             != null ? request.getParameter("mode")          : "";
-		String cabinetId       = request.getParameter("cabinetId")        != null ? request.getParameter("cabinetId")     : "";
-		String divContent      = request.getParameter("content")          != null ? request.getParameter("content")       : "";
-		String doctitle        = request.getParameter("doctitle")         != null ? request.getParameter("doctitle")      : "";
-		String lstAttachLink   = request.getParameter("lstAttachLink")    != null ? request.getParameter("lstAttachLink") : "";
-		String otherAttachLk   = request.getParameter("otherAttachLk")    != null ? request.getParameter("otherAttachLk") : "";
+		String mode            = request.getParameter("mode")      != null ? request.getParameter("mode")      : "";
+		String cabinetId       = request.getParameter("cabinetId") != null ? request.getParameter("cabinetId") : "";
+		String content         = request.getParameter("content")   != null ? request.getParameter("content")   : "";
+		String title           = request.getParameter("title")     != null ? request.getParameter("title")     : "";
+		String attach          = request.getParameter("attach")    != null ? request.getParameter("attach")    : "";
+		String other           = request.getParameter("other")     != null ? request.getParameter("other")     : "";
 		JSONObject resultObj   = new JSONObject();
 		
-		if (divContent.equals("") || (mode.equals("1") && cabinetId.equals("")) || (doctitle.equals("")) || (lstAttachLink.equals("")) || (otherAttachLk.equals(""))) {
+		logger.debug("Title: " + title + " || mode : " + mode + " || Content: " + content + " || Cabinet Id: " + cabinetId + " || Attach: " + attach + " || Other: " + other);
+		
+		if (content.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("")) {
 			logger.debug("Invalid parameter!");
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService_m.saveRelatedApproval(request, userInfo.getId(), mode, cabinetId, divContent, doctitle, lstAttachLink, otherAttachLk);
+		resultObj = cabinetRestService_m.saveRelatedApproval(request, userInfo.getId(), mode, cabinetId, content, title, attach, other);
 		
 		logger.debug("jsonSaveRelatedApproval finishes!");
 		return resultObj.toString();

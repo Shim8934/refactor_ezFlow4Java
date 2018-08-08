@@ -1,11 +1,8 @@
 package egovframework.ezEKP.ezCabinet.service.impl;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -19,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_m;
 
 @Service
@@ -34,13 +30,13 @@ public class EzCabinetRestServiceImpl_m implements EzCabinetRestService_m {
 	public JSONObject saveRelatedApproval(HttpServletRequest request, String userId, String mode, String cabinetId, String divContent, String doctitle, String lstAttachLink, String otherAttachLk) {
 		String url                = "/rest/ezcabinet/relate-item/save/apprv";
 		JSONObject jsonParam      = new JSONObject();
-		jsonParam.put("content",       divContent);
-		jsonParam.put("userId",        userId);
-		jsonParam.put("mode",          mode);
-		jsonParam.put("cabinetId",     cabinetId);
-		jsonParam.put("doctitle",      doctitle);
-		jsonParam.put("lstAttachLink", lstAttachLink);
-		jsonParam.put("otherAttachLk", otherAttachLk);
+		jsonParam.put("content",   divContent);
+		jsonParam.put("userId",    userId);
+		jsonParam.put("mode",      mode);
+		jsonParam.put("cabinetId", cabinetId);
+		jsonParam.put("title",     doctitle);
+		jsonParam.put("attach",    lstAttachLink);
+		jsonParam.put("other",     otherAttachLk);
 		JSONObject resultBody     = getJsonResult(url, null, request, "put", jsonParam);
 		return resultBody;
 	}
