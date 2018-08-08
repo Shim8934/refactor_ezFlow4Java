@@ -357,7 +357,7 @@
 	                <img src="/images/arr_left.gif" name="Image201" onClick="return btnDeldept_onclick()" style="padding-top: 5px; cursor: pointer;"><br/>
 				</td>
 				<td style="vertical-align:top;">
-					<select id="selUseDept" name="selUseDept" style="WIDTH: 245px; HEIGHT: 235px" size="2"></select>
+					<select id="selUseDept" name="selUseDept" style="WIDTH: 245px; HEIGHT: 235px; background: none;" size="2"></select>
 				</td>
 			</tr>
 		</table>

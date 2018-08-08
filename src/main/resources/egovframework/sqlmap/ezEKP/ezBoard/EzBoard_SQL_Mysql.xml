@@ -2771,7 +2771,7 @@
                 AND
                 	A.ItemID = D.ITEMID
                 WHERE  
-                	TENANT_ID = #tenantID#
+                	A.TENANT_ID = #tenantID#
                 AND
                 	BOARDID = #boardId#
                 AND 
