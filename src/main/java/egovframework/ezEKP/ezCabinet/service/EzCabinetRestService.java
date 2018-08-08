@@ -90,7 +90,7 @@ public interface EzCabinetRestService {
 	public JSONObject saveRelatedSchedule(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content) throws Exception;
 	
 	//Save related todo document
-	public JSONObject saveRelatedTodo(HttpServletRequest request, String id, String title, String mode, String cabinetId, String createUser, String createDate, String priority, String memo, String tasktype, String executor, String status, String shareList, String attach, String content) throws Exception;
+	public JSONObject saveRelatedTodo(HttpServletRequest request, String id, String title, String mode, String cabinetId, String createUser, String createDate, String priority, String memo, String tasktype, String executor, String shareList, String attach, String content) throws Exception;
 	
 	//Save related photo board
 	public JSONObject savePhotoBoard(HttpServletRequest request, String id, String title, String mode, String cabinetId, String createUser, String createDate, String descript, String boardId, String itemId) throws Exception;

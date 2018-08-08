@@ -103,11 +103,6 @@
 					divMainElmt.className = "cabrltxt";
 					divMainElmt.innerHTML = documentContent.content;
 					document.body.appendChild(divMainElmt);
-					
-					if (moduleType && moduleType == "todo") {
-						var taskJsonInfo = JSON.parse(documentContent.param);
-						initProgressBar(taskJsonInfo);
-					}
 				}
 				
 				function getContentFromModuleName(moduleName) {
@@ -196,46 +191,6 @@
 					else {
 						if (currentZoom > minZoom) {currentZoom -= 10;} else {return;}
 						txtFieldElmt.style.zoom = currentZoom + "%";
-					}
-				}
-				
-				function initProgressBar(taskInfo) {
-					var taskstatus    = taskInfo.status;
-					var completerate  = taskInfo.completerate;
-					var delayColor    = taskInfo.delaycolor;
-					var completeColor = taskInfo.completecolor;
-					
-					if (taskstatus == '4') {
-						$('.progress_graph').circleProgress({
-							value: ((completerate * 1) / 100),
-							fill: {color: delayColor},
-							size: 135
-						}).on('circle-animation-progress', function(event, progress) {
-							$(this).find('strong').html(completerate + '%');
-							if (completerate == 0) {
-								$(this).find('strong').css("color", delayColor);
-							} else {
-								$(this).find('strong').css("color", "");
-							}
-						});
-					} else if (taskstatus == '3' || completerate == '100') {	
-						$('.progress_graph').circleProgress({
-							value: ((completerate * 1) / 100),
-							fill: {color: completeColor},
-							size: 135
-						}).on('circle-animation-progress', function(event, progress) {
-							$(this).find('strong').html(completerate + '%');
-							$(this).find('strong').css("color", "");
-						});
-					} else {
-						$('.progress_graph').circleProgress({
-							value: ((completerate * 1) / 100),
-							fill: {color: '#3498db'},
-							size: 135
-						}).on('circle-animation-progress', function(event, progress) {
-							$(this).find('strong').html(completerate + '%');
-							$(this).find('strong').css("color", "");
-						});
 					}
 				}
 				

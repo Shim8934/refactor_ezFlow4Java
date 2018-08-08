@@ -791,12 +791,11 @@ var CabinetItem = function() {
 		var itemInfo    = data.fileDetail;
 		var relatedList = data.relatedFileList;
 		var attachList  = data.attachFileList;
-		var status      = data.tskstatus;
 		var columnList  = data.columns;
 		var typeColumn  = columnList.filter(function(col) {return col["columnId"] == "tasktype";})[0];
 		
 		generateTodoTitle(itemInfo, relatedList, typeColumn, dlElmt);
-		generateRelatedModuleContent(itemInfo, attachList, status, "todo");
+		generateRelatedModuleContent(itemInfo, attachList, null, null);
 	}
 	
 	function generateTodoTitle(itemInfo, relatedList, typeColumn, dlElmt) {

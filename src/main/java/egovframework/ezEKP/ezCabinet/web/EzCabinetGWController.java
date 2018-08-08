@@ -1807,13 +1807,12 @@ public class EzCabinetGWController {
 		String shareList  = todoItemInf.get("shareList")   != null ? todoItemInf.get("shareList").toString()  : "";
 		String attach     = todoItemInf.get("attach")      != null ? todoItemInf.get("attach").toString()     : "";
 		String content    = todoItemInf.get("content")     != null ? todoItemInf.get("content").toString()    : "";
-		String status     = todoItemInf.get("status")      != null ? todoItemInf.get("status").toString()     : "";
 		
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName +  "userId: " + userId +  "Title: " + title + " || mode: " + mode + " || cabinetId: " + cabinetId + " || createUser: " + createUser + " || createDate: " + createDate + " || priority: " + priority + " || memo: " + memo + " || tasktype: " + tasktype + " || executor: " + executor + " || shareList: " + shareList + " || attach: " + attach + " || content: " + content + " || status: " + status);
+		logger.debug("ServerName: " + serverName +  "userId: " + userId +  "Title: " + title + " || mode: " + mode + " || cabinetId: " + cabinetId + " || createUser: " + createUser + " || createDate: " + createDate + " || priority: " + priority + " || memo: " + memo + " || tasktype: " + tasktype + " || executor: " + executor + " || shareList: " + shareList + " || attach: " + attach + " || content: " + content);
 		
-		if (serverName.equals("") || userId.equals("") || title.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("") || priority.equals("") || tasktype.equals("") || executor.equals("") || content.equals("") || status.equals("")) {
+		if (serverName.equals("") || userId.equals("") || title.equals("") || createUser.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("") || priority.equals("") || tasktype.equals("") || executor.equals("") || content.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -1824,7 +1823,7 @@ public class EzCabinetGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int dstCabinetId = cabinetId.equals("") ? -1 : Integer.parseInt(cabinetId);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = cabinetService.saveTodoItem(dstCabinetId, realPath, title, mode, createUser, createDate, priority, memo, tasktype, executor, status, shareList, attach, content, locale, userInfo);
+			result           = cabinetService.saveTodoItem(dstCabinetId, realPath, title, mode, createUser, createDate, priority, memo, tasktype, executor, shareList, attach, content, locale, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

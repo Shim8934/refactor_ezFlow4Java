@@ -91,13 +91,10 @@
 					cabinetHelper.start();
 				}
 				
-				function genderInformation(fileItem, displayUserInforPopup, showInfoId, showInfoEmail, scrollHandler, documentCont) {
+				function genderInformation(fileItem, displayUserInforPopup, showInfoId, showInfoEmail, scrollHandler) {
 					var result         = fileItem.fileDetail;
 					var creator        = fileItem.creator;
 					var shares         = fileItem.shares;
-					var status         = fileItem.tskstatus;
-					documentCont.param = status;
-					documentCont.type  = "todo";
 					
 					//Display popup
 					displayUserInforPopup("creator"   , result["creatorId"], showInfoId);
@@ -110,22 +107,6 @@
 					var listElmtId = ["fileListDiv", "shares"];
 					scrollPrint(listElmtId);
 					displayIframePrint();
-					
-					//Copy canvas
-					var iframeElmt  = document.getElementById("todoIframe");
-					var iframeCont  = iframeElmt.contentWindow? iframeElmt.contentWindow: iframeElmt.contentDocument;
-					var canvasElmt  = iframeCont.document.querySelector("canvas");
-					var divPrint    = document.querySelector("div[class='cabtxtPrint']");
-					var printCanvas = divPrint.querySelector("canvas");
-					var parentElmt  = printCanvas.parentElement;
-					var newCanvas   = document.createElement('canvas');
-					var context     = newCanvas.getContext('2d');
-					
-					newCanvas.width  = canvasElmt.width;
-					newCanvas.height = canvasElmt.height;
-					context.drawImage(canvasElmt, 0, 0);
-					parentElmt.replaceChild(newCanvas, printCanvas);
-					
 					window.focus();
 					window.print();
 					removeIframePrint();

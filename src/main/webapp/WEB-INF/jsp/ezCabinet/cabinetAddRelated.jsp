@@ -421,12 +421,8 @@
 					var taskContent      = document.createElement("div");
 					
 					//1: Task title + status + repeate information
-					var taskstatus          = todoOpener.taskstatus;
-					var taskcompleterate    = todoOpener.completerate;
-					var tskDelayColor       = todoOpener.delayColor;
-					var tskCompleteColor    = todoOpener.completeColor;
-					var tskStatusInf        = {status : taskstatus, completerate: taskcompleterate, delaycolor: tskDelayColor, completecolor: tskCompleteColor};
 					var maintaskDiv         = todoOpener.document.querySelector("div[class='wrap_progress']");
+					var canvasElmt          = maintaskDiv.querySelector("canvas");
 					var taskTtlDiv          = maintaskDiv.cloneNode(true);
 					taskTtlDiv.style.height = "auto";
 					var h4TtlElmt           = taskTtlDiv.querySelector("h4");
@@ -436,7 +432,15 @@
 					graphDiv.style.width    = "";
 					var datePicker          = taskTtlDiv.querySelector("div[class='hasDatepicker']");
 					if (!datePicker) {graphDiv.style.top = "";}
-					graphDiv.innerHTML      = "<strong></strong>";
+					var dataURL             = canvasElmt.toDataURL();
+					var newImgElmt          = document.createElement("img");
+					newImgElmt.src          = dataURL;
+					newImgElmt.style.width  = "135px";
+					newImgElmt.style.height = "135px";
+					var cloneCanvas         = graphDiv.querySelector("canvas");
+					graphDiv.replaceChild(newImgElmt, cloneCanvas);
+					
+					//graphDiv.innerHTML      = "<strong></strong>";
 					var taskUpdateParent    = taskUpdateStatus.parentElement;
 					
 					taskUpdateParent.removeChild(taskUpdateStatus);
@@ -553,7 +557,6 @@
 						executor  : taskExecutor,
 						share     : JSON.stringify(taskShareList),
 						attach    : JSON.stringify(attachList),
-						status    : JSON.stringify(tskStatusInf),
 						content   : taskContent.innerHTML
 					};
 					

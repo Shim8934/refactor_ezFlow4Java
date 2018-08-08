@@ -1813,7 +1813,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveTodoItem(int cabinetId, String realPath, String title, String mode, String createUser, String createDate, String priority, String memo, String tasktype, String executor, String status, String shareList, String attach, String content, Locale locale, LoginVO userInfo) throws Exception {
+	public JSONObject saveTodoItem(int cabinetId, String realPath, String title, String mode, String createUser, String createDate, String priority, String memo, String tasktype, String executor, String shareList, String attach, String content, Locale locale, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
@@ -1854,7 +1854,6 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		listColm.add(createNewRelatedColumn("memo"      , itemId, "ezTask.t170" , memo      , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("tasktype"  , itemId, "ezTask.t2003", tasktype  , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("executor"  , itemId, "ezTask.t2005", executor  , companyId, tenantId));
-		listColm.add(createNewRelatedColumn("status"    , itemId, "ezTask.t2005", status    , companyId, tenantId));
 		listColm.add(createNewRelatedColumn("sharelist" , itemId, "ezTask.t157" , shareStr  , companyId, tenantId));
 		
 		saveAllColumns(listColm);

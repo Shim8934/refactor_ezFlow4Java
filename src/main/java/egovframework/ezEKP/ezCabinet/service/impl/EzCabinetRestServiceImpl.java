@@ -679,7 +679,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveRelatedTodo(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String createUser, String createDate, String priority, String memo, String tasktype, String executor, String status, String shareList, String attach, String content) throws Exception {
+	public JSONObject saveRelatedTodo(HttpServletRequest request, String userId, String title, String mode, String cabinetId, String createUser, String createDate, String priority, String memo, String tasktype, String executor, String shareList, String attach, String content) throws Exception {
 		String url                = "/rest/ezcabinet/relate-item/save/todo";
 		JSONObject jsonBody       = new JSONObject();
 		jsonBody.put("userId",     userId);
@@ -692,7 +692,6 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		jsonBody.put("memo",       memo);
 		jsonBody.put("tasktype",   tasktype);
 		jsonBody.put("executor",   executor);
-		jsonBody.put("status",     status);
 		jsonBody.put("shareList",  shareList);
 		jsonBody.put("attach",     attach);
 		jsonBody.put("content",    content);

@@ -914,19 +914,18 @@ public class EzCabinetController {
 		String shareList       = request.getParameter("share")    != null ? request.getParameter("share")    : "";
 		String attach          = request.getParameter("attach")   != null ? request.getParameter("attach")   : "";
 		String content         = request.getParameter("content")  != null ? request.getParameter("content")  : "";
-		String status          = request.getParameter("status")   != null ? request.getParameter("status")   : "";
 		
 		JSONObject resultObj   = new JSONObject();
 		
-		logger.debug("Title: " + title + " || mode: " + mode + " || cabinetId: " + cabinetId + " || createUser: " + createUser + " || createDate: " + createDate + " || priority: " + priority + " || memo: " + memo + " || tasktype: " + tasktype + " || executor: " + executor + " || shareList: " + shareList + " || attach: " + attach + " || content: " + content + " || status: " + status);
+		logger.debug("Title: " + title + " || mode: " + mode + " || cabinetId: " + cabinetId + " || createUser: " + createUser + " || createDate: " + createDate + " || priority: " + priority + " || memo: " + memo + " || tasktype: " + tasktype + " || executor: " + executor + " || shareList: " + shareList + " || attach: " + attach + " || content: " + content);
 		
-		if (title.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("") || priority.equals("") || tasktype.equals("") || executor.equals("") || content.equals("") || status.equals("")) {
+		if (title.equals("") || (mode.equals("1") && cabinetId.equals("")) || mode.equals("") || createUser.equals("") || createDate.equals("") || priority.equals("") || tasktype.equals("") || executor.equals("") || content.equals("")) {
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");
 			return resultObj.toString();
 		}
 		
-		resultObj = cabinetRestService.saveRelatedTodo(request, userInfo.getId(), title, mode, cabinetId, createUser, createDate, priority, memo, tasktype, executor, status, shareList, attach, content);
+		resultObj = cabinetRestService.saveRelatedTodo(request, userInfo.getId(), title, mode, cabinetId, createUser, createDate, priority, memo, tasktype, executor, shareList, attach, content);
 		
 		logger.debug("jsonSaveRelatedTodo finishes!");
 		return resultObj.toString();

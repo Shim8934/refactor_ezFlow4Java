@@ -592,7 +592,6 @@ public class EzCabinetGWController_h {
 
 	private void getMoreTodoDetail(JSONObject result, List<CabinetColumnVO> columnList, String primary, int tenantId) throws Exception {
 		CabinetColumnVO creatorColumn = columnList.stream().filter(column -> column.getColumnId().equals("creator")).collect(Collectors.toList()).get(0);
-		CabinetColumnVO statusColumn  = columnList.stream().filter(column -> column.getColumnId().equals("status")).collect(Collectors.toList()).get(0);
 		List<CabinetColumnVO> share   = columnList.stream().filter(column -> column.getColumnId().equals("sharelist")).collect(Collectors.toList());
 		String creatorId              = creatorColumn.getColumnValue();
 		SimpleUserInfoVO creatorVO    = cabinetService.getSimpleUserInfo(creatorId, primary, tenantId);
@@ -607,7 +606,6 @@ public class EzCabinetGWController_h {
 			result.put("shares", listShare);
 		}
 		
-		result.put("tskstatus", statusColumn.getColumnValue());
 		result.put("creator"  , creatorVO);
 	}
 	

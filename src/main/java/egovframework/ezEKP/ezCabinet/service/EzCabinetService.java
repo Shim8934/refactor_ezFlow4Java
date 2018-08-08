@@ -110,7 +110,7 @@ public interface EzCabinetService {
 	JSONObject saveScheduleItem(int dstCabinetId, String realPath, String title, String mode, String createUser, String createDate, String scheduleDate, String priority, String location, String publicstatus, String groupname, String attendant, String scheduletype, String attach, String content, Locale locale, LoginVO userInfo) throws Exception;
 	
 	//Save related todo item function
-	JSONObject saveTodoItem(int dstCabinetId, String realPath, String title, String mode, String createUser, String createDate, String priority, String memo, String tasktype, String executor, String status, String shareList, String attach, String content, Locale locale, LoginVO userInfo) throws Exception;
+	JSONObject saveTodoItem(int dstCabinetId, String realPath, String title, String mode, String createUser, String createDate, String priority, String memo, String tasktype, String executor, String shareList, String attach, String content, Locale locale, LoginVO userInfo) throws Exception;
 	
 	//Save related photo board item function
 	JSONObject savePhotoBoard(int dstCabinetId, String realPath, String title, String mode, String createUser, String createDate, String descript, String boardId, String itemId, Locale locale, LoginVO userInfo) throws Exception;
