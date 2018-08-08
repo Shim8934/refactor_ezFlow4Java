@@ -269,7 +269,7 @@ public class EzOrganController {
 		String infoXML = "";
 		String adminOrgan = request.getParameter("adminOrgan") == null ? "n" : request.getParameter("adminOrgan"); // 관리자페이지 > 조직도 메뉴에서 검색
 		
-		if ((userInfo.getRollInfo().indexOf("c=1") != -1 && adminOrgan.equalsIgnoreCase("y")) || companyId.equalsIgnoreCase("Top")) { // 전체 관리자 && 관리자 > 조직도 메뉴 => 전체 검색
+		if (userInfo.getRollInfo().indexOf("c=1") != -1 && adminOrgan.equalsIgnoreCase("y")) { // 전체 관리자 && 관리자 > 조직도 메뉴 => 전체 검색
 			companyId = "";
 		}
 
