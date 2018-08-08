@@ -39,9 +39,22 @@
     	</style>
 		<script type="text/javascript">
 			var ReturnFunction;
+			var parent;
+			var paparent;
         	window.onload = function () {
 	            try {
                 	ReturnFunction = opener.PollResult_Cross_dialogArguments[1];
+                	
+                	if(ReturnFunction!= null) {
+                		if(window.opener.opener != null) {
+                			parent = window.opener.opener;
+                			
+        		            if(window.opener.opener.opener != null) {
+        		            	paparent = window.opener.opener.opener;
+        		            }
+        		        }
+                		window.opener.close();
+                	}
             	} catch (e) {}
 		    	//2018-07-26 김보미 - 크롬/ie 양 사이드 여백 상이한것 조정
 		    	var ua = navigator.userAgent;
@@ -50,8 +63,15 @@
 		    	}
         	}
         	function close_btn() {
-	            if(ReturnFunction!= null)
-                	ReturnFunction();
+	            if(ReturnFunction!= null) {
+	            	if(parent != null) {
+                		parent.location.reload();
+	            	}
+	            	
+	            	if(paparent != null) {
+	            		paparent.location.reload();
+	            	}
+	            }
             	window.close();
         	}
 		</script>
