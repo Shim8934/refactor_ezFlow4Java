@@ -63,6 +63,7 @@
 	        var pNoneActiveX = "YES";
 	        var saveItemBoardId = "";
 	        var SelBoard = false;
+	        
 	        function window_onload() {
 	            var ua = navigator.userAgent;
 	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
@@ -75,6 +76,13 @@
 	            }
 	            catch (e) {
 	            }
+	            
+	            document.getElementById("addimagecontent").style.height = document.documentElement.clientHeight - 280 + "PX";
+	        }
+	        
+	        /* 2018-08-08 홍승비 - 썸네일+포토게시물 등록창 세로길이 리사이즈 추가 */
+	        window.onresize = function () {
+	        	 document.getElementById("addimagecontent").style.height = document.documentElement.clientHeight - 280 + "PX";
 	        }
 	
 		    function MakeXMLString(str)
