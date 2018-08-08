@@ -837,6 +837,8 @@ public class EzPortalController extends EgovFileMngUtil {
 	}
 	
 	 public String changeCompany(String loginCookie, String deptID,String companyID, HttpServletResponse response){
+		 logger.debug("changeCompany start");
+		 logger.debug("deptID : " + deptID + ", companyID : " + companyID);
 			try{
 				String decData = egovFileScrty.decryptAES(loginCookie);
 				
@@ -871,6 +873,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		    	}
 			}catch(Exception e){
 			}
+			logger.debug("changeCompany end");
 			return loginCookie;
 	    }
 	

@@ -2820,7 +2820,7 @@ function chk_Passwd(pPwd, CompleteFunction) {
     else
         ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-    DivPopUpShow(330, 215, "/ezApprovalG/ezchkPasswd.do");
+    DivPopUpShow(350, 225, "/ezApprovalG/ezchkPasswd.do");
 }
 
 function sendMail() {

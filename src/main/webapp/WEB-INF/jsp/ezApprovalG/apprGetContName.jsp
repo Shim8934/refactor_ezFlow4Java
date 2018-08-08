@@ -110,7 +110,7 @@
             else
                 url = "/ezApprovalG/ezAprAlert.do";
 
-            if (CrossYN() || pNoneActiveX == "YES") {
+            if (CrossYN()) {
                 ezapralert_cross_dialogArguments[0] = parameter;
                 ezapralert_cross_dialogArguments[1] = CompleteFunction;
 

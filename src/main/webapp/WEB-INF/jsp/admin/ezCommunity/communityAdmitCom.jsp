@@ -18,6 +18,7 @@
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code = 'ezCommunity.e1' />"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
 			var lang = "<c:out value = '${lang}' />";
@@ -209,7 +210,23 @@
 				}
 			}
 		          //########################################페이지네이션 변경 ##############################################
-		            
+		    //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 170;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
+		    
+		    $(function(){
+	    		windowResize();
+		    });       
 		</script>
 	</head>
 	<body class="mainbody" onload="makePageSelPage()">
@@ -232,16 +249,25 @@
 		</table>
 
         <br />
-        <div style="border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
-        <table class="mainlist" style="width:100%">
-			<tr>
-				<th style="width:70px;"><spring:message code = 'ezCommunity.t32' /></th>
-				<th><spring:message code = 'ezCommunity.t9991' /></th>
-				<th style="width:200px"><spring:message code = 'ezCommunity.t33' /></th>
-				<th style="width:150px"><spring:message code = 'ezCommunity.t24' /></th>
-			</tr>
-			<span id="idSpan">${idSpanValue }</span>
-		</table>
+        <div id="contentlist" style="width:100%; overflow: auto;">
+	        <div style="border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
+		        <table class="mainlist" style="width:100%">
+					<tr>
+						<th style="width:70px;"><spring:message code = 'ezCommunity.t32' /></th>
+						<th><spring:message code = 'ezCommunity.t9991' /></th>
+						<th style="width:200px"><spring:message code = 'ezCommunity.t33' /></th>
+						<th style="width:150px"><spring:message code = 'ezCommunity.t24' /></th>
+					</tr>
+					<c:if test="${idSpanValue ne null && idSpanValue ne ''}">
+						<span id="idSpan">${idSpanValue }</span>
+					</c:if>
+					<c:if test="${idSpanValue eq null || idSpanValue eq ''}">
+					<tr>
+						<td colspan="4" style='text-align: center;'><spring:message code = 'main.t00026' /></td>
+					</tr>
+					</c:if>
+				</table>
+			</div>
 		</div>
 		<br/>
 		

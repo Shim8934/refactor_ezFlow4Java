@@ -437,7 +437,8 @@
 	            strXML += "<NODES>";
 	            strXML += "<NODE>";
 	
-	            if (pMode != "modify") {
+	            /* 2018-08-07 홍승비 - 포토+썸네일게시물 임시저장 시 새로운 itemID 생성하는 조건 수정 */
+	            if (pMode != "temp") {
 	                strXML += "<ITEMID>" + newID + "</ITEMID>";
 	            } else {
 	                itemid = strItemID + ";"

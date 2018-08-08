@@ -350,14 +350,14 @@
 			</tr>
 			<tr>
 				<td style="vertical-align:top;">
-					<div id="TreeView" style="padding-top:5px;BORDER:#ddd 1px solid; OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:255px; HEIGHT:230px; BACKGROUND-COLOR:#ffffff"></div>
+					<div id="TreeView" style="padding-top:5px;BORDER:#ddd 1px solid; OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:275px; HEIGHT:230px; BACKGROUND-COLOR:#ffffff"></div>
 				</td>
 				<td style="width:70px;text-align:center;white-space:nowrap;">
-					<a class="imgbtn"><span id="btnAppdept" onClick="return btnAppdept_onclick()"><spring:message code='ezApprovalG.t1649'/></span></a><br/>					
-	                <a class="imgbtn"><span id="btnDeldept" onClick="return btnDeldept_onclick()"><spring:message code='ezApprovalG.t1650'/></span></a><br/>
+					<img src="/images/arr_right.gif" name="Image191" onClick="return btnAppdept_onclick()" style="padding-top: 5px; cursor: pointer;"><br/>					
+	                <img src="/images/arr_left.gif" name="Image201" onClick="return btnDeldept_onclick()" style="padding-top: 5px; cursor: pointer;"><br/>
 				</td>
 				<td style="vertical-align:top;">
-					<select id="selUseDept" name="selUseDept" style="WIDTH: 235px; HEIGHT: 235px" size="2"></select>
+					<select id="selUseDept" name="selUseDept" style="WIDTH: 245px; HEIGHT: 235px" size="2"></select>
 				</td>
 			</tr>
 		</table>

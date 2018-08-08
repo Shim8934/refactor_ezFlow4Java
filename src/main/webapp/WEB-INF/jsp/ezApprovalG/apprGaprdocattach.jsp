@@ -72,7 +72,7 @@
 // 	            pDeptID = arr_userinfo[4];
 // 	            pDeptName = arr_userinfo[5];
 	
-	            if (CrossYN() || pNoneActiveX == "YES") {
+	            if (CrossYN()) {
 	                pDocID = parent.aprcabinetattach_cross_dialogArguments[0];
 	                ReturnFunction = parent.aprcabinetattach_cross_dialogArguments[1];
 	            }
@@ -146,7 +146,7 @@
 	                }
 	
 	                var AprDocAttachxml = DocMoveParser();
-	                if (CrossYN() || pNoneActiveX == "YES") {
+	                if (CrossYN()) {
 	                    ReturnFunction(AprDocAttachxml);
 	                }
 	                else {
@@ -157,7 +157,7 @@
 	            else {
 	                delAttachDoc();
 	                var AprDocAttachxml = DocMoveParser();
-	                if (CrossYN() || pNoneActiveX == "YES") {
+	                if (CrossYN()) {
 	                    ReturnFunction(AprDocAttachxml);
 	                }
 	                else {
@@ -167,7 +167,7 @@
 	            }
 	        }
 	        function bt_Cancel_onclick() {
-	            if (CrossYN() || pNoneActiveX == "YES") {
+	            if (CrossYN()) {
 	                ReturnFunction("cancel");
 	            }
 	            else {
@@ -182,7 +182,7 @@
 	            var para;
 	            var url = "/ezApprovalG/setSearchInfo.do";
 	
-	            if (CrossYN() || pNoneActiveX == "YES") {
+	            if (CrossYN()) {
 	            	setsearchinfo_cross_dialogArguments[0] = "";
 	            	setsearchinfo_cross_dialogArguments[1] = SearchCondi_Complete;
 	                DivPopUpShow(510, 375, url);

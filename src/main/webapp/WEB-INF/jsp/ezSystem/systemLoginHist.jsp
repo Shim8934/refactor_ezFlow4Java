@@ -468,6 +468,23 @@
 		        }
 			}
 			
+	        //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 191;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
+		    
+		    $(function(){
+	    		windowResize();
+		    });
 		</script>
 	</head>
 	<body class="mainbody">
@@ -520,21 +537,23 @@
 			<tr>
 				<td width="98%" style="color: #333;">▒ ${mailLogKeepPeriodMessage}</td>
 			</tr>
-		</table>	
-		<table class="mainlist" style="width:100%;">
-			<thead style="">
-				<tr>
-					<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
-					<th><spring:message code="ezStatistics.t1068"></spring:message></th>
-					<th><spring:message code="ezStatistics.t113"></spring:message></th>
-					<th><spring:message code="ezSystem.x0024"></spring:message></th>
-					<th><spring:message code="ezSystem.x0025"></spring:message></th>
-					<th><spring:message code="ezSystem.x0026"></spring:message></th>
-					<th><spring:message code="ezSystem.x0027"></spring:message></th>
-				</tr>
-			</thead>
-			<tbody id="loginHistListBody" style="overflow: auto;"></tbody> 
 		</table>
+		<div id="contentlist" style="width:100%; overflow: auto;">	
+			<table class="mainlist" style="width:100%;">
+				<thead style="">
+					<tr>
+						<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
+						<th><spring:message code="ezStatistics.t1068"></spring:message></th>
+						<th><spring:message code="ezStatistics.t113"></spring:message></th>
+						<th><spring:message code="ezSystem.x0024"></spring:message></th>
+						<th><spring:message code="ezSystem.x0025"></spring:message></th>
+						<th><spring:message code="ezSystem.x0026"></spring:message></th>
+						<th><spring:message code="ezSystem.x0027"></spring:message></th>
+					</tr>
+				</thead>
+				<tbody id="loginHistListBody" style="overflow: auto;"></tbody> 
+			</table>
+		</div>
 		<div id="tblPageRayer" style="padding-top: 10px;"></div>
 		<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
 	</body>

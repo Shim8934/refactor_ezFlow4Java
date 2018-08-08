@@ -206,7 +206,7 @@
                 <li><span id="btn_OpinionCANCEL" onClick="return btn_OpinionCANCEL_onclick();"></span></li>
             </ul>
         </div>
-		<h2 style="font-weight: normal;margin-top:10px">▒&nbsp;<spring:message code='ezApprovalG.t1746'/></h2>
+		<h2 style="font-weight: normal;margin-top:20px">▒&nbsp;<spring:message code='ezApprovalG.t1746'/></h2>
 		<div class="nobox"><input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%;height:25px;border:1px solid #ccc" onkeypress="password_OnKeyPress(event)"></div>
 		
 		<div class="btnposition btnpositionNew">

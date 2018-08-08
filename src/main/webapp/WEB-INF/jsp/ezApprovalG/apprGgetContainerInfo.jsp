@@ -88,7 +88,7 @@
  	        var period;
  	        var pDocInfoValue = "1";
  	       	var nowDate = "${nowDateUTC}";
- 	        var orgComapnyID = "";
+ 	        var orgCompanyID = "";
  	        
 	        document.onselectstart = function () { return false; };
 	
@@ -937,15 +937,15 @@
 	
 		        if (document.getElementById("sel_year").value.toLowerCase() == "all") {
 		        	var nowyear = nowDate.substring(0,4);
-		            var nowmonth = nowDate.substring(5,7);
-		            var nowday = nowDate.substring(8,10); 
+		            var nowmonth = parseInt(nowDate.substring(5,7));
+		            var nowday = parseInt(nowDate.substring(8,10)); 
 		            
 	            	if (condition[5] != null && condition[5] != "") {
-			            period = condition[5].substring(0, 4) + strLang1028 + " " + condition[5].substring(5, 7) + strLang1029 + " " + condition[5].substring(8,10) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + condition[6].substring(5, 7) + strLang1029 + " " + condition[6].substring(8, 10) + strLang1030;
+			            period = condition[5].substring(0, 4) + strLang1028 + " " + parseInt(condition[5].substring(5, 7)) + strLang1029 + " " + parseInt(condition[5].substring(8,10)) + strLang1030 + " ~ " + condition[6].substring(0, 4) + strLang1028 + " " + parseInt(condition[6].substring(5, 7)) + strLang1029 + " " + parseInt(condition[6].substring(8, 10)) + strLang1030;
 	            	} else if (condition[3] != null && condition[3] != "") {
-			            period = condition[3].substring(0, 4) + strLang1028 + " " + condition[3].substring(5, 7) + strLang1029 + " " + condition[3].substring(8,10) + strLang1030 + " ~ " + condition[4].substring(0, 4) + strLang1028 + " " + condition[4].substring(5, 7) + strLang1029 + " " + condition[4].substring(8, 10) + strLang1030;
+			            period = condition[3].substring(0, 4) + strLang1028 + " " + parseInt(condition[3].substring(5, 7)) + strLang1029 + " " + parseInt(condition[3].substring(8,10)) + strLang1030 + " ~ " + condition[4].substring(0, 4) + strLang1028 + " " + parseInt(condition[4].substring(5, 7)) + strLang1029 + " " + parseInt(condition[4].substring(8, 10)) + strLang1030;
 	            	} else if (condition[7] != null && condition[7] != "") {
-			            period = condition[7].substring(0, 4) + strLang1028 + " " + condition[7].substring(5, 7) + strLang1029 + " " + condition[7].substring(8,10) + strLang1030 + " ~ " + condition[8].substring(0, 4) + strLang1028 + " " + condition[8].substring(5, 7) + strLang1029 + " " + condition[8].substring(8, 10) + strLang1030;
+			            period = condition[7].substring(0, 4) + strLang1028 + " " + parseInt(condition[7].substring(5, 7)) + strLang1029 + " " + parseInt(condition[7].substring(8,10)) + strLang1030 + " ~ " + condition[8].substring(0, 4) + strLang1028 + " " + parseInt(condition[8].substring(5, 7)) + strLang1029 + " " + parseInt(condition[8].substring(8, 10)) + strLang1030;
 	            	}else {
 		            	period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
 	            	}
