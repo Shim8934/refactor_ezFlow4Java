@@ -95,7 +95,7 @@ var CabinetRlFileSelect = function() {
 			case "schedl" : if (parentWd && parentWd.CabinetScheduleFile)  {selectedArr = parentWd.CabinetScheduleFile.get()  ;} break;
 			case "todo"   : if (parentWd && parentWd.CabinetTodoFile)      {selectedArr = parentWd.CabinetTodoFile.get()      ;} break;
 			case "jourl"  : if (parentWd && parentWd.CabinetJournalFile)   {selectedArr = parentWd.CabinetJournalFile.get()   ;} break;
-
+			case "photo"  : if (parentWd && parentWd.CabinetBoardPhoto)    {selectedArr = parentWd.CabinetBoardPhoto.get()    ;} break;
 			default       : if (parentWd && parentWd.CabinetAddFile)       {selectedArr = parentWd.CabinetAddFile.get()       ;}
 		}
 		
@@ -155,6 +155,7 @@ var CabinetRlFileSelect = function() {
 			case "schedl" : if (parentWd && parentWd.CabinetScheduleFile)  {parentWd.CabinetScheduleFile.save(data) ;} break;
 			case "todo"   : if (parentWd && parentWd.CabinetTodoFile)      {parentWd.CabinetTodoFile.save(data)     ;} break;
 			case "jourl"  : if (parentWd && parentWd.CabinetJournalFile)   {parentWd.CabinetJournalFile.save(data)  ;} break;
+			case "photo"  : if (parentWd && parentWd.CabinetBoardPhoto)    {parentWd.CabinetBoardPhoto.save(data)   ;} break;
 			default       : if (parentWd && parentWd.CabinetAddFile)       {parentWd.CabinetAddFile.save(data)      ;}
 		}
 		
