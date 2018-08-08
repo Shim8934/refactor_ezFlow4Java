@@ -5051,9 +5051,7 @@ public class EzPMSController {
 			String pRealStartDate = project.get("realStartDate").toString();
 			row.createCell(7).setCellValue(pRealStartDate);// 수행 시작일
 		} else {
-			row.createCell(7).setCellValue(project.get("").toString());// 프로젝트가
-																		// 시작
-																		// 안한경우
+			row.createCell(7).setCellValue("");// 프로젝트가 시작 안한경우
 		}
 
 		row.getCell(7).setCellStyle(projectStyle);
