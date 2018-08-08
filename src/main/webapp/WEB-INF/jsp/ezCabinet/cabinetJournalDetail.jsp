@@ -15,12 +15,12 @@
 		<h1 id="fileFileH1"><spring:message code='ezCabinet.t108'/></h1>
 		
 		<div class="divInfo">
-			<table class="tblEmailInf">
+			<table class="tblBoardInf">
 				<tr>
 					<th><spring:message code='ezCabinet.t109'/></th>
-					<td id="creator" class="overfl cursor wide" title="<c:out value="${item.creatorName}"/>"><c:out value="${item.creatorName}"/></td>
+					<td id="fileCreator" class="cursor overfl"><c:out value="${item.creatorName}"/></td>
 					<th><spring:message code='ezCabinet.t110'/></th>
-					<td id="createdDate" class="nowrap cabdatetd"><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
+					<td><c:out value="${fn:substring(item.createdDate, 0, 19)}"/></td>
 				</tr>
 				<tr>
 					<th><c:out value="${jourWriter.columnName}"/></th>

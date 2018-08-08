@@ -119,6 +119,7 @@
 						case "resrc" : saveResourceDocument(saveMode, cabinetId) ; break;
 						case "addrs" : saveAddressDocument(saveMode, cabinetId)  ; break;
 						case "jounl" : saveJournalDocument(saveMode, cabinetId)  ; break;
+						case "mjounl" : saveJournalDocument(saveMode, cabinetId) ; break;
 						default      : alert(CabinetMessages.strError)           ; return;
 					}
 					
