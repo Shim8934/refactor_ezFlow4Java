@@ -1386,7 +1386,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 						int taskGroupCount = ezPMSDAO.getBoardListCount(map);
 						if (taskGroupCount > 0) {
-							vo.setText(vo.getText() + "(" + taskGroupCount + ")");
+							vo.setText(vo.getText() + " (" + taskGroupCount + ")");
 						}
 
 						map.remove("taskId");
@@ -1397,7 +1397,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 
 						int taskGroupCount = ezPMSDAO.getCommentListCount(map);
 						if (taskGroupCount > 0) {
-							vo.setText(vo.getText() + "(" + taskGroupCount + ")");
+							vo.setText(vo.getText() + " (" + taskGroupCount + ")");
 						}
 
 						map.remove("taskId");
