@@ -175,6 +175,9 @@ public class LoginController {
 		loginVO.setDn("NOPASSWORD");
 		LoginVO resultVO = loginService.selectUser(loginVO);
 		
+		String deptId = resultVO.getDeptID();
+		String companyId = resultVO.getCompanyID();
+		
 		String useMasteradminLogin = ezCommonService.getTenantConfig("useMasteradminLogin", tenantId);
 		boolean masteradminLogin = false;
 		String displayName1 = null;
@@ -312,7 +315,7 @@ public class LoginController {
 				loginService.insertLog(resultVO);
         		
 				//로그인 쿠기 생성
-				createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
+				createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
 				
 	        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(displayName1, "utf-8"));
 	        	cookieName.setPath("/");
@@ -394,7 +397,7 @@ public class LoginController {
     					
     					loginService.insertLog(resultVO);
     	
-    					createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
+    					createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
     		        	
     		        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1(), "utf-8"));
     		        	cookieName.setPath("/");
