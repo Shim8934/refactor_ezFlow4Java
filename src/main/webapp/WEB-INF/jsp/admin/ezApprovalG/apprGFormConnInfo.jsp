@@ -172,8 +172,8 @@
 		  	</tr>
 		</table>
 		
-		<div class="btnposition">
-			<input type="button" value="<spring:message code = 'ezApprovalG.t20' />" onClick="return btnOK_onclick()">
+		<div class="btnpositionNew">
+			<a class="imgbtn"><span onclick="return btnOK_onclick()"><spring:message code = 'ezApprovalG.t20' /></span></a>
 		</div>
 	</body>
 </html>

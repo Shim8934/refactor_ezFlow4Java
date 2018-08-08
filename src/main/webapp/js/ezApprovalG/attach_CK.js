@@ -194,8 +194,8 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     		strSize = parseInt(temppFileSize) + "B";
     	
     	pAttachxml = pAttachxml + "<VALUE>" + strSize + "</VALUE>";
-    	pAttachxml = pAttachxml + "</CELL><CELL>";
-    	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[1]) + "</VALUE>";
+    	//pAttachxml = pAttachxml + "</CELL><CELL>";
+    	//pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[1]) + "</VALUE>"; 2018-08-08 천성준 - 첨부파일 쪽수 헤더 제거로인한 첨부추가 스크립트 오류때문에 주석처리
     	pAttachxml = pAttachxml + "</CELL></ROW></ROWS></LISTVIEWDATA>";
     } else {
     	pAttachxml = "<LISTVIEWDATA><HEADERS>";

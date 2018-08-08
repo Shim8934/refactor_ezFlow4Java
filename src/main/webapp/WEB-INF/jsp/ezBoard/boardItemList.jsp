@@ -114,7 +114,12 @@
 		        var height = parseInt(document.documentElement.clientHeight - 200);
 		        
 		        MailOptionHidden();
-		        Window_resize();
+		        //보미
+		        if (pAdminType == 'y') {
+		        	windowResize();
+		        } else {
+			        Window_resize();
+		        }
 		    };
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -336,6 +341,10 @@
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
+			            //보미 페이징 위치 조정
+			            if (pAdminType == 'y') {
+			            	windowResize();
+			            }
 					}        			
 				});	
 		    }
@@ -388,7 +397,7 @@
 		            DocList.DataSource(xmlDoc);
 		            DocList.DataBind("lvBoardList");
 		            DocList = null;
-		
+		            
 		            strListInfo = "";
 		            var tempno = 0;
 		            for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
@@ -1203,6 +1212,30 @@
 		            alert("ERROR");
 		        }
 		    }
+		    
+            //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+		    	if ( pAdminType == 'y') {
+		            windowResize();
+		    	}
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 48 - document.getElementById("mainmenu").clientHeight;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+                document.getElementById("MailListRayer").style.height = height + "px";
+                document.getElementById("MailListRayer").style.width = "100%";
+                
+                if (navigator.userAgent.indexOf('Firefox') != -1) {
+                    document.getElementById("divList").style.height = (height - 41) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (height - 100) + "px";
+                } else {
+                    document.getElementById("divList").style.height = (height - 41) + "px";
+                	document.getElementById("BoardList_BODY").style.height = (height - 100) + "px";
+                }
+	        }
 		</script>
 	</head>
 	<c:choose>
