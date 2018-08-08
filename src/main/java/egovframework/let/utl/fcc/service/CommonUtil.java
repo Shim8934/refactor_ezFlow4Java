@@ -18,6 +18,7 @@
 package egovframework.let.utl.fcc.service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -33,6 +34,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -40,6 +42,7 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -384,6 +387,21 @@ public class CommonUtil {
 		if (compatibleValue != null) {
 			response.setHeader("X-UA-Compatible", compatibleValue);
 		}		
+	}
+	
+	public static String addVer(ServletContext application, String filePath) {
+		File fileObj = new File(application.getRealPath(filePath));
+		
+		if (fileObj.exists()) {
+			Date lastDate = new Date(fileObj.lastModified());
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+			String version = sdf.format(lastDate);
+			
+			filePath += "?v=" + version;
+		}
+		
+		return filePath;
 	}
 	
 	public boolean isLoginCookieExists(HttpServletRequest request, HttpServletResponse response) {
