@@ -799,6 +799,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		String reuseTitleYN = ezCommonService.getTenantConfig("reuseTitleYN", userInfo.getTenantId());
 		
+		//baonk 추가 2018-08-08
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		
 		String docSN = "";
 		String beforeUrl = "";
 		String beforeDocID = request.getParameter("beforeDocID");
@@ -919,6 +922,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
 		model.addAttribute("reuseTitleYN", reuseTitleYN);
+		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		
 		logger.debug("draftui ended.");
 
