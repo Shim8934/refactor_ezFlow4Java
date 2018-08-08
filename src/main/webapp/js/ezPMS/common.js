@@ -105,7 +105,17 @@ function ReplaceText(orgStr, findStr, replaceStr) {
      var re = new RegExp(findStr, "gi");
      return (orgStr.replace(re, replaceStr));
 }
- 
+
+function revertString(str) {
+	str = ReplaceText(str, "&", "&amp;");
+	str = ReplaceText(str, "<", "&lt;");
+	str = ReplaceText(str, ">", "&gt;");
+	str = ReplaceText(str, "\'", "&apos;");
+	str = ReplaceText(str, "\"", "&quot;");
+	str = str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+	return str;
+}
+
 function replaceString(p_str) {
      p_str = ReplaceText(p_str, "&lt;", "<");
      p_str = ReplaceText(p_str, "&gt;", ">");

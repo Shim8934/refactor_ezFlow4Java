@@ -66,6 +66,12 @@
 		treeData = ${data};
 		treeData = JSON.parse(JSON.stringify(treeData));
 		
+		for (var i = 0; i < treeData.length; i++) {
+			var taskName = treeData[i].text;
+			taskName = revertString(taskName);
+			treeData[i].text = taskName;
+		}
+		
 		getProjectTaskTree("taskTreeArea", treeData, "board", 0);
 		getDatePicker();
 		
@@ -111,6 +117,13 @@
 			url : "/ezPMS/getFolderList.do",
 			success : function(data) {
 				treeData = JSON.parse(JSON.stringify(data));
+				
+				for (var i = 0; i < treeData.length; i++) {
+					var taskName = treeData[i].text;
+					taskName = revertString(taskName);
+					treeData[i].text = taskName;
+				}
+				
 				var clickedData = $(".jstree-clicked");
 				var idx = $(".jstree-anchor").index(clickedData);
 				
@@ -202,7 +215,7 @@
 			totalCount = contentCount;
 		}
 		
-		taskName = replaceString(taskName);
+		taskName = convertString(taskName);
 		
 		contentTitle = taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span><spring:message code='ezPMS.t4' />";
 

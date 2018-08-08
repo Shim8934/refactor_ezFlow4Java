@@ -20,6 +20,7 @@
 
 	$(function(){
 		taskDetails = ${taskDetails};
+		
 		var target = "${target}";
 		if(target !== "task"){
 			var managersNameList = "";
@@ -128,7 +129,7 @@
 	  </tr>
 	  <tr>
 	    <th class=""><spring:message code='ezPMS.t42' /></th>
-	    <td class="" colspan="2">${taskDetails.groupName == null ? "-" : taskDetails.groupName}</td>
+	    <td class="" colspan="2"><c:out value='${taskDetails.groupName == null ? "-" : taskDetails.groupName}'/></td>
 	  </tr>
 	</c:when>
 	<c:otherwise>
@@ -154,7 +155,7 @@
 	  </tr>
 	   <tr>
 	    <th class="" ><spring:message code='ezPMS.t42' /></th>
-	    <td class="" colspan="2">${taskDetails.upperGroupName == null ? "-" : taskDetails.upperGroupName}</td>
+	    <td class="" colspan="2"><c:out value='${taskDetails.upperGroupName == null ? "-" : taskDetails.upperGroupName}'/></td>
 	  </tr>
 	</c:otherwise>
 	</c:choose>
@@ -194,7 +195,7 @@
 	  </tr>
 	  <tr>
 	    <th class="overviewTh"><spring:message code='ezPMS.t328' /></th>
-	    <td class="overviewTd" colspan="2"><div class="overviewDiv">${taskDetails.overview == null ? "-" : taskDetails.overview}</div></td>
+	    <td class="overviewTd" colspan="2"><div class="overviewDiv"><c:out value='${taskDetails.overview == null ? "-" : taskDetails.overview}'/></div></td>
 	  </tr>
 	</table>
 </body>

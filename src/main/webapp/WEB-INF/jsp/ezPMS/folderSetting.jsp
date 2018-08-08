@@ -103,9 +103,17 @@ function setFolderList() {
 		},
 		dataType: "json",
 		success: function(data) {
+			var treeData = data;
+			
+			for (var i = 0; i < treeData.length; i++) {
+				var taskName = treeData[i].text;
+				taskName = revertString(taskName);
+				treeData[i].text = taskName;
+			}
+			
 			$('#folderTree').jstree({
 				'core' : {
-					'data' : data,
+					'data' : treeData,
 					'multiple' : false,
 					'animation' : 0,
 					'themes' : {

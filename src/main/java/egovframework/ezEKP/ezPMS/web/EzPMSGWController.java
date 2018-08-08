@@ -1185,15 +1185,13 @@ public class EzPMSGWController {
 							.getParameter("groupId"));
 					ProjectGroupVO groupDetails = ezPMSService.getGroupDetails(
 							groupId, info.getTenantId(), projectId);
-					data.put("groupDetails", groupDetails);
-					data.put("taskDetails", "{}");
+					data.put("taskDetails", groupDetails);
 				} else {
 					long taskId = Long
 							.parseLong(request.getParameter("taskId"));
 					ProjectTaskVO taskDetails = ezPMSService.getTaskDetails(
 							taskId, info.getTenantId(), lang);
 					data.put("taskDetails", taskDetails);
-					data.put("groupDetails", "{}");
 				}
 			}
 

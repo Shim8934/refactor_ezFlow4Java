@@ -32,6 +32,14 @@
 				"onlyGroup" : onlyGroup
 			},
 			success : function(data) {
+				var treeData = JSON.parse(JSON.stringify(data.data));
+				
+				for (var i = 0; i < treeData.length; i++) {
+					var taskName = treeData[i].text;
+					taskName = revertString(taskName);
+					treeData[i].text = taskName;
+				}
+				
 				$("#"+containerId).on('changed.jstree', function (e, data) {
 			     	var id = data.instance.get_node(data.selected).id;
 			     	var name = data.instance.get_node(data.selected).text;
@@ -40,7 +48,7 @@
 				})
 					.jstree({
 						'core' : {
-						'data' : data.data,
+						'data' : treeData,
 						'multiple' : false,
 						'animation' : 0,
 						'themes' : {

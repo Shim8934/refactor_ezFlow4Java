@@ -64,6 +64,12 @@
 		treeData = ${data};
 		treeData = JSON.parse(JSON.stringify(treeData));
 		
+		for (var i = 0; i < treeData.length; i++) {
+			var taskName = treeData[i].text;
+			taskName = revertString(taskName);
+			treeData[i].text = taskName;
+		}
+		
 		getProjectTaskTree("taskTree", treeData, "comment", 0);
 		
 		$("#taskTree").on("click", ".jstree-anchor", function() {
@@ -178,11 +184,20 @@
 			data : {"projectId" : projectId, "onlyGroup" : false, "location" : "comment"},
 			url : "/ezPMS/projectTaskTree.do",
 			success : function(data) {
-				treeData = JSON.parse(JSON.stringify(data));
+				var data = JSON.parse(JSON.stringify(data));
+				
+				var treeData = data.data;
+				
+				for (var i = 0; i < treeData.length; i++) {
+					var taskName = treeData[i].text;
+					taskName = revertString(taskName);
+					treeData[i].text = taskName;
+				}
+				
 				var clickedData = $(".jstree-clicked");
 				var idx = $(".jstree-anchor").index(clickedData);
 				
-				getProjectTaskTree("taskTree", treeData.data, "comment", idx);
+				getProjectTaskTree("taskTree", treeData, "comment", idx);
 				getCommentList();
 			}
 		});

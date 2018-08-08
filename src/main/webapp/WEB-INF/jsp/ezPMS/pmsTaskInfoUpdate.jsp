@@ -112,8 +112,8 @@ var userRoleId = parent.userRoleId;
 
  $(function() {
 	 taskDetails = ${taskDetails};
-	 $("#taskName").val(replaceString(taskDetails.taskName || taskDetails.groupName));
-	 $("#overview").val(replaceString(taskDetails.overview));
+	 $("#taskName").val(replaceString(revertString(taskDetails.taskName || taskDetails.groupName)));
+	 $("#overview").val(replaceString(revertString(taskDetails.overview)));
 	 
 	 if (target == "task") {
 		 initMemberList = '${taskDetails.taskMember}';
@@ -567,9 +567,9 @@ function initPreTask() {
 				</c:otherwise>
 			</c:choose>
 		</table>
-		<table style="margin-top : 10px; margin-left:auto; margin-right:auto; border-spacing:10px 0; border-collapse: separate;">
+		<table style="width:100%;">
 			<tr>
-				<td><a class="imgbtn" id="submit" onclick="updateTaskInfo()"><span><spring:message code='ezPMS.t265' /></span></a></td>
+				<td><div class="btnpositionNew"><a class="imgbtn" id="submit" onclick="updateTaskInfo()"><span><spring:message code='ezPMS.t265' /></span></a></div></td>
 			</tr>
 		</table>
 	</div>
