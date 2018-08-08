@@ -706,10 +706,14 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		result.append("<LISTVIEWDATA>");
 		result.append("<ROWS>");
 		
+		//2018-08-08  김보미 - rownumber추가
+		int i = list.size();
 		for (PersonalPopupVO vo : list) {
 			result.append("<ROW>");
 			result.append("<CELL>");
-			result.append("<VALUE>" + vo.getItemSeq() + "</VALUE>");
+			//2018-08-08  김보미 - rownumber추가
+//			result.append("<VALUE>" + vo.getItemSeq() + "</VALUE>");
+			result.append("<VALUE>" + i + "</VALUE>");
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("<DATA2>" + vo.getWidth() + "</DATA2>");
 			result.append("<DATA3>" + vo.getHeight() + "</DATA3>");
@@ -742,6 +746,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("</CELL>");
 			result.append("</ROW>");
+			i--;
 		}
 		
 		result.append("</ROWS>");

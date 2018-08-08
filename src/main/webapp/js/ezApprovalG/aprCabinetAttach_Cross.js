@@ -384,7 +384,7 @@ function InsertToRecListView_lv(Resultxml) {
         DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");      
         DocList.SetOrderbyCol("COLNAME");
         DocList.SetTitleIdx(0);                                  
-
+        DocList.SetSecurityFlag(true);
         DocList.DataSource(ListViewData);                             
         DocList.DataBind("lvtDoclist");                          
         DocList = null;
