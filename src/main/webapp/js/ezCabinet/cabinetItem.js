@@ -1111,7 +1111,7 @@ var CabinetItem = function() {
 		var writer      = data.writerVO;
 		
 		generateOptionTitle(itemInfo, relatedList, dlElmt);
-		generateRelatedModuleContent(attachList, itemInfo);
+		generateRelatedModuleContent(itemInfo, attachList, null, null);
 	}
 	
 	function generateOptionTitle(itemInfo, relatedList, dlElmt) {
@@ -1132,7 +1132,7 @@ var CabinetItem = function() {
 		var writer      = data.writerVO;
 		
 		generateCommunityTitle(itemInfo, relatedList, dlElmt);
-		generateRelatedModuleContent(attachList, itemInfo);
+		generateRelatedModuleContent(itemInfo, attachList, null, null);
 	}
 	
 	function generateCommunityTitle(itemInfo, relatedList, dlElmt) {
