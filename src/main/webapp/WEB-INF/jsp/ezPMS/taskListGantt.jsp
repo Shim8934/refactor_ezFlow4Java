@@ -139,7 +139,7 @@
 	   				
 	   				var tempTask = {};
 	   				tempTask.id = "p" + pd.projectId;
-		   			tempTask.name = pd.projectName.replace(/\"/g, "&quot;");
+		   			tempTask.name = revertString(pd.projectName);
 // 		   			tempTask.name = ReplaceText(pd.projectName, "\"", "&quot;");
 		   			tempTask.code = "";
 		   			tempTask.level = 0;
@@ -251,7 +251,7 @@
 		   				var groupDepth = gl[i].treeDepth;
 		   				
 			   			tempTask.id = "p" + pd.projectId + "_g" + groupId;
-			   			tempTask.name = gl[i].groupName.replace(/\"/g,"&quot;");
+			   			tempTask.name = revertString(gl[i].groupName);
 			   			tempTask.code = gl[i].ancesterGroup;
 			   			tempTask.level = groupDepth;
 			   			tempTask.status = ganttStatus["G"];
@@ -332,7 +332,7 @@
 				   			tempTask.level = 1;
 		   				}
 		   				
-			   			tempTask.name = tl[i].taskName.replace(/\"/g,"&quot;");
+			   			tempTask.name = revertString(tl[i].taskName);
 			   			tempTask.code = tl[i].groupId;
 			   			tempTask.status = ganttStatus[tl[i].status];
 			   			tempTask.statusPMS = tl[i].status;

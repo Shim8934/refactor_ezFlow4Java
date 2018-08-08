@@ -1065,6 +1065,17 @@
 				R.tenant_id = P1.tenant_id
 			)
 		</isEqual>
+		<isNotEqual property="userIdType" compareValue="user">
+			FROM 
+				tbl_deptmaster R
+			LEFT JOIN 
+				tbl_pms_setting P1
+			ON (
+				R.CN = P1.user_id 
+				AND 
+				R.tenant_id = P1.tenant_id
+			)
+		</isNotEqual>
 		 WHERE 
 				R.CN = #userId# 
 			AND	
@@ -1098,6 +1109,17 @@
 				D.tenant_id = P2.tenant_id
 			)
 		</isEqual>
+		<isNotEqual property="userIdType" compareValue="user">
+			FROM 
+				tbl_deptmaster D
+			LEFT JOIN 
+				tbl_pms_setting P2
+			ON (
+				D.CN = P2.user_id 
+				AND 
+				D.tenant_id = P2.tenant_id
+			)
+		</isNotEqual>
 		 WHERE 
 				D.CN = #userId# 
 			AND	

@@ -60,6 +60,12 @@
 		taskData = ${data};
 		taskData = JSON.parse(JSON.stringify(taskData));
 		
+		for (var i = 0; i < taskData.length; i++) {
+			var taskName = taskData[i].text;
+			taskName = revertString(taskName);
+			taskData[i].text = taskName;
+		}
+		
 		getProjectTaskTree("taskTree", taskData, "taskList", 0);
 		getDatePicker();
 		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
@@ -130,7 +136,14 @@
 			data : {"projectId" : projectId, "onlyGroup" : true, "location" : "taskList"},
 			url : "/ezPMS/projectTaskTree.do",
 			success : function(data) {
-				taskData = JSON.parse(JSON.stringify(data));
+				taskData = JSON.parse(JSON.stringify(data.data));
+				
+				for (var i = 0; i < taskData.length; i++) {
+					var taskName = taskData[i].text;
+					taskName = revertString(taskName);
+					taskData[i].text = taskName;
+				}
+				
 				var clickedData = $(".jstree-clicked");
 				var idx = $(".jstree-anchor").index(clickedData);
 				
@@ -280,8 +293,8 @@
 		} else {
 			totalCount = contentCount;
 		}
-		
-		taskName = replaceString(taskName);
+
+		taskName = convertQuotation(taskName);
 		
 		$("#taskNameArea").html(taskName);
 		$("#mailBoxInfo").html("<spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + totalCount + " </span><spring:message code='ezPMS.t4' /></span>");

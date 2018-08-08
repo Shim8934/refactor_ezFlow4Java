@@ -15,7 +15,7 @@
 	var CurrentHeight = document.documentElement.clientHeight - 100;
 	
 	var contentCount = '<c:out value="${boardCount}"/>';
-	taskName = '<c:out value="${folderName}"/>';
+	var taskName = '<c:out value="${folderName}"/>';
 	
 	$(function() {
 		viewSetting();

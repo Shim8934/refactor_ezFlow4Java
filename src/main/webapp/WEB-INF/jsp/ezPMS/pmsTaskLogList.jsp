@@ -22,14 +22,16 @@ var CurrentHeight = document.documentElement.clientHeight - 100;
 var contentTitle = $(".jstree-clicked").text();
 
 $(function() {
-	var groupDetails = ${groupDetails};
 	var taskDetails = ${taskDetails};
-	console.log(groupDetails);
-	console.log(taskDetails);
-	if (groupDetails.groupName == undefined) {
-		contentTitle = taskDetails.taskName;
+	
+	var isTask = false;
+	
+	var taskId = $(".jstree-clicked").attr("id");
+	
+	if (taskId.indexOf("t") != -1) {
+		contentTitle = "<c:out value='${taskDetails.taskName}'/>";
 	} else {
-		contentTitle = groupDetails.groupName;
+		contentTitle = "<c:out value='${taskDetails.groupName}'/>";
 	}
 	
 	if(typeof setContentTitle != 'undefined') {

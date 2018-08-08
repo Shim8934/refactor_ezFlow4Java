@@ -29,7 +29,7 @@ $(function() {
 	} else {
 		$("#title").text('<spring:message code="ezPMS.t110"/>')
 		
-		var folderDetails = JSON.parse('${folderDetails}');
+		var folderDetails = JSON.parse(JSON.stringify(${folderDetails}));
 		
 		$("#folderName1").val(folderDetails.text);
 		$("#folderName2").val(folderDetails.text2);

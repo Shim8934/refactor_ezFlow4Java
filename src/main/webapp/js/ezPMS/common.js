@@ -105,7 +105,27 @@ function ReplaceText(orgStr, findStr, replaceStr) {
      var re = new RegExp(findStr, "gi");
      return (orgStr.replace(re, replaceStr));
 }
- 
+
+function revertString(str) {
+	str = ReplaceText(str, "&", "&amp;");
+	str = ReplaceText(str, "<", "&lt;");
+	str = ReplaceText(str, ">", "&gt;");
+	str = ReplaceText(str, "\'", "&apos;");
+	str = ReplaceText(str, "\"", "&quot;");
+	str = str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+	return str;
+}
+
+function convertQuotation(p_str) {
+    p_str = ReplaceText(p_str, "&apos;", "\'");
+    p_str = ReplaceText(p_str, "&#039;", "\'");
+    p_str = ReplaceText(p_str, "&#39;", "\'");
+    p_str = ReplaceText(p_str, "&quot;", "\"");
+    p_str = ReplaceText(p_str, "&#034;", "\"");
+
+    return p_str;
+}
+
 function replaceString(p_str) {
      p_str = ReplaceText(p_str, "&lt;", "<");
      p_str = ReplaceText(p_str, "&gt;", ">");

@@ -44,8 +44,6 @@
 	var userRoleId = "${userRoleId}";
 	
 	$(function(){
-		console.log(userRoleId);
-		
 		if (target == null || target != "group") {
 			weightData = JSON.parse('${weightData}');
 		}

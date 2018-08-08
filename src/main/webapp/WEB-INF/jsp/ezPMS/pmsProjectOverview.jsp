@@ -477,14 +477,14 @@ function setTasksIntoKanban(taskList, targetPosition, taskCount, taskType, isBoa
 				}
 				
 				kanbanHTML += "<div id='" + targetPosition + taskList[i].taskId + "' class='overview_list card' onclick='selectedTR(this)' ondblclick='getTaskDetails(this)'>";
-				kanbanHTML += "<p class='overview_list_title'><span class='situation_" + className + "' style='background-color:" + statusColor + "'>" + taskStatus + "</span>" + taskList[i].taskName + "</p>";
+				kanbanHTML += "<p class='overview_list_title'><span class='situation_" + className + "' style='background-color:" + statusColor + "'>" + taskStatus + "</span>" + revertString(taskList[i].taskName) + "</p>";
 				kanbanHTML += "<div class='progressArea" + taskList[i].taskId + " progressArea_new'></div>";
 				kanbanHTML += "<div class='date'><p><span class='startBox'>START</span>" + taskList[i].planStartDate + "</p>";
 				kanbanHTML += "<p><span class='endBox'>END</span>" + taskList[i].planEndDate + "</p></div>";
 				kanbanHTML += "</div>";
 			} else {
 				kanbanHTML += "<div id='B" + taskList[i].itemId + "' class='overview_list card' onclick='selectedTR(this)' ondblclick='getBoardDetails(this)'>";
-				kanbanHTML += "<p class='overview_list_title'>" + taskList[i].title + "</p>";
+				kanbanHTML += "<p class='overview_list_title'>" + revertString(taskList[i].title) + "</p>";
 
 				if (taskList[i].imageFilePath == null) {
 					kanbanHTML += "<div class='boardArea_new'>" + taskList[i].writeContent + "</div>";
@@ -705,7 +705,7 @@ function setOverviewContent() {
 						 break;
 					 }
 					 
-					 logHTML += "<span class='text'>" + logList[i].logContent + "</span>";
+					 logHTML += "<span class='text'>" + revertString(logList[i].logContent) + "</span>";
 					 logHTML += "</li>";
 				 }
 			 }
@@ -721,7 +721,7 @@ function setOverviewContent() {
 				 for (var i = 0; i < commentList.length; i++) {					 
 					 commentHTML += "<li>";
 					 commentHTML += "<span class='name'>" + commentList[i].writerName + "</span>";
-					 commentHTML += "<span class='text'>" + commentList[i].commentContent + "</span>";
+					 commentHTML += "<span class='text'>" + revertString(commentList[i].commentContent) + "</span>";
 					 commentHTML += "</li>";
 				 }
 			 }
@@ -780,7 +780,7 @@ function getTaskDetails(elem) {
 				</ul>
 				<div class="btnStyle_center"></div>
 			</div>
-			<div class="overview_textbox">${project.overview }</div>
+			<div class="overview_textbox"><c:out value='${project.overview }'/></div>
 			<ul class="overview_infomationBox">
 				<li style="cursor:default;"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="${project.headManagerName }" />${project.headManagerName }</li>
 				<li onclick="getProjectMember('1')"><img src="/images/ezPMS/icon_defaultAttendant.png" alt="<spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' />" /><spring:message code='ezPMS.t63' /><spring:message code='ezPMS.t156' /></li>

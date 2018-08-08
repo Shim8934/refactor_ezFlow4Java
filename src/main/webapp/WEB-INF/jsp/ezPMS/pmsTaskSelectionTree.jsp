@@ -18,6 +18,12 @@
 		treeData = ${data};
 		treeData = JSON.parse(JSON.stringify(treeData));
 		
+		for (var i = 0; i < treeData.length; i++) {
+			var taskName = treeData[i].text;
+			taskName = revertString(taskName);
+			treeData[i].text = taskName;
+		}
+		
 		getProjectTaskTree("taskTree", treeData, "");
 		
 		$("#taskTree").on("dblclick", ".jstree-anchor", function(evt) {

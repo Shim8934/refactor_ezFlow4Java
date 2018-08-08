@@ -973,12 +973,11 @@ public class EzPMSController {
 					if (status.equals("ok")) {
 						JSONObject data = (JSONObject) result.get("data");
 						model.addAttribute("logList", data.get("taskLogList"));
-						model.addAttribute("groupDetails", data.get("groupDetails"));
+						//model.addAttribute("groupDetails", data.get("groupDetails"));
 						model.addAttribute("taskDetails", data.get("taskDetails"));
 					}
 				} else {// log count가 0일 때
-					if (param.get("taskId").toString().equals("0")) { // 요청이 그룹일
-																		// 경우
+					if (param.get("taskId").toString().equals("0")) { // 요청이 그룹일  경우
 						long groupId = Long.parseLong(param.get("groupId").toString());
 						String groupUrl = "/rest/ezPMS/groups/" + groupId + "/users/" + userId;
 
@@ -989,8 +988,7 @@ public class EzPMSController {
 
 						if (status.equals("ok")) {
 							JSONObject groupDetails = (JSONObject) result.get("data");
-							model.addAttribute("groupDetails", groupDetails.get("groupDetails"));
-							model.addAttribute("taskDetails", "{}");
+							model.addAttribute("taskDetails", groupDetails.get("groupDetails"));
 						}
 					} else {// 요청이 업무일 경우
 						long taskId = Long.parseLong(param.get("taskId").toString());
@@ -1004,7 +1002,6 @@ public class EzPMSController {
 						if (status.equals("ok")) {
 							JSONObject taskDetails = (JSONObject) result.get("data");
 							model.addAttribute("taskDetails", taskDetails.get("taskDetails"));
-							model.addAttribute("groupDetails", "{}");
 						}
 					}
 				}
@@ -5051,9 +5048,7 @@ public class EzPMSController {
 			String pRealStartDate = project.get("realStartDate").toString();
 			row.createCell(7).setCellValue(pRealStartDate);// 수행 시작일
 		} else {
-			row.createCell(7).setCellValue(project.get("").toString());// 프로젝트가
-																		// 시작
-																		// 안한경우
+			row.createCell(7).setCellValue("");// 프로젝트가 시작 안한경우
 		}
 
 		row.getCell(7).setCellStyle(projectStyle);

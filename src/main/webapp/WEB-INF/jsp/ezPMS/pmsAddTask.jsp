@@ -188,7 +188,7 @@ function applyList() {
 }
  
 function setUpperGroup() {
-	$("#upperGroup").html(groupName);
+	$("#upperGroup").html(revertString(groupName));
 }
 
 function addTask() {
@@ -398,11 +398,11 @@ function setDefaultGroup(){
 	} else { // 간트차트에서 업무 추가했을 경우
 		if(curTask.id.indexOf("_t") != -1){ //업무를 선택했을 경우
 			groupId = curTask.getParent().id.match(/g(\d+)/) ? curTask.getParent().id.match(/g(\d+)/)[1] : parent.opener.projectGroupId;
-			groupName = curTask.getParent().name;
+			groupName = replaceString(curTask.getParent().name);
 			treeDepth = curTask.getParent().level;
 		} else { // 그룹이나 프로젝트를 선택했을 경우
 			groupId = curTask.id.match(/g(\d+)/) ? curTask.id.match(/g(\d+)/)[1] : parent.opener.projectGroupId;
-			groupName = curTask.name;
+			groupName = replaceString(curTask.name);
 			treeDepth = curTask.level;
 		}
 	}

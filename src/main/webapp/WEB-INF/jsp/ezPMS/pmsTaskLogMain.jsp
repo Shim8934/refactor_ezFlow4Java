@@ -38,6 +38,13 @@ $(function(){
 	logData = ${data};
 	logData = JSON.parse(JSON.stringify(logData));
 	
+	for (var i = 0; i < logData.length; i++) {
+		var taskName = logData[i].text;
+		taskName = revertString(taskName);
+		logData[i].text = taskName;
+	}
+	
+	
 	getProjectTaskTree("taskTree", logData, "taskLog", 0);
 	
 	$("#searchStatus").css("display", "none");
@@ -195,7 +202,7 @@ function setContentTitle(taskName, totalCount) {
 		totalCount = 0;
 	}
 	
-	taskName = replaceString(taskName);
+	taskName = convertString(taskName);	
 	
 	$("#taskNameArea").html(taskName);
 	$("#mailBoxInfo").html("<spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + totalCount + " </span><spring:message code='ezPMS.t4' /></span>");
