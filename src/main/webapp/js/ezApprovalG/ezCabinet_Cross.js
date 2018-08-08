@@ -1,4 +1,4 @@
-﻿﻿﻿var ListTypeFlag;
+﻿﻿﻿﻿var ListTypeFlag;
 var g_SelCabXml = "";
 var g_TransFlag = "0";
 var g_szParamXml = "";
@@ -1520,7 +1520,7 @@ function SearchCabinet(pInitFlag) {
     searchcab_cross_dialogArguments[1] = SearchCabinet_Complete;
 
     if (pInitFlag == "0") {
-        var OpenWin = window.open(url, "SearchCab_Cross", GetOpenWindowfeature(815, 440));
+        var OpenWin = window.open(url, "SearchCab_Cross", GetOpenWindowfeature(880, 500));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
