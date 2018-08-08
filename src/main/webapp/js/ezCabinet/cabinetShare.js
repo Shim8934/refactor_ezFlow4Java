@@ -295,8 +295,8 @@ var CabinetShareItem = function() {
 		var optionSub1          = document.createElement("option");
 		var optionSub2          = document.createElement("option");
 		
-		selectPerm.setAttribute("ondblclick", "event.cancelBubble = true");
-		selectSub.setAttribute("ondblclick", "event.cancelBubble = true");
+		selectPerm.addEventListener("dblclick", function(e) {e.cancelBubble = true;}, false);
+		selectSub.addEventListener("dblclick", function(e)  {e.cancelBubble = true;}, false);
 		
 		optionPerm1.textContent = CabinetMessages.strRead;
 		optionPerm2.textContent = CabinetMessages.strWrite;

@@ -1093,6 +1093,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);		
 		ezCommunityService.boardItemView(userInfo, boardInfo, item, pItemID, pBoardID, showAdjacent, adjacentItemsEnableFlag, model);
 		String commentCount = ezCommunityService.getOneLineReplyCount(pBoardID, pItemID, userInfo.getTenantId()); // 2018-01-10 강민수92 댓글 카운트 세기
+		//2018.08.08 캐비넷 추가
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
 		
 		model.addAttribute("commentCount", commentCount);
 		model.addAttribute("item", item);
@@ -1109,6 +1111,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("treeCtrl", treeCtrl);
+		model.addAttribute("useCabinet", use_cabinet);
 		
 		logger.debug("boardItemView ended.");
 		
@@ -4329,6 +4332,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		String commentCount = ezCommunityService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId()); // 2018-01-10 강민수92 댓글 카운트 세기
+		//2018.08.08 캐비넷 추가
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
 		
 		model.addAttribute("commentCount", commentCount);
 		model.addAttribute("userInfo", userInfo);
@@ -4346,6 +4351,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("gImageUrl", gImageUrl);
 		model.addAttribute("gWidth", gWidth);
 		model.addAttribute("gHeight", gHeight);
+		model.addAttribute("useCabinet", use_cabinet);
 		
 		return "ezCommunity/communityBoardItemViewPhoto";
 	}

@@ -1392,12 +1392,16 @@ public class EzCircularController extends EgovFileMngUtil {
         	
         	model.addAttribute("attachList", aList);
         }
+        
+        //2018.08.08 캐비넷 추가
+        String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
 
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("result", result);
 		model.addAttribute("totalCommentCount", totalCommentCount);
 		model.addAttribute("myCommentCount", myCommentCount);
 		model.addAttribute("type", type);
+		model.addAttribute("useCabinet", use_cabinet);
 		
 		return "/ezCircular/circularRead";
 	}

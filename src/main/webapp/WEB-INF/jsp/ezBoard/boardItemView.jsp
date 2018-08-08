@@ -1198,9 +1198,9 @@
 		        	<c:if test="${(boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
 		        		<li ID='Retrans'><span onclick='btn_Retrans_Onclick()'><spring:message code='ezBoard.t10100' /></span></li>
 		        	</c:if>
-		        </ul>
-		        <ul>
-		            <li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+					<c:if test="${useCabinet == 'YES'}">
+						<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+					</c:if>
 		        </ul>
 		      </div>    
 		      <div id="close">

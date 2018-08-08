@@ -567,8 +567,9 @@
 	                        	 <li><span onclick="circularReUse()"><spring:message code='ezCircular.t183' /></span></li>
 	                        </c:if>
 	                        <li><span onclick="print_onClick()"><spring:message code='ezCircular.t114' /></span></li>
-							<!-- 캐비넷 버튼 추가 -->
-							<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+							<c:if test="${useCabinet == 'YES'}">
+								<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+                    		</c:if>
                     	</ul>
                 	</div>
                 	<div id="close">

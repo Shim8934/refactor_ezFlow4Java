@@ -1502,8 +1502,9 @@
 		                    <li ID='btn_down' ><span  onclick="btn_ImgDownload()"><spring:message code='ezBoard.t1007'/></span></li>
 		        		</c:otherwise>
 		        	</c:choose>
-					<!-- 캐비넷 버튼 추가 -->
-					<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+					<c:if test="${useCabinet == 'YES'}">
+						<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+					</c:if>
 		        </ul>
 		      </div>
 		      <div id="close">

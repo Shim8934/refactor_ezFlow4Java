@@ -173,7 +173,9 @@
 									<li><span onclick='btn_Delete_Onclick()'><spring:message code = 'ezCommunity.t208' /></span></li>
 					         		<li><span onclick='ReaderList()'><spring:message code = 'ezCommunity.t952' /></span></li>
 					       		</c:if>
-							<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+							<c:if test="${useCabinet == 'YES'}">
+								<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+							</c:if>
 				 	   	</ul>
 					</div>				
 		        	<div id="close">

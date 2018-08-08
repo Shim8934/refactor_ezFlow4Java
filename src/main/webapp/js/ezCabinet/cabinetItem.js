@@ -529,7 +529,7 @@ var CabinetItem = function() {
 	function addFile() {
 		if (!cabinetId) {alert(CabinetMessages.strError); return;}
 		if (addPopup) {addPopup.close();}
-		addPopup = window.open("/ezCabinet/addCabinetFile.do?cabId=" + cabinetId, "addFile", getOpenWindowfeature(600, 470));
+		addPopup = window.open("/ezCabinet/addCabinetFile.do?cabId=" + cabinetId, "addFile", getOpenWindowfeature(780, 660)); //수정
 	}
 	
 	function deleteFileConfirm() {
