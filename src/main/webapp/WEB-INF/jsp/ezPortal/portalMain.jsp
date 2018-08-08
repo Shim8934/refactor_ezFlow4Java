@@ -206,9 +206,16 @@
 		        $("#layer-popup").resizable({
 		        	handles : "n, e, s, w, ne, se, sw, nw"
 		        });
-		        $("#layer-popup").mouseenter(function() {
-		        	console.log("클릭");
-		        })
+		        
+		        $("#layer-popup").resize(function(e) {
+		        	
+		        	var layerHeight = $(this).height();
+		        	var btnBundle = $("#btn-bundle").height();
+		        	
+		        	var memoListHeight = $("#memoList").css("height", layerHeight-btnBundle-10);
+		        	
+		        });
+		        
 		     });
 		    
 		    // 초기 pointet-event set
@@ -410,15 +417,15 @@
 				<!-- 메모 리스트 -->
 				<div style="text-align: center">
 					
-					<div style="text-align: right; margin:8px;">
+					<div style="text-align: right; margin:8px;" id="btn-bundle">
 						<button id="change-mode" style="float: left">모드</button>
 						<div id="slider-range"></div>
 						<button id="new-memo" onclick="save()">추가</button>
 						<button id="close-button">닫기</button>
 					</div>
 										
-					<div class="memoListBox" style="overflow:auto;">
-						<div id="memoList" style=" overflow-y:scroll;  position:relative; margin-right:-25px;"></div>
+					<div class="memoListBox" style="overflow:hidden;">
+						<div id="memoList" style="height: 50%; overflow-y:scroll;  position:relative; margin-right:-25px;"></div>
 					</div>
 					
 				</div>
