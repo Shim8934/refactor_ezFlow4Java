@@ -202,8 +202,6 @@ function setContentTitle(taskName, totalCount) {
 		totalCount = 0;
 	}
 	
-	taskName = convertString(taskName);	
-	
 	$("#taskNameArea").html(taskName);
 	$("#mailBoxInfo").html("<spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + totalCount + " </span><spring:message code='ezPMS.t4' /></span>");
 }
