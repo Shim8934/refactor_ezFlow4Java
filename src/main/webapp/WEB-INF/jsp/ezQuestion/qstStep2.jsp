@@ -178,10 +178,14 @@
             		var tmpText=frmCreate.selQues[index-1].text.substring(vsublen1);
             		var vsubdata=trim_Cross(frmCreate.selQues[index].text).split(".");
             		var vsublen=vsubdata[0].length+1;
+            		//2018-08-08 김보미 - 유형 질문 표시
+            		var answerType = vsubdata[0].split("]")[0] + "]";
+            		var answerType1 = vsubdata1[0].split("]")[0] + "]";
             		frmCreate.selQues[index-1].value = trim_Cross(frmCreate.selQues[index].value);
-            		frmCreate.selQues[index-1].text = index + "." + trim_Cross(frmCreate.selQues[index].text).substring(vsublen);
+            		frmCreate.selQues[index-1].text = answerType + index + "." + trim_Cross(frmCreate.selQues[index].text).substring(vsublen);
             		frmCreate.selQues[index].value = tmpValue;
-            		frmCreate.selQues[index].text = index+1 + "." + tmpText;
+            		frmCreate.selQues[index].text = answerType1 + (index + 1) + "." + tmpText;
+            		frmCreate.selQues.selectedIndex = index-1;
             		frmCreate.selQues.selectedIndex = index-1;
             		index--;
         		}	
@@ -194,10 +198,13 @@
             		var tmpText = trim_Cross(frmCreate.selQues[index+1].text).substring(vsublen);
             		var vsubdata1=trim_Cross(frmCreate.selQues[index].text).split(".");
             		var vsublen1=vsubdata1[0].length+1;
+            		//2018-08-08 김보미 - 유형 질문 표시
+            		var answerType = vsubdata[0].split("]")[0] + "]";
+            		var answerType1 = vsubdata1[0].split("]")[0] + "]";
             		frmCreate.selQues[index+1].value = trim_Cross(frmCreate.selQues[index].value);
-            		frmCreate.selQues[index+1].text = index+2 + "." + trim_Cross(frmCreate.selQues[index].text).substring(vsublen1);
+            		frmCreate.selQues[index+1].text = answerType1 + (index + 2) + "." + trim_Cross(frmCreate.selQues[index].text).substring(vsublen1);
             		frmCreate.selQues[index].value = tmpValue;
-            		frmCreate.selQues[index].text = index+1 + "." + tmpText;
+            		frmCreate.selQues[index].text = answerType + (index + 1) + "." + tmpText;
             		frmCreate.selQues.selectedIndex = index+1;
             		index ++;
         		}
