@@ -497,13 +497,19 @@
 
 		    function ItemRead_onclick(obj) {
 		    	var circularID = obj.getAttribute("CIRCULARID");
+		    	var type = "";
+		    	
+		    	/* 2018-08-08 김민성 - 회람판 검색 > 신규회람판 검색시 삭제 버튼 안뜨도록 수정  */
+		    	if(filter == "circularNew") {	
+		    		type = "&type=new";
+		    	}
 		    	
 		        if (CrossYN()) {
 		            var feature = GetOpenPosition(820, 900);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=820, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID + type, "", "width=820, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	} else {
 	            	var feature = GetOpenPosition(790, 900);
-	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID, "", "width=790, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
+	            	window.open("/ezCircular/circularRead.do?circularID=" + circularID + type, "", "width=790, height=900, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1" + feature);
 	        	}
 		    }
 			
