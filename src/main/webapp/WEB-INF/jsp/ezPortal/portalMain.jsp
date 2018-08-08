@@ -31,7 +31,7 @@
 			#open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;}
 /* 			.individual-memo { width:200px; height:200px; background:url('/images/ezMemo/background.gif') repeat-x; background-size:200px 190px;text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 20px 55px 20px 55px;} */
 			.individual-memo { width:200px; height:200px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }
-			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);overflow:hidden; height: 50%; }
+			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);overflow:hidden; height: 50%;min-height: 270px; min-width: 270px; }
 			#selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;}
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
 			#maskDiv { position:absolute; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);}
@@ -46,6 +46,7 @@
 			.memo-text{margin-top:10px; padding-left:11px; padding-right:10px; border:0px; width:90%; height:88%; resize:none; overflow-y:auto;}
 			.memo-color{ padding:0px; /* margin-left:1px; margin-right:1px;  */box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;}
 			.memo-color-list { display:inline-block; width:16.5%; height:100%; text-align:center; float:left;}
+			.ui-resizable-se { background-image: url("");}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -204,7 +205,8 @@
 
 		        
 		        $("#layer-popup").resizable({
-		        	handles : "n, e, s, w, ne, se, sw, nw"
+		        	handles : "n, e, s, w, ne, se, sw, nw",
+		        	containment:".noteBlock"
 		        });
 		        
 		        $("#layer-popup").resize(function(e) {
@@ -418,7 +420,7 @@
 				<div style="text-align: center">
 					
 					<div style="text-align: right; margin:8px;" id="btn-bundle">
-						<button id="change-mode" style="float: left">모드</button>
+						<!-- <button id="change-mode" style="float: left">모드</button> -->
 						<div id="slider-range"></div>
 						<button id="new-memo" onclick="save()">추가</button>
 						<button id="close-button">닫기</button>
