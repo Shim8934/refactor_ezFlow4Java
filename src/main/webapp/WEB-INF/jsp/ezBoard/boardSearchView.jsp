@@ -461,6 +461,12 @@
 			function hideProgress() {
 				document.getElementById("MailProgress").style.display = "none";
 			}
+			
+			function search_keypress() {
+	            if (window.event.keyCode == "13") {
+	            	search('basic');
+	            }
+	        }
 	</script>
 </head>
 <body class="mainbody"> 
@@ -475,21 +481,21 @@
 			<input type ="text" id="selectedBoard" style="display:none;" value="">
 			<input type ="text" id="selectedBoardParentBoardID" style="display:none;" value="">
 			</td>
-			<th rowspan=4>
-				<a class="imgbtn" style="vertical-align:middle"><span onClick="search('basic')"><spring:message code='ezBoard.t188' /></span></a>
+			<th rowspan=4 style="background-color: white">
+				<a class="imgbtn imgbck" style="vertical-align:middle;height:45px;line-height: 43px"><span onClick="search('basic')" style="vertical-align: middle"><spring:message code='ezBoard.t188' /></span></a>
 			</th>
 		</tr>
 		<tr>
 			<th style="text-align: center"><spring:message code='ezBoard.t223' /></th>
-			<td style="width:50%; white-space:nowrap"><input type="text" id="txtWriterName" style="width: 100%" value=""></td>
+			<td style="width:50%; white-space:nowrap"><input type="text" id="txtWriterName" style="width: 100%" value="" onkeypress="return search_keypress()"></td>
 			<th style="text-align: center"><spring:message code='ezBoard.t208' /></th>
-			<td style="width:50%; white-space:nowrap"><input type="text" id="txtTitle" style="width: 100%" value=""></td>
+			<td style="width:50%; white-space:nowrap"><input type="text" id="txtTitle" style="width: 100%" value="" onkeypress="return search_keypress()"></td>
 		</tr>
 		<tr>
 			<th style="text-align: center"><spring:message code='ezBoard.garm01' /></th>
-			<td style="width:50%; white-space:nowrap"><input type="text" id="txtContent" style="width: 100%" value=""></td>
+			<td style="width:50%; white-space:nowrap"><input type="text" id="txtContent" style="width: 100%" value="" onkeypress="return search_keypress()"></td>
 			<th style="text-align: center"><spring:message code='ezBoard.t209' /></th>
-			<td style="width:50%; white-space:nowrap"><input type="text" id="txtAbstract" style="width: 100%" value=""></td>
+			<td style="width:50%; white-space:nowrap"><input type="text" id="txtAbstract" style="width: 100%" value="" onkeypress="return search_keypress()"></td>
 		</tr>
 		<tr>
 			<th style="text-align: center"><spring:message code='ezBoard.t210' /></th>
