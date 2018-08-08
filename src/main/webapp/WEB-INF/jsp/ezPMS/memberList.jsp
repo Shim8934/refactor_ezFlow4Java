@@ -17,7 +17,7 @@
 		</script>
 		<style>
 			#selectDeptNM {font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;	}
-			#txtlist_Layer {vertical-align: top; height: 293px; overflow: auto; width: 100%;}
+			#txtlist_Layer {vertical-align: top; height: 278px; overflow: auto; width: 100%;}
 			table.mainlist{width:100%; border: 1px solid #B6B6B6;}
 		</style>
 	</head>

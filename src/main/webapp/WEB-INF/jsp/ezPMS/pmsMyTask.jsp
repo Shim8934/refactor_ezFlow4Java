@@ -191,6 +191,8 @@ function clearValue() {
 	Sdatepicker = "";
 	Edatepicker = "";
 	searchByOverview = "";
+	searchByPlanStartDate = "";
+	searchByPlanEndDate = "";
 	
 	//프로젝트 관련 검색 초기화
 	PsearchByProjectName = "";
@@ -350,7 +352,7 @@ function setMyTaskList(position) {
 		url : url,
 		success : function(contentList) {
 			$("#contentList").html(contentList);
-
+			
 			CurrentHeight = $(window).height() - 100;
 			$("MailListRayer").css("height", CurrentHeight + "px");
 			$("#taskTree").css("height", CurrentHeight + 10 + "px");

@@ -473,7 +473,7 @@ var headManagerObj = {};
 			<tr>
 				<th><spring:message code='ezPMS.t31' /></th>
 				<td colspan="3">
-					<input type="text" id="projectName" class="textInput">
+					<input type="text" id="projectName" class="textInput" maxlength=100>
 				</td>
 			</tr>
 			<tr>

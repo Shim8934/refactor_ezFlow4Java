@@ -390,6 +390,14 @@
 		searchByUpperGroupName = $("#searchByUpperGroupName").val();
 		searchByOverview = $("#searchByOverview").val();
 		
+		var startDate = new Date(searchByPlanStartDate);
+		var endDate   = new Date(searchByPlanEndDate);
+		
+		if(startDate > endDate) {
+			alert("<spring:message code='ezPMS.t49' />");
+			return;
+		}
+		
 		layerHidden();
 		setContentList();
 	}
