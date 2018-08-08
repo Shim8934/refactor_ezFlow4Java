@@ -1313,6 +1313,10 @@
                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
             AND 
                 A.TENANT_ID = #v_TENANT_ID# $strSQLCom$
+            <![CDATA[
+            	AND
+            		CN <> 'masteradmin'
+            ]]>
                 
             <isNotEmpty property="companyId">
 	    	AND 
@@ -1401,6 +1405,8 @@
                              CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                      
                          AND 
                              A.TENANT_ID = #v_TENANT_ID#
+		            	 AND
+		            		 CN <> 'masteradmin'
 			       
 					UNION ALL
 			            
