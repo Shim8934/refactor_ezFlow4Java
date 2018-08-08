@@ -274,7 +274,6 @@
 	}
 
 	function setContentTitle(taskName, contentCount) {
-		var contentTitle = "";
 		
 		if (contentCount == null || contentCount == "") {
 			totalCount = 0;
@@ -282,11 +281,10 @@
 			totalCount = contentCount;
 		}
 		
-		taskName = convertString(taskName);
+		taskName = replaceString(taskName);
 		
-		contentTitle = taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span><spring:message code='ezPMS.t4' />";
-
-		$("#taskNameArea").html(contentTitle);
+		$("#taskNameArea").html(taskName);
+		$("#mailBoxInfo").html("<spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + totalCount + " </span><spring:message code='ezPMS.t4' /></span>");
 	}
 	 
 	function searchStatus(status) {
@@ -557,6 +555,14 @@
 	border-radius : 2px;
 	border-color : #d2d2d2;
 }
+
+#taskNameArea {
+	max-width : 50%;
+	white-space : nowrap;
+	overflow : hidden;
+	text-overflow : ellipsis;
+	display : inline-block;
+}
 </style>
 </head>
 <body>
@@ -564,19 +570,21 @@
 <div id="projectArea" class="projectAreaStyle">
 <div id="projectContent">
 	<div id="iconLine" class="mainbody" style="margin:0px; height:auto;">
-		<h1 id="taskName" class="project_subh1"><div id="taskNameArea" style="display:inline-block"></div>
-				<span id="searchArea" style="float:right;font-weight:normal;color:black;">
-				<div>
-				<select id="searchStatus" onchange="searchStatus(this.value)">
-					<option value="A"><spring:message code='ezPMS.t14' /> <spring:message code='ezPMS.t137' /></option>
-					<option value="P"><spring:message code='ezPMS.t15' /> <spring:message code='ezPMS.t137' /></option>
-					<option value="W"><spring:message code='ezPMS.t16' /> <spring:message code='ezPMS.t137' /></option>
-					<option value="C"><spring:message code='ezPMS.t17' /> <spring:message code='ezPMS.t137' /></option>
-					<option value="L"><spring:message code='ezPMS.t18' /> <spring:message code='ezPMS.t137' /></option>
-					<option value="S"><spring:message code='ezPMS.t19' /> <spring:message code='ezPMS.t137' /></option>
-				</select>
-				</div>
-				</span>
+		<h1 id="taskName" class="project_subh1">
+			<div id="taskNameArea"></div>
+			<span id='mailBoxInfo' style='vertical-align: text-bottom;'></span>
+			<span id="searchArea" style="float:right;font-weight:normal;color:black;">
+			<div>
+			<select id="searchStatus" onchange="searchStatus(this.value)">
+				<option value="A"><spring:message code='ezPMS.t14' /> <spring:message code='ezPMS.t137' /></option>
+				<option value="P"><spring:message code='ezPMS.t15' /> <spring:message code='ezPMS.t137' /></option>
+				<option value="W"><spring:message code='ezPMS.t16' /> <spring:message code='ezPMS.t137' /></option>
+				<option value="C"><spring:message code='ezPMS.t17' /> <spring:message code='ezPMS.t137' /></option>
+				<option value="L"><spring:message code='ezPMS.t18' /> <spring:message code='ezPMS.t137' /></option>
+				<option value="S"><spring:message code='ezPMS.t19' /> <spring:message code='ezPMS.t137' /></option>
+			</select>
+			</div>
+			</span>
 		</h1>
 		<div id="mainmenu">
 		<ul>

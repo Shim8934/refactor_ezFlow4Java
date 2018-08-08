@@ -190,15 +190,15 @@ function projectListScroll() {
 }
 
 function setContentTitle(taskName, totalCount) {
-	var contentTitle = "";
 	
 	if (!totalCount) {
 		totalCount = 0;
 	}
 	
-	contentTitle = taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + totalCount + " </span><spring:message code='ezPMS.t4' /></span>";
+	taskName = replaceString(taskName);
 	
-	$("#taskNameArea").html(contentTitle);
+	$("#taskNameArea").html(taskName);
+	$("#mailBoxInfo").html("<spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + totalCount + " </span><spring:message code='ezPMS.t4' /></span>");
 }
 
 function selectedTR(elem) {
@@ -260,10 +260,11 @@ function selectedTR(elem) {
 }
 
 #taskNameArea {
-	width : 50%;
+	max-width : 50%;
 	white-space : nowrap;
 	overflow : hidden;
 	text-overflow : ellipsis;
+	display : inline-block;
 }
 
 #iconLine {
@@ -283,21 +284,23 @@ function selectedTR(elem) {
 <div id="projectArea" class="projectAreaStyle">
 <div id="projectContent">
 	<div id="iconLine" class="mainbody" style="margin:0px; height:auto;">
-		<h1 id="taskName" class="project_subh1"><div id="taskNameArea" style="display:inline-block"></div>
-		<span id="searchArea" style="float:right;font-weight:normal;color:black;">
-			<select id="searchId">
-				<option value="1" selected><spring:message code='ezPMS.t186' /></option>
-				<option value="2"><spring:message code='ezPMS.t188' /></option>
-			</select>
-			<input type="text" id="searchByContent" onkeypress="if(event.keyCode==13) {searchLogContent(); return false;}" style="width:150px;ime-mode: active;border-right:0px;vertical-align: baseline"/>
-                <a id="searchButton" href="#" style="float:right;"><img src="/images/bsearch_new.gif" border="0" onclick="searchLogContent()"></a>
-			<select id="searchStatus" onchange="searchLogStatus(this.value)">
-				<option value="0"><spring:message code='ezPMS.t14' /></option>
-				<option value="1"><spring:message code='ezPMS.t40' /></option>
-				<option value="2"><spring:message code='ezPMS.t110' /></option>
-				<option value="3"><spring:message code='ezPMS.t11' /></option>
-			</select>
-		</span>
+		<h1 id="taskName" class="project_subh1">
+			<div id="taskNameArea"></div>
+			<span id='mailBoxInfo' style='vertical-align: text-bottom;'></span>
+			<span id="searchArea" style="float:right;font-weight:normal;color:black;">
+				<select id="searchId">
+					<option value="1" selected><spring:message code='ezPMS.t186' /></option>
+					<option value="2"><spring:message code='ezPMS.t188' /></option>
+				</select>
+				<input type="text" id="searchByContent" onkeypress="if(event.keyCode==13) {searchLogContent(); return false;}" style="width:150px;ime-mode: active;border-right:0px;vertical-align: baseline"/>
+	                <a id="searchButton" href="#" style="float:right;"><img src="/images/bsearch_new.gif" border="0" onclick="searchLogContent()"></a>
+				<select id="searchStatus" onchange="searchLogStatus(this.value)">
+					<option value="0"><spring:message code='ezPMS.t14' /></option>
+					<option value="1"><spring:message code='ezPMS.t40' /></option>
+					<option value="2"><spring:message code='ezPMS.t110' /></option>
+					<option value="3"><spring:message code='ezPMS.t11' /></option>
+				</select>
+			</span>
 		</h1>
 	</div>
 	<div id="contentList" style="overflow:auto; width:100%; margin:0px; padding:0px 10px; box-sizing:border-box;">

@@ -318,7 +318,6 @@
 	}
 	
 	function setContentTitle(taskName, contentCount) {
-		var contentTitle = "";
 		
 		if (contentCount == null || contentCount == "") {
 			totalCount = 0;
@@ -326,9 +325,10 @@
 			totalCount = contentCount;
 		}
 		
-		taskName = convertString(taskName);
-		contentTitle = taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span><spring:message code='ezPMS.t4' /></span>";
-		$("#taskNameArea").html(contentTitle);
+		taskName = replaceString(taskName);
+		
+		$("#taskNameArea").html(taskName);
+		$("#mailBoxInfo").html("<spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + totalCount + " </span><spring:message code='ezPMS.t4' /></span>");
 	}
 </script>
 
@@ -377,10 +377,11 @@
 	}
 	
 	#taskNameArea {
-		width : 50%;
+		max-width : 50%;
 		white-space : nowrap;
 		overflow : hidden;
 		text-overflow : ellipsis;
+		display : inline-block;
 	}
 	
 	.col1 {width: 9%;}
@@ -400,20 +401,22 @@
 	<div id="projectArea" class="projectAreaStyle">
 		<div id="projectContent">
 			<div id="iconLine" class="mainbody" style="margin:0px; height:auto;">
-				<h1 id="taskName" class="project_subh1"><div id="taskNameArea" style="display:inline-block"></div>
-				<span id="searchArea" style="float:right;font-weight:normal;color:black;">
-					<select id="searchCondition" onchange="setSearchInput(this.value)">
-						<option value="searchByUser"><spring:message code='ezPMS.t114' /></option>
-						<option value="searchByContent"><spring:message code='ezPMS.t130' /></option>
-						<option value="searchByWriteDate"><spring:message code='ezPMS.t119' /></option>
-					</select>
-					<input type="text" id="searchKeyword" onkeypress="if(event.keyCode==13) {searchComment(); return false;}" style="width:150px;ime-mode: active;border-right:0px;vertical-align: baseline">
-					<span id="searchDate" style="display: none; margin-right : 10px;">
-						<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ 
-						<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+				<h1 id="taskName" class="project_subh1">
+					<div id="taskNameArea"></div>
+					<span id='mailBoxInfo' style='vertical-align: text-bottom;'></span>
+					<span id="searchArea" style="float:right;font-weight:normal;color:black;">
+						<select id="searchCondition" onchange="setSearchInput(this.value)">
+							<option value="searchByUser"><spring:message code='ezPMS.t114' /></option>
+							<option value="searchByContent"><spring:message code='ezPMS.t130' /></option>
+							<option value="searchByWriteDate"><spring:message code='ezPMS.t119' /></option>
+						</select>
+						<input type="text" id="searchKeyword" onkeypress="if(event.keyCode==13) {searchComment(); return false;}" style="width:150px;ime-mode: active;border-right:0px;vertical-align: baseline">
+						<span id="searchDate" style="display: none; margin-right : 10px;">
+							<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ 
+							<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+						</span>
+						<a id="searchButton" href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onclick="searchComment()"></a>
 					</span>
-					<a id="searchButton" href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onclick="searchComment()"></a>
-				</span>
 				</h1>
 			</div>
 			<div id="contentList" style="overflow: auto; width:100%; margin:0px; padding:0px 10px; box-sizing:border-box;">

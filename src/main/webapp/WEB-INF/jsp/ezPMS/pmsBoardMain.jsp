@@ -194,7 +194,6 @@
 	}
 	
 	function setContentTitle(taskName, contentCount) {
-		var contentTitle = "";
 		
 		if (contentCount == null || contentCount == "") {
 			totalCount = 0;
@@ -204,9 +203,8 @@
 		
 		taskName = replaceString(taskName);
 		
-		contentTitle = taskName + "<span id='mailBoxInfo'> <spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + contentCount + " </span><spring:message code='ezPMS.t4' />";
-
-		$("#taskNameArea").html(contentTitle);
+		$("#taskNameArea").html(taskName);
+		$("#mailBoxInfo").html("<spring:message code='ezPMS.t3' /> <span style='color:#017BEC;' id='totalCount'>" + totalCount + " </span><spring:message code='ezPMS.t4' /></span>");
 	}
 	
 	//페이지 번호에 의한 셋팅
@@ -427,6 +425,10 @@
 	}
 	
 	#taskNameArea {
+		max-width : 50%;
+		white-space : nowrap;
+		overflow : hidden;
+		text-overflow : ellipsis;
 		display : inline-block;
 	}
 	
@@ -454,7 +456,10 @@
 	<div id="projectArea" class="projectAreaStyle">
 		<div id="projectContent">
 			<div id="iconLine" class="mainbody" style="margin:0px; height:auto;">
-				<h1 id="taskName" class="project_subh1"><div id="taskNameArea" style="display:inline-block"></div></h1>
+				<h1 id="taskName" class="project_subh1">
+					<div id="taskNameArea"></div>
+					<span id='mailBoxInfo' style='vertical-align: text-bottom;'></span>
+				</h1>
 				<div id="mainmenu">
 				<ul>
 					<c:if test="${userRole ne 3}">
