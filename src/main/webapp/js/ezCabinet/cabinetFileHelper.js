@@ -278,17 +278,18 @@ var CabinetFileHelper = function() {
 		function addIframePrintScreen() {
 			//Check if iframe exists
 			if (viewType == "content") {
-				var iframeElmt         = document.getElementById(iframeId);
-				var printWrapDiv       = document.createElement("div");
-				var divInfo            = document.querySelector("div[class='divInfo']");
-				var cloneDivInf        = divInfo.cloneNode(true);
-				printWrapDiv.id        = "cabwrapPrint";
-				printWrapDiv.className = "cabwrapPrintoff";
-				
-				printWrapDiv.appendChild(cloneDivInf);
-				document.body.appendChild(printWrapDiv);
+				var iframeElmt = document.getElementById(iframeId);
 				iframeElmt.addEventListener("load", function(e) {cloneIframeContent();}, false);
 			}
+			
+			var printWrapDiv = document.createElement("div");
+			var divInfo            = document.querySelector("div[class='divInfo']");
+			var cloneDivInf        = divInfo.cloneNode(true);
+			printWrapDiv.id        = "cabwrapPrint";
+			printWrapDiv.className = "cabwrapPrintoff";
+			
+			printWrapDiv.appendChild(cloneDivInf);
+			document.body.appendChild(printWrapDiv);
 		}
 		
 		function cloneIframeContent() {
