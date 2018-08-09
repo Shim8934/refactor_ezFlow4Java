@@ -1085,8 +1085,9 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
         var pURL = GetAttribute(pCurSelRow, "DATA3");
         var openLocation = "";
         if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-            alert(strLang1103);
-            return;
+        	openLocation = "/ezApprovalG/ezRecevGSusinHWP.do";
+
+            openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&uOrgID=" + encodeURI(pArgument[1]) + "&isReDraft=" + encodeURI("Y") + "&draftFlag=" + encodeURI(pDraftFlag);
         }
         else {
             openLocation = "/ezApprovalG/recevGSusin.do";
