@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -9,9 +9,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
+		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>></script>
+		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>></script>
+		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/Common.js")%>></script>
 		<script type="text/javascript">            
             function Save(pPath)
             {
@@ -129,10 +129,16 @@
                 return isNum;
             }
             function valuePlus(target){
+            	if (target.value == "") {
+            		target.value = 0.0;
+            	}
             	var num = parseFloat(target.value) + parseFloat('1');
             	target.value = num.toFixed(1);
             }
 			function valueMinuse(target){
+            	if (target.value == "") {
+            		target.value = 0.0;
+            	}
 				var num = parseFloat(target.value) - parseFloat('1');
 				if (num >= 0) {
 	            	target.value = num.toFixed(1);
