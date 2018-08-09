@@ -433,7 +433,7 @@
 	            var url = "/ezApprovalG/ezchkPasswd.do";
 	            ezchkpasswd_cross_dialogArguments[0] = pUserID;
 	            ezchkpasswd_cross_dialogArguments[1] = FunctionName;
-	            DivPopUpShow(330, 200, url);
+	            DivPopUpShow(350, 225, url);
 	        }
 	        var ezapprovalinfo_dialogArguments = new Array();
 	        function btnApprovalInfo(pGubun) {

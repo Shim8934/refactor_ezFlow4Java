@@ -8,7 +8,15 @@
 	    <title><spring:message code='ezBoard.t368'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 	    <style type="text/css">
-	         .preView { width: 70px; height: 70px; text-align: center; border:1px solid silver; }
+	         .preView {
+	         	width: 70px;
+	         	height: 70px;
+	         	text-align: center;
+	         	border:1px solid silver;
+	         }
+			textarea {
+				resize:none;
+	         }
 	    </style>
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -102,7 +110,14 @@
 // 	            document.getElementById("txtTitle").value = ConvMakeXMLString("<c:out value='${boardListVO.title}'/>");
 	            imageViewInit();
 	            saveItemBoardId = pBoardID;
+	            
+	            document.getElementById("addimagecontent").style.height = document.documentElement.clientHeight - 280 + "PX";
 	        };
+	        
+	        /* 2018-08-08 홍승비 - 썸네일+포토게시물 등록창 세로길이 리사이즈 추가 */
+	        window.onresize = function () {
+				document.getElementById("addimagecontent").style.height = document.documentElement.clientHeight - 280 + "PX";
+	        }
 	
 	        var xmlhttp = createXMLHttpRequest();
 	        var strXML;
@@ -437,7 +452,8 @@
 	            strXML += "<NODES>";
 	            strXML += "<NODE>";
 	
-	            if (pMode != "modify") {
+	            /* 2018-08-07 홍승비 - 포토+썸네일게시물 임시저장 시 새로운 itemID 생성하는 조건 수정 */
+	            if (pMode != "temp") {
 	                strXML += "<ITEMID>" + newID + "</ITEMID>";
 	            } else {
 	                itemid = strItemID + ";"

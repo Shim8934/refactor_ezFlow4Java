@@ -39,6 +39,7 @@
 			 border-top: 1px dotted #eee;
 			 background-color: #fcfcfc;
 		}
+		.mainlist tr th {border-top:0px}
 	    </style>
 	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -868,7 +869,7 @@
 		</table> -->
 		<table style="width:100%;">		
 			<tr>
-				<table id = "t1" style="width:100%;border-top:1px solid #e8e8e8">
+				<table id = "t1" style="width:100%;border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8">
 					<tr>
 						<td style="width:4%;">
 							<spring:message code='ezApprovalG.kes04'/>  
@@ -922,15 +923,15 @@
 						<td colspan="2">
 							<a class="imgbtn" >
 								<span onclick="javascript:search(1);"><spring:message code="ezApproval.t236"></spring:message></span>
-							</a>&nbsp;
+							</a>
 							<a class="imgbtn">
 								<span onClick="reload()"><spring:message code='ezApprovalG.t165' /></span>
-							</a>&nbsp;
+							</a>
 							<a class="imgbtn">
 								<span onClick="bt_OK_onclick()"><spring:message code='ezApproval.t25005' /></span>
-							</a>&nbsp;
+							</a>
 							<a class="imgbtn">
-									<span onClick="bt_All_onclick()"><spring:message code='ezApprovalG.t1679' /></span>
+								<span onClick="bt_All_onclick()"><spring:message code='ezApprovalG.t1679' /></span>
 							</a>
 						</td>
 					</tr>

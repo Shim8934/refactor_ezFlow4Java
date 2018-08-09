@@ -397,6 +397,7 @@
 	            if (CrossYN()) {
 	                ezapropinion_cross_dialogArguments[0] = pInformationContent;
 	                ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
+	                ezapropinion_cross_dialogArguments[2] = true;
 	                var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(330, 205));
 	                try { ezAPROPINION_Cross.focus(); } catch (e) {
 	                }

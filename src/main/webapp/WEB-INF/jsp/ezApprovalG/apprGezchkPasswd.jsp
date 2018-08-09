@@ -73,7 +73,7 @@
 		                ezapralert_cross_dialogArguments[1] = CompleteFunction;
 		            else
 		                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-		            DivPopUpShow(330, 205, url);
+		            DivPopUpShow(325, 200, url);
 		        }
 		        else {
 		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
@@ -214,7 +214,7 @@
                 <li><span id="btn_OpinionCANCEL" onClick="return btn_OpinionCANCEL_onclick();"></span></li>
             </ul>
         </div>
-		<h2 style="font-weight: normal;margin-top:10px">▒&nbsp;<spring:message code='ezApprovalG.t1746'/></h2>
+		<h2 style="font-weight: normal;margin-top:20px">▒&nbsp;<spring:message code='ezApprovalG.t1746'/></h2>
 		<div class="nobox"><input type="password" class="textarea" id="inpPassword" name="inpPassword" style="WIDTH:100%;height:25px;border:1px solid #ccc" onkeypress="password_OnKeyPress(event)"></div>
 		
 		<div class="btnposition btnpositionNew">
