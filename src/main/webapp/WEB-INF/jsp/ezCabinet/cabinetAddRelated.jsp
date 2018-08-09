@@ -64,9 +64,8 @@
 					var cabMgConfig          = document.getElementById("addRelated");
 					
 					if (cabMgConfig) {
-						var listMgConfig        = cabMgConfig.children;
-						listMgConfig[0].onclick = function(e) {autoSelect();};
-						listMgConfig[1].onclick = function(e) {manualSelect();};
+						document.getElementById("auto").onchange   = function (e) {autoSelect();}
+						document.getElementById("manual").onchange = function (e) {manualSelect();}
 					}
 					
 					var cabMgBttnElmt        = document.getElementById("cabMgDivBttn");
