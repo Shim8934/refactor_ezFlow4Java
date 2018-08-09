@@ -2813,28 +2813,22 @@ public class EzPMSGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPMS/tasks/{taskId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
-	public JSONObject updateTask(@PathVariable String taskId,
-			@PathVariable String userId, HttpServletRequest request,
-			@RequestBody JSONObject jsonParam) throws Exception {
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/"
-				+ userId + "] started.");
+	public JSONObject updateTask(@PathVariable String taskId, @PathVariable String userId, HttpServletRequest request, @RequestBody JSONObject jsonParam) throws Exception {
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String lang = commonUtil.getMultiData(info.getLang(),
-					info.getTenantId());
+			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
 			Long groupId = Long.parseLong(request.getParameter("groupId"));
-			Long originGroupId = Long.parseLong(request
-					.getParameter("originGroupId"));
+			Long originGroupId = Long.parseLong(request.getParameter("originGroupId"));
 			String projectId = request.getParameter("projectId");
 
-			List<Map<String, Object>> taskMemberList1 = (List<Map<String, Object>>) jsonParam
-					.get("managerList");
+			List<Map<String, Object>> taskMemberList1 = (List<Map<String, Object>>) jsonParam.get("managerList");
 			List<TaskMemberVO> taskMemberList2 = new ArrayList<TaskMemberVO>();
 
 			// 권한 체크
@@ -2842,8 +2836,8 @@ public class EzPMSGWController {
 
 			// 권한 체크
 			// 1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
-			int userProjectRole = ezPMSService.getUserProjectRole(userId,
-					tenantId, Long.parseLong(projectId), info.getDeptId());
+			int userProjectRole = ezPMSService.getUserProjectRole(userId, tenantId, Long.parseLong(projectId), info.getDeptId());
+			
 			if (userProjectRole == 1) {
 				roleCheck = "permitted";
 			} else if (userProjectRole == 3) {
@@ -2853,25 +2847,20 @@ public class EzPMSGWController {
 				int userGroupRole = 0;
 
 				// upperGroupId가 0이아닌 상위 그룹이 있다면 담당자인지
-				long upperGroupId = ezPMSService.getUpperGroupId(groupId,
-						Long.parseLong(projectId), tenantId);
+				long upperGroupId = ezPMSService.getUpperGroupId(groupId, Long.parseLong(projectId), tenantId);
 
 				if (upperGroupId != 0) {
 					// 해당 그룹의 담당자인지 해당 그룹에 해당이 안되면 roleId는 참여자(2)
-					userGroupRole = ezPMSService.getUserGroupRole(userId,
-							tenantId, Long.parseLong(projectId), groupId);
+					userGroupRole = ezPMSService.getUserGroupRole(userId, tenantId, Long.parseLong(projectId), groupId);
 
 					if (userGroupRole != 1) {
-						userGroupRole = ezPMSService.getUserGroupRole(userId,
-								tenantId, Long.parseLong(projectId),
-								upperGroupId);
+						userGroupRole = ezPMSService.getUserGroupRole(userId, tenantId, Long.parseLong(projectId), upperGroupId);
 					}
 				}
 
 				// userGroupRole이 2일때 업무 담당자인지도 확인
 				if (userGroupRole == 2) {
-					String taskRole = ezPMSService.getUserTaskRole(userId,
-							tenantId, Long.parseLong(taskId));
+					String taskRole = ezPMSService.getUserTaskRole(userId, tenantId, Long.parseLong(taskId));
 
 					if (taskRole != null) {
 						userGroupRole = 1;
@@ -2890,18 +2879,15 @@ public class EzPMSGWController {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 				for (int i = 0; i < taskMemberList1.size(); i++) {
-					String taskMemberId = (String) taskMemberList1.get(i).get(
-							"userId");
-					Float pctinput = Float.parseFloat(taskMemberList1.get(i)
-							.get("pctinput").toString());
+					String taskMemberId = (String) taskMemberList1.get(i).get("userId");
+					Float pctinput = Float.parseFloat(taskMemberList1.get(i).get("pctinput").toString());
 
 					TaskMemberVO taskMemberVO = new TaskMemberVO();
 					taskMemberVO.setTenantId(tenantId);
 					taskMemberVO.setUserId(taskMemberId);
 					taskMemberVO.setPctinput(pctinput);
 
-					ProjectMemberVO member = ezPMSService.getUserInfo(
-							taskMemberId, tenantId, "user");
+					ProjectMemberVO member = ezPMSService.getUserInfo(taskMemberId, tenantId, "user");
 
 					taskMemberVO.setUserName(member.getUserName());
 					taskMemberVO.setUserName2(member.getUserName2());
@@ -2935,87 +2921,61 @@ public class EzPMSGWController {
 						if (pretaskRelCNT > 0) {
 							ezPMSService.updatePreTaskRel(map);
 						} else {
-							ezPMSService.addPreTaskRel(Long.parseLong(taskId),
-									Integer.parseInt(pretaskId),
-									Long.parseLong(projectId), tenantId,
-									pretaskType);
+							ezPMSService.addPreTaskRel(Long.parseLong(taskId), Integer.parseInt(pretaskId),	Long.parseLong(projectId), tenantId, pretaskType);
 						}
 
-						int workingday = Integer.parseInt(request
-								.getParameter("workingday"));
+						int workingday = Integer.parseInt(request.getParameter("workingday"));
 
 						if (pretaskType.equals("task2task")) {
 							map.put("taskId", pretaskId);
-							ProjectTaskVO pretaskVO = ezPMSService
-									.getTaskSchedule(map);
+							ProjectTaskVO pretaskVO = ezPMSService.getTaskSchedule(map);
 
-							Date pretaskEndate = sdf.parse(pretaskVO
-									.getPlanEndDate());
-							Date newStartDate = ezPMSService.addWorkingDays(
-									pretaskEndate, 1, companyId, tenantId);
-							Date newEndDate = ezPMSService.addWorkingDays(
-									newStartDate, workingday - 1, companyId,
-									tenantId);
+							Date pretaskEndate = sdf.parse(pretaskVO.getPlanEndDate());
+							Date newStartDate = ezPMSService.addWorkingDays(pretaskEndate, 1, companyId, tenantId);
+							Date newEndDate = ezPMSService.addWorkingDays(newStartDate, workingday - 1, companyId, tenantId);
 
 							planStartDate = sdf.format(newStartDate);
 							planEndDate = sdf.format(newEndDate);
 						} else if (pretaskType.equals("group2task")) {
 							map.put("groupId", pretaskId);
-							ProjectGroupVO pregroupVO = ezPMSService
-									.getGroupSchedule(map);
+							ProjectGroupVO pregroupVO = ezPMSService.getGroupSchedule(map);
 
-							Date pregroupEndate = sdf.parse(pregroupVO
-									.getPlanEndDate());
-							Date newStartDate = ezPMSService.addWorkingDays(
-									pregroupEndate, 1, companyId, tenantId);
-							Date newEndDate = ezPMSService.addWorkingDays(
-									newStartDate, workingday - 1, companyId,
-									tenantId);
+							Date pregroupEndate = sdf.parse(pregroupVO.getPlanEndDate());
+							Date newStartDate = ezPMSService.addWorkingDays(pregroupEndate, 1, companyId, tenantId);
+							Date newEndDate = ezPMSService.addWorkingDays(newStartDate, workingday - 1, companyId,	tenantId);
 
 							planStartDate = sdf.format(newStartDate);
 							planEndDate = sdf.format(newEndDate);
 						}
 
-						LOGGER.debug("By Pretask Change => planStartDate : "
-								+ planStartDate + ", planEndDate : "
-								+ planEndDate);
+						LOGGER.debug("By Pretask Change => planStartDate : " + planStartDate + ", planEndDate : " + planEndDate);
 					}
 				}
 
 				ProjectTaskVO projectTaskVO = new ProjectTaskVO();
 				projectTaskVO.setTenantId(tenantId);
-				projectTaskVO.setTaskId(Long.parseLong(request
-						.getParameter("taskId")));
-				projectTaskVO.setProjectId(Long.parseLong(request
-						.getParameter("projectId")));
-				projectTaskVO.setGroupId(Long.parseLong(request
-						.getParameter("groupId")));
+				projectTaskVO.setTaskId(Long.parseLong(request.getParameter("taskId")));
+				projectTaskVO.setProjectId(Long.parseLong(request.getParameter("projectId")));
+				projectTaskVO.setGroupId(Long.parseLong(request.getParameter("groupId")));
 				projectTaskVO.setTaskName(request.getParameter("taskName"));
-				projectTaskVO.setWeight(Float.parseFloat(request
-						.getParameter("weight")));
+				projectTaskVO.setWeight(Float.parseFloat(request.getParameter("weight")));
 				projectTaskVO.setOverview(jsonParam.get("overview").toString());
-				projectTaskVO.setHeadManagerId(request
-						.getParameter("headManagerId"));
+				projectTaskVO.setHeadManagerId(request.getParameter("headManagerId"));
 				projectTaskVO.setPlanStartDate(planStartDate);
 				projectTaskVO.setPlanEndDate(planEndDate);
 				projectTaskVO.setWriterId(request.getParameter("writerId"));
 				projectTaskVO.setWriteDate(request.getParameter("writeDate"));
 				projectTaskVO.setWriterName(request.getParameter("writerName"));
-				projectTaskVO.setWriterName2(request
-						.getParameter("writerName2"));
-				projectTaskVO.setWriterDeptname(request
-						.getParameter("writerDeptname"));
-				projectTaskVO.setWriterDeptname2(request
-						.getParameter("writerDeptname2"));
+				projectTaskVO.setWriterName2(request.getParameter("writerName2"));
+				projectTaskVO.setWriterDeptname(request.getParameter("writerDeptname"));
+				projectTaskVO.setWriterDeptname2(request.getParameter("writerDeptname2"));
 				projectTaskVO.setTaskMember(taskMemberList2);
 
 				if (request.getParameter("treeDepth") != null) {
-					projectTaskVO.setUpperTreeDepth(Integer.parseInt(request
-							.getParameter("treeDepth")));
+					projectTaskVO.setUpperTreeDepth(Integer.parseInt(request.getParameter("treeDepth")));
 				}
 
-				ezPMSService.updateTaskInfo(projectTaskVO, companyId, tenantId,
-						lang);
+				ezPMSService.updateTaskInfo(projectTaskVO, companyId, tenantId,	lang);
 
 				// taskId로 해당 date 삭제 후, 추가
 				// ezPMSService.deleteMemberSchedule(null,
@@ -3034,8 +2994,7 @@ public class EzPMSGWController {
 				List<String> dateList = new ArrayList<String>();
 
 				while (startCal.compareTo(endCal) != 1) {
-					if (startCal.get(Calendar.DAY_OF_WEEK) == 1
-							|| startCal.get(Calendar.DAY_OF_WEEK) == 7) {
+					if (startCal.get(Calendar.DAY_OF_WEEK) == 1	|| startCal.get(Calendar.DAY_OF_WEEK) == 7) {
 						startCal.add(Calendar.DATE, 1);
 					} else {
 						dateList.add(sdf.format(startCal.getTime()));
@@ -3056,10 +3015,8 @@ public class EzPMSGWController {
 			}
 
 			if (groupId != originGroupId) {
-				ezPMSService.updateGroupLatestInfo(Long.parseLong(projectId),
-						groupId, tenantId, lang);
-				ezPMSService.updateGroupLatestInfo(Long.parseLong(projectId),
-						originGroupId, tenantId, lang);
+				ezPMSService.updateGroupLatestInfo(Long.parseLong(projectId), groupId, tenantId, lang);
+				ezPMSService.updateGroupLatestInfo(Long.parseLong(projectId), originGroupId, tenantId, lang);
 			}
 
 			result.put("status", "ok");
@@ -3071,8 +3028,7 @@ public class EzPMSGWController {
 			result.put("data", "");
 		}
 
-		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/"
-				+ userId + "] ended.");
+		LOGGER.debug("ezPMS G/W [PUT /rest/ezPMS/tasks/" + taskId + "/users/" + userId + "] ended.");
 		return result;
 	}
 
@@ -3084,8 +3040,7 @@ public class EzPMSGWController {
 	public JSONObject getGroupList(@PathVariable String projectId,
 			@PathVariable String userId, HttpServletRequest request)
 			throws Exception {
-		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId
-				+ "/groups/users/" + userId + "] started.");
+		LOGGER.debug("ezPMS G/W [GET /rest/ezPMS/projects/" + projectId	+ "/groups/users/" + userId + "] started.");
 
 		JSONObject result = new JSONObject();
 
@@ -3519,29 +3474,23 @@ public class EzPMSGWController {
 						taskVO.setProjectId(projectId);
 						taskVO.setPlanStartDate(newStartDate);
 						taskVO.setPlanEndDate(newEndDate);
-						taskVO.setRealProgress(Float.parseFloat(request
-								.getParameter("realProgress")));
+						taskVO.setRealProgress(Float.parseFloat(request.getParameter("realProgress")));
 
-						ezPMSService.updateTaskStatus(taskVO, companyId,
-								tenantId, lang);
+						ezPMSService.updateTaskStatus(taskVO, companyId, tenantId, lang);
 
-						ezPMSService.updateGroupDate(groupId, tenantId,
-								companyId, lang);
+						ezPMSService.updateGroupDate(groupId, tenantId, companyId, lang);
 					}
 				}
 
 				ProjectGroupVO groupInfo = new ProjectGroupVO();
 				groupInfo.setGroupName(request.getParameter("groupName"));
 				groupInfo.setGroupId(groupId);
-				groupInfo.setProjectId(Long.parseLong(request
-						.getParameter("projectId")));
+				groupInfo.setProjectId(Long.parseLong(request.getParameter("projectId")));
 				groupInfo.setGroupMember(groupMemberList);
 				groupInfo.setOverview(jsonParam.get("overview").toString());
 				groupInfo.setTenantId(info.getTenantId());
-				groupInfo.setUpperGroupId(Long.parseLong(request
-						.getParameter("upperGroupId")));
-				groupInfo.setHeadManagerId(request
-						.getParameter("headManagerId"));
+				groupInfo.setUpperGroupId(Long.parseLong(request.getParameter("upperGroupId")));
+				groupInfo.setHeadManagerId(request.getParameter("headManagerId"));
 
 				ezPMSService.updateGroup(groupInfo, lang);
 			}
