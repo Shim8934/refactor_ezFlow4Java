@@ -23,6 +23,7 @@ function SelectTask(pDeptCode, pDeptName, pInitFlag, pMultiSelect, opentype, Com
     }
     else {
         selecttask_cross_dialogArguments[1] = CompleteFunction;
+        selecttask_cross_dialogArguments[2] = true;
         var OpenWin = window.open(url, "SelectTask_Cross", GetOpenWindowfeature(850, 430));
         try { OpenWin.focus(); } catch (e) { }
     }

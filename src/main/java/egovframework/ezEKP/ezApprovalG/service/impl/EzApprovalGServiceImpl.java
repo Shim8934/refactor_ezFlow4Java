@@ -111,6 +111,10 @@ import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositonShapeIdPair;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.lineseg.LineSegItem;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.lineseg.ParaLineSeg;
+import kr.dogfoot.hwplib.object.docinfo.ParaShape;
 import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
 import kr.dogfoot.hwplib.reader.HWPReader;
 import kr.dogfoot.hwplib.writer.HWPWriter;
@@ -5807,13 +5811,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 									newParagraph.createText();
 									newParagraph.createCharShape();
 									
+									ParaHeader ph = paragraphList.getParagraph(0).getHeader();
+									
 									ParaCharShape pcs = paragraphList.getParagraph(0).getCharShape();
-									pcs.getPositonShapeIdPairList();
 									
 									//글자모양 복사해주기
 									for (CharPositonShapeIdPair charPositonShapeIdPair : pcs.getPositonShapeIdPairList()) {
 										newParagraph.getCharShape().addParaCharShape(charPositonShapeIdPair.getPositon(), charPositonShapeIdPair.getShapeId());
 									}
+									
+									//헤더값 복사해서 정렬 맞추기
+									newParagraph.getHeader().setParaShapeId(ph.getParaShapeId());
+									newParagraph.getHeader().setStyleId(ph.getStyleId());
 									
 									newParagraph.getText().addString(signTextArray[1]);
 									
@@ -5867,405 +5876,476 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String docNO = "";
 		String retNum = "";
 		String tempHwp = "";
-
-		// 부재자 설정인 경우 proxySign = '代'
-		if (!userID.equals(orgUID)) {
-			proxySign = messageSource.getMessage("ezApproval.t498", userInfo.getLocale());
-		}
 		
-		String aprStateSign = getDocInfo(docID, "APR", "DOCSTATE", userInfo, companyID, userInfo.getTenantId(), "", "");
-		
-		Document aprXML2 = commonUtil.convertStringToDocument(aprStateSign);
-		aprStateSign = aprXML2.getElementsByTagName("DOCSTATE").item(0).getTextContent();
-		
-		// aprState : 도착(011), 지정(012)
-		if (aprStateSign.equals("011") || aprStateSign.equals("012")) {
-			String receiveRet = getReceivedDocInfo(userInfo, docID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset());
-			Document aprXML = commonUtil.convertStringToDocument(receiveRet);
-			
-			receiveDept = aprXML.getElementsByTagName("RECEIPTDEPTID").item(0).getTextContent();
-			fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
-		} else {
-			/**
-			 * 진행되어야할 문서 (APRSTATE 002 : 진행 , 005 : 보류)의 정보 추출
-			 * -> 문서 정보, 첨부 정보, 결재선 정보
-			 * */
-			String approveRet = getApproveDocInfo(userInfo, docID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset(), mode, "");
-			Document aprXML = commonUtil.convertStringToDocument(approveRet);
-			
-			drafterDept = aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
-			fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
-		}
-		
-		formURL = realPath + fileForder1;
-		
-		//한글파일 리더
-		HWPFile hwpFile = HWPReader.fromFile(formURL);
-		
-		//DOCSTATE : 011(수신)
-		if (aprStateSign.equals("011")) {
-			signAdd = "1";
-		} else {
-			signAdd = "";
-		}
-		
-		String signImage = "";
-		String propList = "extensionAttribute3;title;title2;displayName;displayName2;department;description;description2;extensionAttribute14";
-		String results = ezOrganService.getPropertyList(userID, propList, strLang, userInfo.getTenantId());
-		logger.debug("<<<results : " + results);
-		Document xmlDoc = commonUtil.convertStringToDocument(results);
-		
-		signImage = xmlDoc.getElementsByTagName("EXTENSIONATTRIBUTE3").item(0).getTextContent();
-		pTitle = xmlDoc.getElementsByTagName("TITLE").item(0).getTextContent();
-		displayName = xmlDoc.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
-		displayName2 = xmlDoc.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
-		department = xmlDoc.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
-		description = xmlDoc.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
-		description2 = xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
-		
-		results = ezOrganService.getPropertyList(orgUID, propList, strLang, userInfo.getTenantId());
-		logger.debug("<<<results : " + results);
-		xmlDoc = commonUtil.convertStringToDocument(results);
-		
-		orgName = xmlDoc.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
-		orgName2 = xmlDoc.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
-		orgDeptID = xmlDoc.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
-		
-		String chkFlag = "CHECK";
-		
-		if (pTitle.equals("")) {
-			pTitle = "&nbsp;";
-		}
-		
-		String[] signTextArray = null;
-		
-		if (!signImage.equals("")) {
-			signTextArray = signImage.split(";");
-		} else {
-			signTextArray = new String[1];
-			signTextArray[0] = "defaultsign.gif";
-		}
-		
-		int signCnt = Integer.parseInt(signNum);
-		int pCnt = getDocAprCnt(docID, companyID, userInfo.getTenantId());
-		int refResult = getDocInfoRef(docID, orgUID, aprState, companyID, approvalFlag, userInfo.getTenantId());
-		int habResult = getDocInfoHab(docID, orgUID, aprState, companyID, approvalFlag, userInfo.getTenantId());
-		
-		logger.debug("pCnt = " + pCnt);
-		logger.debug("refResult = " + refResult);
-		logger.debug("habResult = " + habResult);
-		
-		String strSign = "";
-		String strSeumyungDate = "";
-		
-		String lineResult = getAprLineInfo(docID, orgUID, formID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset(), "DRAFT", "", "", "");
-		
-		Document lineXml = commonUtil.convertStringToDocument(lineResult);
-		NodeList docListNode = lineXml.getElementsByTagName("ROW");
-
-		if (docListNode.getLength() > 0) {
-			logger.debug("docListNode.getLength = " + docListNode.getLength());
-			
-			totalLineSN = docListNode.getLength();
-			
-			for (int k = totalLineSN - Integer.parseInt(signNum); k < totalLineSN; k++) {
-				String pType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent(); //APRTYPE
-				// 007(참조), 008(개인순차협조), 009(개인병렬협조), 011(부서순차협조), 012(부서병렬협조)
-				if (pType.equals("007") || pType.equals("008") || pType.equals("009") || pType.equals("011") || pType.equals("012")) {
-					signNum =  String.valueOf(Integer.parseInt(signNum) - 1);
-				}
+		try {
+			// 부재자 설정인 경우 proxySign = '代'
+			if (!userID.equals(orgUID)) {
+				proxySign = messageSource.getMessage("ezApproval.t498", userInfo.getLocale());
 			}
 			
-			for (int k = 0; k < docListNode.getLength(); k++) {
-				String pType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
-				// 003(결재안함), 007(참조), 008(개인순차협조), 009(개인병렬협조), 011(부서순차협조), 012(부서병렬협조)
-				if (pType.equals("003") || pType.equals("007") || pType.equals("008") || pType.equals("009") || pType.equals("011") || pType.equals("012")) {
-					totalLineSN = totalLineSN - 1;
-				}
-			}
+			String aprStateSign = getDocInfo(docID, "APR", "DOCSTATE", userInfo, companyID, userInfo.getTenantId(), "", "");
 			
-			for (int k = docListNode.getLength() -1; k >= 0; k--) {
-				currentAprType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
+			Document aprXML2 = commonUtil.convertStringToDocument(aprStateSign);
+			aprStateSign = aprXML2.getElementsByTagName("DOCSTATE").item(0).getTextContent();
+			
+			// aprState : 도착(011), 지정(012)
+			if (aprStateSign.equals("011") || aprStateSign.equals("012")) {
+				String receiveRet = getReceivedDocInfo(userInfo, docID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset());
+				Document aprXML = commonUtil.convertStringToDocument(receiveRet);
 				
-				switch (currentAprType) {
-                case "001": //"결재";
-                    lastAprLineSN = lastAprLineSN + 1;
-                    break;
-
-                case "019": //"검토";
-                    lastAprLineSN = lastAprLineSN + 1;
-                    break;
-
-                case "004": //"전결";
-                    lastAprLineSN = lastAprLineSN + 1;
-                    break;
-
-                case "003": //"결재안함";
-                    lastAprLineSN = lastAprLineSN + 1;
-                    break;
-                }
-			}
-		}
-		
-		logger.debug("totalLineSN = " + totalLineSN);
-		logger.debug("lastAprLineSN = " + lastAprLineSN);
-		
-		int LSignNum = 0;
-		int lastSignNum = 0;
-		
-		if (!signAdd.equals("")) {
-			for (int k = 1; k < 10; k++) {
-				if (!findHwpField(signAdd + "sign" + k, hwpFile)) {
-					LSignNum = k - 1;
-					lastSignNum = LSignNum;
-					break;
-				}
-			}
-		} else {
-			for (int k = 1; k < 10; k++) {
-				if (!findHwpField("id=\"sign" + k + "\"", hwpFile)) {
-					LSignNum = k - 1;
-					lastSignNum = LSignNum;
-					break;
-				}
-			}
-		}
-		
-		logger.debug("LSignNum = " + LSignNum);
-		logger.debug("lastSignNum = " + lastSignNum);
-		
-		if (result.equals("A")) { // "A"pprove 승인
-			docState = "003";
-			String tempDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
-			
-			if (approvalFlag.equals("S")) {
-				String lastCnt = tempDate.substring(5, 7) + "." + tempDate.substring(8, 10);
+				receiveDept = aprXML.getElementsByTagName("RECEIPTDEPTID").item(0).getTextContent();
+				fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
+			} else {
+				/**
+				 * 진행되어야할 문서 (APRSTATE 002 : 진행 , 005 : 보류)의 정보 추출
+				 * -> 문서 정보, 첨부 정보, 결재선 정보
+				 * */
+				String approveRet = getApproveDocInfo(userInfo, docID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset(), mode, "");
+				Document aprXML = commonUtil.convertStringToDocument(approveRet);
 				
-				if (aprType.equals("001")) {
-					if (refResult > 0) {
-						//분석해야함
-						int tmps = signCnt - refResult;
-						
-						if (totalLineSN == tmps) {
-							setHwpText(signAdd + "sign" + lastSignNum, proxySign + displayName, hwpFile);
-							
-							if (findHwpField(signAdd + "seumyungdate" + lastSignNum, hwpFile)) {
-								setHwpText(signAdd + "seumyungdate" + lastSignNum, lastCnt, hwpFile);
-							}
-						} else {
-							strSign = signAdd + "sign" + tmps;
-							strSeumyungDate = signAdd + "seumyungdate" + tmps;
-							
-							setHwpText(strSign, proxySign + displayName, hwpFile);
-							
-							if (findHwpField(strSeumyungDate, hwpFile)) {
-								setHwpText(strSeumyungDate, lastCnt, hwpFile);
-							}
-						}
-					} else {
-						int tmps = signCnt - refResult;
-						
-						if (totalLineSN == tmps) {
-							strSign = signAdd + "sign" + lastSignNum;
-							strSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
-							
-							setHwpText(strSign, proxySign + displayName, hwpFile);
-							
-							if (findHwpField(strSeumyungDate, hwpFile)) {	
-								setHwpText(strSeumyungDate, lastCnt, hwpFile);
-							}
-						} else {
-							strSign = signAdd + "sign" + tmps;
-							strSeumyungDate = signAdd + "seumyungdate" + tmps;
-							
-							setHwpText(strSign, proxySign + displayName, hwpFile);
-							
-							if (findHwpField(strSeumyungDate, hwpFile)) {	
-								setHwpText(strSeumyungDate, lastCnt, hwpFile);
-							}
-						}
-					}
-					
-					signText = proxySign + displayName;
-				} else if (aprType.equals("008") || aprType.equals("009")) {
-					int tmps = signCnt - habResult;
-					String habSign = signAdd + "habyuisign" + tmps;
-					String habSem = signAdd + "habyuidate" + tmps;
-					
-					signText = proxySign + displayName;
-					
-					setHwpText(habSign, signText, hwpFile);
-					setHwpText(habSem, signText, hwpFile);
-				} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
-					String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
-					
-					if (junGyulFlag.equals("1")) {
-						int tmps = signCnt - refResult;
-						String tempSign = signAdd + "sign" + lastSignNum;
-						String tempSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
-						
-						for (int k = tmps; k < lastAprLineSN; k++) {
-							setHwpText(signAdd + "sign" + k, messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), hwpFile);
-						}
-						
-						setHwpText(tempSign, proxySign + displayName, hwpFile);
-						setHwpText(tempSeumyungDate, lastCnt, hwpFile);
-						
-						signText = proxySign + displayName;
-					} else if (junGyulFlag.equals("4")) {
-						int tmps = signCnt - refResult;
-						String tempSeumyungDate = signAdd + "seumyungdate" + tmps;
-						
-						setHwpText(signAdd + "sign" + tmps, proxySign + displayName, hwpFile);
-						setHwpText(tempSeumyungDate, lastCnt, hwpFile);
-						
-						signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + commonUtil.CRLF + proxySign + displayName;
-					}
-					//TODO: junGyulFlag 2,3 인 경우 전결 일괄결재 처리
-				}
-			} else { // 전자결재 G
-				if (aprType.equals("016")) { // 대결
-					int tmps = signCnt - refResult;
-					String tempSign = signAdd + "sign" + tmps;
-					String[] signAry = {messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), proxySign + displayName};
-					
-					setHwpText(hwpFile, tempSign, signAry);
-					
-					int jeonKyul = getDocInfoJeonKyul(docID, orgUID, aprState, companyID, userInfo.getTenantId());
-					
-					if (jeonKyul > 0) {
-						strSign = "sign" + (tmps + 1);
-						signAry[1] = displayName;
-						
-						setHwpText(hwpFile, strSign, signAry);
-					}
-					
-					signText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
-				} else if (aprType.equals("001") || aprType.equals("019")) { // 결재 || 검토
-					String lastCnt = "";
-
-					if (totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("001")) {
-						lastCnt = tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10);
-					}
-					
-					String[] signAry = {lastCnt, proxySign + displayName};
-					
-					if (refResult > 0) {
-						int tmps = signCnt - refResult;
-						strSign = signAdd + "sign" + tmps;
-						
-						if (lastCnt.equals("")) {
-							setHwpText(strSign, proxySign + displayName, hwpFile);
-						} else {
-							setHwpText(hwpFile, strSign, signAry);
-						}
-					} else {
-						int tmps = signCnt - refResult;
-						strSign = signAdd + "sign" + tmps;
-						
-						if (lastCnt.equals("")) {
-							setHwpText(strSign, proxySign + displayName, hwpFile);
-						} else {
-							setHwpText(hwpFile, strSign, signAry);
-						}
-					}
-					
-					signText = lastCnt + proxySign + displayName;
-				} else if (aprType.equals("008") || aprType.equals("009")) { // 개인순차협조 || 개인병렬협조
-					int tmps = signCnt - habResult;
-					String habSign = signAdd + "habyuisign" + tmps;
-					String habSem = signAdd + "habyuidate" + tmps;
-					
-					signText = proxySign + displayName;
-					
-					String[] signAry = {tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), signText};
-					
-					setHwpText(hwpFile, habSign, signAry);
-					setHwpText(habSem, tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
-				} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
-					int tmps = signCnt - refResult;
-					String tempSign = signAdd + "sign" + tmps;
-					String[] signAry = {messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), proxySign + displayName};
-					
-					setHwpText(hwpFile, tempSign, signAry);
-					
-					signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
-				} else if (aprType.equals("015")) { // 후열
-					gongRamUpdate(docID, userID, companyID, strLang, userInfo.getTenantId());
-					
-					return "001";
-				}
+				drafterDept = aprXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
+				fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
 			}
 			
-			String tmpYear = getDocInfoDState(docID, "STARTDATE", companyID, userInfo.getTenantId());
+			formURL = realPath + fileForder1;
 			
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Calendar cal = Calendar.getInstance();
+			//한글파일 리더
+			HWPFile hwpFile = HWPReader.fromFile(formURL);
 			
-			cal.setTime(format.parse(tmpYear));
-			tmpYear = String.valueOf(cal.get(Calendar.YEAR));
-			
-			if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && !aprStateSign.equals("011")) {
-				if (aprStateSign.equals("012")) {
-					strDeptID = receiveDept;
-				} else {
-					strDeptID = drafterDept;
-				}
-				
-				String ret = getCabinetNum(strDeptID, "", companyID, userInfo.getTenantId(), userInfo.getOffset());
-				
-				logger.debug("serialNum = " + ret);
-				
-				docNumFlag = true;
-				
-				Document docXML = commonUtil.convertStringToDocument(ret);
-				cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
-				//0박아주는거 하면된다
-				if (!ret.equals("")) {
-					if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
-						if (!excuteInfoHwp("DOCNUM_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId())) {
-							return "Link ERROR";
-						}
-					}
-					
-					if (findHwpField("docnumber", hwpFile)) {
-						docNO = userInfo.getDeptName()+ "-" + createDocNO(cabinetSN , docNumZeroCnt);
-						setHwpText("docnumber", docNO, hwpFile);
-					}
-					
-					if (findHwpField("enforcedate", hwpFile)) {
-						setHwpText("enforcedate", commonUtil.getTodayUTCTime("yyyy").replace("-", "."), hwpFile);
-					}
-					
-					
-					retNum = getNDigitNum(cabinetSN, 6);
-					
-					if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
-						if (!excuteInfoHwp("DOCNUM_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId())) {
-							return "Link ERROR";
-						}
-					}
-				}
-			}
-			
-			tempHwp = new File(formURL).getParentFile() + commonUtil.separator + docID + "_backup.hwp";
-			FileUtils.copyFile(new File(formURL), new File(tempHwp));
-			
+			//DOCSTATE : 011(수신)
 			if (aprStateSign.equals("011")) {
-				if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
-					if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
-						linkCheck = excuteInfoHwp("LAST_SIGN_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+				signAdd = "1";
+			} else {
+				signAdd = "";
+			}
+			
+			String signImage = "";
+			String propList = "extensionAttribute3;title;title2;displayName;displayName2;department;description;description2;extensionAttribute14";
+			String results = ezOrganService.getPropertyList(userID, propList, strLang, userInfo.getTenantId());
+			logger.debug("<<<results : " + results);
+			Document xmlDoc = commonUtil.convertStringToDocument(results);
+			
+			signImage = xmlDoc.getElementsByTagName("EXTENSIONATTRIBUTE3").item(0).getTextContent();
+			pTitle = xmlDoc.getElementsByTagName("TITLE").item(0).getTextContent();
+			displayName = xmlDoc.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+			displayName2 = xmlDoc.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
+			department = xmlDoc.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
+			description = xmlDoc.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
+			description2 = xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
+			
+			results = ezOrganService.getPropertyList(orgUID, propList, strLang, userInfo.getTenantId());
+			logger.debug("<<<results : " + results);
+			xmlDoc = commonUtil.convertStringToDocument(results);
+			
+			orgName = xmlDoc.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+			orgName2 = xmlDoc.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
+			orgDeptID = xmlDoc.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
+			
+			String chkFlag = "CHECK";
+			
+			if (pTitle.equals("")) {
+				pTitle = "&nbsp;";
+			}
+			
+			String[] signTextArray = null;
+			
+			if (!signImage.equals("")) {
+				signTextArray = signImage.split(";");
+			} else {
+				signTextArray = new String[1];
+				signTextArray[0] = "defaultsign.gif";
+			}
+			
+			int signCnt = Integer.parseInt(signNum);
+			int pCnt = getDocAprCnt(docID, companyID, userInfo.getTenantId());
+			int refResult = getDocInfoRef(docID, orgUID, aprState, companyID, approvalFlag, userInfo.getTenantId());
+			int habResult = getDocInfoHab(docID, orgUID, aprState, companyID, approvalFlag, userInfo.getTenantId());
+			
+			logger.debug("pCnt = " + pCnt);
+			logger.debug("refResult = " + refResult);
+			logger.debug("habResult = " + habResult);
+			
+			String strSign = "";
+			String strSeumyungDate = "";
+			
+			String lineResult = getAprLineInfo(docID, orgUID, formID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset(), "DRAFT", "", "", "");
+			
+			Document lineXml = commonUtil.convertStringToDocument(lineResult);
+			NodeList docListNode = lineXml.getElementsByTagName("ROW");
+	
+			if (docListNode.getLength() > 0) {
+				logger.debug("docListNode.getLength = " + docListNode.getLength());
+				
+				totalLineSN = docListNode.getLength();
+				
+				for (int k = totalLineSN - Integer.parseInt(signNum); k < totalLineSN; k++) {
+					String pType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent(); //APRTYPE
+					// 007(참조), 008(개인순차협조), 009(개인병렬협조), 011(부서순차협조), 012(부서병렬협조)
+					if (pType.equals("007") || pType.equals("008") || pType.equals("009") || pType.equals("011") || pType.equals("012")) {
+						signNum =  String.valueOf(Integer.parseInt(signNum) - 1);
 					}
-				} else {
-					linkCheck = excuteInfoHwp("MIDDLE_SIGN_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+				}
+				
+				for (int k = 0; k < docListNode.getLength(); k++) {
+					String pType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
+					// 003(결재안함), 007(참조), 008(개인순차협조), 009(개인병렬협조), 011(부서순차협조), 012(부서병렬협조)
+					if (pType.equals("003") || pType.equals("007") || pType.equals("008") || pType.equals("009") || pType.equals("011") || pType.equals("012")) {
+						totalLineSN = totalLineSN - 1;
+					}
+				}
+				
+				for (int k = docListNode.getLength() -1; k >= 0; k--) {
+					currentAprType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
+					
+					switch (currentAprType) {
+	                case "001": //"결재";
+	                    lastAprLineSN = lastAprLineSN + 1;
+	                    break;
+	
+	                case "019": //"검토";
+	                    lastAprLineSN = lastAprLineSN + 1;
+	                    break;
+	
+	                case "004": //"전결";
+	                    lastAprLineSN = lastAprLineSN + 1;
+	                    break;
+	
+	                case "003": //"결재안함";
+	                    lastAprLineSN = lastAprLineSN + 1;
+	                    break;
+	                }
+				}
+			}
+			
+			logger.debug("totalLineSN = " + totalLineSN);
+			logger.debug("lastAprLineSN = " + lastAprLineSN);
+			
+			int LSignNum = 0;
+			int lastSignNum = 0;
+			
+			if (!signAdd.equals("")) {
+				for (int k = 1; k < 10; k++) {
+					if (!findHwpField(signAdd + "sign" + k, hwpFile)) {
+						LSignNum = k - 1;
+						lastSignNum = LSignNum;
+						break;
+					}
 				}
 			} else {
-				if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
-					if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
-						linkCheck = excuteInfoHwp("LAST_SIGN_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+				for (int k = 1; k < 10; k++) {
+					if (!findHwpField("id=\"sign" + k + "\"", hwpFile)) {
+						LSignNum = k - 1;
+						lastSignNum = LSignNum;
+						break;
+					}
+				}
+			}
+			
+			logger.debug("LSignNum = " + LSignNum);
+			logger.debug("lastSignNum = " + lastSignNum);
+			
+			if (result.equals("A")) { // "A"pprove 승인
+				docState = "003";
+				String tempDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+				
+				if (approvalFlag.equals("S")) {
+					String lastCnt = tempDate.substring(5, 7) + "." + tempDate.substring(8, 10);
+					
+					if (aprType.equals("001")) {
+						if (refResult > 0) {
+							//분석해야함
+							int tmps = signCnt - refResult;
+							
+							if (totalLineSN == tmps) {
+								setHwpText(signAdd + "sign" + lastSignNum, proxySign + displayName, hwpFile);
+								
+								if (findHwpField(signAdd + "seumyungdate" + lastSignNum, hwpFile)) {
+									setHwpText(signAdd + "seumyungdate" + lastSignNum, lastCnt, hwpFile);
+								}
+							} else {
+								strSign = signAdd + "sign" + tmps;
+								strSeumyungDate = signAdd + "seumyungdate" + tmps;
+								
+								setHwpText(strSign, proxySign + displayName, hwpFile);
+								
+								if (findHwpField(strSeumyungDate, hwpFile)) {
+									setHwpText(strSeumyungDate, lastCnt, hwpFile);
+								}
+							}
+						} else {
+							int tmps = signCnt - refResult;
+							
+							if (totalLineSN == tmps) {
+								strSign = signAdd + "sign" + lastSignNum;
+								strSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
+								
+								setHwpText(strSign, proxySign + displayName, hwpFile);
+								
+								if (findHwpField(strSeumyungDate, hwpFile)) {	
+									setHwpText(strSeumyungDate, lastCnt, hwpFile);
+								}
+							} else {
+								strSign = signAdd + "sign" + tmps;
+								strSeumyungDate = signAdd + "seumyungdate" + tmps;
+								
+								setHwpText(strSign, proxySign + displayName, hwpFile);
+								
+								if (findHwpField(strSeumyungDate, hwpFile)) {	
+									setHwpText(strSeumyungDate, lastCnt, hwpFile);
+								}
+							}
+						}
+						
+						signText = proxySign + displayName;
+					} else if (aprType.equals("008") || aprType.equals("009")) {
+						int tmps = signCnt - habResult;
+						String habSign = signAdd + "habyuisign" + tmps;
+						String habSem = signAdd + "habyuidate" + tmps;
+						
+						signText = proxySign + displayName;
+						
+						setHwpText(habSign, signText, hwpFile);
+						setHwpText(habSem, signText, hwpFile);
+					} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
+						String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
+						
+						if (junGyulFlag.equals("1")) {
+							int tmps = signCnt - refResult;
+							String tempSign = signAdd + "sign" + lastSignNum;
+							String tempSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
+							
+							for (int k = tmps; k < lastAprLineSN; k++) {
+								setHwpText(signAdd + "sign" + k, messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), hwpFile);
+							}
+							
+							setHwpText(tempSign, proxySign + displayName, hwpFile);
+							setHwpText(tempSeumyungDate, lastCnt, hwpFile);
+							
+							signText = proxySign + displayName;
+						} else if (junGyulFlag.equals("4")) {
+							int tmps = signCnt - refResult;
+							String tempSeumyungDate = signAdd + "seumyungdate" + tmps;
+							
+							setHwpText(signAdd + "sign" + tmps, proxySign + displayName, hwpFile);
+							setHwpText(tempSeumyungDate, lastCnt, hwpFile);
+							
+							signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + commonUtil.CRLF + proxySign + displayName;
+						}
+						//TODO: junGyulFlag 2,3 인 경우 전결 일괄결재 처리
+					}
+				} else { // 전자결재 G
+					if (aprType.equals("016")) { // 대결
+						int tmps = signCnt - refResult;
+						String tempSign = signAdd + "sign" + tmps;
+						String[] signAry = {messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), proxySign + displayName};
+						
+						setHwpText(hwpFile, tempSign, signAry);
+						
+						int jeonKyul = getDocInfoJeonKyul(docID, orgUID, aprState, companyID, userInfo.getTenantId());
+						
+						if (jeonKyul > 0) {
+							strSign = "sign" + (tmps + 1);
+							signAry[1] = displayName;
+							
+							setHwpText(hwpFile, strSign, signAry);
+						}
+						
+						signText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
+					} else if (aprType.equals("001") || aprType.equals("019")) { // 결재 || 검토
+						String lastCnt = "";
+	
+						if (totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("001")) {
+							lastCnt = tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10);
+						}
+						
+						String[] signAry = {lastCnt, proxySign + displayName};
+						
+						if (refResult > 0) {
+							int tmps = signCnt - refResult;
+							strSign = signAdd + "sign" + tmps;
+							
+							if (lastCnt.equals("")) {
+								setHwpText(strSign, proxySign + displayName, hwpFile);
+							} else {
+								setHwpText(hwpFile, strSign, signAry);
+							}
+						} else {
+							int tmps = signCnt - refResult;
+							strSign = signAdd + "sign" + tmps;
+							
+							if (lastCnt.equals("")) {
+								setHwpText(strSign, proxySign + displayName, hwpFile);
+							} else {
+								setHwpText(hwpFile, strSign, signAry);
+							}
+						}
+						
+						signText = lastCnt + proxySign + displayName;
+					} else if (aprType.equals("008") || aprType.equals("009")) { // 개인순차협조 || 개인병렬협조
+						int tmps = signCnt - habResult;
+						String habSign = signAdd + "habyuisign" + tmps;
+						String habSem = signAdd + "habyuidate" + tmps;
+						
+						signText = proxySign + displayName;
+						
+						String[] signAry = {tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), signText};
+						
+						setHwpText(hwpFile, habSign, signAry);
+						setHwpText(habSem, tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
+					} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
+						int tmps = signCnt - refResult;
+						String tempSign = signAdd + "sign" + tmps;
+						String[] signAry = {messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), proxySign + displayName};
+						
+						setHwpText(hwpFile, tempSign, signAry);
+						
+						signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
+					} else if (aprType.equals("015")) { // 후열
+						gongRamUpdate(docID, userID, companyID, strLang, userInfo.getTenantId());
+						
+						return "001";
+					}
+				}
+				
+				String tmpYear = getDocInfoDState(docID, "STARTDATE", companyID, userInfo.getTenantId());
+				
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Calendar cal = Calendar.getInstance();
+				
+				cal.setTime(format.parse(tmpYear));
+				tmpYear = String.valueOf(cal.get(Calendar.YEAR));
+				
+				if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && !aprStateSign.equals("011")) {
+					if (aprStateSign.equals("012")) {
+						strDeptID = receiveDept;
+					} else {
+						strDeptID = drafterDept;
+					}
+					
+					String ret = getCabinetNum(strDeptID, "", companyID, userInfo.getTenantId(), userInfo.getOffset());
+					
+					logger.debug("serialNum = " + ret);
+					
+					docNumFlag = true;
+					
+					Document docXML = commonUtil.convertStringToDocument(ret);
+					cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
+					//0박아주는거 하면된다
+					if (!ret.equals("")) {
+						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
+							if (!excuteInfoHwp("DOCNUM_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId())) {
+								return "Link ERROR";
+							}
+						}
+						
+						if (findHwpField("docnumber", hwpFile)) {
+							docNO = userInfo.getDeptName()+ "-" + createDocNO(cabinetSN , docNumZeroCnt);
+							setHwpText("docnumber", docNO, hwpFile);
+						}
+						
+						if (findHwpField("enforcedate", hwpFile)) {
+							setHwpText("enforcedate", commonUtil.getTodayUTCTime("yyyy").replace("-", "."), hwpFile);
+						}
+						
+						
+						retNum = getNDigitNum(cabinetSN, 6);
+						
+						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
+							if (!excuteInfoHwp("DOCNUM_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId())) {
+								return "Link ERROR";
+							}
+						}
+					}
+				}
+				
+				tempHwp = new File(formURL).getParentFile() + commonUtil.separator + docID + "_backup.hwp";
+				FileUtils.copyFile(new File(formURL), new File(tempHwp));
+				
+				if (aprStateSign.equals("011")) {
+					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
+						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
+							linkCheck = excuteInfoHwp("LAST_SIGN_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+						}
+					} else {
+						linkCheck = excuteInfoHwp("MIDDLE_SIGN_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
 					}
 				} else {
-					linkCheck = excuteInfoHwp("MIDDLE_SIGN_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
+						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
+							linkCheck = excuteInfoHwp("LAST_SIGN_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+						}
+					} else {
+						linkCheck = excuteInfoHwp("MIDDLE_SIGN_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+					}
+				}
+				
+				if (!linkCheck) {
+					if (docNumFlag) {
+						rollBackDocNumber(drafterDept, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
+					}
+				}
+				
+				HWPWriter.toFile(hwpFile, formURL);
+				hwpSaveFlag = true;
+			} else if (result.equals("B")) {
+				docState = "004";
+				
+				if (aprStateSign.equals("011")) {
+					linkCheck = excuteInfoHwp("BANSONG_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+				} else {
+					linkCheck = excuteInfoHwp("BANSONG_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+				}
+			} else if (result.equals("BR")) {
+				docState = "005";
+			}
+			
+			String result2 = updateHistoryForLine(docID, orgUID, displayName, displayName2, pTitle, pTitle, department, description, description2, chkFlag, companyID, userInfo.getTenantId());
+			
+			Document xmlResult = commonUtil.convertStringToDocument(result2);
+			
+			if (!xmlResult.getElementsByTagName("RESULT").item(0).getTextContent().equals("TRUE")) {
+				if (docNumFlag) {
+					rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
+				}
+				
+				return "ERROR";
+			}
+			
+			String docResult = getDocInfoSP(orgUID, docID, docNO, companyID, result, retNum, strLang, userID, orgDeptID, orgName, orgName2, userInfo.getTenantId());
+			
+			docResult = "<PARAMETER>" + docResult + "</PARAMETER>";
+			
+			if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && result.equals("A")) {
+				Document paramXML = commonUtil.convertStringToDocument(docResult);
+				String docNumCode = paramXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
+				
+				if (aprStateSign.equals("011")) {
+					paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent("");
+					paramXML.getElementsByTagName("ORGDOCNUMCODE").item(0).setTextContent("");
+				} else {
+					paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent(docNumCode + retNum);
+				}
+				
+				docResult = commonUtil.convertDocumentToString(paramXML);
+			}
+			
+			if (result.equals("A")) {
+				if (aprStateSign.equals("011")) {
+					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
+						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
+							linkCheck = excuteInfoHwp("LAST_SIGN_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+						}
+					} else {
+						linkCheck = excuteInfoHwp("MIDDLE_SIGN_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+					}
+				} else {
+					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
+						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
+							linkCheck = excuteInfoHwp("LAST_SIGN_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+						}
+					} else {
+						linkCheck = excuteInfoHwp("MIDDLE_SIGN_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+					}
 				}
 			}
 			
@@ -6273,162 +6353,57 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (docNumFlag) {
 					rollBackDocNumber(drafterDept, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
 				}
-			}
-			
-			HWPWriter.toFile(hwpFile, formURL);
-			hwpSaveFlag = true;
-		} else if (result.equals("B")) {
-			docState = "004";
-			
-			if (aprStateSign.equals("011")) {
-				linkCheck = excuteInfoHwp("BANSONG_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-			} else {
-				linkCheck = excuteInfoHwp("BANSONG_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-			}
-		} else if (result.equals("BR")) {
-			docState = "005";
-		}
-		
-		String result2 = updateHistoryForLine(docID, orgUID, displayName, displayName2, pTitle, pTitle, department, description, description2, chkFlag, companyID, userInfo.getTenantId());
-		
-		Document xmlResult = commonUtil.convertStringToDocument(result2);
-		
-		if (!xmlResult.getElementsByTagName("RESULT").item(0).getTextContent().equals("TRUE")) {
-			if (docNumFlag) {
-				rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
-			}
-			
-			return "ERROR";
-		}
-		
-		String docResult = getDocInfoSP(orgUID, docID, docNO, companyID, result, retNum, strLang, userID, orgDeptID, orgName, orgName2, userInfo.getTenantId());
-		
-		docResult = "<PARAMETER>" + docResult + "</PARAMETER>";
-		
-		if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && result.equals("A")) {
-			Document paramXML = commonUtil.convertStringToDocument(docResult);
-			String docNumCode = paramXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent();
-			
-			if (aprStateSign.equals("011")) {
-				paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent("");
-				paramXML.getElementsByTagName("ORGDOCNUMCODE").item(0).setTextContent("");
-			} else {
-				paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent(docNumCode + retNum);
-			}
-			
-			docResult = commonUtil.convertDocumentToString(paramXML);
-		}
-		
-		if (result.equals("A")) {
-			if (aprStateSign.equals("011")) {
-				if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
-					if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
-						linkCheck = excuteInfoHwp("LAST_SIGN_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-					}
-				} else {
-					linkCheck = excuteInfoHwp("MIDDLE_SIGN_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-				}
-			} else {
-				if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
-					if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
-						linkCheck = excuteInfoHwp("LAST_SIGN_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-					}
-				} else {
-					linkCheck = excuteInfoHwp("MIDDLE_SIGN_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-				}
-			}
-		}
-		
-		if (!linkCheck) {
-			if (docNumFlag) {
-				rollBackDocNumber(drafterDept, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
-			}
-			
-			if (hwpSaveFlag) {
-				rollBackHwp(formURL, tempHwp);
-			}
-		}
-		
-		Document tempXmlDom = commonUtil.convertStringToDocument(docResult);
-		
-		userInfo.setRealPath(realPath);
-		
-		String pDocResult = doProcess(docState, docID, orgUID, displayName, displayName2, realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), department, "", tempXmlDom, userID, companyID, strLang, userInfo);
-		
-		Document xmlResult2 = commonUtil.convertStringToDocument(pDocResult);
-		
-		if (!xmlResult2.getElementsByTagName("RESULT").item(0).getTextContent().equals("TRUE")) {
-			linkCheck = true;
-			
-			if (result.equals("A")) {
-				if (aprStateSign.equals("011")) {
-					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-						linkCheck = excuteInfoHwp("END_FAIL", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-					} else {
-						linkCheck = excuteInfoHwp("MIDDLE_END_FAIL", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-					}
-				} else {
-					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-						linkCheck = excuteInfoHwp("END_FAIL", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-					} else {
-						linkCheck = excuteInfoHwp("MIDDLE_END_FAIL", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-					}
-				}
-			} else if (result.equals("B")) {
-				if (aprStateSign.equals("011")) {
-					linkCheck = excuteInfoHwp("BANSONG_FAIL", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-				} else {
-					linkCheck = excuteInfoHwp("BANSONG_FAIL", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-				}
-			}
-			
-			if (!linkCheck) {
-				if (docNumFlag) {
-					rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
-				} 
 				
 				if (hwpSaveFlag) {
-					rollBackMHT(formURL, tempHwp);
+					rollBackHwp(formURL, tempHwp);
+				}
+			}
+			
+			Document tempXmlDom = commonUtil.convertStringToDocument(docResult);
+			
+			userInfo.setRealPath(realPath);
+			
+			String pDocResult = doProcess(docState, docID, orgUID, displayName, displayName2, realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), department, "", tempXmlDom, userID, companyID, strLang, userInfo);
+			
+			Document xmlResult2 = commonUtil.convertStringToDocument(pDocResult);
+			
+			if (!xmlResult2.getElementsByTagName("RESULT").item(0).getTextContent().equals("TRUE")) {
+				linkCheck = true;
+				
+				if (result.equals("A")) {
+					if (aprStateSign.equals("011")) {
+						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
+							linkCheck = excuteInfoHwp("END_FAIL", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+						} else {
+							linkCheck = excuteInfoHwp("MIDDLE_END_FAIL", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+						}
+					} else {
+						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
+							linkCheck = excuteInfoHwp("END_FAIL", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+						} else {
+							linkCheck = excuteInfoHwp("MIDDLE_END_FAIL", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+						}
+					}
+				} else if (result.equals("B")) {
+					if (aprStateSign.equals("011")) {
+						linkCheck = excuteInfoHwp("BANSONG_FAIL", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+					} else {
+						linkCheck = excuteInfoHwp("BANSONG_FAIL", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+					}
 				}
 				
-				return "Link ERROR";
-			}
-			
-			if (docNumFlag) {
-				rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
-			} 
-			
-			if (hwpSaveFlag) {
-				rollBackMHT(formURL, tempHwp);
-			}
-			
-			return "ERROR";
-		} else {
-			linkCheck = true;
-			
-			if (result.equals("A")) {
-				if (aprStateSign.equals("011")) {
-					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-						linkCheck = excuteInfoHwp("LAST_END_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-					} else {
-						linkCheck = excuteInfoHwp("MIDDLE_END_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+				if (!linkCheck) {
+					if (docNumFlag) {
+						rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
+					} 
+					
+					if (hwpSaveFlag) {
+						rollBackHwp(formURL, tempHwp);
 					}
-				} else {
-					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
-						linkCheck = excuteInfoHwp("LAST_END_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-					} else {
-						linkCheck = excuteInfoHwp("MIDDLE_END_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-					}
+					
+					return "Link ERROR";
 				}
-			} else if (result.equals("B")) {
-				if (aprStateSign.equals("011")) {
-					linkCheck = excuteInfoHwp("BANSONG_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-				} else {
-					linkCheck = excuteInfoHwp("BANSONG_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
-				}
-			}
-			
-			if (!linkCheck) {
+				
 				if (docNumFlag) {
 					rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
 				} 
@@ -6437,12 +6412,60 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					rollBackHwp(formURL, tempHwp);
 				}
 				
-				return "Link ERROR";
+				return "ERROR";
+			} else {
+				linkCheck = true;
+				
+				if (result.equals("A")) {
+					if (aprStateSign.equals("011")) {
+						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
+							linkCheck = excuteInfoHwp("LAST_END_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+						} else {
+							linkCheck = excuteInfoHwp("MIDDLE_END_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+						}
+					} else {
+						if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
+							linkCheck = excuteInfoHwp("LAST_END_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+						} else {
+							linkCheck = excuteInfoHwp("MIDDLE_END_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+						}
+					}
+				} else if (result.equals("B")) {
+					if (aprStateSign.equals("011")) {
+						linkCheck = excuteInfoHwp("BANSONG_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+					} else {
+						linkCheck = excuteInfoHwp("BANSONG_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId());
+					}
+				}
+				
+				if (!linkCheck) {
+					if (docNumFlag) {
+						rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
+					} 
+					
+					if (hwpSaveFlag) {
+						rollBackHwp(formURL, tempHwp);
+					}
+					
+					return "Link ERROR";
+				}
+				
+				logger.debug("createHwpFile ended");
+				
+				return "001";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			if (docNumFlag) {
+				rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
+			} 
+			
+			if (hwpSaveFlag) {
+				rollBackHwp(formURL, tempHwp);
 			}
 			
-			logger.debug("createHwpFile ended");
-			
-			return "001";
+			return "ERROR";
 		}
 	}
 
