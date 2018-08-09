@@ -1187,7 +1187,7 @@
 		                }
 		            }
 		        } else {
-		            alert("<spring:message code='ezApprovalG.t478'/>");
+		            alert("<spring:message code='ezApprovalG.t784'/>");
 		        }
 		    }
 		
