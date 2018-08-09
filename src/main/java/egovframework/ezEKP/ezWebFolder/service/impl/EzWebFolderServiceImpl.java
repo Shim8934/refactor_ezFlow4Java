@@ -843,8 +843,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 		}
 		else {
-			String guid                     = UUID.randomUUID().toString();
-			String fileName                 = guid + ".zip";
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+			Date today = new Date();
+			String fileName                     = "webfolder_download_" + formatter.format(today) + ".zip";
 			ZipOutputStream zipOutputStream = null;
 			FileInputStream fileInputStream = null;
 			
