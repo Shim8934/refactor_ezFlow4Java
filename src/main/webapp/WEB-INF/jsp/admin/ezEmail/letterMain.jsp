@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -7,11 +8,11 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">	
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/FormCont.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>></script>
+	    <script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezApprovalG/TreeView.js")%>></script>
+		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezApprovalG/ListView_list.js")%>></script>
+		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezApprovalG/FormCont.js")%>></script>
+	    <script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>></script>
 	    <script type="text/javascript">
 	    	var Tab1_SelectID = "";
 	    	var companyID = "";
