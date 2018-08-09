@@ -178,15 +178,15 @@ public class EzPMSScheduler {
 					String content = "";
 					
 					if (nowDate.equals(endAlamDay)) {
-						subject += "[" + projectList.get(i).getProjectName() + egovMessageSource.getMessage("ezPMS.t326", locale) + projectList.get(i).getAlamMailStatus() + egovMessageSource.getMessage("ezPMS.t327", locale);
+						subject += egovMessageSource.getMessageExtend("ezPMS.t326", new Object[] {projectList.get(i).getProjectName(), projectList.get(i).getAlamMailStatus()}, locale);
 						
-						content += "<p>" + "[" + projectList.get(i).getProjectName() + egovMessageSource.getMessage("ezPMS.t326", locale) + projectList.get(i).getAlamMailStatus() + egovMessageSource.getMessage("ezPMS.t327", locale) + "</p>";
+						content += "<p>" + egovMessageSource.getMessageExtend("ezPMS.t326", new Object[] {projectList.get(i).getProjectName(), projectList.get(i).getAlamMailStatus()}, locale) + "</p>";
 					} else {
 						long restDueday = (endDateDay.getTime() - nowDate.getTime()) / (24 * 60 * 60 * 1000);
 						
-						subject += "[" + projectList.get(i).getProjectName() + egovMessageSource.getMessage("ezPMS.t326", locale) + restDueday + egovMessageSource.getMessage("ezPMS.t327", locale);
+						subject += egovMessageSource.getMessageExtend("ezPMS.t326", new Object[] {projectList.get(i).getProjectName(), restDueday}, locale);
 						
-						content += "<p>" + "[" + projectList.get(i).getProjectName() + egovMessageSource.getMessage("ezPMS.t326", locale) + restDueday + egovMessageSource.getMessage("ezPMS.t327", locale) + "</p>";
+						content += "<p>" + egovMessageSource.getMessageExtend("ezPMS.t326", new Object[] {projectList.get(i).getProjectName(), restDueday}, locale) + "</p>";
 					}
 					
 					content += "<p></p>";

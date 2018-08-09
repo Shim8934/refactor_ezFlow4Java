@@ -933,8 +933,8 @@
 		   						$('#workSpace').trigger('deleteFocused.gantt');
 			   					var pretaskName = $(".taskEditRow[taskid=" + pretaskFullId + "]").find("input[name='name']").val();
 			   					var taskName 	= $(".taskEditRow[taskid=" + taskFullId + "]").find("input[name='name']").val();
-			   					var str = "[" + replaceString(pretaskName) + "<spring:message code='ezPMS.t283' />" + replaceString(taskName) + "<spring:message code='ezPMS.t308' />";
-			   					addTaskLog(projectId, 3, groupId, taskId, str);
+								var logContent = "<spring:message code='ezPMS.t308' arguments='" + replaceString(pretaskName) + "," + replaceString(taskName) + "'/>";
+			   					addTaskLog(projectId, 3, groupId, taskId, logContent);
 			   					toastPopupShow(str);
 		   					} else {
 		   						$("g").removeClass("focused");
@@ -1445,7 +1445,7 @@
 					success : function(data) {
 // 						alert("<spring:message code='ezPMS.t280' />");
 						
-						var logContent = "[" + replaceString(curTask.name) + "<spring:message code='ezPMS.t317' /> " + curTask.progress + "%<spring:message code='ezPMS.t313'/> " + new Number(newProgress).toFixed(1) + "%<spring:message code='ezPMS.t314'/>"; 
+						var logContent = "<spring:message code='ezPMS.t317' arguments='" + replaceString(curTask.name) + "," + curTask.progress + "," + new Number(newProgress).toFixed(1) + "'/>"; 
 	   					addTaskLog(projectId, 2, groupId, taskId, logContent);
 	   					
 	   					// status값이 바뀌었을 때만 실행
