@@ -8,7 +8,7 @@ var CabinetShareItem = function() {
 	var userPopup    = null;
 	var sharePopup   = null;
 	var cabinetId    = null;
-	var userId       = null;
+	var ownId        = null;
 	
 	var userTable = new CabinetTable({
 		normal   : "bnkCabNormal2",
@@ -26,7 +26,7 @@ var CabinetShareItem = function() {
 	
 	function initEvents(cabId, uId) {
 		cabinetId               = cabId;
-		userId                  = uId;
+		ownId                   = uId;
 		document.onselectstart  = function () { return false;};
 		window.addEventListener("beforeunload", function(e) {closeAllPopUp();}, false);
 		
@@ -254,6 +254,7 @@ var CabinetShareItem = function() {
 		var userId        = trElmt.getAttribute("role");
 		var checkElmt     = selectedTable.querySelector("tr[role='" + userId + "'][userType='user']");
 		if (checkElmt) {if(mode) {alert(CabinetMessages.strExist);}; return;}
+		if (ownId == userId) {alert(CabinetMessages.strSelect5); return;}
 		
 		var userName      = trElmt.getAttribute("userName");
 		var deptName      = trElmt.getAttribute("deptName");
@@ -265,6 +266,7 @@ var CabinetShareItem = function() {
 		var selectedTrList = listTableElmt.querySelectorAll("tr[class='bnkCabSelect2']");
 		
 		for (var i = 0, len = selectedTrList.length; i < len; i++) {
+			if (ownId ==  selectedTrList[i].getAttribute("role")) {continue;}
 			addUser(selectedTrList[i]);
 		}
 	}
