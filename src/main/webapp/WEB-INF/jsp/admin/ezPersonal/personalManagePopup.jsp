@@ -164,7 +164,12 @@
 		    }
 	
 		    function del_popup(popup_number) {
-		        if (!confirm(popup_number + "<spring:message code = 'ezPersonal.t159' />")) {
+		    	//2018-08-08  김보미 - rownumber추가
+		        /*if (!confirm(popup_number + "<spring:message code = 'ezPersonal.t159' />")) {
+		            return;
+		        }*/
+		        var row_number = $("tr[data1=" + popup_number + "] td:eq(0)").text();
+		        if (!confirm(row_number + "<spring:message code = 'ezPersonal.t159' />")) {
 		            return;
 		        }
 		        

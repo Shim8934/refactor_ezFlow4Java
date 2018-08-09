@@ -152,12 +152,13 @@
   <tr > 
     <td bgcolor="f7f7f7" height="23" ><spring:message code='ezApprovalG.t846'/></td>
     <td  id="tdCataTransFlag" width=170 bgcolor="ffffff">&nbsp;
-		 <c:if test="${cataTransFlag.indexOf('0') > 0}">
+		 <c:if test="${cataTransFlag == '0'}">
 			N
 		</c:if>
-		<c:if test="${cataTransFlag.indexOf('0') < 0}">
+		<c:if test="${cataTransFlag == '1'}">
 			Y
 		 </c:if>
+		 <c:if test="${cataTransFlag == ''}"> </c:if>
 	</td>
     <td bgcolor="f7f7f7" width="85" ><spring:message code='ezApprovalG.t847'/></td>
     <td  id="tdCataTransYear" bgcolor="ffffff">&nbsp;${cataTransYear}</td>
@@ -165,12 +166,13 @@
   <tr  > 
     <td bgcolor="f7f7f7" height="23" ><spring:message code='ezApprovalG.t848'/></td>
     <td  id="tdFileTransFlag" width=170 bgcolor="ffffff">&nbsp;
-		 <c:if test="${docTransFlag.indexOf('0') > 0}">
+		 <c:if test="${docTransFlag == '0'}">
 			N
-		  </c:if>
-		  <c:if test="${docTransFlag.indexOf('0') < 0}">
+		</c:if>
+		<c:if test="${docTransFlag == '1'}">
 			Y
-		  </c:if>
+		 </c:if>
+		 <c:if test="${docTransFlag == ''}"> </c:if>
 	</td>
     <td bgcolor="f7f7f7" ><spring:message code='ezApprovalG.t849'/></td>
     <td  id="tdFileTransYear" bgcolor="ffffff">&nbsp;${docTransYear}</td>

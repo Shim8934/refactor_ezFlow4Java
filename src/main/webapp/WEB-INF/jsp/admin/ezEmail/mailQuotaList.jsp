@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	
 	pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
@@ -10,9 +11,9 @@
 		<link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">	
 		<link rel="stylesheet" href="<spring:message code='main.e15' />" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>></script>
+		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>></script>
+		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>></script>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript">
 			var strLang1 = "<spring:message code='ezSystem.x0030'/>";

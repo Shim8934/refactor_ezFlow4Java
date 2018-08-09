@@ -722,7 +722,7 @@ function event_HeaderCheckBoxClick(obj) {
         }
         listContentArry = new Array();
     }
-    listEventCheckbox = true;
+    //listEventCheckbox = true;
 }
 function event_listMover(obj) {
     if (!obj.childNodes.item(0).childNodes.item(0).checked) {
