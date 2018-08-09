@@ -130,10 +130,16 @@
                 return isNum;
             }
             function valuePlus(target){
+            	if (target.value == "") {
+            		target.value = 0.0;
+            	}
             	var num = parseFloat(target.value) + parseFloat('1');
             	target.value = num.toFixed(1);
             }
 			function valueMinuse(target){
+            	if (target.value == "") {
+            		target.value = 0.0;
+            	}
 				var num = parseFloat(target.value) - parseFloat('1');
 				if (num >= 0) {
 	            	target.value = num.toFixed(1);
