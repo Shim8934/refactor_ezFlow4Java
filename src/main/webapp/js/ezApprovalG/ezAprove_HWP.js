@@ -1416,7 +1416,7 @@ function setRecevInfo(ret) {
                 }
             }
         } else {
-        	 precipent = strLangS68;
+        	 precipent = strLang92;
 
              if (getNodeText(dataNodes[3]) == "Y") {
                  precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
@@ -1449,6 +1449,7 @@ function setRecevInfo(ret) {
         }
     }
 }
+
 function UpdateDocHistory(pHtml) {
 	var xmlhttp2 = createXMLHttpRequest();
 	var xmlpara = createXmlDom();
