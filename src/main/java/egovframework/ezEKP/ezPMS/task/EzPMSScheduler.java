@@ -190,7 +190,7 @@ public class EzPMSScheduler {
 					}
 					
 					content += "<p></p>";
-					content += "<a href='#' target='' onclick='goProjectDetails(\"" + projectList.get(i).getProjectId() + "\")'>[" + projectList.get(i).getProjectName() + egovMessageSource.getMessage("ezPMS.t201", locale) + "</a><br/><br/>";
+					content += "<a href='#' target='' onclick='goProjectDetails(\"" + projectList.get(i).getProjectId() + "\")'>" + egovMessageSource.getMessageExtend("ezPMS.t201", new Object[] {projectList.get(i).getProjectName()}, locale) + "</a><br/><br/>";
 					content += "===================================================================<br/>";
 					content += "<p style='font-size:14px'><strong>[" + projectList.get(i).getProjectName() + "]</strong></p>";
 					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t250", locale) + " : " + (Math.round(projectList.get(i).getProgress()*10)/10.0) + "%</p>";

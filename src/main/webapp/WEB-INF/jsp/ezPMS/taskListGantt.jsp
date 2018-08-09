@@ -681,8 +681,11 @@
 	     				}
 	   				 	
 		   				saveAllSchedules();
-		   				toastPopupShow("[" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");				
-				   		addTaskLog(projectId, 2, groupId, taskId, "[" + replaceString(taskName) + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");
+		   				var logContent = "<spring:message code='ezPMS.t239' arguments='" + replaceString(taskName) + "," + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "'/>";
+		   				var toastText  = "<spring:message code='ezPMS.t240' arguments='" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "'/>";
+		   				
+		   				toastPopupShow(toastText);				
+				   		addTaskLog(projectId, 2, groupId, taskId, logContent);
 		   				setAllGanttItems();
 		   				return true;
 	   			  	} else {
@@ -731,8 +734,12 @@
 		   				}
 		   				
 		   				saveAllSchedules();
-	   					toastPopupShow("[" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");				
-			   			addTaskLog(projectId, 2, groupId, taskId, "[" + replaceString(taskName) + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");
+		   				
+		   				var logContent = "<spring:message code='ezPMS.t239' arguments='" + replaceString(taskName) + "," + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "'/>";
+		   				var toastText  = "<spring:message code='ezPMS.t240' arguments='" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "'/>";
+		   				
+		   				toastPopupShow(toastText);				
+				   		addTaskLog(projectId, 2, groupId, taskId, logContent);
 		   				setAllGanttItems();
 		   				return true;
 		   			  } else {

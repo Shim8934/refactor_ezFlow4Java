@@ -248,7 +248,7 @@
 						var groupId = deletedTR.attr("data-groupId");
 						var taskId = deletedTR.attr("data-taskId");
 						
-						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + title.trim() + "<spring:message code='ezPMS.t207' />");
+						// addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + title.trim() + "<spring:message code='ezPMS.t207' />");
 					}
 					
 					getFolderTree();

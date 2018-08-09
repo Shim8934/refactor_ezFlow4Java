@@ -72,7 +72,7 @@
 	        
 	        for (var i = 0; i < filelist.length; i++) {
 	            if (filelist[i].size / 1024 / 1024 > window.parent.AttachLimit) {
-	                alert("<spring:message code='ezPMS.t229' /> " + window.parent.AttachLimit + "MB" + "<spring:message code='ezPMS.t230' />");
+	                alert("<spring:message code='ezPMS.t229' arguments='" + window.parent.AttachLimit + "'/>");
 	                return;
 	            } else {
 	                file[filecnt + i] = filelist[i];

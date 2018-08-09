@@ -110,9 +110,10 @@
 						var content = selectedTR.children("td.content").text();
 						var taskName = selectedTR.children("td.taskName").text();
 						var groupId = selectedTR.attr("data-groupId");
-						var taskId = selectedTR.attr("data-taskId");
-												
-						addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + content.trim() + "<spring:message code='ezPMS.t225' />");
+						var taskId = selectedTR.attr("data-taskId");						
+						var logContent = "<spring:message code='ezPMS.t225' arguments='" + taskName.trim() + "," + content.trim() + "'/>";
+						
+						addTaskLog(projectId, 3, groupId, taskId, logContent);
 
 						if(typeof(getTaskTree) !== "undefined"){
 							getTaskTree();
@@ -172,8 +173,9 @@
 					var taskName = selectedTR.children("td.taskName").text();
 					var groupId = selectedTR.attr("data-groupId");
 					var taskId = selectedTR.attr("data-taskId");
-						
-					addTaskLog(projectId, 2, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + content.trim() + "<spring:message code='ezPMS.t226' />" + commentContent.trim() +  "<spring:message code='ezPMS.t227' />");
+					var logContent = "<spring:message code='ezPMS.t226' arguments='" + taskName.trim() + "," + content.trim() + "," + commentContent.trim() + "'/>";
+					
+					addTaskLog(projectId, 2, groupId, taskId, logContent);
 
 					if(typeof(getTaskTree) !== "undefined"){
 						getTaskTree();

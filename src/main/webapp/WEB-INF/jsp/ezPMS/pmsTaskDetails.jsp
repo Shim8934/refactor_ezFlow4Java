@@ -8,7 +8,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title><spring:message code='ezPMS.t256' /></title>
+<c:choose>
+	<c:when test="${target ne 'group'}">
+		<title><spring:message code='ezPMS.t256' /></title>
+	</c:when>
+	<c:otherwise>
+		<title><spring:message code='ezPMS.t257' /></title>
+	</c:otherwise>
+</c:choose>
+
 
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 <link rel="stylesheet" href="/css/Tab.css" type="text/css">

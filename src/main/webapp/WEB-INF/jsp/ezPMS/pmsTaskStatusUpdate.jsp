@@ -338,8 +338,8 @@
    					addTaskLog(projectId, 2, groupId, taskId, logContent);
 				}
 				
-				if (taskDetails.planStartDate != planStartDate || taskDetails.planEndDate != planEndDate) {
-					var logContent = "[" + taskName + "<spring:message code='ezPMS.t239' />" + planStartDate + " ~ " + planEndDate + "<spring:message code='ezPMS.t240' />";
+				if (taskDetails.planStartDate != planStartDate || taskDetails.planEndDate != planEndDate) {					
+					var logContent = "<spring:message code='ezPMS.t239' arguments='" + taskName + "," + planStartDate + " ~ " + planEndDate + "'/>";
 					addTaskLog(projectId, 2, groupId, taskId, logContent);
 				}
 				

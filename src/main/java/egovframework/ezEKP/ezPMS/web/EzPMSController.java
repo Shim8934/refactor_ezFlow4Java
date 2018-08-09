@@ -1361,16 +1361,13 @@ public class EzPMSController {
 			}
 
 			// 메일 제목
-			String subject = "[" + projectName + "] " + egovMessageSource.getMessage("ezPMS.t13", userInfo.getLocale())
-					+ " " + authName + egovMessageSource.getMessage("ezPMS.t200", userInfo.getLocale());
+			String subject = egovMessageSource.getMessageExtend("ezPMS.t200", new Object[] {projectName, authName} ,userInfo.getLocale());
 
 			// 메일 내용
-			String content = "<p>" + "[" + projectName + "] "
-					+ egovMessageSource.getMessage("ezPMS.t13", userInfo.getLocale()) + " " + authName
-					+ egovMessageSource.getMessage("ezPMS.t200", userInfo.getLocale()) + "</p>";
+			String content = "<p>" + egovMessageSource.getMessageExtend("ezPMS.t200", new Object[] {projectName, authName} ,userInfo.getLocale()) + "</p>";
 			content += "<p></p>";
-			content += "<a href='#' target='' onclick='goProjectDetails(\"" + projectId + "\")'>[" + projectName
-					+ egovMessageSource.getMessage("ezPMS.t201", userInfo.getLocale()) + "</a><br/><br/>";
+			content += "<a href='#' target='' onclick='goProjectDetails(\"" + projectId + "\")'>"
+					+ egovMessageSource.getMessageExtend("ezPMS.t201", new Object[] {projectName}, userInfo.getLocale()) + "</a><br/><br/>";
 			content += "===================================================================<br/>";
 			content += "<p style='font-size:14px'><strong>[" + projectName + "]</strong></p>";
 			content += "<p> - " + egovMessageSource.getMessage("ezPMS.t250", userInfo.getLocale()) + " : " + progress
