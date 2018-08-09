@@ -647,6 +647,7 @@
 		from
 			tbl_usermaster u join tbl_cb_share s on s.sharer_id = u.cn and s.tenant_id = u.tenant_id
 		where
+		<![CDATA[ s.sharer_id != #userId# and s.use_status = 1 and u.tenant_id = #tenantId# and ]]>
 			(
 				(s.shared_id = #userId# and s.shared_type = 2) or (s.shared_id in 
 					<iterate property="deptList" open="(" close=")" conjunction=",">
@@ -654,7 +655,7 @@
 					</iterate> and (s.shared_type = 0 or s.shared_type = 1)
 				)
 			)
-			and s.use_status = 1 and u.tenant_id = #tenantId#
+		group by u.cn, u.tenant_id
 		order by display_name desc
 	</select>
 	
@@ -671,13 +672,14 @@
 		from
 			tbl_cb_cabinet c1 join tbl_cb_share s on c1.cabinet_id = s.cabinet_id and s.sharer_id = #shareId# and s.tenant_id = c1.tenant_id and s.use_status = 1
 		where
+		<![CDATA[ s.sharer_id != #userId# and c1.creator_id = #shareId# and c1.tenant_id = #tenantId# and c1.use_status = 1 and ]]>
 			(
 				(s.shared_id = #userId# and s.shared_type = 2) or (s.shared_id in
 					<iterate property="deptList" open="(" close=")" conjunction=",">
 						#deptList[]#
 					</iterate> and (s.shared_type = 0 or s.shared_type = 1)
 				)
-			) and c1.creator_id = #shareId# and c1.tenant_id = #tenantId# and c1.use_status = 1
+			)
 	</select>
 	
 	<!--***********************************************************************************
