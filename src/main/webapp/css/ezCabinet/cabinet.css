@@ -407,6 +407,8 @@
 .cursor {cursor: pointer;}
 .icon_rbtn img {width: 16px; height: 16px;}
 .cabtxtPrint {padding: 8px; border: 1px solid #ddd; margin-top: 10px; overflow-x: hidden;}
+.cabtxtPrint .cabrltxt table, th, td {padding: auto; margin: auto;}
+.cabtxtPrint .cabrltxt p {margin-top: 0px !important; margin-bottom: 0px !important;}
 .cabwrapPrintoff, .cabwrapPrinton {pointer-events: none;}
 .cabwrapPrintoff {display: none;}
 .cabdatetd {width: 150px;}

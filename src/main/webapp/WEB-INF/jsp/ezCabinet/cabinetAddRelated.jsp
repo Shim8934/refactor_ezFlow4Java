@@ -207,7 +207,7 @@
 								
 								attachList.push({
 									filePath : javaURLDecode(params["filePath"]),
-									fileName : params["fileName"]
+									fileName : javaURLDecode(params["fileName"])
 								}); 
 								
 							}

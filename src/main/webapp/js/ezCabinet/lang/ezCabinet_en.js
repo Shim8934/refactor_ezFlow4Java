@@ -87,5 +87,6 @@ var CabinetMessages = {
 	strSchedule3 : "회사일정",
 	strSchedule4 : "나의 일정",
 	strTitleLen  : "제목은 150 글자 이내이어야 합니다.",
-	strSelect3   : "사진을 선택해주세요."
+	strSelect3   : "사진을 선택해주세요.",
+	strSelect4   : "선택된 파일이 없습니다."
 }

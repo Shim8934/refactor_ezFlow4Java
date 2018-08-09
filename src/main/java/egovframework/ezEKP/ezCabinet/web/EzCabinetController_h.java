@@ -87,7 +87,8 @@ public class EzCabinetController_h {
 			model.addAttribute("cabinet", cabinet);
 		}
 		
-		model.addAttribute("cabinetId",   cabinetId);
+		model.addAttribute("cabinetId", cabinetId);
+		model.addAttribute("userId"   , user.getId());
 		
 		logger.debug("jspGetShareCabinetPage ended");
 		return "ezCabinet/cabinetShare";

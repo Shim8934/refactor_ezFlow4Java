@@ -199,7 +199,7 @@ var CabinetFileHelper = function() {
 			if(useStatus && useStatus == 0) {alert(CabinetMessages.strNoRelated); return;}
 			
 			if(itemPopup) {itemPopup.close();}
-			itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "itemDetail", getOpenWindowfeature(600, 565));
+			itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "", getOpenWindowfeature(780, 750));
 		}
 		
 		function getOpenWindowfeature(popUpW, popUpH) {
@@ -434,14 +434,25 @@ var CabinetFileHelper = function() {
 		function afterChangeSuccessfully() {
 			alert(CabinetMessages.strModify);
 			var parentWd = window.opener;
-			if (parentWd && parentWd.CabinetItem) {parentWd.CabinetItem.reload();}
-			closeWindow();
+			if (parentWd) {
+				var currentWd = null;
+				while(!parentWd.CabinetItem) {currentWd = parentWd; parentWd = parentWd.opener;}
+				parentWd.CabinetItem.reload();
+				currentWd.close();
+			}
+			else {
+				closeWindow();
+			}
 		}
 		
 		function afterDeleteSuccessfully() {
 			alert(CabinetMessages.strDel);
-			var parentWd    = window.opener;
-			if (parentWd && parentWd.CabinetItem) {parentWd.CabinetItem.reload();}
+			var parentWd = window.opener;
+			if (parentWd) {
+				while(!parentWd.CabinetItem) {parentWd = parentWd.opener;}
+				parentWd.CabinetItem.reload();
+			}
+			
 			closeWindow();
 		}
 		
@@ -457,7 +468,7 @@ var CabinetFileHelper = function() {
 		
 		function getRelatedPopUp() {
 			if (rlWindow) {rlWindow.close();}
-			rlWindow = window.open("/ezCabinet/getRelatedFile.do?itemId=" + itemId + "&module=" + module, "relatedWd", getOpenWindowfeature(800, 600));
+			rlWindow = window.open("/ezCabinet/getRelatedFile.do?itemId=" + itemId + "&module=" + module, "", getOpenWindowfeature(800, 600));
 		}
 		
 		function getIframeContent() {return mailContent;}

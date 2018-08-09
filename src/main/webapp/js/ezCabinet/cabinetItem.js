@@ -311,6 +311,22 @@ var CabinetItem = function() {
 		searchCallBack();
 		var leftFrame = window.parent.frames["left"];
 		if (leftFrame) {leftFrame.CabUserLeft.draw();}
+		
+		//Check preview
+		if (crrPreMode != "off") {
+			removePreviewDiv();
+		}
+	}
+	
+	function removePreviewDiv() {
+		var divElmtId  = crrPreMode == "w" ? "previewHeaderW" : "previewHeaderH";
+		var prevHElmt  = document.getElementById(divElmtId);
+		var parentElmt = prevHElmt.parentElement;
+		while (parentElmt.childElementCount > 1) {
+			parentElmt.removeChild(parentElmt.lastElementChild);
+		}
+		
+		prevHElmt.innerHTML = "<span class='notSelected'>" + CabinetMessages.strSelect4 + "</span>";
 	}
 	/* Search Panel end*/
 	
@@ -448,7 +464,7 @@ var CabinetItem = function() {
 		switch(type) {
 			case 0 : result = "수동"      ; break;
 			case 1 : result = "메일"      ; break;
-			case 2 : result = "전자결재"   ; break;
+			case 2 : result = "전자결재"    ; break;
 			case 3 : result = "게시판"    ; break;
 			case 4 : result = "일정관리"   ; break;
 			case 5 : result = "업무관리"   ; break;

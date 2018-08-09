@@ -8,6 +8,7 @@ var CabinetShareItem = function() {
 	var userPopup    = null;
 	var sharePopup   = null;
 	var cabinetId    = null;
+	var userId       = null;
 	
 	var userTable = new CabinetTable({
 		normal   : "bnkCabNormal2",
@@ -23,8 +24,9 @@ var CabinetShareItem = function() {
 		dblclick : removeUser
 	});
 	
-	function initEvents(cabId) {
+	function initEvents(cabId, uId) {
 		cabinetId               = cabId;
+		userId                  = uId;
 		document.onselectstart  = function () { return false;};
 		window.addEventListener("beforeunload", function(e) {closeAllPopUp();}, false);
 		

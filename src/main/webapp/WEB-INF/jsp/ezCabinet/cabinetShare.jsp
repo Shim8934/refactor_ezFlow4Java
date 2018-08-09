@@ -161,6 +161,6 @@
 		<script type="text/javascript" src="/js/ezCabinet/cabinetNavi.js"           ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetTable.js"          ></script>
 		<script type="text/javascript" src="/js/ezCabinet/cabinetShare.js"          ></script>
-		<script type="text/javascript">CabinetShareItem.init("<c:out value='${cabinetId}'/>");</script>
+		<script type="text/javascript">CabinetShareItem.init("<c:out value='${cabinetId}'/>", "<c:out value='${userId}'/>");</script>
 	</body>
 </html>

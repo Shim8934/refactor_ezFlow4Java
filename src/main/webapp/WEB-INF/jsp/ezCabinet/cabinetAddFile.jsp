@@ -185,7 +185,7 @@
 				function readRelatedItem(spanElmt) {
 					var itemId = spanElmt.getAttribute("role");
 					if(itemPopup) {itemPopup.close();}
-					itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(600, 565));
+					itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(780, 750));
 				}
 				
 				function saveRelatedFiles(relatedFile) {relatedArr = JSON.parse(JSON.stringify(relatedFile)); showRelatedFiles();}

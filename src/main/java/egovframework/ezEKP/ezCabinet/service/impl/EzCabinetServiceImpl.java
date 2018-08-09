@@ -1253,6 +1253,11 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			}
 		}
 		
+		String startDateTmp = startDate + " 00:00:00";
+		String endDateTmp   = endDate + " 23:59:59";
+		startDate           = commonUtil.getDateStringInUTC(startDateTmp, offset, true);
+		endDate             = commonUtil.getDateStringInUTC(endDateTmp, offset, true);
+		
 		CabinetItemSearchVO searchVO = new CabinetItemSearchVO(Integer.parseInt(cabinetId), listCntSize, tenantId, userId, primary, offset, title, summary, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption);
 		List<CabinetItemVO> itemList = new ArrayList<>();
 		

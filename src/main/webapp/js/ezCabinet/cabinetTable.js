@@ -258,6 +258,8 @@ function CabinetTable(data) {
 			case 'capacity' : _renderFunction(_dataSource, _unselectClass, _tableDataElmt, getChecked, clickRow)     ; break;
 			case 'files'    : _renderFunction(_dataSource, _unselectClass, _tableElmt, clickRow)                     ; break;
 		}
+		
+		_lastSelectedRow = null;
 	}
 	
 	function cleanTable() {
