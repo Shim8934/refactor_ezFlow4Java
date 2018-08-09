@@ -4274,7 +4274,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getTaskSubCategoryAll(String deptCode, String companyID, String cateCode, String strType, String initFlag, int tenantID) throws Exception {
-		// TODO Auto-generated method stub
 		logger.debug("getTaskSubCategoryAll started");
 		
 		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, strType, tenantID);
@@ -4349,13 +4348,28 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE><![CDATA[" + getRecordTypeString(apprGTaskVOList.get(k).getRecTypeCode(), companyID, strType, tenantID) + "]]></VALUE>");
+			
+			if (apprGTaskVOList.get(k).getRecTypeCode() == null || apprGTaskVOList.get(k).getRecTypeCode().equals("")) {
+				resultXML.append("<VALUE>-</VALUE>");
+			} else {
+				resultXML.append("<VALUE><![CDATA[" + getRecordTypeString(apprGTaskVOList.get(k).getRecTypeCode(), companyID, strType, tenantID) + "]]></VALUE>");
+			}
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + apprGTaskVOList.get(k).getRegSerialNo() + "</VALUE>");
+			
+			if (apprGTaskVOList.get(k).getRegSerialNo() == null || apprGTaskVOList.get(k).getRegSerialNo().equals("")) {
+				resultXML.append("<VALUE>-</VALUE>");
+			} else {
+				resultXML.append("<VALUE>" + apprGTaskVOList.get(k).getRegSerialNo() + "</VALUE>");
+			}
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + apprGTaskVOList.get(k).getVolumeNo() + "</VALUE>");
+			
+			if (apprGTaskVOList.get(k).getVolumeNo() == null || apprGTaskVOList.get(k).getVolumeNo().equals("")) {
+				resultXML.append("<VALUE>-</VALUE>");
+			} else {
+				resultXML.append("<VALUE>" + apprGTaskVOList.get(k).getVolumeNo() + "</VALUE>");
+			}
 			resultXML.append("</CELL>");
 			resultXML.append("</ROW>");
         }
