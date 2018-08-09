@@ -191,6 +191,7 @@
 		
 		var startDateComp = new Date(planStartDate);
 		var endDateComp = new Date(planEndDate);
+		endDateComp.setHours(23, 59, 59, 999);
 		
 		var today = new Date();
 // 		var todayComp = new Date(today.getFullYear(), today.getMonth()-1, today.getDay());
@@ -203,13 +204,15 @@
 		  	alert("<spring:message code='ezPMS.t49' />");
 		  	return;
 		}
-		 
+		
 		//2. 종료일 < 현재일일 떄, 지연업무로 넘어갈 것이라는 confirm창 띄우기
 		if (endDateComp.getTime() < today.getTime() && nowStatus !== "L") {
 			var confCheck = confirm("<spring:message code='ezPMS.t93' />");
 			 
 			if (confCheck != true) {
 				 return;
+			} else {
+				status = "L";
 			}
 		}
 		

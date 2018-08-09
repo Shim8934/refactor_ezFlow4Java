@@ -459,7 +459,7 @@
 	   					if (result.checkPermission == "permitted") {
 							alert("<spring:message code='ezPMS.t242' />");
 							
-							var logContent = "[" + groupName + "]<spring:message code='ezPMS.t313' /> [" + taskName + "] " + "<spring:message code='ezPMS.t242' />";
+							var logContent = "[" + replaceString(groupName) + "]<spring:message code='ezPMS.t313' /> [" + replaceString(taskName) + "] " + "<spring:message code='ezPMS.t242' />";
 		   					addTaskLog(projectId, 3, groupId, null, logContent);
 		   					updateGroupRealStartEndDate(groupId);
 		   					$("#projectProgress", parent.document).text(result.projectProgress.toFixed(1) + '%');
@@ -540,7 +540,7 @@
 	   				success : function(data) {
 						alert("<spring:message code='ezPMS.t196' />");
 						
-						var logContent = "[" + upperGroupName + "]<spring:message code='ezPMS.t313' /> [" + groupName + "] " + "<spring:message code='ezPMS.t196' />";
+						var logContent = "[" + replaceString(upperGroupName) + "]<spring:message code='ezPMS.t313' /> [" + replaceString(groupName) + "] " + "<spring:message code='ezPMS.t196' />";
 	   					addTaskLog(projectId, 3, upperGroupId, null, logContent);
 	   					
 	   					location.reload();
@@ -682,7 +682,7 @@
 	   				 	
 		   				saveAllSchedules();
 		   				toastPopupShow("[" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");				
-				   		addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");
+				   		addTaskLog(projectId, 2, groupId, taskId, "[" + replaceString(taskName) + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");
 		   				setAllGanttItems();
 		   				return true;
 	   			  	} else {
@@ -732,7 +732,7 @@
 		   				
 		   				saveAllSchedules();
 	   					toastPopupShow("[" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");				
-			   			addTaskLog(projectId, 2, groupId, taskId, "[" + taskName + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");
+			   			addTaskLog(projectId, 2, groupId, taskId, "[" + replaceString(taskName) + "<spring:message code='ezPMS.t239' />" + dateToYYYYMMDD(new Date(task.start)) + " ~ " + dateToYYYYMMDD(new Date(task.end)) + "<spring:message code='ezPMS.t240' />");
 		   				setAllGanttItems();
 		   				return true;
 		   			  } else {
@@ -933,7 +933,7 @@
 		   						$('#workSpace').trigger('deleteFocused.gantt');
 			   					var pretaskName = $(".taskEditRow[taskid=" + pretaskFullId + "]").find("input[name='name']").val();
 			   					var taskName 	= $(".taskEditRow[taskid=" + taskFullId + "]").find("input[name='name']").val();
-			   					var str = "[" + pretaskName + "<spring:message code='ezPMS.t283' />" + taskName + "<spring:message code='ezPMS.t308' />";
+			   					var str = "[" + replaceString(pretaskName) + "<spring:message code='ezPMS.t283' />" + replaceString(taskName) + "<spring:message code='ezPMS.t308' />";
 			   					addTaskLog(projectId, 3, groupId, taskId, str);
 			   					toastPopupShow(str);
 		   					} else {
@@ -1044,7 +1044,7 @@
 	   				async : false,
 	   				success : function(result) {
 	   					if (result == "permitted") {
-	   						var logContent = "<spring:message code='ezPMS.t241' arguments='" + preTaskRowName + "," + taskName + "'/>";
+	   						var logContent = "<spring:message code='ezPMS.t241' arguments='" + replaceString(preTaskRowName) + "," + replaceString(taskName) + "'/>";
 	   						toastPopupShow(logContent);
 	   						addTaskLog(projectId, 1, groupId, taskIdParam, logContent);
 	   						returnVal = true;
@@ -1445,7 +1445,7 @@
 					success : function(data) {
 // 						alert("<spring:message code='ezPMS.t280' />");
 						
-						var logContent = "[" + curTask.name + "<spring:message code='ezPMS.t317' /> " + curTask.progress + "%<spring:message code='ezPMS.t313'/> " + new Number(newProgress).toFixed(1) + "%<spring:message code='ezPMS.t314'/>"; 
+						var logContent = "[" + replaceString(curTask.name) + "<spring:message code='ezPMS.t317' /> " + curTask.progress + "%<spring:message code='ezPMS.t313'/> " + new Number(newProgress).toFixed(1) + "%<spring:message code='ezPMS.t314'/>"; 
 	   					addTaskLog(projectId, 2, groupId, taskId, logContent);
 	   					
 	   					// status값이 바뀌었을 때만 실행
@@ -1825,13 +1825,13 @@
 						if(data !== "rejected"){
 							var logContent = ""; 
 		   					if(taskType == "p"){
-								logContent = "<spring:message code='ezPMS.t364' arguments='" + prevTaskName + "," + newTaskName +"'/>"; 
+								logContent = "<spring:message code='ezPMS.t364' arguments='" + replaceString(prevTaskName) + "," + replaceString(newTaskName) +"'/>"; 
 								addTaskLog(projectId, 2, projectGroupId, null, logContent);
 		   					} else if(taskType == "t") {
-								logContent = "<spring:message code='ezPMS.t351' arguments='" + prevTaskName + "," + newTaskName +"'/>"; 
+								logContent = "<spring:message code='ezPMS.t351' arguments='" + replaceString(prevTaskName) + "," + replaceString(newTaskName) +"'/>"; 
 								addTaskLog(projectId, 2, upperGroupId, taskId, logContent);
 		   					} else {
-								logContent = "<spring:message code='ezPMS.t363' arguments='" + prevTaskName + "," + newTaskName +"'/>"; 
+								logContent = "<spring:message code='ezPMS.t363' arguments='" + replaceString(prevTaskName) + "," + replaceString(newTaskName) +"'/>"; 
 		   						var groupId = taskId;
 								addTaskLog(projectId, 2, groupId, null, logContent);
 		   					}

@@ -3634,7 +3634,6 @@
 		SET	
 			GROUP_ID = #groupId#,
 			TASK_NAME = #taskName#,			
-			STATUS = #status#,
 			WEIGHT = #weight#,
 			OVERVIEW = #overview#,
 			MEMBER_COUNT = #memberCount#,

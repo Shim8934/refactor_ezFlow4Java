@@ -2368,17 +2368,17 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			// workingday 계산
 			Date startDate = sdf.parse(task.getPlanStartDate());
 			Date endDate = sdf.parse(task.getPlanEndDate());
-			Date createDate = sdf.parse(task.getWriteDate());
 
 			int calWorkingDays = getWorkingDays(startDate, endDate, companyId, tenantId, lang);
 
+			/* 업무 정보 수정 시에는 상태를 수정하지 않음
 			int createAndEndDateComp = createDate.compareTo(endDate);
 
 			if (createAndEndDateComp > 0) {
 				task.setStatus("L");
 			} else {
 				task.setStatus("W");
-			}
+			}*/
 
 			// 업무 총괄담당자 정보 불러오기
 			ProjectMemberVO headManagerInfo = getUserInfo(task.getHeadManagerId(), task.getTenantId(), "user");
