@@ -51,7 +51,7 @@
 		document.getElementById("sltView").addEventListener("click", function(e) {toggleOptionView(this);}, false);
 		document.getElementsByClassName("cabCloseBttn")[0].addEventListener("click", function(e) {toggleSearchPanel();}, false);
 		document.getElementById("listcount").addEventListener("change", function(e) {startSearch(1);}, false);
-		document.getElementById("companyList").addEventListener("change", function(e) {startSearch(1);}, false);
+		document.getElementById("companyList").addEventListener("change", function(e) {clearAllParamAndRefresh();}, false);
 		
 		//Set table view
 		cabinetTable = new CabinetTable({
@@ -427,6 +427,12 @@
 		var crrPage = cabinetNavi.get().currentPage;
 		crrPage     = crrPage ? crrPage : 1;
 		startSearch(crrPage);
+	}
+	
+	function clearAllParamAndRefresh() {
+		searchStr = "";
+		searchOpt = "";
+		startSearch(1);
 	}
 	
 	function getUserCapacities() {

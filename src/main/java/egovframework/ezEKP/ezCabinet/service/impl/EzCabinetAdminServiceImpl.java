@@ -77,7 +77,7 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 	}
 
 	@Override
-	public void changeUserCapacity(List<String> userList, String newValue, int type, String companyId, int tenantId) throws Exception {
+	public void changeUserCapacity(List<String> userList, int newValue, int type, String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("capacity",  newValue);
 		map.put("capatype",  type);

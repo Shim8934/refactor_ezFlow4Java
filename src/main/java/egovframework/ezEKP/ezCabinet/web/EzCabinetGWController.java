@@ -281,6 +281,7 @@ public class EzCabinetGWController {
 			if (type == 1) {
 				newCapacity = Integer.parseInt(newValue);
 			}
+			
 			cabinetAdminService.saveCompanyCapacity(type, newCapacity, companyId, tenantId);
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -379,8 +380,14 @@ public class EzCabinetGWController {
 		}
 		
 		try {
-			int tenantId = loginService.getTenantId(serverName);
-			cabinetAdminService.changeUserCapacity(userList, newValue, type, companyId, tenantId);
+			int tenantId    = loginService.getTenantId(serverName);
+			int newCapacity = 0;
+			
+			if (type == 1) {
+				newCapacity = Integer.parseInt(newValue);
+			}
+			
+			cabinetAdminService.changeUserCapacity(userList, newCapacity, type, companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
