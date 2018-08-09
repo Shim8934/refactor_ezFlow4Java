@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">	 
-		<title><spring:message code='ezApprovalG.pjj03'/></title>   
+		<title><spring:message code='ezApprovalG.pjj03'/></title>
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>        
         <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
@@ -16,9 +16,6 @@
 			    empty-cells: show;
 			    padding:0;margin:0;
 			    font-size:12px;
-			    /* 2018-07-30 김보미 - 폰트 수정 */
-			    /*font-family: Gulim, Meiryo UI;*/
-			    font-family: Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;
 		    }
 		    .printcontent th{
 			    white-space: nowrap;
@@ -52,15 +49,29 @@
 		     	min-height:362px; 
 		     	font-size:12px;
 		    }
+		    //
+		    /* 2018-08-09 김보미 - 테이블 중앙정렬 */
+			th { width:10%; text-align: center; }
+			td { width:40%; }
 		</style>	
 		<script>
+			//2018-08-09 김보미 - 일본어시에 폰트 다르게
+			var locale = "<c:out value = '${locale}' />";
+			 
 			function btnPrint_onClick() {
 		        window.self.focus();
 		        window.self.print();
 		    }
 	
 		    window.onload = function () {
-		        var checks = printAttach.getElementsByTagName("input");
+		    	//2018-08-09 김보미 - 일본어시에 폰트 다르게
+		    	var font = "Gulim, arial, verdana";
+		    	if (locale == "ja") {
+		    		font = "Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif";
+		    	}
+				document.getElementsByClassName("printcontent")[0].style.fontFamily = font;
+
+		    	var checks = printAttach.getElementsByTagName("input");
 		        for (var i = 0; i < checks.length; i++)
 		            checks.item(i).style.display = "none";
 	
@@ -80,24 +91,33 @@
 			<table class="printcontent" style="width:100%;">
 				<c:if test="${type == 'NEW'}">
 	          	<tr>
-	            	<th style="min-width:49px;"><spring:message code='ezSchedule.t363' /></th>
-	              	<td style="width:280px;">
+	          		<!-- 2018-08-09 김보미 - 테이블 중앙정렬 위해 width값 제거 -->
+<%-- 	            <th style="min-width:49px;"><spring:message code='ezSchedule.t363' /></th> --%>
+	            	<th><spring:message code='ezSchedule.t363' /></th>
+<!-- 	            <td style="width:280px;"> -->
+	              	<td>
 	                	<div id="printOwner" style="min-width:280px;">${printOwner}</div>
 	              	</td>
-	              	<th style="min-width:49px; white-space:nowrap"><spring:message code='ezSchedule.jjh06' /></th>
-	                <td  style="width:100%;">
+<%-- 	            <th style="min-width:49px; white-space:nowrap"><spring:message code='ezSchedule.jjh06' /></th> --%>
+	              	<th style="white-space:nowrap"><spring:message code='ezSchedule.jjh06' /></th>
+<!-- 	            <td  style="width:100%;"> -->
+	                <td>
 	                    <div id="printCreateDate" style="min-width:260px;">${printCreateDate}</div>                    
 	                </td>
 	          	</tr>
 	          	</c:if>
 	          	<c:if test="${type != 'NEW'}">
 	            <tr>
-	                <th style="min-width:49px; white-space:nowrap"><spring:message code='ezSchedule.jjh05' /></th>
-	                <td style="width:280px;">
+<%-- 	            <th style="min-width:49px; white-space:nowrap"><spring:message code='ezSchedule.jjh05' /></th> --%>
+	                <th style="white-space:nowrap"><spring:message code='ezSchedule.jjh05' /></th>
+<!-- 	            <td style="width:280px;"> -->
+	                <td>
 	                    <div id="printCreator" style="min-width:280px;">${printCreator}</div>
 	                </td>
-	                <th style="min-width:49px; white-space:nowrap"><spring:message code='ezSchedule.jjh06' /></th>
-	                <td style="width:100%;">
+<%-- 	            <th style="min-width:49px; white-space:nowrap"><spring:message code='ezSchedule.jjh06' /></th> --%>
+	                <th style="white-space:nowrap"><spring:message code='ezSchedule.jjh06' /></th>
+<!-- 	            <td style="width:100%;"> -->
+	                <td>
 	                    <div id="printCreateDate" style="min-width:260px;">${printCreateDate}</div>                    
 	                </td>
 	            </tr>
