@@ -1068,7 +1068,18 @@ var CabinetItem = function() {
 		var relatedList    = data.relatedFileList;
 		
 		generateApprovalTitle(itemInfo, dlElmt);
-		generateRelatedModuleContent(itemInfo, attachList, null, "apprv");
+		generateApprovalContent(attachList, itemInfo);
+	}
+	
+	function generateApprovalContent(attachList, itemInfo) {
+		var totalFiles       = attachList.length;
+		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
+		var ifameContent     = document.getElementById(iframeId);
+		ifameContent.src     = "/ezCabinet/getPreviewContent.do?module=mapprv";
+		documentCont         = {};
+		documentCont.content = itemInfo["contentPath"];
+		documentCont.size    = itemInfo["itemSize"];
+		documentCont.attach  = attachList;
 	}
 	
 	function generateApprovalTitle(itemInfo, dlElmt) {

@@ -33,7 +33,7 @@
 			</table>
 		</div>
 		
-		<div class="boardContDiv"><iframe id="approvalIframe" class="cabrlframe2"></iframe></div>
+		<div class="apprvContDiv"><iframe id="approvalIframe" class="cabrlframe2"></iframe></div>
 		
 		<div class="cabBttnDiv" id="fileDivBttn">
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t78'/></span></a>

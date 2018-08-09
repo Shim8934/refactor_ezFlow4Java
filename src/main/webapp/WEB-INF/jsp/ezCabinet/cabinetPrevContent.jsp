@@ -6,14 +6,14 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title></title>
-		<c:if test="${module != 'jounl' && module != 'mjounl'}">
+		<c:if test="${module != 'jounl' && module != 'mjounl' && module !='apprv' && module !='mapprv'}">
 			<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css"> 
 		</c:if>
 		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"                type="text/css"/>
 		<link rel="stylesheet" href="/css/previewmail.css"                      type="text/css"/>
 		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css"       type="text/css"/>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css"/>
-		<c:if test="${module == 'jounl' || module == 'mjounl'}">
+		<c:if test="${module == 'jounl' || module == 'mjounl' || module =='apprv' && module =='mapprv'}">
 			<style type="text/css">p {margin-top: 0px; margin-bottom: 0px;}</style>
 		</c:if>
 	</head>
@@ -116,6 +116,7 @@
 						case "schedl" : documentContent = parent.CabinetScheduleFile.getContent() ; break;
 						case "todo"   : documentContent = parent.CabinetTodoFile.getContent()     ; break;
 						case "jounl"  : documentContent = parent.CabinetJournalFile.getContent()  ; break;
+						case "mapprv" : documentContent = parent.CabinetItem.getContent()         ; break;
 						case "mjounl" : documentContent = parent.CabinetItem.getContent()         ; break;
 						default       : if (parent.CabinetItem) {documentContent = parent.CabinetItem.getContent();}
 					}
