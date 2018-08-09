@@ -63,22 +63,10 @@
 					popupClose();
 					
 					if(typeof parent.getBoardList == 'function') {
-						
-						/* for(i in parent.itemIds) {
-							var deletedTR = parent.$("tr[data-itemid = " + parent.itemIds[i] + "]");
-							var title = deletedTR.children("td.boardTitle").text();
-							var beforeTaskName = deletedTR.children("td.taskName").text();
-							var beforeGroupId = deletedTR.attr("data-groupId");
-							var beforeTaskId = deletedTR.attr("data-taskId");
-							
-							addTaskLog(parent.projectId, 2, groupId, taskId, "[" + beforeTaskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + title.trim() + "<spring:message code='ezPMS.t233' />" + taskName.trim() +  "<spring:message code='ezPMS.t234' />");
-						} */
-						
 						parent.getBoardList();
 						parent.getFolderTree();
 					} else {
 						var beforeTaskName = parent.folderName;
-						/* addTaskLog(parent.projectId, 2, groupId, taskId, "[" + beforeTaskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + parent.title.trim() + "<spring:message code='ezPMS.t233' />" + taskName.trim() +  "<spring:message code='ezPMS.t234' />"); */
 						parent.location.reload();
 						parent.opener.location.reload();
 					}

@@ -108,7 +108,7 @@
 				success : function(result) {
 					if (result.data == 'success') {
 						
-						var content = selectedTR.children("td.content").text();
+						var content = selectedTR.find("span.originalContent").text();
 						var taskName = selectedTR.children("td.taskName").text();
 						var groupId = selectedTR.attr("data-groupId");
 						var taskId = selectedTR.attr("data-taskId");						

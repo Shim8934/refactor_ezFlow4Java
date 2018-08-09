@@ -247,12 +247,8 @@
 						opener.searchByEndDate = "";
 						opener.searchByTitle = "";
 						opener.searchByOverview = "";
-						opener.searchByContent = "";
-						
-						//addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t127' />" + title.trim() + "<spring:message code='ezPMS.t204' />");
-					} else {
-						//addTaskLog(projectId, 2, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> [" + title.trim() + "<spring:message code='ezPMS.t205' />");
-					}
+						opener.searchByContent = "";	
+					} 
 					
 					if(typeof opener.getBoardList == 'function') {
 						opener.getFolderTree();

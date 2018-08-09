@@ -109,7 +109,6 @@
 				data : JSON.stringify(data),
 				success : function(result) {
 					if(result.data == 'success') {
-						//addTaskLog(projectId, 3, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t206' /> " + "[" + title.trim() + "<spring:message code='ezPMS.t207' />");
 						window.close();
 						opener.getBoardList();
 						
