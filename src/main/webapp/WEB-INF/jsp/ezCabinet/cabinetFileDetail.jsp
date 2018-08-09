@@ -359,6 +359,7 @@
 					var relDocDivElmt         = document.getElementById("rlWrapDiv");
 					var relatedBttn           = document.createElement("a");
 					var relSpanElmt           = document.createElement("span");
+					relatedBttn.className     = "imgbtn imgbck";
 					relSpanElmt.textContent   = CabinetMessages.strSlTxt;
 					relatedBttn.appendChild(relSpanElmt);
 					relatedBttn.onclick       = function(e) {getRelatedPopUp();};

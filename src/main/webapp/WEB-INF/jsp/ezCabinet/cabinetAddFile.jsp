@@ -22,7 +22,7 @@
 					<th><spring:message code='ezCabinet.t94'/></th>
 					<td><div class="rlFileDiv">
 					<div id="fileListDiv" class="rlDocDiv"></div>
-					<a><span id="rlBttn"><spring:message code='ezCabinet.t93'/></span></a></div></td>
+					<a class="imgbtn imgbck"><span id="rlBttn"><spring:message code='ezCabinet.t93'/></span></a></div></td>
 				</tr>
 			</table>
 		</div>
