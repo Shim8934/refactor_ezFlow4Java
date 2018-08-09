@@ -44,8 +44,7 @@
                     document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardPollSetting.do";
                     break;
                 case "BoardEnv_div4":
-                	document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardPollSetting.do";
-                	//document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardMemoSetting.do"; 새로 만들어 줘야함
+                	document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardMemoSetting.do"; 
                     break;
             }
         }
