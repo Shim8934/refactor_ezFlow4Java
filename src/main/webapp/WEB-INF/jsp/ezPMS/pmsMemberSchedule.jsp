@@ -2,24 +2,26 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
-<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="/js/mouseeffect.js"></script>
-<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-<script type="text/javascript" src="/js/dist/jstree.js"></script>
-<script type="text/javascript" src="/js/ezPMS/common.js"></script>
-		<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/jstree.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/common.js")%>"></script>
+<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
+
 <!-- time picker-->
 <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 <link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
-<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.js")%>"></script>
 <title><spring:message code='ezPMS.t290' /></title>
 <script type="text/javascript">
 var memberList = '${memberList}';

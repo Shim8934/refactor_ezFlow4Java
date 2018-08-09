@@ -4,6 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,13 +15,14 @@
 <link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
 <link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
 <link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
-<script type="text/javascript" src="/js/mouseeffect.js"></script>
-<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="/js/jquery-ui/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-<script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
-<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
-<script type="text/javascript" src="/js/ezPMS/common.js"></script>
+
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/common.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery-ui/jquery-ui.min.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezTask/circularProgressBar.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezTask/jquery.lineProgressbar.js")%>"></script>
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 100;
 var projectProgress = "${project.progress}";

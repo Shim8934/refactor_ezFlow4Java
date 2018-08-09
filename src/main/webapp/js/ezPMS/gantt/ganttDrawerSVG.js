@@ -201,7 +201,6 @@ Ganttalendar.prototype.createGanttGrid = function () {
 
         //compute scalefactor fx
         //self.fx = computedTableWidth / (endPeriod - startPeriod);
-        console.log(zoomDrawer.computedScaleX);
         self.fx = zoomDrawer.computedScaleX;
 
       }

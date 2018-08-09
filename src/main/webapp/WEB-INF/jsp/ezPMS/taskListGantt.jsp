@@ -2,6 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -15,32 +16,33 @@
 		<link rel="stylesheet" href="/css/ezPMS/gantt/ganttPrint.css" type="text/css" media="print">
 		<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css" />
 		
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/jquery-ui/jquery-ui.min.js"></script>
-		 
-		<script type="text/javascript" src="/js/ezPMS/gantt/libs/jquery/jquery.livequery.1.1.1.min.js"></script>
-		<script type="text/javascript" src="/js/ezPMS/gantt/libs/jquery/jquery.timers.js"></script>
-		<script type="text/javascript" src="/js/ezPMS/gantt/libs/utilities.js"></script>
-		<script type="text/javascript" src="/js/ezPMS/gantt/libs/dialogs.js"></script>
-		<script type="text/javascript" src="/js/ezPMS/gantt/libs/forms.js"></script>
-		<script type="text/javascript" src="/js/ezPMS/gantt/libs/layout.js"></script>
-		<script type="text/javascript" src="/js/ezPMS/gantt/libs/date.js"></script>
-		<script type="text/javascript" src="/js/ezPMS/gantt/libs/i18nJs.js"></script>
-		<script type="text/javascript" src="/js/ezPMS/gantt/libs/jquery/dateField/jquery.dateField.js"></script>
-		<script type="text/javascript" src="/js/ezPMS/gantt/libs/jquery/JST/jquery.JST.js"></script>
-		 
-		<script type="text/javascript" src="/js/ezPMS/gantt/libs/jquery/svg/jquery.svg.min.js"></script>
-  		<script type="text/javascript" src="/js/ezPMS/gantt/libs/jquery/svg/jquery.svgdom.1.8.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery-ui/jquery-ui.min.js")%>"></script>
 
-		<script type="text/javascript" src="/js/ezPMS/gantt/ganttUtilities.js"></script>
-		<script type="text/javascript" src="/js/ezPMS/gantt/ganttTask.js"></script>
-		<script type="text/javascript" src="/js/ezPMS/gantt/ganttDrawerSVG.js"></script>
-		<script type="text/javascript" src="/js/ezPMS/gantt/ganttZoom.js"></script>
-		<script type="text/javascript" src="/js/ezPMS/gantt/ganttGridEditor.js"></script>
-		<script type="text/javascript" src="/js/ezPMS/gantt/ganttMaster.js"></script>
-		<script type="text/javascript" src="/js/ezPMS/common.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/libs/jquery/jquery.livequery.1.1.1.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/libs/jquery/jquery.timers.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/libs/utilities.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/libs/dialogs.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/libs/forms.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/libs/layout.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/libs/date.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/libs/i18nJs.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/libs/jquery/dateField/jquery.dateField.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/libs/jquery/JST/jquery.JST.js")%>"></script>
+  		
+  		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/libs/jquery/svg/jquery.svg.min.js")%>"></script>
+  		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/libs/jquery/svg/jquery.svgdom.1.8.js")%>"></script>
+
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/ganttUtilities.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/ganttTask.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/ganttDrawerSVG.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/ganttZoom.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/ganttGridEditor.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/ganttMaster.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/common.js")%>"></script>
+		
 		<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
 	   	<script type="text/javascript">
 	   		// 프로젝트 아이디
