@@ -1914,7 +1914,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 * 일정작성 > 인쇄
 	 */
 	@RequestMapping(value = "/ezSchedule/scheduleContentsPrint.do")
-	public String scheduleContentsPrint(Model model, HttpServletRequest request) throws Exception {
+	public String scheduleContentsPrint(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ scheduleContentsPrint started ============");
 		
@@ -1945,6 +1945,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("printTitle", printTitle);
 		model.addAttribute("printAttach", printAttach);
 		model.addAttribute("printDocument", printDocument);
+		
+		//2018-08-09 김보미 - 나라별 폰트가 다르므로 구분하기 위해 추가
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		model.addAttribute("locale", loginVO.getLocale());
 		
 		return "ezSchedule/scheduleContentsPrint";
 	}

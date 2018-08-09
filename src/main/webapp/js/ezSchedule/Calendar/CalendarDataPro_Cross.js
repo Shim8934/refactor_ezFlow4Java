@@ -1549,6 +1549,7 @@ function showTooltip_MouseOver(thisID, e, pTime, pSubject, pScheduleType, pSched
     tTable.setAttribute("cellspacing", "0");
     tTable.setAttribute("border", "0");
     tTable.setAttribute("width", "100%");
+    tTable.setAttribute("style", "word-break : break-all");
     tTh.setAttribute("scope", "col");
     tTh.style.background = "#edf4fd";
     tTh.style.border = "1px solid #d1ddec";

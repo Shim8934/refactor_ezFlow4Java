@@ -1,4 +1,4 @@
-﻿﻿/**
+﻿﻿﻿/**
  * 첨부파일 리스트 추출
  * */
 function InitAttach(pDocID) {
@@ -51,7 +51,7 @@ function APRAttachXMLParsing(ATTACH, pDocID) {
     var pCurCellLen = pCurCell.length;
     var i, j, GetXml;
 
-    GetXml = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + strLang214 + "</NAME><WIDTH>50</WIDTH></HEADER><HEADER><NAME>" + strLang215 + "</NAME><WIDTH>260</WIDTH></HEADER><HEADER><NAME>" + strLang216 + "</NAME><WIDTH>80</WIDTH></HEADER></HEADERS>";
+    GetXml = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + strLang214 + "</NAME><WIDTH>80</WIDTH></HEADER><HEADER><NAME>" + strLang215 + "</NAME><WIDTH>250</WIDTH></HEADER><HEADER><NAME>" + strLang216 + "</NAME><WIDTH>80</WIDTH></HEADER></HEADERS>";
     GetXml = GetXml + "<ROWS>";
 
     for (i = pCurListLen - 1 ; i > -1 ; i--) {
@@ -154,9 +154,9 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     DivPopUpHidden();
     if (approvalFlag == "G") {
     	pAttachxml = "<LISTVIEWDATA><HEADERS>";
-    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>260</WIDTH></HEADER>";
-    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>250</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>100</WIDTH></HEADER>";
     	//pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang221 + "</NAME><WIDTH>50</WIDTH></HEADER>";
     	pAttachxml = pAttachxml + "</HEADERS><ROWS><ROW><CELL>";
     	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(pUserName) + "</VALUE>";
@@ -200,9 +200,9 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	pAttachxml = pAttachxml + "</CELL></ROW></ROWS></LISTVIEWDATA>";
     } else {
     	pAttachxml = "<LISTVIEWDATA><HEADERS>";
-    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>260</WIDTH></HEADER>";
-    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>250</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>100</WIDTH></HEADER>";
     	pAttachxml = pAttachxml + "</HEADERS><ROWS><ROW><CELL>";
     	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(pUserName) + "</VALUE>";
     	pAttachxml = pAttachxml + "<DATA1>" + MakeXMLString(temppFileLocation) + "</DATA1>";
@@ -287,9 +287,9 @@ function AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation) {
     }
     
     pAttachxml = "<LISTVIEWDATA><HEADERS>";
-    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>260</WIDTH></HEADER>";
-    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>250</WIDTH></HEADER>";
+    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>100</WIDTH></HEADER>";
     //pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang221 + "</NAME><WIDTH>50</WIDTH></HEADER>";
     pAttachxml = pAttachxml + "</HEADERS><ROWS><ROW><CELL>";
     pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(pUserName) + "</VALUE>";

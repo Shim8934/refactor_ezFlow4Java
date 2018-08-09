@@ -570,7 +570,9 @@
 	                return;
 	            }
 	            
-	            var regex=/^([\w-]+(?:\.[\w-]+)*)$/;
+	            //var regex=/^([\w-]+(?:\.[\w-]+)*)$/;
+	            var regex=/^[a-zA-Z0-9_-]+$/;
+	            
 	            if(regex.test(document.all("TextId").value.trim()) === false) {
 	            	alert("<spring:message code='ezEmail.lhm13' />");
 	            	return;

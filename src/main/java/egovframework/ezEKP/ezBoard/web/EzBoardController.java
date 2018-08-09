@@ -1863,8 +1863,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA10></DATA10>");
 					resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TITLE")) + "</TITLE>");
-					resultXML.append("<WRITERNAME>" + boardListItem.get(j).get("WRITERNAME") + "</WRITERNAME>");
-					resultXML.append("<WRITERNAME2>" + boardListItem.get(j).get("WRITERNAME2") + "</WRITERNAME2>");
+					resultXML.append("<WRITERNAME>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERNAME")) + "</WRITERNAME>");
+					resultXML.append("<WRITERNAME2>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERNAME2")) + "</WRITERNAME2>");
 					resultXML.append("<WRITERDEPTNAME>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME")) + "</WRITERDEPTNAME>");
 					resultXML.append("<WRITERDEPTNAME2>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME2")) + "</WRITERDEPTNAME2>");
 					resultXML.append("<WRITEDATE>" + boardListItem.get(j).get("WRITEDATE") + "</WRITEDATE>");
@@ -3016,8 +3016,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					}
 					
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TITLE")) + "</TITLE>");
-					resultXML.append("<WRITERNAME>" + boardListItem.get(j).get("WRITERNAME") + "</WRITERNAME>");
-					resultXML.append("<WRITERNAME2>" + boardListItem.get(j).get("WRITERNAME2") + "</WRITERNAME2>");
+					resultXML.append("<WRITERNAME>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERNAME")) + "</WRITERNAME>");
+					resultXML.append("<WRITERNAME2>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERNAME2")) + "</WRITERNAME2>");
 					resultXML.append("<WRITERDEPTNAME>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME")) + "</WRITERDEPTNAME>");
 					resultXML.append("<WRITERDEPTNAME2>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME2")) + "</WRITERDEPTNAME2>");
 					resultXML.append("<WRITEDATE>" + commonUtil.getDateStringInUTC((String)boardListItem.get(j).get("WRITEDATE"), userInfo.getOffset(), false) + "</WRITEDATE>");

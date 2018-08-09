@@ -1062,7 +1062,7 @@
           					<td style="width:340;HEIGHT:50"><div style="OVERFLOW:auto;width:340;HEIGHT:50"> <img id="txtImage" src="">&nbsp; </div>
               					<iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 	              				<form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezPortal/portletImageUpload.do?mode=Portlet" target="ifrm" >
-              						<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px;" multiple="true" />
+              						<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="display:none;" multiple="true" />
               						<input type="hidden" name="boardid" id="boardid" />
               						<input type="hidden" name="maxsize" id="maxsize" />
               						<input type="hidden" name="mode" id="mode" />

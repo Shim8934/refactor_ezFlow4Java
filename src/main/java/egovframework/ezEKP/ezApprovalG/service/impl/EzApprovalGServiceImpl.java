@@ -4249,7 +4249,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getTaskSubCategoryAll(String deptCode, String companyID, String cateCode, String strType, String initFlag, int tenantID) throws Exception {
-		// TODO Auto-generated method stub
 		logger.debug("getTaskSubCategoryAll started");
 		
 		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, strType, tenantID);
@@ -4324,13 +4323,28 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE><![CDATA[" + getRecordTypeString(apprGTaskVOList.get(k).getRecTypeCode(), companyID, strType, tenantID) + "]]></VALUE>");
+			
+			if (apprGTaskVOList.get(k).getRecTypeCode() == null || apprGTaskVOList.get(k).getRecTypeCode().equals("")) {
+				resultXML.append("<VALUE>-</VALUE>");
+			} else {
+				resultXML.append("<VALUE><![CDATA[" + getRecordTypeString(apprGTaskVOList.get(k).getRecTypeCode(), companyID, strType, tenantID) + "]]></VALUE>");
+			}
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + apprGTaskVOList.get(k).getRegSerialNo() + "</VALUE>");
+			
+			if (apprGTaskVOList.get(k).getRegSerialNo() == null || apprGTaskVOList.get(k).getRegSerialNo().equals("")) {
+				resultXML.append("<VALUE>-</VALUE>");
+			} else {
+				resultXML.append("<VALUE>" + apprGTaskVOList.get(k).getRegSerialNo() + "</VALUE>");
+			}
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + apprGTaskVOList.get(k).getVolumeNo() + "</VALUE>");
+			
+			if (apprGTaskVOList.get(k).getVolumeNo() == null || apprGTaskVOList.get(k).getVolumeNo().equals("")) {
+				resultXML.append("<VALUE>-</VALUE>");
+			} else {
+				resultXML.append("<VALUE>" + apprGTaskVOList.get(k).getVolumeNo() + "</VALUE>");
+			}
 			resultXML.append("</CELL>");
 			resultXML.append("</ROW>");
         }
@@ -4490,7 +4504,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if(subQuery.length() > 0) {
 				subQuery.append("AND ");
 			}
-				subQuery.append("TASKCODE = '" + code.trim() + "'");
+				subQuery.append("TASKCODE LIKE '%" + code.trim() + "%'");
 		}
 		
 		subQuery.append("AND TENANT_ID = " + tenantID + " AND COMPANYID = '" + companyID + "'");
@@ -19386,6 +19400,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				resultXML.append("<APRMEMBERDEPTID>" + docList.get(j).getAprMemberDeptID() + "</APRMEMBERDEPTID>");
 				resultXML.append("<DOCSTATE>" + docList.get(j).getDocState() + "</DOCSTATE>");
 				resultXML.append("<FUNCTIONTYPE>" + docList.get(j).getFunctionType() + "</FUNCTIONTYPE>");
+				resultXML.append("<URGENTAPPROVAL>" + docList.get(j).getUrgentApproval() + "</URGENTAPPROVAL>");
 				resultXML.append("</CELL>");
 			}
 			

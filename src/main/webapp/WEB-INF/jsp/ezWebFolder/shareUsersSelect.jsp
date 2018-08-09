@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -9,14 +10,14 @@
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1' />" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/TreeView.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/context/share.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/organJson.js"></script>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/ListView_list.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/TreeView.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/share.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/organJson.js")%>"></script>
 		<script type="text/javascript">
 			var type = "<c:out value='${type}'/>";
 			var pDeptID = "<c:out value='${userInfo.deptID}'/>";
