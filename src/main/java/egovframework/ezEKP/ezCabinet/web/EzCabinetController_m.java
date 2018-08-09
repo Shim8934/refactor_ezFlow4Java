@@ -75,7 +75,7 @@ public class EzCabinetController_m {
 		JSONObject resultObj   = new JSONObject();
 		
 		logger.debug("mode: " + mode+ " cabinetId : " +cabinetId+ " title: " + title+ " createDate : "+createDate+ " journalWriter : " + journalWriter + " journalType : " +journalType+ " formName : "+formName+" content : "+content+" attach: "+attach );
-		if ((mode.equals("1") && cabinetId.equals("")) || title.equals("") || createDate.equals("") || journalWriter.equals("") || journalType.equals("") || formName.equals("") || content.equals("") || attach.equals("")){
+		if ((mode.equals("1") && cabinetId.equals("")) || title.equals("") || createDate.equals("") || journalWriter.equals("") || journalType.equals("") || formName.equals("") || content.equals("") || mode.equals("")){
 			logger.debug("Invalid parameter!");
 			resultObj.put("code", 1);
 			resultObj.put("status", "error");

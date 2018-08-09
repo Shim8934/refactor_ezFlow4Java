@@ -89,7 +89,7 @@ public class EzCabinetGWController_m {
 		
 		logger.debug("ServerName : " + serverName + " || journalContent : " + journalContent + " || userId : " + userId + " || mode : " + mode + " || title : " +title+ " || cabinetId : " + cabinetId + " createDate : " + createDate + " journalWriter : " + journalWriter + " || formName : " + formName + " attach : " + attach);
 		
-		if (serverName.equals("") || journalContent.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || cabinetId.equals("") || createDate.equals("") || journalWriter.equals("") || journalType.equals("") || formName.equals("")){
+		if (serverName.equals("") || journalContent.equals("") || userId.equals("") || mode.equals("") || (mode.equals("1") && cabinetId.equals("")) || title.equals("") || createDate.equals("") || journalWriter.equals("") || journalType.equals("") || formName.equals("")){
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
