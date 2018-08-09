@@ -319,7 +319,7 @@
 				
 				// 이전과 달라진 값에 대해서만 작업이력을 남긴다
 				if (nowStatus != status) {	
-					var logContent = "[" + taskName + "<spring:message code='ezPMS.t283' />" + nowStatusStr + "]<spring:message code='ezPMS.t313' /> [" + statusStr + "]<spring:message code='ezPMS.t314' />"; 
+					var logContent = "<spring:message code='ezPMS.t314' arguments='" + taskName + "," + nowStatusStr + "," + statusStr + "'/>"; 
 					addTaskLog(projectId, 2, groupId, taskId, logContent);
 					updateGroupRealStartEndDate(groupId);
 				}
@@ -334,7 +334,7 @@
 				} */
 				
 				if (taskDetails.realProgress != realProgress) {
-					var logContent = "[" + taskName + "<spring:message code='ezPMS.t317' /> " + new Number(taskDetails.realProgress).toFixed(1) + "%<spring:message code='ezPMS.t313'/> " + new Number(realProgress).toFixed(1) + "%<spring:message code='ezPMS.t314'/>"; 
+					var logContent = "<spring:message code='ezPMS.t317' arguments='" + taskName + "," + new Number(taskDetails.realProgress).toFixed(1) + "," + new Number(realProgress).toFixed(1) + "'/>"; 
    					addTaskLog(projectId, 2, groupId, taskId, logContent);
 				}
 				

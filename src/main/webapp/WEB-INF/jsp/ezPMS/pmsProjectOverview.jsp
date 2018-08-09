@@ -389,7 +389,7 @@ function changeStatus(status) {
 						var nowStatusStr = getStatusStr(nowStatus);
 						var statusStr 	 = getStatusStr(changeStatus);
 						
-						var logContent = "[" + projectName + "<spring:message code='ezPMS.t283' />" + nowStatusStr + "]<spring:message code='ezPMS.t313' /> [" + statusStr + "]<spring:message code='ezPMS.t314' />" 
+						var logContent = "<spring:message code='ezPMS.t314' arguments='" + projectName + "," + nowStatusStr + "," + statusStr + "'/>"; 
 						addTaskLog(projectId, 2, groupId, null, logContent);
 						
 						window.location.reload();

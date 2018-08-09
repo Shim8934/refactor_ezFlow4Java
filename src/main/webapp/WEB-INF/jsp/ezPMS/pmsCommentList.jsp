@@ -61,13 +61,14 @@
 					searchByContent = "";
 					
 					taskName = $("#taskNameArea").text();
-					taskName = taskName.substring(0, taskName.lastIndexOf('-'));
+					//taskName = taskName.substring(0, taskName.lastIndexOf('-'));
 					
 					if(taskName == "") {
 						taskName = $("#taskName", parent.document).text();	
 					}
-										
-					addTaskLog(projectId, 1, groupId, taskId, "[" + taskName.trim() + "<spring:message code='ezPMS.t127' />" + commentContent.trim() +"<spring:message code='ezPMS.t126' />");
+					console.log(taskName);
+					var logContent = "<spring:message code='ezPMS.t126' arguments='" + taskName.trim() + "," + commentContent.trim() + "'/>";
+					addTaskLog(projectId, 1, groupId, taskId, logContent);
 
 					if(typeof(getTaskTree) !== "undefined"){
 						getTaskTree();

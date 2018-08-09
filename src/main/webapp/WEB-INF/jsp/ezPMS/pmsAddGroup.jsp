@@ -185,12 +185,12 @@ function addGroup() {
 		contentType: "application/json; charset=UTF-8",
 		data : JSON.stringify(data),
 		success : function(data) {
-			alert("<spring:message code='ezPMS.t86' />");
 			
 			var upperGroupName = $("#upperGroup").text();
-			var logContent = "[" + upperGroupName + "<spring:message code='ezPMS.t127'/>" + newGroupName + "<spring:message code='ezPMS.t316'/>"; 
+			var logContent = "<spring:message code='ezPMS.t316' arguments='" + upperGroupName + "," + newGroupName + "'/>";
 			addTaskLog(projectId, 1, groupId, null, logContent);
-			
+
+			alert("<spring:message code='ezPMS.t86' />");
 			parent.opener.location.reload();
 			popupClose();
 		},

@@ -335,7 +335,7 @@ function addTask() {
 			alert("<spring:message code='ezPMS.t266' />");
 			
 			var upperGroupName = $("#upperGroup").text();
-			var logContent = "[" + upperGroupName + "<spring:message code='ezPMS.t127'/>" + taskName + "<spring:message code='ezPMS.t315'/>"; 
+			var logContent = "<spring:message code='ezPMS.t315' arguments='" + upperGroupName + "," + taskName + "'/>";
 			addTaskLog(projectId, 1, groupId, null, logContent);
 			updateGroupRealStartEndDate(groupId);
 			
