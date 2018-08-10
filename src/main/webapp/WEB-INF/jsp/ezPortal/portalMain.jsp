@@ -123,16 +123,9 @@
 		    	var maskDiv = $("#maskDiv");
 				var className = $("#layer-popup").attr("class");
 	        	var opendMemo = $("#selected-memo");
-
-				/* if (className.indexOf("layer-half") != -1) {
-	        		layerHalf.css({"top":65, "left": winWidth/2, "right" : 10, "width" : winWidth/2 - 20, "height":winHeight - 56 - 30});
-	        		maskDiv.css({"top":0, "left":0, "width" : winWidth/2 - 20, "height":winHeight - 56 - 30});
-	        		opendMemo.css({"top":10, "left":10, "width" : winWidth/2 - 50, "height":winHeight - 56 - 50})
-	        	} else if (className.indexOf("layer-whole") != -1) {
-	        		layerWhole.css({"top":65, "left": 10, "right" : 20, "width" : winWidth - 30, "height":winHeight - 56 - 30});
-	        		maskDiv.css({"top":0, "left": 0, "width" : winWidth - 30, "height":winHeight - 56 - 30});
-	        		opendMemo.css({"top":20, "left": 20, "width" : winWidth - 90, "height":winHeight - 56 - 90})
-	        	} */
+	        	var layerWidth =$("#layer-popup").css("width");
+	        		        
+	        	$(".memoListBox").css("width", layerWidth);
 				$(".memoListBox").css("height",winHeight - 56 - 60);
 				
 		    }
@@ -154,10 +147,6 @@
 		        	$("#selected-memo").css("display", "none");
 		        });
 
-		        /* $("#change-mode").click(function() {
-		        	
-		        	changSizeOfLayer();
-		        }); */
 		        
 		        $("#memoList").sortable({
 		        	 containment: '.memoListBox'
@@ -304,11 +293,7 @@
 		        });
 		    }
 		    
-		    /* function newMemo() {
-		        $("#maskDiv").css("display", "");
-		        $("#selected-memo").css("display", "");
-		        var textareaW = $(textarea).css("width");
-		    } */
+
 		    
 		    function save() {
 		    	if(headerColor == null) {			// 지정색 없을 때
