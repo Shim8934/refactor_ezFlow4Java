@@ -100,9 +100,9 @@ var CabinetItem = function() {
 	function preProcessing() {
 		var divList           = document.getElementById("cabWraperDiv");
 		var divChild          = divList.querySelector("div[class='tableDataDiv']");
-		var reheight          = document.documentElement.clientHeight - 150;
+		var reheight          = document.documentElement.clientHeight - 120;
 		divList.style.height  = reheight + "px";
-		divChild.style.height = reheight - 40 + "px";
+		divChild.style.height = reheight - 70 + "px";
 	}
 	
 	function initEvents(cabId, height, width, prevMode) {

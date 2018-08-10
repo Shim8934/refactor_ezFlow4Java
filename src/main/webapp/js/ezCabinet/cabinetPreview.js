@@ -22,15 +22,22 @@ var CabinetPreview = function() {
 		
 		function resizeHeight() {
 			var wrapDiv           = document.getElementById(_wrapperDivId);
-			wrapDiv.style.height  = (document.documentElement.clientHeight - 110) + "px";
+			wrapDiv.style.height  = (document.documentElement.clientHeight - 100) + "px";
 			var mainDiv           = document.getElementById(_mainDivId);
 			var divChild          = mainDiv.querySelector("div[class='tableDataDiv']");
-			if (divChild) {divChild.style.height = mainDiv.clientHeight - 70 + "px";}
+			if (divChild) {divChild.style.height = mainDiv.clientHeight - 80 + "px";}
 		}
 		
 		function resizeWidth() {
 			var wrapDiv           = document.getElementById(_wrapperDivId);
-			wrapDiv.style.height  = (document.documentElement.clientHeight - 150) + "px";
+			wrapDiv.style.height  = (document.documentElement.clientHeight - 120) + "px";
+			var divChild          = wrapDiv.querySelector("div[class='tableDataDiv']");
+			if (divChild) {divChild.style.height = wrapDiv.clientHeight - 70 + "px";}
+		}
+		
+		function resetResize() {
+			var wrapDiv           = document.getElementById(_wrapperDivId);
+			wrapDiv.style.height  = (document.documentElement.clientHeight - 100) + "px";
 			var divChild          = wrapDiv.querySelector("div[class='tableDataDiv']");
 			if (divChild) {divChild.style.height = wrapDiv.clientHeight - 40 + "px";}
 		}

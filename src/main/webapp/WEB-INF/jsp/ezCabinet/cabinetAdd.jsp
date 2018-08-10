@@ -3,6 +3,8 @@
 
 <div class="popup cabAddoff" id="cabAddDiv">
 	<h1 id="addCabTtl"></h1>
+	<div id="cabAddClose" class="cabClose"><ul><li><span></span></li></ul></div>
+	
 	<div class="cbNameInputDiv">
 		<span><spring:message code='ezCabinet.t80'/></span>
 		<input id="cabNameTxt1" type="text" maxlength="50">

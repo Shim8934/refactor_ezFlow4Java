@@ -36,6 +36,8 @@
 				initEvents();
 				
 				function initEvents() {
+					document.onselectstart = function() {return false;};
+					
 					myCabinetTree.setTreeInfo({
 						treeId     : "cabinetMgTree",
 						treeType   : "cabinet",
@@ -48,13 +50,10 @@
 					
 					myCabinetTree.makeTree({cabinetNode : document.getElementById("cabMagHeader").getAttribute("role")});
 					
-					document.onselectstart   = function() {return false;};
-					var closeBttn            = document.getElementById("cabMgClose").firstElementChild.firstElementChild.firstElementChild;
-					closeBttn.onclick        = function(e) {closeWindow();};
-					var cabMoveCloseBttn     = document.getElementById("cabMoveClose").firstElementChild.firstElementChild.firstElementChild;
-					cabMoveCloseBttn.onclick = function(e) {closeCabinetDialog("moveCab");};
-					var cabDelCloseBttn      = document.getElementById("cabDelClose").firstElementChild.firstElementChild.firstElementChild;
-					cabDelCloseBttn.onclick  = function(e) {closeCabinetDialog("delCab");};
+					document.getElementById("cabMgClose").onclick   = function(e) {closeWindow();};
+					document.getElementById("cabMoveClose").onclick = function(e) {closeCabinetDialog("moveCab");};
+					document.getElementById("cabDelClose").onclick  = function(e) {closeCabinetDialog("delCab");};
+					document.getElementById("cabAddClose").onclick  = function(e) {closeCabinetDialog("addCab");};
 					
 					var cabMgBttnElmt        = document.getElementById("cabMgDivBttn");
 					var listMgBttns          = cabMgBttnElmt.children;
