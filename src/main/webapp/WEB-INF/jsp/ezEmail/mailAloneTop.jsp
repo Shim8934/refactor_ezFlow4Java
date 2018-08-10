@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -11,16 +12,16 @@
             <c:if test="${lang == '2'}">
                 #input_search { background:#f2f2f2 url(/../images/us/cm/input_search_bg.gif) no-repeat 0 0 }
             </c:if>
-            <c:if test="${lang == '3'}">
+            <c:if test="${lang == '3'} cd">
                 #input_search { background:#f2f2f2 url(/../images/jp/cm/input_search_bg.gif) no-repeat 0 0 }
             </c:if>
             <c:if test="${lang == '4'}">
                 #input_search { background:#f2f2f2 url(/../images/cn/cm/input_search_bg.gif) no-repeat 0 0 }
             </c:if>
         </style>    
-        <script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
-        <script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>          
-        <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+        <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPortal/string_component.js")%>"></script>
+        <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPortal/functionLib.js")%>"></script>          
+        <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
         <script type="text/javascript">
         var skinnum = "";
         
