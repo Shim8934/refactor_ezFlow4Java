@@ -463,9 +463,11 @@ function setDefaultGroup(){
 						</td>
 					</c:when>
       				<c:when test="${weightInput == 1}">
-						<td colspan="3">
-						<input type="text" id="weight" value="0" style="width:40px;text-align:center"> %  &nbsp; <spring:message code='ezPMS.t103' /> <fmt:formatNumber value="${remainingWeight }" pattern="0.0" /> % 
+						<td style="width:50%">
+						<input type="text" id="weight" value="0" style="width:40px;text-align:center"> % 
 						</td>
+						<th><spring:message code='ezPMS.t103' /></th>
+						<td style="padding-left : 5px;"><fmt:formatNumber value="${remainingWeight }" pattern="0.0" /> %</td>
 					</c:when>
    				</c:choose>
 			</tr>

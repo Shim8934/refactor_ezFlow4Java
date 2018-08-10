@@ -180,23 +180,23 @@ public class EzPMSScheduler {
 					if (nowDate.equals(endAlamDay)) {
 						subject += egovMessageSource.getMessageExtend("ezPMS.t326", new Object[] {projectList.get(i).getProjectName(), projectList.get(i).getAlamMailStatus()}, locale);
 						
-						content += "<p>" + egovMessageSource.getMessageExtend("ezPMS.t326", new Object[] {projectList.get(i).getProjectName(), projectList.get(i).getAlamMailStatus()}, locale) + "</p>";
+						content += "<p>" + egovMessageSource.getMessageExtend("ezPMS.t326", new Object[] {commonUtil.cleanValue(projectList.get(i).getProjectName()), projectList.get(i).getAlamMailStatus()}, locale) + "</p>";
 					} else {
 						long restDueday = (endDateDay.getTime() - nowDate.getTime()) / (24 * 60 * 60 * 1000);
 						
 						subject += egovMessageSource.getMessageExtend("ezPMS.t326", new Object[] {projectList.get(i).getProjectName(), restDueday}, locale);
 						
-						content += "<p>" + egovMessageSource.getMessageExtend("ezPMS.t326", new Object[] {projectList.get(i).getProjectName(), restDueday}, locale) + "</p>";
+						content += "<p>" + egovMessageSource.getMessageExtend("ezPMS.t326", new Object[] {commonUtil.cleanValue(projectList.get(i).getProjectName()), restDueday}, locale) + "</p>";
 					}
 					
 					content += "<p></p>";
-					content += "<a href='#' target='' onclick='goProjectDetails(\"" + projectList.get(i).getProjectId() + "\")'>" + egovMessageSource.getMessageExtend("ezPMS.t201", new Object[] {projectList.get(i).getProjectName()}, locale) + "</a><br/><br/>";
+					content += "<a href='#' target='' onclick='goProjectDetails(\"" + projectList.get(i).getProjectId() + "\")'>" + egovMessageSource.getMessageExtend("ezPMS.t201", new Object[] {commonUtil.cleanValue(projectList.get(i).getProjectName())}, locale) + "</a><br/><br/>";
 					content += "===================================================================<br/>";
-					content += "<p style='font-size:14px'><strong>[" + projectList.get(i).getProjectName() + "]</strong></p>";
+					content += "<p style='font-size:14px'><strong>[" + commonUtil.cleanValue(projectList.get(i).getProjectName()) + "]</strong></p>";
 					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t250", locale) + " : " + (Math.round(projectList.get(i).getProgress()*10)/10.0) + "%</p>";
 					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t61", locale) + " : " + projectList.get(i).getPlanStartDate() + "</p>";
 					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t62", locale) + " : " + projectList.get(i).getPlanEndDate() + "</p>";
-					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t66", locale) + " : " + projectList.get(i).getOverview() + "</p>";
+					content += "<p> - " + egovMessageSource.getMessage("ezPMS.t66", locale) + " : " + commonUtil.cleanValue(projectList.get(i).getOverview()) + "</p>";
 						
 					InternetAddress from;
 					from = new InternetAddress(headManager.getUserMail());
