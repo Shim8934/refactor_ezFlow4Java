@@ -157,6 +157,7 @@
 		                    DivLayer.style.display = "inline-block";
 		                    DivLayer.style.marginRight = "5px";
 		                    DivLayer.style.marginBottom = "10px";
+		                    DivLayer.style.width = "220px";
 		                    DivLayer.style.height = "80px";
 		                    DivLayer.setAttribute("_CN", getNodeText(SelectNodes(UserAddJobList[0], "CN")[Cnt]));
 		                    DivLayer.setAttribute("_DEPTID", getNodeText(SelectNodes(UserAddJobList[0], "DEPARTMENT")[Cnt]));
@@ -166,7 +167,7 @@
 		                    DivLayer.onselectstart = function () { return false; };
 
 		                    var oTable = document.createElement("TABLE");
-		                    oTable.setAttribute("style", "width:248px");
+		                    oTable.setAttribute("style", "width:218px");
 		                    var oTr = document.createElement("TR");
 		                    oTable.appendChild(oTr);
 
@@ -522,19 +523,19 @@
 		        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");        
 		    </script>
 		    <div class="portlet_tabpart01" style="padding-bottom:3px">
-		        <div class="portlet_tabpart01_top" id="tab1" style="width:802px;">
+		        <div class="portlet_tabpart01_top" id="tab1" style="width:752px;">
 	                <p id="AddJob_sub1"><span divname="AddJob1" id="1tab1"><spring:message code='ezOrgan.t00017' /></span></p>               
 		        </div>
 		    </div>
-		    <table style="width:800px">
+		    <table style="width:750px">
 		        <tr>
-		            <td style="width:800px">
-		                <div class="listview" style="Width:800px;">
-		                    <div id="AddJobListView" style="border: 0px solid #ddd; Width: 800px; Height:540PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+		            <td style="width:750px">
+		                <div class="listview" style="Width:750px;">
+		                    <div id="AddJobListView" style="border: 0px solid #ddd; Width: 750px; Height:540PX; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 		                </div>
 		            </td>
 		            <td style="padding-left:3px; vertical-align:top">            
-		                 <div style="height:100%; width:800px;" id="AddJobList" >
+		                 <div style="height:100%; width:450px;" id="AddJobList" >
 		                </div>      
 		            </td>
 		        </tr>
