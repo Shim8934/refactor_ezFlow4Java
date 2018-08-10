@@ -183,19 +183,28 @@
 					async: true,
 					success : function(data) {
 						hideProgress();
-						var reason = data.reason;
-						if (reason) {
-							alert(reason);
-							return;
+						var code = data.code;
+						
+						switch(code) {
+							case 0: 
+								var result  = data.fileLogList;
+								totalRows   = data.totalRows;
+								totalPages  = data.totalPages;
+								currentPage = pPage;
+								
+								makePageSelPage();
+								renderData(result);
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
 						}
-						
-						var result  = data.fileLogList;
-						totalRows   = data.totalRows;
-						totalPages  = data.totalPages;
-						currentPage = pPage;
-						
-						makePageSelPage();
-						renderData(result);
 					},
 					error : function(error) {
 						hideProgress();
@@ -311,13 +320,22 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var reason = data.reason;
-						if (reason) {
-							alert(reason);
-						}
-						else {
-							var url      = "/admin/ezWebFolder/downloadExcel.do?fileName=" + data.path;
-							AttachDownFrame.location.href = url;
+						var code = data.code;
+						
+						switch(code) {
+							case 0: 
+								var url = "/admin/ezWebFolder/downloadExcel.do?fileName=" + data.path;
+								AttachDownFrame.location.href = url;
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300'/>");
+								break;
 						}
 					},
 					error : function(error) {
