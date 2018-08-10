@@ -127,7 +127,7 @@
 					var selectedNodeId = "";
 					
 					if (selectedNode) {selectedNodeId = selectedNode.getAttribute("role");}
-					window.open("/ezCabinet/cabinetManagement.do?node=" + selectedNodeId, "management", getOpenWindowfeature(600, 500));
+					window.open("/ezCabinet/cabinetManagement.do?node=" + selectedNodeId, "management", getOpenWindowfeature(600, 505));
 				}
 				
 				function getRelatedCabinet() {

@@ -93,7 +93,7 @@
 													</tr>
 												</table>
 											</div>
-											<div id="tblPageRayer" class="cabOrganPageDiv"></div>
+											<div id="tblPageRayer"></div>
 										</td>
 									</tr>
 								</table>
