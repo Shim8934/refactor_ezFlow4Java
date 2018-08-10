@@ -133,6 +133,13 @@
 		                var newoption = new Option(rtn["name"][i], rtn["id"][i]);
 		                document.getElementById("ListSecretary").options[lastindex] = newoption;
 		            }
+		            
+		            //2018-08-10 김보미 - 비서가 없을 경우 dropbox가 내려오지 않도록 변경
+		            if (rtn["id"].length > 0) {
+		            	document.getElementById("ListSecretary").disabled = false;
+		            } else {
+		            	document.getElementById("ListSecretary").disabled = true;
+		            }
 		        }
 		    }
 		</script>
@@ -232,7 +239,9 @@
 <!-- 			      		</select>			      		 -->
 <%-- 			        	<a class="imgbtn imgbck"><span onClick="ModifySecretary()"><spring:message code='ezSchedule.t153' /></span></a> --%>
 						<div style='height: 75%;'>
-				      		<select name="ListSecretary" id="ListSecretary" style="width:85px; margin-top: 1px;">
+						<!-- 2018-08-10 김보미 - 비서가 없을 경우 dropbox가 내려오지 않도록 변경 -->
+ 				      	<%--<select name="ListSecretary" id="ListSecretary" style="width:85px; margin-top: 1px;" > --%>
+				      		<select name="ListSecretary" id="ListSecretary" style="width:85px; margin-top: 1px;" <c:if test='${selectList eq null || selectList eq "[]"}'> disabled </c:if>>
 				      			<c:forEach var="item" items="${selectList}">
 				      				<option value="${item.cn}" name2="${item.displayName2}" deptname="${item.description}" deptname2="${item.description2}" email="${item.mail}">
 				      					${item.displayName}
