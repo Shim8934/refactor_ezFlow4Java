@@ -133,7 +133,6 @@
 		    var junGyulFlag = "${junGyulFlag}";
 		    var pSignImage_Size = "${signImageSize}";
 		    var pADMIN = "N";
-		    var hideCabinet = "${hideCabinet}";
 		    var docNumZeroCnt = "${docNumZeroCnt}";
 		  	//회람
 			var type = "ING";
