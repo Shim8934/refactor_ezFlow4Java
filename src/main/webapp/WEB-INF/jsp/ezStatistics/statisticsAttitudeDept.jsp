@@ -477,16 +477,16 @@
         <tr>
             <td style="width: 99%">
                 <span id="topmenu" style="width: 500px">
-                <spring:message code='ezStatistics.t1002' /> : 
-                <select id="selyear" onchange="makeoptionyear(); selectBox_change()"></select>
+                &nbsp;<spring:message code='ezStatistics.t1002' /> : 
+                <select style="height:24px" id="selyear" onchange="makeoptionyear(); selectBox_change()"></select>
                     <spring:message code='ezStatistics.t55' />
 		            &nbsp;&nbsp;
 					<spring:message code='ezStatistics.t1013' /> : 
-                    <input id="deptkeyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
-                    <a class="imgbtn" style="vertical-align: middle"><span onclick="searchdept()"><spring:message code='ezStatistics.t36' /></span></a>
+                    <input id="deptkeyword" type="text" style="width: 100px;height:24px" onkeypress="search_press(event)" />
+                    <a class="imgbtn" style="vertical-align: middle;height:22px"><span onclick="searchdept()"><spring:message code='ezStatistics.t36' /></span></a>
                     &nbsp;&nbsp;
                     	<spring:message code='ezStatistics.kbm3' /> : 
-	                <select name="attitudeType" id="attitudeType" onchange="selectBox_change()" style="width: 120px; margin-top:4px; padding-right:40px;">
+	                <select name="attitudeType" id="attitudeType" onchange="selectBox_change()" style="width: 120px; padding-right:40px;height:24px">
 		      		</select>
                 </span>
                 </span>
@@ -494,7 +494,7 @@
             <td>
                 <div id="mainmenu" style="height: 28px;margin:3px 0px !important">
                     <ul>
-                        <li><span style="width: 110px;text-align:center;" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003' /></span></li>
+                        <li><span style="width: 110px;text-align:center;background-color: white" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003' /></span></li>
                     </ul>
                 </div>
             </td>

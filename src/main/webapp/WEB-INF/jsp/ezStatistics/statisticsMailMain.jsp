@@ -345,20 +345,20 @@
     <table style="width:100%;background-color: #f8f8f8;border:1px solid #d3d2d2;margin-bottom:5px">
         <tr>
             <td style="width: 99%">
-                <span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t195' /> :
-        		<select id="SCompID" name="SCompID" onchange="return getmailstatistics()">
+                <span id="topmenu" style="width: 500px">&nbsp;<spring:message code='ezStatistics.t195' /> :
+        		<select style="height:24px" id="SCompID" name="SCompID" onchange="return getmailstatistics()">
 			    	<c:forEach var="item" items="${list}">
 			         		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 			       	</c:forEach>
         		</select>
-                    &nbsp;&nbsp;&nbsp;<spring:message code='ezStatistics.t1002' /> : 
-            <select id="selyear" onchange="makeoptionyear(); getmailstatistics()"></select>
+                    &nbsp;<spring:message code='ezStatistics.t1002' /> : 
+            <select style="height:24px" id="selyear" onchange="makeoptionyear(); getmailstatistics()"></select>
                     <spring:message code='ezStatistics.t55' /></span>
             </td>
             <td>
                 <div id="mainmenu" style="height: 28px;margin:3px 0px !important"> 
                     <ul>
-                        <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003' /></span></li>
+                        <li><span style="width: 110px;text-align:center;background-color: white" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003' /></span></li>
                     </ul>
                 </div>
             </td>

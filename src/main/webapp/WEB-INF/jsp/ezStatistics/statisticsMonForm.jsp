@@ -8,6 +8,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	    <link rel="stylesheet" href="<spring:message code='ezStatistics.e2'/>" type="text/css" />
 	    <link rel="stylesheet" href="/js/ezStatistics/js/jquery.jqplot.min.css" type="text/css">
+	    <style>
+	    	.mainlist_free tr th { border-top:0px }
+	    </style>
 	    <script type="text/javascript" src="<spring:message code='ezStatistics.e1'/>"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -392,24 +395,24 @@
 	    <table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2; margin-bottom: 5px">
 	        <tr>
 	            <td style="width: 99%">
-	                <span id="topmenu" style="float: left; width: 800px"><spring:message code='ezStatistics.t195'/> :
-	        		<select id="SCompID" name="SCompID" onchange="return getforminfo()">
+	                <span id="topmenu" style="float: left; width: 800px">&nbsp;<spring:message code='ezStatistics.t195'/> :
+	        		<select style="height:24px" id="SCompID" name="SCompID" onchange="return getforminfo()">
 	        			<c:forEach var="item" items="${list}">
 	            			<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
             			</c:forEach>
 	        		</select>
-	                    &nbsp;&nbsp;&nbsp;<spring:message code='ezStatistics.t1002'/> : 
-	            	<select id="selyear" onchange="makeoptionyear(); getforminfo()"></select>
+	                    &nbsp;<spring:message code='ezStatistics.t1002'/> : 
+	            	<select style="height:24px" id="selyear" onchange="makeoptionyear(); getforminfo()"></select>
 	                    <spring:message code='ezStatistics.t55'/>
 	       				 &nbsp;&nbsp;<spring:message code='ezStatistics.t1032'/> : 
 	            		<input id="formname" type="text" style="width: 100px;" onkeypress="search_press(event)" />
-	                    <a class="imgbtn" style="vertical-align: middle"><span onclick="getforminfo()"><spring:message code='ezStatistics.t36'/></span></a>
+	                    <a class="imgbtn" style="vertical-align: middle;height:22px"><span onclick="getforminfo()"><spring:message code='ezStatistics.t36'/></span></a>
 	                </span>
 	            </td>
 	            <td>
 	                <div id="mainmenu" style="float: right; height: 28px;margin:3px 0px !important">
 	                    <ul>
-	                        <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
+	                        <li><span style="width: 110px;text-align:center;background-color: white" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
 	                    </ul>
 	                </div>
 	            </td>

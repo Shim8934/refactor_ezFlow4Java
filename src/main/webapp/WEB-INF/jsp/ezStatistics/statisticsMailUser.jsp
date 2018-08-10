@@ -778,22 +778,22 @@
     <table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2; margin-bottom: 5px">
         <tr>
             <td style="width: 99%">
-                <span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1002' /> : 
-                <select id="selyear" onchange="makeoptionyear(); getmailstatistics()"></select>
+                <span id="topmenu" style="width: 500px">&nbsp;<spring:message code='ezStatistics.t1002' /> : 
+                <select style="height:24px" id="selyear" onchange="makeoptionyear(); getmailstatistics()"></select>
                     <spring:message code='ezStatistics.t55' />
               &nbsp;&nbsp;
-             <select id="searchopt">
+             <select id="searchopt" style="height:24px">
                  <option value="1"><spring:message code='ezStatistics.t1017' /></option>
                  <option value="2"><spring:message code='ezStatistics.t113' /></option>
              </select>
                     <input id="keyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
-                    <a class="imgbtn" style="vertical-align: middle"><span onclick="search()"><spring:message code='ezStatistics.t36' /></span></a>
+                    <a class="imgbtn" style="vertical-align: middle;height:22px"><span onclick="search()"><spring:message code='ezStatistics.t36' /></span></a>
                 </span>
             </td>
             <td>
                 <div id="mainmenu" style="height: 28px;margin:3px 0px !important">
                     <ul>
-                        <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003' /></span></li>
+                        <li><span style="width: 110px;text-align:center;background-color: white" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003' /></span></li>
                     </ul>
                 </div>
             </td>
