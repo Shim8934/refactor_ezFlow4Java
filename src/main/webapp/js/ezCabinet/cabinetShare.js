@@ -132,11 +132,7 @@ var CabinetShareItem = function() {
 		tableList.className = txtSpanView == "on" ? "mainlist" : "organCabTbl";
 		
 		if(result == null || result.length == 0) {
-			var trElmt = document.createElement("tr");
-			var tdElmt = document.createElement("td");
-			
-			trElmt.appendChild(tdElmt);
-			tableList.appendChild(trElmt);
+			alert(CabinetMessages.strNoSearch);
 		}
 		else {
 			for(var i = 0, len = result.length; i < len ; i++) {
