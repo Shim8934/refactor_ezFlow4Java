@@ -24,7 +24,7 @@
 .cabiMain .cabBttnDiv {width: 680px; text-align: center;}
 .cabiMain .bttnDiv {width: 300px; text-align: center;}
 .cabGeneral {margin: 0px 10px;}
-.cabGeneral .cabBttnDiv {width: 623px; text-align: center;}
+.cabGeneral .cabBttnDiv {width: 680px; text-align: center;}
 .cabGeneral .cabBttnDiv a.imgbtn, .cabiMain .bttnDiv a.imgbtn, .cabiMain .cabBttnDiv a.imgbtn {box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height: 24px;}
 .cabGeneral .cabBttnDiv a.imgbtn span, .cabiMain .bttnDiv a.imgbtn span, .cabiMain .cabBttnDiv a.imgbtn span {height: 24px; line-height: 24px; font-weight: bold; font-size: 12px; color: #000;}
 .cabPersonalDiv, .cabGroupDiv {height: 500px; display: flex;}
