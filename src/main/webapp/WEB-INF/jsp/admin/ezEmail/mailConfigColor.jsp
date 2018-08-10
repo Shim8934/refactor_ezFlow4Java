@@ -9,9 +9,9 @@
 	    <title></title>
 	    <link rel="stylesheet" href="/js/ezEmail/<spring:message code='ezEmail.e4' />" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c3' />" type="text/css" />
-	    <script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>></script>
-	    <script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>></script>
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css">
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <script type="text/javascript">
 	

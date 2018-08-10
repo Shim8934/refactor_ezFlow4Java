@@ -32,6 +32,11 @@
 			var strLang34  = "<spring:message code='ezWebFolder.t184'/>";
 			var strError   = "<spring:message code='ezWebFolder.t134'/>";
 			var strSuccess = "<spring:message code='ezWebFolder.t27' />";
+			var resultErr1 = "<spring:message code='ezWebFolder.t306'/>";
+			var resultErr2 = "<spring:message code='ezWebFolder.t305'/>";
+			var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
+			var resultErr4 = "<spring:message code='ezWebFolder.t249'/>";
+			var resultErr5 = "<spring:message code='ezWebFolder.t250'/>";
 			
 			$(function () {
 				$.datepicker.regional["<spring:message code='main.t0619' />"] = {

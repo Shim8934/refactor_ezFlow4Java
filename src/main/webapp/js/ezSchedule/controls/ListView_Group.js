@@ -1438,6 +1438,7 @@ function event_listclick(obj, event) {
 }
 
 //2018-07-16 구해안
+// 2018-08-10 김민성 - 그룹 구성원 없을 시 alert
 function show_groupinfo2(obj) {
    /* var listview = new ListView();
     listview.LoadFromID("GroupListView");
@@ -1457,6 +1458,15 @@ function show_groupinfo2(obj) {
     }*/
 	var checkRealID = "";
 	var feature = GetOpenPosition(430, 370);
+	
+	var listview = new ListView();
+    listview.LoadFromID("GroupListView");
+    
+	if (listview.GetSelectedRows() == "") {
+        alert(strLang266);
+        return;
+    }
+	
 	if(obj == 'show'){
 		var checkId = $('input:checked')
 		
