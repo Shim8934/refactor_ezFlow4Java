@@ -21,16 +21,18 @@
     				<dl class="info_txt">
     					<dt>
     						<c:if test="${fn:length(companyList) gt 1 }">
-								<select id="selectCompany" style="width: 190px;" onchange="changeCompany();">
+								<select id="selectCompany" style="width: 190px; font-size: 9pt;" onchange="changeCompany();">
 									<c:forEach items="${companyList }" var="company">
 										<option value="${company.deptID }" <c:if test="${userInfo.deptID eq company.deptID }">selected="selected"</c:if> companyID="${company.companyID }">
-											${company.companyName }(${company.deptName }) - ${company.apprCount }
+											${company.companyName } (${company.deptName }) (${company.apprCount })
 										</option>
 									</c:forEach>
 								</select>
     						</c:if>
 						</dt>
-        				<dt>${companyNm }<br></dt>
+						<c:if test="${fn:length(companyList) eq 0 }">
+        					<dt>${companyNm }<br></dt>
+        				</c:if>
 			 			<dd>${department} ${title}</dd>
 						<dd class="gray"><spring:message code="main.t00016" />  ${lastLogin }</dd>
     				</dl>
