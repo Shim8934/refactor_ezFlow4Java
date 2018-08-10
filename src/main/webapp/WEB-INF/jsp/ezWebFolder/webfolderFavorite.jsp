@@ -778,13 +778,27 @@
 			},
 			mimeType: "multipart/form-data",
 			success: function(data) {
-				var reason = data.reason;
-				var listFile = data.listFile;
+				var code = data.code;
 				
-				if (reason) {
-					alert(reason);
-				} else {
-					context.refreshList(true);
+				switch(code) {
+					case 0: 
+						context.refreshList(true);
+						break;
+					case 1:
+						alert("<spring:message code='ezWebFolder.t306'/>");
+						break;
+					case 2:
+						alert("<spring:message code='ezWebFolder.t305'/>");
+						break;
+					case 3:
+						alert("<spring:message code='ezWebFolder.t300'/>");
+						break;
+					case 4:
+						alert("<spring:message code='ezWebFolder.t249'/>");
+						break;
+					case 5:
+						alert("<spring:message code='ezWebFolder.t250'/>");
+						break;
 				}
 			},
 			error: function(error) {
