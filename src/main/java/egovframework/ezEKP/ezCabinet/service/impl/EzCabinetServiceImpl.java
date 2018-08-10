@@ -1048,9 +1048,20 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("tenantId",  userInfo.getTenantId());
 		CabinetVO cabinet      = ezCabinetDAO.getCabinetById(map);
 		
+		//Check cabinet
 		if (cabinet == null || cabinet.getUseStatus() == 0) {
 			result.put("status", "error");
 			result.put("code", 2);
+			return result;
+		}
+		
+		map.put("itemId",   itemIdList.get(0));
+		CabinetItemVO checkItem    = ezCabinetDAO.getItemById(map);
+		
+		//Check move/copy condition
+		if (cabinetId == checkItem.getCabinetId()) {
+			result.put("status", "error");
+			result.put("code", 5);
 			return result;
 		}
 		

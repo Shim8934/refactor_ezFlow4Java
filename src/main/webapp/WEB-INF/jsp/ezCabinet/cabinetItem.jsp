@@ -64,12 +64,10 @@
 		</div>
 		
 		<div id="searchPanel" class="cabSearchPanel off">
-			<div>
+			<div class="popup cabsearch">
+				<h1><spring:message code='ezCabinet.t54'/></h1>
+				<div id="cabSearchClose" class="cabClose"><ul><li><span></span></li></ul></div>
 				<table class="content cabtable">
-					<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png">&nbsp;<spring:message code='ezCabinet.t54'/></th>
-					</tr>
-					<tr><td class="cabSearchTh2" colspan="2"></td></tr>
 					<tr>
 						<th class="cabSearchTh"><spring:message code='ezCabinet.t01'/></th>
 						<td class="cabSearchTd">
@@ -95,8 +93,8 @@
 						<th class="cabSearchTh"><spring:message code='ezCabinet.t58'/></th>
 						<td class="cabSearchTd"><input type="text" id="Sdatepicker" class="cabDate" readonly="readonly">&nbsp;~&nbsp;<input type="text" id="Edatepicker" class="cabDate" readonly="readonly"></td>
 					</tr>
-					
 				</table>
+				<br>
 				<div class="cabdivBttn" id="searchDivBttn">
 					<a class="cabBttn"><span><spring:message code='ezCabinet.t59'/></span></a>
 					<a class="cabBttn"><span><spring:message code='ezCabinet.t49'/></span></a>

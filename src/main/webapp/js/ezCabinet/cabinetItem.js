@@ -152,7 +152,7 @@ var CabinetItem = function() {
 		document.getElementById("sltView").addEventListener("click", function(e)       {toggleOptionView(this);}, false);
 		document.getElementById("listcount").addEventListener("change", function(e)    {startSearchCabinet("1");}, false);
 		
-		var closeSearchBttn     = document.getElementsByClassName("cabCloseBttn")[0];
+		var closeSearchBttn     = document.getElementById("cabSearchClose");
 		closeSearchBttn.onclick = function() {toggleSearchPanel();};
 		var cabdivBttnElmt      = document.getElementById("searchDivBttn");
 		var listBttns           = cabdivBttnElmt.children;
@@ -219,7 +219,7 @@ var CabinetItem = function() {
 		var searchPanel = rightFrame.getElementById("searchPanel");
 		if (searchPanel.className == "cabSearchPanel off") {
 			addFogPanel("search");
-			var position            = getPosition(426, 278);
+			var position            = getPosition(464, 278);
 			searchPanel.style.top   = position[0] + "px";
 			searchPanel.style.right = position[1] + "px";
 			searchPanel.className   = "cabSearchPanel";
@@ -674,6 +674,7 @@ var CabinetItem = function() {
 			case 2 : alert(CabinetMessages.strError)   ; break;
 			case 3 : alert(CabinetMessages.strPerm)    ; break;
 			case 4 : alert(CabinetMessages.strCapacity); break;
+			case 5 : alert(CabinetMessages.strMovErr1) ; break;
 			default: alert(CabinetMessages.strError)   ; return;
 		}
 	}
