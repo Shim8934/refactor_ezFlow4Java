@@ -1771,7 +1771,7 @@ function btnAddSepAttach_onclick() {
     inssepattach_cross_dialogArguments[0] = para;
     inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
 
-    DivPopUpShow(730, 630, "/ezApprovalG/insSepAttach.do");
+    DivPopUpShow(920, 630, "/ezApprovalG/insSepAttach.do");
 }
 
 
