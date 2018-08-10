@@ -1106,7 +1106,7 @@ function btnAddSepAttach_onclick() {
 	para[3] = ext;
 	    
 	var url = "/ezApprovalG/insSepAttach.do";
-	var feature = "dialogWidth:730px;dialogHeight:380px;scroll:no;resizable:yes;status:no; help:no ";
+	var feature = "dialogWidth:920px;dialogHeight:630px;scroll:no;resizable:yes;status:no; help:no ";
   
 	if(url != "") {
 		var rtn = window.showModalDialog(url,para,feature);

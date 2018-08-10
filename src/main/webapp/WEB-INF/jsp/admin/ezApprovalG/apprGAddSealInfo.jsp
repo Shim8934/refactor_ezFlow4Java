@@ -269,8 +269,8 @@
 	  		<tr> 
 	    		<th><spring:message code = 'ezApprovalG.t1263' /></th>
 	    		<td id="SealSize"> 
-	      			<input type="text" id="tbSealWidth" style="width:40px" onkeydown="return showKeyCode(event)" maxlength="3">mm&nbsp;*
-	      			<input type="text" id="tbSealHeight" style="width:40px" onkeydown="return showKeyCode(event)" maxlength="3">mm 
+	      			<input type="text" value="30" id="tbSealWidth" style="width:40px" onkeydown="return showKeyCode(event)" maxlength="3">mm&nbsp;*
+	      			<input type="text" value="30" id="tbSealHeight" style="width:40px" onkeydown="return showKeyCode(event)" maxlength="3">mm 
 	      		</td>
 	  		</tr>
 	  		<tr> 

@@ -4,14 +4,30 @@ function Receptinfo_ini() {
         Recinfoini = true;
         Tree_setconfig();
         TreeViewinitialize_tree2(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "<%=_pServerName%>");
-        if(approvalFlag == "S") {
+        
+        if (approvalFlag == "G") {
+        	if (receptGubunYN == "Y") {
+        		if (pDocType == "001") { //시행문
+        			ChangeReceptTab(document.getElementById("3tab4"));
+        			initReceptListView();
+        			document.getElementById("3tab4").onclick();
+        		} else { //수신문
+        			ChangeReceptTab(document.getElementById("3tab1"));
+        			initReceptListView();
+        			document.getElementById("3tab1").onclick();
+        		}
+        	} else {
+        		ChangeReceptTab(document.getElementById("3tab1"));
+        		initReceptListView();
+        		document.getElementById("3tab1").onclick();
+        	}
+        } else {
         	RdisplayUserList(arr_userinfo[4]);
+        	
+        	ChangeReceptTab(document.getElementById("3tab1"));
+        	initReceptListView();
+        	document.getElementById("3tab1").onclick();
         }
-        ChangeReceptTab(document.getElementById("3tab1"));
-        initReceptListView();
-        document.getElementById("3tab1").onclick();
-        //2015-06-23 표준모듈:추가 - KSK
-        SelDivName = "Organ";
     }
 }
 //#############################################################################################################################################수신처 내부 버튼 클릭 이벤트

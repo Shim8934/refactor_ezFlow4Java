@@ -57,6 +57,8 @@
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
 		    var proxyInfo = "${proxyInfo}";
+		    var proxyStartDate = "${proxyInfo.startDate}"
+		    var proxyEndDate = "${proxyInfo.endDate}"
 		    var formURL = "";
 		    var formDocType = "";
 		    var pDocInfoValue = "1";
@@ -136,6 +138,20 @@
 		            else {
 		                checkBujaeInfo_Complete(false);
 		            }
+		        } else if(GetBujaeFlag()){
+		        	
+		        		tmpStartDate = proxyStartDate;
+		        		tmpEndDate = proxyEndDate;
+		        		
+		        		var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+
+			            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
+			            if (Rtnval) {
+			                checkBujaeInfo_Complete(true);
+			            }
+			            else {
+			                checkBujaeInfo_Complete(false);
+			            }		            	
 		        } else {
 		            checkBujaeInfo_Complete("ING");
 		        }
@@ -1241,7 +1257,7 @@
 		                return true;
 		            }
 		        }
-		        
+		        setBujaeOff();
 		        return false;
 		    }
 		    function setpause(numberMillis) {

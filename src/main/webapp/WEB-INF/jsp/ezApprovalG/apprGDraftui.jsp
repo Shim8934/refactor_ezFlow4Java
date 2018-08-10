@@ -132,12 +132,9 @@
 		    var Saveflag = false;//임시저장Flag
 		    var pPageType = "DRAFTUI";
 		    var pUse_Editor = "${useEditor}";
-		    var hideCabinet = "${hideCabinet}";
 		    /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
 		    var SummaryOuterReceiverList = "";
-		    var hideCabinet = "${hideCabinet}";
 		    var checkdocinfo = false;
-		    //var DocType = ""; // 이미 위에 선언되어있음
 		    var junGyulFlag = "${junGyulFlag}";
 		    var draftJunGyulFlag = "${draftJunGyulFlag}";
 		    var pSignImage_Size = "${signImageSize}";
@@ -535,39 +532,31 @@
 			                return;
 			            }
 			            
-			            if (hideCabinet == "0") {
-				            if (approvalFlag == "G") {
-				            	if (nonElecRec == "Y" && nonElecRecInfoXml == "") {
-				            		var pAlertContent = "기록물 정보를 입력해 주세요.";
+			            if (approvalFlag == "G") {
+			            	if (nonElecRec == "Y" && nonElecRecInfoXml == "") {
+			            		var pAlertContent = "기록물 정보를 입력해 주세요.";
+				                OpenAlertUI(pAlertContent);
+				                return;
+			            	}
+			            	
+				            if (cabinetID == "") {
+				                var pAlertContent = "<spring:message code='ezApprovalG.t134'/>";
+				                OpenAlertUI(pAlertContent, check_btnSendDraft);
+				                return;
+				            }
+				            
+				            if (nonElecRec != "Y") {
+					            if (cabinetID.substring(0, arr_userinfo[4].length).toLowerCase() != arr_userinfo[4].toLowerCase()) {
+					                var pAlertContent = "<spring:message code='ezApprovalG.t135'/>" + "<br>" + "<spring:message code='ezApprovalG.t136'/>";
 					                OpenAlertUI(pAlertContent);
-					                return;
-				            	}
-				            	
-					            if (cabinetID == "") {
-					                var pAlertContent = "<spring:message code='ezApprovalG.t134'/>";
-					                OpenAlertUI(pAlertContent, check_btnSendDraft);
-					                return;
-					            }
-					            
-					            if (nonElecRec != "Y") {
-						            if (cabinetID.substring(0, arr_userinfo[4].length).toLowerCase() != arr_userinfo[4].toLowerCase()) {
-						                var pAlertContent = "<spring:message code='ezApprovalG.t135'/>" + "<br>" + "<spring:message code='ezApprovalG.t136'/>";
-						                OpenAlertUI(pAlertContent);
-						                return;
-						            }
-					            }
-				            } else {
-					            if (cabinetID == "") {
-					                var pAlertContent = "<spring:message code='ezApprovalG.t137'/>";
-					                OpenAlertUI(pAlertContent, check_btnSendDraft);
 					                return;
 					            }
 				            }
 			            } else {
 				            if (cabinetID == "") {
-				            	//하드코딩 방산끝나면 삭제 ㄱㄱ
-				            	cabinetID = "devteamZZ3782312017000002001";
-				            	TaskCode = "ZZ378231";
+				                var pAlertContent = "<spring:message code='ezApprovalG.t137'/>";
+				                OpenAlertUI(pAlertContent, check_btnSendDraft);
+				                return;
 				            }
 			            }
 			            
@@ -1361,7 +1350,8 @@
 				if(DraftFlag == "REDRAFT" && SusinSN == "1" && DocState == "011" && AprState == "004") {
 					pGubun = "11";
 				}
-		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&ext=" + "mht";
+				
+		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "mht";
 		        
 		        if (ListType == "21") {
 		            OpenUrl += "&docSN=" + DocSN;

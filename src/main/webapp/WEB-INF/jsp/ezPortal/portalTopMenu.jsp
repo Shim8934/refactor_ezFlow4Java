@@ -1605,7 +1605,7 @@
 									</span>
 								</a>
 			  				</td>
-                			<td style="width:56px;"><spring:message code='ezPortal.t990022' />:</td>
+                			<td style="width:60px;"><spring:message code='ezPortal.t990022' />:</td>
                 			<td style="width:135px;">
                     			<select id="Themeinfo" style="width:130px; height: 23px;">
 			                        ${pThemeSelectObject}
