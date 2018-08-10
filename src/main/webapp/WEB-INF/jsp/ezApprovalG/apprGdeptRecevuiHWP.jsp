@@ -681,7 +681,7 @@
 			    if (tempItemCode != "")
 			        tempdocnumcode = tempItemCode;
 			    
-			    var url =  "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&ext=" + "hwp";
+			    var url =  "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType + "&ext=" + "hwp";
 		        var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
 			    var ret = window.showModalDialog(url, parameter, feature);
 			
