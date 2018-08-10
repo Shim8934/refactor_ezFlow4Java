@@ -15078,7 +15078,7 @@
                                                  AND 
                                                  	TBL_CABINETCLASS.ConfirmFlag = '0'
                                                  AND 
-                                                 	OWNERDEPTID = 'GJS'
+                                                 	OWNERDEPTID = #v_DEPTCODE#
                                                  AND
                                                  	TBL_CABINET.TENANT_ID = #v_TENANTID#
                                                  AND
