@@ -38,7 +38,7 @@
 							</tr>
 						</table>
 					</div>
-					<div id="tblPageRayer" style="display: flex;"></div>
+					<div id="tblPageRayer"></div>
 				</div>
 			</div>
 			<div class="cabRlBttnDiv">

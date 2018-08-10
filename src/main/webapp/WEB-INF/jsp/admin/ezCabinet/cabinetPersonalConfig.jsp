@@ -56,29 +56,29 @@
 			<jsp:include page="/WEB-INF/jsp/admin/ezCabinet/cabinetChange.jsp"></jsp:include>
 			
 			<div id="searchPanel" class="cabSearchPanel2 off">
-				<div>
+				<div class="popup cabsearch">
+					<h1><spring:message code='ezCabinet.t54'/></h1>
+					<div id="cabSearchClose" class="cabClose"><ul><li><span></span></li></ul></div>
 					<table class="content cabtable">
-						<tr>
-							<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png">&nbsp;<spring:message code='ezCabinet.t54'/></th>
-						</tr>
-						<tr><td class="cabSearchTh2" colspan="2"></td></tr>
 						<tr>
 							<th class="cabSearchTh"><spring:message code='ezCabinet.t116'/></th>
 							<td class="cabSearchTd2">
-								<select id="searchOption">
-									<option value="userName"><spring:message code='ezCabinet.t117'/></option>
-									<option value="deptName"><spring:message code='ezCabinet.t103'/></option>
-								</select>
-								<input id="inputSearch" type="text">
+								<div>
+									<select id="searchOption">
+										<option value="userName"><spring:message code='ezCabinet.t117'/></option>
+										<option value="deptName"><spring:message code='ezCabinet.t103'/></option>
+									</select>
+									<input id="inputSearch" type="text">
+								</div>
 							</td>
 						</tr>
 					</table>
+					<br>
 					<div class="cabdivBttn" id="searchDivBttn">
 						<a class="cabBttn"><span><spring:message code='ezCabinet.t49'/></span></a>
 						<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
 					</div>
 				</div>
-				<span class="cabCloseBttn"></span>
 			</div>
 			
 			<div id="mainSetting" class="userCapDiv" style="height: 500px;">
