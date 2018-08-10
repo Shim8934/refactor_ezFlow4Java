@@ -1208,6 +1208,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		hm.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 		hm.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		hm.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		
 		saveImage.setRenderingHints(hm);
 		
 		File newFile = new File(realPath + serverPath + pSaveName);

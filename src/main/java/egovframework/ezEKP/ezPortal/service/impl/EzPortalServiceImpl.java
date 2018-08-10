@@ -2369,7 +2369,7 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		
 		if (pMode.equals("view")) {
 			if (!checkViewRightBln(pPortalPageID, getAccessList(userInfo), userInfo.getTenantId())) {
-				return "<table width=100% height=100% border=0><tr><td align=center>페이지를 볼 권한이 없습니다.</td></tr></table>";
+				return "<table width=100% height=100% border=0><tr><td align=center>" + egovMessageSource.getMessage("ezPortal.t286", userInfo.getLocale()) + "</td></tr></table>";
 			}
 			
 			String cacheValue = checkCacheValue(pPortalPageID, getAccessList(userInfo), userInfo.getTenantId());
