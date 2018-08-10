@@ -1642,6 +1642,12 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		
 		List<OrganProxyVO> organProxyVOList = ezOrganDAO.getProxyUserInfo(map);
+		for (OrganProxyVO organProxyVO : organProxyVOList) {
+			
+			logger.debug("getProxyUserInfo : " + organProxyVO.getProxyUserID());
+			logger.debug("getProxyStartDate : " + organProxyVO.getStartDate());
+			logger.debug("getProxyEndDate : " + organProxyVO.getEndDate());
+		}
 		
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
@@ -1689,12 +1695,13 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public OrganProxyVO getProxyInfo(String userID, int tenantID) throws Exception {
+	public OrganProxyVO getProxyInfo(String userID, int tenantID, String offset) throws Exception {
 		logger.debug("getProxyInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userID", userID);
 		map.put("tenantID", tenantID);
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		
 		OrganProxyVO proxyInfo = ezOrganDAO.getProxyInfo(map);
 
