@@ -15078,7 +15078,7 @@
                                                  AND 
                                                  	TBL_CABINETCLASS.ConfirmFlag = '0'
                                                  AND 
-                                                 	OWNERDEPTID = 'GJS'
+                                                 	OWNERDEPTID = #v_DEPTCODE#
                                                  AND
                                                  	TBL_CABINET.TENANT_ID = #v_TENANTID#
                                                  AND
@@ -21992,7 +21992,7 @@
    			TBL_APRLINEINFO 
    		(DocID, 	       AprMemberSN,      AprType,     AprState,     AprMemberID,     AprMemberIsDeptYN,      AprMemberName,    AprMemberName2,     AprMemberJobTitle,   AprMemberJobTitle2,      AprMemberDeptID,     AprMemberDeptName,     AprMemberDeptName2,    AprMemberLDAPPath,   ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID, COMPANYID) 
    		VALUES 
-   		(#v_gongRamDocID#, #v_AprMemberSN#, #v_AprType#, #v_AprState#, #v_AprMemberID#, #v_AprMemberIsDeptYN#, #v_AprMemberName#, #v_AprMemberName2#, #v_AprMemberJobTitle#, #v_AprMemberJobTitle2#, #v_AprMemberDeptID#, #v_AprMemberDeptName#, #v_AprMemberDeptName2#, #v_AprMemberLDAPPath#, $v_ReceivedDate$, $v_ProcessDate$, #v_ReasonDoNotApprov#, #v_isProposerYN#, #v_isBriefUserYN#, #v_TENANTID#, #companyID#)
+   		(#v_gongRamDocID#, #v_AprMemberSN#, #v_AprType#, #v_AprState#, #v_AprMemberID#, #v_AprMemberIsDeptYN#, #v_AprMemberName#, #v_AprMemberName2#, #v_AprMemberJobTitle#, #v_AprMemberJobTitle2#, #v_AprMemberDeptID#, #v_AprMemberDeptName#, #v_AprMemberDeptName2#, #v_AprMemberLDAPPath#, TO_DATE($v_ReceivedDate$,'YYYY-MM-DD HH24:MI:SS'), TO_DATE($v_ProcessDate$,'YYYY-MM-DD HH24:MI:SS'), #v_ReasonDoNotApprov#, #v_isProposerYN#, #v_isBriefUserYN#, #v_TENANTID#, #companyID#)
    	</insert>
    	 	
    	<insert id="EzApprovalG.insertGongRamSaveExpAprLine" parameterClass="Map">
