@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -7,16 +8,16 @@
 		<title><spring:message code='ezPersonal.t120'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/jsbn.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/rsa.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/prng4.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/rng.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/pidcrypt.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/pidcrypt_util.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/asn1.js")%>"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS" type="text/javascript">
 		    var AprPass ="${pwd}";
 		    var rsa = new RSAKey();

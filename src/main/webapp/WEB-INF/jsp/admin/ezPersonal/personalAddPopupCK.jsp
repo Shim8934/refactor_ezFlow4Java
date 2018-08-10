@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -7,18 +8,18 @@
 		<title><spring:message code = 'ezPersonal.t250' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
-		<script type="text/javascript" src="/js/ezPersonal/controls/dhtml.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-		<!-- <script type="text/javascript" src="/js/ezPersonal/controls/datepicker.htc.js"></script> -->
-		<!-- <script type="text/javascript" src="/js/ezPersonal/controls/composeappt.js"></script> -->
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>"/>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>"/>
+		<link rel="stylesheet" type="text/css" href="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.css")%>" />
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPersonal/controls/dhtml.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.js")%>"></script>
+		<!-- <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPersonal/controls/datepicker.htc.js")%>"></script> -->
+		<!-- <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPersonal/controls/composeappt.js")%>"></script> -->
 		
 		<script type="text/javascript">
 			var compid = "<c:out value = '${companyID}' />";
