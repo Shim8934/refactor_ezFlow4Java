@@ -178,7 +178,6 @@
 	        /* 2015-06-23 추가 - KSK */
 	        var T1361andT1362 = "<spring:message code='ezApprovalG.t1361'/>" + "<br>" + "<spring:message code='ezApprovalG.t1362'/>";
 	        var SummaryOuterReceiverList = "";
-	        var hideCabinet = "${hideCabinet}";
 			var useAddressOpenAPI = "${useAddressOpenAPI}";
 			var checkdocinfo = false;
 			var startDateTime = '${startDateTime}';
@@ -190,6 +189,7 @@
 			var chamjoAfterYN = "${chamjoAfterYN}";
 			var isUsed = "${isUsed}";
 			var beforeDocID = "${beforeDocID}";
+			var receptGubunYN = "${receptGubunYN}";
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
 	        
 	        $(function () {
@@ -807,37 +807,35 @@
 			                }
 			                
 			                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
-			                    if (hideCabinet == "0") {
-				                    var List = new ListView();
-				                    List.LoadFromID("DivTaskSCateList");
-				
-				                    var MyList = new ListView();
-				                    MyList.LoadFromID("DivMyTaskSCateList");
-				
-				                    var totalRows = List.GetSelectedRows();
-				                    var MyRows = MyList.GetSelectedRows();
-			                    	
-				                    if (totalRows.length == 0 && MyRows.length == 0) {
-				                        OpenAlertUI(Cabinet4);
-				                        document.getElementById("1tab3").onclick();
-				                        return;
-				                    } else {
-				                        if (MyRows.length > 0) {
-				                            if (GetAttribute(MyRows[0], "DATA1") == "") {
-				                                OpenAlertUI(Cabinet4);
-				                                document.getElementById("1tab3").onclick();
-				                                return;
-				                            }
-				                            else
-				                                totalRows = MyRows;
-				                        } else if (totalRows.length > 0) {
-				                            if (GetAttribute(totalRows[0], "DATA1") == "") {
-				                                OpenAlertUI(Cabinet4);
-				                                document.getElementById("1tab3").onclick();
-				                                return;
-				                            }
-				                        }
-				                    }
+			                    var List = new ListView();
+			                    List.LoadFromID("DivTaskSCateList");
+			
+			                    var MyList = new ListView();
+			                    MyList.LoadFromID("DivMyTaskSCateList");
+			
+			                    var totalRows = List.GetSelectedRows();
+			                    var MyRows = MyList.GetSelectedRows();
+		                    	
+			                    if (totalRows.length == 0 && MyRows.length == 0) {
+			                        OpenAlertUI(Cabinet4);
+			                        document.getElementById("1tab3").onclick();
+			                        return;
+			                    } else {
+			                        if (MyRows.length > 0) {
+			                            if (GetAttribute(MyRows[0], "DATA1") == "") {
+			                                OpenAlertUI(Cabinet4);
+			                                document.getElementById("1tab3").onclick();
+			                                return;
+			                            }
+			                            else
+			                                totalRows = MyRows;
+			                        } else if (totalRows.length > 0) {
+			                            if (GetAttribute(totalRows[0], "DATA1") == "") {
+			                                OpenAlertUI(Cabinet4);
+			                                document.getElementById("1tab3").onclick();
+			                                return;
+			                            }
+			                        }
 			                    }
 			                }
 
@@ -895,11 +893,7 @@
 		
 		                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
 			                if (approvalFlag == "G") {
-			                	if (hideCabinet == "0") {
-				                    ret[4] = GetSelCabInfoXml(totalRows); //기록물철 XML
-			                	} else {
-				                    ret[4] = GetSelCabInfoXml2(); //기록물철 XML
-			                	}
+			                    ret[4] = GetSelCabInfoXml(totalRows); //기록물철 XML
 			                } else {
 			                	ret[4] = setCabInfoXML();
 			                }
@@ -1515,17 +1509,12 @@
 	        <div class="portlet_tabpart02_top" id="tab1">
 	            <p id="showAprLine"><span divname="Lineinfo" id="1tab1"><spring:message code='ezApprovalG.t1769'/></span></p>
 	            <p id="showReceptinfo"><span divname="Receptinfo" id="1tab2"><c:if test="${approvalFlag eq 'G'}" ><spring:message code='ezApprovalG.t448'/></c:if><c:if test="${approvalFlag  eq 'S'}"><spring:message code='ezApprovalG.t999932'/></c:if></span></p>
-	            <c:if test="${hideCabinet eq '1'}" >
-	            	<p id="showCabinetinfo" style="display: none;"><span divname="Cabinetinfo" id="1tab3"><spring:message code='ezApprovalG.t51'/></span></p>
-	            </c:if>
-	            <c:if test="${hideCabinet eq '0'}" >
-		            <c:if test="${approvalFlag eq 'G'}" >
-		            <p id="showCabinetinfo"><span divname="Cabinetinfo" id="1tab3"><spring:message code='ezApprovalG.t51'/></span></p>
-		           	</c:if>
-		           	<c:if test="${approvalFlag eq 'S'}" >
-		            <p id="showCabinetinfo"><span divname="Cabinetinfo" id="1tab3"><spring:message code='ezApproval.t335'/></span></p>
-		           	</c:if>
-	            </c:if>
+	            <c:if test="${approvalFlag eq 'G'}" >
+	            	<p id="showCabinetinfo"><span divname="Cabinetinfo" id="1tab3"><spring:message code='ezApprovalG.t51'/></span></p>
+	           	</c:if>
+	           	<c:if test="${approvalFlag eq 'S'}" >
+	            	<p id="showCabinetinfo"><span divname="Cabinetinfo" id="1tab3"><spring:message code='ezApproval.t335'/></span></p>
+	           	</c:if>
 	            <p id="showDocinfo"><span divname="Docinfo" id="1tab4">
 	            <c:if test="${approvalFlag eq 'G' }">
 	            	<spring:message code='ezApprovalG.t1204'/>
@@ -1736,10 +1725,26 @@
 	                </c:if>
 	                    <div class="portlet_tabpart01" style="margin-top: 3px; text-align: right;">
 	                        <div class="portlet_tabpart01_top" id="tab3">
-	                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
-	                            <c:if test= "${hideCabinet == '0'}">
-	                            <p><span id="3tab4" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
-	                            </c:if>
+	                        	<c:if test="${approvalFlag eq 'G'}">
+		                        	<c:choose>
+		                        		<c:when test="${receptGubunYN eq 'Y'}">
+		                        			<c:if test="${docType eq '001'}">
+					                            <p><span id="3tab4" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+		                        			</c:if>
+		                        			<c:if test="${docType ne '001'}">
+					                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
+		                        			</c:if>
+		                        		</c:when>
+		                        		<c:otherwise>
+				                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
+				                            <p><span id="3tab4" style="display: none;" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+		                        		</c:otherwise>
+		                        	</c:choose>
+	                        	</c:if>
+	                        	<c:if test="${approvalFlag ne 'G'}">
+		                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
+		                            <p><span id="3tab4" style="display: none;" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+	                        	</c:if>
 	                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
 	                            <p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 	                        </div>
@@ -1911,9 +1916,7 @@
 	                        </tr> -->
 	                        <tr>
 	                            <td class="approvalG" style="text-align:left">
-	                            	<c:if test= "${hideCabinet == '0'}">
 	                                <a style="margin-top: 10px; display: none;"  class="imgbtn imgbck" id="btnaddress"><span  onclick="return btnAddAddress()" ><spring:message code='ezApprovalG.t334'/></span></a>
-	                                </c:if>
 	                                <a style="margin-top: 10px; display: none;" class="imgbtn imgbck" id="btnaddressChange" ><span onclick="return btnaddressChange()" ><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a>
 	                            	<!-- 2018-08-08 천성준 - 외부수신자요약 UI때문에 이동 -->
 	                            	<span style="display: inline-block; margin-top: 8px;">

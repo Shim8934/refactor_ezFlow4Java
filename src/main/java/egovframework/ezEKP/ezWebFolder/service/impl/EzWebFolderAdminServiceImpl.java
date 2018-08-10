@@ -683,12 +683,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				destFile.getParentFile().mkdirs(); 
 				destFile.createNewFile();
 				
-				try {
-					FileUtils.copyFile(srcFile, destFile);
-				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
+				FileUtils.copyFile(srcFile, destFile);
 				
 				file.setFilePath(newPath);
 				ezWebFolderService.insertFile(file);
@@ -823,8 +818,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			fileOut.close();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
-			fileName = "";
+			throw e;
 		}
 		finally {
 			fileOut.close();

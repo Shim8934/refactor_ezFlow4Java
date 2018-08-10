@@ -99,21 +99,29 @@
 					async: true,
 					success : function(data) {
 						hideProgress();
-						var reason  = data.reason;
-						if (reason) {
-							alert(reason);
-							return;
+						var code = data.code;
+						
+						switch(code) {
+							case 0: 
+								var result  = data.capacityList;
+								totalRows   = data.totalUsers;
+								totalPages  = data.totalPages;
+								currentPage = pPage;
+								checkedArr  = [];
+								
+								makePageSelPage();
+								renderData(result);
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
 						}
-						
-						var result  = data.capacityList;
-						totalRows   = data.totalUsers;
-						totalPages  = data.totalPages;
-						currentPage = pPage;
-						checkedArr  = [];
-						
-						makePageSelPage();
-						renderData(result);
-						
 					},
 					error : function(error) {
 						hideProgress();
@@ -253,16 +261,26 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var reason = data.reason;
+						var code = data.code;
 						
-						if (reason) {
-							alert(reason);
-							return;
-						}
-						else {
-							alert("<spring:message code='ezWebFolder.t252'/>");
-							document.getElementById("storageVal").value = "";
-							search_Set(currentPage);
+						switch(code) {
+							case 0: 
+								alert("<spring:message code='ezWebFolder.t252'/>");
+								document.getElementById("storageVal").value = "";
+								search_Set(currentPage);
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300'/>");
+								break;
+							case 4:
+								alert("<spring:message code='ezWebFolder.t26' />");
+								break;
 						}
 					},
 					error : function(error) {
@@ -291,15 +309,24 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var reason = data.reason;
-						if (reason) {
-							alert(reason);
-							return;
-						}
+						var code = data.code;
 						
-						alert("<spring:message code='ezWebFolder.t253'/>")
-						search_Set(currentPage);
-						checkedArr = [];
+						switch(code) {
+							case 0: 
+								alert("<spring:message code='ezWebFolder.t253'/>")
+								search_Set(currentPage);
+								checkedArr = [];
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300'/>");
+								break;
+						}
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>" + error);

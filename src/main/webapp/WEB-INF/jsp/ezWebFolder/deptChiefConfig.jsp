@@ -19,6 +19,10 @@
 		var strErrMsg       = "<spring:message code='ezWebFolder.t134'/>";
 		var strDataNotFound = "<spring:message code='ezWebFolder.t144'/>";
 		var strAlreadyAdd   = "<spring:message code='ezWebFolder.t169'/>";
+		var resultErr1      = "<spring:message code='ezWebFolder.t306'/>";
+		var resultErr2      = "<spring:message code='ezWebFolder.t305'/>";
+		var resultErr3      = "<spring:message code='ezWebFolder.t300'/>";
+		
 		document.onselectstart = function () { return false; };
 		
 		window.onload = function () {
@@ -47,13 +51,22 @@
 				data : {
 					"deptList" : jsonData.toString()
 				},
-				success : function(data, textStatus, jqXHR) {
-					var result = data.resultValue;
-					if (result == "ok") {
-						alert('<spring:message code="ezWebFolder.t182"/>');
-					}
-					else {
-						alert('<spring:message code="ezWebFolder.t134"/>');
+				success : function(data) {
+					var code = data.code;
+					
+					switch(code) {
+						case 0: 
+							alert('<spring:message code="ezWebFolder.t182"/>');
+							break;
+						case 1:
+							alert("<spring:message code='ezWebFolder.t306'/>");
+							break;
+						case 2:
+							alert("<spring:message code='ezWebFolder.t305'/>");
+							break;
+						case 3:
+							alert("<spring:message code='ezWebFolder.t300' />");
+							break;
 					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
