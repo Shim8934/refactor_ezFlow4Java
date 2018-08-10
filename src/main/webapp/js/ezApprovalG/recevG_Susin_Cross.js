@@ -57,9 +57,9 @@ function setPublicFlag2() {
 
     var PublicText = "";
     if (PublicType == "Y")
-        PublicText = "<spring:message code='ezApprovalG.t47'/>";
+        PublicText = strLang82;
     else if (PublicType == "N")
-        PublicText = "<spring:message code='ezApprovalG.t46'/>";
+        PublicText = strLang84;
     else
         PublicText = " ";
     
