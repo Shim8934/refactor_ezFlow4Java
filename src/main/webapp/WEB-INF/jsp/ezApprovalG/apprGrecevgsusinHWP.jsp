@@ -1392,6 +1392,8 @@
 				                pSpecialRecordCode = ret[10];
 				                pLimitRange = ret[12];
 				                pPageNum = ret[13];
+				                pPublicityYN = ret[21];
+				                tempPublic = ret[21];
 				                /*2018-04-05 김은석 수정 건설공사 공개여부*/
 //	 			                setPublicFlag();
 				                setPublicFlag2();
