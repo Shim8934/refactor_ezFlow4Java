@@ -4,7 +4,7 @@
 <div class="popup cabMoveoff" id="cabMoveDiv">
 	<h1 id="moveCabTtl"></h1>
 	
-	<div id="cabMoveClose" class="cabClose"><ul><li><span><spring:message code='ezCabinet.t66'/></span></li></ul></div>
+	<div id="cabMoveClose" class="cabClose"><ul><li><span></span></li></ul></div>
 	
 	<div class="cabMoveTree" id="cabinetMoveTree"></div>
 	

@@ -612,16 +612,17 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		}
 		
 		//Add item
-		addNewItem(itemCabinetId, itemId, moduleType, title, content, timeUTC, userInfo);
+		addNewItem(itemCabinetId, itemId, moduleType, title, null, content, timeUTC, userInfo);
 	}
 	
-	private void addNewItem(int cabinetId, int itemId, int moduleType, String title, String content, String timeUTC, LoginVO userInfo) {
+	private void addNewItem(int cabinetId, int itemId, int moduleType, String title, String summary, String content, String timeUTC, LoginVO userInfo) {
 		String userId        = userInfo.getId();
 		CabinetItemVO itemVO = new CabinetItemVO();
 		itemVO.setCabinetId(cabinetId);
 		itemVO.setItemId(itemId);
 		itemVO.setItemType(moduleType);
 		itemVO.setTitle(title);
+		itemVO.setSummary(summary);
 		itemVO.setCreatorId(userId);
 		itemVO.setCreatorName1(userInfo.getDisplayName1());
 		itemVO.setCreatorName2(userInfo.getDisplayName2());

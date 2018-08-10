@@ -885,7 +885,7 @@ var CabinetItem = function() {
 		var relatedList = data.relatedFileList;
 		
 		generateJournalTitle(itemInfo, relatedList, dlElmt);
-		generateJournalContent(attachList, itemInfo);
+		generateRelatedModuleContent(itemInfo, attachList, "mjounl", null);
 	}
 	
 	function generateJournalTitle(itemInfo, relatedList, dlElmt){
@@ -897,17 +897,6 @@ var CabinetItem = function() {
 		
 		//Related documents title
 		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
-	}
-	
-	function generateJournalContent(attachList, itemInfo) {
-		var totalFiles       = attachList.length;
-		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
-		var ifameContent     = document.getElementById(iframeId);
-		ifameContent.src     = "/ezCabinet/getPreviewContent.do?module=mjounl";
-		documentCont         = {};
-		documentCont.content = itemInfo["contentPath"];
-		documentCont.size    = itemInfo["itemSize"];
-		documentCont.attach  = attachList;
 	}
 	
 	function showGeneralItemPreview(data, dlElmt, itemInfo, parentDiv) {
@@ -1068,18 +1057,7 @@ var CabinetItem = function() {
 		var relatedList    = data.relatedFileList;
 		
 		generateApprovalTitle(itemInfo, dlElmt);
-		generateApprovalContent(attachList, itemInfo);
-	}
-	
-	function generateApprovalContent(attachList, itemInfo) {
-		var totalFiles       = attachList.length;
-		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
-		var ifameContent     = document.getElementById(iframeId);
-		ifameContent.src     = "/ezCabinet/getPreviewContent.do?module=mapprv";
-		documentCont         = {};
-		documentCont.content = itemInfo["contentPath"];
-		documentCont.size    = itemInfo["itemSize"];
-		documentCont.attach  = attachList;
+		generateRelatedModuleContent(itemInfo, attachList, "mapprv", null);
 	}
 	
 	function generateApprovalTitle(itemInfo, dlElmt) {
@@ -1126,17 +1104,17 @@ var CabinetItem = function() {
 		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
 	}
 	
-	function generateRelatedModuleContent(itemInfo, attachList, moreParams, moduleType) {
+	function generateRelatedModuleContent(itemInfo, attachList, moduleName, moduleType) {
 		var totalFiles       = attachList.length;
 		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
 		var ifameContent     = document.getElementById(iframeId);
-		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
+		var moreparams       = moduleName ? "?module=" + moduleName : "";
+		ifameContent.src     = "/ezCabinet/getPreviewContent.do" + moreparams;
 		documentCont         = {};
 		documentCont.content = itemInfo["contentPath"];
 		documentCont.size    = itemInfo["itemSize"];
 		documentCont.attach  = attachList;
 		
-		if (moreParams) {documentCont.param = moreParams}
 		if (moduleType) {documentCont.type  = moduleType}
 	}
 	

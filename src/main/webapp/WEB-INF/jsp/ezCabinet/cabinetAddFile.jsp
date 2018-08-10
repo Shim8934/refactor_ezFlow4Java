@@ -12,7 +12,7 @@
 	<body class="popup cabAddMain">
 		<h1><spring:message code="ezCabinet.t67"/></h1>
 		
-		<div id="cabAddClose" class="cabClose"><ul><li><span><spring:message code='ezCabinet.t66'/></span></li></ul></div>
+		<div id="cabAddClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		
 		<div class="divInfo">
 			<table class="tblFileInf">
