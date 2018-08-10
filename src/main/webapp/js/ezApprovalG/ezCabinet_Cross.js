@@ -1227,7 +1227,7 @@ function ViewDoc_onclick_Complete(Rtn) {
 //END
 function GetTodayDate() {
     var objDate = new Date();
-    var y = String(objDate.getYear());
+    var y = String(objDate.getFullYear());
     var m = String(objDate.getMonth() + 1);
     var d = String(objDate.getDate());
     m = "00".substring(0, 2 - m.length) + m;

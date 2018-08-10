@@ -46,3 +46,4 @@ padding:0px 0px 0px 0px; height:36px; line-height:37px;}/* 20130416 수정 */
 .previewmail_addfile .icon_btn {cursor:none; margin:0px 5px 0px 5px;}
 .previewmail_addfile .icon_btn img {vertical-align:middle;}
 .previewmail_addfile  span { font-size:12px; }
+.previewmail_addfile .attachFileName { display:inline-block; width:90%;  white-space:nowrap; overflow:hidden;text-overflow:ellipsis;}

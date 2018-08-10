@@ -513,7 +513,7 @@
 	                                    <tr id="repeateTR">
 	                                        <th><a href="#" class="imgbtn"><span onclick="config_repeat()"><spring:message code='ezSchedule.t367'/></span></a></th>
 	                                        <td class="pos1">
-	                                            <div id="repeatinfo" style="PADDING-TOP: 2px; HEIGHT: 19px; width: 100%">&nbsp;</div>
+	                                            <div id="repeatinfo" style="height: 100%; width: 100%; vertical-align: middle; display: table-cell;">&nbsp;</div>
 	                                        </td>
 	                                        <td class="pos2"></td>
 	                                    </tr>
@@ -557,14 +557,14 @@
                                         <tr ID="HolderWriteTr1">
                                             <th><a href="#" id="resourcebutton" class="imgbtn"><span id="resourcebtn" onclick="manage_resource()"><spring:message code='ezSchedule.t1101'/></span></a></th>
                                             <td class="pos1">
-                                                <div id="resourcelist" style="PADDING-TOP: 2px; HEIGHT: 19px; width: 100%"></div>
+                                                <div id="resourcelist" style="height: 100%; width: 100%; vertical-align: middle; display: table-cell;"></div>
                                             </td>
                                             <td class="pos2"></td>
                                         </tr>
                                         <tr ID="HolderWriteTr2">
                                             <th><a href="#" class="imgbtn"><span onclick="config_repeat_resource()"><spring:message code='ezSchedule.t1102'/></span></a></th>
                                             <td class="pos1">
-                                                <div id="resourcerepeatinfo" style="PADDING-TOP: 2px; HEIGHT: 19px; width: 100%">&nbsp;</div>
+                                                <div id="resourcerepeatinfo" style="height: 100%; width: 100%; vertical-align: middle; display: table-cell;">&nbsp;</div>
                                             </td>
                                             <td class="pos2"></td>
                                         </tr>

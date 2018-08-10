@@ -21,6 +21,9 @@
 			var strMessage        = "<spring:message code='ezWebFolder.t134'/>";
 			var strMessage2       = "<spring:message code='ezWebFolder.t230'/>";
 			var strMessage3       = "<spring:message code='ezWebFolder.t231'/>";
+			var resultErr1        = "<spring:message code='ezWebFolder.t306'/>";
+			var resultErr2        = "<spring:message code='ezWebFolder.t305'/>";
+			var resultErr3        = "<spring:message code='ezWebFolder.t300'/>";
 			
 			document.onselectstart = function () { return false; };
 			window.onload = function () {

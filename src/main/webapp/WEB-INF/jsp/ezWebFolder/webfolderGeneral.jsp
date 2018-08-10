@@ -39,12 +39,22 @@
 					"listCount" : listCount
 				} ,
 				success : function(data, textStatus, jqXHR) {
-					var result = data.resultValue;
-					if (result == "ok") {
-						alert('<spring:message code="ezWebFolder.t182"/>');
-						listCnt = listCount;
-					} else {
-						alert('<spring:message code="ezWebFolder.t134"/>');
+					var code = data.code;
+					
+					switch(code) {
+						case 0: 
+							alert('<spring:message code="ezWebFolder.t182"/>');
+							listCnt = listCount;
+							break;
+						case 1:
+							alert("<spring:message code='ezWebFolder.t306'/>");
+							break;
+						case 2:
+							alert("<spring:message code='ezWebFolder.t305'/>");
+							break;
+						case 3:
+							alert("<spring:message code='ezWebFolder.t300' />");
+							break;
 					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
