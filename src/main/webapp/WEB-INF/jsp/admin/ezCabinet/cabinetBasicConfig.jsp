@@ -165,7 +165,7 @@
 					changeBttnStatus(capacityType);
 				}
 				
-				function isValid(value) {if (!isNaN(value) && parseFloat(value) > 0) {return true;} else {return false;}}
+				function isValid(value) {if (!isNaN(value) && parseFloat(value) > 0 && value % 1 === 0) {return true;} else {return false;}}
 			})();
 		</script>
 	</body>

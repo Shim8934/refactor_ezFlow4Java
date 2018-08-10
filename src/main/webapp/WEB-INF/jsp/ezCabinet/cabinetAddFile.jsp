@@ -147,7 +147,7 @@
 								case 1 : alert(CabinetMessages.strParamErr) ; break;
 								case 2 : alert(CabinetMessages.strError)    ; break;
 								case 3 : alert(CabinetMessages.strPerm)     ; break;
-								case 4 : alert(CabinetMessages.strError)    ; break;
+								case 4 : alert(CabinetMessages.strCapacity) ; break;
 								default: alert(CabinetMessages.strError)    ; return;
 							}
 						},

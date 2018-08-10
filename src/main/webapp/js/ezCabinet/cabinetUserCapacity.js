@@ -9,7 +9,7 @@
 	preProcessing();
 	
 	function keyPress(e)    {if (e.which == 27) {if (document.getElementById("searchPanel").className == "cabSearchPanel2") {toggleSearchPanel();}}}
-	function isValid(value) {if (!isNaN(value) && parseFloat(value) > 0) {return true;} else {return false;}}
+	function isValid(value) {if (!isNaN(value) && parseFloat(value) > 0 && value % 1 === 0) {return true;} else {return false;}}
 	function windowResize() {closeViewPopUp(); preProcessing();}
 	
 	function preProcessing() {

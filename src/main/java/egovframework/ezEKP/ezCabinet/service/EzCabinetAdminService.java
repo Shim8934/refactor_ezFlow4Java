@@ -9,12 +9,12 @@ import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
 public interface EzCabinetAdminService {
 	//Company capacity functions
 	CompanyCapacityVO getCompanyCapacity(String companyId, int tenantId) throws Exception;
-	void saveCompanyCapacity(int type, int newValue, String companyId, int tenantId) throws Exception;
+	void saveCompanyCapacity(int type, double newValue, String companyId, int tenantId) throws Exception;
 	
 	//Admin capacity functions
 	List<UserCapacityVO> getListUserCapacity(String realColmn, String order, String companyId, String searchStr, String searchOpt, int startPoint, int listCnt, int tenantId, String primary) throws Exception;
 	int getTotalListUserCapacity(String companyId, String searchStr, String searchOpt, int tenantId, String primary) throws Exception;
-	void changeUserCapacity(List<String> userList, int newValue, int type, String companyId, int tenantId) throws Exception;
+	void changeUserCapacity(List<String> userList, double newValue, int type, String companyId, int tenantId) throws Exception;
 	UserCapacityVO getUserCapacity(String userId, String companyId, String primary, int tenantId) throws Exception;
 	
 	//Admin module functions
