@@ -160,24 +160,31 @@ var CabinetItem = function() {
 		listBttns[1].onclick    = function(e) {onMainSearch();};
 		listBttns[2].onclick    = function(e) {toggleSearchPanel();};
 		
-		var cabDelBttnElmt      = document.getElementById("delDivBttn");
-		var dellistBttns        = cabDelBttnElmt.children;
-		dellistBttns[0].onclick = function(e) {deleteFile();};
-		dellistBttns[1].onclick = function(e) {toggleDeletePopup();};
-		
-		var cabMoveBttnElmt     = document.getElementById("moveDivBttn");
-		var movlistBttns        = cabMoveBttnElmt.children;
-		movlistBttns[0].onclick = function(e) {moveFile("move");};
-		movlistBttns[1].onclick = function(e) {moveFile("copy");};
-		movlistBttns[2].onclick = function(e) {toggleMovePopup();};
-		
 		var addBttn = document.getElementById("addBttn");
 		var delBttn = document.getElementById("delBttn");
 		var movBttn = document.getElementById("movBttn");
 		var shaBttn = document.getElementById("shaBttn");
 		if (addBttn) {addBttn.firstElementChild.onclick = function(e) {addFile();};}
-		if (delBttn) {delBttn.firstElementChild.onclick = function(e) {deleteFileConfirm();};}
-		if (movBttn) {movBttn.firstElementChild.onclick = function(e) {moveFileConfirm();};}
+		
+		if (delBttn) {
+			var cabDelBttnElmt                              = document.getElementById("delDivBttn");
+			var dellistBttns                                = cabDelBttnElmt.children;
+			dellistBttns[0].onclick                         = function(e) {deleteFile();};
+			dellistBttns[1].onclick                         = function(e) {toggleDeletePopup();};
+			document.getElementById("cabDelClose").onclick  = function(e) {toggleDeletePopup();};
+			delBttn.firstElementChild.onclick               = function(e) {deleteFileConfirm();};
+		}
+		
+		if (movBttn) {
+			var cabMoveBttnElmt                             = document.getElementById("moveDivBttn");
+			var movlistBttns                                = cabMoveBttnElmt.children;
+			movlistBttns[0].onclick                         = function(e) {moveFile("move");};
+			movlistBttns[1].onclick                         = function(e) {moveFile("copy");};
+			movlistBttns[2].onclick                         = function(e) {toggleMovePopup();};
+			document.getElementById("cabMoveClose").onclick = function(e) {toggleMovePopup();};
+			movBttn.firstElementChild.onclick               = function(e) {moveFileConfirm();};
+		}
+		
 		if (shaBttn) {shaBttn.firstElementChild.onclick = function(e) {openSharePopup();};}
 		document.getElementById("refBttn").firstElementChild.onclick = function(e) {searchCallBack();};
 		document.getElementById("schBttn").firstElementChild.onclick = function(e) {toggleSearchPanel();};

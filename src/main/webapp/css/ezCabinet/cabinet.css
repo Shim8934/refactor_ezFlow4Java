@@ -349,9 +349,9 @@
 .cabMgRelTree .mdlRelTree {height: 100%; z-index: 1; white-space: nowrap; overflow: auto;}
 .cabMgRelTree .mdlFog {width: 100%; height: 100%; z-index: 2; background-color: transparent; position: absolute; display: none; top: 0px; left: 0px;}
 
-.cabClose {position: absolute; right: 10px; top: 10px; height: 35px;}
+.cabClose {position: absolute; right: 10px; top: 10px;}
 .cabClose >ul {margin: 0px; padding: 0px; list-style: none;}
-.cabClose >ul >li {display: block; float: left; margin: 0px 3px 0px 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
+.cabClose >ul >li {display: block; float: left; margin: 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
 .cabClose >ul >li >span {display: inline-block; width: 25px; height: 28px; background-image: url(/images/close_xBtn.png); background-repeat: no-repeat; background-position: 4px 6px;}
 .cbNameInputDiv >input[type='text'] {width: 60%; margin-top: 3px; height: 25px; padding: 0px 4px;}
 .checkBnk {width: 27px;}
