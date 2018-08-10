@@ -41,13 +41,13 @@
 	        document.getElementById("txtCode").value = "";
 	    }
 	    function btnOK_onclick() {
-	        if ($("#txtTitle").val().trim() == "" && $("#txtTitle").val().trim() == "") {
+	        if ($("#txtTitle").val().trim() == "" && $("#txtCode").val().trim() == "") {
 	            alert("<spring:message code='ezApprovalG.t1023'/>");
 	        }
 	        else {
 	            rtnVal[0] = "TRUE";
-	            rtnVal[1] = document.getElementById("txtTitle").value.trim;
-	            rtnVal[2] = document.getElementById("txtCode").value.trim;
+	            rtnVal[1] = document.getElementById("txtTitle").value.trim();
+	            rtnVal[2] = document.getElementById("txtCode").value.trim();
 	            
 	            if (ReturnFunction != null) {
 	                ReturnFunction(rtnVal);

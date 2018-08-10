@@ -248,7 +248,14 @@
 		                        var APRMEMBERDEPTID = getNodeText(xmldom.getElementsByTagName("APRMEMBERDEPTID").item(i));
 		                        var DOCSTATE = getNodeText(xmldom.getElementsByTagName("DOCSTATE").item(i));
 		                        var FUNCTIONTYPE = getNodeText(xmldom.getElementsByTagName("FUNCTIONTYPE").item(i));
-		                        listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE.substring(0, STARTDATE.length - 3) + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
+		                        //2018-08-09 배현상, 긴급결재 시 color=red표시
+		                        var URGENTAPPROVAL = getNodeText(xmldom.getElementsByTagName("URGENTAPPROVAL").item(i));
+		                        
+		                        if (URGENTAPPROVAL == 'Y') {
+		                        	listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt' style='color:red'>" + DOCTITLE + "</span> <span class='date' style='color:red'>" + STARTDATE.substring(0, STARTDATE.length - 3) + "</span> <span class='name' style='color:red'>" + WRITERNAME + "</span></li>";
+		                        } else {
+			                        listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE.substring(0, STARTDATE.length - 3) + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
+		                        }
 		                     }                                 
 	
 	

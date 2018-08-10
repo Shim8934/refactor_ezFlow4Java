@@ -4513,7 +4513,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuffer subQuery = new StringBuffer();
 		
 		if(deptCode.trim() != null) {
-			subQuery.append("(PROCESSDEPTCODE = '" + deptCode.trim() + "' AND TASKCODE LIKE 'ZZ%' OR TASKCODE='99999999')");
+			subQuery.append("(PROCESSDEPTCODE = '" + deptCode.trim() + "' OR TASKCODE LIKE 'ZZ%' OR TASKCODE='99999999')");
 		}
 		
 		if(!title.trim().equals("")) {
@@ -20472,6 +20472,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				resultXML.append("<APRMEMBERDEPTID>" + docList.get(j).getAprMemberDeptID() + "</APRMEMBERDEPTID>");
 				resultXML.append("<DOCSTATE>" + docList.get(j).getDocState() + "</DOCSTATE>");
 				resultXML.append("<FUNCTIONTYPE>" + docList.get(j).getFunctionType() + "</FUNCTIONTYPE>");
+				resultXML.append("<URGENTAPPROVAL>" + docList.get(j).getUrgentApproval() + "</URGENTAPPROVAL>");
 				resultXML.append("</CELL>");
 			}
 			

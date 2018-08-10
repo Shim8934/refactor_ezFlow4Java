@@ -107,7 +107,11 @@
 				    var isTrue = HwpCtrl.LoadFile(URL, false);
 			
 				    if (isTrue) {
-				        setAttachInfo(pDocID, "APR", lstAttachLink);
+				    	if (listTypeValue == "21") {
+				    		setAttachInfo(pDocID, "TMP", lstAttachLink);
+				    	} else {
+					        setAttachInfo(pDocID, "APR", lstAttachLink);
+				    	}
 				        GetExchInfo();
 				        //SignCheck();
 				        hideProgress();
