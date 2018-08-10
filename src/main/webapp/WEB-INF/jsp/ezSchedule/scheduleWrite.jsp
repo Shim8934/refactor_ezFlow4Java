@@ -513,7 +513,7 @@
 	                                    <tr id="repeateTR">
 	                                        <th><a href="#" class="imgbtn"><span onclick="config_repeat()"><spring:message code='ezSchedule.t367'/></span></a></th>
 	                                        <td class="pos1">
-	                                            <div id="repeatinfo" style="PADDING-TOP: 2px; HEIGHT: 19px; width: 100%">&nbsp;</div>
+	                                            <div id="repeatinfo" style="padding-top : 2px; height: 19px; width: 100%">&nbsp;</div>
 	                                        </td>
 	                                        <td class="pos2"></td>
 	                                    </tr>

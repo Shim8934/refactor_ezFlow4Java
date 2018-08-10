@@ -434,7 +434,8 @@
 		            TaskCode_Save();
 		        }
 		    }
-		
+		    
+		    //편철시 철지정
 		    function TaskCode_Save() {
 		        if (cabinetID == "") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t134'/>";
@@ -1415,9 +1416,7 @@
 			<li id="btnFileAttach"style="display:none" ><span onClick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
 			<li id="btnAprDocAttach" style="display:none"><span  onClick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t1429'/></span></li>
 			<c:if test="${approvalFlag == 'G'}">
-<%-- 		    <c:if test="${hideCabinet == '0'}"> --%>
-			<li id="btnAddSepAttach"><span  onClick="btnAddSepAttach_onclick()"  ><spring:message code='ezApprovalG.t58'/></span></li>
-<%-- 			</c:if> --%>
+				<li id="btnAddSepAttach"><span  onClick="btnAddSepAttach_onclick()"  ><spring:message code='ezApprovalG.t58'/></span></li>
 			</c:if>
 			<li id="btnAssign" ><span  onClick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t1430'/></span></li>
 			<li id="btnDistribute"><span  onClick="return btnDistribute_onclick()"><spring:message code='ezApprovalG.t1432'/></span></li>

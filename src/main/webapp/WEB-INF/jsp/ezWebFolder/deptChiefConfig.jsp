@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -6,10 +7,10 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-	<link rel="stylesheet" href="/css/Tab.css" type="text/css"/>
-	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/organJson.js"   ></script>
+	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css"/>
+	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/organJson.js")%>"   ></script>
 	<script type="text/javascript">
 		//var listCnt = "<c:out value="${wfListConfig.envValue}"/>";
 		var userDept        = null;
@@ -18,6 +19,10 @@
 		var strErrMsg       = "<spring:message code='ezWebFolder.t134'/>";
 		var strDataNotFound = "<spring:message code='ezWebFolder.t144'/>";
 		var strAlreadyAdd   = "<spring:message code='ezWebFolder.t169'/>";
+		var resultErr1      = "<spring:message code='ezWebFolder.t306'/>";
+		var resultErr2      = "<spring:message code='ezWebFolder.t305'/>";
+		var resultErr3      = "<spring:message code='ezWebFolder.t300'/>";
+		
 		document.onselectstart = function () { return false; };
 		
 		window.onload = function () {
@@ -46,13 +51,22 @@
 				data : {
 					"deptList" : jsonData.toString()
 				},
-				success : function(data, textStatus, jqXHR) {
-					var result = data.resultValue;
-					if (result == "ok") {
-						alert('<spring:message code="ezWebFolder.t182"/>');
-					}
-					else {
-						alert('<spring:message code="ezWebFolder.t134"/>');
+				success : function(data) {
+					var code = data.code;
+					
+					switch(code) {
+						case 0: 
+							alert('<spring:message code="ezWebFolder.t182"/>');
+							break;
+						case 1:
+							alert("<spring:message code='ezWebFolder.t306'/>");
+							break;
+						case 2:
+							alert("<spring:message code='ezWebFolder.t305'/>");
+							break;
+						case 3:
+							alert("<spring:message code='ezWebFolder.t300' />");
+							break;
 					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {

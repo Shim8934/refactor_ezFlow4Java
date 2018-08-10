@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -7,15 +8,15 @@
 		<title><spring:message code='ezEmail.t823' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
-		<script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link href="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.css")%>" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/encode_component.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/ListView_list.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/ListView_list.js")%>"></script>
 		<script type="text/javascript" >
 		    var _OpenerObject;
 		    var RuleItemID;
@@ -1000,7 +1001,7 @@
 	    <div style="border:1px solid #dbdbda;width:585px;height:475px;overflow-y:auto;margin:5px 5px 5px 5px;">
 	    <div style="margin-top:20px;margin-left:20px;">
 	    <img src="/images/ImgIcon/rul-sml.gif" align="absmiddle"  height="16" style="margin-top:-3px;" hspace="2" /><span class="txt"><spring:message code='ezEmail.t812' /></span><p />
-	    <span class="txt"><spring:message code='ezEmail.t813' /></span> <input type="text" style='width:80%;' id="RuleDisplayName" name="RuleDisplayName" /><p />
+	    <span class="txt"><spring:message code='ezEmail.t813' /></span> <input type="text" style='width:70%;' id="RuleDisplayName" name="RuleDisplayName" maxlength="75" /><p />
 	    <span class="txt"><spring:message code='ezEmail.t814' /></span><br />
 	    <div id="ConArea" name="ConArea" style="margin-top:8px;"></div>
 	    <br />

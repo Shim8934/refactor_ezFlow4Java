@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -10,10 +11,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3' />" type="text/css">
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 		<script type="text/javascript" language="javascript">
 			var CurPage = "<c:out value='${pPage}'/>";
 			var totalPage = "<c:out value='${totalPage}'/>";
@@ -390,6 +391,24 @@
 					window.location.href = "/admin/ezOrgan/retireUserManage.do?page=" + parseInt(sCurPage);
 				}
 			}
+            
+            //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 135 - document.getElementById("mainmenu").clientHeight;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
+		    
+		    $(function(){
+	    		windowResize();
+		    });            
 	    </script>
 	</head>
 	<body class="mainbody" onload="makePageSelPage()">
@@ -413,39 +432,41 @@
 		  	<input name="txt_PageInputNum" type="text" value="<c:out value='${pPage}'/>" onKeyDown="moveToPage()"/>
 		  	<img src="/images/page_next.gif" align="absmiddle" id="Img1" style="cursor:pointer;" onClick="nextPage_onclick()"/>
 		</div> --%>
-		<div style="width:100%; border-right:1px solid #eaeaea;border-left:1px solid #eaeaea;">
-		<table class="mainlist" style="width:100%"> 
-			<!-- <form name="frmOutbox" action="BoardItemList.aspx" method="post"></form> -->
-		    	<tr>
-		      		<th style="padding:0;width:20px;"><input type='checkbox' name="checkbox" onclick="funCheckBox('set','a')" /></th>
-		      		<th style="width:150px;"><spring:message code='ezOrgan.t68'/></th>
-		      		<th style="width:100px;"><spring:message code='ezOrgan.t67'/></th>
-		      		<th style="width:100px;"><spring:message code='ezOrgan.t69'/></th>
-		      		<th style="width:100px;"><spring:message code='ezOrgan.t1500'/></th>
-		      		<th><spring:message code='ezOrgan.t313'/></th>
-		   		</tr>
-			   	<!-- list -->
-				<c:forEach var="item" items="${list}">
-					<tr>
-						<td width="20" style="padding:0">
-							<input type="checkbox" name="chk" id="chk" value="<c:out value='${item.cn}'/>" />
-						</td>
-						<c:if test="${lang == '' || lang == 1}">
-							<td><c:out value='${item.description}'/></td>
-							<td style="cursor:pointer" onclick="ShowUserInfo('<c:out value='${item.cn}'/>')"><c:out value='${item.displayName}'/></td>
-							<td><c:out value='${item.title}'/></td>
-							<td><c:out value='${item.extensionAttribute10}'/></td>
-						</c:if>
-						<c:if test="${lang != '' && lang != 1}">
-							<td><c:out value='${item.description2}'/></td>
-							<td style="cursor:pointer" onclick="ShowUserInfo('<c:out value='${item.cn}'/>')"><c:out value='${item.displayName2}'/></td>
-							<td><c:out value='${item.title2}'/></td>
-							<td><c:out value='${item.extensionAttribute102}'/></td>
-						</c:if>
-						<td><c:out value='${fn:substring(item.updateDT, 0, 4)}'/>-<c:out value='${fn:substring(item.updateDT, 4, 6)}'/>-<c:out value='${fn:substring(item.updateDT, 6, 8)}'/></td>
-					</tr>	
-				</c:forEach>	   
-		</table>		
+		<div id="contentlist" style="width:100%; overflow: auto;">
+			<div style="border-right:1px solid #eaeaea;border-left:1px solid #eaeaea;">
+				<table class="mainlist" style="width:100%"> 
+					<!-- <form name="frmOutbox" action="BoardItemList.aspx" method="post"></form> -->
+				    	<tr>
+				      		<th style="padding:0;width:20px;"><input type='checkbox' name="checkbox" onclick="funCheckBox('set','a')" /></th>
+				      		<th style="width:150px;"><spring:message code='ezOrgan.t68'/></th>
+				      		<th style="width:100px;"><spring:message code='ezOrgan.t67'/></th>
+				      		<th style="width:100px;"><spring:message code='ezOrgan.t69'/></th>
+				      		<th style="width:100px;"><spring:message code='ezOrgan.t1500'/></th>
+				      		<th><spring:message code='ezOrgan.t313'/></th>
+				   		</tr>
+					   	<!-- list -->
+						<c:forEach var="item" items="${list}">
+							<tr>
+								<td width="20" style="padding:0">
+									<input type="checkbox" name="chk" id="chk" value="<c:out value='${item.cn}'/>" />
+								</td>
+								<c:if test="${lang == '' || lang == 1}">
+									<td><c:out value='${item.description}'/></td>
+									<td style="cursor:pointer" onclick="ShowUserInfo('<c:out value='${item.cn}'/>')"><c:out value='${item.displayName}'/></td>
+									<td><c:out value='${item.title}'/></td>
+									<td><c:out value='${item.extensionAttribute10}'/></td>
+								</c:if>
+								<c:if test="${lang != '' && lang != 1}">
+									<td><c:out value='${item.description2}'/></td>
+									<td style="cursor:pointer" onclick="ShowUserInfo('<c:out value='${item.cn}'/>')"><c:out value='${item.displayName2}'/></td>
+									<td><c:out value='${item.title2}'/></td>
+									<td><c:out value='${item.extensionAttribute102}'/></td>
+								</c:if>
+								<td><c:out value='${fn:substring(item.updateDT, 0, 4)}'/>-<c:out value='${fn:substring(item.updateDT, 4, 6)}'/>-<c:out value='${fn:substring(item.updateDT, 6, 8)}'/></td>
+							</tr>	
+						</c:forEach>	   
+				</table>
+			</div>		
 		</div>
      <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
      <span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>    

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -8,16 +9,16 @@
 	    <title>left_myoffice</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/email_tree.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/email_tree.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/treeview.htc.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component_utf8.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/encode_component.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezAddress/address_tree_Cross.js")%>"></script>
 	    <!-- 재은 수정 -->
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/NewMailList.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/NewMailList.js")%>"></script>
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 	    <script type="text/javascript">
@@ -292,22 +293,24 @@
 	        
 	        function selectnode(event) {
 	        	if (!event) event = window.event;
-	        	
-	        	if (event.which != 3) {
-	        		var nodeIdx = PostTreeView.selectedIndex();
-		            var href = PostTreeView.getvalue(nodeIdx, "href");
-		            var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
-		            
-		            try {
-		                if (typeof (parent.frames["right"]) != "undefined")
-		                    parent.frames["right"].Window_onunload();
-		            } catch (e) { }
-		            if (g_firstOpen)
-		                g_firstOpen = false;
-		            else
-		                window.open(url, "right");
-		            get_unreadcount();
-	        	}        	
+				/* 2018-08-06 장진혁 스크립트 오류로 undefined 걸름 */
+	        	if (event != undefined) {
+		        	if (event.which != 3) {
+		        		var nodeIdx = PostTreeView.selectedIndex();
+			            var href = PostTreeView.getvalue(nodeIdx, "href");
+			            var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
+			            
+			            try {
+			                if (typeof (parent.frames["right"]) != "undefined")
+			                    parent.frames["right"].Window_onunload();
+			            } catch (e) { }
+			            if (g_firstOpen)
+			                g_firstOpen = false;
+			            else
+			                window.open(url, "right");
+			            get_unreadcount();
+		        	}
+	        	}
 	        }
 	        
 	        function email_dragdrop(event) {

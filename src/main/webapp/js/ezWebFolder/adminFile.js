@@ -176,19 +176,28 @@ function search_Set(pPage) {
 		async: false,
 		success : function(data) {
 			hideProgress();
-			var reason = data.reason;
-			if (reason) {
-				alert(reason);
-				return;
-			}
+			var code = data.code;
 			
-			var result  = data.fileList;
-			totalRows   = data.totalRows;
-			totalPages  = data.totalPages;
-			currentPage = pPage > totalPages                    ? totalPages : pPage;
-			currentPage = (currentPage == 0 && totalPages > 0)  ? 1          : currentPage;
-			makePageSelPage();
-			renderData(result);
+			switch(code) {
+				case 0: 
+					var result  = data.fileList;
+					totalRows   = data.totalRows;
+					totalPages  = data.totalPages;
+					currentPage = pPage > totalPages                    ? totalPages : pPage;
+					currentPage = (currentPage == 0 && totalPages > 0)  ? 1          : currentPage;
+					makePageSelPage();
+					renderData(result);
+					break;
+				case 1:
+					alert(resultErr1);
+					break;
+				case 2:
+					alert(resultErr2);
+					break;
+				case 3:
+					alert(resultErr3);
+					break;
+			}
 		},
 		error : function(error) {
 			hideProgress();

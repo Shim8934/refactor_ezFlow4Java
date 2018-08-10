@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,15 +8,15 @@
 	<head>
 	    <title><spring:message code='ezEmail.t8' /></title>
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <link rel="stylesheet" href="/js/ezEmail/Controls/ezSearchDatePicker.htc" type="text/css">
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css">
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls/ezSearchDatePicker.htc")%>" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code="main.lhm01" />" type="text/css">
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script src="/js/ezPersonal/controls/TreeView.js" type="text/javascript"></script>
-	    <script type="text/javascript" src="/js/ezEmail/Controls/ListView_list.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script src="<%=CommonUtil.addVer(application, "/js/ezPersonal/controls/TreeView.js")%>" type="text/javascript"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls/ListView_list.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 	    <style>
 	    	.mainlist thead tr {
 	    		height: 0px;
@@ -564,7 +565,9 @@
 	                return;
 	            }
 	            
-	            var regex=/^([\w-]+(?:\.[\w-]+)*)$/;
+	            //var regex=/^([\w-]+(?:\.[\w-]+)*)$/;
+	            var regex=/^[a-zA-Z0-9_-]+$/;
+	            
 	            if(regex.test(document.all("TextId").value.trim()) === false) {
 	            	alert("<spring:message code='ezEmail.lhm13' />");
 	            	return;
@@ -1958,7 +1961,7 @@
 		                                    </table>
 		                                </div>
 		                            </div>
-		                            <div style="width: 668px; height: 474px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
+		                            <div style="width: 668px; height: 446px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
 		                            </div>
 		                        </td>
 		                    </tr>

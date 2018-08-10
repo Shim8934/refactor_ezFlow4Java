@@ -131,7 +131,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
         userInfo = commonUtil.aprUserInfo(loginCookie);
 		String viewLeftCount = ezCommonService.getTenantConfig("APPROVLEFTCOUNT", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-		String hideCabinet = config.getProperty("config.hideCabinet");
 		String listType = request.getParameter("listType");
 		String userSendOut = "";
 		String firstContainerID = "";
@@ -198,7 +197,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("userCont", userCont);
 		}
 		
-		model.addAttribute("hideCabinet", hideCabinet);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("apprGLeftVOList", apprGLeftVOList);
 		model.addAttribute("listType", listType);
@@ -343,7 +341,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String forceCallBackYN = ezCommonService.getTenantConfig("forceCallBack_YN", userInfo.getTenantId());
 		String subQuery = request.getParameter("SubQuery");
-		OrganProxyVO proxyInfo = ezOrganService.getProxyInfo(userInfo.getId(), userInfo.getTenantId());
+		OrganProxyVO proxyInfo = ezOrganService.getProxyInfo(userInfo.getId(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		//문서유통 문서 타입
 		String relayG_type = ezCommonService.getTenantConfig("UserInfo_RelayG_Type", userInfo.getTenantId()); 
@@ -916,7 +914,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("draftJunGyulFlag", draftJunGyulFlag);
 		model.addAttribute("signImageSize", signImageSize);
-		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("beforeUrl", beforeUrl);
 		model.addAttribute("signImageType", signImageType);
@@ -1066,7 +1063,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("aprTypeXML", aprTypeXML);
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
-		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
 		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("chamjoAfterYN", chamjoAfterYN);
 		model.addAttribute("isUsed", isUsed);
@@ -1679,6 +1675,29 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezApprovalGService.getTaskMiddleCategory(deptCode, companyID, cateCode, userInfo.getTenantId());
 
 		logger.debug("getTaskMiddleCategory ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 전자결재G 기록물철 소기능 이하 모두 표출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/getTaskSubCategoryAll.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getTaskSubCategoryAll(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("getTaskSubCategoryAll started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String deptCode = request.getParameter("deptCode");
+		String companyID = request.getParameter("companyID");
+		String cateCode = request.getParameter("cateCode");
+		String strType = request.getParameter("strType");
+		String initFlag = request.getParameter("initFlag");
+		
+		String result = ezApprovalGService.getTaskSubCategoryAll(deptCode, companyID, cateCode, strType, initFlag, userInfo.getTenantId());
+		
+		logger.debug("getTaskSubCategoryAll ended.");
 		
 		return result;
 	}
@@ -3484,7 +3503,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		String susinAdmin = "";
-		String hideCabinet = config.getProperty("config.hideCabinet");
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 		
 		//baonk 추가 2018-08-08
@@ -3599,7 +3617,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("signImageSize", signImageSize);
-		model.addAttribute("hideCabinet", hideCabinet);
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
@@ -4223,13 +4240,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
+		String signImageType = ezCommonService.getTenantConfig("SignImageType", userInfo.getTenantId());
+		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
 		String docID = request.getParameter("docID");
 		String orgDocID = request.getParameter("uOrgID");
 		String isReDraft = request.getParameter("isReDraft");
 		String draftFlag = request.getParameter("draftFlag");
 		String retFlag = request.getParameter("retFlag");
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
-		String signImageType = ezCommonService.getTenantConfig("SignImageType", userInfo.getTenantId());
 		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
 		String optisSplit = "";
 		
@@ -4300,6 +4318,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("isReceived", isReceived);
+		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 
 		logger.debug("recevGSusin ended.");
 		

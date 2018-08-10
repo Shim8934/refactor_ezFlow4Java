@@ -160,25 +160,6 @@ CREATE TABLE `james_mailbox` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `james_mailforsearch`
---
-
-DROP TABLE IF EXISTS `james_mailforsearch`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `james_mailforsearch` (
-  `MAILBOX_ID` bigint(20) NOT NULL,
-  `MAIL_UID` bigint(20) NOT NULL,
-  `MAIL_SUBJECT` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `MAIL_TEXTCONTENT` longblob,
-  `MAIL_SENDER` varchar(4000) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `MAIL_RECIPIENT` longblob,
-  `FILE_NAME` varchar(4000) DEFAULT NULL,
-  PRIMARY KEY (`MAILBOX_ID`,`MAIL_UID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `james_recipient_rewrite`
 --
 
