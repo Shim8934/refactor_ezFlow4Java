@@ -157,6 +157,11 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String docState = request.getParameter("docState");
+		String mailChk = request.getParameter("mailchk");// 메일에서 전저결재 열람 여부('Y'일때는 메일 그 외에는 전자결재)
+		
+		if (mailChk == null) {
+			mailChk = "";
+		}
 		
 		if (orgDocID == null) {
 			orgDocID = "";
@@ -184,7 +189,16 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         if (!allFlag.equals("1") && !allFlag.equals("2")) {
         	allFlag = "0";
         }
-
+        
+		Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "APR", userInfo.getCompanyID(), userInfo.getTenantId(), docState);
+		
+		if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
+			if(mailChk != null && mailChk.equals("Y")) {
+				model.addAttribute("chk", "no");
+			}
+			return "main/warning";
+		}
+        
         String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
         String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
         String optisSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
