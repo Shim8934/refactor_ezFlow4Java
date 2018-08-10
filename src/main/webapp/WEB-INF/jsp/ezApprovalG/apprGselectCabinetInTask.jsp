@@ -359,6 +359,7 @@
 		            ReturnFunction(rtnVal);
 		        }
 		        else {
+		        	window.returnValue = rtnVal;
 		            window.close();
 		        }
 		    }
@@ -373,7 +374,9 @@
 		            
 		            if (ReturnFunction != null) {
 		                ReturnFunction(rtnVal);
-		            } else {
+
+		            }
+		            else {
 		            	window.returnValue = rtnVal;
 		                window.close();
 		            }
@@ -383,8 +386,10 @@
 		        }
 		    }
 		    window.onbeforeunload = function () {
-		        if (!CrossYN())
+		    	try {
 		            window.returnValue = rtnVal;
+				} catch (e) {
+				}
 		    }
 		    function GetSelCabInfoXml() {
 		        var pLvList = new ListView();
