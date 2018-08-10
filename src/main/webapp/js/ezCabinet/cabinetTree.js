@@ -75,6 +75,7 @@ function CabinetTree() {
 	
 	function makeTree(data) {
 		var divTree = document.getElementById(_treeElmtId);
+		while (divTree.hasChildNodes()) {divTree.removeChild(divTree.lastChild);}
 		
 		if (!divTree) {alert("Cannot find element with this id: " + _treeElmtId); return;}
 		
@@ -90,7 +91,6 @@ function CabinetTree() {
 		var nodesTree   = data.tree;
 		var currentNode = data.node;
 		if (!nodesTree) {alert(CabinetMessages.strTreeErr); return;}
-		while (divTree.hasChildNodes()) {divTree.removeChild(divTree.lastChild);}
 		
 		switch(_genType) {
 			case "normal":
