@@ -1247,11 +1247,14 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		String userId                = userInfo.getId();
 		int tenantId                 = userInfo.getTenantId();
 		String primary               = userInfo.getPrimary();
-		String offset                = commonUtil.getMinuteUTC(userInfo.getOffset());
+		String offset                = userInfo.getOffset();
+		String offsetMinute          = commonUtil.getMinuteUTC(offset);
 		int startPoint               = 0;
 		int totalItems               = 0;
 		int totalPages               = 0;
 		boolean subSearchflag        = false;
+		
+		logger.debug("Offset: " + offset);
 		
 		if (!column.equals("") && !order.equals("")) {
 			switch(column) {
@@ -1264,12 +1267,14 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			}
 		}
 		
-		String startDateTmp = startDate + " 00:00:00";
-		String endDateTmp   = endDate + " 23:59:59";
-		startDate           = commonUtil.getDateStringInUTC(startDateTmp, offset, true);
-		endDate             = commonUtil.getDateStringInUTC(endDateTmp, offset, true);
+		if (!startDate.equals("")) {
+			String startDateTmp = startDate + " 00:00:00";
+			String endDateTmp   = endDate + " 23:59:59";
+			startDate           = commonUtil.getDateStringInUTC(startDateTmp, offset, true);
+			endDate             = commonUtil.getDateStringInUTC(endDateTmp, offset, true);
+		}
 		
-		CabinetItemSearchVO searchVO = new CabinetItemSearchVO(Integer.parseInt(cabinetId), listCntSize, tenantId, userId, primary, offset, title, summary, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption);
+		CabinetItemSearchVO searchVO = new CabinetItemSearchVO(Integer.parseInt(cabinetId), listCntSize, tenantId, userId, primary, offsetMinute, title, summary, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption);
 		List<CabinetItemVO> itemList = new ArrayList<>();
 		
 		if (srchMode.equals("2") && recursive.equals("1")) {
