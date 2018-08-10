@@ -482,7 +482,7 @@
 					alert(CabinetMessages.strModify);
 					var parentWd = window.opener;
 					if (parentWd) {
-						var currentWd = null;
+						var currentWd = window;
 						while(!parentWd.CabinetItem) {currentWd = parentWd; parentWd = parentWd.opener;}
 						parentWd.CabinetItem.reload();
 						currentWd.close();
