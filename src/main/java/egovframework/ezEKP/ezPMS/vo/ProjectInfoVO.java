@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezPMS.vo;
 
-import java.sql.Date;
 import java.util.List;
 
 //프로젝트 정보 

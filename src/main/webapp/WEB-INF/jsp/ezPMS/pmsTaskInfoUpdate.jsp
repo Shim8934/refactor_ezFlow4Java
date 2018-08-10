@@ -334,7 +334,7 @@ function updateTaskInfo() {
 				if (data == "permitted") {
 					alert("<spring:message code='ezPMS.t170' />");
 					
-					var logContent = "[" + taskName + "<spring:message code='ezPMS.t318' />"; 
+					var logContent = "<spring:message code='ezPMS.t318' arguments='" + taskName + "'/>";
 					addTaskLog(projectId, 2, groupId, taskId, logContent);
 					updateGroupRealStartEndDate(groupId);
 					updateGroupRealStartEndDate(originGroupId);	
@@ -405,7 +405,7 @@ function updateTaskInfo() {
 				if (data == "permitted") {
 					alert("<spring:message code='ezPMS.t170' />");
 					
-					var logContent = "[" + taskName + "<spring:message code='ezPMS.t319' />"; 
+					var logContent = "<spring:message code='ezPMS.t319' arguments='" + taskName + "'/>";
 					addTaskLog(projectId, 2, parent.groupId, null, logContent);
 					
 					parent.location.reload();

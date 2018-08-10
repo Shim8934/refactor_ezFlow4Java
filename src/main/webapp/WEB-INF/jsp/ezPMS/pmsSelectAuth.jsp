@@ -501,9 +501,9 @@
 	   		
 	   		// 담당자, 참여자, 조회자 인원을 표시
 	   		function setMemberCNT() {	   			
-	   			$("#managerCNT").text(managerArray.length + "<spring:message code='ezPMS.t44'/>");
-	   			$("#participantCNT").text(participantArray.length + "<spring:message code='ezPMS.t44'/>");
-	   			$("#viewerCNT").text(viewerArray.length + "<spring:message code='ezPMS.t44'/>");
+	   			$("#managerCNT").text("<spring:message code='ezPMS.t44' arguments='" + managerArray.length + "'/>");
+	   			$("#participantCNT").text("<spring:message code='ezPMS.t44' arguments='" + participantArray.length + "'/>");
+	   			$("#viewerCNT").text("<spring:message code='ezPMS.t44' arguments='" + viewerArray.length + "'/>");
 	   		}
 	   		
 	   		// 담당자, 참여자, 조회자 추가 시 스크롤바를 밑으로 내려줌

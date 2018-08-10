@@ -704,7 +704,7 @@ function deleteProject() {
 							var projectId 	= checkedPrjInfo[i].projectId;
 							var groupId 	= checkedPrjInfo[i].groupId;
 							
-							var logContent = "[" + projectName + "<spring:message code='ezPMS.t312' />"
+							var logContent = "<spring:message code='ezPMS.t312' arguments='" + projectName + "'/>";
 							addTaskLog(projectId, 3, groupId, null, logContent);
 						}
 						

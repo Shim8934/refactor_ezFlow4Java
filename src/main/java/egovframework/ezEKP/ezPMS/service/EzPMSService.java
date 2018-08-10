@@ -17,7 +17,6 @@ import egovframework.ezEKP.ezPMS.vo.ProjectBoardVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectCompanyVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupMemberVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectGroupVO;
-import egovframework.ezEKP.ezPMS.vo.ProjectHolidayVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberScheduleVO;

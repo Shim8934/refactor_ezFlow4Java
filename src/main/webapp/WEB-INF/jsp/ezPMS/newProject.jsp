@@ -332,7 +332,7 @@ var headManagerObj = {};
 				if (mode == "edit") {
 					if (result.roleCheck == "permitted") {
 						sendNotiMail(projectId, projectName);
-						var logContent = "[" + projectName + "<spring:message code='ezPMS.t50' />"
+						var logContent = "<spring:message code='ezPMS.t50' arguments='" + projectName + "'/>";
 						addTaskLog(projectId, 2, groupId, null, logContent);
 						alert ("<spring:message code='ezPMS.t52' />");
 						parent.projectId = projectId;
@@ -344,7 +344,7 @@ var headManagerObj = {};
 					}
 				} else {
 					sendNotiMail(result.projectId, projectName);
-					var logContent = "[" + projectName + "<spring:message code='ezPMS.t51' />"
+					var logContent = "<spring:message code='ezPMS.t51' arguments='" + projectName + "'/>";
 					addTaskLog(result.projectId, 1, result.groupId, null, logContent);
 					alert("<spring:message code='ezPMS.t53' />");
 					parent.opener.setProjectList(); 

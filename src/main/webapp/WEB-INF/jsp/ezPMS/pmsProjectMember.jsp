@@ -44,7 +44,7 @@ var roleId = "${roleId}";
 	 if (memberList.length == null || memberList.length == 0) {
 		 strHTML += "<tr id='noone' class='white' style='border:1px solid #ddd; height:35px;'>";
 		 strHTML += "<td style='border-right:none; width:100%; text-align:center;'>";
-		 strHTML += "<spring:message code='ezPMS.t157' /> " + roleName + "<spring:message code='ezPMS.t158' />";
+		 strHTML += "<spring:message code='ezPMS.t157' arguments='" + roleName + "'/>";
 		 strHTML += "</td></tr>";
 	 } else {
 		 $("#menu1").append("<img style='cursor: pointer; float: right; margin-top: 3px;;' src='/images/poll/sendMail01.png' onclick='sendMailAll()'>");

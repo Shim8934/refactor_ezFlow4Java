@@ -3,10 +3,8 @@ package egovframework.ezEKP.ezPMS.task;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -30,8 +28,6 @@ import egovframework.ezEKP.ezPMS.service.EzPMSService;
 import egovframework.ezEKP.ezPMS.vo.ProjectInfoVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMainSettingVO;
 import egovframework.ezEKP.ezPMS.vo.ProjectMemberVO;
-import egovframework.ezEKP.ezPMS.vo.ProjectTaskVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Component
@@ -257,7 +253,7 @@ public class EzPMSScheduler {
 				ProjectMainSettingVO headManager = ezPMSService.getProjectMainSetting(project.getHeadManagerId(), project.getTenantId(), "user");
 				
 				String userAccount = headManager.getUserMail();
-				String password = jspw;
+				// String password = jspw;
 				
 				String userId = userAccount.split("@")[0];
 				String domainName = userAccount.split("@")[1];						

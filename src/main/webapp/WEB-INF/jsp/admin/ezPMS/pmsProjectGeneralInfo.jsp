@@ -209,7 +209,7 @@
 				success : function(result) {
 					if(result.memberChange == 'success' && result.statusChange == 'success') {
 						sendNotiMail(projectId, projectName);
-						var logContent = "[" + projectName + "<spring:message code='ezPMS.t50' />"
+						var logContent = "<spring:message code='ezPMS.t50' arguments='" + projectName + "'/>";
 						addTaskLog(projectId, 2, groupId, null, logContent);
 						alert ("<spring:message code='ezPMS.t52' />");
 						window.close();
