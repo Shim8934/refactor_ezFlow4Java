@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -8,8 +9,8 @@
 	    <title></title>
         <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/${e1}"></script>
-        <script language="JavaScript" src="/js/ezEmail/js_cross/reademail.js"></script>
-    	<script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+        <script language="JavaScript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/reademail.js")%>"></script>
+    	<script language="javascript" type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
     	<script language="javascript" type="text/javascript">
 		    var objLink = document.all("BigSizeFileLink");
 		    

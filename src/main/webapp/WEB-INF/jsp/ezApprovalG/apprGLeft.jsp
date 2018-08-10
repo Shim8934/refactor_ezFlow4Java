@@ -195,7 +195,10 @@
 			            	setPresentValue("<spring:message code='ezApprovalG.hyj04'/>");
 			                document.getElementById('APPROVAL99').click();
 			            }
-			            
+			            if (pListTypeValue == '21') {
+			            	setPresentValue("<spring:message code='ezApprovalG.t3000'/>");
+			                document.getElementById('APPROVAL21').click();
+			            }
 		        }
 			        getAprCount();
 		    };
@@ -598,11 +601,20 @@
 		            ResultXML = xmlhttp_total.responseXML;
 		            
 		            // 결재할 문서
-		            if (pListTypeValue == "1") {
-		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) > 0)
-		                    count1.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")";
-		                else
-		                    count1.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")";
+		            if (approvalFlag == 'G') {
+						if (pListTypeValue != "1") {
+							if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) > 0)
+			                    count1.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")";
+			                else
+			                    count1.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")";
+						}		            	
+		            } else {
+			            if (pListTypeValue == "1") {
+			                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) > 0)
+			                    count1.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")";
+			                else
+			                    count1.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")";
+			            }
 		            }
 		            // 결재진행문서
 		            if (pListTypeValue != "3") {
