@@ -447,6 +447,7 @@ public class EzWebFolderGWController_y {
 			
 			if (currPage > totalpages & totalCount != 0) {
 				currPage = totalpages;
+				pStart = (currPage -1 )* listCount;
 			}
 			pEnd = listCount;
 			

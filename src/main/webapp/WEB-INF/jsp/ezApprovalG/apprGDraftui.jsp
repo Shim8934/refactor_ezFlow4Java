@@ -134,7 +134,6 @@
 		    /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
 		    var SummaryOuterReceiverList = "";
 		    var checkdocinfo = false;
-		    //var DocType = ""; // 이미 위에 선언되어있음
 		    var junGyulFlag = "${junGyulFlag}";
 		    var draftJunGyulFlag = "${draftJunGyulFlag}";
 		    var pSignImage_Size = "${signImageSize}";
@@ -1325,7 +1324,7 @@
 				if(DraftFlag == "REDRAFT" && SusinSN == "1" && DocState == "011" && AprState == "004") {
 					pGubun = "11";
 				}
-		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun ;
+		        var OpenUrl = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType;
 		        if (ListType == "21") {
 		            OpenUrl += "&docSN=" + DocSN;
 				}
