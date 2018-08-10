@@ -1642,12 +1642,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		
 		List<OrganProxyVO> organProxyVOList = ezOrganDAO.getProxyUserInfo(map);
-		for (OrganProxyVO organProxyVO : organProxyVOList) {
-			
-			logger.debug("getProxyUserInfo : " + organProxyVO.getProxyUserID());
-			logger.debug("getProxyStartDate : " + organProxyVO.getStartDate());
-			logger.debug("getProxyEndDate : " + organProxyVO.getEndDate());
-		}
 		
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
