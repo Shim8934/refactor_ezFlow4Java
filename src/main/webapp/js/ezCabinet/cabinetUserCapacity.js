@@ -87,7 +87,7 @@
 		if (!inputVal.replace(/\s/g,'')) {
 			alert(CabinetMessages.strNoInput);
 			document.getElementById("inputSearch").value = "";
-			document.getElementById("inputSearch").focus;
+			document.getElementById("inputSearch").focus();
 			return;
 		}
 		
@@ -181,7 +181,7 @@
 		var changePanel = rightFrame.getElementById("perSettingPanel");
 		if (changePanel.className == "popup cabChgoff") {
 			addFogPanel("change");
-			var position            = getPosition(320, 186);
+			var position            = getPosition(300, 173);
 			changePanel.style.top   = position[0] + "px";
 			changePanel.style.right = position[1] + "px";
 			changePanel.className   = "popup cabChgon";
