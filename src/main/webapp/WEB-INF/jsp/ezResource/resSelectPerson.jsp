@@ -225,7 +225,7 @@
 						search : document.getElementById("search_type").value + "::" + keyword.value,
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
 						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
-						//page : CurPage ,
+						page : CurPage ,
 						type : "user"
 					} ,
    				success : function(data, textStatus, jqXHR) {

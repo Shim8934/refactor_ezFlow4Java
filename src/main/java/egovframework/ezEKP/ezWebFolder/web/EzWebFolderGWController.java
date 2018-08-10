@@ -597,8 +597,8 @@ public class EzWebFolderGWController {
 			
 			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
 			
-			long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
-			long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
+			double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
+			double totalCapa = Double.parseDouble(userCapacity.getTotalCapacity()) * 1073741824;
 			
 			if (totalUploadSize > (totalCapa - totalUsed)) {
 				logger.debug("Not enough storage to upload these files!");

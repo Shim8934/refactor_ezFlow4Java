@@ -55,7 +55,7 @@
 
 <table width="420" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td ><b>${STRGet_t832}</b></td>
+    <td ><b><spring:message code='ezApprovalG.t832'/></b></td>
   </tr>
 </table>
 <TABLE border=1 borderColorDark=ffffff borderColorLight=#ddd cellPadding=0 cellSpacing=0 width=640 style=" font-size:9pt; padding-left:5;padding-top:4; ">
