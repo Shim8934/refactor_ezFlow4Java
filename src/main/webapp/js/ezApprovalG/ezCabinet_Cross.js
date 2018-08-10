@@ -1,4 +1,4 @@
-﻿﻿var ListTypeFlag;
+﻿﻿﻿﻿var ListTypeFlag;
 var g_SelCabXml = "";
 var g_TransFlag = "0";
 var g_szParamXml = "";
@@ -132,7 +132,7 @@ function ezCabMunuCtl(MenuType, selRow) {
 
 
             if (typeof (tdSetCharger) != "undefined" && typeof (tdSetCharger) != "unknown") {
-                if (IsUserDeptRec() == "true")
+                if (GetCabChargerRight() == "true")
                     document.getElementById("tdSetCharger").style.display = "";
                 else
                     document.getElementById("tdSetCharger").style.display = "none";
@@ -1029,7 +1029,7 @@ function btnViewCabInfo_onclick() {
         var url = "/ezApprovalG/viewCabInfo.do";
         viewcabinfo_cross_dialogArguments[0] = para;
 
-        var OpenWin = window.open(url, "ViewCabInfo_Cross", GetOpenWindowfeature(640, 630));
+        var OpenWin = window.open(url, "ViewCabInfo_Cross", GetOpenWindowfeature(640, 550));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
@@ -1213,7 +1213,7 @@ function ViewDoc_onclick_Complete(Rtn) {
 //END
 function GetTodayDate() {
     var objDate = new Date();
-    var y = String(objDate.getYear());
+    var y = String(objDate.getFullYear());
     var m = String(objDate.getMonth() + 1);
     var d = String(objDate.getDate());
     m = "00".substring(0, 2 - m.length) + m;
@@ -1232,7 +1232,7 @@ function chk_Passwd(pUserID, CompleteFunction) {
         ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
     var url = "/ezApprovalG/ezchkPasswd.do";
-    var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(330, 200));
+    var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(350, 225));
     try { OpenWin.focus(); } catch (e) { }
 }
 //END
@@ -1377,11 +1377,12 @@ function btnSearchRec_onclick(opnOption,opentype) {
         searchrec_cross_dialogArguments[1] = btnSearchRec_onclick_Complete;
 
         if (opentype == "OPEN") {
-            var OpenWin = window.open(url, "SearchRec_Cross", GetOpenWindowfeature(623, 370));
+            var OpenWin = window.open(url, "SearchRec_Cross", GetOpenWindowfeature(800, 460));
             try { OpenWin.focus(); } catch (e) { }
         }
         else
-            DivPopUpShow(470, 350, url);
+            //DivPopUpShow(470, 350, url);
+        	DivPopUpShow(800, 460, url);
     }
     else {
         var feature;
@@ -1418,7 +1419,7 @@ function btnSearchRec_onclick_Complete(rtnVal) {
     }
     if (document.getElementById("rec_year") != null) {
         $('#rec_year').val("ALL");
-        $('#rec_year').selectmenu('refresh');
+        /*$('#rec_year').selectmenu('refresh');*/
     }
 }
 
@@ -1461,7 +1462,7 @@ function SetRecUserRole(pRecID, pSepAttNo, pDeptCode) {
 
     setrecuserrole_cross_dialogArguments[0] = para;
 
-    var OpenWin = window.open(url, "SetRecUserRole_Cross", GetOpenWindowfeature(720, 450));
+    var OpenWin = window.open(url, "SetRecUserRole_Cross", GetOpenWindowfeature(909, 450));
     try { OpenWin.focus(); } catch (e) { }
 }
 
@@ -1519,7 +1520,7 @@ function SearchCabinet(pInitFlag) {
     searchcab_cross_dialogArguments[1] = SearchCabinet_Complete;
 
     if (pInitFlag == "0") {
-        var OpenWin = window.open(url, "SearchCab_Cross", GetOpenWindowfeature(815, 455));
+        var OpenWin = window.open(url, "SearchCab_Cross", GetOpenWindowfeature(880, 500));
         try { OpenWin.focus(); } catch (e) { }
     }
     else {
@@ -1537,7 +1538,7 @@ function SearchCabinet_Complete(rtnVal) {
 
     if (document.getElementById("cab_year") != null) {
         $('#cab_year').val("ALL");
-        $('#cab_year').selectmenu('refresh');
+        /*$('#cab_year').selectmenu('refresh');*/
     }
 }
 
@@ -1582,9 +1583,9 @@ function makePageSelPage(pTotalCnt) {
         }
 
         if (!isPeriodYear)
-            document.getElementById("TitleInfo").innerHTML = "-&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + "]";
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + "]";
         else
-            document.getElementById("TitleInfo").innerHTML = "-&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
     }
 
     strtext = "<div class='pagenavi'>";
@@ -1594,29 +1595,29 @@ function makePageSelPage(pTotalCnt) {
     var pageNum = curpage;
     if (totalPage > 1 && pageNum != 1) {
         strtext = "<span class='btnimg'><a onclick= 'return goToPageByNum(1)'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' width='16' height='16' /></a></span>";
+        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev.gif' /></a></span>";
         PagingHTML += strtext;
     }
     else {
         strtext = "<span class='btnimg'><a >";
-        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' width='16' height='16' /></a></span>";
+        strtext = strtext + "<img src='/images/kr/cm/btn_p_prev01.gif' /></a></span>";
         PagingHTML += strtext;
     }
     if (totalPage > BlockSize) {
         if (pageNum > BlockSize) {
             strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+            strtext = strtext + "<img src='/images/kr/cm/btn_prev.gif' /></span>";
             PagingHTML += strtext;
         }
         else {
             strtext = "<span class='btnimg'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+            strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' /></span>";
             PagingHTML += strtext;
         }
     }
     else {
         strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang940 + "</span>";
+        strtext = strtext + "<img src='/images/kr/cm/btn_prev01.gif'/></span>";
         PagingHTML += strtext;
     }
     var MaxNum;
@@ -1644,30 +1645,30 @@ function makePageSelPage(pTotalCnt) {
     }
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-            strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg' onclick='return selafterBlock()'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_next.gif' width='16' height='16'></span>";
+            strtext = "<span class='btnimg' onclick='return selafterBlock()'>";
+            strtext = strtext + "<img src='/images/kr/cm/btn_next.gif'/></span>";
             PagingHTML += strtext;
         }
         else {
-            strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg'>";
-            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' width='16' height='16'></span>";
+            strtext = "<span class='btnimg'>";
+            strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif'/></span>";
 
             PagingHTML += strtext;
         }
     }
     else {
-        strtext = "<span onclick='return selafterBlock_one()' class='ptxt'>" + strLang941 + "</span><span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' width='16' height='16'></span>";
+        strtext = "<span class='btnimg'>";
+        strtext = strtext + "<img src='/images/kr/cm/btn_next01.gif' /></span>";
         PagingHTML += strtext;
     }
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
         strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' width='16' height='16' /></span>";
+        strtext = strtext + "<img src='/images/kr/cm/btn_n_next.gif' /></span>";
         PagingHTML += strtext;
     }
     else {
         strtext = "<span class='btnimg'>";
-        strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' width='16' height='16' /></span>";
+        strtext = strtext + "<img src='/images/kr/cm/btn_n_next01.gif' /></span>";
         PagingHTML += strtext;
     }
     PagingHTML += "</div>";
@@ -1676,7 +1677,7 @@ function makePageSelPage(pTotalCnt) {
 function goToPageByNum(Value) {
     curpage = Value;
     pageNum = curpage;
-    makePageSelPage();
+    makePageSelPage(NodeListLen);
     openergetDocInfo();
 }
 function selbeforeBlock() {

@@ -989,7 +989,7 @@
 		        BoardSelect_Cross_dialogArgument[1] = CompleteFunction;
 		        var url = "/ezBoard/boardSelect.do";
 		
-		        OpenWin = window.open(url, "BoardSelect_Cross", GetOpenWindowfeature(352, 700));
+		        OpenWin = window.open(url, "BoardSelect_Cross", GetOpenWindowfeature(360, 656));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1524,12 +1524,12 @@
 		    function NewItem_onclick() {
 		        if (CrossYN()) {
 		            writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
+		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
-		            var wWeight = "345";
-		            var wHeight = "660";
+		            var wWeight = "355";
+		            var wHeight = "600";
 		
 		            var heigth = window.screen.availHeight;
 		            var width = window.screen.availWidth;
@@ -1537,7 +1537,7 @@
 		            var left = (width - wWeight) / 2;
 		            var top = (heigth - wHeight) / 2;
 		            var ret = window.showModalDialog("/ezBoard/writeBoardSelectModal.do", "",
-		                "DialogHeight:660px;DialogWidth:345px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
+		                "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
 		
 		
 		            if (typeof (ret) != "undefined") {
@@ -1743,7 +1743,7 @@
 	            document.getElementById("backgroundtd").appendChild(span);
 	
 	            var a = document.createElement("A");
-	            a.className = "imgbtn";
+	            a.className = "imgbtn imgbck";
 	            a.style.verticalAlign = "top";
 	            a.style.marginTop = "5px";
 	            a.style.marginLeft = "10px";
@@ -1986,12 +1986,11 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li><span onclick="window.close();"><spring:message code='ezBoard.t12' /></span></li>
+	                        <li><span onclick="window.close();"></span></li>
 	                    </ul>
 	                </div>
 	                <script type="text/javascript">
 	                    selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	                    selToggleList(document.getElementById("close"), "ul", "li", "0");
 	                </script>
 	            </td>
 	        </tr>
@@ -2070,7 +2069,7 @@
 		                                &nbsp;<input type="checkbox" style="display: none" id="noticePost" />
 	                            	</c:otherwise>
 	                            </c:choose>
-								<c:if test="${mode != 'new' && mode != 'new1' && mode != 'boardContent' && mode != 'boardAttach' && mode != 'temp' && reservedItem == '' }">
+								<c:if test="${mode != 'new' && mode != 'new1' && mode != 'boardContent' && mode != 'boardAttach' && mode != 'temp' && mode != 'reply' && reservedItem == '' }">
 						              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="readCount" /></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t00002' /></span>
 								</c:if>	
 		                        </td>
@@ -2147,8 +2146,8 @@
 	                        		</c:otherwise>
 	                        	</c:choose>
 	                            <span id="reservation_date">
-		                            <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center; margin-bottom:1.2px;"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center; margin-bottom:1.2px;" />
-	                                   &nbsp;<a class="imgbtn" style= "margin-top:3px;"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezBoard.t220' /></span></a></td>
+		                            <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center; "><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
+	                                   &nbsp;<a class="imgbtn imgbck" style= "height:21px;margin-top:1px"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezBoard.t220' /></span></a></td>
 	                            </span>
 	                    </tr>
 	                    <tr id="tdEndDate">

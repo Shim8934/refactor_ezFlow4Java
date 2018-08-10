@@ -140,7 +140,7 @@
 	                modeflag = false;
 	                beforeHtml = message.Get_EditorBodyHTML();
 	                message.SetEditable(true);
-	                setNodeText(btnEdit.childNodes.item(0) , "<spring:message code='ezApproval.t44'/>");
+	                setNodeText(btnEdit.childNodes.item(0) , "<spring:message code='main.sp09'/>");
 	            }
 	            else {
 	                var pInformationContent = "<spring:message code='ezApproval.t45'/>";
@@ -433,7 +433,7 @@
 	            var url = "/ezApprovalG/ezchkPasswd.do";
 	            ezchkpasswd_cross_dialogArguments[0] = pUserID;
 	            ezchkpasswd_cross_dialogArguments[1] = FunctionName;
-	            DivPopUpShow(330, 200, url);
+	            DivPopUpShow(350, 225, url);
 	        }
 	        var ezapprovalinfo_dialogArguments = new Array();
 	        function btnApprovalInfo(pGubun) {
@@ -500,12 +500,11 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li id="btnClose"><span onclick="return btnClose_onclick()"><spring:message code='ezApproval.t70'/></span></li>
+	                        <li id="btnClose"><span onclick="return btnClose_onclick()"></span></li>
 	                    </ul>
 	                </div>
 	                <script type="text/javascript">
 	                    selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	                    selToggleList(document.getElementById("close"), "ul", "li", "0");
 	                </script>
 	            </td>
 	        </tr>

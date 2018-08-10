@@ -15,6 +15,20 @@
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
 	    	}
+			/* 조직도 #SelectDeptNM(부서명[사원수]) 부분 */
+	    	#spn_deptName {
+	    		text-overflow: ellipsis;
+	    		white-space: nowrap;
+	    		overflow: hidden;
+	    		display: inline-block;
+	    	}
+	    	#countInfo {
+	    		overflow: hidden;
+	    		display: inline-block;
+	    	}
+	    	.countColor {
+	    		color:#017BEC;
+	    	}
 	    </style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
@@ -182,7 +196,7 @@
 	            var totalLen = totalRows.length;
 
 	            if (totalLen == 0) {
-	                alert("<spring:message code="ezResource.t169" />");
+	                alert("<spring:message code='ezResource.t169' />");
 	                return;
 	            }
 
@@ -275,7 +289,9 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + nodeIdx.GetNodeData("VALUE");
+        		document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" 
+	        		+ "<span id='spn_deptName' title='" + nodeIdx.GetNodeData("VALUE") + "'>" + nodeIdx.GetNodeData("VALUE") + "</span>"
+	        		+ "<span id='countInfo'></span>";
 	            SelectDeptNM.setAttribute("countinfo", "")
 	            displayUserList(nodeIdx.GetNodeData("CN"));
 	        }
@@ -287,7 +303,7 @@
 	        		dataType : "text",
 	        		url : "/ezOrgan/getDeptMemberList.do",
 	        		data : {
-	        				deptID   : DeptID, 
+	        				deptID   : DeptID,
 	        				cell 	 : "company;description;displayName;title;telephoneNumber",
 	        				prop   : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
 	        				type 	 : "user"
@@ -296,8 +312,36 @@
 	        			pListXML_Info = loadXMLString(result);
 						pSeach = false;
 						DisplayUserImageList();
-	        		}        			
+	        		}
 	        	});
+	        	
+	        	$.ajax({
+					url : "/ezOrgan/getDeptMemberListCount.do",
+					method : "POST",
+					dataType : "json",
+					data : {
+						deptID : DeptID
+					},
+					success : function(result) {
+						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
+							var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
+							var strIsLeaf = $("div#" + id + "").attr("isleaf");
+							
+							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+			        			document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang400 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang400 + "</span>]";
+							} else {
+								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang400 + "</span>]";
+							}
+							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
+							deptNameLong(result.containLow, strIsLeaf);
+
+			            	SelectDeptNM.setAttribute("countinfo","1")
+			        	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(error);
+					}
+				});
 	        }
 	        
 	        function xmlToString(xml) {
@@ -311,7 +355,7 @@
 					pSeach = false;
 					DisplayUserImageList();
 	            } else {
-					alert("<spring:message code="ezResource.t2" />");
+					alert("<spring:message code='ezResource.t2' />");
 				}
 	        }
 	    
@@ -369,7 +413,7 @@
 
 	    function infoview_click() {
 	        if (p_ListOrderObject == null || p_ListOrderObject == "") {
-	            alert("<spring:message code="ezResource.t169" />");
+	            alert("<spring:message code='ezResource.t169' />");
 	            return;
 	        }
 	        var id = p_ListOrderObject.getAttribute("_DATA2");
@@ -536,7 +580,7 @@
 
 	        } else {
 	            if (p_ListOrderObject == "") {
-	                alert("<spring:message code="ezResource.t169" />");
+	                alert("<spring:message code='ezResource.t169' />");
 	                        return;
 	                    }
 	                    if (p_ListOrderObject != "") {
@@ -637,10 +681,24 @@
 	                    document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
 	                }
 	                var UserListHTML = "";
-	                if (SelectDeptNM.getAttribute("countinfo") != "1") {
-	                    SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
+	                /* if (SelectDeptNM.getAttribute("countinfo") != "1") {
+	                	if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "" && typeof (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length) != "undefined") {
+	                		if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length !=  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang400 + "</span>]";
+			        		} else {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang400 + "</span>]";
+			        		}
+	                	} else {
+	                		if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length !=  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + "0/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang400 + "</span>]";
+			        		} else {
+			        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + "0" + strLang400 + "</span>]";
+			        		}
+	                	}
+	                    
 	                    SelectDeptNM.setAttribute("countinfo", "1")
-	                }
+	                } */
+	                
 	                if (pListType == "IMG") {
 	                    document.getElementById("DeptUserImgList").style.display = "";
 	                    document.getElementById("txtlist_Layer").style.display = "none";
@@ -885,7 +943,7 @@
 
 		    function search_click() {
 		        if (keyword.value == "") {
-	    	        alert("<spring:message code="ezResource.t129" />");
+	    	        alert("<spring:message code='ezResource.t129' />");
 	        	    keyword.focus();
 	            	return;
 	        	}
@@ -903,17 +961,22 @@
 	        				},
 	        		success: function(result) {
 	        			pListXML_Info = loadXMLString(result);
-	        			pSeach = true;
-	        			DisplayUserImageList();
+	        			if (pListXML_Info.getElementsByTagName("ROW").length == 0) {
+	        				alert("<spring:message code='ezResource.t9900006' />");
+	        			} else {
+	        				pSeach = true;
+		        			DisplayUserImageList();
+	        			}
 	        		}
 	        	});
 	    	}
 		    
-	    	function event_displayUserList2() {
+		    //2018-07-23 이효진 미사용
+	    	/* function event_displayUserList2() {
 	        	if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
 	            	if (g_xmlHTTP.statusText == "OK") {
 		                if (g_xmlHTTP.responseXML.getElementsByTagName("ROW").length == 0) {
-		                    alert("<spring:message code="ezResource.t9900006" />");
+		                    alert("<spring:message code='ezResource.t9900006' />");
 	    	            } else {
 	        	            pListXML_Info = g_xmlHTTP.responseXML;
 	            	        pSeach = true;
@@ -925,7 +988,7 @@
 
 	            	g_xmlHTTP = null;
 	        	}
-	    	}
+	    	} */
 	    	
 	    	function ReplaceText(orgStr, findStr, replaceStr) {
 	        	var re = new RegExp(findStr, "gi");
@@ -946,7 +1009,7 @@
 	    	function ChangeListView_onClick(Div) {
 	        	pListType = Div;
 	        	ListTypeChangeIcon();
-	        	DisplayUserImageList();
+// 	        	DisplayUserImageList();
 	            setOrganListType(pListType);
 	    	}
 	    	
@@ -1108,6 +1171,24 @@
 	        	})
 	        	return organListType;
 	        }
+	        
+		    //2018-08-01 김보미 - 부서명 [사원수] 길이가 길면 조정하는 함수
+	        function deptNameLong(containLow, strIsLeaf) {
+	        	var deptNameWidth = "";
+	        	var sum = $("#spn_deptName").width() + $("#countInfo").width();
+	        	
+	          	if (containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+	          		if (sum > 359) {
+	          			deptNameWidth = 360 - $("#countInfo").width();
+	          		}
+	          	} else {
+	          		if (sum > 357) {
+	          			deptNameWidth = 358 - $("#countInfo").width();
+	          		}
+	          	}
+	        	
+	        	$("#spn_deptName").css("width", deptNameWidth);
+	        }		        
 		</script>
 	</head>
 	<body class="popup" style="overflow: hidden">	
@@ -1138,6 +1219,11 @@
     		</tree>
 		</xml>
     	<h1 id="h1Title"><spring:message code="ezResource.t12" /></h1>
+    	<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
     	<table style="width: 100%">
         	<tr>
             	<td>
@@ -1184,7 +1270,7 @@
                                         	<table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
                                             	<tr>
                                                 	<th style="white-space:normal;background-color: white;border-top:0px;border-bottom:1px solid #eaeaea">
-                                                    	<span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+														<span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
                                                     	<span style="float:right;">
                                                         	<span onclick="ChangeListView_onClick('TXT');">
                                                             	<img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist">
@@ -1234,11 +1320,9 @@
             		</td>
         		</tr>
     		</table>
-    		<input type="checkbox" value="x" id="Check_Everyone" name="Check_Everyone"><span class="txt" style="margin-bottom: 3px;"><spring:message code="ezResource.t372" /></span>
-    		<br />
-    		<div class="btnposition">
+    		<input type="checkbox" value="x" id="Check_Everyone" name="Check_Everyone" style="display:none"><span class="txt" style="margin-bottom: 3px;display:none "><spring:message code="ezResource.t372" /></span>    		
+    		<div class="btnpositionNew">
         		<a class="imgbtn" onclick="close_onclick()"><span><spring:message code="ezResource.t15" /></span></a>
-        		<a class="imgbtn" onclick="window.close()"><span><spring:message code="ezResource.t16" /></span></a>
     		</div>
 	</body>
 </html>

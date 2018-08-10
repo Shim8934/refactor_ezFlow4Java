@@ -358,25 +358,30 @@
             btnReset_onclick();
             divBasicInfo.style.display = "";
             divClassInfo.style.display = "none";
-
-            window.dialogHeight = "360px";
+            window.resizeTo(window.outerWidth, 405);
+            //window.dialogHeight = "310px";
         }
         else if (g_ModifyFlag == "1")
         {
             btnReset_onclick();
             divBasicInfo.style.display = "none";
             divClassInfo.style.display = "";
-
-            window.dialogHeight = "360px";
+            window.resizeTo(window.outerWidth, 460);
+            //window.dialogHeight = "360px";
         }
     }
 </script>
 </head>
 <body class="popup">
 <h1><spring:message code='ezApprovalG.t951'/></h1>
+<div id="close">
+    <ul>
+        <li><span id="btnClose" onclick="return btnClose_onclick()"></span></li>
+    </ul>
+</div>
 <table class="content">
   <tr>
-    <th><spring:message code='ezApprovalG.t963'/></th>
+    <th style="padding-right: 22px;"><spring:message code='ezApprovalG.t963'/></th>
     <td><Select id="selChangeType" style="width:120PX" onChange="return selChangeType_onchange()">
         <Option value="0" id="0"><spring:message code='ezApprovalG.t964'/></Option>
         <Option value="1" id="1"><spring:message code='ezApprovalG.t965'/></Option>
@@ -387,7 +392,7 @@
 <Div id="divBasicInfo">
   <table class="content" style="margin-top:10px" >
     <tr >
-      <th><spring:message code='ezApprovalG.t106'/></th>
+      <th style="padding-right: 70px;"><spring:message code='ezApprovalG.t106'/></th>
       <td ><input type="text" class="text" style="Width:99%; " name="txtTitle" id="txtTitle">
       </td>
     </tr>
@@ -404,7 +409,9 @@
           <tr>
             <td id="tdSpecialFlag">&nbsp;</td>
             <td style="width:70px">
-                <img src="/images/btn_change.gif"style="display:none;cursor:pointer" name="btnAddSC" id="btnAddSC" onClick="return btnAddSpecialCatalog_onclick()" width="51" height="20"></td>
+                <!-- <img src="/images/btn_change.gif"style="display:none;cursor:pointer" name="btnAddSC" id="btnAddSC" onClick="return btnAddSpecialCatalog_onclick()" width="51" height="20"> -->
+                <a class="imgbtn imgbck" id="btnAddSC" style="margin-top: 2px;display:none;"><span onClick="return btnAddSpecialCatalog_onclick()"><spring:message code='ezApprovalG.t269'/></span></a>
+            </td>
           </tr>
         </table></td>
     </tr>
@@ -441,7 +448,7 @@
 </Div>
 <table class="content" style="margin-top:10px" >
   <tr>
-    <th><spring:message code='ezApprovalG.t626'/></th>
+    <th style="padding-right: 46px;"><spring:message code='ezApprovalG.t626'/></th>
     <td style="padding-top:2px;"><TextArea style="width:97%;height:70px; border: 0; resize:none;" id=txtChangeReason name=txtChangeReason></TextArea>
     </td>
   </tr>
@@ -449,7 +456,6 @@
 <div class="btnposition btnpositionNew">
   <a class="imgbtn"><span id="btnReset" onclick="return btnReset_onclick()"><spring:message code='ezApprovalG.t621'/></span></a>
   <a class="imgbtn"><span id="btnOK" onclick="return btnOK_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-  <a class="imgbtn"><span id="btnClose" onclick="return btnClose_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>  
 </div>
     <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

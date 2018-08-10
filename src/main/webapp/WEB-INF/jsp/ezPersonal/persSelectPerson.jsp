@@ -14,7 +14,7 @@
 		</c:choose>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -421,9 +421,7 @@
 		<div id="close">
 			<ul>
 				<li>
-					<span onClick="window.close()" style="cursor:pointer">
-						<spring:message code='ezPersonal.t10'/>
-					</span>
+					<span onClick="window.close()" style="cursor:pointer"></span>
 				</li>
 			</ul>
 		</div>
@@ -465,12 +463,8 @@
 				</td>
 		  	</tr>
 		</table>
-		<div class="btnposition btnpositionNew" style="margin-top:15px">
+		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn" onClick="select_member()" ><span><spring:message code='ezPersonal.t12'/></span></a>
-		    <a class="imgbtn" onClick="window.close()"><span><spring:message code='ezPersonal.t13'/></span></a>
 		</div>
-		<script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
 	</body>
 </html>

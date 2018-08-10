@@ -52,6 +52,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
+import javax.mail.UIDFolder;
 import javax.mail.internet.ContentDisposition;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.InternetHeaders;
@@ -60,7 +61,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.mail.search.AndTerm;
-import javax.mail.search.ComparisonTerm;
 import javax.mail.search.DateTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.ReceivedDateTerm;
@@ -77,7 +77,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -85,6 +84,7 @@ import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPMessage;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
@@ -124,6 +124,9 @@ public class EzEmailUtil {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzAddressService ezAddressService;
 	
 	public String getInboxFolderId() {
 		return "INBOX";
@@ -851,22 +854,22 @@ public class EzEmailUtil {
 			}
 			
 			if (forPrint) {
-				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
-				pAttachListHtml += "<span><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >";
+				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align:middle'></span>";
+				pAttachListHtml += "<span><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >";
 				pAttachListHtml += this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span></br>";
 			} else if (secureKey != null) {
 				String aitem = "/ezEmail/downloadSecureAttach.do?secureKey=" + URLEncoder.encode(secureKey, "UTF-8") + "&securePassword=" + URLEncoder.encode(securePassword, "UTF-8") + "&filename=" + URLEncoder.encode(filename, "UTF-8") + "&index=" + bodyPartIndex;
-				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
-				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span></li>";
+				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align:middle'></span>";
+				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span></li>";
 			} else if (mobile) {
 				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
 				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' \"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
-				pAttachListHtml += " <span onclick=\"javascript:mailFileDown('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
+				pAttachListHtml += " <span onclick=\"javascript:mailFileDown('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
 				pAttachListHtml += " </p>";
 			} else {
 				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
-				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
-				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
+				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align:middle'></span>";
+				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
 				pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
 			}
 			
@@ -1224,12 +1227,12 @@ public class EzEmailUtil {
 			}
 			
 			if (forPrint) {
-				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+				pAttachListHtml += "<span style='cursor:pointer;'><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align:middle'></span>";
 				pAttachListHtml += "<span><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >";
 				pAttachListHtml += this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span></br>";
 			} else if (secureKey != null) {
 				String aitem = "/ezEmail/downloadSecureAttach.do?secureKey=" + URLEncoder.encode(secureKey, "UTF-8") + "&securePassword=" + URLEncoder.encode(securePassword, "UTF-8") + "&filename=" + URLEncoder.encode(filename, "UTF-8") + "&index=" + bodyPartIndex;
-				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align:middle'></span>";
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span></li>";
 			} else if (mobile) {
 				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
@@ -1238,7 +1241,7 @@ public class EzEmailUtil {
 				pAttachListHtml += " </p>";
 			} else {
 				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
-				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
+				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align:middle'></span>";
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666' style='cursor:pointer' >" + this.getSpclStrCnvr2(filename) + " (" + strSize + ")</span></span>";
 				pAttachListHtml += " <span class='icon_rbtn' fileid='" + bodyPartIndex + "' onclick=\"AttachFile_Delete(this);\"><img src='/images/icon_reddelete.gif' width='16' height='16'></span></li>";
 			}
@@ -1409,7 +1412,183 @@ public class EzEmailUtil {
             
         return resultList;
     }
-
+    
+    public Message[] searchFolder(IMAPAccess ia, String userAccount, Folder folder, String searchField, String searchValue, 
+    		Date startDate, Date endDate, boolean searchSubFolder, boolean isUnreadOnly, boolean isImportantOnly, String sortType, boolean isAscending, 
+    		int startIndex, int listCount, boolean isFromMobile, Map<String, Object> extraMap, int tenantId) throws Exception {
+    	logger.debug("userAccount=" + userAccount + ",folder=" + folder + ",searchField=" + searchField + ",searchValue=" + searchValue
+    			 + ",startDate=" + startDate + ",endDate=" + endDate + ",searchSubFolder=" + searchSubFolder + ",isUnreadOnly=" + isUnreadOnly
+    			 + ",isImportantOnly=" + isImportantOnly + ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex
+    			 + ",listCount=" + listCount + ",isFromMobile=" + isFromMobile + ",extraMap=" + extraMap + ",tenantId=" + tenantId);
+    	
+    	String useAdvancedMailSearch = ezCommonService.getTenantConfig("useAdvancedMailSearch", tenantId);
+    	logger.debug("useAdvancedMailSearch=" + useAdvancedMailSearch);
+    	
+    	Message[] messages = null;
+    	
+    	if (useAdvancedMailSearch.equals("YES")) {
+    		String folderPath = "";
+    		
+    		// folder is null when searching all folder
+    		if (folder != null) {
+    			folderPath = folder.getFullName();
+    		}
+    		
+    		logger.debug("folderPath=" + folderPath);
+    		
+    		messages = advancedSearchFolder(ia, userAccount, folderPath, searchField, searchValue, startDate, endDate, 
+    				searchSubFolder, isUnreadOnly, isImportantOnly, sortType, isAscending, startIndex, listCount, extraMap);
+    		
+    		// pre-fetch
+    		if (messages.length > 0) {
+        		Folder fetchFolder = messages[0].getFolder();
+        	
+	        	FetchProfile fp = new FetchProfile();
+				fp.add(UIDFolder.FetchProfileItem.UID);
+				fp.add("X-Priority");
+				fp.add(FetchProfile.Item.CONTENT_INFO);
+				fp.add(FetchProfile.Item.ENVELOPE);
+				fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+				fp.add(FetchProfile.Item.SIZE);
+				fp.add(FetchProfile.Item.FLAGS);
+				fp.add("Subject");
+				fp.add("From");
+				fp.add("To");
+				
+				fetchFolder.fetch(messages, fp);
+        	}
+    		
+    	} else {
+    		if (folder == null) { // searching all folder
+    			String useDefaultFoldersForLangOnly = ezCommonService.getTenantConfig("UseDefaultFoldersForLangOnly", tenantId);
+				boolean isUseDefaultFoldersForLangOnly = useDefaultFoldersForLangOnly.equals("YES") ? true : false;
+				
+				List<Folder> topLevelFolders = ia.getTopLevelFolders(true, isUseDefaultFoldersForLangOnly);		
+				
+				List<String> topLevelFolderNames = new ArrayList<String>();
+				int maxFolderCount = Math.min(5, topLevelFolders.size());
+				
+				for (int i = 0; i < maxFolderCount; i++) {
+					Folder tmpFolder = topLevelFolders.get(i);
+					
+					topLevelFolderNames.add(tmpFolder.getName());
+				}
+				
+				logger.debug("topLevelFolderNames=" + topLevelFolderNames);	
+				
+				for (String folderName : topLevelFolderNames) {
+					Folder tmpFolder = ia.getFolder(folderName);
+					
+					if (folder == null) {
+						folder = tmpFolder;
+					}
+					
+					tmpFolder.open(Folder.READ_ONLY);
+					
+					Message[] subMessages = searchFolder(tmpFolder, searchField, searchValue, startDate, endDate, true, null, isUnreadOnly, isImportantOnly, isFromMobile);
+					
+					if (messages == null) {
+						messages = subMessages;
+					}
+					else if (subMessages.length > 0) {
+					   int mainLen = messages.length;
+					   int subLen = subMessages.length;
+					   Message[] combined = new Message[mainLen + subLen];
+					   System.arraycopy(messages, 0, combined, 0, mainLen);
+					   System.arraycopy(subMessages, 0, combined, mainLen, subLen);	
+					   
+					   messages = combined;
+					}				
+					
+					FetchProfile fp = new FetchProfile();
+					
+					fp.add(UIDFolder.FetchProfileItem.UID);
+					fp.add("X-Priority");
+					fp.add(FetchProfile.Item.CONTENT_INFO);
+					fp.add(FetchProfile.Item.ENVELOPE);
+					fp.add(IMAPFolder.FetchProfileItem.INTERNALDATE);
+					fp.add(FetchProfile.Item.SIZE);
+					fp.add(FetchProfile.Item.FLAGS);
+					
+					tmpFolder.fetch(messages, fp);		
+				}
+				
+    		} else {
+    			if (!searchField.equals("") || startDate != null || endDate != null || searchSubFolder || isUnreadOnly || isImportantOnly) {
+        			messages = searchFolder(folder, searchField, searchValue, startDate, endDate, searchSubFolder, null, isUnreadOnly, isImportantOnly, isFromMobile);
+        		} else {
+        			logger.debug("get all message.");
+        			messages = folder.getMessages();
+        		}
+    		}
+			
+    		// sort the messages
+			if (sortType != null) {
+				sortMessages(folder, messages, sortType, isAscending);
+			}
+			
+			if (extraMap != null) {
+				extraMap.put("totalCount", messages.length);
+			}
+			
+			if (startIndex > messages.length || listCount < 0) {
+				messages = new Message[0];
+			} else {
+				// split messages
+				listCount = Math.min(messages.length - startIndex, listCount);
+				messages = Arrays.copyOfRange(messages, startIndex, startIndex + listCount);
+				
+				// pre-fetch
+				FetchProfile fp = new FetchProfile();
+				
+				if (sortType.equals("importance") || sortType.equals("receivedDate")) {
+					fp.add(UIDFolder.FetchProfileItem.UID);
+					fp.add("X-Priority");
+					fp.add(FetchProfile.Item.CONTENT_INFO);
+					fp.add(FetchProfile.Item.ENVELOPE);
+					fp.add(FetchProfile.Item.SIZE);
+					fp.add(FetchProfile.Item.FLAGS);								
+				}
+				else if (sortType.equals("readFlag") || sortType.equals("flag")) {
+					fp.add(UIDFolder.FetchProfileItem.UID);
+					fp.add("X-Priority");
+					fp.add(FetchProfile.Item.CONTENT_INFO);
+					fp.add(FetchProfile.Item.ENVELOPE);
+					fp.add(FetchProfile.Item.SIZE);								
+				}
+				else if (sortType.equals("attachment")) {
+					fp.add(UIDFolder.FetchProfileItem.UID);
+					fp.add("X-Priority");
+					fp.add(FetchProfile.Item.ENVELOPE);
+					fp.add(FetchProfile.Item.SIZE);
+					fp.add(FetchProfile.Item.FLAGS);								
+				}
+				else if (sortType.equals("sender") || sortType.equals("subject")) {
+					fp.add(UIDFolder.FetchProfileItem.UID);
+					fp.add("X-Priority");
+					fp.add(FetchProfile.Item.CONTENT_INFO);
+					fp.add(FetchProfile.Item.FLAGS);								
+				}
+				else if (sortType.equals("size")) {
+					fp.add(UIDFolder.FetchProfileItem.UID);
+					fp.add("X-Priority");
+					fp.add(FetchProfile.Item.CONTENT_INFO);
+					fp.add(FetchProfile.Item.ENVELOPE);
+					fp.add(FetchProfile.Item.FLAGS);								
+				}
+				
+				fp.add("Subject");
+				fp.add("From");
+				fp.add("To");
+				
+				folder.fetch(messages, fp);
+			}
+    	}
+    	
+    	logger.debug("messagesLength=" + messages.length);
+    	return messages;
+    }
+    
 	public Message[] searchFolder (
 			Folder folder, 
 			String searchField, 
@@ -1666,10 +1845,10 @@ public class EzEmailUtil {
 			
 			messages = folder.search(sTerm);
 			
-			Folder[] subFolders = folder.list();
-			
 			// search the sub folders and combine the results.			
 			if (searchSubFolder) {
+				Folder[] subFolders = folder.list();
+				
 				for (Folder subFolder : subFolders) {
 					subFolder.open(Folder.READ_ONLY);
 					Message[] subMessages = searchFolder(subFolder, searchField, searchValue, startDate, endDate, searchSubFolder, sTerm, isUnreadOnly, isImportantOnly);
@@ -1703,91 +1882,190 @@ public class EzEmailUtil {
 		}
 		
 		if (isFromMobile && endDate != null && startDate == null) {
-			if (sTerm == null) { // filter search 없을 때
-				ArrayList<Message> arrayList = new ArrayList<>();
-
-				Date from = endDate;       
-				Folder f = folder;
-
-				int end = f.getMessageCount();       
-				long lFrom = from.getTime(); //endDate
-
-				Date rDate; //message Date       
-				long lrDate; //message Date long for comparing endDate
-
-				Message orgMsg[] = f.getMessages();
+			ArrayList<Message> arrayList = new ArrayList<Message>();
+			Message orgMsg[] = messages;
+			
+			Date from = endDate;
+			int end = orgMsg.length;       
+			long lFrom = from.getTime(); // endDate
+			
+			Date rDate; // message Date       
+			long lrDate; // message Date long for comparing endDate       
+			int j = 0;
+							
+			if (orgMsg.length > 0) {
+				this.sortMessages(folder, orgMsg, "receivedDate", true);
 				
-				if (orgMsg.length > 0) {
-					this.sortMessages(folder, orgMsg, "receivedDate", true);
+				do {                
+					Message testMsg = orgMsg[end-1];         
+					rDate = testMsg.getReceivedDate();         
+					lrDate = rDate.getTime();
+					end--;
 					
-					int j = 0;
-					
-					do {                
-						Message testMsg = orgMsg[end-1];         
-						rDate = testMsg.getReceivedDate();         
-						lrDate = rDate.getTime();
-						end--;
-						
-						if (lrDate < lFrom) {
-							arrayList.add(testMsg);
-							j++;
-						}
-					} while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
-				}
-				
-				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
-
-				return msg;
-			// filter 있을 때				
-			} else {				
-				ArrayList<Message> arrayList = new ArrayList<>();
-				
-				Date from = endDate;       
-				Folder f = folder;
-				
-				Message orgMsg[] = f.search(sTerm);
-				
-				int end = orgMsg.length;       
-				long lFrom = from.getTime(); //endDate
-				
-				Date rDate; // message Date       
-				long lrDate; // message Date long for comparing endDate       
-				int j = 0;
-								
-				if (orgMsg.length > 0) {
-					this.sortMessages(folder, orgMsg, "receivedDate", true);
-					
-					do {                
-						Message testMsg = orgMsg[end-1];         
-						rDate = testMsg.getReceivedDate();         
-						lrDate = rDate.getTime();
-						end--;
-						
-						if (lrDate < lFrom) {
-							if (isUnreadOnly || isImportantOnly) {
-								if (isUnreadOnly && !testMsg.isSet(Flags.Flag.SEEN)) {
-									arrayList.add(testMsg);
-									j++;
-								} else if (isImportantOnly && testMsg.isSet(Flags.Flag.FLAGGED)) {
-									arrayList.add(testMsg);
-									j++;
-								}
-							} else {
+					if (lrDate < lFrom) {
+						if (isUnreadOnly || isImportantOnly) {
+							if (isUnreadOnly && !testMsg.isSet(Flags.Flag.SEEN)) {
+								arrayList.add(testMsg);
+								j++;
+							} else if (isImportantOnly && testMsg.isSet(Flags.Flag.FLAGGED)) {
 								arrayList.add(testMsg);
 								j++;
 							}
+						} else {
+							arrayList.add(testMsg);
+							j++;
 						}
-					} while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
-				}
-				
-				Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
-				
-				messages = msg;
+					}
+				} while (j < 30 && end > 0);// 더 빨리 온 메세지를 뽑는다.
 			}
+			
+			Message msg[] = arrayList.toArray(new Message[arrayList.size()]);
+			
+			messages = msg;
 		}
 		
 		logger.debug("searchFolder ended.");
 		return messages;
+	}
+	
+	public Message[] advancedSearchFolder(
+			IMAPAccess ia,
+			String userAccount,
+			String folderPath, 
+			String searchField, 
+			final String searchValue,
+			Date startDate,
+			Date endDate,
+			boolean searchSubFolder,
+			boolean isUnreadOnly,
+			boolean isImportantOnly,
+			String sortType,
+			boolean isAscending,
+			int startIndex,
+			int listCount,
+			Map<String, Object> extraMap
+			) throws Exception {
+		logger.debug("advancedSearchFolder started.");
+		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField + "searchValue=" + searchValue 
+				+ ",startDate=" + startDate + ",endDate=" + endDate + ",searchSubFolder=" + searchSubFolder + ",isUnreadOnly=" + isUnreadOnly 
+				+ ",isImportantOnly=" + isImportantOnly + ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex
+				+ ",listCount=" + listCount);
+		
+		Map<String, Object> resultMap = getMailListFromJGw(userAccount, folderPath, searchField, searchValue, startDate, endDate, 
+				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount);
+		
+		List<String> mailList = (List<String>)resultMap.get("mailList");
+		
+		if (extraMap != null) {
+			extraMap.put("totalCount", (int)resultMap.get("totalCount"));
+		}
+		
+		List<Message> messageList = new ArrayList<Message>();
+		Map<String, Folder> folderMap = new HashMap<String, Folder>();
+		String mailFolderPath = null;
+		long mailUid = 0;
+		Folder mailFolder = null;
+		Message message = null;
+		
+		for (String mailUrl : mailList) {
+			mailFolderPath = mailUrl.split("/")[0];
+			mailUid = Long.parseLong(mailUrl.split("/")[1]);
+			
+			if (folderMap.containsKey(mailFolderPath)) {
+				mailFolder = folderMap.get(mailFolderPath);
+				message = ((IMAPFolder)mailFolder).getMessageByUID(mailUid);
+				
+				if (message != null) {
+					messageList.add(message);
+				}
+			} else {
+				mailFolder = ia.getFolder(mailFolderPath);
+				mailFolder.open(Folder.READ_ONLY);
+				folderMap.put(mailFolderPath, mailFolder);
+				message = ((IMAPFolder)mailFolder).getMessageByUID(mailUid);
+				
+				if (message != null) {
+					messageList.add(message);
+				}
+			}
+		}
+		
+		logger.debug("advancedSearchFolder ended.");
+		return messageList.toArray(new Message[0]);
+	}
+	
+	public Map<String, Object> getMailListFromJGw(
+			String userAccount,
+			String folderPath, 
+			String searchField, 
+			String searchValue, 
+			Date startDate, 
+			Date endDate, 
+			boolean isUnreadOnly, 
+			boolean isImportantOnly,
+			boolean searchSubFolder,
+			String sortType,
+			boolean isAscending,
+			int startIndex,
+			int listCount
+			) throws Exception {
+		logger.debug("getMailUidListFromJGw started.");
+		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField 
+				+ ",searchValue=" + searchValue + ",startDate=" + startDate + ",endDate=" + endDate 
+				+ ",isUnreadOnly=" + isUnreadOnly + ",isImportantOnly=" + isImportantOnly + ",searchSubFolder=" + searchSubFolder
+				+ ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex + ",listCount=" + listCount);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		String userAccountParam = "userAccount=" + URLEncoder.encode(userAccount, "UTF-8");
+		String folderPathParam = "folderPath=" + URLEncoder.encode(folderPath, "UTF-8");
+		String searchFieldParam = "searchField=" + URLEncoder.encode(searchField == null ? "" : searchField, "UTF-8");
+		String searchValueParam = "searchValue=" + URLEncoder.encode(searchValue == null ? "" : searchValue, "UTF-8");
+		String startDateParam = "startDate=" + URLEncoder.encode(startDate == null ? "" : sdf.format(startDate), "UTF-8");
+		String endDateParam = "endDate=" + URLEncoder.encode(endDate == null ? "" : sdf.format(endDate), "UTF-8");
+		String isUnreadOnlyParam = "isUnreadOnly=" + isUnreadOnly;
+		String isImportantOnlyParam = "isImportantOnly=" + isImportantOnly;
+		
+		String searchSubFolderParam = "searchSubFolder=" + searchSubFolder;
+		String sortTypeParam = "sortType=" + URLEncoder.encode(sortType == null ? "" : sortType, "UTF-8");
+		String isAscendingParam = "isAscending=" + isAscending;
+		String startIndexParam = "startIndex=" + startIndex;
+		String listCountParam = "listCount=" + listCount;
+		
+		String inputParams = userAccountParam + "&" + folderPathParam + "&" + searchFieldParam 
+				+ "&" + searchValueParam + "&" + startDateParam + "&" + endDateParam 
+				+ "&" + isUnreadOnlyParam + "&" + isImportantOnlyParam + "&" + searchSubFolderParam
+				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam;
+		
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/searchMail";
+		String response = getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			if (((String)responseObj.get("resultCode")).equals("OK") && (Long)responseObj.get("reasonCode") == 0) {
+				List<String> mailList = (List<String>)responseObj.get("mailList");
+				int totalCount = (int)(long)responseObj.get("totalCount");
+				
+				resultMap.put("mailList", mailList);
+				resultMap.put("totalCount", totalCount);
+				
+//				for (int i = 0; i < result.size(); i++) {
+//					mailList.add((String)result.get(i));
+//				}
+			} else {
+				throw new Exception("JGwServer ERROR");
+			}
+		}
+		
+		logger.debug("getMailUidListFromJGw ended.");
+		return resultMap;
 	}
 	
 	public MimeMessage deleteAttach(SMTPAccess sa, Message oldMessage, int[] index) {
@@ -2344,10 +2622,20 @@ public class EzEmailUtil {
 	public void setSentDateFlag(Message message, boolean isSet) throws MessagingException {
 		logger.debug("setSentDateFlag");
 		
+		String[] flags = message.getFlags().getUserFlags();
+		
+		for (String flag : flags) {
+			if (flag.indexOf("$SentDate-") != -1) {
+				Flags test = new Flags(flag);
+				
+				message.setFlags(test, false);
+			}
+		}
+		
 		String nowMillisTime = Long.toString(System.currentTimeMillis());
 		Flags sentDateFlag = new Flags("$SentDate-" + nowMillisTime);
 		
-		logger.debug(nowMillisTime);
+		logger.debug("nowMillisTime : " + nowMillisTime);
 		
 		message.setFlags(sentDateFlag, isSet);
 	}
@@ -3498,7 +3786,7 @@ public class EzEmailUtil {
 			dateStrExceptTime = sentDateStr.substring(0, 10);
 		}
 		
-		subject = subject.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll("[\\t\\r\\n\\v\\f]", "");
+		subject = subject.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll("[\\t\\r\\n\\v\\f\\u00a0]", "");
 		String fileName = senderName + "_[" + senderAddress + "]_" + "[" + dateStrExceptTime + "]_" + subject ;
 		return fileName;
 	}
@@ -3598,6 +3886,88 @@ public class EzEmailUtil {
 		logger.debug("getSpclStrCnvr2 ended.");
 
 		return rtnStr;
+	}
+	
+	/**
+	 * 편지 이동/복사, 삭제시 (검색에도 동일) 편지함에 ,콤마가 있는 경우 폴더이름/uid를 구분하여 자르기 위한 메서드  
+	 * @param uniqueId
+	 * @return String[] folderAndMsgIdArray
+	 */
+	public String[] makeFolderAndMsgIdArray(String uniqueId) {
+		
+		boolean isSlash = false;
+		int startIdx = 0;
+		List<String> folderIdList = new ArrayList<>();
+		
+		for (int i = 0; i < uniqueId.length(); i++) {
+			String ch = String.valueOf(uniqueId.charAt(i));
+			
+			if (ch.equals("/")) {
+				isSlash = true;
+			}
+			
+			if (isSlash == true && (ch.equals(",") || i == uniqueId.length() - 1)) {
+				String splitBoxNm = uniqueId.substring(startIdx, i + 1);
+				String last = String.valueOf(splitBoxNm.charAt(splitBoxNm.length() - 1));
+				
+				if (last.equals(",")) {
+					splitBoxNm = uniqueId.substring(startIdx, i);
+				}
+				
+				folderIdList.add(splitBoxNm);
+				startIdx = i + 1;
+				isSlash = false;
+			}
+		}
+		
+		String[] folderAndMsgIdArray = new String[folderIdList.size()];
+		folderAndMsgIdArray = folderIdList.toArray(folderAndMsgIdArray);
+		
+		return folderAndMsgIdArray;
+	}
+	
+	/**
+	 * 메일 전송시 외부로 보내는 메일 주소 자동검색 되도록 주소록에 저장시키는 메소드
+	 * @param param			to, cc, bcc 의 주소록에 들어갈 name, address
+	 * @param userId		주소록 user
+	 * @param tenantId			
+	 * @param userAccount	user 주소
+	 * @param displayName	user name	
+	 * @param displayName2	user name2
+	 * @throws Exception 
+	 */
+	public void outerMailInsertAddress(List<Map<String, Object>> param, String userId, int tenantId, 
+			String userAccount, String displayName, String displayName2) throws Exception {
+		logger.debug("outerMailInsertAddress start.");
+		String name = "";
+		String address = "";
+		String innerDomain = ezCommonService.getTenantConfig("MailInnerDomain", tenantId);
+		List<String> innerDomainArray = Arrays.asList(innerDomain.split(";"));
+		
+		for (int i = 0; i < param.size(); i++) {
+			
+			try {
+				name = (String) param.get(i).get("name");
+				address = (String) param.get(i).get("address");
+				String recipientDomain = address.split("@")[1];	
+			
+				if (!innerDomainArray.contains(recipientDomain)) {
+					// exists가 false이면 존재하지 않음
+					boolean exists = ezAddressService.checkDuplicateAddress(tenantId, userId, address);
+					if (!exists) {
+						logger.debug("autoMailAddress make : " + address);
+						ezAddressService.insertAddress(tenantId, userId, "0", userAccount, 
+								displayName, displayName2, name, address, "", "", "", 
+								"", "", "", "", "", "", "", "", "", "P");
+					}
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.debug("outerMail insert Address fail / failAddress:" + address );
+			}
+		}
+		logger.debug("outerMailInsertAddress end.");
 	}
 }
 

@@ -114,7 +114,7 @@
 					<h2><span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t61'/></span><ul></ul></h2>	
 					<h2><span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t224'/></span><ul></ul></h2>	
 					<h2><span onClick="goPage(4)" style="display:inline-block;width:100%;"><spring:message code='ezPortal.t107'/></span><ul></ul></h2>	
-					<div onClick="DeleteCache()"><h1 style="padding-top:10px;padding-bottom:10px;padding-left:19px;border-bottom:1px solid #ccc;cursor: pointer;"><span id="Del_Cache" onClick=""><spring:message code='ezPortal.t230'/></span><ul></ul></h1></div>
+					<div onClick="DeleteCache()"><h1 style="padding-top:10px;padding-bottom:10px;padding-left:19px;border-bottom:1px solid #eaeaea;cursor: pointer;"><span id="Del_Cache" onClick=""><spring:message code='ezPortal.t230'/></span><ul></ul></h1></div>
 				</c:otherwise>
 			</c:choose>
 		</div>

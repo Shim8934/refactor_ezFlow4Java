@@ -6,6 +6,9 @@
 	    <title><spring:message code='ezApprovalG.t560'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+	    <style>
+	    	.mainlist tr th {border-top:0px}
+	    </style>
 	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -27,6 +30,8 @@
 	    	var g_SDeptName = "${userInfo.deptName}";
 	        var CompanyID = "${userInfo.companyID}";
 	        var UserLang = "${userInfo.lang}";
+	        var date = new Date();
+            var nowYear = date.getFullYear();
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -38,6 +43,13 @@
 	            }
 	            document.getElementById("tdSDeptName").innerText = g_SDeptName;
 	            InitSelCabinetList();
+	            
+	            //2018-05-18 강민수92 셀렉트 박스 추가
+	            for (var i = nowYear + 5; i >= nowYear - 5; i--) {
+	            	$('#selYear').append("<option value='" + i + "'>" + i + "</option>")
+	            }
+				
+	            $("#selYear").val(nowYear).prop("selected", true);
 	        };
 	
 	        function bt_OK_onclick() {
@@ -139,6 +151,7 @@
 	        if (len > 0) {
 	            for (i = 0; i < len; i++) {
 	                createNodeAndInsertText(oXml, objNode, "ID", Rows[i].getAttribute("DATA1"));
+	                createNodeAndInsertText(oXml, objNode, "PRODUCTIONYEAR", Rows[i].getAttribute("DATA7"));
 	            }
 	        }
 	        return oXml;
@@ -198,7 +211,10 @@
 	        g_STaskCode = getNodeText(SelectNodes(oXml, "/TASKINFO/TASK/CODE")[0]);
 	        document.getElementById("tdSTaskCode").innerText = g_STaskCode;
 	        document.getElementById("tdSTaskName").innerText = getNodeText(SelectNodes(oXml, "/TASKINFO/TASK/NAME")[0]);
-	        GetCabinetSimpleList(g_SDeptCode, "", g_STaskCode, "", "2");
+	        
+	        var selYear = $('#selYear').val();
+	        
+	        GetCabinetSimpleList(g_SDeptCode, "", g_STaskCode, "", "2", selYear);
 	    }
 	
 	    function GetSelDTaskInfo(szTaskXml) {
@@ -385,6 +401,16 @@
 	        SelListView.DataSource(oList);
 	        SelListView.DataBind("SelCabinetList");
 	    }
+	    
+	    function selYear_onChange() {
+	    	console.log(g_SDeptCode == "")
+	    	console.log(g_STaskCode == "")
+	    	
+	    	if (g_SDeptCode != "" && g_STaskCode != "") {
+	    		var selYear = $('#selYear').val();
+	    		GetCabinetSimpleList(g_SDeptCode, "", g_STaskCode, "", "2", selYear);
+	    	}
+	    }
 	
 	    </script>
 	</head>
@@ -410,7 +436,7 @@
 	                                <tr>
 	                                    <td id="tdSTaskCode">&nbsp;</td>
 	                                    <td style="width: 45px;">
-	                                        <a class="imgbtn"><span onclick="return btnChangeSTask_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
+	                                        <a class="imgbtn imgbck"><span onclick="return btnChangeSTask_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -422,15 +448,16 @@
 	                    </tr>
 	                </table>
 	                <br>
-	                <h2><spring:message code='ezApprovalG.t578'/></h2>
+	                <h2 class="h2_dot" style="font-weight: normal;width:440px"><spring:message code='ezApprovalG.t578'/><span style="float:right"><select id="selYear" style="width: 55px;" onchange="selYear_onChange()"></select></span></h2>
+	                
 	                <div style="WIDTH: 450px; HEIGHT: 300px; OVERFLOW-Y: AUTO;" class="listview">
 	                    <div id="CabinetList"></div>
 	                </div>
 	            </td>
 	            <td style="text-align: center; width: 25px">
-	                <img src="/images/arr_right.gif" name="Image191" width="16px" height="16px" onclick="return AddCabList_onclick()" style="cursor: pointer">
-	                <img src="/images/arr_left.gif" name="Image201" width="16px" height="16px" onclick="return DelCabList_onclick()" style="padding-top: 5px; cursor: pointer;">
-	                <img name="Image1911" src="/images/arr01a.gif" width="16px" height="16px" onclick="return btnAddAll_onclick()" style="padding-top: 20px;  cursor: pointer">
+	                <img src="/images/arr_right.gif" name="Image191" onclick="return AddCabList_onclick()" style="cursor: pointer;margin-top:100px">
+	                <img src="/images/arr_left.gif" name="Image201" onclick="return DelCabList_onclick()" style="padding-top: 5px; cursor: pointer;">
+	                <img name="Image1911" src="/images/arr01a.gif" onclick="return btnAddAll_onclick()" style="padding-top: 20px;  cursor: pointer">
 	            </td>
 	            <td style="vertical-align: top">
 	                <table class="content" style="width: 100%">
@@ -441,7 +468,7 @@
 	                                <tr>
 	                                    <td id="tdDDeptName">&nbsp;</td>
 	                                    <td style="width: 45px;">
-	                                        <a class="imgbtn"><span onclick="return btnChangeDDept_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
+	                                        <a class="imgbtn imgbck"><span onclick="return btnChangeDDept_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -454,7 +481,7 @@
 	                                <tr>
 	                                    <td id="tdDTaskCode">&nbsp;</td>
 	                                    <td style="width: 45px;">
-	                                        <a class="imgbtn"><span onclick="return btnChangeDTask_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
+	                                        <a class="imgbtn imgbck"><span onclick="return btnChangeDTask_onclick()" style="width: 40px; text-align: center;"><spring:message code='ezApprovalG.t105'/></span></a>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -466,7 +493,7 @@
 	                    </tr>
 	                </table>
 	                <br>
-	                <h2><spring:message code='ezApprovalG.t580'/></h2>
+	                <h2 class="h2_dot" style="font-weight: normal"><spring:message code='ezApprovalG.t580'/></h2>
 	                <div style="WIDTH: 375px; HEIGHT: 300px; OVERFLOW-Y: AUTO;" class="listview">
 	                    <div id="SelCabinetList"></div>
 	                </div>

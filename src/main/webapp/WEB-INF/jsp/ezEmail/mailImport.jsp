@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -9,10 +10,10 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 		<c:if test="${isCrossBrowser != true}">
-	    <script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/Kaoni_ActiveX.js")%>"></script>
 	    </c:if>
 	    <script>
 	        var g_fileList;
@@ -21,6 +22,7 @@
 	        var attachxml = "";
 	        var isCrossBrowser = "${isCrossBrowser}";
 	        var ReturnFunction;
+	        var maxAllowMailMsg = "<spring:message code='ezEmail.jje04'/>";
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
@@ -187,13 +189,21 @@
 	        }
 	        function btn_AttachAdd_onclick() {
         		var cnt = document.getElementById("form").file1.files.length;
-	            for (var i = 0; i < cnt; i++) {
+        		
+        		if (cnt > 100) {
+        			alert(maxAllowMailMsg);
+        			document.getElementById("mailCount").innerText = "";
+        			return;
+        		}
+        		
+        		document.getElementById("mailCount").innerText = "[" + cnt + "] <spring:message code='ezBoard.t339'/>";
+        		for (var i = 0; i < cnt; i++) {
 	                var tempname = document.getElementById("form").file1.files[i].name;
 	                var last = tempname.split(".").length;
 	                var extension = tempname.split(".")[last - 1];
 	
 	                if (extension.toUpperCase() != "EML") {
-	                    alert("<spring:message code='ezEmail.t401' />");
+	                    alert("<spring:message code='ezEmail.lsd05' />");
 	                    return;
 	                }
 	                var _Span = document.createElement("SPAN");
@@ -223,30 +233,34 @@
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden">
-	    <h1><spring:message code='ezEmail.t400' /></h1>
-	    <table class="popuplist">
+	    <h1><spring:message code='ezEmail.t400' />&nbsp;&nbsp;<span id="mailCount"></span></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window_Close()"></span></li>
+            </ul>
+        </div>
+	    <table class="popuplist" style="width:100%">
 	        <tr>
 	            <th><spring:message code='ezEmail.t148' /></th>
 	            <td>
-	                <input id="foldername" type="text" name="textfield" style="width: 98%" disabled></td>
-	            <td><a class="imgbtn"><span onclick="selectFolder()" id="folderfindbutton"><spring:message code='ezEmail.t99000078' /></span></a></td>
+	                <input id="foldername" type="text" name="textfield" style="width: 100%" disabled></td>
+	            <td style="text-align:center;"><a class="imgbtn imgbck" style="margin-top:2px"><span onclick="selectFolder()" id="folderfindbutton"><spring:message code='ezEmail.t99000078' /></span></a></td>
 	        </tr>
 	        <tr style="height: 40px">
 	            <th><spring:message code='ezEmail.t405' /></th>
 	            <td>
 	                <div id="filepath" style="overflow: auto; width: 310px; height: 260px; padding-top:5px"></div>
 	            </td>
-	            <td><a class="imgbtn"><span onclick="selectMail()" id="filefindbutton"><spring:message code='ezEmail.t99000079' /></span></a></td>
+	            <td style="text-align:center;"><a class="imgbtn imgbck"><span onclick="selectMail()" id="filefindbutton"><spring:message code='ezEmail.t99000079' /></span></a></td>
 	        </tr>
 	    </table>
-	    <div class="btnposition">
+	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn" id="mailInBtn" onclick="mailIn()"><span><spring:message code='ezEmail.t407' /></span></a>
-	        <a class="imgbtn" id="cancelBtn" onclick="window_Close()"><span><spring:message code='ezEmail.t39' /></span></a>
 	    </div>
 	
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezEmail/mailImportUpload.do" target="ifrm">
-	        <input type="file" name="file1" id="file1" accept="message/rfc822" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="true" />
+	        <input type="file" name="file1" id="file1" accept="message/rfc822" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px; display:none;" multiple="true" />
 	        <input type="hidden" name="folderid" id="folderid" />
 	        <input type="hidden" name="cnt" id="cnt" />
 	    </form>

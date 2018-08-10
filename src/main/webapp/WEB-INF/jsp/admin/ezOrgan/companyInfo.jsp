@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -7,9 +8,9 @@
 		<title><spring:message code="ezOrgan.t112" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">		
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>	    
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 		<script type="text/javascript">
 			var ReturnFunction;
 			var isAdd = true;
@@ -205,7 +206,12 @@
 	    </script>
 	</head>
 	<body class="popup">
-		<h1 id="subtitle"><spring:message code='ezOrgan.t120' /></h1>		
+		<h1 id="subtitle"><spring:message code='ezOrgan.t120' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table class="content"> 
 			<tr> 
 		    	<th><spring:message code='ezOrgan.t121' /></th> 
@@ -231,9 +237,8 @@
 		    	</td>
 		    </tr> 
 		</table> 
-		<div class="btnposition">
+		<div class="btnpositionNew">
 		    <a class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezOrgan.t124' /></span></a>
-		    <a class="imgbtn" onClick="window.close()"><span><spring:message code='ezOrgan.t125' /></span></a>
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

@@ -677,8 +677,12 @@ function ListView() {
                 var oText = document.createTextNode(strValue);
                 var objTd = document.createElement("TD");
 
-                objTd.setAttribute("style", "text-align:left; padding-top:2px; padding-bottom:2px; ");
-
+                /* 2018-07-09 홍승비 - 썸네일게시판의 읽지 않은 게시물 리스트 폰트를 bold로 수정 */
+                if(getNodeText(oDatas[7]) == "0") {
+                	objTd.setAttribute("style", "text-align:left; padding-top:2px; padding-bottom:2px; font-weight:bold;");
+                } else {
+                	objTd.setAttribute("style", "text-align:left; padding-top:2px; padding-bottom:2px;");
+                }
                 //objTd.style.textAlign = "left";
                 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ITEMID") {
@@ -700,14 +704,14 @@ function ListView() {
 
                     var tr = document.createElement("TR");
 
-                    var NewCell = document.createElement("TD");
+                    /*var NewCell = document.createElement("TD");
                     NewCell.setAttribute("style", "text-align:left; border-bottom:0px;");
                     
                     if (getNodeText(oDatas[3]) == "Y") {
                     	 var NewElement = document.createElement("IMG");
                          NewElement.src = "/images/i_new.gif";
                          NewCell.appendChild(NewElement);
-                    }
+                    }*/
                     
                     var ImgElement = document.createElement("IMG");
                     //ImgElement.src = "/Upload_BoardSTD/" + getNodeText(oDatas[4]);
@@ -729,21 +733,26 @@ function ListView() {
                     var Contenttr2 = document.createElement("TR");
 
                     var ContentNewCell1 = document.createElement("TD");
-                    ContentNewCell1.setAttribute("style", "text-overflow:ellipsis; overflow:hidden; white-space:nowrap; border-bottom:0px;");
+                    ContentNewCell1.setAttribute("style", "text-overflow:ellipsis; overflow:hidden; white-space:nowrap; border-bottom:0px; padding-left:10px");
 
                     var TextCell1 = document.createElement("SPAN");
                     TextCell1.id = "spn_title" + i;
-                    if(getNodeText(oDatas[7]) == "0")
+                    if(getNodeText(oDatas[7]) == "0") {
                         TextCell1.setAttribute("style", "font-weight:bold; font-size:12px; padding-left:5px;");
-                    else
+                    } else {
                         TextCell1.setAttribute("style", "font-size:12px; padding-left:5px;");
-
+                    }
                     //var Text1 = document.createTextNode(strValue);
                     //TextCell1.appendChild(Text1);
+                    
+                    if (getNodeText(oDatas[3]) == "Y") {
+                    	TextCell1.innerHTML += "<img src='/images/i_new.gif' style='vertical-align:middle;margin:0px 5px 0px 2px' />";
+                    }
+                    
                     TextCell1.innerHTML += MakeXMLString(strValue);
 
                     var TitleImage = document.createElement("IMG");
-                    TitleImage.setAttribute("style", "padding-bottom:3px;");
+                    TitleImage.setAttribute("style", "padding-bottom:3px;vertical-align:middle;");
                     TitleImage.src = "/images/dot_photoTitle.gif";
 
                     ContentNewCell1.appendChild(TitleImage);
@@ -757,16 +766,23 @@ function ListView() {
                     }
 
                     var ContentNewCell2 = document.createElement("TD");
-                    ContentNewCell2.setAttribute("style", "text-overflow:ellipsis; overflow:hidden; white-space:nowrap; border-bottom:0px;");
+                    ContentNewCell2.id = "spn_content" + i;
+                    if (getNodeText(oDatas[7]) == "0") {
+                    	ContentNewCell2.setAttribute("style", "font-weight:bold;text-overflow:ellipsis; overflow:hidden; white-space:nowrap; border-bottom:0px;padding-left:10px;");
+                    } else {
+                    	ContentNewCell2.setAttribute("style", "text-overflow:ellipsis; overflow:hidden; white-space:nowrap; border-bottom:0px;padding-left:10px;");
+                    }
 
-                    var TextCell2 = document.createElement("SPAN");
+                    // TextCell2은 전혀 사용되지 않는다. spn_content + i의 아이디를 상단의 ContentCell2에 부여하도록 한다.
+                 /*   var TextCell2 = document.createElement("SPAN");
                     TextCell2.id = "spn_content" + i;
-                    if (getNodeText(oDatas[7]) == "0")
+                    if (getNodeText(oDatas[7]) == "0") {
                         TextCell2.setAttribute("style", "font-weight:bold;");
-
+                    }*/
                     //TextCell2.innerHTML = ReplaceText(getNodeText(oDatas[5]), "<br>", "&nbsp;");
                     
                     //ContentNewCell2.appendChild(TextCell2);
+                    
                     ContentNewCell2.innerHTML += MakeXMLString(getNodeText(oDatas[5]));
                     
                     Contenttr1.appendChild(ContentNewCell1);
@@ -779,7 +795,7 @@ function ListView() {
                     ContentCell.setAttribute("style", "border-bottom-width: 0px; width:100%;");
                     ContentCell.appendChild(ContentTable);
 
-                    tr.appendChild(NewCell);
+                    //tr.appendChild(NewCell);
                     tr.appendChild(imgCell);
                     tr.appendChild(ContentCell);
                     Tbody.appendChild(tr);

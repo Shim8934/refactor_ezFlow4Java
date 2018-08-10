@@ -610,18 +610,26 @@ function ListView() {
         for (var i = 0; i < oRows.length; i++) {
             var objTr = document.createElement("TR");
             objTr.setAttribute("id", _thisID + "_TR_" + i);
+            objTr.setAttribute("class", "tr_check");
             objTr.style.cursor = "pointer";
 
             objTr.onmouseover = new Function("tr_mouseover(this)");
             objTr.onmouseout = new Function("tr_mouseout(this)");
-
-            if (_rowonclick != null)
+            //2018-07-13 구해안 _rowonclick 이벤트 삭제
+            /*if (_rowonclick != null)
                 objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\", " + _rowonclick + ");");
             else
-                objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\");");
+                objTr.onclick = new Function("tr_select(this.id, \"" + _thisID + "\");");*/
+            if (_rowonclick != null)
+        		/*objTd.onclick = new Function("td_select(this.parentElement.id, \"" + _thisID + "\", " + _rowonclick + ");");*/
+            	objTr.onclick = new Function("event_listclick(this, event);View_Detail(this);");
+            else
+            	/*objTd.onclick = new Function("td_select(this.parentElement.id, \"" + _thisID + "\");");*/
+            	objTr.onclick = new Function("event_listclick(this, event);View_Detail(this);");
 
             if (_rowondblclick != null)
                 objTr.ondblclick = new Function(_rowondblclick + "(this.id);");
+            	/*objTr.ondblclick = new Function("show_groupinfo()");*/
 
             if (_contextHandler != null)
                 objTr.oncontextmenu = new Function(_contextHandler + "(this.id);");
@@ -635,7 +643,7 @@ function ListView() {
             }
             else {
                 objTr.setAttribute("selected", "false");
-                objTr.className = "";
+                /*objTr.className = "";*/
                 objTr.style.backgroundColor = m_strColorDefault;
             }
             //DATA1, DATA2, DATA3... 등의 값 세팅
@@ -732,6 +740,7 @@ function ListView() {
 
                 if (strValue == "CHECK") {
                     var oInput = document.createElement("INPUT");
+                    oInput.name = 'chk_group';
                     
                     /*if (!new RegExp(/MSIE/).test(navigator.userAgent))*/
                     if(CrossYN())
@@ -740,15 +749,16 @@ function ListView() {
                         oInput.id = oDatas[0].text + ";";
 
                     oInput.type = "checkbox";
-
-                    if (_rowonclick != null)
+                    //2018-07-13 구해안 _rowonclick 이벤트 삭제 후 Input 박스에 이벤트 별도로 연결
+                    /*if (_rowonclick != null)
                         oInput.onclick = new Function("chk_onselect(this);tr_select(this.id, \"" + _thisID + "\", " + _rowonclick + ");");
                     else
-                        oInput.onclick = new Function("chk_onselect(this);tr_select(this.id, \"" + _thisID + "\");");
-
+                        oInput.onclick = new Function("chk_onselect(this);tr_select(this.id, \"" + _thisID + "\");");*/
+                    
+                    oInput.onclick = function () { event_listCheckboxclick(this); }
+                    
                     objTd.appendChild(oInput);
-                }
-                else {
+                }else {                	
                     objTd.appendChild(oText);
                 }
                 objTr.appendChild(objTd);
@@ -764,17 +774,18 @@ function ListView() {
         return oTbody;
     }
 
-    //리스트뷰에 Row 추가
+    //리스트뷰에 Row 추가  -이거 안씀
     function AddDataRow(objTr, addXml) {
 
         objTr.style.cursor = "pointer";
         objTr.onmouseover = new Function("tr_mouseover(this)");
         objTr.onmouseout = new Function("tr_mouseout(this)");
-
-        if (_rowonclick != null)
+        
+        //2018-07-13 구해안 _rowonclick 이벤트 삭제
+        /*if (_rowonclick != null)
             objTr.onclick = new Function("tr_select(\"" + objTr.id + "\", \"" + _thisID + "\", " + _rowonclick + ");");
         else
-            objTr.onclick = new Function("tr_select(\"" + objTr.id + "\", \"" + _thisID + "\");");
+            objTr.onclick = new Function("tr_select(\"" + objTr.id + "\", \"" + _thisID + "\");");*/
 
         var oCells = GetElementsByTagName(addXml, "CELL");
 
@@ -1229,7 +1240,7 @@ function ListView() {
 //###########################################################################################
 
 //ROW 선택 함수
-function tr_select(pRowID, pTableID, callbackFunc) {
+/*function td_select(pRowID, pTableID, callbackFunc) {
 	
     if (!listEventCheckbox) {
         var oList = document.getElementById(pTableID);
@@ -1248,15 +1259,15 @@ function tr_select(pRowID, pTableID, callbackFunc) {
 
         //멀티선택이 가능한 리스트이고 쉬프트키가 눌려져 있으면
         //구간을 모두 선택한다.
-/*        if (bMultiSelectable && PressShiftKey) {
+        if (bMultiSelectable && PressShiftKey) {
             tr_selectBlock(pRowID, pTableID);
             return;
-        }*/
+        }
 
         //멀티선택이 불가능한 리스트이거나 컨트롤키가 눌려있지 않으면 
         //모든 선택된 Row를 Unselect 한다.
         //if (bMultiSelectable == false || PressCtrlKey == false)
-            tr_unselectedAll(pTableID);
+        //    tr_unselectedAll(pTableID);
 
         //현재 클릭한 Row를 Select 한다.
         //strAttribute = GetAttribute(oSourceTr, "selected");
@@ -1293,6 +1304,226 @@ function tr_select(pRowID, pTableID, callbackFunc) {
     }
     else
         listEventCheckbox = false;
+}*/
+//2018-07-13 ROW 선택 함수 -> TD 선택 함수로 변경
+var listContentArry = new Array();
+function event_listclick(obj, event) {
+	if (obj.tagName == "TD") {
+        obj = obj.parentElement;
+    }
+	var oList = document.getElementById('GroupListView');
+    if (!oList)
+        return;	
+	
+    if (!listEventCheckbox) {
+        if (document.getElementById("HeaderAllCheckBox").checked) {
+            var TemplistArray = new Array();
+            if (obj.getElementsByTagName("td").item(0).childNodes.item(0).checked) {
+                for (var i = 0; i < listContentArry.length; i++) {
+                    if (obj.getAttribute("id") == listContentArry[i]) {
+                        obj.childNodes.item(0).childNodes.item(0).checked = false;
+                       /* obj.setAttribute("selected", "false");*/
+                        obj.style.backgroundColor = m_strColorDefault;
+                    }
+                    else {
+                        TemplistArray[TemplistArray.length] = listContentdArry[i];
+                    }
+                }
+                listContentArry = TemplistArray;
+            }
+            else {
+                obj.childNodes.item(0).childNodes.item(0).checked = true;
+                obj.style.backgroundColor = m_strColorSelect;
+                obj.setAttribute("selected", "true");
+                /*oList.setAttribute("lastSelectedRowID", obj.id);
+                listContentArry[listContentArry.length] = obj.getAttribute("id");*/
+            }
+        }
+        else {
+            if (!event.shiftKey && !event.ctrlKey && listContentArry.length > 0) {
+            	
+                for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
+                    _RowObject = document.getElementById(listContentArry[Cnt]);
+					_RowObject.style.backgroundColor = m_strColorDefault;
+                    _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
+                    /*obj.setAttribute("selected", "false");*/
+                }
+                listContentArry = new Array();
+            }
+            if (event.shiftKey) {
+                var SelectedPreObj = null;
+                for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
+                    _RowObject = document.getElementById(listContentArry[Cnt]);
+                    if (Cnt == 0){
+                        SelectedPreObj = _RowObject;	
+                    }
+                    _RowObject.style.backgroundColor = m_strColorDefault;
+                    _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
+                    /*obj.setAttribute("selected", "false");*/
+                }
+                listContentArry = new Array();
+                _RowObject = obj;
+                var PrelistContent;
+                if (SelectedPreObj == null)
+                    PrelistContent = _RowObject.getAttribute("id");
+                else
+                    PrelistContent = SelectedPreObj.getAttribute("id");
+                var CurlistContent = obj.getAttribute("id");
+                var PrePoint = parseInt(PrelistContent.replace("GroupListView_TR_", ""));
+                var CurPoint = parseInt(CurlistContent.replace("GroupListView_TR_", ""));
+
+                if (PrePoint < CurPoint) {
+                    for (var Cnt = PrePoint; Cnt <= CurPoint; Cnt++) {
+                        _RowObject = document.getElementById("GroupListView_TR_" + Cnt);
+                        _RowObject.style.backgroundColor = m_strColorSelect;
+                        _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
+                        /*obj.setAttribute("selected", "true");
+                        oList.setAttribute("lastSelectedRowID", obj.id);*/
+                        listContentArry[listContentArry.length] = _RowObject.getAttribute("id");
+                    }
+
+                }
+                else if (PrePoint > CurPoint) {
+                    for (var Cnt = PrePoint; Cnt >= CurPoint; Cnt--) {
+                        _RowObject = document.getElementById("GroupListView_TR_" + Cnt);
+                        _RowObject.style.backgroundColor = m_strColorSelect;
+                        _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
+                        /*obj.setAttribute("selected", "true");
+                        oList.setAttribute("lastSelectedRowID", obj.id);*/
+                        listContentArry[listContentArry.length] = _RowObject.getAttribute("id");
+                    }
+                }
+                else if (PrePoint == CurPoint) {
+                    if (_RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked) {
+                        _RowObject.style.backgroundColor = m_strColorDefault;
+                        _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
+                        /*obj.setAttribute("selected", "false");*/
+                        listContentArry = ArrayDelete(listContentArry, _RowObject.id);
+                    }
+                    else {
+                        _RowObject.style.backgroundColor = m_strColorSelect;
+                        _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
+                       /* obj.setAttribute("selected", "true");
+                        oList.setAttribute("lastSelectedRowID", obj.id);*/
+                        listContentArry[listContentArry.length] = GetAttribute(_RowObject, "id");
+                    }
+                }
+                else
+                    return;
+            }
+            else {
+            	
+                _RowObject = obj;
+                
+                if (_RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked) {
+                	
+                    _RowObject.style.backgroundColor = m_strColorDefault;
+                    _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = false;
+                    /*obj.setAttribute("selected", "false");*/
+                    listContentArry = ArrayDelete(listContentArry, _RowObject.id);
+                }
+                else {
+                	
+                    _RowObject.style.backgroundColor = m_strColorSelect;
+                    _RowObject.getElementsByTagName("td").item(0).getElementsByTagName("input").item(0).checked = true;
+                   /* obj.setAttribute("selected", "true");
+                    oList.setAttribute("lastSelectedRowID", obj.id);*/
+                    listContentArry[listContentArry.length] = _RowObject.getAttribute("id");
+                }
+            }
+        }
+    }
+    else
+        listEventCheckbox = false;
+}
+
+//2018-07-16 구해안
+function show_groupinfo2(obj) {
+   /* var listview = new ListView();
+    listview.LoadFromID("GroupListView");
+    
+    if(document.getElementById("HeaderAllCheckBox").checked) {
+        document.getElementById("HeaderAllCheckBox").checked = false;
+        event_HeaderCheckBoxClick(document.getElementById("HeaderAllCheckBox"));
+        listview.GetDataRows()[0].onclick();
+    } else {
+    	
+        if (listview.GetSelectedRows() == "") {
+            alert(strLang266);
+            return;
+        }
+        
+        listview.GetSelectedRows()[0].onclick();  
+    }*/
+	var checkRealID = "";
+	var feature = GetOpenPosition(430, 370);
+	if(obj == 'show'){
+		var checkId = $('input:checked')
+		
+		if(checkId.length > 1){
+			alert(strLang276);
+			return;
+		}else if(checkId.length == 0){
+			alert(strLang266);
+			return;
+		}else{
+			checkRealID = checkId[0].id.substring(0,checkId[0].id.length -1);
+			window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID, "", "height = 370px, width = 460px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+			return;
+		}
+		
+		
+	}else{
+		
+		var selectedTr = document.getElementById(obj);
+		
+		
+		//window.open("/myoffice/ezSchedule/schedule_group_member.aspx?id=" + GetAttribute(Selected[0], "data1"), "", "height = 370px, width = 430px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+		
+		window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + selectedTr.getAttribute("data1"), "", "height = 370px, width = 460px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
+		
+	}
+	            
+    //getGroupList();		
+}
+
+//2018-07-13 구해안 Input-Checkbox click 함수 새로 생성
+function event_listCheckboxclick(obj) {
+    if (obj.checked) {
+        obj.parentElement.parentElement.style.backgroundColor = m_strColorSelect;
+        
+        var allChild = $("#GroupListView")[0].childNodes;
+        
+        for (var i = 0;i < allChild.length; i++) {
+        	if (allChild[i].id.indexOf(obj.parentNode.parentNode.id + "_") != -1) {
+        		allChild[i].style.backgroundColor = m_strColorSelect;
+        	}
+        }
+        
+        listContentArry[listContentArry.length] = obj.parentElement.parentElement.getAttribute("id");
+    }
+    else {
+        var TemplistArray = new Array();
+        
+        var allChild = $("#GroupListView")[0].childNodes;
+        
+        for (var i = 0;i < allChild.length; i++) {
+        	if (allChild[i].id.indexOf(obj.parentNode.parentNode.id + "_") != -1) {
+        		allChild[i].style.backgroundColor = m_strColorDefault;
+        	}
+        }
+        
+        for (var i = 0; i < listContentArry.length; i++) {
+            if (obj.parentElement.parentElement.getAttribute("id") == listContentArry[i]) {
+                obj.parentElement.parentElement.style.backgroundColor = m_strColorDefault;
+            }
+            else {
+                TemplistArray[TemplistArray.length] = listContentArry[i];
+            }
+        }
+        listContentArry = TemplistArray;
+    }
+    listEventCheckbox = true;
 }
 
 //모든 ROW를 선택 해제하는 함수
@@ -1502,9 +1733,8 @@ function getOriginXML(pTagetID)
 
 function event_HeaderCheckBoxClick(obj) {
 
-	console.log('event_HeaderCheckBoxClick');
 	strListInfo = "";
-    var SelList = new ListView();
+    /*var SelList = new ListView();
     SelList.LoadFromID("GroupListView");
     
     if (SelList.GetSelectedRows() != "") {
@@ -1536,7 +1766,24 @@ function event_HeaderCheckBoxClick(obj) {
             SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
         }
-    }
+    }*/
+	
+	 if($(obj).is(":checked")) {			    	
+	        $('.tr_check').each(function() {
+	            /*$(this).prop('checked',true);	*/
+	        	$(this).find('td').find('input').prop('checked',true);
+	            $(this).css('backgroundColor',m_strColorSelect);
+	        });
+	        /* chk_IDchange(); */
+	        
+	    } else {			    	
+	        $('.tr_check').each(function() {
+	            /*$(this).prop('checked',false);  */
+	        	$(this).find('td').find('input').prop('checked',false);
+	            $(this).css('backgroundColor',m_strColorDefault);
+	        });
+	        /* chk_IDchange(); */
+	    }
 }
 
 function chk_onselect(obj) {

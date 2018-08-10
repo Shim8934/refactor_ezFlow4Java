@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -7,9 +8,9 @@
 	    <title><spring:message code='ezAddress.t21' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezAddress/string_component.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application,"/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application,"/js/XmlHttpRequest.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application,"/js/ezAddress/string_component.js")%>"></script>
 	    <script type="text/javascript">
 	        var ReturnFunction;
 	        var CancelFunction;
@@ -92,15 +93,19 @@
 	</head>
 	<body class="popup" style="overflow:hidden;">
 	    <h1><spring:message code='ezAddress.t23' /></h1>
-	
-	    <h2 style="height:100%;margin-bottom:10px;"><spring:message code='ezAddress.t24' /></h2>
+		<div id="close">
+            <ul>
+                <li><span onclick="return btn_cancel_onclick()"></span></li>
+            </ul>
+        </div>
+	    <h2 style="height:100%;margin-bottom:10px;font-weight: normal"><spring:message code='ezAddress.t24' /></h2>
 	    <table class="content">
 	        <tr>
 	            <th><spring:message code='ezAddress.t373' /></th>
 	            <td style="padding: 0">
 	                <table width="100%">
 	                    <tr class="primary">
-	                        <td>
+	                        <td style="border:0px">
 	                            <input id="txt_FolderName" type="text" onkeydown="folderName_onkeydown()" style="width: 100%;box-sizing: border-box;" maxlength="20">
 	                        </td>
 	                    </tr>
@@ -110,7 +115,6 @@
 	    </table>
 	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn" onclick="return btn_ok_onclick()"><span><spring:message code='ezAddress.t25' /></span></a>
-	        <a class="imgbtn" onclick="return btn_cancel_onclick()"><span><spring:message code='ezAddress.t11' /></span></a>
 	    </div>
 	</body>
 </html>

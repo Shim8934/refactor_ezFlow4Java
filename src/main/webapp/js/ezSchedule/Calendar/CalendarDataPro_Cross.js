@@ -1,9 +1,9 @@
-﻿var wTable;
+﻿﻿var wTable;
 var xmlhttp;
 
 var delFlag = false;
 
-function CalViewSource() {
+function CalViewSource(chk_str) {
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -12,9 +12,9 @@ function CalViewSource() {
 		data : {
 			STARTDATE : sStartDate,
 			ENDDATE : sEndDate,
-			APP : idtype,
+			APP : chk_str,
 			GROUPID : groupid,
-			IDLIST : (idlist == "") ? idtype : idlist
+			IDLIST : chk_str
 		},
 		success: function(text){
 			if (typeCal == 0) {
@@ -27,6 +27,53 @@ function CalViewSource() {
 			delFlag = false;
 		}
     }); 
+}
+//2018-06-19 구해안 이동할때 css 적용하는 함수 제작
+function chk_scheduleCSS() {
+	if(typeCal == 0){		
+		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
+			var chk_eachVal1 = $(this).val();
+			$('.td_list td[ownerid = "'+chk_eachVal1+'"]').each(function(index, value){
+				$(value).addClass('chk_noneDisplay');
+			});
+		});
+		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
+			var test = $(this).val();
+			
+			$('.td_list td[ownerid = "'+test+'"]').each(function(index, value){
+				$(value).removeClass('chk_noneDisplay');
+			});
+		});					
+	}else if(typeCal == 1) {
+		console.log('주보기진입');
+		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
+			var chk_eachVal1 = $(this).val();
+			$('div[ownerid = "'+chk_eachVal1+'"]').each(function(index, value){
+				$(value).addClass('chk_noneDisplay');
+			});			
+		});
+		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
+			var test = $(this).val();
+			$('div[ownerid = "'+test+'"]').each(function(index, value){
+				$(value).removeClass('chk_noneDisplay');
+			});			
+		});	
+	}else{
+		console.log('일보기진입');
+		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
+			var chk_eachVal1 = $(this).val();
+			$('div[ownerid = "'+chk_eachVal1+'"]').each(function(index, value){
+				$(value).addClass('chk_noneDisplay');
+			});			
+		});
+		$("input[name=chk_schedule]:checked",parent.frames["left"].document).each(function(index) {
+			var test = $(this).val();
+			
+			$('div[ownerid = "'+test+'"]').each(function(index, value){
+				$(value).removeClass('chk_noneDisplay');
+			});			
+		});	
+	}			
 }
 
 function sDataTemp() {
@@ -69,6 +116,7 @@ function getCalMonthViewSource_after(text) {
             DataEDT = null;
         }        
         tempData = null;
+        chk_scheduleCSS();
     }
     catch (e) {
         alert("getCalMonthViewSource_after : " + e.description);
@@ -161,6 +209,7 @@ function getCalWeekViewSource_after(text) {
                 CalDataWidth(tempData[i], i, tempData);
         }
         tempData = null;
+        chk_scheduleCSS();
     }
     catch (e) {
         alert("getCalWeekViewSource_after : " + e.description);
@@ -256,6 +305,7 @@ function getCalDayViewSource_after(text) {
                 CalDataWidth(tempData[i], i, tempData);
         }        
         tempData = null;
+        chk_scheduleCSS();
     }
     catch (e) {
         alert("getCalDayViewSource_after : " + e.description);
@@ -264,7 +314,6 @@ function getCalDayViewSource_after(text) {
 
 
 function tempInsert(objNodes, DataSDT, DataEDT) {
-
     var startHour = parseInt(DataSDT.getHours(), 10);
     var endHour = parseInt(DataEDT.getHours(), 10);
     var startMin = parseInt(DataSDT.getMinutes(), 10);
@@ -559,7 +608,7 @@ function CalDataSize(oAppointment, order, tempData) {
 function CalMonthDataBind(oAppointment) {
 
     var objElm = document.getElementById("TD_" + oAppointment.trID + "_Value");
-    if (objElm) {
+    if (objElm) {    	
 
         var oTr = document.createElement("TR");
         var oTd = document.createElement("TD");
@@ -592,7 +641,7 @@ function CalMonthDataBind(oAppointment) {
         var pSubject;
         if (oAppointment.DateType != 2) {
             pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
-            pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject;
+            pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject + " " ;
         }
         else {
             pTime = strLang39;
@@ -901,7 +950,7 @@ function CalWeekAllDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        oDiv.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
+        oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
 
         objDivS.appendChild(oDiv);
 
@@ -1152,7 +1201,7 @@ function CalDayAllDataBind(oAppointment, order) {
         oDiv.onmouseover = function (event) { TooltipMouseOver(this, event); };
         oDiv.setAttribute("onmouseout", "hideTooltip(this)");
         var divID = "\"div_" + oAppointment.trID + "_" + oAppointment.ScheduleID + "\"";
-        oDiv.setAttribute("ondblclick", "ReadSchedule(" + divID + ")");
+        oDiv.setAttribute("ondblclick", "event.cancelBubble=true;ReadSchedule(" + divID + ")");
 
         objDivS.appendChild(oDiv);
 
@@ -1490,6 +1539,7 @@ function showTooltip_MouseOver(thisID, e, pTime, pSubject, pScheduleType, pSched
     tTable.setAttribute("cellspacing", "0");
     tTable.setAttribute("border", "0");
     tTable.setAttribute("width", "100%");
+    tTable.setAttribute("style", "word-break : break-all");
     tTh.setAttribute("scope", "col");
     tTh.style.background = "#edf4fd";
     tTh.style.border = "1px solid #d1ddec";

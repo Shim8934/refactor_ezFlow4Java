@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -9,10 +10,10 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css">
 	    <script>
 	        var _url = decodeURIComponent('${url}');
 	        var isReadDelete = "${isReadDelete}";
@@ -291,11 +292,7 @@
 	        </div>
 	        <div id="close">
 	            <ul>
-	                <li><span onclick="Refresh()"><spring:message code='ezEmail.t515' /></span></li>
-	                <li><span onclick="MailCancel('ALL')"><spring:message code='ezEmail.t588' /><spring:message code='ezEmail.t549' /></span></li>
-	                <li><span onclick="MailCancel('EACH')"><spring:message code='ezEmail.t549' /></span></li>
-	                <li><span onclick="Window_Print();"><spring:message code='ezEmail.t546' /></span></li>
-	                <li><span onclick="window.close()"><spring:message code='ezEmail.t63' /></span></li>
+	                <li><span onclick="window.close()"></span></li>
 	            </ul>
 	        </div>
 	        <div class="portlet_tabpart01" id="TabDiv">
@@ -319,15 +316,20 @@
 	                    </tr>
 	                </table>
 	            </table>
-	            <div id="contentlist" name="contentlist" style="border: 0px solid blue; height: 350px; width: 100%; overflow-y: auto;overflow-x:hidden;" onscroll="ContextMenuHidden()">
+	            <div id="contentlist" name="contentlist" style="border: 0px solid blue; height: 330px; width: 100%; overflow-y: auto;overflow-x:hidden;" onscroll="ContextMenuHidden()">
 	                <table class="mainlist" style="width: 100%;" id="MailList">
 	                </table>
 	            </div>
 	        </span>
+	        <div class="btnposition btnpositionNew"> 
+			    <a class="imgbtn" onClick="Refresh()" ><span><spring:message code='ezEmail.t515' /></span></a>
+			    <a class="imgbtn" onClick="MailCancel('ALL')" ><span><spring:message code='ezEmail.t588' /><spring:message code='ezEmail.t549' /></span></a>
+			    <a class="imgbtn" onClick="MailCancel('EACH')" ><span><spring:message code='ezEmail.t549' /></span></a>
+			    <a class="imgbtn" onClick="Window_Print()" ><span><spring:message code='ezEmail.t546' /></span></a>
+			</div>
 	    </form>
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	        selToggleList(document.getElementById("close"), "ul", "li", "0");
 	        Tab1_NewTabIni("tab1");
 	    </script>
 	</body>

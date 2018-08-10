@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	
 	pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
@@ -9,10 +10,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">	
 		<link rel="stylesheet" href="<spring:message code='main.e15' />" type="text/css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript">
 			var strLang1 = "<spring:message code='ezSystem.x0030'/>";
@@ -31,6 +32,7 @@
 			window.onload = function(){
 				getUserList(1);
 				makePageSelPage();
+				windowResize();
 			}
 			
 			// 검색값 입력 후 엔터키 입력 시 검색 호출
@@ -65,25 +67,25 @@
 		        var pageNum = CurPage;
 		        
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>"
 		            PagingHTML += strtext;
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>"
 		            PagingHTML += strtext;
 		        }
 		        
 		        if (totalPage > BlockSize) {
 		            
 		        	if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang1 + "</span>";
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
 		                PagingHTML += strtext;
 		            } else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang1 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
 		                PagingHTML += strtext;
 		            }
 		        	
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang1 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        
@@ -112,26 +114,26 @@
 		        if (totalPage > BlockSize) {
 		           
 		        	if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang2 + "</span>";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif'></span>";
 		                PagingHTML += strtext;
 		            } else {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang2 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		        	
 		        } else {
-		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang2 + "</span>";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		            strtext = "";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
 		            PagingHTML += strtext;
 		        }
 		        
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 		            PagingHTML += strtext;
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        
@@ -268,7 +270,7 @@
 			    							html += "<td><div id='myProgress'><div id='myBar_green' style='width:" + result + "%'></div></div><div id='percentage'>" + result + "%</div></td>";
 			    						}
 			    						
-			    						html += "<td><a class='imgbtn'><span onClick=mod_quota('" + i[0] + "')><spring:message code='ezEmail.t481'></spring:message></span></a></td>";
+			    						html += "<td><a class='imgbtn imgbck'><span onClick=mod_quota('" + i[0] + "')><spring:message code='ezEmail.t481'></spring:message></span></a></td>";
 										html += "</tr>";
 										j++;
 									})
@@ -319,6 +321,19 @@
 			    window.open("/admin/ezOrgan/configUserQuota.do?id=" + res, "", specs);
 		    }
 
+            //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 152;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
 		</script>
 		<!-- 용량상태 Progress Bar -->
 		<style type="text/css" >
@@ -357,7 +372,7 @@
 	<body class="mainbody">
 		<h1><spring:message code="ezEmail.lsd01" /><span id="listInfo"></span></h1>
 		<div style="width:100%; padding-bottom:5px;">
-		<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2;">
+		<table style="width: 100%; background-color: #f8f8fa; border: 1px solid #ddd;">
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
 					<span id="topmenu" style="width: 500px"><spring:message code="ezStatistics.t1062"></spring:message>&nbsp; <!-- 검색조건 -->
@@ -386,23 +401,25 @@
 			</tr>
 		</table>
 		</div>
-		<div style="width:100%; border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
-		<table class="mainlist" style="width:100%;">
-			<thead style="">
-				<tr>
-					<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
-					<th width="15%;"><spring:message code="ezEmail.lsd04"></spring:message></th>
-					<th width="15%;"><spring:message code="ezStatistics.t113"></spring:message></th>
-					<th width="15%;"><spring:message code="ezEmail.lsd02"></spring:message></th>
-					<th width="15%;"><spring:message code="ezEmail.lsd03"></spring:message></th>
-					<th><spring:message code="main.t00011"></spring:message></th>
-					<th style="width:140px;"><spring:message code="ezOrgan.t92"></spring:message></th>
-				</tr>
-			</thead>
-			<tbody id="userListBody" style="overflow: auto;"></tbody>
-		</table>
+		<div id="contentlist" style="width:100%; overflow: auto;">
+			<div style="border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
+				<table class="mainlist" style="width:100%;">
+					<thead style="">
+						<tr>
+							<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
+							<th width="15%;"><spring:message code="ezEmail.lsd04"></spring:message></th>
+							<th width="15%;"><spring:message code="ezStatistics.t113"></spring:message></th>
+							<th width="15%;"><spring:message code="ezEmail.lsd02"></spring:message></th>
+							<th width="15%;"><spring:message code="ezEmail.lsd03"></spring:message></th>
+							<th><spring:message code="main.t00011"></spring:message></th>
+							<th style="width:140px;"><spring:message code="ezOrgan.t92"></spring:message></th>
+						</tr>
+					</thead>
+					<tbody id="userListBody" style="overflow: auto;"></tbody>
+				</table>
+			</div>
 		</div>
-		<div id="tblPageRayer" style="width:1200px; padding-top: 10px;"></div>
+		<div id="tblPageRayer" style="width:100%;"></div>
 		<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
 	</body>
 </html>

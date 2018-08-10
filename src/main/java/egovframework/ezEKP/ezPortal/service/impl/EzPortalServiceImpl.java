@@ -1431,10 +1431,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				sb.append("</TR>\n");
 			} else { 
 				if (menuItemMenuItemType.equals("0")) {
-					System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + sb.toString());
+					/*System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + sb.toString());*/
 					sb.append(getMenuItemHTML(pCallingMenuID, menuItemUID, userInfo));
 				} else {
-					System.out.println("######################################### " + sb.toString());
+					/*System.out.println("######################################### " + sb.toString());*/
 					sb.append(getRenderedTopMenuHTMLInsert(pCallingMenuID, menuItemUID, "", "view", userInfo, userInfo.getTenantId()));
 				}
 			}
@@ -2095,6 +2095,17 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		logger.debug("getMainMenuHTML started");
 
 		List<PortalGetMainMenuHtmlVO> result = getMainMenuHtml(pUID, pCallingMenuID, Integer.parseInt(userInfo.getSkinNum()), userInfo.getTenantId());
+
+		//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
+		String use_attitude = ezCommonService.getTenantConfig("USE_ATTITUDE", userInfo.getTenantId());
+		String use_journal = ezCommonService.getTenantConfig("USE_JOURNAL", userInfo.getTenantId());
+		
+		if (use_attitude == null || use_attitude.equals("")) {
+			use_attitude = "YES";
+		}
+		if (use_journal == null || use_journal.equals("")) {
+			use_journal = "YES";
+		}
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -2113,16 +2124,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			/* 2018-05-24 장진혁 홈 메뉴 pass */
 			String menuitemLinkURL = result.get(i).getLinkURL();
 			
+			/*
+			 * 2018-06-14 장진혁 홈 메뉴 안보이게 작업한거 주석처리
 			if (menuitemLinkURL.equals("/ezPortal/myPortal.do")) {
 				continue;
-			}
-			
-			//Baonk 2018-05-31
-			if (menuitemLinkURL.equals("/ezWebFolder/webfolderMain.do")) {
-				if (!ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
-					continue;
-				}
-			}
+			}*/
 			
 			String menuitemUID = result.get(i).getuID();
 			String menuitemDisplayName = result.get(i).getDisplayName();
@@ -2130,6 +2136,14 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			/*String menuitemLinkLocation = result.get(i).getLinkLocation();*/
 			String menuitemWindowOption = result.get(i).getWindowOption();
 			/*String menuitemNormalImagePath = result.get(i).getNormalImagePath();*/
+			
+			//2018-08-03 근태관리, 업무일지 config값에 따라 출력 유무
+			if (menuitemLinkURL.equals("/ezJournal/journalMain.do") && use_journal.equals("NO")) {
+				continue;
+			}
+			if (menuitemLinkURL.equals("/ezAttitude/attitudeMain.do") && use_attitude.equals("NO")) {
+				continue;
+			}
 			
 			/* 2018-03-06 장진혁 탑메뉴 이미지 제거 후 text로 변경 */
 			sb.append("<li ");
@@ -2205,6 +2219,14 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			        }
 				}
 				//end
+				
+				// 2018-07-27 황윤호 추가 
+				// tenant_config 테이블 useLadder가 yes이면 활성화, no이거나 row가 없으면 비활성화
+				if (menuitemLinkURL.equals("/ezBoard/boardMain.do?func=4")) {
+					if (!ezCommonService.getTenantConfig("useLadder", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
+			        	continue;
+			        }
+				}
 				
 				String menuitemLinkLocation = result2.get(j).getLinkLocation();
 				String menuitemWindowOption = result2.get(j).getWindowOption();
@@ -3679,7 +3701,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("parentUID", "203"); //메인메뉴영역
 		map.put("companyID", companyID);
 		map.put("lang", userLang);
-		map.put("topMenuID",topMenuID);
+		
+		if (topMenuID != null && !topMenuID.equals("")); {
+			map.put("topMenuID",topMenuID);
+		}
 		
 		/*top 메뉴에 있는 UID와 LINK URL*/
 		

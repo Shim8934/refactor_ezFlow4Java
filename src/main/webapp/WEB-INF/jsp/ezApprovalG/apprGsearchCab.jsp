@@ -55,7 +55,10 @@
 		        }
 		        rtnVal[0] = "FALSE";
 		        InitCode();
-		        txtDeptName.value = g_DeptName;
+		        
+		        if(document.txtDeptName) { 
+		        	txtDeptName.value = g_DeptName;
+		        }
 		    }
 		    function InitCode() {
 		        var result = "";
@@ -260,13 +263,18 @@
 	</head>
 	<body class="popup" leftmargin="0" topmargin="0" LANGUAGE ="javascript">
 		<h1><spring:message code='ezApprovalG.t1090'/></h1>
+		<div id="close">
+            <ul>
+                <li><span id="btnCancel" onclick="return btnCancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<table class="content" >
 		<c:if test="${approvalFlag eq 'S'}"> 
 		    <tr id="trSelDept"> 
 		        <th><spring:message code='ezApprovalG.t827'/></th>
 		        <td style="vertical-align:middle">
 		            <input class="text" style=" WIDTH: 215px" name="txtDeptName" id=txtDeptName disabled>
-		            <a class="imgbtn" ><span onclick="return SelectDept_OnClick()" id="btnSelDept"><spring:message code='ezApprovalG.t105'/></span></a>
+		            <a class="imgbtn imgbck" ><span onclick="return SelectDept_OnClick()" id="btnSelDept"><spring:message code='ezApprovalG.t105'/></span></a>
 		        </td>
 		    </tr>
 		</c:if>
@@ -280,7 +288,7 @@
 		        <th><spring:message code='ezApprovalG.t1093'/></th>
 		        <td>
 		            <input class="text" style=" WIDTH: 215px" name="txtTaskName" id=txtTaskName disabled>
-		            <a class="imgbtn"><span onClick="return SelectTask_OnClick()" id="btnSelTask"><spring:message code='ezApprovalG.t105'/></span></a>
+		            <a class="imgbtn imgbck"><span onClick="return SelectTask_OnClick()" id="btnSelTask"><spring:message code='ezApprovalG.t105'/></span></a>
 		        </td>
 		    </tr>
 		    <tr> 
@@ -326,18 +334,29 @@
 		        <th> <spring:message code='ezApprovalG.t1101'/></th>
 		        <td>
 		            <input class="text" style=" WIDTH: 215px" name="txtCharger" id=txtCharger disabled>
-		            <a class="imgbtn"><span onClick="return SelectUser_OnClick()" id="btnSelUser" ><spring:message code='ezApprovalG.t105'/></span></a>
+		            <a class="imgbtn imgbck"><span onClick="return SelectUser_OnClick()" id="btnSelUser" ><spring:message code='ezApprovalG.t105'/></span></a>
 		        </td>
+		    </tr>
+		    <tr id="trTransExp">
+		    	<th><spring:message code='ezApprovalG.t1102'/></th>
+		    	<td>
+		    		<input type="checkbox" name="chkTransExp" id="chkTransExp" value="1" style="vertical-align:middle;">
+		    	</td>
+		    </tr>
+		    <tr id="trRejectCab" style="display:none">
+		    	<th><spring:message code='ezApprovalG.t1103'/></th>
+		    	<td>
+		    		<input type="checkbox" name="chkRejectCab" id="chkRejectCab" value="1">
+		    	</td>
 		    </tr>
 		  </table>
 		  
-		<h2 id="trTransExp"><input type="checkbox" name="chkTransExp" id="chkTransExp" value="1" style="vertical-align:middle;"><spring:message code='ezApprovalG.t1102'/></h2>
-		<h2 id="trRejectCab" style="display:none"><input type="checkbox" name="chkRejectCab" id="chkRejectCab" value="1"><spring:message code='ezApprovalG.t1103'/></h2>
+		<%-- <h2 id="trTransExp"><input type="checkbox" name="chkTransExp" id="chkTransExp" value="1" style="vertical-align:middle;"><spring:message code='ezApprovalG.t1102'/></h2>
+		<h2 id="trRejectCab" style="display:none"><input type="checkbox" name="chkRejectCab" id="chkRejectCab" value="1"><spring:message code='ezApprovalG.t1103'/></h2> --%>
 		
 		<div class="btnposition btnpositionNew">
 		    <a class="imgbtn"><span id="btnReset" onclick="return reset_onclick()"><spring:message code='ezApprovalG.t621'/></span></a>
 		    <a class="imgbtn"><span id="btnSearch" onclick="return btnSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></a>
-		    <a class="imgbtn"><span id="btnCancel" onclick="return btnCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>  
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -7,19 +8,19 @@
 		<title><spring:message code="ezOrgan.t185" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">		
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>	    
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery.form.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.form.js")%>"></script>
 	    <c:if test="${!isCrossBrowser}">
-	      	<script type="text/javascript" src="/js/ezBoard/AttachMain.js"></script>
-		    <script type="text/javascript" src="/js/ezBoard/AttachItem.js"></script>
-		    <script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+	      	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezBoard/AttachMain.js")%>"></script>
+		    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezBoard/AttachItem.js")%>"></script>
+		    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/Kaoni_ActiveX.js")%>"></script>
 	    </c:if>
 	    <c:if test="${isCrossBrowser}">
-		    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
-		    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
+		    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezBoard/AttachMain_CK.js")%>"></script>
+		    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezBoard/AttachItem_CK.js")%>"></script>
 	    </c:if>
 		<script type="text/javascript" language="javascript">
 			var userid = "<c:out value='${userID}'/>";
@@ -304,32 +305,36 @@
         </c:if>
 	</head>
 	<body class="popup"> 
-		<h1><spring:message code='ezOrgan.t194' /></h1>		 
-		<table class="popuplist"> 
+		<h1><spring:message code='ezOrgan.t194' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
+		<table class="popuplist" style="width:100%;"> 
 			<tr> 
 		    	<th><spring:message code='ezOrgan.t195' /></th> 
 		    	<th><h2><spring:message code='ezOrgan.t140' /></h2></th> 
 		  	</tr> 
 		  	<tr> 
-		    	<td> 
+		    	<td style="padding:3px; width: 50%;"> 
 		    		 <c:if test="${!isCrossBrowser}">
 		    	 	   <SCRIPT type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
 		    	 	 </c:if>
-		    		<select id="signlist" size="10" style="width:150px;height:150px" onChange="sign_change()"> </select>
+		    		<select id="signlist" size="10" style="width:100%;height:150px;border:0px;background:none;" onChange="sign_change()"> </select>
 		    	</td> 
 		    	<td id="signimage" style="width:150px;height:150px;text-align:center" class="point"><spring:message code='ezOrgan.t191' /></td> 
 		  	</tr> 
 		</table> 
 		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
-			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="false" />
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px; display: none;" multiple="false" />
 			<input type="hidden" name="mode" id="mode" />
 			<input type="hidden" name="tempFilePath" id="tempFilePath" />
 		</form>		
-		<div class="btnposition">
+		<div class="btnpositionNew">
 		    <a class="imgbtn" onClick="add_sign()"><span><spring:message code='ezOrgan.t141' /></span></a>
 		    <a class="imgbtn" onClick="del_sign()"><span><spring:message code='ezOrgan.t142' /></span></a>
-		    <a class="imgbtn" onClick="window.close()"><span><spring:message code='ezOrgan.t143' /></span></a>
 		</div>		
 	</body>
 </html>

@@ -7,6 +7,16 @@
 		<title><spring:message code="ezBoard.t75" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
+	    <style>
+	    <%-- 2018-07-26 홍승비 - 관리자 > 게시판 권한설정 헤더 겹치는 부분, 가로 축소 시 스크롤 수정 --%>
+	    	#AccessListView {
+	    		min-width: 800px;
+	    	}
+	    	#AccessListView_TH th {
+	    		overflow: hidden;
+    			text-overflow: ellipsis;
+	    	} 
+	    </style>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>    
@@ -69,7 +79,7 @@
 	                        if (j == 7)
 	                            j = 12;
 	                        if (j >= 13)
-	                            listTD.setAttribute("style", "text-align:center;");
+	                            listTD.setAttribute("style", "text-align:center;color:#268fff;");
 	                        listTD.appendChild(listTDText);
 	                        listTR.appendChild(listTD);
 	                        listTD = null;
@@ -117,7 +127,7 @@
 	                            j = 12;
 	                        }
 	                        if (j >= 13) {
-	                            listTD.setAttribute("style", "text-align:center;");
+	                            listTD.setAttribute("style", "text-align:center;color:#268fff;");
 	                        }
 	                        listTD.appendChild(listTDText);
 	                        listTR.appendChild(listTD);
@@ -202,14 +212,26 @@
 	                objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "BOARDID", pBoardID);
 	                objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "TARGETID", GetAttribute(selnode[i], "data1"));
 	            }
-	
-	            xmlhttp.open("POST", "/admin/ezBoard/deleteACL.do", false);
-	            xmlhttp.send(xmlpara);
-	
-	            if (xmlhttp.status == 200 && xmlhttp.responseText == "OK") {
-	                alert("<spring:message code='ezBoard.t54'/>");
+	            
+	            var alertContent = "";
+	            
+	            if (type === "one" ) {
+	            	alertContent = "<spring:message code='ezBoard.t197'/>";
+	            } else if (type === "type" ) {
+	            	alertContent = "<spring:message code='ezBoard.pjg03'/>";
 	            }
-	              window.location.reload();
+				
+	            if(confirm(alertContent)) {
+		            
+		            xmlhttp.open("POST", "/admin/ezBoard/deleteACL.do", false);
+		            xmlhttp.send(xmlpara);
+		
+		            if (xmlhttp.status == 200 && xmlhttp.responseText == "OK") {
+		                alert("<spring:message code='ezBoard.t54'/>");
+		            }
+		              window.location.reload();
+		              
+	            }
 	         }
 	
 	        var selecttarget_dialogArguments = new Array();
@@ -609,7 +631,7 @@
 	            pwidth = parseInt(pwidth) / 2;
 	            pheigth = pheigth - 192;
 	            pwidth = pwidth - 260;
-	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=170,width=350px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
+	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=170,width=458px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 	        }
 	    </script>
 		</head>
@@ -617,7 +639,7 @@
 			<body class="mainbody">
 		</c:if>
 		<c:if test="${pParentNeed != 'Y'}">
-			<body>
+			<body class="tabbody" style="overflow-y:auto;">
 		</c:if>
 		<xml id="listviewheader" style="display: none">
 		  <LISTVIEWDATA>
@@ -767,14 +789,14 @@
             <ul>
 				<c:if test="${adminType == 'y'}">
 	                <li><span onclick="goBoardList()"><spring:message code='ezBoard.t72'/></span></li>
-	                <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+	                <!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
 				</c:if>
             	<li><span onclick="SelectTarget()"><spring:message code='ezBoard.t602'/></span></li>
             	<li><span onclick="SaveACL()"><spring:message code='ezBoard.t98'/></span></li>
-                <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+                <!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
             	<li><span onclick="DeleteACL('one')"><spring:message code='ezBoard.t89'/></span></li>
             	<li><span onclick="DeleteACL('type')"><spring:message code='ezBoard.t603'/></span></li>
-            	<li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li>
+            	<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
             	<li><span onclick="AclCopy()"><spring:message code='ezBoard.t604'/></span></li>
             	<li><span onclick="UnderBoardCopy()"><spring:message code='ezBoard.t605'/></span></li>
             </ul>

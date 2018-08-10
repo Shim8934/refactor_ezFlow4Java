@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -9,28 +10,28 @@
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<title><spring:message code='ezEmail.lhm63' /></title>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/Controls_cross/datepicker.htc.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/Controls_cross/composeappt.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/datepicker.htc.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/composeappt.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 		<!-- data picker-->
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>">
 		<!-- time picker-->
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.js")%>"></script>
+		<link rel="stylesheet" type="text/css" href="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.css")%>" />
 		<!-- crypt -->
-		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/pidcrypt.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/pidcrypt_util.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/asn1.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/jsbn.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/prng4.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/rng.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/rsa.js")%>"></script>
 		
 		<script type="text/javascript">
 			var offsetMin = "${offsetMin}";
@@ -226,6 +227,11 @@
 	</head>
 	<body style="overflow:hidden;" class="popup">
 		<h1><spring:message code='ezEmail.lhm63' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="cancel()"></span></li>
+            </ul>
+        </div>
 		<span>▒ <spring:message code='ezEmail.lhm39' /></span><br>
 		<span>▒ <spring:message code='ezEmail.lhm41' /></span><br>
 		<br>
@@ -260,7 +266,6 @@
 		
 		<div class="btnposition btnpositionNew">
 		   <a class="imgbtn" onClick="confirm()" ><span><spring:message code='ezEmail.t38' /></span></a>
-		   <a class="imgbtn" onClick="cancel()" ><span><spring:message code='ezEmail.t39' /></span></a>
 		</div>
 		
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>

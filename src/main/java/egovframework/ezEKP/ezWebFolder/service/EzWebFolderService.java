@@ -76,4 +76,5 @@ public interface EzWebFolderService {
 	List<String> getFolderListFromFileId(List<String> fileIds, int tenantId) throws Exception;
 	String getWebFolderDirPath(int tenantId);
 	double getTotalFilesSize(String fileList, int tenantId) throws Exception;
+	List<FolderSimpleVO> getAllSimpleShareFolder(String userId, String deptId, String compId, int tenantId) throws Exception;
 }

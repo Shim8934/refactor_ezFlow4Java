@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -7,9 +8,9 @@
 		<title><spring:message code="ezOrgan.t208" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">		
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>	    
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 		<script type="text/javascript">
 			var OldDeptName = "";
 			var OldDeptName2 = "";
@@ -92,7 +93,11 @@
 			        }
 			    }
 			    catch (e){ }
-			    */
+			   */
+			   
+			   if(approvalFlag === "S") {
+			   	$(".onlyUseG").css("display", "none");
+			   }
 			});
 			
 			function Check_ID(pValue){
@@ -203,7 +208,12 @@
 	    </script>
 	</head>
 	<body class="popup">
-		<h1 id=subtitle ><spring:message code='ezOrgan.t208' /></h1>		
+		<h1 id=subtitle ><spring:message code='ezOrgan.t208' /></h1>
+		<div id="close">
+            <ul>
+                <li><span id=bt_Cancel onClick="window.close()"></span></li>
+            </ul>
+        </div>		
 		<span style="color:red"><spring:message code='ezOrgan.t00018' /></span>
 		<table class="content"> 
 			<tr> 
@@ -229,19 +239,19 @@
 		      		</table>
 		      	</td> 
 		  	</tr>
-		  	<tr> 
+		  	<tr class="onlyUseG"> 
 		    	<th><spring:message code='ezOrgan.t221' /></th> 
 		    	<td><input type="text" id=SimpleName style="width:97%" maxlength="50"></td> 
 		  	</tr>
-		  	<tr> 
+		  	<tr class="onlyUseG"> 
 		    	<th><spring:message code='ezOrgan.t222' /></th> 
 		    	<td><input type="text" id=SusinSymbol style="width:97%" maxlength="50"></td> 
 		  	</tr> 
-		  	<tr>
+		  	<tr class="onlyUseG">
 		    	<th><spring:message code='ezOrgan.t223' /></th> 
 		    	<td><input type="text" id=BalsinPerson style="width:97%" maxlength="50"></td> 
 		  	</tr> 
-		  	<tr> 
+		  	<tr class="onlyUseG"> 
 		    	<th><spring:message code='ezOrgan.t224' /></th> 
 		    	<td><input type="text" id=DocManage style="width:97%" maxlength="50"></td>		    	 
 		  	</tr> 
@@ -266,9 +276,8 @@
 		  	</tr> 
 		  	</c:if>
 		</table> 
-		<div class="btnposition">
+		<div class="btnpositionNew">
 		    <a class="imgbtn" id=bt_OK  onClick="OK_Click()"><span><spring:message code='ezOrgan.t124' /></span></a>
-		    <a class="imgbtn" id=bt_Cancel onClick="window.close()"><span><spring:message code='ezOrgan.t125' /></span></a>
 		</div>
 			<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -9,26 +10,31 @@
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<title><spring:message code='ezEmail.t353' /></title>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/Controls_cross/datepicker.htc.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/Controls_cross/composeappt.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/datepicker.htc.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/composeappt.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 		<!-- data picker-->
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>">
 		<!-- time picker-->
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.js")%>"></script>
+		<link rel="stylesheet" type="text/css" href="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.css")%>" />
 		<script type="text/javascript">
 	
 			var offsetMin = "${offsetMin}";
 			var individualMailUser = parseInt("${individualMailUser}");
-		    
-			$(function () {
+			
+		    var RetValue;
+		    var ReturnFunction;
+		    var CancelFunction;
+		    var isDivPopUp = false;
+			
+		    $(function () {
 		        $("#Sdatepicker").datepicker({
 		            changeMonth: true,
 		            changeYear: true,
@@ -92,10 +98,6 @@
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });
 		    
-		    var RetValue;
-		    var ReturnFunction;
-		    var CancelFunction;
-		    var isDivPopUp = false;
 		    window.onload = function () {
 		        var rgParams;
 		        try {
@@ -121,15 +123,22 @@
 		        else {
 		            document.getElementById("responseSendid").checked = false;
 		        }
-		
-		        if (rgParams["replyReadTime"] == "1" || rgParams["replyReadTime"] == "2") {
-		            responseReadType.value = rgParams["replyReadTime"];
-		            document.getElementById("responseReadid").checked = true;
-		        }
-		        else {
+		        
+		        var readTypeElement = document.getElementById("responseReadType");
+		        var replyReadTime = rgParams["replyReadTime"];
+		        
+		        if (replyReadTime === "0") {
 		            document.getElementById("responseReadid").checked = false;
+		            readTypeElement.selectedIndex = "0";
+		        } else {
+		        	document.getElementById("responseReadid").checked = true;
+		        	
+			        if ("${useOnlyInnerMail}" === "YES") {
+			        	readTypeElement.selectedIndex = "0";
+			        } else {
+			        	readTypeElement.selectedIndex = replyReadTime === "2" ? "1" : "0";			            
+			        }
 		        }
-		
 		
 		        var tmpStr = "";
 		        tmpStr = rgParams["delaySendDate"];
@@ -160,10 +169,11 @@
 		    
 		    function cancel() {
 		        if (ReturnFunction != null) {
-		            if (deliverySend.checked == true && RetValue["replyReadTime"] == "2") {
-		                deliverySend.checked = false;
-		                alert("<spring:message code='ezEmail.t354' />");
-		            }
+		        	// 2018.08.02 외부용 메일은 예약발송 안되게 하는 로직 삭제
+		            // if (deliverySend.checked == true && RetValue["replyReadTime"] == "2") {
+		            //    deliverySend.checked = false;
+		            //    alert("<spring:message code='ezEmail.t354' />");
+		            // }
 		            if (!isDivPopUp)
 		                window.close();
 		            else
@@ -182,13 +192,14 @@
 		    }
 		
 		    function responseRead_onClick() {
-	            if (document.getElementById("responseReadid").checked == true) {
+		    	document.getElementById("responseReadType").disabled = !document.getElementById("responseReadid").checked;
+	            /* if (document.getElementById("responseReadid").checked == true) {
 	                RetValue["replyReadTime"] = document.getElementById("responseReadType").value
 	                document.getElementById("responseReadid").disabled = false;
 	            }
 	            else {
 	                RetValue["replyReadTime"] = "0";
-	            }
+	            } */
 		    }
 				    
 		    function msgCCDisplay_onClick() {
@@ -266,11 +277,12 @@
 	            }
 	            else
 	                RetValue["delaySendDate"] = "";
-	
-	            if (deliverySend.checked == true && RetValue["replyReadTime"] == "2") {
-	                alert("<spring:message code='ezEmail.t354' />");
-	                return;
-	            }
+	            
+	            // 2018.08.02 외부용 메일은 예약발송 안되게 하는 로직 삭제
+	            // if (deliverySend.checked == true && RetValue["replyReadTime"] == "2") {
+	            //    alert("<spring:message code='ezEmail.t354' />");
+	            //    return;
+	            // }
 		
 	            if (individualMailUser > 0) {
 	            	
@@ -308,6 +320,11 @@
 	</head>
 	<body style="overflow:hidden;" class="popup">
 		<h1><spring:message code='ezEmail.t353' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="cancel()"></span></li>
+            </ul>
+        </div>
 		<table style="width:100%;" class="content">
 			<tr style="display:none;">
 				<th><spring:message code='ezEmail.t363' /></th>
@@ -337,10 +354,10 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="checkbox" name="responseRead" value="checkbox" onClick="" id = "responseReadid">
+					<input type="checkbox" name="responseRead" value="checkbox" onChange="responseRead_onClick()" id = "responseReadid">
 					<span style="vertical-align:middle;"><spring:message code='ezEmail.t370' /> </span>
-					<c:choose>
-						<c:when test="${outMailReadCheck}">
+					<!-- <c:choose>
+						<c:when test="${isDefaultReceiptExternal == 'YES'}">
 							<select <c:if test="${useOnlyInnerMail == 'YES'}">style="display:none"</c:if> id="responseReadType" onChange="">
 								<option value="1" selected><spring:message code='ezEmail.t371' /></option>
 								<option value="2"><spring:message code='ezEmail.t372' /></option>
@@ -351,7 +368,13 @@
 								<option value="1" selected><spring:message code='ezEmail.t371' /></option>
 							</select>
 						</c:otherwise>
-					</c:choose>
+					</c:choose> -->
+					<select <c:if test="${useOnlyInnerMail == 'YES'}">style="display:none" </c:if>id="responseReadType" onChange="" style="vertical-align: middle;" <c:if test="${useReceiptExternal != 'YES'}">disabled</c:if>>
+						<option value="1"><spring:message code='ezEmail.t371' /></option>
+						<c:if test="${useReceiptExternal == 'YES'}">
+						<option value="2"><spring:message code='ezEmail.t372' /></option>
+						</c:if>
+					</select>
 				</td>
 			</tr>
 		</table>
@@ -360,7 +383,7 @@
 			<tr>
 				<td>
 					<input type="checkbox" value="1" id="deliverySend" onclick="ReservedSend(this);">
-					<spring:message code='ezEmail.t374' />
+					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t374' /> </span>
 					<input type="text" id="Sdatepicker" style="width:80px;text-align:center">
 					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 				</td>
@@ -371,14 +394,14 @@
 			<table width="100%" class="content">
 				<tr>
 					<td>
-						<input type="checkbox" name="eachMailSend" id="eachMailSend" value="checkbox">&nbsp;<spring:message code='ezEmail.t748' />
+						<input type="checkbox" name="eachMailSend" id="eachMailSend" value="checkbox">
+						<span style="vertical-align:middle;"> <spring:message code='ezEmail.t748' /> </span>
 					</td>
 				</tr>
 			</table>  
 		</c:if>
 		<div class="btnposition btnpositionNew">
 			<a class="imgbtn" onClick="confirm()" ><span><spring:message code='ezEmail.t38' /></span></a>
-			<a class="imgbtn" onClick="cancel()" ><span><spring:message code='ezEmail.t39' /></span></a>
 		</div>
 	</body>
 </html>

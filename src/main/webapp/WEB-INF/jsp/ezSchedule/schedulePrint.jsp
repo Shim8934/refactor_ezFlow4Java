@@ -34,7 +34,7 @@
 		    	</div>
 		    	<div id="close">
 		      		<ul>
-		        		<li><span onClick="window.close()"><spring:message code='ezSchedule.t16' /></span></li>
+		        		<li><span onClick="window.close()"></span></li>
 		      		</ul>
 		    	</div>
 		  	</div>
@@ -112,10 +112,12 @@
 						<c:if test="${primary != '1'}">${item.ownerName2}</c:if>
 			         </td>
 			         <td style="overflow-wrap: break-word; word-wrap: break-word; word-break: normal; line-break: strict; hyphens: none; -webkit-hyphens: none; -moz-hyphens: none;">
-					 	${item.title} 
+			         	<c:out value="${item.title} " escapeXml="true" />
 					 </td>
 			         <td style="overflow-wrap: break-word; word-wrap: break-word; word-break: normal; line-break: strict; hyphens: none; -webkit-hyphens: none; -moz-hyphens: none;">
-			         	${item.location} 
+			         	<!-- 2018-07-09 김보미 - 태그적용 막기 -->
+ 			         	<%-- ${item.location}  --%>
+ 			         	<c:out value="${item.location} "/>
 			         </td>
 			         <td style="overflow-wrap: break-word; word-wrap: break-word; word-break: normal; line-break: strict; hyphens: none; -webkit-hyphens: none; -moz-hyphens: none;">
 			         	<c:if test="${item.dateType == '2'}">${fn:substring(item.startDate,0,10)}(<spring:message code='ezSchedule.t280' /></c:if>
@@ -136,7 +138,6 @@
 		  	<br/>
 		  	<script type="text/javascript">
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
-				selToggleList(document.getElementById("close"), "ul", "li", "0");
 			</script>		
 		</form>
 	</body>

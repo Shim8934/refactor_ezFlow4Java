@@ -495,6 +495,8 @@
 	            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
 		        window.resizeTo(785, 780);
 		    }
+		    
+		    /* 2018-07-11 홍승비 - 게시물 복사 시 guBun 파라미터 추가 */
 		    function btn_Copy_Onclick() {
 		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
 		            alert("<spring:message code='ezBoard.t202' />");
@@ -512,11 +514,12 @@
 		        pwidth = parseInt(pwidth) / 2;
 		        pheigth = pheigth - 200;
 		        pwidth = pwidth - 127;
-		        var feature = "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
-		        feature = feature + GetOpenPosition(340,656);
-		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "", feature, "");
+		        var feature = "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
+		        feature = feature + GetOpenPosition(355,600);
+		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&guBun=" + gubun, "", feature, "");
 		    }
 		
+		    /* 2018-07-11 홍승비 - 게시물 이동 시 guBun 파라미터 추가 */
 		    var moveboarditem_cross_dialogArguments = new Array();
 		    function btn_Move_Onclick() {
 		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
@@ -534,21 +537,19 @@
 		            return;
 		        }
 		
-		
 		        if (CrossYN()) {
 		            moveboarditem_cross_dialogArguments[1] = btn_Move_Onclick_Complete;
-		            var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "MoveBoardItem", GetOpenWindowfeature(340, 600));
+		            var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&guBun=" + gubun, "MoveBoardItem", GetOpenWindowfeature(355, 600));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
-		
 		            var pheigth = window.screen.availHeight;
 		            var pwidth = window.screen.availWidth;
 		            pheigth = parseInt(pheigth) / 2;
 		            pwidth = parseInt(pwidth) / 2;
 		            pheigth = pheigth - 200;
 		            pwidth = pwidth - 127;
-		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "", "DialogHeight:656px;DialogWidth:340px;status:no;help:no;edge:sunken;scroll:no");
+		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&guBun=" + gubun, "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
 		            if (typeof (ret) != "undefined") {
 		                if (ret == "OK") {
 		                    window.opener.location.reload();
@@ -674,20 +675,24 @@
 		    function ReaderList() {
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var left = (width - 600) / 2;
-		        var top = (heigth - 415) / 2;
+		        var left = (width - 620) / 2;
+		        var top = (heigth - 425) / 2;
 		        var szHref = "/ezBoard/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
-		        var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
+		        var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
 		        if (CrossYN()) {
 		            item_readlist_cross_dialogArguments[0] = "";
 		            item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
-		            DivPopUpShow(600, 415, szHref);
+		            DivPopUpShow(620, 425, szHref);
 		        }
 		        else
-		            window.open(szHref, "", "width=600, height=415, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
+		            window.open(szHref, "", "width=620, height=425, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
 		    }
 		    function ReaderList_Complete() {
 		        DivPopUpHidden();
+		    }
+		    
+		    function printOption_close() {
+		    	DivPopUpHidden();	
 		    }
 		    var boarditemview_cross_print_option_dialogArguments = new Array();
 		    var url = window.location.href;
@@ -696,8 +701,9 @@
 		            url = window.location.href;
 		            url = url.replace(".do", "PrintOption.do");
 		            boarditemview_cross_print_option_dialogArguments[1] = btn_Print_Onclick_Complete;
-		            var OpenWin = window.open(url, "boarditemview_print_option", GetOpenWindowfeature(380, 200));
-		            try { OpenWin.focus(); } catch (e) { }
+		            DivPopUpShow(380, 200, url);
+		            //var OpenWin = window.open(url, "boarditemview_print_option", GetOpenWindowfeature(380, 200));
+		            //try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
 		            var parameter = "";
@@ -1176,12 +1182,11 @@
 		      </div>    
 		      <div id="close">
 		        <ul>
-		          <li><span onClick="btnClose_onclick()"><spring:message code='ezBoard.t12' /></span></li>
+		          <li><span onClick="btnClose_onclick()"></span></li>
 		        </ul>
 		      </div>
 			<script type="text/javascript">
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
-				selToggleList(document.getElementById("close"), "ul", "li", "0");
 			</script>
 		    </td>
 		    </tr>
@@ -1437,8 +1442,8 @@
 				            	<div style="text-align:left; OVERFLOW: auto; HEIGHT: 50px; background-color:white" id="lstAttachLink" ></div>
 				            </td>
 				        <td class="pos2">
-				        <a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-				        <a class="imgbtn"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
+				        <a class="imgbtn imgbck"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+				        <a class="imgbtn imgbck"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
 				        </td>
 				        <td id="ItemLevel" style="display:none"></td>
 				        </tr>
@@ -1454,8 +1459,8 @@
 				          	  <div style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left" id="lstAttachLink"></div>
 				          </td>
 				          <td class="pos2">
-				              <a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-				              <a class="imgbtn"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
+				              <a class="imgbtn imgbck"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+				              <a class="imgbtn imgbck"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
 				          </td>
 				          <td id="Td1"></td>
 				        </tr>
@@ -1477,8 +1482,8 @@
 					            <div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;background-color:white; text-align:left"></div>
 					          </td>
 					          <td class="pos2">
-					             <a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-					             <a class="imgbtn"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
+					             <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+					             <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
 					          </td>
 					          <td id="Td2" style="display:none"></td>
 					        </tr>
@@ -1495,8 +1500,8 @@
 		                      <td class="pos2">
 					            <div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left"></div></td>
 	  				          <td class="pos2">'
-					          <a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-					          <a class="imgbtn"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
+					          <a class="imgbtn imgbck"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
+					          <a class="imgbtn imgbck"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a>
 					          </td>
 					          <td id="Td3"></td>
 					        </tr>

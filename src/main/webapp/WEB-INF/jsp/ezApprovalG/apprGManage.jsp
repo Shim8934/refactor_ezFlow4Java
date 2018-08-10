@@ -7,7 +7,7 @@
 		<title><spring:message code='ezApprovalG.hyj02'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
+		<!-- <link rel="stylesheet" href="/js/jquery/jquery-ui.css"> -->
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<style> 
 			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
@@ -30,7 +30,7 @@
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
+		<!-- <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script> -->
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 		
 		<script ID="clientEventHandlersJS" type="text/javascript">
@@ -56,6 +56,8 @@
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
 		    var proxyInfo = "${proxyInfo}";
+		    var proxyStartDate = "${proxyInfo.startDate}"
+		    var proxyEndDate = "${proxyInfo.endDate}"
 		    var formURL = "";
 		    var formDocType = "";
 		    var formExt = "";
@@ -97,6 +99,7 @@
 		    var SubQuery = "${SubQuery}";
 		    var condition = new Array();
 		    var nowDate = "${nowDateUTC}";
+		    var currentpage = 1;
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -133,6 +136,20 @@
 		            else {
 		                checkBujaeInfo_Complete(false);
 		            }
+		        } else if(GetBujaeFlag()){
+		        	
+		        		tmpStartDate = proxyStartDate;
+		        		tmpEndDate = proxyEndDate;
+		        		
+		        		var pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>"+"<spring:message code='ezApprovalG.t1723'/>" + "<br>"+ " <spring:message code='ezApprovalG.t1724'/>";
+
+			            var Rtnval = OpenInformationUI(pAlertContent, checkBujaeInfo_Complete, "OPEN");
+			            if (Rtnval) {
+			                checkBujaeInfo_Complete(true);
+			            }
+			            else {
+			                checkBujaeInfo_Complete(false);
+			            }		            	
 		        } else {
 		            checkBujaeInfo_Complete("ING");
 		        }
@@ -238,16 +255,17 @@
 	        		$(".approval").css("display","");
 	        	}
 		      	
-		        $("#sel_year").selectmenu({
+		      	/* 2018-06-19 김민성 - 전자결재 selectbox 기본으로 변경 */
+		        /* $("#sel_year").selectmenu({
 		            change: function (event, data) {
 		                onSelect_Year(data.item.value);
 		            }
-		        });
+		        }); */
 		
-		        $("#number")
+		        /* $("#number")
 		          .selectmenu()
 		          .selectmenu("menuWidget")
-		            .addClass("overflow");
+		            .addClass("overflow"); */
 		    });
 		    
 		    function window_onload() {
@@ -269,9 +287,26 @@
 		        var toDay = new Date();
 		        var toDayYear = parseInt(nowDate.substring(0,4));
 		        var minusYear = parseInt(nowDate.substring(0,4)) - parseInt(pOpenYaer);
-		        for (var i = toDayYear; i >= toDayYear - minusYear ; i--)
+				
+		        var cell = document.getElementById("sel_year");
+
+		        var selectedCell = $("#sel_year option:selected").val();
+		        
+		        while(cell.hasChildNodes()) {
+		        	cell.removeChild(cell.firstChild);	
+		        }
+		        
+		        var defaultCell = '<spring:message code="ezApprovalG.kmsg01"/>';
+		        
+		        AddOption(sel_year, defaultCell, "ALL");
+		        
+		        for (var i = toDayYear; i >= toDayYear - minusYear ; i--) {
 		            AddOption(sel_year, i, i);
-		            checkBujaeInfo();
+		        }
+		        if(selectedCell !== undefined) {
+		        	document.getElementById("sel_year").value = selectedCell;
+		        }
+		        checkBujaeInfo();
 		        } catch (e) {
 		            hideProgress();
 		        }
@@ -284,8 +319,8 @@
 		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + GetSelectVal("sel_year") + "-01-01</APRSTARTDATE><APRENDDATE>" + GetSelectVal("sel_year") + "-12-31</APRENDDATE></DATA></ROOT>";
 		        else {
 		            var nowyear = nowDate.substring(0,4);
-		            var nowmonth = nowDate.substring(5,7);
-		            var nowday = nowDate.substring(8,10);        
+		            var nowmonth = parseInt(nowDate.substring(5,7));
+		            var nowday = parseInt(nowDate.substring(8,10));        
 		
 		            SQLPARADATA = "<ROOT><TYPE>APRSTARTDATE;APRENDDATE;</TYPE><DATA><APRSTARTDATE>" + (nowyear - 1) + "-" + nowmonth + "-" + nowday + "</APRSTARTDATE><APRENDDATE>" + nowyear + "-" + nowmonth + "-" + nowday + "</APRENDDATE></DATA></ROOT>";		            
 
@@ -789,32 +824,17 @@
 		        if (oArrRows.length != 0) {
 		            var pCurSelRow = oArrRows[0];
 		            var DocID = pCurSelRow.getAttribute("DATA1");
-		
+					
+		            //2018-07-10 배현상, btnforcecallback_onclick 수정 (강제회수)
+		            tempDocID = DocID;
+		            
 		            if (pListTypeValue == "3") {
 		                var pMsg = "<spring:message code='ezApprovalG.t67'/>";
-		                if (CrossYN()) {
-		                    tempDocID = DocID;
-		                    OpenInformationUI(pMsg, btnforcecallback_onclick_Complete, "open");
-		                }
-		                else {
-		                    var Ans = OpenInformationUI(pMsg);
-		                    if (Ans) {
-		                        doCancelForce(DocID, pListTypeValue);
-		                    }
-		                }
+		                var Ans = OpenInformationUI(pMsg, btnforcecallback_onclick_Complete, "open");
 		            }
 		            else {
 		                var pMsg = "<spring:message code='ezApprovalG.t68'/>";
-		                if (CrossYN()) {
-		                    tempDocID = DocID;
-		                    OpenInformationUI(pMsg, btnforcecallback_onclick_Complete, "open");
-		                }
-		                else {
-		                    var Ans = OpenInformationUI(pMsg);
-		                    if (Ans) {
-		                        doCancelForce(DocID, pListTypeValue);
-		                    }
-		                }
+		                var Ans = OpenInformationUI(pMsg, btnforcecallback_onclick_Complete, "open");
 		            }
 		        }
 		    }
@@ -845,14 +865,17 @@
     	            }
 	        	});
 		        
+	        	//2018-07-10 배현상, OpenAlertUI에서 브라우저alert으로 변경 및 로직 수정
+	        	var RtnVal = getNodeText(loadXMLString(result).documentElement);
+	        	
 		        if (RtnVal == "TRUE") {
 		            if (tempListType == "3") {
-		                var pAlertContent = strLang891 + "<br> " + strLang892;
-		                OpenAlertUI(pAlertContent,"","OPEN");
+		                var pAlertContent = strLang891 + "\n" + strLang892;
+		                alert(pAlertContent);
 		            }
 		            else {
-		                var pAlertContent = strLang893 + "<br> " + strLang894;
-		                OpenAlertUI(pAlertContent, "", "OPEN");
+		                var pAlertContent = strLang893 + "\n" + strLang894;
+		                alert(pAlertContent);
 		            }
 		            getDocList();
 		
@@ -863,18 +886,18 @@
 		        }
 		        else if (RtnVal == "ERR01") {
 		            var pAlertContent = strLang895;
-		            OpenAlertUI(pAlertContent, "", "OPEN");
+		            alert(pAlertContent);
 		        }
 		        else if (RtnVal == "ERR02") {
 		            var pAlertContent = strLang896;
-		            OpenAlertUI(pAlertContent, "", "OPEN");
+		            alert(pAlertContent);
 		        }
 		        else if (RtnVal == "ERR03") {
 		            var pAlertContent = strLang897;
-		            OpenAlertUI(pAlertContent, "", "OPEN");
+		            alert(pAlertContent);
 		        }else {
 	            	var pAlertContent = strLang898;
-	                OpenAlertUI(pAlertContent);
+	                alert(pAlertContent);
 	            }
 		    }
 		    function Recipent_onclick() {
@@ -1205,7 +1228,7 @@
 		                return true;
 		            }
 		        }
-		        
+		        setBujaeOff();
 		        return false;
 		    }
 		    function setpause(numberMillis) {
@@ -1242,7 +1265,7 @@
 		        createNodeAndInsertText(xmlpara, objNode, "SEARCHQUERY", SQLPARADATA);
 
 		        var wWeigth = 630;
-		        var wHeigth = 450;
+		        var wHeigth = 480;
 		        var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
 		        var left = 0;
@@ -1363,7 +1386,7 @@
 		            }
 		        }
 		        $('#sel_year').val("ALL");
-		        $('#sel_year').selectmenu('refresh');
+		        /* $('#sel_year').selectmenu('refresh'); */
 		    }
 		    var SearchFlag = false;
 		    function MakeSubCondition() {
@@ -1416,64 +1439,64 @@
 			        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 			        
 				} else {
-					 if (condition[0] != "") {
-					        TYPE += "DOCNO;"
-					        DATA += "<DOCNO>" + condition[0] + "</DOCNO>";
-					    }
+					if (condition[0] != "") {
+				        TYPE += "DOCNO;"
+				        DATA += "<DOCNO>" + condition[0] + "</DOCNO>";
+				    }
 
-					    if (condition[1] != "") {
-					        TYPE += "DOCTITLE;"
-					        DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
-					    }
+				    if (condition[1] != "") {
+				        TYPE += "DOCTITLE;"
+				        DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
+				    }
 
-					    if (condition[2] != "") {
-					        TYPE += "WRITERNAME;"
-					        DATA += "<WRITERNAME>" + condition[2] + "</WRITERNAME>";
-					    }
+				    if (condition[2] != "") {
+				        TYPE += "WRITERNAME;"
+				        DATA += "<WRITERNAME>" + condition[2] + "</WRITERNAME>";
+				    }
 
-					    if (condition[3] != "null" && condition[3].trim() != "") {
-					        TYPE += "APRSTARTDATE;"
-					        DATA += "<APRSTARTDATE>" + condition[3] + "</APRSTARTDATE>";
-					    }
+				    if (condition[3] != "null" && condition[3].trim() != "") {
+				        TYPE += "APRSTARTDATE;"
+				        DATA += "<APRSTARTDATE>" + condition[3] + "</APRSTARTDATE>";
+				    }
 
-					    if (condition[4] != "null" && condition[4].trim() != "") {
-					        TYPE += "APRENDDATE;"
-					        DATA += "<APRENDDATE>" + condition[4] + "</APRENDDATE>";
-					    }
+				    if (condition[4] != "null" && condition[4].trim() != "") {
+				        TYPE += "APRENDDATE;"
+				        DATA += "<APRENDDATE>" + condition[4] + "</APRENDDATE>";
+				    }
 
-					    if (condition[5] != "null" && condition[5].trim() != "") {
-					        TYPE += "APRSTARTDATE;"
-					        DATA += "<APRSTARTDATE>" + condition[5] + "</APRSTARTDATE>";
-					    }
+				    if (condition[5] != "null" && condition[5].trim() != "") {
+				        TYPE += "APRSTARTDATE;"
+				        DATA += "<APRSTARTDATE>" + condition[5] + "</APRSTARTDATE>";
+				    }
 
-					    if (condition[6] != "null" && condition[6].trim() != "") {
-					        TYPE += "APRENDDATE;"
-					        DATA += "<APRENDDATE>" + condition[6] + "</APRENDDATE>";
-					    }
+				    if (condition[6] != "null" && condition[6].trim() != "") {
+				        TYPE += "APRENDDATE;"
+				        DATA += "<APRENDDATE>" + condition[6] + "</APRENDDATE>";
+				    }
 
-					    if (condition[9] != "") {
-					        TYPE += "FORMID;"
-					        DATA += "<FORMID>" + condition[9] + "</FORMID>";
-					    }
-					    
-					    if (condition[10] != "") {
-					        TYPE += "WRITERDEPTNAME;"
-					        DATA += "<WRITERDEPTNAME>" + condition[11] + "</WRITERDEPTNAME>";
-					    }
+				    if (condition[9] != "") {
+				        TYPE += "FORMID;"
+				        DATA += "<FORMID>" + condition[9] + "</FORMID>";
+				    }
+				    
+				    if (typeof (condition[11]) != "undefined" && condition[11] != "") {
+				        TYPE += "WRITERDEPTNAME;"
+				        DATA += "<WRITERDEPTNAME>" + condition[11] + "</WRITERDEPTNAME>";
+				    }
 
-					    if (condition[12] != "") {
-					        TYPE += condition[12];
-					        DATA += condition[13];
-					    }
-					    if (typeof (condition[14]) != "undefined" && condition[14] != "") {
-					        TYPE += condition[14];
-					        DATA += condition[15];
-					    }
-					    if (typeof (condition[16]) != "undefined" && condition[16] != "") {
-					        TYPE += condition[16];
-					        DATA += condition[17];
-					    }
-					}
+				    if (typeof (condition[12]) != "undefined" && condition[12] != "") {
+				        TYPE += condition[12];
+				        DATA += condition[13];
+				    }
+				    if (typeof (condition[14]) != "undefined" && condition[14] != "") {
+				        TYPE += condition[14];
+				        DATA += condition[15];
+				    }
+				    if (typeof (condition[16]) != "undefined" && condition[16] != "") {
+				        TYPE += condition[16];
+				        DATA += condition[17];
+				    }
+				}
 				SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 		    }
 		
@@ -1511,26 +1534,26 @@
 		    function search() {
 		        pChackYN = "SEARCH";
 		        if (document.getElementById("txt_keyword").value != "") {
-		            var radiosearch = document.getElementsByName('searchCheck');
+		            var selectSearch = document.getElementById('selectType');
 					if (approvalFlag == "G") {
 			            for (var i = 0; i < 25; i++) {
 			                SearchCond[i] = "";
 			            }
 			
-			            if (radiosearch.item(0).checked) {
+			            if (selectSearch.item(0).selected) {
 			                SearchCond[1] = replaceCond(document.getElementById("txt_keyword").value);
 			            }
-			            else if (radiosearch.item(1).checked) {
+			            else if (selectSearch.item(1).selected) {
 			                SearchCond[2] = replaceCond(document.getElementById("txt_keyword").value);
 			            }
 					} else {
 						for (i = 0; i < 11; i++)
 							condition[i] = "";
 
-		                if (radiosearch.item(0).checked) {
+		                if (selectSearch.item(0).selected) {
 		                	condition[1] = replaceCond(document.getElementById("txt_keyword").value);
 		                }
-		                else if (radiosearch.item(1).checked) {
+		                else if (selectSearch.item(1).selected) {
 		                	condition[2] = replaceCond(document.getElementById("txt_keyword").value);
 		                }
 					}
@@ -1579,7 +1602,7 @@
 		        }
 		
 		        $('#sel_year').val("ALL");
-		        $('#sel_year').selectmenu('refresh');
+		        /* $('#sel_year').selectmenu('refresh'); */
 		    }
 		    
 		    var SelUserCont_dialogArgument = new Array();
@@ -1690,11 +1713,12 @@
 		<h1>
 			<span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 		    <span style="float:right;font-weight:normal;color:black;">
-		        <input name="searchCheck" id="Radio1" type="radio" value="rad_Subject" checked style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1"><spring:message code='ezApprovalG.t106'/></label>
-			    <input name="searchCheck" id="Radio2" type="radio" value="rad_Writer" style="margin-bottom:5px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2"><spring:message code='ezApprovalG.t445'/></label>
-			    &nbsp;
-			    <input id="txt_keyword" style="width:150px;height:20px;border-right:0px;vertical-align: top" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		        <a href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onClick="search()"></a>
+		    	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
+		    		<option selected value="rad_Subject"><spring:message code='ezApprovalG.t106'/></option>
+		    		<option value="rad_Writer"><spring:message code='ezApprovalG.t445'/></option>
+		    	</select>
+			    <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+		        <a href="#" style="float:right;"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
 		    </span>
 		</h1>
 		<div id="mainmenu">
@@ -1703,17 +1727,11 @@
 				<li id="tbtnDraft" style="DISPLAY:none"><span id="btnDraft" onclick="return btnDraft_onclick()" ><spring:message code='ezApprovalG.t30'/></span></li>
 				<li id="tbtnLinkDraft" style="display:none"><span id="btnLinkDraft" onclick="return btnLinkDraft_onclick()"><spring:message code='ezApprovalG.t1737'/></span></li>
 				<li id="tbtnRedraft" style="DISPLAY:none"><span id="btnRedraft" onclick="return btnRedraft_onclick()"><spring:message code='ezApprovalG.t1738'/></span></li>
-				<li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" ></li>
+				<!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" ></li> -->
 				<li id="tbtnApprove" style="DISPLAY:none"><span id="btnApprove" onclick="return  btnApprove_onclick('0')" ><spring:message code='ezApprovalG.t1'/></span></li>
 				<li id="tbtnApprove1" style="DISPLAY:none"><span id="btnApprove1"  onclick ="return  btnApprove_onclick('1')" ><spring:message code='ezApprovalG.t1739'/></span></li>
-				<c:if test="${useMobile != 'YES'}">
-					<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>
-					<li id="tbtnApprove2" style="DISPLAY:none"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
-				</c:if>
-				<c:if test="${useMobile == 'YES'}">
-					<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>
-					<li id="tbtnApprove2"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
-				</c:if>
+				<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>
+				<li id="tbtnApprove2" style="DISPLAY:none"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
 				<li id="tbtnReceipt"  style="DISPLAY:none"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>
 				<li id="tbtnReturn" style="DISPLAY:none"><span id="btnReturn" onclick="return btnReturn_onclick()" ><spring:message code='ezApprovalG.t1434'/></span></li>
 				<li id="tbtnSimsa" style="DISPLAY:none"><span id="btnSimsa" onclick="return btnSimsa_onclick()" ><spring:message code='ezApprovalG.t214'/></span></li>
@@ -1722,7 +1740,7 @@
 				<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		
 				<li id="tbtncallback" style="DISPLAY:none"><span id="btncallback" onclick="return btncallback_onclick('CALLBACK')" ><spring:message code='ezApprovalG.t66'/></span></li>
 		        
-		        	<li id="tbtnforcecallback" style="display:none"><span id="btnforcecallback" onclick="return btncallback_onclick('FORCECALLBACK')"><spring:message code='ezApprovalG.t2005'/></span></li>
+		        	<li id="tbtnforcecallback" style="display:none"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
 				
 				<li id="tbtnRemoveDoc" style="DISPLAY:none"><span id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
 				<li id="tbtnViewDoc" style="DISPLAY:none"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
@@ -1735,10 +1753,12 @@
 		        <li id="tSearchCondi" style="DISPLAY:none"><span id="SearchCondi" onclick="return SearchCondi_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
 		        <li id="tbtnTotalSave" style="DISPLAY:none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <li id="tSecondApproval" class="approvalG"><span id="btnSecondApproval" onclick="return btnSecondApproval()"><spring:message code='ezApprovalG.t26'/><spring:message code='ezApprovalG.t54'/></span></li>
-		        <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
-		        <select id="sel_year" name="sel_year" style="width:75px;" onchange="onSelect_Year(this);">    
-		            <option value="ALL">ALL</option>
-		        </select>  
+		        <!-- <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li> -->
+		        <li style="vertical-align: middle;">
+		        	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">    
+		            	<%-- <option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option> --%>
+		        	</select>  
+		        </li>
 			</ul>
 		</div>
 		<div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">

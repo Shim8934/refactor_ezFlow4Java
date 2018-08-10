@@ -61,7 +61,7 @@ function DocMove() {
                     GetXml += "<DATA7>" + MakeXMLString(pDeptName) + "</DATA7>";
                     GetXml += "<DATA8>" + MakeXMLString(pUserName) + "</DATA8>";
                     GetXml += "<DATA9>N</DATA9>";
-                    GetXml += "<DATA10><![CDATA[" + GetChildNodes(selRow)[4].textContent + "]]></DATA10>";
+                    GetXml += "<DATA10><![CDATA[" + GetChildNodes(selRow)[5].textContent + "]]></DATA10>";
                     GetXml += "<DATA11>" + MakeXMLString(arr_userinfo[11]) + "</DATA11>";
                     GetXml += "<DATA12>" + MakeXMLString(arr_userinfo[12]) + "</DATA12>";
                     GetXml += "<DATA13>" + MakeXMLString(arr_userinfo[13]) + "</DATA13>";
@@ -384,7 +384,7 @@ function InsertToRecListView_lv(Resultxml) {
         DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");      
         DocList.SetOrderbyCol("COLNAME");
         DocList.SetTitleIdx(0);                                  
-
+        DocList.SetSecurityFlag(true);
         DocList.DataSource(ListViewData);                             
         DocList.DataBind("lvtDoclist");                          
         DocList = null;

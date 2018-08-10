@@ -191,6 +191,14 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public String getMemberListCount(Map<String, Object> map) throws Exception {
 		return getMemberListCountForLocal(map);       
 	}
+	
+	public int getMemberListCount2(Map<String, Object> map) throws Exception {
+		return (int) select("EzOrganDAO.getMemberListCount2", map);
+	}
+	
+	public List<String> getChildCompany(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzOrganDAO.getChildCompany", map);
+	}
 		
     private String getPropertyValueForLocal(Map<String, Object> map) throws Exception {
         String cn = (String)map.get("v_CN");
@@ -265,7 +273,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     private List<OrganDeptVO> organSearchListPageForLocal(Map<String, Object> map) throws Exception{
         return (List<OrganDeptVO>) list("EzOrganDAO.organSearchListPage", map);
     }
-	
+    
 	public List<OrganDeptVO> organSearchListPage(Map<String, Object> map) throws Exception{
 		return organSearchListPageForLocal(map);                       
 	}

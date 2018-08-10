@@ -7,7 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>left_community</title>
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<style>
 			.btn_comm {
@@ -21,7 +21,7 @@
 			    background-color: #fff;
 			    font-weight: bold;
 			    background: linear-gradient(#fff, #f8f8f8);
-			}
+			}			
 		</style>
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -45,13 +45,13 @@
 			var isCrossBrowser = "${isCrossBrowser}";
 
 			window.onload = function () {
-			    if (screen.height < 1080) {
+			    /* if (screen.height < 1080) {
 			        if(screen.height <= 800){
 			            document.getElementById("MyCopList").style.height = "135px";
 			        }else{
 			            document.getElementById("MyCopList").style.height = "225px";
 			        }
-			    }
+			    } */
 			    try {
 	                if (code != "") {
 	                    window.open("/ezCommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel);
@@ -109,7 +109,7 @@
 						if (result["list"] != "") {
 							getCommunityList_after(result["list"]);
 						} else {
-							$("#MyCopList").html("<div style='height:200px;text-align:center;'><img style='margin-top:100px;margin-bottom:20px' src='/images/signcommunity.png' /><div style='margin-top:15px'><div style='color:#979797'>"+strLang86+"</div><div style='margin-top:5px;color:#979797'>"+strLang87+"</div></div></div>");
+							$("#MyCopList").html("<div style='height:435px;text-align:center;'><img style='margin-top:100px;margin-bottom:20px' src='/images/signcommunity.png' /><div style='margin-top:15px'><div style='color:#979797'>"+strLang86+"</div><div style='margin-top:5px;color:#979797'>"+strLang87+"</div></div></div>");
 						}
 					}
 				});
@@ -352,7 +352,9 @@
 			                }
 			                break;
 			            case "btn_MemberJoinIng":
-			                alert("<spring:message code='ezCommunity.t1102' />");
+			            	//2018-07-24 김보미
+// 			                alert("<spring:message code='ezCommunity.t1102' />");
+			                alert("<spring:message code='ezCommunity.kbm01' />");
 			                break;
 			            default: 
 			            	window.open("/ezcommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel, "right");
@@ -396,7 +398,9 @@
 			                    }
 			                    break;
 		                case "btn_MemberJoinIng":
-		                    alert("<spring:message code='ezCommunity.t1102' />");
+			            	//2018-07-24 김보미
+// 			                alert("<spring:message code='ezCommunity.t1102' />");
+			                alert("<spring:message code='ezCommunity.kbm01' />");
 		                    break;
 		                default: 
 		                	window.open("/ezcommunity/commHome/popupCommHome.do?code=" + code + "&userLevel=" + UserLevel, "right");
@@ -484,8 +488,10 @@
 				            if (userID == master) {
 				                alert("Community <spring:message code='ezCommunity.t1103' />");
 				            } else {
-				                var wWeight = "425";
-				                var wHeight = "385";
+				            	//2018-07-09  김보미 - 너비값 조정
+ 				                //var wWeight = "425";
+				                var wWeight = "475";
+				                var wHeight = "395";
 				                var heigth = window.screen.availHeight;
 				                var width = window.screen.availWidth;
 				                var left = (width - wWeight) / 2;
@@ -575,7 +581,7 @@
 	    <div id="left">
 	        <div class="left_cop" title="<spring:message code='main.t1006' />"><span><spring:message code='main.t1006' /></span></div>
 	        <!-- mylist -->	        
-	        <div style="overflow: auto; overflow-x: hidden; height: 470px; background-color: white; border-bottom:1px solid #ddd" id="MyCopList">
+	        <div style="overflow: auto; overflow-x: hidden; background-color: white; min-height:435px; padding:5px" id="MyCopList">
 	            <!-- list -->
 	            <ul class="list_thumbnail" id="list_thumbnail">
 	            </ul>

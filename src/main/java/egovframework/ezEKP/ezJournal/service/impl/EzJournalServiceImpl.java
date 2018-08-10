@@ -267,8 +267,27 @@ public class EzJournalServiceImpl implements EzJournalService {
 	}
 	
 	@Override
-	public List<JournalAuthorVO> getDeptUserList(int tenantId, String key ,String value, String companyId, String lang) throws Exception{
+	public List<JournalAuthorVO> getDeptUserList(int tenantId, String key ,String value, String companyId, String lang, String curPage) throws Exception{
 		logger.debug("getDeptUserList started");
+		// 페이징 설정
+		int pageSize = 50;
+		int page = pageSize * (Integer.parseInt(curPage)-1);
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("tenantId", tenantId);
+		param.put("key", key);
+		param.put("value", value);
+		param.put("companyId", companyId);
+		param.put("lang", lang);
+		param.put("curPage", page);
+		param.put("pageSize", pageSize);
+		List<JournalAuthorVO> userList = ezJournalDAO.getDeptUserList(param);
+		
+		logger.debug("getDeptUserList ended");
+		return userList;
+	}
+	
+	public int getDeptUserListCount(int tenantId, String key ,String value, String companyId, String lang) throws Exception{
+		logger.debug("getDeptUserListCount started");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("tenantId", tenantId);
@@ -276,10 +295,10 @@ public class EzJournalServiceImpl implements EzJournalService {
 		param.put("value", value);
 		param.put("companyId", companyId);
 		param.put("lang", lang);
-		List<JournalAuthorVO> userList = ezJournalDAO.getDeptUserList(param);
 		
-		logger.debug("getDeptUserList ended");
-		return userList;
+		int userListCount = ezJournalDAO.getDeptUserListCount(param);
+		
+		return userListCount;
 	}
 
 	@Override
@@ -849,32 +868,28 @@ public class EzJournalServiceImpl implements EzJournalService {
 			String journalContent = journal.getJournalContent();
 			Elements thisElems = Jsoup.parseBodyFragment(journalContent).body().getElementById("thisJournal").children();
 
-			synchronized (thisElems) {
-				Iterator<Element> it = thisElems.iterator();
-				while (it.hasNext()) {
-					String elemHtml = it.next().html().replaceAll("&nbsp;", "");
-					String elemText =Jsoup.parseBodyFragment(elemHtml).text().trim();
-					if (elemText.equals("")) {
-						it.remove();
-					} else {
-						break;
-					}
+			Iterator<Element> it = thisElems.iterator();
+			while (it.hasNext()) {
+				String elemHtml = it.next().html().replaceAll("&nbsp;", "");
+				String elemText =Jsoup.parseBodyFragment(elemHtml).text().trim();
+				if (elemText.equals("")) {
+					it.remove();
+				} else {
+					break;
 				}
 			}
 			String thisContent = thisElems.toString();
 			
 			Elements nextElems = Jsoup.parseBodyFragment(journalContent).body().getElementById("nextJournal").children();
 
-			synchronized (nextElems) {
-				Iterator<Element> it = nextElems.iterator();
-				while (it.hasNext()) {
-					String elemHtml = it.next().html().replaceAll("&nbsp;", "");
-					String elemText =Jsoup.parseBodyFragment(elemHtml).text().trim();
-					if (elemText.equals("")) {
-						it.remove();
-					} else {
-						break;
-					}
+			it = nextElems.iterator();
+			while (it.hasNext()) {
+				String elemHtml = it.next().html().replaceAll("&nbsp;", "");
+				String elemText =Jsoup.parseBodyFragment(elemHtml).text().trim();
+				if (elemText.equals("")) {
+					it.remove();
+				} else {
+					break;
 				}
 			}
 			String nextContent = nextElems.toString();
@@ -882,12 +897,12 @@ public class EzJournalServiceImpl implements EzJournalService {
 			// #146bb8 rgb(0, 144, 208)
 //			formThisHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");
 //			formThisHtml.append("<p><img style='width:16px;height:16px;vertical-align:bottom;' src='/images/ImgIcon/icon_partapproval.gif'>" + journal.getJournalTitle().trim() + "</span></p>");
-			formThisHtml.append("<p><img style='width:18px;height:18px;vertical-align:sub;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA; font-family: Malgun Gothic; font-size: 13px;'>" + commonUtil.cleanValue(journal.getJournalTitle().trim()) + "</span></p>");
+			formThisHtml.append("<p><img style='width:14px;height:14px;vertical-align:middle;margin-left:5px' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA; font-family: Malgun Gothic; font-size: 13px;'>" + commonUtil.cleanValue(journal.getJournalTitle().trim()) + "</span></p>");
 			formThisHtml.append(thisContent.trim() + "<p></p><p></p>");
 			
 //			formNextHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");   
 //			formNextHtml.append("<p><img style='width:16px;height:16px;vertical-align:bottom;' src='/images/ImgIcon/icon_partapproval.gif'>" + journal.getJournalTitle().trim() + "</span></p>");
-			formNextHtml.append("<p><img style='width:18px;height:18px;vertical-align:sub;' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA; font-family: Malgun Gothic; font-size: 13px;'>" + commonUtil.cleanValue(journal.getJournalTitle().trim()) + "</span></p>");
+			formNextHtml.append("<p><img style='width:14px;height:14px;vertical-align:middle;margin-left:5px' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA; font-family: Malgun Gothic; font-size: 13px;'>" + commonUtil.cleanValue(journal.getJournalTitle().trim()) + "</span></p>");
 			formNextHtml.append(nextContent.trim() + "<p></p><p></p>");
 		}
 		

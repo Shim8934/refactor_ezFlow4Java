@@ -248,7 +248,14 @@
 		                        var APRMEMBERDEPTID = getNodeText(xmldom.getElementsByTagName("APRMEMBERDEPTID").item(i));
 		                        var DOCSTATE = getNodeText(xmldom.getElementsByTagName("DOCSTATE").item(i));
 		                        var FUNCTIONTYPE = getNodeText(xmldom.getElementsByTagName("FUNCTIONTYPE").item(i));
-		                        listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE.substring(0, STARTDATE.length - 3) + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
+		                        //2018-08-09 배현상, 긴급결재 시 color=red표시
+		                        var URGENTAPPROVAL = getNodeText(xmldom.getElementsByTagName("URGENTAPPROVAL").item(i));
+		                        
+		                        if (URGENTAPPROVAL == 'Y') {
+		                        	listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt' style='color:red'>" + DOCTITLE + "</span> <span class='date' style='color:red'>" + STARTDATE.substring(0, STARTDATE.length - 3) + "</span> <span class='name' style='color:red'>" + WRITERNAME + "</span></li>";
+		                        } else {
+			                        listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE.substring(0, STARTDATE.length - 3) + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
+		                        }
 		                     }                                 
 	
 	
@@ -601,12 +608,16 @@
 		                var listHTML = "<ul class=\"listtype_txt \">";
 		                
 		                for (var i = 0; i < xmldom.getElementsByTagName("NODE").length; i++) {
-		                    var SUBJECT = getNodeText(xmldom.getElementsByTagName("SUBJECT").item(i));
+		                	var _SubjectColumSpan = document.createElement("span");
+		                	var SUBJECT = getNodeText(xmldom.getElementsByTagName("SUBJECT").item(i));
 		                    var SENDER = getNodeText(xmldom.getElementsByTagName("SENDER").item(i));
 		                    var DATE = getNodeText(xmldom.getElementsByTagName("DATE").item(i));
 		                    var HREF = getNodeText(xmldom.getElementsByTagName("HREF").item(i));
+		                    
+		                    _SubjectColumSpan.innerText = SUBJECT;
+		                    SUBJECT = _SubjectColumSpan.innerHTML;
 	
-		                    listHTML += "<li onclick=\"open_mail('" + HREF + "')\"><span class='txt'>" + SUBJECT + "</span> <span class='date'>" + DATE + "</span> <span class='name'>" + SENDER + "</span></li>";
+		                    listHTML += "<li onclick=\"open_mail('" + HREF + "')\"> <span class='txt'>" + SUBJECT + "</span> <span class='date'>" + DATE + "</span> <span class='name'>" + SENDER + "</span></li>";
 		                }
 	
 		                listHTML += "</ul>";

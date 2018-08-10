@@ -190,8 +190,8 @@ function addLetterList(jsonArr) {
 				}
 			} else {
 				letterListHtml += "<span style='float:left;'>" + langDisplayName.replace(/</gi, "&lt;") + "</span>";
-				letterListHtml += "<button class='lmLetterModifyBtn' onClick='letterEditPopUp(this)'>" + modifyMsg + "</button>";
-				letterListHtml += "<button class='lmLetterDeleteBtn'>" + deleteMsg + "</button>";
+				letterListHtml += "<div style='float:right;'><button class='lmLetterModifyBtn' onClick='letterEditPopUp(this)'>" + modifyMsg + "</button>";
+				letterListHtml += "<button class='lmLetterDeleteBtn'>" + deleteMsg + "</button></div>";
 			}
 			
 			letterListHtml += "</li>";
@@ -207,6 +207,12 @@ function addLetterList(jsonArr) {
 	}
 	
 	$(".lmLetterListUl").html(letterListHtml);
+	
+	// 편지지명 span width
+	var lmLetterListUlLiW = $(".lmLetterListUl li").width() - 12; // padding
+	var lmLetterListUlDivW = $(".lmLetterListUl li > div").width();
+	var lmLetterListUlSpanW = lmLetterListUlLiW - lmLetterListUlDivW;
+	$(".lmLetterListUl li > span").width(lmLetterListUlSpanW);
 	
 	// 선택한 편지지 목록 유지
 	if (nowSelect !== undefined && nowSelect !== "") {
@@ -244,14 +250,14 @@ function letterListCss(pageType, searchMode) {
 function onloadPreview(ifr) {
 	var ifrHead = $(ifr).contents().find("head");
 	
-	$(ifrHead).html("<style>p {margin-top: 0; margin-bottom: 0;}</style>");
+	$(ifrHead).html("<style> html { height:520px; } p {margin-top: 0; margin-bottom: 0;}</style>");
 }
 
 // 편지지 선택 (개별 조회 미리보기)
 $(document).on("click", ".lmLetterListUl li:not(.lmLetterSelect)", function(){
 	var letterNo = $(this).attr("data-letterno");
 	
-	$(this).css("background","#e9f1ff");
+	$(this).css("background","#f0f6ff");
 	$(this).parents("ul").find(".lmLetterSelect").css("background","none").removeClass("lmLetterSelect");
 	$(this).addClass("lmLetterSelect");
 	

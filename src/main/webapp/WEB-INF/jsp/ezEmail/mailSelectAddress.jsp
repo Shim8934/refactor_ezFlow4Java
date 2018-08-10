@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,11 +8,11 @@
 	    <title><spring:message code='ezEmail.t554' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 	    <script>
 	    	var returnFunction;
 	    	
@@ -189,6 +190,11 @@
 	</head>
 	<body style="overflow:hidden;" class="popup">
         <h1><spring:message code='ezEmail.t554' /></h1>
+        <div id="close">
+			<ul>
+				<li><span onClick="cancel()"></span></li>
+			</ul>
+		</div>
         <div class="portlet_tabpart01">
             <div class="portlet_tabpart01_top" id="tabGroup">
                 <p id="fromTab" class="tab" addressType="from"><span><spring:message code='ezEmail.t161' /></span></p>
@@ -233,7 +239,6 @@
         </div>
         <div class="btnposition btnpositionNew">
 			<a class="imgbtn" onClick="confirm()"><span><spring:message code='ezEmail.t38' /></span></a>
-			<a class="imgbtn" onClick="cancel()"><span><spring:message code='ezEmail.t39' /></span></a>
 		</div>
 	</body>
 </html>

@@ -1509,7 +1509,8 @@
 		<![CDATA[
 			SELECT
 				DISTINCT A.UID_ ,
-                      		  A.DisplayName 
+				A.DisplayName,
+				A.DisplayName2
         	FROM
         		TBL_PORTALPAGE_GENERAL A, TBL_PORTAL_ACL companyACL
        		WHERE  
@@ -2558,8 +2559,10 @@
 			a.tenant_id = #tenantID#
 		and
 			a.companyid = #companyID#
+		<isNotEmpty property="v_pDISPLAYNAME">
 		and
-			a.UID_ = #topMenuID#			
+			a.UID_ = #topMenuID#
+		</isNotEmpty>
 		and
 			a.lang = #lang#
 		and

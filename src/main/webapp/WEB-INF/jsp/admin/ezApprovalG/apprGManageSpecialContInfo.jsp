@@ -6,7 +6,7 @@
 	    <title><spring:message code='ezApproval.t650'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -419,14 +419,19 @@
 		</xml>
 	
 	    <h1><spring:message code='ezApproval.t669'/></h1>
-	
+		<div id="close">
+            <ul>
+                <li><span onclick="btnClose_onclick()"></span></li>
+            </ul>
+        </div>
 	    <table class="content">
 	        <tr>
 	            <th><spring:message code='ezApproval.t670'/></th>
 	            <td>
 	                <select name="selContType" id="selContType">
 	                    ${codeXML}
-	                </select></td>
+	                </select>
+				</td>
 	        </tr>
 	        <tr>
 	            <th><spring:message code='ezApproval.t671'/></th>
@@ -442,7 +447,8 @@
 	                <spring:message code='ezApproval.t674'/>
 	                <input type="radio" name="rdSel" id="rdSel2" value="N">
 	                <spring:message code='ezApproval.t675'/>
-	                <spring:message code='ezApproval.t676'/></td>
+	                <spring:message code='ezApproval.t676'/>
+				</td>
 	        </tr>
 	    </table>
 	
@@ -472,7 +478,6 @@
 	
 	    <div class="btnposition">
 	        <a class="imgbtn" onclick="btnOK_onclick()"><span><spring:message code='ezApprovalG.t413'/></span></a>
-	        <a class="imgbtn" onclick="btnClose_onclick()"><span><spring:message code='ezApprovalG.t414'/></span></a>
 	    </div>
 	</body>
 </html>

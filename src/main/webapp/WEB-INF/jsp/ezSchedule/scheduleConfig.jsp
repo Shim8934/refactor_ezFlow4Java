@@ -221,15 +221,26 @@
 				</tr>
 			    <tr>
 			    	<th><spring:message code='ezSchedule.t152' /></th>
-			      	<td>			      		
-			      		<select name="ListSecretary" id="ListSecretary" style="width:85px">
-			      			<c:forEach var="item" items="${selectList}">
-			      				<option value="${item.cn}" name2="${item.displayName2}" deptname="${item.description}" deptname2="${item.description2}" email="${item.mail}">
-			      					${item.displayName}
-			      				</option>
-			      			</c:forEach>
-			      		</select>			      		
-			        	<a class="imgbtn"><span onClick="ModifySecretary()"><spring:message code='ezSchedule.t153' /></span></a>
+			      	<td>
+			      	<!-- 2018-08-06 김보미 - 셀렉트박스, 버튼 가운데로 위치 조정 -->		
+<!-- 			      		<select name="ListSecretary" id="ListSecretary" style="width:85px"> -->
+<%-- 			      			<c:forEach var="item" items="${selectList}"> --%>
+<%-- 			      				<option value="${item.cn}" name2="${item.displayName2}" deptname="${item.description}" deptname2="${item.description2}" email="${item.mail}"> --%>
+<%-- 			      					${item.displayName} --%>
+<!-- 			      				</option> -->
+<%-- 			      			</c:forEach> --%>
+<!-- 			      		</select>			      		 -->
+<%-- 			        	<a class="imgbtn imgbck"><span onClick="ModifySecretary()"><spring:message code='ezSchedule.t153' /></span></a> --%>
+						<div style='height: 75%;'>
+				      		<select name="ListSecretary" id="ListSecretary" style="width:85px; margin-top: 1px;">
+				      			<c:forEach var="item" items="${selectList}">
+				      				<option value="${item.cn}" name2="${item.displayName2}" deptname="${item.description}" deptname2="${item.description2}" email="${item.mail}">
+				      					${item.displayName}
+				      				</option>
+				      			</c:forEach>
+				      		</select>			      		
+				        	<a class="imgbtn imgbck"><span onClick="ModifySecretary()"><spring:message code='ezSchedule.t153' /></span></a>
+			        	</div>
 			        </td>
 			    </tr>
 		    	<tr style="display:none">
@@ -242,9 +253,10 @@
 		        	</td>
 		    	</tr>
 		  	</table>
-		  	<br/>
 		  	<div align="center" style="width:450px;">
-		    	<a class="imgbtn" onClick="save_info()"><span><spring:message code='ezSchedule.t157' /></span></a>
+		  		<div class="btnpositionJsp">
+		    		<a class="imgbtn" onClick="save_info()"><span><spring:message code='ezSchedule.t157' /></span></a>
+		    	</div>	
 		    	<%-- <a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezSchedule.t5' /></span></a> --%>
 		  	</div>
 		</form>

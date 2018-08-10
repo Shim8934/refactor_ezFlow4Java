@@ -6,7 +6,7 @@
 		<title><spring:message code='ezApprovalG.t388'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -658,6 +658,11 @@
 		</OBJECT>
 		
 		<h1><spring:message code='ezApprovalG.t388'/></h1>
+		<div id="close">
+            <ul>
+                <li><span id="CancelAprline" name="CancelAprline" onClick="return CancelAprline_onclick()"></span></li>
+            </ul>
+        </div>
 		<table style="margin-top:-20px;" >
 		  <tr>
 		    <td valign="top"><table>
@@ -757,7 +762,6 @@
 		  <tr>
 		    <td colspan="4" align="right">
 		         <a class="imgbtn" ><span id="SaveAprline" name="SaveAprline" onClick="return SaveAprline_onclick()"><spring:message code='ezApprovalG.t413'/></span></a>
-		         <a class="imgbtn" style="margin-right:20px;"><span id="CancelAprline" name="CancelAprline" onClick="return CancelAprline_onclick()"><spring:message code='ezApprovalG.t414'/></span></a>
 		    </td>
 		  </tr>
 		</table>

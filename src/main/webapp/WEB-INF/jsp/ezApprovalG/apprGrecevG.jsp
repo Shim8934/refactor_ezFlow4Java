@@ -523,7 +523,7 @@
 		        SaveFile();
 		
 		        writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
+		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		
@@ -1220,7 +1220,7 @@
 			</div>
 			<div id="close">
 		        <ul>
-		          <li id="btnClose" ><span onClick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
+		          <li id="btnClose" ><span onClick="return btnClose_onclick()"></span></li>
 		        </ul>
 		      </div>
 		    </td>
@@ -1254,7 +1254,6 @@
 		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
 		<XML ID="ATTACHINFO"></XML>

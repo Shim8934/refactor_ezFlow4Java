@@ -8,6 +8,6 @@
 	</head>
 	<frameset cols="220,*" frameborder="0" border="0">
 		<frame src="${url}" name="left" marginwidth="0" marginheight="0" scrolling="no" frameborder="0">
-			<frame src="/ezPortal/myPortalPageList.do" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
+		<frame src="" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
 	</frameset>
 </html>

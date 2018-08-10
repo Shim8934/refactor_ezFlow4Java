@@ -1,4 +1,5 @@
 ﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,8 +8,8 @@
 	    <title>mailAutoForward</title>
 	    <meta name="CODE_LANGUAGE" Content="C#">
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 	    <script type="text/javascript">
 		    var g_UserID = "${userId}";
@@ -195,15 +196,16 @@
 			    	<th><spring:message code='ezEmail.t139' /></th>
 			    	<td style="height:32px">
 			        	<input type="text" id="ForwardAddress" value="${forwardAddress}" class="textarea" style="WIDTH:80%;margin-left:2px" NAME="ForwardAddress" onkeyup="onkeydown_SaveKeyEvent(event);">
-			        	<a id="ReceiverSelect" class="imgbtn" style="width:14%;" onClick="SelectReceiver_onClick()"><span style="width:80%;text-align:center;"><spring:message code='ezEmail.t488' /></span></a>
+			        	<a id="ReceiverSelect" class="imgbtn imgbck" style="width:14%;" onClick="SelectReceiver_onClick()"><span style="width:80%;text-align:center;"><spring:message code='ezEmail.t488' /></span></a>
 			        </td>
 			  	</tr>
 			</table>
-			<div class="btnposition"></div>
 			<div style="text-align:center;width:490px;">
-			    <a class="imgbtn" id="ForwardDel" onClick="ButtonSaveAutoForward_Click()"><span><spring:message code='ezEmail.t95' /></span></a>
-			    <a id="btnSave" class="imgbtn" onClick="btnSave_onClick()"><span><spring:message code='main.sp09' /></span></a>
-			    <a class="imgbtn" onClick="window.location.href='/ezEmail/mailAutoForward.do'"><span><spring:message code='ezEmail.t39' /></span></a>			    
+				<div class="btnpositionJsp">
+			    	<a class="imgbtn" id="ForwardDel" onClick="ButtonSaveAutoForward_Click()"><span><spring:message code='ezEmail.t95' /></span></a>
+			    	<a id="btnSave" class="imgbtn" onClick="btnSave_onClick()"><span><spring:message code='main.sp09' /></span></a>
+			    	<a class="imgbtn" onClick="window.location.href='/ezEmail/mailAutoForward.do'"><span><spring:message code='ezEmail.t39' /></span></a>
+			    </div>				    
 			</div>
 			<div style="display:none;">
 			    <input type="text" id="DisplayName" value="${forwardAddress}" class="textarea" style="WIDTH:250px"> 

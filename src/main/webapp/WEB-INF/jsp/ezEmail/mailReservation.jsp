@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -9,8 +10,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 		
 		<style> 
 		.imgbtn_h { height:auto; } 
@@ -59,6 +60,12 @@
 		        var newwin = GetOpenWindow(pUrl, "", 890, 840, "yes");
 		        newwin.focus();
 		    }
+		    
+		    // 제목에 태그 입력 후 예약발송 > 예약발송관리에서 확인 시 태그 적용되어 나타나는 현상 수정
+		    function removeTag(subject, uid) {
+		    	document.getElementById(uid).innerText = subject;
+		    }
+		    
 		</script>
 	</head>
 	
@@ -67,7 +74,7 @@
 		<h1><spring:message code='ezEmail.t605' /></h1>
 		<div id="close">
 		  <ul>
-		    <li><span onClick="window.returnValue=0;window.close()"><spring:message code='ezEmail.t63' /></span></li>
+		    <li><span onClick="window.returnValue=0;window.close()"></span></li>
 		  </ul>
 		</div>
 		<div class="box" id="maillist" style="overflow:auto; height:250px;margin:0px;padding:0px;border-top:0px;border-right:1px solid #ddd">
@@ -79,17 +86,15 @@
 				</tr>
 				<c:forEach var="item" items="${list}">
 					<tr>
-						<td style="text-overflow:ellipsis; overflow:hidden;white-space:nowrap;"><span style="cursor:pointer;" onClick="View_ReservationMail('${item.messageId}')">${item.subject}</span></td>
+						<td style="text-overflow:ellipsis; overflow:hidden;white-space:nowrap;"><span id="${item.messageId}" style="cursor:pointer;" onClick="View_ReservationMail('${item.messageId}')">
+							<script>removeTag('${item.subject}', '${item.messageId}')</script></span></td>
 						<td style="width:150px;white-space:nowrap;text-align:center;">${item.sendDate}</td>
-						<td style="text-align:center;width:100px;white-space:nowrap;"><a href="#" class="imgbtn imgbtn_h"><span  onClick="cancel_mail('${item.messageId}', this)"><spring:message code='ezEmail.t39' /></span></a></td>
+						<td style="text-align:center;width:100px;white-space:nowrap;"><a href="#" class="imgbtn imgbtn_h imgbck"><span  onClick="cancel_mail('${item.messageId}', this)"><spring:message code='ezEmail.t39' /></span></a></td>
 					</tr>
 				</c:forEach>
 			</table>
 		</div>
 		</form> 
-		<script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
 	</body>
 </html>
 

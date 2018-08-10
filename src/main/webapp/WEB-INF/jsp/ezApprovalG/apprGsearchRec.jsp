@@ -247,61 +247,69 @@
 	</head>
 	<body class="popup" style="margin-left:0px;margin-top:0px">
 		<h1><spring:message code='ezApprovalG.t1104'/></h1>
+		<div id="close">
+            <ul>
+                <li><span id="Submit22223" onclick="return btnCancel_onclick()"></span></li>
+            </ul>
+        </div>
 		<table class="content" style="width:100%" >
 		  <tr  id="trDept"> 
 		    <th style="WIDTH:80px;" > <spring:message code='ezApprovalG.t1105'/></th>
 		    <td style=" WIDTH:270px" > 
 		      <input class="text" name="txtDeptName" id=txtDeptName disabled>
-		      <a class="imgbtn" style="vertical-align:middle"><span onClick="return SelectDept_OnClick()" id="btnSelDept"  style="width:40px;text-align:center"><spring:message code='ezApprovalG.t105'/></span></a>
+		      <a class="imgbtn imgbck" style="height: 23px;margin-bottom: 0px;"><span onClick="return SelectDept_OnClick()" id="btnSelDept"  style="width:24px;text-align:center;line-height: 22px;"><spring:message code='ezApprovalG.t105'/></span></a>
 		     </td>
 		  </tr>
 		  <tr > 
 		    <th style="WIDTH:80px"> <spring:message code='ezApprovalG.t1092'/></th>
 		    <td style=" WIDTH:270px"> 
-		      <input class="text" style=" WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" name="txtTitle" id=txtTitle>    </td>
+		      <input class="text" style=" WIDTH: 100%;height: 25px; -moz-box-sizing:border-box;box-sizing:border-box;" name="txtTitle" id=txtTitle>    </td>
 		  </tr>
 		  <tr > 
 		    <th style="WIDTH:80px"> <spring:message code='ezApprovalG.t1106'/></th>
 		    <td style=" WIDTH:270px"> 
-		      <input class="text" style=" WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" name="txtCabTitle" id=txtCabTitle>    </td>
+		      <input class="text" style=" WIDTH: 100%;height: 25px; -moz-box-sizing:border-box;box-sizing:border-box;" name="txtCabTitle" id=txtCabTitle>    </td>
 		  </tr>
 		  <tr > 
 		    <th  style="WIDTH:80px"><spring:message code='ezApprovalG.t1107'/></th>
 		    <td style=" WIDTH:270px"> 
-		      <select name="selRegisterType" id="selRegisterType" style=" WIDTH: 100%" ></select>    </td>
+		      <select name="selRegisterType" id="selRegisterType" style=" WIDTH: 150px;HEIGHT: 25px;" ></select>    </td>
 		  </tr>
 		  <tr > 
 		    <th style="WIDTH:80px"> <spring:message code='ezApprovalG.t831'/></th>
 		    <td style=" WIDTH:270px">
-				<input type="text" id="Sdatepicker" style="width:80px;text-align:center"> 
-		        <input type="text" id="Edatepicker" style="width:80px;text-align:center">
+				<input type="text" id="Sdatepicker" style="width:80px;height:25px;text-align:center"> 
+		        <input type="text" id="Edatepicker" style="width:80px;height:25px;text-align:center">
 		    </td>
 		  </tr>
 		  <tr > 
 		    <th style="WIDTH:80px"> <spring:message code='ezApprovalG.t1101'/></th>
 		    <td style=" WIDTH:270px" > 
 		      <input class="text" name="txtCharger" id=txtCharger disabled>
-		      <a  class="imgbtn" style="vertical-align:middle"><span onClick="return SelectUser_OnClick()" id="btnSelUser"  style="width:40px;text-align:center;"  ><spring:message code='ezApprovalG.t105'/></span></a>
+		      <a  class="imgbtn imgbck" style="height: 23px;margin-bottom: 0px;"><span onClick="return SelectUser_OnClick()" id="btnSelUser"  style="width:24px;text-align:center;line-height: 22px;"><spring:message code='ezApprovalG.t105'/></span></a>
 		    </td>
 		  </tr>
 		  <tr > 
 		    <th style="WIDTH:80px"> <spring:message code='ezApprovalG.t445'/></th>
 		    <td style=" WIDTH:270px"> 
-		      <input class="text" style=" WIDTH:100%;-moz-box-sizing:border-box;box-sizing:border-box;" name="txtDrafter" id=txtDrafter>    </td>
+		      <input class="text" style=" WIDTH:100%;height:25px; -moz-box-sizing:border-box;box-sizing:border-box;" name="txtDrafter" id=txtDrafter>    </td>
 		  </tr>
 		  <tr > 
 		    <th style="WIDTH:80px"><spring:message code='ezApprovalG.t94'/></th>
 		    <td style=" WIDTH:270px"> 
-		      <input class="text" style=" WIDTH:100%;-moz-box-sizing:border-box;box-sizing:border-box;" name="txtSC" id=txtSC>    </td>
+		      <input class="text" style=" WIDTH:100%;height:25px; -moz-box-sizing:border-box;box-sizing:border-box;" name="txtSC" id=txtSC>    </td>
+		  </tr>
+		  <tr>
+		  	<th style="WIDTH:80px"><spring:message code='ezApprovalG.t1116'/></th>
+		  	<td><input type="checkbox" name="chkTransExp" id="chkTransExp" value="1"  style="vertical-align:middle;"></td>
 		  </tr>
 		  </table>
 		  
-		<h2><input type="checkbox" name="chkTransExp" id="chkTransExp" value="1"  style="vertical-align:middle;"><spring:message code='ezApprovalG.t1116'/></h2>
+		<%-- <h2><input type="checkbox" name="chkTransExp" id="chkTransExp" value="1"  style="vertical-align:middle;"><spring:message code='ezApprovalG.t1116'/></h2> --%>
 		
 		<div class="btnposition btnpositionNew">
 			<a class="imgbtn"><span id="reset" onclick="return reset_onclick()"><spring:message code='ezApprovalG.t621'/></span></a>
 			<a class="imgbtn"><span id="Submit22222" onclick="return btnSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></a>
-			<a class="imgbtn"><span id="Submit22223" onclick="return btnCancel_onclick()"><spring:message code='ezApprovalG.t64'/></span></a>  
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

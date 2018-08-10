@@ -8,7 +8,7 @@
 		<style>
 			#lstAttachLink {
 			height: 115px;
-			border: 1px solid #3C2F2E;
+			border: 1px solid #d2d2d2;
 			}
 		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -185,20 +185,51 @@
 		        var strRet = "";
 		        var fileList = "";
 
+				//2018-07-06 김보미 - 파일부분 수정
+// 		        for (var i = 1; i < filecnt; i++) {
+// 		            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
+// 		                var pAttachDelSN;
+// 		                var pAttachDelFileName;
+// 		                var is_newfile;
+// 		                var Rtnval;
+
+// 		                pAttachDelFileName = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
+
+// 						if (fileList == "") {
+// 							fileList = pAttachDelFileName;
+// 						} else {
+// 							fileList += "," + pAttachDelFileName;
+// 						}
+
+// 		                var delfilesize;
+// 		                delfilesize = document.getElementById("filelist").childNodes[i].lastChild.textContent;
+// 		                filesize -= delfilesize;
+// 		                file.splice(i - 1, 1);
+// 		                document.getElementById("filelist").removeChild(document.getElementById("filelist").childNodes[i]);
+// 		                i--;
+// 		                filecnt--;
+// 		            }
+// 		        }
+// 			    var fileArr = new Array(); //Object를 배열로 저장할 Array
+// 		        for (var i = 0; i < filelist.length - 1; i++) {
+// 			        +
+// 			        fileObj.newFileName = GetAttribute(filelist[i + 1], "data");
+// 			        fileObj.pFileName = GetAttribute(filelist[i + 1], "data2");
+// 			        fileObj.fileSize = GetAttribute(filelist[i + 1], "data3");
+// 			        fileArr.push(fileObj);
+// 		        }
 		        for (var i = 1; i < filecnt; i++) {
+					var fileArr = new Array(); //Object를 배열로 저장할 Array
 		            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
-		                var pAttachDelSN;
+		            	var fileObj = new Object(); //key, value형태로 저장할 Object
 		                var pAttachDelFileName;
-		                var is_newfile;
-		                var Rtnval;
 
 		                pAttachDelFileName = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
 
-						if (fileList == "") {
-							fileList = pAttachDelFileName;
-						} else {
-							fileList += "," + pAttachDelFileName;
-						}
+	 			        fileObj.newFileName = document.getElementById("filelist").childNodes[i].getAttribute("DATA");
+	 			        fileObj.pFileName = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
+	 			        fileObj.fileSize = document.getElementById("filelist").childNodes[i].getAttribute("DATA3");
+	 			        fileArr.push(fileObj);
 
 		                var delfilesize;
 		                delfilesize = document.getElementById("filelist").childNodes[i].lastChild.textContent;
@@ -224,7 +255,9 @@
 	                type : 'POST',
 	                dataType : 'json',
 	                data : {
-	                	fileList : fileList
+						//2018-07-06 김보미 - 파일부분 수정
+ 	                	//fileList : fileList
+	                	fileList : JSON.stringify(fileArr)
 	                },
 	                success: function() {
 	                },
@@ -277,8 +310,8 @@
 	<body style ="width:100%;height:100%;overflow:hidden">   
         <div style="width:100%;white-space:nowrap;display:inline-block; height: 20px;">
             <div style="float:left">
-                <a class="imgbtn" onclick="btnfileup()"><span><spring:message code='ezCircular.t96' /></span></a>
-                <a class="imgbtn" onclick="btnfiledel()"><span><spring:message code='ezCircular.t97' /></span></a>   
+                <a class="imgbtn imgbck" onclick="btnfileup()"><span><spring:message code='ezCircular.t96' /></span></a>
+                <a class="imgbtn imgbck" onclick="btnfiledel()"><span><spring:message code='ezCircular.t97' /></span></a>   
             </div>
             <div id="progdiv" class="progarea" style="display:none">
              	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>

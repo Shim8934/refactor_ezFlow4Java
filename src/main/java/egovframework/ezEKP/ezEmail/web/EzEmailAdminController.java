@@ -164,34 +164,26 @@ public class EzEmailAdminController {
 					.getTextContent();
 			String cn = doc.getElementsByTagName("CN").item(0).getTextContent() == null ? "" 
 					: doc.getElementsByTagName("CN").item(0).getTextContent();
-			
-			List<MailDistributionVO> distributionSearchList = ezEmailService
+			//모든 공용배포그룹
+			List<MailDistributionVO> distributionTotalList = ezEmailService
 					.getDistributionList(companyId, auth.getTenantId());
 			
-			List<MailDistributionVO> distributionResultList = new ArrayList<MailDistributionVO>();
+			logger.debug("cn=" + cn);
 			
-			String isIncluded = "NO";
-			
-			if (!cn.equals("null") && !cn.equals("")) {
+			if (cn != null && !cn.equals("null")) {
+				//cn을 포함하는 공용배포그룹
+				List<MailDistributionVO> distributionSearchList = ezEmailService
+						.getDistributioUpperList(cn, auth.getTenantId());
+				
 				for (MailDistributionVO vo : distributionSearchList) {
-					if (!vo.getId().equals(cn)) {
-						isIncluded = ezEmailService.checkDistributionIsIncluded(cn, vo.getId(), auth.getTenantId());
-						
-						if (isIncluded.equals("NO")) {
-							distributionResultList.add(vo);
-						} 
-					} else {
-					distributionResultList.add(vo);
-					}	
+					distributionTotalList.remove(vo);
 				}
-			} else {
-				distributionResultList = distributionSearchList;
 			}
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append("<LISTVIEWDATA><ROWS>");
 
-			for (MailDistributionVO vo : distributionResultList) {
+			for (MailDistributionVO vo : distributionTotalList) {
 				sb.append("<ROW><CELL>");
 
 				sb.append("<VALUE>");
@@ -486,8 +478,9 @@ public class EzEmailAdminController {
 				String pCn = (String) address.get("cn");
 				pCn = pCn.substring(0, pCn.indexOf("@"));
 				String pClass = (String) address.get("class");
+				String displayName = (String) address.get("displayName"); //
 
-				logger.debug("pCn=" + pCn + ", pClass=" + pClass);
+				logger.debug("pCn=" + pCn + ", pClass=" + pClass + ", displayName=" + displayName);
 
 				if (pClass.equals("group")) {
 					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn,
@@ -514,12 +507,11 @@ public class EzEmailAdminController {
 										locale) + "</TITLE>");
 						sb.append("</ROW>");
 					} else {
-						if (ezCommonService.getTenantConfig("useRankMail", userInfo.getTenantId()).equals("YES")) {
 						sb.append("<ROW>");
 						sb.append("<CLASS>" + "distribution" + "</CLASS>");
 						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
 						sb.append("<DISPLAYNAME>"
-								+ commonUtil.cleanValue(pCn)
+								+ displayName
 								+ "</DISPLAYNAME>");
 						sb.append("<MAIL>"
 								+ commonUtil.cleanValue(cn)
@@ -528,8 +520,7 @@ public class EzEmailAdminController {
 								+ egovMessageSource.getMessage("ezEmail.t57",
 										locale) + "</DEPT>");
 						sb.append("</ROW>");
-				}
-					}
+						}
 
 				} else {
 					OrganUserVO user = ezOrganAdminService.getUserInfo(pCn,
@@ -863,10 +854,9 @@ public class EzEmailAdminController {
 			currPage = "1";
 		}
 
-		int maxItemPerPage = 20;
+		int maxItemPerPage = 20; 
 		int currentPage = Integer.parseInt(currPage);
 		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
-		int endRow = (Integer.parseInt(currPage)) * maxItemPerPage;
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;
@@ -890,7 +880,7 @@ public class EzEmailAdminController {
 
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow, 
-									   endRow, maxItemPerPage, searchKeycode, searchKeyword);
+									    maxItemPerPage, searchKeycode, searchKeyword);
 		
 		IMAPAccess ia = null;
 		Locale locale = Locale.getDefault();
@@ -964,7 +954,6 @@ public class EzEmailAdminController {
 
 		int maxItemPerPage = 20;
 		int startRow = (Integer.parseInt(currPage) - 1) * maxItemPerPage;
-		int endRow = (Integer.parseInt(currPage)) * maxItemPerPage;
 		
 		if (currPage.equals("-1")) {
 			startRow = -1;
@@ -972,7 +961,7 @@ public class EzEmailAdminController {
 
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(Integer.valueOf(userInfo.getTenantId()), 
-									   startRow, endRow, maxItemPerPage, searchKeycode, searchKeyword);
+									   startRow, maxItemPerPage, searchKeycode, searchKeyword);
 		
 		int totalCount = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword);
 		

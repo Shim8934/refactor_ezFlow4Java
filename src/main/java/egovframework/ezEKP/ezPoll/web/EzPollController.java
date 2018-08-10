@@ -237,10 +237,19 @@ public class EzPollController extends EgovFileMngUtil {
 				endTime = boardPollConfigVO.getDefaultEndTime();
 				
 				//Process target
-		        String[] departIdList = boardPollConfigVO.getTargetDepts().split(",");
-		        String[] userIdList = boardPollConfigVO.getTargetUsers().split(",");
+		        String[] departIdList = null;
+		        String targetDepts = boardPollConfigVO.getTargetDepts();
+		        if(targetDepts != null){
+		        	departIdList = targetDepts.split(",");
+		        }
 		        
-		        if (departIdList.length > 0 && !departIdList[0].equals("")) {
+		        String[] userIdList = null;
+		        String targetUsers = boardPollConfigVO.getTargetUsers();
+		        if(targetUsers != null){
+		        	userIdList = targetUsers.split(",");
+		        }
+		        
+		        if (targetDepts != null && !departIdList[0].equals("")) {
 		        	strXMLRange.append("<DEPT>"); 
 		        	
 			        for (String deptID : departIdList) {
@@ -260,7 +269,7 @@ public class EzPollController extends EgovFileMngUtil {
 			        strXMLRange.append("</DEPT>"); 
 		        }
 		        
-		        if (userIdList.length > 0 && !userIdList[0].equals("")) {
+		        if (targetUsers != null && !userIdList[0].equals("")) {
 		        	strXMLRange.append("<MEMBER>"); 
 		        	
 		        	for (String userID : userIdList) {
@@ -347,6 +356,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String mode1 = (request.getParameter("mode1") != null) ? request.getParameter("mode1") : mode;
 		String listQst = (request.getParameter("listQst") != null) ? request.getParameter("listQst") : "";
 		
+		//현재 listQst에 값을 넣어주는 메소드를 호출 하는 부분이 없어 타지 않는 조건문임 2018-06-05 홍대표
 		if (!listQst.equals("")) {
 			String [] questionIDs = listQst.split(",");			
 			
@@ -358,6 +368,7 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		List<PollQuestionVO> listOfModifyingQst = new ArrayList<PollQuestionVO>();		
 		
+		//사용자의 권한을 체크함.
 		if (loginVO.getRollInfo().indexOf("c=1") == -1 && loginVO.getRollInfo().indexOf("k=1") == -1) {
 			//Normal user
 			adminPrivilege = 0;
@@ -399,6 +410,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		//Save hidden questions to database
+		//현재 listQst에 값을 넣어주는 메소드를 호출 하는 부분이 없어 타지 않는 조건문임 2018-06-05 홍대표
 		if (!hideQstList.equals("")) {
 			saveHiddenQuestion(hideQstList, loginVO);
 		}

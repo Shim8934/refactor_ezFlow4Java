@@ -21,6 +21,33 @@
 	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarDataPro_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarView_Cross.js"></script>   
 	    <script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+	    <!-- data picker-->
+		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+		<!-- 2018-06-12 구해안 -->
+		<script type="text/javascript" src="/js/jquery/dateControls/monthpicker.js"></script>
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
+		<style type="text/css">
+ 		.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-year{ 
+ 			margin: 0 auto; 
+ 		}  
+				
+ 		.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-month { 
+ 		  display: none; 
+ 		} 
+ 		
+		.ui-monthpicker td span {
+		  padding: 5px;
+		  cursor: pointer;
+		  text-align: center;
+		}		
+		.chk_noneDisplay {
+			display:none;
+		}
+		
+		</style>
 		<script type="text/javascript">		    
 			var timeZoneStr = "<c:out value='${timeZoneStr}'/>";
 			var receivecount = "<c:out value='${receiveCount}'/>";
@@ -85,6 +112,39 @@
 			                }
 			            }			            
 			            CalendarView("Calendar");
+
+			            //2018-06-12 구해안 datepicker localization
+			            $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+					            closeText: "<spring:message code='main.t3' />",
+					            prevText: "<spring:message code='main.t0604' />",
+					            nextText: "<spring:message code='main.t0605' />",
+					            currentText: "<spring:message code='main.t0606' />",
+					            monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+					                         "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+					                         "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+					                         "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					            monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+					                              "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+					                              "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+					                              "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					            dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+					                       "<spring:message code='main.t0627' />"],
+					            dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+							                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+							                       "<spring:message code='main.t0627' />"],
+					            dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+						                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+						                       "<spring:message code='main.t0627' />"],
+					            weekHeader: "Wk",
+					            dateFormat: "yy-mm-dd",
+					            firstDay: 0,
+					            isRTL: false,
+					            duration: 200,
+					            showAnim: "show",
+					            showMonthAfterYear: true
+					        };
+					        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    		}		    		
 		        });
 		    }
@@ -129,6 +189,7 @@
 		        }
 		        if (pDefaultview == 2) {
 		            typeCal = 0
+		            // 2018-06-07 구해안 미니 호출 부분 주석처리
 		            parent.frames["left"].typeCal = 0
 
 		        } else if (pDefaultview == 1) {
@@ -145,6 +206,7 @@
 		            DefaultView = 0            
        
 				if (receivecount != "0") {
+					parent.frames["left"].document.body.style.overflow = "hidden";
 		            schedule_receive_attendant_cross_dialogArguments[0] = this;
 		            schedule_receive_attendant_cross_dialogArguments[1] = windowonload_Complete;
 		           
@@ -179,6 +241,7 @@
 		    	}
 		        
 		    	if (groupcount != "0") {
+		    		parent.frames["left"].document.body.style.overflow = "hidden";
 		            schedule_receive_member_dialogArguments[0] = this;
 		            schedule_receive_member_dialogArguments[1] = windowonload_Complete2;
 		            
@@ -204,7 +267,8 @@
               
 		    	var xmldom = createXmlDom();
 
-		        if (groupxml != "") {
+		    	// 2018-06-08 구해안 셀렉트박스 미사용으로 주석처리
+		        /* if (groupxml != "") {
 		            var groupxmldom = loadXMLString(groupxml);
    
 		            for (var i = 0; i < groupxmldom.getElementsByTagName("GROUPID").length; i++) {
@@ -212,9 +276,9 @@
 		                var newoption = new Option("<spring:message code='ezSchedule.t204'/>" + " " + getNodeText(groupxmldom.getElementsByTagName("GROUPNAME")[i]), getNodeText(groupxmldom.getElementsByTagName("GROUPID")[i]));
 		                idSelect.options[lastindex] = newoption;
                     }
-                }
-	
-                if (sharexml != "") {	
+                } */
+             	// 2018-06-08 구해안 공유 main에서 미사용으로 주석처리
+                /* if (sharexml != "") {	
                     var sharexmldom = loadXMLString(sharexml);
 
                     for (var i = 0; i < xmldom.getElementsByTagName("OWNERID").length; i++) {
@@ -226,9 +290,9 @@
 
                         idSelect.options[lastindex] = newoption;
                     }
-                }
-
-		        if (idtype == "G") {
+                } */
+             	// 2018-06-08 구해안 그룹 main에서 미사용으로 주석처리
+		        /* if (idtype == "G") {
 		            idSelect.value = groupid;
 		        } else {
 		            if (idtype != "") {
@@ -237,13 +301,13 @@
 		                else
 		                    idSelect.value = idtype;
 		            }
-		        }
+		        } */
 		        
                 if (otherid != "") {
                     secretarySelect.value = otherid;
                 }
-
-                var secretaryxmldom = loadXMLString(secretaryxml);
+		     	// 2018-06-08 구해안 비서 미사용으로 주석처리
+                /* var secretaryxmldom = loadXMLString(secretaryxml);
                 
                 for (var i = 0; i < secretaryxmldom.getElementsByTagName("USERID").length; i++) {
                     var lastindex = secretarySelect.length;
@@ -252,7 +316,7 @@
 
                     if (getNodeText(secretaryxmldom.getElementsByTagName("USERID")[i]) == otherid)
                         secretarySelect.selectedIndex = lastindex;
-                }                
+                }       */          
                 resize();
 		    }
 
@@ -312,12 +376,13 @@
 		        var pLeft = (pwidth - 790) / 2;
 		        
 		        if (otherid == "") {
-		            var index = idSelect.selectedIndex;
+		        	// 2018-06-08 구해안 셀렉트박스 미사용으로 주석처리
+		            /* var index = idSelect.selectedIndex;
 		            if (index == -1)
-		                index = 0;
-
-		            if (idSelect.options[idSelect.selectedIndex].onlyread == "1")
-		                index = 0;
+		                index = 0; */
+					var index = 0;
+		           /*  if (idSelect.options[idSelect.selectedIndex].onlyread == "1")
+		                index = 0; */
                     
 		            var feature = GetOpenPosition(790, 760);
 		            //if (CrossYN()) {
@@ -333,7 +398,7 @@
 		                }
 		            } */
 		        } else {
-		            var type = GetAttribute(secretarySelect.options[secretarySelect.selectedIndex], "type") == "user" ? "6" : "8";
+		            /* var type = GetAttribute(secretarySelect.options[secretarySelect.selectedIndex], "type") == "user" ? "6" : "8"; */
 
 		            var feature = GetOpenPosition(790, 760);
 		            //if (CrossYN()) {
@@ -379,9 +444,9 @@
 		        var pLeft = (pwidth - 790) / 2;
 		        
 		        if (otherid == "") {
-		            var index = idSelect.selectedIndex;
-		            if (index == -1)
-		                index = 0;
+		            /* var index = idSelect.selectedIndex;
+		            if (index == -1) */
+		            var index = 0;
 
 		            var feature = GetOpenPosition(790, 760);
 		            //if (CrossYN()) {
@@ -467,55 +532,59 @@
 		    }
 				
 		    function ViewChange(szCmd) {
+		    	var chk_str = parent.frames["left"].document.getElementById('chk_str').value;
 		        switch (szCmd.toUpperCase()) {
 		            case "DAY":
 		                typeCal = 2;
+		                // 2018-06-08 구해안 미니달력 미사용으로 주석처리
 		                parent.frames["left"].typeCal = 2;
 
 		                if (g_selTDID != null && g_selTDID != "") {
 		                    sDate = new Date(g_selTDID.substring(7, 11), parseInt(g_selTDID.substring(12, 14)) - 1, parseInt(g_selTDID.substring(15, 17)));
 		                }
-
-		                parent.frames["left"].sDate = sDate;
+		              	// 2018-06-08 구해안 미니달력 미사용으로 주석처리
+		                /* parent.frames["left"].sDate = sDate;
 		                var ItemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
 
 		                var item = parent.frames["left"].document.getElementById(ItemID);
 		                if (item)
 		                    item.onclick();
-		                else
-		                    CalendarView("Calendar");
-
+		                else */
+		                CalendarView("Calendar",chk_str);
+		                
 		                break;
 		                
 		            case "WEEK":
 		                typeCal = 1;
+		                // 2018-06-08 구해안 미니달력 미사용으로 주석처리
 		                parent.frames["left"].typeCal = 1;
 
 		                if (g_selTDID != null && g_selTDID != "") {
 		                    sDate = new Date(g_selTDID.substring(7, 11), parseInt(g_selTDID.substring(12, 14)) - 1, parseInt(g_selTDID.substring(15, 17)));
 		                }
-
-		                parent.frames["left"].sDate = sDate;
+		                //2018-06-08 구해안 미니달력 미사용으로 주석처리
+		                /* parent.frames["left"].sDate = sDate;
 		                var ItemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
 
 		                var item = parent.frames["left"].document.getElementById(ItemID);
 		                if (item)
 		                    item.onclick();
-		                else
-		                    CalendarView("Calendar");
+		                else */
+		                    CalendarView("Calendar",chk_str);
+		                
 		                break;
 
 		            case "MONTH":
 		                typeCal = 0;
+		                // 2018-06-08 구해안 미니달력 미사용으로 주석처리
 		                parent.frames["left"].typeCal = 0;
-		                var ItemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
+		                /* var ItemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
 
 		                var item = parent.frames["left"].document.getElementById(ItemID);
 		                if (item)
-		                    item.onclick();
+		                    item.onclick(); */
 
-		                CalendarView("Calendar");
-
+		                CalendarView("Calendar",chk_str);		                
 		                break;
 		        }
 		        /* 2018-02-01 김보미 - 일정관리 타이틀 고정. */
@@ -541,14 +610,15 @@
 		    }
 			
 		    function RefreshView() {
-		        CalendarView('Calendar');
-		        if (parent.frames["left"].document.getElementById("iYear")) {
+		    	var chk_str = parent.frames["left"].document.getElementById('chk_str').value;
+		        CalendarView('Calendar',chk_str);
+		        /* if (parent.frames["left"].document.getElementById("iYear")) {
 		            parent.frames["left"].CalendarMiniView("CalendarMini");
 		            parent.frames["left"].CalendarMiniDataSource();
-		        }
+		        } */
 		    }
-			
-		    function IDChange() {
+		    // 2018-06-08 구해안 라디오 미사용으로 IDChange() 주석처리
+		    /* function IDChange() {
 		        if (idSelect.value == "GOOGLE") {
 		            parent.frames["left"].idtype = idSelect.value;
 		            parent.frames["left"].idlist = "";
@@ -571,18 +641,18 @@
 		                window.location.href = "/ezSchedule/scheduleMain.do?idtype=" + idSelect.value;
 		            }
 		        }
-		    }
-
-		    function IDClick(type) {
+		    } */
+		    // 2018-06-08 구해안 라디오 미사용으로 IDClick() 주석처리
+		    /* function IDClick(type) {
 		        parent.frames["left"].idtype = type;
 		        document.getElementById("idSelect").value = type;
 		        parent.frames["left"].idlist = "";
 		        parent.frames["left"].CalendarMiniView("CalendarMini");
 		        parent.frames["left"].schedule_get_holiday();
 		        window.location.href = "/ezSchedule/scheduleMain.do?idtype=" + type;
-		    }
-
-		    function SecretaryChange() {
+		    } */
+		    //2018-06-08 구해안 셀릭트 미사용으로 SecretaryChange() 주석처리
+		    /* function SecretaryChange() {
 		        if (secretarySelect.value == "")
 		            window.location.href = "/ezSchedule/scheduleMain.do";
 		        else {
@@ -593,7 +663,7 @@
 		        parent.frames["left"].idlist = encodeURIComponent(secretarySelect.value);
 		        parent.frames["left"].CalendarMiniView("CalendarMini");
 		        parent.frames["left"].CalendarMiniDataSource();
-		    }
+		    } */
 			
 			var sScheduleID, sScheduleChangeKey, sParentID, sOwnerID, sCreatorID, sModifierID, sScheduleType, sImportance;
 			var sIsReadOnly, sDateType, sSubject, sLocation, sRepeatCount;
@@ -963,7 +1033,12 @@
 	
 		        return v_str.toString();
 		    }
-		   
+		    /* $(document).on('click','.ui-datepicker-trigger', function() { $('.ui-datepicker-month').css('display','none') }); */
+		    
+		    $('.ui-datepicker-trigger').click(function(){
+		    	$('.ui-datepicker-month').css('display','none');
+		    });
+		    
 	    </script>				
 	</head>
 	<body class="mainbody" style="overflow: auto; margin-bottom:0px">
@@ -971,13 +1046,14 @@
         <div id="mainmenu">
             <ul>
             	<li><span id="pn_img" onClick="WriteSchedule()"><spring:message code='ezSchedule.t214'/></span></li>
-              	<li><span onclick='ViewChange("DAY");'><spring:message code='ezSchedule.t140'/></span></li>
+            	<li><span onClick="PrintSchedule()"><spring:message code='ezSchedule.t217'/></span></li>
+              	<li><span onClick="RefreshView()"><spring:message code='ezSchedule.t218'/></span></li>              	
+		      	<!-- <li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li> -->
+		      	<li><span onclick='ViewChange("DAY");'><spring:message code='ezSchedule.t140'/></span></li>
               	<li><span onclick='ViewChange("WEEK");'><spring:message code='ezSchedule.t141'/></span></li>
-              	<li><span onclick='ViewChange("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>
-		      	<li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li>
-              	<li><span onClick="PrintSchedule()"><spring:message code='ezSchedule.t217'/></span></li>
-              	<li><span onClick="RefreshView()"><spring:message code='ezSchedule.t218'/></span></li>
-              	<li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li>
+              	<li><span onclick='ViewChange("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>              	
+              	<!-- 2018-06-08 구해안 상단 셀렉트박스 및 라디오버튼 미사용으로 삭제 및 bar 이미지 삭제 -->
+              	<%-- <li style="background:none; padding-right:2px; cursor:default;"><img src="/images/i_bar.gif" alt=""/></li>
               	<li style="background:none; padding:0; cursor:default;">
               		<select class="select" id="idSelect" onChange="IDChange()" style="width:140px">
 						<option value="T"><spring:message code='ezSchedule.t220'/></option>
@@ -997,6 +1073,7 @@
 	            <li onClick="IDClick('D')" style="background:none;cursor:pointer"><span style="display:inline-block; width:11px; height:11px; border:1px solid #049c37; background:#01b43f; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezSchedule.t222'/></li>
 	            <li onClick="IDClick('C')" style="background:none;cursor:pointer"><span style="display:inline-block; width:11px; height:11px; border:1px solid #e01662; background:#ff1c71; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='ezSchedule.t223'/></li>
                 <li style="background:none;cursor:text"><span style="display:inline-block; width:11px; height:11px; border:1px solid #ccc31f; background:#e9de13; overflow:hidden; margin:7px 0px 0px 0px; padding:0; vertical-align:middle;border-radius:2px;"></span>&nbsp;<spring:message code='main.t00022'/></li>
+                 --%>
             </ul>
         </div>
 

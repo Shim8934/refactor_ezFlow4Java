@@ -17,11 +17,11 @@
     			<c:when test="${packageType != 'standard'}">
     				<c:choose>	
 						<c:when test="${lang != '3'}">
-							<frame src="/ezPortal/help/top.do" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
+							<frame src="/ezPortal/help/top.do?topMenuID=${topMenuID }" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
   							<frame src="/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftMail.do&rUrl=/ezPortal/help/main.do?id=/images/help/mail_01" name="bottom" frameborder="no" scrolling="auto" marginwidth="0" marginheight="0">
 						</c:when>
 						<c:otherwise>
-							<frame src="/ezPortal/help/top.do?lang=jp" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
+							<frame src="/ezPortal/help/top.do?lang=jp&topMenuID=${topMenuID }" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
    							<frame src="/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftPortal.do?lang=jp&rUrl=/ezPortal/help/main.do?id=/images/help/portal_jp_01" name="bottom" frameborder="no" scrolling="auto" marginwidth="0" marginheight="0">
 						</c:otherwise>
 					</c:choose>
@@ -29,11 +29,11 @@
     			<c:otherwise>
     				<c:choose>	
 						<c:when test="${lang != '3'}">
-							<frame src="/ezPortal/help/top.do" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
+							<frame src="/ezPortal/help/top.do?topMenuID=${topMenuID }" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
   							<frame src="/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftPortal.do&rUrl=/ezPortal/help/main.do?id=/images/help/portal_01" name="bottom" frameborder="no" scrolling="auto" marginwidth="0" marginheight="0">
 						</c:when>
 						<c:otherwise>
-							<frame src="/ezPortal/help/top.do?lang=jp" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
+							<frame src="/ezPortal/help/top.do?lang=jp&topMenuID=${topMenuID }" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
    							<frame src="/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftPortal.do?lang=jp&rUrl=/ezPortal/help/main.do?id=/images/help/portal_jp_01" name="bottom" frameborder="no" scrolling="auto" marginwidth="0" marginheight="0">
 						</c:otherwise>
 					</c:choose>

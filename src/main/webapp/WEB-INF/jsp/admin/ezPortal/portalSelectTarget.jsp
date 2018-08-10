@@ -7,13 +7,27 @@
 		<title><spring:message code='ezPortal.t13'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<style>
 			.box {
 				border-right:0px;
 			}
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
+	    	}
+			/* 조직도 #SelectDeptNM(부서명[사원수]) 부분 */
+	    	#spn_deptName {
+	    		text-overflow: ellipsis;
+	    		white-space: nowrap;
+	    		overflow: hidden;
+	    		display: inline-block;
+	    	}
+	    	#countInfo {
+	    		overflow: hidden;
+	    		display: inline-block;
+	    	}
+	    	.countColor {
+	    		color:#017BEC;
 	    	}
 		</style>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
@@ -209,7 +223,9 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + nodeIdx.GetNodeData("VALUE");
+				document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" 
+					+ "<span id='spn_deptName' title='" + nodeIdx.GetNodeData("VALUE") + "'>" + nodeIdx.GetNodeData("VALUE") + "</span>"
+					+ "<span id='countInfo'></span>";
 	            SelectDeptNM.setAttribute("countinfo", "")
 	            displayUserList(nodeIdx.GetNodeData("CN"));
 	        }
@@ -234,9 +250,35 @@
   					error : function(jqXHR, textStatus, errorThrown) {
   						alert("<spring:message code='ezPortal.t14'/>" + textStatus);
   					}
-  				});  
+  				});
 	            
-	            
+	            $.ajax({
+					url : "/ezOrgan/getDeptMemberListCount.do",
+					method : "POST",
+					dataType : "json",
+					data : {
+						deptID : DeptID
+					},
+					success : function(result) {
+						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
+							var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
+							var strIsLeaf = $("div#" + id + "").attr("isleaf");
+							
+							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+			        			document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang1 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang1 + "</span>]";
+							} else {
+								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang1 + "</span>]";
+							}
+							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
+							deptNameLong(result.containLow, strIsLeaf);
+										            	
+			            	SelectDeptNM.setAttribute("countinfo","1")
+			        	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(error);
+					}
+				});
 	        }
 	        function event_displayUserList() {
 	            if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
@@ -339,10 +381,16 @@
 	            document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
 	        }
 	        var UserListHTML = "";
-	        if (SelectDeptNM.getAttribute("countinfo") != "1") {
-	            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	        /* if (SelectDeptNM.getAttribute("countinfo") != "1" && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length && SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length != "") {
+	            //SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	            if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
+        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+        		} else {
+        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang1 + "</span>]";
+        		}
+	            
 	            SelectDeptNM.setAttribute("countinfo", "1")
-	        }
+	        } */
 	        if (pListType == "IMG") {
 	            document.getElementById("DeptUserImgList").style.display = "";
 	            document.getElementById("txtlist_Layer").style.display = "none";
@@ -586,29 +634,34 @@
 	            return;
 	        } 
 	        
-	         	$.ajax({
-					url : '/ezOrgan/getSearchList.do',
-					method : 'POST',
-					dataType : "text",
-					data : {
-						search : document.getElementById("search_type").value + "::" + keyword.value,
-						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
-						type : "user"
-					} ,
-   				success : function(xml) {
-   					pListXML_Info = loadXMLString(xml);
-					pSeach = true;
-		            DisplayUserImageList(xml);
-					},
-					error : function(jqXHR, textStatus, errorThrown) {
-						alert("<spring:message code='ezPortal.t14'/>" + textStatus);
-					}
-				}); 
-	        
-	        
+         	$.ajax({
+				url : '/ezOrgan/getSearchList.do',
+				method : 'POST',
+				dataType : "text",
+				data : {
+					search : document.getElementById("search_type").value + "::" + keyword.value,
+					cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
+					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+					type : "user"
+				} ,
+  				success : function(xml) {
+  					pListXML_Info = loadXMLString(xml);
+  					
+  					if (pListXML_Info.getElementsByTagName("ROW").length == 0) {
+  						alert("<spring:message code='ezPortal.t22'/>");
+        			} else {
+        				pSeach = true;
+    		            DisplayUserImageList(xml);
+        			}
+				},
+				error : function(jqXHR, textStatus, errorThrown) {
+					alert("<spring:message code='ezPortal.t14'/>" + textStatus);
+				}
+			});
 	    }
-	    function event_displayUserList2() {
+	    
+	    //2018-07-23 이효진 미사용
+	    /* function event_displayUserList2() {
 	        if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
 	            if (g_xmlHTTP.statusText == "OK") {
 	                if (g_xmlHTTP.responseXML.getElementsByTagName("ROW").length == 0)
@@ -624,7 +677,7 @@
 
 	            g_xmlHTTP = null;
 	        }
-	    }
+	    } */
 	    function deptsearch_click() {
 
 	        if (deptkeyword.value == "") {
@@ -647,7 +700,7 @@
                 		adCount = row.length;
 					},
 				error : function(jqXHR, textStatus, errorThrown) {
-					alert("<spring:message code="ezResource.t2"/>" + textStatus);
+					alert("<spring:message code='ezResource.t2'/>" + textStatus);
 					xmlDOM = null;
 				}
 			}); 
@@ -748,7 +801,7 @@
 	    function ChangeListView_onClick(Div) {
 	        pListType = Div;
 	        ListTypeChangeIcon();
-	        DisplayUserImageList();
+// 	        DisplayUserImageList();
             setOrganListType(pListType);
 	    }
 	    function keyword_Clear() {
@@ -853,6 +906,24 @@
         	})
         	return organListType;
         }
+        
+	    //2018-08-01 김보미 - 부서명 [사원수] 길이가 길면 조정하는 함수
+        function deptNameLong(containLow, strIsLeaf) {
+        	var deptNameWidth = "";
+        	var sum = $("#spn_deptName").width() + $("#countInfo").width();
+        	
+          	if (containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+          		if (sum > 359) {
+          			deptNameWidth = 360 - $("#countInfo").width();
+          		}
+          	} else {
+          		if (sum > 357) {
+          			deptNameWidth = 358 - $("#countInfo").width();
+          		}
+          	}
+        	
+        	$("#spn_deptName").css("width", deptNameWidth);
+        }		        
 		</script>
 		
 	</head>
@@ -885,6 +956,11 @@
     </tree>
 </xml>
     <h1 id="h1Title"><spring:message code='ezPortal.t13'/></h1>
+    <div id="close">
+        <ul>
+            <li><span onclick="window.close()"></span></li>
+        </ul>
+    </div>
     <table style="width: 100%">
         <tr>
             <td>
@@ -932,7 +1008,7 @@
                                         <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
                                             <tr>
                                                 <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
-                                                    <span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+													<span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
                                                     <span style="float:right;">
                                                         <span onclick="ChangeListView_onClick('TXT');">
                                                             <img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
@@ -969,10 +1045,9 @@
         </tr>
     </table>
     <br />
-    <div class="btnposition">
+    <div class="btnpositionNew">
         <a class="imgbtn"><span onclick="dept_select()"><spring:message code='ezPortal.t43'/></span></a>
         <a class="imgbtn" onclick="Save_onclick()"><span><spring:message code='ezPortal.t45'/></span></a>
-        <a class="imgbtn" onclick="window.close()"><span><spring:message code='ezPortal.t46'/></span></a>
     </div>
 	</body>
 </html>

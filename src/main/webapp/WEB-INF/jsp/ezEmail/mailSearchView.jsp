@@ -1,4 +1,5 @@
 ﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -7,22 +8,22 @@
 		<title>mail_search</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<script type="text/javascript" src="/js/ezEmail/js_cross/search_mail.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/newMail_Cross.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/search_mail.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/newMail_Cross.js")%>"></script>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/date_component.js"></script>
-		<script  type="text/javascript" src="/js/ezEmail/Controls_cross/datepicker.htc.js"></script>
-		<script  type="text/javascript" src="/js/ezEmail/Controls_cross/composeappt.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/encode_component.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/date_component.js")%>"></script>
+		<script  type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/datepicker.htc.js")%>"></script>
+		<script  type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/composeappt.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>">
 		<script type="text/javascript">
 		    var pUse_Editor = "${useEditor}";
 			var g_servername = "${serverName}";	
@@ -38,7 +39,7 @@
 		    var m_strColorDefault = "#ffffff";
 		    var pNoneActiveX = "YES";
 		    var useEncryptZipForEmail = "${useEncryptZipForEmail}";
-
+		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -103,8 +104,7 @@
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });
 		    
-		    window.onload =  function()
-		    {
+		    window.onload = function() {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
@@ -114,7 +114,14 @@
 		        }
 		        $("#Sdatepicker").datepicker('disable');
 		        $("#Edatepicker").datepicker('disable');
+		        
+		        document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 300) + "px";
 		    }
+		    
+		    window.onresize = function () {
+		    	document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 300) + "px";
+		    }
+		    
 		    function search_keypress(evt)
 			{	
 		        var curevent = (typeof event == 'undefined' ? evt : event)
@@ -128,7 +135,8 @@
 		            return;
 		        } else {
 		        	keyword.value = prekeyword.value;
-			    	start_search();	
+		        	document.getElementById("resultTD").setAttribute("curPage", 1);
+			    	start_search();
 		        }
 		    }
 			function document_onselectstart()
@@ -486,6 +494,68 @@
 			    }
 			}
 		
+			function deleteWork(bDel) {
+			    if (GetChildNodes(resultTD).length == 0) {
+			        alert(strLang57);
+			        return;
+			    }
+
+				var selcheck = new Array();
+				var count = 0;
+				    
+				var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
+				for (var i = 0; i < Rows.length; i++) {
+				    if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
+				        selcheck[count] = Rows.item(i);
+				        count++;
+				    }
+				}		
+
+				var includeSecureMail = false;
+				for (var i = 0; i < selcheck.length; i++) {
+					if (selcheck[i].getAttribute("securemail") == "1") {
+						includeSecureMail = true;
+				    	break;
+				    }
+				}
+				
+				var strItemID = "";
+				for(i=0; i < count; i++)
+		        {
+					var itemId = selcheck[i].getAttribute("itemid");
+		            strItemID += itemId + ",";
+			    }
+				
+			    if (includeSecureMail) {
+		        	if (!confirm(strLangLHM19)) {
+		        		return;
+		        	}
+		        }
+	        	if (!confirm(strLang59)) {
+	            	return;
+	            }
+				
+				var xmlpara = createXmlDom();
+			    var objNode;
+			    xmlhttp_mailMoveDelete = createXMLHttpRequest();
+			    createNodeInsert(xmlpara, objNode, "DATA");
+			    createNodeAndInsertText(xmlpara, objNode, "UNIQUEID", strItemID);
+			    createNodeAndInsertText(xmlpara, objNode, "FOLDERID", "");
+			    xmlhttp_mailMoveDelete.open("POST", "/ezEmail/mailDeleteS.do?cmd=BMOVE", true);
+			    xmlhttp_mailMoveDelete.send(xmlpara);
+			    xmlhttp_mailMoveDelete.onreadystatechange = function () {
+			    	if (xmlhttp_mailMoveDelete.readyState == 4) {
+				    	if (xmlhttp_mailMoveDelete.status < 200 || xmlhttp_mailMoveDelete.status > 300)
+						    alert('<spring:message code="ezEmail.t638" />');
+						else {
+						    alert('<spring:message code="ezEmail.t604" />');
+						    listContentArry = new Array();
+						    start_search();
+						}
+			    	}
+			    } // onreadystatechange End
+			}
+			
 			function delete_mail()
 			{
 			    var selcheck = new Array();
@@ -512,25 +582,28 @@
 		
 				var strItemID = "";
 		
-		        for(i=0; i < count; i++)
-		        {
-		            strItemID += selcheck[i].getAttribute("itemid") + ",";
-			    }
-				var xmlHTTP = createXMLHttpRequest();
-		        var xmlDOM = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlDOM, objNode, "DATA");
-		        createNodeAndInsertText(xmlDOM, objNode, "UNIQUEID",strItemID );
-				xmlHTTP.open("POST", "/ezEmail/mailDeleteS.do?cmd=BDELETE", false);
-				xmlHTTP.send(xmlDOM);
-				
-				if (xmlHTTP.status < 200 || xmlHTTP.status > 300)
-				    alert('<spring:message code="ezEmail.t638" />');
-				else {
-				    alert('<spring:message code="ezEmail.t604" />');
-				    listContentArry = new Array();
-				    start_search();
+				if (confirm(strLang58)) {
+					for(i=0; i < count; i++)
+			        {
+			            strItemID += selcheck[i].getAttribute("itemid") + ",";
+				    }
+					var xmlHTTP = createXMLHttpRequest();
+			        var xmlDOM = createXmlDom();
+			        var objNode;
+			        createNodeInsert(xmlDOM, objNode, "DATA");
+			        createNodeAndInsertText(xmlDOM, objNode, "UNIQUEID",strItemID );
+					xmlHTTP.open("POST", "/ezEmail/mailDeleteS.do?cmd=BDELETE", false);
+					xmlHTTP.send(xmlDOM);
+					
+					if (xmlHTTP.status < 200 || xmlHTTP.status > 300)
+					    alert('<spring:message code="ezEmail.t638" />');
+					else {
+					    alert('<spring:message code="ezEmail.t604" />');
+					    listContentArry = new Array();
+					    start_search();
+					}
 				}
+		        
 			}
 			
 			var selcheck = new Array();
@@ -694,7 +767,7 @@
 	</head>
 	
 	<body style="overflow:auto" id="theBody" class="mainbody"> 
-		<span id="normalblock"> 
+		<span id="normalblock"> </span>
 		<h1><spring:message code="ezEmail.t641" /></h1>
 		<div id="mainmenu">
 			<ul>
@@ -702,64 +775,66 @@
 			  <li><span onClick="reply_mail_onclick()"><spring:message code="ezEmail.t511" /></span></li>
 			  <li><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
 			  <li><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
-			  <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+			  <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 			  <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
+			  <li><span onClick="deleteWork()"><spring:message code="ezEmail.t95" /></span></li>
 			  <li><span onClick="delete_mail()"><spring:message code="ezEmail.t156" /></span></li>
 			</ul>
 		</div>  
 		<table class="content"> 
-		<tr> 
-			<th nowrap><spring:message code="ezEmail.t642" /></th> 
-			<td width="100%">
-			    <select id="select2" style="height: 23px">
-			    <option value="ALL"><spring:message code="ezEmail.t643" /></option>      
-			    <c:forEach var="folderName" items="${topLevelFolderNames}" varStatus="status">
-			    <option value="${folderName}">
-					<c:choose>
-						<c:when test="${folderName eq 'INBOX'}">
-							<spring:message code="ezEmail.t644" />
-						</c:when>
-						<c:when test="${folderName eq 'Sent'}">
-							<spring:message code="ezEmail.t645" />
-						</c:when>
-						<c:when test="${folderName eq 'Drafts'}">
-							<spring:message code="ezEmail.t646" />
-						</c:when>
-						<c:when test="${folderName eq 'Trash'}">
-							<spring:message code="ezEmail.t647" />
-						</c:when>
-						<c:when test="${folderName eq 'Personal folder'}">
-							<spring:message code="ezEmail.t648" />
-						</c:when>
-						<c:otherwise>
-							${folderName}
-						</c:otherwise>
-					</c:choose>      	
-			    </option>
-			    </c:forEach>
-			    </select>
-			    <select name="select" class="text" id="select" style="height: 23px;">
-					<option selected value="<spring:message code="ezEmail.t98" />"><spring:message code="ezEmail.t98" /></option> 
-					<option value="<spring:message code="ezEmail.t649" />"><spring:message code="ezEmail.t649" /></option> 
-					<option value="<spring:message code="ezEmail.t161" />"><spring:message code="ezEmail.t161" /></option> 
-					<option value="<spring:message code="ezEmail.t650" />"><spring:message code="ezEmail.t651" /></option> 
-			    </select>
-			    <input name="prekeyword" id = "prekeyword" style="vertical-align: top;"onkeyup="return search_keypress(event)" />
-		    	<input name="keyword" id = "keyword" style="vertical-align: top; display: none;"onkeyup="return search_keypress(event)" />
-		    	<a class="imgbtn"><span onClick="set_searchKey()"><spring:message code="ezEmail.t37" /></span></a>
-		    </td> 
-		</tr> 
-		<tr>
-		    <th><spring:message code="ezEmail.t653" /></th>
-		    <td><input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code="ezEmail.t654" /></label>
-		    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;">
-		    </td>
-		</tr>
+			<tr> 
+				<th nowrap><spring:message code="ezEmail.t642" /></th> 
+				<td width="100%">
+				    <select id="select2" style="height: 22px">
+				    <option value="ALL"><spring:message code="ezEmail.t643" /></option>      
+				    <c:forEach var="folderName" items="${topLevelFolderNames}" varStatus="status">
+				    <option value="${folderName}">
+						<c:choose>
+							<c:when test="${folderName eq 'INBOX'}">
+								<spring:message code="ezEmail.t644" />
+							</c:when>
+							<c:when test="${folderName eq 'Sent'}">
+								<spring:message code="ezEmail.t645" />
+							</c:when>
+							<c:when test="${folderName eq 'Drafts'}">
+								<spring:message code="ezEmail.t646" />
+							</c:when>
+							<c:when test="${folderName eq 'Trash'}">
+								<spring:message code="ezEmail.t647" />
+							</c:when>
+							<c:when test="${folderName eq 'Personal folder'}">
+								<spring:message code="ezEmail.t648" />
+							</c:when>
+							<c:otherwise>
+								${folderName}
+							</c:otherwise>
+						</c:choose>      	
+				    </option>
+				    </c:forEach>
+				    </select>
+				    <select name="select" class="text" id="select" style="height: 22px;">
+						<option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option> 
+						<option value="CONTENT"><spring:message code="ezEmail.t649" /></option> 
+						<option value="FROM"><spring:message code="ezEmail.t161" /></option> 
+						<option value="RECEIVE"><spring:message code="ezEmail.t651" /></option> 
+						<option value="ALL"><spring:message code="ezEmail.t588" /></option> 
+				    </select>
+				    <input name="prekeyword" id = "prekeyword" style="vertical-align: top;height:22px"onkeyup="return search_keypress(event)" />
+			    	<input name="keyword" id = "keyword" style="vertical-align: top; display: none;"onkeyup="return search_keypress(event)" />
+			    	<a class="imgbtn imgbck"><span onClick="set_searchKey()"><spring:message code="ezEmail.t37" /></span></a>
+			    </td> 
+			</tr> 
+			<tr>
+			    <th><spring:message code="ezEmail.t653" /></th>
+			    <td><input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code="ezEmail.t654" /></label>
+			    	<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center;">
+			    </td>
+			</tr>
 		</table> 
 		<br>
 		<h2 class="h2_dot"><spring:message code="ezEmail.t655" /><span id="resultCount"></span></h2>
 		    
-		<span id="printblock"> 
+		<div id="printblock"> 
 			<table class="mainlist" style="width:100%;table-layout:fixed;">
 				<tr> 
 			        <th style="width: 26px; padding: 0px; color: black;padding-left:3px;" align="center" nowrap title><input type="checkbox" onClick="check_change(this)" id="Checkbox1"></th>
@@ -774,8 +849,11 @@
 					<th style="width:50px;cursor:pointer" align="left" onclick="event_HeaderClick(this)" porp="size" orderoption="ASC"><spring:message code="ezEmail.t617" /></th> 
 				</tr> 
 			</table>
-			<div id='resultTD'> </div>
-		</span> 
+			<div id="resultTD" style="height:600px; overflow-y:auto;" curPage="1" MaxPage="0" MaxCount="0">
+			</div>
+		</div>
+		<div id="tblPageRayer" style="width:470px; margin:6px auto;"></div>
+		
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" onclick="ContextMenuHidden();" ></div>
 		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 		    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>

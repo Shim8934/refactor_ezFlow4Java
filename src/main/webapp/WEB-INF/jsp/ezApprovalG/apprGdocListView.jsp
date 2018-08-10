@@ -111,14 +111,14 @@
         var endcnt = parseInt(EndNum.value);
         if (StartNum.value == "" || EndNum.value == "") {
             alert("<spring:message code='ezApprovalG.t1004'/>");
-        }
-        else if (startcnt > endcnt) {
+        } else if (startcnt < 1) {
+        	alert("<spring:message code='ezApprovalG.garm03'/>")
+        	$('#StartNum').val(1);
+        } else if (startcnt > endcnt) {
             alert("<spring:message code='ezApprovalG.t1005'/>");
-        }
-        else if ((endcnt - startcnt) >= 1000) {
+        } else if ((endcnt - startcnt) >= 1000) {
             alert("<spring:message code='ezApprovalG.t1900'/>");
-        }
-        else {
+        } else {
             document.getElementById("lvtDoclist").innerHTML = "<table style='width:100%;height:100%;'><tr><td style='text-align:center'><img src='/images/email/progress_01.gif' style='vertical-align:middle'><td></tr></table>";
             RecDocLoad();
         }
@@ -286,7 +286,7 @@
 		<li><span onClick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t10017'/></span></li> 
 	</ul>
 </div>
-<div id="close"><ul><li id=btnClose ><span onClick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li></ul></div>
+<div id="close"><ul><li id=btnClose ><span onClick="return btnClose_onclick()"></span></li></ul></div>
 <table style="table-layout:fixed; width:100%; height:480px">
 	<tr> 
 		<td style="height:30px">
@@ -294,7 +294,7 @@
 			<input name="StartNum" id="StartNum" type="text" size="4" onkeyup="fn_onlyNumber(this)" onkeydown="return checkForNumber()">
 			~
 			<input name="EndNum" id="EndNum" type="text" size="4" onkeyup="fn_onlyNumber(this)" onkeydown="return checkForNumber()">
-			<a class="imgbtn" style="vertical-align:middle"><span onclick="return PrintLimit_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>  
+			<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="return PrintLimit_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>  
 			<span id = countInfo class="point"> </span>
 		</td>
 	</tr>
@@ -308,7 +308,6 @@
 </table>
 <script type="text/javascript">
 	selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	selToggleList(document.getElementById("close"), "ul", "li", "0");
 </script>
 
     <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezApprovalG/excelExportOut.do">

@@ -731,6 +731,8 @@
 					userid = #v_PUSERID#
 				AND
 					boardid = #v_PBOARDID# 
+				AND
+					tenant_id = #tenantID#
 				GROUP BY
 					itemid,
 					tenant_id
@@ -739,12 +741,14 @@
 				A.itemid = D.itemid
 			AND
 				A.tenant_id = D.tenant_id
- 				WHERE 
+ 			WHERE 
 				boardid = #v_PBOARDID#
 			AND
-				startdate < #v_pNow#
+				startdate <= #v_pNow#
 			AND
 				enddate > #v_pNow#
+			AND
+				A.tenant_id = #tenantID#
 		]]>
 		
 		<isEqual property="v_PSORTBY" compareValue="">
@@ -1758,7 +1762,7 @@
 				A.c_id,
 				A.companyid,
 				A.c_indate,
-				B.username$v_USERINFO_LANG$
+				CASE WHEN #primary# = '1' THEN B.username ELSE B.username2 END AS username
 			FROM
 				TBL_C_CLUBUSER A
 			INNER JOIN
@@ -1968,6 +1972,8 @@
 					$v_searchName$ LIKE CONCAT('%', #v_searchValue#, '%')
 				AND
 					T1.tenant_id = #tenantID#
+				AND
+					T1.C_ADMINCONFIRM = 'Y'
 				ORDER BY
 					T1.c_regdate
 				LIMIT
@@ -2003,6 +2009,8 @@
 						$v_searchName$ LIKE CONCAT('%', #v_searchValue#, '%')
 					AND
 						T1.tenant_id = #tenantID#
+					AND
+						T1.C_ADMINCONFIRM = 'Y'
 					ORDER BY
 						T1.c_regdate
 					) T2

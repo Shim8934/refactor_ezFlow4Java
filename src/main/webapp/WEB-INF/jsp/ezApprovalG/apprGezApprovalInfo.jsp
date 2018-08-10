@@ -7,7 +7,7 @@
 	    <title><spring:message code='ezApprovalG.t1742'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
 	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
@@ -39,6 +39,11 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    <script src="/js/Common.js" type="text/javascript"></script>
+	    <style type="text/css">
+	    	.h2_dot {
+	    		background: url(/images/kr/left/left_dot02.gif) no-repeat 0px 70%;
+	    	}
+	    </style>
 	    <script type="text/javascript">
 	    	var approvalFlag = "${approvalFlag}";
 	        var OrderCell = "";
@@ -218,14 +223,14 @@
 	            if (MACSAFARIYN()) {
 	                window.resizeBy(0, 35);
 	            }
-	            if (screen.height >= 900) {
+	            /* if (screen.height >= 900) {
 	                document.getElementById("orgbtnArea").style.display = "";
 	                document.getElementById("btnArea").style.display = "none";
 	            }
 	            else {
 	                document.getElementById("orgbtnArea").style.display = "none";
 	                document.getElementById("btnArea").style.display = "inline";
-	            }
+	            } */
 	
 	            GetDocInfo(); 
 	            AprTypeXML = loadXMLString(tempAprTypeXML);
@@ -384,8 +389,8 @@
 	            vAprSecurity = RetValue[38];
 	            SummaryFlag = RetValue[39];
 	            vPublicFlag2 = RetValue[45];
-	
-	            if (pSuSinFlag == "N") {
+	            
+	            if (pSuSinFlag == "N" || pDocType == "002") {
 	                document.getElementById("showReceptinfo").style.display = "none";//.innerHTML = "";
 	            }
 	            
@@ -423,13 +428,23 @@
 	                liniReceptOuter();
 	            }
 	            else if (pIniGubun == "5") { //수신자, 결재정보
-	                document.getElementById("showAprLine").style.display = "none";
-	                document.getElementById("showCabinetinfo").style.display = "none";
-	                document.getElementById("Lineinfo").style.display = "none";
-	                document.getElementById("Cabinetinfo").style.display = "none";
-	                document.getElementById("1tab2").onclick();
-	                ChangeTab(document.getElementById("1tab2"));
-	                liniReceptOuter();
+	            	//기안문일경우 수신자탭 안뜨게 하기위해 if문 추가 2018-07-25 강민수92
+	            	if (pDocType == "002") {
+		                document.getElementById("showAprLine").style.display = "none";
+		                document.getElementById("showCabinetinfo").style.display = "none";
+		                document.getElementById("Lineinfo").style.display = "none";
+		                document.getElementById("Cabinetinfo").style.display = "none";
+		                document.getElementById("1tab4").onclick();
+	                	ChangeTab(document.getElementById("1tab4"));
+	            	} else {
+		                document.getElementById("showAprLine").style.display = "none";
+		                document.getElementById("showCabinetinfo").style.display = "none";
+		                document.getElementById("Lineinfo").style.display = "none";
+		                document.getElementById("Cabinetinfo").style.display = "none";
+		                document.getElementById("1tab2").onclick();
+		                ChangeTab(document.getElementById("1tab2"));
+		                liniReceptOuter();
+	            	}
 	            }
 	            else if (pIniGubun == "6") { //결재선, 결재정보
 	                document.getElementById("showReceptinfo").style.display = "none";
@@ -871,7 +886,7 @@
 		                listview.LoadFromID("lvRECEPTLIST");
 		                var receptRow = listview.GetDataRows();
 		
-		                if (receptRow.length > 0 && receptRow[0].id.indexOf("noItems") == -1) {
+		                if (receptRow.length > 0 && receptRow[0].id.indexOf("noItems") == -1 && pDocType != "002") {
 		                    ret[2] = AprDeptListXML(); //수신자 저장 XML
 		                    ret[3] = MakertnVal(); //문서 매핑 XML
 		                }
@@ -924,6 +939,7 @@
 		                	ret[11] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pPublicFlag");
 		                	ret[12] = "";
 		                	ret[13] = "";
+		                	ret[21] = "";
 		                }
 	
 		                if (document.getElementById("AprSecurity").checked)
@@ -1171,7 +1187,7 @@
 		                }
 		            }
 		        } else {
-		            alert("<spring:message code='ezApprovalG.t478'/>");
+		            alert("<spring:message code='ezApprovalG.t784'/>");
 		        }
 		    }
 		
@@ -1464,17 +1480,38 @@
 	    </script>
 	    <style>
 	    	.mainlist_free tr th {text-align:center}
-	    	.mainlist_free tr td {text-align:center}	    	
+	    	.mainlist_free tr td {text-align:center}
+	    	#lvAPRTEMPLIST_TH_0 {text-align:left}
+	    	#lvAPRTEMPLIST td {text-align:left}
+	    	#lvAPRTEMPLIST_TR_noItems td {text-align:center}
+	    	#lvRecSaveList_TH_0 {text-align:left}
+	    	#lvRecSaveList td {text-align:left}
+	    	#lvRecSaveList_TR_noItems td {text-align:center}
+	    	#lvRecSaveListCC_TH_0 {text-align:left}
+	    	#lvRecSaveListCC td {text-align:left}
+	    	#lvRecSaveListCC_TR_noItems td {text-align:center}
+	    	#lvRecGroupList_TH_0 {text-align:left}
+	    	#lvRecGroupList td {text-align:left}
+	    	#lvRecGroupList_TR_noItems td {text-align:center}
+	    	#lvRecGroupDetail_TH_0 {text-align:left}
+	    	#lvRecGroupDetail td {text-align:left}
+	    	#lvRecGroupDetail_TR_noItems td {text-align:center}
 	    </style>
 	</head>
 	<body id="bodytag" class="popup" style="background-color: #ffffff; overflow: hidden">
-	    <h1><spring:message code='ezApprovalG.t1742'/>
-	        <div id="btnArea" style="display:inline;float:right;">
+	    <h1>
+	    	<spring:message code='ezApprovalG.t1742'/>
+	        <div id="btnArea" style="display:none;float:right;">
 	            <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
 	            <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="btn_Close()"><spring:message code='ezApprovalG.t1761'/></span></a>
-	        </div>
+	        </div>	        
 	    </h1>
-	    <div class="portlet_tabpart02">
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
+	    <div class="portlet_tabpart02" style="margin: 5px 0px 15px">
 	        <div class="portlet_tabpart02_top" id="tab1">
 	            <p id="showAprLine"><span divname="Lineinfo" id="1tab1"><spring:message code='ezApprovalG.t1769'/></span></p>
 	            <p id="showReceptinfo"><span divname="Receptinfo" id="1tab2"><c:if test="${approvalFlag eq 'G'}" ><spring:message code='ezApprovalG.t448'/></c:if><c:if test="${approvalFlag  eq 'S'}"><spring:message code='ezApprovalG.t999932'/></c:if></span></p>
@@ -1503,7 +1540,7 @@
 	    </div>
 	    <div id="Approvallist">
 	        <!-- 결재선 -->
-	        <div id="Lineinfo" style="border-bottom: 1px solid #dbdbda; width: 100%; height: 597px;">
+	        <div id="Lineinfo" style="width: 100%; height: 597px;">
 	            <table>
 	                <tr>
 	                    <td style="vertical-align: top">
@@ -1546,17 +1583,17 @@
 
 	                                <tr>
 	                                <c:if test="${approvalFlag == 'S'}">
-	                                    <td style="background-color: transparent; height: 28px; padding-top: 5px; vertical-align: top;">
-	                                    <input id="textUser" style="width: 150px" name="textUser" onkeypress="return textUser_onkeypress(event)"  maxlength="50">
-	                                        <a class="imgbtn"><span name="btn_searchUser" id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
-	                                        <a class="imgbtn" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a>
+	                                    <td style="background-color: transparent; height: 28px; padding-top: 10px; vertical-align: top;">
+	                                    <input id="textUser" style="width: 150px;height:22px" name="textUser" onkeypress="return textUser_onkeypress(event)"  maxlength="50">
+	                                        <a class="imgbtn imgbck"><span name="btn_searchUser" id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
+	                                        <a class="imgbtn imgbck" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a>
 	                                    </td>
 	                                </c:if>
 	                                <c:if test="${approvalFlag == 'G'}">
 	                                    <td style="background-color: transparent; height: 38px; padding-right: 5px;margin-top: auto;margin-bottom: auto;" >
-	                                    	<input id="textUser" style="width: 150px" name="textUser" onkeypress="return textUser_onkeypress(event)"  maxlength="50">
-	                                    	<a class="imgbtn" style="vertical-align: middle; margin: auto;"><span name="btn_searchUser" id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
-	                                    	<a class="imgbtn" style="vertical-align: middle; margin: auto;" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a>
+	                                    	<input id="textUser" style="width: 150px;height:22px" name="textUser" onkeypress="return textUser_onkeypress(event)"  maxlength="50">
+	                                    	<a class="imgbtn imgbck" style="vertical-align: middle; margin: auto;"><span name="btn_searchUser" id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
+	                                    	<a class="imgbtn imgbck" style="vertical-align: middle; margin: auto;" onclick="APRDEPTADD();" id="deptaddbtn"><span><spring:message code='ezApprovalG.G0002'/></span></a>
 	                                    </td>
 	                                </c:if>
 	                                        
@@ -1579,9 +1616,9 @@
 	                                        <table class="content" style="margin-bottom: 5px; width: 100%;">
 	                                            <tr>
 	                                                <td style="vertical-align: middle; text-align: center; padding-top: 3px;">
-	                                                    <a class="imgbtn"><span id="btn_DelAprLineTemplet" onclick="return btn_DelAprLineTemplet_onclick()"><spring:message code='ezApprovalG.G0004'/></span></a>
-	                                                    <a class="imgbtn"><span id="Span1" onclick="return btn_ModifyToAprLine_onclick()"><spring:message code='ezApprovalG.G0005'/></span></a>
-	                                                    <a class="imgbtn"><span onclick="return btn_AddToAprLine_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
+	                                                    <a class="imgbtn imgbck"><span id="btn_DelAprLineTemplet" onclick="return btn_DelAprLineTemplet_onclick()"><spring:message code='ezApprovalG.G0004'/></span></a>
+	                                                    <a class="imgbtn imgbck"><span id="Span1" onclick="return btn_ModifyToAprLine_onclick()"><spring:message code='ezApprovalG.G0005'/></span></a>
+	                                                    <a class="imgbtn imgbck"><span onclick="return btn_AddToAprLine_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
 	                                                </td>
 	                                            </tr>
 	                                        </table>
@@ -1615,23 +1652,23 @@
 	                            <tr>
 	                                <td style="vertical-align: top;">
 	                                    <h2 class="h2_dot"><spring:message code='ezApprovalG.t407'/>
-	                                        <div style="text-align: right; margin-top: -20px;">
-	                                            <a class="imgbtn" onclick="AprlineUpper_onclick();"><span>
-	                                                <img src="/images/ImgIcon/prev.gif" height="16" alt="<spring:message code='ezApprovalG.pjj28'/>" style="vertical-align:middle"/></span></a>
-	                                            <a class="imgbtn" onclick="AprlineDown_onclick();"><span>
-	                                                <img src="/images/ImgIcon/next.gif" height="16" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align:middle"/></span></a>
+	                                        <div style="text-align: right; margin-top: -23px;">
+	                                            <a class="imgbtn" onclick="AprlineUpper_onclick();" style="height:22px;box-shadow:0px 2px 0px 0px rgba(0,0,0,0.1)"><span>
+	                                                <img src="/images/ImgIcon/prev.gif" alt="<spring:message code='ezApprovalG.pjj28'/>" style="vertical-align:middle"/></span></a>
+	                                            <a class="imgbtn" onclick="AprlineDown_onclick();" style="height:22px;box-shadow:0px 2px 0px 0px rgba(0,0,0,0.1)"><span>
+	                                                <img src="/images/ImgIcon/next.gif" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align:middle"/></span></a>
 	                                        </div>
 	                                    </h2>
 	                                  
 	                                        <c:if test="${approvalFlag == 'G' }">
 		                                        <div class="border_gray" style="margin-top:7px">
-		                                        <div id="APRLINE" style="Width: 723px; Height: 488px; overflow: auto; border: 0; font-size: 9pt; margin: auto; padding-top: 0px;">
+		                                        <div id="APRLINE" style="Width: 723px; Height: 488px; overflow: auto; overflow-x:hidden; border: 0; font-size: 9pt; margin: auto; padding-top: 0px;">
 		                                        </div>
 		                                        </div>
 	                                        </c:if>
 	                                        <c:if test="${approvalFlag == 'S' }">
 		                                        <div class="border_gray" style="margin-top:7px; margin-left:4px;">
-		                                        <div id="APRLINE" style="Width: 717px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+		                                        <div id="APRLINE" style="Width: 717px; Height: 518px; overflow: auto; overflow-x:hidden; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                        	</div>
 	                                        	</div>
                                         	</c:if>
@@ -1640,9 +1677,9 @@
 	                            <tr class="approvalG">
 	                                <td>
 	                                    <div>
-	                                        <table class="content" style="margin-top: 5px; width: 100%;">
+	                                        <table class="content" style="margin-top: 6px; width: 100%;">
 	                                            <tr>
-	                                                <td colspan="2" style="margin-top: 3px; text-align: center;">
+	                                                <td colspan="2" style="margin-top: 3px; text-align: center; background-color: #f8f8fa">
 	                                                    <input type="checkbox" name="Reporter" id="Reporter" value="checkbox" onclick="return Reporter_onclick()" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;">
 	                                                    <span><spring:message code='ezApprovalG.t409'/></span>
 	                                                    <input type="checkbox" id="Suggester" name="Suggester" value="checkbox" onclick="return Suggester_onclick()" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;">
@@ -1671,11 +1708,11 @@
 	                            <tr>
 	                            	<c:if test ="${approvalFlag =='G'}">
 	                                <td style="text-align: right;">
-	                                    <a style="margin-top: 8px;" class="imgbtn">
+	                                    <a style="margin-top: 8px;" class="imgbtn imgbck">
 	                                 </c:if>
 	                                 <c:if test = "${approvalFlag=='S'}">
-	                                 <td style="padding-top: 5px; text-align: right; vertical-align: top;" id="SaveAprLineTemplet">
-	                                 <a class="imgbtn">
+	                                 <td style="padding-top: 10px; text-align: right; vertical-align: top;" id="SaveAprLineTemplet">
+	                                 <a class="imgbtn imgbck">
 	                                 </c:if>
 	                                 <span id="btn_SaveAprLineTemplet" onclick="return btn_SaveAprLineTemplet_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t384'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t270'/></c:if></span></a>
 	                                </td>
@@ -1688,7 +1725,7 @@
 	    </div>
 	
 	    <!-- 수신처 -->
-	    <div id="Receptinfo" style="border-bottom: 1px solid #dbdbda; width: 100%; height: 597px; display: none;">
+	    <div id="Receptinfo" style="width: 100%; height: 597px; display: none;">
 	        <table>
 	            <tr>
 	            	<c:if test= "${approvalFlag eq 'G'}">
@@ -1732,16 +1769,16 @@
                                 </tr>
                                 </c:if>
 	                            <tr>
-	                                <td height="36px;" style="background-color: transparent; margin-top: auto;margin-bottom: auto;">
+	                                <td height="36px;" style="background-color: transparent; padding-top: 10px;vertical-align: top">
 	                                <c:if test="${approvalFlag == 'G'}">
-	                                    <input id="txtDeptName" style="width: 150px;" name="textUser" onkeyup="return btnSearchDept_onKeyPress(event)"  maxlength="50">
-	                                    <a class="imgbtn" style="vertical-align: middle; margin: auto;"><span id="Span2" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
-	                                	<a class="imgbtn" style="vertical-align: middle; margin: auto;" id="AprDeptAdd" onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApprovalG.G0002'/></span></a>
+	                                    <input id="txtDeptName" style="width: 150px;height:22px" name="textUser" onkeyup="return btnSearchDept_onKeyPress(event)"  maxlength="50">
+	                                    <a class="imgbtn imgbck" style="vertical-align: middle; margin: auto;"><span id="Span2" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
+	                                	<a class="imgbtn imgbck" style="vertical-align: middle; margin: auto;" id="AprDeptAdd" onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApprovalG.G0002'/></span></a>
 	                                </c:if>
 	                                <c:if test="${approvalFlag == 'S'}">
-	                                 	<input id="textUser2" style="width: 200px;" name="textUser" onkeypress="return textUser_onkeypress2()" maxlength="50">
-                                        <a class="imgbtn" style="vertical-align: middle"><span name="btn_searchUser" id="Span2" onkeypress="return btn_searchUser_onclick2()" onclick="return btn_searchUser_onclick2()"><spring:message code='ezApproval.t175'/></span></a>
-	                                	<a class="imgbtn" style="vertical-align: middle" id="AprDeptAdd"  onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApproval.t1101'/></span></a>
+	                                 	<input id="textUser2" style="width: 150px;height:22px" name="textUser" onkeypress="return textUser_onkeypress2()" maxlength="50">
+                                        <a class="imgbtn imgbck"><span name="btn_searchUser" id="Span2" onkeypress="return btn_searchUser_onclick2()" onclick="return btn_searchUser_onclick2()"><spring:message code='ezApproval.t175'/></span></a>
+	                                	<a class="imgbtn imgbck" id="AprDeptAdd"  onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApproval.t1101'/></span></a>
 	                                </c:if>
 	                                </td>
 	                            </tr>
@@ -1758,9 +1795,9 @@
 	                            </tr>
 	                            <tr>
 	                                <td style="background-color: transparent; height: 30px;">
-	                                    <input id="txtOuterDeptName" style="width: 150px; margin-top:7px;" name="textUser2" onkeyup="return btnSearchDept_onKeyPress2(event)"  maxlength="50">
-	                                    <a style=" margin-top:7px;" class="imgbtn"><span id="Span7" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
-	                                    <a class="imgbtn" style="margin-top:7px;" id="AprDeptOuterAdd" onclick="AprDeptOuterAdd_onclick();"><span><spring:message code='ezApprovalG.t1236'/></span></a>
+	                                    <input id="txtOuterDeptName" style="width: 150px;height:22px; margin-top:7px;" name="textUser2" onkeyup="return btnSearchDept_onKeyPress2(event)"  maxlength="50">
+	                                    <a style=" margin-top:7px;" class="imgbtn imgbck"><span id="Span7" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
+	                                    <a class="imgbtn imgbck" style="margin-top:7px;" id="AprDeptOuterAdd" onclick="AprDeptOuterAdd_onclick();"><span><spring:message code='ezApprovalG.t1236'/></span></a>
 	                                </td>
 	                            </tr>
 	                        </table>
@@ -1782,9 +1819,9 @@
 	                                    <table class="content" style="margin-bottom: 5px; width: 100%;">
 	                                        <tr>
 	                                            <td style="text-align: center; padding-top: 3px">
-	                                                <a class="imgbtn"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t252'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t219'/></c:if></span></a>
-	                                                <a class="imgbtn"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.G0006'/></c:if></span></a>
-	                                                <a class="imgbtn"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
+	                                                <a class="imgbtn imgbck"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t252'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t219'/></c:if></span></a>
+	                                                <a class="imgbtn imgbck"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.G0006'/></c:if></span></a>
+	                                                <a class="imgbtn imgbck"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
 	                                            </td>
 	                                        </tr>
 	                                    </table>
@@ -1816,7 +1853,7 @@
 	                                    <table class="content" style="margin-bottom: 5px; width: 100%">
 	                                        <tr>
 	                                            <td style="text-align: center; padding-top: 3px">
-	                                                <a class="imgbtn"><span onclick="return btn_GroupReceptAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.G0008'/></span></a>
+	                                                <a class="imgbtn imgbck"><span onclick="return btn_GroupReceptAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.G0008'/></span></a>
 	                                            </td>
 	                                        </tr>
 	                                    </table>
@@ -1857,30 +1894,34 @@
 	                                    </div>
 	                                </c:if>
 	                                <c:if test="${approvalFlag == 'S'}">
-	                                    <div id="RECEPTLIST" style="Width: 710px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                    <div id="RECEPTLIST" style="Width: 716px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
                                         </div>
                                     </c:if>
 	                                </div>
 	                            </td>
 	                        </tr>
 	                        <!-- 2015-06-30 표준모듈:추가(외부수신자요약) - KSK -->
-	                        <tr style="display:none;" id="trSummaryOuterReceiverList">
+	                        <!-- <tr style="display:none;" id="trSummaryOuterReceiverList">
 	                            <td style="width: 120px;">
 	                                <h2 class="h2_dot">외부수신자 요약:</h2>
 	                            </td>
 	                            <td>
 	                                <input id="inputSummaryOuterReceiverList" style="width: 97%; margin-top: 5px;" value="" />
 	                            </td>
-	                        </tr>
+	                        </tr> -->
 	                        <tr>
 	                            <td class="approvalG" style="text-align:left">
 	                            	<c:if test= "${hideCabinet == '0'}">
-	                                <a style="margin-top: 8px; display: none;"  class="imgbtn" id="btnaddress"><span  onclick="return btnAddAddress()" ><spring:message code='ezApprovalG.t334'/></span></a>
+	                                <a style="margin-top: 10px; display: none;"  class="imgbtn imgbck" id="btnaddress"><span  onclick="return btnAddAddress()" ><spring:message code='ezApprovalG.t334'/></span></a>
 	                                </c:if>
-	                                <a style="margin-top: 8px; display: none;" class="imgbtn" id="btnaddressChange" ><span onclick="return btnaddressChange()" ><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a>
+	                                <a style="margin-top: 10px; display: none;" class="imgbtn imgbck" id="btnaddressChange" ><span onclick="return btnaddressChange()" ><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a>
+	                            	<!-- 2018-08-08 천성준 - 외부수신자요약 UI때문에 이동 -->
+	                            	<span style="display: inline-block; margin-top: 8px;">
+	                            		<a class="h2_dot" style="display: none;" id="trSummaryOuterReceiverList">외부수신자 요약:&nbsp;<input id="inputSummaryOuterReceiverList" value="" style="width: 470px; height: 22px;"/></a>
+	                            	</span>
 	                            </td>
 	                            <td style="text-align:right">
-	                                <a class="imgbtn" style="margin-top:8px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
+	                                <a class="imgbtn imgbck" style="margin-top:10px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
 	                            </td>
 	                        </tr>
 	                    </table>
@@ -1899,23 +1940,22 @@
 		                        <tr>
 		                            <th style="width: 50px"><spring:message code='ezApprovalG.t592'/></th>
 		                            <td style="width: 105px">
-		                                <select id="selTaskCategory" onchange="return selTaskCategory_onchange()" style="width: 100px">
+		                                <select id="selTaskCategory" onchange="return selTaskCategory_onchange()" style="width: 100px; height:24px">
 		                                </select>
 		                            </td>
 		                            <th style="width: 50px"><spring:message code='ezApprovalG.t593'/></th>
 		                            <td style="width: auto;">
-		                                <select id="selTaskMCategory" onchange="return selTaskMCategory_onchange()" style="width: 100px; margin-top: 4px">
-		                                </select>
-		                                &nbsp;
+		                                <select id="selTaskMCategory" onchange="return selTaskMCategory_onchange()" style="width: 100px; margin-top: 2px; height:24px">
+		                                </select>		                                
 		                                        <span id="trCreateCab">
 		                                        	<c:if test="${initFlag == '1'}">
-			                                            <a class="imgbtn" style="margin-top: 3px"><span onclick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
-			                                            <a class="imgbtn" style="margin-top: 3px; display:none;"><span onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></a>
+			                                            <a class="imgbtn imgbck" style="margin-top: 3px"><span onclick="return btnCreateCab_onclick()"><spring:message code='ezApprovalG.t1118'/></span></a>
+			                                            <a class="imgbtn imgbck" style="margin-top: 3px; display:none;"><span onclick="return btnNewVolume_onclick()"><spring:message code='ezApprovalG.t894'/></span></a>
 		                                        	</c:if>
 		                                        </span>
 		                                <span id="trCreateCabDummy" style="display: none"></span>
 		                                <span  style="vertical-align: middle; margin-left: 247px;">
-		                                    <select id="selSearchOption" style="vertical-align: none;">
+		                                    <select id="selSearchOption" style="vertical-align: none;height:24px">
 		                                        <option>
 		                                            <spring:message code='ezApprovalG.t10026'/>
 		                                        </option>
@@ -1924,8 +1964,8 @@
 		                                        </option>
 		                                    </select>
 		                                    <input type="text" id="Cabinetkeyword" value="" onkeypress="CabinetSearch_Press(event)" style="vertical-align:baseline;">
-		                                    <a class="imgbtn" style="margin-top: 4px"><span name="btnSearch" onclick="return CabinetSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></a>
-		                                    <a class="imgbtn" style="margin-top: 4px"><span name="btnSearch" onclick="return Cabinetinfo_ini()"><spring:message code='ezApprovalG.t165'/></span></a>
+		                                    <a class="imgbtn imgbck" style="margin-top: 3px"><span name="btnSearch" onclick="return CabinetSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></a>
+		                                    <a class="imgbtn imgbck" style="margin-top: 3px"><span name="btnSearch" onclick="return Cabinetinfo_ini()"><spring:message code='ezApprovalG.t165'/></span></a>
 		                                </span>
 		                            </td>
 		                        </tr>
@@ -1941,8 +1981,8 @@
 		                </td>
 		                <td style="padding-top:5px;">
 		                    <div align="right">
-		                        <a class="imgbtn"><span onclick="return Set_MyTask('INS')"><spring:message code='ezApprovalG.t00002'/></span></a>
-		                        <a class="imgbtn"><span onclick="return Set_MyTask('DEL')"><spring:message code='ezApprovalG.t00003'/></span></a>
+		                        <a class="imgbtn imgbck"><span onclick="return Set_MyTask('INS')"><spring:message code='ezApprovalG.t00002'/></span></a>
+		                        <a class="imgbtn imgbck"><span onclick="return Set_MyTask('DEL')"><spring:message code='ezApprovalG.t00003'/></span></a>
 		                    </div>
 		                </td>
 		            </tr>
@@ -1963,13 +2003,13 @@
 	                <tr>
 	                    <td style="border: 0px solid red; height: 580px; width: 971px; vertical-align: top">
 	                        <table style="width: 100%">
-	                            <tr style="height:30px">
+	                            <tr style="height:33px">
 	                                <td>
 	                                    <h2 class="h2_dot"><spring:message code='ezApproval.t335'/></h2>
 	                                </td>
 	                                <td>
 	                                    <span style="float: right;">
-	                                        <select id="selSearchOption" style="vertical-align: middle;">
+	                                        <select id="selSearchOption" style="vertical-align: middle;height:22px">
 	                                            <option id="ITEMNAME">
 	                                                <spring:message code='ezApproval.t79'/>
 	                                            </option>
@@ -1977,9 +2017,13 @@
 	                                                <spring:message code='ezApprovalG.t114'/>
 	                                            </option>
 	                                        </select>
-	                                        <input type="text" id="txtCodeSearch" onkeypress="CodeSearch_Press(event)" />
-	                                        <a class="imgbtn" onclick="return CodeSearch_onclick()"><span name="btnSearch"><spring:message code='ezApproval.t236'/></span></a>
-	                                        <a class="imgbtn"><span name="btnSearch" onclick="Draftinfo_reload()"><spring:message code='ezApproval.t1042'/></span></a>
+	                                        <input type="text" style="height:22px" id="txtCodeSearch" onkeypress="CodeSearch_Press(event)" />
+	                                        <a class="imgbtn imgbck" onclick="return CodeSearch_onclick()">
+	                                        	<span style="height:22px;line-height:22px" name="btnSearch"><spring:message code='ezApproval.t236'/></span>
+	                                        </a>
+	                                        <a class="imgbtn imgbck">
+	                                        	<span style="height:22px;line-height:22px" name="btnSearch" onclick="Draftinfo_reload()"><spring:message code='ezApproval.t1042'/></span>
+	                                        </a>
 	                                    </span>
 	                                </td>
 	                            </tr>
@@ -2002,17 +2046,17 @@
 					                    <td>
 					                       <h2 class="h2_dot"><spring:message code='ezApproval.t1100'/></h2>
 					                    </td>
-					                    <td style="padding-top:5px;">
+					                    <td style="padding-top:10px;padding-bottom:5px">
 					                        <div align="right">
-					                            <a class="imgbtn"><span style="text-align: center;" onclick="btnAddCode_onclick()"><spring:message code='ezApproval.t00001'/></span></a>
-					                            <a class="imgbtn"><span style="text-align: center;" onclick="btnDelCode_onclick()"><spring:message code='ezApproval.t00002'/></span></a>
+					                            <a class="imgbtn imgbck"><span style="text-align: center;" onclick="btnAddCode_onclick()"><spring:message code='ezApproval.t00001'/></span></a>
+					                            <a class="imgbtn imgbck"><span style="text-align: center;" onclick="btnDelCode_onclick()"><spring:message code='ezApproval.t00002'/></span></a>
 					                        </div>
 					                    </td>
 					                </tr>
 					                <tr>
 					                    <td colspan="2">
 					                        <div class="border_gray">
-					                            <div id="infofrequencylist" style="border: 0px; HEIGHT: 160px; WIDTH: 1108px; overflow-x: hidden; overflow-y: auto; margin: 1px 1px 1px 1px; padding-top: 0px;"></div>
+					                            <div id="infofrequencylist" style="border: 0px; HEIGHT: 155px; WIDTH: 1108px; overflow-x: hidden; overflow-y: auto; margin: 1px 1px 1px 1px; padding-top: 0px;"></div>
 					                        </div>
 					                    </td>
 					                </tr>
@@ -2033,19 +2077,19 @@
 		                <th><spring:message code='ezApprovalG.t875'/></th>
 		                <td>
 		                    <div style="padding-top: 5px; padding-left: 3px;">
-		                        <input type="checkbox" name="special1" id="special1" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> <spring:message code='ezApprovalG.t1205'/></span>
+		                        <input type="checkbox" name="special1" id="special1" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><label for="special1"><span> <spring:message code='ezApprovalG.t1205'/></span></label>
 		                    </div>
 		                    <div style="padding-top: 5px; padding-left: 3px;">
-		                        <input type="checkbox" name="special2" id="special2" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> <spring:message code='ezApprovalG.t984'/></span>
+		                        <input type="checkbox" name="special2" id="special2" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><label for="special2"><span> <spring:message code='ezApprovalG.t984'/></span></label>
 		                    </div>
 		                    <div style="padding-top: 5px; padding-left: 3px;">
-		                        <input type="checkbox" name="special3" id="special3" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> <spring:message code='ezApprovalG.t1206'/></span>
+		                        <input type="checkbox" name="special3" id="special3" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><label for="special3"><span> <spring:message code='ezApprovalG.t1206'/></span></label>
 		                    </div>
 		                    <div style="padding-top: 5px; padding-left: 3px;">
-		                        <input type="checkbox" name="special4" id="special4" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> <spring:message code='ezApprovalG.t986'/></span>
+		                        <input type="checkbox" name="special4" id="special4" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><label for="special4"><span> <spring:message code='ezApprovalG.t986'/></span></label>
 		                    </div>
 		                    <div style="padding-top: 5px; padding-bottom: 5px; padding-left: 3px;">
-		                        <input type="checkbox" name="special5" id="special5" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> <spring:message code='ezApprovalG.t1207'/></span>
+		                        <input type="checkbox" name="special5" id="special5" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><label for="special5"><span> <spring:message code='ezApprovalG.t1207'/></span></label>
 		                    </div>
 		
 		                </td>
@@ -2115,19 +2159,23 @@
 		                <th><spring:message code='ezApprovalG.t109'/></th>
 		                <td>
 		                    <div style="padding-left: 3px; padding-bottom: 5px;">
-		                        <input type="radio" name="rdoSecType2" value="Y" checked onclick="return rdoSecType2_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t47'/></span>&nbsp;
-		                        <input type="radio" name="rdoSecType2" value="N" onclick="return rdoSecType2_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t46'/></span>&nbsp;
+		                    	<div style="padding-left: 3px; padding-top: 5px;">
+			                        <input id="rdoSecType2Y" type="radio" name="rdoSecType2" value="Y" checked onclick="return rdoSecType2_onclick(this.value)" style="height: 13px; width: 13px; padding-top: 5px; padding-bottom: 5px; margin: 0px; vertical-align: top;"><label for="rdoSecType2Y"><span><spring:message code='ezApprovalG.t47'/> (<spring:message code='ezApproval.t2000'/>)</span></label>
+		                    	</div>
+		                    	<div style="padding-left: 3px; padding-top: 5px;">
+			                        <input id="rdoSecType2N" type="radio" name="rdoSecType2" value="N" onclick="return rdoSecType2_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><label for="rdoSecType2N"><span><spring:message code='ezApprovalG.t46'/> (<spring:message code='ezApproval.t2001'/>)</span></label>
+		                    	</div>
 		                    </div>
 		                </td>
 		           </tr>
 		        </table>
-		        <h2 style="margin-left: 5px;"><spring:message code='ezApprovalG.t1203'/></h2>
-		        <textarea id="taSummery" name="taSummery" style="HEIGHT: 182px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin-left:3px;"></textarea>
+		        <h2 class="h2_dot"><spring:message code='ezApprovalG.t1203'/></h2>
+		        <textarea id="taSummery" name="taSummery" style="HEIGHT: 160px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin-left:3px;"></textarea>
 		    </div>
 	    </c:if>
 	    
 	    <c:if test="${approvalFlag eq 'S' }">
-	    	<div id="Docinfo" style="width: 1110px; height: 597px; display: none;">
+	    	<div id="Docinfo" style="width: 1110px; height: 594px; display: none; padding-top:3px">
         		<td style="border: 0px solid red; height: 580px; width: 390px; margin-left: 5px; vertical-align: top">
 		            <h2 class="h2_dot"><spring:message code='ezApproval.t334'/></h2>
 		            <table class="content" style="margin-top:4px">
@@ -2144,7 +2192,7 @@
 		                                    <input type="hidden" id="tbItemName2" />
 		                                </td>
 		                                <td>
-		                                    <a class="imgbtn" id="btndocinfo"><span id="btndocinfo2" onclick="movedraftinfo()"><spring:message code='ezApproval.t335'/><spring:message code='ezApproval.t321'/></span></a>
+		                                    <a class="imgbtn imgbck" id="btndocinfo"><span id="btndocinfo2" onclick="movedraftinfo()"><spring:message code='ezApproval.t335'/><spring:message code='ezApproval.t321'/></span></a>
 		                                </td>
 		                            </tr>
 		                        </table>                                                
@@ -2208,7 +2256,7 @@
 		                	<th><spring:message code='ezApproval.t339'/></th>
 		                    <td>		                    	
 		                        <!-- <div class="nobox"> -->
-		                            <textarea id="taSummery" name="taSummery" style="HEIGHT: 337px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin: 2px 2px 2px 2px"></textarea>
+		                            <textarea id="taSummery" name="taSummery" style="HEIGHT: 370px; WIDTH: 99.7%; resize:none; box-sizing: border-box; -moz-box-sizing: border-box; margin: 2px 2px 2px 2px"></textarea>
 		                        <!-- </div> -->
 		                    </td>
 		                </tr>
@@ -2218,7 +2266,7 @@
 	    </c:if>
 	    <c:if test="${approvalFlag eq 'S' }">
 <!-- 	    회람 -->
-	    	<div id="Circulation" style="border-bottom: 1px solid #dbdbda; width: 1110px; height: 597px; display: none;">
+	    	<div id="Circulation" style="width: 1110px; height: 597px; display: none;">
         		<table>
 			        <tr>
 			            <td style="vertical-align: top">
@@ -2246,11 +2294,11 @@
                                     </td>
                                 	</tr>
 			                    	<tr>
-	                                    <td style="background-color: transparent; height: 28px;">
-	                                        <input id="textUserCC" style="width: 150px" name="textUserCC" onkeypress="return textUserCC_onkeypress(event)"  maxlength="50">
-	                                        <a class="imgbtn"><span name="btn_searchUserCC" id="btn_searchUserCC" onkeypress="return btn_searchUserCC_onclick()" onclick="return btn_searchUserCC_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
+	                                    <td style="background-color: transparent; height: 28px; padding-top:10px; vertical-align: top">
+	                                        <input id="textUserCC" style="width: 150px;height:22px" name="textUserCC" onkeypress="return textUserCC_onkeypress(event)"  maxlength="50">
+	                                        <a class="imgbtn imgbck"><span name="btn_searchUserCC" id="btn_searchUserCC" onkeypress="return btn_searchUserCC_onclick()" onclick="return btn_searchUserCC_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
 											<!-- 부서추가 -->
-											<a class="imgbtn" style="vertical-align: middle;"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.t1101'/></span></a>
+											<a class="imgbtn imgbck"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.t1101'/></span></a>
 	                                    </td>
 	                                </tr>
 			                    </table>
@@ -2272,9 +2320,9 @@
 			                                <table class="content" style="margin-bottom: 5px; width: 100%; ">
 			                                    <tr>
 			                                        <td style="text-align: center;">
-			                                            <a class="imgbtn"><span id="Span3" onclick="return btn_AprDeptTempletDelCC_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
-			                                            <a class="imgbtn"><span id="Span4" onclick="return btn_AprDeptTempletSaveCC_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
-			                                            <a class="imgbtn"><span onclick="return btn_AprDeptTempletAddCC_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
+			                                            <a class="imgbtn imgbck"><span id="Span3" onclick="return btn_AprDeptTempletDelCC_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
+			                                            <a class="imgbtn imgbck"><span id="Span4" onclick="return btn_AprDeptTempletSaveCC_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
+			                                            <a class="imgbtn imgbck"><span onclick="return btn_AprDeptTempletAddCC_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
 			                                        </td>
 			                                    </tr>
 			                                </table>
@@ -2300,11 +2348,11 @@
 			                <h2 class="h2_dot"><spring:message code='ezApprovalG.hyj20'/>
 			                </h2>
 			                <div class="border_gray" style="margin-top:7px; margin-left:4px;">
-                                <div id="APRLINECC" style="Width: 717px; Height: 518px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+                                <div id="APRLINECC" style="Width: 717px; Height: 518px; overflow: auto; overflow-x:hidden; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
                               	</div>
                             </div>
 			                <div style="text-align: right;">
-			                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSaveCC_onclick('NEW')"><spring:message code='ezApprovalG.hyj07'/> </span></a>
+			                    <a class="imgbtn imgbck" style="padding-right: 5px; margin-top: 10px;"><span id="Span5" onclick="return btn_AprDeptTempletSaveCC_onclick('NEW')"><spring:message code='ezApprovalG.hyj07'/> </span></a>
 			                </div>
 			            </td>
 			        </tr>
@@ -2314,11 +2362,12 @@
 	    
 	    <br />
 	    <div style="text-align: center;" id="orgbtnArea">
-	        <table style="width: 1110px">
+	        <table style="width: 100%">
 	            <tr>
 	                <td style="text-align: center;">
-	                    <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
-	                    <a class="imgbtn"><span style="width: 60px; text-align: center;" onclick="btn_Close()"><spring:message code='ezApprovalG.t1761'/></span></a>
+	                	<div class="btnpositionNew">
+	                    	<a class="imgbtn"><span style="text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
+	                    </div>	
 	                </td>
 	            </tr>
 	        </table>

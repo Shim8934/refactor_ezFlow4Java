@@ -9,7 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	    <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 	    <link rel="stylesheet" href="/css/style.css" type="text/css" />
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css" />
 	    <style>
 	    	.mainlist tr th {
 	    		border-top:0px;
@@ -364,6 +364,11 @@
 	      	</LISTVIEWDATA>
 	    </xml>
 	    <h1><spring:message code='ezSchedule.t1101' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="btn_close()"></span></li>
+            </ul>
+        </div>
 	    <table>
 	    	<tr>
 	        	<td>
@@ -371,13 +376,13 @@
 	                <div class="box" style="height:300px;width:245px;overflow-x:auto;overflow-y:auto;" id="TreeView"></div>
 	            </td>
 	            <td style="width: 30px; text-align: center;">
-                    <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver()"><br/>
+                    <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;margin-top:22px" onclick="InsertReceiver()"><br/>
                     <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver()">
                 </td>
 	            <td>
 	                <h2><span id="Span1"><spring:message code='ezSchedule.t1105' /></span></h2>
 	                <div class="listview">
-	                    <div id="ListView" STYLE="border:0; Width:245px; Height:296px; overflow:auto;"></div>
+	                    <div id="ListView" STYLE="border:0; Width:245px; Height:302px; overflow:auto;"></div>
 	                </div> 
 	            </td>
 	        </tr>      
@@ -385,7 +390,6 @@
 	    <div class="btnpositionNew">
 	   		<a class="imgbtn"><span onClick="Add_ResourceInfo()"><spring:message code='ezSchedule.t1106' /></span></a>
 	        <a class="imgbtn"><span onClick="btn_OK()"><spring:message code='ezSchedule.t190' /></span></a>
-	        <a class="imgbtn"><span onClick="btn_close()"><spring:message code='ezSchedule.t5' /></span></a>
 	    </div>			
 	</body>
 </html>

@@ -169,6 +169,7 @@ function MakeAddressList() {
             var _TD1 = document.createElement("TD");
             _TD1.style.width = "20px";
             _TD1.style.margin = "0px";
+            _TD1.style.textAlign = "center";
             var _TDCheckBox_Sub = document.createElement("INPUT");
             _TDCheckBox_Sub.type = "checkbox";
             _TDCheckBox_Sub.style.margin = "0px";
@@ -435,7 +436,7 @@ function Complete_Get_AddressList() {
         if (XmlRows.length == 0) {
             if (searchFlag) {
                 pCurrentPage--;
-                if (pCurrentPage < 0) {
+                if (pCurrentPage <= 0) {
                     document.getElementById("mailBoxInfo").style.visibility = "hidden";
                     while (document.getElementById("MailList").childNodes.length > 0) {
                         document.getElementById("MailList").removeChild(document.getElementById("MailList").childNodes.item(0));
@@ -449,7 +450,7 @@ function Complete_Get_AddressList() {
                     makePageSelPage();
                     return;
                 }
-                Get_SearchAddressList();
+                //Get_SearchAddressList();
                 return;
             }
         }
@@ -552,21 +553,21 @@ function makePageSelPage() {
         document.getElementById("mailBoxInfo").innerHTML = strLang_1 + "&nbsp;<span class='point'>" + pTotalCnt + "</span> " + strLang_2;
     }
     if (totalPage > 1 && pageNum != 1) {
-        PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\" width=\"16\" height=\"16\"></span>";
+        PagingHTML += "<span class=\"btnimg\" onclick= 'return goToPageByNum(1)'><img src=\"/images/kr/cm/btn_p_prev.gif\"></span>";
     }
     else {
-        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_p_prev01.gif\" width=\"16\" height=\"16\"></span>";
+        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_p_prev01.gif\"></span>";
     }
     if (totalPage > BlockSize) {
         if (pageNum > BlockSize) {
-            PagingHTML += "<span class=\"btnimg\" onclick= 'return selbeforeBlock()'><img src=\"/images/kr/cm/btn_prev.gif\" width=\"16\" height=\"16\"></span><span class=\"ptxt\" onclick= 'return selbeforeBlock_one()'>" + strLang258 + "</span>";
+            PagingHTML += "<span class=\"btnimg\" onclick= 'return selbeforeBlock()'><img src=\"/images/kr/cm/btn_prev.gif\"></span>";
         }
         else {
-            PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\" width=\"16\" height=\"16\"></span><span class=\"ptxt\" onclick= 'return selbeforeBlock_one()'>" + strLang258 + "</span>";
+            PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
         }
     }
     else {
-        PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\" width=\"16\" height=\"16\"></span><span class=\"ptxt\" onclick= 'return selbeforeBlock_one()'>" + strLang258 + "</span>";
+        PagingHTML += "<span class=\"btnimg\" ><img src=\"/images/kr/cm/btn_prev01.gif\"></span>";
     }
     var MaxNum;
     var i;
@@ -592,20 +593,20 @@ function makePageSelPage() {
     	
     if (totalPage > BlockSize) {
         if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-            PagingHTML += "<span class=\"ptxt\" onclick='return selafterBlock_one()'>" + strLang259 + "</span><span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\" width=\"16\" height=\"16\"></span>";
+            PagingHTML += "<span class=\"btnimg\" onclick='return selafterBlock()'><img src=\"/images/kr/cm/btn_next.gif\"></span>";
         }
         else {
-            PagingHTML += "<span class=\"ptxt\" onclick='return selafterBlock_one()'>" + strLang259 + "</span><span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\" width=\"16\" height=\"16\"></span>";
+            PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
         }
     }
     else {
-        PagingHTML += "<span class=\"ptxt\" onclick='return selafterBlock_one()'>" + strLang259 + "</span><span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\" width=\"16\" height=\"16\"></span>";
+        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_next01.gif\"></span>";
     }
     if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-        PagingHTML += "<span class=\"btnimg\" onclick='return goToPageByNum(" + totalPage + ")'><img src=\"/images/kr/cm/btn_n_next.gif\" width=\"16\" height=\"16\"></span>";
+        PagingHTML += "<span class=\"btnimg\" onclick='return goToPageByNum(" + totalPage + ")'><img src=\"/images/kr/cm/btn_n_next.gif\"></span>";
     }
     else {
-        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_n_next01.gif\" width=\"16\" height=\"16\"></span>";
+        PagingHTML += "<span class=\"btnimg\"><img src=\"/images/kr/cm/btn_n_next01.gif\"></span>";
     }
     PagingHTML += "</div>";
     td_Create1(PagingHTML);
@@ -614,7 +615,7 @@ function Window_onresize() {
     if (searchFlag) {
         if (document.getElementById("ListViewType").value == "list") {
             document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 283) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 313) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 312) + "px";
         }
         else {
             document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 245) + "px";
@@ -624,11 +625,11 @@ function Window_onresize() {
     else {
         if (document.getElementById("ListViewType").value == "list") {
             document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 243) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 273) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 271) + "px";
         }
         else {
             document.getElementById("list_Layer").style.height = (document.documentElement.clientHeight - 205) + "px";
-            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 235) + "px";
+            document.getElementById("contentlist").style.height = (document.documentElement.clientHeight - 238) + "px";
         }
     }
 }
@@ -721,7 +722,7 @@ function event_HeaderCheckBoxClick(obj) {
         }
         listContentArry = new Array();
     }
-    listEventCheckbox = true;
+    //listEventCheckbox = true;
 }
 function event_listMover(obj) {
     if (!obj.childNodes.item(0).childNodes.item(0).checked) {
@@ -962,13 +963,13 @@ function event_listDBClick(obj) {
             "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 500px, width =600px, status = no, toolbar=no, menubar=no,location=no, resizable=yes");
     }
     else {
-        var conHeight = 470;
-        var conWidth = 370;
+        var conHeight = 575;
+        var conWidth = 717;
         var pTop = (pheight - conHeight) / 2;
         var pLeft = (pwidth - conWidth) / 2;
         address_group_edit_dialogArguments[0] = edit_group;
         window.open("/ezAddress/addressReadGroup.do?addressid=" + encodeURIComponent(pAddressID) + "&type=" + pFolderType, "",
-                "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 470px, width = 370px, status = no, toolbar=no, menubar=no,location=no, resizable=yes");
+                "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 575px, width = 717px, status = no, toolbar=no, menubar=no,location=no, resizable=yes");
     }
 }
 var address_group_edit_dialogArguments = new Array();
@@ -988,13 +989,13 @@ function event_SearchlistDBClick(obj) {
             "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 500px, width =600px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
     }
     else {
-        var conHeight = 470;
-        var conWidth = 370;
+        var conHeight = 575;
+        var conWidth = 717;
         var pTop = (pheight - conHeight) / 2;
         var pLeft = (pwidth - conWidth) / 2;
         address_group_edit_dialogArguments[0] = edit_group;
         window.open("/ezAddress/addressReadGroup.do?addressid=" + encodeURIComponent(pAddressID) + "&type=" + pFolderType, "",
-            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 470px, width = 370px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 575px, width = 717px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
     }
 }
 

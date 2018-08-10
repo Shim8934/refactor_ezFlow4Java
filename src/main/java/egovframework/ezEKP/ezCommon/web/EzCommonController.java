@@ -74,7 +74,16 @@ public class EzCommonController extends EgovFileMngUtil{
 	private static final Logger logger = LoggerFactory.getLogger(EzCommonController.class);
 	
 	@RequestMapping(value = "/ezCommon/manyColor.do")
-	public String manyColor(HttpServletRequest request, ModelMap model) throws Exception{		
+	public String manyColor(HttpServletRequest request, ModelMap model) throws Exception {
+		String type = "";
+		
+		type = request.getParameter("type");
+		
+		if (type == null) {
+			type = "";
+		}
+		
+		model.addAttribute("type", type);
 		return "ezCommon/manyColor";
 	}
 	
@@ -319,37 +328,59 @@ public class EzCommonController extends EgovFileMngUtil{
 		logger.debug("dotNetIntegration=" + dotNetIntegration);
 		
 		if (dotNetIntegration.equals("YES")) {
-			String personId = "";		
+			String parameter = "";
+			String personId = "";
 			String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", loginVO.getTenantId());
+			String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginVO.getTenantId());
+			String[] mailInnerDomains = mailInnerDomain.split(";");
+			boolean isInnerUser = false;
 			
 			if (!email.isEmpty()) {
 				int atSignPos = email.indexOf("@");
 				
-				if (atSignPos != -1) {									
+				if (atSignPos != -1) {
 					personId = email.substring(0, atSignPos);
+					String domain = email.substring(atSignPos + 1);
+					
+					for (String innerDomain : mailInnerDomains) {
+						if (domain.equals(innerDomain)) {
+							isInnerUser = true;
+						}
+					}
 				}
 			} else if (!id.isEmpty()) {
 				personId = id;
+				isInnerUser = true;
 			}
 			
-			if (useEmpNumberLogin.equals("YES")) {
-				logger.debug("personId=" + personId);
-				
+			logger.debug("personId=" + personId + ",isInnerUser=" + isInnerUser);
+			
+			LoginVO user = null;
+			
+			if (isInnerUser) {
 				LoginVO login = new LoginVO();
 				login.setId(personId);
 				login.setDn("NOPASSWORD");
 				login.setTenantId(loginVO.getTenantId());
 				
-				LoginVO user = loginService.selectUser(login);
-				
+				user = loginService.selectUser(login);
+			}
+			
+			if (useEmpNumberLogin.equals("YES")) {
 				if (user != null && user.getSabun() != null) {
 					personId = user.getSabun();
 				}
-				
-				logger.debug("final personId=" + personId);
 			}
 			
-			return "redirect:" + dotNetUrl + "/myoffice/common/ShowPersonInfo.aspx?id=" + URLEncoder.encode(personId, "utf-8"); 
+			if (user == null) {
+				parameter = "email=" + URLEncoder.encode(email, "utf-8");
+			} else {
+				parameter = "id=" + URLEncoder.encode(personId, "utf-8") + "&alias=" + URLEncoder.encode(user.getEmail(), "utf-8"); 
+			}
+			
+			logger.debug("parameter=" + parameter);
+			
+			return "redirect:" + dotNetUrl + "/myoffice/common/ShowPersonInfo.aspx?" + parameter; 
 		}
 		
 		if (id.equals("")) {

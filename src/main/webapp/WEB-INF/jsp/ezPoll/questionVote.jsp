@@ -69,7 +69,7 @@
             iframeStyle += "UL   	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
             iframeStyle += "OL   	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
             iframeStyle += "LI   	    { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
-            iframeStyle += "BODY 	    { MARGIN: 10px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic; overflow-x: auto; overflow-y: hidden;}";
+            iframeStyle += "BODY 	    { MARGIN: 10px; FONT-SIZE:10PT;LINE-HEIGHT:1.3; FONT-FAMILY:Malgun Gothic, Meiryo UI; overflow-x: auto; overflow-y: hidden;}";
             iframeStyle += "TABLE TD    { text-indent: 0px }";
             iframeStyle += "BLOCKQUOTE  { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px;}";
             iframeStyle += "</style>";          
@@ -2028,9 +2028,11 @@
 		    }
 		    
 		    function addSticker() {
-		    	if (document.getElementById("emoticonPanel").style.display == "block") {
-		    		document.getElementById("emoticonPanel").style.display = "none";
-		    		document.getElementById("_addEmoticon").src = "/images/poll/add_emo_vote.png";
+		    	var targetPanel = event.target.parentElement.querySelector(".emoticonPanel") || document.getElementById("emoticonPanel");
+		    	if (targetPanel && targetPanel.style && (targetPanel.style.display == "block")) {
+		    		targetPanel.style.display = "none";
+// 		    		document.getElementById("_addEmoticon").src = "/images/poll/add_emo_vote.png";
+		    		$("._addEmoticon").attr("src", "/images/poll/add_emo_vote.png");
 		    	}
 		    	else {
 		    		//baonk added
@@ -2038,7 +2040,7 @@
 			    		evt = evt || window.event;
 			    		
 			    	    if (evt.keyCode == 27) {
-				    		document.getElementById("emoticonPanel").style.display = "none";
+			    	    	targetPanel.style.display = "none";
 				    		document.getElementById("_addEmoticon").src = "/images/poll/add_emo_vote.png";
 			    	    }
 			    	    
@@ -2046,7 +2048,8 @@
 			    	});	 
 		    		//end
 		    		
-		    		document.getElementById("_addEmoticon").src = "/images/poll/add_emo_vote2.png";
+// 		    		document.getElementById("_addEmoticon").src = "/images/poll/add_emo_vote2.png";
+		    		event.target.src = "/images/poll/add_emo_vote2.png";
 			    	processGroupStickers();
 			    	stickerIndex = 1;		    	
 			    	document.getElementById("_group1").style.backgroundColor  = "#d9d9d9";
@@ -2057,9 +2060,9 @@
 			    		document.getElementById("_listG" + i).style.display = "none";
 			    	}		    		    	
 			    	
-			    	document.getElementById("emoticonPanel").style.display = "block";
+			    	targetPanel.style.display = "block";
 			    	checkScrollBars();
-			    	emoticonPanelClose();
+// 			    	emoticonPanelClose();
 		    	}
 		    }
 		    
@@ -2120,7 +2123,7 @@
 		    			// Add cancel image in top right of files/sticker
 		    			var cancelImg = document.createElement("img"); 
 		    			cancelImg.src = "/images/close.png";
-		    			cancelImg.setAttribute("style", "height: 20; width: 20px; top: 0; left: 50px; position: absolute; cursor: pointer;");
+		    			cancelImg.setAttribute("style", "height: 20; width: 20px; top: 0px; left: 20px; position: absolute; cursor: pointer;");
 		    			cancelImg.onclick = function () { deleteFileInCmt(); };
 		    			editPreviewTag.parentElement.appendChild(cancelImg);
 		    		}
@@ -2578,13 +2581,26 @@
 		    //이모티콘 패널이 아닌 영역을 선택하면 패널이 닫힘
 		    function emoticonPanelClose(){
 		    	var emoticonPanel = document.getElementById("emoticonPanel");
-		    	if(emoticonPanel){
-			        $(document).click(function(e){
+		    	var targetPanel;
+		    	if(event.target.parentElement){
+			    	targetPanel = event.target.parentElement.querySelector(".emoticonPanel");
+		    	}
+		    	else{
+		    		targetPanel = emoticonPanel;
+		    	}
+		    	if(targetPanel){
+			        $(document).on("click.emo", function(e){
 			            var target = e.target;
-			            var onOff = emoticonPanel.getAttribute("style").indexOf("display: block")!= -1 ? true : false;
+// 			            var onOff = targetPanel.getAttribute("style").indexOf("display: block")!= -1 ? true : false;
+			            var panelDiv = $(".emoticonPanel").filter(function(idx, panel){
+							return panel.style.display == "block";	            	
+			            });
+			            var onOff = !!panelDiv;
 			            
 			            if(onOff && target.id != "_addEmoticon"){
-	                        addSticker();
+// 	                        addSticker();
+							$(".emoticonPanel").hide();
+							$("._addEmoticon").attr("src", "/images/poll/add_emo_vote.png");
 			            }
 			        });
 		    	}
@@ -2629,9 +2645,9 @@
 		  	//썸네일 이미지에 레이어 팝업 기능 관련
 		    var tempTimer;
 		    function addThumbnailEvent(){
-		  		$(document).on("mouseover",".thumbnail",function(e){
-		    		thumbnailImgMouseOver(e);
-		    	}).on("click", ".thumbCloseBtn", function(e){
+		  		$(document)
+// 		  		.on("mouseover",".thumbnail",function(e){thumbnailImgMouseOver(e);})
+		    	.on("click", ".thumbCloseBtn", function(e){
 					toggleImgPopupBox(e);
 				}).on("click", ".thumbnail", function(e){
 					toggleImgPopupBox(e);
@@ -2765,6 +2781,12 @@
 		  		var imgPopup = $("#imgPopup");
 		  		
 		  		$("#imgPopupDiv, #imgPopupBox, #imgPopup").attr("style","");
+		  		
+		  		//마우스 오버 이벤트 없애는 작업과 함께 이미지 뷰어가 보이는 상태에서 다른 그림 선택했을 때 처리하기 위해 수정. 2018-06-19 홍대표
+		  		if(imgPopup.attr("_filename") != e.target.getAttribute("_filename") && e.target.id !== "thumbCloseBtn"){
+		  			thumbnailImgMouseOver(e);
+		  			return;
+		  		}
 		  		
 		  		if(imgPopup.attr("src")){
 			  		imgPopupBox.removeClass("imgPopupBox").addClass("imgPopupBoxOff");
@@ -3130,7 +3152,7 @@
 		<form method="post">
 			<h1 style="margin-bottom: 16px;"><spring:message code='ezBoard.t371' /></h1>
 			<div id="ballotSystemBody">
-				<div id="mainmenu3" style="overflow: hidden; margin:27px 0px 5px 0px">
+				<div id="mainmenu3" style="overflow: hidden;">
 					  <div style="float: left; display: block;" class="voteInfo">
 					  		
 					  		<p class="voteInfoP"><img src="${question.creatorImage}" style="display:inline-block; float:left; cursor: pointer;" onclick="menuQst_DetailUserInfo('${question.creator}')"></p>
@@ -3155,13 +3177,13 @@
 							</ul>
 							<ul class="voteIcon_ul">
 								<li class="voteIconImg_li icon">
-									<img id="reuseVoteImg" src="/images/poll/reuseVote.png" class="voteIconImg nosecret" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code = 'ezCircular.t183'/>" onmouseover="this.src = '/images/poll/reuseVote_hover.png'" onmouseout="this.src = '/images/poll/reuseVote.png'" />
+									<img id="reuseVoteImg" src="/images/poll/reuseVote.png" class="voteIconImg nosecret" onclick="voteReuse()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/><spring:message code = 'ezCircular.t183'/>" onmouseover="this.src = '/images/poll/reuseVote_hover.png'" onmouseout="this.src = '/images/poll/reuseVote.png'" />
 								</li>
 							</ul>
 							<c:if test="${(curentUser == question.creator || adminPrivilege == 1) && question.status == 1}">
 								<ul class="voteIcon_ul">
 									<li class="voteIconImg_li icon">
-										<img src="/images/poll/icon_voteDelete.png" class="voteIconImg nosecret" onclick="voteDelete()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/> <spring:message code="ezPoll.t202"/>" onmouseover="this.src = '/images/poll/icon_voteDelete_hover.png'" onmouseout="this.src = '/images/poll/icon_voteDelete.png'" />
+										<img src="/images/poll/icon_voteDelete.png" class="voteIconImg nosecret" onclick="voteDelete()"  style="width:45px" title="<spring:message code = 'ezPoll.t103'/><spring:message code="ezPoll.t202"/>" onmouseover="this.src = '/images/poll/icon_voteDelete_hover.png'" onmouseout="this.src = '/images/poll/icon_voteDelete.png'" />
 									</li>
 								</ul>
 							</c:if>
@@ -3416,7 +3438,7 @@
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" class="_thu${loop.index}"></div>
-			               			<img id="mailSend<c:out value ="${_option.ansId}" />" src="/images/poll/sendMailSmall.png" style="vertical-align:middle; margin-left:5px; cursor:pointer; display:none; margin-top: -9px;" onClick="sendMailAll('${question.qstId}','${_option.ansId}')"/>
+			               			<img id="mailSend<c:out value ="${_option.ansId}" />" src="/images/poll/sendMail.png" style="vertical-align:middle; margin-left:7px; cursor:pointer; display:none; margin-top: -7px; width:26px" onClick="sendMailAll('${question.qstId}','${_option.ansId}')"/>
 			               			<div style="display:none; float:left; margin:2px 0px 0px 0px; height:20px; line-height:20px;" align="center" id="_tax${loop.index}">
 			               				<div style="float:left; display:block; margin: 0px 0px 0px 10px; cursor: pointer;" id="vAll${loop.index}" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}');"><spring:message code = 'ezPoll.t122'/></div>
 			               				<img src="/images/arrow_right.png" height="14px" width="14px" style="cursor: pointer; float:left; display:block; margin: 2px 0px 0px 2px;" onclick="javascript:displayVotedUser('${question.qstId}', '${_option.ansId}')">
@@ -3457,7 +3479,7 @@
 							<div id="emoticonPanel" class="emoticonPanel" style="display:none">
 								<div id="emoticonGroup" style="display:block;width:100%; height: 45px;background-color: #fff; border-bottom:1px solid #ddd;">
 									<div style="float:left; display:block;">
-										<img id="previousEmoticon" src="/images/previous1.png" height=40 width=30 style="padding-top: 3px; ">
+										<img id="previousEmoticon" src="/images/previous1.png">
 									</div>
 									<div id="_ePresentors" style="float:left; display:block; ">
 										<div id="_group1" style="background-color: #d9d9d9; float:left; display: block; height:45px; width:45px; cursor: pointer; " onclick="changeStickerGroup(this);"><img src="/images/emoticon/girl.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>
@@ -3472,7 +3494,7 @@
 										<div id="_group10" style="float:left; display: block; height:45px; width:45px; cursor: pointer;" onclick="changeStickerGroup(this);"><img src="/images/emoticon/crayonShin.png" height=30 width=30 style="padding-top: 7px; padding-left: 7px; "></div>  -->
 									</div>
 									<div style="float: right; display:block;">
-										<img id="nextEmoticon" src="/images/next1.png" height=40 width=30 style="padding-top: 3px; ">
+										<img id="nextEmoticon" src="/images/next1.png">
 									</div>
 								</div>						
 								<div id="emoticonList" style="display:inline-block;width:100%; background-color: #fff;">
@@ -3503,7 +3525,8 @@
 							<img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker()">
 						</div >				
 						<div class="comment_input_layout">
-							<textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea>
+							<!-- <textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea> -->
+							<input type="text" id="comment_input" oninput="auto_grow(this)" maxlength="500" style="width: 100%"/>
 						</div>
 						<div class="commentBtn">
 							<div id="uploadedFile" class="uploadedFile" style="display:none;">

@@ -74,6 +74,7 @@
 							if (checks.item(i).checked == true)
 								checks.item(i).parentElement.parentElement.parentElement.removeChild(checks.item(i).parentElement.parentElement);
 						}
+						
 					},
 					error: function() {
 						if (status == "1")
@@ -87,10 +88,18 @@
 					ReturnFunction("success");
 					window.close();
 				}
+				if(parent.parent.frames["right"].groupcount == "0") {
+					parent.parent.frames["left"].document.body.removeAttribute('style');
+				}
 			}
 	
 			function closePopup(){
 				if(ReturnFunction != null) {
+					
+					if(parent.parent.frames["right"].groupcount == "0") {
+						parent.parent.frames["left"].document.body.removeAttribute('style');
+					}
+					
 					ReturnFunction("cancel");
 					window.close();
 				}
@@ -106,17 +115,11 @@
 	
 	<body class="popup"> 
 	    <form method="post">
-	        <div id="menu">
-	            <ul>
-	                <li><span onClick="accept_schedule('1')"><spring:message code='ezSchedule.t338' /></span></li>
-	                <li><span onClick="accept_schedule('2')"><spring:message code='ezSchedule.t339' /></span></li>
-	            </ul>
-	        </div>
-			<div id="popuptitle" style="position:absolute;left:260px;top:5px;height:35px;"><h1><spring:message code='ezSchedule.t332'/></h1></div>
+			<div id="popuptitle"><h1><spring:message code='ezSchedule.t332'/></h1></div>
 	        <div id="close">
 	            <ul>
 <%-- 	                <li><span onClick="window.close()"><spring:message code='ezSchedule.t16' /></span></li> --%>
-	                <li><span onClick="closePopup()"><spring:message code='ezSchedule.t16' /></span></li>
+	                <li><span onClick="closePopup()"></span></li>
 	            </ul>
 	        </div> 
 	
@@ -159,12 +162,12 @@
 	                    </td> 
 	                </tr>	              		
 	              	</c:forEach>	                 
-	            </table> 
+	            </table>
+	            <div class="btnposition btnpositionNew">
+				    <a class="imgbtn" onClick="accept_schedule('1')" ><span><spring:message code='ezSchedule.t338' /></span></a>
+				    <a class="imgbtn" onClick="accept_schedule('2')" ><span><spring:message code='ezSchedule.t339' /></span></a>
+				</div>
 	        </div>
-	        <script type="text/javascript">
-		        selToggleList(document.getElementById("menu"), "ul", "li", "0");
-		        selToggleList(document.getElementById("close"), "ul", "li", "0");
-	        </script>
 	    </form> 
 	</body>
 </html>

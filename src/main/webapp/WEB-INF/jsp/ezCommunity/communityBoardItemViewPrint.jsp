@@ -200,25 +200,30 @@
 	<body class="popup">
 		<table class="layout">
 			<tr>
-<!-- 		    	<td style="height:20px"> -->
+		    	<!-- <td style="height:20px"> -->
 		    	<td style="width:100%;">
-					<h1><spring:message code = 'ezCommunity.t982' /></h1>
-					
-			      	<div id="close">
+			      	<div id="menu">
+						<ul id="menuTable">
+							<li class="sel">
+								<h1><spring:message code = 'ezCommunity.t982' /></h1>
+							</li>
+						</ul>
+						<ul style="float: right; margin-right: 50px">
+							<li id="menuTable" style="background: none; border: none;">
+								<span onclick="beforePrint()"><spring:message code = 'ezCommunity.t981' /></span>
+							</li>
+						</ul>
+					</div>
+				    <div id="close">
 				        <ul>
-				        	<li><span onclick="beforePrint()"><spring:message code = 'ezCommunity.t981' /></span></li>
-				          	<li><span onClick="window.close();"><spring:message code = 'ezCommunity.t21' /></span></li>
+				            <li><span onClick="window.close();"></span></li>
 				        </ul>
-			      	</div>
-			      	
-			      	<script type="text/javascript">
-						selToggleList(document.getElementById("close"), "ul", "li", "0");
-					</script>
+				    </div>
 				</td>
 		  	<tr>
-<!-- 		    	<td style="height:20px"> -->
+		    	<!-- <td style="height:20px"> -->
 		    	<td>
-		    	<!-- 2018-02-05  김보미 - 테이블컬럼 조정 -->
+		    		<!-- 2018-02-05  김보미 - 테이블컬럼 조정 -->
 		    		<table class="content" style="width:100%">
 		    		<!-- 작성자&부서 -->
 		    		<tr>

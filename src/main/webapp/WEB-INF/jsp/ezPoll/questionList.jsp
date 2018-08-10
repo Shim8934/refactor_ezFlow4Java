@@ -48,8 +48,8 @@
         	
         	window.onresize = function () {
 				var divList = document.getElementById("divList");				
-				var reheight = document.documentElement.clientHeight - 155;	
-				
+				var reheight = document.documentElement.clientHeight - 170;	
+
 				if (reheight < 500) {
 					divList.style.height = "500px";	
 				}
@@ -85,7 +85,7 @@
 			
 			function preProcessing() {
 				var divList = document.getElementById("divList");				
-				var reheight = document.documentElement.clientHeight - 155;	
+				var reheight = document.documentElement.clientHeight - 170;	
 				divList.style.height = reheight + "px";				
 				
 				//Uncheck all checkboxes after reload for firefox
@@ -100,7 +100,7 @@
 		    function menu_Search() {
 		    	var checkSeeAll = 0;
 		    	var search_str = "";
-		    	var mode = $("input[name=searchCheck]:checked").val();
+		    	var mode = document.getElementById("selectType").value;
 		    	var pollType = $("input[name=processCheck]:checked").val(); //2017-12-22
 		    	//if ($("input[name=searchCheck]:checked").val() == ) {}
 		    	
@@ -196,7 +196,7 @@
 		    function getParameters() {
 		    	var checkSeeAll = 0;
 		    	var _searchPrm = document.getElementById("searchInput").value;
-		    	var mode1 = $("input[name=searchCheck]:checked").val();
+		    	var mode1 = document.getElementById("selectType").value;
 		    	var pollType = $("input[name=processCheck]:checked").val(); //2017-12-22
 				
 		    	/* if (document.getElementById("seeAll").checked) {
@@ -269,14 +269,14 @@
 		    			qstId : pReceve
 		    			
 		    		},
-		    		success: function(data) {		    			
+		    		success: function(data) {	
 						var result = JSON.parse(data).result;					
 						
 						if (result == "Normal") {
 							var list_params = "";
 							var checkSeeAll = 0;
 					    	var _searchPrm = document.getElementById("searchInput").value;
-					    	var mode1 = $("input[name=searchCheck]:checked").val();
+					    	var mode1 = document.getElementById("selectType").value;
 					    	var pollType = $("input[name=processCheck]:checked").val(); //2017-12-22
 					    	
 /* 					    	if (document.getElementById("seeAll").checked) {
@@ -315,26 +315,26 @@
 		        var pageNum = currentPage;
 		        
 		        if (totalPages > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        
 		        if (totalPages > blockSize) {
 		            if (pageNum > blockSize) {
-		                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                strtext = "<span class='btnimg' onClick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onClick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        
@@ -362,28 +362,28 @@
 		        
 		        if (totalPages > blockSize) {
 		        	if (totalPages >= parseInt(((parseInt((pageNum - 1) / blockSize) + 1) * blockSize) + 1)) {
-		        	    strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		        	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+		        	    strtext = "";
+		        	    strtext = strtext + "<span class='btnimg' onClick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 		                PagingHTML += strtext;
 		        	}
 		        	else {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		                PagingHTML += strtext;
 		        	}
 		        }
 		        else {
-		            strtext = "<span class='ptxt' onClick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		            strtext = "";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        
 		        if (totalPages > 1 && totalPages != 1 && (totalPages != pageNum)) {
-		            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onClick='return goToPageByNum(" + totalPages + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        
@@ -462,18 +462,20 @@
 		<h1><spring:message code="ezPoll.t103"/>
 			<span id="mailBoxInfo"></span>
 			<span style="float: right; font-weight:normal;color:black;">
-				<c:if test="${mode1 != 'wri'}">
-					<input name="searchCheck" id="radio1" type="radio" value="sub" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"> <span><spring:message code="ezPoll.t106"/></span>
-					<input name="searchCheck" id="radio2" type="radio" value="wri" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"> <span><spring:message code="ezPoll.t107"/></span>
-				</c:if>
-				<c:if test="${mode1 == 'wri'}">
-					<input name="searchCheck" id="radio1" type="radio" value="sub" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"> <span><spring:message code="ezPoll.t106"/></span>
-					<input name="searchCheck" id="radio2" type="radio" value="wri" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"> <span><spring:message code="ezPoll.t107"/></span>
-				</c:if>
+				<select id="selectType">
+					<c:if test="${mode1 != 'wri'}">
+						<option name="searchCheck" id="radio1" value="sub" selected> <span><spring:message code="ezPoll.t106"/></span>
+						<option name="searchCheck" id="radio2" value="wri" > <span><spring:message code="ezPoll.t107"/></span>
+					</c:if>
+					<c:if test="${mode1 == 'wri'}">
+						<option name="searchCheck" id="radio1" value="sub" > <span><spring:message code="ezPoll.t106"/></span>
+						<option name="searchCheck" id="radio2" value="wri" selected> <span><spring:message code="ezPoll.t107"/></span>
+					</c:if>
+				</select>
 					<!-- <input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0;" > -->					
 					<%-- <a class="pollImgbtn" onClick="menu_Search()" ><span style="height: 23px;"><spring:message code="ezPoll.t227"/></span></a> --%>
-					<input type="text" name="searchInput" id="searchInput" style="width:150px; margin-left:8px; height:20px;border-right: 0px;vertical-align: top" onkeypress="check_key(event);" value="<c:out value='${strSearch1}'/>">
-					<a href="#" style="float:right"><img src="/images/sub/bsearch.gif" border="0" onclick="menu_Search()"></a>
+					<input type="text" name="searchInput" id="searchInput" onkeypress="check_key(event);" value="<c:out value='${strSearch1}'/>">
+					<a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onclick="menu_Search()"></a>
 			</span>
 		</h1>
 		<div id="mainmenu">
@@ -488,19 +490,19 @@
 				<li><a onClick="menu_Show()" style="margin-top: 3px;"><span ><spring:message code="ezPoll.t204"/></span></a></li>				
 				<li><input id="seeAll" type="checkbox" style="float:left; margin:6px 4px 0px 5px;"><spring:message code="ezPoll.t205" /></li> --%>
 				<li style="float:right; font-weight:normal; color:black; padding-right: 20px;">
-					<input id="btnRadio1" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle; padding-right: 20px;" onclick="selectCheck()" value="3" ${pollType == '3'? 'checked' : ''} >
+					<input id="btnRadio1" type="radio" name="processCheck" style="vertical-align:middle; padding-right: 20px;" onclick="selectCheck()" value="3" ${pollType == '3'? 'checked' : ''} >
 					<label for="btnRadio1"><spring:message code='ezPoll.t145' /></label>					
 				</li>
 				<li style="float:right; font-weight:normal; color:black;">
-					<input id="btnRadio2" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle;" onclick="selectCheck()" value="2" ${pollType == '2'? 'checked' : ''}>
+					<input id="btnRadio2" type="radio" name="processCheck" style="vertical-align:middle;" onclick="selectCheck()" value="2" ${pollType == '2'? 'checked' : ''}>
 					<label for="btnRadio2"><spring:message code='ezPoll.t146' /></label>					
 				</li>
 				<li style="float:right; font-weight:normal; color:black;">
-					<input id="btnRadio4" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle;" onclick="selectCheck()" value="4" ${pollType == '4'? 'checked' : ''}>
+					<input id="btnRadio4" type="radio" name="processCheck" style="vertical-align:middle;" onclick="selectCheck()" value="4" ${pollType == '4'? 'checked' : ''}>
 					<label for="btnRadio4"><spring:message code='ezPoll.t251' /></label>		
 				</li>
 				<li style="float:right; font-weight:normal; color:black;">
-					<input id="btnRadio3" type="radio" name="processCheck" style="width:13px;height:13px;vertical-align:middle;" onclick="selectCheck()" value="1" ${pollType == '1'? 'checked' : ''}>
+					<input id="btnRadio3" type="radio" name="processCheck" style="vertical-align:middle;" onclick="selectCheck()" value="1" ${pollType == '1'? 'checked' : ''}>
 					<label for="btnRadio3"><spring:message code='ezPoll.t237' /></label>		
 				</li>
 				
@@ -516,7 +518,7 @@
 					<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
 						<input type="checkbox" id="checkAll" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)">
 					</th> 
-					<th width="20px"><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
+<!-- 					<th width="20px"><img src="/images/ImgIcon/view-importance.gif" border="0"></th> -->
 					<th><spring:message code="ezPoll.t106"/></th> 
 					<th width="60px"><spring:message code="ezPoll.t104"/></th> 					
 					<th width="90px"><spring:message code="ezPoll.t107"/></th> 
@@ -529,13 +531,18 @@
 			        <tr id="${list.qstId}" class="white">
 			        	<td style="padding:0"> <input type="checkbox" class="checkBnk" id="qstCheck+<c:out value ="${list.qstId}" />+" value=<c:out value="${list.qstId}" />  onchange="javascript:getChecked(this)"></td>
 			        	
-			        	<td>			        	
-							<c:if test="${list.isHidden == 1}">
-								<img src="/images/ImgIcon/icon-highimportance.gif" border="0">
-							</c:if>						
-			        	</td>
+<!-- 			        	<td>			        	 -->
+<%-- 							<c:if test="${list.isHidden == 1}"> --%>
+<!-- 								<img src="/images/ImgIcon/icon-highimportance.gif" border="0"> -->
+<%-- 							</c:if>						 --%>
+<!-- 			        	</td> -->
 			        	 
-			          	<td id="tlt<c:out value ="${list.qstId}" />" style="overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;" title=<c:out value ="${list.title}"/> onClick="title_OnClick('<c:out value ="${list.qstId}"/>')" ><c:out value ="${list.title}"/></td>
+			          	<td id="tlt<c:out value ="${list.qstId}" />" style="overflow: hidden; cursor: pointer; text-overflow: ellipsis; white-space: nowrap;" title=<c:out value ="${list.title}"/> onClick="title_OnClick('<c:out value ="${list.qstId}"/>')" >
+				          	<c:out value ="${list.title}"/>
+				          	<c:if test="${list.cmtCnt > 0}">
+				          		<span class="voteCmtCnt">[<c:out value ="${list.cmtCnt}"/>]</span>
+				          	</c:if>
+			          	</td>
 			          	
 			          	<%-- Question status --%>
 						<c:if test="${list.status == 0}">
@@ -590,7 +597,7 @@
 		        
 			    <c:if test="${list.size() == 0}"> 
 			        <tr> 
-						<td colspan="9" align="center"  bgcolor="#FFFFFF"> <spring:message code="ezPoll.t241" /></td>
+						<td colspan="8" align="center"  bgcolor="#FFFFFF"> <spring:message code="ezPoll.t241" /></td>
 		       		</tr> 
 		        </c:if> 
 			</table> 

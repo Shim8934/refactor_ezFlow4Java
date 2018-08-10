@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -9,15 +10,15 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 		<style> 
 			P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm } 
 		</style>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/reademail.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/reademail.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/Common.js")%>"></script>
 		<script type="text/javascript">	
 		    var g_paramURL = "${url}";
 			var g_expath = "exchange";
@@ -134,7 +135,9 @@
 		            document.getElementById("message").style.height = document.documentElement.clientHeight - 220 + "px";
 		        else
 			        document.getElementById("message").style.height = document.documentElement.clientHeight - 190 + "px";
-			}	
+				
+		        mailPrevSentDateChk();
+		    }	
 			
 			function HideMenu()
 			{
@@ -321,19 +324,19 @@
 		            <c:if test="${dotNetIntegration == 'YES'}">
 		            // IE가 window.postMessage를 Cross Origin에서 지원하지 않는 관계로 동일 사이트의 윈도우를
 		            // 띄운 후 그 안에서 iframe으로 처리해야 한다.
-		            var OpenWin = window.open("/ezBoard/writeBoardSelectModalDotNet.do", "WriteBoardSelect_Modal", GetOpenWindowfeatureNoScrollbar(345, 660));		            
+		            var OpenWin = window.open("/ezBoard/writeBoardSelectModalDotNet.do", "WriteBoardSelect_Modal", GetOpenWindowfeatureNoScrollbar(355, 660));		            
 		            </c:if>
 		            
 		            <c:if test="${dotNetIntegration != 'YES'}">
 		            // 자체 게시판 선택 모듈을 호출하는 경우
-		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
+		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
 		            </c:if>
 		            
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
-		            var wWeight = "345";
-		            var wHeight = "660";
+		            var wWeight = "355";
+		            var wHeight = "600";
 		
 		            var heigth = window.screen.availHeight;
 		            var width = window.screen.availWidth;
@@ -341,7 +344,7 @@
 		            var left = (width - wWeight) / 2;
 		            var top = (heigth - wHeight) / 2;
 		            var ret = window.showModalDialog("/ezBoard/writeBoardSelectModal.do", "",
-		                "DialogHeight:660px;DialogWidth:345px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
+		                "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
 		
 		            if (typeof (ret) != "undefined") {
 		
@@ -426,6 +429,15 @@
 		        newwin.focus();
 		    }
 		    
+		    function mailPrevSentDateChk() {
+		    	if (sentDateMsg != "") { // 전달 및 회신시 보낸시각
+		    		var sentDateHeight = $(".sentDateStr").innerHeight();
+		    		sentDateHeight = (Math.ceil(sentDateHeight/10) * 10);
+		    		
+		    		var messageH = $("#message").height();
+		    		$("#message").height(messageH - sentDateHeight);
+		    	}
+		    }
 		</script>
 	</head>
 
@@ -457,7 +469,7 @@
 		                    </c:if>
 		                </ul>
 		            </div>
-		            <div id="close"><ul><li><span onClick="OnBtnClose()"><spring:message code="ezEmail.t63" /></span></li></ul></div>	
+		            <div id="close"><ul><li><span onClick="OnBtnClose()"></span></li></ul></div>	
 		        </td> 
 		    </tr>  
 		    <tr> 
@@ -543,7 +555,7 @@
 		</table>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
+			
 			if("${pIsCCFg}"!="N") {
 				document.getElementById("message").style.height = document.documentElement.clientHeight - 220 + "px";
 			} else {

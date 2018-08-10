@@ -30,7 +30,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
 		<style type="text/css">
-			.warningbox01 { width:540px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
+			.warningbox01 { width:540px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;}
 			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}
 			.warnintxt01 { position:relative; margin-bottom:10px;margin-top:20px}
 			.warningimg { position:absolute; top:0px; left:0px;}
@@ -149,7 +149,7 @@
 	                	if(CheckAdmin()) {
 	                		document.getElementById("mainmenu").onload = function(){};
 	    	               	document.getElementById("noResListSpan").style.display = "none";
-	    	               	document.getElementById("tbar2").style.display = "none";
+	    	               	//document.getElementById("tbar2").style.display = "none";
 	                	} else {
 	                		document.getElementById("mainmenu").style.display = "none";
 	                	} 
@@ -280,11 +280,11 @@
 						if (result.primary == "1") {						
 							$("#ownerNm").html(result.resBrd.ownerNm + " (" + result.resBrd.ownerPosition + ")");
 							$("#ownerDept").html(result.resBrd.ownDeptNm);
-							$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm);
+							$("#brdNm").html(result.resBrd.brdNm);
 						} else {
 							$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownerPosition2 + ")");
 							$("#ownerDept").html(result.resBrd.ownDeptNm2);
-							$("#brdNm").html('<img src="/images/kr/left/left_resource.png" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;&nbsp;'+result.resBrd.brdNm2);
+							$("#brdNm").html(result.resBrd.brdNm2);
 						}
 						
 						$("#ownerCall").html(result.resBrd.ownerCall);
@@ -319,20 +319,22 @@
 	        }
 		</script>
 	</head>
-	<body class="mainbody" style="overflow:hidden;">
-		<h1 style="text-overflow:ellipsis;overflow:hidden;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
+	<body class="mainbody" style="overflow:hidden; padding-right: 6px;">
+		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
+		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
 		<div id="mainmenu" onload = "makePageSelPage()">
   			<ul>
     			<c:if test="${adminFg eq 'Y'}">
     				<li><span onClick="btnAdd_Click();"><spring:message code="ezResource.t363" /></span></li>	
     				<li><span onClick="btnView_Resource();"><spring:message code="ezResource.t17" /></span></li>
-    				<li id="tbar2" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li>
+    				<!-- <li id="tbar2" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li> -->
     			</c:if>
     			<span id = "noResListSpan">
     			<li id="ToDaybtn"><span onClick="setweek_onload('TODAY');"><spring:message code="ezResource.t251" /></span></li>
     			<li id="Weekbtn"><span onClick="setweek_onload('WEEK');"><spring:message code="ezResource.t253" /></span></li>
-      			<li style="background:none;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
-				<li style="background:none;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t370" /></li>
+    			<!-- 2018-06-05 구해안 허가,비허가 오른쪽으로 ui 수정 -->
+      			<li style="background:none;float:right;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
+				<li style="background:none;float:right;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t370" /></li>
   				</span>
   			</ul>
 		</div>
@@ -354,7 +356,7 @@
                 	<div id="mainlistlayout" style="width:100%;height:780px;margin-top:10px;overflow-y: auto;overflow-x:hidden;" >
                 		<table style="width:100%;">
                     		<tr id="weeklyline">
-                				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #edf4fd;">
+                				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f0f6ff;">
                 					<div style="border:1px solid #d1ddec;height:35px;line-height: 33px">
 					                	<img src="/images/calendar/btn_calendar_mini_prev.gif" style="cursor:pointer;vertical-align:middle;" id=Img2 onClick="pagenavi('PREV');">
 					                	&nbsp;<span id="divViewHeader" class="calResTitleSpan"></span>&nbsp;
@@ -400,36 +402,42 @@
         	</div>
         </div>
         <!-- layer 팝업 -->
+        <!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
         <div id="ResourceInfo" style="display: none">
-        	<table id="resourceDataTable" style="width:440px; border-collapse:collapse; border-spacing:0px; margin-top:10px; border-color:#ccc; margin-bottom:10px">
-				<tr>
-					<th colspan="2" class="layerHeader" id="brdNm"></th>
-				</tr>
-				<tr>
-					<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
-					<td><span id="ownerNm"></span></td>
-				</tr>
-				<tr>
-					<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t151'/></th>
-					<td><span id="ownerDept"></span></td>
-				</tr>
-				<tr>
-					<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t155'/></th>
-					<td><span id="ownerCall"></span></td>
-				</tr>
-				<tr>
-					<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t148'/></th>
-					<td style="word-break:break-all;" id="resLocation"><%-- ${resLocation} --%></td>
-				</tr>							
-				<tr>
-					<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
-					<td id="approveFlag"></td>
-				</tr>
-				<tr>
-					<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
-					<td><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></td>
-				</tr>
-         	</table>
+        	<div class="popupJQLayer" style="padding-top:6px">
+				<div class="title" id="brdNm" style="overflow:hidden; text-overflow:ellipsis; width:450px;"></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span></span></a></li>
+		            </ul>
+		        </div>
+	        	<table id="resourceDataTable" style="width:478px; margin-top:10px;">
+					<tr>
+						<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
+						<td><span id="ownerNm"></span></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t151'/></th>
+						<td><span id="ownerDept"></span></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t155'/></th>
+						<td><span id="ownerCall"></span></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t148'/></th>
+						<td style="word-break:break-all;" id="resLocation"><%-- ${resLocation} --%></td>
+					</tr>							
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
+						<td id="approveFlag"></td>
+					</tr>
+					<tr>
+						<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
+						<td><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></td>
+					</tr>
+	         	</table>
+	         </div>	
         </div>
 	</body>
 </html>

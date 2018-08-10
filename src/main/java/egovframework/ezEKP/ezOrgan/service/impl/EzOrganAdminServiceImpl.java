@@ -128,7 +128,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public List<OrganUserVO> getPermissionList(String companyID, String type, String strLang, int startRow, int endRow, int tenantID) throws Exception {
+	public List<OrganUserVO> getPermissionList(String companyID, String type, String searchType, String searchValue, String strLang, int startRow, int endRow, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("v_TENANT_ID", tenantID);
@@ -139,6 +139,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PENDROW", endRow);
         map.put("v_STARTNUM", startRow - 1);
         map.put("v_COUNT", endRow - startRow + 1);
+        map.put("searchType", searchType);
+        map.put("searchValue", searchValue);
 		
 		return ezOrganAdminDao.getPermissionList(map);
 	}
@@ -510,13 +512,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public int getPermissionListCount(String companyID, String type, String strLang, int tenantID) throws Exception {
+	public int getPermissionListCount(String companyID, String type, String searchType, String searchValue, String strLang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TYPE", type);
 		map.put("v_LANGDATA", strLang);
+		map.put("searchType", searchType);
+		map.put("searchValue", searchValue);
 		
 		return ezOrganAdminDao.getPermissionListCount(map);
 	}
@@ -582,6 +586,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				ezOrganAdminDao.insertCompanyInfo_I17(map1);
 				ezOrganAdminDao.insertCompanyInfo_I18(map1);
 				ezOrganAdminDao.insertCompanyInfo_I19(map1);
+				ezOrganAdminDao.insertCompanyInfo_I20(map1);
+				map1.put("lang", userInfo.getLang());
+				ezOrganAdminDao.insertCompanyInfo_I21(map1);
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
                 e.printStackTrace();
@@ -798,7 +805,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         logger.debug("updateDBData_user ended");
     }   
 	
-    @Override
+	@Override
     public void updateDBData_userPermission(OrganUserVO vo) throws Exception {
         logger.debug("updateDBData_userPermission started");
         logger.debug("tenantId=" + vo.getTenantId() + ",cn=" + vo.getCn());
@@ -1121,7 +1128,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
 	// 사용자 이름,부서 목록을 반환한다.
     @Override
-    public List<OrganUserVO> getUserList(int tenantID,int startPage, int endPage, int maxItemPerPage,
+    public List<OrganUserVO> getUserList(int tenantID,int startPage, int maxItemPerPage,
     									 String keycode,String keyword) throws Exception {     
     	logger.debug("getUserList started");
     	
@@ -1129,7 +1136,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     	
     	params.put("tenantID", tenantID);
 		params.put("v_start", startPage);
-		params.put("v_end", endPage);
+		params.put("v_end",   startPage + maxItemPerPage - 1);
 		params.put("pageCount", maxItemPerPage);
 		params.put("search_keycode", keycode);
 		params.put("search_keyword", keyword);
@@ -1370,7 +1377,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 		
-		String inputParams = "&domainName=" + URLEncoder.encode(domain, "UTF-8") 
+		String inputParams = "domainName=" + URLEncoder.encode(domain, "UTF-8") 
 				+"&groupName=" + URLEncoder.encode(groupName, "UTF-8");
 		
 		logger.debug("inputParams=" + inputParams);

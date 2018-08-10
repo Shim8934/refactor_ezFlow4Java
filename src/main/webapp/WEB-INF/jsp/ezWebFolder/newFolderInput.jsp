@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -6,11 +7,11 @@
 	<head>
 	    <title><spring:message code='ezEmail.t348' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script src="/js/ezEmail/js_cross/string_component.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 	    <script type="text/ecmascript">
 			var ReturnFunction;
 	        var CancelFunction;
@@ -139,6 +140,11 @@
 	</head>
 	<body class="popup" onload="javascript:window_onload()">
 	    <h1 id="title"></h1>
+	    <div id="close">
+            <ul>
+                <li><span id="btn_cancel" onclick="btn_cancel_onclick()"></span></li>
+            </ul>
+        </div>
 	    <!-- <div class="txt"><span></span></div> -->
 	    <div class="nobox">
 	    	<span id="ko_lang"><spring:message code='ezWebFolder.t226'/></span>
@@ -149,7 +155,6 @@
 	    </div>
 	    <div class="btnposition btnpositionNew">
 	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezWebFolder.t116'/></span></a>
-	        <a id="btn_cancel" class="imgbtn" onclick="btn_cancel_onclick()"><span><spring:message code='ezWebFolder.t112'/></span></a>
 	    </div>	
 	</body>
 </html>

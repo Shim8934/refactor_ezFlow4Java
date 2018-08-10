@@ -148,12 +148,14 @@
 		                        var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
 		                        var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("GUBUN").item(0));
 
-		                        listHTML = "<dl onclick=\"openDoc_section4_Type('" + pfirstItemID + "','" + FboardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" class='listtype_photo' style='cursor:pointer'>";
+		                        listHTML = "<dl onclick=\"openDoc_section4_Type('" + pfirstItemID + "','" + FboardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" class='listtype_photo' style='cursor:pointer;margin-top:-4px'>";
 		                        
-		                        if (pBoardID_NewBoardSTD == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")
-		                            var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("TITLE").item(0));
-		                        else
-		                            var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("TITLE").item(0));
+		                        /* 2018-07-16 홍승비 - 포틀릿 게시판 특수문자 처리 */
+		                        if (pBoardID_NewBoardSTD == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
+		                            var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("TITLE").item(0)));
+		                        } else {
+		                            var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("TITLE").item(0)));
+		                        }
 		                        
 		                        listHTML += "<dt class='tit'><strong>" + DOCTITLE + "</strong></dt>";
 		                        listHTML += "<dd class='photo'><img src='/images/kr/main/board_pic.gif' width='86' height='61' alt=''></dd>";
@@ -162,10 +164,11 @@
 		                        listHTML += "<ul class=\"listtype_txt \">";
 		                        
 		                        for (var i = 1; i < RowCnt; i++) {
-		                            if (pBoardID_NewBoardSTD == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")
-		                                var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("TITLE").item(0));
-		                            else
-		                                var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("TITLE").item(0));
+		                            if (pBoardID_NewBoardSTD == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
+		                                var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("TITLE").item(0)));
+		                            } else {
+		                                var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("TITLE").item(0)));
+		                            }
 		                            
 		                            var STARTDATE = "";
                             		var WRITERNAME = "";
@@ -297,11 +300,14 @@
 	                if (DocContentObject_Div.getElementsByTagName("style").length > 0)
 	                    DocContentObject_Div.removeChild(DocContentObject_Div.getElementsByTagName("style")[0]);
 
-	                if (CrossYN())
+	                if (CrossYN()) {
 	                    DocContentObject.innerHTML = DocContentObject_Div.textContent.replace(/(\r\n)/g, "");
-	                else
+	                } else {
 	                    DocContentObject.innerHTML = DocContentObject_Div.innerText.replace(/(\r\n)/g, "");
-
+	                }
+	                
+	                /* 2018-07-16 홍승비 - 포틀릿 게시판 특수문자 처리 */
+	                DocContentObject.innerHTML = MakeXMLString(DocContentObject.innerHTML);
 	                document.getElementById("content").appendChild(DocContentObject);
 		        }
 

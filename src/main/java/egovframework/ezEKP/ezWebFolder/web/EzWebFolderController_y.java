@@ -384,7 +384,6 @@ public class EzWebFolderController_y {
 		jsonObj.put("userId", userInfo.getId());
 		jsonObj.put("folderId", request.getParameter("folderId"));
 		jsonObj.put("uppFolderId", request.getParameter("uppFolderId"));
-		jsonObj.put("lang", userInfo.getLang());
 		
 		resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/folders/"+ folderId + "/"+mode, 
 				null, request, "put", jsonObj);

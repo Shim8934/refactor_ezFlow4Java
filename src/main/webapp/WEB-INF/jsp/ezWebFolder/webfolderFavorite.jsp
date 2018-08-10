@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <!DOCTYPE html>
@@ -8,27 +9,27 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
 <script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
-<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="/js/mouseeffect.js"></script>
-<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
-<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css"/>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/fileFolderDrop.js")%>"></script>
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.css")%>" type="text/css"/>
 <!-- date Picker -->
-<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
-<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/pageNav.js")%>"></script>
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
 <!-- date Picker -->
-<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
-<!-- module -->
-<script type="text/javascript" src="/js/ezWebFolder/context/row-selector.js"></script>
-<script type="text/javascript" src="/js/ezWebFolder/context/favorite.js"></script>
-<script type="text/javascript" src="/js/ezWebFolder/context/buttons.js"></script>
-<script type="text/javascript" src="/js/ezWebFolder/context/search.js"></script>
-<script type="text/javascript" src="/js/ezWebFolder/context/share.js"></script>
-<script type="text/javascript" src="/js/ezWebFolder/popup.js"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.js")%>"></script>
+<!-- module --> 
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/row-selector.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/favorite.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/buttons.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/search.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/share.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/popup.js")%>"></script>
 <script type="text/javascript">
 	"use strict";
 	var context = (function() {
@@ -137,7 +138,7 @@
 	
 	// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 	window.onresize = function() {
-		var reheight = document.documentElement.clientHeight - 200;
+		var reheight = document.documentElement.clientHeight - 210;
 		dom.dragDropArea.style.height = reheight + "px";
 		
 		reheight = document.documentElement.clientHeight - 100;
@@ -851,7 +852,7 @@
 	</h1>
 	<div id="pageArea">
 		<div id="originalPathWrapper" style="height:40px;">
-			<div id="originalPath" style="font-size: 24px; font-weight: bold; padding: 8px 0px;"></div>
+			<div id="originalPath" style="font-size: 24px; font-weight: bold; padding: 8px 4px 0px;"></div>
 		</div>
 		<div id="mainmenu">
 			<ul>
@@ -861,13 +862,13 @@
 				<li favoritemenu onclick="buttons.fileRename()"><span><spring:message code='ezWebFolder.t273'/></span></li>
 				<li onclick="buttons.fileMoveAndCopy()"><span><spring:message code='ezWebFolder.t275'/></span></li>
 				<li onclick="shareContext.addShareView()"><span><spring:message code='ezWebFolder.t254'/></span></li>			
-				<li favoritemenu><img src="/images/i_bar.gif"></li>
+				<!-- <li favoritemenu><img src="/images/i_bar.gif"></li> -->
 				<li favoritemenu onclick="favoriteContext.toggleAll()"><span><spring:message code='ezWebFolder.t281'/></span></li>
-				<li><img src="/images/i_bar.gif"></li>
+				<!-- <li><img src="/images/i_bar.gif"></li> -->
 				<li id="SearchOption" favoritemenu mode="off" onclick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
-				<li><img src="/images/i_bar.gif"></li>
+				<!-- <li><img src="/images/i_bar.gif"></li> -->
 				<li favoritemenu onclick="context.refreshList(true)"><span><spring:message code='ezWebFolder.t139'/></span></li>
-				<li favoritemenu><img src="/images/i_bar.gif"></li>
+				<!-- <li favoritemenu><img src="/images/i_bar.gif"></li> -->
 				<li favoritemenu style="height: 28px;">
 					<select class="select" id="idSelect" onchange="onFileTypeChange(this.value);">
 						<option value=""><spring:message code='ezWebFolder.t191'/></option>
@@ -942,15 +943,15 @@
 		<div id="tblPageRayer"></div>
 	</div>
 
-	<div id="searchpopup" class="popupwrap3" style="display: none; padding-top: 20px; padding-bottom: 20px; margin-bottom: 70px">
-		<div class="popupwrap4">
+	<div id="searchpopup" class="popupwrap3" style="display: none;margin-bottom: 70px">
+		<div class="popupJQLayer">
+			<div class="title"><spring:message code='ezWebFolder.t10'/><spring:message code='ezWebFolder.t123'/></div>
+			<div id="close">
+	            <ul>
+	                <li><a rel="modal:close"><span onclick="searchOptionHidden()"></span></a></li>
+	            </ul>
+	        </div>
 			<table class="content" style="margin-top: 10px;">
-				<tr>
-					<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" width="16px" style="vertical-align: middle; padding-bottom: 1px"/> &nbsp;<spring:message code='ezWebFolder.t10'/>&nbsp;<spring:message code='ezWebFolder.t123'/></th>
-				</tr>
-				<tr>
-					<td style="border-left-color:white;border-right-color:white;height:10px" colspan="2"></td>
-				</tr>
 				<tr>
 					<th style="text-align: center"><spring:message code='ezBoard.t210'/></th>
 					<td><input type="text" id="Sdatepicker" class="datepicker" style="width: 80px; text-align: center" readonly="readonly"> ~ <input type="text" id="Edatepicker" class="datepicker" style="width: 80px; text-align: center" readonly="readonly"></td>
@@ -972,10 +973,13 @@
 					<td><input type="text" id="searchCreateName" style="width: 99%" value="" name="searchCreateName"></td>
 				</tr>
 			</table>
-			<br/>
 			<table style="width: 100%">
 				<tr>
-					<td style="text-align: center;"><a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142'/></span></a> <a class="imgbtn" rel="modal:close"><span onClick="searchOptionHidden()"><spring:message code='ezAddress.t11'/></span></a></td>
+					<td style="text-align: center;">
+						<div class="btnpositionLayer" style="padding-top:6px">
+							<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142'/></span></a>
+						</div>	
+					</td>
 				</tr>
 			</table>
 		</div>

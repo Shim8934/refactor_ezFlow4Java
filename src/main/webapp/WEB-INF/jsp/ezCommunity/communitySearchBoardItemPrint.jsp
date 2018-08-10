@@ -82,12 +82,9 @@
 		<h1><spring:message code='ezCommunity.t1463'/></h1>
 		<div id="close">
 	  		<ul>
-		    	<li><span onClick="window.close();"><spring:message code='ezCommunity.t21'/></span></li>
+		    	<li><span onClick="window.close();"></span></li>
 		  	</ul>
 		</div>
-		<script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
 		<table class="content">
 			<tr>
 		    	<th><spring:message code='ezCommunity.t1464'/></th>

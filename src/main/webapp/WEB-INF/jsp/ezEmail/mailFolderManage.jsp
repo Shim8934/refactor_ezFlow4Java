@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -11,13 +12,13 @@
 		<link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/email_tree.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/email_tree.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/treeview.htc.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component_utf8.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/encode_component.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 		<script type="text/javascript">
 			var lang = "${userinfo.lang}";
 			var PostTreeView = null;
@@ -509,11 +510,19 @@
 	<body style="overflow:hidden;" class="popup">
 		<h1 style="margin-bottom:0px;"><spring:message code='ezEmail.t481' /></h1>
 		<div id="close">
-		  <ul>
-		    <li><span onClick="manageClose()"><spring:message code='ezEmail.t63' /></span></li>
-		  </ul>
+			<ul>
+		    	<li><span onClick="manageClose()"></span></li>
+		  	</ul>
 		</div>
-		<div style="margin-bottom:5px;">
+		<table class="popuplist" style="width:100%;margin-top:5px">
+			<tr>
+		    	<td>
+		        	<div style="height:390px;width:100%;overflow-x:auto;overflow-y:auto;background-color:#FFFFFF;padding-left:2px;padding-top:5px;" id="PostTreeView">
+					</div>
+		    	</td>
+		  	</tr>
+		</table>
+		<div class="btnpositionNew">
 		    <a class="imgbtn"><span onClick="add_onclick()" style="text-align:center;"><spring:message code='ezEmail.t308' /></span></a>
 		    <a class="imgbtn"><span onClick="modify_onclick()" style="text-align:center;"><spring:message code='ezEmail.t149' /></span></a>
 		    <a class="imgbtn"><span onClick="delete_onclick()" style="text-align:center;"><spring:message code='ezEmail.t95' /></span></a>
@@ -521,17 +530,6 @@
 		    <a class="imgbtn"><span onClick="delete_mail_onclick()" style="text-align:center;"><spring:message code='ezEmail.t483' /></span></a>
 		    <a class="imgbtn"><span onClick="subscribe_onclick()" style="text-align:center;"><spring:message code='ezEmail.lhm71' /></span></a>
 		</div>
-		<table class="popuplist" style="width:100%">
-		  <tr>
-		    <td>
-		        <div style="height:400px;width:100%;overflow-x:auto;overflow-y:auto;background-color:#FFFFFF;padding-left:2px;padding-top:5px;" id="PostTreeView">
-				</div>
-		    </td>
-		  </tr>
-		</table>
-		<script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 		    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>

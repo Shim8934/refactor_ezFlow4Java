@@ -11,8 +11,14 @@
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	   	<script type="text/javascript">
+	   		var containLow = "${containLow}";
+	   		var totalCount = "<c:out value='${totalCount }'/>";
+	   		var totalCount2 = "<c:out value='${totalCount2 }'/>";
+	   		var keyword = "<c:out value='${keyword }'/>";
+	   	
 	   		$(document).ready(function() {
 	   			ChangeListView_onClick(getOrganListType());
+	   			memberCountInfo();
 	   		})
 	   	
 	   		function ChangeListView_onClick(flag) {
@@ -59,6 +65,24 @@
 	        	})
 	        	return organListType;
 	        }
+	        
+	        //부서별 사원 수 출력
+	        function memberCountInfo() {
+	        	var html = "<img src='/images/OrganTree_cross/ic-open.gif' style='vertical-align:middle;padding-right: 3px;'>";
+	        	html += keyword;
+				if (containLow == "YES") {
+					var expanded = $("li[aria-selected=true]").eq(0).attr("aria-expanded");
+
+					if (expanded != null && expanded != "") { //하위가 있으면
+						html += "-[<span style='color:#017BEC;'>" + totalCount + "<spring:message code='main.t20000'/></span>/<spring:message code='ezAddress.t362' /> <span style='color:#017BEC;'>" + totalCount2 + "<spring:message code='main.t20000'/></span>]";
+	        		} else { //하위가 없으면
+	        			html += "-[<span style='color:#017BEC;'>" + totalCount +"<spring:message code='main.t20000'/></span>]";
+	        		}
+				} else {
+					html += "-[<span style='color:#017BEC;'>" + totalCount + "<spring:message code='main.t20000'/></span>]";
+				}
+				$("#selectDeptNM").html(html);
+	        }
 		</script>
 		<style>
 		</style>
@@ -67,7 +91,21 @@
 			<tbody>
 				<tr>
 			    	<th style="white-space:normal;background-color: white;border-top:0px solid #ddd;border-bottom:1px solid #eaeaea">
-			    		<span id="selectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1"><img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;padding-right: 3px;"><c:out value='${keyword }'/>-[<span style="color:#017BEC;"><c:out value='${userCount }'/><spring:message code='main.t20000'/></span>]</span>
+			    		<span id="selectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;" countinfo="1">
+<!-- 			    			<img src="/images/OrganTree_cross/ic-open.gif" style="vertical-align:middle;padding-right: 3px;"> -->
+<%-- 			    			<c:out value='${keyword }'/>-[ --%>
+<!-- 			    				<span style="color:#017BEC;"> -->
+<%-- 				    				<c:choose> --%>
+<%-- 				    					<c:when test="${containLow eq 'NO' }"> --%>
+<%-- 				    						<c:out value='${totalCount }'/> --%>
+<%-- 				    					</c:when> --%>
+<%-- 				    					<c:otherwise> --%>
+<%-- 				    						<c:out value='${totalCount }'/><spring:message code='main.t20000'/></span>/<span style="color:#017BEC;"><c:out value='${totalCount2 }'/> --%>
+<%-- 				    					</c:otherwise> --%>
+<%-- 				    				</c:choose> --%>
+<%-- 				    				<spring:message code='main.t20000'/> --%>
+<!-- 		    					</span>] -->
+			    			</span>
 			    		<c:choose>
 			    			<c:when test="${listType eq 'TXT' }">
 					    		<span style="float:right;">
@@ -88,7 +126,7 @@
 		</table>
 		<c:choose>
 			<c:when test="${listType eq 'TXT' }">
-				<div style="vertical-align: top; height: 440px; overflow: auto; width: 100%;" id="txtlist_Layer">
+				<div style="vertical-align: top; height: 400px; overflow: auto; width: 100%;" id="txtlist_Layer">
 					<table style="width:100%; border: 1px solid #B6B6B6;" class="mainlist">
 					<c:choose>
 						<c:when test="${key eq 'DEPARTMENT' }">
@@ -124,7 +162,7 @@
 					</c:choose>
 				    </table>
 				</div>
-				<div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; width: 100%; display: none;" id="DeptUserImgList">
+				<div style="vertical-align: top; text-align: center; height: 400px; overflow: auto; width: 100%; display: none;" id="DeptUserImgList">
 					<c:forEach items="${userList}" var="user">
 						<table class="organwrap" cellspacing="0" cellpadding="0" style="margin-top: 5px; margin-left: auto; margin-right: auto;">
 					        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
@@ -152,7 +190,7 @@
 				</div>
 			</c:when>
 			<c:otherwise>
-				<div style="vertical-align: top; height: 440px; overflow: auto; width: 100%; display: none;" id="txtlist_Layer">
+				<div style="vertical-align: top; height: 400px; overflow: auto; width: 100%; display: none;" id="txtlist_Layer">
 					<table style="width:100%; border: 1px solid #B6B6B6;" class="mainlist">
 					<c:choose>
 						<c:when test="${key eq 'DEPARTMENT' }">
@@ -188,7 +226,7 @@
 					</c:choose>
 				    </table>
 				</div>
-				<div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; width: 100%;" id="DeptUserImgList">
+				<div style="vertical-align: top; text-align: center; height: 400px; overflow: auto; width: 100%;" id="DeptUserImgList">
 					<c:forEach items="${userList}" var="user">
 						<table class="organwrap" cellspacing="0" cellpadding="0" style="margin-top: 5px; margin-left: auto; margin-right: auto;">
 					        <tr id="${user.userId }" name="${user.userName }" deptId="${user.deptId}" onclick="setUserAuthorDept(this);" ondblclick="setAuthorViewUser();" style="cursor: pointer;" class="hover">
@@ -216,5 +254,6 @@
 				</div>
 			</c:otherwise>
 		</c:choose>
+		<input type="hidden" id="totalCount" name="totalCount" value="${totalCount }" />
 </html>
 

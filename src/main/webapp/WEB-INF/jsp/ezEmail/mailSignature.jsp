@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -8,11 +9,11 @@
 		<title>mail_signature</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css">
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js/dhtml.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js/dhtml.js")%>"></script>
 		<script type="text/javascript">
 		    var pUserID = "${userId}";
 		    var pSigState = "0";
@@ -279,10 +280,11 @@
 		    </TD> 
 		  </TR> 
 		</table>
-		<div style="width:780px;text-align:center;margin-top:5px;">
-		    <%--<a class="imgbtn" onClick="NoSign()"><span><%=RM.GetString("t99000009")%></span></a>--%>
-		    <a class="imgbtn" onClick="SetSig()"><span><spring:message code='main.sp09' /></span></a>
-		    <a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
+		<div style="width:780px;text-align:center;">
+		    <div class="btnpositionJsp">
+		    	<a class="imgbtn" onClick="SetSig()"><span><spring:message code='main.sp09' /></span></a>
+		    	<a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
+		    </div>	
 		</div>
 		<xml id="_signature1" style="display: none;">${signature1}</xml>
 		<xml id="_signature2" style="display: none;">${signature2}</xml>

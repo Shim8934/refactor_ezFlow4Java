@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page session="false" %>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%
@@ -12,15 +13,15 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<link rel="stylesheet" type="text/css" href="/css/previewmail.css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/NewMailList.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/Newemail.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/newMail_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>		
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/NewMailList.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/Newemail.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/newMail_Cross.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component_utf8.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/Common.js")%>"></script>		
 		<script type="text/javascript">
 		    var g_bdraft = false;
 		    var g_moveUrl = "${url}";
@@ -93,6 +94,10 @@
 		    var compareFolderName = "<spring:message code="ezEmail.t645" />";
 		    var useReSend = "${useReSend}";
 		    var useSearchContent = "${useSearchContent}";
+		    var useMailNewWindow = "${useMailNewWindow}";
+		    var useReceivingChk = false;
+		    var reSendMsg = "<spring:message code='ezEmail.t569' />";
+		    var noReadMsg = "<spring:message code='ezPoll.t137'/>"; // 읽지 않음
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -115,6 +120,16 @@
 		    	
 		    	if (useReSend == "YES" && g_szRootFolderName == compareFolderName) {
 		    		$('#liReSend').css('display', 'block');
+		    	}
+		    	
+		    	if (g_moveUrl == 'receiveChk') {
+		    		document.getElementById("toggle_flag_btn").style.display = "none"; 
+		    		document.getElementById("read_stat").style.display = "none";
+		    		document.getElementById("unread_stat").style.display = "none";
+		    		useReceivingChk = true;
+		    		g_foldertype = g_moveUrl;
+		    		p_ListOrderby = "http://schemas.microsoft.com/exchange/date-iso";
+		    		select.selectedIndex = 3;
 		    	}
 		    	
 		        CurrentHeight = document.body.clientHeight;
@@ -143,6 +158,12 @@
 		                deleteone.style.display = 'none';
 		                deleteall.style.display = '';
 		                break;
+		            
+		            case "receiveChk":
+		            	p_HeaderViewXML = "/js/ezEmail/Controls_cross/" + g_userLang + "/viewXMLFile5.xml";
+		            	g_foldertype = "sent";
+		            	g_moveUrl = "${sentFolderId}";
+		            	break;
 		        }
 		        
 		        if (g_foldertype != "sent" && g_foldertype != "draft")
@@ -187,9 +208,11 @@
 		                document.getElementById("MailListRayer").style.width = "100%";
 		                document.getElementById("PreviewRayerW").style.width = "100%";
 		                document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
-		                document.getElementById("contentlist").style.height = (pMailListHeightW - 70) + "px";
+		                document.getElementById("contentlist").style.height = (pMailListHeightW - 100) + "px";
 		                document.getElementById("PreviewRayerW").style.height = pMailPreHeightW + "px";
 		                document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 100) + "px";
+		                document.getElementById("PreW_subject").style.width = (CurrenWidth - 185) + "px";
+		                
 		                pMailListDiv = Math.round((pMailListHeightW / CurrentHeight) * 100);
 		                pMailPreVDiv = Math.round((pMailPreHeightW / CurrentHeight) * 100);
 		                
@@ -211,10 +234,12 @@
 		                document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		                document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
 		                document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
-		                document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
+		                document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
 		                document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
 		                document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
 		                document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
+		                document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+		                
 		                pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
 		                pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
 		                
@@ -232,7 +257,7 @@
 		            CurrentHeight = document.documentElement.clientHeight - 110 - (document.getElementById("mainmenu").clientHeight - 28);
 		            document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
 		            document.getElementById("MailListRayer").style.width = "100%";
-		            document.getElementById("contentlist").style.height = (CurrentHeight - 70) + "px";
+		            document.getElementById("contentlist").style.height = (CurrentHeight - 100) + "px";
 		        }
 		
 		        var HeaderObject = document.getElementById("MailHeader");
@@ -373,6 +398,20 @@
 		        }
 		    }
 		    
+		    function ReSendWithURLOnly(pURL) {
+		        var pheight = window.screen.availHeight;
+		        var conHeight = pheight * 0.8;
+		        var pwidth = window.screen.availWidth;
+		        var conWidth = pwidth * 0.8;
+		        if (conWidth > 890)
+		            conWidth = 890;
+		        var pTop = (pheight - conHeight) / 2;
+		        var pLeft = (pwidth - 890) / 2;
+		        var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px,width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+		        
+		        window.open("/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND", "", feature);
+		    }
+		    
 		    function mailGeneralSave() {
 	            var _pPreview;
 	            
@@ -441,20 +480,10 @@
 		            return;
 		        }
 		        
-		        SearchKeyword = MakeSQL(inputkeyword.value);
-		        goToPageByNum("1");
-		
-		    }
-		    
-		    function MakeSQL(key) {
-		        var radiosearch = document.getElementsByName('searchCheck');
+		        var searchField = document.getElementById("searchCheck");
+		        SearchKeyword = searchField.value + "=" + inputkeyword.value;
 		        
-		        if (radiosearch.item(0).checked)
-		            return radiosearch.item(0).value + "=" + key;
-		        else if (radiosearch.item(1).checked)
-		            return radiosearch.item(1).value + "=" + key;
-		        else if (radiosearch.item(2).checked)
-		            return radiosearch.item(2).value + "=" + key;
+		        goToPageByNum("1");
 		    }
 		    
 		    function reloadReadContent(url) {
@@ -778,19 +807,21 @@
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		<h1>${folderName}<span id="mailBoxInfo"></span>
 	      <span style="float:right;font-weight:normal;color:black;">
-	          <input name="searchCheck" id="Radio1" type="radio" value="SUBJECT" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio1">&nbsp;<spring:message code="ezEmail.t98" /></label>
-	          <c:if test="${isSentItems == true}">
-	          <input name="searchCheck" id="Radio2" type="radio" value="RECEIVE" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio2">&nbsp;<spring:message code="ezEmail.t66" /></label>
-	          </c:if>
-	          <c:if test="${isSentItems != true}">
-			  <input name="searchCheck" id="Radio3" type="radio" value="FROM" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio3">&nbsp;<spring:message code="ezEmail.t161" /></label>
-			  </c:if>
-			  <c:if test="${useSearchContent == 'YES'}">
-			  <input name="searchCheck" id="Radio4" type="radio" value="CONTENT" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;"><label for="Radio4">&nbsp;<spring:message code="ezEmail.t649" /></label>
-			  </c:if>
-			  &nbsp;
-			  <input name="keyword" class="Mail_Input" style="width:150px;ime-mode: active;height:20px;border-right:0px;vertical-align: top" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
-	          <a href="#" style="float:right"><img src="../../images/sub/bsearch.gif" border="0" onClick="start_search()"></a>
+              <select name="searchCheck" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
+                  <option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option>
+                  <c:if test="${isSentItems != true}">
+                  <option value="FROM"><spring:message code="ezEmail.t161" /></option>
+                  </c:if>
+                  <c:if test="${isSentItems == true}">
+                  <option value="RECEIVE"><spring:message code="ezEmail.t651" /></option>
+                  </c:if>
+                  <c:if test="${useSearchContent == 'YES'}">
+                  <option value="CONTENT"><spring:message code="ezEmail.t649" /></option>
+                  </c:if>
+              </select>
+			  
+			  <input name="keyword" class="Mail_Input" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
+	          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="start_search()"></a>
 	      </span>
 	    </h1>	
         <div id="mainmenu">
@@ -800,13 +831,13 @@
           <li><span onClick="all_reply_mail_onclick()"><spring:message code="ezEmail.t512" /></span></li>
           <li id="liReSend" style="display: none;"><span id="btnReSend" onClick="reSend_onClick()"><spring:message code="ezEmail.kyj19" /></span></li>
           <li><span onClick="transmission_mail_onclick()"><spring:message code="ezEmail.t513" /></span></li>
-          <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
-          <li><span onClick="Read_StatusChange('R');" ><spring:message code="ezEmail.t99000006" /></span></li>
-          <li><span onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></span></li>
+          <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
+          <li id="read_stat"><span onClick="Read_StatusChange('R');" ><spring:message code="ezEmail.t99000006" /></span></li>
+          <li id="unread_stat"><span onClick="Read_StatusChange('U');"><spring:message code="ezEmail.t99000007" /></span></li>
           <li onClick="mail_export();" id="EmailPCSave"><span><spring:message code="ezEmail.t378" /></span></li>
-          <li onClick="toggle_flag();" ><span class="img_Newbtn"><spring:message code="ezEmail.t550" /></span></li>
+          <li id="toggle_flag_btn" onClick="toggle_flag();" ><span class="img_Newbtn"><spring:message code="ezEmail.t550" /></span></li>
           <li><span onClick="move_mail_onclick()"><spring:message code="ezEmail.t482" /></span></li>
-          <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
+          <!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
           <li><span onClick="deleteWork(false)"><spring:message code="ezEmail.t95" /></span></li>
           <li id="deleteone"><span onClick="deleteWork(true)"><spring:message code="ezEmail.t156" /></span></li>
           <li id="deleteall" style="display:none"><span onClick="delAllFile()"><spring:message code="ezEmail.t514" /></span></li>
@@ -834,12 +865,17 @@
               	  <tr>
                     <th><spring:message code="ezEmail.t179" /></th>
                     <td> 
-	                   <select id="listcount" style="WIDTH:40px;height:20px;" onChange="ListCount(this.value);">
+	                   <select id="listcount" style="WIDTH:50px;height:20px;" onChange="ListCount(this.value);">
 	                        <option value=10 <c:if test="${mailGeneral.listCount == '10'}">selected</c:if>>10</option>
 	                        <option value=20 <c:if test="${mailGeneral.listCount == '20'}">selected</c:if>>20</option>
 	                        <option value=30 <c:if test="${mailGeneral.listCount == '30'}">selected</c:if>>30</option>
 	                        <option value=40 <c:if test="${mailGeneral.listCount == '40'}">selected</c:if>>40</option>
 	                        <option value=50 <c:if test="${mailGeneral.listCount == '50'}">selected</c:if>>50</option>
+	                        <option value=60 <c:if test="${mailGeneral.listCount == '60'}">selected</c:if>>60</option>
+	                        <option value=70 <c:if test="${mailGeneral.listCount == '70'}">selected</c:if>>70</option>
+	                        <option value=80 <c:if test="${mailGeneral.listCount == '80'}">selected</c:if>>80</option>
+	                        <option value=90 <c:if test="${mailGeneral.listCount == '90'}">selected</c:if>>90</option>
+	                        <option value=100 <c:if test="${mailGeneral.listCount == '100'}">selected</c:if>>100</option>
 	                    </select>
 	                </td>
                   </tr>
@@ -886,7 +922,7 @@
             <span id="PreContent_RayerH" style="position:absolute; border:0px solid red;">
                 <span style="width:100%;height:100px;display:block;">            
 	                <span class="previewmail_info" style="display:block;width:100%;">
-                        <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width:100%;display:none;">
+                        <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width:100%;display:none;">
 		                    <p class="mail_title" style="margin-left:0px;"><span class="icon_btn"><span onclick="MailReadOpen();" style="cursor:pointer;padding-right:5px;"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" border="0"></span></span><span id="PreH_subject" style="display:none;"><span id="PreH_sub_subject" class="title_blodtxt"></span></span></p>
 		                    <span class="mail_date" style="margin-right:10px;display:inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span>
 		                    <dl class="mail_item">
@@ -922,7 +958,7 @@
             <span id="PreContent_RayerW" style="display:block;border:0px solid red;">
                 <span style="width:100%;height:100px;display:block;">
 	                <span class="previewmail_info" style="display:block;width:100%;">
-                        <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display:none;">
+                        <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display:none;">
 		                    <p class="mail_title"><span class="icon_btn"><span onclick="MailReadOpen();" style="cursor:pointer;padding-right:5px;"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" border="0"></span></span><span id="PreW_subject" ><span id="PreW_sub_subject" class="title_blodtxt"></span></span></p>
 		                    <span class="mail_date" style="margin-right:10px;display:inline-block;"><span id="PreW_date" ><span id="PreW_sub_date"></span></span></span>
 		                    <dl class="mail_item">

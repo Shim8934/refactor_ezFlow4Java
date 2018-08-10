@@ -75,7 +75,8 @@
 			
 			function GetEditorTextContent() {
 	            try {
-	                return CKEDITOR.instances.editor1.editable().$.outerText;
+	                //return CKEDITOR.instances.editor1.editable().$.outerText;
+	            	return CKEDITOR.instances.editor1.document.getBody().getText();
 	            } catch (e) { return ""; }
 	        }
 			

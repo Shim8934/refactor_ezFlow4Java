@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -7,16 +8,16 @@
 		<title><spring:message code="ezOrgan.t250" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
-	    <link rel="stylesheet" href='/css/Tab.css' type="text/css" />
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>   
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css" />
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>   
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 	    <!-- data picker -->
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>">
 		<!-- data picker -->
 		<script type="text/javascript">
 			var DeptID = "";
@@ -27,7 +28,8 @@
 		    var RetValue;
 	    	var useAddressOpenAPI = "${useAddressOpenAPI}"
 	    	var useBizmekaSpambox = "${useBizmekaSpambox}";
-		    
+	    	var locale = "<c:out value='${locale}'/>";
+	    	
 			$(document).ready(function(){
 				var toYear = new Date().getFullYear();
 				var sYear = parseInt(toYear-70);
@@ -182,6 +184,9 @@
 			                }
 						}
 		            });
+		        }
+		        if (locale != 'ko') {
+		        	$(".onlyUseKo").css("display", "none");
 		        }
 			});
 			
@@ -480,7 +485,7 @@
 		        //if (CrossYN()) {
 	            personpicture_cross_dialogArguments[0] = document.getElementById("UserID").value;
 	            personpicture_cross_dialogArguments[1] = btnPhoto_onclick_Complete;
-	            DivPopUpShow(415, 273, "/admin/ezOrgan/personPicture.do");
+	            DivPopUpShow(415, 285, "/admin/ezOrgan/personPicture.do");
 		        <%-- }else {
 		            if (navigator.appName.indexOf("Microsoft") > -1)
 		                ret = window.showModalDialog("PersonPicture.aspx", document.getElementById("UserID").value, "status:no;dialogWidth:405px;dialogHeight:330px;scroll:no;edge:sunken");
@@ -532,7 +537,7 @@
 	    </div>
 	    <div id="close">
 	    	<ul>
-	            <li><span onclick="window.close()"><spring:message code='ezOrgan.t143' /></span></li>
+	            <li><span onclick="window.close()"></span></li>
 	        </ul>
 	    </div>
 	    <div class="portlet_tabpart01">
@@ -548,11 +553,11 @@
 	            </td>
 	            <th style="width: 71px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t275' /><span style="color:red"> *</span></th>
 	            <td style="width: 240px">
-	                <input id="UserID" style="ime-mode: disabled; width: 98%;" maxlength="20"/>
+	                <input id="UserID" style="ime-mode: disabled; width: 100%;" maxlength="20"/>
 	            </td>
 	            <th style="width: 71px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t277' /><span style="color:red"> *</span></th>
 	            <td style="width: 240px;">
-	                <input type="password" id="Password" style="width: 98%" maxlength="50"/>
+	                <input type="password" id="Password" style="width: 100%" maxlength="50"/>
 	            </td>
 	        </tr>
 	        <tr>
@@ -562,13 +567,13 @@
 	                    <tr class="primary">
 	                        <th><c:out value='${primary}'/></th>
 	                        <td>
-	                            <input name="Input" id="UserName" style="width: 98%" maxlength="50"/>
+	                            <input name="Input" id="UserName" style="width: 100%" maxlength="50"/>
 	                        </td>
 	                    </tr>
 	                    <tr class="secondary">
 	                        <th><c:out value='${secondary}'/></th>
 	                        <td>
-	                            <input id="UserName2" type="text" style="width: 98%" maxlength="50"/>
+	                            <input id="UserName2" type="text" style="width: 100%" maxlength="50"/>
 	                        </td>
 	                    </tr>
 	                </table>
@@ -579,13 +584,13 @@
 	                    <tr class="primary">
 	                        <th><c:out value='${primary}'/></th>
 	                        <td>
-	                            <input name="Input3" id="DeptName" style="width: 98%" readonly="readonly" maxlength="50"/>
+	                            <input name="Input3" id="DeptName" style="width: 100%" readonly="readonly" maxlength="50"/>
 	                        </td>
 	                    </tr>
 	                    <tr class="secondary">
 	                        <th><c:out value='${secondary}'/></th>
 	                        <td>
-	                            <input id="DeptName2" type="text" style="width: 98%" readonly="readonly" maxlength="50"/>
+	                            <input id="DeptName2" type="text" style="width: 100%" readonly="readonly" maxlength="50"/>
 	                        </td>
 	                    </tr>
 	                </table>
@@ -598,13 +603,13 @@
 	                    <tr class="primary">
 	                        <th><c:out value='${primary}'/></th>
 	                        <td>
-	                            <input id="JobTitle" name="txtUserJobTitle" style="width: 98%" maxlength="50"/>
+	                            <input id="JobTitle" name="txtUserJobTitle" style="width: 100%" maxlength="50"/>
 	                        </td>
 	                    </tr>
 	                    <tr class="secondary">
 	                        <th><c:out value='${secondary}'/></th>
 	                        <td>
-	                            <input id="JobTitle2" type="text" style="width: 98%" maxlength="50"/>
+	                            <input id="JobTitle2" type="text" style="width: 100%" maxlength="50"/>
 	                        </td>
 	                    </tr>
 	                </table>
@@ -615,13 +620,13 @@
 	                    <tr class="primary">
 	                        <th><c:out value='${primary}'/></th>
 	                        <td>
-	                            <input name="Input2" id="JobPosition" style="width: 98%" maxlength="50"/>
+	                            <input name="Input2" id="JobPosition" style="width: 100%" maxlength="50"/>
 	                        </td>
 	                    </tr>
 	                    <tr class="secondary">
 	                        <th><c:out value='${secondary}'/></th>
 	                        <td>
-	                            <input id="JobPosition2" type="text" style="width: 98%" maxlength="50"/>
+	                            <input id="JobPosition2" type="text" style="width: 100%" maxlength="50"/>
 	                        </td>
 	                    </tr>
 	                </table>
@@ -632,21 +637,23 @@
 	            <td style="width: 240px;">
 	                <input type="text" id="txtBirth" style="width:80px;text-align:center;" readonly="readonly"/>	                
 	                <input type="radio" id="birth_S" name="BirthType" Checked /><spring:message code='ezOrgan.t00001' />
+	                <c:if test="${locale eq 'ko'}">
 	                <input type="radio" id="birth_N" name="BirthType" /><spring:message code='ezOrgan.t00002' />
+	                </c:if>
 	            </td>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t283' /></th>
 	            <td style="width: 240px;" >
-	                <input id="SocialNum" style="width: 98%" maxlength="50"/>
+	                <input id="SocialNum" style="width: 100%" maxlength="50"/>
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t284' /></th>
 	            <td style="width: 240px;">
-	                <input id="SecurityLevel" style="width: 98%" maxlength="50"/>
+	                <input id="SecurityLevel" style="width: 100%" maxlength="50"/>
 	            </td>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t226' /></th>
 	            <td style="width: 240px;">
-	                <input id="SortNum" style="width: 98%" maxlength="10" />
+	                <input id="SortNum" style="width: 100%" maxlength="10" />
 	            </td>
 	        </tr>         
 	    </table>
@@ -655,41 +662,41 @@
 	        <tr>
 	            <th id="mailtitle" style="width: 80px; text-align:center"><spring:message code='ezOrgan.t288' /></th>
 	            <td colspan="5">
-	                <input id="MailAlias" style="WIDTH: 200px; display: none" size="11" />
+	                <input id="MailAlias" style="WIDTH: 100%; display: none" size="11" />
 	                <span id="mailcontext"><spring:message code='ezOrgan.t289' /></span>
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t95' /></th>
 	            <td style="width: 186px">
-	                <input id="PhoneNumber" style="width: 98%" maxlength="50"/>
+	                <input id="PhoneNumber" style="width: 100%" maxlength="50"/>
 	            </td>
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t97' /></th>
 	            <td style="width: 186px">
-	                <input id="HomePhone" style="width: 98%" maxlength="50"/>
+	                <input id="HomePhone" style="width: 100%" maxlength="50"/>
 	            </td>
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t96' /></th>
 	            <td style="width: 186px">
-	                <input id="Mobile" style="width: 98%" maxlength="50"/>
+	                <input id="Mobile" style="width: 100%" maxlength="50"/>
 	            </td>
 	        </tr>
 	       <tr>
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t98' /></th>
 	            <td style="width: 190px">
-	                <input id="FaxNum" style="width: 98%" maxlength="50"/>
+	                <input id="FaxNum" style="width: 100%" maxlength="50"/>
 	            </td>
 	            <th style="width: 80px; text-align:center"></th>
 	            <td style="width: 190px"></td>
 	            <th style="width: 80px; text-align:center"></th>
 	            <td style="width: 190px"></td>
 	        </tr>
-	        <tr>
+	        <tr class="onlyUseKo">
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t286' /></th>
 	            <td colspan="5">
                     <c:if test="${primaryLang == '1'}">
                     	<c:if test="${useZipCodeSearch == 'YES'}">
 	                		<input id="ZipCode" style="WIDTH: 100px;" maxlength="6" readonly="readonly" />
-	                		<a class="imgbtn" style="vertical-align:middle"><span onclick="GetPostCode()"><spring:message code='ezOrgan.t286' /></span></a>
+	                		<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="GetPostCode()"><spring:message code='ezOrgan.t286' /></span></a>
                     	</c:if>
                     	<c:if test="${useZipCodeSearch == 'NO'}">
                     		<input id="ZipCode" style="WIDTH: 100px;" maxlength="6" />
@@ -705,7 +712,7 @@
 	        <tr>
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t287' /></th>
 	            <td colspan="5">
-	                <input id="HomeAddr" style="WIDTH: 98%;" maxlength="150"/>
+	                <input id="HomeAddr" style="WIDTH: 100%;" maxlength="150"/>
 	            </td>
 	        </tr>
 	    </table>   

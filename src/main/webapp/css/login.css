@@ -3,39 +3,39 @@
 
 * { position:relative;}
 html { height:100%; }
-body {height:100%; margin:0; color:#444444; font-family:"맑은고딕", Malgun Gothic, "굴림", Gullim,"돋움", Dotum, verdana, Arial, sans-serif;}
-input,button { margin:0; outline:none; color:#444444; font-family:"맑은고딕", Malgun Gothic, "굴림", Gullim,"돋움", Dotum, verdana, Arial, sans-serif; }
+body {height:100%; margin:0; color:#444444; font-family:Malgun Gothic, Meiryo UI;}
+input,button { margin:0; outline:none; color:#444444; font-family:Malgun Gothic, Meiryo UI; }
 img { border:0 none; vertical-align:top; }
 hr,caption,legend  { display:none; }
 address { font-style:normal; }
 article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,address {  display:block; }
 
-.login_body{margin:0px; padding:0px; background-color: rgb(160, 180, 144);}
+.login_body{margin:0px; padding:0px; background-color: white;}
 .login_wrapper{height:786px; vertical-align:top; background:url(/images/kr/login/login_wrapper_bg.png) repeat-x;}
 .login_layout{width:1140px; height:786px; margin:0px auto; padding:0px; background:url(/images/kr/login/login_layout_bg.png) no-repeat center center;}
 
-.login_form {float:right; width:300px; height:340px; margin:240px 120px 0px 0px; padding:0px; background:#FFF; border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px; font-family:Malgun Gothic, Meiryo UI; box-shadow: 0 0 50px 5px rgba(0, 0, 0, 0.19);}
+.login_form {float:right; width:320px; height:365px; margin:205px 150px 0px 0px; padding:0px; background:#FFF; font-family:Malgun Gothic, Meiryo UI; box-shadow: 0 0 50px 5px rgba(0, 0, 0, 0.19);}
 .login_form .title{width:173px; height:66px; margin:62px auto 30px; padding:0;}
 .login_form form {width:227px; margin:0 auto 24px; padding:0}
-.login_form form fieldset {margin:0; padding:0px 37px; border:0; clear:both;}
+.login_form form fieldset {margin:0; padding:0px 47px; border:0; clear:both;}
 .login_form legend {visibility:hidden; position:absolute; top:0; left:0; width:1px; height:1px; font-size:0; line-height:0}
 
 .txt_form{width:220px; float:left;}
 
-.logo{width:137px; height:38px; margin:60px auto 30px;}
+.logo{width:137px; height:38px; margin:55px auto 50px;}
 .id{width:227px; height:41px; margin:0px 0px 8px 0px; padding:0px 0px 0px 0px; background:url(/images/kr/login/input_bg_id.gif) #f1f1f1 18px center no-repeat; border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;}
 .pw{width:227px; height:41px; margin:0px 0px 15px 0px; padding:0px 0px 0px 0px; background:url(/images/kr/login/input_bg_pw.gif) #f1f1f1 18px center no-repeat; border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;}
 .btn_login {width:227px; height:41px; margin:0px 0px 15px 0px; padding:0px;}
 
-#uid {background:url(/images/kr/login/txt_id.gif) no-repeat 0px 14px; width:178px; height:41px; margin:0px 0px 0px 46px; padding:0px 5px 0px 0px; line-height:21px; color:#333; font-size:14px; border:0px solid #fff; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px;}
-#upw {background:url(/images/kr/login/txt_pw.gif) no-repeat 0px 14px; width:178px; height:41px;  margin:0px 0px 0px 46px; padding:0px 5px 0px 0px; line-height:21px; color:#333; font-size:14px; border:0px solid #fff; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px;}
+#uid {background:url(/images/kr/login/txt_id.gif) no-repeat 0px 14px; width:178px; height:41px; margin:0px 0px 0px 46px; padding:0px 5px 0px 0px; line-height:21px; color:#777; font-size:14px; border:0px solid #fff; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px;}
+#upw {background:url(/images/kr/login/txt_pw.gif) no-repeat 0px 14px; width:178px; height:41px;  margin:0px 0px 0px 46px; padding:0px 5px 0px 0px; line-height:21px; color:#777; font-size:14px; border:0px solid #fff; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px;}
 
 .input_text.focus,
 .input_text.focusnot { background:#f1f1f1 !important;}
 
 .saveid {float:right; margin:0px 10px 0px 0px; padding:0px;}
 .saveid input[type="checkbox"] {display:none;}
-.saveid input[type="checkbox"] + label {color:#000000; font-size:12px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif; cursor:pointer;}
+.saveid input[type="checkbox"] + label {color:#000000; font-size:12px; font-family:Malgun Gothic, Meiryo UI; cursor:pointer;}
 .saveid input[type="checkbox"] + label span {display:inline-block;width:14px;height:12px;margin:-2px 5px 0 0;vertical-align:middle;background:url(/images/kr/login/bg_check.png) left top no-repeat;cursor:pointer;}
 .saveid input[type="checkbox"]:checked + label span {background:url(/images/kr/login/bg_check.png) -14px top no-repeat;}
 
@@ -50,5 +50,5 @@ article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,addre
 .help span.icon{margin:0px 5px 0px 0px;}
 .help span.txt{border-bottom:1px solid #a0a0a0;}*/
 
-footer{font-size:12px; color:lavenderblush; font-weight:bold;}
-footer p{margin:18px 0px 0px 0px; padding:0px; text-align:center;}
+footer{font-size:12px; color:darkgray;}
+footer p{margin:20px 0px 0px 0px; padding:0px; text-align:center;}

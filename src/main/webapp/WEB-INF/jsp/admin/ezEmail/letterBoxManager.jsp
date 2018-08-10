@@ -1,56 +1,69 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <!DOCTYPE html>
 <html style="height: 99%;">
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
-	    <link rel="stylesheet" href="/css/ezEmail/style.css" />
-	    <link rel="stylesheet" href="/js/dist/themes/default/style.min.css" />
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script src="/js/dist/jstree.min.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterBoxTree.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
+	    <link rel="stylesheet" href="<spring:message code = 'main.e15' />" type="text/css" />
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezEmail/style.css")%>" />
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/dist/themes/default/style.min.css")%>" />
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script src="<%=CommonUtil.addVer(application, "/js/dist/jstree.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/letterBoxTree.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/letterList.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 	    
 	</head>
+	
+	<style>
+		.jstree-container-ul {
+			margin:2px;
+		}
+	</style>
+	
 	<body style="height: 95%; overflow:hidden;">
-	    <h5 style="padding: 10px 1px;"><spring:message code='ezEmail.letter21'/></h5>
+	    <%-- <h5 style="padding: 10px 1px;"><spring:message code='ezEmail.letter21'/></h5> --%>
+	    <h1 style="padding: 5px"> </h1>
 	    <div id="mainmenu">
 		    <ul class="on">
-		        <li><span onclick="addLetterBox()">&nbsp;&nbsp;+ <spring:message code='ezEmail.letter17'/>&nbsp;&nbsp;</span></li>
-		        <li><span onclick="deleteLetterBox()">&nbsp;&nbsp;- <spring:message code='ezEmail.letter18'/>&nbsp;&nbsp;</span></li>
+		        <li><span onclick="addLetterBox()"><spring:message code='ezEmail.letter17'/></span></li>
+		        <li><span onclick="deleteLetterBox()"><spring:message code='ezEmail.letter18'/></span></li>
 		    </ul>
 		</div>
-		<div id="divTree" class="myScrollableBlock">
+		<div id="letterContentDiv" style="width:639px;">
+			<div id="divTree" class="myScrollableBlock" style="border:1px solid #ddd">
+			</div>
+			<div id="divInput" style="border:1px solid #ddd; padding:15px; height:319px">
+				<form id="myForm" action="/admin/ezEmail/updateLetterBox.do" method="post">
+					<label for="display">
+						<spring:message code='ezEmail.letter35'/>
+					</label>
+					<input type="text" id="display" name="displayname" size="30" maxlength="40">
+					
+					<br><br>
+					
+					<label for="display2">
+						<spring:message code='ezEmail.letter36'/>
+					</label>
+					<input type="text" id="display2" name="displayname2" size="30" maxlength="40">
+					
+					<br>
+					
+					<input type="hidden" id="letterbox_no" name="letterBoxNo">
+					<input type="hidden" id="parent_letterbox_no" name="parentLetterBoxNo">
+					<input type="hidden" id="company_id" name="companyID" value="${companyId}">
+				</form>
+			</div>
+			<div class="btnpositionJsp" style="width:100%;text-align:center;float:left;margin-top:10px;padding:7px;">
+		        <a class="imgbtn" onclick="submitClick()"><span><spring:message code="ezEmail.t38"/></span></a>
+		    </div>
 		</div>
-		<div id="divInput">
-			<form id="myForm" action="/admin/ezEmail/updateLetterBox.do" method="post">
-				<label for="display">
-					<b><spring:message code='main.t76'/>(${primary})</b>
-				</label>
-				<input type="text" id="display" name="displayname" size="30" maxlength="40">
-				
-				<br><br>
-				
-				<label for="display2">
-					<b><spring:message code='main.t76'/>(${secondary})</b>
-				</label>
-				<input type="text" id="display2" name="displayname2" size="30" maxlength="40">
-				
-				<br>
-				
-				<input type="hidden" id="letterbox_no" name="letterBoxNo">
-				<input type="hidden" id="parent_letterbox_no" name="parentLetterBoxNo">
-				<input type="hidden" id="company_id" name="companyID" value="${companyId}">
-				
-				<div class="divInputBtn">
-					<input type="button" id="submitBtn" onclick="submitClick()" value="<spring:message code="ezEmail.t38"/>">
-				</div>
-			</form>
-		</div>
-		
+		<script>
+			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+		</script>
 		<script type="text/javascript">
 			var pageType = "${pageType}";
 	    	var returnCompany = '${companyId}';
@@ -64,6 +77,7 @@
 		    var selectNode;
 		    var addCheck = 0;
 		    
+		    var letterStr20 = "<spring:message code='ezEmail.letter20'/>"; 
 		    var letterStr22 = "<spring:message code='ezEmail.letter22'/>"; 
 		    var letterStr23 = "<spring:message code='ezEmail.letter23'/>";
 		    var letterStr24 = "<spring:message code='ezEmail.letter24'/>";
@@ -76,6 +90,7 @@
 			var lengthMsg = "<spring:message code='ezEmail.letter14'/>"; // 자 이하로 입력 가능합니다.
 			var contentMsg = "<spring:message code='ezEmail.letter11'/>"; // 이름을 입력해주세요.
 			var letterBoxNameMsg = "<spring:message code='ezEmail.letter31'/>"; // 이름은
+			var letterBoxDelMsg = "<spring:message code='ezBoard.t54'/>"; // 삭제되었습니다.
 		    
 		    window.onload = window_onload;
 		    

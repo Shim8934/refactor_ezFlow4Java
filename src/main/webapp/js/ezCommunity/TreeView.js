@@ -91,10 +91,7 @@ function TreeNode() {
                 color = strDataValue;
 
         }
-        treeDiv.style.height = "21px";
-        treeDiv.style.whiteSpace = "nowrap";
-
-
+        
         //확장하는 노드인지 체크
         var bExpanded = false;
 
@@ -688,4 +685,6 @@ function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
         if (callbackFunc != null & typeof (callbackFunc) == "function")
             callbackFunc(pNodeID, pNodeNM);
     }
+    
+    applyEllipsis();
 }

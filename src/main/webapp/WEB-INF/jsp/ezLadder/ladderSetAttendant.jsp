@@ -9,7 +9,7 @@
 		<title><spring:message code="ezLadder.t071" /></title>
 		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
 	    <style>
 	    	.mainlist tr td:first-child {
@@ -21,6 +21,20 @@
 	    	.mainlist_free tr td input{
 	    		height:24px;
 	    	}
+	    	/* 조직도 #SelectDeptNM(부서명[사원수]) 부분 */
+			#spn_deptName {
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+				display: inline-block;
+			}
+			#countInfo {
+				overflow: hidden;
+				display: inline-block;
+			}
+			.countColor {
+				color:#017BEC;
+			}	    	
 	    </style>
 	    <script type="text/javascript" src="<spring:message code='ezLadder.e1' />"></script>
         <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -330,7 +344,9 @@
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
 	            var nodeIdx = treeView.GetSelectNode();
-	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;");
+	            document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top; padding-right:3px; \" >"
+	            	+ "<span id='spn_deptName' title='" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;") + "'>" + ReplaceText(nodeIdx.GetNodeData("VALUE"), "&", "&amp;") + "</span>"
+	            	+ "<span id='countInfo'></span>";
 	            SelectDeptNM.setAttribute("countinfo", "")
 	            displayUserList(nodeIdx.GetNodeData("CN"));
 	        }
@@ -342,35 +358,63 @@
 		        }
 	
 	        	$.ajax({
-						url : '/ezOrgan/getDeptMemberList.do',
-						method : 'POST',
-						dataType : "text",
-						data : {
-							deptID : tempDeptID ,
-							cell : "company;description;displayName;title;telephoneNumber",
-							prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
-							page : CurPage ,
-							type : "user"
-						} ,
-						success : function(xml) {
-							event_displayUserList(loadXMLString(xml));
-			                
-							//2016-10-17 자바스크립트 실행순서때문에 자꾸 getDeptMemberList.do리스트가 나중에 나와서 window.onload 밑에있던부분 이쪽으로 위치 이동
-							if (strSearch != "") {
-								document.getElementById('keyword').value = strSearch;
-								search_click("search"); 
-								strSearch = "";
-							}
-							
-							selectDeptAllUser();
-							
-						},
-						error : function(jqXHR, textStatus, errorThrown) {
-							alert(error);
+					url : '/ezOrgan/getDeptMemberList.do',
+					method : 'POST',
+					dataType : "text",
+					data : {
+						deptID : tempDeptID ,
+						cell : "company;description;displayName;title;telephoneNumber",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+						page : CurPage ,
+						type : "user"
+					} ,
+					success : function(xml) {
+						event_displayUserList(loadXMLString(xml));
+		                
+						//2016-10-17 자바스크립트 실행순서때문에 자꾸 getDeptMemberList.do리스트가 나중에 나와서 window.onload 밑에있던부분 이쪽으로 위치 이동
+						if (strSearch != "") {
+							document.getElementById('keyword').value = strSearch;
+							search_click("search"); 
+							strSearch = "";
 						}
-	  			});   
-	        	 
+						
+						selectDeptAllUser();
+						
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(error);
+					}
+	  			});
+	        	
+	        	$.ajax({
+					url : "/ezOrgan/getDeptMemberListCount.do",
+					method : "POST",
+					dataType : "json",
+					data : {
+						deptID : tempDeptID
+					},
+					success : function(result) {
+						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
+							var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
+							var strIsLeaf = $("div#" + id + "").attr("isleaf");
+							
+							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + "<spring:message code='ezLadder.t105' /></span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + "<spring:message code='ezLadder.t105' /></span>]";
+							} else {
+								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + "<spring:message code='ezLadder.t105' /></span>]";
+							}
+							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
+							deptNameLong(result.containLow, strIsLeaf);
+							
+			            	SelectDeptNM.setAttribute("countinfo","1")
+			        	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(error);
+					}
+				});
 	    	}
+	        
 	        function selectDeptAllUser() {
 	        	/** boh add : 부서 클릭하면 부서 전체 list 추가하기*/
 				deptClickFlag = true;
@@ -396,7 +440,7 @@
 		        } 
 		    }	    
 	        
-	        var m_strColorSelect = "rgb(233, 241, 255)";
+	        var m_strColorSelect = "#edf4fd";
 	        var m_strColorOver = "#f4f5f5";
 	        var m_strColorDefault = "#ffffff";
 	        var p_ListOrderObject = null;
@@ -891,10 +935,15 @@
 		        }
 		        
 		        var UserListHTML = "";
-		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
-		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "<spring:message code='ezLadder.t105' />" + "</span>]";
+		        /* if (SelectDeptNM.getAttribute("countinfo") != "1") {
+		            if (getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "<spring:message code='ezLadder.t105' />" + "</span>]";
+	        		} else {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + "<spring:message code='ezLadder.t105' />" + "</span>]";
+	        		}
+		            
 		            SelectDeptNM.setAttribute("countinfo", "1")
-		        }
+		        } */
 		        
 		        if (pListType == "IMG") {
 		            document.getElementById("DeptUserImgList").style.display = "";
@@ -1407,25 +1456,25 @@
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>"
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>"
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang6 + "</span>";
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang6 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang6 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        var MaxNum;
@@ -1449,27 +1498,27 @@
 		        }
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang7 + "</span>";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		            else {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang7 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		        }
 		        else {
-		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang7 + "</span>";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		            strtext = "";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        PagingHTML += "</div>";
@@ -1558,7 +1607,7 @@
 		        _RowObjectID = obj.id;
 		        _RowObjectName = $(obj).attr("name");
 
-		        obj.style.backgroundColor = "rgb(233, 241, 255)";
+		        obj.style.backgroundColor = "#edf4fd";
 		        
 		        if(_RowObjectID.substring(0, 8) !== "nameList") {
 		        	getLadderBmList(_RowObjectID);
@@ -1573,7 +1622,7 @@
 		        _RowObject = obj;
 		        _RowObjectID = obj.id;
 		        _RowObjectName = $(obj).attr("name");
-		        obj.style.backgroundColor = "rgb(233, 241, 255)";
+		        obj.style.backgroundColor = "#edf4fd";
 		    }
 		    
 		    var Tab1_SelectID = "1tab1";
@@ -1616,10 +1665,32 @@
 	            }
 	        }
 	        
+		    //2018-08-01 김보미 - 부서명 [사원수] 길이가 길면 조정하는 함수
+	        function deptNameLong(containLow, strIsLeaf) {
+	        	var deptNameWidth = "";
+	        	var sum = $("#spn_deptName").width() + $("#countInfo").width();
+	        	
+	          	if (containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+	          		if (sum > 359) {
+	          			deptNameWidth = 360 - $("#countInfo").width();
+	          		}
+	          	} else {
+	          		if (sum > 357) {
+	          			deptNameWidth = 358 - $("#countInfo").width();
+	          		}
+	          	}
+	        	
+	        	$("#spn_deptName").css("width", deptNameWidth);
+	        }
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
 		<h1 id="h1Title" style="height: 20px;"><spring:message code="ezLadder.t071" /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table style="width:100%">
 			<tr>
 				<td>
@@ -1672,7 +1743,7 @@
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                            <tr>
 	                                                <th style="white-space:normal;background-color: white;border-top:1px solid #ddd;border-bottom:1px solid #eaeaea">
-	                                                    <span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom; margin-top:2px;"></span>
+	                                                    <span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
 	                                                    <span style="float:right;">
 	                                                        <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
 	                                                        <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>
@@ -1680,7 +1751,7 @@
 	                                                </th>
 	                                            </tr>
 	                                        </table>
-	                                        <div style="vertical-align: top; height: 440px; overflow: auto; width: 440px;" id="txtlist_Layer">
+	                                        <div style="vertical-align: top; height: 422px; overflow: auto; width: 440px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
 	                                                    <td style="width: 170px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezLadder.t029' /></td>
@@ -1697,8 +1768,8 @@
 	                                                </tr>
 	                                            </table>
 	                                        </div>
-	                                        <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
-	                                        <div id="tblPageRayer" style="text-align:center;/* border-top:1px solid #B6B6B6; */height:32px"></div>
+	                                        <div style="vertical-align: top; text-align: center; height: 422px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
+	                                        <div id="tblPageRayer" style="text-align:center;/* border-top:1px solid #B6B6B6; */height:32px;margin-bottom:15px"></div>
 	                                    </td>
 	                                </tr>
 	                            </table>
@@ -1709,8 +1780,8 @@
 	                                    <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                        <h2 class="h2_dot" style="padding-top: 2px; display: inline-block;"><spring:message code='ezLadder.t022' /></h2>
 											<div style="float: right;">
-												<a class="imgbtn" onclick="editBM('modify');" style="display: inline-block; margin-top: 1px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t052" /></span></a>
-												<a class="imgbtn" onclick="editBM('delete');" style="display: inline-block; margin-top: 1px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t053" /></span></a>
+												<a class="imgbtn imgbck" onclick="editBM('modify');" style="display: inline-block; margin-top: 1px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t052" /></span></a>
+												<a class="imgbtn imgbck" onclick="editBM('delete');" style="display: inline-block; margin-top: 1px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t053" /></span></a>
 											</div>
 	                                        <div class="border_gray">
 	                                            <div id="circularDept" style="Width: 100%; Height: 182px; OVERFLOW: AUTO; padding-top: 0px;">
@@ -1733,7 +1804,7 @@
 	                                <tr>
 	                                    <td style="vertical-align: top;">
 	                                        <div class="border_gray">
-	                                            <div id="circularTemp" style="Width: 100%; Height: 329px; OVERFLOW: AUTO; padding-top: 0px;">
+	                                            <div id="circularTemp" style="Width: 100%; Height: 325px; OVERFLOW: AUTO; padding-top: 0px;">
 	                                            	<table id="List" class="mainlist" style="width:100%">
 														<thead id="List_THEAD2">
 															<tr>
@@ -1758,7 +1829,7 @@
 	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver(ListViewMsgTo)">
 	                        </td>
 	                        <td style="vertical-align: top; position: relative;">
-								<a class="imgbtn" id="ladderBmBtn" onclick="setBmGroup('add', 0);" style="position:  absolute; top: 0; right:  0; margin-top: -30px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t021" /></span></a>
+								<a class="imgbtn imgbck" id="ladderBmBtn" onclick="setBmGroup('add', 0);" style="position:  absolute; top: 0; right:  0; margin-top: -30px;"><span><spring:message code="ezLadder.t061" /> <spring:message code="ezLadder.t021" /></span></a>
 	                            <h2 id="ToTitle" class="receiver_tltype01" style="margin-top:-30px;">
 	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezLadder.t013'/></span>
 	                            </h2>
@@ -1771,9 +1842,8 @@
 	      		</td> 
 	    	</tr> 
 	 	</table>	    
-		<div class="btnposition">
+		<div class="btnposition btnpositionNew">
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezLadder.t086' /></span></a>
-	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezLadder.t087' /></span></a>
 		</div>
 		
 		<!-- popup start -->

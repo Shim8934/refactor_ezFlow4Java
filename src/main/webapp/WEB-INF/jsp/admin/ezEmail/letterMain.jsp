@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -6,12 +7,12 @@
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">	
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/FormCont.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css">	
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezApprovalG/TreeView.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezApprovalG/ListView_list.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezApprovalG/FormCont.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 	    <script type="text/javascript">
 	    	var Tab1_SelectID = "";
 	    	var companyID = "";
@@ -159,8 +160,8 @@
 	</head>
 	<body class="mainbody" style="height: 95%;">
 	    <h1><spring:message code='main.t374'/><span></span></h1>
-		    <span><b><spring:message code = 'ezApprovalG.t1566' /></b>&nbsp;
-			    <select id="ListCompany" onchange="selectCompanyID()">
+		    <span><b><spring:message code = 'ezApprovalG.t1566' /> : </b>
+			    <select id="ListCompany" onchange="selectCompanyID()" style="height:29px">
 		        	<c:forEach var="item" items="${list}">
 		        		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>

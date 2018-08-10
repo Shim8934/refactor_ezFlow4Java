@@ -243,13 +243,21 @@
 	                    
 	                    _htmlcontent = document.getElementById('div_Content').innerHTML;
 	                    var TDRows = document.getElementById('div_Content').getElementsByTagName("TD");
+	                    
 	                    for (var i = 0; i < TDRows.length; i++) {
-	                        if (TDRows.item(i).getAttribute("class") == "FIELD") {
+	                    	var tempVal = TDRows.item(i).getAttribute("class");
+	                    	
+	                    	if (tempVal != null && tempVal.indexOf("FIELD") >= 0)
+	                    		tempVal = tempVal.trim();
+	                    	
+	                        if (tempVal == "FIELD") {
 	                            if (TDRows.item(i).childNodes.length == 0) {
 	                                if (TDRows.item(i).innerHTML == "" || TDRows.item(i).innerHTML == " ") {
 	                                    TDRows.item(i).innerHTML = "&nbsp;";
 	                                }
 	                            }
+	                            
+	                            TDRows.item(i).setAttribute("class", tempVal);
 	                        }
 	                        if (TDRows.item(i).style.borderBottom == "currentColor")
 	                            TDRows.item(i).style.borderBottom = "";
@@ -603,7 +611,7 @@
 	                        bodyObj.style.textAlign = "left";
 	                    //}
 	                    if (DocTitleObj.getAttribute("free") != null) {
-	                        titleObj.innerHTML = GetDocTitle();
+	                        titleObj.innerHTML = ConvertCharToEntityReference(GetDocTitle());
 	                        //titleObj.style.textAlign = "left";
 	                    }
 	                }

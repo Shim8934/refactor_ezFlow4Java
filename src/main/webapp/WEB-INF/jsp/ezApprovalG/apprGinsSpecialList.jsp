@@ -12,6 +12,11 @@
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SpecialList_Cross.js"></script>
+		<style type="text/css">
+			.mainlist tr th {
+				border-top: 0px;
+			}
+		</style>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var OrderCell = "";
 		    var rtnVal = new Array();
@@ -103,6 +108,11 @@
 	</head>
 	<body class="popup" style="margin-left:0px;margin-top:0px;">
 		<h1><spring:message code='ezApprovalG.t1025'/></h1>
+		<div id="close">
+            <ul>
+                <li><span id="btnCancel" onClick="return btnClose_onclick()"></span></li>
+            </ul>
+        </div>
 		<table class="content">   
 		  <tr id="trSC1" >           
 		    <th   id="tdSC1Title" >&nbsp;</th>
@@ -130,14 +140,13 @@
 		  </tr>      
 		</table>
 		<br />
-		<h2><spring:message code='ezApprovalG.t94'/></h2>
+		<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t94'/></h2>
 		<div class="listview" >
-			<div id="SpecialList" style="BACKGROUND-COLOR: #ffffff;border:0px solid #ddd;HEIGHT: 120px; WIDTH: 100%; overflow:auto;">
+			<div id="SpecialList" style="BACKGROUND-COLOR: #ffffff;border:0px solid #ddd;HEIGHT: 155px; WIDTH: 100%; overflow:auto;">
 			</div>
 		</div>
-		<div class="btnposition" >
-		      <a class="imgbtn"><span id="btnOK" onClick="return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>
-		      <a class="imgbtn"><span id="btnCancel" onClick="return btnClose_onclick()" ><spring:message code='ezApprovalG.t119'/></span></a>
+		<div class="btnpositionNew" >
+		    <a class="imgbtn"><span id="btnOK" onClick="return btnOK_onclick()" ><spring:message code='ezApprovalG.t20'/></span></a>		      
 		</div>
 	</body>
 </html>

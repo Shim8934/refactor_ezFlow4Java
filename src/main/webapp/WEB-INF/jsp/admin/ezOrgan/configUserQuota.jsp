@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -6,8 +7,8 @@
 <head>
 	<title><spring:message code='ezOrgan.t168' /></title>
 	<link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
-    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 	<script type="text/javascript">
 	
     function window_onload() {
@@ -72,8 +73,11 @@
             }
         }
         
+        var textQuotaValue2 = document.getElementById("TextQuota2").value;
+        var textQuotaValue3 = document.getElementById("TextQuota3").value;
+        
         // 2018.05.09 재은 수정 (경고알림이 총용량보다 더 크거나 같을경우)
-        if (Number(document.getElementById("TextQuota2").value) >= Number(document.getElementById("TextQuota3").value)) {
+        if (textQuotaValue2 != "" && textQuotaValue3 != "" && Number(textQuotaValue2) >= Number(textQuotaValue3)) {
         	alert("<spring:message code='ezEmail.jje01'/>");
         	return;
         }
@@ -125,7 +129,12 @@
 <body class="popup" onload="javascript:window_onload()">
 <form name="Form1" method="post" action="ConfigQuota.aspx?id=dev01" id="Form1">
   <h1 style="height:30px;"><spring:message code='ezOrgan.t168' /></h1>
-    <br />
+  <div id="close">
+      <ul>
+          <li><span onclick="window.close()"></span></li>
+      </ul>
+  </div>
+  <br />
   <table  class="content">
     <tr>
       <th><spring:message code='ezOrgan.t175' /></th>
@@ -134,17 +143,16 @@
     <tr>
       <th ><spring:message code='ezOrgan.t177' /></th>
       <td><input id="CheckQuota2" type="checkbox" name="CheckQuota2" <c:if test="${userWarn != null}">checked="checked"</c:if> onclick="check_change(document.getElementById('CheckQuota2'), document.getElementById('TextQuota2'));" />
-        <input name="TextQuota2" type="text" value="<c:if test="${userWarn != null}">${userWarn}</c:if>" id="TextQuota2" />GB </td>
+        <input name="TextQuota2" type="text" value="<c:if test="${userWarn != null}">${userWarn}</c:if>" id="TextQuota2" /> GB </td>
     </tr>
     <tr>
       <th ><spring:message code='ezStatistics.t1024' /></th>
       <td><input id="CheckQuota3" type="checkbox" name="CheckQuota3" <c:if test="${userQuota != null}">checked="checked"</c:if> onclick="check_change(document.getElementById('CheckQuota3'), document.getElementById('TextQuota3'));" />
-        <input name="TextQuota3" type="text" value="<c:if test="${userQuota != null}">${userQuota}</c:if>" id="TextQuota3" />GB </td>
+        <input name="TextQuota3" type="text" value="<c:if test="${userQuota != null}">${userQuota}</c:if>" id="TextQuota3" /> GB </td>
     </tr>
   </table>
-  <div class="btnposition">
+  <div class="btnpositionNew">
        <a class="imgbtn"><span onClick="return OK_Click()"><spring:message code='ezOrgan.t124' /></span></a>
-      <a class="imgbtn"><span onClick="window.close()"><spring:message code='ezOrgan.t125' /></span></a>
   </div>
 </form>
 </body>

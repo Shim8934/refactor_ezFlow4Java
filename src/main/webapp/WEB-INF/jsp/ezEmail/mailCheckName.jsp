@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -12,11 +13,11 @@
 			}
 		</style>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/ListView_list.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/Common.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/ListView_list.js")%>"></script>
 		<script>
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -328,6 +329,11 @@
 		</LISTVIEWDATA>
 		</xml> 
 	<h1><spring:message code='ezEmail.t331' /></h1>
+	<div id="close">
+        <ul>
+            <li><span onclick="cancel_onClick()"></span></li>
+        </ul>
+    </div>
 	<div class="txt"><spring:message code='ezEmail.t335' /><br>
 	  <br><br>
 	  ▒&nbsp;<spring:message code='ezEmail.t337' /><span class="point" id="unresolveName" style="padding-left:5px"><spring:message code='ezEmail.t338' /></span></div>
@@ -335,7 +341,6 @@
 	<div class="btnposition btnpositionNew">
 	    <a class="imgbtn" onClick="delete_onClick()" ><span><spring:message code='ezEmail.t95' /></span></a>
 	    <a class="imgbtn" onClick="change_onClick()" ><span><spring:message code='ezEmail.t38' /></span></a>
-	    <a class="imgbtn" onClick="cancel_onClick()" ><span><spring:message code='ezEmail.t39' /></span></a>
 	</div>
 	</body>
 </html>

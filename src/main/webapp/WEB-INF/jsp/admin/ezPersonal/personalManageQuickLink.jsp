@@ -61,6 +61,12 @@
 	                listview.RowDataBind();
 	                xmldomNode = null;
 	                xmldom = null;
+	                
+	                //2018-08-09 김보미 - 데이터가 없을 경우 출력
+	                if (headerData.getElementsByTagName("ROW").length == 0) {
+	                	var TR_noItems = "<tr id='Link_TR_noItems'><td style='text-align: center;' colspan='8'>" + "<spring:message code = 'ezPersonal.t20005' />" + "</td></tr>";
+		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
+	                }
 	            } catch (e) {
 	
 	            }
@@ -71,10 +77,12 @@
 	                addquicklink_dialogArguments[0] = "";
 	                addquicklink_dialogArguments[1] = btn_Select_Complete;
 	                
-	              //크롬일때 alert창 크기때문에 크롬일때 구별
+	                //크롬일때 alert창 크기때문에 크롬일때 구별
 		            var agent = navigator.userAgent.toLowerCase();
 		            if (agent.indexOf("chrome") != -1) {
-		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(450, 682));	
+		            	//2018-08-03 김보미 - alert창 크기때문에 팝업 사이즈 조정
+		            	//var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(450, 682));	
+		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(460, 682));	
 		            } else {
 		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(415, 670));
 		            }
@@ -103,9 +111,18 @@
 	            if (CrossYN()) {
 	                addquicklink_dialogArguments[0] = listviewSelected[0].getAttribute("data1");
 	                addquicklink_dialogArguments[1] = btn_Select_Complete;
-	                var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(415, 680));
+	                
+		            //2018-08-03 김보미 - alert창 크기때문에 팝업 사이즈 조정
+ 	                //var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(415, 680));
+		            var agent = navigator.userAgent.toLowerCase();
+		            if (agent.indexOf("chrome") != -1) {
+		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(460, 682));	
+		            } else {
+		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(415, 670));
+		            }
 	                try { AddQuickLink.focus(); } catch (e) {
 	                }
+	                
 	            } else {
 	                var rtnValue = window.showModalDialog("/admin/ezPersonal/addQuickLink.do?mode=modify", listviewSelected[0].getAttribute("data1"), "dialogHeight:620px;dialogwidth:400px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(415, 625));
 	                window.location.reload();
@@ -273,7 +290,7 @@
 		<div id="mainmenu">
 			<ul>
 		    	<li><span onclick="btn_Select()"><spring:message code = 'ezPersonal.t105' /></span></li>
-		    	<li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li>
+		    	<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		        <li><span onclick="QuickList_onDblclick()"><spring:message code = 'ezPersonal.t169' /></span></li>
 		        <li><span onclick="btn_Del()"><spring:message code = 'ezPersonal.t99' /></span></li>
 			</ul>

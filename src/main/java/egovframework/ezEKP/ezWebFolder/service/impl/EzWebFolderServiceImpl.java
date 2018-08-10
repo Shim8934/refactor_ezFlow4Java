@@ -40,6 +40,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
@@ -63,6 +64,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	
 	@Autowired
 	private EzWebFolderAdminService ezWebFolderAdminService;
+	
+	@Autowired
+	private EzWebFolderService_m ezWebFolderService_m;
 	
 	@Autowired
 	private EzCommonService ezCommonService;
@@ -839,8 +843,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			saveLog("D", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 		}
 		else {
-			String guid                     = UUID.randomUUID().toString();
-			String fileName                 = guid + ".zip";
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+			Date today = new Date();
+			String fileName                     = "webfolder_download_" + formatter.format(today) + ".zip";
 			ZipOutputStream zipOutputStream = null;
 			FileInputStream fileInputStream = null;
 			
@@ -1020,7 +1025,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 	
 	public String getWebFolderDirPath(int tenantId) {
-		return commonUtil.separator + "fileroot" + commonUtil.separator + tenantId + commonUtil.separator + "webfolder" + commonUtil.separator;
+		return commonUtil.getUploadPath("upload_webfolder.ROOT", tenantId) + commonUtil.separator;
 	}
 	
 	@Override
@@ -1216,5 +1221,18 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("tenantId", tenantId);
 		
 		return ezWebFolderDAO.getFolderListFromFileId(map);
+	}
+	
+	@Override
+	public List<FolderSimpleVO> getAllSimpleShareFolder(String userId, String deptId, String compId, int tenantId) throws Exception {
+		List<Map<String, String>> idList = ezWebFolderService_m.getPermissionIdMapList(userId, deptId, compId, tenantId);
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("idList", idList);
+		map.put("compId", compId);
+		map.put("tenantId", tenantId);
+		
+		return ezWebFolderDAO.getAllSimpleShareFolder(map);
 	}
 }

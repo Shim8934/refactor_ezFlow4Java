@@ -219,20 +219,28 @@
 		</xml>
 	    <div id="menu">
 	        <ul>
-				<li style="background-image: none;font-size:11pt;font-weight:bold;color:white;padding-top:6px;margin-right:12px;padding-left:0px">
-				<c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.t1429'/></c:if></li>	        
+	        	<c:if test="${approvalFlag == 'S'}">
+					<li style="background-image: none;font-size:11pt;font-weight:bold;color:white;padding-top:6px;margin-right:12px;padding-left:0px">
+						<spring:message code='ezApprovalG.t1429'/>
+					</li>
+				</c:if>	
 	            <li><span onclick="return btnSearch_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
 	        </ul>
 	    </div>
+	    <div id="close">
+            <ul>
+                <li><span onclick="return bt_Cancle_onclick()"></span></li>
+            </ul>
+        </div>
 	    <table style="margin-top: -10px; width: 455px;">
 	        <tr>
 	            <td style="height: 25px; vertical-align: bottom;"><span class="point" id="listcount">&nbsp;</span></td>
 	            <td>
-	                <div class="page">
-	                    <img src="/images/page_previous.gif" width="15" height="15" id="td_Previous" onclick="goToPage_lv('front')" style="vertical-align: middle;">
+	                <div class="page" style="margin-right:50px">
+	                    <img src="/images/page_previous.gif" id="td_Previous" onclick="goToPage_lv('front')" style="vertical-align: middle;">
 	                    <span><spring:message code='ezApprovalG.t103'/></span><span id="td_pTotalCount" style="color:black;"></span>&nbsp;&nbsp;<span style="color:black;"><spring:message code='ezApprovalG.t363'/></span>
 	                    <input id="txt_PageInputNum" onkeydown="goToPage_lv('page', event)" onselectstart="event.cancelBubble=true;event.returnValue=true">
-	                    <img src="/images/page_next.gif" width="15" height="15" id="td_Next" onclick="goToPage_lv('next')" style="vertical-align: middle;">
+	                    <img src="/images/page_next.gif" id="td_Next" onclick="goToPage_lv('next')" style="vertical-align: middle;">
 	                </div>
 	            </td>
 	        </tr>
@@ -242,11 +250,11 @@
 	        <tr>
 	            <td style="vertical-align: top;">
 	                <div class="listview">
-	                    <div id="lvtDoclist" style="border: 0; width: 448px; height: 360px; overflow-x: auto; overflow-y:hidden;"></div>
+	                    <div id="lvtDoclist" style="border: 0; width: 680px; height: 360px; overflow-x: auto; overflow-y:hidden;"></div>
 	                </div>
 	            </td>
 	            <td style="width: 25px; text-align: center;">
-	                <img id="arrow_right" onclick="return btnIns_onclick()" src="/images/arr01.gif" width="16" height="16" style="cursor: pointer"><img id="arrow_left" onclick="return btndel_onclick()" src="/images/arr02.gif" width="16" height="16" style="cursor: pointer"></td>
+	                <img id="arrow_right" onclick="return btnIns_onclick()" src="/images/arr01.gif" style="cursor: pointer"><img id="arrow_left" onclick="return btndel_onclick()" src="/images/arr02.gif" style="cursor: pointer"></td>
 	            <td>
 	                <div class="listview">
 	                    <div id="lvTDoc" style="border: 0; width: 320px; height: 360px; overflow: auto; "></div>
@@ -257,7 +265,6 @@
 	
 	    <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="return bt_OK_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-	        <a class="imgbtn"><span onclick="return bt_Cancle_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 	    </div>
 	    <script type="text/javascript">
 	        selToggleList(document.getElementById("menu"), "ul", "li", "0");

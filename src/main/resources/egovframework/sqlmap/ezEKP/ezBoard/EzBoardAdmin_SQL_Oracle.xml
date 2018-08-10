@@ -591,7 +591,7 @@
 		<![CDATA[
 			SELECT 
 				boardid,
-				boardname$lang$ boardname,
+				CASE WHEN (boardname$lang$ = '' OR boardname$lang$ IS NULL) THEN boardname ELSE boardname$lang$ END boardname,
 				treevieworder,
 				'' as boardcolor,
 				'' as gubun,
@@ -704,6 +704,18 @@
         	FORMLOCATION IS NOT NULL
 	</select>
 	
+	<!-- 2018-07-12 홍승비 - PRI 제약을 가지는 CompanyID 칼럼의 데이터 삽입 판단용 쿼리 -->
+	<select id="EzBoardAdminDAO.checkCompanyIDCol" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			ALL_TAB_COLUMNS
+		WHERE
+			TABLE_NAME = 'TBL_BOARD_MYBOARDS'
+		AND
+			COLUMN_NAME = 'COMPANYID'
+	</select>
+	
 	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl_I" parameterClass="Map">
 		INSERT INTO TBL_Board_BoardManage (
 			BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID 
@@ -808,9 +820,49 @@
 				boardid, 	sn, 	name1, 		name2,	 	name3, 		name4, 		colname, 		width,		view_fg, tenant_id
 			)
 			VALUES(
-				#boardID#, 	#sn#, 	#name1#, 	#name2#,	#name3#, 	#name4#, 	#colName#, 		#width#,	#name#,  #tenantID#
-			)		
-		]]>		
+				#boardID#, 	#sn#,
+		]]>
+		<isEqual property="isInitHeader" compareValue="YES">
+			<isEqual property="colName" compareValue="ATTACHMENTS">
+				<![CDATA[
+					'첨부', 'Attachments', '添付', '附加', 
+				]]>
+			</isEqual>
+			<isEqual property="colName" compareValue="TITLE">
+				<![CDATA[
+					'제목', 'Title', '件名', '标题', 
+				]]>
+			</isEqual>
+			<isEqual property="colName" compareValue="WRITERDEPTNAME">
+				<![CDATA[
+					'부서', 'Department', '部署', '部门', 
+				]]>
+			</isEqual>
+			<isEqual property="colName" compareValue="WRITERNAME">
+				<![CDATA[
+					'게시자', 'Writer', '作成者', '写作者', 
+				]]>
+			</isEqual>
+			<isEqual property="colName" compareValue="WRITEDATE">
+				<![CDATA[
+					'게시일', 'Registered', '掲示日', '发布日期', 
+				]]>
+			</isEqual>
+			<isEqual property="colName" compareValue="READCOUNT">
+				<![CDATA[
+					'조회수', 'View', 'ヒット数', '查询数', 
+				]]>
+			</isEqual>
+		</isEqual>
+		<isNotEqual property="isInitHeader" compareValue="YES">
+			<![CDATA[
+				#name1#, #name2#, #name3#, #name4#, 
+			]]>
+		</isNotEqual>
+		<![CDATA[
+				#colName#, #width#, #name#, #tenantID#
+			)
+		]]>
 	</insert>
 		
 	<insert id="EzBoardAdminDAO.saveACL_I" parameterClass="Map">
@@ -888,6 +940,47 @@
                   AND
                   	USERID = #v_PUSERID# ),
                 TENANT_ID
+           	  FROM 
+           	  	TBL_Board_BoardInfo 
+           	  WHERE
+           	  	TENANT_ID = #v_TENANTID#
+           	  AND
+           	  	BOARDID = #v_PBOARDID# )
+		]]>
+	</insert>
+	
+	<insert id="EzBoardAdminDAO.addMyBoardsComp" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Board_MyBoards ( 
+				USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID, COMPANYID
+			)
+         	( SELECT 
+         		#v_PUSERID# USERID ,
+              	BOARDID ,
+                BOARDNAME ,
+                BOARDNAME2 ,
+                ( SELECT 
+                	COUNT(BOARDID) + 1
+     			  FROM 
+     			  	TBL_Board_MyBoards 
+     			  WHERE
+     			  	TENANT_ID = #v_TENANTID#
+     			  AND  
+     			  	USERID = #v_PUSERID# ),
+                ( SELECT
+                	CASE 
+                		WHEN MAX(VIEWORDER) IS NULL 
+                		THEN 2 
+                		ELSE MAX(VIEWORDER) + 1 
+                	END 
+                  FROM 
+                  	TBL_Board_MyBoards 
+                  WHERE  
+                  	TENANT_ID = #v_TENANTID#
+                  AND
+                  	USERID = #v_PUSERID# ),
+                TENANT_ID,
+                " "
            	  FROM 
            	  	TBL_Board_BoardInfo 
            	  WHERE

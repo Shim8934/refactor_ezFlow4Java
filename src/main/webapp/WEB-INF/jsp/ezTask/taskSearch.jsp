@@ -24,6 +24,9 @@
 				font:bold;
 				color:#017bec;
 			}
+			.h2_dot {
+				background: url(/images/kr/left/left_dot02.gif) no-repeat 0px 70%;
+			}
 		</STYLE>
 		<script type="text/javascript">
 			var startdate = "_startdate";
@@ -60,6 +63,11 @@
 
 		        $("#Sdatepicker").datepicker('disable');
 		        $("#Edatepicker").datepicker('disable');
+		        
+		        /* 2018-07-20 홍승비 - 업무검색(to-do) > 검색결과 좌측네모 IE에서 높이조절 */
+		        if (navigator.userAgent.toLowerCase().indexOf('chrome') == -1) {
+					document.getElementsByClassName("h2_dot")[0].style.background = "url(/images/kr/left/left_dot02.gif) no-repeat 0px 67%";
+		        }
 		    }
 
 		    function select_row(elem) {
@@ -318,6 +326,8 @@
 						tr.cells[4].innerHTML = SelectSingleNodeValue(node, "TITLE");
 			            tr.cells[4].setAttribute("title", ConvertEntityReferenceToChar(SelectSingleNodeValue(node, "TITLE")));
 			        }
+			        tr.cells[4].style.overflow = "hidden";
+		            tr.cells[4].style.textOverflow = "ellipsis";
 
 			        if (useTodoMemo == "YES") {
 				        setNodeText(tr.cells[6], SelectSingleNodeValue(node, "MEMO"));
@@ -511,19 +521,19 @@
 			<tr>
 				<th style="height:auto"><spring:message code='ezTask.t181' /></th>
 				<td>
-					<select id="search_field" name="search_field" style="WIDTH: 70px;vertical-align:middle">
+					<select id="search_field" name="search_field" style="WIDTH: 70px;vertical-align:middle;height:22px">
 						<option  value="title" selected><spring:message code='ezTask.t118' /></option>
 						<option  value="personName" ><spring:message code='ezTask.t2005' /></option>
 					</select>
-					<select name="search_class" id="search_class" style="WIDTH: 80px;vertical-align:middle">
+					<select name="search_class" id="search_class" style="WIDTH: 80px;vertical-align:middle;height:22px">
 						<option  value="" selected ><spring:message code='ezTask.t240' /></option>
 						<%-- <option  value="1" ><spring:message code='ezTask.t97' /></option> --%>
 						<option  value="2"><spring:message code='ezTask.t98' /></option>
 						<option  value="3"><spring:message code='ezTask.t9001' /></option>
 						<option  value="4"><spring:message code='ezTask.t100' /></option>
 					</select>
-					<input name="text" type="text" id="keyword" onKeyPress="return search_keypress(event)" size="21" style="vertical-align:middle">
-					<span style="vertical-align:middle"><a class="imgbtn" style="vertical-align:middle"><span onClick="search()"><spring:message code='ezTask.t183' /></span></a></span>
+					<input name="text" type="text" id="keyword" onKeyPress="return search_keypress(event)" size="21" style="vertical-align:middle;height:22px">
+					<span style="vertical-align:middle"><a class="imgbtn imgbck" style="vertical-align:middle;margin-top:1px"><span onClick="search()"><spring:message code='ezTask.t183' /></span></a></span>
 				</td>
 			</tr>
 			<tr>
@@ -542,27 +552,27 @@
 			<span class="point"></span><span id="resultCount"></span></h2>
 		</div>
 		
-		<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed;">
+		<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed; min-width:800px;">
 			<col style ="width:30px;">
 			<col style ="width:50px;">
 			<col style ="width:20px;">
 			<col style ="width:100px;">
 			<c:if test="${useTodoMemo == 'YES'}">
-				<col >
-				<col style ="width:50px;">
-				<col style ="width:140px;">
+				<col style = "width:80%;">
+				<col style ="width:30px;">
+				<col style ="width:25%;">
 			</c:if>
 			<c:if test="${useTodoMemo == 'NO'}">
-				<col >
-				<col style ="width:50px;">
-				<col style ="width:30px;">
+				<col style = "width:80%;">
+				<col style = "width:30px;">
+				<col style = "width:25%;">
 			</c:if>
-            <col style ="width:100px;">
+            <col style ="width:120px;">
 			<col style ="width:130px;">
-			<col style ="width:100px;">
-			<col style ="width:100px;">
+			<col style ="width:120px;">
+			<col style ="width:120px;">
 			<tr>
-				<th ><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
+				<th style="text-align:center"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
 				<th style="text-align:center"><img src="/images/ImgIcon/view-importance.gif"></th>
 				<th ><img src="/images/newAttach.gif"></th>
 				<th ><spring:message code='ezTask.t2005' /></th>
@@ -574,21 +584,21 @@
 				<c:if test="${useTodoMemo == 'NO'}">
 					<th ></th>
 				</c:if>
-                <th style="text-align:center;"><spring:message code='ezTask.t2003' /></th>
+                <th style="padding-left:14px"><spring:message code='ezTask.t2003' /></th>
 				<th style="text-align:center;"><spring:message code='ezTask.t120' /></th>
 				<th style="text-align:center;"><spring:message code='ezTask.t121' /></th>
 				<th style="text-align:center;"><spring:message code='ezTask.t9002' /></th>
 			</tr>
 			<!-- 18-05-24 김민성 - 중요도 이미지로 수정 -->
 			<tr class="row_body" id="row_body" style="display:none;" repeatcount="0" startdate="" onclick="select_row(this)">
-				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;" ondblclick="ReadTask(this)"></td>
+				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style ="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
                 <td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;" ondblclick="ReadTask(this)"></td>
-				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;padding-left: 15px;" ondblclick="ReadTask(this)"></td>
+				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
 				<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>

@@ -19,7 +19,7 @@
 		select {
 			height: auto;
 		}
-		table, td {
+		table td {
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -197,26 +197,23 @@
 				var pageNum = CurPage;
 
 				if (totalPage > 1 && pageNum != 1) {
-					strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+					strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>"
 					PagingHTML += strtext;
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>"
 					PagingHTML += strtext;
 				}
 
 				if (totalPage > BlockSize) {
 					if (pageNum > BlockSize) {
-						strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>"
-								+ strLang1 + "</span>";
+						strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 						PagingHTML += strtext;
 					} else {
-						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>"
-								+ strLang1 + "</span>";
+						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 						PagingHTML += strtext;
 					}
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>"
-							+ strLang1 + "</span>";
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 					PagingHTML += strtext;
 				}
 
@@ -244,33 +241,30 @@
 				if (totalPage > BlockSize) {
 					if (totalPage >= parseInt(((parseInt((pageNum - 1)
 							/ BlockSize) + 1) * BlockSize) + 1)) {
-						strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>"
-								+ strLang2 + "</span>";
+						strtext = "";
 						strtext = strtext
-								+ "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+								+ "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 						PagingHTML += strtext;
 					} else {
-						strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>"
-								+ strLang2 + "</span>";
+						strtext = "";
 						strtext = strtext
-								+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+								+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 						PagingHTML += strtext;
 					}
 				} else {
-					strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>"
-							+ strLang2 + "</span>";
+					strtext = "";
 					strtext = strtext
-							+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+							+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 					PagingHTML += strtext;
 				}
 
 				if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
 					strtext = "<span class='btnimg' onclick='return goToPageByNum("
 							+ totalPage
-							+ ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+							+ ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 					PagingHTML += strtext;
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 					PagingHTML += strtext;
 				}
 
@@ -460,11 +454,29 @@
 				var pageNum = "-1";
 				getLoginHist(pageNum, searchStartTime, searchEndTime);
 			}
+			
+	        //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 191;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
+		    
+		    $(function(){
+	    		windowResize();
+		    });
 		</script>
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code="ezSystem.x0021"></spring:message><span id="listInfo"></span></h1>
-		<table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2;">
+		<table style="width: 100%; background-color: #f8f8f8; border-top: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8;">
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
 					<span id="topmenu" style="width: 500px"><spring:message code='ezSystem.x0032'/> : &nbsp; 
@@ -501,23 +513,25 @@
 		</table>
 		<table style="margin: 10px 0px;">
 			<tr>
-				<td width="98%" style="font-weight: bold; color: gray;">※ ${mailLogKeepPeriodMessage} ※</td>
+				<td width="98%" style="color: #333;">▒ ${mailLogKeepPeriodMessage}</td>
 			</tr>
-		</table>	
-		<table class="mainlist" style="width:100%;">
-			<thead style="">
-				<tr>
-					<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
-					<th><spring:message code="ezStatistics.t1068"></spring:message></th>
-					<th><spring:message code="ezStatistics.t113"></spring:message></th>
-					<th><spring:message code="ezSystem.x0024"></spring:message></th>
-					<th><spring:message code="ezSystem.x0025"></spring:message></th>
-					<th><spring:message code="ezSystem.x0026"></spring:message></th>
-					<th><spring:message code="ezSystem.x0027"></spring:message></th>
-				</tr>
-			</thead>
-			<tbody id="loginHistListBody" style="overflow: auto;"></tbody> 
 		</table>
+		<div id="contentlist" style="width:100%; overflow: auto;">	
+			<table class="mainlist" style="width:100%;">
+				<thead style="">
+					<tr>
+						<th width="80px;"><spring:message code="ezSystem.kyj1"></spring:message></th>
+						<th><spring:message code="ezStatistics.t1068"></spring:message></th>
+						<th><spring:message code="ezStatistics.t113"></spring:message></th>
+						<th><spring:message code="ezSystem.x0024"></spring:message></th>
+						<th><spring:message code="ezSystem.x0025"></spring:message></th>
+						<th><spring:message code="ezSystem.x0026"></spring:message></th>
+						<th><spring:message code="ezSystem.x0027"></spring:message></th>
+					</tr>
+				</thead>
+				<tbody id="loginHistListBody" style="overflow: auto;"></tbody> 
+			</table>
+		</div>
 		<div id="tblPageRayer" style="padding-top: 10px;"></div>
 		<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
 	</body>

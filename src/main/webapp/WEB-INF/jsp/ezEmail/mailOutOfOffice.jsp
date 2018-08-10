@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -8,18 +9,18 @@
 	    <title>mail_outofoffice</title>
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/composeappt.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/composeappt.js")%>"></script>
 	    <!-- data picker-->
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>">
 	    <!-- time picker-->
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.js")%>"></script>
+		<link rel="stylesheet" type="text/css" href="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.css")%>" />
 	    <script type="text/javascript">
 	    	var offsetMin = "${offsetMin}";
 		    var g_oofstate = "${gOofState}";
@@ -242,7 +243,10 @@
 		            poofstate = "enabled";
 				
 		        if (poofstate == "scheduled") {
-		        	if (dateStart > dateEnd || dateStart < now) {
+		        	if (dateStart.toString() == dateEnd.toString()) {
+		        		alert("<spring:message code='ezPersonal.pjj1' />");
+			            return;
+		        	} else if (dateStart < now) {
 			            alert("<spring:message code='ezEmail.t99000036' />");
 			            return;
 			        }
@@ -352,9 +356,11 @@
 	<div id="externalDiv" class="nobox" style="width:720px; height:500px;margin-top:5px;">
 		<iframe id="tbContentElement2" class="viewbox" src="/ezEditor/selectEditor.do?type=MAILOUTOFOFFICE" name="tbContentElement2" style="padding:0; height:500px; width:100%; overflow:auto;"></iframe>
 	</div> 
-	<div style="width:700px;text-align:center;margin-top:10px">
-	    <a class="imgbtn" onClick="Save()"><span><spring:message code='main.sp09' /></span></a>
-	    <a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
+	<div style="width:700px;text-align:center;">
+		<div class="btnpositionJsp">
+	    	<a class="imgbtn" onClick="Save()"><span><spring:message code='main.sp09' /></span></a>
+	    	<a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
+	    </div>	
 	</div>
 	<XMP id="BujaeBody1" style="DISPLAY: none">${gInternal}</XMP> 
 	<XMP id="BujaeBody2" style="DISPLAY: none">${gExternal}</XMP> 

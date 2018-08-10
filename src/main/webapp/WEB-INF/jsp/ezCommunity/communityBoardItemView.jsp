@@ -58,6 +58,8 @@
 	    	var pUse_Editor = "<c:out value='${useEditor}' />";
 	    	var rsa = new RSAKey();
 	    	var commentCount = "<c:out value='${commentCount}' />";
+	    	//2018-07-13 김보미
+	    	var treeCtrl = "<c:out value='${treeCtrl}' />";
 	    	
 	    	window.onload = function () {
 	    		$("#message").contents().find("body").css("word-wrap", "break-word");
@@ -108,13 +110,14 @@
 	    	    rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 	    	}
 			
+	    	/* 2018-08-03 홍승비 - 커뮤니티 게시물(포토게시물 제외) 리사이즈 수정*/
 		    window.onresize = function () {
 		        if (gubun != "3") { 
 		            var contentHeight;
 		            if (gubun == "2") {
-		                contentHeight = document.documentElement.clientHeight - 338;
+		                contentHeight = document.documentElement.clientHeight - 261;
 		            } else {
-		                contentHeight = document.documentElement.clientHeight - 363;
+		                contentHeight = document.documentElement.clientHeight - 281;
 		            }
 		            if(contentHeight < 40){
 		            	contentHeight = 40;
@@ -363,14 +366,17 @@
 				    return;
 				}
 	            
+	            var wWeight = "355";
+    			var wHeight = "600";
+
 	            var pheigth = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
-	            pheigth = parseInt(pheigth) / 2;
-	            pwidth = parseInt(pwidth) / 2;
-	            pheigth = pheigth - 200;
-	            pwidth = pwidth - 127;
-
-	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code, "", "height=656,width=440px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth, "");
+	            
+	        	var left = (pwidth - wWeight) / 2;
+    			var top = (pheigth - wHeight) / 2;
+				//2018-07-13 김보미 - 파라메터 추가
+// 	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code, "", "height=600,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
+	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code + "&treeCtrl=" + treeCtrl, "", "height=600,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
 	        }
 
 	        function btnClose_onclick() {
@@ -570,17 +576,17 @@
 // 	            GetOpenWindow(szHref, "", 520, 400);
 	        	var heigth = window.screen.availHeight;
 		        var width = window.screen.availWidth;
-		        var left = (width - 600) / 2;
-		        var top = (heigth - 415) / 2;
+		        var left = (width - 620) / 2;
+		        var top = (heigth - 425) / 2;
 		        var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
-		        var strFeature = "status:no;dialogHeight: 415px;dialogWidth: 600px;help: no;resizable:yes";
+		        var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
 		        if (CrossYN()) {
 		            item_readlist_cross_dialogArguments[0] = "";
 		            item_readlist_cross_dialogArguments[1] = ReaderList_Complete;
-		            DivPopUpShow(600, 415, szHref);
+		            DivPopUpShow(620, 425, szHref);
 		        }
 		        else
-		            window.open(szHref, "", "width=600, height=415, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
+		            window.open(szHref, "", "width=620, height=425, resizable=yes, scrollbars=yes, top="+top+", left=" + left);
 		    }
 		    function ReaderList_Complete() {
 		        DivPopUpHidden();
@@ -922,12 +928,11 @@
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li><span onclick="btnClose_onclick()"><spring:message code='ezCommunity.t21'/></span></li>
+	                        <li><span onclick="btnClose_onclick()"></span></li>
 	                    </ul>
 	                </div>
 	                <script type="text/javascript">
 	                    selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	                    selToggleList(document.getElementById("close"), "ul", "li", "0");
 	                </script>
 	            </td>
 	        </tr>
@@ -1055,9 +1060,9 @@
 			               		<div align="left" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white" id="lstAttachLink"></div>
 			              	</td>
 		                  	<td class="pos2" style ="white-space:normal;">
-		                   		<a class="imgbtn"><span onclick="attach_SelectAll()" style="width:70px;"><spring:message code='ezCommunity.t962'/></span></a>
+		                   		<a class="imgbtn imgbck"><span onclick="attach_SelectAll()" style="width:70px;"><spring:message code='ezCommunity.t962'/></span></a>
 		                        <br>
-		                        <a class="imgbtn"><span onclick="attach_Download_Cross()" style="width:70px;"><spring:message code='ezCommunity.t20'/></span></a>
+		                        <a class="imgbtn imgbck"><span onclick="attach_Download_Cross()" style="width:70px;"><spring:message code='ezCommunity.t20'/></span></a>
 		               		</td>
 			           	</tr>
 			       	</table>

@@ -679,6 +679,115 @@
               			B.TENANT_ID = #v_TENANT_ID#) AA
 		]]>
 	</select>
+	
+	<select id="EzOrganDAO.getMemberListCount2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(cn) totalcount
+        	FROM
+        		(
+		]]>
+        		
+		<isEqual property="containConfig" compareValue="YES">
+			<![CDATA[
+				SELECT
+       				cn
+				FROM
+					TBL_USERMASTER
+				WHERE
+					department = #deptCN#
+				AND
+					cn <> 'masteradmin'
+				AND
+					cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantID#)
+				AND
+					tenant_id = #tenantID#
+					
+				UNION ALL
+				
+				SELECT
+					B.cn
+				FROM
+					TBL_ADDJOBMASTER B
+				JOIN
+					TBL_USERMASTER A
+				ON
+					A.tenant_id = B.tenant_id
+				AND
+					A.cn = B.cn
+				WHERE
+					B.deptid = #deptCN#
+				AND
+					B.tenant_id = #tenantID#
+					
+				UNION ALL
+			]]>
+		</isEqual>
+		
+		<![CDATA[
+			SELECT
+				C.cn
+			FROM
+				TBL_USERMASTER C
+			WHERE
+				C.tenant_id = #tenantID#
+			AND
+				C.cn <> 'masteradmin'
+			AND
+				C.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantID#)
+			AND
+				C.department in (SELECT
+									cn
+								FROM
+									TBL_DEPTMASTER
+								WHERE
+									C.tenant_id = #tenantID#
+								AND
+									(LOCATE((SELECT CONCAT(dept_cd_path, ',') from TBL_DEPTMASTER where tenant_id = #tenantID# AND cn = #deptCN#), dept_cd_path)
+								OR
+									extensionattribute1 = #deptCN#))
+			UNION ALL
+			
+			SELECT
+				D.cn
+			FROM
+				TBL_ADDJOBMASTER D
+			JOIN
+				TBL_USERMASTER E
+			ON
+				D.tenant_id = E.tenant_id
+			AND
+				D.cn = E.cn
+			WHERE
+				D.tenant_id = #tenantID#
+			AND
+				D.deptid IN (SELECT
+								cn
+							FROM
+								TBL_DEPTMASTER
+							WHERE
+								D.tenant_id = #tenantID#
+							AND
+								(LOCATE((SELECT CONCAT(dept_cd_path, ',') FROM TBL_DEPTMASTER WHERE tenant_id = #tenantID# AND cn = #deptCN#), dept_cd_path))
+							OR
+								extensionattribute1 = #deptCN#)) AA
+		]]>
+	</select>
+	
+	<select id="EzOrganDAO.getChildCompany" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				CN
+			FROM
+				TBL_DEPTMASTER
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				extensionattribute1 = #deptCN#
+			AND
+				extensionattribute2 = dept_cd_path
+		]]>
+	</select>
 		
 	<select id="EzOrganDAO.getTBLDeptMaster" parameterClass="Map" resultClass="OrganDeptVO">
 		<![CDATA[
@@ -1514,8 +1623,8 @@
 			PROXYUSERID,
 			PROXYUSERNAME,
 			PROXYUSERDEPTID,
-			STARTDATE,
-			ENDDATE
+			DATE_ADD(DATE_FORMAT(STARTDATE ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as STARTDATE,
+			DATE_ADD(DATE_FORMAT(ENDDATE ,'%Y-%m-%d %H:%i:%s'), INTERVAL #offsetMin# MINUTE) as ENDDATE
 		FROM
 			TBL_PROXYINFO
 		WHERE
@@ -1578,7 +1687,7 @@
 		AND
 			cn = #userID#
 	</select>
-	
+
 	<update id="EzOrganDAO.setListType" parameterClass="Map">
 		UPDATE
 			TBL_USERMASTER
@@ -1604,4 +1713,5 @@
 		AND
 			PHYSICALDELIVERYOFFICENAME = #companyID#	
 	</select>
+
 </sqlMap>

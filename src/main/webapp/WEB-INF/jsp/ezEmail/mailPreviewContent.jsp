@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,12 +8,12 @@
 	<head>
 	    <title></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-	    <script language="javascript" src="/js/ezEmail/js_cross/reademail.js"></script>
+	    <link href="<%=CommonUtil.addVer(application, "/css/previewmail.css")%>" rel="stylesheet" type="text/css">
+	    <script language="javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/reademail.js")%>"></script>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-	    <script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/Newemail.js"></script>
+	    <script language="javascript" type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/Newemail.js")%>"></script>
 	    <script language="javascript" type="text/javascript">
 	        var g_paramURL = "${url}";
 	        var editor = "${Use_Editor}";
@@ -291,21 +292,32 @@
 	        
 	     	// 전달, 회신 시 보낸 시간
 	        function sentDateView(msg) {
-			    if (sentDateMsg != "") {
-			    	
-			    	$("body").prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
-			    	$(".sentDateStr").css({
-			    		"padding" : "5px 0",
-				        "margin-bottom" : "10px",
-				        "font-size" : "14px",
-				        "background" : "rgba(255,250,205,0.5)"
+	     		var preViewInfoParent = $(".previewmail_info", parent.document).parent();
+	     		preViewInfoParent.find(".sentDateStr").remove();
+
+	     		if (sentDateMsg != "") {
+	     			preViewInfoParent.prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
+	     			preViewInfoParent.find(".sentDateStr").css({
+			    		"height" : "27px",
+			        	"box-sizing" : "border-box",
+			        	"background" : "#fdfec1",
+		        		"border-top" : "1px solid #e9ea94",
+			        	"line-height" : "27px",
+			    		"width" : "100%",
+			        	"padding" : "0px 0px 0px 10px",
+			    		"margin" : "0px",
+			    		"font-family" : "Gulim",
+			    		"font-size" : "12px",
+			    		"color" : "#333"
 			    	});
 			    }
-	        }
+	     		
+		    	parent.mailPrevIframeSize();
+	     	}
 	    </script> 
 	</head>
 
-	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">
+	<body style="margin:10px 13px" onload="javascript:window_onload()">
 		<img src='/images/minus.png' title='<spring:message code='ezEmail.t99000065' />' onclick='Smaller()' style='cursor:pointer;' />
 		<img src='/images/plus.png' title='<spring:message code='ezEmail.t99000064' />' onclick='Bigger()' style='cursor: pointer; margin-left: -4px;' />
 		<span style="float:right;">

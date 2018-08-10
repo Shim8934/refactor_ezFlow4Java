@@ -14,6 +14,8 @@
 		<script type="text/javascript">
 		 	var ReturnFunction;
 		    var retVal = new Array();
+		    var dialogArguments;
+		    var openerFlag = false;
 		    
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -25,10 +27,16 @@
 		    	 try {
 			            dialogArguments = parent.checkdeptname_cross_dialogArguments[0];
 			            ReturnFunction = parent.checkdeptname_cross_dialogArguments[1];
-
-			            retVal["deptid"] = "";
 			        }
 			        catch (e) {
+			        	/* 2018-08-08 김민성 - 자원관리 부서검색 수정 */
+			        	try {
+			        		dialogArguments = opener.checkdeptname_cross_dialogArguments[0];
+	    	           		ReturnFunction = opener.checkdeptname_cross_dialogArguments[1];
+	    	           		openerFlag = true;
+			            } catch (e) {
+			                openerFlag = false;
+			            }
 			        }
 	    		initializeReceiverList();	    		
 	    	});
@@ -62,6 +70,9 @@
 		        if (ReturnFunction != null) {
 		            retVal["deptid"] = GetListRow[0].getAttribute("DATA2");
 		            ReturnFunction(retVal);
+		            if (openerFlag){
+			            window.close();
+			        }
 		        } else {
 		            dialogArguments["deptid"] = GetListRow[0].getAttribute("DATA2");
 		            window.close();
@@ -80,8 +91,9 @@
 
 		    function cancel_onClick() {
 		        if (ReturnFunction != null) {
-		            retVal["recipientTDData"] = "dontprocess";
-		            ReturnFunction(retVal);
+		        	window.close();
+		        	//retVal["recipientTDData"] = "dontprocess";
+		            //ReturnFunction(retVal);
 		        } else {
 		            dialogArguments["recipientTDData"] = "dontprocess";
 		            window.close();
@@ -110,12 +122,15 @@
 		</xml>
 		
 		<h1><spring:message code="ezResource.t13"/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="cancel_onClick()"></span></li>
+            </ul>
+        </div>
 		<h2><spring:message code="ezResource.t167"/></h2>
-
 		<div id="ListView" style="behavior: url(#ListViewBehave#ListView); width: 570px; height: 200px; overflow-y:auto" onrowdblclick="change_onClick()"> </div>
 		<div class="btnposition btnpositionNew">
     		<a class="imgbtn" onClick="change_onClick()"><span><spring:message code="ezResource.t15"/></span></a>
-    		<a class="imgbtn" onClick="cancel_onClick()"><span><spring:message code="ezResource.t16"/></span></a>
 		</div>
 	</body>
 </html>

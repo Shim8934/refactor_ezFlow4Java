@@ -241,4 +241,9 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	public double getTotalFilesSize(Map<String, Object> map) {
 		return (double)select("EzWebFolderDAO.getTotalFilesSize", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<FolderSimpleVO> getAllSimpleShareFolder(Map<String, Object> map) {
+		return (List<FolderSimpleVO>)list("EzWebFolderDAO.getAllSimpleShareFolder", map);
+	}
 }

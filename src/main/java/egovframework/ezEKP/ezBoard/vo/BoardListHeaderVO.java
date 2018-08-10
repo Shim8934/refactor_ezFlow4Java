@@ -15,12 +15,14 @@ public class BoardListHeaderVO {
 	private String name4;
 	/** 헤더 사이즈*/
 	private String width;
-	/** Header Soring Column 명*/
+	/** Header String Column 명*/
 	private String colName;
 	/** SN */
 	private String sn;
 	/** tenantID*/
 	private int tenantID;
+	/** 2018-07-25 홍승비 - 기본헤더 다국어 저장을 위한 분기 변수 */
+	private String isInitHeader;
 
 	public String getName() {
 		return name;
@@ -81,6 +83,12 @@ public class BoardListHeaderVO {
 	}
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
+	}
+	public String getIsInitHeader() {
+		return isInitHeader;
+	}
+	public void setIsInitHeader(String isInitHeader) {
+		this.isInitHeader = isInitHeader;
 	}
 	
 }

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -9,10 +10,10 @@
 	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
 	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	<script src="/js/jquery/jquery.min.js"></script>
-	<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
+	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/jquery.min.js")%>></script>
+	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>></script>
+	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>></script>
+	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezWebFolder/fileFolderDrop.js")%>></script>
 	<script type="text/javascript">
 		var fileList = "<c:out value="${fileList}"/>";
 		
@@ -64,10 +65,14 @@
 </head>
 <body class="popup" style="overflow: hidden;"> 
 	<h1 id ="topMenu" style="margin:0px;margin-top:2px"><spring:message code='ezWebFolder.t117'/></h1>
+	<div id="close">
+        <ul>
+            <li><span id="btnCancel"class="webfolderBttn" onclick="wClose();"></span></li>
+        </ul>
+    </div>
 	<div style="margin: 0px 0px 12px;height:110px;border:1px solid #ddd;padding:15px;font-size:12px;"><spring:message code='ezWebFolder.t109'/></div>	
-	<div style="margin: 6px 0px 0px; bottom: 0px; text-align: center">
-		<a id="btnSave" class="webfolderBttn" onclick="ok_Click();"><span><spring:message code='ezWebFolder.t111'/></span></a>
-		<a id="btnCancel"class="webfolderBttn" onclick="wClose();"><span><spring:message code='ezWebFolder.t112'/></span></a>
+	<div class="btnpositionNew">
+		<a id="btnSave" class="imgbtn" onclick="ok_Click();"><span><spring:message code='ezWebFolder.t111'/></span></a>
 	</div>
 </body>
 </html>

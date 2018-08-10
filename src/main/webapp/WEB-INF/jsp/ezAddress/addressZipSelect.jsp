@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -31,12 +32,12 @@
 	        .searchDesign{float:none; border:3px solid #414347; padding:7px; margin:0px 60px 0px 0px;} 
 	        .searchWrap input[type="text"] {width: 100%; height: 20px; padding:0px; margin:0px; border:0 none; font-size: 15px; font-weight: bold; vertical-align:top;}
 	    </style>
-	    <link rel="stylesheet" type="text/css" href="/css/jquery.selectbox.ZipCode.css" />
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery.selectbox-0.2.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
-	    <script type="text/javascript" src="/js/ezPersonal/controls/ListView_list.js"></script>	    
+	    <link rel="stylesheet" type="text/css" href="<%=CommonUtil.addVer(application, "/css/jquery.selectbox.ZipCode.css")%>" />
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.selectbox-0.2.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>	    
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPersonal/controls/ListView_list.js")%>"></script>	    
 		<script type="text/javascript">
 			//TODO: 이거 문제있네!
 			$(function () {
@@ -160,25 +161,25 @@
 	            totalPage = Math.ceil(new Number(totalcount / pagesize));
 	            var pageNum = CurPage;
 	            if (totalPage > 1 && pageNum != 1) {
-	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            if (totalPage > BlockSize) {
 	                if (pageNum > BlockSize) {
-	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + "<spring:message code='ezPersonal.t10000' />" + "</span>";
+	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 	                    PagingHTML += strtext;
 	                }
 	                else {
-	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + "<spring:message code='ezPersonal.t10000' />" + "</span>";
+	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 	                    PagingHTML += strtext;
 	                }
 	            }
 	            else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + "<spring:message code='ezPersonal.t10000' />" + "</span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            var MaxNum;
@@ -202,27 +203,27 @@
 	            }
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + "<spring:message code='ezPersonal.t10001' />" + "</span>";
-	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+	                    strtext = "";
+	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 	                    PagingHTML += strtext;
 	                }
 	                else {
-	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + "<spring:message code='ezPersonal.t10001' />" + "</span>";
-	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                    strtext = "";
+	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 	                    PagingHTML += strtext;
 	                }
 	            }
 	            else {
-	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + "<spring:message code='ezPersonal.t10001' />" + "</span>";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                strtext = "";
+	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 	                PagingHTML += strtext;
 	            }
 	            PagingHTML += "</div>";
@@ -303,12 +304,9 @@
 	    <h1><spring:message code='ezPersonal.t5003' /></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="window_close()"><spring:message code='ezPersonal.t10' /></span></li>
+	            <li><span onclick="window_close()"></span></li>
 	        </ul>
 	    </div>
-	    <script type="text/javascript">
-	        selToggleList(document.getElementById("close"), "ul", "li", "0");
-	    </script>	    
 	    <div id="main_body">   
 	        <table class="content" style="border:0px">
 	            <tr>

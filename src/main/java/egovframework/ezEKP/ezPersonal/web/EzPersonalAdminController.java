@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -462,7 +463,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("managePollList started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		int currentPage = 1, pageSize = 12;
+		int currentPage = 1, pageSize = 15;
 		String progressPollFlag = "false";
 		StringBuilder result = new StringBuilder();
 		
@@ -482,10 +483,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		result.append("<CURPAGE>" + currentPage + "</CURPAGE>");
 		result.append("<ROWS>");
 		
-		for (PersonalLightPollVO vo : list) {
+		for (int i = 0; i < list.size(); i++) {
+			PersonalLightPollVO vo = list.get(i);
 			result.append("<ROW>");
-			result.append("<CELL>");
-			result.append("<VALUE>" + vo.getItemSeq() + "</VALUE>");
+			result.append("<CELL>"); 
+			result.append("<VALUE>" + (totalCount - (pageSize * (currentPage-1)+i)) + "</VALUE>");
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("</CELL>");
 			result.append("<CELL>");
@@ -704,10 +706,14 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		result.append("<LISTVIEWDATA>");
 		result.append("<ROWS>");
 		
+		//2018-08-08  김보미 - rownumber추가
+		int i = list.size();
 		for (PersonalPopupVO vo : list) {
 			result.append("<ROW>");
 			result.append("<CELL>");
-			result.append("<VALUE>" + vo.getItemSeq() + "</VALUE>");
+			//2018-08-08  김보미 - rownumber추가
+//			result.append("<VALUE>" + vo.getItemSeq() + "</VALUE>");
+			result.append("<VALUE>" + i + "</VALUE>");
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("<DATA2>" + vo.getWidth() + "</DATA2>");
 			result.append("<DATA3>" + vo.getHeight() + "</DATA3>");
@@ -740,6 +746,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("</CELL>");
 			result.append("</ROW>");
+			i--;
 		}
 		
 		result.append("</ROWS>");
@@ -857,6 +864,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("itemSeq", itemSeq);
 		model.addAttribute("title", title);
 		model.addAttribute("content", content);
+		model.addAttribute("user", userInfo.getId());
 		
 		logger.debug("showPopup ended");
 		return "admin/ezPersonal/personalShowPopup";
@@ -1180,7 +1188,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
    			dir.mkdirs();
    		}
    		
-         File file = new File(realPath + pAttachPath);
+        File file = new File(realPath + pAttachPath);
     
         String pSaveName = qID + ".jpg";
         BufferedImage inputImage = ImageIO.read(file);
@@ -1190,8 +1198,14 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		outputImage= new BufferedImage(40, 39, BufferedImage.TYPE_INT_RGB);
          
 		saveImage = outputImage.createGraphics();
-		saveImage.drawImage(inputImage, 0, 0, 467, 200, null);
-		saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+		saveImage.drawImage(inputImage, 0, 0, 40, 39, null);
+		
+		HashMap<RenderingHints.Key,Object> hm = new HashMap<RenderingHints.Key,Object>();
+		
+		hm.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+		hm.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		hm.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+		saveImage.setRenderingHints(hm);
 		
 		File newFile = new File(realPath + serverPath + pSaveName);
 		

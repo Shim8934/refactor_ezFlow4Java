@@ -25,7 +25,7 @@
     				</dl>
     				<div class="bottom"></div>
     			</div>
-    			<div class="personal_content">
+    			<div class="personal_content" style="${isCircularUsed == 'Y' ? '' : 'display:none'}">
 					<a id="NewMail" onClick="btnSumming_click(this)">
 						<ul>
 							<li class="count">
@@ -95,6 +95,7 @@
                     		</c:choose>
 						</ul>						
 					</a>
+					<c:if test="${isCircularUsed == 'Y'}">
 					<a id="Circular" onClick="btnSumming_click(this)">
 						<ul class="last">
 							<li class="count">
@@ -112,6 +113,7 @@
                     		</c:choose>                  		
 						</ul>
 					</a>			
+					</c:if>			
 				</div>
 			</article>
       		<div class="blue_bar"></div>
@@ -140,7 +142,7 @@
 				</article>
 	      		<!-- /calender -->   
 			</div>
-    		<div class="blue_bar"></div>
+   			<div class="blue_bar"></div>
 			<div class="bannerlink_area">
     			<article class="writebanner">
         			<%-- <p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p> --%>
@@ -163,20 +165,58 @@
         			<%--<span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner01.gif" width="58" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner02.gif" width="56" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner03.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner04.gif" width="58" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner05.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner06.gif" width="56" height="85"></span>--%>
     			</article>
     		</div>
-        	<div class="blue_bar"></div>
-    		<article class="time">
-    			<p class="title"><spring:message code='main.t00023' /></p>
-    			<div id="clock_id" style="width: 120px; height: 120px; background: url(/images/WebPartSliderCI/analogu.png) no-repeat ; "></div>    
-    			<div id="timeinput" style=" margin-left:10px ;width:104px; height:25px; border:0px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px;"></div>    			
+    		<div class="blue_bar"></div>
+    		<article class="time" style="margin-right:0px">
+	   			<c:choose>
+	       			<c:when test="${isUseAttMenuItem == 'N'}">
+				             <p class="title"><spring:message code='main.t00023' /></p>
+				             <div id="clock_id" style="width: 120px; height: 120px; background: url(/images/WebPartSliderCI/analogu.png) no-repeat ; "></div>    
+				             <div id="timeinput" style=" margin-left:10px ;width:104px; height:25px; border:0px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px;"></div>             
+	       			</c:when>
+	       			<c:otherwise>
+						<div id="timeinput" style="font-weight:bold; color: black; text-align:center; width:122px;">
+							<p id="todayTime" class="title" style="margin-left:0px"></p>
+			            	<div id="timeFlow" style='margin:13px 0 15px 0; font-size:28px; letter-spacing:1px; font-family:Arial, Helvetica, sans-serif;'><p></p></div>
+			            </div>
+		    			<div id="atti_area" style="font-family:Arial, Helvetica, sans-serif; text-align:center; width:122px">
+<%-- 		    				<p id="inAttiClock" style="margin-top:2px;margin-left:11px;font-size:12px;text-align: left; padding-left:20px"><spring:message code='ezAttitude.t64'/> : <spring:message code='ezAttitude.t71'/></p> --%>
+<%-- 							<p id="outAttiClock" style="margin-top:5px;margin-left:11px;margin-bottom:16px;font-size:12px;text-align: left; padding-left:20px"><spring:message code='ezAttitude.t65'/> : <spring:message code='ezAttitude.t72'/></p> --%>
+<%-- 							<span style="margin-left:13px" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><spring:message code='ezAttitude.t64'/></span> --%>
+<%-- 							<span id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)" style="margin-left:5px"><spring:message code='ezAttitude.t65'/></span> --%>
+							<div class="main_time">
+		    					<dl class="timeCheckIn">
+		    						<dt>출근</dt>
+		    						<dd id="inAttiBtn" class="out" type="A01" datetype="2" onClick="checkHoliday(this)">입력</dd>
+		    					</dl>
+		    					<dl class="timeCheckOut">
+		    						<dt>퇴근</dt>
+		    						<dd id="outAttiBtn" class="out" type="A03" datetype="2" onclick="checkHoliday(this)">입력</dd>
+		    					</dl>
+		    				</div>
+		    			</div>
+	       			</c:otherwise>
+	       		</c:choose>  
    			</article>
 		</section>
 			
 		<link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
+		<link rel="stylesheet" href="/css/ezAttitude/clockTemp1.css" type="text/css" />
+		<link rel="stylesheet" href="/css/ezAttitude/timecheck.css" type="text/css" />
+		<style>
+			select {
+				-webkit-appearance: none; border:1px solid #d5e0ef;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white;
+			}
+			select::-ms-expand {
+			    display: none;
+			}
+		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/Holiday.js"></script>
+		<script type="text/javascript" src="/js/ezAttitude/Calendar.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/jindo.all.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/selectbox.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/scrollbox.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
+		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>		
 		<script type="text/javascript">
 		 	var UserOffset = "${userOffset}";
 		</script>
@@ -190,15 +230,67 @@
 		</c:choose>
 		
 		<script type="text/javascript" src="/js/jquery/raphael-min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>   
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<style>
+			#atti_area span{
+				width:35px;
+				margin-left:7px;
+				display:block;
+				float:left;
+				padding: 5px 4px;
+				font: 12px gulim;
+				padding-top: 7px;
+ 				border: 1px solid #ddd;
+ 				color: #666;
+				border-radius:3px;						
+			}
+			
+			.btn_hover{
+				cursor: pointer;
+				color: rgb(4, 112, 227) !important;
+				border-color: rgb(4, 112, 227) !important;
+			}
+			
+			.btn_disabled{
+				background-color: transparent !important;
+				border: 1px solid #ddd !important;
+				color: #aaa !important;
+			}
+			
+			#inAttiClock, #outAttiClock {
+				background: url("/images/clock.png") no-repeat 0 3px;
+				background-size: 13px;
+				height:20px;
+				font-family: Malgun Gothic, Meiryo UI;
+			}
+		</style>   
 		<script type="text/javascript">
 		    var pMode = "P";
 		    var date = "";
 		    var strLang1_total = "<spring:message code='main.t00025' />";
 		    var strLang2_total = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
-		    var pNoneActiveX = "YES";
-
+			var isCircularUsed = "${isCircularUsed}";
+		    
+			$(document).ready(function(){
+				if (isCircularUsed != 'Y') {
+					$(".personal_content a ul").css({'width': 100/$(".personal_content a ul").length + '%'});
+					$(".personal_content a ul:last").attr("class","last");
+					$(".personal_content").show();
+				}
+			});
+		    
+		    var year = sDate.getFullYear();
+		 	var mon = leadingZeros((sDate.getMonth() + 1), 2);
+		 	var day = sDate.getDate();		 	
+		 	/*근태관리 추가*/
+		 	var serverTime = "${serverTime}";
+		 	var nowAttiTime = "";
+		 	var beforeAlertDate = "";
+			var afterAlertDate = "";
+			var overTime = "";
+			var isUseAttMenuItem = "${isUseAttMenuItem}";
+			
 		    function window_onload_total() {
 			    if (navigator.userAgent.indexOf('Firefox') != -1) {
 			        document.body.style.MozUserSelect = 'none';
@@ -209,9 +301,17 @@
 			    }
 			    
 			    CalendarMiniView("CalendarMini");
-
-			    draw_clock();
-			    yourClock();
+				
+			    if (isUseAttMenuItem == "N") {
+				    draw_clock();
+				    yourClock();
+			    } else {
+			    	parseDate();
+			    	attiClock();
+					setAttiBtnHover();
+					getAttitudeList();
+					getHolidayList();
+			    }
 
 			    CalendarMiniDataSource();
 
@@ -236,8 +336,8 @@
 		            overflowY: "scroll" // auto, scroll
 		        });
 
-		        draw_clock();
-		        yourClock();
+// 		        draw_clock();
+// 		        yourClock();
 
 		        try { top.onresize() } catch (e) { }
 		        
@@ -248,7 +348,7 @@
 		        getNewCircularCount();
 			}
 
-			function open_schedule(scheduleid, scheduletype, datetype, repeatcount, date) {
+			function open_schedule(scheduleid, scheduletype, datetype, repeatcount, date, pageFrom) {
 			    date = date.substr(0, 10);
 
 			    var wWeight = "760";
@@ -260,10 +360,10 @@
 
 			    //PNO-3
 			    if (CrossYN())
-			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0", "",
+			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0 &pageFrom="+pageFrom, "",
 		                "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");
 			    else
-			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0", "",
+			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0 &pageFrom="+pageFrom, "",
 		                "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");
 			    //PNO-3 END
 			}
@@ -295,7 +395,8 @@
 			        
 			        var count = 0;
 			        var mType;
-			        
+			        //2018-07-04 포탈에서 read.do 호출시 출처를 알기위한 변수추가
+		            var pageFrom = 'Portal';
 			        if (mode == "P") {
 			        	//2018.02.05 김기하 #11421
 			        	mType = "16";
@@ -318,8 +419,21 @@
 				            var selDateType = new Date(selDate.substring(0, 4), selDate.substring(5, 7), selDate.substring(8, 10));			            
 			                
 			                listHTML += "<li style='text-overflow: ellipsis; overflow: hidden; width: 240px;'>";
-			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "')\" title='" + TITLE + "'>";
-			                listHTML += "<nobr>&nbsp;" + TITLE + "</nobr></span></li>";
+			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "','" + pageFrom + "')\" title='" + TITLE + "'>";
+			                listHTML += "&nbsp;"
+			                if(SCHEDULETYPE == 1) {
+			                	listHTML += "";
+			                } else if (SCHEDULETYPE == 2) {
+			                	listHTML += "(<spring:message code='ezSchedule.t12' />)&nbsp;";
+			                } else if (SCHEDULETYPE == 3) {
+			                	listHTML += "(<spring:message code='ezSchedule.t11' />)&nbsp;";
+			                } else if (SCHEDULETYPE == 7) {
+			                	listHTML += "(<spring:message code='ezSchedule.t282' />)&nbsp;";
+			                } else {
+			                	listHTML += "";
+			                }
+			                /* listHTML += TITLE.replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/\'/g,"&#39;").replace(/\n/g,"<br />")+ "</span></li>"; */
+			                listHTML += MakeXMLString(TITLE)+"</span></li>"
 			                count++;
 			        	}
 			        }
@@ -549,37 +663,18 @@
 		                break;
 
 		            case "schedulewrite":
+	                    var wWeight = "790";
+	                    var wHeight = "830";
 
-		                if (CrossYN() || pNoneActiveX == "YES") {
-		                    var wWeight = "790";
-		                    var wHeight = "830";
+	                    var heigth = window.screen.availHeight;
+	                    var width = window.screen.availWidth;
 
-		                    var heigth = window.screen.availHeight;
-		                    var width = window.screen.availWidth;
-
-		                    var left = (width - wWeight) / 2;
-		                    var top = (heigth - wHeight) / 2;
-		                    
-		                    window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                    "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                } else {
-		                    var wWeight = "790";
-		                    var wHeight = "760";
-
-		                    var heigth = window.screen.availHeight;
-		                    var width = window.screen.availWidth;
-
-		                    var left = (width - wWeight) / 2;
-		                    var top = (heigth - wHeight) / 2;
-		                    if (CrossYN() || pNoneActiveX == "YES") {
-		                        window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-		                        	"height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                    }
-		                    else {
-	                            window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
-	                                "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                    }
-		                }
+	                    var left = (width - wWeight) / 2;
+	                    var top = (heigth - wHeight) / 2;
+	                    
+	                    window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
+	                    "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+	                    
 		                break;
 
 		            case "addresswrite":
@@ -596,7 +691,7 @@
 		                break;
 
 		            case "resourcewrite":
-		                if (CrossYN() || pNoneActiveX == "YES") {
+		                if (CrossYN()) {
 		                    var url = "/ezResource/scheduleAddSelect.do";
 
 		                    schedule_add_select_cross_dialogArguments[0] = "";
@@ -611,7 +706,7 @@
 		                    var ret = window.showModalDialog(url, "", feature);
 
 		                    if (ret != undefined && ret[0][0] != undefined) {
-		                        url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ret[0][0] + "&brdName=" + encodeURIComponent(ret[1][0]);
+		                        url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ret[0][0];
 		                        feature = "status:no;dialogWidth:770px;dialogHeight:700px;help:no;scroll:no;edge:sunken";
 		                        feature = feature + GetShowModalPosition(700, 700);
 		                        window.showModalDialog(url, ret, feature);
@@ -620,8 +715,8 @@
 		                break;
 
 		            case "boardwrite":
-		                var wWeight = "345";
-		                var wHeight = "680";
+		                var wWeight = "355";
+		                var wHeight = "600";
 
 		                var heigth = window.screen.availHeight;
 		                var width = window.screen.availWidth;
@@ -636,7 +731,7 @@
 		    
 		    function btnWrite_onclick_Complete(ret) {
 		        if (ret != "close" && ret != undefined && ret[0][0] != undefined) {
-		            url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ret[0][0] + "&brdName=" + encodeURIComponent(ret[1][0]);
+		            url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ret[0][0];
 
 		            var Schedule_Add_ck = window.open(url, "Schedule_Add_Cross", GetOpenWindowfeature(820, 700));
 		            
@@ -658,11 +753,7 @@
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
 
-		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-		        } else {
-	                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-		        }
+                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		    }
 
 		    var formURL = "";
@@ -681,7 +772,7 @@
 		            url = "/ezApproval/getFormCont.do";
 		        }
 		        
-		        if (CrossYN() || pNoneActiveX == "YES") {
+		        if (CrossYN()) {
 		            getformcont_cross_dialogArguments[0] = parameter;
 		            getformcont_cross_dialogArguments[1] = openForm_Complete;
 		            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
@@ -726,7 +817,7 @@
 
 	            var openLocation = "";
 	            if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	                if (CrossYN() || pNoneActiveX == "YES") {
+	                if (!isIE()) {
 	                    alert("<spring:message code='main.t3000' />");
 	                    return;
 	                } else {
@@ -865,7 +956,215 @@
 		            }
 		        }
 		    }
-
+			
+		    /** 배현상 근태관리메서드 추가 */
+		    function getAttitudeList() {
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "json",
+		    		async : false,
+		    		url : "/ezAttitude/getAttitudeList.do",
+		    		data : {},
+		    		success : function(result) {
+		    			for (var i = 0; i < result.length; i++) {
+		    				if (result[i].typeId == "A01") {
+ 		    					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
+								$("#inAttiBtn").removeClass("out").addClass("in");
+								$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+		    				} else if (result[i].typeId == "A02") {
+		    					$("#inAttiBtn").attr("onclick", "").unbind("mouseenter");
+								$("#inAttiBtn").removeClass("out").addClass("lateIn");
+								$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+		    				} else if (result[i].typeId == "A03") {
+		    					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
+								$("#outAttiBtn").removeClass("out").addClass("in");
+								$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
+		    				}
+		    			}
+		    		}
+		    	})
+		    }
+		    
+		  //시간놓고 alert내용을 파라미터로 던져서 체크??
+		    function addAttitude(obj) {
+		    	var pTypeId = obj.getAttribute("type");
+		    	var pDateType = obj.getAttribute("datetype");
+		    	if (pTypeId == "A03") {
+		    		var returnValue = getIsAttitude("A01");
+		    		if (returnValue == 0) {
+		    			alert("<spring:message code='ezAttitude.t168'/>");
+			    		return;
+		    		} else {
+		    			getAttitudeList();
+		    		}
+		    	}
+		    	
+		    	beforeAlertDate = new Date();
+		    	var dateAlert = nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + (nowAttiTime.getMonth() + 1) + "<spring:message code='ezAttitude.t67'/> " + (nowAttiTime.getDate()) + "<spring:message code='ezAttitude.t68'/> " + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
+		    	var saveFlag = confirm("<spring:message code='ezAttitude.t69'/> " + dateAlert + "<spring:message code='ezAttitude.t70'/>");
+		    	if (!saveFlag) {
+		    		afterAlertDate = new Date();
+		    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
+		    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
+		    		return;
+		    	} 
+		    	$.ajax({
+		    		type : "POST",
+		    		async : true,
+		    		url : "/ezAttitude/attitudeSave.do",
+		    		data : {
+		    			typeId : pTypeId,
+		    			dateType : pDateType,
+		    			mode : "new"
+		    		},
+		    		success : function(result) {
+		    			getAttitudeList();
+		    		},
+		    		complete : function() {
+		    			afterAlertDate = new Date();
+			    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
+			    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
+		    		}
+		    	})
+		    }
+		    
+		    function getHolidayList() {
+				$.ajax({
+					type:"POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/getHolidayList.do",
+					data : {},
+					success : function(result) {
+						for (var i = 0; i < result.holidayList.length; i++) {
+							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
+								memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
+																  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
+																  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
+							} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
+								yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
+																		  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
+																		  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
+																		  result.holidayList[i].isRest == 1 ? true : false));
+							}
+						}
+						closedDay = result.attitudeConfigVO.closedDay.split(",");
+					}
+				});
+			}
+		    
+		  //휴일 체크
+			function checkHoliday(obj) {
+				var todayLunar = lunarCalc(nowAttiTime.getFullYear(), nowAttiTime.getMonth() + 1, nowAttiTime.getDate(), 1);
+				var todayMemorialDayList = memorialDayCheck(nowAttiTime, todayLunar);
+				var todayYearMemorialDayList = yearmemorialDayCheck(nowAttiTime, todayLunar);
+				var addAttitude = true; // true 등록 가능
+				
+				if (closedDay[nowAttiTime.getDay()] == "1"){ //회사지정 휴일인지 체크
+					addAttitude = false;				
+				} else if (todayMemorialDayList.length != 0 || todayYearMemorialDayList.length != 0) { //기념일체크
+					if (todayMemorialDayList.length != 0 ) {
+						for (var i = 0; i < todayMemorialDayList.length; i++) {
+							if (todayMemorialDayList[i].holiday ==  true) { //휴무일인 기념일일때
+								addAttitude = false;
+							}
+						}
+					} 
+					if (todayYearMemorialDayList.length != 0) {
+						for (var i = 0; i < todayYearMemorialDayList.length; i++) {
+							if (todayYearMemorialDayList[i].holiday == true) { //휴무일인 기념일일때
+								addAttitude = false;
+							}
+						}
+					}
+				}
+				
+				if(addAttitude) {
+					checkAttitude(obj);
+				} else {
+					alert("<spring:message code='ezAttitude.t167'/>");
+				}
+			}
+			
+			//근태 중복 체크
+		 	function checkAttitude(obj) {
+				var returnValue = getIsAttitude(obj.getAttribute("type"));
+				
+				if (returnValue == 0) {
+					addAttitude(obj);
+				} else {
+					alert("<spring:message code='ezAttitude.t169'/>");
+					getAttitudeList();
+	    			try{parent.frames["right"].getAttitudeMainList();}catch(e){}
+				}
+		 	}
+		    
+		    function getIsAttitude(typeId) {
+				var isAttitudeReturn = "";
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezAttitude/getIsAttitude.do",
+		    		data : {
+		    			typeId : typeId
+		    		},
+		    		success : function(result) {
+		    			isAttitudeReturn = result;
+		    		},
+		    		complete : function() {
+		    			
+		    		}
+		    	})
+		    	return isAttitudeReturn;
+		    }
+		    
+		    function setAttiBtnHover() {
+		    	$("#inAttiBtn, #outAttiBtn").hover(function(){
+		    		$(this).addClass("btn_hover");
+		    	}, function(){
+		    		$(this).removeClass("btn_hover");
+		    	})
+		    }
+		    
+		    function parseDate() {
+	    		var _strDate = "";
+	    		nowAttiTime = new Date(serverTime);
+	    		
+	    		if (nowAttiTime.toString() == 'Invalid Date') {
+	    		    var _parts = serverTime.split(' ');
+	    		
+	    		    var _dateParts = _parts[0];
+	    		    nowAttiTime = new Date(_dateParts);
+	    		
+	    		    if (_parts.length > 1) {
+	    		        var _timeParts = _parts[1].split(':');
+	    		        nowAttiTime.setHours(_timeParts[0]);
+	    		        nowAttiTime.setMinutes(_timeParts[1]);
+	    		        if (_timeParts.length > 2) {
+	    		        	nowAttiTime.setSeconds(_timeParts[2]);
+	    		        }
+	    		    }
+	    		}
+	    		
+	    		$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
+	    	}
+		    
+		    function attiClock() {
+		        var h, m;
+		        var s;
+		        var time = " ";
+		        
+		        nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
+		        time = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2) + ':' + leadingZeros(nowAttiTime.getSeconds(), 2);
+		        document.getElementById("timeFlow").innerHTML = time;
+		        if (time == "00:00:00") {
+		        	$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
+		        }
+		        gizmo = setTimeout("attiClock()", 1000);
+		        
+		    }
+		    
 		    window_onload_total();
 		</script>
 	</head>

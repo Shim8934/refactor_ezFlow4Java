@@ -659,7 +659,7 @@ function CalMonthDataBind(oAppointment, oAppointment2) {
             var timeeSplit = oAppointment.odtendDisplay.split(":");
             var timeofStart = timesSplit[0]+ ":" + ((timesSplit[1].length == 1)?("0" + timesSplit[1]):timesSplit[1]); 
             var timeofEnd = timeeSplit[0] + ":" + ((timeeSplit[1].length == 1)?("0" + timeeSplit[1]):timeeSplit[1]); 
-            pSubject.innerHTML = timeofStart + " - " + timeofEnd + "<p style='display:inline-block; width:10px; margin:0; padding:0;'></P>" + oAppointment.oSubject;
+            pSubject.innerHTML = timeofStart + " - " + timeofEnd + "<p style='display:inline-block; width:10px; margin:0; padding:0;'></P>" + MakeXMLString(oAppointment.oSubject);		// 2018-07-04 김민성 - 특수문자 태그 적용 안되도록 수정
         }
         else {
             pTime = strLang126;
@@ -1239,17 +1239,36 @@ function hideTooltip() {
 //    return locationY
 //}
 
+//2018-08-07 김민성 - 자원관리 tooltip 윈도우 사이즈 별 위치 수정
 function getMouseXLocation(e) {
     if (e)
         var E = e;
     else
         var E = window.event;
 
-    if (E.clientX > 1000) {
-        var tTip = document.getElementById("tooltip");
-        var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
-    } else
-        var locationX = E.clientX + document.body.scrollLeft + 20;
+    var tTip = document.getElementById("tooltip");
+    if (navigator.userAgent.indexOf('Firefox') != -1) {
+        if (E.clientX > 1000) {
+            var locationX = E.clientX + document.documentElement.scrollLeft - tTip.clientWidth;
+        } else {
+            if (E.clientX > 300) {
+                var locationX = E.clientX + document.documentElement.scrollLeft - tTip.clientWidth;
+            }
+            else
+                var locationX = E.clientX + document.documentElement.scrollLeft;
+        }
+    }
+    else {
+        if (E.clientX > 1000) {
+            var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
+        } else {
+            if (E.clientX > 300) {
+                var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
+            }
+            else
+                var locationX = E.clientX + document.body.scrollLeft;
+        }
+    }
 
     return locationX
 }
@@ -1264,12 +1283,13 @@ function getMouseYLocation(e) {
     if (navigator.userAgent.indexOf('Firefox') != -1) {
         if (E.clientY > 500) {
             var locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
+            locationY -= 12;
         }
         else {
             if (document.documentElement.scrollTop > 0) {
-                //var locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
+                
                 var locationY
-                //이벤트 발생 Y좌표보다 toolTip의 높이가 더 크면
+                
                 if (tTip.clientHeight > E.clientY) {
                     locationY = E.clientY + document.documentElement.scrollTop;
                 } else {
@@ -1279,16 +1299,18 @@ function getMouseYLocation(e) {
             else {
                 var locationY = E.clientY + document.documentElement.scrollTop;
             }
+            locationY += 12;
         }
     }
     else {
         if (E.clientY > 500) {
             var locationY = E.clientY + document.body.scrollTop - tTip.clientHeight;
+            locationY -= 12;
         }
         else {
             if (document.body.scrollTop > 0) {
                 var locationY
-                //이벤트 발생 Y좌표보다 toolTip의 높이가 더 크면
+                
                 if (tTip.clientHeight > E.clientY) {
                     locationY = E.clientY + document.body.scrollTop;
                 } else {
@@ -1298,6 +1320,7 @@ function getMouseYLocation(e) {
             else {
                 var locationY = E.clientY + document.body.scrollTop;
             }
+            locationY += 12;
         }
     }
 
@@ -1697,10 +1720,11 @@ function showTooltip_MouseOver(nextTo, e, pTime, pSubject, pApproveFlag) {
     //예약자
     var sTr = document.createElement("TR");
     var sTd = document.createElement("TD");
+    sTd.style.height = '16px';
     var sSpan = document.createElement("SPAN");
     //sSpan.className = "width_16";
     sTd.appendChild(sSpan);
-    sTd.innerHTML += "[" + strLang571 + "]<br />" + GetAttribute(nextTo,"titletext");
+    sTd.innerHTML += "<span>[" + strLang571 + "]</span><br /><span style='margin-top:2px;display:block;'>" + GetAttribute(nextTo,"titletext") + "</span>";
     sTr.appendChild(sTd);
     sTable.appendChild(sTr);
     tTd.appendChild(sTable);

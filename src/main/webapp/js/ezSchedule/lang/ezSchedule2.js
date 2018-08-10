@@ -5,8 +5,8 @@ var strLang3 = "JAN;FEB;MAR;APR;MAY;JUN;JUL;AUG;SEP;OCT;NOV;DEC"
 var strLang4 = "SUN;MON;TUE;WED;THU;FRI;SAT"
 var strLang5 = "SUN;MON;TUE;WED;THU;FRI;SAT"
 var strLang6 = "MON;TUE;WED;THU;FRI;SAT;SUN"
-var strLang5_1 = "SUN;MON;TUE;WED;THU;FRI;SAT"
-var strLang6_1 = "MON;TUE;WED;THU;FRI;SAT;SUN"
+var strLang5_1 = "Su;Mo;Tu;We;Th;Fr;Sa"
+var strLang6_1 = "Mo;Tu;We;Th;Fr;Sa;Su"
 var strLang7 = "(No title)"
 // X:\NetModule\FrontEnd\Home\myoffice\ezSchedule\js\kaoni_ActiveX.js
 // X:\NetModule\FrontEnd\Home\myoffice\ezSchedule\js\schedule_write.js
@@ -36,7 +36,7 @@ var strLang36 = "Monthly"
 var strLang37 = "Annually"
 var strLang38 = "Appointed time : "
 var strLang39 = "All day long"
-var strLang40 = "오"
+var strLang40 = "Oh"
 var strLang41 = "Item deleted : "
 var strLang42 = " occurrences"
 var strLang43 = " - "
@@ -127,7 +127,7 @@ var strLang120 = "Close";
 var strLang121 = "-";
 var strLang122 = ".";
 var strLang123 = "";
-var strLang124 = "All day long";
+var strLang124 = "all day long";
 var strLang125 = "Personal schedule";
 var strLang126 = "Department schedule";
 var strLang127 = "Company Schedule";
@@ -146,26 +146,27 @@ var strLang260 = "FileName"
 var StrLang261 = "Completed connection testing.";
 var StrLang262 = "Error occurred while connecting. Verify user ID and password.";
 var strLang263 = "No data found.";
-var strLang264 = "Group Description : ";
-var strLang265 = "Group members : ";
+var strLang264 = "Group Description";
+var strLang265 = "Group members";
 var strLang266 = "Select a group.";
 var strLang267 = "Limited extension upload files.";
 var strLang268 = "Prev";
 var strLang269 = "Next";
 var strLang270 = "Time schedule";
 var strLang271 = "Select attachment to delete."
-var strLang272 = "End time is earlier than the time today.";
+var strLang272 = "End time is earlier than today.";
 var strLang273 = "Certain departments can register a department manager, company manager.";
 var strLang274 = "Companies can register only certain company managers.";
-/*2018.02.01*/
-var strLang275 = "반복 일정은 시작시간을 현재시간 이전으로 등록할 수 없습니다.";
 var strLang535 = "No data found.";
-
 var strLang1000 = "Can not insert company schedule.";
 var strLang1001 = "Can not insert department schedule.";
 /* 2017-07-11 */
 var strLang1002 = "leap ";
 /* 2017-11-17 */
-var strLang1003 = "이미 등록된 일정공유정보가 있습니다.";
+var strLang1003 = "You have already registered a certain share information.";
+/*2018.02.01*/
+var strLang275 = "Unable to register prior to the start today.";
 //2018.02.22
-var strLangKMS1 = "100회 이하만 반복가능합니다.";
+var strLangKMS1 = "You can only repeat more than 100 times.";
+/ * 2018-07-16 * /
+var strLang276 = "Please select one group to view members";

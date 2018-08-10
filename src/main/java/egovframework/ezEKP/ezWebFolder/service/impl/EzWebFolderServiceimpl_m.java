@@ -145,103 +145,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public List<ShareVO> getFolderFileList(String folderId, String subSearchFlag, String userId, String primary, String offset, int startPoint, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
-		String searchStartDate = searchInfo.getSearchStartDate();
-		String searchEndDate = searchInfo.getSearchEndDate();
-		
-		if (!searchStartDate.equals("") && !searchEndDate.equals("")) {
-			searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
-			searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
-		}
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", userId);
-		map.put("primary", primary);
-		map.put("offset", commonUtil.getMinuteUTC(offset));
-		map.put("startPoint", startPoint);
-		map.put("pageSize", pageSize);
-		map.put("tenantId", tenantId);
-		map.put("searchExt", searchInfo.getSearchExt());
-		map.put("searchFileName", searchInfo.getSearchFileName());
-		map.put("searchCreatorName", searchInfo.getSearchCreateName());
-		map.put("searchFileType", searchInfo.getSearchFileType());
-		map.put("searchStartDate", searchStartDate);
-		map.put("searchEndDate", searchEndDate);
-		map.put("folderId", folderId);
-		map.put("subSearchFlag", subSearchFlag);
-		
-		List<ShareVO> list = ezWebFolderDAO_m.getFolderFileList(map);
-		
-		String folderPath = null;
-		
-		for (ShareVO vo : list) {
-			folderPath = ezWebFolderService.getFolderPath(vo.getFolderPath().split("\\|"), primary, tenantId);
-			
-			if (vo.getFolderFileType().startsWith("D")) {
-				vo.setFolderPath(folderPath.substring(0, folderPath.lastIndexOf(vo.getFileName()) - 1));
-			} else {
-				vo.setFolderPath(folderPath.substring(0, folderPath.length() - 1));
-			}
-		}
-		
-		return list;
-	}
-	
-	@Override
-	public Map<String, Long> getFolderFileCount(String folderId, String subSearchFlag, String userId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
-		String searchStartDate = searchInfo.getSearchStartDate();
-		String searchEndDate = searchInfo.getSearchEndDate();
-		
-		if (!searchStartDate.equals("") && !searchEndDate.equals("")) {
-			searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
-			searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
-		}
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", userId);
-		map.put("primary", primary);
-		map.put("offset", commonUtil.getMinuteUTC(offset));
-		map.put("tenantId", tenantId);
-		map.put("searchExt", searchInfo.getSearchExt());
-		map.put("searchFileName", searchInfo.getSearchFileName());
-		map.put("searchCreatorName", searchInfo.getSearchCreateName());
-		map.put("searchFileType", searchInfo.getSearchFileType());
-		map.put("searchStartDate", searchStartDate);
-		map.put("searchEndDate", searchEndDate);
-		map.put("folderId", folderId);
-		map.put("subSearchFlag", subSearchFlag);
-		
-		List<Map<String, Object>> list = ezWebFolderDAO_m.getFolderFileCount(map);
-		
-		long fileCount	 = 0;
-		long folderCount = 0;
-		long totalCount	 = 0;
-		long totalPage	 = 0;
-		
-		for (Map<String, Object> info : list) {
-			String folderFileType = (String) info.get("folderfileType");
-			if (folderFileType.equals("D")) {
-				folderCount = (Long) info.get("count");
-			} else if (folderFileType.equals("F")) {
-				fileCount = (Long) info.get("count");
-			}
-		}
-		
-		totalCount	= fileCount + folderCount;
-		totalPage	= (totalCount + pageSize - 1) / pageSize;
-		
-		Map<String, Long> countInfo = new HashMap<String, Long>();
-		countInfo.put("fileCount", fileCount);
-		countInfo.put("folderCount", folderCount);
-		countInfo.put("totalCount", totalCount);
-		countInfo.put("totalPage", totalPage);
-		countInfo.put("pageSize", (long) pageSize);
-		
-		LOGGER.debug("countInfo: " + countInfo);
-		return countInfo;
-	}
-	
-	@Override
 	public Map<String, Long> getSharingCount(String subSearchFlag, String userId, String primary, String offset, int pageSize, SearchVO searchInfo, int tenantId) throws Exception {
 		String searchStartDate = searchInfo.getSearchStartDate();
 		String searchEndDate = searchInfo.getSearchEndDate();
@@ -495,8 +398,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		map.put("userNameList", "");
 		map.put("shareDate", shareDate);
 		map.put("tenantId", tenantId);
-		
-		//TODO: 폴더 또는 파일이 존재하는지, 사용중인지, 권한이 있는지 확인
 		
 		int shareId = ezWebFolderDAO_m.insertShare(map);
 		
@@ -842,37 +743,42 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		String userId    = userInfo.getId();
 		
 		for (String file : fileIDList ) {
-			FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
-			
-			if (fileVO != null) {
-				int isFileDeleted = deleteFile(file, tenantId);
+			if (!file.equals("")) {
+				FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 				
-				if (isFileDeleted > 0) {
-					realFileDelete(fileVO, realPath, userInfo, userName1,  userName2);
-					deleteFavoriteAnyUser(fileVO.getFileId(), "F", tenantId);
-					deleteShareWithSub(fileVO.getFileId(), "F", tenantId);
+				if (fileVO != null) {
+					int isFileDeleted = deleteFile(file, tenantId);
+					
+					if (isFileDeleted > 0) {
+						realFileDelete(fileVO, realPath, userInfo, userName1,  userName2);
+						deleteFavoriteAnyUser(fileVO.getFileId(), "F", tenantId);
+						deleteShareWithSub(fileVO.getFileId(), "F", tenantId);
+					}
 				}
 			}
 		}
 		
 		for (String folder : folderIDList) {
-			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
-			
-			if (folderVO != null) {
-				List<String> lowerFolders = getAllFolderIdNotInFolder(folderVO.getFolderPath(), folderVO.getFolderId());
+			if (!folder.equals("")) {
+				FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
 				
-				for (String lowerFolder : lowerFolders) {
-					FolderVO lowerFolderVO = ezWebFolderService.getFolderByFolderId(lowerFolder, offset, tenantId);
+				if (folderVO != null) {
+					deleteAllFilesInFolder(folderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2);
 					
-					int isFolderDeleted = deleteFolder(lowerFolderVO);
-					deleteFavoritesInFolder(folderVO.getFolderId(), tenantId);
-					deleteShareWithSub(folderVO.getFolderId(), "D", tenantId);
+					List<String> lowerFolders = getAllFolderIdNotInFolder(folderVO.getFolderPath(), folderVO.getFolderId());
 					
-					if (isFolderDeleted > 0) {
-						deleteAllFilesInFolder(lowerFolderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2);
+					for (String lowerFolder : lowerFolders) {
+						FolderVO lowerFolderVO = ezWebFolderService.getFolderByFolderId(lowerFolder, offset, tenantId);
+						
+						int isFolderDeleted = deleteFolder(lowerFolderVO);
+						deleteFavoritesInFolder(folderVO.getFolderId(), tenantId);
+						deleteShareWithSub(folderVO.getFolderId(), "D", tenantId);
+						
+						if (isFolderDeleted > 0) {
+							deleteAllFilesInFolder(lowerFolderVO, companyId , realPath, userInfo, offset, tenantId, userId, userName1, userName2);
+						}
 					}
 				}
-				
 			}
 		}
 	}
@@ -944,17 +850,17 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	public void deleteAllFilesInFolder(FolderVO folderVO, String companyId ,String realPath, LoginVO userInfo, String offset, int tenantId, String userId, String userName1, String userName2) throws Exception {
 		
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("folderPath", folderVO.getFolderPath());
+		map.put("folderId", folderVO.getFolderId());
 		map.put("tenantId", folderVO.getTenantId());
 		
 		List<String> searchFiles = ezWebFolderDAO.selectAllFilesInFolder(map);
 		
 		for (String file : searchFiles) {
 			map.put("fileId", file);
+			FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 			int result = ezWebFolderDAO.deleteFile(map);
 			
 			if (result > 0) {
-				FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 				realFileDelete(fileVO, realPath, userInfo, userName1, userName2);
 				ezWebFolderService.saveLog("P", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
 				deleteFavoriteAnyUser(fileVO.getFileId(), "F", tenantId);

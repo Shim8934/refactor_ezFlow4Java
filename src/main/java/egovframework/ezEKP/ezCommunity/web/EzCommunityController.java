@@ -225,7 +225,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (pFilePath != null && !pFilePath.equals("")) {
-            ezCommonService.responseAttach(pFilePath, pfileName, true, request, response);
+			downImage(pFilePath, request, response);
 		}
 	}
 
@@ -508,6 +508,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/boardItemList.do")
 	public String boardItemList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		//2018-07-13 김보미 - 파라메터 추가
+		String treeCtrl = request.getParameter("treeCtrl");
 		String code = request.getParameter("code");
 		String boardID = request.getParameter("boardID");
 		String boardName = request.getParameter("boardName");
@@ -545,6 +548,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
 		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
 		
+		model.addAttribute("treeCtrl", treeCtrl);
 		model.addAttribute("code", code);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
@@ -1070,6 +1074,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = request.getParameter("boardID");
 		String code = request.getParameter("code");
 		String showAdjacent = request.getParameter("showAdjacent");
+		//2018-07-13 김보미
+		String treeCtrl = request.getParameter("treeCtrl");
 		
 		if (showAdjacent == null) {
 			showAdjacent = ezCommonService.getTenantConfig("ADJACENT_ITEMS_ENABLE", userInfo.getTenantId());
@@ -1102,6 +1108,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
+		model.addAttribute("treeCtrl", treeCtrl);
 		
 		logger.debug("boardItemView ended.");
 		
@@ -1398,10 +1405,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pItemIDList = request.getParameter("itemIDList");
 		String pBoardID = request.getParameter("boardID");
 		String code = request.getParameter("code");
+		//2018-07-13 김보미 - 파라메터 추가
+		String treeCtrl = request.getParameter("treeCtrl");
 		
 		model.addAttribute("itemIDList", pItemIDList);
 		model.addAttribute("boardID", pBoardID);
 		model.addAttribute("code", code);
+		model.addAttribute("treeCtrl", treeCtrl);
 		return "ezCommunity/communityCopyBoardItem";
 	}
 	
@@ -1898,10 +1908,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 			
 			if (item != null) {
 				bIsMyContent = true;
-				item.setContent(item.getContent().replaceAll("<br>", "\n"));
+				//2018-07-02 김보미 - 화면에서 처리하기 위해 주석.
+//				item.setContent(item.getContent().replaceAll("<br>", "\n"));
+//				2018-07-16 김보미 - 특수문자 처리
+//				item.setContent(commonUtil.cleanValue(item.getContent().trim()));
 			}
 		}
-		
 		model.addAttribute("code", code);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("mode", mode);
@@ -1926,7 +1938,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = request.getParameter("code");
 		String mode = request.getParameter("mode");
 		String memo = URLDecoder.decode(request.getParameter("memo"), "utf-8");
-		
+		//String memo = request.getParameter("memo");
 		logger.debug("code : " + code + ", mode : " + mode + ", memo : " + memo);
 		
 		bIsMyContent = ezCommunityService.guestEditOk(userInfo, item, code, mode, memo, cNo, bIsMyContent);
@@ -2309,6 +2321,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String code = request.getParameter("code");
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
+		// 2018-06-29 김보미 - 커뮤니티 회원수 수정
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
 		CommunityMemberInfoVO member = ezCommunityService.commOutGet(club.getC_SysopID().trim(), club.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		String sysopName = member.getUserName();
@@ -3388,6 +3402,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
+		// 2018-07-03 김보미 - 커뮤니티 회원수 수정
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
 		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getTenantId());
 		
 		String sysopName = member.getUserName();

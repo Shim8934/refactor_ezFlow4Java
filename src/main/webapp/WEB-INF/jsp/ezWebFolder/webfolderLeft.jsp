@@ -1,18 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	   	<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	   	<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">	        
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <link rel="stylesheet" href="/js/ezWebFolder/jsTree/dist/themes/default/style.css" />
-		<script type="text/javascript" src="/js/ezWebFolder/jsTree/dist/jstree.js"></script>
-	    <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezWebFolder/jsTree/dist/themes/default/style.css")%>" />
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/jsTree/dist/jstree.js")%>"></script>
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
 		<script type="text/javascript" >
 		    var companyFolderId = "";
 		    var deptFolderId    = "";
@@ -115,7 +116,6 @@
 					async : true,
 					success : function(data) {
 						var code = data.code;
-						
 						switch(code) {
 							case 0: 
 								var result      = data.userCapacity;
@@ -131,28 +131,19 @@
 								} else {
 									barElmt.style.width = "100%";
 								}
-								
-								volumeInf.textContent = useVolume + " / " + totalVolume + " (" + percent + "%)";
-								
-								if (percent > 90) {
+								$("#useVol").html(useVolume + "<span>/ " + totalVolume + "</span>");
+								$("#usePer").text(percent+"%");
+														
+								if (percent >= 80) {
 									barElmt.className = "myBar_red";
-								} else if (percent > 70) {
-									barElmt.className = "myBar_orange";
-								} else if (percent > 60) {
+									$(".volumeDL dd").css("color", "#ff4040");
+								} else if (percent >= 70) {
 									barElmt.className = "myBar_yellow";
+									$(".volumeDL dd").css("color", "#ff9c00");
 								} else {
 									barElmt.className = "myBar_green";
+									$(".volumeDL dd").css("color", "#0470e4");
 								}
-								break;
-							case 1:
-								alert("<spring:message code='ezWebFolder.t306'/>");
-								break;
-							case 2:
-								alert("<spring:message code='ezWebFolder.t305'/>");
-								break;
-							case 3:
-								alert("<spring:message code='ezWebFolder.t300' />");
-								break;
 						}
 					},
 					error : function(error) {
@@ -283,12 +274,20 @@
   			</h2>
     		<ul>
 			</ul>			
-			<div style="border:1px solid #ddd;border-radius:3px;margin:10px 10px 2px;background-color: white">
+			<!-- <div style="border:1px solid #e8e8e8;margin:10px 10px 2px;background-color:#f8f8fa">
 			    <div id='myProgress' style='margin-left:20px;margin-top:10px'></div>
 			    <div style="width:80%">
 			    	<div id='myBar'></div>
 			    </div>	
 			    <div style='text-align:center; margin-top:10px;margin-bottom:5px;font-weight: bold;font-family: dotum;' class="volumes"></div>
+		    </div> -->
+		    <div class="mail_volume">
+		    	<p class="volume_num"><img src="/images/volume_num.png" /></p>
+		        <p class="volume_graph" id='myProgress'><span id='myBar'></span></p>
+		        <dl class="volumeDL" >
+		        	<dt id="useVol"></dt>
+		            <dd id="usePer"></dd>
+		        </dl>
 		    </div>		    
 			<h3 style="border-top:0px;">
 		        <span onClick="folder_Manage()" style="display:inline-block;width:100%;"><spring:message code='ezWebFolder.t268'/></span><!-- 폴더관리 -->

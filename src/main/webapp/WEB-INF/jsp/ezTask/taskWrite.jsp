@@ -266,23 +266,23 @@
 				
 				if (useTodoMemo == 'YES') {													
 					if (tasktype == "1") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX";
 					} else if (tasktype == "2") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX";
 					} else if (tasktype == "3") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX";
 					} else {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX";
 					}
 				} else {
 					if (tasktype == "1") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX";
 					} else if (tasktype == "2") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX";
 					} else if (tasktype == "3") {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX";
 					} else {
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX";
 					}
 				}
 			}
@@ -380,7 +380,7 @@
 							$("#editorTitle").html("<spring:message code='ezTask.t2011' />");
 						}
 						
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX";
 					} else if (obj.id == "I") {
 						taskType = obj.value;
 						document.getElementById("personinputtr").style.display = "";
@@ -396,7 +396,7 @@
 							$("#editorTitle").html("<spring:message code='ezTask.t2010' />");
 						}
 						
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 440 + "PX";
 					} else if (obj.id == "C") {
 						taskType = obj.value;
 						document.getElementById("personinputtr").style.display = "";
@@ -412,7 +412,7 @@
 							$("#editorTitle").html("<spring:message code='ezTask.t2010' />");
 						}
 						
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 440 + "PX";
 					}
 				} else {				
 					if (obj.id == "P") {
@@ -431,7 +431,7 @@
 							$("#editorTitle").html("<spring:message code='ezTask.t2011' />");
 						}
 						
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX";
 					} else if (obj.id == "I") {
 						taskType = obj.value;
 						document.getElementById("personinputtr").style.display = "";
@@ -447,7 +447,7 @@
 							$("#editorTitle").html("<spring:message code='ezTask.t2010' />");
 						}
 						
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX";
 					} else if (obj.id == "C") {
 						taskType = obj.value;
 						document.getElementById("personinputtr").style.display = "";
@@ -463,7 +463,7 @@
 							$("#editorTitle").html("<spring:message code='ezTask.t2010' />");
 						}
 						
-						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+						document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX";
 					}
 				}
 				
@@ -634,7 +634,7 @@
 								</div>
 								<div id="close">
 									<ul>
-										<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
+										<li><span onClick="close_onclick()"></span></li>
 									</ul>
 								</div>
 							</c:when>
@@ -668,9 +668,11 @@
 										</div>
 										<div id="close">
 											<ul>
-												<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
-												<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
+												<li><span onClick="close_onclick()"></span></li>
 											</ul>
+										</div>
+										<div class="btnposition btnpositionNew">
+										    <a class="imgbtn" onClick="save_task()" ><span><spring:message code='ezTask.t96' /></span></a>
 										</div>
 									 </c:when>
 									 
@@ -704,14 +706,16 @@
 														<option value='2' selected><spring:message code='ezTask.t172' /></option>
 														<option value='3'><spring:message code='ezTask.t173' /></option>
 													</select>
-												</li>
+												</li>												
 											</ul>
 										</div>
 										<div id="close">
 											<ul>
-												<li><span onClick="save_task()"><spring:message code='ezTask.t96' /></span></li>
-												<li><span onClick="close_onclick()"><spring:message code='ezTask.t9' /></span></li>
+												<li><span onClick="close_onclick()"></span></li>
 											</ul>
+										</div>
+										<div class="btnposition btnpositionNew">
+										    <a class="imgbtn" onClick="save_task()" ><span><spring:message code='ezTask.t96' /></span></a>
 										</div>
 									  </c:otherwise>
 								 </c:choose>								
@@ -720,7 +724,6 @@
 						
 						<script type="text/javascript">
 							selToggleList(document.getElementById("menu"), "ul", "li", "0");
-							selToggleList(document.getElementById("close"), "ul", "li", "0");
 						</script>
 					</td>
 				</tr>
@@ -838,7 +841,7 @@
 								<c:if test="${useTodoMemo == 'YES' && mode == ''}">	
 									<tr id="menuTaskMemo">
 										<th><spring:message code='ezTask.t170' /></th>
-										<td colspan="3" id ="memoTd" style="width:100%; height: 40px;">
+										<td colspan="3" id ="memoTd" style="width:100%;">
 											<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
 										</td>
 									</tr>
@@ -874,7 +877,7 @@
 								<c:if test="${useTodoMemo == 'YES' && mode == '1' }">
 									<tr>
 										<th><spring:message code='ezTask.t1701' /></th>
-										<td colspan="3" style="height: 40px;">
+										<td colspan="3">
 											<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
 										</td>
 									</tr>
@@ -997,7 +1000,7 @@
 									<c:if test="${mode == '1' }">
 										<tr>
 											<th><spring:message code='ezTask.t1701' /></th>
-											<td colspan="3" style="height: 40px;">
+											<td colspan="3">
 												<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
 											</td>
 										</tr>
@@ -1005,7 +1008,7 @@
 									<c:if test="${mode == '2' }">
 										<tr>
 											<th><spring:message code='ezTask.t1701' /></th>
-											<td colspan="3" style="height: 40px;">
+											<td colspan="3">
 												<input type="text" id="TextMemo" style="width:100%;height: 80%;" value = "<c:out value = '${taskInfoVO.memo }' />">
 											</td>
 										</tr>
@@ -1028,7 +1031,7 @@
 						<c:choose>
 							<c:when test="${ mode == '2'}">
 								<tr>
-									<td id="EdtorSize" style="height: 340px;">
+									<td id="EdtorSize" style="height: 440px;">
 										<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do" style="padding: 0; margin-top: 2.3px; height: 100%; width: 99.7%; overflow: auto;"></iframe>
 									</td>
 								</tr>
@@ -1048,8 +1051,7 @@
 					<c:when test="${mode == ''}">
 						<tr>
 							<td>
-								<br/> 
-								<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px;" src="/ezTask/dragAndDrop.do"></iframe>
+								<iframe id="dadiframe" name="dadiframe" style="width: 100%;margin-top:3px; height: 100%; border: 0px;" src="/ezTask/dragAndDrop.do"></iframe>
 							</td>
 						</tr>
 					</c:when>
@@ -1058,15 +1060,13 @@
 							<c:when test="${ mode == '2'}">
 								<tr>
 									<td>
-										<br/> 
-										<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 160px; border: 0px;" src="/ezTask/dragAndDrop.do"></iframe>
+										<iframe id="dadiframe" name="dadiframe" style="width: 100%;margin-top:3px; height: 160px; border: 0px;" src="/ezTask/dragAndDrop.do"></iframe>
 									</td>
 								</tr>
 							</c:when>
 							<c:otherwise>
 								<tr>
 									<td>
-										<br/> 
 										<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 160px; border: 0px; display: none;" src="/ezTask/dragAndDrop.do"></iframe>
 									</td>
 								</tr>
@@ -1077,9 +1077,6 @@
 				
 			</table>
 		</div>
-		<c:if test="${ mode == '1'}">
-			<div class="btnpositionNew">&nbsp;</div>
-		</c:if>	
 		<div id="printScreen" style="display: none">
 			<table class="content">
 				<tr>
@@ -1126,23 +1123,23 @@
 				if (mode == "") {					
 					if (useTodoMemo == 'YES') { 
 						if (tasktype == "1") { 
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX"; 
 						} else if (tasktype == "2") { 
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX"; 
 						} else if (tasktype == "3") { 
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX"; 
 						} else { 
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX"; 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 410 + "PX"; 
 						} 
 					} else { 
 						if (tasktype == "1") { 
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX"; 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX"; 
 						} else if (tasktype == "2") { 
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX"; 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX"; 
 						} else if (tasktype == "3") { 
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX"; 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX"; 
 						} else { 
-							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX"; 
+							document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 380 + "PX"; 
 						} 
 					}
 				}

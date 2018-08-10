@@ -173,31 +173,35 @@
 		</script>
 	</head>
 	<body class="popup">
-	    <h1><spring:message code='ezSchedule.t6' /></h1>
+	    <h1><spring:message code='ezApprovalG.t1678' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 	    <center>
-	    <table class="content">
+	    <table class="content" style="width:95%">
 	       <tr>
-				<td style=" width:200px;">
-	            		<spring:message code='ezApprovalG.kes05'/>
-				</td>
+				<th style=" width:150px;">
+	            	<spring:message code='ezApprovalG.kes05'/>
+				</th>
 				<td style=" width:200px;">
 					<input type="text" id="TDeptName" name="TDeptName" style="WIDTH: 71%;" readonly="true" />
-	        	    <a class="imgbtn" name="TDeptSelect"><span id = "spanrecev" onclick="bt_TDeptSelect_onclick(this)"><spring:message code='ezApprovalG.t105'/></span></a>
+	        	    <a class="imgbtn imgbck" name="TDeptSelect"><span id = "spanrecev" onclick="bt_TDeptSelect_onclick(this)"><spring:message code='ezApprovalG.t105'/></span></a>
 				</td>
 			</tr>
 			<tr>
-				<td style="width:200px;">
+				<th style="width:150px;">
 					<spring:message code='ezApproval.t611'/>
-				</td>
+				</th>
 				<td style=" width:200px; margin-bottom: 10px;">
 					<select name="selTContName" id="selTContName" style="WIDTH: 100%; height: 23px;" onchange="return bt_selTContName_onclick()"></select>
 				</td>
 			</tr>
 	    </table>
 	    </center>
-	    <div class="btnposition">
+	    <div class="btnpositionNew">
 	        <a class="imgbtn"><span onclick="save_info()" ><spring:message code='ezSchedule.t157' /></span></a>
-	        <a class="imgbtn"><span onclick="window.close()"><spring:message code='ezSchedule.t5' /></span></a>      
 	    </div>
 	</body>
 </html>

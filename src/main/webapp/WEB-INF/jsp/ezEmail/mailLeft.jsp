@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -8,16 +9,16 @@
 	    <title>left_myoffice</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/email_tree.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/email_tree.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/treeview.htc.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component_utf8.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/encode_component.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezAddress/address_tree_Cross.js")%>"></script>
 	    <!-- 재은 수정 -->
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/NewMailList.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/NewMailList.js")%>"></script>
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 	    <script type="text/javascript">
@@ -32,6 +33,7 @@
 	      	var usePreviewSubTree = "${usePreviewSubTree}";
 	      	var useBottomFrameOnly = "${useBottomFrameOnly}";
 	      	var useMailBoxBackUp = "${useMailBoxBackUp}";
+	      	var useMailReceiveScreen = "${useMailReceiveScreen}";
 	      	
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
@@ -73,6 +75,56 @@
 	            previewSubTreeCall();
 	        }
 	        
+	        /**
+	        	메일함 ellipsis 추가.
+	        	박종균
+	        */
+	        function applyEllipsisMailTree() {
+	        	/**
+	        		1. 왼쪽 메뉴에 존재하는 트리 node를 전부 가져온다.
+	        		2. 그 안에서 들여쓰기가 된 img 갯수를 가져온다.
+	        		3. 이미지 갯수를 통해 list가 표현될 width를 재설정한다.
+	        	*/
+	        	$("[id^='PostTreeView_node']").each(function(index, element){
+	        		
+	        		var imgCnt = $(element).parent().find('img').length - 2;
+	        		var title = $(element)[0].innerHTML;
+	        		
+	        		if (imgCnt > 0) {
+	        			// 최초값 164, 한 블럭의 값 18
+	        			var customWidth = 140 - (18 * imgCnt);
+	        			$(element).css("width", customWidth+"px");
+	        			$(element).attr("title", title);	
+	        		}
+							
+	        	});
+	        }
+	        
+	        /**
+	        	주소록 ellipsis 추가.
+	        	박종균
+	        */
+	        function applyEllipsisAddressTree() {
+	        	/**
+	        		1. 왼쪽 메뉴에 존재하는 트리 node를 전부 가져온다.
+	        		2. 그 안에서 들여쓰기가 된 img 갯수를 가져온다.
+	        		3. 이미지 갯수를 통해 list가 표현될 width를 재설정한다.
+	        	*/
+	        	$($("[id^='AddressTreeView_node']")).each(function(index, element){
+	        		
+	        		var imgCnt = $(element).parent().find('img').length - 2;
+	        		var title = $(element)[0].innerHTML;
+	        		
+	        		if (imgCnt > 0) {
+	        			// 최초값 164, 한 블럭의 값 18
+	        			var customWidth = 140 - (18 * imgCnt);
+	        			$(element).css("width", customWidth+"px");
+	        			$(element).attr("title", title);	
+	        		}
+							
+	        	});
+	        }	        
+	        
 	        
 	        // 수정 수아 재은
 	        function detailView() {
@@ -105,28 +157,30 @@
                  	        useVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[1].text; 
                  	        percent = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[2].text;
                  	   }
-                 	        	
+
                  	   //뿌려주기
                  	   $("#myBar").css({
                  	       "width" : percent + "%"
-                 	   });
-                 	   $(".volumes").text(useVolume + " / " + totalVolume + " (" + percent + "%)");                
-
+                 	   });                 	                   
+                 	   $("#useVol").html(useVolume + "<span>/ " + totalVolume + "</span>");
+                 	   $("#usePer").text(percent+"%");
+                 	   
                  	   //용량 체크(색깔로)
-                 	   if (percent > 90) {
-                 	        colorClass = "myBar_red";
-                 	   } else if (percent > 70) {
-                 	        colorClass = "myBar_orange";
-                 	   } else if (percent > 60) {
-                 	         colorClass = "myBar_yellow";
-                 	   }
+                 	   if (percent >= 80) {
+                 	   		colorClass = "myBar_red";
+                 	       	$(".volumeDL dd").css("color", "#ff4040");
+                 	   } else if (percent >= 70) {
+					   		colorClass = "myBar_yellow";
+					   		$(".volumeDL dd").css("color", "#ff9c00");
+                 	   } else {
+                 		  	colorClass = "myBar_green";
+                 		  	$(".volumeDL dd").css("color", "#0470e4");
+                 	   }                  		   
                  	            
                  	   $("#myBar").addClass(colorClass);
                     }
-                });
-        	    
-	        }
-	        
+                });        	    
+	        }	        
 	        
         	// 2017.12.27 단암 시스템 트리 열기 
             // plus 이미지의 갯수를 확인 한 후 하위 트리를 재귀적으로 호출하여 오픈시킨다. 오픈된 하위트리는 minus 이미지로 바꿔준다.
@@ -230,25 +284,32 @@
 	            }
 	            var childxml = get_childXML(PostTreeView.getvalue(nodeIdx, "href"), false, true, false);
 	            PostTreeView.putchildxml(nodeIdx, childxml);
+	            
+	            /**
+	            	ellipsis 적용을 위해 함수 호출
+	            */
+	            applyEllipsisMailTree();
 	        }
 	        
 	        function selectnode(event) {
 	        	if (!event) event = window.event;
-	        	
-	        	if (event.which != 3) {
-	        		var nodeIdx = PostTreeView.selectedIndex();
-		            var href = PostTreeView.getvalue(nodeIdx, "href");
-		            var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
-		            
-		            try {
-		                if (typeof (parent.frames["right"]) != "undefined")
-		                    parent.frames["right"].Window_onunload();
-		            } catch (e) { }
-		            if (g_firstOpen)
-		                g_firstOpen = false;
-		            else
-		                window.open(url, "right");
-		            get_unreadcount();
+				/* 2018-08-06 장진혁 스크립트 오류로 undefined 걸름 */
+	        	if (event != undefined) {
+		        	if (event.which != 3) {
+		        		var nodeIdx = PostTreeView.selectedIndex();
+			            var href = PostTreeView.getvalue(nodeIdx, "href");
+			            var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(nodeIdx, "href"));
+			            
+			            try {
+			                if (typeof (parent.frames["right"]) != "undefined")
+			                    parent.frames["right"].Window_onunload();
+			            } catch (e) { }
+			            if (g_firstOpen)
+			                g_firstOpen = false;
+			            else
+			                window.open(url, "right");
+			            get_unreadcount();
+		        	}
 	        	}
 	        }
 	        
@@ -330,6 +391,7 @@
 	                }
 	            }
 	            xmlHTTP_Unread = null;
+	            applyEllipsisMailTree();
 	        }
 	        function get_unreadcount() {
 	            return get_unreadcount_2010();
@@ -541,6 +603,8 @@
 	                AddressTreeView.select(1);
 	            else
 	                selectnode_address();
+	            
+	            applyEllipsisAddressTree();
 	        }
 	        var AddressTreeView = null;
 	        function LoadAddressTree() {
@@ -589,6 +653,11 @@
 	
 	            var childxml = get_Address_childXML(AddressTreeView.getvalue(nodeIdx, "folderid"), AddressTreeView.getvalue(nodeIdx, "ownerid"), AddressTreeView.getvalue(nodeIdx, "type"))
 	            AddressTreeView.putchildxml(nodeIdx, childxml);
+	            
+	            /**
+	            	주소록 ellipsis 추가
+	            */
+	            applyEllipsisAddressTree();
 	        }
 	        function selectnode_address() {
 	            var nodeIdx = AddressTreeView.selectedIndex();
@@ -699,7 +768,7 @@
 		            EventMouseX = EventMouseX - Div_;
 		        }
 		        
-		        document.getElementById("folderPanel").style.display = "";
+		        //document.getElementById("folderPanel").style.display = "";
 		        document.getElementById("folderMenuDiv").style.left = EventMouseX + "px";
 		        document.getElementById("folderMenuDiv").style.top = EventMouseY + "px";
 		        document.getElementById("folderMenuDiv").style.display = "";
@@ -921,48 +990,61 @@
 					parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
 				}
 			}
+			
+			// 수신확인 메뉴 클릭
+			function reception_check() {
+				var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent("<spring:message code='ezEmail.t516' />") + "&url=receiveChk";
+				
+	            try {
+	                if (typeof (parent.frames["right"]) != "undefined")
+	                    parent.frames["right"].Window_onunload();
+	            } catch (e) { }
+	            if (g_firstOpen)
+	                g_firstOpen = false;
+	            else
+	                window.open(url, "right");
+	            get_unreadcount();
+			}
+			
 	    </script>
-		 <style type="text/css">
-		 		#myBar {		 			
-					margin-left:20px;
-				 	margin-top:-9px;
-		 		}
-				#myProgress {
-				  width: 80%;
-				  height:7px;
-				  background-color: white;
-				  border: 1px solid #ddd;
-				  overflow:hidden;
-				}
-				.myBar_red {
-				  height: 7px;
-				  border: 1px solid #ee0606;
-				  background-color: #ff1616;
-				}
-				.myBar_orange {
-				  height: 7px;
-				  border: 1px solid #ee5e00;
-				  background-color: #ff7f00;
-				}
-				.myBar_yellow {
-				  height: 7px;
-				  border: 1px solid #eea600;
-				  background-color: #ffb600;
-				}
-				.myBar_green {
-				  height: 7px;
-				  border: 1px solid #2C8F30;
-				  background-color: #4CAF50;
-				}
-			</style>
+		<style type="text/css">
+			.myBar_red {
+			  height: 7px;				  
+			  background-color: #ff4040;
+			}
+			.myBar_yellow {
+			  height: 7px;				  
+			  background-color: #ff9c00;
+			}
+			.myBar_green {
+			  height: 7px;				  
+			  background-color: #4faaff;
+			}
+			.node_normal{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		white-space: nowrap;
+	    	}
+			.node_selected{
+	    		overflow:hidden;
+	    		text-overflow:ellipsis;
+	    		display:inline-block;
+	    		white-space: nowrap;
+	    	}	    	
+		</style>
 	</head>
 	<body class="leftbody" style="overflow: auto; height: 100%;">
 	    <div id="left">
 	        <div class="left_mail" title="<spring:message code="ezEmail.t99000012" />"><span><spring:message code="ezEmail.t99000012" /></span></div>
 	        <h2><span onclick="Email_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000012" /></span></h2>
 	        <ul>
-	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #dedede; overflow: auto; padding-left: 20px;" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;"></div>
+	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
 	            <li><span onclick="write_Letter()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000013" /></span></li>
+	            
+	            <c:if test="${useMailReceiveScreen == 'YES'}">
+	            	<li><span onclick="reception_check()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t516" /></span></li>
+	            </c:if>
 	            <li><span onclick="folder_manage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t481" /></span></li>
 	            <li><span onclick="Open_Search();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t641" /></span></li>
 		        <c:if test="${useOnlyInnerMail != 'YES'}">
@@ -978,17 +1060,25 @@
 	        </ul>
 	        <h2><span onclick="Address_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000041" /></span></h2>
 	        <ul>
-	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #dedede; overflow: auto; padding-left: 20px;" id="AddressTreeView"></div>
+	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" id="AddressTreeView"></div>
 	            <li><span id='Address_Search' onclick="address_Search();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000042" /></span></li>
-	            <li style="border-bottom-color:#dedede" evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
+	            <li style="border-bottom-color:#e8e8e8" evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
 	        </ul>	        
 	    	<!-- 수정 수아 재은 -->
-	    	<div style="border:1px solid #ddd;border-radius:3px;margin:10px 10px 2px;background-color: white">
+	    	<!-- <div style="border:1px solid #e8e8e8;margin:10px 10px 2px;background-color:#f8f8fa">
 			    <div id='myProgress' style='margin-left:20px;margin-top:10px'></div>
 			    <div style="width:80%">
 			    	<div id='myBar'></div>
 			    </div>	
 			    <div style='text-align:center; margin-top:10px;margin-bottom:5px;font-weight: bold;font-family: dotum;' class="volumes"></div>
+		    </div> -->
+		    <div class="mail_volume">
+		    	<p class="volume_num"><img src="/images/volume_num.png" /></p>
+		        <p class="volume_graph" id='myProgress'><span id='myBar'></span></p>
+		        <dl class="volumeDL" >
+		        	<dt id="useVol"></dt>
+		            <dd id="usePer"></dd>
+		        </dl>
 		    </div>
 	        <h3 style="border-top:0px"><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
 	        <c:if test="${isDotNetAdmin == true}">

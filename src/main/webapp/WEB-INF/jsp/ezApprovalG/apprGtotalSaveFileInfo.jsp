@@ -85,6 +85,7 @@
 	                            break;
 	                    }
 	                    IMG.style.display = "inline-block";
+	                    IMG.style.verticalAlign = "middle";
 	                    SPAN.style.paddingLeft = "5px";
 	                    SPAN.style.height = "16px";
 	                    SPAN.style.verticalAlign = "middle";
@@ -110,11 +111,10 @@
 	            var pSourcePath = obj.getAttribute("FILEPATH").split('.')[1];
 	            var pDocID_mht = obj.getAttribute("FILEPATH").substring(obj.getAttribute("FILEPATH").lastIndexOf("/") + 1, obj.getAttribute("FILEPATH").length).split('.')[0];
 	            if (obj.getAttribute("DATA1") == "ATT")
-	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALG&docID=" + pDocID + "&docStatus=" + pType + "&docAttachSN=" + obj.getAttribute("DATA3");
+	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALG&fileName=" + encodeURI(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID + "&docStatus=" + pType + "&docAttachSN=" + obj.getAttribute("DATA3");
 	            else if (obj.getAttribute("DATA1") == "ATTDOC") {
 	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURI(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=END";
-	            }
-	            else {
+	            } else {
 	                AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURIComponent(obj.getAttribute("DATA2") + "." + pSourcePath) + "&docID=" + pDocID_mht + "&docStatus=" + pType;
 	            }
 	        }
@@ -211,6 +211,11 @@
 	</head>
 	<body class="popup">
 	    <h1><spring:message code='ezApprovalG.t00008'/></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window_close()"></span></li>
+            </ul>
+        </div>
 	    <span>&nbsp;▒ <spring:message code='ezApprovalG.t00009'/></span>
 	    <table class="mainlist" style="width: 550px; margin-left: 5px;margin-top:7px">
 	        <tr>
@@ -218,14 +223,13 @@
 	            <th><spring:message code='ezApprovalG.t00010'/></th>
 	        </tr>                
 	    </table>
-	    <div style="overflow-y:auto; overflow-x:auto; height:250px;">
-	        <table class="mainlist" id="table_filelist" style="width: 550px; margin-left: 5px;">
+	    <div style="overflow-y:auto; overflow-x:auto; height:250px; width: 555px;">
+	        <table class="mainlist" id="table_filelist" style="width: 99%; margin-left: 5px;">
 	        </table>
 	    </div>
 	    <br />
-	     <div class="btnposition btnpositionNew" align="center">
-	        <a class="imgbtn"><span style="width: 40px; text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>
-	        <a class="imgbtn"><span style="width: 40px; text-align: center;" onclick="window_close()"><spring:message code='ezApprovalG.t1761'/></span></a>
+	     <div class="btnposition btnpositionNew">
+	        <a class="imgbtn"><span style="text-align: center;" onclick="btn_OK()"><spring:message code='ezApprovalG.t1760'/></span></a>	        
 	    </div>
 	    <iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>
 	</body>

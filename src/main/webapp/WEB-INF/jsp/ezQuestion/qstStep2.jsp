@@ -48,17 +48,34 @@
             		}			
         		}
         		var v_ques =  vdata;
+        		
+        		//2018-07-27 배현상, 전자설문 질문 추가 시 어떤 유형의 질문인지 표시하는 기능 추가
+        		var xmlQst = SelectSingleNode(loadXMLString(QstXML), "ROW");
+        		
+        		var typeName = SelectSingleNodeValue(xmlQst, "ANSWERTYPE");
+        		
+        		//1=객관식, 2=주관식, 4=우선순위 선택형, 5=표형식 (3은 안쓰임)
+        		if (typeName == 1) {
+        			typeName = "<spring:message code='ezQuestion.t487' />";
+        		} else if (typeName == 2) {
+        			typeName = "<spring:message code='ezQuestion.t372' />";
+        		} else if (typeName == 4) {
+        			typeName = "<spring:message code='ezQuestion.t373' />";
+        		} else if (typeName == 5) {
+        			typeName = "<spring:message code='ezQuestion.t50003' />"
+        		}
+        		
         		if (selCnt > 0 ) {
             		if (frmCreate.selQues[0].text == "") {
             			i = 0;
             		} else {
             			i = frmCreate.selQues.length;
             		}
-            		var TmpOption= new Option((i+1) + "." + v_ques, QstXML,true);
+            		var TmpOption= new Option("[" + typeName + "]" + (i+1) + ". " + v_ques, QstXML,true);
             		frmCreate.selQues.options[i] = TmpOption;
             		frmCreate.selQues.options[i].AttachYN = vAttachYN;
         		} else {
-            		var TmpOption= new Option((1) + "." + v_ques, QstXML,true);
+            		var TmpOption= new Option("[" + typeName + "]" + (1) + ". " + v_ques, QstXML,true);
             		frmCreate.selQues.options[0] = TmpOption;
             		frmCreate.selQues.options[0].AttachYN = vAttachYN;
         		}
@@ -161,10 +178,14 @@
             		var tmpText=frmCreate.selQues[index-1].text.substring(vsublen1);
             		var vsubdata=trim_Cross(frmCreate.selQues[index].text).split(".");
             		var vsublen=vsubdata[0].length+1;
+            		//2018-08-08 김보미 - 유형 질문 표시
+            		var answerType = vsubdata[0].split("]")[0] + "]";
+            		var answerType1 = vsubdata1[0].split("]")[0] + "]";
             		frmCreate.selQues[index-1].value = trim_Cross(frmCreate.selQues[index].value);
-            		frmCreate.selQues[index-1].text = index + "." + trim_Cross(frmCreate.selQues[index].text).substring(vsublen);
+            		frmCreate.selQues[index-1].text = answerType + index + "." + trim_Cross(frmCreate.selQues[index].text).substring(vsublen);
             		frmCreate.selQues[index].value = tmpValue;
-            		frmCreate.selQues[index].text = index+1 + "." + tmpText;
+            		frmCreate.selQues[index].text = answerType1 + (index + 1) + "." + tmpText;
+            		frmCreate.selQues.selectedIndex = index-1;
             		frmCreate.selQues.selectedIndex = index-1;
             		index--;
         		}	
@@ -177,10 +198,13 @@
             		var tmpText = trim_Cross(frmCreate.selQues[index+1].text).substring(vsublen);
             		var vsubdata1=trim_Cross(frmCreate.selQues[index].text).split(".");
             		var vsublen1=vsubdata1[0].length+1;
+            		//2018-08-08 김보미 - 유형 질문 표시
+            		var answerType = vsubdata[0].split("]")[0] + "]";
+            		var answerType1 = vsubdata1[0].split("]")[0] + "]";
             		frmCreate.selQues[index+1].value = trim_Cross(frmCreate.selQues[index].value);
-            		frmCreate.selQues[index+1].text = index+2 + "." + trim_Cross(frmCreate.selQues[index].text).substring(vsublen1);
+            		frmCreate.selQues[index+1].text = answerType1 + (index + 2) + "." + trim_Cross(frmCreate.selQues[index].text).substring(vsublen1);
             		frmCreate.selQues[index].value = tmpValue;
-            		frmCreate.selQues[index].text = index+1 + "." + tmpText;
+            		frmCreate.selQues[index].text = answerType + (index + 1) + "." + tmpText;
             		frmCreate.selQues.selectedIndex = index+1;
             		index ++;
         		}
@@ -221,7 +245,23 @@
         		}
     		}
     		function EditQues(data, index, vAttachYN, QstXML) {
-        		frmCreate.selQues[index].text=String(parseInt(index)+1) +"." + data;
+    			//2018-07-27 배현상, 전자설문 질문 추가 시 어떤 유형의 질문인지 표시하는 기능 추가
+        		var xmlQst = SelectSingleNode(loadXMLString(QstXML), "ROW");
+        		
+        		var typeName = SelectSingleNodeValue(xmlQst, "ANSWERTYPE");
+        		
+        		//1=객관식, 2=주관식, 4=우선순위 선택형, 5=표형식 (3은 안쓰임)
+        		if (typeName == 1) {
+        			typeName = "<spring:message code='ezQuestion.t487' />";
+        		} else if (typeName == 2) {
+        			typeName = "<spring:message code='ezQuestion.t372' />";
+        		} else if (typeName == 4) {
+        			typeName = "<spring:message code='ezQuestion.t373' />";
+        		} else if (typeName == 5) {
+        			typeName = "<spring:message code='ezQuestion.t50003' />"
+        		}
+        		
+        		frmCreate.selQues[index].text= "[" + typeName + "]"+ String(parseInt(index)+1) +". " + data;
         		frmCreate.selQues[index].value = QstXML;
         		frmCreate.selQues[index].AttachYN = vAttachYN;
     		}
@@ -404,8 +444,25 @@
 		    		xmlDom = loadXMLString(DataXML);
 		    		removeQue();
 		    		for (i = 0 ; i < SelectNodes(xmlDom, "ROW").length ; i++) {
-		        		var TmpOption = new Option((i + 1) + "." + SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "QUESTIONCONTENT"), getXmlString(SelectNodes(xmlDom, "ROW")[i]), true);
+		    			//2018-08-09 김보미 - 불러오기 시에 질문 유형명 표시되게끔 변경
+// 		        		var TmpOption = new Option((i + 1) + "." + SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "QUESTIONCONTENT"), getXmlString(SelectNodes(xmlDom, "ROW")[i]), true);
+// 		        		frmCreate.selQues.options[i] = TmpOption;
+
+		        		var typeName = SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "ANSWERTYPE");
+		        		
+		        		//1=객관식, 2=주관식, 4=우선순위 선택형, 5=표형식 (3은 안쓰임)
+		        		if (typeName == 1) {
+		        			typeName = "<spring:message code='ezQuestion.t487' />";
+		        		} else if (typeName == 2) {
+		        			typeName = "<spring:message code='ezQuestion.t372' />";
+		        		} else if (typeName == 4) {
+		        			typeName = "<spring:message code='ezQuestion.t373' />";
+		        		} else if (typeName == 5) {
+		        			typeName = "<spring:message code='ezQuestion.t50003' />"
+		        		}
+		        		var TmpOption = new Option("[" + typeName + "]" + (i + 1) + "." + SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "QUESTIONCONTENT"), getXmlString(SelectNodes(xmlDom, "ROW")[i]), true);
 		        		frmCreate.selQues.options[i] = TmpOption;
+		        		
 		    		}
 		    		AttachFile.innerHTML = AttachFile.innerHTML;
 				}
@@ -471,7 +528,9 @@
 		                    var trName = getNodeText(QuestionNode.childNodes[i].childNodes[1].getElementsByTagName("ROW")[j].getElementsByTagName("ATTACHTITLE")[0]);
     						trName = decodeURI(trName);
 		                    oTd = document.createElement("td");
-        		            oTd.setAttribute("style", "padding:5px; cursor:pointer; font-weight:bold;");
+		                    //2018-07-13 김보미 - 다운로드 안되게 막기
+         		            //oTd.setAttribute("style", "padding:5px; cursor:pointer; font-weight:bold;");
+        		            oTd.setAttribute("style", "padding:5px; font-weight:bold;");
                     		oTr.appendChild(oTd);
                     		if(attachType==1){
                     			oImg = document.createElement("img");
@@ -481,22 +540,22 @@
 		                    	oImg = document.createElement("img");
             		            oImg.setAttribute("src", "/images/poll/sound.gif");
                     		    oImg.setAttribute("style", "width:19px;height:17px");
-                    		    oTd.setAttribute("onclick", "file_down('"+pFileName+"',"+attachType+",'"+encodeURI(trName)+"')");
+//                     		    oTd.setAttribute("onclick", "file_down('"+pFileName+"',"+attachType+",'"+encodeURI(trName)+"')");
 		                    }else if(attachType==4){
 		                    	oImg = document.createElement("img");
             		            oImg.setAttribute("src", "/images/poll/link.gif");
                     		    oImg.setAttribute("style", "width:26px;height:17px");
-                    		    oTd.setAttribute("onclick","window.open('http://"+pFileName+"'),'',''");
+//                     		    oTd.setAttribute("onclick","window.open('http://"+pFileName+"'),'',''");
 		                    }else if(attachType==5){
 		                    	oImg = document.createElement("img");
             		            oImg.setAttribute("src", "/images/poll/video.gif");
                     		    oImg.setAttribute("style", "width:21px;height:17px");
-                    		    oTd.setAttribute("onclick", "file_down('"+pFileName+"',"+attachType+",'"+encodeURI(trName)+"')");
+//                     		    oTd.setAttribute("onclick", "file_down('"+pFileName+"',"+attachType+",'"+encodeURI(trName)+"')");
 		                    }else{
 		                    	oImg = document.createElement("img");
             		            oImg.setAttribute("src", "/images/poll/link.gif");
                     		    oImg.setAttribute("style", "width:26px;height:17px");
-                    		    oTd.setAttribute("onclick","window.open('http://"+pFileName+"'),'',''");
+//                     		    oTd.setAttribute("onclick","window.open('http://"+pFileName+"'),'',''");
 		                    }
                     		oTd.appendChild(oImg);
                     		if(attachType!=1){
@@ -785,16 +844,16 @@
 			<div id="Main_List">
         		<div id="mainmenu">
             		<ul>
-               			<li style="padding-left: 4px"><span onclick="javascript:fun_Cancel()"><spring:message code="ezQuestion.t130" /></span></li>
-                		<li style="padding-left: 4px"><span onclick="javascript:menuQst_FileOpen()"><spring:message code="ezQuestion.t474" /></span></li>
-                		<li style="padding-left: 4px"><span onclick="javascript:menuQst_tempSave()"><spring:message code="ezQuestion.t475" /></span></li>
-                		<li style="padding-left: 4px"><span onclick="Preview()"><spring:message code="ezQuestion.t100001" /></span></li>
+               			<li><span onclick="javascript:fun_Cancel()"><spring:message code="ezQuestion.t130" /></span></li>
+                		<li><span onclick="javascript:menuQst_FileOpen()"><spring:message code="ezQuestion.t474" /></span></li>
+                		<li><span onclick="javascript:menuQst_tempSave()"><spring:message code="ezQuestion.t475" /></span></li>
+                		<li><span onclick="Preview()"><spring:message code="ezQuestion.t100001" /></span></li>
             		</ul>
         		</div>
 			    <script type="text/javascript">
            			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
        			</script>
-       			<h2><spring:message code="ezQuestion.t476" /></span>- <spring:message code="ezQuestion.t477" /></h2>
+       			<h2 style="font-weight: normal">▒ <spring:message code="ezQuestion.t476" />- <spring:message code="ezQuestion.t477" /></h2>
        			<table width="100%" class="popuplist">
            			<!------------------ 설문제목 ------------------------>
            			<tr>
@@ -805,10 +864,18 @@
            			</tr>
            			<tr>
                			<th style="text-align: center"><spring:message code="ezQuestion.t479" /></th>
+               			<!-- 2018-07-24 김보미 - 버튼 가운데 정렬 -->
+<!--                			<td> -->
+<%--                    			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesAdd();"><spring:message code="ezQuestion.t176" /></span></a> --%>
+<%--                    			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesEdit();"><spring:message code="ezQuestion.t480" /></span></a> --%>
+<%--                    			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesDelete();"><spring:message code="ezQuestion.t177" /></span></a> --%>
+<!--                 		</td> -->
                			<td>
-                   			<a class="imgbtn"><span onclick="javascript:fun_QuesAdd();"><spring:message code="ezQuestion.t176" /></span></a>
-                   			<a class="imgbtn"><span onclick="javascript:fun_QuesEdit();"><spring:message code="ezQuestion.t480" /></span></a>
-                   			<a class="imgbtn"><span onclick="javascript:fun_QuesDelete();"><spring:message code="ezQuestion.t177" /></span></a>
+               				<div style="vertical-align: middle;height: 74%;width: 100%;">
+	                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesAdd();"><spring:message code="ezQuestion.t176" /></span></a>
+	                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesEdit();"><spring:message code="ezQuestion.t480" /></span></a>
+	                   			<a class="imgbtn imgbck"><span onclick="javascript:fun_QuesDelete();"><spring:message code="ezQuestion.t177" /></span></a>
+	                   		</div>
                 		</td>
                 		<th style="text-align: center; width: 100px"><spring:message code="ezQuestion.t481" /></th>
                 		<td style="width: 250px; white-space: nowrap">
@@ -821,12 +888,11 @@
             		<!------------------ 질문리스트 ------------------------>
             		<tr>
                 		<td colspan="4" bgcolor="#f5f5f5">
-                    		<select id="selQues" name="selQues" onclick="javascript:fun_SelClick();" ondblclick="javascript:fun_QuesEdit();" size="20" style="WIDTH: 100%; HEIGHT: 300px; background:none;"></select>
+                    		<select id="selQues" name="selQues" onclick="javascript:fun_SelClick();" ondblclick="javascript:fun_QuesEdit();" size="20" style="WIDTH: 100%; HEIGHT: 300px; background:none; margin:2px 0px"></select>
                 		</td>
             		</tr>
         		</table>
-        		<br>
-        		<div class="btnposition">
+        		<div class="btnpositionJsp">
             		<a class="imgbtn" name="Submit" onclick="javaScript:fun_Prev()"><span><spring:message code="ezQuestion.t483" /></span></a>
             		<a class="imgbtn" name="Submit2" onclick="fun_OK(this)"><span><spring:message code="ezQuestion.t484" /></span></a>
             		<a class="imgbtn" name="Submit3" onclick="fun_Cancel()"><span><spring:message code="ezQuestion.t38" /></span></a>

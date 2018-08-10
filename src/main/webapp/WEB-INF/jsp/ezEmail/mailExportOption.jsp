@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -9,20 +10,20 @@
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<title>Insert title here</title>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/Controls_cross/datepicker.htc.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/Controls_cross/composeappt.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/datepicker.htc.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/composeappt.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 		<!-- crypt -->
-		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/pidcrypt.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/pidcrypt_util.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/asn1.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/jsbn.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/prng4.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/rng.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/rsa.js")%>"></script>
 		<script type="text/javascript">
 			var m_rgParams4PostOption = new Array();
 			var RetValue;
@@ -198,6 +199,11 @@
 	<body style="overflow:hidden;" class="popup">
 		<form name="optionForm">
 			<h1><spring:message code="ezEmail.kyj04"/></h1>
+			<div id="close">
+	            <ul>
+	                <li><span onclick="cancel()"></span></li>
+	            </ul>
+	        </div>
 			<c:if test="${exportType eq 'MAILBOX' }">
 				<span>▒ <spring:message code='ezEmail.kyj02' /></span><br>
 			</c:if>
@@ -223,7 +229,6 @@
 			
 			<div class="btnposition btnpositionNew">
 			   <a class="imgbtn" onClick="javascript:confirm();" ><span><spring:message code='ezEmail.t38' /></span></a>
-			   <a class="imgbtn" onClick="cancel()" ><span><spring:message code='ezEmail.t39' /></span></a>
 			</div>
 		</form>
 	</body>

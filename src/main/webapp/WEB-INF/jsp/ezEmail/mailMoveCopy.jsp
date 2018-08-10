@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -11,12 +12,11 @@
     <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
     <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 	<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-    <script type="text/javascript" src="/js/ezEmail/js_cross/email_tree.js"></script>
-    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview.htc.js"></script>
-    <script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
-    <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
-    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/email_tree.js")%>"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/treeview.htc.js")%>"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component_utf8.js")%>"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/encode_component.js")%>"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
     <script>
         var lang = "${userinfo.lang}";
         var PostTreeView = null;
@@ -182,21 +182,21 @@
     <h1><spring:message code='ezEmail.t482' /></h1>
     <div id="close">
         <ul>
-            <li><span onclick="Window_Close();"><spring:message code='ezEmail.t63' /></span></li>
+            <li><span onclick="Window_Close();"></span></li>
         </ul>
     </div>
     <table class="content">
         <tr>
             <td class="pos1">
-                <div style="border: 0px solid #ddd; height: 275px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px;" id="PostTreeView">
+                <div style="border: 0px solid #ddd; height: 255px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px; width:293px" id="PostTreeView">
                 </div>
             </td>
-            <td class="pos3"><a class="imgbtn"><span onclick="return btn_Move_onclick()"><spring:message code='ezEmail.t538' /></span></a><a class="imgbtn"><span onclick="return btn_Copy_onclick()"><spring:message code='ezEmail.t539' /></span></a></td>
         </tr>
     </table>
-    <script type="text/javascript">
-        selToggleList(document.getElementById("close"), "ul", "li", "0");
-    </script>
+    <div class="btnpositionNew">
+    	<a class="imgbtn"><span onclick="return btn_Move_onclick()"><spring:message code='ezEmail.t538' /></span></a>
+    	<a class="imgbtn"><span onclick="return btn_Copy_onclick()"><spring:message code='ezEmail.t539' /></span></a>
+    </div>
 </body>
 </html>
 

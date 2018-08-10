@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -6,19 +7,19 @@
 	<head>
 		<title><spring:message code="ezBoard.t84" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href='/css/organ_tree.css' type="text/css" />
+		<link rel="stylesheet" href='<spring:message code='ezOrgan.e3'/>' type="text/css" />
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
 	    <style>
 	    	.mainlist_free tr th {
 	    		border-top: 0px;
 	    	}
 	    </style>		
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezOrgan/TreeView.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezOrgan/ListView_list.js")%>"></script>
 	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 		<script type="text/javascript" language="javascript">		
 			var topid = "<c:out value='${topid}'/>";
 		    var useOCS = "<c:out value='${useOCS}'/>";
@@ -558,7 +559,7 @@
 		    var checkname2_cross_dialogArguments = new Array();
 		    
 			function deptsearch_click(){
-				if (document.getElementById("deptkeyword").value == ""){
+				if ($.trim(document.getElementById("deptkeyword").value) == ""){
 					alert("<spring:message code='ezOrgan.t56' />");
 				    document.getElementById("deptkeyword").focus();
 					return;
@@ -631,7 +632,7 @@
 		    }
 		    
 		    function search_click(){
-				if (keyword.value == ""){
+				if ($.trim(keyword.value) == ""){
 					alert("<spring:message code='ezOrgan.t56' />");
 					keyword.focus();
 					return;
@@ -687,12 +688,13 @@
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
 
-		        if (listview.GetSelectedRows().length == 0){
+		        if (listview.GetSelectedRows().length == 0) {
 					alert("<spring:message code='ezOrgan.t50' />");
 					return;
-				}
-
-			    if (listview.GetSelectedRows().length > 1){
+				} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+                    alert(strLang13);
+                    return;
+			    } else if (listview.GetSelectedRows().length > 1) {
 					alert("<spring:message code='ezOrgan.t51' />");
 					return;
 				}
@@ -877,7 +879,7 @@
 		        }
 		    }
 		    
-			function info_user(){
+			function info_user() {
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
 		        
@@ -888,17 +890,17 @@
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
 
-				if (document.getElementById("listOpt2").checked == true){
-					return;
-				}
-				if (listview.GetSelectedRows().length == 0){
+				if (listview.GetSelectedRows().length == 0) {
 					alert("<spring:message code='ezOrgan.t9' />");
 					return;
-				}
-			    if (listview.GetSelectedRows().length > 1){
+				} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+                    alert(strLang13);
+                    return;
+		        } if (listview.GetSelectedRows().length > 1) {
 					alert("<spring:message code='ezOrgan.t10' />");
 					return;
-				}				
+				}
+		        
 				var args = new Array();
 				args[0] = treeNode.GetNodeData("CN");
 				
@@ -942,24 +944,28 @@
 		        }
 		    }
 		    
-		    function mod_quota()
-		    {
+		    function mod_quota() {
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
 
-		        if (listview.GetSelectedRows().length == 0)
-		        {
+		        if (listview.GetSelectedRows().length == 0) {
 		            alert("<spring:message code='ezOrgan.t43' />");
 		            return;
-		        }
-
-		        if (listview.GetSelectedRows().length > 1)
-		        {
+		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+                    alert(strLang13);
+                    return;
+		        } else if (listview.GetSelectedRows().length > 1) {
 		            alert("<spring:message code='ezOrgan.t44' />");
 		            return;
 		        }
 		        
-		        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=210px,width=480px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(480, 210));
+		        var agent = navigator.userAgent.toLowerCase();
+	            if (agent.indexOf("chrome") != -1) {
+			        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=210px,width=480px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(480, 210));
+	            } else {
+			        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=210px,width=300px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(480, 210));
+	            }
+		        
 		    }
 		    
 		    function mod_sign() {
@@ -969,19 +975,22 @@
 		        if (listview.GetSelectedRows().length == 0) {
 		            alert("<spring:message code='ezOrgan.t45' />");
 		            return;
-		        }
-		        if (listview.GetSelectedRows().length > 1) {
+		        } else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+                    alert(strLang13);
+                    return;
+				} else if (listview.GetSelectedRows().length > 1) {
 		            alert("<spring:message code='ezOrgan.t46' />");
 		            return;
 		        }
+		        
 		        //2016-04-15 장진혁과장 -- cross 버전으로 통일하기 위한 주석처리
 		        //if (CrossYN()){
 		        	 //크롬일때 alert창 크기때문에 크롬일때 구별
 		            var agent = navigator.userAgent.toLowerCase();
 		            if (agent.indexOf("chrome") != -1) {
-		            	window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=315px,width=449px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(449, 315));	
+		            	window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=305px,width=460px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(449, 315));	
 		            } else {
-		            	window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=310px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 310));
+		            	window.open("/admin/ezOrgan/configSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=300px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 310));
 		            }
 		        /* }else{
 		            window.open("ConfigSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=297px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 297));
@@ -990,14 +999,18 @@
 		    
 		    var inputpassword_dialogArguments = new Array();
 		    
-			function mod_password(){
+			function mod_password() {
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
 
-		        if (listview.GetSelectedRows().length == 0){
+		        if (listview.GetSelectedRows().length == 0) {
 					alert("<spring:message code='ezOrgan.t39' />");
 					return;
+				} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+                    alert(strLang13);
+                    return;
 				}
+		        
 		        //2016-04-18 장진혁과장 -- Cross 사용으로 인한 주석처리
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
 		        
@@ -1057,10 +1070,16 @@
 	            var listview = new ListView();
 	            listview.LoadFromID("lvUserList");
 
-	            if (listview.GetSelectedRows().length == 0){
+	            if (listview.GetSelectedRows().length == 0) {
 	        		alert(strLang2);
 	        		return;
-	        	}
+	        	} else {
+				    if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+	                    alert(strLang13);
+	                    return;
+				    }
+				}
+	            
 	            var length = listview.GetSelectedRows().length;		            
 	        	
 	        	if (!confirm(length + strLang1)){
@@ -1110,9 +1129,9 @@
 					return;
 				} else {
 				    if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
-	                    alert("<spring:message code='ezOrgan.t12' />");
-	                    return;				        
-				    }    
+				    	alert(strLang13);
+	                    return;
+				    }
 				}
 		        
 		        //2016-04-18 장진혁 과장 -- Cross 버전 사용으로 인한 주석 처리
@@ -1308,9 +1327,10 @@
 		    	if (length == 0) {
 		    		alert("<spring:message code='ezOrgan.kyj05' />");
 		    		return;
-		    	} 
-		    	
-		    	if (length > 1) {
+		    	} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+                    alert(strLang13);
+                    return;
+				} else if (length > 1) {
 	    			alert("<spring:message code='ezOrgan.kyj06' />");
 		    		return;
 	    		}
@@ -1421,12 +1441,12 @@
 		</h1>
 		<table style="margin-top:10px;width:900px;border:1px solid #ddd">
 			<tr>
-				<th style="height:30px"><spring:message code='ezOrgan.t73' /></th>
-				<th>
-					<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><spring:message code='ezOrgan.t74' />					
-					<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><spring:message code='ezOrgan.t75' />
+				<th style="height:30px;border-bottom:0px"><spring:message code='ezOrgan.t73' /></th>
+				<th style="border-bottom:0px">
+					<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>					
+					<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
 				</th>
-				<th style="width:80px;text-align:center" rowspan="3">
+				<th style="width:80px;text-align:center;" rowspan="3">
 					<table>
                         <tr id="companybutton3">
                             <td><a class="imgbtn"><span onClick="info_company()"><spring:message code='ezCommunity.t1070' /></span></a></td>
@@ -1491,9 +1511,11 @@
 							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></a></td>
 						</tr>		                
 						<c:if test="${useBizmekaTalk == 'YES'}">			
-						<tr>
-		                	<td><a class="imgbtn" id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></a></td>
-		                </tr>
+							<c:if test="${locale eq 'ko'}">
+							<tr>
+			                	<td><a class="imgbtn" id="usermenu21"><span onClick="syncWithBizmekaTalkAccounts()"><spring:message code='ezOrgan.t1002' /></span></a></td>
+			                </tr>
+							</c:if>
 		                </c:if>
 		                <c:if test="${useDisablePopImap == 'YES'}">
 							<tr>
@@ -1504,11 +1526,11 @@
 				</th>
 			</tr>
 			<tr>
-				<th style="height:30px">
+				<th style="height:30px;border-top:0px">
 					<input id="deptkeyword" onKeyPress="deptsearch_press();" style="WIDTH:130px; height:22px;" />
 					<a class="imgbtn" style="vertical-align:middle"><span onClick="deptsearch_click()"><spring:message code='ezOrgan.t93' /></span></a>
 				</th>
-				<th>
+				<th style="border-top:0px">
 					<select id="search_type" style="WIDTH:60px; height:22px;">
 						<option selected value="displayname"><spring:message code='ezOrgan.t67' /></option>
 						<option value="cn"><spring:message code='ezOrgan.t94' /></option>

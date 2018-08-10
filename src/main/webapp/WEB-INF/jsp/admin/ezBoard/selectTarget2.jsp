@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code="ezBoard.t16" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href='/css/organ_tree.css' type="text/css" />
+	    <link rel="stylesheet" href='<spring:message code='ezOrgan.e3'/>' type="text/css" />
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -101,7 +101,12 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "displayName;description;title;telephoneNumber", prop : "mail;displayName;description;title", type : "user"},
+		        	data : {
+		        		deptID : DeptID,
+		        		cell : "displayName;description;title;telephoneNumber",
+		        		prop : "mail;displayName;description;title",
+		        		type : "user"
+		        	},
 		        	success : function(result){	
 		        		result = loadXMLString(result);
 		        		document.getElementById("OrganListView").innerHTML = "";
@@ -121,6 +126,56 @@
 		        });		            
 		    }
 		    
+		    /* 2018-08-06 홍승비 - 승인자 검색 시 한 명만 표출하도록 수정 */
+		    var listv = "";
+		    var rows = "";
+		    var row = "";
+		    var thead = "";
+			function displayUserOne(UserID, DeptID) {			
+				 $.ajax({
+			        	type : "POST",
+			        	dataType : "text",
+			        	url : "/ezOrgan/getDeptMemberList.do",
+			        	async : false,
+			        	data : {
+			        		deptID : DeptID, 
+			        		cell : "displayname;description;title;telephonenumber", 
+			        		prop : "mail;displayName;description;title",
+			        		type : "user"
+			        	},
+			        	success : function(result){	
+			        		result = loadXMLString(result);
+			        		thead = loadXMLString(document.getElementById("listviewheader2").innerHTML.toUpperCase());
+			        		row = result.getElementsByTagName("ROW");
+			        		
+			        		for(var i = 0; i < row.length; i++){
+			        			if(row[i].getElementsByTagName("DATA2")[0].textContent == UserID){
+			        				row = row[i];
+			        			}
+			        		}
+			        			
+							listv = document.createElement("LISTVIEWDATA");
+							rows = document.createElement("ROWS");
+							rows.appendChild(row);
+							listv.appendChild(rows);
+							
+							document.getElementById("OrganListView").innerHTML = "";
+							var listview = new ListView();
+							listview.SetID("OrganList");
+							listview.SetSelectFlag(false);
+							listview.SetMulSelectable(false);
+							listview.SetRowOnDblClick("ListViewNodeDblClick");
+							listview.DataSource(thead);
+							listview.DataBind("OrganListView");
+							listview.DataSource(listv);
+							listview.RowDataBind();
+						},
+						error : function(error) {
+							alert("<spring:message code='ezBoard.t22'/>" + error);
+						}
+					});
+			}
+
 		    function RequestData(pNodeID, pTreeID) {
 		        var TreeIdx = pNodeID;
 		        var treeNode = new TreeNode();
@@ -383,13 +438,16 @@
 		    
 		    var checkname2_cross_dialogArguments = new Array();
 		    var rgParams = new Array();
+		    var adCount = 0;
+		    var userID = "";
+			var deptID = "";
 		    function cnsearch_click(pMode){
 		        if (cnkeyword.value.replace(/\s/g, "") == ""){
 		            alert("<spring:message code='ezBoard.t23'/>");
 		            cnkeyword.focus();
 		            return;
 		        }
-		        var adCount = 0;		        
+		        adCount = 0;		        
 		        var xmlDOM = createXmlDom();
 
 		        $.ajax({
@@ -397,10 +455,21 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : pMode + "::" + cnkeyword.value, cell : 'company;description;title;displayName;mail', prop : 'department', type : 'user'},
+		        	data : {
+		        		search : pMode + "::" + cnkeyword.value,
+		        		cell : 'company;description;title;displayName;mail',
+		        		prop : 'department',
+		        		type : 'user'
+		        	},
 		        	success : function(result){	
 		        		xmlDOM = loadXMLString(result);
 		                adCount = xmlDOM.getElementsByTagName("ROW").length;
+		                userID = getNodeText(GetElementsByTagName(xmlDOM, "DATA2")[0]);
+						deptID = getNodeText(GetElementsByTagName(xmlDOM, "DATA3")[0]);
+		                
+						if (adCount == 1) {
+							displayUserOne(userID, deptID);
+						}
 		        	},
 		        	error : function(error){
 		        		alert("<spring:message code='ezBoard.t24'/>" + error);
@@ -411,26 +480,18 @@
 		        if (adCount == 0) {
 		            alert("<spring:message code='ezBoard.t25'/>");
 		            return;
-		        } else if (adCount == 1) {
-		            bSearch = true;
-		            g_xmlHTTP = createXMLHttpRequest();
-	                var strQuery = "<DATA><DEPTID>" + getNodeText(GetElementsByTagName(xmlDOM, "DATA3")[0]) + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
-	                
-		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
-		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
-		            g_xmlHTTP.send(strQuery);
-		        } else {
+		        } else if (adCount != 1) {
 		            rgParams["addrBook"] = xmlDOM;
 		            rgParams["deptid"] = "";
 		            
 		            if (CrossYN()){
 		                checkname2_cross_dialogArguments[0] = rgParams;
 		                checkname2_cross_dialogArguments[1] = cnsearch_click_Complete;
-		                var checkName2_Cross = window.open("/admin/ezBoard/checkName.do", "checkName2_Cross", GetOpenWindowfeature(630, 352));
+		                var checkName2_Cross = window.open("/admin/ezBoard/checkName.do", "checkName2_Cross", GetOpenWindowfeature(900, 430));
 		                try { checkName2_Cross.focus(); } catch (e) { }
 		            } else {
-		                var feature = "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken";
-		                feature = feature + GetShowModalPosition(600, 320);
+		                var feature = "dialogHeight:430px; dialogWidth:900px; status:no;scroll:no; help:no; edge:sunken";
+		                feature = feature + GetShowModalPosition(900, 430);
 		                window.showModalDialog("/admin/ezBoard/checkName.do", rgParams, feature);
 
 		                if (rgParams["deptid"] != "") {
@@ -444,18 +505,13 @@
 		            }
 		        }
 		    }
-
-		    function cnsearch_click_Complete(RetValue) {
-		        if (RetValue["deptid"] != "") {
-		            bSearch = true;
-		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + RetValue["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail;displayName</PROP></DATA>";
-		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
-		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
-		            g_xmlHTTP.send(strQuery);
-		        }
-		    }
 		    
+		   //검색한 여러명 중 한 명을 선택할 경우
+				function cnsearch_click_Complete(RetValue) {
+					if ((RetValue["deptid"] != "") && (RetValue["userid"] != "")) {
+						displayUserOne(RetValue["userid"], RetValue["deptid"]);
+					}		
+				}
 		    function infoview_click() {
 		        if (OrganListView.multiSelects.length < 1) {
 		            alert("<spring:message code='ezBoard.t26' />");
@@ -626,6 +682,11 @@
 		  	</LISTVIEWDATA>
 		</xml>
 		<h1><spring:message code='ezBoard.t16' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="return window.close()"></span></li>
+            </ul>
+        </div>
 		<table>
 		  <tr align=left>
 		    <td  colspan="1" id="cnblock" style="height: 30px; background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;" align="right">
@@ -683,7 +744,6 @@
 		</table>
 		<div class="btnposition">
 		  <a class="imgbtn"><span onclick="confirm_onClick()"><spring:message code='ezBoard.t48'/></span></a>
-		  <a class="imgbtn"><span onclick="return window.close()"><spring:message code='ezBoard.t49'/></span></a>
 		</div>
 	</body>
 </html>

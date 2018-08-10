@@ -11,6 +11,8 @@
 		<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link href="/css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
+		<link href="/css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
+		<link href="<spring:message code='ezOrgan.e3'/>" type="text/css" rel="stylesheet" />
 	    <style type="text/css">
 	        .instance.sbHolder{
 	            width: 100%;
@@ -20,13 +22,22 @@
 				font-weight:bold;
 				color:black;
 			}
+ 			#left ul li.ing, #TopBoards ul li.ing{
+				font-weight:normal !important;
+				color:#9b9b9b !important;
+			}
+			#ITEMCONT {
+				width:170px;
+				overflow:hidden;
+				text-overflow:ellipsis;
+			}
 	    </style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery.selectbox-0.2.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
@@ -96,20 +107,20 @@
 		        if(approvalFlag == "G") {
 		        	if(hideCabinet == "0") {
 				        if (g_bRecAdmin || AdminYN == "TRUE") {
-				            document.getElementById("tag07").style.display = "";
-				            document.getElementById("tag08").style.display = "";
+				            /* document.getElementById("tag07").style.display = "";
+				            document.getElementById("tag08").style.display = ""; */
 				            document.getElementById("tag09").style.display = "";
 				            document.getElementById("tag10").style.display = "";
 				        }
 				        else if (g_bDeptCharger) {
-				            document.getElementById("tag07").style.display = "";
-				            document.getElementById("tag08").style.display = "";
-				            document.getElementById("tag09").style.display = "none";
+				            /* document.getElementById("tag07").style.display = "";
+				            document.getElementById("tag08").style.display = ""; */
+				            document.getElementById("tag09").style.display = "";
 				            document.getElementById("tag10").style.display = "none";
 				        }
 				        else {
-				            document.getElementById("tag07").style.display = "none";
-				            document.getElementById("tag08").style.display = "none";
+				            /* document.getElementById("tag07").style.display = "none";
+				            document.getElementById("tag08").style.display = "none"; */
 				            document.getElementById("tag09").style.display = "none";
 				            document.getElementById("tag10").style.display = "none";
 				        }
@@ -129,6 +140,16 @@
 		            treeView.SetNodeClick("UserContNodeClick");
 		            treeView.DataSource(xmlDom2);
 		            treeView.DataBind("divUserContTree");
+
+		            //title3[0].setAttribute("TITLE", title3[0].innerHTML); 
+ 		            $(".node_normal").css("width", "135px");
+ 		            
+					var node = $(".node_normal");
+					
+					for(var i=0; i<node.length; i++) {
+						node[i].setAttribute("TITLE", node[i].innerHTML);
+					} 
+
 		        } 
 			        if (parseInt(pListTypeValue) < 10) {
 			            window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
@@ -191,7 +212,22 @@
 
 	            var treeView = new TreeView();
 	            treeView.LoadFromID(pTreeID);
-	            treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID)
+	            treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID);
+	            
+	            var node = document.getElementById(pNodeID);
+		        var title2 = node.getElementsByClassName("node_div");
+		        var nodeLevel = title2[0].getAttribute("nodelevel");
+		        
+		        if(nodeLevel > 9) {
+		        	nodeLevel = 9;
+		        }
+		        for(var i=0; i<title2.length; i++) {
+		        	var title3 = title2[i].getElementsByClassName("node_normal");
+		        	title3[0].setAttribute("TITLE", title3[0].innerHTML); 
+		        	title3[0].style.width = 135 - 16*(nodeLevel-1) +'px';
+		        	title3[0].style.textOverflow = 'ellipsis';
+		        	title3[0].style.overflow = 'hidden';
+		        }		        
 	        }
 		    
 		    function Tree_setconfig() {
@@ -233,7 +269,7 @@
 	        function MngUserOnclick_Complete(RtnVal) {
 	            TreeViewRefresh();
 	        }
-	        
+
 	        function TreeViewRefresh() {
 	            var xmlHTTP = createXMLHttpRequest();
 	            var strQuery = "<DATA><USERID>" + pUserID + "</USERID><ParentContID>ROOT</ParentContID><NAME></NAME></DATA>";
@@ -251,6 +287,14 @@
 	            treeView.SetNodeClick("UserContNodeClick");
 	            treeView.DataSource(xmlDomRet);
 	            treeView.DataBind("divUserContTree");
+	            
+	            $(".node_normal").css("width", "135px");
+ 		          
+				var node = $(".node_normal");
+					
+				for(var i=0; i<node.length; i++) {
+					node[i].setAttribute("TITLE", node[i].innerHTML);
+				} 
 	        }
 	        
 		    function Open_Func(pthis) {
@@ -321,7 +365,7 @@
 		                    break;
 		            }
 		            parent.frames["right"].$('#sel_year').val("ALL");
-		            parent.frames["right"].$('#sel_year').selectmenu('refresh');
+		            /* parent.frames["right"].$('#sel_year').selectmenu('refresh'); */
 		        }
 		        catch (e) { }
 		    }
@@ -423,7 +467,7 @@
 				            }
 				            try { parent.frames["right"].document.getElementById("txt_keyword").value = ""; } catch (e) { }
 				            parent.frames["right"].$('#sel_year').val("ALL");
-				            parent.frames["right"].$('#sel_year').selectmenu('refresh');
+				            /* parent.frames["right"].$('#sel_year').selectmenu('refresh'); */
 		        		} else {
 				        	if (PresentOpen != "APPROVAL") {
 				                PresentOpen = "APPROVAL";
@@ -554,44 +598,44 @@
 		            ResultXML = xmlhttp_total.responseXML;
 		            
 		            // 결재할 문서
-		            if (pListTypeValue != "1") {
+		            if (pListTypeValue == "1") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) > 0)
-		                    count1.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")</b>";
+		                    count1.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")";
 		                else
 		                    count1.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(0)) + ")";
 		            }
 		            // 결재진행문서
 		            if (pListTypeValue != "3") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(1)) > 0)
-		                    count2.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(1)) + ")</b>";
+		                    count2.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(1)) + ")";
 		                else
 		                    count2.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(1)) + ")";
 		            }
 		            // 기안한문서
 		            if (pListTypeValue != "2") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(2)) > 0)
-		                    count3.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(2)) + ")</b>";
+		                    count3.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(2)) + ")";
 		                else
 		                    count3.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(2)) + ")";
 		            }
 		            // 부서수신함
 		            if (pListTypeValue != "4") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(3)) > 0)
-		                    count4.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(3)) + ")</b>";
+		                    count4.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(3)) + ")";
 		                else
 		                    count4.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(3)) + ")";
 		            }
 		            // 발송의뢰문서
 		            if (pListTypeValue != "6") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) > 0)
-		                    count6.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) + ")</b>";
+		                    count6.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) + ")";
 		                else
 		                    count6.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(4)) + ")";
 		            }
 		            
 		            if (document.getElementById('countWHO') != null) {
 			            if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) > 0)
-		                    document.getElementById('countWHO').innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) + ")</b>";
+		                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) + ")";
 		                else
 		                    document.getElementById('countWHO').innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(10)) + ")";
 		            }
@@ -599,7 +643,7 @@
 		            // 임시보관함
 		            if (pListTypeValue != "21") {
 		                if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) > 0)
-		                    count21.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")</b>";
+		                    count21.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
 		                else
 		                    count21.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(9)) + ")";
 		            }
@@ -615,7 +659,7 @@
 		                } else {
 		                	 if (pListTypeValue != "99") {
 				                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) > 0)
-				                        count99.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")</b>";
+				                        count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
 				                    else
 				                        count99.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(7)) + ")";
 				                }
@@ -631,7 +675,7 @@
 		                } else {
 		                	 if (pListTypeValue != "10") {
 				                    if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) > 0)
-				                    	count10.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")</b>";
+				                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
 				                    else
 				                    	count10.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(8)) + ")";
 				                }
@@ -642,7 +686,7 @@
 		                if (pListTypeValue != "7") {
 		                	if("${userSendOut}" == "YES") {
 		                    	if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) > 0)
-		                        	count7.innerHTML = "<b>(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) + ")</b>";
+		                        	count7.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) + ")";
 		                    	else
 		                        	count7.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) + ")";
 		                		}
@@ -962,7 +1006,7 @@
 		            ${subTitleString}
 				</select>
 			</c:if>
-			<h2><span style="width:100%; display:inline-block;" id="APPROVAL" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t102'/></span></h2>
+			<h2><span style="width:100%; display:inline-block;" id="APPROVAL" onClick="Open_Func(this)"><spring:message code='main.t00018'/></span></h2>
 			<ul id="iconul">
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL1" onClick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1747'/><span id=count1></span></span></li>
 
@@ -975,6 +1019,11 @@
 				<c:if test="${hideSusin != 'N'}">
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL4" onClick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1749'/><span id=count4></span></span></li>
 				</c:if>
+				<c:if test="${approvalFlag == 'G'}">
+					<c:if test="${hideCabinet == '0'}">
+						<li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t10011'/><span id="count99"></span></li>
+					</c:if>
+				</c:if>		
 				<c:if test="${whoKyulYN == '1'}">
 					<li><span id="MYCONTWHO" style="width: 100%; display: inline-block;" onclick="setPresentValue('<spring:message code='ezApproval.pjj34'/>');Open_Func(this)">
 	                <img src="../../images/ImgIcon/icon_afterapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApproval.pjj34'/><span id="countWHO"></span></span></li>
@@ -999,15 +1048,6 @@
 				</c:if>
 	            <li><span id="APPROVAL21" onClick="setPresentValue('<spring:message code='ezApprovalG.t3000'/>');convMain('21','')" ><img src="/images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t3000'/></span><span id=count21></span></li>
 			</ul>
-			<c:if test="${approvalFlag == 'G'}">
-				<c:if test="${hideCabinet == '0'}">
-			        <h2><span style="width:100%; display:inline-block" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><spring:message code='ezApprovalG.t10010'/></span></span></h2>
-			         <ul id="iconul">
-					    <li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t10011'/><span id="count99"></span></li>
-					    <li><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><img src="/images/ImgIcon/icon_enddisplaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1787'/><span id="count10"></span></li>
-					</ul>
-				</c:if>
-			</c:if>
 			<c:if test="${approvalFlag == 'S'}">
 				<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span><ul></ul></h2>
 		        <h2><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj03'/>');convMain('10','')"><spring:message code='ezApprovalG.hyj03'/></span></h2>
@@ -1015,7 +1055,16 @@
 				</ul>
 			</c:if>
 			<c:if test="${approvalFlag == 'G'}">
-			<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApprovalG.t1554'/>');Open_Func(this)"><spring:message code='ezApprovalG.t1554'/></span><ul></ul></h2>
+			<h2><span style="width:100%;display:inline-block;"  id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span><ul></ul></h2>
+			</c:if>
+			<c:if test="${approvalFlag == 'G'}">
+				<c:if test="${hideCabinet == '0'}">
+			        <h2><span style="width:100%; display:inline-block" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><spring:message code='ezApprovalG.t1787'/></span><ul></ul></h2>
+			         <%-- <ul id="iconul">
+					    <li><span style="width:100%; display:inline-block;" id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t10011'/><span id="count99"></span></li>
+					    <li><span style="width:100%; display:inline-block;" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><spring:message code='ezApprovalG.t1787'/><span id="count10"></span></li>
+					</ul> --%>
+				</c:if>
 			</c:if>
 			<h2><span style="width:100%;display:inline-block;"  id="MYDEPTCONT" onClick="setPresentValue('<spring:message code='ezApprovalG.t1755'/>');Open_Func(this)"><spring:message code='ezApprovalG.t1755'/></span></h2>
 			<ul>
@@ -1041,7 +1090,7 @@
 				</c:if>
 			</ul>
 			<c:if test="${approvalFlag == 'S'}">
-			<h2><span id="ITEMCONT" onclick="setPresentValue('<spring:message code='ezApproval.t844'/>');Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t844'/></span></h2>
+			<h2><span id="ITEMCONT" onclick="setPresentValue('<spring:message code='ezApproval.t844'/>');Open_Func(this)" style="display: inline-block;"><spring:message code='ezApproval.t844'/></span></h2>
 			<ul>
           	<c:forEach var="itemList" items="${itemList}" varStatus="status">
           	    <li><span id = "itemList${status.count - 1}" style="width: 100%; display: inline-block;" onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})')">${itemList.taskName}(${itemList.keepingPeriod}) </span></li>
@@ -1050,22 +1099,25 @@
 
         <h2><span id="USERCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t848'/></span></h2>
         <ul>
-            <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff;"></div>
+            <div class="tree" id="divUserContTree" style="height: 160px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 10px; vertical-align: top; background-color: #ffffff; border-bottom:1px solid #eaeaea"></div>
             <h3><span id="MNGUSERCONT"  onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t316'/></span></h3>
         </ul>
         </c:if>
 			<c:if test="${approvalFlag eq 'G'}">
 			<c:if test="${hideCabinet == '0'}">
 			<h2><span style="width:100%;display:inline-block;" id="m01" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t552'/></span><ul></ul></h2>
-			<h2><span style="width:100%;display:inline-block;" id="m02" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span><ul></ul></h2>
 			<h2><span style="width:100%;display:inline-block;" id="m03" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t911'/></span><ul></ul></h2>
+			<h2><span style="width:100%;display:inline-block;" id="m02" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span><ul></ul></h2>
 			<h2><span style="width:100%;display:inline-block;" id="m05" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t905'/></span><ul></ul></h2>
-			<h2><span style="width:100%;display:inline-block;" id="m06" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t906'/></span><ul></ul></h2>
-			<h2 id="tag07"><span style="width:100%;display:inline-block;" id="m07" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t524'/></span><ul></ul></h2>
-			<h2 id="tag08"><span style="width:100%;display:inline-block;" id="m08" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t908'/></span><ul></ul></h2>
-			<h2 id="tag09"><span style="width:100%;display:inline-block;" id="m09" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t909'/></span><ul></ul></h2>
-			<h2 id="tag10"><span style="width:100%;display:inline-block;" id="m10" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t1753'/></span></h2>
+			<h2><span style="width:100%;display:inline-block;" id="m06" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t906'/></span><ul></ul></h2>			
+			<h2 id="tag09"><span style="width:100%;display:inline-block;" id="m07" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t999'/></span></h2>
 			<ul>
+				<li><span style="width:100%;display:inline-block;" id="m07" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t524'/></span></li>
+				<li><span style="width:100%;display:inline-block;" id="m08" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t908'/></span></li>
+			</ul>	
+			<h2 id="tag10"><span style="width:100%;display:inline-block;" id="m09" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t1753'/></span></h2>
+			<ul>
+				<li><span style="width:100%;display:inline-block;" id="m09" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t909'/></span></li>
 				<li><span style="width:100%;display:inline-block;" id="admin_sub01" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.t717'/></span></li>
 				<li><span style="width:100%;display:inline-block;" id="admin_sub02" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.t1754'/></span></li>
 				<li><span style="width:100%;display:inline-block;" id="admin_sub03" onClick="Menu_Click(this)" ><spring:message code='ezApprovalG.t524'/></span></li>

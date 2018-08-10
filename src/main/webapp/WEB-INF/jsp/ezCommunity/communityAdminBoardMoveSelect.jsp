@@ -7,12 +7,24 @@
 		<title><spring:message code = 'ezCommunity.t352' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+		<style>
+			.groupBoard {
+				width:266px;
+				overflow:hidden;
+				text-overflow:ellipsis;
+				display: inline-block;
+			}
+			.node_div span {
+				width:266px;
+				overflow:hidden;
+				text-overflow:ellipsis;
+			}
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/TreeView.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
 	        var selectedBoard = "";
@@ -33,20 +45,19 @@
 		    var board_alertArguments = new Array();
 		    board_alertArguments[1] = DivPopUpHidden;
 			
+		    /* 2018-08-06 홍승비 - 대상게시판선택 레이어팝업 추가, 게시물 이동+복사 팝업창과 같도록 UI 통일 */
 			function Select() {
 			    var objGList = document.all("GChkBox");
 	
 			    if (SelectedBoardID == "" && tmpSelectedBoardGroupID == "") {
 			    	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezCommunity.t356' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezCommunity.t356'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
-// 			        alert("<spring:message code = 'ezCommunity.t356' />");
 				    return;
 				}
 	
 			    if (SelectedBoardID == BoardID) {
 			    	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezCommunity.t357' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezCommunity.t357'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
-// 			        alert("<spring:message code = 'ezCommunity.t357' />");
 				    return;
 				}
 	
@@ -236,11 +247,15 @@
 			}
 		</script>
 	</head>
-	<body class="popup" style="overflow: hidden">
+	<body class="popup">
 		<h1><spring:message code = 'ezCommunity.t359' /></h1>
-		
-        <div class="box" style="width: 320px; height: 550px; overflow: auto; word-break: break-all;border-top:0px" id="TopBoardsList"></div>
-        <div class="btnposition">
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
+        <div class="box" style="height: 485px; overflow: auto; word-break: break-all;border-top:0px" id="TopBoardsList"></div>
+        <div class="btnpositionNew">
             <a class="imgbtn" name="Submit" onclick="Select()"><span><spring:message code = 'ezCommunity.t278' /></span></a>
         </div>
         <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>

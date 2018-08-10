@@ -8,7 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -481,7 +481,7 @@
 		    	FormConnInfo_dialogarguments[0] = "";
 		        FormConnInfo_dialogarguments[1] = FormConnInfo_onclick_Complete;
 		        var url = "/admin/ezApprovalG/formConnInfo.do?companyID=" + encodeURIComponent(companyID);
-		        GetOpenWindow(url, "FormConnInfo", 430, 450, "NO");
+		        GetOpenWindow(url, "FormConnInfo", 440, 480, "NO");
 		    }
 		    
 		    function FormConnInfo_onclick_Complete(retVal) {
@@ -810,7 +810,7 @@
         </div>
         <div id="close">
             <ul>
-                <li><span id="btnClose" onClick="return btnClose_onclick()"><spring:message code = 'ezApprovalG.t64' /></span></li>
+                <li><span id="btnClose" onClick="return btnClose_onclick()"></span></li>
             </ul>
         </div>
         <div class="portlet_tabpart01">

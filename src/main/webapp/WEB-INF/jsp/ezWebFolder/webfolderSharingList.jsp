@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,26 +8,26 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1' />" type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" />
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css" />
-		<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>	
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/fileFolderDrop.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/pageNav.js")%>"></script>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>" />
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css" />
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.css")%>" type="text/css" />
 		<!-- datepicker -->
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.js")%>"></script>
 		<!-- module -->
-		<script type="text/javascript" src="/js/ezWebFolder/context/row-selector.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/context/favorite.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/context/buttons.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/context/search.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/context/share.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/selectUsers.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/popup.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/row-selector.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/favorite.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/buttons.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/search.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/share.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/selectUsers.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/popup.js")%>"></script>
 		<script type="text/javascript">
 			var folderId = "";
 			var isShareMode = true;
@@ -35,7 +36,7 @@
 			
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
-				var reheight = document.documentElement.clientHeight - 200;
+				var reheight = document.documentElement.clientHeight - 210;
 				document.getElementById("dragDropArea").style.height = reheight + "px";
 				
 				reheight = document.documentElement.clientHeight - 100;
@@ -320,7 +321,8 @@
 			// folderPath 는 숫자 
 			function setNamePath(folderPath, originalPath) {
 				var orginalPathElmt = document.getElementById("originalPath");
-				var nameTag = document.createElement("span");
+				var nameTag = document.createElement("div");
+				nameTag.setAttribute("class", "mainPath");
 				var originPath;
 				
 				// for statement using
@@ -332,16 +334,19 @@
 				orginalPathElmt.appendChild(nameTag);
 				
 				if (folderPath == null) {
-					detailName = document.createElement("span");
+					detailName = document.createElement("div");
 					detailName.className = "aName";
-					detailName.textContent = "공유한목록";
-					detailName.setAttribute("style", "font-size:15px; ");
 					detailName.onclick = function() {
 						isShareMode = true;
 						isSubSearching = "N";
 						nameFileList("");
 					};
 					
+					var divName = document.createElement("div");
+					divName.textContent = "<spring:message code='ezWebFolder.t267'/>";
+					divName.setAttribute("style", "font-size:15px;");
+					
+					detailName.appendChild(divName);
 					nameTag.appendChild(detailName);
 					return;
 				}
@@ -352,7 +357,8 @@
 				length = path.length - 1;
 				
 				for (var i = 0; i < length; i++) {
-					detailName = document.createElement("span");
+					detailName = document.createElement("div");
+					var divName = document.createElement("div");
 					
 					detailName.className = "aName";
 					detailName.id = originPath[i];
@@ -360,17 +366,17 @@
 						nameFileList(this.id);
 					};
 
-					detailName.textContent = path[i] ;
+					divName.textContent = path[i] ;
 					/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 */
-					detailName.setAttribute("style", "font-size:15px; ");
+					divName.setAttribute("style", "font-size:15px;");
+					detailName.appendChild(divName);
 					nameTag.appendChild(detailName);
 					
-					if(length == 1) {
-						detailName = document.createElement("span");
-						/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 및 꺽새 추가 */
-						detailName.textContent =  " > " + messages.strLang17 + " "; // 모든파일
-						detailName.setAttribute("style", "font-size:15px;");
-						nameTag.appendChild(detailName);
+					if (length == 1) {
+						var divSeparator = document.createElement("div");
+						divSeparator.setAttribute("class", "separator");
+						divSeparator.textContent =  " > " + messages.strLang17 + " "; // 모든파일
+						nameTag.appendChild(divSeparator);
 					}
 					
 					/* 2018-05-07 장진혁 - 이미지 태그 안씀 */
@@ -379,9 +385,10 @@
 					imgElmt.src = "/images/webfolder/arrow2.png"; */
 					
 					if (i != length - 1) {
-						detailName = document.createElement("span");
-						detailName.textContent = " > ";
-						nameTag.appendChild(detailName);
+						var divSeparator = document.createElement("div");
+						divSeparator.setAttribute("class", "separator");
+						divSeparator.textContent = " > ";
+						nameTag.appendChild(divSeparator);
 					}	
 				}
 			}
@@ -911,11 +918,8 @@
 		</h1>
 		
 		<div id="pageArea">
-			<!-- pagenation이 namePath로 움직이지 않도록 설정 -->
-			<div id="originalPathWrapper" style="height: 40px;">
-				<span style="font-size: 24px; font-weight: bold; font-weight: bold; display: block; float: left;" id="originalPath">
-					<span class="aName" style="font-size:15px;" onClick="getFileList();"><spring:message code='ezWebFolder.t267' /></span>
-				</span>
+			<div style="height: 40px;">
+				<div style="font-size: 24px; font-weight: bold; padding: 8px 4px 0px;" id="originalPath"></div>
 			</div>
 			
 			<div id="mainmenu">
@@ -925,15 +929,15 @@
 					<li><a onclick="buttons.fileDelete()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t274'/></span></a></li>
 					<li><a onclick="buttons.fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
 					<li><a onclick="buttons.fileMoveAndCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
-					<li><img src="/images/i_bar.gif"></li>
+					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li id="addShareBtn" style="display:none"><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t254'/></span></a></li>
 					<li id="modifyShareBtn"><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t217'/></span></a></li>
 					<li id="deleteShareBtn"><a onclick="shareContext.deleteShare()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t218'/></span></a></li>
-					<li><img src="/images/i_bar.gif"></li>
+					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li><span onclick="favoriteContext.toggleAll()"><spring:message code='ezWebFolder.t281'/></span></li>
 					<li id="SearchOption" mode="off" onclick="doLayerPopup(this)"><span><spring:message code='ezWebFolder.t123'/></span></li>
 					<li><a onclick="refreshView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t139'/></span></a></li>
-					<li><img src="/images/i_bar.gif"></li>
+					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li style="height: 28px;">
 						<select id="fileTypeSelect" class="select" onchange="onFileTypeChange(this.value);">
 							<option value=""><spring:message code='ezWebFolder.t191'/></option>
@@ -1019,15 +1023,15 @@
 			<div id="tblPageRayer"></div>
 		</div>
 		
-		<div id="searchpopup" class="popupwrap3" style="display:none;padding-top:20px;padding-bottom:20px;margin-bottom:70px">
-			<div class="popupwrap4">
-				<table class="content" style="margin-top:10px;">  
-					<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" width="16px" style="vertical-align: middle;padding-bottom:1px"/>&nbsp;<spring:message code='ezWebFolder.t10' />&nbsp;<spring:message code='ezWebFolder.t123' /></th>
-					</tr>
-					<tr>
-						<td style="border-left-color:white;border-right-color:white;height:10px" colspan="2"></td>
-					</tr>
+		<div id="searchpopup" class="popupwrap3" style="display:none;margin-bottom:70px">
+			<div class="popupJQLayer" style="padding-top:6px">
+				<div class="title"><spring:message code='ezWebFolder.t10' /><spring:message code='ezWebFolder.t123' /></div>
+				<div id="close">
+		            <ul>
+		                <li><a rel="modal:close"><span onclick="searchOptionHidden()"></span></a></li>
+		            </ul>
+		        </div>
+				<table class="content" style="margin-top:10px;">
 					<tr>
 			           <th style="text-align:center"><spring:message code='ezBoard.t210' /></th>
 			           <td>
@@ -1050,12 +1054,12 @@
 			            <td><input type="text" id="searchCreateName" style="width:99%" value="" name="searchCreateName"></td>
 			        </tr>    
 				</table>
-				<br/>
 				<table style="width:100%">
 					<tr>
 						<td style="text-align:center;">
-							<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142' /></span></a>
-							<a class="imgbtn" rel="modal:close"><span onClick="searchOptionHidden()"><spring:message code='ezAddress.t11' /></span></a>
+							<div class="btnpositionLayer">
+								<a class="imgbtn"><span onClick="search('basic')"><spring:message code='ezAddress.t142' /></span></a>
+							</div>	
 						</td>
 					</tr>
 				</table>

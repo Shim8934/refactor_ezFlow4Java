@@ -275,7 +275,7 @@ function CalendarMiniDataSource() {
 			ENDDATE : sEndDate,
 			APP : "0",
 			GROUPID : groupid,
-			IDLIST : "P"
+			IDLIST : "T"
 		},
 		success: function(text){
 			getCalendarMiniDataSource_after(text)

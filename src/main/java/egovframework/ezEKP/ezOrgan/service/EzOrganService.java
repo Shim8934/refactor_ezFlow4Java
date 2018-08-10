@@ -34,7 +34,7 @@ public interface EzOrganService {
 
 	public String getUserAddjobInfo(String id, String pDeptID, String primary, int tenantID) throws Exception;	
 	
-	public String getOrganTreeInfo(String strFilter, int intScope, String strBaseDN) throws Exception;
+	public String getOrganTreeInfo(String strFilter, int intScope) throws Exception;
 	
 	public String getEncPassword(String dUserID, int tenantID) throws Exception;
 	
@@ -58,7 +58,7 @@ public interface EzOrganService {
 
 	public String getDeptReceipterIDs(String deptID, int tenantID) throws Exception;
 
-	public OrganProxyVO getProxyInfo(String userID, int tenantID) throws Exception;
+	public OrganProxyVO getProxyInfo(String userID, int tenantID, String offset) throws Exception;
 	
 	public List<String> getAllSubDeptId(String deptID, int tenantID) throws Exception;
 	
@@ -66,9 +66,9 @@ public interface EzOrganService {
 
 	public String getOrganSubTreeInfo(String strFilter, String strBaseDN, int intScope) throws Exception;
 
-	public String getOrgInfo(String strBaseDN, String strFilter, int intScope) throws Exception;
+	public String getOrgInfo(String strFilter, int intScope) throws Exception;
 
-	public String searchOuterOrgan(String strFilter, int intScope, String strBaseDN) throws Exception;
+	public String searchOuterOrgan(String strFilter, int intScope) throws Exception;
 
 	public List<OrganDeptVO> getExtensionAttr4ID(String strReceiveID) throws Exception;
 	
@@ -83,4 +83,10 @@ public interface EzOrganService {
 	public String setListType(String listType, String userID, int tenantID, String companyID) throws Exception;
 
 	public String getListType(String userID, int tenantID, String companyID) throws Exception;
+
+	public String getSearchListOR(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID) throws Exception;
+
+	public int getMemberListCount2(String pDeptID, List<String> companyList, int totalCount2, String containCompany, int tenantId) throws Exception;
+	
+	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID) throws Exception;
 }

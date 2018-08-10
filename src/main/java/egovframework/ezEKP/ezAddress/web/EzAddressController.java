@@ -289,6 +289,9 @@ public class EzAddressController{
 			sb.append("<DISPLAYNAME>" + pFolderName + "</DISPLAYNAME>");
 			
 			for (AddressVO vo : addressList) {
+				String sType = vo.getsType();
+				String sEmail = sType.equals("G") ? egovMessageSource.getMessage("ezBoard.t18", userInfo.getLocale()) : commonUtil.cleanValue(vo.getsEmail());
+				
 				sb.append("<ROW>");
 				sb.append("<ADDRESSID>" + vo.getAddressId() + "</ADDRESSID>");
 				sb.append("<CREATORID>" + vo.getCreatorId() + "</CREATORID>");
@@ -299,9 +302,9 @@ public class EzAddressController{
 				sb.append("<SCOMPANY>" + commonUtil.cleanValue(vo.getsCompany()) + "</SCOMPANY>");
 				sb.append("<SCOMPANYPHONE>" + commonUtil.cleanValue(vo.getsCompanyPhone()) + "</SCOMPANYPHONE>");
 				sb.append("<SMOBILE>" + commonUtil.cleanValue(vo.getsMobile()) + "</SMOBILE>");
-				sb.append("<SEMAIL>" + commonUtil.cleanValue(vo.getsEmail()) + "</SEMAIL>");
-				sb.append("<STYPE>" + vo.getsType() + "</STYPE>");
-				sb.append("</ROW>");
+				sb.append("<SEMAIL>" + sEmail + "</SEMAIL>");
+				sb.append("<STYPE>" + sType + "</STYPE>");
+				sb.append("</ROW>");				
 			}
 			
 			sb.append("</DATA>");
@@ -392,6 +395,7 @@ public class EzAddressController{
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
+		model.addAttribute("userLang", userInfo.getLang());
 		
 		logger.debug("addressWrite ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId
@@ -778,20 +782,19 @@ public class EzAddressController{
 		
 		AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), pAddressId);
 		String address = addressInfo.getsMemo();
-		StringBuilder listMember = new StringBuilder();
 		
+		List<String> listMember = new ArrayList<String>();
 		int listMemberSize = 0;
 		
         if (address != null && !address.trim().equals("")) {
-	        	String[] addrList = address.split(";");
-	        	listMemberSize = addrList.length;
-        	
-	        	for (String addr : addrList) {
-	        		logger.debug("addr Before=" + addr);
+	        	String[] addressArr = address.split(";");
+	        	
+	        	for (String addr : addressArr) {
 	        		addr = EgovStringUtil.getSpclStrCnvr(addr).replaceAll("\"", "");
-	        		addr = "<option title='"+ addr +"'>" + addr + "</option>";
-	        		listMember.append(addr);
+	        		listMember.add(addr);
 	        	}
+	        	
+	        	listMemberSize = listMember.size();
         }
         
 		String dateInUserTimeZone = commonUtil.getDateStringInUTC(addressInfo.getCreateDate(), userInfo.getOffset(), false);
@@ -806,7 +809,7 @@ public class EzAddressController{
         model.addAttribute("pAddressId", pAddressId);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("addressInfo", addressInfo);
-		model.addAttribute("listMember", listMember.toString());
+		model.addAttribute("listMember", listMember);
 		model.addAttribute("listMemberSize", listMemberSize);
 		model.addAttribute("compAdmin", compAdmin);
 		model.addAttribute("deptAdmin", deptAdmin);
@@ -816,7 +819,7 @@ public class EzAddressController{
 		
 		logger.debug("addressReadGroup ended.");
 		logger.debug("pFolderType=" + pFolderType + ",pAddressId=" + pAddressId + ",userInfo=" + userInfo + ",addressInfo=" + addressInfo
-				 + ",listMember=" + listMember.toString() + ",listMemberSize=" + listMemberSize + ",compAdmin=" + compAdmin + ",deptAdmin=" + deptAdmin
+				 + ",listMemberSize=" + listMemberSize + ",compAdmin=" + compAdmin + ",deptAdmin=" + deptAdmin
 				 + ",useEditor=" + useEditor + ",noneActiveX=" + noneActiveX);
 		
 		return "ezAddress/addressReadGroup";
@@ -1693,14 +1696,14 @@ public class EzAddressController{
 			
 			List<AddressVO> addressList = null;
 			int totalCount = 0;
+
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
 			if (searchGubun.equals("Y")) {
 				//TODO: Y로 올 경우가 없는 것 같음.
 				// 여기로 넘어오는지 테스트해보고 안넘어오면 지우기. 넘어오면 코딩하기.
 				logger.error("searchGubun=Y. Need more code. Location:EzAddressController 1367");
 			} else {
-				LoginVO userInfo = commonUtil.userInfo(loginCookie);
-				
 				totalCount = ezAddressService.getAddressCount(userInfo.getTenantId(), folderId, ownerId, "");
 				addressList = ezAddressService.getAddressList(userInfo.getTenantId(), folderId, ownerId, orderBy, "", pageSize, (currentPage - 1) * pageSize);
 			}
@@ -1715,6 +1718,9 @@ public class EzAddressController{
 			sb.append("<DATA>");
 			
 			for (AddressVO addressInfo : addressList) {
+				String sType = addressInfo.getsType();
+				String sEmail = sType.equals("G") ? egovMessageSource.getMessage("ezBoard.t18", userInfo.getLocale()) : commonUtil.cleanValue(addressInfo.getsEmail());
+				
 				sb.append("<ROW>");
 				sb.append("<ADDRESSID>" + addressInfo.getAddressId() + "</ADDRESSID>");
 				sb.append("<CREATORID>" + addressInfo.getCreatorId() + "</CREATORID>");
@@ -1725,8 +1731,8 @@ public class EzAddressController{
 				sb.append("<SCOMPANY>" + commonUtil.cleanValue(addressInfo.getsCompany()) + "</SCOMPANY>");
 				sb.append("<SCOMPANYPHONE>" + commonUtil.cleanValue(addressInfo.getsCompanyPhone()) + "</SCOMPANYPHONE>");
 				sb.append("<SMOBILE>" + commonUtil.cleanValue(addressInfo.getsMobile()) + "</SMOBILE>");
-				sb.append("<SEMAIL>" + commonUtil.cleanValue(addressInfo.getsEmail()) + "</SEMAIL>");
-				sb.append("<STYPE>" + addressInfo.getsType() + "</STYPE>");
+				sb.append("<SEMAIL>" + sEmail + "</SEMAIL>");
+				sb.append("<STYPE>" + sType + "</STYPE>");
 				sb.append("<FOLDERTYPE>" + folderType + "</FOLDERTYPE>");
 				sb.append("</ROW>");
 			}
@@ -1825,6 +1831,9 @@ public class EzAddressController{
 			sb.append("<DATA>");
 			
 			for (AddressVO addressInfo : addressList) {
+				String sType = addressInfo.getsType();
+				String sEmail = sType.equals("G") ? egovMessageSource.getMessage("ezBoard.t18", userInfo.getLocale()) : commonUtil.cleanValue(addressInfo.getsEmail());
+				
 				sb.append("<ROW>");
 				sb.append("<ADDRESSID>" + addressInfo.getAddressId() + "</ADDRESSID>");
 				sb.append("<CREATORID>" + addressInfo.getCreatorId() + "</CREATORID>");
@@ -1835,8 +1844,8 @@ public class EzAddressController{
 				sb.append("<SCOMPANY>" + commonUtil.cleanValue(addressInfo.getsCompany()) + "</SCOMPANY>");
 				sb.append("<SCOMPANYPHONE>" + commonUtil.cleanValue(addressInfo.getsCompanyPhone()) + "</SCOMPANYPHONE>");
 				sb.append("<SMOBILE>" + commonUtil.cleanValue(addressInfo.getsMobile()) + "</SMOBILE>");
-				sb.append("<SEMAIL>" + commonUtil.cleanValue(addressInfo.getsEmail()) + "</SEMAIL>");
-				sb.append("<STYPE>" + addressInfo.getsType() + "</STYPE>");
+				sb.append("<SEMAIL>" + sEmail + "</SEMAIL>");
+				sb.append("<STYPE>" + sType + "</STYPE>");
 				sb.append("<FOLDERTYPE>" + pFolderType + "</FOLDERTYPE>");
 				sb.append("</ROW>");
 			}
@@ -1916,6 +1925,7 @@ public class EzAddressController{
 			csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, "\r\n");
 			
 	        String[] headerArray = egovMessageSource.getMessage("ezAddress." + format, locale).split(";");
+	        int headerLength = headerArray.length;
 	        
 	        csvWriter.writeNext(headerArray);
 	        csvWriter.flush();
@@ -1923,7 +1933,7 @@ public class EzAddressController{
 	        List<AddressVO> addressList = ezAddressService.getAllAddressList(userInfo.getTenantId(), folderId, ownerId, "", null);
 	        
 	        for (AddressVO address : addressList) {
-	        	String[] valueArray = new String[87];
+	        	String[] valueArray = new String[headerLength];
 	        	Arrays.fill(valueArray, "");
 	        	
 	        	if (format.equals("outlookCSV")) {

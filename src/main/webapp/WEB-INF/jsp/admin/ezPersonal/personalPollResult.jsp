@@ -31,13 +31,9 @@
 		<h1>Quick Poll</h1>
 		<div id="close">
 			<ul>
-				<li><span onClick="close_btn()"><spring:message code = 'ezPersonal.t10' /></span></li>
+				<li><span onClick="close_btn()"></span></li>
 			</ul>
 		</div>
-		
-		<script type="text/javascript">
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
-		</script>
 		 
 		<table>
 			<tr>
@@ -63,7 +59,7 @@
 	 									<x:out select = '$xml/PERCENT' />
 	 								</c:set>
 	 								
- 									<td style="width:<c:out value='${percent * 4}' />px;background-color:#68bbef"></td>
+ 									<td style="width:<c:out value='${percent * 4}' />px;background-color:rgb(245, 117, 120)"></td>
                                  	<td style="width:<c:out value='${400 - percent * 4}' />px;"></td>
                               	</tr> 
 	 						</table>

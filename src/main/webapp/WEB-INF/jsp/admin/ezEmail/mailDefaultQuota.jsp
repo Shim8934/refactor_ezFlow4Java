@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -9,9 +9,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/Common.js")%>"></script>
 		<script type="text/javascript">            
             function Save(pPath)
             {
@@ -129,10 +129,16 @@
                 return isNum;
             }
             function valuePlus(target){
+            	if (target.value == "") {
+            		target.value = 0.0;
+            	}
             	var num = parseFloat(target.value) + parseFloat('1');
             	target.value = num.toFixed(1);
             }
 			function valueMinuse(target){
+            	if (target.value == "") {
+            		target.value = 0.0;
+            	}
 				var num = parseFloat(target.value) - parseFloat('1');
 				if (num >= 0) {
 	            	target.value = num.toFixed(1);
@@ -151,9 +157,9 @@
 		            <td style="width:115px; border-right:1px solid #dbdbda;">
 		                <input id="defaultWarn" type="text" onkeyup="return Mark1000Sep(this)" value="${defaultWarn}" style="width:83%; text-align:right"> GB
 		            </td>
-		        	<td style="width:40px; /* background-color: #f8f8fa; */">
-		        		<img src="/images/plusicon.png" width="20" height="20"style="cursor:pointer" onClick="valuePlus(defaultWarn);">
-		        		<img src="/images/minusicon.png" width="20" height="20"style="cursor:pointer" onClick="valueMinuse(defaultWarn)">
+		        	<td style="width:40px;text-align: center">
+		        		<img src="/images/plusicon.png" style="cursor:pointer" onClick="valuePlus(defaultWarn);">
+		        		<img src="/images/minusicon.png" style="cursor:pointer" onClick="valueMinuse(defaultWarn)">
 		        	</td>
 		        </tr>     
 		        <tr>
@@ -161,16 +167,16 @@
 		            <td style="width:115px; border-bottom:0px; border-right:1px solid #dbdbda;">
 		                <input id="defaultMax" type="text" onkeyup="return Mark1000Sep(this)" value="${defaultMax}" style="width:83%; text-align:right"> GB
 		            </td>
-		        	<td style="width:40px; /* background-color: #f8f8fa; */">
-		        		<img src="/images/plusicon.png" width="20" height="20" style="cursor:pointer" onClick="valuePlus(defaultMax)">
-		        		<img src="/images/minusicon.png" width="20" height="20" style="cursor:pointer" onClick="valueMinuse(defaultMax)">
+		        	<td style="width:40px;text-align: center">
+		        		<img src="/images/plusicon.png" style="cursor:pointer" onClick="valuePlus(defaultMax)">
+		        		<img src="/images/minusicon.png" style="cursor:pointer" onClick="valueMinuse(defaultMax)">
 		        	</td>
 		        </tr>
 		    </table>
 	    </div>
-    <div style="padding-top: 15px;" align="center">
-	    <a href="#" class="imgbtn"><span onClick="Save('')"><spring:message code='main.sp09' /></span></a>
-    </div>
+	    <div class="btnpositionJsp">
+		    <a href="#" class="imgbtn"><span onClick="Save('')"><spring:message code='main.sp09' /></span></a>
+	    </div>
     </div>
   </body>
 </html>

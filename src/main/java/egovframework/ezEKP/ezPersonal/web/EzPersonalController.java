@@ -171,11 +171,17 @@ public class EzPersonalController extends EgovFileMngUtil {
 //				proxyInfo2 = proxyInfo.split(":")[0] + ":" + proxyInfo.split(":")[1] + ":" + proxyInfo.split(":")[3] + ":" + proxyInfo.split(":")[4];
 //			}
 			
-			if (proxyInfo.split(":")[0].trim().equals("")) {
+		/*	if (proxyInfo.split(":")[0].trim().equals("")) {
 				result = ezOrganService.delProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
 			} else {
 				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split(":")[0], proxyInfo.split(":")[1], proxyInfo.split(":")[2], proxyInfo.split(":")[3]+":"+proxyInfo.split(":")[4].replace("/", ":"), proxyInfo.split(":")[5]+":"+proxyInfo.split(":")[6].replace("/", ":"), userInfo.getTenantId(), userInfo.getOffset());
+			}*/
+			if (proxyInfo.split("|")[0].trim().equals("")) {
+				result = ezOrganService.delProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
+			} else {
+				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split("\\|")[0], proxyInfo.split("\\|")[1], proxyInfo.split("\\|")[2], proxyInfo.split("\\|")[3], proxyInfo.split("\\|")[4], userInfo.getTenantId(), userInfo.getOffset());
 			}
+			
 		}
 
 		logger.debug("saveBujae ended");
@@ -347,14 +353,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 				proxyUserID = xmlDom.getElementsByTagName("PROXYUSERID").item(0).getTextContent();
 				proxyDeptID = xmlDom.getElementsByTagName("PROXYUSERDEPTID").item(0).getTextContent();
 				proxyUserName = xmlDom.getElementsByTagName("PROXYUSERNAME").item(0).getTextContent();
+				/*startDate = commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent().substring(0, 16), userInfo.getOffset(), false);
+				endDate = commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("ENDDATE").item(0).getTextContent().substring(0, 16), userInfo.getOffset(), false);*/
 				startDate = xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent();
 				endDate = xmlDom.getElementsByTagName("ENDDATE").item(0).getTextContent();
-				
-				startDate = startDate.substring(0, startDate.length()-2);
-				endDate = endDate.substring(0, endDate.length()-2);
-				
-				startDate = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), false);
-				endDate = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), false);
 				
 				textProxyName = proxyUserName;
 			}
@@ -500,7 +502,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		int currentPage;
-		int pageSize = 10;
+		int pageSize = 15;
 		boolean isPollEmpty = false;
 		String votePoll = "";
 		
@@ -549,6 +551,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("pageCount", pageCount);
 		model.addAttribute("totalCount", totalCount);
 		model.addAttribute("isPollEmpty", isPollEmpty);
+		model.addAttribute("pageSize", pageSize);
 
 		logger.debug("homePollListUser ended");
 		return "ezPersonal/persHomePollListUser";
@@ -579,12 +582,24 @@ public class EzPersonalController extends EgovFileMngUtil {
 				} else {
 					labelPollTitle = result.getPollTitle();
 				}
+				//2018-07-26 김보미 - title ellipsis처럼 보이게 처리
+				String pollTitle = labelPollTitle;
+				if (labelPollTitle.length() > 93) {
+					pollTitle = labelPollTitle.substring(0, 92) + "...";
+				}
+				
+				labelPollTitle = "<span title='" + labelPollTitle + "'>" + pollTitle + "</span>";
 				
 				pollSeq = String.valueOf(result.getItemSeq());
 				int count = Integer.parseInt(result.getPollSelectionCount());
-				
+				//2018-07-26 김보미 - ellipsis처리하기 위해 div추가
+//				for (int i=0; i<count; i++) {
+//					answer += "<input type=radio name='answer' id='answer" + i + "' value=" + (i + 1) + "><label for='answer" + i + "' style='cursor:pointer''>" + xmlDom.getElementsByTagName("ANSWER"+(i+1)).item(0).getTextContent() + "</label><br>";
+//				}
 				for (int i=0; i<count; i++) {
+					answer += "<div class='line_ellipsis' title='" + xmlDom.getElementsByTagName("ANSWER"+(i+1)).item(0).getTextContent() + "'>";
 					answer += "<input type=radio name='answer' id='answer" + i + "' value=" + (i + 1) + "><label for='answer" + i + "' style='cursor:pointer''>" + xmlDom.getElementsByTagName("ANSWER"+(i+1)).item(0).getTextContent() + "</label><br>";
+					answer += "</div>";
 				}
 				
 				literalAnswer = answer;
@@ -619,6 +634,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String title = "";
 		int totalCount = 0;
 		String subject = "";
+		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
+		String subjectCont = "";
 		
 		String itemSeq = req.getParameter("itemSeq");
 		
@@ -678,31 +695,70 @@ public class EzPersonalController extends EgovFileMngUtil {
 				
 				resultDom.getElementsByTagName("PERCENT").item(i).setTextContent(String.format("%.1f", temp));
 			}
-			
-			subject += " - " + egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
+			//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
+			subjectCont = subject;
+			if (subject.length() > 86) {
+				subjectCont = subject.substring(0, 86) + "...";
+			}
+			//subject += " - " + egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
+			subjectCont += " - " + egovMessageSource.getMessage("ezPersonal.t248", locale) + totalCount + egovMessageSource.getMessage("ezPersonal.t249", locale);
+		}
+		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
+		else {
+			subjectCont = subject;
+			if (subject.length() > 93) {
+				subjectCont = subject.substring(0, 92) + "...";
+			}
 		}
 		
 		String strHtml = "";
+		//2018-07-26 김보미 - 설문결과 내용부분 수정
+//		for (int i=0; i<resultDom.getElementsByTagName("ROW").getLength(); i++) {
+//			strHtml += "<span class='txt'>"+resultDom.getElementsByTagName("TITLE").item(i).getTextContent()+"</b>(<b>"+resultDom.getElementsByTagName("COUNT").item(i).getTextContent()+"</b>"+egovMessageSource.getMessage("ezPersonal.t247", locale) + "<span class='point'>"+resultDom.getElementsByTagName("PERCENT").item(i).getTextContent()+"</span>%)</span>";
+//			strHtml += "<table style='border:1px solid #c9c9c9;width:100%;height:12px;background-image:url(/images/quickpoll_bg.gif);'>";
+//			strHtml += "<tr>";
+//			strHtml += "<td style='width:"+Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4 +"px;background-color:rgb(245, 117, 120)'></td>";
+//			//pollResult 전자설문 그래프부분 브라우저에 따라 width px 조건에 맞게 처리
+//			if (req.getHeader("User-Agent").indexOf("Trident") > 0 || req.getHeader("User-Agent").indexOf("MSIE") > 0) {
+//				strHtml += "<td style='width:"+(400-Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4)+"px;'></td>";
+//			} else {
+//				strHtml += "<td style='width:"+(408-Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4)+"px;'></td>";
+//			}
+//			strHtml += "</tr>";
+//			strHtml += "</table>";
+//			strHtml += "<br>";
+//		}
 		for (int i=0; i<resultDom.getElementsByTagName("ROW").getLength(); i++) {
-			strHtml += "<span class='txt'>"+resultDom.getElementsByTagName("TITLE").item(i).getTextContent()+"</b>(<b>"+resultDom.getElementsByTagName("COUNT").item(i).getTextContent()+"</b>"+egovMessageSource.getMessage("ezPersonal.t247", locale) + "<span class='point'>"+resultDom.getElementsByTagName("PERCENT").item(i).getTextContent()+"</span>%)</span>";
-			strHtml += "<table style='border:1px solid #c9c9c9;width:100%;height:12px;background-image:url(/images/quickpoll_bg.gif);'>";
-			strHtml += "<tr>";
-			strHtml += "<td style='width:"+Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4 +"px;background-color:#68bbef'></td>";
-			//pollResult 전자설문 그래프부분 브라우저에 따라 width px 조건에 맞게 처리
-			if (req.getHeader("User-Agent").indexOf("Trident") > 0 || req.getHeader("User-Agent").indexOf("MSIE") > 0) {
-				strHtml += "<td style='width:"+(400-Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4)+"px;'></td>";
-			} else {
-				strHtml += "<td style='width:"+(408-Double.parseDouble(resultDom.getElementsByTagName("PERCENT").item(i).getTextContent())*4)+"px;'></td>";
-			}
-			strHtml += "</tr>";
-			strHtml += "</table>";
-			strHtml += "<br>";
+			strHtml +=
+			"<div class='poll_list1'>" + 								    
+					"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
+						"<div class='Pt_QstOptTitleDiv' style='width: 315px;' title='" + resultDom.getElementsByTagName("TITLE").item(i).getTextContent() + "'>" + resultDom.getElementsByTagName("TITLE").item(i).getTextContent() + "</div>" +
+						"<div id='info" + i + "' class='Pt_QstInfoDiv'>&nbsp" + 
+							 "<span class='Pt_QstInfoVotes'>"+ resultDom.getElementsByTagName("COUNT").item(i).getTextContent() + "</span>" +
+							 egovMessageSource.getMessage("main.t20000", locale) + "/" ;
+							 if (resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0")) {
+								 strHtml += "<span class='Pt_QstInfoPercent'>" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + ".0</span>";
+							 } else {
+								 strHtml += "<span class='Pt_QstInfoPercent'>" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + "</span>";
+							 }
+						 strHtml += "%</div>"+
+					"</div>" +
+					"<div class='graphbar1' id='divGraph" + i + "' style='display: block;'>" ;
+						if (resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0.0") || resultDom.getElementsByTagName("PERCENT").item(i).getTextContent().equals("0")) {
+							strHtml += "<p id='graph" + i + "' class='gx_bar11' style='display: none;'></p>";
+						} else {
+							strHtml += "<p id='graph" + i + "' class='gx_bar11' style='width:" + resultDom.getElementsByTagName("PERCENT").item(i).getTextContent() + "%;'></p>" ;
+						}
+					strHtml += "</div>"+	
+				"</div>";
 		}
 		
 		model.addAttribute("listPoll", resultDom);
 		model.addAttribute("subject", subject);
 		model.addAttribute("strHtml", strHtml);
 		model.addAttribute("title", title);
+		//2018-07-26 김보미 - 설문제목 ellipsis처럼 보이게 처리
+		model.addAttribute("subjectCont", subjectCont);
 		
 		logger.debug("pollResult ended");
 		return "ezPersonal/persPollResult";
@@ -830,7 +886,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		moduleList.put("/ezResource/resMain.do", "res");
 		moduleList.put("/ezCircular/circularIndex.do", "circular");
 		moduleList.put("/ezJournal/journalMain.do", "journal");
-		
+		moduleList.put("/ezWebFolder/webfolderMain.do", "webfolder");
+
 		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);
 		
 		/*
@@ -845,6 +902,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("isResUsed", usedList.get("res"));
 		model.addAttribute("isCircularUsed", usedList.get("circular"));
 		model.addAttribute("isJournalUsed", usedList.get("journal"));
+		model.addAttribute("isWebfolderUsed", usedList.get("webfolder"));
 		
 		model.addAttribute("ezInfoSSL", ezInfoSSL);
 		model.addAttribute("funCode", funCode);

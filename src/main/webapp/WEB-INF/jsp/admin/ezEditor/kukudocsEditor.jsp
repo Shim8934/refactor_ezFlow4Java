@@ -329,7 +329,7 @@
 			var customAlignMenu = ['about','print','undo','redo','text_paste','textFormatCopy','textFormatPaste','link','unlink','image','symbol','horizontal','numbered_list','bullet_list','outdent','indent',
 								   'table','table_insert_left','table_insert_right','table_insert_top','table_insert_bottom','table_remove_col','table_remove_row','table_remove_table',
 								   'table_merge','table_split_col','table_split_row','table_background_color','table_border_style','align_left','align_center','align_right','align_justify','paragraph_margin',
-								   'template','heading','fontFamily','fontSize','line_height','bold','italic','underline','strike_through','paragraph_remove_format','color','background_color',
+								   'template','heading','fontFamily','fontSize','line_height','bold','italic','underline','strike_through','remove_format','color','backgroundColor',
 								   'cellLock', 'cellFree', 'tableLock', 'tableFree'];
 			
 			// 이미지 업로드 URL 설정
@@ -437,7 +437,11 @@
 	            useTextMode : false,
 	            usePreviewMode : false,
 	            useEditorResize : false,
+	            useFirstFocus : false,
+	            useOnlyTableContentMenu : true,
+	            publicPathURL : '/js/ezEditor/kukudocsEditor/',
 	            templateList : templateList,
+	            defaultEditorStylePath :'/js/ezEditor/kukudocsEditor/stylesheets/editor_style.css',
 	            loadingImageURL : '/js/ezEditor/kukudocsEditor/images/load.gif',
 	            errorImageURL : '/js/ezEditor/kukudocsEditor/images/error.png',
 	            imageUploadURL : imageUploadURL,

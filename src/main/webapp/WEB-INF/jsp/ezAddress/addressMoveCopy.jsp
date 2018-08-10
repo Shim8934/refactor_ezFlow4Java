@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -6,12 +7,15 @@
 	<head>
 	    <title><spring:message code='ezAddress.t266' /></title>
 	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
-	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezAddress/Controls/treeview.htc.js"></script>
+	    <style>
+	    	/* #AddressTreeView div {height:20px !important} */
+	    </style>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezAddress/address_tree_Cross.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezAddress/Controls/treeview.htc.js")%>"></script>
 	    <script>
 	        var checkadmin = "${checkAdmin}";
 	        var deptadmin = "${deptAdmin}";
@@ -52,6 +56,11 @@
 	            AddressTreeView.update();
 	            if (AddressTreeView.selectedIndex() == -1) {
 	                AddressTreeView.select(1);
+	            }
+	            
+	            var addressTreeChild = document.getElementById("AddressTreeView").childNodes[0].childNodes;
+	            for (var i = 0; i < addressTreeChild.length; i++) {
+	            	addressTreeChild[i].style.marginBottom = "0px";
 	            }
 	        }
 
@@ -145,24 +154,17 @@
 	    <h1><spring:message code='ezAddress.t269' /></h1>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="Window_Close()"><spring:message code='ezAddress.t5' /></span></li>
+	            <li><span onclick="Window_Close()"></span></li>
 	        </ul>
-	    </div>
-	    <script type="text/javascript">
-	        selToggleList(document.getElementById("close"), "ul", "li", "0");
-	    </script>
-	    <div style="margin-top: -5px; margin-bottom: 5px;">
-	        <a class="imgbtn"><span onclick="return btn_Move_onclick()"><spring:message code='ezAddress.t270' /></span></a>
-	        <a class="imgbtn"><span onclick="return btn_Copy_onclick()"><spring:message code='ezAddress.t271' /></span></a>
 	    </div>
 	    <table class="content" style="width: 100%;">
 	        <tr>
 	            <td class="pos1" style="padding-right: 0">
                     <c:if test="${browser == 'Chrome'}">
-                    <div class="tree" style="border: 0; margin-left: 5px; width: 98%; height: 265px; overflow: auto" id="AddressTreeView"></div>
+                    <div class="tree" style="border: 0; margin-left: 5px; width: 98%; height: 240px; overflow: auto" id="AddressTreeView"></div>
                     </c:if>
                     <c:if test="${browser != 'Chrome'}">
-	                <div class="tree" style="border: 0; margin-left: 5px; width: 98%; height: 270px; overflow: auto" id="AddressTreeView"></div>
+	                <div class="tree" style="border: 0; margin-left: 5px; width: 98%; height: 245px; overflow: auto" id="AddressTreeView"></div>
                     </c:if>
 	            </td>
 	        </tr>
@@ -170,6 +172,10 @@
 	    <xml id="AddressFolderXML" style="display: none;">
 			${rootAddressXML}
 		</xml>
+		<div class="btnpositionNew">
+	        <a class="imgbtn"><span onclick="return btn_Move_onclick()"><spring:message code='ezAddress.t270' /></span></a>
+	        <a class="imgbtn"><span onclick="return btn_Copy_onclick()"><spring:message code='ezAddress.t271' /></span></a>
+	    </div>
 	</body>
 </html>
 

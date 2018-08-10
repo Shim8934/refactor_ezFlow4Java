@@ -116,7 +116,7 @@
 		    		}
 		    	});
 		        
-		        g_CodeInfoXml = result;
+		        g_CodeInfoXml = getXmlString(result);
 		
 		        
 		    }
@@ -140,7 +140,7 @@
 		        if (Val == 5 || Val == 6) {
 		            window.dialogHeight = "596px";
 		            if (CrossYN())
-		                window.resizeTo(705, 690);
+		                //window.resizeTo(705, 690);
 		
 		            divAudioVisualDummy.style.display = "none";
 		            divAudioVisual.style.display = "";
@@ -158,7 +158,7 @@
 		        else {
 		            window.dialogHeight = "420px";
 		            if (CrossYN())
-		                window.resizeTo(705, 550);
+		                //window.resizeTo(705, 550);
 		
 		            document.getElementById("divAudioVisualDummy").style.display = "";
 		            document.getElementById("divAudioVisual").style.display = "none";
@@ -185,7 +185,7 @@
 		        var Root, objNode;
 		
 		        var objCodeInfo = createXmlDom();
-		        objCodeInfo = g_CodeInfoXml;
+		        objCodeInfo = loadXMLString(g_CodeInfoXml);
 		
 		        if (navigator.userAgent.indexOf('Trident') == -1) {
 		            Root = "<REGISTERTYPE>";
@@ -247,7 +247,6 @@
 		                    break; 
 		            }
 		        }
-
 		        InitCodeSelectBox(RegTypeCodeXml.documentElement.childNodes, selRegisterType); // 분리첨부 정보입력->등록구분 입력
 		        SelectOption(selRegisterType, g_RegType); 
 		
@@ -445,7 +444,7 @@
 		            selectcabinetintask_cross_dialogArguments[0] = para;
 		            selectcabinetintask_cross_dialogArguments[1] = btnChangeCabinet_onclick_Complete;
 		
-		            DivPopUpShow(675, 450, url);
+		            DivPopUpShow(800, 550, url);
 		        }
 		        else {
 		            var feature = "dialogWidth:475px;dialogHeight:425px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
@@ -559,14 +558,19 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t1076'/></h1>
-		<h2><spring:message code='ezApprovalG.t1018'/></h2>
-		<table class="content">
+		<div id="close">
+            <ul>
+                <li><span id="btnClose" onclick="return btnClose_onclick()"></span></li>
+            </ul>
+        </div>
+		<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1018'/></h2>
+		<table class="content" style="width:100%">
 		  <tr>
-		    <th ><spring:message code='ezApprovalG.t1063'/></th>
+		    <th style="width:15%;"><spring:message code='ezApprovalG.t1063'/></th>
 		    <td><table style="width:100%">
 		        <tr>
 		          <td id="tdCabinetName">&nbsp;</td>
-		          <td style="width:70px"><a class="imgbtn"><span onclick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a></td>
+		          <td style="width:70px"><a class="imgbtn imgbck" style="margin-bottom:0px;"><span onclick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a></td>
 		        </tr>
 		      </table></td>
 		  </tr>
@@ -579,16 +583,16 @@
 		    <td id="tdCabinetVolNo"  >&nbsp;</td>
 		  </tr>
 		</table>
-		<h2 style="margin-top:10px" ><spring:message code='ezApprovalG.t1089'/></h2>
-		<table class="content">
+		<h2 class="h2_dot" style="font-weight: normal; margin-top: 10px;"><spring:message code='ezApprovalG.t1089'/></h2>
+		<table class="content" style="width:100%">
 		  <tr>
-		    <th><spring:message code='ezApprovalG.t859'/></th>
-		    <td><Select id="selRegisterType" style="width:100%" onChange="return selRegisterType_onchange()"></Select>
+		    <th style="width:15%;"><spring:message code='ezApprovalG.t859'/></th>
+		    <td><Select id="selRegisterType" style="width:150px; height: 25px;" onChange="return selRegisterType_onchange()"></Select>
 		    </td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code='ezApprovalG.t106'/></th>
-		    <td><input type="text" class="text" style="Width:98%;" name="txtTitle" id="txtTitle">
+		    <td><input type="text" class="text" style="Width:100%;" name="txtTitle" id="txtTitle">
 		    </td>
 		  </tr>
 		  <tr>
@@ -604,16 +608,16 @@
 		</table>
 		
 		<Div id="divAudioVisual">
-		  <h2 style="margin-top:10px" ><spring:message code='ezApprovalG.t1074'/></h2>
-		  <table class="content" >
+		  <h2 class="h2_dot" style="font-weight: normal; margin-top: 10px;"><spring:message code='ezApprovalG.t1074'/></h2>
+		  <table class="content" style="width:100%">
 		    <tr>
-		      <th><spring:message code='ezApprovalG.t1075'/></th>
-		      <td><TextArea style="width:97%; height:70px; resize:none;" id=txtSummary name=txtSummary></TextArea>
+		      <th style="width:15%;"><spring:message code='ezApprovalG.t1075'/></th>
+		      <td><TextArea style="width:98%; height:70px; resize:none; margin:2px 0px;" id=txtSummary name=txtSummary></TextArea>
 		      </td>
 		    </tr>
 		    <tr >
 		      <th><spring:message code='ezApprovalG.t826'/></th>
-		      <td id=tdAVType><table border="0" style="border-collapse:collapse; border-spacing:0;padding:0px;height:140px;width:100%">
+		      <td id=tdAVType><table style="border-collapse:collapse; border-spacing:0;padding:0px;height:140px;width:99.5%">
 		          <tr>
 		            <td id=tdAVType1 style="padding-right:0; padding-left:0;overflow:auto;vertical-align:top"></td>
 		            <td id=tdAVType2 style="padding-right:0; padding-left:0;vertical-align:top"></td>
@@ -624,9 +628,8 @@
 		</Div>
 		
 		<div class="btnposition btnpositionNew">
-		  <a class="imgbtn"><span id="btnReset" onclick="return btnReset_onclick()"><spring:message code='ezApprovalG.t621'/></span></a>
-		  <a class="imgbtn"><span id="btnOK" onclick="return btnOK_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>  
-		  <a class="imgbtn"><span id="btnClose" onclick="return btnClose_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>  
+		  	<a class="imgbtn"><span id="btnReset" onclick="return btnReset_onclick()"><spring:message code='ezApprovalG.t621'/></span></a>
+		  	<a class="imgbtn"><span id="btnOK" onclick="return btnOK_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 		</div>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

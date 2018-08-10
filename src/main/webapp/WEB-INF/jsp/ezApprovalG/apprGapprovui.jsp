@@ -557,8 +557,10 @@
 		                }
 		            }		
 		        }
+ 		        <%--2018-07-11 천성준 -전자결재G 중간결재자 부재설정 시, 부재내용 사인칸에 표기안되서 주석해제 --%>
 		        //없이 테스트
-// 		        SignCheck();
+ 		        SignCheck(); 
+		        
 		        if (pDraftFlag == "HABYUI") {
 		            setMenuBar("btntotaldocinfo", false);
 		        }
@@ -615,7 +617,7 @@
 		    /**
 		    * ExcuteInfo()를 통한 연동관리
 		    * getDocNumber()를 통한 문서번호 채번
-		    * AprrovMappingSign()를 통한 결재정보 내용 출력
+		    * ApprovMappingSign()를 통한 결재정보 내용 출력
 		    * SaveApproveInfo()를 통한 xml 생성 및 Contoller 호출
 		    */
 		    function Approv_Complete(signtype) {
@@ -721,7 +723,7 @@
 		            }
 		        }
 		        
-		        signInfo = AprrovMappingSign(signtype); // 현재 양식에 결재 관련 정보 출력( ex. 서명 서명 날짜 등등)
+		        signInfo = ApprovMappingSign(signtype); // 현재 양식에 결재 관련 정보 출력( ex. 서명 서명 날짜 등등)
 
 		        var rtnVal = true;
 		        if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
@@ -1486,7 +1488,7 @@
 		            var contentEditable = message.DocumentBodyGetAttribute("contentEditable");
 		            if (contentEditable)
 		                message.DocumentBodySetAttribute("contentEditable", "inherit");
-		            btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t42'/>";
+		            btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t1767'/>";
 		        }
 		        else {
 		            var pInformationContent = "<spring:message code='ezApprovalG.t43'/>";
@@ -1604,7 +1606,7 @@
 		                  <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		              </ul>
 				</div>
-			<div id="close"><ul><li><span id="btnClose" onClick="return btnClose_onclick()" ><spring:message code='ezApprovalG.t64'/></span></li></ul></div>
+			<div id="close"><ul><li><span id="btnClose" onClick="return btnClose_onclick()" ></span></li></ul></div>
 		</td> 
 		  </tr>
 		  <tr>
@@ -1624,7 +1626,6 @@
 		</table>
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		<XML ID="ATTACHINFO"></XML>
 		<XML ID="DOCINFO"></XML>

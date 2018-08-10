@@ -1,23 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
 <head>
     <title><spring:message code="ezWebFolder.t282"/></title>
-<!--     <meta name="CODE_LANGUAGE" content="C#"> -->
-    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
-    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-   	<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
     <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-    <link rel="stylesheet" href="/js/ezWebFolder/jsTree/dist/themes/default/style.css" />
-    <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	<script type="text/javascript" src="/js/ezWebFolder/jsTree/dist/jstree.js"></script>
-    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezWebFolder/jsTree/dist/themes/default/style.css")%>" />
+    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/jsTree/dist/jstree.js")%>"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
    	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1' />"></script>	
     <script>
         var PostTreeView = null;
@@ -141,6 +137,11 @@
 
 <body scroll="no" class="popup">
 	<h1><spring:message code='ezWebFolder.t286'/></h1>
+	<div id="close">
+        <ul>
+            <li><span onclick="window.close()"></span></li>
+        </ul>
+    </div>
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
 		<div style="position: absolute; top: 0px; right: 0px;">
 			<input name="treeType" id="radio1" type="radio" value="C" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="folderList('C');"><label for="radio1"><span> <spring:message code='ezWebFolder.t233'/></span></label>
@@ -149,9 +150,8 @@
 		</div>
 	</div>
 	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 330px; height: 330px; overflow: auto; padding-top:5px" id="folderTree"></div>
-	<div style="margin: 0px 0px 15px; text-align: center ">
-      	<a class="webfolderBttn" onclick="move_onclick()"><span><spring:message code="ezWebFolder.t121"/></span></a>
-      	<a class="webfolderBttn" onclick="window.close();"><span onclick=""><spring:message code='ezWebFolder.t110'/></span></a>
+	<div class="btnpositionNew">
+      	<a class="imgbtn" onclick="move_onclick()"><span><spring:message code="ezWebFolder.t121"/></span></a>
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 	<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">

@@ -2939,7 +2939,6 @@
                 // will result in the selection direction begin reversed if the original selection was backwards and the
                 // browser does not support setting backwards selections (Internet Explorer, I'm looking at you).
                 var sel = window.getSelection();
-                
                 if (sel) {
                     // Store the current selection
                     var originalSelectionRangeCount = sel.rangeCount;
@@ -2961,6 +2960,7 @@
 
                             
                     if(xfeBrowserFlag.isIE()) {
+
                         if(IE_version !== 9 && IE_version !== 10) {
                             r1.setStart(textNode, 1);
                             r1.collapse(true);
@@ -2988,10 +2988,9 @@
                     }
                     
                     
-                    //2017-09-29 이효진(양식작성기 IE11 빈 div생성되는 문제때문에 주석처리)
-                    
+
                     // Test whether the native selection is capable of supporting multiple ranges.
-                    /*if (!selectionHasMultipleRanges) {
+                    if (!selectionHasMultipleRanges) {
                         // Doing the original feature test here in Chrome 36 (and presumably later versions) prints a
                         // console error of "Discontiguous selection is not supported." that cannot be suppressed. There's
                         // nothing we can do about this while retaining the feature test so we have to resort to a browser
@@ -3010,7 +3009,7 @@
                                 // Todo: Is this solution well?
                                 selectionSupportsMultipleRanges = false;
                                 
-                                 IE9 Bug - r2 is empty
+                                /* IE9 Bug - r2 is empty
                                 var r2 = r1.cloneRange();
                                 r1.setStart(textNode, 0);
                                 r2.setEnd(textNode, 3);
@@ -3018,7 +3017,7 @@
                                 sel.addRange(r1);
                                 sel.addRange(r2);
                                 selectionSupportsMultipleRanges = (sel.rangeCount == 2);
-                                selectionSupportsMultipleRanges = (sel.rangeCount == 2);
+                                selectionSupportsMultipleRanges = (sel.rangeCount == 2);*/
 
                             } else {
                             
@@ -3026,19 +3025,29 @@
                                 r1.setStart(textNode, 0);
                                 r2.setEnd(textNode, 3);
                                 r2.setStart(textNode, 2);
-                                sel.addRange(r1);
                                 
-                                // current chrome doesn't support multiple ranges. 20140718
-                                if(!xfeBrowserFlag.isChrome()) {
-                                    sel.addRange(r2);    
+                                /**
+                                 * @20171026    .kscho
+                                 */
+                                try{
+                                    
+                                    sel.addRange(r1);
+                                    
+                                    // current chrome doesn't support multiple ranges. 20140718
+                                    if(!xfeBrowserFlag.isChrome()) {
+                                        sel.addRange(r2);    
+                                    }
+                                    //sel.addRange(r2);    
+                                } catch (e) {
+                                    
                                 }
-                                //sel.addRange(r2);
+                                
                                 
                                 
                                 selectionSupportsMultipleRanges = (sel.rangeCount == 2);    
                             }                                         
                         }
-                    }*/
+                    }
 
                     // Clean up
                     dom.removeNode(testEl);

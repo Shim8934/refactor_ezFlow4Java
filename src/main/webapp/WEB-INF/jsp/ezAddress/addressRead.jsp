@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -7,8 +8,8 @@
 		<title><spring:message code='ezAddress.t275' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 		<script type="text/javascript">
 			var creatorid = "${addressInfo.creatorId}";
 			var modifierid = "${addressInfo.modifierId}";
@@ -35,7 +36,11 @@
 				else if (whoto == 1)
 					userid = modifierid;
 		
-				window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+				// 2018.07.24  - 팝업을 창 가운데 띄우도록 개선 (재은 수정)
+				var popupX = Math.ceil((window.screen.width - 500)/2);
+				var popupY = Math.ceil((window.screen.height - 500)/2);
+
+				window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1, left=" + popupX + ",top=" + popupY);
 			}
 			function open_homepage()
 			{
@@ -135,13 +140,12 @@
 		    </div>
 		    <div id="close">
 		      <ul>
-		        <li><span onClick="window.close()"><spring:message code='ezAddress.t5' /></span></li>
+		        <li><span onClick="window.close()"></span></li>
 		      </ul>
 		    </div>
 		    
 		    <script type="text/javascript">
 			    selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			    selToggleList(document.getElementById("close"), "ul", "li", "0");
 		    </script>
 		    <table class="popuplist" style="width:100%; table-layout: fixed; ">
 		          <tr>

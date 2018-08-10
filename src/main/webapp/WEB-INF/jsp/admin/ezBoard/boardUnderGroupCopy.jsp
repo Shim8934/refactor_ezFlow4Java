@@ -35,7 +35,7 @@
 	            	url : "/admin/ezBoard/setUnderBoardAcl.do",
 	            	data : {boardID : pBoardID, type : type},
 	            	success : function(){
-	            		alert("<spring:message code='ezBoard.t79' />.")
+	            		alert("<spring:message code='ezBoard.t79' />")
 		                window.close();
 	            	},
 	            	error : function(error){
@@ -51,16 +51,23 @@
 	</head>
 	<body class="popup">		
 		<h1><spring:message code="ezBoard.t610" /></h1>
-	    <h2 class="h2_dot"><spring:message code="ezBoard.t611" /></h2>
+		<div id="close">
+            <ul>
+                <li><span onclick="window_Cancel()"></span></li>
+            </ul>
+        </div>
 	    <div style="text-align:center; margin:10px;" id="div1">
-		    <span class="txt">
-		        <input style="vertical-align: middle;" type="radio" name="radioAcl" value="1" checked="checked"/> <spring:message code="ezBoard.t612" />
-		        <input style="vertical-align: middle;" type="radio" name="radioAcl" value="2" /> <spring:message code="ezBoard.t613" />
-		    </span>
+		    <div class="txt" style="margin-top:15px">
+		    	<div style="text-align: left">
+		        	<input style="vertical-align: middle;" type="radio" name="radioAcl" value="1" checked="checked"/> <spring:message code="ezBoard.t612" />
+		        </div>
+		        <div style="text-align: left;margin-top:10px">	
+		        	<input style="vertical-align: middle;" type="radio" name="radioAcl" value="2" /> <spring:message code="ezBoard.t613" />
+		        </div>	
+		    </div>
 	    </div>
 	    <div class="btnpositionNew">
 	        <a class="imgbtn"><span onclick="Save_Acl()"><spring:message code="ezBoard.t14" /></span></a>
-	        <a class="imgbtn"><span onclick="window_Cancel()"><spring:message code="ezBoard.t15" /></span></a>
 	    </div>
 	</body>
 </html>

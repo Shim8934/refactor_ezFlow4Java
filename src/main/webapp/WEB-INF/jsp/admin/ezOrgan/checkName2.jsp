@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -7,11 +8,11 @@
 		<title><spring:message code="ezOrgan.t105" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
-	    <script type="text/javascript" src="/js/ezBoard/ListView_list_admin.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>	    
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezBoard/ListView_list_admin.js")%>"></script>
 	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 		<script type="text/javascript" language="javascript">
 			var ReturnFunction;
 	    	var RetValue;
@@ -113,6 +114,10 @@
 			    }
 			}
 	    </script>
+	    <style>
+	    	.mainlist tr th {border-top:0px}
+	    </style>
+	    
 	</head>
 	<body class="popup">
 	    <xml id="listviewheader" style="display:none">
@@ -135,13 +140,17 @@
 		</xml>
 	
 	    <h1><spring:message code='ezOrgan.t105' /></h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="cancel_onClick()"></span></li>
+            </ul>
+        </div>
 	    <h2><spring:message code='ezOrgan.t109' /></h2>
 	    <div class="listview" style="width: 570px;">
 	        <div id="OrganListView" style="border: 0px solid #ddd; Width: 570px; Height: 160px; overflow: auto; BACKGROUND-COLOR: white;"></div>
 	    </div>
-	    <div class="btnposition">
+	    <div class="btnpositionNew">
 	        <a class="imgbtn"><span onClick="change_onClick()"><spring:message code='ezOrgan.t110' /></span></a>
-	        <a class="imgbtn"><span onClick="cancel_onClick()"><spring:message code='ezOrgan.t111' /></span></a>
 	    </div>
 	</body>
 </html>

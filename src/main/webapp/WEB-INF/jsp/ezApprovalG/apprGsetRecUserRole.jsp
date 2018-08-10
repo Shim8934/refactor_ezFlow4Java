@@ -52,6 +52,7 @@
 
         DisplayOrganSearchList(pSearchList, pCellList, pPropList, pClass);
         InitRecViewerInfo();
+        SwapRoleList();
 
         MM_preloadimages('./images/arrow_add1.gif', './images/arrow_delete1.gif');
     }
@@ -73,7 +74,7 @@
     }
     function SwapRoleList() {
     
-         if (document.getElementsByName("rdoRecRole")[0].checked) {
+        if (document.getElementsByName("rdoRecRole")[0].checked) {
         	 $('#txtKeyword').prop("disabled",true);
         	 $('.listview').prop("disabled",true);
         	 $('#trRecUserRole').css("display","none");
@@ -98,16 +99,25 @@
         alert("<spring:message code='ezApprovalG.t1156'/>");
             return "";
         }
-
-   
-        if (AllAllowed == "0") {
+        
+   		/* 2018-08-07 천성준 - 디폴트 체크 변경으로 인한 주석처리 */
+        /* if (AllAllowed == "0") {
             document.getElementsByName("rdoRecRole")[0].checked = false;
             document.getElementsByName("rdoRecRole")[1].checked = true;
         }
         else {
             document.getElementsByName("rdoRecRole")[0].checked = true;
             document.getElementsByName("rdoRecRole")[1].checked = false;
+        } */
+        
+        if (AllAllowed == "0") {
+        	document.getElementById("roleCheck1").innerHTML = "";
+        	document.getElementById("roleCheck2").innerHTML = "(○)";
+        } else {
+        	document.getElementById("roleCheck1").innerHTML = "(○)";
+        	document.getElementById("roleCheck2").innerHTML = "";
         }
+        
         var LVXml = createXmlDom();
         LVXml = SelectSingleNode(SelectSingleNode(rtnXml,"ROLEINFO"),"LISTVIEWDATA");
         var listview = new ListView();
@@ -119,7 +129,7 @@
         listview.DataSource(LVXml);
         listview.RowDataBind("SelUserList");
         listview.SetSelectFlag(false);
-        SwapRoleList();
+        //SwapRoleList();
     }
     function GetRecViewerInfo(pRecID, pSepAttNo) {
         var xmlhttp = createXMLHttpRequest();
@@ -295,9 +305,9 @@
 
         var totalRows = userlist.GetDataRows();
         if (document.getElementsByName("rdoRecRole")[1].checked) {
-            if (totalRows.length < 1) {
+            if (totalRows.length < 1 || totalRows[0].id.indexOf("noItems") > -1) {
                 alert("<spring:message code='ezApprovalG.t1158'/>");
-                return;
+   	            return;
             }
         }
         if (SaveRecUserRole()) {
@@ -507,32 +517,40 @@
 </xml>
 <!---------------------------------------- 리스트뷰 컨트롤 ---------------------------------------->	
 <h1><spring:message code='ezApprovalG.t1155'/></h1>
-
+<div id="close">
+    <ul>
+        <li><span id="btnCancel" onclick="return cmdCancel_onclick()"></span></li>
+    </ul>
+</div>
 <table class="content">
 	<tr>
 	<th><spring:message code='ezApprovalG.t1163'/></th>
-		<td><Input Type="radio" name="rdoRecRole" id="rdoRecRole1" value="0" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()" checked>&nbsp<spring:message code='ezApprovalG.t1164'/><br />
-			<Input Type="radio" name="rdoRecRole" id="rdoRecRole2" value="1" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()">&nbsp<spring:message code='ezApprovalG.t1165'/></td>
+		<td><Input Type="radio" name="rdoRecRole" id="rdoRecRole1" value="0" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()">&nbsp;<spring:message code='ezApprovalG.t1164'/><span id="roleCheck1"></span><br />
+			<Input Type="radio" name="rdoRecRole" id="rdoRecRole2" value="1" style="margin:3px 0px 5px 3px" onClick="return SwapRoleList()" checked>&nbsp;<spring:message code='ezApprovalG.t1165'/><span id="roleCheck2"></span></td>
 	</tr>
 </table>
-<table id="DataLayout" style="margin-top:10px; display: none;">
+<table id="DataLayout" style="margin-top:5px; display: none;">
 	<tr id="trRecUserRole">			
-		<td style="vertical-align:top"> <h2><spring:message code='ezApprovalG.t1166'/></h2>
+		<td style="vertical-align:top">
+		<h2 class="h2_dot" style="font-weight: normal; margin-top: 0px;">
+			<spring:message code='ezApprovalG.t1166'/>
+			<span style="margin-left:145px;">
+				<select id="selSearchType" style="height:22px;">
+					<option selected value="displayname"><spring:message code='ezApprovalG.t379'/></option>
+					<option value="description"><spring:message code='ezApprovalG.t108'/></option>
+					<option value="title"><spring:message code='ezApprovalG.t230'/></option>
+				</select>
+				<input id="txtKeyword" value="" onKeyPress="txtKeyword_onKeyPress()" style="width:90px;height:22px;">
+				<a class="imgbtn imgbck"><span onClick="btnSearch_Click()" style="width:25px" ><spring:message code='ezApprovalG.t111'/></span></a>
+			</span>
+		</h2>
 			<table>
-				<tr>
-					<th style="height:30px"><select id="selSearchType">
-						<option selected value="displayname"><spring:message code='ezApprovalG.t379'/></option>
-						<option value="description"><spring:message code='ezApprovalG.t108'/></option>
-						<option value="title"><spring:message code='ezApprovalG.t230'/></option>
-					</select>
-					<input id="txtKeyword" value="" onKeyPress="txtKeyword_onKeyPress()" style="width:90px;height:20px;">&nbsp;<a class="imgbtn" style="vertical-align:middle"><span onClick="btnSearch_Click()" style="width:40px" ><spring:message code='ezApprovalG.t111'/></span></a></th>
-				</tr>
 				<tr style="height:2px">
 				<td></td>
 				</tr>
 				<tr> 
 					<td><div class="listview">
-					<div id="OrgListView" style="overflow:auto; border:0;HEIGHT: 205px; WIDTH: 370px;"></div>
+					<div id="OrgListView" style="overflow:auto; border:0;HEIGHT: 240px; WIDTH: 434px;"></div>
 					</div></td>
 				</tr>
 			</table>
@@ -545,16 +563,15 @@
 			</a>
 		</td>
 
-		<td style="width:200px;vertical-align:top"><h2><spring:message code='ezApprovalG.t1167'/></h2>
+		<td style="width:200px;vertical-align:top"><h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1167'/></h2>
 		<div class="listview">
-		<div id="SelUserList" style="overflow:auto; border:0;HEIGHT: 237px; WIDTH: 300px;"></div>
+		<div id="SelUserList" style="overflow:auto; border:0;HEIGHT: 240px; WIDTH: 430px;"></div>
 		</div></td>
 	</tr>
 </table>
 
 <div class="btnposition btnpositionNew">
-<a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-<a class="imgbtn"><span id="btnCancel" onclick="return cmdCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>  
+	<a class="imgbtn"><span id="btnOK" onclick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>  
 </div>
 
 </body>

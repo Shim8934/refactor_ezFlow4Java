@@ -5,8 +5,8 @@ var strLang3 = "1월;2월;3월;4월;5월;6월;7월;8월;9월;10월;11월;12월"
 var strLang4 = "일요일;월요일;화요일;수요일;목요일;금요일;토요일"
 var strLang5 = "일;월;화;수;목;금;토"
 var strLang6 = "월;화;수;목;금;토;일"
-var strLang5_1 = "SUN;MON;TUE;WED;THU;FRI;SAT"
-var strLang6_1 = "MON;TUE;WED;THU;FRI;SAT;SUN"
+var strLang5_1 = "일;월;화;수;목;금;토"
+var strLang6_1 = "월;화;수;목;금;토;일"
 var strLang7 = "제목 없음"
 // X:\NetModule\FrontEnd\Home\myoffice\ezSchedule\js\kaoni_ActiveX.js
 // X:\NetModule\FrontEnd\Home\myoffice\ezSchedule\js\schedule_write.js
@@ -146,8 +146,8 @@ var strLang260 = "파일명"
 var StrLang261 = "접속 테스트가 정상적으로 완료되었습니다.";
 var StrLang262 = "접속중 오류 발생. 아이디, 패스워드를 다시 확인하세요.";
 var strLang263 = "데이터가 없습니다.";
-var strLang264 = "그룹 설명 : ";
-var strLang265 = "그룹 구성원 : ";
+var strLang264 = "그룹 설명";
+var strLang265 = "그룹 구성원";
 var strLang266 = "선택된 그룹이 없습니다.";
 var strLang267 = "업로드 제한 확장자 파일이 있습니다.";
 var strLang268 = "이전";
@@ -168,3 +168,5 @@ var strLang1003 = "이미 등록된 일정공유정보가 있습니다.";
 var strLang275 = "시작일을 오늘 이전으로 등록할 수 없습니다.";
 // 2018.02.22
 var strLangKMS1 = "100회 이하만 반복가능합니다.";
+/*2018-07-16*/
+var strLang276 = "구성원 보기를 할 그룹을 하나만 선택해주세요.";

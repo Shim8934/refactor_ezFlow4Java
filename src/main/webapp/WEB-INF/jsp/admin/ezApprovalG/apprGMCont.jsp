@@ -7,7 +7,10 @@
 		<title></title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+		<style>
+			.mainlist tr th { border-top:0px }
+		</style>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
@@ -110,7 +113,7 @@
 		        } else {
 		            para["P_companyID"] = CompanyID;
 		            mconttype_cross_dialogArguments[0] = para;
-		            var OpenWin = window.open("/admin/ezApprovalG/apprGMContType.do", "MContType_Cross", GetOpenWindowfeature(290, 390));
+		            var OpenWin = window.open("/admin/ezApprovalG/apprGMContType.do", "MContType_Cross", GetOpenWindowfeature(500, 500));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		    }
@@ -264,14 +267,16 @@
   			</LISTVIEWDATA>
 		</xml>
 		<h1><spring:message code='ezApprovalG.t1591'/></h1>
-	    <span>
-	    	<b><spring:message code='ezApprovalG.t1276'/></b>
-	    	<select id="SCompID" name="SCompID" onchange="selectCompanyID()">
-	    		<c:forEach var="item" items="${list}">
-            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-            	</c:forEach>
-            </select>
-	    </span>
+		<div id="mainmenu">
+		    <span>
+		    	<b><spring:message code='ezApprovalG.t1276'/></b>	    	
+		    	<select id="SCompID" name="SCompID" onchange="selectCompanyID()" style="height:29px">
+		    		<c:forEach var="item" items="${list}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+	            </select>            
+		    </span>
+	    </div>
 	    <table>
 	        <tr>
 	            <td>

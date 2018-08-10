@@ -74,6 +74,12 @@
 		            //listview.DataSource(xmldom);
 		            listview.RowDataBind();
 		            xmldomNode = null;
+		            
+	                //2018-08-09 김보미 - 데이터가 없을 경우 출력
+	                if (headerData.getElementsByTagName("ROW").length == 0) {
+	                	var TR_noItems = "<tr id='Link_TR_noItems'><td style='text-align: center;' colspan='6'>" + "<spring:message code = 'ezPersonal.t20005' />" + "</td></tr>";
+		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
+	                }
 		        } catch (e) {
 	
 		        }
@@ -164,7 +170,12 @@
 		    }
 	
 		    function del_popup(popup_number) {
-		        if (!confirm(popup_number + "<spring:message code = 'ezPersonal.t159' />")) {
+		    	//2018-08-08  김보미 - rownumber추가
+		        /*if (!confirm(popup_number + "<spring:message code = 'ezPersonal.t159' />")) {
+		            return;
+		        }*/
+		        var row_number = $("tr[data1=" + popup_number + "] td:eq(0)").text();
+		        if (!confirm(row_number + "<spring:message code = 'ezPersonal.t159' />")) {
 		            return;
 		        }
 		        
@@ -221,7 +232,7 @@
 	    <form method="post">
 			<h1><spring:message code = 'ezPersonal.t266' /></h1>
 			<div id="mainmenu">
-				<span><b><spring:message code='ezEmail.t59' /></b></span>&nbsp;
+				<span><b><spring:message code='ezEmail.t59' /> : </b></span>
 				<SELECT id="ListCompany" name="ListCompany" onChange="company_change()">
 		        	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ><c:out value='${item.displayName}'/></option>

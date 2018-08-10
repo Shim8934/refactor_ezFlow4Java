@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -8,10 +9,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	<script src="/js/jquery/jquery.min.js"></script>
-	<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	<script type="text/javascript" src="/js/ezWebFolder/fileFolderDrop.js"></script>
+	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/jquery.min.js")%>></script>
+	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>></script>
+	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>></script>
+	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezWebFolder/fileFolderDrop.js")%>></script>
 	<script type="text/javascript">
 		var primary        = "<c:out value='${primary}'/>";
 		var fileList       = "<c:out value='${fileIdList}'/>";
@@ -20,6 +21,10 @@
 		var currentFolders = [];
 		var arrSubFolder   = [];
 		var mode           = "<c:out value='${mode}'/>";
+		
+		window.onbeforeunload = function() {
+			parent.closeAllPopup();
+		}
 		
 		window.onload = function () {
 			getData();
@@ -45,13 +50,12 @@
 				async: true,
 				success : function(data) {
 					var code = data.code;
-					
 					switch(code) {
 						case 0: 
 							var result     = data.folderTree;
 							currentFolders = data.currentFolders;
 							
-							renderData(result, type == "dept" ? "0" : "1");
+							renderData(result, (type == "dept" || type == "share") ? "0" : "1");
 							break;
 						case 1:
 							alert("<spring:message code='ezWebFolder.t306'/>");
@@ -77,26 +81,19 @@
 				divTree.removeChild(divTree.lastChild);
 			}
 			
-			if (!result || (result.length == 0 && mode != "1")) {
-				alert("<spring:message code='ezWebFolder.t325'/>");
-				return;
-			}
-			
 			if (mode == "1") {
 				var divDept  = document.createElement("div");
-				displaySubFolder(divTree, divDept, result);
+				displaySubFolder(divTree, divDept, result, 0);
 			}
 			else {
 				for (var i = 0; i < result.length; i++) {
 					var divDept  = document.createElement("div");
-					displaySubFolder(divTree, divDept, result[i]);
+					displaySubFolder(divTree, divDept, result[i], 0);
 				}
 			}
 		}
 		
-		function displaySubFolder(divTree, divElmt, list) {
-			var level = list["folderLevel"];
-			
+		function displaySubFolder(divTree, divElmt, list, level) {
 			if (level > 0) {
 				for (var j = 0; j < level; j++) {
 					var imgTag = document.createElement("img");
@@ -108,6 +105,7 @@
 			
 			var imgElmt = document.createElement("img");
 			imgElmt.setAttribute("id" , list["folderId"]);
+			imgElmt.setAttribute("level" , level);
 			
 			var imgElmt2 = document.createElement("img");
 			imgElmt2.setAttribute("class", "webfolderImg");
@@ -154,21 +152,18 @@
 				
 				for (var i = 0; i < len; i++) {
 					var subDivElmt = document.createElement("div");
-					displaySubFolder(newDivElmt, subDivElmt, list["listSubFolders"][i]);
+					displaySubFolder(newDivElmt, subDivElmt, list["listSubFolders"][i], level + 1);
 				}
 			}
 		}
 		
 		function getSelected(obj) {
-			var previousElmt = document.getElementsByName(selectedFolder)[0];
+			var previousElmtList = document.getElementsByName(selectedFolder);
 			
-			if (previousElmt != null) {
-				if (previousElmt.getAttribute("name") != obj.getAttribute("name")) {
-					previousElmt.style.color      = "";
-					previousElmt.style.fontWeight = "normal";
-				}
-				else {
-					return;
+			for (var i = 0; i < previousElmtList.length; i++) {
+				if (previousElmtList[i] != null) {
+					previousElmtList[i].style.color = "";
+					previousElmtList[i].style.fontWeight = "normal";
 				}
 			}
 			
@@ -181,6 +176,7 @@
 		function getDetailTree(obj, mode) {
 			//Check if already in arrSubFolder
 			var uniqueId = obj.getAttribute("id");
+			var level = obj.getAttribute("level");
 			
 			if (arrSubFolder.indexOf(uniqueId) != -1) {
 				var childElmt = obj.parentElement.lastElementChild;
@@ -210,6 +206,7 @@
 					dataType: "JSON",
 					async: true,
 					success: function(data) {
+<<<<<<< HEAD
 						var code = data.code;
 						
 						switch(code) {
@@ -228,6 +225,11 @@
 								alert("<spring:message code='ezWebFolder.t300' />");
 								break;
 						}
+=======
+						var result = data.subTree;
+						displaySubTree(result, obj.parentElement, Number(level) + 1);
+						arrSubFolder.push(uniqueId);
+>>>>>>> origin/master
 					},
 					error: function (xhr, status, e){
 						alert("<spring:message code='ezWebFolder.t134'/>");
@@ -236,7 +238,7 @@
 			}
 		}
 		
-		function displaySubTree(result, divElmt) {
+		function displaySubTree(result, divElmt, level) {
 			if (result["listSubFolders"] == null) {
 				alert("<spring:message code='ezWebFolder.t134'/>");
 				return;
@@ -248,7 +250,7 @@
 			
 			for (var i = 0; i < len; i++) {
 				var subDiv = document.createElement("div");
-				displaySubFolder(newDivElmt, subDiv, result["listSubFolders"][i]);
+				displaySubFolder(newDivElmt, subDiv, result["listSubFolders"][i], level);
 			}
 		}
 		
@@ -263,12 +265,14 @@
 		}
 		
 		function fileCopy() {
+			var type = document.querySelector('input[name=treeType]:checked').value;
+			
 			if (selectedFolder == null) {
 				alert("<spring:message code='ezWebFolder.t181'/>");
 				return;
 			}
 			
-			if (selectedLevel == '0') {
+			if (type != "share" && selectedLevel == '0') {
 				alert("<spring:message code='ezWebFolder.t18'/>");
 				return;
 			}
@@ -308,18 +312,20 @@
 					}
 				},
 				error : function(error) {
-					alert("<spring:message code='ezWebFolder.t134'/>" + jqXHR.status + ", " + textStatus);
+					alert("<spring:message code='ezWebFolder.t134'/>");
 				}
 			});
 		}
 		
 		function fileMove() {
+			var type = document.querySelector('input[name=treeType]:checked').value;
+			
 			if (selectedFolder == null) {
 				alert("<spring:message code='ezWebFolder.t181'/>");
 				return;
 			}
 			
-			if (selectedLevel == '0') {
+			if (type != "share" && selectedLevel == '0') {
 				alert("<spring:message code='ezWebFolder.t18'/>");
 				return;
 			}
@@ -360,7 +366,7 @@
 					}
 				},
 				error : function(error) {
-					alert("<spring:message code='ezWebFolder.t134'/>" + error);
+					alert("<spring:message code='ezWebFolder.t134'/>");
 				}
 			});
 		}
@@ -371,6 +377,11 @@
 		<c:if test="${type eq 'copy'}"><spring:message code='ezWebFolder.t316'/></c:if>
 		<c:if test="${type ne 'copy'}"><spring:message code='ezWebFolder.t120'/></c:if>
 	</h1>
+	<div id="close">
+        <ul>
+            <li><span id="btnClose" class="webfolderBttn" onClick="wClose();"></span></li>
+        </ul>
+    </div>
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
 		<c:if test="${mode != 'normal'}">
 			<select id="companyList" style="font-size: 12px; height: 20px; display:inline-block;" onchange="getData();">
@@ -384,17 +395,17 @@
 			<input name="treeType" id="radio2" type="radio" value="dept" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio2"><span> <spring:message code="ezWebFolder.t234"/></span></label>
 			<c:if test="${mode == 'normal'}">
 				<input name="treeType" id="radio3" type="radio" value="user" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio3"><span> <spring:message code="ezWebFolder.t235"/></span></label>
+				<input name="treeType" id="radio4" type="radio" value="share" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio4"><span> <spring:message code="ezWebFolder.t266"/></span></label>
 			</c:if>
 		</div>
 	</div>
 	<div style="margin: 0px 10px 10px 10px; border: 1px solid #ddd; min-height: 330px; height: 330px; overflow: auto; padding: 5px 0px 0px 5px; white-space: nowrap;" id="folderTree"></div>
 	
-	<div style="margin: 0px 0px 15px; position:fixed; bottom: 0px; text-align: center; width: 100%;">
+	<div class="btnpositionNew">
 		<c:if test="${type ne 'copy'}">
-			<a id="btnSave" class="webfolderBttn" onClick="fileMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>
+			<a id="btnSave" class="imgbtn" onClick="fileMove();"><span><spring:message code='ezWebFolder.t121'/></span></a>
 		</c:if>
-		<a id="btnCancel" class="webfolderBttn" onClick="fileCopy();"><span><spring:message code='ezWebFolder.t122'/></span></a>
-		<a id="btnClose"  class="webfolderBttn" onClick="wClose();"><span><spring:message code='ezWebFolder.t112'/></span></a>
+		<a id="btnCancel" class="imgbtn" onClick="fileCopy();"><span><spring:message code='ezWebFolder.t122'/></span></a>
 	</div>
 	
 </body>

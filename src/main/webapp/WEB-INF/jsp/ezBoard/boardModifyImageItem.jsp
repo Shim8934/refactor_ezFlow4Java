@@ -401,12 +401,12 @@
 	            <td style="vertical-align:top">
 	                <div id="menu">
 	                    <ul>
-	                        <li ID='btn_Modify'><span onClick="btn_ImgOnclick()"><spring:message code='ezBoard.t316'/></span></li>
+	                        <li ID='btn_Modify'><span onClick="btn_ImgOnclick()"><spring:message code='ezBoard.t98'/></span></li>
 	                    </ul>
 	                </div>
 	                <div id="close">
 	                    <ul>
-	                        <li ><span onClick="window.close()"><spring:message code='ezBoard.t12'/></span></li>
+	                        <li ><span onClick="window.close()"></span></li>
 	                    </ul>
 	                </div>
 	            </td>
@@ -418,7 +418,7 @@
 	        </tr>
 	        <tr>
 	            <th style="height:28px; line-height:28px; border-bottom:0 none; background:#fff;">
-	    	        <ul id = "btnUl"><li><span onClick="btn_PhotoChange()"><spring:message code='ezBoard.t1002'/></span></li></ul>
+	    	        <ul id = "btnUl"><li><span style="border:1px solid #d2d2d2" onClick="btn_PhotoChange()"><spring:message code='ezAddress.t301'/><spring:message code='ezBoard.t47'/></span></li></ul>
 	            </th>
 	        </tr>
 	        <tr>
@@ -426,11 +426,12 @@
 	                <div class="viewbox" style="width:100%; border:0 none; padding:0; background:none;">
 	                	<c:set var="result" value="${fn:split(listImages, ';')}"/>
 	                	<c:forEach var="res" items="${result}" varStatus="vs">
-		                    <table style="width:100%">
+	                	<%-- 2018-06-12 홍승비 - 사진수정 시 이미지 비율 유지 --%>
+		                    <table style="width:100%; min-height:230px; ">
 		                        <tr>
 		                            <td style="text-align:center">
 		                                <span id='imagechange1' class='preView' style='display:none;' value=""></span>
-		                                <img src='${res}' width='${g_Width}' height ='${g_Height}' id='image${vs.count}' name='zb_target_resize' style='cursor:pointer;'/>
+		                                <img src='${res}' id='image${vs.count}' name='zb_target_resize' style='cursor:pointer;max-height:230px;'/>
 		                            </td>
 		                        </tr>
 		                    </table>

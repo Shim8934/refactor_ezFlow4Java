@@ -1,16 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
 	<head>
 	    <title></title>
-	        <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
+	        <link href="<%=CommonUtil.addVer(application, "/css/previewmail.css")%>" rel="stylesheet" type="text/css">
 			<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-	        <script language="JavaScript" src="/js/ezEmail/js_cross/reademail.js"></script>
-	        <script src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    	<script language="javascript" type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	        <script language="JavaScript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/reademail.js")%>"></script>
+	        <script src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    	<script language="javascript" type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 	    	<script language="javascript" type="text/javascript">
 			    var g_rejectWord = "${rejectKeyWord}";
 			    var g_paramURL = "${url}";
@@ -327,17 +328,31 @@
 		        
 		     	// 전달, 회신 시 보낸 시간
 		        function sentDateView(msg) {
-				    if (window.parent.sentDateMsg != "") {
-				    	var sentDateMsg = window.parent.sentDateMsg;
-				    	
-				    	$("body").prepend("<div class='sentDateStr'>" + sentDateMsg + "</div>");
-				    	$(".sentDateStr").css({
-				    		"padding" : "5px 0",
-					        "margin-bottom" : "10px",
-					        "font-size" : "14px",
-					        "background" : "rgba(255,250,205,0.5)"
+					var sendDateStrApp = $(".content", parent.document).parent();
+					
+					sendDateStrApp.find(".sentDateStr").remove();
+
+		     		if (parent.sentDateMsg != "") {
+		     			sendDateStrApp.prepend("<div class='sentDateStr'>" + parent.sentDateMsg + "</div>");
+		     			sendDateStrApp.find(".sentDateStr").css({
+		     				"height" : "27px",
+			     		    "box-sizing" : "border-box",
+			     		    "background" : "#fdfec1",
+			     		    "border-top" : "1px solid #e9ea94",
+			     			"border-left" : "1px solid #e9ea94",
+			     			"border-right" : "1px solid #e9ea94",
+			     		    "line-height" : "27px",
+			     			"width" : "100%",
+			     		    "padding" : "0px 0px 0px 10px",
+			     			"margin" : "0px",
+			     			"font-family" : "Gulim",
+			     			"font-size" : "12px",
+			     			"color" : "#333"
 				    	});
+
 				    }
+		     		
+			    	parent.mailPrevSentDateChk();
 		        }
 			</script> 
 	</head>

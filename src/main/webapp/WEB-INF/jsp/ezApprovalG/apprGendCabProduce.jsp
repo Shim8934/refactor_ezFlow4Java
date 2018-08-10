@@ -100,7 +100,12 @@
 	</head>
 	<body class="popup">
 		<h1><spring:message code='ezApprovalG.t931'/></h1>
-		<h2><spring:message code='ezApprovalG.t1018'/></h2>
+		<div id="close">
+            <ul>
+                <li><span name="btnCancel" onClick="return cmdCancel_onclick()"></span></li>
+            </ul>
+        </div>
+		<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1018'/></h2>
 		<table class="content">
 		  <tr>                 
 		    <th  ><spring:message code='ezApprovalG.t998'/></th>
@@ -120,12 +125,11 @@
 		  </tr>
 		</table>
 		<br>
-		<div style="font-family:'arial', 'verdana', 'dotum'; FONT-SIZE: 9pt"><spring:message code='ezApprovalG.t1020'/><br>
-				(<spring:message code='ezApprovalG.t1021'/></div>
+		<h2 style="font-weight: normal;">▒ <spring:message code='ezApprovalG.t1020'/><br>
+				&nbsp;&nbsp;(<spring:message code='ezApprovalG.t1021'/></h2>
 		<!---------------------------------------- 확인, 취소버튼 ----------------------------------------------->
 		<div class="btnposition btnpositionNew" >
 		    <a class="imgbtn"><span name="btnOK" onClick="return cmdConfirm_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
-		    <a class="imgbtn"><span name="btnCancel" onClick="return cmdCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

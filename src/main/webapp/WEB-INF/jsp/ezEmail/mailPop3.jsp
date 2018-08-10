@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -8,18 +9,18 @@
 		<title>mail_pop3</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/encode_component.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component.js")%>"></script>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/pidcrypt.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/pidcrypt_util.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/asn1.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/jsbn.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/prng4.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/rng.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/rsa.js")%>"></script>
 		<script type="text/javascript">
 			var rsa = new RSAKey();
 		    document.onselectstart = function () { return false; };
@@ -474,11 +475,11 @@
 		    <td style="width:100%;"> <input type="text" name="popID1" id="popID1" class="textarea" style="width:200px"><span id="popSpan1"></span></td> 
 		    <th style="white-space:nowrap" ><spring:message code='ezEmail.t264' /></th> 
 		    <td style="white-space:nowrap;width:250px;"> <input type="password" name="popPW1" id="popPW1" class="textarea" style="width:100px;margin:0px 1px 0px 0px;">
-		        <a  class="imgbtn"><span onClick="connect_test(1)"><spring:message code='ezEmail.t265' /></span></a></td> 
+		        <a  class="imgbtn imgbck"><span onClick="connect_test(1)"><spring:message code='ezEmail.t265' /></span></a></td> 
 		  </tr> 
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t266' /></th> 
-		    <td colspan="3"><a  class="imgbtn"><span onClick="search_mailbox(1)"><spring:message code='ezEmail.t37' /></span></a> <spring:message code='ezEmail.t267' /><span id='popBox1' url=""><spring:message code='ezEmail.t158' /></span> 
+		    <td colspan="3"><a  class="imgbtn imgbck" style="margin-right:3px"><span onClick="search_mailbox(1)"><spring:message code='ezEmail.t37' /></span></a> <spring:message code='ezEmail.t267' /><span id='popBox1' url=""><spring:message code='ezEmail.t158' /></span> 
 		      <input type="checkbox" name="popDelete1" id="popDelete1" value="checkbox"> 
 		      <spring:message code='ezEmail.t268' /></td> 
 		  </tr> 
@@ -489,7 +490,7 @@
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t243' /></th> 
 		    <td colspan="3"> <input type="text" name="popServer2" id="popServer2" class="textarea" style="width:200px" disabled /> 
-		      <select name="popSelect2" id="popSelect2" class="select" onChange="popChange(2)" style="vertical-align:middle;width:200px;"> 
+		      <select name="popSelect2" id="popSelect2" onChange="popChange(2)" style="vertical-align:middle;width:200px;"> 
 		        <OPTION VALUE=""><spring:message code='ezEmail.t731' /></option>
 			    <c:choose>
 			    	<c:when test="${primaryLang == '1'}">
@@ -519,11 +520,11 @@
 		    <td style="width:100%;"> <input type="text" name="popID2" id="popID2" class="textarea" style="width:200px"> <span id="popSpan2"></span></td> 
 		    <th style="white-space:nowrap" ><spring:message code='ezEmail.t264' /></th> 
 		    <td style="white-space:nowrap;width:250px;"> <input type="password" name="popPW2" id="popPW2" class="textarea" style="width:100px;margin:0px 0px 0px 0px;"> 
-		      <a  class="imgbtn"><span onClick="connect_test(2)"><spring:message code='ezEmail.t265' /></span></a> </td> 
+		      <a  class="imgbtn imgbck"><span onClick="connect_test(2)"><spring:message code='ezEmail.t265' /></span></a> </td> 
 		  </tr> 
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t266' /></th> 
-		    <td colspan="3"><a  class="imgbtn"><span onClick="search_mailbox(2)"><spring:message code='ezEmail.t37' /></span></a><span><spring:message code='ezEmail.t267' /></span><span id='popBox2' url=""><spring:message code='ezEmail.t158' /></span> 
+		    <td colspan="3"><a  class="imgbtn imgbck" style="margin-right:5px"><span onClick="search_mailbox(2)"><spring:message code='ezEmail.t37' /></span></a><span><spring:message code='ezEmail.t267' /></span><span id='popBox2' url=""><spring:message code='ezEmail.t158' /></span> 
 		      <input type="checkbox" name="popDelete2" id="popDelete2" value="checkbox"> 
 		      <spring:message code='ezEmail.t268' /></td> 
 		  </tr> 
@@ -564,19 +565,20 @@
 		    <td style="width:100%;"> <input type="text" name="popID3" id="popID3" class="textarea" style="width:200px"> <span id="popSpan3"></span></td> 
 		    <th style="white-space:nowrap" ><spring:message code='ezEmail.t264' /></th> 
 		    <td style="white-space:nowrap;width:250px;"> <input type="password" name="popPW3" id="popPW3" class="textarea" style="width:100px;margin:0px 0px 0px 0px;"> 
-		      <a  class="imgbtn"><span onClick="connect_test(3)"><spring:message code='ezEmail.t265' /></span></a></td> 
+		      <a  class="imgbtn imgbck"><span onClick="connect_test(3)"><spring:message code='ezEmail.t265' /></span></a></td> 
 		  </tr> 
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t266' /></th> 
-		    <td colspan="3"> <a  class="imgbtn"><span onClick="search_mailbox(3)"><spring:message code='ezEmail.t37' /></span></a><span><spring:message code='ezEmail.t267' /></span><span id='popBox3' url=""><spring:message code='ezEmail.t158' /></span> 
+		    <td colspan="3"> <a  class="imgbtn imgbck" style="margin-right:5px"><span onClick="search_mailbox(3)"><spring:message code='ezEmail.t37' /></span></a><span><spring:message code='ezEmail.t267' /></span><span id='popBox3' url=""><spring:message code='ezEmail.t158' /></span> 
 		      <input type="checkbox" name="popDelete3" value="checkbox" id="popDelete3"> 
 		      <spring:message code='ezEmail.t268' /></td> 
 		  </tr> 
-		</table> 
-		<br />
+		</table>
 		<div style="width:720px;text-align:center;">
-		    <a class="imgbtn" onClick="SavePop3()"><span><spring:message code='main.sp09' /></span></a>
-		    <a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
+			<div class="btnpositionJsp">
+		    	<a class="imgbtn" onClick="SavePop3()"><span><spring:message code='main.sp09' /></span></a>
+		    	<a class="imgbtn" onClick="Cancel_Click()"><span><spring:message code='ezEmail.t39' /></span></a>
+		    </div>	
 		</div>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 		<input id="publicExponent" value="${publicExponent}" type="hidden"/>

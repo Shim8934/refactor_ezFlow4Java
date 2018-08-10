@@ -612,9 +612,9 @@ function organtreeview(thisobjid, elobjid) {
                 } else {
                 	nodeHtml += ("<img src='" + g_images["BASE"] + "'>");
                 }
-                    
+                
                 nodeHtml += ("<a href='#" + g_nodeCount + "'><span id='" + g_nodeid + g_nodeCount + "' class='" +
-					g_baseClass["normal"] + "' style='display:inline-block;'>");
+                	g_baseClass["normal"] + "' style='display:inline-block;'>");
 
                 nodeHtml += (childXML.documentElement.selectSingleNode("VALUE").text + "</span></a></span>");
 
@@ -702,7 +702,7 @@ function organtreeview(thisobjid, elobjid) {
                 }
 
                 nodeHtml += ("<a href='#" + g_nodeCount + "'><span id='" + g_nodeid + g_nodeCount + "' class='" +
-					g_baseClass["normal"] + "' style='display:inline-block;'>");
+                	g_baseClass["normal"] + "' style='display:inline-block;'>");
 
                 nodeHtml += (childXML.documentElement.selectSingleNode("VALUE").text + "</span></a></span>");
 
@@ -902,14 +902,14 @@ function organtreeview(thisobjid, elobjid) {
 	        var targetEl = event.target;
 	        var elementid = targetEl.id;
 
-	        if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "")
-	            document.getElementById(elementid).className = g_baseClass["hover"];
+	        /*if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "")
+	            document.getElementById(elementid).className = g_baseClass["hover"];*/
 	    }).call(this, event) :
 	    (function() { // IE
 	        var elementid = window.event.srcElement.id;
 
-	        if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "")
-	            document.getElementById(elementid).className = g_baseClass["hover"];
+	        /*if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "")
+	            document.getElementById(elementid).className = g_baseClass["hover"];*/
 	    }).call(this);
     }
 
@@ -1124,18 +1124,26 @@ function organtreeview(thisobjid, elobjid) {
 				        if (findchildnodevalue(childNode, "DATA15") == 1)
 				            nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");
 				        else
-				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "'>");
+				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' style='padding-right:4px'>");
 				}
 
                 //if (childNode.selectSingleNode("SELECT") != null) {
                 if (findchildnodevalue(childNode, "SELECT") != null) {
+                    //2018-07-12 김보미 - 자원명 길 경우 처리    
+                    //nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
+                    //g_baseClass["selected"] + "' style='display:inline-block;'>");
                     nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
-						g_baseClass["selected"] + "' style='display:inline-block;'>");
+                  		g_baseClass["selected"] + "' style='display:inline-block; overflow-x:hidden; text-overflow:ellipsis; width:" + (168 - (mydepth.length * 18)) + "px;'" +
+                  		" title='" + findchildnodevalue(childNode, "VALUE") + "'>");
                     g_selectedIdx = nodeCount;
                 }
                 else {
+                    //2018-07-12 김보미 - 자원명 길 경우 처리    
+                    //nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
+                    //g_baseClass["normal"] + "' style='display:inline-block;'>");
                     nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
-						g_baseClass["normal"] + "' style='display:inline-block;'>");
+                  		g_baseClass["normal"] + "' style='display:inline-block; overflow-x:hidden; text-overflow:ellipsis; width:" + (168 - (mydepth.length * 18)) + "px;'" +
+                  		" title='" + findchildnodevalue(childNode, "VALUE") + "'>");
                 }
 
                 //nodeHtml += (childNode.selectSingleNode("VALUE").text + "</span></a></div>");
@@ -1249,7 +1257,7 @@ function organtreeview(thisobjid, elobjid) {
 				        if (childNode.selectSingleNode("DATA15").text == 1)
 				            nodeHtml += ("<img src='/images/calendar/icon_resource_ok.png'>&nbsp;");
 				        else
-				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "'>");
+				            nodeHtml += ("<img src='" + g_images["SUB_BASE"] + "' style='padding-right:4px'>");
 				}
 
                 if (childNode.selectSingleNode("SELECT") != null) {

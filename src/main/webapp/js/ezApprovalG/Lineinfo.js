@@ -1,4 +1,4 @@
-﻿
+﻿﻿﻿
 //#############################################################################################################################################사용자리스트 원클릭 이벤트 list2_onSel_Click()
 function list2_onSel_Click() {
 }
@@ -428,7 +428,7 @@ function aprLineAddDeptUser(mode, xmlData) {
             pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
             pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
             pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
-            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>140</WIDTH></HEADER>";
             pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
             pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
             pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
@@ -558,7 +558,7 @@ function AprLineAddUserCC(Mode, tr, pSelectedRow) {
                 pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
                 pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
                 pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>140</WIDTH></HEADER>";
                 pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
                 pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
                 pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
@@ -627,7 +627,7 @@ function AprLineAddUserCC(Mode, tr, pSelectedRow) {
             	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
             	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
             	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
-            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+            	pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>140</WIDTH></HEADER>";
             	pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
             	pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
             	pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
@@ -859,7 +859,7 @@ function APRLINESNDownFunction() {
     		if (pSelectedRow.length != 0) {
     			var p_NextSelRow = pAPRLINE.GetDataRows()[Number(pAPRLINE.GetSelectedIndexes().split(',')[0]) + 1];
     			
-    			if(p_NextSelRow.getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && p_NextSelRow.childNodes[0].innerHTML == "1") {
+    			if(p_NextSelRow == undefined || p_NextSelRow.getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && p_NextSelRow.childNodes[0].innerHTML == "1") {
     				OpenAlertUI(strLangS576);
     				return;
     			} 
@@ -888,7 +888,7 @@ function APRLINESNDownFunction() {
     			if (p_NextSelRow != null) {
     				var p_NextAprStat = GetAttribute(p_NextSelRow, "DATA12");
     				if ((pSelAprLineState == "003" || p_NextAprStat == "003") && pReDraftFlag == "DRAFT") {
-    					var pAlertContent = strLang237;
+    					var pAlertContent = strLang306;
     					OpenAlertUI(pAlertContent);
     					return;
     				}
@@ -908,7 +908,7 @@ function APRLINESNDownFunction() {
     				else {
     					if (pReDraftAprLineFlag) {
     						if (((p_NextAprStat == "002" || p_NextAprStat == "005") && GetAttribute(p_NextSelRow, "DATA4") == pUserID || p_NextAprStat == "003")) {
-    							var pAlertContent = strLang239;
+    							var pAlertContent = strLang310;
     							OpenAlertUI(pAlertContent);
     							return;
     						}
@@ -3691,7 +3691,7 @@ function Checkline() {
         var receptRow = listview.GetDataRows();
 
         var CurListLen = receptRow.length;
-        if (CurListLen == 0 || (CurListLen == 1 && receptRow[0].id == "lvRECEPTLIST_TR_noItems")) {
+        if (CurListLen == 0 || (CurListLen == 1 && receptRow[0].id == "lvRECEPTLIST_TR_noItems") && pDocType != "002") {
             OpenAlertUI(linealt14);
             var tabshow = document.getElementById("1tab2");
             Tab1_MouseClick(tabshow);

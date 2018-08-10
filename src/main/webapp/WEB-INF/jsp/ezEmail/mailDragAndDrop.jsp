@@ -1,19 +1,20 @@
  <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<style>
 			#lstAttachLink {
 				height: 117px;
-				border: 1px solid #3C2F2E;
+				border: 1px solid #d2d2d2;
 			}
 		</style>
 		<script type="text/javascript">
@@ -662,9 +663,9 @@
     <body ondragover ="defaultenter(event)" ondragenter ="defaultenter(event)" style="overflow:hidden">   
         <div style="width:845px;white-space:nowrap;display:inline-block">
             <span style="float:left;">
-                <a class="imgbtn" onclick="btnfileup()"><span><spring:message code='ezEmail.t677' /></span></a>
-                <a class="imgbtn" onclick="btnfileup_big()"><span><spring:message code='ezEmail.t663' /></span></a>
-                <a class="imgbtn" onclick="btnfiledel()"><span><spring:message code='ezEmail.t678' /></span></a>   
+                <a class="imgbtn imgbck" onclick="btnfileup()"><span><spring:message code='ezEmail.t677' /></span></a>
+                <a class="imgbtn imgbck" onclick="btnfileup_big()"><span><spring:message code='ezEmail.t663' /></span></a>
+                <a class="imgbtn imgbck" onclick="btnfiledel()"><span><spring:message code='ezEmail.t678' /></span></a>   
             </span>
             <div id="progdiv" class="progarea" style="display:none">
              	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
@@ -672,7 +673,7 @@
         </div>
         <div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
         </div>
-        <input id="file" type="file" onchange="filechange(event)" multiple="multiple" style="width:1px;height:1px" />
+        <input id="file" type="file" onchange="filechange(event)" multiple="multiple" style="width:1px;height:1px;display:none;" />
         <input type="hidden" value="업로드" onclick ="fileupload()" />
   </body>
 </html>

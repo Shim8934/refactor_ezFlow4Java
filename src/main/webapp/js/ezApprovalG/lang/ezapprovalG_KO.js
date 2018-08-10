@@ -1,4 +1,4 @@
-﻿// ApprovUI\ApprovUI.js
+﻿﻿// ApprovUI\ApprovUI.js
 var strLang2 = "합의";
 var strLang3 = "협조";
 var strLang4 = "반송";
@@ -108,7 +108,7 @@ var strLang207 = "기안자 만이 발송 의뢰를 할 수 있습니다."
 var strLang208 = "발송의뢰 가능여부를 조회하는데 실패하였습니다. "
 // ezAPRATTACH\attach.js
 var strLang214 = "첨부자"
-var strLang215 = "첨부파일명"
+var strLang215 = "파일이름"
 var strLang216 = "파일사이즈"
 var strLang217 = "저장시 오류가 발생하였습니다.!"
 var strLang219 = "본문부)"
@@ -1007,3 +1007,6 @@ var strLangSpjj32 =	"후결 승인시에 에러가 발생하였습니다."
 	
 var strLangSpjj33 = "결재 문서 바로가기";
 var strLangSpjj34 = "님이 기안한 결재 문서가 도착했습니다. <br> 결재를 하시려면 아래 링크를 클릭하세요.";
+
+//2018-06-27 강민수92
+var strLanggarm01 = "관리부서를 추가하여 주십시오."

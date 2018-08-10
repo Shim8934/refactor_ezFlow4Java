@@ -8,7 +8,7 @@
 		<style>
 			#lstAttachLink {
 			height: 105px;
-			border: 1px solid #3C2F2E;
+			border: 1px solid #d2d2d2;
 			}
 		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -250,8 +250,8 @@
 	<body style ="width:100%;height:100%;overflow:hidden">   
         <div style="width:100%;white-space:nowrap;display:inline-block; height: 20px;">
             <div style="float:left">
-                <a class="imgbtn" onclick="btnfileup()"><span><spring:message code='ezTask.t215' /></span></a>
-                <a class="imgbtn" onclick="btnfiledel()"><span><spring:message code='ezTask.t216' /></span></a>   
+                <a class="imgbtn imgbck" onclick="btnfileup()"><span><spring:message code='ezTask.t215' /></span></a>
+                <a class="imgbtn imgbck" onclick="btnfiledel()"><span><spring:message code='ezTask.t216' /></span></a>   
             </div>
             <div id="progdiv" class="progarea" style="display:none">
              	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>

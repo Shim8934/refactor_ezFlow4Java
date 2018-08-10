@@ -612,8 +612,8 @@ public class EzWebFolderGWController {
 			
 			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
 			
-			long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
-			long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
+			double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
+			double totalCapa = Double.parseDouble(userCapacity.getTotalCapacity()) * 1073741824;
 			
 			if (totalUploadSize > (totalCapa - totalUsed)) {
 				logger.debug("Not enough storage to upload these files!");
@@ -851,8 +851,8 @@ public class EzWebFolderGWController {
 			String primary         = userInfo.getPrimary();
 			int startRow           = (pageSize * (pageNum - 1)) + 1;
 			int endRow             = pageSize * pageNum;
-			int cnt                = ezOrganAdminService.getPermissionListCount(companyId, type, primary, tenantId);
-			List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyId, type, primary, startRow, endRow, tenantId);
+			int cnt                = ezOrganAdminService.getPermissionListCount(companyId, type,"","", primary, tenantId);
+			List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyId, type,"","", primary, startRow, endRow, tenantId);
 			
 			logger.debug("List size: " + list.size());
 			
@@ -2147,6 +2147,12 @@ public class EzWebFolderGWController {
 					}
 					
 					result.put("folderTree", personalFolder);
+					break;
+				case "share":
+					//Get share folder tree
+					List<FolderSimpleVO> shareFolders = new ArrayList<FolderSimpleVO>();
+					shareFolders = ezWebFolderService.getAllSimpleShareFolder(userId, userInfo.getDeptID(), companyId, tenantId);
+					result.put("folderTree", shareFolders);
 					break;
 			}
 			

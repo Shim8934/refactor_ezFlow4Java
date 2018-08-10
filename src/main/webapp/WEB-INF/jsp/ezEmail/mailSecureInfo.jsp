@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -9,20 +10,20 @@
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<title><spring:message code='ezEmail.lhm44' /></title>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/Controls_cross/datepicker.htc.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/Controls_cross/composeappt.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/datepicker.htc.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/composeappt.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 		<!-- data picker-->
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>">
 		<!-- time picker-->
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.js")%>"></script>
+		<link rel="stylesheet" type="text/css" href="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.css")%>" />
 		<script type="text/javascript">
 			var offsetMin = "${offsetMin}";
 		    
@@ -36,7 +37,7 @@
 		
 		<div id="close">
 		  <ul>
-		    <li><span onClick="btnClose()"><spring:message code='ezEmail.t63' /></span></li>
+		    <li><span onClick="btnClose()"></span></li>
 		  </ul>
 		</div>
 		
@@ -83,9 +84,9 @@
 			<table style="width:100%;text-align:center">
 				<c:forEach var="vo" items="${secureReaderList}">
 					<tr>
-						<td>${vo.reader}</td>
-						<td width="60px">${vo.readCount}</td>
-						<td width="150px">${vo.readDate}</td>
+			    		<td width="278px" style="color: #5b5a5a;border-bottom: 1px solid #eaeaea;padding: 5px 4px;box-sizing: border-box;">${vo.reader}</td>
+						<td width="85px" style="color: #5b5a5a;border-bottom: 1px solid #eaeaea;padding: 5px 4px;box-sizing: border-box;">${vo.readCount}</td>
+						<td width="160px" style="color: #5b5a5a;border-bottom: 1px solid #eaeaea;padding: 5px 4px;box-sizing: border-box;">${vo.readDate}</td>
 					</tr>
 				</c:forEach>
 			</table>

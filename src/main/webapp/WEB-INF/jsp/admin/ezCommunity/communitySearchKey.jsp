@@ -16,9 +16,11 @@
 			padding-left: 10px;
 		}
 		</style>
+		<script type="text/javascript" src="<spring:message code = 'ezCommunity.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
-		<script type="text/javascript" src="<spring:message code = 'ezCommunity.e1' />"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
 			var sCurPage = "<c:out value = '${curPage}' />";
@@ -88,11 +90,11 @@
 				window.location.href = "/admin/ezCommunity/searchKey.do?select=" + encodeURIComponent(strSelect) + "&query=" + encodeURIComponent(strQuery);
 			}
 			
+			/* 2018-07-18 홍승비 - 팝업창 위치, 스크립트 오류 수정(.js import) */
 			function openinfo_userinfo(pCN) {
-				window.open("/ezCommon/showPersonInfo.do?id=" + pCN, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-			    var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=440";
-			    feature = feature + GetOpenPosition(420, 440);
-			    rts60 = window.open("/ezCommon/showPersonInfo.do?id=" + pCN, "", feature);
+			    var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=438";
+			    feature = feature + GetOpenPosition(420, 438);
+			    window.open("/ezCommon/showPersonInfo.do?id=" + pCN, "", feature);
 			}
 			
 			//########################################페이지네이션 변경 ##############################################
@@ -111,23 +113,23 @@
 	            var pageNum = sCurPage;
 	            
 	            if (sTotalPage > 1 && pageNum != 1) {
-	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (sTotalPage > BlockSize) {
 	                if (pageNum > BlockSize) {
-	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
 	                    PagingHTML += strtext;
 	                } else {
-	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
@@ -157,26 +159,26 @@
                 
 	            if (sTotalPage > BlockSize) {
 	                if (sTotalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+	                    strtext = "";
+	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif'></span>";
 	                    PagingHTML += strtext;
 	                }
 	                else {
-	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                    strtext = "";
+	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 	                    PagingHTML += strtext;
 	                }
 	            } else {
-	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang81 + "</span>";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                strtext = "";
+	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
 	            if (sTotalPage > 1 && sTotalPage != 1 && (sTotalPage != pageNum)) {
-	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + sTotalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + sTotalPage + ")'><img src='/images/sub/btn_n_next.gif'></span>";
 	                PagingHTML += strtext;
 	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
 	                PagingHTML += strtext;
 	            }
 	            
@@ -222,6 +224,24 @@
 	            }
 	        }
 	        //########################################페이지네이션 변경 ##############################################
+	        
+	        //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 170;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
+		    
+		    $(function(){
+	    		windowResize();
+		    });
 		</script>
 	</head>
 	<body class="mainbody" onload = "makePageSelPage()">
@@ -237,7 +257,7 @@
 						</select>
 						
 						<input name="text" type="text" style="WIDTH:200px;vertical-align:middle; height: 22px;" id="txt_SearchQuery" onKeyPress="return get_search_CommunityInfo(event)"> 
-						<a class="imgbtn" style="vertical-align:middle; margin-bottom:0px;"><span onClick="search_CommunityInfo()"><spring:message code = 'ezCommunity.t31' /></span></a>
+						<a class="imgbtn imgbck" style="vertical-align:middle; margin-bottom:0px;"><span onClick="search_CommunityInfo()"><spring:message code = 'ezCommunity.t31' /></span></a>
 			  		</td>
 				</tr>
 			</table>
@@ -249,28 +269,35 @@
 			<img src="/images/page_next.gif" width="15" height="16" align="absmiddle" id="Img1"  onClick="nextPage_onclick()"></div>--%>
 			
 			<br />
-			<div style="border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
-			<table class="mainlist" style="width:100%">
-				<tr>
-					<th style="width:70px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
-					<th style="width:250px;"><spring:message code = 'ezCommunity.t9991' /></th>
-					<th><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></th>
-					<th style="width:100px;"><spring:message code = 'ezCommunity.t33' /></th>
-					<th style="width:80px;"><spring:message code = 'ezCommunity.t78' /></th>
-				</tr>
-
-				<c:forEach var = "club" items = "${clubList }" varStatus="status">
-					<tr>
-						<td style="width:50px; height:23px"><c:out value='${totalCount - ((curPage -1) * 10) - status.index }' /></td>
-						<!--// 20100108 : 보안 처리, 관련 추가작업(XSS)-->
-						<td style="cursor:pointer; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><nobr ><c:out value = '${club.c_ClubName }' /></nobr></td>
-						<td style="cursor:pointer; width:300px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><c:out value = '${club.c_ClubDesc}' /></td>
-						<td style="cursor:pointer; width:80px" onClick="openinfo_userinfo('${club.c_SysopID}')"><c:out value = '${club.userName }' /></td>
-						<td style="width:80px"><c:out value = '${fn:substring(club.c_RegDate, 0, 10) }' /></td>
-					</tr>
-				</c:forEach>
-				
-			</table>
+			<div id="contentlist" style="width:100%; overflow: auto;">
+				<div style="border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
+					<table class="mainlist" style="width:100%">
+						<tr>
+							<th style="width:70px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
+							<th style="width:250px;"><spring:message code = 'ezCommunity.t9991' /></th>
+							<th><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></th>
+							<th style="width:100px;"><spring:message code = 'ezCommunity.t33' /></th>
+							<th style="width:80px;"><spring:message code = 'ezCommunity.t78' /></th>
+						</tr>
+						<c:if test="${clubList ne null && clubList ne ''}">
+							<c:forEach var = "club" items = "${clubList }" varStatus="status">
+								<tr>
+									<td style="width:50px; height:23px"><c:out value='${totalCount - ((curPage -1) * 10) - status.index }' /></td>
+									<!--// 20100108 : 보안 처리, 관련 추가작업(XSS)-->
+									<td style="cursor:pointer; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><nobr ><c:out value = '${club.c_ClubName }' /></nobr></td>
+									<td style="cursor:pointer; width:300px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><c:out value = '${club.c_ClubDesc}' /></td>
+									<td style="cursor:pointer; width:80px" onClick="openinfo_userinfo('${club.c_SysopID}')"><c:out value = '${club.userName }' /></td>
+									<td style="width:80px"><c:out value = '${fn:substring(club.c_RegDate, 0, 10) }' /></td>
+								</tr>
+							</c:forEach>
+						</c:if>
+						<c:if test="${clubList eq null || clubList eq ''}">
+							<tr>
+								<td colspan="5"><spring:message code = 'main.t00026' /></td>
+							</tr>
+						</c:if>	
+					</table>
+				</div>
 			</div>
 			<br />
 			<div id="tblPageRayer"></div>

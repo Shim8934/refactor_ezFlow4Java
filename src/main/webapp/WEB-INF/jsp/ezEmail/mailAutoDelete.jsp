@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -8,10 +9,10 @@
 		<title>mail_autodelete</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/encode_component.js")%>"></script>
 		<script  type="text/javascript">
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -97,7 +98,7 @@
 					<th><spring:message code='ezEmail.t119' /></th>
 					<td>
 						<div style="margin:1px 0px 0px 0px;">
-							&nbsp;<input id="folderpath" lealfolderPath="" readonly="true" type="text" style="WIDTH:190px;margin:0px 1px 0px 0px;" name="text">&nbsp;<a class="imgbtn"><span onClick="getFolder()"><spring:message code='ezEmail.t120' /></span></a>
+							&nbsp;<input id="folderpath" lealfolderPath="" readonly="true" type="text" style="WIDTH:190px;margin:0px 1px 0px 0px;" name="text">&nbsp;<a class="imgbtn imgbck" style="height:22px"><span style="line-height:22px" onClick="getFolder()"><spring:message code='ezEmail.t120' /></span></a>
 						</div>
 					</td>
 				</tr>
@@ -113,9 +114,10 @@
 					<td><input id="deleteunread" type="checkbox" name="checkbox"></td>
 				</tr>
 			</table>
-			<br>
 			<div style="width:750px;text-align:center;">
-				<a class="imgbtn" name="Submit" onClick="add_condition()"><span><spring:message code='ezEmail.t124' /></span></a>
+				<div class="btnpositionJsp">
+					<a class="imgbtn" name="Submit" onClick="add_condition()"><span><spring:message code='ezEmail.t124' /></span></a>
+				</div>	
 			</div>
 			<br>
 			<table class="popuplist" style="width:750px;">

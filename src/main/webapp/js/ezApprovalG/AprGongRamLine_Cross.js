@@ -174,7 +174,7 @@ function InitListView() {
     		},
     		success: function(text){
     			result = text;
-    		}			
+    		}
     	});
 
         var LVData = null;
@@ -185,6 +185,24 @@ function InitListView() {
             LVData = createXmlDom();
             LVData = loadXMLString(result);
         }
+        
+        var resultXML = loadXMLString(result);
+        
+        setNodeText(GetElementsByTagName(resultXML, "WIDTH")[0], "35");
+        setNodeText(GetElementsByTagName(resultXML, "WIDTH")[1], "120");
+        setNodeText(GetElementsByTagName(resultXML, "WIDTH")[2], "50");
+        setNodeText(GetElementsByTagName(resultXML, "WIDTH")[3], "130");
+        setNodeText(GetElementsByTagName(resultXML, "WIDTH")[4], "120");
+        setNodeText(GetElementsByTagName(resultXML, "WIDTH")[5], "70");
+        setNodeText(GetElementsByTagName(resultXML, "WIDTH")[6], "140");
+        
+        resultXML.getElementsByTagName("HEADER")[0].removeChild(resultXML.getElementsByTagName("HEADER")[0].childNodes[2]);
+        resultXML.getElementsByTagName("HEADER")[1].removeChild(resultXML.getElementsByTagName("HEADER")[1].childNodes[2]);
+        resultXML.getElementsByTagName("HEADER")[2].removeChild(resultXML.getElementsByTagName("HEADER")[2].childNodes[2]);
+        resultXML.getElementsByTagName("HEADER")[3].removeChild(resultXML.getElementsByTagName("HEADER")[3].childNodes[2]);
+        resultXML.getElementsByTagName("HEADER")[4].removeChild(resultXML.getElementsByTagName("HEADER")[4].childNodes[2]);
+        resultXML.getElementsByTagName("HEADER")[5].removeChild(resultXML.getElementsByTagName("HEADER")[5].childNodes[2]);
+        resultXML.getElementsByTagName("HEADER")[6].removeChild(resultXML.getElementsByTagName("HEADER")[6].childNodes[2]);
 
         var pAPRLINE = new ListView();
         pAPRLINE.SetID("pAPRLINE");
@@ -192,7 +210,7 @@ function InitListView() {
         pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");
         pAPRLINE.SetSelectFlag(false);
         pAPRLINE.SetHeightFree(true);
-        pAPRLINE.DataSource(loadXMLString(result));
+        pAPRLINE.DataSource(resultXML);
         pAPRLINE.DataBind("APRLINE");
         
     }
@@ -438,13 +456,13 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
                 }
 
                 pparsingXML = "<LISTVIEWDATA><HEADERS>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>30</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>60</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang300 + "</NAME><WIDTH>35</WIDTH></HEADER>";
+                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang29 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang28 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
+                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
+                pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>140</WIDTH></HEADER>";
                 pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
                 pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
                 pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";
@@ -507,6 +525,7 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
                     pAPRLINE.SetMulSelectable(false);    
                     pAPRLINE.SetRowOnDblClick("AprlineDel_onclick");            
                     pAPRLINE.SetSelectFlag(false);
+                    pAPRLINE.SetHeightFree(true);
                     pAPRLINE.DataSource(objXML);      
                     pAPRLINE.DataBind("APRLINE");
                 } else {
@@ -697,7 +716,7 @@ function btn_addDepartment() {
 				}
 			}
 		});
-	} else {*/
+	} else {
 		var listView = new ListView();
 		listView.LoadFromID("DivUserList");
 		var listObj = listView.GetDataRows();
@@ -709,7 +728,14 @@ function btn_addDepartment() {
 				}
 			}
 		}
-	//}
+	}*/ // 부서추가 버튼이 조직도 트리뷰의 선택한 부서의 부서원 입력이 아닌, 이름 검색 시 트리뷰 하단에 검색 결과가 나오는데 그것을 전부 입력하는 동작을 하여서 주석처리
+	
+	//2018-08-08 천성준 - 부서추가 버튼 클릭 시, 조직도 트리뷰에서 선택한 부서의 CN을 가져와서 부서원 입력  
+	var treeView = new TreeView();
+	treeView.LoadFromID("FromTreeView");
+	var selnode = treeView.GetSelectNode();
+	var deptID = selnode.GetNodeData("CN");
+	getUserInDept(deptID);
 }
 // 부서원 정보를 가져온다.
 function getUserInDept(dept) {
@@ -776,7 +802,7 @@ function aprLineAddDeptUser(mode, xmlData) {
             pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang32 + "</NAME><WIDTH>130</WIDTH></HEADER>";
             pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang61 + "</NAME><WIDTH>120</WIDTH></HEADER>";
             pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang125 + "</NAME><WIDTH>70</WIDTH></HEADER>";
-            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>120</WIDTH></HEADER>";
+            pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang301 + "</NAME><WIDTH>140</WIDTH></HEADER>";
             pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
             pparsingXML = pparsingXML + "<VALUE>" + AprLineAddIndex + "</VALUE>";
             pparsingXML = pparsingXML + "<DATA1>" + "" + "</DATA1>";

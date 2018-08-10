@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -17,16 +18,16 @@
 		</style>
 		</c:if>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/newMail_Cross.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/AttachMain_CK.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/AttachItem_CK.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/encode_component.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/newMail_Cross.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/AttachMain_CK.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/AttachItem_CK.js")%>"></script>
         <c:if test="${isCrossBrowser != true}">
-        <script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+        <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/Kaoni_ActiveX.js")%>"></script>
         </c:if>  
 		<script>
 			var g_szAuthor = "";
@@ -59,7 +60,7 @@
 			var g_font = "<spring:message code='ezEmail.t409' />";
 			var g_showdisplay = "${showDisplay}";
 			var g_simplemimeencoding = "7bit";
-			var g_simplemime = "";
+			var g_simplemime = "0";
 			var g_xmldoc = createXMLHttpRequest();
 			var useMultiLangMail = "${useMultiLangMail}";
 			var g_isFormat = false;
@@ -122,7 +123,7 @@
 	                ezUtil.UseUTF8 = true;              
 	            }
 			    
-				if (useMultiLangMail == "1") LoadLanguageConfig();
+				//if (useMultiLangMail == "1") LoadLanguageConfig();
 				
 				if (g_unread == "1")
 				{
@@ -775,7 +776,7 @@
 		              <li><span onClick="Option_onClick('M')" id="Span1"><spring:message code='ezEmail.t353' /></span></li>
 		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
 		                 <img src="/images/pbar.gif" align="absmiddle"></li> 
-					<li id="menuTable" class="sel" style="background:none; border:none;padding:4px 0 2px 0; margin:0; vertical-align:top;">
+					<li id="menuTable" class="sel" style="background:none; border:none; margin:0; vertical-align:top;">
 		              <select name="importantSelect" id="importantSelect" onChange="important_change()">
 		                <option><spring:message code='ezEmail.t360' /></option>
 		                <option selected="selected"><spring:message code='ezEmail.t361' /></option>
@@ -786,7 +787,7 @@
 		            <li class="bar" style="background:none; border:0;padding-left:0;padding-right:0;cursor:default; display:none;"><img src="/images/pbar.gif" align="absmiddle"></li>                        
 		            <li class="bar" style="background:none; border:0;padding-left:5px;padding-right:0;padding-top:4px;cursor:default;">
                         <img src="/images/pbar.gif"></li> 
-                    <li class="sel" style="background:none; border:none; padding:0px;padding-top:4px;">
+                    <li class="sel" style="background:none; border:none; padding:0px;">
                         <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">
                         	<option value="0">HTML</option>
                         	<option value="1">PlainText</option>
@@ -811,7 +812,7 @@
 		        </div>
 		        <div id="close">
 		          <ul>
-		            <li><span onClick="window_close()"><spring:message code='ezEmail.t63' /></span></li>
+		            <li><span onClick="window_close()"></span></li>
 		          </ul>
 		        </div></td>
 		    </tr>
@@ -841,7 +842,7 @@
 		                <select id="SelectToAddress" style="WIDTH:100px" onchange="simple_select('TO',this)">
 		                </select>
 		            </td>
-		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
+		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
 		          </tr>
 		          <tr>
 		            <td colspan="3"><div id="MsgToGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
@@ -855,7 +856,7 @@
 		                <select id="SelectCcAddress" style="WIDTH:100px" onchange="simple_select('CC',this)">
 		                </select>
 		            </td>
-		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
+		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
 		          </tr>
 		          <tr id="MsgCC_TRu">
 		            <td colspan="3"><div id="MsgCCGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
@@ -867,7 +868,7 @@
 		                <select id="SelectBCCAddress" style="WIDTH:100px" onchange="simple_select('BCC',this)">
 		                </select>
 		            </td>
-		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
+		            <td style="width:200px;BORDER-LEFT: #ffffff 1px solid;" ><a class="imgbtn imgbck"><span onClick="new_Address()"><spring:message code='ezEmail.t832' /></span></a></td>
 		          </tr>
 		          <tr id="MsgBCC_TRu" style="display:none;">
 		            <td colspan="3"><div id="MsgBCCGot" style="OVERFLOW-Y: auto; HEIGHT: 17px" class="viewtxt"></div></td>
@@ -922,7 +923,7 @@
                 <c:if test="${isCrossBrowser == true}">          
 		        <tr>
 		            <td style="padding-top: 10px;height:20px;vertical-align:middle;">
-		                <span style="color:#3a76c3;font-weight:bold;height:15px;display:inline-block;"><img src="/images/i_urgency.gif" />&nbsp;${pAttachWarning}</span>
+		                <img src="/images/i_notice.gif" style="vertical-align: middle;padding-left:1px" /><span style="color:#3a76c3;height:18px;display:inline-block;margin-left:5px">${pAttachWarning}</span>
 		                <iframe id="dadiframe" name="dadiframe" style="width:100%;border:0px" frameborder="0" src="/ezEmail/dragAndDrop.do"></iframe>
 		            </td>
 		        </tr>
@@ -939,11 +940,11 @@
                                     <script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans","100%", "20");</script>                                
                                 </td>
                                 <td class="pos2">
-                                    <a href="#" class="imgbtn"><span id="btn_AttachAdd" onclick="attach_Add()"><spring:message code='ezEmail.t677' /></span></a>
+                                    <a href="#" class="imgbtn imgbck"><span id="btn_AttachAdd" onclick="attach_Add()"><spring:message code='ezEmail.t677' /></span></a>
                                     <br>
-                                    <a href="#" class="imgbtn"><span id="btn_bigAttachAdd" onclick="bigattach_Add()"><spring:message code='ezEmail.t663' /></span></a>
+                                    <a href="#" class="imgbtn imgbck"><span id="btn_bigAttachAdd" onclick="bigattach_Add()"><spring:message code='ezEmail.t663' /></span></a>
                                     <br>                                    
-                                    <a href="#" class="imgbtn"><span id="btn_AttachDel" onclick="attach_Delete()"><spring:message code='ezEmail.t678' /></span></a></td>
+                                    <a href="#" class="imgbtn imgbck"><span id="btn_AttachDel" onclick="attach_Delete()"><spring:message code='ezEmail.t678' /></span></a></td>
                             </tr>
                         </table>
                     </td>
@@ -977,7 +978,6 @@
 		<input type="hidden" name="eImportant" style="display:none;">
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 			
 			if (useSecureMail == "YES") {
 	        	$('.securemail').css('display', '');

@@ -26,6 +26,7 @@
 	        var strLang2 = "<spring:message code = 'ezPersonal.t10000' />";
 	        var strLang3 = "<spring:message code = 'ezPersonal.t10001' />";
 	        var strLang4 = "<spring:message code = 'ezPersonal.t223' />";
+	        var strLang5 = "<spring:message code = 'ezQuestion.t312' />";
 	
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -43,6 +44,8 @@
 	            }
 	
 	            makelist();
+	            //2018-08-06 김보미 - 페이지 위치 고정
+	            windowResize();
 	        });
 			
 	        function makelist() {
@@ -96,6 +99,12 @@
 		                pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
 		            }
 		            
+		            //2018-08-02 김보미 - 데이터가 없을 때
+		            if (TotalCount == null || TotalCount == 0) { 
+		            	var TR_noItems = "<tr id='Poll_TR_noItems'><td style='text-align: center;' colspan='5'>" + strLang5 + "</td></tr>";
+		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
+		            }
+		            
 		            totalPage = Math.ceil(new Number(TotalCount / PageSize));
 		            
 		            if (CrossYN()) {
@@ -139,11 +148,11 @@
 		        if (CrossYN()) {
 		            addpoll_cross_dialogArguments[0] = document.getElementById("ListCompany").value;
 		            addpoll_cross_dialogArguments[1] = add_poll_Complete;
-		            var AddPoll_Cross = window.open("/admin/ezPersonal/addPoll.do", "AddPoll_Cross", GetOpenWindowfeature(450, 490));
+		            var AddPoll_Cross = window.open("/admin/ezPersonal/addPoll.do", "AddPoll_Cross", GetOpenWindowfeature(450, 500));
 		            try { AddPoll_Cross.focus(); } catch (e) {
 		            }
 		        } else {
-		            rtnValue = window.showModalDialog("/admin/ezPersonal/addPoll.do", document.getElementById("ListCompany").value, "dialogHeight:490px;dialogwidth:430px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(430, 490));
+		            rtnValue = window.showModalDialog("/admin/ezPersonal/addPoll.do", document.getElementById("ListCompany").value, "dialogHeight:500px;dialogwidth:430px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(430, 500));
 		
 		            if (typeof (rtnValue) != "undefined") {
 		                company_change();
@@ -197,23 +206,23 @@
 		        PagingHTML += strtext;
 		        
 		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
 		            PagingHTML += strtext;
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        
 		        if (totalPage > BlockSize) {
 		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang2 + "</span>";
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
 		                PagingHTML += strtext;
 		            } else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang2 + "</span>";
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang2 + "</span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        
@@ -236,27 +245,33 @@
 		            }
 		        }
 		        
+		        //2018-08-02 김보미 - 데이터가 하나도 없을때 디폴트 페이징
+	            if (i == 1) {
+	            	strtext = "<span class='on'>" + i + "</span>";
+                    PagingHTML += strtext;
+	            }
+		        
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang3 + "</span>";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
 		                PagingHTML += strtext;
 		            } else {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang3 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		                PagingHTML += strtext;
 		            }
 		        } else {
-		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang3 + "</span>";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+		            strtext = "";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        
 		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
 		            PagingHTML += strtext;
 		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
 		            PagingHTML += strtext;
 		        }
 		        
@@ -314,6 +329,20 @@
 		    function td_Create(strtext) {
 		        tblPageNum.innerHTML = tblPageNum.innerHTML + strtext;
 		    }
+		    
+            //2018-08-06 김보미 - 페이지 위치 고정
+		    $(window).on("resize", function(){
+	            windowResize();
+	        });
+		    
+		    function windowResize() {
+	        	var height = document.documentElement.clientHeight - 122 - document.getElementById("mainmenu").clientHeight;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+	        		height = height - 30;
+	        	}
+	        	document.getElementById("contentlist").style.height = height + "px";
+	        	document.getElementById("contentlist").style.overflow = "auto";
+	        }
 		</script>
 	</head>
 	<body class = "mainbody">
@@ -345,29 +374,28 @@
 		</xml>
 		
 	    <form method="post">
-	        <h1>Quick Poll<span id="mailBoxInfo"></span></h1>
+	        <h1>Quick Poll<span id="mailBoxInfo" style="display:none"></span></h1>
 	        <div id="mainmenu">
-	            <ul>
-	                <li style="background: none">
-	                    <SELECT id="ListCompany" name="ListCompany" onChange="company_change()">
-			        	<c:forEach var="item" items="${list}">
-		            		<option value="<c:out value='${item.cn}'/>" ><c:out value='${item.displayName}'/></option>
-		            	</c:forEach>
-			        	</SELECT>
-	                </li>
+				<span><b><spring:message code='ezEmail.t59' /> : </b></span>
+				<SELECT id="ListCompany" name="ListCompany" onChange="company_change()">
+	        	<c:forEach var="item" items="${list}">
+            		<option value="<c:out value='${item.cn}'/>" ><c:out value='${item.displayName}'/></option>
+            	</c:forEach>
+	        	</SELECT>
+				<ul style="margin-top:15px">	            	
 	                <li><span onclick="add_poll()"><spring:message code = 'ezPersonal.t235' /></span></li>
 	            </ul>
-	        </div>
+		  	</div>
 	        
 	        <script type="text/javascript">
 	            selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	        </script>
-	        
-	        <table class="mainlist" style="width: 100%;">
-	            <div id="AccessList" style="BORDER: 0; WIDTH: 100%"></div>
-	        </table>
-	        
-	        <div id="tblPageRayer" style="margin-bottom: 10px;"></div>
+	        <div id="contentlist" style="width:100%; overflow: auto;">
+		        <table class="mainlist" style="width: 100%;">
+		            <div id="AccessList" style="BORDER: 0; WIDTH: 100%"></div>
+		        </table>
+		    </div>
+	        <div id="tblPageRayer"></div>
 	    </form>
 	</body>
 </html>

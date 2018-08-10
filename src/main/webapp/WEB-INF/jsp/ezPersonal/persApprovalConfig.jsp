@@ -233,8 +233,9 @@
 			</c:if>
 		  	<c:if test="${flag != 'N'}">
 				<div id="DivPassType">
-					<h2>▒&nbsp;<spring:message code='ezPersonal.t948'/>
-						<div style="margin-top:10px;">						
+					<h2>▒&nbsp;<spring:message code='ezPersonal.t948'/>&nbsp;
+							<!-- 2018-07-25 김보미 - div주석 -->
+<!-- 						<div style="margin-top:10px;">						 -->
 							<select id="pwdType" onchange="ChangeType()">
 								<c:choose>
 									<c:when test="${pwdType == 'L' || pwdType == '' }">
@@ -261,7 +262,7 @@
 									</c:otherwise>
 								</c:choose>
 							</select>
-						</div>
+<!-- 						</div> -->
 					</h2>
 			</c:if>
 			<br />
@@ -283,8 +284,8 @@
 					    </table>  
 			   	 </div>
 			</div>
-			<div class="btnposition" style="width:450px;margin-top:10px">
-			    <a class="imgbtn" onClick="Change_Click()" ><span><spring:message code='ezPersonal.t12'/></span></a>
+			<div class="btnpositionJsp" style="width:436px">
+			    <a class="imgbtn" onClick="Change_Click()" ><span><spring:message code='ezPersonal.t34'/></span></a>
 			    <a class="imgbtn" onClick="Cancel_Click()" ><span><spring:message code='ezPersonal.t13'/></span></a>
 			</div>
 			<input id="publicModulus" value="${publicModulus}" type="hidden"/>

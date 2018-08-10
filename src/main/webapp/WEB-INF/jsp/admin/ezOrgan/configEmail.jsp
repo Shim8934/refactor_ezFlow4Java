@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -6,8 +7,8 @@
 <head>
 	<title><spring:message code='ezOrgan.t144' /></title>
 	<link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
-    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 	<script type="text/javascript">
 		
 		function Delete_Address()
@@ -242,6 +243,11 @@
 <body class="popup"> 
 	<form method="post"> 
 		<h1><spring:message code='ezOrgan.t144' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table class="content">
 			<%-- //2016-12-15 이효민 : 사용하지 않는 기능.
 			<tr>
@@ -253,17 +259,16 @@
 			</tr>  --%>
 			<tr> 
 				<th><spring:message code='ezOrgan.t163' /></th> 
-				<td>
+				<td style="padding:3px">
 					${listEmailHtml}	
 				</td> 
 			</tr> 
 		</table> 
-		<div class="btnposition">
+		<div class="btnpositionNew">
 			<a class="imgbtn" onClick="Add_Address()"><span><spring:message code='ezOrgan.t164' /></span></a>
 			<a class="imgbtn" onClick="Delete_Address()"><span><spring:message code='ezOrgan.t165' /></span></a>
 			<a class="imgbtn" style="WIDTH:auto" onClick="Set_Primary()"><span>Primary<spring:message code='ezOrgan.t166' /></span></a>
 			<a class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezOrgan.t167' /></span></a>
-			<a class="imgbtn" onClick="window.close()"><span><spring:message code='ezOrgan.t125' /></span></a>
 		</div>
 	</form> 
 </body>

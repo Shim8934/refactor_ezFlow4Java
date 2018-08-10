@@ -524,7 +524,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				Cookie[] cookies = req.getCookies();
 				if (cookies != null) {
 					for (int j=0; j<cookies.length; j++) {
-						if (cookies[j].getName().equals("POPUP_"+itemSeq)) {
+						if (cookies[j].getName().equals("POPUP_"+itemSeq+"_"+userInfo.getId())) {
 							cookieValue = cookies[j].getValue();
 						}
 					}
@@ -544,7 +544,9 @@ public class EzPortalController extends EgovFileMngUtil {
 			
 			//스킨정보
 			strHTML = strHTML.replace("table-layout:fixed;", "");
+			//topMenuId로 사용중인 모듈을 확인하기 위해서 parameter로 전달
 			strHTML = strHTML.replace("/ezPortal/environmentMain.do", "/ezPortal/environmentMain.do?topMenuID=" + pageID);
+			strHTML = strHTML.replace("/ezPortal/help/help.do", "/ezPortal/help/help.do?topMenuID=" + pageID);
 			
 			if (!mode.equals("edit") || !mode.equals("view")) {
 				mode = "view";
@@ -1056,8 +1058,12 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pollNum = "";
 		String userPhoto = "";
 		String userOffset = userInfo.getOffset().split("\\|")[1];
-		String userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
-		
+		String userApprovalG = config.getProperty("config.UserInfo_ApprovalG");
+		/*근태관리 추가*/
+		String serverTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String accessID = ezPortalService.getAccessList(userInfo);
+		String attitudeLinkURL = "/ezAttitude/attitudeMain.do";
+		String isUseAttMenuItem = "";
 		mailAddress = userInfo.getEmail();
 		
 		if (userInfo.getPrimary().equals("1")) {
@@ -1099,6 +1105,41 @@ public class EzPortalController extends EgovFileMngUtil {
 			checkBrowser = false;
 		}
 		
+		//근태관리 사용에 따른 시계 사용 유무 로직
+		isUseAttMenuItem = ezPortalService.getMainMenuItemUID(accessID, attitudeLinkURL, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String accessList = ezPortalService.getAccessList(userInfo);
+		
+		/*
+		 * 환경설정 좌측 메뉴 리스트에 있는 모듈의 URL과 이름을 map에 추가
+		 * 여기에 입력한 모듈의 이름으로 사용 여부 확인 
+		 */
+		
+		HashMap <String, String> moduleList = new HashMap<String, String>();
+
+//		moduleList.put("/ezEmail/mailMain.do", "mail");
+//		moduleList.put("/ezSchedule/scheduleIndex.do?funCode=2", "schedule");
+//		moduleList.put("/ezApprovalG/apprGMain.do", "appr");
+//		moduleList.put("/ezBoard/boardMain.do", "board");
+//		moduleList.put("/ezCommunity/communityMain.do", "community");
+//		moduleList.put("/ezResource/resMain.do", "res");
+		moduleList.put("/ezCircular/circularIndex.do", "circular");
+//		moduleList.put("/ezJournal/journalMain.do", "journal");
+		
+		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), "");
+		
+		/*
+		 * moduleList에 추가해준 모듈의 이름으로 확인 
+		 */
+		
+//		model.addAttribute("isMailUsed", usedList.get("mail"));
+//		model.addAttribute("isScheduleUsed", usedList.get("schedule"));
+//		model.addAttribute("isApprUsed", usedList.get("appr"));
+//		model.addAttribute("isBoardUsed", usedList.get("board"));
+//		model.addAttribute("isCommunityUsed", usedList.get("community"));
+//		model.addAttribute("isResUsed", usedList.get("res"));
+		model.addAttribute("isCircularUsed", usedList.get("circular"));
+//		model.addAttribute("isJournalUsed", usedList.get("journal"));
+		
 		model.addAttribute("displayName", displayName);
 		model.addAttribute("department", department);
 		model.addAttribute("title", title);
@@ -1116,6 +1157,9 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("host", userInfo.getServerName());
 		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("checkBrowser", checkBrowser);
+		//근태관리 추가
+		model.addAttribute("serverTime", serverTime);
+		model.addAttribute("isUseAttMenuItem", isUseAttMenuItem);
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";
@@ -1603,15 +1647,33 @@ public class EzPortalController extends EgovFileMngUtil {
 								float poolRstPer = ((poolRstCnt / pTotalCnt) * 100);
 								String strAnswer =  xmlDom.getElementsByTagName("ANSWER"+list.get(i).getResult()).item(0).getTextContent();
 								String titleString = strAnswer;
-								if (strAnswer.length() > 11) {
-									strAnswer = strAnswer.substring(0, 11) + "…";
-								}
+								// 2018-07-25 김보미 - 주석
+//								if (strAnswer.length() > 11) {
+//									strAnswer = strAnswer.substring(0, 11) + "…";
+//								}
 								pPollResultList.add(list.get(i).getResult());
-								pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + list.get(i).getResult() + "." + strAnswer + " (" + 
-								"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
-								"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
-								"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
-								"</dl>";
+								// 2018-07-25 김보미 - content부분 변경
+//								pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + list.get(i).getResult() + "." + strAnswer + " (" + 
+//								"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
+//								"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
+//								"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
+//								"</dl>";
+								pPollResultContent += 
+								"<div class='poll_list1'>" + 								    
+									"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
+										"<div style='float:left; display: block;'>" + list.get(i).getResult() + "." + "</div>" +
+										"<div class='Pt_QstOptTitleDiv' title='" + titleString + "'>" + titleString + "</div>" +
+										"<div id='info" + list.get(i).getResult() + "' class='Pt_QstInfoDiv'>&nbsp" + 
+											 "<span class='Pt_QstInfoVotes'>"+ list.get(i).getCount() + "</span>" +
+											 egovMessageSource.getMessage("main.t20000", locale) + "/" +
+											 "<span class='Pt_QstInfoPercent'>" + String.format("%.1f", poolRstPer) + "</span>" +
+										"%</div>" +
+									"</div>" +
+									"<div class='graphbar1' id='divGraph" + list.get(i).getResult() + "' style='display: block;'>" +
+										"<p id='graph" + list.get(i).getResult() + "' class='gx_bar11' style='width:" + Math.round((poolRstCnt / pTotalCnt) * 100) + "%;'></p>" +
+									"</div>"+	
+								"</div>";
+								
 		                        resultPrintCnt++;
 							}
 						}
@@ -1629,13 +1691,31 @@ public class EzPortalController extends EgovFileMngUtil {
 								if (!isDuplication) {
 									String strAnswer = xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent();
 									String titleString = strAnswer;
-									if (strAnswer.length() > 13) {
-										strAnswer = strAnswer.substring(0, 13) + "...";
-									}
-									pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
-		                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
-		                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
-																	resultPrintCnt++;
+									// 2018-07-25 김보미 - 주석
+//									if (strAnswer.length() > 13) {
+//										strAnswer = strAnswer.substring(0, 13) + "...";
+//									}
+									// 2018-07-25 김보미 - content부분 변경
+//									pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
+//		                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
+//		                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
+									pPollResultContent += 
+									"<div class='poll_list1'>" + 								    
+										"<div style='display: inline-block; width: 100%; font-size: 12px;'>" +
+											"<div style='float:left; display: block;'>" + i + "." + "</div>" +
+											"<div class='Pt_QstOptTitleDiv' title='" + titleString + "'>" + titleString + "</div>" +
+											"<div id='info" + i + "' class='Pt_QstInfoDiv'>&nbsp" + 
+												 "<span class='Pt_QstInfoVotes'>0</span>" +
+												 egovMessageSource.getMessage("main.t20000", locale) + "/" +
+												 "<span class='Pt_QstInfoPercent'>0.0</span>" +
+											"%</div>" +
+										"</div>" +
+										"<div class='graphbar1' id='divGraph" + i + "' style='display: block;'>" +
+											"<p id='graph" + i + "' class='gx_bar11' style='display: none;'></p>" +
+										"</div>"+
+									"</div>";
+									
+									resultPrintCnt++;
 									if (resultPrintCnt == 4) {
 										break;
 									}
@@ -2731,6 +2811,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		int recordCnt = 0;
 		int intPage = 1;
 		int totalPage = 1;
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").equals("")) {
 			parentPageID = req.getParameter("parentPageID");
@@ -2767,7 +2848,7 @@ public class EzPortalController extends EgovFileMngUtil {
 					if (uID != null && uID.equals(newPortalParentUID)) {
 						sb.append("<ROW>");
 						sb.append("<UID_>" + commonUtil.cleanValue(tempNewMyPortalPageList.get(t).getuID_()) + "</UID_>");
-						sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(myPortalList.get(i).getDisplayName()) + "</DISPLAYNAME>");
+						sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(userInfo.getLang().equals(sysLang) ? myPortalList.get(i).getDisplayName() : myPortalList.get(i).getDisplayName2()) + "</DISPLAYNAME>");
 						sb.append("<USEFLAG>" + commonUtil.cleanValue(tempNewMyPortalPageList.get(t).getUseFlag()) + "</USEFLAG>");
 						sb.append("</ROW>");
 					}
@@ -2818,17 +2899,17 @@ public class EzPortalController extends EgovFileMngUtil {
 				resultHTML += "<dl id='"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"' onclick=\"setValueNew('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim()+"', this)\" ondblclick=\"selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\">";
 				resultHTML	+= "<dt>";
 				resultHTML	+= "<div class='onimg'></div>";
-				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='175' height='140'>";
+				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='170' height='140'>";
 				resultHTML+= "</dt>";
-				resultHTML += "<dd>"+xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent()+"</dd>";		
+				resultHTML += "<dd>"+commonUtil.cleanValue(userInfo.getLang().equals(sysLang) ? xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent() : xmlDom.getElementsByTagName("DISPLAYNAME2").item(i).getTextContent())+"</dd>";		
 				resultHTML += "</dl>";
 			} else {
 				resultHTML += "<dl id='"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"' onclick=\"setValueNew('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim()+"', this)\" ondblclick=\"selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\">";
 				resultHTML	+= "<dt>";
 				resultHTML	+= "<div>";
-				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='175' height='140'>";
+				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='170' height='140'>";
 				resultHTML+= "</dt>";
-				resultHTML += "<dd>"+xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent()+"</dd>";		
+				resultHTML += "<dd>"+commonUtil.cleanValue(userInfo.getLang().equals(sysLang) ? xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent() : xmlDom.getElementsByTagName("DISPLAYNAME2").item(i).getTextContent())+"</dd>";		
 				resultHTML += "</dl>";
 			}
 		}
@@ -3316,14 +3397,21 @@ public class EzPortalController extends EgovFileMngUtil {
 	 * 포탈 - 도움말 메인 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezPortal/help/help.do")
-	public String help(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+	public String help(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("help started");
 
+		String topMenuID = "";
+		
+		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").equals("")) {
+			topMenuID = req.getParameter("topMenuID");
+		}
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 				
 		model.addAttribute("lang", userInfo.getLang());
 		model.addAttribute("packageType", packageType);
+		model.addAttribute("topMenuID", topMenuID);
 		
 		logger.debug("help ended");
 		return "/ezPortal/help/help";
@@ -3333,18 +3421,60 @@ public class EzPortalController extends EgovFileMngUtil {
 	 * 포탈 - 도움말 상단 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezPortal/help/top.do")
-	public String top(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+	public String top(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("top started");
 
+		String topMenuID = "";
+		
+		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").equals("")) {
+			topMenuID = req.getParameter("topMenuID");
+		}
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 				
 		String firstScreenMail = ezCommonService.getTenantConfig("firstScreen_Mail", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		if (firstScreenMail == null || firstScreenMail.equals("")) {
 			firstScreenMail = "NO";
 		}
 		
+		String accessList = ezPortalService.getAccessList(userInfo);
+		
+		/*
+		 * 환경설정 좌측 메뉴 리스트에 있는 모듈의 URL과 이름을 map에 추가
+		 * 여기에 입력한 모듈의 이름으로 사용 여부 확인 
+		 */
+		
+		HashMap <String, String> moduleList = new HashMap<String, String>();
+
+		moduleList.put("/ezEmail/mailMain.do", "mail");
+		moduleList.put("/ezSchedule/scheduleIndex.do?funCode=2", "schedule");
+		moduleList.put("/ezApprovalG/apprGMain.do", "appr");
+		moduleList.put("/ezBoard/boardMain.do", "board");
+		moduleList.put("/ezCommunity/communityMain.do", "community");
+		moduleList.put("/ezResource/resMain.do", "res");
+		moduleList.put("/ezCircular/circularIndex.do", "circular");
+		moduleList.put("/ezJournal/journalMain.do", "journal");
+		
+		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);
+		
+		/*
+		 * moduleList에 추가해준 모듈의 이름으로 확인 
+		 */
+		
+		model.addAttribute("isMailUsed", usedList.get("mail"));
+		model.addAttribute("isScheduleUsed", usedList.get("schedule"));
+		model.addAttribute("isApprUsed", usedList.get("appr"));
+		model.addAttribute("isBoardUsed", usedList.get("board"));
+		model.addAttribute("isCommunityUsed", usedList.get("community"));
+		model.addAttribute("isResUsed", usedList.get("res"));
+		model.addAttribute("isCircularUsed", usedList.get("circular"));
+		model.addAttribute("isJournalUsed", usedList.get("journal"));
+
+		model.addAttribute("topMenuID", topMenuID);
+		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("packageType", packageType);
@@ -3513,9 +3643,44 @@ public class EzPortalController extends EgovFileMngUtil {
 	public String leftEnv(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("leftEnv started");
 
+		String topMenuID = "";
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
 				
+		String accessList = ezPortalService.getAccessList(userInfo);
+		
+		/*
+		 * 환경설정 좌측 메뉴 리스트에 있는 모듈의 URL과 이름을 map에 추가
+		 * 여기에 입력한 모듈의 이름으로 사용 여부 확인 
+		 */
+		
+		HashMap <String, String> moduleList = new HashMap<String, String>();
+
+		moduleList.put("/ezEmail/mailMain.do", "mail");
+		moduleList.put("/ezSchedule/scheduleIndex.do?funCode=2", "schedule");
+		moduleList.put("/ezApprovalG/apprGMain.do", "appr");
+		moduleList.put("/ezBoard/boardMain.do", "board");
+		moduleList.put("/ezCommunity/communityMain.do", "community");
+		moduleList.put("/ezResource/resMain.do", "res");
+		moduleList.put("/ezCircular/circularIndex.do", "circular");
+		moduleList.put("/ezJournal/journalMain.do", "journal");
+		
+		HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);
+		
+		/*
+		 * moduleList에 추가해준 모듈의 이름으로 확인 
+		 */
+		
+		model.addAttribute("isMailUsed", usedList.get("mail"));
+		model.addAttribute("isScheduleUsed", usedList.get("schedule"));
+		model.addAttribute("isApprUsed", usedList.get("appr"));
+		model.addAttribute("isBoardUsed", usedList.get("board"));
+		model.addAttribute("isCommunityUsed", usedList.get("community"));
+		model.addAttribute("isResUsed", usedList.get("res"));
+		model.addAttribute("isCircularUsed", usedList.get("circular"));
+		model.addAttribute("isJournalUsed", usedList.get("journal"));
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("packageType", packageType);
 

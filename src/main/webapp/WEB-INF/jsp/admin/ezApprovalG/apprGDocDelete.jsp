@@ -17,18 +17,27 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"> </script>
 		<style type="text/css">
-		<!-- datepicker 월 나타내는 selectbox안의 글자가 자꾸 밑으로 내려가는 현상때문에 스타일 줌. -->
-		select {
-			height: auto;
-		}
-		table, td {
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-		td {
-			padding: 8px 5px;
-		}
+			<!-- datepicker 월 나타내는 selectbox안의 글자가 자꾸 밑으로 내려가는 현상때문에 스타일 줌. -->
+			select {
+				height: auto;
+			}
+			/* 2018-08-02 김보미 - 검색 테이블 ui수정 */
+			/*
+			table, td {
+				white-space: nowrap;
+				/* overflow: hidden; */
+			/*	text-overflow: ellipsis;
+			}
+			*/
+			.mainlist, .mainlist th, .mainlist td {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			td {
+				padding: 8px 5px;
+			}
+			.mainlist tr th {border-top:0px}
 		</style>
 		<SCRIPT type="text/javascript" ID="clientEventHandlersJS" >
 		    var Check = false, PeriodDocList;
@@ -230,23 +239,23 @@
 				var pageNum = CurPage;
 
 				if (totalPage > 1 && pageNum != 1) {
-					strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+					strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>"
 					PagingHTML += strtext;
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>"
 					PagingHTML += strtext;
 				}
 
 				if (totalPage > BlockSize) {
 					if (pageNum > BlockSize) {
-						strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'><spring:message code='ezApproval.t931'/></span>";
+						strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
 						PagingHTML += strtext;
 					} else {
-						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'><spring:message code='ezApproval.t931'/></span>";
+						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
 						PagingHTML += strtext;
 					}
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'><spring:message code='ezApproval.t931'/></span>";
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
 					PagingHTML += strtext;
 				}
 
@@ -274,30 +283,30 @@
 				if (totalPage > BlockSize) {
 					if (totalPage >= parseInt(((parseInt((pageNum - 1)
 							/ BlockSize) + 1) * BlockSize) + 1)) {
-						strtext = "<span class='ptxt' onclick='return selafterBlock_one()'><spring:message code='ezApproval.t932'/></span>";
+						strtext = "";
 						strtext = strtext
-								+ "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+								+ "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif'></span>";
 						PagingHTML += strtext;
 					} else {
-						strtext = "<span class='ptxt' onclick='return selafterBlock_one()'><spring:message code='ezApproval.t932'/></span>";
+						strtext = "";
 						strtext = strtext
-								+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+								+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
 						PagingHTML += strtext;
 					}
 				} else {
-					strtext = "<span class='ptxt' onclick='return selafterBlock_one()'><spring:message code='ezApproval.t932'/></span>";
+					strtext = "";
 					strtext = strtext
-							+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+							+ "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
 					PagingHTML += strtext;
 				}
 
 				if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
 					strtext = "<span class='btnimg' onclick='return goToPageByNum("
 							+ totalPage
-							+ ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+							+ ")'><img src='/images/sub/btn_n_next.gif'></span>";
 					PagingHTML += strtext;
 				} else {
-					strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
 					PagingHTML += strtext;
 				}
 
@@ -394,6 +403,61 @@
 								pSelectTab : pSelectTab//탭구분	
 							},
 							success : function(res) {
+								if (res.pSelectTab == "completedoclist") {
+									$("#doclist").empty().append(
+											/* 2018-07-31 김보미 - style에 ellipsis 추가 */
+//												  '<th style="width:3%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
+//												+ '<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>'
+//												+ '<th style="width:2%;"><img src="/images/newAttach.gif"></th>'
+//												+ '<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
+//												+ '<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>'
+//												+ '<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>'
+//												+ '<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
+//												+ '<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
+//												+ '<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>'
+//												+ '<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>'
+//												+ '<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
+											  '<th style="width:3%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
+											+ '<th style="width:15%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t434"></spring:message></th>'
+											+ '<th style="width:2%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><img src="/images/newAttach.gif"></th>'
+											+ '<th style="width:25%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
+											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t433"></spring:message></th>'
+											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t437"></spring:message></th>'
+											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
+											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
+											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezTask.t210"></spring:message></th>'
+											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t448"></spring:message></th>'
+											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
+											)
+								} else {
+									$("#doclist").empty().append(
+											/* 2018-07-31 김보미 - style에 ellipsis 추가 */
+//												  '<th style="width:3%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
+//												+ '<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>'
+//												+ '<th style="width:2%;"><img src="/images/newAttach.gif"></th>'
+//												+ '<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
+//												+ '<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>'
+//												+ '<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>'
+//												+ '<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
+//												+ '<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
+//												+ '<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>'
+//												+ '<th style="width:10%;"><spring:message code="ezApproval.t368"></spring:message></th>'
+//												+ '<th style="width:5%;"><spring:message code="ezApprovalG.kes03"></spring:message></th>'
+//												+ '<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
+											  '<th style="width:3%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
+											+ '<th style="width:15%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t434"></spring:message></th>'
+											+ '<th style="width:2%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><img src="/images/newAttach.gif"></th>'
+											+ '<th style="width:25%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
+											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t433"></spring:message></th>'
+											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t437"></spring:message></th>'
+											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
+											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
+											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezTask.t210"></spring:message></th>'
+											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t368"></spring:message></th>'
+											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.kes03"></spring:message></th>'
+											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
+											)
+								}
 								
 								var html = "";
 
@@ -403,64 +467,52 @@
 									} else {
 										html += "<tr><td colspan='12' style='text-align:center;'>"+text1+"</td></tr>";
 									}
-										
 								} else {
-										if (res.pSelectTab == "completedoclist") {
-											$("#doclist").empty().append(
-													  '<th style="width:3%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
-													+ '<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>'
-													+ '<th style="width:2%;"><img src="/images/newAttach.gif"></th>'
-													+ '<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
-													+ '<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>'
-													+ '<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>'
-													+ '<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
-													+ '<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
-													+ '<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>'
-													+ '<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>'
-													+ '<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
-													)
+									res.DocDeleteHistList.forEach(function(i, v) {
+										html += "<tr class='row_body' onclick='select_row(this)' ondblclick='openDoc(this)' docid='docID_" + i.docID + "' id='" + i.docID + "' writerName='" + i.writerName + "' " 
+											 + "DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "' style='cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'"
+											 + "formid='"+i.formID+"' dochref='"+i.href+"' orgdocid='"+i.orgDocID+"' >";
+										/* 2018-07-31 김보미 - style에 ellipsis 추가 */
+										/*html += "   <td><input type ='checkbox' name='myCheckbox' id='" + i.docID + "' onclick='chk_onselect(this)' writerName='" 
+											 + i.writerName + "' DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "'></td>";
+										html += "	<td title=\'" + i.docNo + "'>"	+ i.docNo	+ "</td>";
+										if (i.hasAttachYn != "N") {
+											html += '<td><img src="\/images\/newAttach.gif"></td>';
 										} else {
-											$("#doclist").empty().append(
-													  '<th style="width:3%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
-													+ '<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>'
-													+ '<th style="width:2%;"><img src="/images/newAttach.gif"></th>'
-													+ '<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
-													+ '<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>'
-													+ '<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>'
-													+ '<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
-													+ '<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
-													+ '<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>'
-													+ '<th style="width:10%;"><spring:message code="ezApproval.t368"></spring:message></th>'
-													+ '<th style="width:5%;"><spring:message code="ezApprovalG.kes03"></spring:message></th>'
-													+ '<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
-													)
-											
+											html += "<td>"  +   		 " "   	 				+ "</td>";
 										}
-										res.DocDeleteHistList.forEach(function(i, v) {
-											html += "<tr class='row_body' onclick='select_row(this)' ondblclick='openDoc(this)' docid='docID_" + i.docID + "' id='" + i.docID + "' writerName='" + i.writerName + "' " 
-												 + "DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "' style='cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'"
-												 + "formid='"+i.formID+"' dochref='"+i.href+"' orgdocid='"+i.orgDocID+"' >";
-											html += "   <td><input type ='checkbox' name='myCheckbox' id='" + i.docID + "' onclick='chk_onselect(this)' writerName='" 
-												 + i.writerName + "' DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "'></td>";
-											html += "	<td title=\'" + i.docNo + "'>"	+ i.docNo	+ "</td>";
-											if (i.hasAttachYn != "N") {
-												html += '<td><img src="\/images\/newAttach.gif"></td>';
-											} else {
-												html += "<td>"  +   		 " "   	 				+ "</td>";
-											}
-											html += "	<td>"	+ i.docTitle						+ "</td>";
-											html += "	<td>"	+ i.formName						+ "</td>";
-											html += "	<td>"	+ i.writerDeptName					+ "</td>";
-											html += "	<td>"	+ i.writerName						+ "</td>";
-											html += "	<td>"	+ i.docstateName					+ "</td>";
-											html += "	<td>"	+ i.sendFlag						+ "</td>";
-											html += "	<td>"	+ i.endDate					        + "</td>";
-											if (res.pSelectTab != "completedoclist") {
-												html += "	<td>"	+ i.receiptPointName			+ "</td>";
-											}
-											html += "	<td>"	+ i.isPublic						+ "</td>";
-											html += "</tr>";
-										});
+										html += "	<td>"	+ i.docTitle						+ "</td>";
+										html += "	<td>"	+ i.formName						+ "</td>";
+										html += "	<td>"	+ i.writerDeptName					+ "</td>";
+										html += "	<td>"	+ i.writerName						+ "</td>";
+										html += "	<td>"	+ i.docstateName					+ "</td>";
+										html += "	<td>"	+ i.sendFlag						+ "</td>";
+										html += "	<td>"	+ i.endDate					        + "</td>";
+										if (res.pSelectTab != "completedoclist") {
+											html += "	<td>"	+ i.receiptPointName			+ "</td>";
+										}
+										html += "	<td>"	+ i.isPublic						+ "</td>";*/
+										html += "   <td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'><input type ='checkbox' name='myCheckbox' id='" + i.docID + "' onclick='chk_onselect(this)' writerName='" 
+											 + i.writerName + "' DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "'></td>";
+										html += "	<td title=\'" + i.docNo + "' style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.docNo	+ "</td>";
+										if (i.hasAttachYn != "N") {
+											html += '<td style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><img src="\/images\/newAttach.gif"></td>';
+										} else {
+											html += "<td>"  +   		 " "   	 				+ "</td>";
+										}
+										html += "	<td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.docTitle		+ "</td>";
+										html += "	<td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.formName		+ "</td>";
+										html += "	<td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.writerDeptName	+ "</td>";
+										html += "	<td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.writerName		+ "</td>";
+										html += "	<td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.docstateName	+ "</td>";
+										html += "	<td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.sendFlag		+ "</td>";
+										html += "	<td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.endDate			+ "</td>";
+										if (res.pSelectTab != "completedoclist") {
+											html += "	<td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.receiptPointName			+ "</td>";
+										}
+										html += "	<td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.isPublic						+ "</td>";
+										html += "</tr>";
+									});
 								}
 								
 								$('#DocCompleteListBody').empty().append(html);
@@ -470,15 +522,12 @@
 								totalCount = res.totalcnt;
 								searchStartTime = res.startdate;
 								searchEndTime = res.endDate;
-								
 							},
 							error : function(err) {
 								alert(err);
 							}
 						});
-				
 					makePageSelPage();
-				
 			}
 			
 			function chk_onselect(obj) {
@@ -849,40 +898,43 @@
 	
 	<body class="mainbody" onLoad="javascript:window_onload()">
 		<h1><spring:message code='ezApprovalG.t1569'/><span id="listInfo"></span></h1>
-		<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-		    <select id="ListCompany" onChange="return changeCompID()">
-	        	<c:forEach var="item" items="${list}">
-            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-            	</c:forEach>
-		    </select><br /><br/>
-		</span>
+		<div id="mainmenu">	
+			<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
+			    <select id="ListCompany" onChange="return changeCompID()">
+		        	<c:forEach var="item" items="${list}">
+	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+			    </select><br /><br/>
+			</span>
+		</div>	
 		<div class="portlet_tabpart01" style="margin-top:3px;text-align:right;">
 		    <div class="portlet_tabpart01_top" id="tab1">
 		        <p><span id="1tab1" divname="completedoclist"><spring:message code='ezApprovalG.kes01' /></span></p>
 		        <p><span id="1tab2" divname="deletedoclist"><spring:message code='ezApprovalG.kes02' /></span></p>		        
 		    </div>
 		</div>
-		<table style="width: 100%; background-color: #fcfcfc;">
+		<!-- 2018-08-02 김보미 - 검색 테이블 ui수정 -->
+	<!-- <table style="width: 100%; background-color: #fcfcfc;">
 			<tr>
 				<table style="width:100%; background-color: #fcfcfc; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8;">
 					<tr>
-						<td style="width:5%; ">
+						<td style="width:60px;">
 							<spring:message code='ezApproval.t434'/> 
 						</td>
-						<td style="width:11%;">
-							<input type="text" id="DocNumber" name="DocNumber" style="width:97%;" maxlength="50" onkeypress="return search_keypress(event)" />
+						<td style="width:80px;">
+							<input type="text" id="DocNumber" name="DocNumber" style="width:110px; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)" />
 						</td>
-						<td style="width:5%;">
+						<td style="width:50px;">
 							<spring:message code='ezApproval.t435'/> 
 						</td>
-						<td style="width:11%;">
-							<input type="text" id="DocTitle" name="DocTitle" style="width:90%;" maxlength="50" onkeypress="return search_keypress(event)"/>
+						<td style="width:80px;">
+							<input type="text" id="DocTitle" name="DocTitle" style="width:110px; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>
 						</td>
-						<td style="width:25%; margin-bottom: 10px;  ">
+						<td style="width:250px; margin-bottom: 10px;">
 							<span id="topmenu" style="width: 500px">
 								<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/></label>&nbsp;
-								<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 25%; text-align: center" readonly="readonly" />&nbsp; ~ &nbsp;
-								<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 25%; text-align: center" readonly="readonly" />
+								<input type="text" id="startDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />&nbsp; ~ &nbsp;
+								<input type="text" id="endDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />
 							</span>
 						</td>
 						<td style="width:*;"></td>
@@ -892,21 +944,20 @@
 			<tr>
 				<table style="width:100%; background-color: #fcfcfc; border-left: 1px solid #e8e8e8;border-right: 1px solid #e8e8e8;">
 					<tr>
-						<td style="width:5%;">
+						<td style="width:60px;">
 							 <spring:message code='ezApproval.t437'/>
 						</td>
-						<td style="width:11%;">
-							<input type="text" id="drafterdept" name="drafterdept" style="width: 65%;" maxlength="50" readonly="readonly"/>
+						<td style="width:170px;">
+							<input type="text" id="drafterdept" name="drafterdept" style="width:110px; height: 23px;" maxlength="50" readonly="readonly"/>
 							<a class="imgbtn" name="TDeptSelect"><span id = "spandept" onclick="bt_TDeptSelect_onclick()"><spring:message code='ezApprovalG.t105'/></span></a>
 						</td>
-						<td style="width:5%;">
+						<td style="width:40px;">
 						    <spring:message code='ezApproval.t436'/> 
 						</td>
-						<td style="width:11%;">
-							<input type="text" id="drafter" name="drafter" style="width: 90%;" maxlength="50" onkeypress="return search_keypress(event)"/>&nbsp;
+						<td style="width:80px;">
+							<input type="text" id="drafter" name="drafter" style="width:110px; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>&nbsp;
 						</td>
 						<td style="width:*; margin-bottom: 10px;">
-							 
 							<a class="imgbtn" >
 								<span onclick="javascript:search(1);"><spring:message code="ezApproval.t236"></spring:message></span>
 							</a>&nbsp; 
@@ -920,7 +971,61 @@
 					</tr>
 				</table>
 			</tr>
+		</table>  -->
+		<table style="width:100%; background-color: #fcfcfc; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8; border-bottom:1px solid #e8e8e8">
+			<tr>
+				<td style="width:3%;">
+					<spring:message code='ezApproval.t434'/> 
+				</td>
+				<td style="width:12%;">
+					<input type="text" id="DocNumber" name="DocNumber" style="width:82%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)" />
+				</td>
+				<td style="width:3%;">
+					<spring:message code='ezApproval.t435'/> 
+				</td>
+				<td style="width:11%;">
+					<input type="text" id="DocTitle" name="DocTitle" style="width:85%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>
+				</td>
+				<td style="width:4%; margin-bottom: 10px;">
+					<span id="topmenu" style="width: 500px">
+						<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/></label>&nbsp;
+					</span>
+				</td>
+				<td style="width:18%; margin-bottom: 10px;">
+					<span id="topmenu" style="width: 500px">
+						<input type="text" id="startDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />&nbsp; ~ &nbsp;
+						<input type="text" id="endDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td style="width:3%;">
+					 <spring:message code='ezApproval.t437'/>
+				</td>
+				<td style="width:12%;">
+					<input type="text" id="drafterdept" name="drafterdept" style="width:82%; height: 23px;" maxlength="50" readonly="readonly"/>
+					<a class="imgbtn" name="TDeptSelect"><span id = "spandept" onclick="bt_TDeptSelect_onclick()"><spring:message code='ezApprovalG.t105'/></span></a>
+				</td>
+				<td style="width:3%;">
+				    <spring:message code='ezApproval.t436'/> 
+				</td>
+				<td style="width:11%;">
+					<input type="text" id="drafter" name="drafter" style="width:85%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>&nbsp;
+				</td>
+				<td style="width:*; margin-bottom: 10px;" colspan="2">
+					<a class="imgbtn" >
+						<span onclick="javascript:search(1);"><spring:message code="ezApproval.t236"></spring:message></span>
+					</a> 
+					<a class="imgbtn">
+						<span onClick="reload()"><spring:message code='ezApprovalG.t165' /></span>
+					</a>
+					<a class="imgbtn" id ="delbtn">
+						<span onClick="DeleteDoc()"><spring:message code='ezApprovalG.t266' /></span>
+					</a>
+				</td>
+			</tr>
 		</table>
+		
 		<table class="mainlist" style="width:100%; height: 100%;">
 			<thead>
 				<tr id ="doclist">

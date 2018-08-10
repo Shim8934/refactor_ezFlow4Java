@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -7,7 +8,7 @@
 		<title><spring:message code='ezOrgan.t00013' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <style>
 	    	.box {
 	    		border-right:0px;
@@ -15,13 +16,27 @@
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
 	    	}
+			/* 조직도 #SelectDeptNM(부서명[사원수]) 부분 */
+	    	#spn_deptName {
+	    		text-overflow: ellipsis;
+	    		white-space: nowrap;
+	    		overflow: hidden;
+	    		display: inline-block;
+	    	}
+	    	#countInfo {
+	    		overflow: hidden;
+	    		display: inline-block;
+	    	}
+	    	.countColor {
+	    		color:#017BEC;
+	    	}
 	    </style>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/Controls/ListView_list.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezOrgan/TreeView.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls/ListView_list.js")%>"></script>
 	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 		<script type="text/javascript">
 			var topid = "<c:out value='${topID}'/>";
 		    var cn = "<c:out value='${userID}'/>";
@@ -134,7 +149,9 @@
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
 		        nodeIdx = treeView.GetSelectNode();
-		        document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + nodeIdx.GetNodeData("VALUE");
+        		document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:top;padding-right:3px;\" >" 
+        		+ "<span id='spn_deptName' title='" + nodeIdx.GetNodeData("VALUE") + "'>" + nodeIdx.GetNodeData("VALUE") + "</span>"
+        		+ "<span id='countInfo'></span>";
 		        SelectDeptNM.setAttribute("countinfo", "")
 
 		        if (isfirst && cn != "") {
@@ -149,7 +166,8 @@
 			        	success : function(xml){	
 			        		result=loadXMLString(xml);
 			        		var headerData = createXmlDom();
-		                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                    headerData = result;
+// 		                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 
 		                    if (CrossYN()) {
 		                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
@@ -185,7 +203,8 @@
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
-		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                headerData = result;
+// 		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
 
 		                if (CrossYN()) {
 		                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
@@ -207,6 +226,34 @@
 		        		alert("<spring:message code='ezOrgan.t9' />" + error);
 		        	}
 		        });
+		        
+		        $.ajax({
+					url : "/ezOrgan/getDeptMemberListCount.do",
+					method : "POST",
+					dataType : "json",
+					data : {
+						deptID : DeptID
+					},
+					success : function(result) {
+						if (SelectDeptNM.getAttribute("countinfo") != "1" && !pSeach ) {
+							var id = $("span[class=node_selected]").eq(0).closest("div").attr("id");
+							var strIsLeaf = $("div#" + id + "").attr("isleaf");
+							
+							if (result.containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+			        			document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang24 + "</span>/<spring:message code='ezAddress.t362' /> <span class='countColor'>" + result.totalCount2 + strLang24 + "</span>]";
+							} else {
+								document.getElementById("countInfo").innerHTML += "-[<span class='countColor'>" + result.totalCount + strLang24 + "</span>]";
+							}
+							//2018-08-01 김보미 - 부서명 [사원수] 가 넘치는지 확인하는 함수
+							deptNameLong(result.containLow, strIsLeaf);
+										            			            	
+			            	SelectDeptNM.setAttribute("countinfo","1")
+			        	}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						alert(error);
+					}
+				});
 		    }
 		    
 		    var m_strColorSelect = "#edf4fd";
@@ -377,10 +424,16 @@
 		        }
 		        
 		        var UserListHTML = "";
-		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
-		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang24 + "</span>]";
+		        /* if (SelectDeptNM.getAttribute("countinfo") != "1") {
+		            //SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang24 + "</span>]";
+		            if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length ==  getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0])) {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang24 + "</span>]";
+	        		} else {
+	        			SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + "/" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT2")[0]) + strLang24 + "</span>]";
+	        		}
+		            
 		            SelectDeptNM.setAttribute("countinfo", "1")
-		        }
+		        } */
 		        
 		        if (pListType == "IMG") {
 		            document.getElementById("DeptUserImgList").style.display = "";
@@ -916,7 +969,8 @@
 		        		result=loadXMLString(xml);
 		        		var usedefault;		                
 		                var headerData = createXmlDom();
-		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+// 		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                headerData = result;
 		                
 		                if (CrossYN()) {
 		                	usedefault = document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex].usedefault;
@@ -1002,6 +1056,24 @@
 	        	})
 	        	return organListType;
 	        }
+	        
+		    //2018-08-01 김보미 - 부서명 [사원수] 길이가 길면 조정하는 함수
+	        function deptNameLong(containLow, strIsLeaf) {
+	        	var deptNameWidth = "";
+	        	var sum = $("#spn_deptName").width() + $("#countInfo").width();
+	        	
+	          	if (containLow == "YES" && strIsLeaf != "TRUE") { //하위가 있고, 표기방식이 [1명/ 전체10명]일 경우
+	          		if (sum > 359) {
+	          			deptNameWidth = 360 - $("#countInfo").width();
+	          		}
+	          	} else {
+	          		if (sum > 357) {
+	          			deptNameWidth = 358 - $("#countInfo").width();
+	          		}
+	          	}
+	        	
+	        	$("#spn_deptName").css("width", deptNameWidth);
+	        }		        
 	    </script>
 	</head>
 	<body class="popup">
@@ -1030,12 +1102,11 @@
 	    </div>
 	    <div id="close">
 	        <ul>
-	            <li><span onclick="closeWindow()"><spring:message code='ezOrgan.t143' /></span></li>
+	            <li><span onclick="closeWindow()"></span></li>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 	    <table id="TreeViewTD">
 	        <tr>
@@ -1083,7 +1154,7 @@
 	                            <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                <tr>
 	                                    <th style="white-space:normal;background-color: white;border-top:0px;border-bottom:1px solid #eaeaea">
-	                                        <span id="SelectDeptNM" style="font-weight: normal; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
+											<span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
 	                                        <span style="float:right;">
 	                                            <span onclick="ChangeListView_onClick('TXT');"><img src="/images/kr/cm/btn_list.gif" class="icon_btn" id="txtlist"></span>
 	                                            <span onclick="ChangeListView_onClick('IMG');"><img src="/images/kr/cm/btn_imglist.gif" class="icon_btn" id="imglist"></span>

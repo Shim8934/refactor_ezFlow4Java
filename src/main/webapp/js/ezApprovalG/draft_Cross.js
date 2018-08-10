@@ -1628,7 +1628,7 @@ function SendDraftMappingSign(ret) {
 
         field = message.GetListItem(fields, psigncell);
         
-//       if (singImageType == "IMAGE") {
+//       if (signImageType == "IMAGE") {
 //       	if (message.GetListItem(fields, "1sign1")) {
 //        		message.GetListItem(fields, "1sign1").height = "65";
 //      	}
@@ -1668,7 +1668,7 @@ function SendDraftMappingSign(ret) {
                     	signHeight = "28";
                     }
                     
-					if (singImageType == "NAME") {
+					if (signImageType == "NAME") {
 						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
 					} else {
 						strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
@@ -1727,7 +1727,7 @@ function SendDraftMappingSign(ret) {
                 if (ret != "NAME") {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
-                   	if (singImageType == "NAME") {
+                   	if (signImageType == "NAME") {
                     	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>" + "<br>" + arr_userinfo[2];
                     } else {
                         strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
@@ -2466,7 +2466,7 @@ function openAaprDocAttachUI() {
             aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
             
             if(approvalFlag == "G") {
-            	DivPopUpShow(820, 500, url);
+            	DivPopUpShow(1050, 500, url);
             } else {
             	DivPopUpShow(1050, 560, url);
             }
@@ -2502,6 +2502,7 @@ function openAaprDocAttachUI_Complete(ret) {
 function SaveDraftDocInfo() {
     var rtnVal;
     SaveFile();
+    SignSave();
     rtnVal = SaveDraftDocInfo_ilban("002");
     if (rtnVal.toUpperCase() == "FALSE") {
     	 return rtnVal;
@@ -3260,7 +3261,7 @@ function chk_Passwd() {
     ezchkpasswd_cross_dialogArguments[0] = parameter;
     ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-    DivPopUpShow(330, 200, "/ezApprovalG/ezchkPasswd.do");
+    DivPopUpShow(350, 225, "/ezApprovalG/ezchkPasswd.do");
 }
 
 function setDrafterAddress() {

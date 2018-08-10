@@ -78,7 +78,7 @@ function putBansongSign() {
  * 현재 결재중인 양식에 결재관련 서명 및 기타 내용 출력.
  * field.innerHTML = String Data
  * */
-function AprrovMappingSign(ret) {
+function ApprovMappingSign(ret) {
     var fields = message.GetFieldsList();
     var field;
     var SingFlag = true;
@@ -2815,7 +2815,7 @@ function chk_Passwd(pPwd, CompleteFunction) {
     else
         ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
 
-    DivPopUpShow(330, 200, "/ezApprovalG/ezchkPasswd.do");
+    DivPopUpShow(350, 225, "/ezApprovalG/ezchkPasswd.do");
 }
 
 function sendMail() {
@@ -2901,7 +2901,7 @@ function openAaprDocAttachUI() {
         aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
         
         if(approvalFlag == "G") {
-        	DivPopUpShow(850, 500, "/ezApprovalG/aprCabinetAttach.do");
+        	DivPopUpShow(1050, 500, "/ezApprovalG/aprCabinetAttach.do");
         } else {
         	DivPopUpShow(1050, 560, "/ezApprovalG/aprDocAttach.do");
         }
@@ -3001,9 +3001,12 @@ function putSignXML(SignXML) {
                 var SignName = getNodeText(SelectSingleNode(NodeList[i], "SIGNNAME"));
                 var SignCont = getNodeText(SelectSingleNode(NodeList[i], "CONTENT"));
                 
-                if (!(SignName.indexOf("habyui") > -1)) {
-                	continue;
-                }
+                var aprMemberName = getNodeText(SelectSingleNode(NodeList[i], "APRMEMBERNAME"));
+                
+                //2018-07-11 천성준 -전자결재G 중간결재자 부재설정 시, 부재내용 서명란에 표기안되서 주석
+//                if (!(SignName.indexOf("habyui") > -1)) {
+//                	continue;
+//                }
                 
                 var field = message.GetListItem(fields, SignName);
                 var field2 = message.GetListItem(fields, SignName.replace("habyuisign", "habyuija"));
@@ -3012,9 +3015,10 @@ function putSignXML(SignXML) {
                     retVal = true;
                     if (SignType == "TEXT" || SignType == "HTML") {
                         field.innerHTML = SignCont;
-                        if (field2) {
-                        	field2.textContent = SignCont.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
-                        }
+                        //2018-07-11 천성준 - replace가 서명 볼드처리 해제시켜버려서 주석 
+//                        if (field2) {
+//                        	field2.textContent = SignCont.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+//                        }
                     }
                     else {
                     	var seumyung = message.GetListItem(fields, "seumyungdate" + (i + 1));
@@ -3042,8 +3046,10 @@ function putSignXML(SignXML) {
                             var filename = img[0].split("/")[img[0].split("/").length - 1];
                             strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
                             strimg = strimg + " width=" + signWidth;
-                            if (signImage = "NAME") {
-                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + arr_userinfo[2] ;
+                            if (signImageType = "NAME") {
+                            	//이효진 signImageType Name일때 반복문으로 앞쪽 이미지 서명까지 전부 새로 입력중이라 userInfo 말고 DB에서 꺼내쓰도록 수정
+//                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + arr_userinfo[2] ;
+                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + aprMemberName;
                             } else {
                                 strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
                             }

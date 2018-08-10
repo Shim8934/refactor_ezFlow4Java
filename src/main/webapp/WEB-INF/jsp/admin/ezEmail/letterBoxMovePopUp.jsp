@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -7,50 +8,51 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezEmail.letter4'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
-	    <link rel="stylesheet" href="/css/ezEmail/style.css" />
-	    <link rel="stylesheet" href="/js/dist/themes/default/style.min.css" />
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script src="/js/dist/jstree.min.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterBoxTree.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
+	    <link rel="stylesheet" href="<spring:message code = 'main.e15' />" type="text/css" />
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezEmail/style.css")%>" />
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/dist/themes/default/style.min.css")%>" />
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script src="<%=CommonUtil.addVer(application, "/js/dist/jstree.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/letterBoxTree.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/letterList.js")%>"></script>
+	    <style>
+			.leLetterBtns {
+				text-align: center;
+				margin-top: 30px;
+			}
+			
+			.divFolder {
+				height: 280px;
+				width: 470px;
+				border: 1px solid #ccc;
+				margin: auto;
+				margin-top: 35px;
+				overflow: auto;
+				box-sizing: border-box;
+	    		padding: 5px;
+			}
+			
+		</style>
 	</head>
 	<body style="background: url(/images/kr/cm/popup_bg.gif) #ffffff repeat-x left top">
-	<style>
-		.leLetterBtns {
-			text-align: center;
-			margin-top: 30px;
-		}
-		
-		.divFolder {
-			height: 280px;
-			width: 470px;
-			border: 1px solid #ccc;
-			margin: auto;
-			margin-top: 35px;
-			overflow: auto;
-			box-sizing: border-box;
-    		padding: 5px;
-		}
-		
-	</style>
-	
-		<div id="leTop">
-			
-			<div class="leTitle">
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
+		<div id="leTop">			
+			<div class="leTitle" style="padding-left:10px">
 				<spring:message code='ezEmail.letter4'/>
 			</div>
 			
 			<div class="divFolder" id="divTree"></div>
 			
-			<div class="leLetter">
-				 <div class="leLetterBtns">
-				 	<button id="leSave" data-letterNo="${letterNo}" onclick="letterBoxSave()"><spring:message code='main.sp09'/></button>
-				 	<button id="leClose" onclick="window.close()"><spring:message code='main.t135'/></button>
-				 </div>
-			</div>
-		
+			
+			 <div class="btnpositionNew" style="margin:0px">
+			 	<a class="imgbtn"><span id="leSave" data-letterNo="${letterNo}" onclick="letterBoxSave()"><spring:message code='main.sp09'/></span></a>
+			 	
+			 </div>
 		</div>
 		<script>
 		    var pageType = "${pageType}";
@@ -61,7 +63,8 @@
 			var result = [];
 		    var treeCollection = [];
 		    var selectNode;
-		    
+		    var modifyMsg = "";
+		    var deleteMsg = "";
 		    var letterMoveMsg = "<spring:message code='ezEmail.letter29'/>";
 		    
 			$(document).ready(function(){

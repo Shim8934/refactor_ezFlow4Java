@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezOrgan.web;
 
-import java.util.ArrayList;
-
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import antlr.collections.List;
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -48,6 +47,9 @@ public class EzOrganController {
 
 	@Autowired
 	private EgovMessageSource messageSource;
+	
+	@Resource(name = "EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	/**
 	 * 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
@@ -162,12 +164,13 @@ public class EzOrganController {
                 Element Nodetip = doc.createElement("TOOLTIP");
 
                 if (!doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().equals("")) {
-                    String[] arry = doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().split(":");
+                	//2018-07-12 이효진 미사용 소스 주석처리
+                    /*String[] arry = doc.getElementsByTagName("ROW").item(i).getChildNodes().item(idx).getChildNodes().item(0).getTextContent().split(":");
                     tooltip = arry[3].replace("/", ":") + " ~ " + arry[4].replace("/", ":");
                     
                     if (arry.length > 5) {
                         tooltip += " " + messageSource.getMessage(arry[5], userInfo.getLocale());
-                    }
+                    }*/
                     
                     /* 
                      * 2016-03-29 장진혁과장 날짜비교 작업 필요
@@ -195,6 +198,38 @@ public class EzOrganController {
 		logger.debug("getDeptMemberList ended");
 		
 		return result;
+	}
+	
+	@RequestMapping(value = "/ezOrgan/getDeptMemberListCount.do")
+	public String getDeptMemberListCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getDeptMemberList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String deptID = request.getParameter("deptID");
+		
+		String primary = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
+		int totalCount = 0, totalCount2 = 0;
+		
+		String containLow = ezCommonService.getTenantConfig("containLow", tenantID);
+		
+		if (containLow == null || containLow.equals("")) {
+			containLow = "NO";
+		}
+		
+		model.addAttribute("containLow", containLow);
+		
+		totalCount = ezOrganService.getDeptMemberListCount(deptID, false, primary, tenantID);
+		if (containLow.equals("YES")) {
+			totalCount2 = ezOrganService.getDeptMemberListCount(deptID, true, primary, tenantID);
+		}
+		
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("totalCount2", totalCount2);
+
+		logger.debug("getDeptMemberList ended.");
+		
+		return "json";
 	}
 	
 	/**
@@ -280,11 +315,10 @@ public class EzOrganController {
 	@ResponseBody
 	public String getOrganTreeInfo() throws Exception{
 		logger.debug("getOrganTreeInfo Started.(Outer Rec.)");
-		String strFilter = "(&(objectclass=ucorg2)(ouLevel=1)(docsysteminfo=*))";
-		String strBaseDN = "";
+		String strFilter = "(&(objectclass=ucorg2)(ouLevel=1))";
 		int intScope = 1;
 
-		String strXML = ezOrganService.getOrganTreeInfo(strFilter, intScope, strBaseDN);
+		String strXML = ezOrganService.getOrganTreeInfo(strFilter, intScope);
 
 		logger.debug("getOrganTreeInfo Ended.(Outer Rec.)");
 		return strXML;
@@ -316,7 +350,7 @@ public class EzOrganController {
 		userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
         String strBaseDN = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
-		String strFilter = "(&(objectclass=ucOrg2)(docsysteminfo=*))";
+		String strFilter = "(&(objectclass=ucOrg2))";
 
         int intScope = 1;
         String strXML = ezOrganService.getOrganSubTreeInfo(strFilter, strBaseDN, intScope);
@@ -333,7 +367,7 @@ public class EzOrganController {
 	public String insertAllOrganSubTreeInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo , String deptID) throws Exception{
 		logger.debug("insertAllOrganSubTreeInfo Started (outer)");
 		userInfo = commonUtil.userInfo(loginCookie);
-		String strFilter = "(&(objectclass=ucOrg2)(docsysteminfo=*))";
+		String strFilter = "(&(objectclass=ucOrg2))";
 		
 		int intScope = 1;
 		String strXML = ezOrganService.getOrganSubTreeInfo(strFilter, deptID, intScope);
@@ -360,7 +394,6 @@ public class EzOrganController {
 	 * 외부 수신처 정보 가져오기
 	 * @throws Exception 
 	 */
-//	 * 
 	@RequestMapping(value = "/ezOrgan/getOrgInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getOrgInfo(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
@@ -370,7 +403,7 @@ public class EzOrganController {
 		String strBaseDN = request.getParameter("orgID") ;
 		String strFilter = "(&(objectclass=ucOrg2)(ouCode=" + strBaseDN + "))";
 		int intScope = 0;
-		String strXML = ezOrganService.getOrgInfo(strBaseDN, strFilter, intScope);
+		String strXML = ezOrganService.getOrgInfo(strFilter, intScope);
 		
 		logger.debug("getOrgInfo ended");
 		return strXML;

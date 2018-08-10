@@ -162,7 +162,7 @@
 		            //setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
 		            //setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
 		            $(".taskType").html("<spring:message code='ezTask.t2000' />");
-		        } else if (tasktype == "2") {
+		        } else if (tasktype == "2" || tasktype == "5") {
 		        	$(".taskType").html("<spring:message code='ezTask.t2001' />");
 		        } else {
 		        	$(".taskType").html("<spring:message code='ezTask.t2002' />");
@@ -516,13 +516,13 @@
 				if (useTodoMemo == 'YES') {
 					var feature = GetOpenPosition(760, 700);
 		        	
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 550, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 700, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
 			                "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 		        } else {
-					var feature = GetOpenPosition(760, 645);
+					var feature = GetOpenPosition(760, 700);
 		        	
-					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 550, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
-			                "height = 645px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
+					DivPopUpShow($('body').prop('scrollWidth') * 0.9, 700, "/ezTask/taskWrite.do?taskID=" + taskid + "&mode=2", "",
+			                "height = 700px, width = 760px, status = no, toolbar=no, menubar=no,location=no, scrollbars=no, resizable=1" + feature);
 		        }
 				
 			}			
@@ -643,8 +643,8 @@
 						taskCommentList += "<colgroup><col width='7%' /><col width='35%' /><col width='57%' /></colgroup>";
 						taskCommentList += "<tr style='height:58px'>";
 						taskCommentList += "<th style='font-weight: bold;'><spring:message code='ezTask.t2012' /></th>";
-						taskCommentList += "<td class='pos1' style='padding-left:5px;padding-right:5px;padding-top:4px;padding-bottom:4px;width: 84%;border-bottom:0px;'><textarea id='TextComment' maxlength='500' style='width:97%;resize:none;overflow:auto;padding:7px;'></textarea></td>";
-						taskCommentList += "<td style='text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;background-color:#f8f8fa;'><a class='imgbtn' style='vertical-align: middle;'><span onClick='add_comment()'><spring:message code='ezBoard.t321' /></span></a>";
+						taskCommentList += "<td class='pos1' style='border:0px;padding-left:5px;padding-right:5px;padding-top:4px;padding-bottom:4px;width: 84%;border-bottom:0px;'><textarea id='TextComment' maxlength='500' style='width:97%;resize:none;overflow:auto;padding:7px;'></textarea></td>";
+						taskCommentList += "<td style='border:0px;text-align:center;'><a class='imgbtn imgbck' style='vertical-align: middle;'><span onClick='add_comment()'><spring:message code='ezBoard.t321' /></span></a>";
 						taskCommentList += "</td></tr>";
 						taskCommentList += "</table>";
 						taskCommentList += "</td>";
@@ -822,7 +822,7 @@
 			            	if(creatorid != userid) {
 			            		if (tasktype == "1" || tasktype == "4") {	
 			            			document.getElementById("editTaskWork").style.display = "none";
-			            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.t1511' />";
+			            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.jjh02' />";
 			            			document.getElementById("editTaskChisi").style.display = "";			            					            			
 			            		}
 			            		else {
@@ -1148,7 +1148,41 @@
 			            checks[i].style.display = "none";
 			    }
 			    
-			    if ($("#taskCommentList").html().trim() != "") {
+			  //2018-07-10 구해안 #12746
+			    var tableOption = document.createElement("TABLE");
+		    	tableOption.setAttribute("class", "content2");
+			    var userName = "";
+	    		var content  = "";
+	    		var dateTime = "";
+	    		var trElmt  = document.createElement("TR");
+	    		var tdElmt1 = document.createElement("TD");
+	    		var tdElmt2 = document.createElement("TD");
+	    		var tdElmt3 = document.createElement("TD");
+			     
+			    if($('#tablecomment2 > tbody > tr').length == 0 || $('#tablecomment2 > tbody > tr').length < 0 || !$('#tablecomment2 > tbody > tr').length){
+			    	console.log('진입!!! : ' + $('#tablecomment2'));
+			    	
+			    	var printCommentView = document.getElementById("printCommentView");
+			    	
+			    	tdElmt1.innerHTML = userName;
+		    		tdElmt2.innerHTML = content;
+		    		tdElmt3.innerHTML = dateTime;
+		    		
+		    		tdElmt1.setAttribute("style", "min-width: 120px; width: 120px; text-align: center; white-space:nowrap; vertical-align: middle; padding: 0px 10px;");
+		    		tdElmt2.setAttribute("style", "vertical-align: middle; padding: 0px 10px;");
+		    		tdElmt3.setAttribute("style", "min-width: 120px; width: 120px; text-align: center; white-space:nowrap; vertical-align: middle; padding: 0px 10px;");
+		    		
+		    		trElmt.appendChild(tdElmt1);
+		    		trElmt.appendChild(tdElmt2);
+		    		trElmt.appendChild(tdElmt3);
+		    		tableOption.appendChild(trElmt);
+			    	
+			    	printCommentView.appendChild(tableOption);			    	
+			    	printCommentView.style.display = "";
+			    	
+			    }else{			    	
+			    
+			    if ($("#tablecomment2 > tbody  > tr").html().trim() != "") {
 			    	//baonk added
 			    	var printCommentView = document.getElementById("printCommentView");
 					while (printCommentView.firstChild) {
@@ -1156,18 +1190,12 @@
 					}
 			    	
 			    	var tableOption = document.createElement("TABLE");
-			    	tableOption.setAttribute("class", "content2");
-			    	
-			    	$('#opi_ul li').each(function (i) {
-			    		var userName = $(this).children().eq(0).text();
-			    		var content  = $(this).children().eq(1).text();
-			    		var dateTime = $(this).children().eq(2).text();
-						
+			    	tableOption.setAttribute("class", "content2");			    	
+			    	$('#tablecomment2 > tbody  > tr').each(function (i) {
+			    		userName = $(this).children().eq(0).text();
+			    		content  = $(this).children().eq(1).text();
+			    		dateTime = $(this).children().eq(2).text();		
 			    		
-			    		var trElmt  = document.createElement("TR");
-			    		var tdElmt1 = document.createElement("TD");
-			    		var tdElmt2 = document.createElement("TD");
-			    		var tdElmt3 = document.createElement("TD");
 			    		tdElmt1.innerHTML = userName;
 			    		tdElmt2.innerHTML = content;
 			    		tdElmt3.innerHTML = dateTime;
@@ -1192,6 +1220,7 @@
 			        document.getElementById("printCommentView").style.display = "none";
 			        document.getElementById("optiontr").style.display = "none";
 			    }
+			    }
 			
 			    if (document.getElementById("attachedfileDIV").innerHTML.trim() != "")
 			        printattachView.style.display = "";
@@ -1210,7 +1239,7 @@
 			    document.getElementById("close").style.display = "";
 			    document.getElementById("tabpart").style.display = "";
 			    document.getElementById("tablework").style.display = "";
-			    document.getElementById("tablecomment").style.display = "";
+			    document.getElementById("tablecomment2").style.display = "";
 			    $("#updateStatus").show();
 			
 /* 			    if (selecttab == "0") {
@@ -1299,7 +1328,7 @@
 		            	if(creatorid != userid) {
 		            		if (tasktype == "1" || tasktype == "4") {	
 		            			document.getElementById("editTaskWork").style.display = "none";
-		            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.t1511' />";
+		            			document.getElementById("chisiButton").innerHTML = "<spring:message code='ezTask.jjh02' />";
 		            			document.getElementById("editTaskChisi").style.display = "";			            					            			
 		            		}
 		            		else {
@@ -1603,7 +1632,7 @@
 		        
 	    		$("#message").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
 		    	$("#message2").closest("td").height(document.documentElement.clientHeight - 420 + "PX");
-		    	$("#taskCommentList").height(document.documentElement.clientHeight - 420 + "PX");
+		    	$("#taskComment").height(document.documentElement.clientHeight - 420 + "PX");
 		    	$("#new_div_body").height(document.documentElement.clientHeight - 360 + "PX");
 		    	
 
@@ -1612,7 +1641,7 @@
 		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />");
 		            setNodeText(document.getElementById("1tab1"), "<spring:message code='ezTask.t2011' />"); */
 		            $(".taskType").html("<spring:message code='ezTask.t2000' />");
-		        } else if (tasktype == "2") {
+		        } else if (tasktype == "2" || tasktype == "5") {
 		        	$(".taskType").html("<spring:message code='ezTask.t2001' />");
 		        } else {
 		        	$(".taskType").html("<spring:message code='ezTask.t2002' />");
@@ -1679,13 +1708,12 @@
 		</div>
 		<div id="close">
 			<ul>
-				<li><span onClick="window.close()"><spring:message code='ezTask.t9' /></span></li>
+				<li><span onClick="window.close()"></span></li>
 			</ul>
 		</div>
 		
 		<script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		
 		<div class="wrap_progress" style="height:245px;">
@@ -1709,7 +1737,7 @@
 					</ul>
 					<!-- 18-05-04 김민성 - 담당자만 업무 정보 수정 가능 하도록 수정 -->
 					<!-- 18-05-16 구해안 - 지시자만 업무 정보 수정 가능 하도록 수정, 담당자만 업무 내용 수정 가능하도록 수정 -->
-					<a id="updateStatus" class="imgbtn" ><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
+					<a id="updateStatus" class="imgbtn imgbck"><span onclick="return update_status()"><spring:message code='ezTask.lhj01' /></span></a>
 				</div>
 				<div id="Sdatepicker" style="float:right;"></div>
 			</div>
@@ -1721,9 +1749,12 @@
 			<div class="portlet_tabpart03_top" id="tab1">			
 				<p id = "MailEnv_sub0"><span divname="MailEnv_div0" id="1tab0" class="tabon"><spring:message code='ezTask.lhj02' /></span></p>					
 				<c:if test="${taskInfoVO.taskType != 4 && taskInfoVO.taskType != 1}">
-					<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>
-				</c:if>		
-				<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezTask.t2011' /></span></p>						
+					<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezTask.t2010' /></span></p>					
+				</c:if>
+				<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2">
+					<c:if test="${taskInfoVO.taskType != 4 && taskInfoVO.taskType != 1}"><spring:message code='ezTask.jjh01' /></c:if>
+					<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 1}"><spring:message code='ezTask.t2011' /></c:if></span>
+				</p>											
 				<p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezTask.t2013' /></span></p>
 				<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 5 || taskInfoVO.taskType == 6}">
 				<p id = "MailEnv_sub4"><span divname="MailEnv_div4" id="1tab4"><spring:message code='ezTask.t200904' /></span></p>
@@ -1732,9 +1763,12 @@
 				<div style="float: right; margin-top: 3px;">
 				<!-- 18-05-04 김민성 - 담당자만 업무 정보 수정 가능 하도록 수정 -->
 				<!-- 18-05-16 구해안 - 지시자만 업무 정보 수정 가능 하도록 수정, 담당자만 업무 내용 수정 가능하도록 수정 -->
-					<a id="editTaskInfo" class="imgbtn" style="display:none;"><span onclick="return edit_taskInfo()"><spring:message code='ezTask.t1512' /></span></a>
-					<a id="editTaskWork" class="imgbtn" style="display:none; "><span onclick="return edit_taskwrok()"><spring:message code='ezTask.t1511' /></span></a>
-					<a id="editTaskChisi" class="imgbtn" style="display:none; "><span onclick="return edit_task()" id= "chisiButton"><spring:message code='ezTask.t1513' /></span></a>
+					<a id="editTaskInfo" class="imgbtn imgbck" style="display:none;"><span onclick="return edit_taskInfo()"><spring:message code='ezTask.t1512' /></span></a>
+					<a id="editTaskWork" class="imgbtn imgbck" style="display:none; "><span onclick="return edit_taskwrok()">
+						<c:if test="${taskInfoVO.taskType != 4 && taskInfoVO.taskType != 1}"><spring:message code='ezTask.jjh02' /></c:if>
+						<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 1}"><spring:message code='ezTask.t1511' /></c:if></span>
+					</a>
+					<a id="editTaskChisi" class="imgbtn imgbck" style="display:none; "><span onclick="return edit_task()" id= "chisiButton"><spring:message code='ezTask.t1513' /></span></a>
 				</div>
 			</div>
 		</div> 		
@@ -1834,8 +1868,8 @@
 								<div id="attachedfileDIV" style="overflow:auto;height:57px;background-color:white;text-align:left"></div>
 							</td>
 							<td class="pos2">
-								<a class="imgbtn"><span onClick="attach_SelectAll('1')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br />
-								<a class="imgbtn"><span onClick="attach_Download('1')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
+								<a class="imgbtn imgbck"><span onClick="attach_SelectAll('1')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br />
+								<a class="imgbtn imgbck"><span onClick="attach_Download('1')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
 							</td>
 							<td id="Td2" style="display:none"></td>
 						</tr>
@@ -1858,9 +1892,9 @@
 							<td class="pos1">
 								<div id="attachedfileDIV2" style="overflow: auto;height: 57px;background-color:white;text-align:left"></div>
 							</td>
-							<td class="pos2"><a class="imgbtn">
+							<td class="pos2"><a class="imgbtn imgbck">
 								<span  onClick="attach_SelectAll('2')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br />
-								<a class="imgbtn"><span onClick="attach_Download('2')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
+								<a class="imgbtn imgbck"><span onClick="attach_Download('2')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
 							</td>
 						</tr>
 					</table>
@@ -1898,7 +1932,10 @@
 			<ul style="padding-left: 0px; list-style:none;">
 				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200906' /></li>
 				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200907' /></li>
-				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200908' /></li>
+				<li style="padding-top: 10px; font-size:12px;"> ▒
+					<c:if test="${taskInfoVO.taskType != 4 && taskInfoVO.taskType != 1}"><spring:message code='ezTask.jjh03' /></c:if>
+					<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 1}"><spring:message code='ezTask.t200908' /></c:if> 
+				</li>
 				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200909' /></li>				
 				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200910' /></li>				
 			</ul>
@@ -1994,7 +2031,10 @@
 							<ul style="padding-left: 0px; list-style:none;">
 								<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200906' /></li>
 								<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200907' /></li>
-								<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200908' /></li>
+								<li style="padding-top: 10px; font-size:11px;"> ▒
+									<c:if test="${taskInfoVO.taskType != 4 && taskInfoVO.taskType != 1}"><spring:message code='ezTask.jjh03' /></c:if>
+									<c:if test="${taskInfoVO.taskType == 4 || taskInfoVO.taskType == 1}"><spring:message code='ezTask.t200908' /></c:if> 
+								</li>
 								<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200909' /></li>				
 								<li style="padding-top: 10px; font-size:11px;"> ▒ <spring:message code='ezTask.t200910' /></li>				
 							</ul>

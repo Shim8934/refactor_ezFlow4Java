@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,8 +8,8 @@
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css">
 	    <script type = "text/javascript">
 	        var pUse_Editor = "${userEditor}";
 	        var pNoneActiveX = "${noneActiveX}";
@@ -104,7 +105,7 @@
 	    </script>
 	    <title><spring:message code='ezEmail.t904' /></title>
 	</head>
-	<body class="mainbody">
+	<body class="mainbody" style="min-width: 835px">
 	    <h1><spring:message code='ezEmail.t10010' /></h1>
 	        <div class="portlet_tabpart01">
 		        <div class="portlet_tabpart01_top" id="tab1">

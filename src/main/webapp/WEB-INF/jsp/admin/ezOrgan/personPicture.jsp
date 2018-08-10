@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -7,20 +8,20 @@
 		<title><spring:message code="ezOrgan.t238" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>    
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>    
 	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>	    
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery.form.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.form.js")%>"></script>
 	    
 	    <c:if test="${!isCrossBrowser}">
-	      	<script type="text/javascript" src="/js/ezBoard/AttachMain.js"></script>
-		    <script type="text/javascript" src="/js/ezBoard/AttachItem.js"></script>
-		    <script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+	      	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezBoard/AttachMain.js")%>"></script>
+		    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezBoard/AttachItem.js")%>"></script>
+		    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/Kaoni_ActiveX.js")%>"></script>
 	    </c:if>
 	    <c:if test="${isCrossBrowser}">
-		    <script type="text/javascript" src="/js/ezBoard/AttachMain_CK.js"></script>
-		    <script type="text/javascript" src="/js/ezBoard/AttachItem_CK.js"></script>
+		    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezBoard/AttachMain_CK.js")%>"></script>
+		    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezBoard/AttachItem_CK.js")%>"></script>
 	    </c:if>
 		<script type="text/javascript" language="javascript">
 		    var ReturnFunction;
@@ -189,40 +190,43 @@
 	    </script>
 	</head>
 	<body class="popup">
-		<h1><spring:message code='ezOrgan.t240' /></h1>		
-		<table class="content"> 
+		<h1><spring:message code='ezOrgan.t240' /></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="close_Click()"></span></li>
+            </ul>
+        </div>
+		<table class="content" style="height: 140px;"> 
 			<tr>
-		    	<th width="119" height="128"><img <spring:message code='ezOrgan.i6' />></th>
-		    	<td>
+		    	<th style="min-width:119px; height:128px;"><img <spring:message code='ezOrgan.i6' />></th>
+		    	<td style="padding:5px">
 		    	<c:if test="${!isCrossBrowser}">
 		    	 	   <SCRIPT type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
 		    	 </c:if>
 		    		<spring:message code='ezOrgan.t241' /><br/>
 		      		119*128px<spring:message code='ezOrgan.t10000' />
 		      		<br/>
-			  		<a class="imgbtn"><span onClick="divImageFile_onclick()"><spring:message code='ezOrgan.t244' /></span></a>
+			  		<a class="imgbtn imgbck" style="margin-top:5px"><span onClick="divImageFile_onclick()"><spring:message code='ezOrgan.t244' /></span></a>
 			  	</td>
 		  	</tr>
 		</table>
-		<table class="content"> 
+		<table class="content" style="margin-top:7px"> 
 			<tr>
 		    	<th><spring:message code='ezOrgan.t245' /></th>
-		    	<td width="100%">
-		    
-		    		<input id=imagefile name=imagefile style=" WIDTH: 210px" readonly="readonly" />
+		    	<td width="100%">		    
+		    		<input id=imagefile name=imagefile style=" WIDTH: 247px" readonly="readonly" />
 		    		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 		    		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" >
-		  				<input type="file" name="file1" id="file1" style="width: 1px; height: 1px;" onchange="imgtemp_onclick()" multiple="false"/>
+		  				<input type="file" name="file1" id="file1" style="width: 1px; height: 1px; display:none;" onchange="imgtemp_onclick()" multiple="false"/>
 		    			<input type="hidden" name="mode" id="mode" />
 		    			<input type="hidden" name="tempFilePath" id="tempFilePath" />
 		    		</form>
-					<a class="imgbtn"><span id="btnimagefile" onClick="btnimagefile_onclick()" style="width:25px"><spring:message code='ezOrgan.t101' /></span></a>
+					<a class="imgbtn imgbck" style="height: 22px; margin-bottom: 0px;"><span id="btnimagefile" onClick="btnimagefile_onclick()" style="width:25px; line-height: 23px;"><spring:message code='ezOrgan.t101' /></span></a>
 				</td>
 		  	</tr>
 		</table>
-		<div class="btnposition">
+		<div class="btnpositionNew">
 		    <a class="imgbtn"><span onClick="imgConfirm_onclick();"><spring:message code='ezOrgan.t246' /></span></a>
-		    <a class="imgbtn"><span onClick="close_Click()"><spring:message code='ezOrgan.t111' /></span></a>
 		</div>		
 	</body>
 </html>

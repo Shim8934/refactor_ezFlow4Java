@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -8,10 +9,10 @@
 		<title><spring:message code='ezWebFolder.t324' /></title>
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1' />" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 		<script type="text/javascript">
 			var shareInfos = [];
 			var folderFileId = "${folderFileId}";
@@ -36,7 +37,15 @@
 							renderData(result.data);
 							changeShareInfo(0);
 						} else {
-							alert(messages.strLang7 + " code: " + result.code);
+							if (result.code == 1) {
+								alert("<spring:message code='ezWebFolder.t306'/>");
+							} else if (result.code == 2) {
+								alert("<spring:message code='ezWebFolder.t305'/>");
+							} else if (result.code == 3) {
+								alert("<spring:message code='ezWebFolder.t300'/>");
+							} else {
+								alert("<spring:message code='ezWebFolder.t134'/>" + " - errorCode : " + result.code);
+							}
 						}
 					},
 					error : function(error) {
@@ -114,22 +123,22 @@
 		
 		<div id="close">
 		  <ul>
-		    <li><span onClick="window.close();"><spring:message code='main.t3' /></span></li>
+		    <li><span onClick="window.close();"></span></li>
 		  </ul>
 		</div>
 		
 		<table style="width:100%;" class="popuplist">
 			<tr>
-				<th style="width:20%; text-align:center;"><spring:message code='ezWebFolder.t319' /></th>
-				<td style="text-align:center;">
+				<th style="width:20%; text-align:left;"><spring:message code='ezWebFolder.t319' /></th>
+				<td style="text-align:left;padding-left:5px">
 					<select id="sharingUser" onchange="changeShareInfo(this.value)">
 					</select>
-					<a id="sharerInfo"><img src="/images/ImgIcon/circular_share2.gif" style="width:15px; vertical-align:middle;" /></a>
+					<a id="sharerInfo"><img src="/images/i_group_new.gif" style="vertical-align:middle;" /></a>
 				</td>
 			</tr>
 			<tr>
-				<th style="width:20%; text-align:center;"><spring:message code='ezWebFolder.t321' /></th>
-				<td style="text-align:center;"><span id="shareDate"></span></td>
+				<th style="width:20%; text-align:left;"><spring:message code='ezWebFolder.t321' /></th>
+				<td style="text-align:left;padding-left:7px"><span id="shareDate"></span></td>
 			</tr>
 		</table>
 		

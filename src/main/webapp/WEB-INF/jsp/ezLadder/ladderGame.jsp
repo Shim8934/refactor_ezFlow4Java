@@ -104,13 +104,13 @@
 								changeListOrder();
 							},
 							
-						})
-						.on("mousedown", function() {
-							userSwitchFlag = true;
-						})
-						.on("mouseup", function() {
-							userSwitchFlag = false;
 						});
+						/* .on("mousedown", function() {
+							userSwitchFlag = true;
+						}) */
+						/* .on("mouseup", function() {
+							userSwitchFlag = false;
+						}); */
 				} else {
 					$(".ladderDrag").on("dragstart", function() {
 						return false;
@@ -182,12 +182,12 @@
 			$("#usePreladder").on("click", function() {
 				window.location.href = "/ezLadder/setLadder.do?ladderId=" + ${vo.ladderId};
 			});
-			$("#ladderContents")
+			/* $("#ladderContents")
 				.on("mouseleave", function() {
 					if(!!moFlag) {
 						scrollMouseUpEvent();
 					}
-				});
+				}); */
 		});
 		
 		function ladder_window_resize() {
@@ -379,7 +379,17 @@
 			
 			$(document)
 			.on("click", "[id^=drag]", function() {
-				if(userClickFlag) {
+				clickUserOrder = Number($(this).attr("id").slice(4));
+				
+				if($body.scrollTop() != ladLineTop) {
+					$body.animate({"scrollTop": ladLineTop}, 200);
+				}
+				if(userStatus[clickUserOrder] == 0) {
+					aniOneUser();
+				} else {
+					popOneUser();
+				}
+				/* if(userClickFlag) {
 					clickUserOrder = Number($(this).attr("id").slice(4));
 					
 					if($body.scrollTop() != ladLineTop) {
@@ -390,7 +400,7 @@
 					} else {
 						popOneUser();
 					}
-				}
+				} */
 			});
 		}
 		function ladderAnimationComplete(type) {
@@ -654,7 +664,7 @@
 			}
 		}
 		
-		var moFlag = false;
+		/* var moFlag = false;
 		var userSwitchFlag = false;
 		var userClickFlag = false;
 		var $linebox;
@@ -682,7 +692,7 @@
 			if(moFlag) {
 				moFlag = !moFlag;
 			}
-		}
+		} */
 	</script>
 	<style type="text/css">
 		input[type=text]::-ms-clear {
@@ -733,7 +743,7 @@
 		
 		.directionBtn {			
 			position: relative;
-			margin-top: 8px;
+			margin-top: 5px;
 		}
 		
 		.direcDiv {
@@ -774,8 +784,8 @@
 		}
 		.name {
 			color : #000;
-			font-size: 14px;
-			padding-top: 3px;
+			font-size: 13px;
+			padding-top: 4px;
 		}
 		.team {
 			color : #000;
@@ -783,7 +793,7 @@
 		}
 		.date {
 			color: #aaa9a9;
-			padding-top: 6px;
+			padding-top: 4px;
 		}
 		a, a:hover {
 			color: transparent;
@@ -804,7 +814,7 @@
 		<h1><spring:message code='ezLadder.t001' /></h1>
 		<div class="fullwidth">
 			<div style="height:50px">
-				<div style="float:left;margin-top:3px;margin-bottom:10px">
+				<div style="float:left;margin-top:3px;margin-bottom:5px">
 					<p class="pic" style="float:left;margin:5px 10px; cursor: pointer;" onclick="menuQst_DetailUserInfo('<c:out value="${vo.writerId}" />')" > 
 						<c:choose>
 							<c:when test="${empty vo.pic}">
@@ -863,7 +873,8 @@
 						</div>
 					</td>
 				</tr>
-				<tr id="ladderContents" onmousedown="scrollMouseDownEvent(this, event);" onmousemove="scrollMouseDragEvent(this, event);" onmouseup="scrollMouseUpEvent(this, event);" onselectstart="return false;">
+				<!-- <tr id="ladderContents" onmousedown="scrollMouseDownEvent(this, event);" onmousemove="scrollMouseDragEvent(this, event);" onmouseup="scrollMouseUpEvent(this, event);" onselectstart="return false;"> -->
+					<tr id="ladderContents">
 					<td>
 						<c:if test="${vo.status eq 0}">
 							<div id="startButton" style="position: absolute; z-index: 100; top: 0; left: 0; margin-top:-10px">
@@ -874,7 +885,7 @@
 										</div>
 									</c:when>
 									<c:otherwise>
-										<div style="width: 500px; height: 140px; background: white; text-align: center;border:1px solid #e8e8ef">
+										<div style="width: 500px; height: 140px; background: white; text-align: center;border:1px solid palevioletred">
 											<span style="font-size: large; color: palevioletred; font-weight: bold; display: inline-block; margin-top: 45px; margin-bottom: 20px;"><spring:message code="ezLadder.t049" /></span>
 											<span style="display: inline-block;"><spring:message code="ezLadder.t049" /></span>
 										</div>
@@ -909,7 +920,7 @@
 									</ul>
 								</div>
 								<div id="lineDiv" style="position: relative; height: 400px; z-index: 1;">
-									<div id="blackBox" style="height: 398px;background: #f9f9fc; position: absolute;left: -50px;right: 0;border-top:1px solid #dde;border-bottom:1px solid #dde">
+									<div id="blackBox" style="height: 398px;background: whiteSmoke; position: absolute;left: -50px;right: 0;border-top:1px solid #ddd;border-bottom:1px solid #ddd">
 										<div id="changeOrderPop" style="height: 150px; width: 500px; position: relative;"></div>
 									</div>
 									<span></span>

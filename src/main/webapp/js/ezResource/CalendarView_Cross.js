@@ -1,5 +1,6 @@
 ﻿var DefaultView = 1;
 var sStartDate, sEndDate;
+var sDate = new Date();
 
 //리스트뷰 바디 생성
 var startOfWeek, endOfWeek;
@@ -16,6 +17,10 @@ var g_szCurrentApptSDate;
 var g_szCurrentApptEDate;
 var g_szCurrentApptDivID;
 var dayOfWeeks;
+
+var g_selDivID = null;
+var g_selTRID = null;
+var g_selTDID = null;
 
 var monthHeight = ((parseInt(document.documentElement.clientHeight, 10) - 250) / 6) - 12;
 
@@ -57,7 +62,7 @@ function CalendarView(pTagetID) {
             oTable.setAttribute("border", "0");
             oTable.setAttribute("width", "100%");
             oTh.setAttribute("id", "calTitle");
-            oTh.style.padding = "1px 0px 1px 0px";
+            /*oTh.style.padding = "1px 0px 1px 0px";*/
             oTh.style.fontSize = "15px";
             oTh.colSpan = "2";
             if (typeCal == 2) {
@@ -154,10 +159,26 @@ function CalendarView(pTagetID) {
 
             mSpan.appendChild(mImg);
             oTh.appendChild(mSpan);
-
-            var oText = document.createTextNode(" " + dayText + " ");
-            oTh.appendChild(oText);
-
+            
+            /*2018-06-04 구해안 dayText 대신에 DatePicker 시작*/
+           
+            var oText = document.createTextNode(" " + dayText + " ");            
+            
+            oTh.appendChild(oText);           
+            
+            var uploadSDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
+            var datePick = document.createElement("INPUT");
+            datePick.setAttribute("type", "hidden");
+            datePick.setAttribute("name", "datePick");
+            datePick.setAttribute("class", "datePick");
+            datePick.setAttribute("value", uploadSDate);
+            
+            oTh.appendChild(datePick);
+            
+            /*2018-06-04 구해안 dayText 대신에 DatePicker 끝*/
+            var kSpan = document.createElement("SPAN");
+            kSpan.setAttribute("width", "10px");
+            oTh.appendChild(kSpan);
             var mSpan = document.createElement("SPAN");
             mSpan.className = "btn_next";
             var mImg = document.createElement("IMG");
@@ -211,6 +232,8 @@ function CalendarView(pTagetID) {
                 var dTr = document.createElement("TR")
                 var dTd = document.createElement("TD")
                 dTd.className = "calendar_t_time";
+                dTd.setAttribute("dispDate", dayText.substring(0,10));
+                dTd.setAttribute("ondblclick", "newSchedule_onclick(event)");
                 var dDiv = document.createElement("DIV")
                 dDiv.setAttribute("id", dayText.substring(0, 10) + "ALL");
                 dDiv.style.width = "100%"
@@ -222,7 +245,7 @@ function CalendarView(pTagetID) {
                 var dTr = document.createElement("TR")
                 var dTd = document.createElement("TD")
                 dTd.className = "calendar_t_text";
-                dTd.setAttribute("dispDate", dayText);
+                dTd.setAttribute("dispDate", dayText.substring(0,10));
                 dTd.setAttribute("ondblclick", "newSchedule_onclick(event)");
                 dTr.appendChild(dTd);
                 dTable.appendChild(dTr);
@@ -304,13 +327,161 @@ function CalendarView(pTagetID) {
     CalViewSource();
     
     Window_resize();
+    
+    /*//2018-06-05 구해안 datepicker 호출함수
+    $('.datePick').datepicker({
+   	    changeMonth: true,
+    	changeYear: true,
+    	autoSize: true,
+    	showOn: "both",
+    	buttonImage: "/images/ImgIcon/calendar-month.gif",
+    	buttonImageOnly: true,
+    	onSelect: function (dateText, inst) {
+    	   var iMonth = parseInt($('.datePick').val().substring(5,7),10)-1;
+    	   var iYear = $('.datePick').val().substring(0,4);
+    	   var iDay = $('.datePick').val().substring(8,10);
+    	    
+    	   var beforeMonth = leadingZeros((sDate.getMonth() + 1), 2) - 1; 	
+    	   var beforeYear = sDate.getFullYear();
+    	   
+    	   sDate.setFullYear(iYear, iMonth, iDay); 
+    	   if(typeCal == 0){    		   
+    		   if(iYear == beforeYear && iMonth == beforeMonth){
+    			   return;   			   
+    		   }else CalendarView("Calendar");
+    	   }else{
+    		   CalendarView("Calendar");
+    	   }
+    	}
+    });*/
+ // 2018-06-07 구해안 datepicker 호출함수    
+    var WstartDate, WendDate; 
+    var monthCssHidden = function(){
+		window.setTimeout(function(){
+			 $('.ui-datepicker-month').css('display','none');
+			 $('.ui-datepicker-year').css('margin','0 auto');
+		}, 1);
+	}
+    var monthCssShow = function(){
+		window.setTimeout(function(){
+			 $('.ui-datepicker-month').css('display','');
+			 $('.ui-datepicker-year').css('margin','');
+		}, 1);
+	}
+    var removeMonthClass = function(){
+		window.setTimeout(function(){
+			 $('#ui-datepicker-div').removeClass('ui-monthpicker');
+		}, 1);
+	}
+    if(typeCal == 2){    
+    	$('.datePick').datepicker({
+    		changeMonth: true,
+    		changeYear: true,
+    		autoSize: true,
+    		showOn: "both",
+    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+    		buttonImageOnly: true,
+    		dateFormat: 'yy-mm-dd',
+    		showMonthAfterYear: true, 
+    		onSelect: function (dateText, inst) {
+    			var iMonth = parseInt($('.datePick').val().substring(5,7),10)-1;
+    			var iYear = $('.datePick').val().substring(0,4);
+    			var iDay = $('.datePick').val().substring(8,10);
+    			
+    			var beforeMonth = leadingZeros((sDate.getMonth() + 1), 2) - 1; 	   
+    			var beforeYear = sDate.getFullYear();
+    			
+    			sDate.setFullYear(iYear, iMonth, iDay); 
+    			
+    			CalendarView("Calendar");    			
+    		},
+    		beforeShow: function(input, inst) {
+    			/*monthCssShow();    */		
+    			removeMonthClass();
+    		}
+    	});
+    	$(document).off('mousemove','.ui-datepicker-calendar tr');
+    	$(document).off('mouseleave', '.ui-datepicker-calendar tr');
+    	
+    }else if(typeCal == 1){
+    	var selectCurrentWeek = function() { 
+            window.setTimeout(function () { 
+                $(document).find('.ui-datepicker-current-day a').addClass('ui-state-active'); 
+            }, 1); 
+        }     	
+    	$('.datePick').datepicker({
+    		showOtherMonths: true, 
+            selectOtherMonths: true, 
+    		changeMonth: true,
+    		changeYear: true,
+    		autoSize: true,
+    		showOn: "both",
+    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+    		buttonImageOnly: true,
+    		dateFormat: 'yy-mm-dd',
+    		showMonthAfterYear: true, 
+    		onSelect: function (dateText, inst) {
+    			var iMonth = parseInt($('.datePick').val().substring(5,7),10)-1;
+    			var iYear = $('.datePick').val().substring(0,4);
+    			var iDay = $('.datePick').val().substring(8,10);
+    			    			
+    			var date = $(this).datepicker('getDate'); 
+                WstartDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay()); 
+                WendDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 6);                
+                 
+                selectCurrentWeek(); 
+    			sDate.setFullYear(iYear, iMonth, iDay);     			
+    			CalendarView("Calendar");    			
+    		  },
+	    	  beforeShowDay: function(date) { 
+	    		  /*monthCssShow();*/
+	    		  removeMonthClass();
+	    	      
+	              var cssClass = ''; 
+	              if (date >= WstartDate && date <= WendDate) 
+	                  cssClass = 'ui-datepicker-current-day'; 
+	              return [true, cssClass]; 	              
+	          }, 
+	          onChangeMonthYear: function(year, month, inst) { 
+	              selectCurrentWeek(); 
+	          } 
+    	});
+    	$(document).on('mousemove', '.ui-datepicker-calendar tr', function() { $(this).find('td a').addClass('ui-state-hover'); }); 
+	    $(document).on('mouseleave', '.ui-datepicker-calendar tr', function() { $(this).find('td a').removeClass('ui-state-hover'); });
+    }else{   
+            $(".datePick").monthpicker({
+            	showOn: "both",
+        		buttonImage: "/images/ImgIcon/calendar-month.gif",
+        		buttonImageOnly: true,
+        		onSelect: function (dateText, inst) {
+        			var iMonth = parseInt($('.datePick').val().substring(5,7),10)-1;
+        			var iYear = $('.datePick').val().substring(0,4);
+        			var iDay = $('.datePick').val().substring(8,10);
+        			
+        			var beforeMonth = leadingZeros((sDate.getMonth() + 1), 2) - 1; 	   
+        			var beforeYear = sDate.getFullYear();
+        			
+        			sDate.setFullYear(iYear, iMonth, iDay); 
+        			if(typeCal == 0){    		   
+        				if(iYear == beforeYear && iMonth == beforeMonth){
+        					return;   			   
+        				}else CalendarView("Calendar");
+        			}else{
+        				CalendarView("Calendar");
+        			}
+        		}
+            });               
+ 
+    }
 }
 
 ///////////// 월보기 Calendar 생성 시작 /////////////
 function GetMonthBodyObj() {
-    var year = document.getElementById("iYear").value;
-    var month = parseInt(document.getElementById("iMon").value, 10);
-
+	
+	//2018-06-05 구해안 mini에서 호출하는 부분 전부 제거
+    var year = sDate.getFullYear();
+    var month = parseInt(leadingZeros((sDate.getMonth() + 1), 2), 10);
+   
     oBeforeDate = new Date(new Date(year, month - 1, 1) - 86400000);  // 이전달
     oThisDate = new Date(year, month - 1, 1); // 현재달
     oBeforeDate.setTime(oBeforeDate.getTime() + (oBeforeDate.getTimezoneOffset() + (oBeforeDate.getHours() * 60) + oBeforeDate.getMinutes()) * 60 * 1000);
@@ -577,10 +748,10 @@ function Write() {
 
     var feature = GetOpenPosition(820, 700);
     if (CrossYN() || pNoneActiveX == "YES") {
-        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ResID + "&brdName=" + encodeURIComponent(brd_NM) + "&startDate=" + startdate + "&endDate=" + enddate + "", "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ResID + "&startDate=" + startdate + "&endDate=" + enddate + "", "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     }
     else {
-        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ResID + "&brdName=" + encodeURIComponent(brd_NM) + "&startDate=" + startdate + "&endDate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ResID + "&startDate=" + startdate + "&endDate=" + enddate + "", "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     }
 
     DragStartItemID = "";
@@ -693,6 +864,19 @@ function GetWeekBodyObj() {
     document.getElementById("list_Top").appendChild(mSpan);
 
     document.getElementById("list_Top").appendChild(oText);
+    
+    /*2018-06-04 구해안 dayText 대신에 DatePicker 시작*/
+    
+    var uploadSDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
+    var datePick = document.createElement("INPUT");
+    datePick.setAttribute("type", "hidden");
+    datePick.setAttribute("name", "datePick");
+    datePick.setAttribute("class", "datePick");
+    datePick.setAttribute("value", uploadSDate);
+    
+    document.getElementById("list_Top").appendChild(datePick);
+    
+    /*2018-06-04 구해안 dayText 대신에 DatePicker 끝*/
 
     var mSpan = document.createElement("SPAN");
     mSpan.className = "btn_next";
@@ -862,6 +1046,8 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         var dTr = document.createElement("TR")
         var dTd = document.createElement("TD")
         dTd.className = "calendar_t_time";
+        dTd.setAttribute("ondblclick", "newSchedule_onclick(event)");
+        dTd.setAttribute("dispDate", divID);
         var dDiv = document.createElement("DIV")
         dDiv.setAttribute("id", divID + "ALL");
         dDiv.style.height = "100px";
@@ -1009,8 +1195,9 @@ function DayData(j) {
 
 //이전월 이동
 function preMonth() {
-    var iMonth = parseInt(document.getElementById("iMon").value, 10) - 1;
-    var iYear = document.getElementById("iYear").value;
+	//2018-06-05 구해안 기존 mini 달력에서 가져오는 값을 제거하고 datepicker에서 가져오도록 수정		
+    var iMonth = parseInt($('.datePick').val().substring(5,7),10) - 1;
+    var iYear = $('.datePick').val().substring(0,4);
 
     if (iMonth < 1) {
         iYear--;
@@ -1021,18 +1208,18 @@ function preMonth() {
         iMonth = 1;
     }
 
-    document.getElementById("iYear").value = iYear;
-    document.getElementById("iMon").value = iMonth;
+    /*document.getElementById("iYear").value = iYear;
+    document.getElementById("iMon").value = iMonth;*/
     sDate.setFullYear(iYear, iMonth - 1, 14);
 
     CalendarView('Calendar');
-    CalendarMiniView("CalendarMini");
+     
 }
 
 //다음월 이동
 function nextMonth() {
-    var iMonth = parseInt(document.getElementById("iMon").value, 10) + 1;
-    var iYear = document.getElementById("iYear").value;
+	var iMonth = parseInt($('.datePick').val().substring(5,7),10) + 1;
+	var iYear = $('.datePick').val().substring(0,4);
 
     if (iMonth < 1) {
         iYear--;
@@ -1044,52 +1231,52 @@ function nextMonth() {
     }
 
     sDate.setFullYear(iYear, iMonth - 1, 14);
-    document.getElementById("iYear").value = iYear;
-    document.getElementById("iMon").value = iMonth;
+    /*document.getElementById("iYear").value = iYear;
+    document.getElementById("iMon").value = iMonth;*/
 
     CalendarView('Calendar');
-    CalendarMiniView("CalendarMini");
+     
 }
 
 //이전년도 이동
 function preYear() {
-    var iMonth = document.getElementById("iMon").value;
-    var iYear = document.getElementById("iYear").value;
+	var iMonth = parseInt($('.datePick').val().substring(5,7),10);
+	var iYear = $('.datePick').val().substring(0,4);
 
     iYear--;
-    document.getElementById("iYear").value = iYear;
-    document.getElementById("iMon").value = iMonth;
+    /*document.getElementById("iYear").value = iYear;
+    document.getElementById("iMon").value = iMonth;*/
     sDate.setFullYear(iYear, iMonth - 1, 14);
 
     CalendarView('Calendar');
-    CalendarMiniView("CalendarMini");
+     
 }
 
 //다음년도 이동
 function nextYear() {
-    var iMonth = document.getElementById("iMon").value;
-    var iYear = document.getElementById("iYear").value;
+	var iMonth = parseInt($('.datePick').val().substring(5,7),10);
+	var iYear = $('.datePick').val().substring(0,4);
 
     iYear++;
     sDate.setFullYear(iYear, iMonth - 1, 14);
-    document.getElementById("iYear").value = iYear;
-    document.getElementById("iMon").value = iMonth;
+    /*document.getElementById("iYear").value = iYear;
+    document.getElementById("iMon").value = iMonth;*/
 
     CalendarView('Calendar');
-    CalendarMiniView("CalendarMini");
+     
 }
 
 //선택한 년도 이동
 function changeYear() {
-    var iMonth = document.getElementById("iMon").value;
-    var iYear = document.getElementById("iYear").value;
+	var iMonth = parseInt($('.datePick').val().substring(5,7),10);
+	var iYear = $('.datePick').val().substring(0,4);
 
     sDate.setFullYear(iYear, iMonth - 1, 14);
-    document.getElementById("iYear").value = iYear;
-    document.getElementById("iMon").value = iMonth;
+    /*document.getElementById("iYear").value = iYear;
+    document.getElementById("iMon").value = iMonth;*/
 
     CalendarView('Calendar');
-    CalendarMiniView("CalendarMini");
+     
 }
 
 //선택한 월 이동
@@ -1102,127 +1289,37 @@ function changeMonth() {
     sDate.setFullYear(iYear, iMonth - 1, 14);
 
     CalendarView('Calendar');
-    CalendarMiniView("CalendarMini");
+     
 }
 
 
-
+//2018-06-05 구해안 월, 주, 일 달력 이동하는 이벤트 mini 호출하는 부분 삭제
 function preWeek() {
     sDate.setDate(sDate.getDate() - 7);
-
-    var itemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
-    var DayItem = document.getElementById(itemID);
-    if (DayItem)
-        DayItem.onclick();
-    else {
-        preWeekMonth();
-        var DayItem = document.getElementById(itemID);
-        if (DayItem) {
-            DayItem.onclick();
-            CalendarMiniDataSource();
-        }
-    }
+    
+    CalendarView("Calendar");
 }
 
 function nextWeek() {
 
     sDate.setDate(sDate.getDate() + 7);
-
-    var itemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
-    var DayItem = document.getElementById(itemID);
-    if (DayItem)
-        DayItem.onclick();
-    else {
-        nextWeekMonth();
-
-        var DayItem = document.getElementById(itemID);
-        if (DayItem) {
-            DayItem.onclick();
-            CalendarMiniDataSource();
-        }
-    }
+   
+    CalendarView("Calendar");
 }
 
 
 function preDay() {
     sDate.setDate(sDate.getDate() - 1);
-
-    var itemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
-    var DayItem = document.getElementById(itemID);
-    if (DayItem)
-        DayItem.onclick();
-    else {
-        preWeekMonth();
-        var DayItem = document.getElementById(itemID);
-        if (DayItem) {
-            DayItem.onclick();
-            CalendarMiniDataSource();
-        }
-    }
+   
+    CalendarView("Calendar");
 }
 
 function nextDay() {
 
     sDate.setDate(sDate.getDate() + 1);
-
-    var itemID = "TDMINI_" + sDate.getFullYear() + "-" + leadingZeros(sDate.getMonth() + 1, 2) + "-" + leadingZeros(sDate.getDate(), 2) + "_Day";
-    var DayItem = document.getElementById(itemID);
-    if (DayItem)
-        DayItem.onclick();
-    else {
-        nextWeekMonth();
-
-        var DayItem = document.getElementById(itemID);
-        if (DayItem) {
-            DayItem.onclick();
-            CalendarMiniDataSource();
-        }
-    }
+ 
+    CalendarView("Calendar");
 }
-
-
-
-//이전월 이동
-function preWeekMonth() {
-    var iMonth = parseInt(document.getElementById("iMon").value, 10) - 1;
-    var iYear = document.getElementById("iYear").value;
-
-    if (iMonth < 1) {
-        iYear--;
-        iMonth = 12;
-    }
-    else if (iMonth > 12) {
-        iYear++;
-        iMonth = 1;
-    }
-
-    document.getElementById("iYear").value = iYear;
-    document.getElementById("iMon").value = iMonth;
-
-    CalendarMiniView("CalendarMini");
-}
-
-//다음월 이동
-function nextWeekMonth() {
-    var iMonth = parseInt(document.getElementById("iMon").value, 10) + 1;
-    var iYear = document.getElementById("iYear").value;
-
-    if (iMonth < 1) {
-        iYear--;
-        iMonth = 12;
-    }
-    else if (iMonth > 12) {
-        iYear++;
-        iMonth = 1;
-    }
-
-    sDate.setFullYear(iYear, iMonth - 1, 14);
-    document.getElementById("iYear").value = iYear;
-    document.getElementById("iMon").value = iMonth;
-
-    CalendarMiniView("CalendarMini");
-}
-
 
 function memorialDayCheck(solarDate, lunarDate) {
     var i;

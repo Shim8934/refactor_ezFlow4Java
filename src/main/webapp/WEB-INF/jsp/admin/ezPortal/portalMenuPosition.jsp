@@ -109,6 +109,11 @@
 	</head>
 	<body class="popup" onload="javascript:window_onload()">
 		<h1><spring:message code='ezPortal.t100'/></h1>
+		<div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
 		<table width="500" class="content">
 			<tr>
 				<th><spring:message code='ezPortal.t70'/></th>
@@ -148,7 +153,6 @@
 		</table>
 		<div class="btnposition">
         	<a class="imgbtn"><span onClick="SaveSetting();"><spring:message code='ezPortal.t62'/></span></a>
-        	<a class="imgbtn"><span onClick="window.close();"><spring:message code='ezPortal.t46'/></span></a>
 		</div>
 	</body>
 </html>

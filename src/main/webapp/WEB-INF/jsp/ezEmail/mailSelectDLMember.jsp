@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -9,7 +10,7 @@
 		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 		<script>
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -75,6 +76,11 @@
 	<body style="overflow:hidden;" class="popup">
 		<form method="post">
 			<h1 id="h1"><spring:message code='ezEmail.t659' /></h1>
+			<div id="close">
+	            <ul>
+	                <li><span onclick="Window_Close()"></span></li>
+	            </ul>
+	        </div>
 			<div class="box" id="maillist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:320px;border:0px">
 			  <table style="width:100%;" class="popuplist" style="TABLE-LAYOUT:fixed" id="checkboxtable">
 			    <tr>
@@ -99,10 +105,9 @@
 			    
 			  </table>
 			</div>
-		  <div class="btnposition btnpositionNew">
-		    <a class="imgbtn" onClick="add_personal()" id="cmd_ok"><span><spring:message code='ezEmail.t38' /></span></a>
-		    <a class="imgbtn" onClick="Window_Close()"><span><spring:message code='ezEmail.t39' /></span></a>
-		  </div>
+		  	<div class="btnposition btnpositionNew">
+		    	<a class="imgbtn" onClick="add_personal()" id="cmd_ok"><span><spring:message code='ezEmail.t38' /></span></a>		    
+		  	</div>
 		</form>
 	</body>
 </html>

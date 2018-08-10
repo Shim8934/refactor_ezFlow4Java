@@ -238,10 +238,20 @@ function AddGroupReceptADD(p_AprLineTempletID) {
 				},
 		success: function(text){
 			result = text;
+			
+			document.getElementById('RECEPTLIST').innerHTML = "";
+			var listview = new ListView();
+            listview.SetID("lvRECEPTLIST");
+            listview.SetSelectFlag(false);
+            listview.SetHeightFree(true);
+            listview.SetRowOnDblClick("AprDeptDel_onclick");
+            listview.DataSource(loadXMLString(result));
+            listview.DataBind("RECEPTLIST");
 		}        			
 	});
 	
-    var ResultXML = loadXMLString(result)
+    /*var ResultXML = loadXMLString(result);
+    
     if (SelectNodes(ResultXML, "LISTVIEWDATA/ROWS/ROW").length > 0) {
         var listview = new ListView();
         listview.LoadFromID("lvRECEPTLIST");
@@ -306,7 +316,7 @@ function AddGroupReceptADD(p_AprLineTempletID) {
             }
         }
 
-    }
+    }*/
 }
 function DuplicateAddGroupReceptCheck(APRDEPT) {
     var listview = new ListView();
@@ -391,6 +401,7 @@ function btn_AprDeptTempletAdd_onclick()
     else {
         AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN);
         pAprDeptTempletUseFlag = false;
+        checkOuterReceiver();
     }
 }
 function AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN) {
@@ -411,13 +422,13 @@ function AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN) {
 	});
 
     document.getElementById('RECEPTLIST').innerHTML = "";
-    var listview = new ListView();                      
-    listview.SetID("lvRECEPTLIST");                     
-    listview.SetMulSelectable(false);                     
+    var listview = new ListView();
+    listview.SetID("lvRECEPTLIST");
+    listview.SetMulSelectable(false);
     listview.SetHeightFree(true);
     listview.SetSelectFlag(false);
     listview.SetRowOnDblClick("AprDeptDel_onclick");
-    listview.DataSource(result);            
+    listview.DataSource(result);
     listview.DataBind("RECEPTLIST");
 }
 //############################################################################################################################################# 수신처 즐겨찾기 적용 
@@ -634,3 +645,35 @@ function AprDeptTempletXmlParsing(p_AprDeptTempletName) {
     return xmlpara;
 }
 //############################################################################################################################################# 수신처 즐겨찾기 저장 및 수정
+
+function checkOuterReceiver() {
+	var listview = new ListView();
+	listview.LoadFromID("lvRECEPTLIST");
+	
+	var cnt = listview.GetRowCount();
+	var row = listview.GetDataRows();
+
+	if (cnt > 0) {
+		var checkOuter = row[0].getAttribute("DATA3");
+		var checkAddress = row[0].getAttribute("DATA1");
+		
+		if (cnt > 9 && checkOuter == "Y" && checkAddress.indexOf("Address") == -1) {
+	        document.getElementById("inputSummaryOuterReceiverList").focus();
+	        document.getElementById("trSummaryOuterReceiverList").style.display = "";
+	        document.getElementById("btnaddress").style.display = "none";
+	        document.getElementById("btnaddressChange").style.display = "none";
+		} else if (cnt <= 9 && checkOuter == "Y" && checkAddress.indexOf("Address") == -1) {
+	        document.getElementById("trSummaryOuterReceiverList").style.display = "none";
+	        document.getElementById("btnaddress").style.display = "";
+	        document.getElementById("btnaddressChange").style.display = "";
+		} else if (checkOuter == "Y" && checkAddress.indexOf("Address") != -1) {
+			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
+	        document.getElementById("btnaddress").style.display = "";
+	        document.getElementById("btnaddressChange").style.display = "";
+		} else {
+			document.getElementById("trSummaryOuterReceiverList").style.display = "none";
+	        document.getElementById("btnaddress").style.display = "";
+	        document.getElementById("btnaddressChange").style.display = "none";
+		}
+	}
+}
