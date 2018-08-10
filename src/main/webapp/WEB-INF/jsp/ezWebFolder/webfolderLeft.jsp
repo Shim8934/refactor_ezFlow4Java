@@ -115,31 +115,35 @@
 					dataType: "JSON",
 					async : true,
 					success : function(data) {
-						var result      = data.userCapacity;
-						var totalVolume = result["totalCapacity"] + "GB";
-						var useVolume   = getFileSize(result["totalUsed"]);
-						var percent     = result["usedRate"];
-						var colorClass  = "myBar_green";
-						var barElmt     = document.getElementById("myBar");
-						var volumeInf   = document.getElementsByClassName("volumes")[0];
-						
-						if (percent < 100) {
-							barElmt.style.width = percent + "%";
-						} else {
-							barElmt.style.width = "100%";
-						}
-						$("#useVol").html(useVolume + "<span>/ " + totalVolume + "</span>");
-	                 	$("#usePer").text(percent+"%");
-												
-						if (percent >= 80) {
-							barElmt.className = "myBar_red";
-							$(".volumeDL dd").css("color", "#ff4040");
-						} else if (percent >= 70) {
-							barElmt.className = "myBar_yellow";
-							$(".volumeDL dd").css("color", "#ff9c00");
-						} else {
-							barElmt.className = "myBar_green";
-							$(".volumeDL dd").css("color", "#0470e4");
+						var code = data.code;
+						switch(code) {
+							case 0: 
+								var result      = data.userCapacity;
+								var totalVolume = result["totalCapacity"] + "GB";
+								var useVolume   = getFileSize(result["totalUsed"]);
+								var percent     = result["usedRate"];
+								var colorClass  = "myBar_green";
+								var barElmt     = document.getElementById("myBar");
+								var volumeInf   = document.getElementsByClassName("volumes")[0];
+								
+								if (percent < 100) {
+									barElmt.style.width = percent + "%";
+								} else {
+									barElmt.style.width = "100%";
+								}
+								$("#useVol").html(useVolume + "<span>/ " + totalVolume + "</span>");
+								$("#usePer").text(percent+"%");
+														
+								if (percent >= 80) {
+									barElmt.className = "myBar_red";
+									$(".volumeDL dd").css("color", "#ff4040");
+								} else if (percent >= 70) {
+									barElmt.className = "myBar_yellow";
+									$(".volumeDL dd").css("color", "#ff9c00");
+								} else {
+									barElmt.className = "myBar_green";
+									$(".volumeDL dd").css("color", "#0470e4");
+								}
 						}
 					},
 					error : function(error) {

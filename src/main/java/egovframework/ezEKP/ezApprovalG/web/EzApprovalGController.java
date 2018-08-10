@@ -131,7 +131,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
         userInfo = commonUtil.aprUserInfo(loginCookie);
 		String viewLeftCount = ezCommonService.getTenantConfig("APPROVLEFTCOUNT", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-		String hideCabinet = config.getProperty("config.hideCabinet");
 		String listType = request.getParameter("listType");
 		String userSendOut = "";
 		String firstContainerID = "";
@@ -198,7 +197,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			model.addAttribute("userCont", userCont);
 		}
 		
-		model.addAttribute("hideCabinet", hideCabinet);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("apprGLeftVOList", apprGLeftVOList);
 		model.addAttribute("listType", listType);
@@ -913,7 +911,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("draftJunGyulFlag", draftJunGyulFlag);
 		model.addAttribute("signImageSize", signImageSize);
-		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("beforeUrl", beforeUrl);
 		model.addAttribute("signImageType", signImageType);
@@ -1062,7 +1059,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("aprTypeXML", aprTypeXML);
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
-		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
 		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("chamjoAfterYN", chamjoAfterYN);
 		model.addAttribute("isUsed", isUsed);
@@ -3499,7 +3495,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		String susinAdmin = "";
-		String hideCabinet = config.getProperty("config.hideCabinet");
 		String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 		// a=1 수발신담당자
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -3610,7 +3605,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("signImageSize", signImageSize);
-		model.addAttribute("hideCabinet", hideCabinet);
 		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		model.addAttribute("signImageType", signImageType);
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
