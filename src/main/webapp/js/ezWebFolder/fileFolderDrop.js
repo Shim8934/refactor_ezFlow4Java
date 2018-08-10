@@ -74,15 +74,28 @@ function fileupload() {
 		},
 		mimeType:"multipart/form-data",
 		success : function(data) {
-			var reason   = data.reason;
-			var listFile = data.listFile;
+			var code = data.code;
 			
-			if (reason) {
-				alert(reason);
-			}
-			else {
-				alert(strSuccess);
-				refreshView();
+			switch(code) {
+				case 0: 
+					alert(strSuccess);
+					refreshView();
+					break;
+				case 1:
+					alert(resultErr1);
+					break;
+				case 2:
+					alert(resultErr2);
+					break;
+				case 3:
+					alert(resultErr3);
+					break;
+				case 4:
+					alert(resultErr4);
+					break;
+				case 5:
+					alert(resultErr5);
+					break;
 			}
 		},
 		error : function(error) {

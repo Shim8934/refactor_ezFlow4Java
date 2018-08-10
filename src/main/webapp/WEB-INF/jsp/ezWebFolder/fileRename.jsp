@@ -46,10 +46,25 @@
 					"fileId"  : fileId,
 					"newName" : newName
 				},
-				dataType: "text",
+				dataType: "JSON",
 				async: true,
-				success : function(data, textStatus, jqXHR) {
-					afterDeleteSuccess();
+				success : function(data) {
+					var code = data.code;
+					
+					switch(code) {
+						case 0: 
+							afterDeleteSuccess();
+							break;
+						case 1:
+							alert("<spring:message code='ezWebFolder.t306'/>");
+							break;
+						case 2:
+							alert("<spring:message code='ezWebFolder.t305'/>");
+							break;
+						case 3:
+							alert("<spring:message code='ezWebFolder.t300' />");
+							break;
+					}
 				},
 				error : function(jqXHR, textStatus, errorThrown) {
 					alert("<spring:message code='ezWebFolder.t134'/>" + jqXHR.status + ", " + textStatus);

@@ -37,27 +37,34 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var reason = data.reason;
+						var code = data.code;
 						
-						if (reason) {
-							alert(reason);
-							return;
+						switch(code) {
+							case 0: 
+								var result = data.config;
+								
+								if (!result) {
+									currPersonalLimit = "";
+									currUploadLimit   = "";
+								}
+								else {
+									currPersonalLimit = result["totalLimit"];
+									currUploadLimit   = result["uploadLimit"];
+								}
+								
+								document.getElementById("uploadLimit").value   = currUploadLimit;
+								document.getElementById("personalLimit").value = currPersonalLimit;
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
 						}
-						
-						var result = data.webfolderConfig;
-						
-						if (!result) {
-							currPersonalLimit = "";
-							currUploadLimit   = "";
-						}
-						else {
-							currPersonalLimit = result["totalLimit"];
-							currUploadLimit   = result["uploadLimit"];
-						}
-						
-						document.getElementById("uploadLimit").value   = currUploadLimit;
-						document.getElementById("personalLimit").value = currPersonalLimit;
-						
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>" + error);
@@ -98,14 +105,22 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var reason = data.reason;
-						if (reason) {
-							alert(reason);
-						}
-						else {
-							alert("<spring:message code='ezWebFolder.t182'/>");
-							currPersonalLimit = personalLimitVal;
-							currUploadLimit   = uploadLimitVal;
+						var code = data.code;
+						switch(code) {
+							case 0: 
+								alert("<spring:message code='ezWebFolder.t182'/>");
+								currPersonalLimit = personalLimitVal;
+								currUploadLimit   = uploadLimitVal;
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
 						}
 					},
 					error : function(error) {

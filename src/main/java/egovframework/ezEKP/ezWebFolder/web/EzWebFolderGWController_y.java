@@ -315,7 +315,6 @@ public class EzWebFolderGWController_y {
 				if (folderSize > (totalCapa - totalUsed)) {
 					LOGGER.debug("Not enough storage to move/copy this folder!");
 					result.put("status", "error");
-					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
 					result.put("code", 7);
 					result.put("data", "");
 					return result;
