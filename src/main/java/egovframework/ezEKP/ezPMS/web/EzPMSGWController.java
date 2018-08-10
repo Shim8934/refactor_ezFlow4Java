@@ -12,9 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Decoder;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.GregorianCalendar;
@@ -28,7 +26,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -710,7 +707,7 @@ public class EzPMSGWController {
 					info.getTenantId());
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
-			String deptId = info.getDeptId();
+			// String deptId = info.getDeptId();
 
 			ProjectInfoVO project = new ProjectInfoVO();
 			project.setProjectId(projectId);
@@ -1643,7 +1640,7 @@ public class EzPMSGWController {
 					String fullPath = request.getServletContext().getRealPath(
 							realPath);
 
-					if (fullPath != null || !fullPath.equals("")) {
+					if (fullPath != null && !fullPath.equals("")) {
 						member.setUserImg(imagePath);
 					} else {
 						member.setUserImg("/images/poll/default_pic_vote.gif");
@@ -1725,7 +1722,7 @@ public class EzPMSGWController {
 					String fullPath = request.getServletContext().getRealPath(
 							realPath);
 
-					if (fullPath != null || !fullPath.equals("")) {
+					if (fullPath != null && !fullPath.equals("")) {
 						member.setUserImg("/ezCommon/downloadAttach.do?filePath="
 								+ realPath);
 					} else {
@@ -1955,7 +1952,7 @@ public class EzPMSGWController {
 			int tenantId = info.getTenantId();
 			String roleCheck = "";
 			long projectId = Long.parseLong(request.getParameter("projectId"));
-			String companyId = info.getCompanyId();
+			// String companyId = info.getCompanyId();
 
 			// 권한 체크
 			// 1. 프로젝트의 담당자인지 아닌지 확인 (여러개 있을 때, 하나라도 들어가있으면 return)
@@ -2071,8 +2068,7 @@ public class EzPMSGWController {
 							.get("order").toString());
 					long taskId = Long.parseLong(taskList.get(i).get("taskId")
 							.toString());
-					int preTaskIndex = Integer.parseInt(taskList.get(i)
-							.get("depends").toString());
+					// int preTaskIndex = Integer.parseInt(taskList.get(i).get("depends").toString());
 
 					ezPMSService.updateTaskSort(groupId, taskId, sortOrder,
 							tenantId);
@@ -3627,7 +3623,7 @@ public class EzPMSGWController {
 		JSONObject result = new JSONObject();
 
 		try {
-			String serverName = request.getHeader("x-user-host");
+			// String serverName = request.getHeader("x-user-host");
 			int tenantId = Integer.parseInt(request.getParameter("tenantId"));
 
 			Map<String, Object> data = ezPMSService.getRemainingWeight(
@@ -5832,7 +5828,7 @@ public class EzPMSGWController {
 					request.getParameter("userId"));
 
 			int tenantId = info.getTenantId();
-			String lang = commonUtil.getMultiData(info.getLang(), tenantId);
+			// String lang = commonUtil.getMultiData(info.getLang(), tenantId);
 
 			List<ProjectGroupMemberVO> memberList = ezPMSService
 					.getGroupMemberList(projectId, tenantId, groupId);
@@ -6143,10 +6139,9 @@ public class EzPMSGWController {
 		try {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			String lang = commonUtil.getMultiData(info.getLang(),
-					info.getTenantId());
+			// String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			int tenantId = info.getTenantId();
-			String companyId = info.getCompanyId();
+			// String companyId = info.getCompanyId();
 			Long groupId = Long.parseLong(request.getParameter("groupId"));
 			String taskType = request.getParameter("taskType").toString();
 			String projectId = request.getParameter("projectId");

@@ -3676,7 +3676,7 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		Date today = new Date();
 		String simpToday = sdf.format(today);
-		Date now = sdf.parse(simpToday);
+		// Date now = sdf.parse(simpToday);
 		
 		map.put("realEndDate", simpToday);
 		map.put("tenantId", tenantId);
