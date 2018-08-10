@@ -6,7 +6,7 @@ var CabinetNavi = function() {
 		var _totalRows      = 0;
 		var _totalPages     = 0;
 		var _behindDivId    = data.divId    ? data.divId    : "tblPageRayer";
-		var _divClass       = data.divClass ? data.divClass : "cabpagenavi";
+		var _divClass       = data.divClass ? data.divClass : "pagenavi";
 		var _spanClass      = "ptxt";
 		var _imgClass       = "btnimg";
 		var _selectedClass  = "on";
@@ -52,57 +52,46 @@ var CabinetNavi = function() {
 			var spanElmt2     = document.createElement("span");
 			var spanElmt3     = document.createElement("span");
 			var spanElmt4     = document.createElement("span");
-			var spanElmt5     = document.createElement("span");
-			var spanElmt6     = document.createElement("span");
-			var divElmt1      = document.createElement("div");
-			var divElmt2      = document.createElement("div");
-			var divElmt3      = document.createElement("div");
-			var divElmt4      = document.createElement("div");
+			var imgElmt1      = document.createElement("img");
+			var imgElmt2      = document.createElement("img");
+			var imgElmt3      = document.createElement("img");
+			var imgElmt4      = document.createElement("img");
 			
 			spanElmt1.className = _imgClass;
 			spanElmt2.className = _imgClass;
 			spanElmt3.className = _imgClass;
 			spanElmt4.className = _imgClass;
 			
-			spanElmt5.className   = _spanClass;
-			spanElmt5.textContent = _messages.previous;
-			
-			spanElmt6.className   = _spanClass;
-			spanElmt6.textContent = _messages.next;
-			
 			spanElmt1.onclick = function(e) {goToPageByNum(1);};
 			spanElmt2.onclick = function(e) {selbeforeBlock();}
-			spanElmt5.onclick = function(e) {selbeforeBlock_one();}
 			spanElmt3.onclick = function(e) {selafterBlock();}
-			spanElmt6.onclick = function(e) {selafterBlock_one();}
 			spanElmt4.onclick = function(e) {goToPageByNum(_totalPages);};
 			
 			if (_totalPages > _blockSize) {
-				divElmt2.className = pageNum > _blockSize ? "previousBlockOn" : "previousBlockOff";
-				divElmt3.className = (_totalPages >= parseInt(((parseInt((pageNum - 1) / _blockSize) + 1) * _blockSize) + 1)) ? "nextBlockOn" : "nextBlockOff";
+				imgElmt2.src = pageNum > _blockSize ? "/images/kr/cm/btn_prev.gif" : "/images/kr/cm/btn_prev01.gif";
+				imgElmt3.src = (_totalPages >= parseInt(((parseInt((pageNum - 1) / _blockSize) + 1) * _blockSize) + 1)) ? "/images/kr/cm/btn_next.gif" : "/images/kr/cm/btn_next01.gif";
 			}
 			else {
-				divElmt2.className = "previousBlockOff";
-				divElmt3.className = "nextBlockOff";
+				imgElmt2.src = "/images/kr/cm/btn_prev01.gif";
+				imgElmt3.src = "/images/kr/cm/btn_next01.gif";
 			}
 			
 			if (_totalPages > 1) {
-				divElmt1.className = pageNum != 1           ? "firstOn" : "firstOff";
-				divElmt4.className = _totalPages != pageNum ? "lastOn"  : "lastOff";
+				imgElmt1.src = pageNum != 1           ? "/images/kr/cm/btn_p_prev.gif" : "/images/kr/cm/btn_p_prev01.gif";
+				imgElmt4.src = _totalPages != pageNum ? "/images/kr/cm/btn_n_next.gif" : "/images/kr/cm/btn_n_next01.gif";
 			}
 			else {
-				divElmt1.className = "firstOff";
-				divElmt4.className = "lastOff";
+				imgElmt1.src = "/images/kr/cm/btn_p_prev01.gif";
+				imgElmt4.src = "/images/kr/cm/btn_n_next01.gif";
 			}
 			
-			spanElmt1.appendChild(divElmt1);
-			spanElmt2.appendChild(divElmt2);
-			spanElmt3.appendChild(divElmt3);
-			spanElmt4.appendChild(divElmt4);
+			spanElmt1.appendChild(imgElmt1);
+			spanElmt2.appendChild(imgElmt2);
+			spanElmt3.appendChild(imgElmt3);
+			spanElmt4.appendChild(imgElmt4);
 			
 			divElmt.appendChild(spanElmt1);
 			divElmt.appendChild(spanElmt2);
-			divElmt.appendChild(spanElmt5);
 			
 			var startNum = (parseInt((pageNum - 1) / _blockSize) * _blockSize) + 1;
 			var maxNum   = (_totalPages >= (startNum + parseInt(_blockSize))) ? (startNum + parseInt(_blockSize)) - 1 : _totalPages;
@@ -117,7 +106,6 @@ var CabinetNavi = function() {
 				divElmt.appendChild(spanElmt);
 			}
 			
-			divElmt.appendChild(spanElmt6);
 			divElmt.appendChild(spanElmt3);
 			divElmt.appendChild(spanElmt4);
 			targetDivElmt.appendChild(divElmt);

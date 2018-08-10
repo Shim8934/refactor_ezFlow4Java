@@ -106,8 +106,10 @@
 			<span class="cabCloseBttn"></span>
 		</div>
 		
-		<jsp:include page="/WEB-INF/jsp/ezCabinet/cabinetFileDelete.jsp"></jsp:include>
-		<jsp:include page="/WEB-INF/jsp/ezCabinet/cabinetFileMove.jsp"  ></jsp:include>
+		<c:if test="${cabinet.permission == '2' || cabinet.permission == '1'}">
+			<jsp:include page="/WEB-INF/jsp/ezCabinet/cabinetFileDelete.jsp"></jsp:include>
+			<jsp:include page="/WEB-INF/jsp/ezCabinet/cabinetFileMove.jsp"  ></jsp:include>
+		</c:if>
 		
 		<div id="layerPopup" class="cabViewPopup" style="left: 0px; top: 0px; display: none;">
 			<div class="popupwrap1">
@@ -146,7 +148,7 @@
 						</tr>
 					</table>
 				</div>
-				<div id="tblPageRayer" class="cabpagenaviDiv"></div>
+				<div id="tblPageRayer"></div>
 			</div>
 			
 			<div id="previewCabH" class="cabDivPrevH" style="display: none;">

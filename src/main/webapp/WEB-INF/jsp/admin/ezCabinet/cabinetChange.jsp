@@ -3,7 +3,7 @@
 
 <div class="popup cabChgoff" id="perSettingPanel">
 	<h3><spring:message code='ezCabinet.t115'/></h3>
-	<div id="cabPChClose" class="cabClose"><ul><li><span><spring:message code='ezCabinet.t66'/></span></li></ul></div>
+	<div id="cabPChClose" class="cabClose"><ul><li><span></span></li></ul></div>
 	
 	<table class="content on">
 		<tr>

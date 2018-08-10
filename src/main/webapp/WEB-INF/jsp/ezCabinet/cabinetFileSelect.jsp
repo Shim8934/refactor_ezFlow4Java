@@ -12,7 +12,7 @@
 	<body class="popup cabRelatedFile">
 		<h1><spring:message code="ezCabinet.t87"/></h1>
 		
-		<div id="cabRlClose" class="cabClose"><ul><li><span><spring:message code='ezCabinet.t66'/></span></li></ul></div>
+		<div id="cabRlClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		
 		<div class="cabRlSearch">
 			<div>

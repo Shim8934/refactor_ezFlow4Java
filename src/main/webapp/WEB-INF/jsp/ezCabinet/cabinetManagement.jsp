@@ -11,7 +11,7 @@
 	<body class="popup cabMag">
 		<h1 id="cabMagHeader" role='<c:out value="${node}"></c:out>'><spring:message code="ezCabinet.t03"/></h1>
 		
-		<div id="cabMgClose" class="cabClose"><ul><li><span><spring:message code='ezCabinet.t66'/></span></li></ul></div>
+		<div id="cabMgClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		
 		<div class="cabMgTree" id="cabinetMgTree"></div>
 		

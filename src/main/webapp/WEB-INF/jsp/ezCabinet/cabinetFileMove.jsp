@@ -3,6 +3,7 @@
 
 <div class="popup cabFileMoveoff" id="cabFileMove">
 	<h1 class="cabfdTop"><spring:message code='ezCabinet.t72'/></h1>
+	<div id="cabMoveClose" class="cabClose"><ul><li><span></span></li></ul></div>
 	
 	<div class="cabMoveFile" id="moveCabTree"></div>
 	

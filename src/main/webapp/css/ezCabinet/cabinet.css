@@ -122,7 +122,7 @@
 .cabTable2 tr td {text-align: center; border-bottom: 1px solid #efefef; color: #5b5a5a; word-wrap: break-word; padding: 5px 4px 3px 4px; font-weight: normal; font-size: 12px; border-spacing: 0;}
 .cabTable2 tr td label {margin-right: 3px;}
 .cabTable2 tr td input[type='radio'] {vertical-align: middle; margin: 0px 3px;}
-.cabTable .cabName {text-align: left !important; padding-left: 20% !important;}
+.cabTable .cabName, .cabTable2 .cabName {text-align: left !important; padding-left: 20% !important;}
 .cabViewPopup {width:150px; position: absolute; background-color:#fff; z-index: 2500;}
 .cabViewPopup .popupwrap1 {background-color:#fff; border: 1px solid #666a64; padding: 0px; margin: 0px; position: relative;}
 .cabViewPopup .popupwrap2 {border: 2px solid #e5e5e5; padding: 10px;}
@@ -349,11 +349,10 @@
 .cabMgRelTree .mdlRelTree {height: 100%; z-index: 1; white-space: nowrap; overflow: auto;}
 .cabMgRelTree .mdlFog {width: 100%; height: 100%; z-index: 2; background-color: transparent; position: absolute; display: none; top: 0px; left: 0px;}
 
-.cabClose {position: absolute; right: 10px; top: 10px; height: 35px;}
+.cabClose {position: absolute; right: 10px; top: 10px;}
 .cabClose >ul {margin: 0px; padding: 0px; list-style: none;}
-.cabClose >ul >li {display: block; float: left; margin: 0px 3px 0px 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
-.cabClose >ul >li >span {display: inline-block; background: white; border: 1px solid rgba(188, 211, 224, 1); height: 25px; padding: 0px 8px; border-radius: 3px; line-height: 25px; font-size: 12px; color: #333;}
-
+.cabClose >ul >li {display: block; float: left; margin: 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
+.cabClose >ul >li >span {display: inline-block; width: 25px; height: 28px; background-image: url(/images/close_xBtn.png); background-repeat: no-repeat; background-position: 4px 6px;}
 .cbNameInputDiv >input[type='text'] {width: 60%; margin-top: 3px; height: 25px; padding: 0px 4px;}
 .checkBnk {width: 27px;}
 .checkBnk input {vertical-align: middle;}
@@ -363,22 +362,6 @@
 .cabTd8 {width: 15%;}
 .cabCenter {text-align: center !important;}
 .cabTxtOver {overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
-
-.cabpagenaviDiv {display: flex; align-items: center;}
-.cabpagenavi {margin: 0px auto; padding: 5px 0px; line-height: normal; text-align: center; display: flex;}
-.cabpagenavi span {font-size:12px; display:inline-block; cursor:pointer; border:1px solid #cfcfcf; height:19px; margin:0px 3px; padding:0px 6px 0px 5px; text-align:center; line-height:19px; border-radius:3px; font-weight:normal; color:#666; font-family: arial; vertical-align: top;}
-.cabpagenavi .btnimg {vertical-align:middle; padding: 1px 0px 0px; border: 1px solid #fff; margin: 0px; width: 16px;}
-.cabpagenavi .on {background-color: #017bec; color: #fff; font-weight: bold;}
-.cabpagenavi .ptxt {display:inline-block; cursor:pointer; border:1px solid #bbb; height:19px; padding:0px 3px; font-weight:normal; white-space:nowrap; width:auto; line-height:19px;}
-.cabpagenavi .btnimg div {background-repeat: no-repeat; padding: 8px;}
-.cabpagenavi .btnimg .firstOn {background-image: url('data:image/png;base64,R0lGODlhEAAQALMAAAD/ACFKjCFKlClSnCljxiljzilj1iJr7j1quUR620eD7mqX7Yyv9KC9963G7////yH5BAEAAAAALAAAAAAQABAAAARVEMhJ63wYWy3fYstTPYrYLU5JeYkJeE17LbHrMfKrNEuu4yJSg6FA2BILoxBUPCaDSMXBeEFSX4XDYWAzKLgXwrabELheBnM1EDi/2peM+zW32O+WCAA7');}
-.cabpagenavi .btnimg .firstOff {background-image: url('data:image/png;base64,R0lGODlhEAAQAHAAACH5BAEAAA8ALAAAAAAQABAAgwAAAP///6urq8DAwJqams7Ozo+Pj8vLy3t7e4iIiGJiYn9/f3d3d1paWlZWVgAAAARU8MlJ6wwYWy2DOEJQBYTYfSXlJebjHeyFtt4QuwR440NKHj0GLSEQ/gYCgvBCKIoCREJi2SFSA4xEQkFjELiXLLiacLRcDPOlrFa1XZlzR26p2+sRADs=');}
-.cabpagenavi .btnimg .lastOn {background-image: url('data:image/png;base64,R0lGODlhEAAQALMAAAD/ACFCjCFKjCFKlClSnDNirSZi2DFz90Jz0FCD5GWS8Xyk8JS196TA9+/v7////yH5BAEAAAAALAAAAAAQABAAAARVEMhJq3zP4j2fypSjLF+nJKAkNqjJpmt7KQ2DgKKdegx5A7nfJUE6GAoPB1EIeBCNgYxSgewgEoaoCkHdIRDabYLgDasMicHOkNoKBLv2ZSO32O/3CAA7');}
-.cabpagenavi .btnimg .lastOff {background-image: url('data:image/png;base64,R0lGODlhEAAQAHAAACH5BAEAAA8ALAAAAAAQABAAgwAAAP///6urq+/v77a2tpqams3NzcXFxYmJiZSUlH9/f3BwcFZWVmJiYlpaWgAAAART8MlJqwzB4j2DyNQgEF8nFKAkGqjJpmt7CYaBgOvtknqeBgXBabEIDIK6S4FQWDAyR0Hjh2g+VQhBsYNAXLGFKferWgjIgS0l4EWnOpu3ZU6vRwAAOw==');}
-.cabpagenavi .btnimg .nextBlockOff {background-image: url('data:image/png;base64,R0lGODlhEAAQAHAAACH5BAEAAA8ALAAAAAAQABAAgwAAAP///62trZycnM3NzcfHx5CQkKampoODg7m5uZSUlHd3d2tra1ZWVoeHhwAAAAQ48MlJaw3B6hdE3lQ3fCAnEGPJDQThkFrACsILyskwMAwcOoLBouH7CYmlgMOBTDKLFiU0OlVZVREAOw==');}
-.cabpagenavi .btnimg .nextBlockOn {background-image: url('data:image/png;base64,R0lGODlhEAAQALMAAAD/ACFCjDFapTlrzhha1i1n2jFz9zlz1kN53lqM3lqQ826c7YSt75C1/5y9/////yH5BAEAAAAALAAAAAAQABAAAAQ8EMhJa33PavBW3lSXfCC3OGPJJU6DkNqTNIsywFfCKAYh4JMHYtELAIOIBMFYehwOzCb0eClQL1eVthQBADs=');}
-.cabpagenavi .btnimg .previousBlockOff {background-image: url('data:image/png;base64,R0lGODlhEAAQAHAAACH5BAEAAA8ALAAAAAAQABAAgwAAAP///6SkpImJidLS0rm5uZeXl83NzXBwcIeHh3t7e2JiYnd3d1paWlZWVgAAAAQ28MlJq60hXBuE3lM3fGBHjOBjFui2Gi0nHIVgMCQ3FPCSc4zeDzjwpSQBhmN4CSyPISZ0SokAADs=');}
-.cabpagenavi .btnimg .previousBlockOn {background-image: url('data:image/png;base64,R0lGODlhEAAQALMAAAD/ACFKjCFKlClSnCljxiljzilj1hxn8zNirUV2zT5/8F6U6nOk/5y9/6W9/////yH5BAEAAAAALAAAAAAQABAAAAQ3EMhJq63vXfuW3lOXfGDnjCBgMui2Ki23NMyiICSXMMqBp49Cb5C7PAgHYkoSFBRdgadLuqxaIgA7');}
 
 .spanDown, .spanUp {cursor:pointer; border-radius: 50%; border: 1px solid #aeaeae; text-align: center; line-height: 14px; margin-top: -1px; position: relative; width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-left: 2px; box-sizing: border-box;}
 .spanDown:before   {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 5px 4px 0px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}

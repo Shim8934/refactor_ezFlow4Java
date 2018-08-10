@@ -119,7 +119,7 @@ var CabinetItem = function() {
 		cabinetNavi = new CabinetNavi({
 			messages : naviMessages,
 			divId    : "tblPageRayer",
-			divClass : "cabpagenavi",
+			divClass : "pagenavi",
 			headerId : "cabinetInfo",
 			callback : startSearchCabinet
 		});
@@ -160,24 +160,31 @@ var CabinetItem = function() {
 		listBttns[1].onclick    = function(e) {onMainSearch();};
 		listBttns[2].onclick    = function(e) {toggleSearchPanel();};
 		
-		var cabDelBttnElmt      = document.getElementById("delDivBttn");
-		var dellistBttns        = cabDelBttnElmt.children;
-		dellistBttns[0].onclick = function(e) {deleteFile();};
-		dellistBttns[1].onclick = function(e) {toggleDeletePopup();};
-		
-		var cabMoveBttnElmt     = document.getElementById("moveDivBttn");
-		var movlistBttns        = cabMoveBttnElmt.children;
-		movlistBttns[0].onclick = function(e) {moveFile("move");};
-		movlistBttns[1].onclick = function(e) {moveFile("copy");};
-		movlistBttns[2].onclick = function(e) {toggleMovePopup();};
-		
 		var addBttn = document.getElementById("addBttn");
 		var delBttn = document.getElementById("delBttn");
 		var movBttn = document.getElementById("movBttn");
 		var shaBttn = document.getElementById("shaBttn");
 		if (addBttn) {addBttn.firstElementChild.onclick = function(e) {addFile();};}
-		if (delBttn) {delBttn.firstElementChild.onclick = function(e) {deleteFileConfirm();};}
-		if (movBttn) {movBttn.firstElementChild.onclick = function(e) {moveFileConfirm();};}
+		
+		if (delBttn) {
+			var cabDelBttnElmt                              = document.getElementById("delDivBttn");
+			var dellistBttns                                = cabDelBttnElmt.children;
+			dellistBttns[0].onclick                         = function(e) {deleteFile();};
+			dellistBttns[1].onclick                         = function(e) {toggleDeletePopup();};
+			document.getElementById("cabDelClose").onclick  = function(e) {toggleDeletePopup();};
+			delBttn.firstElementChild.onclick               = function(e) {deleteFileConfirm();};
+		}
+		
+		if (movBttn) {
+			var cabMoveBttnElmt                             = document.getElementById("moveDivBttn");
+			var movlistBttns                                = cabMoveBttnElmt.children;
+			movlistBttns[0].onclick                         = function(e) {moveFile("move");};
+			movlistBttns[1].onclick                         = function(e) {moveFile("copy");};
+			movlistBttns[2].onclick                         = function(e) {toggleMovePopup();};
+			document.getElementById("cabMoveClose").onclick = function(e) {toggleMovePopup();};
+			movBttn.firstElementChild.onclick               = function(e) {moveFileConfirm();};
+		}
+		
 		if (shaBttn) {shaBttn.firstElementChild.onclick = function(e) {openSharePopup();};}
 		document.getElementById("refBttn").firstElementChild.onclick = function(e) {searchCallBack();};
 		document.getElementById("schBttn").firstElementChild.onclick = function(e) {toggleSearchPanel();};
@@ -885,7 +892,7 @@ var CabinetItem = function() {
 		var relatedList = data.relatedFileList;
 		
 		generateJournalTitle(itemInfo, relatedList, dlElmt);
-		generateJournalContent(attachList, itemInfo);
+		generateRelatedModuleContent(itemInfo, attachList, "mjounl", null);
 	}
 	
 	function generateJournalTitle(itemInfo, relatedList, dlElmt){
@@ -897,17 +904,6 @@ var CabinetItem = function() {
 		
 		//Related documents title
 		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
-	}
-	
-	function generateJournalContent(attachList, itemInfo) {
-		var totalFiles       = attachList.length;
-		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
-		var ifameContent     = document.getElementById(iframeId);
-		ifameContent.src     = "/ezCabinet/getPreviewContent.do?module=mjounl";
-		documentCont         = {};
-		documentCont.content = itemInfo["contentPath"];
-		documentCont.size    = itemInfo["itemSize"];
-		documentCont.attach  = attachList;
 	}
 	
 	function showGeneralItemPreview(data, dlElmt, itemInfo, parentDiv) {
@@ -1068,18 +1064,7 @@ var CabinetItem = function() {
 		var relatedList    = data.relatedFileList;
 		
 		generateApprovalTitle(itemInfo, dlElmt);
-		generateApprovalContent(attachList, itemInfo);
-	}
-	
-	function generateApprovalContent(attachList, itemInfo) {
-		var totalFiles       = attachList.length;
-		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
-		var ifameContent     = document.getElementById(iframeId);
-		ifameContent.src     = "/ezCabinet/getPreviewContent.do?module=mapprv";
-		documentCont         = {};
-		documentCont.content = itemInfo["contentPath"];
-		documentCont.size    = itemInfo["itemSize"];
-		documentCont.attach  = attachList;
+		generateRelatedModuleContent(itemInfo, attachList, "mapprv", null);
 	}
 	
 	function generateApprovalTitle(itemInfo, dlElmt) {
@@ -1126,17 +1111,17 @@ var CabinetItem = function() {
 		if(relatedList && relatedList.length > 0) {generateRelatedListTitle(dlElmt, relatedList);}
 	}
 	
-	function generateRelatedModuleContent(itemInfo, attachList, moreParams, moduleType) {
+	function generateRelatedModuleContent(itemInfo, attachList, moduleName, moduleType) {
 		var totalFiles       = attachList.length;
 		var iframeId         = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
 		var ifameContent     = document.getElementById(iframeId);
-		ifameContent.src     = "/ezCabinet/getPreviewContent.do";
+		var moreparams       = moduleName ? "?module=" + moduleName : "";
+		ifameContent.src     = "/ezCabinet/getPreviewContent.do" + moreparams;
 		documentCont         = {};
 		documentCont.content = itemInfo["contentPath"];
 		documentCont.size    = itemInfo["itemSize"];
 		documentCont.attach  = attachList;
 		
-		if (moreParams) {documentCont.param = moreParams}
 		if (moduleType) {documentCont.type  = moduleType}
 	}
 	

@@ -891,7 +891,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		//Save item
 		int itemId = ezCabinetDAO.getMaxItem(map) + 1;
-		addNewItem(cabinetId, itemId, 0, title, null, timeUTC, userInfo);
+		addNewItem(cabinetId, itemId, 0, title, summary, null, timeUTC, userInfo);
 		
 		int attachSize  = attacheFiles.size();
 		int relatedSize = relatedFiles.size();
@@ -1639,13 +1639,14 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		return new CabinetColumnVO(columnId, itemId, columnName1, columnName2, columnValue, companyId, tenantId);
 	}
 	
-	private void addNewItem(int cabinetId, int itemId, int moduleType, String title, String content, String timeUTC, LoginVO userInfo) {
+	private void addNewItem(int cabinetId, int itemId, int moduleType, String title, String summary, String content, String timeUTC, LoginVO userInfo) {
 		String userId        = userInfo.getId();
 		CabinetItemVO itemVO = new CabinetItemVO();
 		itemVO.setCabinetId(cabinetId);
 		itemVO.setItemId(itemId);
 		itemVO.setItemType(moduleType);
 		itemVO.setTitle(title);
+		itemVO.setSummary(summary);
 		itemVO.setCreatorId(userId);
 		itemVO.setCreatorName1(userInfo.getDisplayName1());
 		itemVO.setCreatorName2(userInfo.getDisplayName2());
@@ -1759,7 +1760,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		}
 		
 		//Add item
-		addNewItem(itemCabinetId, itemId, moduleType, title, content, timeUTC, userInfo);
+		addNewItem(itemCabinetId, itemId, moduleType, title, null, content, timeUTC, userInfo);
 	}
 	
 	@SuppressWarnings("unchecked")

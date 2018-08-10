@@ -12,7 +12,7 @@
 	</head>
 	<body class="popup cabShareFile">
 		<h1 id="moveCabTtl"><spring:message code="ezCabinet.t136"/></h1>
-		<div class="cabClose"><ul><li><span id="closeBttn"><spring:message code='ezCabinet.t66'/></span></li></ul></div>
+		<div class="cabClose"><ul><li><span id="closeBttn"></span></li></ul></div>
 		
 		<div class="cabShareListDiv2">
 			<div>
