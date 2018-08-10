@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
@@ -130,10 +129,16 @@
                 return isNum;
             }
             function valuePlus(target){
+            	if (target.value == "") {
+            		target.value = 0.0;
+            	}
             	var num = parseFloat(target.value) + parseFloat('1');
             	target.value = num.toFixed(1);
             }
 			function valueMinuse(target){
+            	if (target.value == "") {
+            		target.value = 0.0;
+            	}
 				var num = parseFloat(target.value) - parseFloat('1');
 				if (num >= 0) {
 	            	target.value = num.toFixed(1);
