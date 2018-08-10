@@ -266,6 +266,12 @@
 				case 5:
 					alert("<spring:message code='ezWebFolder.t245'/>");
 					break;
+				case 6:
+					alert("<spring:message code='ezWebFolder.t313'/>");
+					break;
+				case 7:
+					alert("<spring:message code='ezWebFolder.t250'/>");
+					break;
 			}
 		}
 		

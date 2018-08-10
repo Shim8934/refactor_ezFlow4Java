@@ -1104,7 +1104,6 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		if (fileArr.length == 0) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
-			result.put("reason", egovMessageSource.getMessage("ezWebFolder.t244", locale));
 			result.put("code", 1);
 			return result;
 		}
@@ -1133,7 +1132,6 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				else {
 					logger.debug("Privileges!");
 					result.put("status", "error");
-					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t243", locale));
 					result.put("code", 3);
 					return result;
 				}
@@ -1151,7 +1149,6 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			if (totalUploadSize > (totalCapa - totalUsed)) {
 				logger.debug("Not enough storage to move/copy these files!");
 				result.put("status", "error");
-				result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
 				result.put("code", 4);
 				return result;
 			}
