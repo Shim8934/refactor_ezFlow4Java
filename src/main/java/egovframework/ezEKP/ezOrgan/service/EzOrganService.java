@@ -59,7 +59,7 @@ public interface EzOrganService {
 
 	public String getDeptReceipterIDs(String deptID, int tenantID) throws Exception;
 
-	public OrganProxyVO getProxyInfo(String userID, int tenantID) throws Exception;
+	public OrganProxyVO getProxyInfo(String userID, int tenantID, String offset) throws Exception;
 	
 	public List<String> getAllSubDeptId(String deptID, int tenantID) throws Exception;
 	

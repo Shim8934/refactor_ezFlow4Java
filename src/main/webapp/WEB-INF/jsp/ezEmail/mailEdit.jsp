@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -17,16 +18,16 @@
 		</style>
 		</c:if>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/string_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/encode_component.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/newMail_Cross.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/AttachMain_CK.js"></script>
-		<script type="text/javascript" src="/js/ezEmail/js_cross/AttachItem_CK.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/encode_component.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/newMail_Cross.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/AttachMain_CK.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/AttachItem_CK.js")%>"></script>
         <c:if test="${isCrossBrowser != true}">
-        <script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+        <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/Kaoni_ActiveX.js")%>"></script>
         </c:if>  
 		<script>
 			var g_szAuthor = "";

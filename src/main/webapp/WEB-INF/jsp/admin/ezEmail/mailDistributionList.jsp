@@ -24,10 +24,10 @@
 			}
 		</style>
 		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>></script>
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>></script>
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezEmail/Controls/ListView_list.js")%>></script>
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/Common.js")%>></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls/ListView_list.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/Common.js")%>"></script>
 		<script type="text/javascript">
 			var companyId = "${userCompany}";
 			

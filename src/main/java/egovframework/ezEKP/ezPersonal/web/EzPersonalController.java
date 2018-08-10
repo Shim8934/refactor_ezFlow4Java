@@ -171,11 +171,17 @@ public class EzPersonalController extends EgovFileMngUtil {
 //				proxyInfo2 = proxyInfo.split(":")[0] + ":" + proxyInfo.split(":")[1] + ":" + proxyInfo.split(":")[3] + ":" + proxyInfo.split(":")[4];
 //			}
 			
-			if (proxyInfo.split(":")[0].trim().equals("")) {
+		/*	if (proxyInfo.split(":")[0].trim().equals("")) {
 				result = ezOrganService.delProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
 			} else {
 				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split(":")[0], proxyInfo.split(":")[1], proxyInfo.split(":")[2], proxyInfo.split(":")[3]+":"+proxyInfo.split(":")[4].replace("/", ":"), proxyInfo.split(":")[5]+":"+proxyInfo.split(":")[6].replace("/", ":"), userInfo.getTenantId(), userInfo.getOffset());
+			}*/
+			if (proxyInfo.split("|")[0].trim().equals("")) {
+				result = ezOrganService.delProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
+			} else {
+				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split("\\|")[0], proxyInfo.split("\\|")[1], proxyInfo.split("\\|")[2], proxyInfo.split("\\|")[3], proxyInfo.split("\\|")[4], userInfo.getTenantId(), userInfo.getOffset());
 			}
+			
 		}
 
 		logger.debug("saveBujae ended");
@@ -347,14 +353,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 				proxyUserID = xmlDom.getElementsByTagName("PROXYUSERID").item(0).getTextContent();
 				proxyDeptID = xmlDom.getElementsByTagName("PROXYUSERDEPTID").item(0).getTextContent();
 				proxyUserName = xmlDom.getElementsByTagName("PROXYUSERNAME").item(0).getTextContent();
-				startDate = commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent().substring(0, 16), userInfo.getOffset(), false);
-				endDate = commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("ENDDATE").item(0).getTextContent().substring(0, 16), userInfo.getOffset(), false);
-				
-				startDate = startDate.substring(0, startDate.length()-2);
-				endDate = endDate.substring(0, endDate.length()-2);
-				
-				startDate = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), false);
-				endDate = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), false);
+				/*startDate = commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent().substring(0, 16), userInfo.getOffset(), false);
+				endDate = commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("ENDDATE").item(0).getTextContent().substring(0, 16), userInfo.getOffset(), false);*/
+				startDate = xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent();
+				endDate = xmlDom.getElementsByTagName("ENDDATE").item(0).getTextContent();
 				
 				textProxyName = proxyUserName;
 			}

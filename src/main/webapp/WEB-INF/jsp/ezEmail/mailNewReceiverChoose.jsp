@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -8,7 +9,7 @@
 	    <title><spring:message code='ezEmail.t572' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css">
 	    <style>
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
@@ -34,18 +35,18 @@
 			}			
 	    </style>
 	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<link rel="stylesheet" href="/js/ezEmail/Controls/ezSearchDatePicker.htc" type="text/css">
-		<script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview_namespace.htc.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls/ezSearchDatePicker.htc")%>" type="text/css">
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezAddress/address_tree_Cross.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/treeview_namespace.htc.js")%>"></script>
 	    <link rel="stylesheet" href="<spring:message code="main.lhm01" />" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezPersonal/controls/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/js_cross/ListView_list.js"></script>
-	    <script type="text/javascript" src="/js/Common.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-	    <script type="text/javascript" src="/js/jquery-ui/jquery.multipleSortable.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPersonal/controls/TreeView.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/ListView_list.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/Common.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-ui.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery-ui/jquery.multipleSortable.js")%>"></script>
 	    <script type="text/javascript">
 	        var m_orgImg = { "normal": "/images/tab_org1.gif", "select": "/images/tab_org.gif" };
 	        var m_dlImg = { "normal": "/imagefs/tab_dl1.gif", "select": "/images/tab_dl.gif" };
