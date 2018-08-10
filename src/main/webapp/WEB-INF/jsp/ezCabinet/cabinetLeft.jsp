@@ -32,25 +32,28 @@
 			
 			<!-- 용량보기 -->
 			<div class="volumeDiv">
-				<div id="myProgress"></div>
-				<div class="volumeBar">
+				<p class="volume_num"><img src="/images/volume_num.png"></p>
+				<p class="volume_graph" id="myProgress">
 					<c:choose>
-						<c:when test="${percent > 90}"                 ><div id="myBar" class="myBar_red"    style="width: ${percent < 100 ? percent : 100}%;"></div></c:when>
-						<c:when test="${percent <= 90 && percent > 70}"><div id="myBar" class="myBar_orange" style="width: ${percent}%;"></div></c:when>
-						<c:when test="${percent <= 70 && percent > 60}"><div id="myBar" class="myBar_yellow" style="width: ${percent}%;"></div></c:when>
-						<c:when test="${percent <= 60 && percent > 0}" ><div id="myBar" class="myBar_green"  style="width: ${percent}%;"></div></c:when>
-						<c:when test="${percent == 0}"                 ><div id="myBar" class="myBar_white"  style="width: 0%;"></div></c:when>
+						<c:when test="${percent > 90}"                 ><span id="myBar" class="myBar_red"    style="width: ${percent < 100 ? percent : 100}%;"></span></c:when>
+						<c:when test="${percent <= 90 && percent > 70}"><span id="myBar" class="myBar_orange" style="width: ${percent}%;"></span></c:when>
+						<c:when test="${percent <= 70 && percent > 60}"><span id="myBar" class="myBar_yellow" style="width: ${percent}%;"></span></c:when>
+						<c:when test="${percent <= 60 && percent > 0}" ><span id="myBar" class="myBar_green"  style="width: ${percent}%;"></span></c:when>
+						<c:when test="${percent == 0}"                 ><span id="myBar" class="myBar_white"  style="width: 0%;"></span></c:when>
 					</c:choose>
-				</div>
-				<c:choose>
-					<c:when test="${capacityType == 0}">
-						<div class="volumes"><c:out value='${useVolume}'/> / <spring:message code='ezCabinet.t114'/></div>
-					</c:when>
-					<c:otherwise>
-						<div class="volumes"><c:out value='${useVolume}'/> / <c:out value="${totalCapacity}"/> MB (<c:out value="${percent > 100 ? 100 : percent}"/>%)</div>
-					</c:otherwise>
-				</c:choose>
-				
+				</p>
+				<dl class="volumeDL">
+					<c:choose>
+						<c:when test="${capacityType == 0}">
+							<dt id="useVol"><c:out value='${useVolume}'/><span> / <spring:message code='ezCabinet.t114'/></span></dt>
+							<dd id="usePer" style="color: #0470e4;">0%</dd>
+						</c:when>
+						<c:otherwise>
+							<dt id="useVol"><c:out value='${useVolume}'/><span> / <c:out value="${totalCapacity}"/> MB</span></dt>
+							<dd id="usePer" style="color: #0470e4;"><c:out value="${percent > 100 ? 100 : percent}"/>%</dd>
+						</c:otherwise>
+					</c:choose>
+				</dl>
 			</div>
 			
 			<!-- 환경설정 -->
@@ -97,7 +100,7 @@
 					
 					var cabinetAdminElmt = document.getElementById("cabinetAdmin");
 					if (cabinetAdminElmt) {cabinetAdminElmt.addEventListener("click", function(e) {getAdminPage();} , false);}
-					if (document.getElementById("myBar").className == "") {drawVolume();}
+					if (!document.getElementById("myBar").className == "") {drawVolume();}
 				}
 				
 				function getCabinet(obj) {
@@ -173,6 +176,7 @@
 				}
 				
 				function drawVolume() {
+					console.log("Run here!");
 					$.ajax({
 						url: "/ezCabinet/getUserCapicity.do",
 						type: "POST",
@@ -182,13 +186,25 @@
 							var result            = data.capacity;
 							var capacityType      = result["capacityType"];
 							var percent           = result["usedRate"] > 100 ? 100 : result["usedRate"];
-							var totalVolume       = capacityType == 0 ? CabinetMessages.strNolimit : result["totalCapacity"] + "MB"  + " (" + percent + "%)";
-							var useVolume         = getFileSize(result["totalUsed"]);
-							var barElmt           = document.getElementById("myBar");
-							var volumeInf         = document.getElementsByClassName("volumes")[0];
-							barElmt.style.width   = percent + "%";
-							volumeInf.textContent = useVolume + " / " + totalVolume;
-							var colorClass        = "myBar_green";
+							var pElmt             = document.getElementById("myProgress");
+							var userVolElmt       = document.getElementById("useVol");
+							var usedPerElmt       = document.getElementById("usePer");
+							var spanElmt          = document.createElement("span");
+							pElmt.innerHTML       = "";
+							pElmt.appendChild(spanElmt);
+							
+							if (capacityType == 0) {
+								usedPerElmt.textContent = "0%";
+								spanElmt.style.width    = "0%";
+								userVolElmt.innerHTML   = getFileSize(result["totalUsed"]) + "<span>/ " + CabinetMessages.strNolimit + "</span>";
+							}
+							else {
+								usedPerElmt.textContent = percent + "%";
+								spanElmt.style.width    = percent + "%";
+								userVolElmt.innerHTML   = getFileSize(result["totalUsed"]) + "<span>/ " + result['totalCapacity'] + "MB</span>";
+							}
+							
+							var colorClass = "myBar_green";
 							
 							switch (true) {
 								case percent > 90 : colorClass = "myBar_red"   ; break;
@@ -197,7 +213,7 @@
 								case percent == 0 : colorClass = "myBar_white" ; break;
 							}
 							
-							barElmt.className = colorClass;
+							spanElmt.className = colorClass;
 						},
 						error : function(error) {}
 					});
