@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title></title>
+		<title><spring:message code="ezCabinet.t67"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css">
 		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">

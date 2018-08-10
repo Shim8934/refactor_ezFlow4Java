@@ -54,7 +54,7 @@
 			</div>
 		</div>
 		
-		<div class="btnposition" id="cabShareBttn">
+		<div class="btnposition btnpositionNew" id="cabShareBttn">
 			<a class="imgbtn"><span><spring:message code='ezCabinet.t79'/></span></a>
 			<a class="imgbtn"><span><spring:message code='ezCabinet.t46'/></span></a>
 		</div>

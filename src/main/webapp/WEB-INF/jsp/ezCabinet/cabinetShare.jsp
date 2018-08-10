@@ -150,7 +150,7 @@
 			</tr>
 		</table>
 		
-		<div class="btnposition" id="cabShareBttn">
+		<div class="btnposition btnpositionNew" id="cabShareBttn">
 			<a class="imgbtn"><span><spring:message code='ezCabinet.t14'/></span></a>
 			<a class="imgbtn"><span><spring:message code='ezCabinet.t15'/></span></a>
 		</div>
