@@ -90,11 +90,12 @@
 					displayUserInforPopup("fileCreator" , result["creatorId"]  , showInfoId);
 					displayUserInforPopup("boardCreator", boardWriter["userId"], showInfoId);
 					
-					var cabMgBttnElmt        = document.getElementById("cabPhotoBttn");
-					var listMgBttns          = cabMgBttnElmt.children;
-					listMgBttns[0].onclick   = function(e) {selectAllPhoto();};
-					listMgBttns[1].onclick   = function(e) {downloadPhotoList();};
-					listMgBttns[2].onclick   = function(e) {closeDownloadPopup();};
+					var cabMgBttnElmt                               = document.getElementById("cabPhotoBttn");
+					var listMgBttns                                 = cabMgBttnElmt.children;
+					listMgBttns[0].onclick                          = function(e) {selectAllPhoto();};
+					listMgBttns[1].onclick                          = function(e) {downloadPhotoList();};
+					listMgBttns[2].onclick                          = function(e) {closeDownloadPopup();};
+					document.getElementById("cabDownClose").onclick = function(e) {closeDownloadPopup();};
 					
 					//Add list of images
 					var cabPhotoUl = document.getElementById("photoSelect");
