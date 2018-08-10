@@ -36,12 +36,12 @@
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
 			#maskDiv { position:absolute; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);}
 			.selected-memoWrapper {display:table-cell;vertical-align:middle;}
-			#memo-btn{text-align:right;margin:0 auto;width:400px;}
-			#font-btn{text-align:right;margin:0 auto; width:400px;}
+			#memo-btn{text-align:right;margin:0 auto; }
+			#font-btn{text-align:right;margin:0 auto; }
 			#slider-range{width:100px;float:left; margin-left:15px;}
 			.ui-widget-header{background: #0470e4}
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
-			#textarea{padding-left:10px;padding-right:10px;width:100%;height:95%;margin-left:-3px;overflow-y:auto; margin-top: 5%;}
+			#textarea{padding-left:10px;padding-right:10px;width:100%;height:95%;margin-left:-3px;overflow-y:auto;}
 			.detailMemo{border: 1px solid black;width: 400px;center;height: 400px;float: center;margin: 0 auto; padding-top: 30px;overflow:hidden; }
 			.memo-text{margin-top:10px; padding-left:11px; padding-right:10px; border:0px; width:90%; height:88%; resize:none; overflow-y:auto;}
 			.memo-color{ padding:0px; /* margin-left:1px; margin-right:1px;  */box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;}
@@ -379,7 +379,9 @@
 			        $("#selected-memo").css("display", "");
 					$("#textarea").css("font-size", "15px");
 					$("#textarea").css("background-color", textColor);
+					$("#textarea").css("border-color", textColor);
 					$(".detailMemo").css("background-color", headerColor);
+			        $("#font-btn").css("background-color", textColor);
 			        $("#font-btn").css("display", "");
 			        $("#textarea").val(currText);
 		        });
@@ -436,17 +438,17 @@
 			<!-- 하나 클릭 -->
 			<div id="selected-memo" style="display: none">
 				<div class="selected-memoWrapper">
-					<div id="memo-btn">
-						<button id="save" onclick="save()">저장</button> 
-						<button onclick="closeMemo()">닫기</button>
-					</div>
 					<div class="detailMemo">
+						<div id="memo-btn">
+							<button id="save" onclick="save()">저장</button> 
+							<button onclick="closeMemo()">닫기</button>
+						</div>
+			        	<div id="font-btn" style="text-align: left; display: none ">
+							<button id="font-up">폰트+</button> 
+						    <button id="font-down">폰트-</button>
+				        </div>
 						<textarea id="textarea" style="resize:none;"></textarea>
 		        	</div>
-		        	<div id="font-btn" style="text-align: right; display: none">
-						<button id="font-up">폰트+</button> 
-					    <button id="font-down">폰트-</button>
-			        </div>
 				</div>
 			</div>
 			
