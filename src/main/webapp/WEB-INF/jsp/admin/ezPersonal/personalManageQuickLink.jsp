@@ -61,6 +61,12 @@
 	                listview.RowDataBind();
 	                xmldomNode = null;
 	                xmldom = null;
+	                
+	                //2018-08-09 김보미 - 데이터가 없을 경우 출력
+	                if (headerData.getElementsByTagName("ROW").length == 0) {
+	                	var TR_noItems = "<tr id='Link_TR_noItems'><td style='text-align: center;' colspan='8'>" + "<spring:message code = 'ezPersonal.t20005' />" + "</td></tr>";
+		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
+	                }
 	            } catch (e) {
 	
 	            }

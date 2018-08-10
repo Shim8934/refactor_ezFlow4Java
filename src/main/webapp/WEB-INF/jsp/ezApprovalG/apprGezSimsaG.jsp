@@ -219,7 +219,7 @@
 		        ezchkpasswd_cross_dialogArguments[0] = parameter;
 		        ezchkpasswd_cross_dialogArguments[1] = Complete_Function;
 		
-		        DivPopUpShow(330, 205, "/ezApprovalG/ezchkPasswd.do");
+		        DivPopUpShow(350, 225, "/ezApprovalG/ezchkPasswd.do");
 		    }
 		    function setArrAttachInfo() {
 		        // lstAttachLink.getElementsByTagName("a").length
@@ -392,7 +392,7 @@
 // 		        SaveFile();
 		
 		        writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(458, 660));
+		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
 		    }
 		
 		    function NewItem_onclick_Complete(ret) {

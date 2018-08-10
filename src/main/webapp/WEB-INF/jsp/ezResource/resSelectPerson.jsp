@@ -225,7 +225,7 @@
 						search : document.getElementById("search_type").value + "::" + keyword.value,
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
 						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
-						//page : CurPage ,
+						page : CurPage ,
 						type : "user"
 					} ,
    				success : function(data, textStatus, jqXHR) {
@@ -287,7 +287,7 @@
 						xmlDOM = null;
 					}
 				}); 
-		        
+		       
 		        if (adCount == 0) {
 		            alert("<spring:message code="ezResource.t130"/>");
 		            return;
@@ -305,15 +305,18 @@
 		            rgParams["addrBook"] = xmlDOM;
 		            rgParams["deptid"] = "";
 		            
-
+		            /* 2018-08-08 김민성 - 자원등록 > 관리자 선택시 부서검색 수정  */
+		            checkdeptname_cross_dialogArguments[0] = rgParams;
+	            	checkdeptname_cross_dialogArguments[1] = deptsearch_click_Complete;
+		            
 		            if (CrossYN()) {
-		            	checkdeptname_cross_dialogArguments[0] = rgParams;
-		            	checkdeptname_cross_dialogArguments[1] = deptsearch_click_Complete;
-		                DivPopUpShow(609, 352, "/ezResource/checkDeptName.do");
+		                //DivPopUpShow(609, 352, "/ezResource/checkDeptName.do");
+		            	 var OpenWin = window.open("/ezResource/checkDeptName.do", "", GetOpenWindowfeature(600, 320));
+		             	 OpenWin.focus(); 
 		            } else {
 		                var feature =  GetShowModalPosition(600, 320);
 		                var result = window.showModalDialog("/ezResource/checkDeptName.do", rgParams, "dialogHeight:320px; dialogWidth:600px; status:no;scroll:no; help:no; edge:sunken;"+feature);
-
+						
 		                if (rgParams["deptid"] != "") {
 		                    g_xmlHTTP = createXMLHttpRequest();
 		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";

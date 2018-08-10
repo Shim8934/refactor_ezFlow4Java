@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -10,11 +11,11 @@
 		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
 		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"          type="text/css">
 		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css"         type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"     ></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"                  ></script>
-		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/adminTable.js"       ></script>
-		<script type="text/javascript" src="/js/ezWebFolder/popup.js"                       ></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezTask/jquery.lineProgressbar.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/adminTable.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/popup.js")%>"></script>
 		<script type="text/javascript" >
 			var blockSize   = 10;
 			var searchStr   = "";
@@ -98,21 +99,29 @@
 					async: true,
 					success : function(data) {
 						hideProgress();
-						var reason  = data.reason;
-						if (reason) {
-							alert(reason);
-							return;
+						var code = data.code;
+						
+						switch(code) {
+							case 0: 
+								var result  = data.capacityList;
+								totalRows   = data.totalUsers;
+								totalPages  = data.totalPages;
+								currentPage = pPage;
+								checkedArr  = [];
+								
+								makePageSelPage();
+								renderData(result);
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
 						}
-						
-						var result  = data.capacityList;
-						totalRows   = data.totalUsers;
-						totalPages  = data.totalPages;
-						currentPage = pPage;
-						checkedArr  = [];
-						
-						makePageSelPage();
-						renderData(result);
-						
 					},
 					error : function(error) {
 						hideProgress();
@@ -252,16 +261,26 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var reason = data.reason;
+						var code = data.code;
 						
-						if (reason) {
-							alert(reason);
-							return;
-						}
-						else {
-							alert("<spring:message code='ezWebFolder.t252'/>");
-							document.getElementById("storageVal").value = "";
-							search_Set(currentPage);
+						switch(code) {
+							case 0: 
+								alert("<spring:message code='ezWebFolder.t252'/>");
+								document.getElementById("storageVal").value = "";
+								search_Set(currentPage);
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300'/>");
+								break;
+							case 4:
+								alert("<spring:message code='ezWebFolder.t26' />");
+								break;
 						}
 					},
 					error : function(error) {
@@ -290,15 +309,24 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var reason = data.reason;
-						if (reason) {
-							alert(reason);
-							return;
-						}
+						var code = data.code;
 						
-						alert("<spring:message code='ezWebFolder.t253'/>")
-						search_Set(currentPage);
-						checkedArr = [];
+						switch(code) {
+							case 0: 
+								alert("<spring:message code='ezWebFolder.t253'/>")
+								search_Set(currentPage);
+								checkedArr = [];
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300'/>");
+								break;
+						}
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>" + error);

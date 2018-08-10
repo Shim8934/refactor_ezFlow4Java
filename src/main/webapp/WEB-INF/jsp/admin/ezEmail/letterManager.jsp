@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
@@ -7,14 +8,14 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title></title>
-	<link rel="stylesheet" href="/js/dist/themes/default/style.min.css" />
+	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/dist/themes/default/style.min.css")%>" />
 	<link rel="stylesheet" href="<spring:message code = 'main.e15' />" type="text/css" />
-	<link rel="stylesheet" href="/css/ezEmail/style.css" />
-	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	<script src="/js/dist/jstree.min.js"></script>
-	<script type="text/javascript" src="/js/ezEmail/js_cross/letterBoxTree.js"></script>
-	<script type="text/javascript" src="/js/ezEmail/js_cross/letterList.js"></script>
+	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezEmail/style.css")%>" />
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	<script src="<%=CommonUtil.addVer(application, "/js/dist/jstree.min.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/letterBoxTree.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/letterList.js")%>"></script>
 </head>
 <style>
 	.lmtitle {

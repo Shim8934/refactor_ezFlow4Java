@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -8,9 +9,9 @@
 		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
 		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"          type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/popup.js"       ></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"             ></script>
+		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>></script>
+		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezWebFolder/popup.js")%>></script>
+		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>></script>
 		<script type="text/javascript" >
 			var arrSubFolder      = [];
 			var selectedFolder    = "";
@@ -38,8 +39,23 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var result = data.companyTree;
-						renderData(result);
+						var code = data.code;
+						
+						switch(code) {
+							case 0: 
+								var result = data.companyTree;
+								renderData(result);
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
+						}
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>" + error);
@@ -173,14 +189,23 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var reason = data.reason;
-						if (reason) {
-							alert(reason);
-							return;
-						}
+						var code = data.code;
 						
-						var result = data.folderUsers;
-						processUsersList(result, obj.getAttribute("fldName1"), obj.getAttribute("fldName2"));
+						switch(code) {
+							case 0: 
+								var result = data.folderUsers;
+								processUsersList(result, obj.getAttribute("fldName1"), obj.getAttribute("fldName2"));
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
+						}
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>" + error);
@@ -260,9 +285,24 @@
 						dataType: "JSON",
 						async: true,
 						success: function(data) {
-							var result = data.subTree;
-							displaySubTree(result, obj.parentElement);
-							arrSubFolder.push(uniqueId);
+							var code = data.code;
+							
+							switch(code) {
+								case 0: 
+									var result = data.subTree;
+									displaySubTree(result, obj.parentElement);
+									arrSubFolder.push(uniqueId);
+									break;
+								case 1:
+									alert("<spring:message code='ezWebFolder.t306'/>");
+									break;
+								case 2:
+									alert("<spring:message code='ezWebFolder.t305'/>");
+									break;
+								case 3:
+									alert("<spring:message code='ezWebFolder.t300' />");
+									break;
+							}
 						},
 						error: function (xhr, status, e){
 							alert("<spring:message code='ezWebFolder.t134'/>");
@@ -360,13 +400,22 @@
 					dataType: "JSON",
 					async: false,
 					success: function(data) {
-						var reason = data.reason;
-						if (reason) {
-							alert(reason);
-							return;
-						}
+						var code = data.code;
 						
-						refreshView2();
+						switch(code) {
+							case 0: 
+								refreshView2();
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
+						}
 					},
 					error: function (xhr, status, e){
 						alert("<spring:message code='ezWebFolder.t134'/>");
@@ -448,14 +497,23 @@
 					dataType: "JSON",
 					async: false,
 					success: function(data) {
-						var reason = data.reason;
-						if (reason) {
-							alert(reason);
-							return;
-						}
+						var code = data.code;
 						
-						alert("<spring:message code='ezWebFolder.t182'/>");
-						refreshView2();
+						switch(code) {
+							case 0: 
+								alert("<spring:message code='ezWebFolder.t182'/>");
+								refreshView2();
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
+						}
 					},
 					error: function (xhr, status, e){
 						alert("<spring:message code='ezWebFolder.t134'/>");
@@ -516,13 +574,22 @@
 					dataType: "JSON",
 					async: false,
 					success: function(data) {
-						var reason = data.reason;
-						if (reason) {
-							alert(reason);
-							return;
-						}
+						var code = data.code;
 						
-						refreshViewAfterUpdate();
+						switch(code) {
+							case 0: 
+								refreshViewAfterUpdate();
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
+						}
 					},
 					error: function (xhr, status, e){
 						alert("<spring:message code='ezWebFolder.t134'/>");

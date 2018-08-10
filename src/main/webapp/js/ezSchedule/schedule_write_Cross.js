@@ -112,7 +112,8 @@ function save_schedule(pageFrom)
     	}
     }
     
-	if (scheduleid == "") check_name();
+    /* 2018-08-09 김보미 - 일정작성시  참석자 초대 input을 검사 할 필요는 없음 */
+	//if (scheduleid == "") check_name();
 	
 	if (document.getElementById("TextTitle").value.trim() == "")
 	{
@@ -547,6 +548,8 @@ function check_name(type) {
                 for (var j = 0; j < length; j++) {
                     if (g_attendant["id"][j] == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0])) {
                         alert(strLang22);
+                        //2018-08-10 김보미
+                        document.getElementById("receiverinput").value = "";
                         return;
                     }
                 }
@@ -600,6 +603,9 @@ function check_name_Complete(rgParams) {
             for (var j = 0; j < length; j++) {
                 if (g_attendant["id"][j] == rgParams["id"]) {
                     alert(strLang22);
+                  	//2018-08-10 김보미
+                    document.getElementById("receiverinput").value = "";
+                    document.getElementById("receiverinput").focus();
                     return;
                 }
             }
