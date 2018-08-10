@@ -373,7 +373,7 @@
 				
 				if (result.checkPermission == "permitted") {
 					alert("<spring:message code='ezPMS.t242' />");
-					var logContent = "[" + taskDetails.groupName + "]<spring:message code='ezPMS.t313' /> [" + taskDetails.taskName + "] " + "<spring:message code='ezPMS.t242' />";
+					var logContent = "<spring:message code='ezPMS.t313' arguments='" + taskDetails.groupName + "," + taskDetails.taskName + "'/>";
    					addTaskLog(projectId, 3, groupId, null, logContent);
    					updateGroupRealStartEndDate(groupId);
    					opener.location.reload();
@@ -423,8 +423,7 @@
 				alert("<spring:message code='ezPMS.t196' />");
 				var upperGroupIds = taskDetails.ancesterGroup.split(',');
 				var upperGroupId = upperGroupIds[upperGroupIds.length - 2];
-				
-				var logContent = "[" + taskDetails.upperGroupName + "]<spring:message code='ezPMS.t313' /> [" + taskDetails.groupName + "] " + "<spring:message code='ezPMS.t196' />";
+				var logContent = "<spring:message code='ezPMS.t283' arguments='" + taskDetails.upperGroupName + "," + taskDetails.groupName + "'/>";
 				addTaskLog(projectId, 3, upperGroupId, null, logContent);
 				opener.location.reload();
 				window.close();

@@ -458,8 +458,7 @@
 	   				success : function(result) {
 	   					if (result.checkPermission == "permitted") {
 							alert("<spring:message code='ezPMS.t242' />");
-							
-							var logContent = "[" + replaceString(groupName) + "]<spring:message code='ezPMS.t313' /> [" + replaceString(taskName) + "] " + "<spring:message code='ezPMS.t242' />";
+							var logContent = "<spring:message code='ezPMS.t313' arguments='" + replaceString(groupName) + "," + replaceString(taskName) + "'/>";
 		   					addTaskLog(projectId, 3, groupId, null, logContent);
 		   					updateGroupRealStartEndDate(groupId);
 		   					$("#projectProgress", parent.document).text(result.projectProgress.toFixed(1) + '%');
@@ -539,8 +538,7 @@
 	   				data : JSON.stringify(data),
 	   				success : function(data) {
 						alert("<spring:message code='ezPMS.t196' />");
-						
-						var logContent = "[" + replaceString(upperGroupName) + "]<spring:message code='ezPMS.t313' /> [" + replaceString(groupName) + "] " + "<spring:message code='ezPMS.t196' />";
+						var logContent = "<spring:message code='ezPMS.t283' arguments='" + replaceString(upperGroupName) + "," + replaceString(groupName) + "'/>";
 	   					addTaskLog(projectId, 3, upperGroupId, null, logContent);
 	   					
 	   					location.reload();

@@ -436,7 +436,7 @@
 							
 							
 							for(var i = 0; i < checkedTaskInfo.length; i++) {
-								var logContent = "[" + checkedTaskInfo[i].groupName + "]<spring:message code='ezPMS.t313' /> [" + checkedTaskInfo[i].taskName + "] " + "<spring:message code='ezPMS.t242' />";
+								var logContent = "<spring:message code='ezPMS.t313' arguments='" + checkedTaskInfo[i].groupName + "," + checkedTaskInfo[i].taskName + "'/>";
 								addTaskLog(projectId, 3, checkedTaskInfo[i].groupId, null, logContent);
 								updateGroupRealStartEndDate(checkedTaskInfo[i].groupId);
 							}
