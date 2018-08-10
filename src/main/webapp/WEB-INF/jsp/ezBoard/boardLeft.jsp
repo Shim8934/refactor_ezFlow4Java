@@ -882,8 +882,14 @@
 				<h2><span><spring:message code="ezMemo.t001" /></span></h2>
 			</div>
 			</c:if>
-			<ul></ul>
-
+			
+			<ul id="iconul">
+				<li><span style="width:100%;display:inline-block;" id="APPROVAL1" onclick="setPresentValue('결재할문서');convMain('1','')"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon">전체메모<span id="count1">(0)</span></span></li>
+				<!-- 이쪽에 리스트 뿌려주기-->
+				<h3 style="margin-top:12px;border-top:1px solid #eaeaea;border-bottom:1px solid #eaeaea;"><span id="MNGUSERCONT" onclick="MngUserOnclick()" style="width: 100%; display: inline-block;">메모함관리</span></h3>
+			</ul>
+			
+		    
 			<h3>
 				<span onclick="boardSearch()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.khj1" /></span>
 			</h3>

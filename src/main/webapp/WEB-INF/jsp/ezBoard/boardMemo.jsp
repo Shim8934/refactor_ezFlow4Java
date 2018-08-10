@@ -258,7 +258,7 @@
         	<table class="content" style="width: 623px;margin-top:5px">
             	<tr>
                 	<th><spring:message code="ezMemo.t005" /></th>
-                	<td style="position: relative; background-clip: padding-box;"> 
+                	<td> 
 						<select id="set_quickFlag" style="margin-left: 5px;">
 							<option value="0000"><spring:message code="ezMemo.t008"/></option>
 							<option value="0030"><spring:message code="ezMemo.t009"/></option>
@@ -267,7 +267,7 @@
             	</tr>
             	<tr>
                 	<th><spring:message code="ezMemo.t006" /></th>
-                	<td style="position: relative; background-clip: padding-box;">
+                	<td>
                 		<select id="set_DateFlag" style="margin-left: 5px;">							
 							<option value="0"><spring:message code="ezMemo.t008"/></option>
 							<option value="1"><spring:message code="ezMemo.t009"/></option>							
@@ -276,7 +276,7 @@
             	</tr>
             	<tr>
                 	<th><spring:message code="ezMemo.t007" /></th>
-                	<td style="position: relative; background-clip: padding-box;">
+                	<td>
                			<select id="set_fontSize" style="margin-left: 5px;">							
 							<option value="33"><spring:message code="ezMemo.t0010"/></option>
 							<option value="44"><spring:message code="ezMemo.t0011"/></option>
