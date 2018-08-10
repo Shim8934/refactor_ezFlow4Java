@@ -41,7 +41,7 @@ var CabinetShareItem = function() {
 		cabinetNavi = new CabinetNavi({
 			messages : naviMessages,
 			divId    : "tblPageRayer",
-			divClass : "cabpagenavi",
+			divClass : "pagenavi",
 			callback : getUsers
 		});
 		

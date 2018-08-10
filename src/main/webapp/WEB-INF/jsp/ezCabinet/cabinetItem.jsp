@@ -148,7 +148,7 @@
 						</tr>
 					</table>
 				</div>
-				<div id="tblPageRayer" class="cabpagenaviDiv"></div>
+				<div id="tblPageRayer"></div>
 			</div>
 			
 			<div id="previewCabH" class="cabDivPrevH" style="display: none;">

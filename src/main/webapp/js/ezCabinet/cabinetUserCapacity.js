@@ -75,7 +75,7 @@
 		cabinetNavi = new CabinetNavi({
 			messages : naviMessages,
 			divId    : "tblPageRayer",
-			divClass : "cabpagenavi",
+			divClass : "pagenavi",
 			headerId : "cabinetTtlInf",
 			callback : startSearch
 		});

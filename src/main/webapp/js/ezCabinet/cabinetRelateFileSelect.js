@@ -50,7 +50,7 @@ var CabinetRlFileSelect = function() {
 		cabinetNavi = new CabinetNavi({
 			messages : naviMessages,
 			divId    : "tblPageRayer",
-			divClass : "cabpagenavi",
+			divClass : "pagenavi",
 			headerId : "cabinetInfo",
 			callback : searchItem
 		});
