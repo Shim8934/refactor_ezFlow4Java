@@ -136,7 +136,7 @@
 		            else {
 		                checkBujaeInfo_Complete(false);
 		            }
-		        } else if(GetBujaeFlag){
+		        } else if(GetBujaeFlag()){
 		        	
 		        		tmpStartDate = proxyStartDate;
 		        		tmpEndDate = proxyEndDate;
@@ -1228,7 +1228,7 @@
 		                return true;
 		            }
 		        }
-		        
+		        setBujaeOff();
 		        return false;
 		    }
 		    function setpause(numberMillis) {
