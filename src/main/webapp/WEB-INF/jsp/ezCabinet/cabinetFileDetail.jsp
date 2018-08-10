@@ -123,6 +123,7 @@
 					var fileCapacityDivElmt = document.getElementById("fileCapacityDiv");
 					
 					creator.textContent     = result["creatorName"];
+					creator.addEventListener("click", function(e) {showUserInfoFromId(e, result["creatorId"]);}, false);
 					createdDate.textContent = result["createdDate"].substring(0, 19);
 					title.textContent       = result["title"];
 					summary.textContent     = result["summary"];
@@ -230,6 +231,12 @@
 					
 					if(itemPopup) {itemPopup.close();}
 					itemPopup = window.open("/ezCabinet/cabinetFileDetail.do?itemId=" + itemId, "", getOpenWindowfeature(780, 750));
+				}
+				
+				function showUserInfoFromId(event, userId) {
+					var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
+					feature     = feature + getOpenWindowfeature(420, 500);
+					userWindow  = window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
 				}
 				
 				function downloadFile(event) {
