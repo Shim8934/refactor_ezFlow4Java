@@ -1007,6 +1007,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String endDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		String initFlag = request.getParameter("initFlag");
 		String guBun = request.getParameter("guBun").trim();
+		String docType = request.getParameter("docType");
 		String docSN = "";
 		String susinAdmin = "";
 		String aprTypeXML = "";
@@ -1015,6 +1016,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String chamjoAfterYN = ezCommonService.getTenantConfig("chamjoAfterYN", userInfo.getTenantId());
 		String isUsed = request.getParameter("isUsed");
 		String beforeDocID = request.getParameter("beforeDocID");
+		String receptGubunYN = ezCommonService.getTenantConfig("receptGubunYN", userInfo.getTenantId());
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		
 		if (isUsed == null) {
@@ -1063,6 +1065,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("chamjoAfterYN", chamjoAfterYN);
 		model.addAttribute("isUsed", isUsed);
 		model.addAttribute("beforeDocID", beforeDocID);
+		model.addAttribute("receptGubunYN", receptGubunYN);
+		model.addAttribute("docType", docType);
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
 		
 		logger.debug("ezApprovalInfo ended.");

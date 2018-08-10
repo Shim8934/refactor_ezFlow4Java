@@ -101,6 +101,7 @@ INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTIO
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'UseDisablePopImap','NO','POP3/IMAP 미사용 유무. Default=NO(사용)');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'MaxAllowedCountOfLoginFail','0','계정 잠금이 되는 로그인 실패 횟수');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'addLastKyulJeYN','0','최종 결재선이 결재 외의 것이 올 수 있는지 여부');
+INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'receptGubunYN','N','G버전일때 수신자탭에서 시행문일경우 외부탭만 나오고 수신문일땐 조직도탭만 나오게 하는 여부 defalut:N(둘다나옴)');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'approvalForDoc','N','결재조회관리자 권한 사용여부(Y/N)');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'UseAnyoneEdit','NO','YES일 경우 부서/회사 주소록, 일정을 누구나 수정 가능.');
 INSERT INTO tbl_tenant_config (TENANT_ID,PROPERTY_NAME,PROPERTY_VALUE,DESCRIPTION) VALUES (0,'ApprTotalAttachLimit','50','전자결재 첨부파일 총용량 제한크기. 단위는 MB. 0일 경우 무제한.');
