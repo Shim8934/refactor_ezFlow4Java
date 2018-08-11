@@ -167,6 +167,27 @@
 		]]>
 	</delete>
 	
+	<select id="EzCommonDAO.checkTblCompanyConfig" resultClass="String">
+		<![CDATA[
+			SELECT 
+				property_value
+			FROM 
+				TBL_COMPANY_CONFIG
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblCompanyConfig"> 
+	    CREATE TABLE "TBL_COMPANY_CONFIG" (
+	        "TENANT_ID" NUMBER(5,0), 
+		    "COMPANY_ID" NVARCHAR2(80) NOT NULL ENABLE, 
+		    "PROPERTY_NAME" NVARCHAR2(100) NOT NULL ENABLE, 
+		    "PROPERTY_VALUE" NVARCHAR2(2000) NOT NULL ENABLE, 
+		    CONSTRAINT "PK2_TBL_COMPANY_CONFIG" PRIMARY KEY ("TENANT_ID", "COMPANY_ID", "PROPERTY_NAME")
+	    )	
+	</statement>
+		
 	<select id="EzCommonDAO.getCompanyConfig" parameterClass="map" resultClass="String">
 		<![CDATA[
 			SELECT 

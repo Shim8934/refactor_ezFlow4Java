@@ -1122,6 +1122,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	@Override
+	public void createTblCompanyConfig() throws Exception {
+		ezCommonDAO.createTblCompanyConfig();
+	}
+	
+	@Override
 	public String getCompanyConfig(int tenantID, String companyID, String property) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
         map.put("property", property.toUpperCase());

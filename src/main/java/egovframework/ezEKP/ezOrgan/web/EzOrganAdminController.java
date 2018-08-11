@@ -21,6 +21,7 @@ import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -114,8 +115,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     @Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
 
-	
+    @PostConstruct
+	public void init() throws Exception {
+    	logger.debug("init started.");
 
+    	ezCommonService.createTblCompanyConfig();
+    	
+    	logger.debug("init ended.");
+    }
 
 	/**
 	 * 조직도관리 메인화면 호출 함수
