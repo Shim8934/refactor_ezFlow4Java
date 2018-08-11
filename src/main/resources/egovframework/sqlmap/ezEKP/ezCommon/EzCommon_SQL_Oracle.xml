@@ -185,10 +185,10 @@
 	<insert id="EzCommonDAO.insertCompanyConfig" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_COMPANY_CONFIG (
-				TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION
+				TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE
 			)
 			VALUES (
-				#tenantID#, #companyID#, #propertyName#, #propertyValue#, #description#
+				#tenantID#, #companyID#, #propertyName#, #propertyValue#
 			)
 		]]>
 	</insert>

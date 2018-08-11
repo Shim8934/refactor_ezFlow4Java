@@ -214,7 +214,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveCompanyInfo.do", produces = "text/html;charset=utf-8")	
 	@ResponseBody
-	public String saveCompanyInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+	public String saveCompanyInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("saveCompanyInfo started.");
 	    
 		String parentCn = request.getParameter("parentCn");
@@ -251,7 +251,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String result = "";
 		
 		String propertyName = "operatorMailId";
-		String descriptrion = egovMessageSource.getMessage("ezEmail.0hun02", locale);
 		
 		// 회사정보를 수정하는 경우
         if (parentCn == null || parentCn.isEmpty()) {
@@ -267,14 +266,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         	ezOrganAdminService.updateDBData_company(cn, displayName, displayName2, mailAddr, tenantID);
         	
         	if (operatorId != null && !operatorId.equals("")) {
-				String operatorMailId = ezCommonService.getCompanyConfig(propertyName, tenantID, cn);
+				String operatorMailId = ezCommonService.getCompanyConfig(tenantID, cn, propertyName);
 				if (!operatorMailId.equals("")) {
 					ezCommonService.updateCompanyConfig(tenantID, companyId, propertyName, operatorId);
 				} else {
-					ezCommonService.insertCompanyConfig(tenantID, companyId, propertyName, operatorId, descriptrion);
+					ezCommonService.insertCompanyConfig(tenantID, companyId, propertyName, operatorId);
 				}
         	} else {
-        		String operatorMailId = ezCommonService.getCompanyConfig(propertyName, tenantID, cn);
+        		String operatorMailId = ezCommonService.getCompanyConfig(tenantID, cn, propertyName);
         		if (!operatorMailId.equals("")) {
         			ezCommonService.deleteCompanyConfig(tenantID, companyId, propertyName);
         		}
@@ -330,7 +329,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							ezOrganAdminService.insertDBData_company(cn, displayName, displayName2,
 									mailAddr, parentCn, ldapPath, extensionAttribute15, skipInitData, tenantID, userInfo);
 							if (!operatorId.equals("")) {
-								ezCommonService.insertCompanyConfig(tenantID, companyId, propertyName, operatorId, descriptrion);
+								ezCommonService.insertCompanyConfig(tenantID, companyId, propertyName, operatorId);
 							} 
 							result = "OK";
 						} catch (Exception e) {
@@ -2927,7 +2926,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String operatorMailId = "";
 		
 		try {
-			operatorMailId = ezCommonService.getCompanyConfig("operatorMailId", tenantID, companyID);
+			operatorMailId = ezCommonService.getCompanyConfig(tenantID, companyID, "operatorMailId");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

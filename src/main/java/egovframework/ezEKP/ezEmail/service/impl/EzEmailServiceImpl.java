@@ -2075,7 +2075,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public String checkDistributionIsIncluded (String standardCn, String searchCn, int tenantId) throws Exception {
+	public String checkDistributionIsIncluded(String standardCn, String searchCn, int tenantId) throws Exception {
 		logger.debug("checkDistributionIsIncluded started.");
 		logger.debug("standardCn=" + standardCn + ", searchCn=" + searchCn);
 		
@@ -2192,7 +2192,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public List<String> aliasMailCheck (String address) throws Exception{
+	public List<String> aliasMailCheck(String address) throws Exception {
 		logger.debug("aliasMailCheck started.");
 		List<String> resultList = new ArrayList<String>();
 
@@ -2219,7 +2219,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         	} 
         }
 		
-        logger.debug("usercnt="  + resultList.size());
+        logger.debug("usercnt=" + resultList.size());
 		logger.debug("aliasMailCheck ended.");
 		
 		return resultList;

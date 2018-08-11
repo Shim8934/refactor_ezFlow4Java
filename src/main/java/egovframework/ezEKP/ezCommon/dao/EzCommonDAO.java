@@ -213,20 +213,20 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		insert("EzCommonDAO.insertUserConfigInfo", map);
 	}
 	
-	public String getCompanyConfig(Map<String, Object> map) throws Exception{
+	public String getCompanyConfig(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommonDAO.getCompanyConfig", map);
 	}
 	
-	public void insertCompanyConfig(Map<String, Object> map) throws Exception{
-		insert ("EzCommonDAO.insertCompanyConfig", map);
+	public void insertCompanyConfig(Map<String, Object> map) throws Exception {
+		insert("EzCommonDAO.insertCompanyConfig", map);
 	}
 	
-	public int updateCompanyConfig(Map<String, Object> map) throws Exception{
-		return update ("EzCommonDAO.updateCompanyConfig", map);
+	public int updateCompanyConfig(Map<String, Object> map) throws Exception {
+		return update("EzCommonDAO.updateCompanyConfig", map);
 	}
 	
-	public int deleteCompanyConfig(Map<String, Object> map) throws Exception{
-		return delete ("EzCommonDAO.deleteCompanyConfig", map);
+	public int deleteCompanyConfig(Map<String, Object> map) throws Exception {
+		return delete("EzCommonDAO.deleteCompanyConfig", map);
 	}
 	
 }

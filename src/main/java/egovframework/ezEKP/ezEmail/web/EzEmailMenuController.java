@@ -281,9 +281,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		
 		model.addAttribute("useOnlyInnerMail", ezCommonService.getTenantConfig("UseOnlyInnerMail", loginInfo.getTenantId()));
 		
-		int idx = loginInfo.getEmail().indexOf("@");
-       	String operatorMailAddress = ezCommonService.getCompanyConfig("operatorMailId", loginInfo.getTenantId(), loginInfo.getCompanyID()) + loginInfo.getEmail().substring(idx);
-        List<String> aliasMailList =  ezEmailService.aliasMailCheck(operatorMailAddress);
+       	String operatorMailAddress = ezCommonService.getCompanyConfig(loginInfo.getTenantId(), loginInfo.getCompanyID(), "operatorMailId") + "@" + domainName;
+        List<String> aliasMailList = ezEmailService.aliasMailCheck(operatorMailAddress);
        	
         if (aliasMailList.size() > 0) {
         	model.addAttribute("operatorMailAddress", operatorMailAddress);
