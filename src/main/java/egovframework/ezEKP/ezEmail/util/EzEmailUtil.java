@@ -1427,6 +1427,13 @@ public class EzEmailUtil {
     	Message[] messages = null;
     	
     	if (useAdvancedMailSearch.equals("YES")) {
+    		String useCIAdvancedMailSearch = ezCommonService.getTenantConfig("useCIAdvancedMailSearch", tenantId);
+    		boolean isCaseInsensitive = false;
+    		
+    		if (useCIAdvancedMailSearch.equals("YES")) {
+    			isCaseInsensitive = true;
+    		}
+    		
     		String folderPath = "";
     		
     		// folder is null when searching all folder
@@ -1437,7 +1444,7 @@ public class EzEmailUtil {
     		logger.debug("folderPath=" + folderPath);
     		
     		messages = advancedSearchFolder(ia, userAccount, folderPath, searchField, searchValue, startDate, endDate, 
-    				searchSubFolder, isUnreadOnly, isImportantOnly, sortType, isAscending, startIndex, listCount, extraMap);
+    				searchSubFolder, isUnreadOnly, isImportantOnly, sortType, isAscending, startIndex, listCount, extraMap, isCaseInsensitive);
     		
     		// pre-fetch
     		if (messages.length > 0) {
@@ -1943,16 +1950,17 @@ public class EzEmailUtil {
 			boolean isAscending,
 			int startIndex,
 			int listCount,
-			Map<String, Object> extraMap
+			Map<String, Object> extraMap,
+			boolean isCaseInsensitive
 			) throws Exception {
 		logger.debug("advancedSearchFolder started.");
 		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField + "searchValue=" + searchValue 
 				+ ",startDate=" + startDate + ",endDate=" + endDate + ",searchSubFolder=" + searchSubFolder + ",isUnreadOnly=" + isUnreadOnly 
 				+ ",isImportantOnly=" + isImportantOnly + ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex
-				+ ",listCount=" + listCount);
+				+ ",listCount=" + listCount + ",isCaseInsensitive=" + isCaseInsensitive);
 		
 		Map<String, Object> resultMap = getMailListFromJGw(userAccount, folderPath, searchField, searchValue, startDate, endDate, 
-				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount);
+				isUnreadOnly, isImportantOnly, searchSubFolder, sortType, isAscending, startIndex, listCount, isCaseInsensitive);
 		
 		List<String> mailList = (List<String>)resultMap.get("mailList");
 		
@@ -2007,13 +2015,15 @@ public class EzEmailUtil {
 			String sortType,
 			boolean isAscending,
 			int startIndex,
-			int listCount
+			int listCount,
+			boolean isCaseInsensitive
 			) throws Exception {
 		logger.debug("getMailUidListFromJGw started.");
 		logger.debug("userAccount=" + userAccount + ",folderPath=" + folderPath + ",searchField=" + searchField 
 				+ ",searchValue=" + searchValue + ",startDate=" + startDate + ",endDate=" + endDate 
 				+ ",isUnreadOnly=" + isUnreadOnly + ",isImportantOnly=" + isImportantOnly + ",searchSubFolder=" + searchSubFolder
-				+ ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex + ",listCount=" + listCount);
+				+ ",sortType=" + sortType + ",isAscending=" + isAscending + ",startIndex=" + startIndex + ",listCount=" + listCount
+				+ ",isCaseInsensitive=" + isCaseInsensitive);
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
@@ -2031,11 +2041,13 @@ public class EzEmailUtil {
 		String isAscendingParam = "isAscending=" + isAscending;
 		String startIndexParam = "startIndex=" + startIndex;
 		String listCountParam = "listCount=" + listCount;
+		String isCaseInsensitiveParam = "isCaseInsensitive=" + isCaseInsensitive;
 		
 		String inputParams = userAccountParam + "&" + folderPathParam + "&" + searchFieldParam 
 				+ "&" + searchValueParam + "&" + startDateParam + "&" + endDateParam 
 				+ "&" + isUnreadOnlyParam + "&" + isImportantOnlyParam + "&" + searchSubFolderParam
-				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam;
+				+ "&" + sortTypeParam + "&" + isAscendingParam + "&" + startIndexParam + "&" + listCountParam
+				+ "&" + isCaseInsensitiveParam;
 		
 		logger.debug("inputParams=" + inputParams);
 
