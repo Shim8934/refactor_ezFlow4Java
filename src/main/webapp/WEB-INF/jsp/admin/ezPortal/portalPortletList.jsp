@@ -218,7 +218,7 @@
 					</select>
 				
 				<input type="text" name="SearchString" id="SearchString" style="width:140px; height: 22px;" value="${pSearchString}" onKeyDown="entercheck()">
-                	<a class="imgbtn">
+                	<a class="imgbtn imgbck">
                 		<span onClick="btnSearch_onClick()">
                 			<spring:message code='ezPortal.t252'/>
                 		</span>

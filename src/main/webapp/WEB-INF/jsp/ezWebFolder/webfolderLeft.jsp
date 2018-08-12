@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,12 +8,12 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	   	<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">	        
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <link rel="stylesheet" href="/js/ezWebFolder/jsTree/dist/themes/default/style.css" />
-		<script type="text/javascript" src="/js/ezWebFolder/jsTree/dist/jstree.js"></script>
-	    <link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezWebFolder/jsTree/dist/themes/default/style.css")%>" />
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/jsTree/dist/jstree.js")%>"></script>
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
 		<script type="text/javascript" >
 		    var companyFolderId = "";
 		    var deptFolderId    = "";
@@ -114,31 +115,35 @@
 					dataType: "JSON",
 					async : true,
 					success : function(data) {
-						var result      = data.userCapacity;
-						var totalVolume = result["totalCapacity"] + "GB";
-						var useVolume   = getFileSize(result["totalUsed"]);
-						var percent     = result["usedRate"];
-						var colorClass  = "myBar_green";
-						var barElmt     = document.getElementById("myBar");
-						var volumeInf   = document.getElementsByClassName("volumes")[0];
-						
-						if (percent < 100) {
-							barElmt.style.width = percent + "%";
-						} else {
-							barElmt.style.width = "100%";
-						}
-						$("#useVol").html(useVolume + "<span>/ " + totalVolume + "</span>");
-	                 	$("#usePer").text(percent+"%");
-												
-						if (percent >= 80) {
-							barElmt.className = "myBar_red";
-							$(".volumeDL dd").css("color", "#ff4040");
-						} else if (percent >= 70) {
-							barElmt.className = "myBar_yellow";
-							$(".volumeDL dd").css("color", "#ff9c00");
-						} else {
-							barElmt.className = "myBar_green";
-							$(".volumeDL dd").css("color", "#0470e4");
+						var code = data.code;
+						switch(code) {
+							case 0: 
+								var result      = data.userCapacity;
+								var totalVolume = result["totalCapacity"] + "GB";
+								var useVolume   = getFileSize(result["totalUsed"]);
+								var percent     = result["usedRate"];
+								var colorClass  = "myBar_green";
+								var barElmt     = document.getElementById("myBar");
+								var volumeInf   = document.getElementsByClassName("volumes")[0];
+								
+								if (percent < 100) {
+									barElmt.style.width = percent + "%";
+								} else {
+									barElmt.style.width = "100%";
+								}
+								$("#useVol").html(useVolume + "<span>/ " + totalVolume + "</span>");
+								$("#usePer").text(percent+"%");
+														
+								if (percent >= 80) {
+									barElmt.className = "myBar_red";
+									$(".volumeDL dd").css("color", "#ff4040");
+								} else if (percent >= 70) {
+									barElmt.className = "myBar_yellow";
+									$(".volumeDL dd").css("color", "#ff9c00");
+								} else {
+									barElmt.className = "myBar_green";
+									$(".volumeDL dd").css("color", "#0470e4");
+								}
 						}
 					},
 					error : function(error) {

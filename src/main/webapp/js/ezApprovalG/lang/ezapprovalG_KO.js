@@ -1,4 +1,4 @@
-﻿// ApprovUI\ApprovUI.js
+﻿﻿// ApprovUI\ApprovUI.js
 var strLang2 = "합의";
 var strLang3 = "협조";
 var strLang4 = "반송";
@@ -108,7 +108,7 @@ var strLang207 = "기안자 만이 발송 의뢰를 할 수 있습니다."
 var strLang208 = "발송의뢰 가능여부를 조회하는데 실패하였습니다. "
 // ezAPRATTACH\attach.js
 var strLang214 = "첨부자"
-var strLang215 = "첨부파일명"
+var strLang215 = "파일이름"
 var strLang216 = "파일사이즈"
 var strLang217 = "저장시 오류가 발생하였습니다.!"
 var strLang219 = "본문부)"

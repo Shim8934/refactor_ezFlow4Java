@@ -422,7 +422,7 @@
 				</span> 
 				&nbsp;&nbsp;
 				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1062'/>: &nbsp;
-					<select id="searchField"> 
+					<select id="searchField" style="height:24px"> 
 						<option value="recipientName"><spring:message code='ezStatistics.kyj6'/></option>
 						<option value="recipientDeptName"><spring:message code='ezStatistics.t83'/></option>
 						<option value="recipientEmail"><spring:message code='ezStatistics.kyj7'/></option>
@@ -432,13 +432,13 @@
 						<option value="attachedFileName"><spring:message code='ezStatistics.t1057'/></option>
 					</select>
 					<input type="text" id="searchValue" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
-					<a class="imgbtn" >
+					<a class="imgbtn" style="height:22px">
 						<span onclick="javascript:search();"><spring:message code='ezStatistics.t36'/></span>
 					</a>
-					<a class="imgbtn" >
+					<a class="imgbtn" style="height:22px">
 						<span onclick="javascript:reset();"><spring:message code='ezStatistics.t1059'/></span>
 					</a>
-					<a class="imgbtn" >
+					<a class="imgbtn" style="height:22px">
 						<span onclick="javascript:reload();"><spring:message code='ezStatistics.t1060'/></span>
 					</a>
 				</span> 
@@ -446,7 +446,7 @@
 			<td width="5%">
 				<div id="mainmenu" style="height: 28px;margin:3px 0px !important">
                     <ul>
-						<li><span style="width: 110px;text-align:center" onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span></li>
+						<li><span style="width: 110px;text-align:center;background-color: white" onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span></li>
 					</ul>
 				</div>	
 			</td>
@@ -454,7 +454,7 @@
 	</table>
 	<table style="margin: 10px 0px;">
 		<tr>
-			<td width="98%" style="font-weight: bold; color: gray;"> ※ ${mailLogKeepPeriodMessage} ※  </td>
+			<td width="98%" style="font-weight: bold; color: gray;">▒ ${mailLogKeepPeriodMessage}</td>
 		</tr>
 	</table>
 	<table class="mainlist" style="width:100%;">

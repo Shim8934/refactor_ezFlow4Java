@@ -37,13 +37,22 @@
 				dataType: "JSON",
 				async: false,
 				success: function(data) {
-					var reason = data.reason;
-					if (reason) {
-						alert(reason);
-						return;
-					}
+					var code = data.code;
 					
-					afterDeleteSuccess();
+					switch(code) {
+						case 0: 
+							afterDeleteSuccess();
+							break;
+						case 1:
+							alert("<spring:message code='ezWebFolder.t306'/>");
+							break;
+						case 2:
+							alert("<spring:message code='ezWebFolder.t305'/>");
+							break;
+						case 3:
+							alert("<spring:message code='ezWebFolder.t300' />");
+							break;
+					}
 				},
 				error: function (xhr, status, e){
 					alert("<spring:message code='ezWebFolder.t134'/>");

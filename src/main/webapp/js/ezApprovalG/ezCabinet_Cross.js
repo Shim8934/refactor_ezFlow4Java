@@ -1213,7 +1213,7 @@ function ViewDoc_onclick_Complete(Rtn) {
 //END
 function GetTodayDate() {
     var objDate = new Date();
-    var y = String(objDate.getYear());
+    var y = String(objDate.getFullYear());
     var m = String(objDate.getMonth() + 1);
     var d = String(objDate.getDate());
     m = "00".substring(0, 2 - m.length) + m;
@@ -1562,9 +1562,14 @@ function td_Create1(strtext) {
     document.getElementById("tblPageRayer").innerHTML = strtext;
 }
 function makePageSelPage(pTotalCnt) {
-
     var strtext;
     var PagingHTML = "";
+    if ($("tblPageRayer").length == 0) {
+    	totalPage = Math.ceil(new Number(pTotalCnt / PageSize));
+    	document.getElementById("td_pTotalCount").innerHTML = totalPage;
+    	document.getElementById("txt_PageInputNum").value = 1; 
+    	return;
+    }
     document.getElementById("tblPageRayer").innerHTML = "";
     if (pTotalCnt != undefined) {
         if (GetSelectVal("rec_year") == "ALL" && GetSelectVal("cab_year") == "ALL" && GetSelectVal("del_year") == "ALL") {

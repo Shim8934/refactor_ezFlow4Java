@@ -382,10 +382,10 @@
 						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
 					</td>
 					<td style="width: 15%;" colspan=2>
-						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('search');"><spring:message code='ezAttitude.t121' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="sendMail();"><spring:message code='ezAttitude.t136' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('search');"><spring:message code='ezAttitude.t121' /></span></a>
+						<a class="imgbtn"><span onclick="searchAttitudeAbsentedList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
+						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
+						<a class="imgbtn"><span onclick="sendMail();"><spring:message code='ezAttitude.t136' /></span></a>
 					</td>
 				</tr>
 			</tbody>
