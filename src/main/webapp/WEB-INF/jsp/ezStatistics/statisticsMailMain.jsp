@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -15,13 +16,13 @@
         }
     </style>    
     <script type="text/javascript" src="<spring:message code='ezStatistics.e1' />"></script>
-    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/excanvas.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/jquery.jqplot.min.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/jqplot.categoryAxisRenderer.min.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/jqplot.barRenderer.min.js"></script>    
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/excanvas.js")%>"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jquery.min.js")%>"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jquery.jqplot.min.js")%>"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jqplot.categoryAxisRenderer.min.js")%>"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jqplot.barRenderer.min.js")%>"></script>    
     <script type="text/javascript">
         var Tab1_flag = true;
         var xmlHttp = createXMLHttpRequest();
