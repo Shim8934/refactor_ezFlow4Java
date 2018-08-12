@@ -2304,3 +2304,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 }
 
 .question { font-family: Meiryo UI }
+
+/* 20180731_운영자에게 메일 보내기 기능 추가 */
+#left h4{width:155px; margin:0px auto; border:1px solid #e0e0e0; padding:8px 15px; text-align:left; font-weight:normal; background:url('/images/kr/left/icon_adminMail.gif') no-repeat 12px 10px; cursor:pointer;}
+#left h4 span{padding:0px 0px 0px 20px; line-height:18px;}
