@@ -316,7 +316,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	                    }
 	                }
 	                deptListFlag += 1;
-	                if (deptListFlag > 1) {
+	                if (deptListFlag > 0) {
 	                	isSubTitle = true;
 					}
                 } 
