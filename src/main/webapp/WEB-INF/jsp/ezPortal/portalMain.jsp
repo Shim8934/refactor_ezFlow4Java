@@ -34,8 +34,8 @@
 			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);overflow:hidden; height: 50%;min-height: 270px; min-width: 270px; }
 			/* #selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;} */
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
-			#maskDiv { position:absolute; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);}
-			.selected-memoWrapper {display:table-cell;vertical-align:middle;}
+			/* #maskDiv { position:absolute; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);} */
+			/* .selected-memoWrapper {display:table-cell;vertical-align:middle;} */
 			#memo-btn{text-align:right;margin:0 auto; }
 			#font-btn{text-align:right;margin:0 auto; }
 			#slider-range{width:100px;float:left; margin-left:15px;}
@@ -87,20 +87,19 @@
 		    	var winHeight = window.innerHeight;
 				var winWidth = window.innerWidth;
 				var memoBtn = $("#open-memo");
-				var opendMemo = $("#selected-memo");
+				/* var opendMemo = $("#selected-memo"); */
 				
 				memoBtn.css({"top" : winHeight - 80, "left" : winWidth - 100});
 		    }
 		    
 		    function setSizeOfLayer() {
 		    	var winHeight = window.innerHeight;
-				var winWidth = window.innerWidth;
-		    	
+				/* var winWidth = window.innerWidth;
 				var layerHalf = $(".layer-half");
 				var layerWhole = $(".layer-whole");
 		    	var maskDiv = $("#maskDiv");
 				var className = $("#layer-popup").attr("class");
-	        	var opendMemo = $("#selected-memo");
+	        	var opendMemo = $("#selected-memo"); */
 	        	var layerWidth =$("#layer-popup").css("width");
 	        		        
 	        	$(".memoListBox").css("width", layerWidth);
@@ -120,10 +119,10 @@
 		        	$("#open-memo" ).css("display", "");
 		        })
 		        
-		        $("#maskDiv").click(function() {
+		        /* $("#maskDiv").click(function() {
 		        	$("#maskDiv").css("display", "none");
 		        	$("#selected-memo").css("display", "none");
-		        });
+		        }); */
 
 		        
 		        $("#memoList").sortable({
@@ -315,8 +314,8 @@
 		    	html += "</div>"
 		    	$("#memoList").prepend(html);
 		    	$("#textarea").val('');
-		    	$("#maskDiv").css("display", "none");
-		    	$("#selected-memo").css("display", "none");
+		    	/* $("#maskDiv").css("display", "none");
+		    	$("#selected-memo").css("display", "none"); */
 		    	
 		    	memoIndex = -1;
 		    	
@@ -325,8 +324,9 @@
 		    
 		    function closeMemo() {
 		    	$("#textarea").val('');
-		    	$("#maskDiv").css("display", "none");
-		    	$("#selected-memo").css("display", "none");
+		    	/* $("#maskDiv").css("display", "none");
+		    	$("#selected-memo").css("display", "none"); */
+		    	$(".detailMemo").css("display", "none");
 		    	
 		    	memoIndex = -1;
 		    }
@@ -355,7 +355,7 @@
 		        	var headerColor = $(this).css("background-color");
 			    	var textColor = $(this).children("textarea").css("background-color");
 			    	
-		        	$("#maskDiv").css("display", "");
+		        	/* $("#maskDiv").css("display", ""); */
 			        $(".detailMemo").css("display", "");
 					$("#textarea").css("font-size", "15px");
 					$("#textarea").css("background-color", textColor);
@@ -396,7 +396,7 @@
 		<!-- memo note -->
 		<div class="noteBlock">
 			<div id="layer-popup" style="display: none" class="layer-half">
-				<div id="maskDiv" style="display: none"></div>
+				<!-- <div id="maskDiv" style="display: none"></div> -->
 
 				<!-- 메모 리스트 -->
 				<div style="text-align: center">
