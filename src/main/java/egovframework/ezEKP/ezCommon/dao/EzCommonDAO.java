@@ -219,7 +219,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		} catch (Exception e) {
 			String msg = e.getMessage();
 			
-			if (msg.contains("exist")) {
+			if (msg.contains("exist") || msg.contains("ORA-00942")) {
 				logger.debug("tbl_company_config doesn't exist. creating the table...");
 				
 				update("EzCommonDAO.createTblCompanyConfig");
