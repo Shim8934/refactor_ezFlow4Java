@@ -127,11 +127,11 @@ var CabinetFileHelper = function() {
 		function displayUserInforPopup(elementId, userId, displayFunct) {document.getElementById(elementId).onclick = function(e) {displayFunct(userId);};}
 		
 		function genderScrollForElmt(divElmentId, arrayList, callBackHandler, fieldId, fieldName, fieldStatus) {
-			var divElement       = document.getElementById(divElmentId);
+			var divElement = document.getElementById(divElmentId);
 			if (divElement && arrayList && arrayList.length > 0) {
 				divElement.innerHTML = "";
 				var elementScroll    = new CabinetScroll(divElmentId);
-				setScrollElement(divElement, arrayList, showUserInfoFromEmail, "userEmail", "userName", "");
+				setScrollElement(divElement, arrayList, showUserInfoFromEmail, fieldId, fieldName, fieldStatus);
 			}
 		}
 		
