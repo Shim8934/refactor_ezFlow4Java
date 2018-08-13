@@ -436,7 +436,10 @@
 						$("#approveFlag").html("<spring:message code='ezResource.t273'/>");
 					}
 					
-					var resbrdExc = result.resBrd.brdExplain.replace(/(?:\r\n|\r|\n)/g, '<br />');
+					var resbrdExc = "";
+					if (result.resBrd.brdExplain != null) {
+						resbrdExc = result.resBrd.brdExplain.replace(/(?:\r\n|\r|\n)/g, '<br />');
+					}
 					
 					$("#brdExplain").html(resbrdExc);
 					

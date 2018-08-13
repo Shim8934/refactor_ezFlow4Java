@@ -88,12 +88,7 @@
 					document.getElementById("personalLimit").focus();
 					return;
 				}
-				
-				if (parseInt(uploadLimitVal) > parseInt(personalLimitVal)) {
-					alert("<spring:message code='ezWebFolder.t185'/>");
-					return;
-				}
-				
+
 				$.ajax({
 					type: "POST",
 					url: "/admin/ezWebFolder/saveConfig.do",
