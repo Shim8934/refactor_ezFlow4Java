@@ -41,7 +41,7 @@
 			#slider-range{width:100px;float:left; margin-left:15px;}
 			.ui-widget-header{background: #0470e4}
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
-			#textarea{padding-left:10px;padding-right:10px;width:100%;height:95%;margin-left:-3px;overflow-y:auto;}
+			#textarea{padding-left:10px; padding-right:10px; width:100%; height:85%; margin-left:-3px; overflow-y:scroll; padding-bottom: 10px;}
 			/* .detailMemo{border: 1px solid black;width: 400px;center;height: 400px;float: center;margin: 0 auto; padding-top: 30px;overflow:hidden; } */
 			.detailMemo{border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; padding-top: 30px;overflow:hidden; z-index:9001; position: absolute; }
 			.memo-text{margin-top:10px; padding-left:11px; padding-right: 25px; border:0px; width:100%; height:81%; resize:none; overflow-y:scroll; padding-bottom:5px;}
@@ -452,8 +452,7 @@
 				<div class="selected-memoWrapper"> -->
 					<div class="detailMemo" style="display: none">
 						<div id="memo-btn">
-							<button id="save" onclick="save()">저장</button> 
-							<button onclick="closeMemo()">닫기</button>
+							<div id="save" onclick="save()" style="display:inline-block"><img src='/images/close_xBtn.png' style='float:right; height:20px; padding-right:5px; cursor:pointer'></div> 
 						</div>
 			        	<div id="font-btn" style="text-align: left; display: none ">
 							<button id="font-up">폰트+</button> 
