@@ -402,8 +402,8 @@ function AddOpinionContent(Opstate, OpContent) {
 
                     var tr = GetChildNodes(pSelectedRow[0]);
 
-                    setNodeText(tr[3], UserLang == "1" ? tmpKyljeaDeptName : tmpKyljeaDeptName2);
-                    setNodeText(tr[2], UserLang == "1" ? tmpKyljeaJobtitle : tmpKyljeaJobtitle2);
+                    setNodeText(tr[3], tmpKyljeaDeptName);
+                    setNodeText(tr[2], tmpKyljeaJobtitle);
                     SetAttribute(pSelectedRow[0], "DATA4", tmpKyljeaDeptID);
                     SetAttribute(pSelectedRow[0], "DATA9", tmpKyljeaJobtitle);
                     SetAttribute(pSelectedRow[0], "DATA10", tmpKyljeaJobtitle2);
