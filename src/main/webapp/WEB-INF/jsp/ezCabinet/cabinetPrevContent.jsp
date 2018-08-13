@@ -110,17 +110,19 @@
 				
 				function getContentFromModuleName(moduleName) {
 					switch (moduleName) {
-						case "mail"   : documentContent = parent.CabinetEmailFile.getContent()    ; break;
-						case "apprv"  : documentContent = parent.CabinetApprovalFile.getContent() ; break;
-						case "board"  : documentContent = parent.CabinetBoardFile.getContent()    ; break;
-						case "option" : documentContent = parent.CabinetOptionFile.getContent()   ; break;
-						case "commu"  : documentContent = parent.CabinetCommunityFile.getContent(); break;
-						case "resrc"  : documentContent = parent.CabinetResourceFile.getContent() ; break;
-						case "schedl" : documentContent = parent.CabinetScheduleFile.getContent() ; break;
-						case "todo"   : documentContent = parent.CabinetTodoFile.getContent()     ; break;
-						case "jounl"  : documentContent = parent.CabinetJournalFile.getContent()  ; break;
-						case "mapprv" : documentContent = parent.CabinetItem.getContent()         ; break;
-						case "mjounl" : documentContent = parent.CabinetItem.getContent()         ; break;
+						case "mail"    : documentContent = parent.CabinetEmailFile.getContent()    ; break;
+						case "apprv"   : documentContent = parent.CabinetApprovalFile.getContent() ; break;
+						case "board"   : documentContent = parent.CabinetBoardFile.getContent()    ; break;
+						case "option"  : documentContent = parent.CabinetOptionFile.getContent()   ; break;
+						case "commu"   : documentContent = parent.CabinetCommunityFile.getContent(); break;
+						case "resrc"   : documentContent = parent.CabinetResourceFile.getContent() ; break;
+						case "schedl"  : documentContent = parent.CabinetScheduleFile.getContent() ; break;
+						case "todo"    : documentContent = parent.CabinetTodoFile.getContent()     ; break;
+						case "jounl"   : documentContent = parent.CabinetJournalFile.getContent()  ; break;
+						case "mapprv"  : documentContent = parent.CabinetItem.getContent()         ; break;
+						case "mjounl"  : documentContent = parent.CabinetItem.getContent()         ; break;
+						case "mcommu"  : documentContent = parent.CabinetItem.getContent()         ; break;
+						case "moption" : documentContent = parent.CabinetItem.getContent()         ; break;
 						default       : if (parent.CabinetItem) {documentContent = parent.CabinetItem.getContent();}
 					}
 				}

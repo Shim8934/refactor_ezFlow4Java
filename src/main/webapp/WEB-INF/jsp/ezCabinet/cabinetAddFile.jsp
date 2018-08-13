@@ -16,8 +16,8 @@
 		
 		<div class="divInfo">
 			<table class="tblFileInf">
-				<tr><th><spring:message code='ezCabinet.t51'/></th><td><input maxlength="150" type="text" placeholder="<spring:message code='ezCabinet.t70'/>" id="itemTtl"></td></tr>
-				<tr><th><spring:message code='ezCabinet.t52'/></th><td><input maxlength="250" type="text" placeholder="<spring:message code='ezCabinet.t71'/>" id="itemSum"></td></tr>
+				<tr><th><spring:message code='ezCabinet.t51'/></th><td><input class="tblFileInput" maxlength="150" type="text" placeholder="<spring:message code='ezCabinet.t70'/>" id="itemTtl"></td></tr>
+				<tr><th><spring:message code='ezCabinet.t52'/></th><td><input class="tblFileInput" maxlength="250" type="text" placeholder="<spring:message code='ezCabinet.t71'/>" id="itemSum"></td></tr>
 				<tr>
 					<th><spring:message code='ezCabinet.t94'/></th>
 					<td><div class="rlFileDiv">
