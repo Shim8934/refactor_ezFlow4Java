@@ -62,6 +62,7 @@
 			];
 			var headerColor;
 	    	var textColor;
+	    	var currText;
 			
 			
 			topHeight = "56";
@@ -354,15 +355,6 @@
 		    	$(".write-date:first").html(year+"-"+month+"-"+date+" "+arrayDay[day]);
 		    }
 		    
-		    function closeMemo() {
-		    	$("#textarea").val('');
-		    	/* $("#maskDiv").css("display", "none");
-		    	$("#selected-memo").css("display", "none"); */
-		    	$(".detailMemo").css("display", "none");
-		    	
-		    	memoIndex = -1;
-		    }
-		    
 		    function addremove() {
 			    $(".individual-memo").mouseenter(function(){
 			    	$(this).children("img").css("visibility", "visible");
@@ -383,7 +375,7 @@
 		        
 		        $(".individual-memo").dblclick(function(){
 		        	memoIndex = $(this).index();
-		        	var currText = $(this).children(".memo-text").val();
+		        	currText = $(this).children(".memo-text").val();
 		        	var headerColor = $(this).css("background-color");
 			    	var textColor = $(this).children("textarea").css("background-color");
 			    	
@@ -412,6 +404,16 @@
 		        	}
 		        });
 		    }
+		    
+		    function detailMemoSave() {
+		    	if(currText != $("#textarea").val()) {
+		    		save();
+		    	}
+		    	$("#textarea").val('');
+		    	$(".detailMemo").css("display", "none");
+		    	memoIndex = -1;
+		    }
+		    
 		    
 		</script>
 	</head>
@@ -452,7 +454,7 @@
 				<div class="selected-memoWrapper"> -->
 					<div class="detailMemo" style="display: none">
 						<div id="memo-btn">
-							<div id="save" onclick="save()" style="display:inline-block"><img src='/images/close_xBtn.png' style='float:right; height:20px; padding-right:5px; cursor:pointer'></div> 
+							<div id="save" onclick="detailMemoSave()" style="display:inline-block"><img src='/images/close_xBtn.png' style='float:right; height:20px; padding-right:5px; cursor:pointer'></div> 
 						</div>
 			        	<div id="font-btn" style="text-align: left; display: none ">
 							<button id="font-up">폰트+</button> 
