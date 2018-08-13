@@ -1,14 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <!DOCTYPE html>
 <html>
 	<head>
 		<title>left_Top</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code="ezJournal.c1" />" type="text/css" />
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 		<script type="text/javascript">
 			
 			document.onselectstart = function () {

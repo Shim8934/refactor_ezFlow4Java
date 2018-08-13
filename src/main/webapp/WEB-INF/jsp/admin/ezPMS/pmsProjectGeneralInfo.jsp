@@ -4,6 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <!DOCTYPE>
 <html>
 <head>
@@ -11,10 +12,10 @@
 	<title><c:out value="${project.projectName }"/></title>
 	<link rel="stylesheet" href="/css/ezPMS/default/style.css" type="text/css" />
 	<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
-	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	<script type="text/javascript" src="/js/ezPMS/jstree.js"></script>
-	<script type="text/javascript" src="/js/ezPMS/common.js"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/common.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/jstree.js")%>"></script>
 </head>
 <script>
 	var mode = 'edit';
