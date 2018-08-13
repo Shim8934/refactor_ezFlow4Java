@@ -113,6 +113,7 @@
 		    	defaultPointer();
 		    	setPanelPointer();
 		    	layerPopupOpacity();
+		    	setDetailMemoPosition();
 		     
 		        $("#close-button").click(function() {
 		        	$("#layer-popup").css("display", "none")
@@ -202,6 +203,19 @@
 		        });
 		        
 		     });
+		    
+		    function setDetailMemoPosition () {
+		    	var winWidth = $(window).width();
+		    	var winHeight = $(window).height();
+		    	
+		    	var detalMemWidth = $(".detailMemo").width();
+		    	var detalMemHeight = $(".detailMemo").height();
+		    	
+		    	var top = winHeight/2 - detalMemHeight/2;  
+		    	var left = winWidth/2 - detalMemWidth/2;
+		    	
+		    	$(".detailMemo").css({"top" : top, "left" : left });
+		    }
 		    
 		    // 초기 pointet-event set
 		    function defaultPointer() {
