@@ -1154,7 +1154,7 @@ var CabinetItem = function() {
 		var writer      = data.writerVO;
 		
 		generateCommunityTitle(itemInfo, relatedList, dlElmt);
-		generateRelatedModuleContent(itemInfo, attachList, null, null);
+		generateRelatedModuleContent(itemInfo, attachList, "mcommu", null);
 	}
 	
 	function generateCommunityTitle(itemInfo, relatedList, dlElmt) {

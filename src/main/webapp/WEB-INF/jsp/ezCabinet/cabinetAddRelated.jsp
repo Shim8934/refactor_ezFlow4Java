@@ -359,7 +359,7 @@
 					var endDate       = trimStr(thridRow.children[3].firstElementChild.textContent);
 					var messageFrame  = commuOpener.document.getElementById("message");
 					var contentWd     = messageFrame.contentWindow || messageFrame.contentDocument;
-					var content       = contentWd.document.body.innerHTML;
+					var content       = contentWd.document.documentElement.innerHTML;
 					var attach        = commuOpener.document.getElementById("lstAttachLink");
 					var attachList    = [];
 					
