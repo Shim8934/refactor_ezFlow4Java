@@ -251,7 +251,7 @@
 				<tr>
 					<th ><spring:message code = 'ezCommunity.t31' /></th>
 			  		<td>
-						<select id="QuerySelect" name="QuerySelect" style="vertical-align:middle; height: 22px; margin-left:2px;width:100px;">
+						<select id="QuerySelect" name="QuerySelect" style="vertical-align:middle; height: 22px; margin-left:2px;">
 							<option selected value="pCommunityName"><spring:message code = 'ezCommunity.t9991' /></option>
 							<option value="pCommuintyDesc" ><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></option>
 						</select>
