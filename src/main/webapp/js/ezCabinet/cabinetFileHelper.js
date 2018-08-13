@@ -131,7 +131,7 @@ var CabinetFileHelper = function() {
 			if (divElement && arrayList && arrayList.length > 0) {
 				divElement.innerHTML = "";
 				var elementScroll    = new CabinetScroll(divElmentId);
-				setScrollElement(divElement, arrayList, showUserInfoFromEmail, fieldId, fieldName, fieldStatus);
+				setScrollElement(divElement, arrayList, callBackHandler, fieldId, fieldName, fieldStatus);
 			}
 		}
 		
