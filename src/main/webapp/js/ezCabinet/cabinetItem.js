@@ -1133,7 +1133,7 @@ var CabinetItem = function() {
 		var writer      = data.writerVO;
 		
 		generateOptionTitle(itemInfo, relatedList, dlElmt);
-		generateRelatedModuleContent(itemInfo, attachList, null, null);
+		generateRelatedModuleContent(itemInfo, attachList, "moption", null);
 	}
 	
 	function generateOptionTitle(itemInfo, relatedList, dlElmt) {

@@ -16,6 +16,9 @@
 		<c:if test="${module == 'jounl' || module == 'mjounl' || module =='apprv' && module =='mapprv'}">
 			<style type="text/css">p {margin-top: 0px; margin-bottom: 0px;}</style>
 		</c:if>
+		<c:if test="${module == 'option' || module == 'moption'}">
+			<style type="text/css">p {font-size: 12px; color: #393939;}</style>
+		</c:if>
 	</head>
 	<body style="padding: 8px; margin: 0px;">
 		<div class="zoomDiv"><img src="/images/minus.png"><img src="/images/plus.png"></div>
@@ -107,17 +110,19 @@
 				
 				function getContentFromModuleName(moduleName) {
 					switch (moduleName) {
-						case "mail"   : documentContent = parent.CabinetEmailFile.getContent()    ; break;
-						case "apprv"  : documentContent = parent.CabinetApprovalFile.getContent() ; break;
-						case "board"  : documentContent = parent.CabinetBoardFile.getContent()    ; break;
-						case "option" : documentContent = parent.CabinetOptionFile.getContent()   ; break;
-						case "commu"  : documentContent = parent.CabinetCommunityFile.getContent(); break;
-						case "resrc"  : documentContent = parent.CabinetResourceFile.getContent() ; break;
-						case "schedl" : documentContent = parent.CabinetScheduleFile.getContent() ; break;
-						case "todo"   : documentContent = parent.CabinetTodoFile.getContent()     ; break;
-						case "jounl"  : documentContent = parent.CabinetJournalFile.getContent()  ; break;
-						case "mapprv" : documentContent = parent.CabinetItem.getContent()         ; break;
-						case "mjounl" : documentContent = parent.CabinetItem.getContent()         ; break;
+						case "mail"    : documentContent = parent.CabinetEmailFile.getContent()    ; break;
+						case "apprv"   : documentContent = parent.CabinetApprovalFile.getContent() ; break;
+						case "board"   : documentContent = parent.CabinetBoardFile.getContent()    ; break;
+						case "option"  : documentContent = parent.CabinetOptionFile.getContent()   ; break;
+						case "commu"   : documentContent = parent.CabinetCommunityFile.getContent(); break;
+						case "resrc"   : documentContent = parent.CabinetResourceFile.getContent() ; break;
+						case "schedl"  : documentContent = parent.CabinetScheduleFile.getContent() ; break;
+						case "todo"    : documentContent = parent.CabinetTodoFile.getContent()     ; break;
+						case "jounl"   : documentContent = parent.CabinetJournalFile.getContent()  ; break;
+						case "mapprv"  : documentContent = parent.CabinetItem.getContent()         ; break;
+						case "mjounl"  : documentContent = parent.CabinetItem.getContent()         ; break;
+						case "mcommu"  : documentContent = parent.CabinetItem.getContent()         ; break;
+						case "moption" : documentContent = parent.CabinetItem.getContent()         ; break;
 						default       : if (parent.CabinetItem) {documentContent = parent.CabinetItem.getContent();}
 					}
 				}
