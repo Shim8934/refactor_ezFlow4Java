@@ -952,7 +952,7 @@
 	
 	<insert id="EzCabinetDAO.saveAttachFile" parameterClass="CabinetAttachFileVO">
 		<selectKey keyProperty="temp" resultClass="Integer">
-			<![CDATA[select case when (select attach_id from tbl_cb_attach_file where item_id = #itemId# and file_path = #filePath# and file_name = #fileName# and file_size = #fileSize# and tenant_id = #tenantId#) is not null then 0 else 1 end as temp]]>
+			<![CDATA[select case when (select attach_id from tbl_cb_attach_file where item_id = #itemId# and file_path = #filePath# and file_name = #fileName# and file_size = #fileSize# and tenant_id = #tenantId#) is not null then 0 else 1 end as temp from dual]]>
 		</selectKey>
 		<isEqual property="temp" compareValue="1">
 			<![CDATA[insert into tbl_cb_attach_file (attach_id, item_id, file_path, file_name, file_size, file_description, company_id, tenant_id) values (#attachId#, #itemId#, #filePath#, #fileName#, #fileSize#, #fileDescription#, #companyId#, #tenantId#)]]>

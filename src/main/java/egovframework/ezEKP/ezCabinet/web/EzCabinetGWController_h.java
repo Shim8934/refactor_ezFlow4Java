@@ -600,7 +600,7 @@ public class EzCabinetGWController_h {
 			creatorVO = new SimpleUserInfoVO(creatorId, creatorId);
 		}
 		
-		if (share != null && share.size() > 0 && !share.get(0).getColumnValue().equals("")) {
+		if (share != null && share.size() > 0 && share.get(0).getColumnValue() != null && !share.get(0).getColumnValue().equals("")) {
 			List<String> shareIds            = Arrays.asList(share.get(0).getColumnValue().split(";"));
 			List<SimpleUserInfoVO> listShare = cabinetService.getUsersInfoFromIdList(shareIds, primary, tenantId);
 			result.put("shares", listShare);
