@@ -6,7 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title></title>
-		<c:if test="${module != 'jounl' && module != 'mjounl' && module !='apprv' && module !='mapprv'}">
+		<c:if test="${module != 'jounl' && module != 'mjounl' && module !='apprv' && module !='mapprv' && module !='commu' && module !='mcommu'}">
 			<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css"> 
 		</c:if>
 		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"                type="text/css"/>
