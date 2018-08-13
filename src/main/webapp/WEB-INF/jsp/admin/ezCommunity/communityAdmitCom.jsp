@@ -250,7 +250,7 @@
 
         <br />
         <div id="contentlist" style="width:100%; overflow: auto;">
-	        <div style="border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
+	        <div>
 		        <table class="mainlist" style="width:100%">
 					<tr>
 						<th style="width:70px;"><spring:message code = 'ezCommunity.t32' /></th>

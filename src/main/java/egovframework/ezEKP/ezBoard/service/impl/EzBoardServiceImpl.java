@@ -2589,6 +2589,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			result.append("<DATA3>" + pRootBoardID + "</DATA3>");
 			result.append("<DATA4>" + brdBoardTreeList.get(i).getBoardColor() + "</DATA4>");
 			result.append("<DATA5>" + brdBoardTreeList.get(i).getGuBun() + "</DATA5>"); //20070228 포토게시판관련으로 추가함
+			result.append("<DATA6>" + brdBoardTreeList.get(i).getUrl() + "</DATA6>"); //2018-08-13 강민수92 url 게시판인지 체크하기 위해 추가
 			result.append("<EXPANDED>FALSE</EXPANDED>");
 			result.append("<ISLEAF>" + checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId(), tenantID) + "</ISLEAF>");
 			

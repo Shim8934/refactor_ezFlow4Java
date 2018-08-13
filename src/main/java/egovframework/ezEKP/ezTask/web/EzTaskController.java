@@ -1368,11 +1368,15 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		Map<String, Integer> result = ezTaskService.getRepTaskInfo(date, taskID, offset, primary, tenantID, taskInfoVO, companyID);
 		taskInfoVO.setRepeatCount(result.get(date));		
+		
+		if (taskInfoVO.getPersonContentPath() == null) {
+			taskInfoVO.setPersonContentPath("");
+		}
     	
     	StringBuffer resultXML = new StringBuffer();
     	
     	resultXML.append("<DATA>"); 
-    		
+    	
 		resultXML.append("<ROW>");
 		
 		resultXML.append("<TASKID>" + taskInfoVO.getTaskID() + "</TASKID>");

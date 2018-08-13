@@ -966,24 +966,24 @@
 		</table>  -->
 		<table style="width:100%; background-color: #fcfcfc; border-right: 1px solid #e8e8e8; border-left: 1px solid #e8e8e8; border-bottom:1px solid #e8e8e8">
 			<tr>
-				<td style="width:3%;">
+				<td style="width:6%;">
 					<spring:message code='ezApproval.t434'/> 
 				</td>
-				<td style="width:12%;">
+				<td style="width:25%;">
 					<input type="text" id="DocNumber" name="DocNumber" style="width:82%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)" />
 				</td>
-				<td style="width:3%;">
+				<td style="width:6%;">
 					<spring:message code='ezApproval.t435'/> 
 				</td>
-				<td style="width:11%;">
+				<td style="width:25%;">
 					<input type="text" id="DocTitle" name="DocTitle" style="width:85%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>
 				</td>
-				<td style="width:4%; margin-bottom: 10px;">
+				<td style="width:7%; margin-bottom: 10px;">
 					<span id="topmenu" style="width: 500px">
 						<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezSystem.x0032'/></label>&nbsp;
 					</span>
 				</td>
-				<td style="width:18%; margin-bottom: 10px;">
+				<td style="width:31%; margin-bottom: 10px;">
 					<span id="topmenu" style="width: 500px">
 						<input type="text" id="startDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />&nbsp; ~ &nbsp;
 						<input type="text" id="endDatepicker" class="hasDatapicker" style="width:90px; text-align: center" readonly="readonly" />

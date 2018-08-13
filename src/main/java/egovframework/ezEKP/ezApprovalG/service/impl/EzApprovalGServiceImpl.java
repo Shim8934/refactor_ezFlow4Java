@@ -9859,7 +9859,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (dlength >= 2) {
 			String aprType = makeListField(docXML.getElementsByTagName("APRTYPE").item(0).getTextContent());
 			
-			if (!(aprType.equals(staATGyulJe) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATgian))) {
+			if (!(aprType.equals(staATGyulJe) || aprType.equals(staatwhoakin) || aprType.equals(staATSoonChaHyubJo) || aprType.equals(staATgian) || aprType.equals(staATgumto))) {
 				rtnVal = false;
 			}
 			

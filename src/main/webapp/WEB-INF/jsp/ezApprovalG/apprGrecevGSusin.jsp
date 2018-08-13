@@ -120,6 +120,7 @@
 		    var curDocNum = "";
 		    var isReceived = "${isReceived}";
 		    var orgCompanyID = "";
+		    var useReceiveDocNo = "${useReceiveDocNo}";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {

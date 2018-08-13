@@ -2991,6 +2991,32 @@
 	    			defaultIdx = defaultOpt.index;
     			}
     			
+    			/* 2018-08-13 홍승비 - 투표모듈 DatePicker 다국어 설정 추가 */
+    			var monthMsg = "<spring:message code='ezSchedule.t110' />";
+			    var monthStr = monthMsg.split(";");		    
+			    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+			    var dayStr = dayMsg.split(";");
+			    
+    			 $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		        	closeText: "<spring:message code='main.t3' />",
+		            prevText: "<spring:message code='main.t0604' />",
+		            nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+		            monthNames: monthStr,
+		            monthNamesShort: monthStr,
+		            dayNames: dayStr,
+		            dayNamesShort: dayStr,
+		            dayNamesMin: dayStr,
+		            weekHeader: 'Wk',
+		            dateFormat: 'yy-mm-dd',
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: 'show',
+		            showMonthAfterYear: true
+		        };
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+    			
     			$("#endDate").click(function() {
     				if($("#_dateTimePicker").css("display") == "none"){
 	    				$("#_dateTimePicker").css("display", "inline-block");

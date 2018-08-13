@@ -424,7 +424,7 @@
 			</table>
 		</div>
 		<div id="contentlist" style="width:100%; overflow: auto;">
-			<div style="width:100%; border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
+			<div>
 				<table class="mainlist" style="width:100%;">
 					<thead style="">
 						<tr>

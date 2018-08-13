@@ -172,7 +172,7 @@
             </div>
         </div>
 		<script type="text/javascript">
-// 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+ 		    selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 	</body>
 </html>

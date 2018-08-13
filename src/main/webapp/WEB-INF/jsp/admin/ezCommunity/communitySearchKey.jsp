@@ -251,7 +251,7 @@
 				<tr>
 					<th ><spring:message code = 'ezCommunity.t31' /></th>
 			  		<td>
-						<select id="QuerySelect" name="QuerySelect" style="vertical-align:middle; height: 22px; margin-left:2px;width:100px;">
+						<select id="QuerySelect" name="QuerySelect" style="vertical-align:middle; height: 22px; margin-left:2px;">
 							<option selected value="pCommunityName"><spring:message code = 'ezCommunity.t9991' /></option>
 							<option value="pCommuintyDesc" ><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></option>
 						</select>
@@ -270,7 +270,7 @@
 			
 			<br />
 			<div id="contentlist" style="width:100%; overflow: auto;">
-				<div style="border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
+				<div>
 					<table class="mainlist" style="width:100%">
 						<tr>
 							<th style="width:70px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>

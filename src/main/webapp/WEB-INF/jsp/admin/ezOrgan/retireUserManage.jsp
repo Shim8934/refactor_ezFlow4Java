@@ -452,7 +452,7 @@
 		  	<img src="/images/page_next.gif" align="absmiddle" id="Img1" style="cursor:pointer;" onClick="nextPage_onclick()"/>
 		</div> --%>
 		<div id="contentlist" style="width:100%; overflow: auto;">
-			<div style="border-right:1px solid #eaeaea;border-left:1px solid #eaeaea;">
+			<div>
 				<table class="mainlist" style="width:100%"> 
 					<!-- <form name="frmOutbox" action="BoardItemList.aspx" method="post"></form> -->
 				    	<tr>

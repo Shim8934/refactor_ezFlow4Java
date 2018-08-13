@@ -730,7 +730,7 @@
 		                break;
 
 		            case "boardwrite":
-		                var wWeight = "355";
+		                var wWeight = "460";
 		                var wHeight = "600";
 
 		                var heigth = window.screen.availHeight;

@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
@@ -57,6 +58,42 @@ public class EzTalkGateController {
     @Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
 	
+    @RequestMapping("/ezTalkGate/login.do")
+    @ResponseBody
+	public String ezTalkLogin(
+					@RequestParam String ezTalkId,
+					@RequestParam String ezTalkPw,
+					HttpServletRequest request,
+					HttpServletResponse response
+					) throws Exception {
+		logger.debug("ezTalkLogin started.");
+		String result = "FAIL";
+		
+		try {
+			String serverName = request.getServerName();
+	        int serverPort = request.getServerPort();
+	        int tenantId = loginService.getTenantId(serverName);
+	        logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
+			
+			String orgId = ezTalkGateUtil.decryptEzTalkAES(ezTalkId);
+			String orgPw = ezTalkGateUtil.decryptEzTalkAES(ezTalkPw);
+			logger.debug("orgId=" + orgId);
+			
+			boolean isUserExists = checkIfUserExists(orgId, orgPw, tenantId);
+			logger.debug("isUserExists=" + isUserExists);
+			
+			if (isUserExists) {
+				result = "OK";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = "ERROR";
+		}
+		
+		logger.debug("ezTalkLogin ended. result=" + result);
+		return result;
+    }
+    
 	@RequestMapping("/ezTalkGate/main.do")
 	public String ezTalkGateMain(
 					@RequestParam String ezTalkId,

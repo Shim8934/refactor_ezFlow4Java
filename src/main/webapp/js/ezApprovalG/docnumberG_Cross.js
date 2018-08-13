@@ -5,9 +5,16 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
         var fields = message.GetFieldsList();
         var name, docnumber;
         var rtnval;
-
-        name = pPrefix + "docnumber";
+        
+        name = pPrefix + "docnumber"	;
         var field = message.GetListItem(fields, name);
+        
+        // useReceiveDocNo NO일때 최종결재시 문서번호가 아니라 접수번호에 채번 추가
+        if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
+        	name = "receiptnumber";
+            field = message.GetListItem(fields, name);
+        }
+        
         if (!field) return true;
 
         fractionsymbol = field.textContent;
@@ -73,6 +80,11 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
         		message.DocumentBodySetAttribute("deptid", pDeptID);
         		
         		var field = message.GetListItem(fields, "enforcedate");
+        		
+        		if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
+                    field = message.GetListItem(fields, "receiptdate");
+                }
+        		
         		if (field) {
         			if (trim(field.textContent) == "") {
         				field.textContent = getGyulJeDate();
