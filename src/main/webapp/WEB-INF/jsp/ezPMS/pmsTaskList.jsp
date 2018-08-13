@@ -30,7 +30,7 @@ $(function() {
 	groupDetail = ${groupDetail};
 	
 	if (position == null || position == "") {	
-		setContentTitle(groupDetail.groupName, "${taskListCount}");
+		setContentTitle(MakeXMLString(groupDetail.groupName), "${taskListCount}");
 	} else { 
 		CurrentHeight = $(window).height() - 100;
 		$("MailListRayer").css("height", CurrentHeight + "px");
