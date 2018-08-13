@@ -84,17 +84,17 @@
 					var firstNode = "#" + folderId;
 					
 					$('#folderTree').jstree({
-						'plugins': [ "core", "types", "json_data", "themes", "ui","sort" ],
+						'plugins': [ "core", "types", "json_data", "themes", "ui" ],
 						'core': {
 							"animation": 0,
 							'data': data.data,
 							"multiple": false,
 							'themes': {
-								"theme": "default",
-								"dots": false,
+								"theme"		: "default",
+								"dots"		: false,
 								'responsive': false,
-								'variant': 'small',
-								'stripes': false
+								'variant'	: 'small',
+								'stripes'	: false
 							}
 						},
 						"types": {
@@ -103,8 +103,8 @@
 							}
 						},
 						"grid": {
-							"width": "20",
-							"margin-left": "10"
+							"width"			: "20",
+							"margin-left"	: "10"
 						}
 					}).on('changed.jstree', function(e, data) {
 						folderId = data.selected[0];
@@ -114,7 +114,6 @@
 						parent = data.node.original.parent;
 					});
 					
-					console.log(folderType);
 				},
 				error: function(error) {
 					alert("<spring:message code='ezWebFolder.t134' />" + error);
