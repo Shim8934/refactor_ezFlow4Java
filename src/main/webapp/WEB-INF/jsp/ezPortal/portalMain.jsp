@@ -103,8 +103,7 @@
 	        	var layerWidth =$("#layer-popup").css("width");
 	        		        
 	        	$(".memoListBox").css("width", layerWidth);
-				$(".memoListBox").css("height",winHeight - 56 - 60);
-				
+
 		    }
 		    
 		    $(function() {
