@@ -1951,7 +1951,6 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardVO.setWriterName("");
 		}
 		
-		// 여기에서 content-type 수정?
 		List<HashMap<String, Object>> boardThumbnailList = ezBoardService.getThumbnailList(boardListVO, boardVO);
 		
 		int dlength = boardThumbnailList.size();
@@ -2013,10 +2012,6 @@ public class EzBoardController extends EgovFileMngUtil{
 					} else {
 						resultXML.append("<DATA4>N</DATA4>");
 					}
-					// 파일패스단에서 수정??
-					
-					logger.debug("filepath      ::    " + boardThumbnailList.get(j).get("FILEPATH"));
-					
 					resultXML.append("<DATA5>" + boardThumbnailList.get(j).get("FILEPATH") + "</DATA5>");
 					
 					if (globals.getProperty("Globals.DbType").equals("oracle")) {

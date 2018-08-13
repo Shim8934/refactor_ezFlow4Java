@@ -100,7 +100,7 @@
                         /* 2018-07-12 홍승비 - 포탈 포틀릿 게시판 제목 특수문자 처리 */
                         var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("TITLE").item(0)));
                         listHTML += "<dt class='tit'><strong>" + DOCTITLE + "</strong></dt>";
-                        listHTML += "<dd class='photo'><img src='/images/" + strLang1_NewBoard + "/main/notice_pic.gif' width='83' height='54' alt=''></dd>";
+                        listHTML += "<dd class='photo'><img src='/images/" + strLang1_NewBoard + "/main/notice_pic.jpg' width='83' height='54' alt=''></dd>";
                         listHTML += "<dd id='content' class='txt'></dd>";
                         listHTML += "</dl>";
 
