@@ -35,6 +35,8 @@ var CabinetMessages = {
 	strSelect    : "캐비넷 선택하세요.",
 	strAdd       : "추가하였습니다.",
 	strRoot      : "최상위 캐비넷은 삭제할 수 없습니다.",
+	strRoot1     : "최상위 캐비넷은 수정할 수 없습니다.",
+	strRoot2     : "최상위 캐비넷은 복사/이동할 수 없습니다.",
 	strDel       : "삭제하였습니다.",
 	strMove      : "캐비넷 이동에 성공하셨습니다.",
 	strCopy      : "캐비넷 복사에 성공하셨습니다.",

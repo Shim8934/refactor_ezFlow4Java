@@ -273,7 +273,7 @@
 					var selectedNode = document.querySelector("span[class='selectedNode']");
 					
 					if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
-					if (selectedNode.getAttribute("level") == "0") {alert(CabinetMessages.strRoot); return;}
+					if (selectedNode.getAttribute("level") == "0") {alert(CabinetMessages.strRoot1); return;}
 					
 					document.getElementById("cabNameTxt1").value = selectedNode.getAttribute("name1");
 					document.getElementById("cabNameTxt2").value = selectedNode.getAttribute("name2");
@@ -296,7 +296,7 @@
 					var selectedNode = document.querySelector("span[class='selectedNode']");
 					
 					if (!selectedNode) {alert(CabinetMessages.strSelect); return;}
-					if (selectedNode.getAttribute("level") == "0") {alert(CabinetMessages.strRoot); return;}
+					if (selectedNode.getAttribute("level") == "0") {alert(CabinetMessages.strRoot2); return;}
 					
 					addFogPanel();
 					
