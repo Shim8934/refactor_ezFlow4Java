@@ -8,21 +8,21 @@
 	<title>Insert title here</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>></script>
-	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>></script>
-	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>></script>
+	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 	<!-- date Picker -->
-	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>></script>
-	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>></script>
-	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>></script>
-	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezOrgan/ListView_list.js")%>></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>" type="text/css">
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezOrgan/ListView_list.js")%>"></script>
 	<!-- time picker-->
 	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
-	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezWebFolder/popup.js")%>></script>
-	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezWebFolder/pageNav.js")%>></script>
-	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezWebFolder/adminTable.js")%>></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/popup.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/pageNav.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/adminTable.js")%>"></script>
 	<script type="text/javascript">
 		var lang      = ${lang};
 		var strErr    = "<spring:message code = 'ezWebFolder.t107'/>";
