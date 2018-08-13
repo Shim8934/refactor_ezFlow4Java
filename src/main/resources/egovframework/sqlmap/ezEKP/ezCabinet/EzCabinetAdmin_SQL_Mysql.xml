@@ -163,15 +163,13 @@
 		<![CDATA[select * from tbl_cb_admin_module where company_id = #companyId# and tenant_id = #tenantId# order by module_type desc]]>
 	</select>
 	
-	<insert id="EzCabinetAdminDAO.insertModulForAdmin" parameterClass="Map">
+	<insert id="EzCabinetAdminDAO.insertModulForAdmin" parameterClass="CompanyModuleVO">
 		insert into tbl_cb_admin_module (
 			company_id,  module_type,  active_status,  tenant_id
 		)
-		<iterate prepend="values" property="moduleList" conjunction=",">
-		(
-			#moduleList[].companyId#,  #moduleList[].moduleType#, #moduleList[].activeStatus#, #moduleList[].tenantId#
+		values (
+			#companyId#,  #moduleType#, #activeStatus#, #tenantId#
 		)
-		</iterate>
 	</insert>
 	
 	<update id="EzCabinetAdminDAO.saveModulesSetting">

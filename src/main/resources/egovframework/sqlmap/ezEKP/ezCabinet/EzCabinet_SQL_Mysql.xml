@@ -635,7 +635,7 @@
 	</select>
 	
 	<select id="EzCabinetDAO.getSharedUserList" resultMap="deptMemberInfo">
-		select
+		select distinct
 			u.cn                                                                 as cn,
 			case when #primary# = '1' then u.title else u.title2 end             as position,
 			case when #primary# = '1' then u.displayname else u.displayname2 end as display_name,
@@ -655,7 +655,6 @@
 					</iterate> and (s.shared_type = 0 or s.shared_type = 1)
 				)
 			)
-		group by u.cn, u.tenant_id
 		order by display_name desc
 	</select>
 	
@@ -1054,22 +1053,22 @@
 	************************************************************************************-->
 	
 	<select id="EzCabinetDAO.getUserInfoFromEmail" resultMap="simpleUserMailVO">
-			select
-				a.*
-			from
-				(
-					select
-						case when #primary# = '1' then u.displayname else u.displayname2 end as user_name,
-						u.mail                                                               as user_email
-					from tbl_usermaster u where u.tenant_id = #tenantId# and u.mail in
-						<iterate property="mailList" open="(" close=")" conjunction=",">#mailList[]#</iterate>
-					union
-					select 
-						case when #primary# = '1' then d.displayname else d.displayname2 end as user_name,
-						d.mail                                                               as user_email
-					from tbl_deptmaster d where d.tenant_id = #tenantId# and d.mail in
-						<iterate property="mailList" open="(" close=")" conjunction=",">#mailList[]#</iterate>
-				) a
+		select
+			a.*
+		from
+			(
+				select
+					case when #primary# = '1' then u.displayname else u.displayname2 end as user_name,
+					u.mail                                                               as user_email
+				from tbl_usermaster u where u.tenant_id = #tenantId# and u.mail in
+					<iterate property="mailList" open="(" close=")" conjunction=",">#mailList[]#</iterate>
+				union
+				select 
+					case when #primary# = '1' then d.displayname else d.displayname2 end as user_name,
+					d.mail                                                               as user_email
+				from tbl_deptmaster d where d.tenant_id = #tenantId# and d.mail in
+					<iterate property="mailList" open="(" close=")" conjunction=",">#mailList[]#</iterate>
+			) a
 	</select>
 	
 	<select id="EzCabinetDAO.getSimpleUserInfo" resultMap="simpleUserInfoVO">

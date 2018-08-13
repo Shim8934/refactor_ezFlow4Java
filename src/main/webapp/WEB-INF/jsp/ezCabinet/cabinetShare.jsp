@@ -68,9 +68,9 @@
 										<td class="box">
 											<div id="treeView" class="bnkOrgTree"></div>
 										</td>
-										<td class="listview" style="width: 440px" id="orglistView">
+										<td class="listview" id="orglistView">
 											<!-- 부서 정보 -->
-											<table style="margin-top: -1px;" class="cabOrganDeptTbl">
+											<table class="cabOrganDeptTbl">
 												<tr>
 													<th>
 														<span class="selectDeptNm">
@@ -81,7 +81,7 @@
 															<span id="imgSpanView"><img ${listType == 'IMG' ? "src='/images/kr/cm/btn_onimglist.gif' role='on'" : "src='/images/kr/cm/btn_imglist.gif' role='off'"} class="icon_btn" id="imglist"></span>
 														</span>
 													</th>
-												</tr>	
+												</tr>
 											</table>
 											
 											<div id="txtlist_Layer" class="cabOrganTextListDiv">
@@ -93,7 +93,7 @@
 													</tr>
 												</table>
 											</div>
-											<div id="tblPageRayer"></div>
+											<div id="tblPageRayer" class="cabpgshare"></div>
 										</td>
 									</tr>
 								</table>

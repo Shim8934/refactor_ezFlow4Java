@@ -20,8 +20,5 @@ public interface EzCabinetAdminService {
 	//Admin module functions
 	List<CabinetModuleVO> getModuleListForAdmin(String companyId, int tenantId) throws Exception;
 	void saveModulesSetting(JSONArray modules, String companyId, int tenantId) throws Exception;
-	
-	
-	
-
+	void insertModulForAdmin(List<CabinetModuleVO> listAllModule) throws Exception;
 }

@@ -49,8 +49,9 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezLadder/EzLadder_SQL_Oracle.xml"/>
      <!--업무일지 -->
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezJournal/EzJournal_SQL_Oracle.xml"/>
-    <!-- 케비닛 -->
-    <sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinet_SQL_Oracle.xml"/>
+	<!-- 케비닛 -->
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinet_SQL_Oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinet_SQL_Oracle_h.xml"/>
 
 	<!-- 2.관리자 모듈관리 SQL쿼리 XML -->
 	
@@ -77,5 +78,5 @@
 	<!-- 웹폴더 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezWebFolder/EzWebFolderAdmin_SQL_Oracle.xml"/>
 	<!-- 케비닛 -->
-    <sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinetAdmin_SQL_Oracle.xml"/>
+	<sqlMap resource="egovframework/sqlmap/ezEKP/ezCabinet/EzCabinetAdmin_SQL_Oracle.xml"/>
 </sqlMapConfig>

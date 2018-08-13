@@ -186,7 +186,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			
 			listAllModule.addAll(listModule);
 			map.put("moduleList", listAllModule);
-			ezCabinetAdminDAO.insertModulForAdmin(map);
+			cabinetAdminService.insertModulForAdmin(listAllModule);
 		}
 		else {
 			listActiveModule      = listAllModule.stream().filter(module -> module.getActiveStatus() == 1).collect(Collectors.toList());

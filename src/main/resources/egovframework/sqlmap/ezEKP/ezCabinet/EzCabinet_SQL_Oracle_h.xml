@@ -123,61 +123,70 @@
 	<select id="EzCabinetDAO_h.getDeptMemberList" resultMap="deptMemberInfo">
 		<![CDATA[
 			SELECT
-				AA.CN                  AS CN,
-				AA.POSITION            AS POSITION,
-				AA.DISPLAYNAME         AS DISPLAYNAME,
-				AA.DEPARTMENT          AS DEPARTMENT,
-				AA.DEPARTMENTNAME      AS DEPARTMENTNAME,
-				AA.TELEPHONENUMBER     AS TELEPHONENUMBER,
-				AA.MAIL                AS MAIL, 
-				AA.EXTENSIONATTRIBUTE2 AS USERIMAGE
-			FROM (
+				*
+			FROM
+				(
 				SELECT
-					CN                                                                                                                           AS CN,
-					CASE WHEN #primary# = '1'THEN TITLE ELSE TITLE2 END                                                                          AS POSITION,
-					CASE WHEN #primary# = '1'THEN DISPLAYNAME ELSE DISPLAYNAME2 END                                                              AS DISPLAYNAME,
-					CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
-					DEPARTMENT                                                                                                                   AS DEPARTMENT,
-					CASE WHEN #primary# = '1'THEN DESCRIPTION ELSE DESCRIPTION2 END                                                              AS DEPARTMENTNAME,
-					TELEPHONENUMBER                                                                                                              AS TELEPHONENUMBER,
-					MAIL                                                                                                                         AS MAIL,
-					EXTENSIONATTRIBUTE2                                                                                                          AS EXTENSIONATTRIBUTE2
+					k.*, ROWNUM AS RNUM
 				FROM
-					TBL_USERMASTER 
-				WHERE
-					DEPARTMENT = #deptId#
-				AND
-					CN != 'masteradmin'
-				AND
-					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
-				AND
-					TENANT_ID = #tenantId#
-					
-				UNION ALL
-				
-				SELECT
-					A.CN                                                                                                                         AS CN,
-					CASE WHEN #primary# = '1'THEN A.TITLE ELSE A.TITLE2 END                                                                      AS POSITION,
-					CASE WHEN #primary# = '1'THEN A.DISPLAYNAME ELSE A.DISPLAYNAME2 END                                                          AS DISPLAYNAME,
-					CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
-					A.DEPARTMENT                                                                                                                 AS DEPARTMENT,
-					CASE WHEN #primary# = '1'THEN A.DESCRIPTION ELSE A.DESCRIPTION2 END                                                          AS DEPARTMENTNAME,
-					A.TELEPHONENUMBER                                                                                                            AS TELEPHONENUMBER,
-					A.MAIL                                                                                                                       AS MAIL,
-					A.EXTENSIONATTRIBUTE2                                                                                                        AS EXTENSIONATTRIBUTE2
-				FROM
-					TBL_ADDJOBMASTER B
-				JOIN
-					TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
-				WHERE
-					B.DEPTID = #deptId#
-				AND
-					B.TENANT_ID = #tenantId#
-			) AA
-			ORDER BY
-				EXTENSIONATTRIBUTE15 ASC,
-				DISPLAYNAME ASC
-			LIMIT #startPoint#, #listCount#
+					(
+						SELECT
+							AA.CN                  AS CN,
+							AA.POSITION            AS POSITION,
+							AA.DISPLAYNAME         AS DISPLAYNAME,
+							AA.DEPARTMENT          AS DEPARTMENT,
+							AA.DEPARTMENTNAME      AS DEPARTMENTNAME,
+							AA.TELEPHONENUMBER     AS TELEPHONENUMBER,
+							AA.MAIL                AS MAIL, 
+							AA.EXTENSIONATTRIBUTE2 AS USERIMAGE
+						FROM (
+							SELECT
+								CN                                                                                                                     AS CN,
+								CASE WHEN #primary# = '1'THEN TITLE ELSE TITLE2 END                                                                    AS POSITION,
+								CASE WHEN #primary# = '1'THEN DISPLAYNAME ELSE DISPLAYNAME2 END                                                        AS DISPLAYNAME,
+								CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))), NVL(EXTENSIONATTRIBUTE15, '0'))           AS EXTENSIONATTRIBUTE15,
+								DEPARTMENT                                                                                                             AS DEPARTMENT,
+								CASE WHEN #primary# = '1'THEN DESCRIPTION ELSE DESCRIPTION2 END                                                        AS DEPARTMENTNAME,
+								TELEPHONENUMBER                                                                                                        AS TELEPHONENUMBER,
+								MAIL                                                                                                                   AS MAIL,
+								EXTENSIONATTRIBUTE2                                                                                                    AS EXTENSIONATTRIBUTE2
+							FROM
+								TBL_USERMASTER 
+							WHERE
+								DEPARTMENT = #deptId#
+							AND
+								CN != 'masteradmin'
+							AND
+								CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+							AND
+								TENANT_ID = #tenantId#
+								
+							UNION ALL
+							
+							SELECT
+								A.CN                                                                                                                   AS CN,
+								CASE WHEN #primary# = '1'THEN A.TITLE ELSE A.TITLE2 END                                                                AS POSITION,
+								CASE WHEN #primary# = '1'THEN A.DISPLAYNAME ELSE A.DISPLAYNAME2 END                                                    AS DISPLAYNAME,
+								CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))), NVL(EXTENSIONATTRIBUTE15, '0'))           AS EXTENSIONATTRIBUTE15,
+								A.DEPARTMENT                                                                                                           AS DEPARTMENT,
+								CASE WHEN #primary# = '1'THEN A.DESCRIPTION ELSE A.DESCRIPTION2 END                                                    AS DEPARTMENTNAME,
+								A.TELEPHONENUMBER                                                                                                      AS TELEPHONENUMBER,
+								A.MAIL                                                                                                                 AS MAIL,
+								A.EXTENSIONATTRIBUTE2                                                                                                  AS EXTENSIONATTRIBUTE2
+							FROM
+								TBL_ADDJOBMASTER B
+							JOIN
+								TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+							WHERE
+								B.DEPTID = #deptId#
+							AND
+								B.TENANT_ID = #tenantId#
+						) AA
+						ORDER BY
+							EXTENSIONATTRIBUTE15 ASC,
+							DISPLAYNAME ASC
+				) k WHERE ROWNUM <= #startPoint# + #listCount#
+			) WHERE RNUM >= #startPoint# + 1
 		]]>
 	</select>
 	
@@ -218,40 +227,49 @@
 	<select id="EzCabinetDAO_h.getSearchMemberList" resultMap="deptMemberInfo">
 		<![CDATA[
 			SELECT
-				AA.CN                  AS CN,
-				AA.POSITION            AS POSITION,
-				AA.DISPLAYNAME         AS DISPLAYNAME,
-				AA.DEPARTMENT          AS DEPARTMENT,
-				AA.DEPARTMENTNAME      AS DEPARTMENTNAME,
-				AA.TELEPHONENUMBER     AS TELEPHONENUMBER,
-				AA.MAIL                AS MAIL, 
-				AA.EXTENSIONATTRIBUTE2 AS USERIMAGE
-			FROM (
+				*
+			FROM
+				(
 				SELECT
-					CN                                                                                                                           AS CN,
-					CASE WHEN #primary# = '1'THEN TITLE ELSE TITLE2 END                                                                          AS POSITION,
-					CASE WHEN #primary# = '1'THEN DISPLAYNAME ELSE DISPLAYNAME2 END                                                              AS DISPLAYNAME,
-					CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
-					DEPARTMENT                                                                                                                   AS DEPARTMENT,
-					CASE WHEN #primary# = '1'THEN DESCRIPTION ELSE DESCRIPTION2 END                                                              AS DEPARTMENTNAME,
-					TELEPHONENUMBER                                                                                                              AS TELEPHONENUMBER,
-					MAIL                                                                                                                         AS MAIL,
-					EXTENSIONATTRIBUTE2                                                                                                          AS EXTENSIONATTRIBUTE2
+					k.*, ROWNUM AS RNUM
 				FROM
-					TBL_USERMASTER 
-				WHERE
-					CN != 'masteradmin'
-				AND
-					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
-				AND
-					TENANT_ID = #tenantId#
-				AND
-					$srchOption$ LIKE CONCAT('%', #srchValue#, '%')
-			) AA
-			ORDER BY
-				EXTENSIONATTRIBUTE15 ASC,
-				DISPLAYNAME ASC
-			LIMIT #startPoint#, #listCount#
+					(
+						SELECT
+							AA.CN                  AS CN,
+							AA.POSITION            AS POSITION,
+							AA.DISPLAYNAME         AS DISPLAYNAME,
+							AA.DEPARTMENT          AS DEPARTMENT,
+							AA.DEPARTMENTNAME      AS DEPARTMENTNAME,
+							AA.TELEPHONENUMBER     AS TELEPHONENUMBER,
+							AA.MAIL                AS MAIL, 
+							AA.EXTENSIONATTRIBUTE2 AS USERIMAGE
+						FROM (
+							SELECT
+								CN                                                                                                                           AS CN,
+								CASE WHEN #primary# = '1'THEN TITLE ELSE TITLE2 END                                                                          AS POSITION,
+								CASE WHEN #primary# = '1'THEN DISPLAYNAME ELSE DISPLAYNAME2 END                                                              AS DISPLAYNAME,
+								CONCAT(SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))), NVL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
+								DEPARTMENT                                                                                                                   AS DEPARTMENT,
+								CASE WHEN #primary# = '1'THEN DESCRIPTION ELSE DESCRIPTION2 END                                                              AS DEPARTMENTNAME,
+								TELEPHONENUMBER                                                                                                              AS TELEPHONENUMBER,
+								MAIL                                                                                                                         AS MAIL,
+								EXTENSIONATTRIBUTE2                                                                                                          AS EXTENSIONATTRIBUTE2
+							FROM
+								TBL_USERMASTER 
+							WHERE
+								CN != 'masteradmin'
+							AND
+								CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+							AND
+								TENANT_ID = #tenantId#
+							AND
+								$srchOption$ LIKE ||('%', #srchValue#, '%')
+						) AA
+						ORDER BY
+							EXTENSIONATTRIBUTE15 ASC,
+							DISPLAYNAME ASC
+				) k WHERE ROWNUM <= #startPoint# + #listCount#
+			) WHERE RNUM >= #startPoint# + 1
 		]]>
 	</select>
 	
@@ -271,7 +289,7 @@
 				AND
 					TENANT_ID = #tenantId#
 				AND 
-					$srchOption$ LIKE CONCAT('%', #srchValue#, '%')
+					$srchOption$ LIKE ||('%', #srchValue#, '%')
 			) AA
 		]]>
 	</select>
@@ -304,7 +322,7 @@
 				where s.cabinet_id = #cabinetId# and s.sharer_id = #userId# and s.tenant_id = #tenantId# and s.use_status = 1
 		]]>
 		<isNotEmpty property="searchValue" prepend="and">
-			$sqlQuery$ LIKE CONCAT('%', #searchValue#, '%')
+			$sqlQuery$ LIKE ||('%', #searchValue#, '%')
 		</isNotEmpty>
 		<![CDATA[
 				union
@@ -322,7 +340,7 @@
 				where s1.cabinet_id = #cabinetId# and s1.sharer_id = #userId# and s1.tenant_id = #tenantId# and s1.use_status = 1
 		]]>
 		<isNotEmpty property="searchValue" prepend="and">
-			$sqlQuery$ LIKE CONCAT('%', #searchValue#, '%')
+			$sqlQuery$ LIKE ||('%', #searchValue#, '%')
 		</isNotEmpty>
 		<![CDATA[
 			) s2
@@ -339,21 +357,22 @@
 	</update>
 	
 	<select id="EzCabinetDAO_h.getMaximumShareId" resultClass="Integer">
-		<![CDATA[select ifnull(max(share_id), 0) from tbl_cb_share where tenant_id = #tenantId#]]>
+		<![CDATA[select nvl(max(share_id), 0) from tbl_cb_share where tenant_id = #tenantId#]]>
 	</select>
 	
 	<insert id="EzCabinetDAO_h.saveShareUserList">
 		<selectKey keyProperty="temp" resultClass="Integer">
-			<![CDATA[ select 1 from dual where not exists (select share_id, cabinet_id from tbl_cb_share where cabinet_id = #cabinetId# and sharer_id = #userId# and shared_id = #sharedId# and shared_type = #shareType# and tenant_id = #tenantId#) ]]>
+			<![CDATA[ select 1 from dual where not exists (select share_id, cabinet_id from tbl_cb_share where cabinet_id = #cabinetId# and sharer_id = #userId# and shared_id = #sharedId# and shared_type = #shareType# and tenant_id = #tenantId#)]]>
 		</selectKey>
 		<isEqual property="temp" compareValue="1">
-			<![CDATA[insert into tbl_cb_share (
+			<![CDATA[
+				insert into tbl_cb_share (
 					share_id,   cabinet_id,  sharer_id,        sharer_name1, sharer_name2, shared_id,  shared_type, 
 					permission, share_date,  child_permission, use_status,   company_id,   tenant_id
 				)
 				values (
 					#shareId#,    #cabinetId#, #userId#,          #userName1#, #userName2#, #sharedId#, #shareType#,
-					#permission#, #shareDate#, #childPermission#, 1,           #company#,   #tenantId#
+					#permission#, to_date(#shareDate#, 'YYYY-MM-DD HH24:MI:SS'), #childPermission#, 1,           #company#,   #tenantId#
 				)
 			]]>
 		</isEqual>
@@ -366,15 +385,7 @@
 					permission       = #permission#,
 					child_permission = #childPermission#
 				where
-					cabinet_id  = #cabinetId#
-				and
-					sharer_id   = #userId#
-				and
-					shared_id   = #sharedId#
-				and 
-					shared_type = #shareType#
-				and
-					tenant_id   = #tenantId#
+					cabinet_id = #cabinetId# and sharer_id = #userId# and shared_id = #sharedId# and shared_type = #shareType# and tenant_id = #tenantId#
 			]]>
 		</isNotEqual>
 	</insert>
@@ -398,17 +409,15 @@
 				i.department_name1                                                      as department_name1,
 				i.department_name2                                                      as department_name2,
 				i.content_path                                                          as content_path,
-				date_add(i.create_date, interval #offset# minute)                       as create_date,
-				date_add(i.update_date, interval #offset# minute)                       as update_date,
-				i.create_date                                                           as create_date,
-				i.update_date                                                           as update_date,
+				(i.create_date + #offset#/(24*60))                                      as create_date,
+				(i.update_date + #offset#/(24*60))                                      as update_date,
 				i.use_status                                                            as use_status,
 				i.update_id                                                             as update_id,
 				i.delete_id                                                             as delete_id,
 				i.company_id                                                            as company_id,
 				i.tenant_id                                                             as tenant_id,
 				case when #primary# = '1' then i.creator_name1 else i.creator_name2 end as creator_name,
-				ifnull ((select sum(f.file_size) from tbl_cb_attach_file f where f.item_id = i.item_id and f.tenant_id = i.tenant_id), 0) as item_size
+				nvl ((select sum(f.file_size) from tbl_cb_attach_file f where f.item_id = i.item_id and f.tenant_id = i.tenant_id), 0) as item_size
 			from
 				tbl_cb_item i
 			where
@@ -435,10 +444,7 @@
 				tbl_cb_item i
 			on
 				r.relate_item_id = i.item_id and r.tenant_id = i.tenant_id
-			where
-				r.item_id = #itemId#
-			and
-				r.tenant_id = #tenantId#
+			where r.item_id = #itemId# and r.tenant_id = #tenantId#
 		]]>
 	</select>
 	
@@ -449,7 +455,7 @@
 			set
 				title       = #title#,
 				summary     = #summary#,
-				update_date = #updatedDate#,
+				update_date = to_date(#updatedDate#, 'YYYY-MM-DD HH24:MI:SS'),
 				update_id   = #updateId#
 			where
 				item_id = #itemId# and tenant_id = #tenantId#

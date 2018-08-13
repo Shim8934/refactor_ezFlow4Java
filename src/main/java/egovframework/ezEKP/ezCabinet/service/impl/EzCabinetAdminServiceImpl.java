@@ -112,14 +112,12 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 			result.add(new CabinetModuleVO(companyId, "addrs" , 0, tenantId));
 			result.add(new CabinetModuleVO(companyId, "jounl" , 0, tenantId));
 			
-			map.put("moduleList", result);
-			
-			ezCabinetAdminDAO.insertModulForAdmin(map);
+			insertModulForAdmin(result);
 		}
 		
 		return result;
 	}
-
+	
 	@Override
 	public void saveModulesSetting(JSONArray modules, String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -136,7 +134,7 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 			ezCabinetAdminDAO.saveModulesSetting(map);
 		}
 	}
-
+	
 	@Override
 	public UserCapacityVO getUserCapacity(String userId, String companyId, String primary, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -147,5 +145,11 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 		
 		return ezCabinetAdminDAO.getUserCapacity(map);
 	}
-
+	
+	@Override
+	public void insertModulForAdmin(List<CabinetModuleVO> listAllModule) throws Exception {
+		for (CabinetModuleVO module : listAllModule) {
+			ezCabinetAdminDAO.insertModulForAdmin(module);
+		}
+	}
 }

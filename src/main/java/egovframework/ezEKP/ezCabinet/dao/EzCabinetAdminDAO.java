@@ -35,8 +35,8 @@ public class EzCabinetAdminDAO extends EgovAbstractDAO {
 		return (List<CabinetModuleVO>)list("EzCabinetAdminDAO.getModuleListForAdmin", map);
 	}
 
-	public void insertModulForAdmin(Map<String, Object> map) {
-		insert("EzCabinetAdminDAO.insertModulForAdmin", map);
+	public void insertModulForAdmin(CabinetModuleVO module) {
+		insert("EzCabinetAdminDAO.insertModulForAdmin", module);
 	}
 
 	public void saveModulesSetting(Map<String, Object> map) {
