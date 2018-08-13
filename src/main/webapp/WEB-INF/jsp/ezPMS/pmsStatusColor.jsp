@@ -8,7 +8,7 @@
 		<title><spring:message code="ezTask.t91" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
 	    <link rel="stylesheet" href='<spring:message code="ezTask.e2" />' type="text/css" />
-	    <link rel="stylesheet" href="/css/jquery-hex-colorpicker.css" type="text/css" />
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/jquery-hex-colorpicker.css")%>" type="text/css" />
 	    <script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>

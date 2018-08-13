@@ -9,12 +9,14 @@
 		<title><spring:message code='ezPMS.t151' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<link rel="stylesheet" href="/css/ezPMS/gantt/platform.css" type="text/css">
-		<link rel="stylesheet" href="/js/ezPMS/gantt/libs/jquery/dateField/jquery.dateField.css" type="text/css">
-		<link rel="stylesheet" href="/css/ezPMS/gantt/gantt.css" type="text/css">
-		<link rel="stylesheet" href="/css/ezPMS/gantt/ganttPrint.css" type="text/css" media="print">
+		
 		<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css" />
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPMS/pms.css")%>" type="text/css" />
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css" />
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPMS/gantt/platform.css")%>" type="text/css" />
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/libs/jquery/dateField/jquery.dateField.css")%>" type="text/css" />
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPMS/gantt/gantt.css")%>" type="text/css" />
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPMS/gantt/ganttPrint.css")%>" type="text/css" media="print"/>
 		
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
@@ -43,7 +45,7 @@
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/ganttMaster.js")%>"></script>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/common.js")%>"></script>
 		
-		<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
+		
 	   	<script type="text/javascript">
 	   		// 프로젝트 아이디
 	   		var projectId = "<c:out value='${projectId}'/>";

@@ -4,13 +4,15 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
+
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.css")%>" type="text/css" />
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/common.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/jstree.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.js")%>"></script>
-<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+
 <script>
 	var boardDetail;
 	var CurrentHeight = document.documentElement.clientHeight - 100;

@@ -7,7 +7,7 @@
 	<head>
 		<title>left_Top</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="<spring:message code="ezJournal.c1" />" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 		<script type="text/javascript">

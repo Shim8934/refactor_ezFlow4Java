@@ -9,17 +9,16 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezPMS.t89' /></title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
-<link rel="stylesheet" href="/css/ezPMS/default/style.css"
-	type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPMS/default/style.css")%>" type="text/css" />
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/jstree.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/common.js")%>"></script>
 <!-- date picker -->
-<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
-<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.css")%>" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>" type="text/css" />
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.js")%>"></script>

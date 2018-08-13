@@ -9,8 +9,8 @@
 		<title><spring:message code='ezPMS.t330' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css" />
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css" />
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/jstree/style.css")%>" type="text/css" />
 
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>

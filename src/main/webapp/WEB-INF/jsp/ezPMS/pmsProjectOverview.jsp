@@ -11,10 +11,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t66' /></title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
-<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
-<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
-<link rel="stylesheet" href="/css/ezPMS/pms.css" type="text/css">
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezTask/circularProgressBar.css")%>" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/jquery.lineProgressbar.css")%>" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPMS/pms.css")%>" type="text/css" />
 
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/common.js")%>"></script>

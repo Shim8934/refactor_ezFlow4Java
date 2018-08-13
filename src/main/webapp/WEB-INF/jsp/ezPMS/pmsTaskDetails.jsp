@@ -19,10 +19,10 @@
 
 
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
-<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
-<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
-<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/jquery.lineProgressbar.css")%>" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezTask/circularProgressBar.css")%>" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.css")%>" type="text/css" />
 
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>

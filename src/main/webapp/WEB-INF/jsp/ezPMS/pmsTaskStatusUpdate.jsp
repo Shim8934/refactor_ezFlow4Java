@@ -9,10 +9,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezPMS.t175' /></title>
 <link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
-<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
-<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
-<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/jquery.lineProgressbar.css")%>" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezTask/circularProgressBar.css")%>" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.css")%>" type="text/css" />
 
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
@@ -22,9 +22,9 @@
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezTask/jquery.lineProgressbar.js")%>"></script>
 
 <!-- time picker-->
-<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
-<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.css")%>" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>" type="text/css" />
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.js")%>"></script>

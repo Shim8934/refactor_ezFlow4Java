@@ -8,17 +8,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="text/javascript" src="/js/mouseeffect.js"></script>
-<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />"
-	type="text/css">
-<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="/css/jquery.lineProgressbar.css"
-	type="text/css">
+<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/previewmail.css")%>" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/jquery.lineProgressbar.css")%>" type="text/css" />
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.css")%>" type="text/css" />
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezTask/jquery.lineProgressbar.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezBoard/ListView_list.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.js")%>"></script>
-<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+
 <title><spring:message code='ezPMS.t142' /></title>
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 100;
