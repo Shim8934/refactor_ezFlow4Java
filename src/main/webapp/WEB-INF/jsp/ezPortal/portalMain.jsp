@@ -44,7 +44,7 @@
 			#textarea{padding-left:10px;padding-right:10px;width:100%;height:95%;margin-left:-3px;overflow-y:auto;}
 			/* .detailMemo{border: 1px solid black;width: 400px;center;height: 400px;float: center;margin: 0 auto; padding-top: 30px;overflow:hidden; } */
 			.detailMemo{border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; padding-top: 30px;overflow:hidden; z-index:9001; position: absolute; }
-			.memo-text{margin-top:10px; padding-left:11px; padding-right:10px; border:0px; width:90%; height:88%; resize:none; overflow-y:auto;}
+			.memo-text{margin-top:10px; padding-left:11px; padding-right: 25px; border:0px; width:100%; height:81%; resize:none; overflow-y:scroll; padding-bottom:5px;}
 			.memo-color{ padding:0px; /* margin-left:1px; margin-right:1px;  */box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;}
 			.memo-color-list { display:inline-block; width:16.5%; height:100%; text-align:center; float:left;}
 			.ui-resizable-se { background-image: url("");}
