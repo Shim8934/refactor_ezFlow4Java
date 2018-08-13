@@ -29,10 +29,10 @@
 			}
 
 			#open-memo { width:60px; height:60px; position: absolute; z-index: 1000; cursor: pointer; background-color: white; text-align: center;}
-/* 			.individual-memo { width:200px; height:200px; background:url('/images/ezMemo/background.gif') repeat-x; background-size:200px 190px;text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 20px 55px 20px 55px;} */
+ 			/* .individual-memo { width:200px; height:200px; background:url('/images/ezMemo/background.gif') repeat-x; background-size:200px 190px;text-align:center; border:1px solid black; cursor: pointer; float: left; margin: 20px 55px 20px 55px;} */
 			.individual-memo { width:200px; height:200px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }
 			#layer-popup{float:right; background:white; position:absolute; text-align:center; border:1px solid black; z-index: 1001; background-color: rgba(231,231,231,1);overflow:hidden; height: 50%;min-height: 270px; min-width: 270px; }
-			#selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;}
+			/* #selected-memo { position:absolute;z-index:9001; top:48px; left:36px; display:table;} */
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
 			#maskDiv { position:absolute; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);}
 			.selected-memoWrapper {display:table-cell;vertical-align:middle;}
@@ -42,7 +42,8 @@
 			.ui-widget-header{background: #0470e4}
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
 			#textarea{padding-left:10px;padding-right:10px;width:100%;height:95%;margin-left:-3px;overflow-y:auto;}
-			.detailMemo{border: 1px solid black;width: 400px;center;height: 400px;float: center;margin: 0 auto; padding-top: 30px;overflow:hidden; }
+			/* .detailMemo{border: 1px solid black;width: 400px;center;height: 400px;float: center;margin: 0 auto; padding-top: 30px;overflow:hidden; } */
+			.detailMemo{border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; padding-top: 30px;overflow:hidden; z-index:9001; position: absolute; }
 			.memo-text{margin-top:10px; padding-left:11px; padding-right:10px; border:0px; width:90%; height:88%; resize:none; overflow-y:auto;}
 			.memo-color{ padding:0px; /* margin-left:1px; margin-right:1px;  */box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;}
 			.memo-color-list { display:inline-block; width:16.5%; height:100%; text-align:center; float:left;}
@@ -89,30 +90,7 @@
 				var opendMemo = $("#selected-memo");
 				
 				memoBtn.css({"top" : winHeight - 80, "left" : winWidth - 100});
-				//opendMemo.css({"top": 50, "left": 50});
 		    }
-		    
-		    /* function changSizeOfLayer() {
-		    	var winHeight = window.innerHeight;
-				var winWidth = window.innerWidth;
-		    	
-				var layerHalf = $(".layer-half");
-				var layerWhole = $(".layer-whole");
-		    	var maskDiv = $("#maskDiv");
-				var className = $("#layer-popup").attr("class");
-	        	var opendMemo = $("#selected-memo");
-	        	
-	        	layerWhole.css({"top":65, "left": winWidth/2, "right" : 10, "width" : winWidth/2 - 20, "height":winHeight - 56 - 30});
-	        	layerHalf.css({"top":65, "left": 10, "right" : 20, "width" : winWidth - 30, "height":winHeight - 56 - 30});
-
-				if (className.indexOf("layer-half") != -1) {
-	        		$("#layer-popup").removeClass().addClass("layer-whole");
-	        	} else if (className.indexOf("layer-whole") != -1) {
-	        		$("#layer-popup").removeClass().addClass("layer-half");
-	        	}
-				setSizeOfLayer();
-				$(".memoListBox").css("height",winHeight - 56 - 60);
-		    } */
 		    
 		    function setSizeOfLayer() {
 		    	var winHeight = window.innerHeight;
@@ -193,9 +171,26 @@
 		        }); */
 
 		        
-		        $("#layer-popup, .detailMemo").resizable({
+		        $("#layer-popup").resizable({
 		        	handles : "n, e, s, w, ne, se, sw, nw",
 		        	containment:".noteBlock"
+		        });
+		        
+		        $(".detailMemo").resizable({
+		        	handles : "n, e, s, w, ne, se, sw, nw",
+		        	containment:".noteBlock",
+		        	minWidth: 270,
+		        	minHeight: 270,
+		        	stop : function () {
+		        		var detailWidth = $(".detailMemo").width();
+		        		var detailHeight = $(".detailMemo").height();
+		        		
+		        		if (detailWidth == 270 || detailHeight == 270) {
+		        			alert("최소 사이즈입니다.");
+		        		}
+		        		
+		        		
+		        	}
 		        });
 		        
 		        $("#layer-popup").resize(function(e) {
@@ -239,10 +234,10 @@
 		        	}
 		       	});
 		     
-		        $('#layer-popup, #selected-memo').on("mouseup", function() {
+		        $('#layer-popup, .detailMemo').on("mouseup", function() {
 		        	$(".noteBlock").css("pointer-events", "none");
 		        	$("#open-memo").css("pointer-events", "auto");
-		        	$("#layer-popup, #selected-memo").css("pointer-events", "auto");
+		        	$("#layer-popup, .detailMemo").css("pointer-events", "auto");
 		        }).on("mousedown", function() {
 		        	$(".noteBlock").css("pointer-events", "auto");
 		       	}).draggable({
@@ -250,7 +245,7 @@
 	        		stop:function(){
 	        			$(".noteBlock").css("pointer-events", "none");
 			        	$("#open-memo").css("pointer-events", "auto");
-			        	$("#layer-popup, #selected-memo").css("pointer-events", "auto");		
+			        	$("#layer-popup, .detailMemo").css("pointer-events", "auto");		
 	        		} 
 		       	});
 			}
@@ -361,7 +356,7 @@
 			    	var textColor = $(this).children("textarea").css("background-color");
 			    	
 		        	$("#maskDiv").css("display", "");
-			        $("#selected-memo").css("display", "");
+			        $(".detailMemo").css("display", "");
 					$("#textarea").css("font-size", "15px");
 					$("#textarea").css("background-color", textColor);
 					$("#textarea").css("border-color", textColor);
@@ -421,9 +416,9 @@
 			</div>
 			
 			<!-- 하나 클릭 -->
-			<div id="selected-memo" style="display: none">
-				<div class="selected-memoWrapper">
-					<div class="detailMemo">
+			<!-- <div id="selected-memo" style="display: none; ">
+				<div class="selected-memoWrapper"> -->
+					<div class="detailMemo" style="display: none">
 						<div id="memo-btn">
 							<button id="save" onclick="save()">저장</button> 
 							<button onclick="closeMemo()">닫기</button>
@@ -434,8 +429,8 @@
 				        </div>
 						<textarea id="textarea" style="resize:none;"></textarea>
 		        	</div>
-				</div>
-			</div>
+				<!-- </div>
+			</div> -->
 			
 			<div id="open-memo" style="display: none;"><img src="/images/cmtFile.png" width="60px"></div>
 		</div>
