@@ -409,7 +409,7 @@
 					<td style="width: 3%;"><spring:message code='ezAttitude.t10' /></td>
 					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%"><spring:message code='ezAttitude.t134' /></td>
-					<td style="width: 12%;"><select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;"></select></td>
+					<td style="width: 12%;"><select name="searchAttitudeType" id="searchAttitudeType" style="padding-right:50px;height:24px"></select></td>
 				</tr>
 				<tr>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td>
@@ -420,10 +420,10 @@
 						<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
 					</td>
 					<td style="width: *;" colspan=2>
-						<a class="imgbtn"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.t121' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="addAtt();"><spring:message code='ezAttitude.t51' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchAttitudeCheckList('search');"><spring:message code='ezAttitude.t121' /></span></a>
+						<a class="imgbtn"><span onclick="searchAttitudeCheckList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
+						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
+						<a class="imgbtn"><span onclick="addAtt();"><spring:message code='ezAttitude.t51' /></span></a>
 						
 					</td>
 				</tr>

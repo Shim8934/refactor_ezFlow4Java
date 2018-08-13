@@ -358,10 +358,10 @@
 						<span id="topmenu"><input id="searchStartTime" type="text" style="width:50px; text-align:center;"/>&nbsp; ~ &nbsp;<input id="searchEndTime" type="text" style="width:50px; text-align:center;"/></span>
 					</td>
 					<td style=" width:*;" colspan=2>
-						<a class="imgbtn"><span onclick="searchUserConfList('search');"><spring:message code='ezAttitude.t121' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="searchUserConfList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="editUserConfList();"><spring:message code='ezAttitude.t123' /></span></a>&nbsp;
-						<a class="imgbtn"><span onclick="editDeptConfList();"><spring:message code='ezAttitude.t225' /></span></a>&nbsp;
+						<a class="imgbtn"><span onclick="searchUserConfList('search');"><spring:message code='ezAttitude.t121' /></span></a>
+						<a class="imgbtn"><span onclick="searchUserConfList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
+						<a class="imgbtn"><span onclick="editUserConfList();"><spring:message code='ezAttitude.t123' /></span></a>
+						<a class="imgbtn"><span onclick="editDeptConfList();"><spring:message code='ezAttitude.t225' /></span></a>
 					</td>
 				</tr>
 			</tbody>

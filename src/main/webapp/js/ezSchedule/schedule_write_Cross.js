@@ -548,6 +548,8 @@ function check_name(type) {
                 for (var j = 0; j < length; j++) {
                     if (g_attendant["id"][j] == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0])) {
                         alert(strLang22);
+                        //2018-08-10 김보미
+                        document.getElementById("receiverinput").value = "";
                         return;
                     }
                 }
@@ -601,6 +603,9 @@ function check_name_Complete(rgParams) {
             for (var j = 0; j < length; j++) {
                 if (g_attendant["id"][j] == rgParams["id"]) {
                     alert(strLang22);
+                  	//2018-08-10 김보미
+                    document.getElementById("receiverinput").value = "";
+                    document.getElementById("receiverinput").focus();
                     return;
                 }
             }

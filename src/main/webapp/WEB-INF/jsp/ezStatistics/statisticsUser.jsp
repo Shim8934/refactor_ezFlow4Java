@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -6,21 +7,21 @@
 		<title><spring:message code='ezStatistics.t1041'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <link rel="stylesheet" href="<spring:message code='ezStatistics.e2'/>" type="text/css" />
-	    <link rel="stylesheet" href="/js/ezStatistics/js/jquery.jqplot.min.css" type="text/css">
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jquery.jqplot.min.css")%>" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-	    <link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>">
 	    <script type="text/javascript" src="<spring:message code='ezStatistics.e1'/>"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/ezStatistics/control_Cross/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezStatistics/control_Cross/ListView_list.js"></script>
-	    <script src="/js/ezStatistics/js/raphael-min.js" type="text/javascript" charset="utf-8"></script>
-	    <script src="/js/ezStatistics/js/g.raphael.js" type="text/javascript" charset="utf-8"></script>
-	    <script src="/js/ezStatistics/js/g.pie.js" type="text/javascript" charset="utf-8"></script>
-	    <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-	    <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/control_Cross/TreeView.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/control_Cross/ListView_list.js")%>"></script>
+	    <script src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/raphael-min.js")%>" type="text/javascript" charset="utf-8"></script>
+	    <script src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/g.raphael.js")%>" type="text/javascript" charset="utf-8"></script>
+	    <script src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/g.pie.js")%>" type="text/javascript" charset="utf-8"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
 	    <script type="text/javascript">
 	        var xmlHttp = createXMLHttpRequest();
 
@@ -609,23 +610,23 @@
 	     <table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2; margin-bottom: 5px">
 	         <tr>
 	             <td style="width: 99%">
-	                 <span id="topmenu" style="float: left; width: 500px"><spring:message code='ezStatistics.t1002'/> : 
+	                 <span id="topmenu" style="float: left; width: 500px">&nbsp;<spring:message code='ezStatistics.t1002'/> : 
 	       <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" onchange="getapprovalstatistics()" readonly="readonly">
 	                     ~ 
 	             <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" onchange="getapprovalstatistics()" readonly="readonly">
 	                     &nbsp;&nbsp;
-	             <select id="searchopt">
+	             <select id="searchopt" style="height:24px">
 	                 <option value="1"><spring:message code='ezStatistics.t1017'/></option>
 	                 <option value="2"><spring:message code='ezStatistics.t113'/></option>
 	             </select>
 	                     <input id="keyword" type="text" style="width: 100px;" onkeypress="search_press(event)" />
-	                     <a class="imgbtn" style="vertical-align: middle"><span onclick="search()"><spring:message code='ezStatistics.t36'/></span></a>
+	                     <a class="imgbtn" style="vertical-align: middle;height:22px"><span onclick="search()"><spring:message code='ezStatistics.t36'/></span></a>
 	                 </span>
 	             </td>
 	             <td>
 	                 <div id="mainmenu" style="float: right; height: 28px;margin:3px 0px !important">
 	                     <ul>
-	                         <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
+	                         <li><span style="width: 110px;text-align:center;background-color: white" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
 	                     </ul>
 	                 </div>
 	             </td>

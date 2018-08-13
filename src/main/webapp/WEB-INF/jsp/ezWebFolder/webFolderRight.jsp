@@ -41,6 +41,11 @@
 		var pEnd =10;
 		var folderId = "${folderId}";
 		var folderType = "${folderType}";
+		var resultErr1 = "<spring:message code='ezWebFolder.t306'/>";
+		var resultErr2 = "<spring:message code='ezWebFolder.t305'/>";
+		var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
+		var resultErr4 = "<spring:message code='ezWebFolder.t249'/>";
+		var resultErr5 = "<spring:message code='ezWebFolder.t250'/>";
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {

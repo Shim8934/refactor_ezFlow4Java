@@ -1,4 +1,5 @@
 <%@page import="org.w3c.dom.Document"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
@@ -8,8 +9,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezPersonal.t999900011' /></title>
 		<link rel="stylesheet"  href="<spring:message code='ezPersonal.e3' />" type="text/css">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 		<script type="text/javascript">
 		 	window.onload = function () {
 		 		if ("${portalEnv}" == "1") {

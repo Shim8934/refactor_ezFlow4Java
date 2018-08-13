@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -7,7 +8,7 @@
 		<title><spring:message code="ezBoard.t176" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />    
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 	    <script type="text/javascript">
 		    var ReturnFunction;
 		    var type = "${type}";
