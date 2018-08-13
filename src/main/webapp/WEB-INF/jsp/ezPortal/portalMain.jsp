@@ -319,7 +319,7 @@
 		    	html += "<div class='individual-memo' style='background-color:"+ headerColor +"'>";
 		    	html += "<div class='memo-color'>";
 		    	html += "<div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div><div class='memo-color-list'></div></div>";
-		    	html += "<span style='padding-left: 10px'>2018-08-03</span>";
+		    	html += "<span class='write-date' style='padding-left: 10px'></span>";
 		    	html += "<img src='/images/close_xBtn.png' style='visibility:hidden; float:right; height:20px; padding-right:5px; cursor:pointer'>";
 		    	html += "<img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:10px; cursor:pointer'>";
 		    	html += "<textarea class='memo-text' style='background-color:"+ textColor +"'>";
@@ -333,7 +333,25 @@
 		    	
 		    	memoIndex = -1;
 		    	
+		    	addDate();
 		    	addremove();
+		    }
+		    
+		    function addDate() {
+		    	var nowDate = new Date();
+		    	var year = nowDate.getFullYear();
+		    	var month = nowDate.getMonth() + 1;
+		    	var date = nowDate.getDate();
+		    	var day = nowDate.getDay();
+		    	var arrayDay = ["(일)", "(월)", "(화)", "(수)", "(목)", "(금)", "(토)"];
+		    	
+		    	if(month < 10) {
+		    		month = "0"+month;
+		    	}
+		    	if(date < 10) {
+		    		date = "0"+date;
+		    	}
+		    	$(".write-date:first").html(year+"-"+month+"-"+date+" "+arrayDay[day]);
 		    }
 		    
 		    function closeMemo() {
