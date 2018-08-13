@@ -724,5 +724,8 @@
 		    	</td>
 		  	</tr>  
 		</table>
+		<script>
+	    	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+	    </script>
 	</body>
 </html>

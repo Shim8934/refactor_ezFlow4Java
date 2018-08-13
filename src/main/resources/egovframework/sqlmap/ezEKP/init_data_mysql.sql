@@ -143,7 +143,8 @@ INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`D
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useSearchContent','NO','메일 간단검색시 내용검색 사용여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useMailAddrAutoComplete','NO','메일 쓰기창의 받는사람,참조,숨은참조에 수신인의 이름이 자동완성 되어지는 기능(default : NO)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useMailNewWindow','NO','메일리스트에서 단일클릭으로 메일 읽기 가능한 아이콘 사용 여부 (default : NO)');
-INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useAdvancedMailSearch','YES','속도가 개선된 메일검색 기능 사용 여부. 메일검색 테이블 사용 (default : YES)');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useAdvancedMailSearch','YES','속도가 개선된 메일검색 기능 사용 여부. 메일검색 테이블 사용 (default : NO)');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useCIAdvancedMailSearch','YES','메일 검색 시 대소문자 구분 여부. YES일 경우 대소문자 구분하지 않음. useAdvancedMailSearch가 YES일 경우에만 적용됨 (default : NO)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'mobileUseMailAddrAutoComplete','NO','메일 쓰기창의 받는사람,참조,숨은참조에 수신인의 이름이 자동완성 되어지는 기능(default : NO)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useAutoSaveMailAddress','NO','외부로 메일을 보낼경우 주소록에 저장되지 않은 메일 개인주소록에 자동저장 YES 는 저장 NO는 저장안함.');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'containLow','NO','YES: 하위부서 포함하여 카운트표시 default NO');

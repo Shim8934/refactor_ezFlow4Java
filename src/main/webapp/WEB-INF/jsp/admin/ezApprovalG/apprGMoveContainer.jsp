@@ -871,29 +871,29 @@
 			<tr>
 				<table id = "t1" style="width:100%;border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8">
 					<tr>
-						<td style="width:4%;">
+						<td style="width:6%;">
 							<spring:message code='ezApprovalG.kes04'/>  
 						</td>
-						<td style="width:20%;">
+						<td style="width:17%;">
 							<input type="text" id="SDeptName" name="SDeptName" style="width: 72%; height: 23px;" readonly="readonly" />
 			 	            <a class="imgbtn" name="SDeptSelect"><span onclick="bt_SDeptSelect_onclick()"><spring:message code='ezApprovalG.t105'/></span></a>
 						</td>
-						<td style="width:4%;">
+						<td style="width:6%;">
 							<spring:message code='ezApproval.t611'/>
 						</td>
-						<td style="width:17%;">
+						<td style="width:12%;">
 							<select name="selSContName" style="width:84%; height: 23px;" onchange="return bt_selSContName_onclick()"></select>
 						</td>
-						<td style="width:5%;">
+						<td style="width:7%;">
 							<spring:message code='ezApproval.t434'/> 
 						</td>
-						<td style="width:18%;">
+						<td style="width:22%;">
 							<input type="text" id="DocNumber" name="DocNumber" style="width: 80%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)" />
 						</td>
-						<td style="width:4%;">
+						<td style="width:6%;">
 							<spring:message code='ezApproval.t435'/> 
 						</td>
-						<td style="width:27%;">
+						<td style="width:24%;">
 							<input type="text" id="DocTitle" name="DocTitle" style="width: 51%; height: 23px;" maxlength="50" onkeypress="return search_keypress(event)"/>
 						</td>
 					</tr>

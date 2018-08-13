@@ -79,6 +79,10 @@
 		                var pLeft = (pwidth - 765) / 2;
 		                window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + SelectedBoardID + "&mode=new", "", feature, "");
 		                break;
+		            case "6":
+		            	alert("<spring:message code='ezBoard.garm02' />");
+		            	return;
+		            	break;
 		            default:
 		                var feature = GetOpenWindowfeature(765, 820);
 		                if (CrossYN() || pNoneActiveX == "YES") {
@@ -172,6 +176,11 @@
 			    SelectedBoardID = treeNode.GetNodeData("DATA1");	
 			    SelectedBoardName = treeNode.GetNodeData("DATA2");
 			    SelectedBoardType = treeNode.GetNodeData("DATA5");
+       			
+			    //2018-08-13 강민수92 url 게시판일 경우 게시물등록을 못하게 하기 위해 체크
+       			if (treeNode.GetNodeData("DATA6") != "null" && SelectedBoardType == "0") {
+       				SelectedBoardType = "6";
+       			}
 			}
 			
 			function DisplayTopBoard()

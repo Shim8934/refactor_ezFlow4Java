@@ -235,7 +235,7 @@
 				    </form>
 				</div>															
 			</div>
-			<footer><p style="font-family: Malgun Gothic, Meiryo UI">Copyright &copy; 2000-2018 KAONI  All Rights reserved</p></footer>
+			<footer style="min-height: 40px"><p style="font-family: Malgun Gothic, Meiryo UI">Copyright &copy; 2000-2018 KAONI  All Rights reserved</p></footer>
 		</div>				
 		<div class="noti_layer" style="position:absolute;top:295px;left:800px;display:none;" id="divCapsLock">
 			<span class="arrow">
