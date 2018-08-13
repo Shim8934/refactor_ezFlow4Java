@@ -1846,8 +1846,7 @@ form{display:inline;margin:0}
 .tabpartMycommunity02 .left_tabpartTitle{width:161px; list-style:none; margin:0; padding:0; overflow:hidden;}
 .tabpartMycommunity02 .left_tabpartTitle li{float:left; width:80px; height:28px; line-height:2.3; text-align:center; background:#e9eff7; border:1px solid #d5e0ef; font-weight:bold; color:#a3aebc; box-sizing:border-box;}
 .tabpartMycommunity02 .left_tabpartTitle li.on{background:#0470e4; color:#fff; border:1px solid #0470e4;}
-.tabpartMycommunity02 .left_tabpartTitle li.line{margin-left:1px;}
-.tabpartMycommunity02 .left_tabpartTitle li span{display:inline-block; margin-left:-8px;}
+.tabpartMycommunity02 .left_tabpartTitle li span{display:inline-block;}
 
 .left_tabpartList_layout{width:159px; height:450px; margin:-1px 0px 0px 0px; border:1px solid #cbcbcb; background:#fefefe; overflow-y:auto;}
 .left_tabpartLis{list-style:none; margin:0; padding:10px 15px; overflow:hidden;}
@@ -2304,3 +2303,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 }
 
 .question { font-family: Meiryo UI }
+
+/* 20180731_운영자에게 메일 보내기 기능 추가 */
+#left h4{width:155px; margin:0px auto; border:1px solid #e0e0e0; padding:8px 15px; text-align:left; font-weight:normal; background:url('/images/kr/left/icon_adminMail.gif') no-repeat 12px 10px; cursor:pointer;}
+#left h4 span{padding:0px 0px 0px 20px; line-height:18px;}

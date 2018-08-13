@@ -173,6 +173,6 @@
 			    <p><span id="tagsub2"><spring:message code='ezEmail.t824'/></span></p>
 	        </div>
 	    </div>
-	    <iframe id="Letter_ifrm" style="width: 1200px; height:650px;" frameborder="0"></iframe> 
+	    <iframe id="Letter_ifrm" style="width: 1200px; height:535px;" frameborder="0"></iframe> 
 	</body>
 </html>
