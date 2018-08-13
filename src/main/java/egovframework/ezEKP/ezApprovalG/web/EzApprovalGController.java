@@ -1885,10 +1885,33 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
 		
 		String orgCompanyID = request.getParameter("orgCompanyID");
+		String orgDeptID = request.getParameter("orgDeptID");
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(orgCompanyID);
+			if (orgDeptID != null && !orgDeptID.equals("") && !orgDeptID.equals(userInfo.getDeptID())) {
+				String decData = egovFileScrty.decryptAES(loginCookie);
+				
+				String[] decDataArray = decData.split("///");
+				
+				decDataArray[9] = orgDeptID;
+				decDataArray[10] = orgCompanyID;
+				
+				decData = "";
+				for (int i = 0; i < decDataArray.length; i++) {
+					if (i==0) {
+						decData += decDataArray[i];
+					} else {
+						decData += "///"+decDataArray[i];
+					}
+				}
+				
+				String loginCookie2 = egovFileScrty.encryptAES(decData);
+				
+				userInfo = commonUtil.aprUserInfo(loginCookie2);
+			}
 		}
+		
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
