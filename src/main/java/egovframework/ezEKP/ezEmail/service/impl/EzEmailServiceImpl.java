@@ -2075,7 +2075,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public String checkDistributionIsIncluded (String standardCn, String searchCn, int tenantId) throws Exception {
+	public String checkDistributionIsIncluded(String standardCn, String searchCn, int tenantId) throws Exception {
 		logger.debug("checkDistributionIsIncluded started.");
 		logger.debug("standardCn=" + standardCn + ", searchCn=" + searchCn);
 		
@@ -2189,6 +2189,40 @@ public class EzEmailServiceImpl implements EzEmailService {
 		logger.debug(distributionList.toString());
 		
 		return distributionList;
+	}
+	
+	@Override
+	public List<String> aliasMailCheck(String address) throws Exception {
+		logger.debug("aliasMailCheck started.");
+		List<String> resultList = new ArrayList<String>();
+
+		String inputParams = "address=" + URLEncoder.encode(address, "UTF-8");
+		
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getAliasMail";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (object.get("resultCode").equals("OK")) {
+        	JSONArray array = (JSONArray)object.get("result");
+        	
+        	if (array != null) { 
+        		int len = array.size();
+        		for (int i=0; i<len; i++){ 
+        			resultList.add((String)array.get(i));
+        		} 
+        	} 
+        }
+		
+        logger.debug("usercnt=" + resultList.size());
+		logger.debug("aliasMailCheck ended.");
+		
+		return resultList;
 	}
 	
 }

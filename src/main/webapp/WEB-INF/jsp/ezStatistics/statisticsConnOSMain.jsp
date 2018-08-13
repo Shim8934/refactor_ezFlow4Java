@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -7,24 +8,26 @@
     <title><spring:message code='ezStatistics.t1001'/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" href="<spring:message code='ezStatistics.e2' />" type="text/css" />
-    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-    <link rel="stylesheet" href="/js/ezStatistics/js/jquery.jqplot.min.css" type="text/css">
-  	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-    <link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css">
+    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jquery.jqplot.min.css")%>" type="text/css">
+  	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
+    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>">
     <style type="text/css">
         .jqplot-table-legend {
-        white-space:nowrap
+        	white-space:nowrap
         }
+        #statisticschart svg {right:100px; padding-right:150px;}
+        #statisticschart2 svg {left:-100px !important;right:100px; padding-right:150px;}
     </style>
     <script type="text/javascript" src="<spring:message code='ezStatistics.e1' />"></script>
-    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/ezStatistics/js/raphael-min.js"></script>
-    <script src="/js/ezStatistics/js/g.raphael.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/js/ezStatistics/js/g.pie.js" type="text/javascript" charset="utf-8"></script>
-    <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-    <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jquery.min.js")%>"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/raphael-min.js")%>"></script>
+    <script src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/g.raphael.js")%>" type="text/javascript" charset="utf-8"></script>
+    <script src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/g.pie.js")%>" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
     <script type="text/javascript">
         var Tab1_flag = true;
         var xmlHttp = createXMLHttpRequest();
@@ -330,12 +333,12 @@
     <table style="width: 100%; background-color: #f8f8f8; border: 1px solid #d3d2d2; margin-bottom: 5px">
         <tr>
             <td style="width: 99%">
-            <span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t195'/> :
-            <select id="SCompID" name="SCompID" onchange="return getpersonalstatistics()">
+            <span id="topmenu" style="width: 500px">&nbsp;<spring:message code='ezStatistics.t195'/> :
+            <select style="height:24px" id="SCompID" name="SCompID" onchange="return getpersonalstatistics()">
             	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
             	</c:forEach>
-            </select>
+            </select>&nbsp;
                 <span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1002'/> : 
         <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" onchange="getpersonalstatistics()" readonly="readonly">
                     ~ 
@@ -345,7 +348,7 @@
             <td>
                 <div id="mainmenu" style="height: 28px;margin:3px 0px !important">
                     <ul>
-                        <li><span style="width: 110px;text-align:center" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
+                        <li><span style="width: 110px;text-align:center;background-color: white" onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003'/></span></li>
                     </ul>
                 </div>
             </td>
@@ -357,15 +360,15 @@
         <table>
             <tr>
                 <td>
-                    <div id="statisticschart" style="width: 700px; height: 370px; float: left; font-size: 16px">
+                    <div id="statisticschart" style="width: 550px; height: 370px; float: left; font-size: 16px">
                     </div>
-                    <div id="statisticstable" style="width: 680px;height:300px;padding-left:10px">
+                    <div id="statisticstable" style="width: 550px;height:300px;padding-left:10px">
                     </div>
                 </td>
                 <td>
-                    <div id="statisticschart2" style="width: 700px; height: 370px; float: right; font-size: 16px">
+                    <div id="statisticschart2" style="width: 550px; height: 370px; float: right; font-size: 16px">
                     </div>
-                    <div id="statisticstable2" style="width: 680px;height:300px;padding-left:13px">
+                    <div id="statisticstable2" style="width: 550px;height:300px;padding-left:13px">
                     </div>
                 </td>
             </tr>

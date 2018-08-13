@@ -9,8 +9,8 @@
 		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"          type="text/css">
-		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css"         type="text/css">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/jquery.lineProgressbar.css")%>" type="text/css">
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezTask/jquery.lineProgressbar.js")%>"></script>
@@ -278,9 +278,6 @@
 							case 3:
 								alert("<spring:message code='ezWebFolder.t300'/>");
 								break;
-							case 4:
-								alert("<spring:message code='ezWebFolder.t26' />");
-								break;
 						}
 					},
 					error : function(error) {
@@ -451,7 +448,7 @@
 			
 			<div id="tblPageRayer"></div>
 			<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel" onclick="closeAllPopups();">&nbsp;</div>
-			<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
+			<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/pageNav.js")%>"></script>
 		</div>
 	</body>
 </html>

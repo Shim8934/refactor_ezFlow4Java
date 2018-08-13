@@ -146,41 +146,44 @@
 		
 		<h1><spring:message code="ezBoard.t64"/></h1>
 		<div style="max-width:800px;">
-		<table class="content">
-			<tr>
-	            <th><spring:message code="ezBoard.t92"/></th>
-	            <td class="point"><c:out value='${boardName}'/></td>
-	        </tr>
-	    </table><br />
-	    <div id="mainmenu">
-	        <ul id="tb_Parent">
-	            <li>
-	                <span onclick="GetSubBoards()">
-	                    <img src="/images/ImgIcon/recur.gif" style="margin-top: -2px;" />
-	                    <spring:message code="ezBoard.t205"/>
-	                </span>
-	            </li>
-	            <li>
-	                <span onclick="MoveUp_onclick()">
-	                    <img src="/images/ImgIcon/prev.gif" style="margin-top: -2px;" alt="<spring:message code='main.sp07'/>" />
-	                </span>
-	            </li>
-	            <li>
-	                <span onclick="MoveDown_onclick()">
-	                    <img src="/images/ImgIcon/next.gif" style="margin-top: -2px;" alt="<spring:message code='main.sp08'/>" />
-	                </span>
-	            </li>
-	        </ul>
+			<table class="content">
+				<tr>
+		            <th><spring:message code="ezBoard.t92"/></th>
+		            <td class="point"><c:out value='${boardName}'/></td>
+		        </tr>
+		    </table><br />
+		    <div id="mainmenu">
+		        <ul id="tb_Parent">
+		            <li>
+		                <span onclick="GetSubBoards()">
+		                    <spring:message code="ezBoard.t205"/>
+		                </span>
+		            </li>
+		            <li>
+		                <span onclick="MoveUp_onclick()" style="padding-top:5px">
+		                    <img src="/images/ImgIcon/prev.gif" style="margin-top: -2px;" alt="<spring:message code='main.sp07'/>" />
+		                </span>
+		            </li>
+		            <li>
+		                <span onclick="MoveDown_onclick()" style="padding-top:5px">
+		                    <img src="/images/ImgIcon/next.gif" style="margin-top: -2px;" alt="<spring:message code='main.sp08'/>" />
+		                </span>
+		            </li>
+		        </ul>
+		    </div>
+		    <table style="width: 100%">
+		        <tr>
+		            <td class="listview">
+		                <div id="BoardList" style="BACKGROUND-COLOR: #ffffff; BORDER: 0px; HEIGHT: 250px; WIDTH: 100%; overflow: auto;"></div>
+		            </td>
+		        </tr>
+		    </table>
+		    <div class="btnpositionJsp">
+		        <a class="imgbtn"><span onclick="Save()"><spring:message code="ezBoard.t98"/></span></a>
+		    </div>
 	    </div>
-	    <table style="width: 100%">
-	        <tr>
-	            <td class="listview">
-	                <div id="BoardList" style="BACKGROUND-COLOR: #ffffff; BORDER: 0px; HEIGHT: 250px; WIDTH: 100%; overflow: auto;"></div>
-	            </td>
-	        </tr>
-	    </table>
-	    <div class="btnpositionJsp">
-	        <a class="imgbtn"><span onclick="Save()"><spring:message code="ezBoard.t98"/></span></a>
-	    </div></div>
+	    <script>
+	    	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+	    </script>
 	</body>
 </html>

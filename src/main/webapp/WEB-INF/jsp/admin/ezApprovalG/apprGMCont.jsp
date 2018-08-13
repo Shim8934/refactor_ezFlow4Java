@@ -280,10 +280,10 @@
 	    <table>
 	        <tr>
 	            <td>
-	                <h2><spring:message code='ezApprovalG.t232'/></h2>
+	                <h2 class="h2_dot" style="padding-top:0px"><spring:message code='ezApprovalG.t232'/></h2>
 	            </td>
 	            <td style="padding-left: 5px; padding-right: 5px">
-	                <h2><spring:message code='ezApprovalG.t904'/></h2>
+	                <h2 class="h2_dot" style="padding-top:0px"><spring:message code='ezApprovalG.t904'/></h2>
 	            </td>
 	            <td>&nbsp;</td>
 	        </tr>

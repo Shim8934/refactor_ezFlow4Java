@@ -138,4 +138,5 @@ public interface EzEmailUserAdminService {
 	public int updateGroupMove(String oldGroupEmailAddress, String newGroupEmailAddress, String targetEmail) throws Exception;
 	
 	public List<String> getUserDistributionList (String userEmailAddress) throws Exception;
+
 }
