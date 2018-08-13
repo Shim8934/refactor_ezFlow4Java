@@ -243,12 +243,6 @@ public class EzWebFolderGWController {
 			int tenantId                      = loginService.getTenantId(serverName);
 			WebfolderConfigVO webfolderConfig = ezWebFolderAdminService.getWebfolderConfig(companyId, tenantId);
 			
-			if (Double.parseDouble(newValue) < Double.parseDouble(webfolderConfig.getUploadLimit())) {
-				result.put("status", "error");
-				result.put("code", 4);
-				return result;
-			}
-			
 			ezWebFolderAdminService.updateNewAmount(userList, newValue, companyId, tenantId);
 			
 			result.put("status", "ok");
