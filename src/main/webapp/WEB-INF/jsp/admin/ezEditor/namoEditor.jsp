@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
 	<head>
 		<title></title>
-		<script  type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script  type="text/javascript" src="/js/ezEditor/namoEditor/js/namo_scripteditor.js"></script>
-		<script  type="text/javascript" src="/js/XmlHttpRequest.js"  ></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEditor/namoEditor/js/namo_scripteditor.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 		<script type="text/javascript">
 		var userLang = "${userInfo.lang}";
 		var type = "${type}";

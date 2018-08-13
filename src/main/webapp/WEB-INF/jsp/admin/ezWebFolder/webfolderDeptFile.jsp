@@ -8,17 +8,17 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>"   type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"            type="text/css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css"/>
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>></script>
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezWebFolder/popup.js")%>></script>
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>></script>
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>></script>
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>></script>
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezWebFolder/fileFolderDrop.js")%>></script>
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezWebFolder/adminTable.js")%>></script>
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezWebFolder/adminFile.js")%>></script>
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery-ui/jquery-ui.js")%>></script>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>" type="text/css">
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/popup.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/fileFolderDrop.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/adminTable.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/adminFile.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery-ui/jquery-ui.js")%>"></script>
 		<script type="text/javascript">
 			var strLang39  = "<spring:message code='ezWebFolder.t135'/>";
 			var strLang40  = "<spring:message code='ezWebFolder.t136'/>";
@@ -71,7 +71,51 @@
 				};
 				
 				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+
+				// listoption 다른 곳 클릭시 숨김 처리
+				var listOptionHidden = function(event) {
+					if (document.getElementById("webfolderlistoptiondiv").getAttribute('mode') == "on"
+							&& !document.getElementById("layer_Viewpopup").contains(event.target)
+							&& event.target.id !== "webfolderlistoptiondiv") {
+						optionHidden();
+					}
+				};
+				document.addEventListener("mouseup", listOptionHidden, true);
+				parent.frames["left"].document.addEventListener("mouseup", listOptionHidden, true);
+				
+				// listoption 클릭 이벤트
+				document.getElementById("webfolderlistoptiondiv").addEventListener("click", function(event) {
+					event.stopPropagation();
+					optionView(event.target);
+				});
+				
+				document.getElementById("listCount").addEventListener("change", function() {
+					optionHidden();
+					pagination.setListSize(this.value);
+					refreshView();
+				});
+				
 			});
+
+			function optionHidden() {
+		 	    document.getElementById("layer_Viewpopup").style.display = "none";
+		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("mode", "off");
+		 	    document.getElementById("webfolderlistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+		 	}
+			function optionView(obj) {
+		   		 if (obj.getAttribute("mode") == "off") {
+		   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
+//		    	        if(pAdminType == "y")
+		   	            document.getElementById("layer_Viewpopup").style.top = "130px";
+//		    	        else
+//		    	            document.getElementById("layer_Viewpopup").style.top = "100px";
+		   	        document.getElementById("layer_Viewpopup").style.display = "";
+		   	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+		   	        obj.setAttribute("mode", "on");
+		   	    } else {
+		   	        optionHidden();
+		   	    }
+		   	}
 		</script>
 	</head>
 	<body class="mainbody" onload="init('dept');" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
@@ -110,16 +154,7 @@
 						<option value="7"         ><spring:message code='ezWebFolder.t311'/></option>
 					</select>
 				</li>
-				<li id="right">
-					<span><spring:message code='ezWebFolder.t29'/></span>
-					<select id="listCount" class="wfListCnt">
-						<option selected="selected">10</option>
-						<option>20</option>
-						<option>30</option>
-						<option>40</option>
-						<option>50</option>
-					</select>
-				</li>
+				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li>
 			</ul>
 		</div>
 		
@@ -207,7 +242,36 @@
 		</div>
 		
 		<div id="tblPageRayer"></div>
+		
+		<!-- 파일 리스트 10~ 50 선택 -->
+	    <div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
+	        <div class="popupwrap1">	
+	            <div class="popupwrap2">
+	                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
+	                    <caption></caption>
+	                    <colgroup>
+	                        <col style="width: 80px;">
+	                        <col>
+	                    </colgroup>
+	                    <tr>
+	                        <th><spring:message code='ezBoard.t10021' /></th>
+	                        <td>
+	                            <select id="listCount" class="wfListCnt">
+	                                <option value="10">10</option>
+	                                <option value="20">20</option>
+	                                <option value="30">30</option>
+	                                <option value="40">40</option>
+	                                <option value="50">50</option>
+	                            </select>    
+	                        </td>
+	                    </tr>
+	                </table>
+	            </div>
+	        </div>
+	        <div class="shadow">
+	        </div>
+	 	</div>
 		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/pageNav.js")%>"></script>
 	</body>
 </html>

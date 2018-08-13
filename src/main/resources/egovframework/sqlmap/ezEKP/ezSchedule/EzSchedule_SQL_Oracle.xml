@@ -750,7 +750,7 @@
 			) VALUES (
 				SEQ_TBL_SCHEDULE.NEXTVAL,		0,					#v_OWNERID#,	#v_OWNERNAME#,		#v_OWNERNAME2#,	#v_CREATORID#,		#v_CREATORNAME#,	#v_CREATORNAME2#,	SYS_EXTRACT_UTC(SYSTIMESTAMP),	#v_CREATORID#,	#v_CREATORNAME#,
 				#v_CREATORNAME2#,				SYS_EXTRACT_UTC(SYSTIMESTAMP),		#v_SCHEDULETYPE#,	#v_IMPORTANCE#,	#v_HASATTENDANT#,	#v_HASATTACH#,		'N',				'N',			#v_ISPUBLIC#,	#v_DATETYPE#,
-				TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),		TO_DATE(#v_ENDDATE#,'yyyy-mm-dd hh24:mi'),			NVL(#v_REPETITION#, ' '),				' ',				#v_TITLE#,		NVL(#v_LOCATION#, ' '),				
+				TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),		TO_DATE(#v_ENDDATE#,'yyyy-mm-dd hh24:mi'),			NVL(#v_REPETITION#, ''),				' ',				#v_TITLE#,		NVL(#v_LOCATION#, ' '),				
 				#v_CONTENTPATH#,				#v_TENANTID#	 
 			)
    		]]>
@@ -868,7 +868,7 @@
 				ENDDATE = TO_DATE(#v_ENDDATE#,'yyyy-mm-dd hh24:mi'),
 		    ]]>
             <isNotEmpty property="v_REPETITION">
-                REPETITION = NVL(#v_REPETITION#, ' '),
+                REPETITION = NVL(#v_REPETITION#, ''),
             </isNotEmpty>
             <![CDATA[	
 				TITLE = #v_TITLE#,
