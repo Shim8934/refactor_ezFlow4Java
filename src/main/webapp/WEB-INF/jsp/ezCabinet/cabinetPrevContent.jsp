@@ -16,6 +16,9 @@
 		<c:if test="${module == 'jounl' || module == 'mjounl' || module =='apprv' && module =='mapprv'}">
 			<style type="text/css">p {margin-top: 0px; margin-bottom: 0px;}</style>
 		</c:if>
+		<c:if test="${module == 'option' || module == 'moption'}">
+			<style type="text/css">p {font-size: 12px; color: #393939;}</style>
+		</c:if>
 	</head>
 	<body style="padding: 8px; margin: 0px;">
 		<div class="zoomDiv"><img src="/images/minus.png"><img src="/images/plus.png"></div>
