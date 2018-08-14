@@ -119,6 +119,7 @@
 		    var signImageType = "${signImageType}";
 		    var curDocNum = "";
 		    var isReceived = "${isReceived}";
+		    var useReceiveDocNo = "${useReceiveDocNo}";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {

@@ -217,13 +217,9 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		try {
 			select("EzCommonDAO.checkTblCompanyConfig");
 		} catch (Exception e) {
-			String msg = e.getMessage();
+			logger.debug("tbl_company_config doesn't exist. creating the table...");
 			
-			if (msg.contains("exist")) {
-				logger.debug("tbl_company_config doesn't exist. creating the table...");
-				
-				update("EzCommonDAO.createTblCompanyConfig");
-			}
+			update("EzCommonDAO.createTblCompanyConfig");
 		}
 	}
 	

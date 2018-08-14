@@ -26,7 +26,8 @@
 		<result property="treeViewOrder" 			column="TREEVIEWORDER" 				columnIndex="4"/>
 		<result property="boardColor" 				column="BOARDCOLOR" 				columnIndex="5"/>
 		<result property="guBun" 					column="GUBUN" 						columnIndex="6"/>
-		<result property="boardGroupAcl" 			column="BOARDGROUPACL" 				columnIndex="7"/>
+		<result property="url" 						column="URL" 						columnIndex="7"/>
+		<result property="boardGroupAcl" 			column="BOARDGROUPACL" 				columnIndex="8"/>
 	</resultMap>
 	
 	<resultMap id="getMyBoardTree_get3" class="MyFavoriteVO">
@@ -163,6 +164,7 @@
 	                    A.treevieworder TreeViewOrder,
 	                    A.boardcolor BoardColor,
 	                    A.gubun,
+	                    A.url,
 	                    '' BoardGroupACL
 	              	FROM 
 	              		TBL_Board_BoardInfo A
@@ -213,6 +215,7 @@
 	                    A.TreeViewOrder TreeViewOrder  ,
 	                    A.BoardColor BoardColor  ,
 	                    A.Gubun ,
+	                    A.url ,
 	                    B.BOARDGROUPACL BOARDGROUPACL  
 	                FROM 
 	                	TBL_Board_BoardInfo A
@@ -266,6 +269,7 @@
                     A.TreeViewOrder ,
                     A.BoardColor BoardColor,
                     A.Gubun ,
+                    A.url ,
                     '' BoardGroupACL
            		FROM 
            			TBL_Board_BoardInfo A

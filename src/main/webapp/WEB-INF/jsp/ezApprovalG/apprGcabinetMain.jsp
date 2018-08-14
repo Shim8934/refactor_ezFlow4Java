@@ -468,7 +468,7 @@
 		
 		                }
 		
-		                if (ListTypeFlag == "8" && (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE")) {
+		                if (ListTypeFlag == "8" && (g_bDeptCharger || g_bRecAdmin || AdminYN == "TRUE") && g_sFlag != "m09") {
 		                    document.getElementById("tdbtnEndProduce").style.display = "";
 		                    document.getElementById("tdbtnCancelEndProd").style.display = "";
 		                }

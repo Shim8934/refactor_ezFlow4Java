@@ -5636,7 +5636,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String type = request.getParameter("type");
 		String boardID = request.getParameter("boardID");
 		String fileName = request.getParameter("fileName");
-		String realPath = commonUtil.getRealPath(request);
+	//	String realPath = commonUtil.getRealPath(request);
 		String pSignatureDir = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		String filePath = "";
 		
@@ -5650,7 +5650,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (filePath != null && !filePath.equals("")) {
 			logger.debug("filePath : " + filePath + "|| fileName : " + fileName);
-			downFile(request, response, realPath + filePath, fileName);
+			/* 2018-08-13 홍승비 - IE에서 이미지 파일 content-type 수정 */
+			//downFile(request, response, realPath + filePath, fileName);
+			downImage(filePath, request, response);
 		}
 
 		logger.debug("getBoardThumbnailInfo ended");

@@ -1459,10 +1459,15 @@ function show_groupinfo2(obj) {
 	var checkRealID = "";
 	var feature = GetOpenPosition(430, 370);
 	
-	var listview = new ListView();
-    listview.LoadFromID("GroupListView");
-    
-	if (listview.GetSelectedRows() == "") {
+	var checkCnt = 0;
+	var allChild = $("#GroupListView")[0].childNodes[1];
+    for (var i = 0;i < allChild.childNodes.length; i++) {
+    	if (allChild.childNodes[i].getElementsByTagName("td").item(0).childNodes.item(0).checked){
+    		checkCnt++;
+    	}
+    }
+	
+    if (checkCnt == 0) {
         alert(strLang266);
         return;
     }

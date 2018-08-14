@@ -158,7 +158,7 @@
 		                        }
 		                        
 		                        listHTML += "<dt class='tit'><strong>" + DOCTITLE + "</strong></dt>";
-		                        listHTML += "<dd class='photo'><img src='/images/kr/main/board_pic.gif' width='86' height='61' alt=''></dd>";
+		                        listHTML += "<dd class='photo'><img src='/images/kr/main/board_pic.jpg' width='86' height='61' alt=''></dd>";
 		                        listHTML += "<dd id='content' class='txt'></dd>";
 		                        listHTML += "</dl>";
 		                        listHTML += "<ul class=\"listtype_txt \">";
