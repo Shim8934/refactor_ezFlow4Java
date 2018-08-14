@@ -213,4 +213,34 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		insert("EzCommonDAO.insertUserConfigInfo", map);
 	}
 	
+	public void createTblCompanyConfig() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblCompanyConfig");
+		} catch (Exception e) {
+			String msg = e.getMessage();
+			
+			if (msg.contains("exist") || msg.contains("ORA-00942")) {
+				logger.debug("tbl_company_config doesn't exist. creating the table...");
+				
+				update("EzCommonDAO.createTblCompanyConfig");
+			}
+		}
+	}
+	
+	public String getCompanyConfig(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommonDAO.getCompanyConfig", map);
+	}
+	
+	public void insertCompanyConfig(Map<String, Object> map) throws Exception {
+		insert("EzCommonDAO.insertCompanyConfig", map);
+	}
+	
+	public int updateCompanyConfig(Map<String, Object> map) throws Exception {
+		return update("EzCommonDAO.updateCompanyConfig", map);
+	}
+	
+	public int deleteCompanyConfig(Map<String, Object> map) throws Exception {
+		return delete("EzCommonDAO.deleteCompanyConfig", map);
+	}
+	
 }

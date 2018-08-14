@@ -6,7 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">		
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">		
 	</head>
 	<body>
 		<div style="width:100%;padding:9px 16px 15px;font-weight: bold;">

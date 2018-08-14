@@ -8,9 +8,14 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
 
         name = pPrefix + "docnumber";
         
+        if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
+        	name = "receiptnumber";
+        }
+        
         if (isHWP == "Y") {
-            if (!HwpCtrl.CheckFieldExist(name))
+            if (!HwpCtrl.CheckFieldExist(name)) {
                 return true;
+            }
 
             fractionsymbol = HwpCtrl.GetFieldText(name);
         } else {
@@ -86,9 +91,17 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
         				DocNumCode = SN;
         			}
 
-                    if (HwpCtrl.CheckFieldExist("enforcedate"))
-                        if (trim(HwpCtrl.GetFieldText("enforcedate")) == "")
-                            HwpCtrl.SetFieldText("enforcedate", getGyulJeDate());
+        			if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
+                        if (HwpCtrl.CheckFieldExist("receiptdate"))
+                            if (trim(HwpCtrl.GetFieldText("receiptdate")) == "")
+                                HwpCtrl.SetFieldText("receiptdate", getGyulJeDate());
+                    } else {
+                    	if (HwpCtrl.CheckFieldExist("enforcedate"))
+                            if (trim(HwpCtrl.GetFieldText("enforcedate")) == "")
+                                HwpCtrl.SetFieldText("enforcedate", getGyulJeDate());
+                    }
+        			
+                    
 
                     return true;
         		} else {
@@ -105,6 +118,11 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
         			message.DocumentBodySetAttribute("deptid", pDeptID);
         			
         			var field = message.GetListItem(fields, "enforcedate");
+        			
+        			if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
+                        field = message.GetListItem(fields, "receiptdate");
+                    }
+        			
         			if (field) {
         				if (trim(field.textContent) == "") {
         					field.textContent = getGyulJeDate();

@@ -552,7 +552,7 @@
 <!-- 		        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:540px; /* overflow-x: auto; */ BACKGROUND-COLOR: white; /* overflow-y:auto; */"></div> -->
 <!-- 		    </div> -->
 			<div id="contentlist" style="width:100%; overflow: auto;">
-			    <div class="listview">
+			    <div class="listview" style="border-left:0px;border-right:0px;border-bottom:1px">
 			        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:540px; /* overflow-x: auto; */ BACKGROUND-COLOR: white; /* overflow-y:auto; */"></div>
 			    </div>
 			</div>

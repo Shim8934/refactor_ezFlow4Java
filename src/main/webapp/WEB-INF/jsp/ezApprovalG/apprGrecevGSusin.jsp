@@ -123,6 +123,8 @@
 		    var ext = "mht";
 		    var nonElecRec = "${isNonElecRec}";
 		    var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
+		    var useReceiveDocNo = "${useReceiveDocNo}";
+
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {

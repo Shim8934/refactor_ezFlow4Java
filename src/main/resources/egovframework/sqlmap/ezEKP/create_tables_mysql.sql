@@ -4287,6 +4287,24 @@ CREATE TABLE `tbl_comm_treecache` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_company_config`
+--
+
+DROP TABLE IF EXISTS `tbl_company_config`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_company_config` (
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANY_ID` varchar(80) NOT NULL,
+  `PROPERTY_NAME` varchar(400) NOT NULL,
+  `PROPERTY_VALUE` varchar(2000) NOT NULL,
+  `DESCRIPTION` varchar(1000) DEFAULT NULL,
+  PRIMARY KEY (`COMPANY_ID`,`PROPERTY_NAME`(255)),
+  CONSTRAINT `FK_TBLCOMPANY_CONFIG_TENANT_ID` FOREIGN KEY (`TENANT_ID`) REFERENCES `tbl_tenant` (`TENANT_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_connection_info`
 --
 

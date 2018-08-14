@@ -721,7 +721,9 @@ function ListView() {
                 objTr.setAttribute(strData, strValue);
             }
             
-            if (!getNodeText(oDatas[5]) == "") {
+            //2018-08-10 김보미 - null일경우 처리          
+            //if (!getNodeText(oDatas[5]) == "") {
+            if (!getNodeText(oDatas[5]) == null && !getNodeText(oDatas[5]) == "") {
             	objTr.setAttribute("title", getNodeText(oDatas[5]));
             }
             

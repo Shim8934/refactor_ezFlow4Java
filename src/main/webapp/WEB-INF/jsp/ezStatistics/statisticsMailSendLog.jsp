@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -8,10 +8,10 @@
 <title><spring:message code='ezStatistics.t1051'/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet"  href="<spring:message code='main.e15'/>" type="text/css">
-<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
 <script type="text/javascript">
 	
 	var strLang1 = "<spring:message code='ezStatistics.t1063'/>";
@@ -418,7 +418,7 @@
 				</span> 
 				&nbsp;&nbsp;
 				<span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1062'/> : &nbsp;
-					<select id="searchField"> 
+					<select id="searchField" style="height:24px"> 
 						<option value="senderName"><spring:message code='ezStatistics.kyj3'/></option>
 						<option value="senderDeptName"><spring:message code='ezStatistics.t83'/></option>
 						<option value="senderEmail"><spring:message code='ezStatistics.kyj4'/></option>
@@ -428,13 +428,13 @@
 						<option value="attachedFileName"><spring:message code='ezStatistics.t1057'/></option>
 					</select>
 					<input type="text" id="searchValue" style="width: 150px;" onKeyDown="return keyword_onkeydown(event)"/>
-					<a class="imgbtn" >
+					<a class="imgbtn" style="height:22px">
 						<span onclick="javascript:search();"><spring:message code='ezStatistics.t36'/></span>
 					</a>
-					<a class="imgbtn" >
+					<a class="imgbtn" style="height:22px">
 						<span onclick="javascript:reset();"><spring:message code='ezStatistics.t1059'/></span>
 					</a>
-					<a class="imgbtn" >
+					<a class="imgbtn" style="height:22px">
 						<span onclick="javascript:reload();"><spring:message code='ezStatistics.t1060'/></span>
 					</a>
 
@@ -443,7 +443,7 @@
 			<td width="5%">
 				<div id="mainmenu" style="height: 28px;margin:3px 0px !important">
                     <ul>
-						<li><span style="width: 110px;text-align:center" onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span></li>
+						<li><span style="width: 110px;text-align:center;background-color: white" onclick="javascript:excelExport();"><spring:message code='ezStatistics.t1003'/></span></li>
 					</ul>
 				</div>
 			</td>
@@ -451,7 +451,7 @@
 	</table>
 	<table style="margin: 10px 0px;">
 		<tr>
-			<td width="98%" style="font-weight: bold; color: gray;"> ※ ${mailLogKeepPeriodMessage} ※	</td>
+			<td width="98%" style="font-weight: bold; color: gray;">▒ ${mailLogKeepPeriodMessage}</td>
 		</tr>
 	</table>
 	<table class="mainlist" style="width:100%;">
