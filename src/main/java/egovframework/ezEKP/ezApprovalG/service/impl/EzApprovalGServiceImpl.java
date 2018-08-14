@@ -5816,26 +5816,26 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							for (Cell cell : row.getCellList()) {
 								if (cell.getListHeader().getFieldName() != null && cell.getListHeader().getFieldName().equals(fieldName)) {
 									ParagraphList paragraphList = cell.getParagraphList();
-									
-									Paragraph newParagraph = paragraphList.addNewParagraph();
-									
-									newParagraph.createText();
-									newParagraph.createCharShape();
-									
 									ParaHeader ph = paragraphList.getParagraph(0).getHeader();
-									
 									ParaCharShape pcs = paragraphList.getParagraph(0).getCharShape();
 									
-									//글자모양 복사해주기
-									for (CharPositonShapeIdPair charPositonShapeIdPair : pcs.getPositonShapeIdPairList()) {
-										newParagraph.getCharShape().addParaCharShape(charPositonShapeIdPair.getPositon(), charPositonShapeIdPair.getShapeId());
+									for (int k = 1; k < signTextArray.length; k++) {
+										Paragraph newParagraph = paragraphList.addNewParagraph();
+										
+										newParagraph.createText();
+										newParagraph.createCharShape();
+										
+										//글자모양 복사해주기
+										for (CharPositonShapeIdPair charPositonShapeIdPair : pcs.getPositonShapeIdPairList()) {
+											newParagraph.getCharShape().addParaCharShape(charPositonShapeIdPair.getPositon(), charPositonShapeIdPair.getShapeId());
+										}
+										
+										//헤더값 복사해서 정렬 맞추기
+										newParagraph.getHeader().setParaShapeId(ph.getParaShapeId());
+										newParagraph.getHeader().setStyleId(ph.getStyleId());
+										
+										newParagraph.getText().addString(signTextArray[k]);
 									}
-									
-									//헤더값 복사해서 정렬 맞추기
-									newParagraph.getHeader().setParaShapeId(ph.getParaShapeId());
-									newParagraph.getHeader().setStyleId(ph.getStyleId());
-									
-									newParagraph.getText().addString(signTextArray[1]);
 									
 									paragraphList.getParagraph(0).createText();
 									paragraphList.getParagraph(0).getText().addString(signTextArray[0]);
@@ -6206,7 +6206,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
 						int tmps = signCnt - refResult;
 						String tempSign = signAdd + "sign" + tmps;
-						String[] signAry = {messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), proxySign + displayName};
+						String[] signAry = {messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), proxySign + displayName};
 						
 						setHwpText(hwpFile, tempSign, signAry);
 						

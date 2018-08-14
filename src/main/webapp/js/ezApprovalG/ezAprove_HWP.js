@@ -128,7 +128,7 @@ function AprrovMappingSign(ret)
 			if(ret != "NAME" && ret != "")
 			{
 				HwpCtrl.SetFieldText(habyui, "");
-				HwpCtrl.SetFieldImage(habyui, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret), 3, 0, 0, true, 2);
+				HwpCtrl.SetFieldImage(habyui, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
 
 				if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
 					HwpCtrl.AppendFieldText(habyui, strLang17, true);
@@ -240,7 +240,7 @@ function AprrovMappingSign(ret)
 	  			if(ret != "NAME")
 	  			{
 					HwpCtrl.SetFieldText(signID, "");
-					HwpCtrl.SetFieldImage(signID, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret), 3, 0, 0, true, 2);
+					HwpCtrl.SetFieldImage(signID, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
                     var content ="";
 					if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
 					{
@@ -321,7 +321,7 @@ function AprrovMappingSign(ret)
 	  			{
 	  				var strimg;
 					HwpCtrl.SetFieldText(signID, "");
-					HwpCtrl.SetFieldImage(signID, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(ret), 3, 0, 0, true, 2);
+					HwpCtrl.SetFieldImage(signID, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
 
 					if(pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
 					{
@@ -1304,7 +1304,7 @@ function putSignXML(SignXML)
 				else if (SignType == "PROXY")
 				{
 					HwpCtrl.SetFieldText(SignName, " ");
-					HwpCtrl.SetFieldImage(SignName, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(SignCont), 3, 0, 0, true, 2);
+					HwpCtrl.SetFieldImage(SignName, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(SignCont), 3, 0, 0, true, 2);
 					HwpCtrl.AppendFieldText(SignName, strLang17, true);
 				}
 				else if (SignType == "IMAGE")
@@ -1312,7 +1312,7 @@ function putSignXML(SignXML)
 				    var img = SignCont.split("::");
 					HwpCtrl.SetFieldText(SignName, "");
 					if(img.length >= 1)
-					    HwpCtrl.SetFieldImage(SignName, document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + escape(img[0]), 3, 0, 0, true, 2);
+					    HwpCtrl.SetFieldImage(SignName, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(img[0]), 3, 0, 0, true, 2);
 					    
 				    if(img.length >= 2)
 				        HwpCtrl.AppendFieldText(SignName, img[1], true);
