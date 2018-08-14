@@ -2541,7 +2541,7 @@
 				B.write_date,		B.write_update_date,		B.read_count,			B.writer_name$lang$ AS writer_name,		
 				B.writer_deptname$lang$ AS writer_deptname,	
 				IFNULL(A.file_cnt, 0) AS FILE_CNT,				B.write_content,		B.folder_id,
-				B.root_item_id,				B.item_level,			B.doc_no,			F.FOLDER_NAME$lang$
+				B.root_item_id,				B.item_level,			B.doc_no,			F.FOLDER_NAME$lang$ AS FOLDER_NAME
 			FROM 
 				tbl_pms_item_list B
 			JOIN 
@@ -2635,7 +2635,7 @@
 				B.writer_name$lang$ AS writer_name,				B.writer_deptname$lang$ AS writer_deptname,		
 				B.writer_position$lang$ AS writer_position,		M.mobile,
 				B.folder_id,			B.root_item_id,
-				B.item_level,			F.FOLDER_NAME$lang$,	F.PROJECT_ID
+				B.item_level,			F.FOLDER_NAME$lang$ AS FOLDER_NAME,	F.PROJECT_ID
 			FROM 
 				tbl_pms_item_list B
 			JOIN 
