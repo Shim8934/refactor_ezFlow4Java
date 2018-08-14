@@ -1,4 +1,4 @@
-﻿﻿﻿﻿var ListTypeFlag;
+﻿﻿﻿﻿﻿var ListTypeFlag;
 var g_SelCabXml = "";
 var g_TransFlag = "0";
 var g_szParamXml = "";
@@ -89,8 +89,7 @@ function ezCabMunuCtl(MenuType, selRow) {
 
             if (selRow.getAttribute("DATA6") == "0") {
                 if (typeof (tdbtnEndProduce) != "undefined" && typeof (tdbtnEndProduce) != "unknown") {
-                	console.log(g_bDeptCharger)
-					if (GetCabChargerRight() == "true" || g_bDeptCharger) {                    	
+					if ((GetCabChargerRight() == "true" || g_bDeptCharger) && g_sFlag != "m09") {                    	
                         document.getElementById("tdbtnEndProduce").style.display = "";
                         //SwapImage(btnEndProduce, "");
                     }
@@ -112,7 +111,7 @@ function ezCabMunuCtl(MenuType, selRow) {
                 }
 
                 if (typeof (tdbtnCancelEndProd) != "undefined" && typeof (tdbtnCancelEndProd) != "unknown") {
-					if (GetCabChargerRight() == "true") {                    	
+					if (GetCabChargerRight() == "true" && g_sFlag != "m09") {                    	
                         document.getElementById("tdbtnCancelEndProd").style.display = "";
                         //SwapImage(btnCancelEndProd, "");
                     }

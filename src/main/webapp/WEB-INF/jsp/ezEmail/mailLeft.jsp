@@ -8,7 +8,7 @@
 	<head>
 	    <title>left_myoffice</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, request, "<spring:message code='ezEmail.e1' />")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/email_tree.js")%>"></script>
@@ -19,8 +19,8 @@
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezAddress/address_tree_Cross.js")%>"></script>
 	    <!-- 재은 수정 -->
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/NewMailList.js")%>"></script>
-	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezEmail.c1' />")%>" type="text/css">
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='main.lhm02' />")%>" type="text/css">
 	    <script type="text/javascript">
 	        var pUse_Editor = "${useEditor}";
 	        var subCode = "${subCode}";
