@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -107,8 +108,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     @Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
 
-	
+    @PostConstruct
+	public void init() throws Exception {
+    	logger.debug("init started.");
 
+    	ezCommonService.createTblCompanyConfig();
+    	
+    	logger.debug("init ended.");
+    }
 
 	/**
 	 * 조직도관리 메인화면 호출 함수
@@ -218,11 +225,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String extensionAttribute15 = request.getParameter("extensionAttribute15");
 		extensionAttribute15 = extensionAttribute15 != null ? extensionAttribute15 : "";		
 		String skipInitData = request.getParameter("skipInitData");
+		String operatorId = request.getParameter("operatorId") != null ? request.getParameter("operatorId") : "";
 		skipInitData = skipInitData != null ? skipInitData : "";
 		
 		logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",displayName=" + displayName
 				+ ",displayName2=" + displayName2 + ",mailId=" + mailId
-				+ ",extensionAttribute15=" + extensionAttribute15 + ",skipInitData=" + skipInitData);
+				+ ",extensionAttribute15=" + extensionAttribute15 + ",skipInitData=" + skipInitData + ",operatorId=" + operatorId);
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -237,8 +245,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		
 		logger.debug("domain=" + domain);
+		
+		String companyId = userInfo.getCompanyID();
         
 		String result = "";
+		
+		String propertyName = "operatorMailId";
 		
 		// 회사정보를 수정하는 경우
         if (parentCn == null || parentCn.isEmpty()) {
@@ -252,6 +264,20 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
         	
         	ezOrganAdminService.updateDBData_company(cn, displayName, displayName2, mailAddr, tenantID);
+        	
+        	if (operatorId != null && !operatorId.equals("")) {
+				String operatorMailId = ezCommonService.getCompanyConfig(tenantID, cn, propertyName);
+				if (!operatorMailId.equals("")) {
+					ezCommonService.updateCompanyConfig(tenantID, companyId, propertyName, operatorId);
+				} else {
+					ezCommonService.insertCompanyConfig(tenantID, companyId, propertyName, operatorId);
+				}
+        	} else {
+        		String operatorMailId = ezCommonService.getCompanyConfig(tenantID, cn, propertyName);
+        		if (!operatorMailId.equals("")) {
+        			ezCommonService.deleteCompanyConfig(tenantID, companyId, propertyName);
+        		}
+        	}
         // 새로운 회사를 생성하는 경우	
         } else {			
 			String ldapPath = "";
@@ -302,6 +328,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						try {
 							ezOrganAdminService.insertDBData_company(cn, displayName, displayName2,
 									mailAddr, parentCn, ldapPath, extensionAttribute15, skipInitData, tenantID, userInfo);
+							if (!operatorId.equals("")) {
+								ezCommonService.insertCompanyConfig(tenantID, companyId, propertyName, operatorId);
+							} 
 							result = "OK";
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -2877,6 +2906,39 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("result=" + result);
 		logger.debug("mailSaveDistributionList ended.");
 		return result;
+	}
+	
+	/**
+	 * 회사 추가,수정시 운영자 전자우편 ID 가져오기
+	 */
+	@RequestMapping(value="/admin/ezOrgan/getComanyConfig.do")
+	@ResponseBody
+	public String getComanyConfig(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model,  HttpServletRequest request) throws Exception{
+		//관리자 권한체크
+		LoginVO auth = commonUtil.aprCheckAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String companyID = request.getParameter("cn");
+		
+		logger.debug("getComanyConfig started.");
+		logger.debug("companyID=" + companyID);
+		
+		int tenantID = auth.getTenantId();
+		String operatorMailId = "";
+		
+		try {
+			operatorMailId = ezCommonService.getCompanyConfig(tenantID, companyID, "operatorMailId");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("operatorMailId=" + operatorMailId);
+		logger.debug("getComanyConfig ended.");
+		return operatorMailId;
 	}
 	
 	private boolean createThumbnail(File sourceFile, File targetFile) {

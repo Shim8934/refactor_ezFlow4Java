@@ -1011,6 +1011,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String endDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		String initFlag = request.getParameter("initFlag");
 		String guBun = request.getParameter("guBun").trim();
+		String docType = request.getParameter("docType");
 		String docSN = "";
 		String susinAdmin = "";
 		String aprTypeXML = "";
@@ -1019,6 +1020,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String chamjoAfterYN = ezCommonService.getTenantConfig("chamjoAfterYN", userInfo.getTenantId());
 		String isUsed = request.getParameter("isUsed");
 		String beforeDocID = request.getParameter("beforeDocID");
+		String receptGubunYN = ezCommonService.getTenantConfig("receptGubunYN", userInfo.getTenantId());
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		
 		if (isUsed == null) {
@@ -1067,6 +1069,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("chamjoAfterYN", chamjoAfterYN);
 		model.addAttribute("isUsed", isUsed);
 		model.addAttribute("beforeDocID", beforeDocID);
+		model.addAttribute("receptGubunYN", receptGubunYN);
+		model.addAttribute("docType", docType);
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
 		
 		logger.debug("ezApprovalInfo ended.");
@@ -3527,6 +3531,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalPWD = ezApprovalGService.getApprovalPWD(uID, userInfo.getTenantId(), userInfo.getCompanyID());
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
+		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
 		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
 		String mailChk = request.getParameter("mailchk");// 메일에서 전저결재 열람 여부('Y'일때는 메일 그 외에는 전자결재)
 		String docState = request.getParameter("docState");
@@ -3624,6 +3629,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("draftDeptID", draftDeptID);
 		model.addAttribute("docState", docState);
 		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
+		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		
 		logger.debug("approvui ended");
 		

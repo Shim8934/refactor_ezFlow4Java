@@ -189,6 +189,7 @@
 			var chamjoAfterYN = "${chamjoAfterYN}";
 			var isUsed = "${isUsed}";
 			var beforeDocID = "${beforeDocID}";
+			var receptGubunYN = "${receptGubunYN}";
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
 	        
 	        $(function () {
@@ -1724,8 +1725,26 @@
 	                </c:if>
 	                    <div class="portlet_tabpart01" style="margin-top: 3px; text-align: right;">
 	                        <div class="portlet_tabpart01_top" id="tab3">
-	                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
-	                            <p><span id="3tab4" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+	                        	<c:if test="${approvalFlag eq 'G'}">
+		                        	<c:choose>
+		                        		<c:when test="${receptGubunYN eq 'Y'}">
+		                        			<c:if test="${docType eq '001'}">
+					                            <p><span id="3tab4" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+		                        			</c:if>
+		                        			<c:if test="${docType ne '001'}">
+					                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
+		                        			</c:if>
+		                        		</c:when>
+		                        		<c:otherwise>
+				                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
+				                            <p><span id="3tab4" style="display: none;" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+		                        		</c:otherwise>
+		                        	</c:choose>
+	                        	</c:if>
+	                        	<c:if test="${approvalFlag ne 'G'}">
+		                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
+		                            <p><span id="3tab4" style="display: none;" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+	                        	</c:if>
 	                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
 	                            <p><span id="3tab3" divname="Group"><c:if test="${approvalFlag =='G' }"><spring:message code='ezApprovalG.t1568'/></c:if><c:if test="${approvalFlag =='S' }"><spring:message code='ezApproval.t227'/></c:if></span></p>
 	                        </div>
@@ -1897,7 +1916,20 @@
 	                        </tr> -->
 	                        <tr>
 	                            <td class="approvalG" style="text-align:left">
-	                                <a style="margin-top: 10px; display: none;"  class="imgbtn imgbck" id="btnaddress"><span  onclick="return btnAddAddress()" ><spring:message code='ezApprovalG.t334'/></span></a>
+	                            	<c:choose>
+		                        		<c:when test="${receptGubunYN eq 'Y'}">
+		                        			<c:if test="${docType eq '001'}">
+				                                <a style="margin-top: 10px; display: none;"  class="imgbtn imgbck" id="btnaddress"><span  onclick="return btnAddAddress()" ><spring:message code='ezApprovalG.t334'/></span></a>
+		                        			</c:if>
+		                        			<c:if test="${docType ne '001'}">
+<!-- 		                        				btnaddress 아이디 참조 스크립트때문에 살려줌 -->
+				                                <a style="display: none;" id="btnaddress"></a>
+		                        			</c:if>
+		                        		</c:when>
+		                        		<c:otherwise>
+			                                <a style="margin-top: 10px; display: none;"  class="imgbtn imgbck" id="btnaddress"><span  onclick="return btnAddAddress()" ><spring:message code='ezApprovalG.t334'/></span></a>
+		                        		</c:otherwise>
+		                        	</c:choose>
 	                                <a style="margin-top: 10px; display: none;" class="imgbtn imgbck" id="btnaddressChange" ><span onclick="return btnaddressChange()" ><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.t348'/></c:if><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApproval.t1104'/></c:if></span></a>
 	                            	<!-- 2018-08-08 천성준 - 외부수신자요약 UI때문에 이동 -->
 	                            	<span style="display: inline-block; margin-top: 8px;">
