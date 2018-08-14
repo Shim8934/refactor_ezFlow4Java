@@ -471,7 +471,7 @@ function setDefaultGroup(){
    				</c:choose>
 			</tr>
 			<tr>
-				<th><spring:message code='ezPMS.t104' /></th>
+				<th><spring:message code='ezPMS.t328' /></th>
 				<td colspan="3"><textarea id="overview" style="height:100px; width:98.5%; margin-top:2px; resize:none;"></textarea></td>
 			</tr>
 		</table>
