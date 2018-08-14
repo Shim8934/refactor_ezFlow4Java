@@ -44,14 +44,15 @@
 			.ui-widget-header{background: #0470e4}
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
 			/* #textarea{padding-left:10px; padding-right:10px; width:100%; height:85%; margin-left:-3px; overflow-y:scroll; padding-bottom: 10px;} */
-			#textarea{padding-left:10px; padding-right:10px; width:100%; height:332px; margin-left:-3px; overflow-y:scroll;}
+			#textarea{padding-left:10px; padding-right:10px; width:100%; height:332px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
 			/* .detailMemo{border: 1px solid black;width: 400px;center;height: 400px;float: center;margin: 0 auto; padding-top: 30px;overflow:hidden; } */
 			/* .detailMemo{border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; padding-top: 30px;overflow:hidden; z-index:9001; position: absolute; } */
 			.detailMemo{border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
-			.memo-text{margin-top:10px; padding-left:11px; padding-right: 25px; border:0px; width:100%; height:81%; resize:none; overflow-y:scroll; padding-bottom:5px;}
+			.memo-text{margin-top:10px; padding-left:11px; padding-right: 25px; border:0px; width:100%; height:81%; resize:none; overflow-y:scroll; padding-bottom:5px; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif;}
 			.memo-color{ padding:0px; /* margin-left:1px; margin-right:1px;  */box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;}
 			.memo-color-list { display:inline-block; width:16.5%; height:100%; text-align:center; float:left;}
 			.ui-resizable-se { background-image: url("");}
+			.write-date { font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
