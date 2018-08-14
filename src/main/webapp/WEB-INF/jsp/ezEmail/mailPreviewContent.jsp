@@ -8,7 +8,7 @@
 	<head>
 	    <title></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link href="<%=CommonUtil.addVer(application, "/css/previewmail.css")%>" rel="stylesheet" type="text/css">
+	    <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 	    <script language="javascript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	    <script language="javascript" type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>

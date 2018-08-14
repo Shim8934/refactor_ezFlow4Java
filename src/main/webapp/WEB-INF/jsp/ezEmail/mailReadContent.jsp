@@ -7,7 +7,7 @@
 <html>
 	<head>
 	    <title></title>
-	        <link href="<%=CommonUtil.addVer(application, "/css/previewmail.css")%>" rel="stylesheet" type="text/css">
+	        <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 			<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	        <script language="JavaScript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
 	        <script src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
