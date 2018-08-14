@@ -177,8 +177,7 @@
 		        
 		        $("#layer-popup").resizable({
 		        	handles : "n, e, s, w, ne, se, sw, nw",
-		        	containment:".noteBlock",
-		        	ghost : true
+		        	containment:".noteBlock"
 		        });
 		        
 		        $(".detailMemo").resizable({
