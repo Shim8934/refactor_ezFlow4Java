@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="text/javascript" src="/js/mouseeffect.js"></script>
-<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezPMS.e1' />")%>" type="text/css" />
 <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/previewmail.css")%>" type="text/css" />
 <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/jquery.lineProgressbar.css")%>" type="text/css" />
 <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.css")%>" type="text/css" />

@@ -8,7 +8,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezPMS.t82' /></title>
-<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezPMS.e1' />")%>" type="text/css" />
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/common.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>

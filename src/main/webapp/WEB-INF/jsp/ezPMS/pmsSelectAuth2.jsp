@@ -8,7 +8,7 @@
 	<head>
 		<title><spring:message code='ezPMS.t330' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css" />
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezPMS.e1' />")%>" type="text/css" />
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css" />
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/jstree/style.css")%>" type="text/css" />
 

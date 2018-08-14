@@ -18,7 +18,7 @@
 </c:choose>
 
 
-<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezPMS.e1' />")%>" type="text/css" />
 <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css" />
 <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/jquery.lineProgressbar.css")%>" type="text/css" />
 <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezTask/circularProgressBar.css")%>" type="text/css" />

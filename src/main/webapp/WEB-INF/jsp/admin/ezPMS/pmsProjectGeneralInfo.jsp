@@ -11,7 +11,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title><c:out value="${project.projectName }"/></title>
 	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPMS/default/style.css")%>" type="text/css" />
-	<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
+	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezPMS.e1' />")%>" type="text/css" />
 	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/common.js")%>"></script>
 	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>

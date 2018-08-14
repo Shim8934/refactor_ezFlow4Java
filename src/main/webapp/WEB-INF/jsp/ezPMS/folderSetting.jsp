@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPMS/default/style.css")%>" type="text/css" />
 <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPMS/pms.css")%>" type="text/css" />
 <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.css")%>" type="text/css" />
-<link rel="stylesheet" href="<spring:message code='ezPMS.e1' />" type="text/css">
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezPMS.e1' />")%>" type="text/css" />
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/common.js")%>"></script>
 <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
