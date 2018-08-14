@@ -279,16 +279,19 @@
 		        }
 		
 		        // 대리 수신 담당자 지정
-		        if (Roll.toLowerCase().indexOf("a=1;") > -1) {
+		        /* if (Roll.toLowerCase().indexOf("a=1;") > -1) {
 		            if (document.getElementById("TextProxyName").value != "") {
 		            	pProxy = proxyuserid + ":" + document.getElementById("TextProxyName").value + ":" + proxydeptid + ":" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + ":" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val() + ":";
+		            	pProxy = proxyuserid + "|" + document.getElementById("TextProxyName").value + "|" + proxydeptid + "|" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() +"|"+ $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 		                gIsAppoint = "1";
 		            }
 		            else
 		                pProxy = "";
 		        }
 		        else
-		            pProxy = "";
+		            pProxy = ""; */
+		            
+		          
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
@@ -378,7 +381,17 @@
 		                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName').value=''; $('#TextName').attr('check','clear')"><spring:message code='ezPersonal.t33'/></span></a>
 					</td>
 				</tr>
-				<c:if test="${fn:indexOf(fn:toLowerCase(userInfo.rollInfo), 'a=1;') > -1}">
+				<%-- <c:if test="${fn:indexOf(fn:toLowerCase(userInfo.rollInfo), 'a=1;') > -1}">
+					<c:if test="${approvalFlag eq 'S'}">
+						<tr>
+				            <th><spring:message code='ezPersonal.t399'/></th>
+						    <td>
+						    	<input type="text" name="TextProxyName" id="TextProxyName" value="${textProxyName}" Width="120" ReadOnly />
+							    <a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsProxyUser = true;select_person('Proxy')"><spring:message code='ezPersonal.t32'/></span></a> 
+				                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsProxyUser = false;document.getElementById('TextProxyName').value=''"><spring:message code='ezPersonal.t33'/></span></a>
+						    </td>
+					    </tr>
+					</c:if>
 				    <tr>
 			            <th><spring:message code='ezPersonal.t399'/></th>
 					    <td>
@@ -387,7 +400,7 @@
 			                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsProxyUser = false;document.getElementById('TextProxyName').value=''"><spring:message code='ezPersonal.t33'/></span></a>
 					    </td>
 				    </tr>
-				</c:if>
+				</c:if> --%>
 				<c:if test="${approvalFlag eq 'G'}">
 					<tr>
 						<th><spring:message code='ezPersonal.t42'/></th>
