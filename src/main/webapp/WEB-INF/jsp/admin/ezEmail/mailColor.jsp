@@ -7,8 +7,8 @@
 <html>
 	<head>
 	    <title></title>
-	    <link rel="stylesheet" href="/js/ezEmail/<spring:message code='ezEmail.e4' />" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='ezEmail.c3' />" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('ezEmail.e4', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezEmail.c3', 'msg')}" type="text/css" />
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">

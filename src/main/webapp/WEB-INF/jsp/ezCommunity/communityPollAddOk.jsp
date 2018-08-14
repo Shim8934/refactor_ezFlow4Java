@@ -6,7 +6,7 @@
 	<head>
 		<title>poll_add_ok</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
 		<link rel="stylesheet" type="text/css" href="/css/community.css" />
 		<style>
 			select {

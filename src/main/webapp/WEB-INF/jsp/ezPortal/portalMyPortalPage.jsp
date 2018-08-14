@@ -8,10 +8,10 @@
 		<title>PortalPage</title>
 		<c:choose>
 			<c:when test="${mode != 'view'}">
-				<link href="<spring:message code="ezPortal.i2" />" rel="stylesheet" type="text/css">
+				<link href="${util.addVer('ezPortal.i2', 'msg')}" rel="stylesheet" type="text/css">
 			</c:when>
 			<c:otherwise>
-				<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
+				<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 			</c:otherwise>
 		</c:choose>
 		

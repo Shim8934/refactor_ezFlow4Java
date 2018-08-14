@@ -8,8 +8,8 @@
 	    <title><spring:message code='ezCircular.t56' /></title>
 	    <meta name="CODE_LANGUAGE" content="C#">
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>

@@ -9,7 +9,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title><spring:message code='ezCircular.kmsc01'/></title>
-	<link rel="stylesheet" href="<spring:message code='ezJournal.c1'/>" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css">
 </head>
 	<script type="text/javascript" src="${util.addVer('/js/ezCircular/ListView_list.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list.js')}"></script>

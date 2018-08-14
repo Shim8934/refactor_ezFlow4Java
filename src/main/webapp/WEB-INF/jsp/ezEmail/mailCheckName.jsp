@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<title><spring:message code='ezEmail.t331' /></title>
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr th {
 				border-top : 0px;

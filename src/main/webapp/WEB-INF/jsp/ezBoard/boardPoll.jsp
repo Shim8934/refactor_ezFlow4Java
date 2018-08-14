@@ -6,7 +6,7 @@
 	<head>
 		<title>Insert title here</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    	<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+    	<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
     	<link rel="stylesheet" href="/css/Tab.css" type="text/css" />
     	<style type="text/css">
     		.pollImgbtn1{ white-space:nowrap; display:inline-block; cursor: pointer; height:17px; vertical-align:top; cursor:pointer; margin-top: 0px;}

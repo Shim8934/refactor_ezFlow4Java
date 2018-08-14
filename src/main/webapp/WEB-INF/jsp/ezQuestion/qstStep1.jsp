@@ -8,7 +8,7 @@
 		<meta name="vs_defaultClientScript" content="JavaScript" />
 		<meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5" />
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
-		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezQuestion.i1', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezQuestion/common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>

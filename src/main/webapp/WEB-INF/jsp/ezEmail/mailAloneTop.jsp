@@ -7,7 +7,7 @@
     <head>
         <title>TopMenu</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />               
-        <link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
+        <link rel="stylesheet" href="${util.addVer('main.e6', 'msg')}" type="text/css" />
         <style type="text/css">
             <c:if test="${lang == '2'}">
                 #input_search { background:#f2f2f2 url(/../images/us/cm/input_search_bg.gif) no-repeat 0 0 }

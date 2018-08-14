@@ -7,10 +7,10 @@
     <head>
     <title><spring:message code='ezStatistics.t1018' /></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="<spring:message code='ezStatistics.e2' />" type="text/css" />
+    <link rel="stylesheet" href="${util.addVer('ezStatistics.e2', 'msg')}" type="text/css" />
     <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css">
     <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jquery.jqplot.min.css")%>" type="text/css">
-    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">    
+    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">    
     <script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
     <script type="text/javascript" src="${util.addVer('ezStatistics.e1', 'msg')}"></script>

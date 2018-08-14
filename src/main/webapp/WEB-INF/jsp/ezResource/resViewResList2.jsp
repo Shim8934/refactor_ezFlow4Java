@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code="ezResource.t403" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
 		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 		<style>
 			#resourceDataTable tr td {

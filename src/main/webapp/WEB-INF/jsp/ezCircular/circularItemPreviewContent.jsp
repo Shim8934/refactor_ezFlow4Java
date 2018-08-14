@@ -4,7 +4,7 @@
 <html>
 	<head>
 	    <title><spring:message code='ezCircular.t19'/></title>
-	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css" />
 	    <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>

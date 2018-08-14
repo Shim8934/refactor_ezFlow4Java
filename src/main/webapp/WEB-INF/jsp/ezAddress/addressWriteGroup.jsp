@@ -7,8 +7,8 @@
 	<head>
 	    <title><spring:message code='ezAddress.t344' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code="main.lhm01" />" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css">
 	    <style>
 	    	.mainlist tr td:first-child {

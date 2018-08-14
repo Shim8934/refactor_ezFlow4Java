@@ -199,7 +199,7 @@
    			</article>
 		</section>
 			
-		<link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.e6', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="/css/ezAttitude/clockTemp1.css" type="text/css" />
 		<link rel="stylesheet" href="/css/ezAttitude/timecheck.css" type="text/css" />
 		<style>

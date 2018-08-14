@@ -5,8 +5,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css" />
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css">
 		<style>
 	    	.mainlist tr td:first-child {

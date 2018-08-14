@@ -7,7 +7,7 @@
 	<head>
 		<title><spring:message code='ezPortal.t261'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="/css/ezPortal/skin.css" type="text/css" />
 		<script type="text/javascript">
 			var portletWidth = "${portletWidth}";

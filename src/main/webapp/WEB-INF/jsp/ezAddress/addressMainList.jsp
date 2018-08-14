@@ -7,7 +7,7 @@
     <head>
 	    <title>address_list</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
 	    <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 	    <style>
 	    	.emptyDiv {

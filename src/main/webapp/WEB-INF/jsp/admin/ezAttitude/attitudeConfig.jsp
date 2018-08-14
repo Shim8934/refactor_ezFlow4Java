@@ -7,7 +7,7 @@
 	<head>
 	    <title><spring:message code = 'ezAttitude.t2' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>

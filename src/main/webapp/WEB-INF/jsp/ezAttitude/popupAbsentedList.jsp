@@ -6,7 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezAttitude.t111'/></title>
-		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>

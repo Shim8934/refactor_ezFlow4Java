@@ -7,9 +7,9 @@
 	<head>
 		<title><spring:message code='ezCircular.t40' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 	    <style>
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;

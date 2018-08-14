@@ -31,7 +31,7 @@
     		</article>
 		</section>
 		
-		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
+		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 		<style>
 			.photocont ul li {
 				margin-left: 16.5px;

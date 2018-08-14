@@ -8,7 +8,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezTask.t143' /></title>
-		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezTask.e2', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
 		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">

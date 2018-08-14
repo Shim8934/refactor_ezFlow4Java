@@ -7,7 +7,7 @@
 	<head>
 		<title><spring:message code='ezJournal.t164'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezJournal.c1', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 		<link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
 		<style>

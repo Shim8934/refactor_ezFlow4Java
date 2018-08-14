@@ -7,7 +7,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Create Poll</title>	
 		
-	<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">	
+	<link rel="stylesheet" href="${util.addVer('ezPoll.i1', 'msg')}" type="text/css">	
 	<link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css">	
 	<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
 	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>

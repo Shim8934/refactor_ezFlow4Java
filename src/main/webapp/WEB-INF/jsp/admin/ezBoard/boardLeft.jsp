@@ -6,8 +6,8 @@
 	<head>
 		<title><spring:message code="ezBoard.t52" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	   	<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">	   	
-	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+	   	<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">	   	
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 	    <style>
 	    	.tree {
 	    		min-height : 100px;

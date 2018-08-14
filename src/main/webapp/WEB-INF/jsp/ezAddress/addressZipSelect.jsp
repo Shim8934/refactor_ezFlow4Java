@@ -7,7 +7,7 @@
 	<head>
 		<title><spring:message code="ezAddress.t2" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
 	    <style type="text/css">
 	        html { height:100%; }
 	        body { height:100%; margin:0; }

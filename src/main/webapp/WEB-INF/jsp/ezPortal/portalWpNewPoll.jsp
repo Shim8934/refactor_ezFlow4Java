@@ -33,7 +33,7 @@
 			</article>
 		</section>
 		
-		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
+		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<!-- 2018-07-25 김보미 - 투표모듈 css맞추기 위해 추가 -->
 		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">

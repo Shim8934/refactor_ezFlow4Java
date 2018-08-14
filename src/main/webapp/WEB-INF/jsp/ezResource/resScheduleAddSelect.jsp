@@ -6,8 +6,8 @@
    <head>
       <title><spring:message code="ezResource.t375" /></title>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-      <link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
-      <link type="text/css" rel="stylesheet" href="<spring:message code="main.lhm01" />" />
+      <link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+      <link type="text/css" rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" />
       <style>
          .box{border:1px solid #ddd; padding:1px 18px 1px 1px; background-color:#fff;}
       </style>

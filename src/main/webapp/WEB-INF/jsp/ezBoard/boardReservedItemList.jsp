@@ -7,7 +7,7 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 		<style>
 			<%-- 2018-07-20 홍승비 - 예약게시물 헤더 스타일 등 수정 --%>
 			#chk, #HeaderAllCheckBox {

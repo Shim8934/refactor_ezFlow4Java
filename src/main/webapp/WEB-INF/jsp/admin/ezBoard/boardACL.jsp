@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code="ezBoard.t75" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
 	    <style>
 	    <%-- 2018-07-26 홍승비 - 관리자 > 게시판 권한설정 헤더 겹치는 부분, 가로 축소 시 스크롤 수정 --%>
 	    	#AccessListView {

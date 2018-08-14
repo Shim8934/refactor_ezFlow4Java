@@ -9,10 +9,10 @@
 	<head>
 		<title></title>
 		<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<link href="/css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
 		<link href="/css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
-		<link href="<spring:message code='ezOrgan.e3'/>" type="text/css" rel="stylesheet" />
+		<link href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" rel="stylesheet" />
 	    <style type="text/css">
 	        .instance.sbHolder{
 	            width: 100%;
@@ -37,7 +37,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.selectbox-0.2.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">

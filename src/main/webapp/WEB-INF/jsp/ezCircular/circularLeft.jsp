@@ -13,8 +13,8 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/treeview.htc.js')}"></script>	    
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	    
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<style>
 			#left ul li.on{
 				font-weight:bold;

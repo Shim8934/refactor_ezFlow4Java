@@ -6,8 +6,8 @@
 	<head>
 		<title><spring:message code='ezPortal.t13'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
 			.box {
 				border-right:0px;

@@ -7,10 +7,10 @@
 <html>
 	<head>
 	    <title><spring:message code='ezEmail.t8' /></title>
-	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css">
 	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls/ezSearchDatePicker.htc")%>" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code="main.lhm01" />" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('main.lhm01', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script src="${util.addVer('/js/ezPersonal/controls/TreeView.js')}" type="text/javascript"></script>

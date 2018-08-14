@@ -6,8 +6,8 @@
 	<head>
 		<title><spring:message code='ezCommunity.t1047' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="<spring:message code='ezOrgan.e3'/>">
-		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezOrgan.e3', 'msg')}">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
 		<style>
 			.groupBoard {
 				width:266px;

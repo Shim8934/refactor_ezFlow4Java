@@ -19,8 +19,8 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/address_tree_Cross.js')}"></script>
 	    <!-- 재은 수정 -->
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/NewMailList.js')}"></script>
-	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezEmail.c1' />")%>" type="text/css">
-	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='main.lhm02' />")%>" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 	    <script type="text/javascript">
 	        var pUse_Editor = "${useEditor}";
 	        var subCode = "${subCode}";

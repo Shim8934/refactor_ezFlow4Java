@@ -10,7 +10,7 @@
 <head>
 		<title><spring:message code='ezAttitude.t165' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezAttitude.i1' />" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css">
 		<link rel="stylesheet" type="text/css" href="/css/previewmail.css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />

@@ -7,9 +7,9 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezLadder.t071" /></title>
-		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezLadder.e2', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
 	    <style>
 	    	.mainlist tr td:first-child {

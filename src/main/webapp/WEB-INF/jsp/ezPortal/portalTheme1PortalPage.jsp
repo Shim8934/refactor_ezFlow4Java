@@ -8,7 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<c:choose>
 			<c:when test="${mode != 'view'}">
-				<link href="<spring:message code="ezPortal.i2" />" rel="stylesheet" type="text/css">
+				<link href="${util.addVer('ezPortal.i2', 'msg')}" rel="stylesheet" type="text/css">
 			</c:when>
 			<c:otherwise>
 				<link href="/css/theme01.css" rel="stylesheet" type="text/css">

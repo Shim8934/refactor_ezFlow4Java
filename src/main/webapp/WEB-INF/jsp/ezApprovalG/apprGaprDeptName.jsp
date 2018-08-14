@@ -8,7 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 <script type="text/javascript">
     function btn_SaveAprDeptTempletName_onclick() {
         var p_AprDeptTempletName = trim(TxtAprDeptTempletName.value);

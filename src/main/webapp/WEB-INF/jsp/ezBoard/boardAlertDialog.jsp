@@ -6,7 +6,7 @@
 <html>
 	<head>
 	<title>${caption}</title>
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>  
 		<script type="text/javascript">
 	        var ReturnFunction;

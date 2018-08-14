@@ -10,7 +10,7 @@
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />		
 		<link href="/css/login.css" rel="stylesheet" type="text/css" />
-		<link rel="stylesheet" href="<spring:message code='main.e15'/>" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">
 		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
 		<style>
 			.blocker {
