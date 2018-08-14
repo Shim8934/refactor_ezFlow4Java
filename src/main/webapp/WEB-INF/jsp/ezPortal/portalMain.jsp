@@ -328,12 +328,7 @@
 			    	textColor = memoColor[0];
 		    	}
 		    	
-		    	if(memoIndex != -1) {		// 수정일때
-		    		$(".individual-memo").eq(memoIndex).remove();
-		    	}
-		    	
 		    	var text = $("#textarea").val();
-		    	/* $("#memoList").prepend("<div class='individual-memo'><img src='/images/close_xBtn.png'  style='visibility:hidden; float:right; height:20px;'><img src='/images/ezMemo/more.png' style='visibility:hidden; float:right; height:20px; padding-right:5px;'><textarea class='memo-text'>" + text + "</textarea></div>"); */
 		    	var html = "";
 		    	html += "<div class='individual-memo' style='background-color:"+ headerColor +"'>";
 		    	html += "<div class='memo-color'>";
@@ -347,10 +342,6 @@
 		    	html += "</div>"
 		    	$("#memoList").prepend(html);
 		    	$("#textarea").val('');
-		    	/* $("#maskDiv").css("display", "none");
-		    	$("#selected-memo").css("display", "none"); */
-		    	
-		    	memoIndex = -1;
 		    	
 		    	addDate();
 		    	addremove();
@@ -391,7 +382,7 @@
 		        });
 		        
 		        $(".individual-memo").dblclick(function(){
-		        	memoIndex = $(this).index();
+		        	memoIndex = $(this).index()+1;
 		        	currText = $(this).children(".memo-text").val();
 		        	var headerColor = $(this).css("background-color");
 			    	var textColor = $(this).children("textarea").css("background-color");
@@ -423,9 +414,7 @@
 		    }
 		    
 		    function detailMemoSave() {
-		    	if(currText != $("#textarea").val()) {
-		    		save();
-		    	}
+		    	$(".individual-memo:nth-child("+memoIndex+") > .memo-text").val($("#textarea").val());
 		    	$("#textarea").val('');
 		    	$(".detailMemo").css("display", "none");
 		    	memoIndex = -1;
