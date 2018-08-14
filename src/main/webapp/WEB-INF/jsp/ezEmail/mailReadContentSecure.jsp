@@ -7,7 +7,7 @@
 <html>
 	<head>
 	    <title></title>
-        <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
+        <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${e1}"></script>
         <script language="JavaScript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
     	<script language="javascript" type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>

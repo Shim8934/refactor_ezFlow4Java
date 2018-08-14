@@ -15,7 +15,7 @@
 <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendOffer_Cross.js')}"></script>
-<link rel="stylesheet" href="/css/main_Cross.css"  type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('/css/main_Cross.css')}"  type="text/css"/>
 <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css"/>
 <script type="text/javascript">
     var pDocID = "${docID}";

@@ -7,7 +7,7 @@
 		<title>poll_res</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
-		<link rel="stylesheet" type="text/css" href="/css/community.css" />
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/community.css')}" />
 		<style>
 			.graphback {
 				background-color: #f8f8fa;

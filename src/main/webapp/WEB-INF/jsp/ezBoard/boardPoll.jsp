@@ -7,7 +7,7 @@
 		<title>Insert title here</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     	<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
-    	<link rel="stylesheet" href="/css/Tab.css" type="text/css" />
+    	<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />
     	<style type="text/css">
     		.pollImgbtn1{ white-space:nowrap; display:inline-block; cursor: pointer; height:17px; vertical-align:top; cursor:pointer; margin-top: 0px;}
 			.pollImgbtn1 span{ display:inline-block; border:1px solid #d0d0d0; border-radius:3px; padding:0px 10px; height:16px; font:12px gulim; letter-spacing:-1; vertical-align:top; line-height:17px;}

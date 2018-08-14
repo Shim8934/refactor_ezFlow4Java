@@ -6,10 +6,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-        <link rel="stylesheet" href="/css/olstyle_nonIE.css" type="text/css" />
+        <link rel="stylesheet" href="${util.addVer('/css/olstyle_nonIE.css')}" type="text/css" />
         <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
-        <link rel="stylesheet" href="/css/ezSchedule/Calendar_cross.css" type="text/css" />  
-        <link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="${util.addVer('/css/ezSchedule/Calendar_cross.css')}" type="text/css" />  
+        <link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
         <script type="text/javascript">
         	var UserOffset = "<c:out value='${pOffset}'/>";
         </script>      
@@ -22,13 +22,13 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarView_Cross.js')}"></script>   
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 	    <!-- data picker-->
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<!-- 2018-06-12 구해안 -->
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/monthpicker.js')}"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
 		<style type="text/css">
  		.ui-monthpicker>.ui-datepicker-header>.ui-datepicker-title>.ui-datepicker-year{ 
  			margin: 0 auto; 

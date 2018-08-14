@@ -7,9 +7,9 @@
 		<title><spring:message code="ezResource.t241" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
-		<link type="text/css" rel="stylesheet" href="/css/Tab.css" />
-		<link type="text/css" rel="stylesheet" href="/css/olstyle_nonIE.css" />
-		<link type="text/css" rel="stylesheet" href="/css/Calendar_cross.css" />
+		<link type="text/css" rel="stylesheet" href="${util.addVer('/css/Tab.css')}" />
+		<link type="text/css" rel="stylesheet" href="${util.addVer('/css/olstyle_nonIE.css')}" />
+		<link type="text/css" rel="stylesheet" href="${util.addVer('/css/Calendar_cross.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -20,14 +20,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/calendar_cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
 		<!-- data picker-->
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/monthpicker.js')}"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
 		<!-- modal -->
-		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<style>
 			#resourceDataTable tr td {

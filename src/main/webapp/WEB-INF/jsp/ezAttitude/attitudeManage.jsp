@@ -7,10 +7,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title><spring:message code='ezAttitude.t73'/></title>
 		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css"/>
-	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
-	    <link rel="stylesheet" href='/css/Tab.css' type="text/css" />
-	    <link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" >
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}" type="text/css" >
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezAttitude/ListView_list.js')}"></script>

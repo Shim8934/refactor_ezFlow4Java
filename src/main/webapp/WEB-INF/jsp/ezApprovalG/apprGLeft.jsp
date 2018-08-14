@@ -10,8 +10,8 @@
 		<title></title>
 		<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
-		<link href="/css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
-		<link href="/css/jquery.selectbox.css" type="text/css" rel="stylesheet" />
+		<link href="${util.addVer('/css/jquery.selectbox.css')}" type="text/css" rel="stylesheet" />
+		<link href="${util.addVer('/css/jquery.selectbox.css')}" type="text/css" rel="stylesheet" />
 		<link href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" rel="stylesheet" />
 	    <style type="text/css">
 	        .instance.sbHolder{

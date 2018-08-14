@@ -33,13 +33,13 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
 		
 		<!-- data picker -->
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" />
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" />
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}" />
 		<!-- time picker -->
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 
 		<c:choose>

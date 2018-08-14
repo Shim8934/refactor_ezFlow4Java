@@ -9,9 +9,9 @@
 	<head>
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />		
-		<link href="/css/login.css" rel="stylesheet" type="text/css" />
+		<link href="${util.addVer('/css/login.css')}" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">
-		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
 		<style>
 			.blocker {
 				text-align: center;

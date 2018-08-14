@@ -8,9 +8,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezLadder.t071" /></title>
 		<link rel="stylesheet" href="${util.addVer('ezLadder.e2', 'msg')}" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
-	    <link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
+	    <link rel="stylesheet" href="${util.addVer('/css/ezLadder/ladder_CSS.css')}">
 	    <style>
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;

@@ -8,7 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezLadder.t073" /></title>
 		<link rel="stylesheet" href="${util.addVer('ezLadder.e2', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="/css/ezLadder/ladderPreList.css" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezLadder/ladderPreList.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezLadder.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>

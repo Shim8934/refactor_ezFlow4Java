@@ -8,10 +8,10 @@
 	<title>Create Poll</title>	
 		
 	<link rel="stylesheet" href="${util.addVer('ezPoll.i1', 'msg')}" type="text/css">	
-	<link rel="stylesheet" href="/css/ezPoll/sort.css" type="text/css">	
-	<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
-	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
-	<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
+	<link rel="stylesheet" href="${util.addVer('/css/ezPoll/sort.css')}" type="text/css">	
+	<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
+	<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
+	<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
 	 
 	<script src="${util.addVer('/js/jquery/jquery.min.js')}"></script> 
 	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>

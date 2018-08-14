@@ -7,7 +7,7 @@
 		<title><spring:message code='ezCircular.t2' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css" />
-		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
+		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 <%-- 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script> --%>
 		<script type="text/javascript" src="${util.addVer('ezCircular.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>

@@ -8,7 +8,7 @@
 		<title>popupCommHome</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="/css/community.css" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/community.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
 			.btype_list ul li .date {

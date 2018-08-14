@@ -7,7 +7,7 @@
 		<title>poll_edit</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
-		<link rel="stylesheet" href="/css/community.css" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/community.css')}" type="text/css">
 		<style>
 			.disableSelIE {
 				background: none;
@@ -32,13 +32,13 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/datepicker.htc.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<!-- data picker -->
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
         <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
-        <link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
+        <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
 		<!-- time picker -->
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css"/>
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}"/>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<script type="text/javascript">
 		

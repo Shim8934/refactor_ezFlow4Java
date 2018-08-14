@@ -7,9 +7,9 @@
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />				
 		<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width" />
-		<link rel="stylesheet" type="text/css" href="/js/jquery.mobile/jquery.mobile-1.4.5.min.css" />
-    	<link rel="stylesheet" type="text/css" href="/css/mobile/mobile.css" />
-    	<link rel="stylesheet" type="text/css" href="/css/mobile/mApprovalG.css" />
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery.mobile/jquery.mobile-1.4.5.min.css')}" />
+    	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/mobile/mobile.css')}" />
+    	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/mobile/mApprovalG.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery.mobile/jquery.mobile-1.4.5.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mobile/mobile.js')}"></script>

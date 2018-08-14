@@ -34,7 +34,7 @@
 		</section>
 		
 		<link rel="stylesheet" href="${util.addVer('main.e6', 'msg')}" type="text/css" />
-		<link rel="stylesheet" href="/css/orbit-1.2.3.css" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/orbit-1.2.3.css')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.7.2.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.orbit-1.2.3.min.js')}"></script>
 		<style type="text/css">

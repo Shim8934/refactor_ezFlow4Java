@@ -4,7 +4,7 @@
 <html>
 	<head>
 	    <title></title>
-	    <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
+	    <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 	    <style type="text/css">
 	    	.list {
 	    		font-size:12px;

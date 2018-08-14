@@ -9,7 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezLadder.t009" /></title>
 		
-		<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezLadder/ladder_CSS.css')}">
 		<link rel="stylesheet" href="${util.addVer('ezLadder.e2', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>

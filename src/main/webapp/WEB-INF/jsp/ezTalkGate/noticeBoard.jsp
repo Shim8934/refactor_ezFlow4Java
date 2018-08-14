@@ -8,8 +8,8 @@
 	<head>
 		<title><spring:message code="ezTalkGate.ldh001" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/ezTalkGate/ktb2b.css" type="text/css">
-		<link rel="stylesheet" href="/css/ezTalkGate/main.css" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezTalkGate/ktb2b.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezTalkGate/main.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezTalkGate.e1', 'msg')}"></script>
 		<script>
 		

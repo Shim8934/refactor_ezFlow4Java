@@ -7,7 +7,7 @@
 		<title>${boardName }</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
-		<link rel="stylesheet" type="text/css" href="/css/community.css" />
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/community.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/ErrorHandler.js')}"></script>

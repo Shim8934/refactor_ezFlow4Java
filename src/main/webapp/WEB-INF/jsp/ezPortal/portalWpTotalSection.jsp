@@ -200,8 +200,8 @@
 		</section>
 			
 		<link rel="stylesheet" href="${util.addVer('main.e6', 'msg')}" type="text/css" />
-		<link rel="stylesheet" href="/css/ezAttitude/clockTemp1.css" type="text/css" />
-		<link rel="stylesheet" href="/css/ezAttitude/timecheck.css" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/clockTemp1.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/timecheck.css')}" type="text/css" />
 		<style>
 			select {
 				-webkit-appearance: none; border:1px solid #d5e0ef;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white;

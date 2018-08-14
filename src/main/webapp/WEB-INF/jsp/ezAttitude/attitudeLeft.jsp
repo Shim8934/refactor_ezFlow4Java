@@ -7,11 +7,11 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<title>left_attitude</title>
-		<link rel="stylesheet" href="/css/email_tree.css" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('/css/email_tree.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css"/>
-		<link rel="stylesheet" href="/css/main.css" type="text/css"/>	
-		<link rel="stylesheet" href="/css/ezAttitude/clockTemp1.css" type="text/css" />
-		<link rel="stylesheet" href="/css/ezAttitude/timecheck.css" type="text/css" />	
+		<link rel="stylesheet" href="${util.addVer('/css/main.css')}" type="text/css"/>	
+		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/clockTemp1.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/timecheck.css')}" type="text/css" />	
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>

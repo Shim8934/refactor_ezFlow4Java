@@ -20,8 +20,8 @@
 <script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
-<link rel="stylesheet" href="/js/jquery/jquery-ui.css">
-<link rel="stylesheet" href="/js/jquery/jquery-ui.min.css">
+<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
+<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.min.css')}">
 <style type="text/css">
 	#tdAVType div input {
 		padding:3px;

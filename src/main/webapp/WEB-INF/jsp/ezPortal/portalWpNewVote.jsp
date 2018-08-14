@@ -8,7 +8,7 @@
 		<title><spring:message code='main.t1006' /></title>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezPoll/vote.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPoll/stomp.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPoll/sockjs.min.js')}"></script>

@@ -8,9 +8,9 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
 	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>

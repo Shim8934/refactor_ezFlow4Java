@@ -7,8 +7,8 @@
 		<title><spring:message code='ezApprovalG.hyj02'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
-		<!-- <link rel="stylesheet" href="/js/jquery/jquery-ui.css"> -->
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<!-- <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}"> -->
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<style> 
 			.IMG_BTN { behavior:url("/css/include/ImgBtn.htc") }
 			.pagetd{padding-top:6px; }

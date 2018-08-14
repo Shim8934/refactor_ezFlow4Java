@@ -6,7 +6,7 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t1674'/></title>
 	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
-	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+	    <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 	    <style>
 	    
 		/* 2018-08-02 김보미 - 검색 테이블 ui수정 */

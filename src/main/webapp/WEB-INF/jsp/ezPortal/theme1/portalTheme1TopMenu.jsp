@@ -13,7 +13,7 @@
 				<link href="${util.addVer('ezPortal.i2', 'msg')}" rel="stylesheet" type="text/css">
 			</c:when>
 			<c:otherwise>
-				<link href="/css/theme01.css" rel="stylesheet" type="text/css">
+				<link href="${util.addVer('/css/theme01.css')}" rel="stylesheet" type="text/css">
 			</c:otherwise>
 		</c:choose>
 		

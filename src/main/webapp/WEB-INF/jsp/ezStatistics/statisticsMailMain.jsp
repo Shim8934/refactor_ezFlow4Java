@@ -8,8 +8,8 @@
     <title><spring:message code='ezStatistics.t1001' /></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="${util.addVer('ezStatistics.e2', 'msg')}" type="text/css" />
-    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-    <link rel="stylesheet" href="/js/ezStatistics/js/jquery.jqplot.min.css" type="text/css">
+    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+    <link rel="stylesheet" href="${util.addVer('/js/ezStatistics/js/jquery.jqplot.min.css')}" type="text/css">
     <style type="text/css">
         .jqplot-table-legend {
         white-space:nowrap

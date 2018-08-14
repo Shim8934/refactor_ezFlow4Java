@@ -16,7 +16,7 @@
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<style>
 			.mainlist tr th {
 				border-top:0px;

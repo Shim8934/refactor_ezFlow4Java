@@ -7,7 +7,7 @@
 		<title><spring:message code="ezBoard.t135" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
-	    <link rel="stylesheet" href='/css/email_tree.css' type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/email_tree.css')}" type="text/css" />
 	    <style>
 			.groupBoard {
 				width:266px;
