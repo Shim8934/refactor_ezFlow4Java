@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezCabinet/cabinet.css")%>" type="text/css" />
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/jquery-ui.css")%>" type="text/css" />
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>" type="text/css" />
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>" type="text/css" />
 	</head>
 	<body class="mainbody overY">
 		<h1 id="cabInfo">
