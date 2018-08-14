@@ -1713,5 +1713,16 @@
 		AND
 			PHYSICALDELIVERYOFFICENAME = #companyID#	
 	</select>
+	
+	<select id="EzOrganDAO.getPhysicalDeliveryOfficeName" parameterClass="Map" resultClass="String">
+		SELECT
+			PHYSICALDELIVERYOFFICENAME
+		FROM 
+			TBL_USERMASTER
+		WHERE
+			CN = #userID#
+		AND
+			TENANT_ID = #v_TENANT_ID#		
+	</select>
 
 </sqlMap>

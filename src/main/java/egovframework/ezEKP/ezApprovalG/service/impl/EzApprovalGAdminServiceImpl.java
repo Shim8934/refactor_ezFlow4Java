@@ -3349,6 +3349,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("primary", userInfo.getPrimary());
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyID());
+		map.put("lang", userInfo.getLang());
 		
 		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getCodeType(map);
 		
@@ -3383,6 +3384,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("primary", userInfo.getPrimary());
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyID());
+		map.put("lang", userInfo.getLang());
 		
 		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getCodeType(map);
 		
@@ -3928,4 +3930,17 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		return list;
 	}
 
+
+	@Override
+	public String getExAttribute(String buJaeId, int tenantID) throws Exception {
+		logger.debug("getExAttribute");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERID", buJaeId);
+		map.put("v_TENANTID", tenantID);
+		
+		String auth = ezApprovalGDAO.getExtAttr1(map);
+		
+		return auth;
+	}
 }

@@ -3057,4 +3057,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void susinNonElecRecDocDel7(Map<String, Object> map) throws Exception {
 		delete("EzApprovalG.susinNonElecRecDocDel7", map);
 	}
+	public String getExtAttr1(Map<String, Object> map) throws Exception{
+		return (String)select("EzApprovalG.getExtAttr1", map);
+	}
 }

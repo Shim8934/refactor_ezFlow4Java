@@ -696,13 +696,14 @@
 		            try {
 		                // 직인의뢰함
 		                if (pListTypeValue != "7") {
-		                	if("${userSendOut}" == "YES") {
+		                	//겸직 시 겸직된 부서로 이동할 경우 직인의뢰함의 count가 표시되지 않는 현상 제거
+		                	//if("${userSendOut}" == "YES") {
 		                    	if (getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) > 0)
 		                        	count7.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) + ")";
 		                    	else
 		                        	count7.innerHTML = "(" + getNodeText(ResultXML.getElementsByTagName("COUNT").item(5)) + ")";
-		                		}
-		                	}
+		                	//}
+	                	}
 		            } catch (e) { }
 		            
 		        } catch (e) { }

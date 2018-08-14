@@ -309,8 +309,8 @@ public class EzWebFolderGWController_y {
 				double folderSize           = ezWebFolderAdminService.getFolderSize(folder.getFolderPath(), tenantId);
 				UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
 				
-				long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
-				long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
+				double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
+				double totalCapa = Double.parseDouble(userCapacity.getTotalCapacity()) * 1073741824;
 				
 				if (folderSize > (totalCapa - totalUsed)) {
 					LOGGER.debug("Not enough storage to move/copy this folder!");

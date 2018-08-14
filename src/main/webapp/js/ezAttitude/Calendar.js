@@ -2,7 +2,8 @@
 var sDate = new Date();
 var dayOfWeeks;
 
-var monthHeight = ((parseInt(document.documentElement.clientHeight, 10) - 255) / 6) - 11;
+//2018-08-14 배현상, 브라우저의 창 크기가 작을 경우 달력의 height가 작게 고정되어 근태유형의 max height의 값을 적용
+var monthHeight = Math.floor((781 - 191) /6) > (((parseInt(document.documentElement.clientHeight, 10) - 255) / 6) - 11) ? Math.floor((781 - 191) /6) : (((parseInt(document.documentElement.clientHeight, 10) - 255) / 6) - 11);
 /**
  * 달력 생성(월보기만 제공)
  * @param pTargetID 달력을 배치시킬 ID
