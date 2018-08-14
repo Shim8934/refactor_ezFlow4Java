@@ -191,7 +191,9 @@
 			changePanel.className   = "popup cabChgoff";
 		}
 		
-		document.getElementById("basicValue").value                           = "";
+		var inputElmt      = document.getElementById("basicValue");
+		inputElmt.value    = "";
+		inputElmt.disabled = false;
 		document.querySelector("input[name='capType'][role='limit']").checked = true;
 	}
 	
