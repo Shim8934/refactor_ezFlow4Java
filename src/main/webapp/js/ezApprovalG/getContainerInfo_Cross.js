@@ -397,19 +397,19 @@ function btnRemoveDoc_onclick() {
 
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
-    var selRow = DocList.GetSelectedRows();
+    var tr = DocList.GetSelectedRows();
+    var orgCompanyID = "";
 
-    if (selRow.length <= 0) {
-        var InformationString = strLangS385;
-        OpenAlertUI(InformationString);
+    if (tr.length == 0) {
+        OpenAlertUI(strLangS385,"OPEN");
         return;
-    }
-
-    var OpinionContent = strLangS387;
-    var rtn = OpenInformationUI(OpinionContent, RemoveDoc_Complete, "OPEN");
-    
-    if (!CrossYN()) {
-        RemoveDoc_Complete(rtn);
+    } else {
+	    var OpinionContent = strLangS387;
+	    var rtn = OpenInformationUI(OpinionContent, RemoveDoc_Complete, "OPEN");
+	    
+	    if (!CrossYN()) {
+	        RemoveDoc_Complete(rtn);
+	    }
     }
 }
 
@@ -1209,11 +1209,21 @@ function check_presence2() {
 
     var SelUserCont_dialogArgument = new Array();
     function btnRegUserCont_onclick() {
-        SelUserCont_dialogArgument[0] = "";
-        SelUserCont_dialogArgument[1] = RegUserCont_Complete;;
-        var url = "/ezApprovalG/selUserCont.do";
-        ContOpen = GetOpenWindow(url, "selUserCont", 340, 460, "NO");
-        try { ContOpen.focus() } catch (e) { }
+    	var DocList = new ListView();
+        DocList.LoadFromID("DocList");
+        var tr = DocList.GetSelectedRows();
+        var orgCompanyID = "";
+
+        if (tr.length == 0) {
+            OpenAlertUI(strLangS385,"OPEN");
+            return;
+        } else {
+        	SelUserCont_dialogArgument[0] = "";
+        	SelUserCont_dialogArgument[1] = RegUserCont_Complete;;
+        	var url = "/ezApprovalG/selUserCont.do";
+        	ContOpen = GetOpenWindow(url, "selUserCont", 340, 460, "NO");
+        	try { ContOpen.focus() } catch (e) { }
+        }
     }
     
     function RegUserCont_Complete(RtnVal) {

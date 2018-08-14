@@ -1108,7 +1108,7 @@
 		        var orgCompanyID = "";
 		
 		        if (tr.length == 0) {
-		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>");
+		            OpenAlertUI("<spring:message code='ezApprovalG.t113'/>","OPEN");
 		            return;
 		        }
 		        else{
