@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil"                      %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core"   %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -7,12 +8,12 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title></title>
 		<c:if test="${module != 'jounl' && module != 'mjounl' && module !='apprv' && module !='mapprv' && module !='commu' && module !='mcommu'}">
-			<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css"> 
+			<link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezCabinet.css' />")%>" type="text/css">
 		</c:if>
-		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"                type="text/css"/>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezCabinet/cabinet.css")%>" type="text/css" />
 		<link rel="stylesheet" href="/css/previewmail.css"                      type="text/css"/>
-		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css"       type="text/css"/>
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css"/>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezTask/circularProgressBar.css")%>" type="text/css">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>" type="text/css">
 		<c:if test="${module == 'jounl' || module == 'mjounl' || module =='apprv' && module =='mapprv'}">
 			<style type="text/css">p {margin-top: 0px; margin-bottom: 0px;}</style>
 		</c:if>
@@ -23,10 +24,10 @@
 	<body style="padding: 8px; margin: 0px;">
 		<div class="zoomDiv"><img src="/images/minus.png"><img src="/images/plus.png"></div>
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"                  ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
-		<script type="text/javascript" src="/js/ezTask/circularProgressBar.js"      ></script>
-		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezTask/circularProgressBar.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, request, "<spring:message code='ezCabinet.lang' />")%>"></script>
 		<script type="text/javascript">
 			var CabinetContentPreview = function() {
 				var currentZoom     = 100;
