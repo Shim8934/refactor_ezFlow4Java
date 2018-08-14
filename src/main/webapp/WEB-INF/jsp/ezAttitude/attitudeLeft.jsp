@@ -12,11 +12,11 @@
 		<link rel="stylesheet" href="/css/main.css" type="text/css"/>	
 		<link rel="stylesheet" href="/css/ezAttitude/clockTemp1.css" type="text/css" />
 		<link rel="stylesheet" href="/css/ezAttitude/timecheck.css" type="text/css" />	
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/Holiday.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezAttitude/Calendar.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
 		<style>
 			.time {
 				float:left;

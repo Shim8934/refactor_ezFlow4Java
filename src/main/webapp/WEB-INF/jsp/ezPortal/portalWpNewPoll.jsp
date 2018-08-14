@@ -6,7 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='main.t1006' /></title>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<section  class="body_bg1">
 			<article class="portletbox pollbox">
@@ -34,7 +34,7 @@
 		</section>
 		
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<!-- 2018-07-25 김보미 - 투표모듈 css맞추기 위해 추가 -->
 		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
 		<script type="text/javascript">

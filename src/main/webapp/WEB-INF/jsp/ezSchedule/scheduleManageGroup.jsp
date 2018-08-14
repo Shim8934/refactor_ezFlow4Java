@@ -8,12 +8,12 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>		
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezSchedule/controls/ListView_Group.js"></script>		
-		<script type="text/javascript" src="/js/NameControl.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/controls/ListView_Group.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/NameControl.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript">
 		    var strListInfo = "";
 		    var use_ocs = "<c:out value='${use_ocs}' />";

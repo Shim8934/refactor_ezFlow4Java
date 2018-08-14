@@ -15,8 +15,8 @@
 	    		padding-left:10px;
 	    	}
 	    </style>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
 			var pageid = "${pageID}";
 			var UtilAreaExist = "${utilAreaExist}";

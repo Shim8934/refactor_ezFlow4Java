@@ -21,7 +21,7 @@
 			    border: 1px solid rgb(225, 97, 100);
 			}
 		</style>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
 			function sendIt() {
 				if ("${isSave}" == 0) {

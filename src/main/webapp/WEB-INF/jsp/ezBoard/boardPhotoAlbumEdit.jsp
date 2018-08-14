@@ -4,7 +4,7 @@
 	<head>
 	    <title><spring:message code='ezBoard.t1005'/></title>
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 		    var pBoardID = "";
 		    var pItemID = "";

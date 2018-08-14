@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<link href="/css/jquery.theme01scrollbar.css" rel="stylesheet" type="text/css">
 		<link href="/css/theme01.css" rel="stylesheet" type="text/css">
 		
@@ -31,9 +31,9 @@
      		<p class="title"><spring:message code='main.t00030' /></p>
 			${strHTML}	
 		</div>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.theme01Scrollbar.concat.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.theme01Scrollbar.concat.min.js')}"></script>
 		<script type="text/javascript">
 			(function ($) {
 	        	$(window).load(function () {

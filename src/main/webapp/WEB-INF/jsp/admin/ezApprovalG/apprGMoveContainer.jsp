@@ -42,13 +42,13 @@
 		.mainlist tr th {border-top:0px}
 	    </style>
 	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/admin/MoveContainer_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/admin/Pagenation_Cross.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/MoveContainer_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/Pagenation_Cross.js')}"></script>
 	    <script type="text/javascript" id="clientEventHandlersJS">
 	    var Check = false, PeriodDocList;
 	    var ScontID = "";

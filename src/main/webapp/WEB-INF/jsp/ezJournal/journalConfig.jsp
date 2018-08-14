@@ -9,10 +9,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="<spring:message code='ezCircular.c1'/>" type="text/css">
     <link rel="stylesheet" href="/css/Tab.css" type="text/css" />
-    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
     <link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
-	<script type="text/javascript" src="/js/jstree/jstree.js"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jstree/jstree.js')}"></script>
 	
 	<style type="text/css">
 		tr.hover:hover{

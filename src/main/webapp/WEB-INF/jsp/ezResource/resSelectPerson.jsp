@@ -24,13 +24,13 @@
 	    		color:#017BEC;
 	    	}
 	    </style>		
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezResource/control/TreeView.js"></script>
-		<script type="text/javascript" src="/js/ezResource/control/TreeViewCtrl.js"></script>
-		<script type="text/javascript" src="/js/ezResource/control/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
-		<script type="text/javascript" src="<spring:message code="ezResource.e1"/>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/control/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/control/TreeViewCtrl.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/control/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
 		<script type="text/javascript">
 			var pListType = "TXT";
 		    var UserAgentState = navigator.userAgent.toLowerCase();

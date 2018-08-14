@@ -8,9 +8,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezResource.e1' />" ></script>
-		<script type="text/javascript" src="/js/mouseeffect.js" ></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js" ></script>
-		<script type="text/javascript" src="/js/ezResource/admin/gwBoardsInfo.js" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/admin/gwBoardsInfo.js')}" ></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
 			var pUserID = "${userInfo.id}"
 			var pDeptID = "${userInfo.deptID}"

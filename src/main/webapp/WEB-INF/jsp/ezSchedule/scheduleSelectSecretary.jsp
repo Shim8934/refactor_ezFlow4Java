@@ -10,11 +10,11 @@
 	    <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css" />	    
 	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
-        <script type="text/javascript" src="/js/mouseeffect.js"></script>
-        <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-        <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
-        <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
+        <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 		<script type="text/javascript">
 			var g_xmlHTTP;
 		    var ReturnFunction;

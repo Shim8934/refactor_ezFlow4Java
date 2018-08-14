@@ -7,10 +7,10 @@
 		<title><spring:message code="ezResource.t13"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2"/>" type="text/css" />
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezResource/organtreeview.htc.js"></script>
-		<script type="text/javascript" src="/js/ezResource/control/ListView_list.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/organtreeview.htc.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/control/ListView_list.js')}"></script>
 		<script type="text/javascript">
 		 	var ReturnFunction;
 		    var retVal = new Array();

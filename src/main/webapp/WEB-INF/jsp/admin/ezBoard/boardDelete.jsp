@@ -18,9 +18,9 @@
 			.warnintxt02 { font-size:12px; color:#666666; line-height:18px; margin:10px 10px 10px 10px; padding:0px;}
 			</style>
 			
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>    
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>    
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	    
 		<script type="text/javascript" language="javascript">
 			var SelectedBoardID = "<c:out value='${boardID}'/>";
 	    	var BoardGroupID = "<c:out value='${boardGroupID}'/>";

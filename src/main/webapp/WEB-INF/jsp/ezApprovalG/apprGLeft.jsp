@@ -33,13 +33,13 @@
 			}
 	    </style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.7.2.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.selectbox-0.2.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.7.2.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.selectbox-0.2.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 			var pUserID = "${userInfo.id}";
 		    var pListTypeValue = "${listType}";

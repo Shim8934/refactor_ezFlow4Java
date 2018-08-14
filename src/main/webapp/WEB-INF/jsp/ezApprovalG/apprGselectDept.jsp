@@ -14,18 +14,18 @@
 			}
 		</style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/OrganTree_Cross.js"></SCRIPT>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezCabinet_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CabinetInfo_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getContainerInfo_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/SendOffer_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/OrganTree_Cross.js')}"></SCRIPT>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezCabinet_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CabinetInfo_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getContainerInfo_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendOffer_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript">
 		    var OrderCell = "";
 		    var UserAgentState = navigator.userAgent.toLowerCase();

@@ -15,9 +15,9 @@
 			</c:otherwise>
 		</c:choose>
 		
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>
-		<script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 		<script type="text/javascript">
 			var xmlhttp;
 			var QuickcurNum = 0;

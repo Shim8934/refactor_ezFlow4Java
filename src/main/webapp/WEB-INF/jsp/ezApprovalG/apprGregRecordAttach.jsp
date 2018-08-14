@@ -16,12 +16,12 @@
 		border-top :0px;
 	}
 </style>
-<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-<script type="text/javascript" src="/js/mouseeffect.js"></script>
-<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-<script type="text/javascript" src="/js/jquery/jquery.js"></script>
-<script type="text/javascript" src="/js/escapenew.js"></script>
-<script type="text/javascript" src="/js/ezApprovalG/attach_CK.js"></script>
+<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/attach_CK.js')}"></script>
 <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 <script type="text/javascript" ID="clientEventHandlersJS">
     var pDocID = null;

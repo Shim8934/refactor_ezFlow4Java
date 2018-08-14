@@ -10,11 +10,11 @@
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css" />
 		<link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jstree/jstree.js"></script>
-		<script type="text/javascript" src="/js/ezJournal/FormMain_Cross.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jstree/jstree.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezJournal/FormMain_Cross.js')}"></script>
 	    <script type="text/javascript">		    
 	    	var companyId = "<c:out value='${companyId}'/>";
 		    var typeId = "<c:out value='${typeId}'/>";

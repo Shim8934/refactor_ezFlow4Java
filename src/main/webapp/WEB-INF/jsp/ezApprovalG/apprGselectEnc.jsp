@@ -6,9 +6,9 @@
 <head>
     <title><spring:message code='ezApprovalG.t259'/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	<script type="text/javascript" src="/js/mouseeffect.js"></script>
+	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
     <script id="clientEventHandlersJS" type="text/javascript">
         if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
             window.onblur = function () {

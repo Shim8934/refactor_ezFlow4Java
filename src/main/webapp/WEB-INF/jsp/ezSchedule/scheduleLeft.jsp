@@ -77,16 +77,16 @@
 				display: none;
 			}
 	    </style>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/Holiday.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/TreeView.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezAddress/Controls/treeview.htc.js"></script>
-	    <!-- <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_Cross.js"></script> -->
-	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarView_Cross.js"></script>  
-	    <script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarDataPro_Cross.js"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/address_tree_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/Controls/treeview.htc.js')}"></script>
+	    <!-- <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_Cross.js')}"></script> -->
+	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarView_Cross.js')}"></script>  
+	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarDataPro_Cross.js')}"></script>
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 
 	    <script type="text/javascript">

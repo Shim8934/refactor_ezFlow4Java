@@ -21,7 +21,7 @@
     <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jquery.jqplot.min.js")%>"></script>
     <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jqplot.categoryAxisRenderer.min.js")%>"></script>
     <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jqplot.barRenderer.min.js")%>"></script>    
-<!--     <script type="text/javascript" src="/js/showModalDialog.js"></script>     -->
+<!--     <script type="text/javascript" src="${util.addVer('/js/showModalDialog.js')}"></script>     -->
     <script type="text/javascript">
     var xmlHttp = null;
     var Tab1_flag = true;

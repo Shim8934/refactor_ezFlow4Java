@@ -7,9 +7,9 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	    <link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-        <script type="text/javascript" src="/js/mouseeffect.js"></script>
-        <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>        
-        <script type="text/javascript" src="/js/ezSchedule/ListView_list.js"></script>
+        <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>        
+        <script type="text/javascript" src="${util.addVer('/js/ezSchedule/ListView_list.js')}"></script>
 		<title><spring:message code='ezSchedule.t53'/></title>
 		<script>
 			var RetValue;

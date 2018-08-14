@@ -8,7 +8,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="<spring:message code='ezCircular.c1'/>" type="text/css">
     <link rel="stylesheet" href="/css/Tab.css" type="text/css" />
-    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     <script type="text/javascript">
         var pUse_Editor = "";
         var pNoneActiveX = "";

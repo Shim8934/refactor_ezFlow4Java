@@ -13,14 +13,14 @@
 	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
 	<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
 	 
-	<script src="/js/jquery/jquery.min.js"></script> 
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-	<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-	<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	<script type="text/javascript" src="/js/ezPoll/dropzone.js"></script>
-  	<script src="/js/jquery-ui/jquery-ui.js"></script>
+	<script src="${util.addVer('/js/jquery/jquery.min.js')}"></script> 
+	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezPoll/dropzone.js')}"></script>
+  	<script src="${util.addVer('/js/jquery-ui/jquery-ui.js')}"></script>
   	<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	  
 	<script type="text/javascript">	
 		var messageCode1	  = '<spring:message code="ezPoll.t164"/>';

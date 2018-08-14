@@ -9,12 +9,12 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>
-		<script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
 		<script type="text/javascript">
 			var portlet_type = "${prop.portlet_Type}";
 			var view_type = "${prop.showTitleBar}";

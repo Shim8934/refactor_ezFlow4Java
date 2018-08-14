@@ -31,16 +31,16 @@
 	    	}
 	    </style>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-   		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/escapenew.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/TabMenu.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/TreeViewCtrl_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/AprGongRamLine_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/SelectSubTitles_Cross.js"></script>
+   		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TabMenu.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrl_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/AprGongRamLine_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SelectSubTitles_Cross.js')}"></script>
 	    <script type="text/javascript">
 		    var pDocID;
 		    var approvalFlag = "${approvalFlag}";

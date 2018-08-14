@@ -8,8 +8,8 @@
 			<title><spring:message code='ezQuestion.t154' /></title>
 			<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css" />
 			<script type="text/javascript" src="<spring:message code='ezQuestion.e1' />"></script>
-			<script type="text/javascript" src="/js/mouseeffect.js"></script>
-			<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+			<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+			<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 			<script type="text/javascript">
 				var pID = "${idName}";
 			    var pType = "";

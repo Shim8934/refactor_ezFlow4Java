@@ -9,17 +9,17 @@
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezForm.js"></script>
-		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/FormMain.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker_AprLine.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezForm.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/FormMain.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/AutoLineRuleMaker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/AutoLineRuleMaker_AprLine.js')}"></script>
 		
 		<script type="text/javascript">
 			var OrderCell = "";

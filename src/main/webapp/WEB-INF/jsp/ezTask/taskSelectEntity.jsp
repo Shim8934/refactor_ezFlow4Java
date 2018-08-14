@@ -29,12 +29,12 @@
 	    	}
 	    </style>
 	    <script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>	    
-        <script type="text/javascript" src="/js/mouseeffect.js"></script>
-        <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-        <script type="text/javascript" src="/js/ezTask/TreeView_Task.js"></script>
-	    <script type="text/javascript" src="/js/ezTask/ListView_list.js"></script>
-        <script type="text/javascript" src="/js/NameControl.js"></script>
-        <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+        <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/ezTask/TreeView_Task.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezTask/ListView_list.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/NameControl.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 		var g_xmlHTTP = null;
 	    var pListType = "TXT";

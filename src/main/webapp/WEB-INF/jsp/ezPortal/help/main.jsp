@@ -16,7 +16,7 @@
 			.warningdl dd { padding:0px 0px 0px 5px; margin:0px; height:50px; font-weight:bold; font-size:14px; color:#333333;}
 			.warnintxt02 { font-size:12px; color:#666666; line-height:18px; margin:10px 10px 10px 10px; padding:0px;}
 		</style>
-		<script type="text/javascript" src="/js/pdf_Check.js"></script>	
+		<script type="text/javascript" src="${util.addVer('/js/pdf_Check.js')}"></script>	
 		</head>
 		<script type="text/javascript">
 	        window.onload = function () {

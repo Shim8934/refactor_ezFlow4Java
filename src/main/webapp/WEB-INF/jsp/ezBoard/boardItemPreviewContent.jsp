@@ -11,9 +11,9 @@
 				text-decoration: none;
 	    	}
 	    </style>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/PreviewItem.js')}"></script>
 	    <script type="text/javascript">
 	        var nowZoom = 100;
 	        var maxZoom = 200;

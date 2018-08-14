@@ -6,12 +6,12 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='main.t1006' /></title>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
-		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPoll/stomp.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPoll/sockjs.min.js')}"></script>
 		<script type="text/javascript">			
 		    var qstId 			= "${qstId}";
 		    var votesArr 		= [];

@@ -18,12 +18,12 @@
 	    <link rel="stylesheet" href="/css/jstree/style.css" type="text/css" />
 	    <link rel="stylesheet" href="/css/ezJournal/journal_css.css" type="text/css" />
 	    <link rel="stylesheet" href="/js/jquery/jquery.modal.css" type="text/css" />
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/jstree/jstree.js"></script>
-	    <script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jstree/jstree.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezJournal/journal_script.js')}"></script>
 	    <style type="text/css">
 	    	#loading {
 				 width: 100%;  

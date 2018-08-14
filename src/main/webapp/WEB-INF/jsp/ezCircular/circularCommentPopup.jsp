@@ -9,10 +9,10 @@
 		<link rel="stylesheet" href="<spring:message code="ezCircular.c1" />" type="text/css" />
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezCircular/circularComment.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCircular/circularComment.js')}"></script>
 		
 		<style type="text/css">
 			.portlet_tabpart01_top p .tabon { border-bottom-color: white !important}

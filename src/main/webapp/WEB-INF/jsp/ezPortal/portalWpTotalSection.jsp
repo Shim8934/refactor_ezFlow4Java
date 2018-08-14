@@ -210,27 +210,27 @@
 			    display: none;
 			}
 		</style>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/Holiday.js"></script>
-		<script type="text/javascript" src="/js/ezAttitude/Calendar.js"></script>
-		<script type="text/javascript" src="/js/ezSchedule/jindo.all.js"></script>
-		<script type="text/javascript" src="/js/ezSchedule/selectbox.js"></script>
-		<script type="text/javascript" src="/js/ezSchedule/scrollbox.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/jindo.all.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/selectbox.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/scrollbox.js')}"></script>
 		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>		
 		<script type="text/javascript">
 		 	var UserOffset = "${userOffset}";
 		</script>
 		<c:choose>
 			<c:when test="${checkBrowser == true}">
-				<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_IEEIP.js"></script>
+				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_IEEIP.js')}"></script>
 			</c:when>
 			<c:otherwise>
-				<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_EIP.js"></script>
+				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_EIP.js')}"></script>
 			</c:otherwise>
 		</c:choose>
 		
-		<script type="text/javascript" src="/js/jquery/raphael-min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<style>
 			#atti_area span{
 				width:35px;

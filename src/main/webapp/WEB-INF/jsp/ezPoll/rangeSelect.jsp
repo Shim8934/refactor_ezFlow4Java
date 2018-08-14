@@ -8,11 +8,11 @@
 		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">   
 		<link href="/css/ezPoll/rangeSelect.css" rel="stylesheet" type="text/css">     
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezPoll/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezPoll/TreeView.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPoll/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPoll/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
         	var xmlHttp_Depttree = createXMLHttpRequest();
         	var xmlHttp_UserList = createXMLHttpRequest();

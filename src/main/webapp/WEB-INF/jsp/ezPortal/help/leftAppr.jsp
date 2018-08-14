@@ -7,7 +7,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
 	</head>
 	<link href="/css/help.css" rel="stylesheet" type="text/css">
-	<script type="text/javascript" src="/js/mouseeffect.js"></script>
+	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<body  id="left">
 		<c:choose>
 			<c:when test="${userInfo.lang != '3'}">

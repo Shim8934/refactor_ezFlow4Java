@@ -9,9 +9,9 @@
 	    <link rel="stylesheet" href='<spring:message code="ezTask.e2" />' type="text/css" />
 	    <link rel="stylesheet" href="/css/jquery-hex-colorpicker.css" type="text/css" />
 	    <script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezTask/jquery-hex-colorpicker.js"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezTask/jquery-hex-colorpicker.js')}"></script>
 	    <script type="text/javascript">
 	    	var Name_Complete;
 		    var ReturnFunction;

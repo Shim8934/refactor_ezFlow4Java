@@ -9,13 +9,13 @@
 		<title><spring:message code='ezJournal.t133' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezJournal.c1' />" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/common.js"></script>
-		<script type="text/javascript" src="/js/ezJournal/journal_script.js"></script>
-		<script type="text/javascript" src="/js/ezJournal/excel.js"></script>
-		<script type="text/javascript" src="/js/Common.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezJournal/journal_script.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezJournal/excel.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript">
 		
 			var formId = "${journal.formId}";

@@ -15,11 +15,11 @@
 	    		border-top:0px;
 	    	}
 	    </style>
-        <script type="text/javascript" src="/js/mouseeffect.js"></script>
-        <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-        <script type="text/javascript" src="/js/ezResource/organtreeview.htc.js"></script>
-        <script type="text/javascript" src="/js/ezResource/ResTreeInfo_cross.js"></script>
-        <script type="text/javascript" src="/js/ezSchedule/ListView_list.js"></script>        
+        <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/ezResource/organtreeview.htc.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/ezResource/ResTreeInfo_cross.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/ezSchedule/ListView_list.js')}"></script>        
 		<script>			
 		    var brdGubun = "<c:out value='${brd_Gubun}'/>";					// Board 구분 == Brd_GB (1:일반, 2:하위자원)
 		    var g_UserID = "<c:out value='${userInfo.id}'/>";

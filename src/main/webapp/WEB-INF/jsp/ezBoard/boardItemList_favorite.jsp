@@ -8,7 +8,7 @@
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <!-- <link rel="stylesheet" href="/css/tab_over.css" type="text/css"> -->
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <style type="text/css">
 	    .tabpart01UL{
 	    	position:absolute;

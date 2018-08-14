@@ -13,7 +13,7 @@
 				padding : 3px
 			}
 		</style>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>		
 		<script type="text/javascript">
 		    function sendIt() {
 				if ( ByteLength(document.getElementById("pollSubject").value) > 200 ) {

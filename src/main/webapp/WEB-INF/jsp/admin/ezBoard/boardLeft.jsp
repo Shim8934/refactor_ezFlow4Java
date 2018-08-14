@@ -18,10 +18,10 @@
 				text-overflow:ellipsis;
 			}
 	    </style>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	    
 		<script type="text/javascript" language="javascript">
 	        var SSUserID = "<c:out value='${user.id}'/>";
 	        var SSUserName = "<c:out value='${user.displayName}'/>";
