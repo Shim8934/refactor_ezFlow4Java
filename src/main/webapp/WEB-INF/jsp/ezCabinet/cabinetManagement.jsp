@@ -19,7 +19,7 @@
 		<jsp:include page="/WEB-INF/jsp/ezCabinet/cabinetMove.jsp"  ></jsp:include>
 		<jsp:include page="/WEB-INF/jsp/ezCabinet/cabinetDelete.jsp"></jsp:include>
 		
-		<div class="cabdivBttn" id="cabMgDivBttn">
+		<div class="cabdivBttn2" id="cabMgDivBttn">
 			<a class="cabBttn"><span><spring:message code="ezCabinet.t75"/></span></a>
 			<a class="cabBttn"><span><spring:message code="ezCabinet.t78"/></span></a>
 			<a class="cabBttn"><span><spring:message code="ezCabinet.t76"/></span></a>

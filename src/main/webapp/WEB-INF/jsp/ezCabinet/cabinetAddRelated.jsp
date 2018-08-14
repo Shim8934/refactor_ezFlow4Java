@@ -31,7 +31,7 @@
 			</div>
 		</div>
 		
-		<div class="cabdivBttn" id="cabMgDivBttn">
+		<div class="cabdivBttn2" id="cabMgDivBttn">
 			<a class="cabBttn"><span><spring:message code="ezCabinet.t79"/></span></a>
 			<a class="cabBttn"><span><spring:message code="ezCabinet.t15"/></span></a>
 		</div>
