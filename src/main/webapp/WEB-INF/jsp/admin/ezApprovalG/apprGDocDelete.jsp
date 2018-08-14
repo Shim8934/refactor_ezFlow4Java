@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"> </script>
+	    <script type="text/javascript" src="<spring:message code='ezEmail.e1' />"> </script>
 		<style type="text/css">
 			<!-- datepicker 월 나타내는 selectbox안의 글자가 자꾸 밑으로 내려가는 현상때문에 스타일 줌. -->
 			select {

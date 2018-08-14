@@ -8,7 +8,7 @@
 	<head>
 	    <title></title>
         <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="/js/ezEmail/${e1}"></script>
+		<script type="text/javascript" src="${e1}"></script>
         <script language="JavaScript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/reademail.js")%>"></script>
     	<script language="javascript" type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
     	<script language="javascript" type="text/javascript">

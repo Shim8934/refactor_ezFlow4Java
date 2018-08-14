@@ -10,7 +10,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
         <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-        <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+        <script type="text/javascript" src="<spring:message code='ezEmail.e1' />"></script>
         <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
         <script src="<%=CommonUtil.addVer(application, "/js/jquery/raphael.2.1.0.min.js")%>"></script>
         <script src="<%=CommonUtil.addVer(application, "/js/jquery/justgage.1.0.1.min.js")%>"></script>

@@ -8,7 +8,7 @@
 	<head>
 	    <title>left_myoffice</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, request, "/js/ezEmail/<spring:message code='ezEmail.e1' />")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, request, "<spring:message code='ezEmail.e1' />")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/email_tree.js")%>"></script>
