@@ -8,7 +8,7 @@
 	    <title><spring:message code='ezEmail.t341' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	    <script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+	    <script type="text/javascript" src="<spring:message code='ezEmail.e1' />"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/ie_methods.js")%>"></script>
 	    <script type="text/javascript">
