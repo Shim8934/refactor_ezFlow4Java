@@ -2984,4 +2984,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (int) select("EzApprovalG.getLinkedAttachFileCount", map);
 	}
 
+	public String getExtAttr1(Map<String, Object> map) throws Exception{
+		return (String)select("EzApprovalG.getExtAttr1", map);
+	}
 }
