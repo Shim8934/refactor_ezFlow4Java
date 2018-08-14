@@ -28,7 +28,35 @@ public class BeanLogic {
 	private EgovMessageSource msg;
 	
 	public String addVer(String filePath) {
-		String springMessage = "<spring:message";
+		File fileObj = new File(servletContext.getRealPath(filePath));
+		
+		if (fileObj.exists()) {
+			Date lastDate = new Date(fileObj.lastModified());
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+			String version = sdf.format(lastDate);
+			
+			filePath += "?v=" + version;
+		}
+		
+		return filePath;
+	}
+	
+	public String addVer(String filePath, String type) {
+		String msgFilePath = "";
+	
+		if (type.equals("msg")) {
+			ServletRequestAttributes attr = (ServletRequestAttributes)RequestContextHolder.currentRequestAttributes();		
+			Locale locale = localeResolver.resolveLocale(attr.getRequest());
+			
+			filePath = msg.getMessage(filePath, locale);	
+			
+			msgFilePath = addVer(filePath);
+		}
+		
+		return msgFilePath;
+		
+		/*String springMessage = "<spring:message";
 		int startOfSpringMessage = filePath.indexOf(springMessage);
 		
 		if (startOfSpringMessage > -1) {
@@ -52,9 +80,9 @@ public class BeanLogic {
 					}
 				}
 			}
-		}
+		}*/
 
-		File fileObj = new File(servletContext.getRealPath(filePath));
+		/*File fileObj = new File(servletContext.getRealPath(filePath));
 		
 		if (fileObj.exists()) {
 			Date lastDate = new Date(fileObj.lastModified());
@@ -65,7 +93,7 @@ public class BeanLogic {
 			filePath += "?v=" + version;
 		}
 		
-		return filePath;
+		return filePath;*/
 	}
 	
 	/*public static String addVer(ServletContext application, HttpServletRequest request, String filePath) {
