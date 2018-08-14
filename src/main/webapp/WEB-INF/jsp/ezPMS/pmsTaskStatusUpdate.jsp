@@ -189,24 +189,28 @@
 		var startDateArr = planStartDate.split('-');
 		var endDateArr = planEndDate.split('-');
 		
-		var startDateComp = new Date(planStartDate);
-		var endDateComp = new Date(planEndDate);
-		endDateComp.setHours(23, 59, 59, 999);
+		var startDateComp = planStartDate.replace(/-/g, "");
+		var endDateComp = planEndDate.replace(/-/g, "");
+// 		endDateComp.setHours(23, 59, 59, 999);
 		
-		var today = new Date();
+// 		var today = new Date();
+		var today = TimeToStr(new Date()).replace(/-/g, "");
 // 		var todayComp = new Date(today.getFullYear(), today.getMonth()-1, today.getDay());
 		
-		var projectStartDateComp = new Date(projectStartDate);
-		var projectEndDateComp = new Date(projectEndDate);
+// 		var projectStartDateComp = new Date(projectStartDate);
+// 		var projectEndDateComp = new Date(projectEndDate);
+		
+		var projectStartDateComp = projectStartDate.replace(/-/g, "");
+		var projectEndDateComp = projectEndDate.replace(/-/g, "");
 		
 		//1. 시작일 > 종료일은 불가능
-		if (startDateComp.getTime() > endDateComp.getTime()) {
+		if (startDateComp > endDateComp) {
 		  	alert("<spring:message code='ezPMS.t49' />");
 		  	return;
 		}
 		
 		//2. 종료일 < 현재일일 떄, 지연업무로 넘어갈 것이라는 confirm창 띄우기
-		if (endDateComp.getTime() < today.getTime() && nowStatus !== "L") {
+		if ((endDateComp < today) && nowStatus !== "L") {
 			var confCheck = confirm("<spring:message code='ezPMS.t93' />");
 			 
 			if (confCheck != true) {
@@ -217,17 +221,17 @@
 		}
 		
 		//업무가 지연 상태일때 오늘날짜보다 종료날짜가 뒤로 변경되면 상태를 진행으로 변경
-		if (status == "L" && (endDateComp.getTime() > today.getTime())) {
+		if (status == "L" && (endDateComp > today)) {
 			status = "P";
 		}
 		
 		//3. 업무의 계획 시작일과 계획 종료일은 프로젝트 시작일과 종료일범위를 벗어날수 없음
-		if (startDateComp.getTime() < projectStartDateComp.getTime()) {
+		if (startDateComp < projectStartDateComp) {
 			alert("<spring:message code='ezPMS.t94' />");
 			return;
 		}
 		
-		if (endDateComp.getTime() > projectEndDateComp.getTime()) {
+		if (endDateComp > projectEndDateComp) {
 			alert("<spring:message code='ezPMS.t95' />");
 			return;
 		}
