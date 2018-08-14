@@ -200,7 +200,7 @@
                     	DocContentObject.innerHTML = DocContentObject_Div.innerText.replace(/(\r\n)/g, "");
             	    }
             	    /* 2018-07-12 홍승비 - 포탈 포틀릿 게시판 제목+내용 특수문자 처리 */
-            	    DocContentObject.innerHTML = MakeXMLString(DocContentObject.innerHTML);
+            	    //DocContentObject.innerHTML = MakeXMLString(DocContentObject.innerHTML);
                 	document.getElementById("content").appendChild(DocContentObject);
 	            }
     	        catch (e) {

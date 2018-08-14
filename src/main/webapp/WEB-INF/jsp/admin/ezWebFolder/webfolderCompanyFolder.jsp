@@ -689,6 +689,6 @@
 		</div>
 		
 		<input type="text" name="rangeStr" id="rangeStr" style="display:none">
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezWebFolder/selectUsers.js")%>></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/selectUsers.js")%>"></script>
 	</body>
 </html>
