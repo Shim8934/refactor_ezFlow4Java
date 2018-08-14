@@ -188,7 +188,7 @@ function applyList() {
 }
  
 function setUpperGroup() {
-	$("#upperGroup").html(revertString(groupName));
+	$("#upperGroup").html(MakeXMLString(groupName));
 }
 
 function addTask() {
