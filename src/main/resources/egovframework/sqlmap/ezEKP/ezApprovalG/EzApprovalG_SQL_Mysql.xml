@@ -26551,4 +26551,21 @@
 		and 
 			tenant_id = #tenantId#
 	</select>
+	
+	<!-- 단암 마이그레이션 권한 체크-->
+	<select id="EzApprovalG.getExtAttr1" parameterClass="Map" resultClass="String" remapResults="true">
+		<![CDATA[							
+		SELECT 
+			EXTENSIONATTRIBUTE1	
+		FROM 
+			TBL_USERMASTER
+		WHERE
+		    1 = 1
+		AND  
+		   CN = #v_USERID#
+		AND 
+		   TENANT_ID = #v_TENANTID#
+		]]>
+		 
+	</select>
 </sqlMap>

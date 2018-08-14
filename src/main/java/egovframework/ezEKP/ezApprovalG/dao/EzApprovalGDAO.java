@@ -2989,4 +2989,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(Map<String, Object> map) {
 		return (List<PortalTopOtherCompanyAddJobVO>) list("EzApprovalG.getAllCompanyList", map);
 	}
+		
+	public String getExtAttr1(Map<String, Object> map) throws Exception{
+		return (String)select("EzApprovalG.getExtAttr1", map);
+	}
 }

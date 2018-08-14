@@ -9,17 +9,17 @@
 		<title><spring:message code='ezPersonal.t4465'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<!-- data picker-->
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
-	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
-		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>">
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
 		<!-- time picker-->
-		<link rel="stylesheet" type="text/css" href="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.css")%>" />
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.js")%>"></script>
+		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
+		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<script type="text/javascript">
 			var deptid = "${deptID}";
 			var userid = "${userID}";
@@ -35,6 +35,10 @@
 		    var proxyenddate = "";
 		    var Roll = "${userInfo.rollInfo}";
 		    var approvalFlag = "${approvalFlag}";
+		    var buJaeId = "";
+		    var buJaedeptid = "";
+		    var proxybuJaeId = "";
+		    var proxybuJaedeptid = "";
 		
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -54,7 +58,7 @@
 		            idDatepicker_Temp = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		            D2_Temp = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        }
-		        if (startdate != "") {
+		        /* if (startdate != "") {
 		        	var nowDate = new Date(startdate.substring(0, 4), startdate.substring(5, 7)-1, startdate.substring(8, 10), startdate.substring(11, 13), startdate.substring(14, 15));
 		            var nowDate2 = new Date(enddate.substring(0, 4), enddate.substring(5, 7)-1, enddate.substring(8, 10), enddate.substring(11, 13), enddate.substring(14, 15));
 		            nowDate.setMonth(nowDate.getMonth());
@@ -63,7 +67,7 @@
 		            $("#Edatepicker").datepicker('setDate', nowDate2);
 		            document.getElementById("absentreason").value = BReason;            
 		            gIsAppoint = "1";
-		        }
+		        } */
 		        if (proxystartdate != "") {
 		            gIsProxyUser = true;
 		        }
@@ -170,17 +174,23 @@
 		 	    return date;
 			}
 			var selectperson_cross_dialogArguments = new Array();
+			var selectperson_cross_dialogArguments1 = new Array();
 			var type_Complete;
 			var NoneActiveX = "YES";
 			function select_person(type) {
+				if(document.getElementById('TextName1').value=='' || document.getElementById('TextName1').value == undefined){
+					//2018-08-10 구해안 추후에 resource 추가
+					alert("<spring:message code='main.t0630'/>");
+					return;
+				}
 			    type_Complete = type;
 			    if (CrossYN() || NoneActiveX == "YES") {
 			        selectperson_cross_dialogArguments[1] = select_person_Complete;
-			        var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type, "SelectPerson_cross", GetOpenWindowfeature(760, 535));
+			        var OpenWin = window.open("/admin/ezApprovalG/DselectPerson.do?type=" + type +"&buJaeId="+buJaeId + "&buJaedeptid="+buJaedeptid, "SelectPerson_cross", GetOpenWindowfeature(760, 535));
 			        try { OpenWin.focus(); } catch (e) { }
 			    }
 			    else {
-			        var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=" + type, "",
+			        var rtnValue = window.showModalDialog("/admin/ezApprovalG/DselectPerson.do?type=" + type +"&buJaeId="+buJaeId + "&buJaedeptid="+buJaedeptid, "",
 		                "dialogHeight:535px;dialogwidth:760px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(760, 535));
 		
 			        if (typeof (rtnValue) != "undefined" && type == "") {
@@ -192,6 +202,29 @@
 			            proxyuserid = rtnValue.split(":")[0];
 			            document.getElementById("TextProxyName").value = rtnValue.split(":")[1];
 			            proxydeptid = rtnValue.split(":")[2];
+			        }
+			    }
+			}
+			function select_person1(type) {
+			    type_Complete = type;
+			    if (CrossYN() || NoneActiveX == "YES") {
+			        selectperson_cross_dialogArguments1[1] = select_person_Complete1;
+			        var OpenWin = window.open("/admin/ezApprovalG/selectPerson.do?type=" + type, "SelectPerson_cross", GetOpenWindowfeature(760, 535));
+			        try { OpenWin.focus(); } catch (e) { }
+			    }
+			    else {
+			        var rtnValue = window.showModalDialog("/admin/ezApprovalG/selectPerson.do?type=" + type, "",
+		                "dialogHeight:535px;dialogwidth:760px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(760, 535));
+		
+			        if (typeof (rtnValue) != "undefined" && type == "") {
+			        	buJaeId = rtnValue.split(":")[0];
+			            document.getElementById("TextName1").value = rtnValue.split(":")[1];
+			            buJaedeptid = rtnValue.split(":")[2];
+			        }
+			        if (typeof (rtnValue) != "undefined" && type == "Proxy") {
+			        	proxybuJaeId = rtnValue.split(":")[0];
+			            document.getElementById("TextProxyName1").value = rtnValue.split(":")[1];
+			            proxybuJaedeptid = rtnValue.split(":")[2];
 			        }
 			    }
 			}
@@ -207,6 +240,87 @@
 			        proxydeptid = rtnValue.split(":")[2];
 			    }
 			}
+			function select_person_Complete1(rtnValue) {
+			    if (typeof (rtnValue) != "undefined" && type_Complete == "") {
+			    	buJaeId = rtnValue.split(":")[0];
+			        document.getElementById("TextName1").value = rtnValue.split(":")[1];
+			        buJaedeptid = rtnValue.split(":")[2];
+			        
+			        check_substitute(rtnValue);
+			    }
+			    /* if (typeof (rtnValue) != "undefined" && type_Complete == "Proxy") {
+			    	proxybuJaeId = rtnValue.split(":")[0];
+			        document.getElementById("TextProxyName1").value = rtnValue.split(":")[1];
+			        proxybuJaedeptid = rtnValue.split(":")[2];
+			    } */
+			}
+			
+			function check_substitute(rtnValue){
+				$.ajax({
+		    		type : "POST",
+		    		dataType : 'json',
+		    		async : false,
+		    		url : "/admin/ezApprovalG/checkSubstitute.do",
+		    		data : {
+		    				buJaeId  : rtnValue.split(":")[0]
+		    				},
+		    		success: function(result){
+			            
+		    			
+				        document.getElementById("TextName").value = result.textName;
+				        var startdate = result.startDate;
+				        var enddate = result.endDate;
+		    			
+	    				if (startdate != "") {
+	    		        	var nowDate = new Date(startdate.substring(0, 4), startdate.substring(5, 7)-1, startdate.substring(8, 10), startdate.substring(11, 13), startdate.substring(14, 16));
+	    		            var nowDate2 = new Date(enddate.substring(0, 4), enddate.substring(5, 7)-1, enddate.substring(8, 10), enddate.substring(11, 13), enddate.substring(14, 16));
+	    		            nowDate.setMonth(nowDate.getMonth());
+	    		            nowDate2.setMonth(nowDate2.getMonth());
+	    		            $("#Sdatepicker").datepicker('setDate', nowDate);
+	    		            $("#Edatepicker").datepicker('setDate', nowDate2);
+	    		            $("#Stimepicker").timepicker('setTime', nowDate);
+	    		            $("#Etimepicker").timepicker('setTime', nowDate2);
+	    		            document.getElementById("absentreason").value = BReason;            
+	    		            gIsAppoint = "1";
+	    		        }		
+	    				
+	    				userid = result.userID;
+	    				deptid = result.deptID;
+	    				
+	    				/* if(!result.subalsinFlag){
+	    					
+	    					$('#proxyOutput').html("");
+	    					
+	    				}else{
+	    			        $('#proxyOutput').html("");
+							output = '';
+							
+	    					output += "<th><spring:message code='ezPersonal.t399'/></th>";
+	    					output += '<td>';
+	    					output += '<input type="text" name="TextProxyName" id="TextProxyName" value="'+result.textProxyName+'" Width="120" ReadOnly />';	
+	    					output += '    &nbsp;<a class="imgbtn" style="vertical-align:middle"><span onclick="gIsProxyUser = true;select_person(\'Proxy\')"><spring:message code="ezPersonal.t32"/></span></a>'; 
+	    					output += '   <a class="imgbtn" style="vertical-align:middle"><span onClick="gIsProxyUser = false;document.getElementById(\'TextProxyName\').value=\'\'"><spring:message code="ezPersonal.t33"/></span></a>';
+	    					output += '</td>';
+	    					
+	    					$('#proxyOutput').html(output);
+	    					
+	    					proxyuserid = result.proxyUserID;
+	    					proxydeptid = result.proxyDeptID;
+    					} */
+    					
+						if(!result.bReasonFlag){
+							document.getElementById("absentreason").style.display = "";
+							document.getElementById("TR_Appoint").style.display = "";
+							document.getElementById("absentreason").value = "";
+	    				}else{
+	    					document.getElementById("absentreason").style.display = "";
+	    					document.getElementById("absentreason").value = result.bReason;
+	    					document.getElementById("TR_Appoint").style.display = "none";
+    					}
+		    		}		    		
+		    	});
+			}
+		
 		
 		    function check_enddate() {
 		        if (!gIsAppoint && document.getElementById("TextName").value == "")
@@ -251,53 +365,66 @@
 		        if (check_enddate()) {
 		            return;
 		        }
+		        
+		        if (document.getElementById("TextName1").value == "") {
+					alert("<spring:message code='main.t0630'/>");
+					return;
+				} 
 		
 		        if (gIsAppoint != '2') {
-		            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
+		        	/* document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>"*/
+		            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "") {
 		                alert("<spring:message code='ezPersonal.t36'/>");
 		                return;
 		            }
 		        }
 				var pProxy = "";
 				var pBujae = "";
+				
+				// 부재자 지정
+				
+				
 		        // 대리 결재자 지정
 		        if (document.getElementById("TextName").value != "") {
-		            if (orguserid.toLowerCase() == userid.toLowerCase()) {
+		            if (buJaeId.toLowerCase() == proxyuserid.toLowerCase()) {
 		                alert("<spring:message code='ezPersonal.t16'/>");
 		                return;
 		            }
 		            pBujae = userid + ":" + document.getElementById("TextName").value + ":" + deptid + ":" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + ":" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() +  " " + $('#Etimepicker').val() + ":";
-		        } else if (document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
+		        } else if (document.getElementById("TextName1").value != "" && document.getElementById("absentreason").value != "" && document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
 		        	pBujae = "" + ":" + "" + ":" + "" + ":" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + ":" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val() + ":" + document.getElementById("absentreason").value;
 		            gIsAppoint = "2";
 		        } else if($("#TextName").attr("check") == "clear") {
 		        	pBujae = "";
 		        	gIsAppoint = "3";
-		        } else {
+		        } else if (document.getElementById("TextName1").value != "" && document.getElementById("absentreason").value == ""){
+					 pBujae = "";
+			         gIsAppoint = "4";
+				} else {
 		            pBujae = "";
 		            gIsAppoint = "4";
-		        }
+		        } 
 		
 		        // 대리 수신 담당자 지정
-		        /* if (Roll.toLowerCase().indexOf("a=1;") > -1) {
+		        
+		        if(document.getElementById("TextProxyName")){
 		            if (document.getElementById("TextProxyName").value != "") {
-		            	pProxy = proxyuserid + ":" + document.getElementById("TextProxyName").value + ":" + proxydeptid + ":" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + ":" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val() + ":";
 		            	pProxy = proxyuserid + "|" + document.getElementById("TextProxyName").value + "|" + proxydeptid + "|" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() +"|"+ $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 		                gIsAppoint = "1";
 		            }
 		            else
 		                pProxy = "";
 		        }
-		        else
-		            pProxy = ""; */
-		            
-		          
+		        
+		        
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
 		    		async : false,
-		    		url : "/ezPersonal/saveBujae.do",
+		    		url : "/admin/ezApprovalG/saveBujae.do",
 		    		data : {
+		    				buJaeId : buJaeId,
+		    				proxyuserid : proxyuserid,
 		    				buJae  : pBujae,
 		    				proxy  : pProxy
 		    				},
@@ -314,7 +441,7 @@
 			            else if (gIsAppoint == "4") {
 			            	alert("<spring:message code='ezPersonal.t191'/>");// 아무것도 지정 않았을 때
 			            }
-			            window.location.reload(false);
+			            window.location.reload(true);
 		    		},
 		    		error: function(){
 			            if (gIsAppoint == "1") {
@@ -345,7 +472,8 @@
 		    }
 		</script>
 	</head>
-	<body>
+	<body class="mainbody" marginwidth="0" marginheight="0">
+		<h1><spring:message code='main.t0628'/></h1>
 		<form id="ManageBujae" method="post">
 			<br/>
 			<div class="txt">
@@ -360,6 +488,15 @@
 			    </c:if>
 			</div>
 			<table class="content" style="width:520px;margin-top:20px">
+				<tr id="TR_Appoint1">
+					<th><spring:message code='ezApprovalG.t1777'/></th>
+					<td>
+						<input type="text" name="TextName" id="TextName1" Width="120" value="" ReadOnly />
+						&nbsp;<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person1('')"><spring:message code='ezPersonal.t32'/></span></a> 
+		                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="document.getElementById('TextName1').value=''; document.getElementById('TextName').value=''; $('#TextName1').attr('check','clear');"><spring:message code='ezPersonal.t33'/></span></a>
+					</td>
+				</tr>
+				
 				<tr> 
 					<th><spring:message code='ezPersonal.t22'/></th>
 					<td>
@@ -376,28 +513,19 @@
 				<tr id="TR_Appoint">
 					<th><spring:message code='ezPersonal.t31'/></th>
 					<td>
-						<input type="text" name="TextName" id="TextName" Width="120" value="${textName}" ReadOnly />
-						<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person('')"><spring:message code='ezPersonal.t32'/></span></a> 
+						<input type="text" name="TextName" id="TextName" Width="120" value="" ReadOnly />
+						&nbsp;<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person('')"><spring:message code='ezPersonal.t32'/></span></a> 
 		                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName').value=''; $('#TextName').attr('check','clear')"><spring:message code='ezPersonal.t33'/></span></a>
 					</td>
 				</tr>
+				<tr id="proxyOutput"></tr>
 				<%-- <c:if test="${fn:indexOf(fn:toLowerCase(userInfo.rollInfo), 'a=1;') > -1}">
-					<c:if test="${approvalFlag eq 'S'}">
-						<tr>
-				            <th><spring:message code='ezPersonal.t399'/></th>
-						    <td>
-						    	<input type="text" name="TextProxyName" id="TextProxyName" value="${textProxyName}" Width="120" ReadOnly />
-							    <a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsProxyUser = true;select_person('Proxy')"><spring:message code='ezPersonal.t32'/></span></a> 
-				                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsProxyUser = false;document.getElementById('TextProxyName').value=''"><spring:message code='ezPersonal.t33'/></span></a>
-						    </td>
-					    </tr>
-					</c:if>
 				    <tr>
 			            <th><spring:message code='ezPersonal.t399'/></th>
 					    <td>
-					    	<input type="text" name="TextProxyName" id="TextProxyName" value="${textProxyName}" Width="120" ReadOnly />
-						    <a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsProxyUser = true;select_person('Proxy')"><spring:message code='ezPersonal.t32'/></span></a> 
-			                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsProxyUser = false;document.getElementById('TextProxyName').value=''"><spring:message code='ezPersonal.t33'/></span></a>
+					    	<input type="text" name="TextProxyName" id="TextProxyName" value="" Width="120" ReadOnly />
+						    &nbsp;<a class="imgbtn" style="vertical-align:middle"><span onclick="gIsProxyUser = true;select_person('Proxy')"><spring:message code='ezPersonal.t32'/></span></a> 
+			                <a class="imgbtn" style="vertical-align:middle"><span onClick="gIsProxyUser = false;document.getElementById('TextProxyName').value=''"><spring:message code='ezPersonal.t33'/></span></a>
 					    </td>
 				    </tr>
 				</c:if> --%>
@@ -446,11 +574,11 @@
 					</tr>
 				</c:if>
 			</table>            
-			<div style="width:520px;text-align:center;">
+			<div style="width:520px;text-align:center;margin-top:15px;">
 				<div class="btnpositionJsp">
-		    		<a class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezPersonal.t34'/></span></a>
-		    		<a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezPersonal.t13'/></span></a>
-		    	</div>	
+			    	<a class="imgbtn" onClick="OK_Click()"><span><spring:message code='ezPersonal.t34'/></span></a>
+			    	<a class="imgbtn" onClick="window.location.reload(false)"><span><spring:message code='ezPersonal.t13'/></span></a>
+		    	</div>
 		  	</div>
 		</form>
 	</body>

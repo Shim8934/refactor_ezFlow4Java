@@ -385,4 +385,8 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public String getListType(Map<String, Object> map) {
 		return (String) select("EzOrganDAO.getListType", map);
 	}
+	
+	public String getPhysicalDeliveryOfficeName(Map<String, Object> map) {
+		return (String) select("EzOrganDAO.getPhysicalDeliveryOfficeName", map);
+	}
 }

@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
@@ -70,9 +71,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.service.LoginService;
@@ -120,6 +123,9 @@ public class CommonUtil {
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
+    @Resource(name="egovMessageSource")
+    private EgovMessageSource egovMessageSource;    
+	
 	@Resource(name = "jspw")
     private String jspw;
 	
@@ -129,6 +135,16 @@ public class CommonUtil {
 	public final String CRLF = "\r\n";
 	
 	private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
+	private static CommonUtil commonUtilInstance;
+	
+    @PostConstruct
+	public void init() throws Exception {
+    	logger.debug("init started.");
+
+    	commonUtilInstance = this;
+    	
+    	logger.debug("init ended.");
+    }
 	
 	public LoginVO userInfo(String loginCookie){
 		try{
@@ -399,13 +415,51 @@ public class CommonUtil {
 		}		
 	}
 	
-	public static String addVer(ServletContext application, String filePath) {
+	public static String addVer(ServletContext application, String filePath) {		
 		File fileObj = new File(application.getRealPath(filePath));
 		
 		if (fileObj.exists()) {
 			Date lastDate = new Date(fileObj.lastModified());
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+			String version = sdf.format(lastDate);
+			
+			filePath += "?v=" + version;
+		}
+		
+		return filePath;
+	}
+	
+	public static String addVer(ServletContext application, HttpServletRequest request, String filePath) {
+		String springMessage = "<spring:message";
+		int startOfSpringMessage = filePath.indexOf(springMessage);
+		
+		if (startOfSpringMessage > -1) {
+			String code = "code='";
+			int startOfCode = filePath.indexOf(code, startOfSpringMessage + springMessage.length());
+			
+			if (startOfCode > -1) {
+				int endOfCode = filePath.indexOf("'", startOfCode + code.length());
+				
+				if (endOfCode > -1) {
+					String codeValue = filePath.substring(startOfCode + code.length(), endOfCode);					
+					String msg = commonUtilInstance.egovMessageSource.getMessage(codeValue, new CookieLocaleResolver().resolveLocale(request));					
+					int endOfSpringMessage = filePath.indexOf(">", endOfCode + 1); 
+					
+					if (endOfSpringMessage > -1) {
+						filePath = filePath.substring(0, startOfSpringMessage) + msg
+									+ filePath.substring(endOfSpringMessage + 1);
+					}
+				}
+			}
+		}
+		
+		File fileObj = new File(application.getRealPath(filePath));
+		
+		if (fileObj.exists()) {
+			Date lastDate = new Date(fileObj.lastModified());
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 			String version = sdf.format(lastDate);
 			
 			filePath += "?v=" + version;
