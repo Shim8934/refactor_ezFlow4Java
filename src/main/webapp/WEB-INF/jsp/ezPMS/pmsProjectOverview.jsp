@@ -10,19 +10,19 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezPMS.t13' /> <spring:message code='ezPMS.t66' /></title>
-<link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezPMS.e1' />")%>" type="text/css" />
-<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css" />
-<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezTask/circularProgressBar.css")%>" type="text/css" />
-<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/jquery.lineProgressbar.css")%>" type="text/css" />
-<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPMS/pms.css")%>" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('ezPMS.e1', 'msg')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/ezTask/circularProgressBar.css')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/ezPMS/pms.css')}" type="text/css" />
 
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPMS/common.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery-ui/jquery-ui.min.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezTask/circularProgressBar.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezTask/jquery.lineProgressbar.js")%>"></script>
+<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezPMS/common.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezTask/circularProgressBar.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezTask/jquery.lineProgressbar.js')}"></script>
 <script type="text/javascript">
 var CurrentHeight = document.documentElement.clientHeight - 100;
 var projectProgress = "${project.progress}";

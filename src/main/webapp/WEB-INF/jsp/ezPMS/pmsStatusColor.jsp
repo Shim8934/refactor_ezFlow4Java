@@ -7,12 +7,12 @@
 	<head>
 		<title><spring:message code="ezTask.t91" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
-	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezTask.e2' />")%>" type="text/css" />
-	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/jquery-hex-colorpicker.css")%>" type="text/css" />
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, request, "<spring:message code='ezTask.e1' />")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezTask/jquery-hex-colorpicker.js")%>"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezTask.e2', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/jquery-hex-colorpicker.css')}" type="text/css" />
+	    <script type="text/javascript" src="${util.addVer('ezTask.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezTask/jquery-hex-colorpicker.js')}"></script>
 	    
 	    <script type="text/javascript">
 	    
