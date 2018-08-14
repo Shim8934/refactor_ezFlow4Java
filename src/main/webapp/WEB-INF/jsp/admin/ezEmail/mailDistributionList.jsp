@@ -24,10 +24,10 @@
 			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls/ListView_list.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/Common.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript">
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")

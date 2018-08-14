@@ -9,10 +9,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet"  href="<spring:message code='main.e15'/>" type="text/css">
 <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jui/lib/core.min.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jui/dist/chart.min.js")%>"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jui/lib/core.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jui/dist/chart.min.js')}"></script>
 <script type="text/javascript">
 
 	$(document).ready(function(){

@@ -9,12 +9,12 @@
 	    <link rel="stylesheet" href="<spring:message code = 'main.e15' />" type="text/css" />
 	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezEmail/style.css")%>" />
 	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/dist/themes/default/style.min.css")%>" />
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-	    <script src="<%=CommonUtil.addVer(application, "/js/dist/jstree.min.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/letterBoxTree.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/letterList.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script src="${util.addVer('/js/dist/jstree.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/letterBoxTree.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/letterList.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    
 	</head>
 	

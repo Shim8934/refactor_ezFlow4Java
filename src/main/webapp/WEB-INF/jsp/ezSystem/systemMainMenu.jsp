@@ -8,7 +8,7 @@
 		<title><spring:message code='main.kms1'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet"  href="<spring:message code='main.e15'/>" type="text/css">
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var timeZone = "${configMap.PrimaryTimeZone}";
 			var list = [];

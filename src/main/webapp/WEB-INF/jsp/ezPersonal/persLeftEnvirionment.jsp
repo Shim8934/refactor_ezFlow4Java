@@ -9,8 +9,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezPersonal.t999900011' /></title>
 		<link rel="stylesheet"  href="<spring:message code='ezPersonal.e3' />" type="text/css">
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 		 	window.onload = function () {
 		 		if ("${portalEnv}" == "1") {

@@ -7,11 +7,11 @@
 	<head>
 		<title><spring:message code='ezApprovalG.pjj03'/></title>
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css" />
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezOrgan/TreeView.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezOrgan/ListView_list.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			 var RetValue;
 			 

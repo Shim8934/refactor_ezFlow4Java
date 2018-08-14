@@ -10,15 +10,15 @@
 		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>" type="text/css">
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/popup.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/fileFolderDrop.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/adminTable.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/adminFile.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery-ui/jquery-ui.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminFile.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js')}"></script>
 		<script type="text/javascript">
 			var strLang39  = "<spring:message code='ezWebFolder.t135'/>";
 			var strLang40  = "<spring:message code='ezWebFolder.t136'/>";
@@ -272,6 +272,6 @@
 	        </div>
 	 	</div>
 		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/pageNav.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/pageNav.js')}"></script>
 	</body>
 </html>

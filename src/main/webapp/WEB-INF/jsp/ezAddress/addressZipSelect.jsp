@@ -33,11 +33,11 @@
 	        .searchWrap input[type="text"] {width: 100%; height: 20px; padding:0px; margin:0px; border:0 none; font-size: 15px; font-weight: bold; vertical-align:top;}
 	    </style>
 	    <link rel="stylesheet" type="text/css" href="<%=CommonUtil.addVer(application, "/css/jquery.selectbox.ZipCode.css")%>" />
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.selectbox-0.2.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>	    
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPersonal/controls/ListView_list.js")%>"></script>	    
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.selectbox-0.2.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	    
+	    <script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>	    
 		<script type="text/javascript">
 			//TODO: 이거 문제있네!
 			$(function () {

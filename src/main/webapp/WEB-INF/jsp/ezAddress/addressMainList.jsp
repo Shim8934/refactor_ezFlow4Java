@@ -18,11 +18,11 @@
 	    		font-weight: bold;
 	    	}
 	    </style>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezAddress/Address_List.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.js")%>"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/Address_List.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezAddress.e1', 'msg')}"></script>
 	    <script type="text/javascript">
 	        var pFolderID = "${pFolderId}";

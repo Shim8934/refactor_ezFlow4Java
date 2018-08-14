@@ -7,8 +7,8 @@
 	<head>
 		<title>address_search</title>
 		<link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script>
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {

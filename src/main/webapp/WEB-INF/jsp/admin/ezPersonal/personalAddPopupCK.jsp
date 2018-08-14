@@ -11,15 +11,15 @@
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>"/>
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>"/>
 		<link rel="stylesheet" type="text/css" href="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.css")%>" />
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPersonal/controls/dhtml.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.js")%>"></script>
-		<!-- <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPersonal/controls/datepicker.htc.js")%>"></script> -->
-		<!-- <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPersonal/controls/composeappt.js")%>"></script> -->
+		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/dhtml.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
+		<!-- <script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/datepicker.htc.js')}"></script> -->
+		<!-- <script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/composeappt.js')}"></script> -->
 		
 		<script type="text/javascript">
 			var compid = "<c:out value = '${companyID}' />";

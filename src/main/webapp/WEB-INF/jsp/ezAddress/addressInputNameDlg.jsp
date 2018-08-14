@@ -8,9 +8,9 @@
 	    <title><spring:message code='ezAddress.t21' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application,"/js/mouseeffect.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application,"/js/XmlHttpRequest.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application,"/js/ezAddress/string_component.js")%>"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezAddress/string_component.js')}"></script>
 	    <script type="text/javascript">
 	        var ReturnFunction;
 	        var CancelFunction;

@@ -11,7 +11,7 @@
 <STYLE> 
 P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm } 
 </STYLE>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezTalkGate/site.css")%>" type="text/css">
 </head>
 <body class="popup">

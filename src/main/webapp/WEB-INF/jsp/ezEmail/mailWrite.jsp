@@ -53,18 +53,18 @@
 		</style>
 		
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.9.1.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-ui.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/encode_component.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/newMail_Cross.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/AttachMain_CK.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/AttachItem_CK.js")%>"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.9.1.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachMain_CK.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachItem_CK.js')}"></script>
         <c:if test="${isCrossBrowser != true}">
-        	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/Kaoni_ActiveX.js")%>"></script>
+        	<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
         </c:if>
 	    <script type="text/javascript">
 	    var g_szAuthor = "";

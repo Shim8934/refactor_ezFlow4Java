@@ -10,10 +10,10 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<c:if test="${isCrossBrowser != true}">
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/Kaoni_ActiveX.js")%>"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 	    </c:if>
 	    <script>
 	        var g_fileList;

@@ -8,21 +8,21 @@
 		<title>mail_search</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/search_mail.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/newMail_Cross.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/search_mail.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/encode_component.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/date_component.js")%>"></script>
-		<script  type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/datepicker.htc.js")%>"></script>
-		<script  type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/composeappt.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/date_component.js')}"></script>
+		<script  type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/datepicker.htc.js')}"></script>
+		<script  type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/composeappt.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>">
 		<script type="text/javascript">
 		    var pUse_Editor = "${useEditor}";

@@ -11,9 +11,9 @@
 		<title></title>
 	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezEmail/style.css")%>" />	
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/letterList.js")%>"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/letterList.js')}"></script>
 		<script type="text/javascript">
 			var letterNo = '${letterNo}';
 			var isDivPopUp = false;

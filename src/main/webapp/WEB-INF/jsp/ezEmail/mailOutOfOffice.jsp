@@ -9,17 +9,17 @@
 	    <title>mail_outofoffice</title>
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/composeappt.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls_cross/composeappt.js')}"></script>
 	    <!-- data picker-->
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>">
 	    <!-- time picker-->
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<link rel="stylesheet" type="text/css" href="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.css")%>" />
 	    <script type="text/javascript">
 	    	var offsetMin = "${offsetMin}";

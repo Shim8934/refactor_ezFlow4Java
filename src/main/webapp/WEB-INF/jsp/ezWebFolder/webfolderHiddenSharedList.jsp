@@ -8,20 +8,20 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1' />"   type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>	
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/fileFolderDrop.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/pageNav.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/pageNav.js')}"></script>
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>" />
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css" />
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.css")%>" type="text/css" />
 		<!-- module -->
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/row-selector.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/share.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/favorite.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/search.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/selectUsers.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/popup.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/row-selector.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/share.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/favorite.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/search.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 		<script type="text/javascript">
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {

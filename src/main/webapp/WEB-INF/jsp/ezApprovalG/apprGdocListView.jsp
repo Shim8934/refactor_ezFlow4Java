@@ -13,7 +13,6 @@
 <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getContainerInfo_Cross.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/docListView_Cross.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
-<%-- <script type="text/javascript" src="<%=MakeFileVersionPath("/myoffice/Common/Kaoni_ActiveX.js") %>"></script> --%>
 <script ID="clientEventHandlersJS" type="text/javascript">
     var OrderCell = "";
     var flag = false;

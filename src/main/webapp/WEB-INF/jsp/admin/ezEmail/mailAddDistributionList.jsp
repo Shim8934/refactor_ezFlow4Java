@@ -11,12 +11,12 @@
 	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css">
 	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls/ezSearchDatePicker.htc")%>" type="text/css">
 	    <link rel="stylesheet" href="<spring:message code="main.lhm01" />" type="text/css">
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-	    <script src="<%=CommonUtil.addVer(application, "/js/ezPersonal/controls/TreeView.js")%>" type="text/javascript"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls/ListView_list.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script src="${util.addVer('/js/ezPersonal/controls/TreeView.js')}" type="text/javascript"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <style>
 	    	.mainlist thead tr {
 	    		height: 0px;

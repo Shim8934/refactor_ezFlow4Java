@@ -9,10 +9,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
 	<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css" type="text/css">
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.min.js")%>"></script>
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/fileFolderDrop.js")%>"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
 	<script type="text/javascript">
 		var primary        = "<c:out value='${primary}'/>";
 		var fileList       = "<c:out value='${fileIdList}'/>";

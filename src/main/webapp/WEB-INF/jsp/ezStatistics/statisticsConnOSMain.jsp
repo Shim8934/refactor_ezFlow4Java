@@ -20,14 +20,14 @@
         #statisticschart2 svg {left:-100px !important;right:100px; padding-right:150px;}
     </style>
     <script type="text/javascript" src="${util.addVer('ezStatistics.e1', 'msg')}"></script>
-    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jquery.min.js")%>"></script>
-    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/raphael-min.js")%>"></script>
-    <script src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/g.raphael.js")%>" type="text/javascript" charset="utf-8"></script>
-    <script src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/g.pie.js")%>" type="text/javascript" charset="utf-8"></script>
-    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
-    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jquery.min.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/raphael-min.js')}"></script>
+    <script src="${util.addVer('/js/ezStatistics/js/g.raphael.js')}" type="text/javascript" charset="utf-8"></script>
+    <script src="${util.addVer('/js/ezStatistics/js/g.pie.js')}" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
     <script type="text/javascript">
         var Tab1_flag = true;
         var xmlHttp = createXMLHttpRequest();
