@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jquery.jqplot.min.css")%>" type="text/css">
     <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">    
     <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezOrgan/TreeView.js")%>"></script>
-    <script type="text/javascript" src="<spring:message code='ezStatistics.e1' />"></script>
+    <script type="text/javascript" src="${util.addVer('ezStatistics.e1', 'msg')}"></script>
     <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
     <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
     <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>

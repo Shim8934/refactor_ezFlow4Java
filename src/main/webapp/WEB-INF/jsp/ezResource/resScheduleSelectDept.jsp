@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="<spring:message code="main.lhm01" />" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
+		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
 		<script type="text/javascript">
 			var ReturnFunction;

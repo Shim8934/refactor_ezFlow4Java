@@ -12,7 +12,7 @@
 				border-top:0px;
 			}
 		</style>
-		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>		
+		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>

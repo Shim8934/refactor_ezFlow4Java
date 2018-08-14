@@ -8,7 +8,7 @@
 		<title>Insert title here</title>
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
+		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>

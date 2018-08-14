@@ -216,7 +216,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/jindo.all.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/selectbox.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/scrollbox.js')}"></script>
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>		
+		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>		
 		<script type="text/javascript">
 		 	var UserOffset = "${userOffset}";
 		</script>

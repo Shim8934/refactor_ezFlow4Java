@@ -9,7 +9,7 @@
 		<title><spring:message code='ezApprovalG.pjj03'/></title>
         <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>        
-        <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
+        <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
         <style>
 		    .printcontent, .printcontent th, .printcontent td {
 			    border-collapse: collapse;

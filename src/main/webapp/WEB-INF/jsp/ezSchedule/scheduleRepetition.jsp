@@ -13,7 +13,7 @@
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
+		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/dlg_schedule.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/schedule_write_Cross.js')}"></script>
 		<!-- data picker-->		

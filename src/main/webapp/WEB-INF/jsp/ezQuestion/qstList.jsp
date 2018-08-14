@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script type="text/javascript" src="<spring:message code='ezQuestion.e1' />"></script>
+		<script type="text/javascript" src="${util.addVer('ezQuestion.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<style>
 			#QstList{

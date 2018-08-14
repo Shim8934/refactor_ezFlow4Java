@@ -19,7 +19,7 @@
 	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>" type="text/css">
 	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezOrgan/ListView_list.js")%>"></script>
 	<!-- time picker-->
-	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
+	<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
 	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/popup.js")%>"></script>
 	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/pageNav.js")%>"></script>
 	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/adminTable.js")%>"></script>

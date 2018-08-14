@@ -14,7 +14,7 @@
 		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
-		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
+		<script type="text/javascript" src="${util.addVer('ezTask.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezTask/AttachItem_CK.js')}"></script>

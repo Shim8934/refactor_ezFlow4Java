@@ -87,7 +87,7 @@
 	    <!-- <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_Cross.js')}"></script> -->
 	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarView_Cross.js')}"></script>  
 	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarDataPro_Cross.js')}"></script>
-	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
+	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 
 	    <script type="text/javascript">
 	    	var UserOffset = "${userOffset}";

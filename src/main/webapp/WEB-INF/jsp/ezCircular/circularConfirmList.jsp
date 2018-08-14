@@ -13,7 +13,7 @@
 </head>
 	<script type="text/javascript" src="${util.addVer('/js/ezCircular/ListView_list.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list.js')}"></script>
-	<script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
+	<script type="text/javascript" src="${util.addVer('ezCircular.e1', 'msg')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>

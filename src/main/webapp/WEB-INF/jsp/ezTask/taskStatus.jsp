@@ -9,7 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
 		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
+		<script type="text/javascript" src="${util.addVer('ezTask.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezTask/AttachItem_CK.js')}"></script>

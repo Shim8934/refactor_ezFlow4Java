@@ -7,7 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>		
+		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/controls/ListView_Group.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/NameControl.js')}"></script>

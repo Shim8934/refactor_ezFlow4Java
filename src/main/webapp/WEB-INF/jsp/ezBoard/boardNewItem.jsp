@@ -25,7 +25,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/composeappt.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/ConvertSaveImage.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
+	    <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 	    <c:if test="${!isCrossBrowser}">
 		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain.js')}"></script>
 		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem.js')}"></script>

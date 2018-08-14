@@ -10,7 +10,7 @@
 	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-	    <script type="text/javascript" src="<spring:message code='ezAddress.e1' />"></script>
+	    <script type="text/javascript" src="${util.addVer('ezAddress.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezAddress/Address_List.js")%>"></script>
 	    <script type="text/javascript">
 	

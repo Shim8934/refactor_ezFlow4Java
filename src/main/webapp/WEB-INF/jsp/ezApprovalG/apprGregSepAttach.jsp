@@ -8,7 +8,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/RegRecord_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>

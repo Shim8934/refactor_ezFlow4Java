@@ -34,7 +34,7 @@
 				color:#017BEC;
 			}			
 	    </style>
-	    <script type="text/javascript" src="<spring:message code='ezEmail.e1' />"></script>
+	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls/ezSearchDatePicker.htc")%>" type="text/css">
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezAddress/address_tree_Cross.js")%>"></script>

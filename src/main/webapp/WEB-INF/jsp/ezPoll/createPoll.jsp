@@ -21,7 +21,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezPoll/dropzone.js')}"></script>
   	<script src="${util.addVer('/js/jquery-ui/jquery-ui.js')}"></script>
-  	<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	  
+  	<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>	  
 	<script type="text/javascript">	
 		var messageCode1	  = '<spring:message code="ezPoll.t164"/>';
 		var messageCode2	  = '<spring:message code="ezPoll.t165"/>';

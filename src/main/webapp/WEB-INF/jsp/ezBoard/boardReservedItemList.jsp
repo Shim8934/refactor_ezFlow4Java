@@ -23,7 +23,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
+		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script>
 			var pOrgBoardParameters = "${orgBoardParameters}";
 			var SSUserID = "${userInfo.id}";

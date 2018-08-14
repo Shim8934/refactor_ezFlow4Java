@@ -14,7 +14,7 @@
 		</style>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
     	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-		<script type="text/javascript" src="<spring:message code='ezStatistics.e1' />"></script>
+		<script type="text/javascript" src="${util.addVer('ezStatistics.e1', 'msg')}"></script>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/control_Cross/ListView_list.js")%>"></script>
 		<script language="javascript" type="text/javascript">
 		    var UserAgentState = navigator.userAgent.toLowerCase();

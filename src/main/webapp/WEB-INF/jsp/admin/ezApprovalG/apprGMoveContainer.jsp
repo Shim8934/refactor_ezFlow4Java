@@ -41,7 +41,7 @@
 		}
 		.mainlist tr th {border-top:0px}
 	    </style>
-	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
+	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>

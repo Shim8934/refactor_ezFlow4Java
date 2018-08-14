@@ -21,7 +21,7 @@
 				font-weight: normal;
 			}
 		</style>
-		<script type="text/javascript" src="<spring:message code='ezResource.e1' />"></script>
+		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/Calendar_Action_cross.js')}"></script>

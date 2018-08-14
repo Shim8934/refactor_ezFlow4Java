@@ -8,7 +8,7 @@
 		<title><spring:message code='ezCommunity.t202' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezCommunity.e1' />"></script>
+		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>

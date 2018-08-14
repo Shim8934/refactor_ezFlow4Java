@@ -17,7 +17,7 @@
 			.selectbox select { width: 100%; height: auto; /* 높이 초기화 */ line-height: normal; /* line-height 초기화 */ font-family: inherit; /* 폰트 상속 */ border: 0; opacity: 0; /* 숨기기 */ filter:alpha(opacity=0); /* IE8 숨기기 */ -webkit-appearance: none; /* 네이티브 외형 감추기 */ -moz-appearance: none; appearance: none; }
 		</style>
 		</c:if>
-		<script type="text/javascript" src="<spring:message code='ezEmail.e1' />"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/string_component.js")%>"></script>

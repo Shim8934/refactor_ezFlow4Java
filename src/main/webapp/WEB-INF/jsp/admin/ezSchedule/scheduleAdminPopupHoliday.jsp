@@ -13,7 +13,7 @@
 				padding-top: 1px; <%-- 2018-07-24 천성준 - (#13167) 월 표시 상단이 잘려보임 --%>
 			}
 		</style>
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
+		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>

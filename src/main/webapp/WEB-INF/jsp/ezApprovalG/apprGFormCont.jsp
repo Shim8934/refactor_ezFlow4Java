@@ -11,7 +11,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getFormCont_Cross.js')}"></script>

@@ -8,7 +8,7 @@
 	<title>Insert title here</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
+	<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
 	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
     <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.min.js")%>"></script>
     <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>

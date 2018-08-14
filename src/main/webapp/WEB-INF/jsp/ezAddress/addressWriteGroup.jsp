@@ -32,7 +32,7 @@
 				color:#017BEC;
 			}		    	
 	    </style>
-	    <script type="text/javascript" src="<spring:message code='ezAddress.e1' />"></script>
+	    <script type="text/javascript" src="${util.addVer('ezAddress.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezAddress/address_tree_Cross.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/Controls_cross/treeview_namespace.htc.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>

@@ -12,7 +12,7 @@
 	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css">
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-	    <script type="text/javascript" src="<spring:message code='ezEmail.e1' />"></script>
+	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js/dhtml.js")%>"></script>
 		<script type="text/javascript">
 		    var pUserID = "${userId}";

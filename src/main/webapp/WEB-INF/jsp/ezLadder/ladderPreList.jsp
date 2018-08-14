@@ -9,7 +9,7 @@
 		<title><spring:message code="ezLadder.t073" /></title>
 		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
 		<link rel="stylesheet" href="/css/ezLadder/ladderPreList.css" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezLadder.e1'/>"></script>
+		<script type="text/javascript" src="${util.addVer('ezLadder.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezLadder/ladderList.js')}"></script>

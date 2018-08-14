@@ -11,7 +11,7 @@
         
 		<link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezEmail.e1' />"></script>
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/email_tree.js")%>"></script>

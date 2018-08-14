@@ -46,7 +46,7 @@
 		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain_CK.js')}"></script>
 		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem_CK.js')}"></script>
 	    </c:if>
-	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script> 
+	    <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script> 
         <script type="text/javascript">
 	        var pListImagePath = "";
 	        var pListCount = "${listCount}";

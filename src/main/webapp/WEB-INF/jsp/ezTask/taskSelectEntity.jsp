@@ -28,7 +28,7 @@
 	    		color:#017BEC;
 	    	}
 	    </style>
-	    <script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>	    
+	    <script type="text/javascript" src="${util.addVer('ezTask.e1', 'msg')}"></script>	    
         <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/ezTask/TreeView_Task.js')}"></script>

@@ -7,7 +7,7 @@
 		<title><spring:message code='ezBoard.t293'/></title>
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 		<link rel="stylesheet" href="/css/font-awesome-5.0.10/css/fontawesome-all.css">
-		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
+		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>

@@ -24,7 +24,7 @@
 	<!-- time picker-->
 	<link rel="stylesheet" type="text/css" href="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.css")%>" />
 	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.js")%>"></script>
-	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
+	<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
 	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/pageNav.js")%>"></script>
 	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
 	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.js")%>"></script>

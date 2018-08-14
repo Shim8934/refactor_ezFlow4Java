@@ -9,7 +9,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2"/>" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
+		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezResource/dlg_recurrence_cross.js')}"></script>
 		<!-- data picker-->
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>

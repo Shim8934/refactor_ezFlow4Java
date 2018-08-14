@@ -11,7 +11,7 @@
 	    <style>
 	    	.mainlist tr th {border-top:0px}
 	    </style>
-	    <script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
+	    <script type="text/javascript" src="${util.addVer('ezCircular.e1', 'msg')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		

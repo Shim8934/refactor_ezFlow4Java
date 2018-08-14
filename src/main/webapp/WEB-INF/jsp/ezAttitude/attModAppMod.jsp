@@ -18,7 +18,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/schedule_write_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/TabMenu.js')}"></script>
-	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
+	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 		<!-- data picker-->		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>

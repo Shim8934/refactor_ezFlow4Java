@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
 	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/jsTree/dist/jstree.js")%>"></script>
     <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-   	<script type="text/javascript" src="<spring:message code='ezWebFolder.e1' />"></script>	
+   	<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>	
     <script>
         var PostTreeView = null;
         var treeconfig = "";

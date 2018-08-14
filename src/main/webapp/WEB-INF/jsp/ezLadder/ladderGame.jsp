@@ -13,7 +13,7 @@
 	<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
 	<link rel="stylesheet" href="/css/ezLadder/ladderPreList.css" type="text/css">
 	<link rel="stylesheet" href="/css/font-awesome-5.0.10/css/fontawesome-all.css" type="text/css">
-	<script type="text/javascript" src="<spring:message code='ezLadder.e1'/>"></script>
+	<script type="text/javascript" src="${util.addVer('ezLadder.e1', 'msg')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezPoll/stomp.min.js')}"></script>
