@@ -7,29 +7,29 @@
 <head>
 <title>Insert title here</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/fileFolderDrop.js")%>"></script>
-<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.css")%>" type="text/css"/>
+<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
+<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css"/>
 <!-- date Picker -->
-<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/pageNav.js")%>"></script>
-<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
+<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/pageNav.js')}"></script>
+<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
 <!-- date Picker -->
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.js")%>"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 <!-- module --> 
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/row-selector.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/favorite.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/buttons.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/search.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/context/share.js")%>"></script>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/popup.js")%>"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/row-selector.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/favorite.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/buttons.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/search.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/share.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 <script type="text/javascript">
 	"use strict";
 	var context = (function() {

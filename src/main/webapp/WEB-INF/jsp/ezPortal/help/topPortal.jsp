@@ -4,9 +4,9 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 	</head>
-	<link href="/css/help.css" rel="stylesheet" type="text/css">
+	<link href="${util.addVer('/css/help.css')}" rel="stylesheet" type="text/css">
 	<body>
 		<table width="100%" cellpadding="0" cellspacing="0" style="BORDER-bottom: 1px solid #B4B4B4">
   			<tr>

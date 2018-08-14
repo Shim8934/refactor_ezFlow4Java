@@ -7,13 +7,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code="ezTalkGate.ldh002" /></title>
-<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezTalkGate/ktb2b.css")%>" type="text/css">
+<link rel="stylesheet" href="${util.addVer('/css/ezTalkGate/ktb2b.css')}" type="text/css">
 <STYLE> 
 P { MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm }
 ul{ list-style-type: circle; }
 </STYLE>
-<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezTalkGate/site.css")%>" type="text/css">
+<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+<link rel="stylesheet" href="${util.addVer('/css/ezTalkGate/site.css')}" type="text/css">
 </head>
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" bgcolor="ffffff">
 <table width="100%" border="0" cellspacing="0" cellpadding="5" bordercolorlight="#CCCCCC" bordercolordark="#FFFFFF">
