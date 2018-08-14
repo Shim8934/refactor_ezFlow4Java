@@ -148,13 +148,13 @@
 					<c:choose>
 						<c:when test="${type == 'Del' }">
 							<th>Community<br><spring:message code = 'ezCommunity.t71' /></th>
-							<td style="padding:0px 2px 0px 0px;"> <textarea id="c_clubdesc" name="c_clubdesc" style="background-color:#ffffff; Width:98%; Height:120px; margin-bottom: -3px; cursor:default;
+							<td style="padding:0px 2px 0px 0px;"> <textarea id="c_clubdesc" name="c_clubdesc" style="background-color:#ffffff; Width:98%; Height:120px; cursor:default;
 								 border:none; resize:none;" readonly><c:out value = '${delReason}' /></textarea></td>
 						</c:when>
 						
 						<c:otherwise>
 							<th>Community<spring:message code = 'ezCommunity.t18' /></th>
-							<td style="padding:0px 2px 0px 0px;"> <textarea id="c_clubdesc" name="c_clubdesc" style="background-color:#ffffff;Width:98%; Height:120px; margin-bottom: -3px; cursor:default;
+							<td style="padding:0px 2px 0px 0px;"> <textarea id="c_clubdesc" name="c_clubdesc" style="background-color:#ffffff;Width:98%; Height:120px; cursor:default;
 								 border:none; resize:none;" readonly><c:out value = '${newInfo}' /></textarea></td>
 						</c:otherwise>
 					</c:choose>

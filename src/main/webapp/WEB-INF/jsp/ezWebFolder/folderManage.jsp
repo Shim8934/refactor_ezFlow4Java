@@ -8,7 +8,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title><spring:message code="ezWebFolder.t268"/></title>
     <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-	<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1'/>"></script>
+	<script type="text/javascript" src="<spring:message code='ezEmail.e1'/>"></script>
     <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
     <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
     <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezWebFolder/jsTree/dist/themes/default/style.css")%>" />
@@ -84,17 +84,17 @@
 					var firstNode = "#" + folderId;
 					
 					$('#folderTree').jstree({
-						'plugins': [ "core", "types", "json_data", "themes", "ui","sort" ],
+						'plugins': [ "core", "types", "json_data", "themes", "ui" ],
 						'core': {
 							"animation": 0,
 							'data': data.data,
 							"multiple": false,
 							'themes': {
-								"theme": "default",
-								"dots": false,
+								"theme"		: "default",
+								"dots"		: false,
 								'responsive': false,
-								'variant': 'small',
-								'stripes': false
+								'variant'	: 'small',
+								'stripes'	: false
 							}
 						},
 						"types": {
@@ -103,8 +103,8 @@
 							}
 						},
 						"grid": {
-							"width": "20",
-							"margin-left": "10"
+							"width"			: "20",
+							"margin-left"	: "10"
 						}
 					}).on('changed.jstree', function(e, data) {
 						folderId = data.selected[0];
@@ -114,7 +114,6 @@
 						parent = data.node.original.parent;
 					});
 					
-					console.log(folderType);
 				},
 				error: function(error) {
 					alert("<spring:message code='ezWebFolder.t134' />" + error);

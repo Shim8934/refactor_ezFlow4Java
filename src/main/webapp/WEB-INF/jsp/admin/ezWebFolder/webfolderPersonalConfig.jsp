@@ -9,8 +9,8 @@
 		<link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezWebFolder.e1'/>"></script>
-		<link rel="stylesheet" href="/css/ezWebFolder/webfolder.css"          type="text/css">
-		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css"         type="text/css">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/jquery.lineProgressbar.css")%>" type="text/css">
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezTask/jquery.lineProgressbar.js")%>"></script>
@@ -99,21 +99,29 @@
 					async: true,
 					success : function(data) {
 						hideProgress();
-						var reason  = data.reason;
-						if (reason) {
-							alert(reason);
-							return;
+						var code = data.code;
+						
+						switch(code) {
+							case 0: 
+								var result  = data.capacityList;
+								totalRows   = data.totalUsers;
+								totalPages  = data.totalPages;
+								currentPage = pPage;
+								checkedArr  = [];
+								
+								makePageSelPage();
+								renderData(result);
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
 						}
-						
-						var result  = data.capacityList;
-						totalRows   = data.totalUsers;
-						totalPages  = data.totalPages;
-						currentPage = pPage;
-						checkedArr  = [];
-						
-						makePageSelPage();
-						renderData(result);
-						
 					},
 					error : function(error) {
 						hideProgress();
@@ -253,16 +261,23 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var reason = data.reason;
+						var code = data.code;
 						
-						if (reason) {
-							alert(reason);
-							return;
-						}
-						else {
-							alert("<spring:message code='ezWebFolder.t252'/>");
-							document.getElementById("storageVal").value = "";
-							search_Set(currentPage);
+						switch(code) {
+							case 0: 
+								alert("<spring:message code='ezWebFolder.t252'/>");
+								document.getElementById("storageVal").value = "";
+								search_Set(currentPage);
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300'/>");
+								break;
 						}
 					},
 					error : function(error) {
@@ -291,15 +306,24 @@
 					dataType: "JSON",
 					async: true,
 					success : function(data) {
-						var reason = data.reason;
-						if (reason) {
-							alert(reason);
-							return;
-						}
+						var code = data.code;
 						
-						alert("<spring:message code='ezWebFolder.t253'/>")
-						search_Set(currentPage);
-						checkedArr = [];
+						switch(code) {
+							case 0: 
+								alert("<spring:message code='ezWebFolder.t253'/>")
+								search_Set(currentPage);
+								checkedArr = [];
+								break;
+							case 1:
+								alert("<spring:message code='ezWebFolder.t306'/>");
+								break;
+							case 2:
+								alert("<spring:message code='ezWebFolder.t305'/>");
+								break;
+							case 3:
+								alert("<spring:message code='ezWebFolder.t300'/>");
+								break;
+						}
 					},
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>" + error);
@@ -424,7 +448,7 @@
 			
 			<div id="tblPageRayer"></div>
 			<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel" onclick="closeAllPopups();">&nbsp;</div>
-			<script type="text/javascript" src="/js/ezWebFolder/pageNav.js"></script>
+			<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/pageNav.js")%>"></script>
 		</div>
 	</body>
 </html>

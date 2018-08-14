@@ -8,14 +8,14 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title></title>
-	<link rel="stylesheet" href="/js/dist/themes/default/style.min.css" />
+	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/dist/themes/default/style.min.css")%>" />
 	<link rel="stylesheet" href="<spring:message code = 'main.e15' />" type="text/css" />
-	<link rel="stylesheet" href="/css/ezEmail/style.css" />
-	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>></script>
-	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>></script>
-	<script src=<%=CommonUtil.addVer(application, "/js/dist/jstree.min.js")%>></script>
-	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/letterBoxTree.js")%>></script>
-	<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/letterList.js")%>></script>
+	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezEmail/style.css")%>" />
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	<script src="<%=CommonUtil.addVer(application, "/js/dist/jstree.min.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/letterBoxTree.js")%>"></script>
+	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/letterList.js")%>"></script>
 </head>
 <style>
 	.lmtitle {
@@ -27,7 +27,7 @@
 </style>
 <body>
 	<div id="lmTop">
-		<div class="lmleft">
+		<div class="lmleft" style="height:100%">
 			<!-- 편지지함 목록 -->
 			<table >
 				<tr>
@@ -59,7 +59,7 @@
 							<div class="lmtitle lmLetterTitle">
 								<spring:message code='ezEmail.letter2' />
 							</div>
-							<div class="lmLetterList boxNo" data-boxNo="" style="height: 350px; width: 360px; overflow: auto">
+							<div class="lmLetterList boxNo" data-boxNo="" style="height: 220px; width: 360px; overflow: auto">
 								<!-- boxNo -->
 								<ul class="lmLetterListUl lmLetterListWrap"></ul>
 							</div>
@@ -98,7 +98,7 @@
 		<table>
 			<tr>
 				<td>
-					<div class="lmright" style="width: 578px; height: 578px">
+					<div class="lmright" style="width: 578px; height: 448px">
 						<div class="lmPreview">
 							<div class="lmPreViewTxt"
 								style='text-align: center; position: relative; top: 48%; transform: translateY(-50%); font-size:13px'>
@@ -213,7 +213,7 @@
 				url = "/admin/ezEmail/letterBoxMovePopUp.do?letterBox="
 						+ letterBox + "&letterNo=" + letterNo + "&letterId="
 						+ letterId;
-				var win = window.open(url, "_blank", "width=550, height=450");
+				var win = window.open(url, "_blank", GetOpenWindowfeature(550, 450));
 
 				// 팝업이 끝나면 실행되는 부분
 				var interval = window.setInterval(function() {
@@ -258,12 +258,11 @@
 				letterBoxNo = $(btn).parents("li").attr("data-letterboxno");
 				letterNo = $(btn).parents("li").attr("data-letterno");
 			}
-
+			
 			var url = "/admin/ezEmail/letterEditPopUp.do?" + "letterBoxNo="
 					+ letterBoxNo + "&popUpType=" + popUpType + "&letterNo="
 					+ letterNo;
-			var letterPopUp = window.open(url, "letterPopUp",
-					"width=890, height=660");
+			var letterPopUp = window.open(url, "letterPopUp", GetOpenWindowfeature(890, 660));
 		}
 
 		// 편지지 삭제

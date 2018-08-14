@@ -58,7 +58,7 @@ public interface EzOrganService {
 
 	public String getDeptReceipterIDs(String deptID, int tenantID) throws Exception;
 
-	public OrganProxyVO getProxyInfo(String userID, int tenantID) throws Exception;
+	public OrganProxyVO getProxyInfo(String userID, int tenantID, String offset) throws Exception;
 	
 	public List<String> getAllSubDeptId(String deptID, int tenantID) throws Exception;
 	
@@ -89,4 +89,6 @@ public interface EzOrganService {
 	public int getMemberListCount2(String pDeptID, List<String> companyList, int totalCount2, String containCompany, int tenantId) throws Exception;
 	
 	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID) throws Exception;
+	
+	public String getPhysicalDeliveryOfficeName(String userID,  String property, int tenantID) throws Exception;
 }

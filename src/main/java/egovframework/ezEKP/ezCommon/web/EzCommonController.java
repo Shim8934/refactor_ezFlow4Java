@@ -469,7 +469,7 @@ public class EzCommonController extends EgovFileMngUtil{
 
 		String filePath = request.getParameter("filePath");
 		String fileName = "";
-		String realPath = commonUtil.getRealPath(request);
+//		String realPath = commonUtil.getRealPath(request);
 		
 		if (request.getParameter("fileName") != null) {
 			fileName = request.getParameter("fileName");
@@ -481,7 +481,10 @@ public class EzCommonController extends EgovFileMngUtil{
 			filePath = "/images/ezCommunity/logo/default_logo_empty.png";			
 		}
 		
-		downFile(request, response, realPath + filePath, fileName);
+		downImage(filePath, request, response);
+		
+//		2018-08-14 천성준 - IE, https에서 이미지 깨짐현상 때문에 주석 후, downImage로 대체
+//		downFile(request, response, realPath + filePath, fileName);
 //		ezCommonService.responseAttach(filePath, fileName, true, request, response);
 		
 		logger.debug("downloadAttach ended");

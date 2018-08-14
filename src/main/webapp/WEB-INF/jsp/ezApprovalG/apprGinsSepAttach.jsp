@@ -349,13 +349,13 @@
 		            para[1] = GetAttribute(selnode[0], "DATA1");
 
 		            var url = "/ezApprovalG/selectCabinetInTask.do";
-		            var feature = "dialogWidth:480px;dialogHeight:430px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
-        			feature = feature + GetShowModalPosition(480, 430);
+		            var feature = "dialogWidth:800px;dialogHeight:550px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
+        			feature = feature + GetShowModalPosition(800, 550);
 		            if (CrossYN()) {
 		            	selectcabinetintask_cross_dialogArguments[0] = para;
 		            	selectcabinetintask_cross_dialogArguments[1] = btnSelectCabinet_onclick_Complete;
 
-		                 DivPopUpShow(475, 375, url);
+		                 DivPopUpShow(800, 550, url);
 		            }
 		            else {
 		            if (url != "")

@@ -8,7 +8,7 @@
 	<head>
 	    <title>left_myoffice</title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, request, "<spring:message code='ezEmail.e1' />")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/email_tree.js")%>"></script>
@@ -19,8 +19,8 @@
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezAddress/address_tree_Cross.js")%>"></script>
 	    <!-- 재은 수정 -->
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/NewMailList.js")%>"></script>
-	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezEmail.c1' />")%>" type="text/css">
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='main.lhm02' />")%>" type="text/css">
 	    <script type="text/javascript">
 	        var pUse_Editor = "${useEditor}";
 	        var subCode = "${subCode}";
@@ -34,6 +34,7 @@
 	      	var useBottomFrameOnly = "${useBottomFrameOnly}";
 	      	var useMailBoxBackUp = "${useMailBoxBackUp}";
 	      	var useMailReceiveScreen = "${useMailReceiveScreen}";
+	      	var operatorMailAddress = "${operatorMailAddress}";
 	      	
 	        document.onselectstart = function () { return false; };
 	        window.onresize = function () {
@@ -1006,6 +1007,22 @@
 	            get_unreadcount();
 			}
 			
+			function operatorSendMail() {
+		        var pheight = window.screen.availHeight;
+		        var conHeight = pheight * 0.8;
+		        var pwidth = window.screen.availWidth;
+		        var conWidth = pwidth * 0.8;
+		        
+		        if (conWidth > 890) {
+		            conWidth = 890;
+		        }
+		        
+		        var pTop = (pheight - conHeight) / 2;
+		        var pLeft = (pwidth - 890) / 2;
+		        var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+
+		        window.open("/ezEmail/mailWrite.do?cmd=NEW&operatorMailAddress=" + operatorMailAddress, "", feature);
+		    }
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -1080,6 +1097,9 @@
 		            <dd id="usePer"></dd>
 		        </dl>
 		    </div>
+		    <c:if test="${operatorMailAddress ne null && operatorMailAddress != ''}">
+		    <h4><span onclick="operatorSendMail()"><spring:message code="ezEmail.0hun01" /></span></h4>
+		    </c:if>
 	        <h3 style="border-top:0px"><span onclick="mail_Config()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
 	        <c:if test="${isDotNetAdmin == true}">
   			<h2>

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -8,17 +9,17 @@
 		<title><spring:message code='ezPersonal.t4465'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 		<!-- data picker-->
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>">
 		<!-- time picker-->
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+		<link rel="stylesheet" type="text/css" href="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.css")%>" />
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/timeControls/jquery.timepicker.js")%>"></script>
 		<script type="text/javascript">
 			var deptid = "${deptID}";
 			var userid = "${userID}";
@@ -278,16 +279,19 @@
 		        }
 		
 		        // 대리 수신 담당자 지정
-		        if (Roll.toLowerCase().indexOf("a=1;") > -1) {
+		        /* if (Roll.toLowerCase().indexOf("a=1;") > -1) {
 		            if (document.getElementById("TextProxyName").value != "") {
 		            	pProxy = proxyuserid + ":" + document.getElementById("TextProxyName").value + ":" + proxydeptid + ":" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + ":" + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val() + ":";
+		            	pProxy = proxyuserid + "|" + document.getElementById("TextProxyName").value + "|" + proxydeptid + "|" + $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() +"|"+ $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 		                gIsAppoint = "1";
 		            }
 		            else
 		                pProxy = "";
 		        }
 		        else
-		            pProxy = "";
+		            pProxy = ""; */
+		            
+		          
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
@@ -377,7 +381,17 @@
 		                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName').value=''; $('#TextName').attr('check','clear')"><spring:message code='ezPersonal.t33'/></span></a>
 					</td>
 				</tr>
-				<c:if test="${fn:indexOf(fn:toLowerCase(userInfo.rollInfo), 'a=1;') > -1}">
+				<%-- <c:if test="${fn:indexOf(fn:toLowerCase(userInfo.rollInfo), 'a=1;') > -1}">
+					<c:if test="${approvalFlag eq 'S'}">
+						<tr>
+				            <th><spring:message code='ezPersonal.t399'/></th>
+						    <td>
+						    	<input type="text" name="TextProxyName" id="TextProxyName" value="${textProxyName}" Width="120" ReadOnly />
+							    <a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsProxyUser = true;select_person('Proxy')"><spring:message code='ezPersonal.t32'/></span></a> 
+				                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsProxyUser = false;document.getElementById('TextProxyName').value=''"><spring:message code='ezPersonal.t33'/></span></a>
+						    </td>
+					    </tr>
+					</c:if>
 				    <tr>
 			            <th><spring:message code='ezPersonal.t399'/></th>
 					    <td>
@@ -386,7 +400,7 @@
 			                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsProxyUser = false;document.getElementById('TextProxyName').value=''"><spring:message code='ezPersonal.t33'/></span></a>
 					    </td>
 				    </tr>
-				</c:if>
+				</c:if> --%>
 				<c:if test="${approvalFlag eq 'G'}">
 					<tr>
 						<th><spring:message code='ezPersonal.t42'/></th>

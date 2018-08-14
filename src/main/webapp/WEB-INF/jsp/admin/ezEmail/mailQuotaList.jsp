@@ -10,11 +10,11 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">	
 		<link rel="stylesheet" href="<spring:message code='main.e15' />" type="text/css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>></script>
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>></script>
-		<script type="text/javascript" src=<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>></script>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
+		<script type="text/javascript" src="<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript">
 			var strLang1 = "<spring:message code='ezSystem.x0030'/>";
 			var strLang2 = "<spring:message code='ezSystem.x0031'/>";
@@ -402,7 +402,7 @@
 		</table>
 		</div>
 		<div id="contentlist" style="width:100%; overflow: auto;">
-			<div style="border-left: 1px solid #eaeaea;border-right: 1px solid #eaeaea;">
+			<div>
 				<table class="mainlist" style="width:100%;">
 					<thead style="">
 						<tr>

@@ -175,7 +175,12 @@
 				/* 의견카운트 */
 				getCommentList();			
 				
-				setTimeout(onloadchangtab, 100);					
+				setTimeout(onloadchangtab, 100);		
+				
+				/* 2018-08-10 김민성 - 반복일정 progressbar 설정 추가 */
+				if(taskstatus == 0) {
+					dayOnMouseClick(date);
+				}
 				
 				initProgressBar(taskstatus, completerate);
 		    });

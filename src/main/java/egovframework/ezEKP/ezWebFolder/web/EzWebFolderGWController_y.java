@@ -309,13 +309,12 @@ public class EzWebFolderGWController_y {
 				double folderSize           = ezWebFolderAdminService.getFolderSize(folder.getFolderPath(), tenantId);
 				UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
 				
-				long totalUsed = Long.parseLong(userCapacity.getTotalUsed());
-				long totalCapa = Long.parseLong(userCapacity.getTotalCapacity()) * 1073741824;
+				double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
+				double totalCapa = Double.parseDouble(userCapacity.getTotalCapacity()) * 1073741824;
 				
 				if (folderSize > (totalCapa - totalUsed)) {
 					LOGGER.debug("Not enough storage to move/copy this folder!");
 					result.put("status", "error");
-					result.put("reason", egovMessageSource.getMessage("ezWebFolder.t250", locale));
 					result.put("code", 7);
 					result.put("data", "");
 					return result;
@@ -448,6 +447,7 @@ public class EzWebFolderGWController_y {
 			
 			if (currPage > totalpages & totalCount != 0) {
 				currPage = totalpages;
+				pStart = (currPage -1 )* listCount;
 			}
 			pEnd = listCount;
 			

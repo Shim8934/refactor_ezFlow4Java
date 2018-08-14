@@ -119,6 +119,7 @@
 		    var signImageType = "${signImageType}";
 		    var curDocNum = "";
 		    var isReceived = "${isReceived}";
+		    var useReceiveDocNo = "${useReceiveDocNo}";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -1294,7 +1295,7 @@
 		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
 		        	window.close();
 		        } else {
-		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
 		        	try { OpenWin.focus(); } catch (e) { }
 		        }
 
@@ -1416,9 +1417,7 @@
 			<li id="btnFileAttach"style="display:none" ><span onClick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
 			<li id="btnAprDocAttach" style="display:none"><span  onClick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t1429'/></span></li>
 			<c:if test="${approvalFlag == 'G'}">
-<%-- 		    <c:if test="${hideCabinet == '0'}"> --%>
-			<li id="btnAddSepAttach"><span  onClick="btnAddSepAttach_onclick()"  ><spring:message code='ezApprovalG.t58'/></span></li>
-<%-- 			</c:if> --%>
+				<li id="btnAddSepAttach"><span  onClick="btnAddSepAttach_onclick()"  ><spring:message code='ezApprovalG.t58'/></span></li>
 			</c:if>
 			<li id="btnAssign" ><span  onClick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t1430'/></span></li>
 			<li id="btnDistribute"><span  onClick="return btnDistribute_onclick()"><spring:message code='ezApprovalG.t1432'/></span></li>
