@@ -4,7 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
-<link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezPMS.e1' />")%>" type="text/css" />ype="text/css">
+<link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezPMS.e1' />")%>" type="text/css" />
 <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPMS/default/style.css")%>" type="text/css" />
 <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPoll/vote.css")%>" type="text/css" />
 
