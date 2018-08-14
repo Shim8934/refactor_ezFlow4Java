@@ -302,11 +302,24 @@ GridEditor.prototype.bindRowInputEvents = function (task, taskRow) {
           var task = self.master.getTask(taskId);
 
           var leavingField = inp.prop("name");
-          var dates = resynchDates(inp, row.find("[name=start]"), row.find("[name=startIsMilestone]"), row.find("[name=duration]"), row.find("[name=end]"), row.find("[name=endIsMilestone]"));
+          
+          // 시작일 수정 시 종료일에 영향을 미치지 않게하기 위해 수정 - 임민석
+          // var dates = resynchDates(inp, row.find("[name=start]"), row.find("[name=startIsMilestone]"), row.find("[name=duration]"), row.find("[name=end]"), row.find("[name=endIsMilestone]"));   
+          var start = Date.parseString(row.find("[name=start]").val());
+          var end 	= Date.parseString(row.find("[name=end]").val());
+                    
+          if(start > end) {
+        	  alert(GanttMaster.messages["START_CANNOT_BE_LATER_THAN_END"]);
+        	  row.find("[name=start]").val(new Date(task.start).format());
+        	  row.find("[name=end]").val(new Date(task.end).format());
+        	  return;
+          }
+          end.setHours(23, 59, 59, 999);
+  
           //console.debug("resynchDates",new Date(dates.start), new Date(dates.end),dates.duration)
           //update task from editor
           self.master.beginTransaction();
-          self.master.changeTaskDates(task, dates.start, dates.end);
+          self.master.changeTaskDates(task, start, end);
           self.master.endTransaction();
           inp.updateOldValue(); //in order to avoid multiple call if nothing changed
         }
