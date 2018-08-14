@@ -3344,6 +3344,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("primary", userInfo.getPrimary());
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyID());
+		map.put("lang", userInfo.getLang());
 		
 		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getCodeType(map);
 		
@@ -3378,6 +3379,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("primary", userInfo.getPrimary());
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyID());
+		map.put("lang", userInfo.getLang());
 		
 		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getCodeType(map);
 		
