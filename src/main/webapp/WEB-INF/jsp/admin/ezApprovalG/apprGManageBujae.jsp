@@ -365,6 +365,11 @@
 		        if (check_enddate()) {
 		            return;
 		        }
+		        
+		        if (document.getElementById("TextName1").value == "") {
+					alert("<spring:message code='main.t0630'/>");
+					return;
+				} 
 		
 		        if (gIsAppoint != '2') {
 		        	/* document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>"*/
@@ -392,10 +397,7 @@
 		        } else if($("#TextName").attr("check") == "clear") {
 		        	pBujae = "";
 		        	gIsAppoint = "3";
-		        } else if (document.getElementById("TextName1").value == "") {
-					alert("<spring:message code='main.t0630'/>");
-					return;
-				} else if (document.getElementById("TextName1").value != "" && document.getElementById("absentreason").value == ""){
+		        } else if (document.getElementById("TextName1").value != "" && document.getElementById("absentreason").value == ""){
 					 pBujae = "";
 			         gIsAppoint = "4";
 				} else {
@@ -491,7 +493,7 @@
 					<td>
 						<input type="text" name="TextName" id="TextName1" Width="120" value="" ReadOnly />
 						&nbsp;<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person1('')"><spring:message code='ezPersonal.t32'/></span></a> 
-		                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="gIsAppoint = '2';document.getElementById('TextName1').value=''; $('#TextName1').attr('check','clear')"><spring:message code='ezPersonal.t33'/></span></a>
+		                <a class="imgbtn imgbck" style="vertical-align:middle"><span onClick="document.getElementById('TextName1').value=''; document.getElementById('TextName').value=''; $('#TextName1').attr('check','clear');"><spring:message code='ezPersonal.t33'/></span></a>
 					</td>
 				</tr>
 				
