@@ -118,6 +118,7 @@
 		    var nonElecRec = "${isNonElecRec}";
 		    var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
 		    var dirPath = "${approvalRoot}";
+		    var useReceiveDocNo = "${useReceiveDocNo}";
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -625,6 +626,7 @@
 			              }
 			
 			              var rtnval = true;
+			              //mht는 G일때만 수신채번하게 되잇는데
 			              rtnval = getRecvDocNumber(arr_userinfo[4]);
 			              if (!rtnval) {
 			                  var pAlertContent = "[접수 문서번호]를 가져오지 못했습니다!";

@@ -44,6 +44,7 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
 	    			result = xml;
 	    		}
 	    	});
+	    	
 	    	dataNodes = GetChildNodes(loadXMLString(result));
 	    	SN = getNodeText(dataNodes[0]);
     	} else {
@@ -53,15 +54,14 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
         if (SN == "") {
             DocNumCode = "";
             return false;
-        }
-        else {
+        } else {
         	if (approvalFlag == "S") {
         		var tempNumString = SN;
-        		var i = 0;
         		if (tempNumString < Math.pow(10, docNumZeroCnt)) {
-	        			for (i = 0; i < docNumZeroCnt-SN.length; i++) {
-	        				tempNumString = "0" + tempNumString;
-	        			}
+        			for (var i = 0; i < docNumZeroCnt-SN.length; i++) {
+        				tempNumString = "0" + tempNumString;
+        			}
+        			
         			field.textContent = fractionsymbol + tempNumString;
         		} else {
         			field.textContent = fractionsymbol + tempNumString
@@ -82,10 +82,11 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
         			if (nonElecRec != "Y") {
 	                    HwpCtrl.SetFieldText(name, fractionsymbol.substr(0, fractionsymbol.lastIndexOf('-') + 1) + SN);
 	                    var tempNumString = SN;
-	                    var i = 0;
 	                    var templen = tempNumString.length;
-	                    for (i = 0; i < 6 - templen; i++)
-	                        tempNumString = "0" + tempNumString;
+	                    for (var i = 0; i < 6 - templen; i++) {
+	                    	tempNumString = "0" + tempNumString;
+	                    }
+	                    
 	                    DocNumCode = pDeptID + tempNumString;
         			} else {
         				DocNumCode = SN;
@@ -100,18 +101,17 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
                             if (trim(HwpCtrl.GetFieldText("enforcedate")) == "")
                                 HwpCtrl.SetFieldText("enforcedate", getGyulJeDate());
                     }
-        			
-                    
 
                     return true;
         		} else {
         			field.textContent = fractionsymbol + SN;
         			
         			var tempNumString = SN;
-        			var i = 0;
         			var templen = tempNumString.length;
-        			for (i = 0; i < 6 - templen; i++)
+        			for (var i = 0; i < 6 - templen; i++) {
         				tempNumString = "0" + tempNumString;
+        			}
+        			
         			DocNumCode = pDeptID + tempNumString;
         			
         			message.DocumentBodySetAttribute("regnumbercode", tempNumString);

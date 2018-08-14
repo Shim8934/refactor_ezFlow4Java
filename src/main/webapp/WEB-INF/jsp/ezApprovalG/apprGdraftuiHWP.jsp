@@ -150,6 +150,7 @@
 	        var ext = "hwp";
 	        var nonElecRec = "${nonElecRec}";
 	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "";
+	        var useReceiveDocNo = "${useReceiveDocNo}";
 	        
 	        window.onload = function () {
 	            try {

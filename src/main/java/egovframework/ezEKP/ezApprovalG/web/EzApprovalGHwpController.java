@@ -100,6 +100,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
 		
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("hwpToolbar", hwpToolbar);
@@ -124,6 +125,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("docSN", docSN);
 		model.addAttribute("isHWP", "Y");
 		model.addAttribute("nonElecRec", nonElecRec);
+		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		
 		LOGGER.debug("draftuiHWP ended");
 		
@@ -156,6 +158,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+        String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
 		String docState = request.getParameter("docState");
 		String mailChk = request.getParameter("mailchk");// 메일에서 전저결재 열람 여부('Y'일때는 메일 그 외에는 전자결재)
 		
@@ -230,6 +233,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         model.addAttribute("susinAdmin", susinAdmin);
         model.addAttribute("docState", docState);
         model.addAttribute("isHWP", "Y");
+        model.addAttribute("useReceiveDocNo", useReceiveDocNo);
         
 		LOGGER.debug("approvuiHWP ended");
 		
@@ -603,6 +607,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String sihangURL = ezApprovalGService.getOptionInfo("A36", "004", userInfo, "CODE");
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
 
 		String docID = request.getParameter("docID");
 		String orgDocID = request.getParameter("uOrgID");
@@ -662,6 +667,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("isNonElecRec", isNonElecRec);
 		model.addAttribute("approvalRoot", approvalRoot);
+		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		
 		LOGGER.debug("ezRecevGSusinHWP ended");
 		
