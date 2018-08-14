@@ -493,7 +493,8 @@
 	   			var url = "";
 	   			var groupId = "";
 	   			var groupName = ge.currentTask.name;
-	   			var upperGroupIds = ge.currentTask.code.split(',');
+	   			var codeStr = ge.currentTask.code + "";
+	   			var upperGroupIds = codeStr.split(',');
 	   			// 바로 위 groupId
 	   			var upperGroupId = upperGroupIds[upperGroupIds.length - 2];
 	   			var upperGroupName = $("[id$='g" + upperGroupId + "']").find("input[name='name']").val();
@@ -505,8 +506,13 @@
 	   				upperGroupName = projectDetails.projectName;
 	   			}
 	   			
-	   			if(selectType !== "g"){
+	   			console.log(selectType);
+	   			
+	   			if(selectType === "t"){
 		   			alert("<spring:message code='ezPMS.t281' />");
+		   			return;
+	   			} else if (selectType === "p") {
+	   				alert("<spring:message code='ezPMS.t307' />");
 		   			return;
 	   			} else {
 	   				if(!confirm("<spring:message code='ezPMS.t306' />")){
