@@ -134,45 +134,56 @@
 		        	 containment: '.memoListBox'
 		        });
 		        
-		        /* $("#font-up").click(function() {
+		        $("#font-up").click(function() {
 		        	
 		        	var textarea = $("#font-up").parent().parent().find("textarea");
-		        	var thisWidth = textarea.css("width");
-		        	var thisHeight = textarea.css("height");
 		        	var thisFont = textarea.css("font-size");
 		        	var fontNum = parseInt(thisFont.substr(0, 2));
 		        	 
-					if (fontNum == 15) {
+		        	switch(fontNum) {
+			        	case 10 : 
+			        		textarea.css("font-size", "15px");
+			        		break;
+	
+			        	case 15 : 
+			        		textarea.css("font-size", "20px");
+			        		break;
 		        		
-			        	textarea.css("font-size", "20px");
-		        	} else if (fontNum == 10) {
-		        		
-			        	textarea.css("font-size", "15px");
+		        		case 20 : 
+			        		textarea.css("font-size", "25px");
+			        		break;
+			        		
+		        		case 25 : 
+			        		textarea.css("font-size", "30px");
+			        		break;
 		        	}
 		        	
-					console.log(thisWidth);
-		        	textarea.css("width", thisWidth);
-		        	
-		        	textarea.css("height", thisHeight);
 		        });
 		        
 		        $("#font-down").click(function() {
 		        	var textarea = $("#font-down").parent().parent().find("textarea");
-		        	var thisWidth = textarea.css("width");
-		        	var thisHeight = textarea.css("height");
 		        	var thisFont = textarea.css("font-size");
 		        	var fontNum = parseInt(thisFont.substr(0, 2));
 		        	
-		        	if (fontNum == 20) {
+		        	switch(fontNum) {
+		        		case 30 : 
+			        		textarea.css("font-size", "25px");
+			        		break;
 		        		
-			        	textarea.css("font-size", "15px");
-		        	} else if (fontNum == 15) {
-		        		
-			        	textarea.css("font-size", "10px");
-		        	}
-		        	textarea.css("width", thisWidth);
-		        	textarea.css("height", thisHeight);
-		        }); */
+		        		case 25 : 
+			        		textarea.css("font-size", "20px");
+			        		break;
+			        		
+		        		case 20 : 
+			        		textarea.css("font-size", "15px");
+			        		break;
+			        		
+		        		case 15 : 
+			        		textarea.css("font-size", "10px");
+			        		break;
+	        		}
+		        	
+		        });
 
 		        
 		        $("#layer-popup").resizable({
