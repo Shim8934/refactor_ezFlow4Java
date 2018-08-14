@@ -38,6 +38,7 @@
         <script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>			
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript">
 			var skinnum = "${skinNum}";
 			var selectedCell = "";
@@ -1543,7 +1544,9 @@
 		</c:choose>
 		
 		<c:if test="${isCrossBrowser != true}">
-			<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,13" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
+			<script type="text/javascript">
+				ezIcd_ActiveX("i_icd2");
+			</script>
 		</c:if>  
 		<div id="objectDiv"></div>
 		<c:choose>

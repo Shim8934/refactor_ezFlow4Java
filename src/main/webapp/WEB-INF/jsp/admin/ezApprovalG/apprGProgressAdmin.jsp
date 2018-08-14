@@ -5,6 +5,7 @@
 	<head>
 		<title>Component Download</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript">
 			var i_totalDownload;
 			var i_currentDownload = 0;
@@ -64,7 +65,9 @@
 	</head>
 
 	<body id=theBody bgcolor="#dedede" leftmargin="0" topmargin="0">
-		<OBJECT id="i_icd" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,19" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
+		<script type="text/javascript">
+			ezIcd_ActiveX("i_icd");
+		</script>
 		<table width="390" border="0" cellspacing="0" cellpadding="3" vspace="0" hspace="0">
   			<tr> 
     			<td colspan="2"> 
