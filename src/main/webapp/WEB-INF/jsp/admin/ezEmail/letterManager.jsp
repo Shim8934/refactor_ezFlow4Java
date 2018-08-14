@@ -213,7 +213,7 @@
 				url = "/admin/ezEmail/letterBoxMovePopUp.do?letterBox="
 						+ letterBox + "&letterNo=" + letterNo + "&letterId="
 						+ letterId;
-				var win = window.open(url, "_blank", "width=550, height=450");
+				var win = window.open(url, "_blank", GetOpenWindowfeature(550, 450));
 
 				// 팝업이 끝나면 실행되는 부분
 				var interval = window.setInterval(function() {
@@ -258,12 +258,11 @@
 				letterBoxNo = $(btn).parents("li").attr("data-letterboxno");
 				letterNo = $(btn).parents("li").attr("data-letterno");
 			}
-
+			
 			var url = "/admin/ezEmail/letterEditPopUp.do?" + "letterBoxNo="
 					+ letterBoxNo + "&popUpType=" + popUpType + "&letterNo="
 					+ letterNo;
-			var letterPopUp = window.open(url, "letterPopUp",
-					"width=890, height=660");
+			var letterPopUp = window.open(url, "letterPopUp", GetOpenWindowfeature(890, 660));
 		}
 
 		// 편지지 삭제

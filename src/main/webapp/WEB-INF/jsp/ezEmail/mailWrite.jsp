@@ -52,7 +52,7 @@
 			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
 		</style>
 		
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+		<script type="text/javascript" src="<spring:message code='ezEmail.e1' />"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.9.1.js")%>"></script>
 	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-ui.js")%>"></script>

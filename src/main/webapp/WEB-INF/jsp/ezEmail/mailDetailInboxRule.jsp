@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.modal.js")%>"></script>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-		<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
+		<script type="text/javascript" src="<spring:message code='ezEmail.e1' />"></script>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/ListView_list.js")%>"></script>
 		<script type="text/javascript" >
 		    var _OpenerObject;

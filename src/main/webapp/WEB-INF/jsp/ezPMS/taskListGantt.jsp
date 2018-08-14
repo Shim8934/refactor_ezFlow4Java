@@ -2726,7 +2726,8 @@
 			      "GANTT_QUARTER":"<spring:message code='ezPMS.t302' />",
 			      "GANTT_QUARTER_SHORT":"q.",
 			      "GANTT_WEEK":"<spring:message code='ezCommunity.t591' />",
-			      "GANTT_WEEK_SHORT":"<spring:message code='ezCommunity.t591' />"
+			      "GANTT_WEEK_SHORT":"<spring:message code='ezCommunity.t591' />",
+			      "START_CANNOT_BE_LATER_THAN_END":"<spring:message code='ezPMS.t49' />"
 			    };
 			  }
 			
