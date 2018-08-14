@@ -179,5 +179,6 @@ public interface EzApprovalGAdminService {
 	public String deleteDocListjson(String[] DocDelIDArr, String[] DocDelNoArr, String[] DocDelTitleArr, String[] DocDelWriterNameArr, String[] DocDelDeptNameArr,String deleteDay, String DeluserId, String offset, String companyID, int tenantID) throws Exception;
 
 	public List<ApprGDocListVO> getDeleteDocList_json(String userID, String subQuery, int startRow, int pageSize, String pageNum, int totalcnt, String companyID, int tenantID, String offset, String lang, Locale locale) throws Exception;
-
+	
+	public String getExAttribute(String buJaeId, int tenantID) throws Exception;
 }

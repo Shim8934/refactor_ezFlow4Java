@@ -75,6 +75,11 @@
 						//전체 문서 조회(완료문서)
 					    url = "/admin/ezApprovalG/forDoc.do?type=admin";
 						break;
+					case 14:
+						//2018-08-07 구해안
+						//부재자 설정관리
+					    url = "/admin/ezApprovalG/adminBujae.do";
+						break;
 				}
 				
 				window.open(url,"right");
@@ -122,7 +127,7 @@
 						<h2><span style="display:inline-block;width:100%;" onClick="goPage(10)"><spring:message code='main.t49'/></span><ul></ul></h2>
 					</c:otherwise>
 				</c:choose>
-				
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(14)"><spring:message code='main.t0628'/></span><ul></ul></h2>				
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(11)"><spring:message code='main.t42'/></span><ul></ul></h2>	
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(12)"><spring:message code='main.t50'/></span><ul></ul></h2>	
 				<h2><span style="display:inline-block;width:100%;" onClick="goPage(13)"><spring:message code='main.t51'/></span><ul></ul></h2>	
