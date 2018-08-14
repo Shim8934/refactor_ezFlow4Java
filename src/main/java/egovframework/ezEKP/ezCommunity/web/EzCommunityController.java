@@ -39,6 +39,7 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
@@ -98,6 +99,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommunityController.class);
 	
@@ -1095,6 +1099,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String commentCount = ezCommunityService.getOneLineReplyCount(pBoardID, pItemID, userInfo.getTenantId()); // 2018-01-10 강민수92 댓글 카운트 세기
 		//2018.08.08 캐비넷 추가
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("commu", userInfo);
+		}
 		
 		model.addAttribute("commentCount", commentCount);
 		model.addAttribute("item", item);
@@ -4334,6 +4341,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String commentCount = ezCommunityService.getOneLineReplyCount(boardID, itemID, userInfo.getTenantId()); // 2018-01-10 강민수92 댓글 카운트 세기
 		//2018.08.08 캐비넷 추가
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("commu", userInfo);
+		}
 		
 		model.addAttribute("commentCount", commentCount);
 		model.addAttribute("userInfo", userInfo);

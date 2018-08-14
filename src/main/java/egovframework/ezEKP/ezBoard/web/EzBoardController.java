@@ -50,6 +50,7 @@ import org.w3c.dom.NodeList;
 
 
 
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
@@ -66,6 +67,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -126,6 +128,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource egovMessageSource;
+	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardController.class);
 	
@@ -3337,6 +3342,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		//2018.08.08 캐비넷 추가
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("board", userInfo);
+		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
@@ -5083,7 +5091,10 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		//2018.08.08 캐비넷 추가
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
-				
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("board", userInfo);
+		}
+		
 		/* 2018-06-20 홍승비 - 포토/썸네일 승인게시판 게시물 apprFlag 수정 */
 		model.addAttribute("boardAdjacent", boardAdjacent);
 		model.addAttribute("itemID", itemID);
