@@ -10,13 +10,14 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
 		
-		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezPMS.e1' />")%>" type="text/css" />
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPMS/pms.css")%>" type="text/css" />
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css" />
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPMS/gantt/platform.css")%>" type="text/css" />
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezPMS/gantt/libs/jquery/dateField/jquery.dateField.css")%>" type="text/css" />
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPMS/gantt/gantt.css")%>" type="text/css" />
 		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPMS/gantt/ganttPrint.css")%>" type="text/css" media="print"/>
+		<!-- default.css는 우선 순위때문에 css 중에서 가장 아래줄에 있어야 함. -->
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezPMS.e1' />")%>" type="text/css" />
 		
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
 		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
