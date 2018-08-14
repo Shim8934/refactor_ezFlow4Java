@@ -36,14 +36,18 @@
 			.noteBlock { margin: 0;padding: 0;width:100%;height:100%;position:absolute;z-index:1000;top:0;left:0;}
 			/* #maskDiv { position:absolute; background:white; z-index:9001; top:0px; left:0px; opacity:0.4; z-index:9000; background:rgb(59, 60, 60);} */
 			/* .selected-memoWrapper {display:table-cell;vertical-align:middle;} */
-			#memo-btn{text-align:right;margin:0 auto; }
-			#font-btn{text-align:right;margin:0 auto; }
+			/* #memo-btn{text-align:right;margin:0 auto; } */
+			#memo-btn{text-align:right; height:40px; }
+			/* #font-btn{text-align:right;margin:0 auto; } */
+			#font-btn{text-align:right; height: 23px; }
 			#slider-range{width:100px;float:left; margin-left:15px;}
 			.ui-widget-header{background: #0470e4}
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
-			#textarea{padding-left:10px; padding-right:10px; width:100%; height:85%; margin-left:-3px; overflow-y:scroll; padding-bottom: 10px;}
+			/* #textarea{padding-left:10px; padding-right:10px; width:100%; height:85%; margin-left:-3px; overflow-y:scroll; padding-bottom: 10px;} */
+			#textarea{padding-left:10px; padding-right:10px; width:100%; height:330px; margin-left:-3px; overflow-y:scroll;}
 			/* .detailMemo{border: 1px solid black;width: 400px;center;height: 400px;float: center;margin: 0 auto; padding-top: 30px;overflow:hidden; } */
-			.detailMemo{border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; padding-top: 30px;overflow:hidden; z-index:9001; position: absolute; }
+			/* .detailMemo{border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; padding-top: 30px;overflow:hidden; z-index:9001; position: absolute; } */
+			.detailMemo{border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
 			.memo-text{margin-top:10px; padding-left:11px; padding-right: 25px; border:0px; width:100%; height:81%; resize:none; overflow-y:scroll; padding-bottom:5px;}
 			.memo-color{ padding:0px; /* margin-left:1px; margin-right:1px;  */box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;}
 			.memo-color-list { display:inline-block; width:16.5%; height:100%; text-align:center; float:left;}
@@ -173,7 +177,8 @@
 		        
 		        $("#layer-popup").resizable({
 		        	handles : "n, e, s, w, ne, se, sw, nw",
-		        	containment:".noteBlock"
+		        	containment:".noteBlock",
+		        	ghost : true
 		        });
 		        
 		        $(".detailMemo").resizable({
@@ -181,16 +186,17 @@
 		        	containment:".noteBlock",
 		        	minWidth: 270,
 		        	minHeight: 270,
-		        	stop : function () {
-		        		var detailWidth = $(".detailMemo").width();
-		        		var detailHeight = $(".detailMemo").height();
-		        		
-		        		if (detailWidth == 270 || detailHeight == 270) {
-		        			alert("최소 사이즈입니다.");
-		        		}
-		        		
-		        		
-		        	}
+		        	ghost : true,
+		        	stop : function() {
+		        	
+			    	var detailMemoHeight = $(".detailMemo").height();
+			        var memoBtnHeight = $("#memo-btn").height();
+			        
+			        var fontBtnHeight = $("#font-btn").height();
+			        
+			        var textareaHeight = detailMemoHeight - (memoBtnHeight + fontBtnHeight);
+			        $("#textarea").css("height", textareaHeight +"px");
+				    }
 		        });
 		        
 		        $("#layer-popup").resize(function(e) {
@@ -203,6 +209,8 @@
 		        });
 		        
 		     });
+		    
+		    
 		    
 		    function setDetailMemoPosition () {
 		    	var winWidth = $(window).width();
