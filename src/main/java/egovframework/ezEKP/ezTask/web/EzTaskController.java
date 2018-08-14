@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
@@ -75,7 +76,10 @@ public class EzTaskController extends EgovFileMngUtil {
 
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
-
+	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
+	
 	/**
 	 * 업무관리 메인화면
 	 */
@@ -132,6 +136,9 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		//baonk 추가 2018-08-08
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("todo", userInfo);
+		}
 		
 		String taskID = request.getParameter("taskID");		
 		String date = request.getParameter("date");

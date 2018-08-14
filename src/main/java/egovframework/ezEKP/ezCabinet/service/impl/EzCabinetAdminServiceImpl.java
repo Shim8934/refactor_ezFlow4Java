@@ -15,8 +15,9 @@ import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
 import egovframework.ezEKP.ezCabinet.web.EzCabinetAdminController;
+import egovframework.let.user.login.vo.LoginVO;
 
-@Service
+@Service("EzCabinetAdminService")
 public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 	@Resource(name = "EzCabinetAdminDAO")
 	private EzCabinetAdminDAO ezCabinetAdminDAO;
@@ -151,5 +152,43 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 		for (CabinetModuleVO module : listAllModule) {
 			ezCabinetAdminDAO.insertModulForAdmin(module);
 		}
+	}
+
+	@Override
+	public String checkModuleActive(String moduleType, LoginVO userInfo) throws Exception {
+		String check           = "NO";
+		String companyId       = userInfo.getCompanyID();
+		int tenantId           = userInfo.getTenantId();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId",  tenantId);
+		
+		List<CabinetModuleVO> result = ezCabinetAdminDAO.getModuleListForAdmin(map);
+		
+		if (result == null || result.size() == 0) {
+			//Auto insert data
+			result.add(new CabinetModuleVO(companyId, "todo"  , 0, tenantId));
+			result.add(new CabinetModuleVO(companyId, "schedl", 1, tenantId));
+			result.add(new CabinetModuleVO(companyId, "resrc" , 0, tenantId));
+			result.add(new CabinetModuleVO(companyId, "projt" , 0, tenantId));
+			result.add(new CabinetModuleVO(companyId, "option", 0, tenantId));
+			result.add(new CabinetModuleVO(companyId, "email" , 1, tenantId));
+			result.add(new CabinetModuleVO(companyId, "commu" , 0, tenantId));
+			result.add(new CabinetModuleVO(companyId, "board" , 1, tenantId));
+			result.add(new CabinetModuleVO(companyId, "apprv" , 1, tenantId));
+			result.add(new CabinetModuleVO(companyId, "addrs" , 0, tenantId));
+			result.add(new CabinetModuleVO(companyId, "jounl" , 0, tenantId));
+			
+			insertModulForAdmin(result);
+		}
+		
+		for (CabinetModuleVO module : result) {
+			if (module.getModuleType().equals(moduleType) && module.getActiveStatus() == 1) {
+				check = "YES";
+				break;
+			}
+		}
+		
+		return check;
 	}
 }

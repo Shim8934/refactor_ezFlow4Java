@@ -5,6 +5,7 @@ import org.json.simple.JSONArray;
 import egovframework.ezEKP.ezCabinet.vo.CabinetModuleVO;
 import egovframework.ezEKP.ezCabinet.vo.CompanyCapacityVO;
 import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCabinetAdminService {
 	//Company capacity functions
@@ -21,4 +22,5 @@ public interface EzCabinetAdminService {
 	List<CabinetModuleVO> getModuleListForAdmin(String companyId, int tenantId) throws Exception;
 	void saveModulesSetting(JSONArray modules, String companyId, int tenantId) throws Exception;
 	void insertModulForAdmin(List<CabinetModuleVO> listAllModule) throws Exception;
+	String checkModuleActive(String moduleType, LoginVO userInfo) throws Exception;
 }

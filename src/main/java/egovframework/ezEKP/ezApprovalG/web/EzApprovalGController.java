@@ -51,6 +51,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
@@ -95,6 +96,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
+	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
 	
 	@Autowired
 	private EgovMessageSource messageSource;
@@ -799,6 +803,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		//baonk 추가 2018-08-08
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("apprv", userInfo);
+		}
 		
 		String docSN = "";
 		String beforeUrl = "";
@@ -2616,6 +2623,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		//baonk 추가 2018-08-08
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("apprv", userInfo);
+		}
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -3511,6 +3521,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		//baonk 추가 2018-08-08
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("apprv", userInfo);
+		}
 		
 		// a=1 수발신담당자
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -4708,6 +4721,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		//baonk 추가 2018-08-08
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("apprv", userInfo);
+		}
 		
 		String susinAdmin = "";
 		String hasOpinionYN = "";

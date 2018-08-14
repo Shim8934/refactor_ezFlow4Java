@@ -70,6 +70,7 @@ import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
@@ -132,6 +133,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	@Resource(name = "loginService")
     private LoginService loginService;
 	
+	@Resource(name="EzCabinetAdminService")
+	private EzCabinetAdminService cabinetAdminService;
+	
 	/**
 	 * 메일 읽기화면 호출 함수
 	 */
@@ -151,6 +155,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		//baonk 추가 2018-08-08
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", loginInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("email", loginInfo);
+		}
 		
 		// retrieve the passed in parameters
 		String url = request.getParameter("iptURL");
