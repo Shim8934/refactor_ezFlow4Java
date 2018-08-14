@@ -44,7 +44,7 @@
 			.ui-widget-header{background: #0470e4}
 			.ui-slider-handle{background: #eeeeee; margin-top:2px}
 			/* #textarea{padding-left:10px; padding-right:10px; width:100%; height:85%; margin-left:-3px; overflow-y:scroll; padding-bottom: 10px;} */
-			#textarea{padding-left:10px; padding-right:10px; width:100%; height:330px; margin-left:-3px; overflow-y:scroll;}
+			#textarea{padding-left:10px; padding-right:10px; width:100%; height:332px; margin-left:-3px; overflow-y:scroll;}
 			/* .detailMemo{border: 1px solid black;width: 400px;center;height: 400px;float: center;margin: 0 auto; padding-top: 30px;overflow:hidden; } */
 			/* .detailMemo{border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; padding-top: 30px;overflow:hidden; z-index:9001; position: absolute; } */
 			.detailMemo{border: 1px solid black; width: 400px; height: 400px; margin: 0 auto; overflow:hidden; z-index:9001; position: absolute; }
@@ -194,8 +194,8 @@
 			        
 			        var fontBtnHeight = $("#font-btn").height();
 			        
-			        var textareaHeight = detailMemoHeight - (memoBtnHeight + fontBtnHeight);
-			        $("#textarea").css("height", textareaHeight +"px");
+			        var textareaHeight = detailMemoHeight - (memoBtnHeight + fontBtnHeight + 5);
+			        $("#textarea").css("height", parseInt(textareaHeight) +"px");
 				    }
 		        });
 		        
@@ -347,7 +347,6 @@
 		    
 		    function addDate() {
 		    	var nowDate = new Date();
-		    	var year = nowDate.getFullYear();
 		    	var month = nowDate.getMonth() + 1;
 		    	var date = nowDate.getDate();
 		    	var day = nowDate.getDay();
@@ -359,7 +358,7 @@
 		    	if(date < 10) {
 		    		date = "0"+date;
 		    	}
-		    	$(".write-date:first").html(year+"-"+month+"-"+date+" "+arrayDay[day]);
+		    	$(".write-date:first").html(month+"-"+date+" "+arrayDay[day]);
 		    }
 		    
 		    function addremove() {
@@ -461,7 +460,7 @@
 				<div class="selected-memoWrapper"> -->
 					<div class="detailMemo" style="display: none">
 						<div id="memo-btn">
-							<div id="save" onclick="detailMemoSave()" style="display:inline-block"><img src='/images/close_xBtn.png' style='float:right; height:20px; padding-right:5px; cursor:pointer'></div> 
+							<div id="save" onclick="detailMemoSave()" style="display:inline-block"><img src='/images/close_xBtn.png' style='float:right; height:20px; padding-right:5px; cursor:pointer; margin-top: 10px;'></div> 
 						</div>
 			        	<div id="font-btn" style="text-align: left; display: none ">
 							<button id="font-up">폰트+</button> 
