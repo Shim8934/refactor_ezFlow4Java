@@ -306,7 +306,8 @@ function CalendarView(pTagetID,chk_str) {
         oTable.setAttribute("cellspacing", "0");
         oTable.setAttribute("border", "0");
         oTable.setAttribute("width", "100%");
-        oTable.style.minHeight = "670px";
+        //2018-08-14 구해안 최소높이 삭제
+        /*oTable.style.minHeight = "670px";*/
         if (typeCal == 0)
             oTable.className = "calendar_month";
         else if (typeCal == 1)

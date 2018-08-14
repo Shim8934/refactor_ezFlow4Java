@@ -1194,7 +1194,7 @@
 		    });			
 		</script>
 	</head>
-	<body class="mainbody" style="overflow:auto; margin-bottom:0px;" marginwidth="0" marginheight="0">
+	<body class="mainbody" style="overflow:auto;" marginwidth="0" marginheight="0">
 		<c:if test="${deptFlag != 'true'}">
 			<h1 id="titleimg"><spring:message code='ezAttitude.t143'/></h1>
 		</c:if>

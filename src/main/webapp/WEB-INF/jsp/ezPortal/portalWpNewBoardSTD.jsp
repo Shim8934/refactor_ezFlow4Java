@@ -307,7 +307,7 @@
 	                }
 	                
 	                /* 2018-07-16 홍승비 - 포틀릿 게시판 특수문자 처리 */
-	                DocContentObject.innerHTML = MakeXMLString(DocContentObject.innerHTML);
+	                //DocContentObject.innerHTML = MakeXMLString(DocContentObject.innerHTML);
 	                document.getElementById("content").appendChild(DocContentObject);
 		        }
 
