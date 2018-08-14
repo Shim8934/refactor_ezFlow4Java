@@ -52,6 +52,7 @@
 			.memo-color{ padding:0px; /* margin-left:1px; margin-right:1px;  */box-sizing:border-box; width: 202px; height: 36px; position:absolute; top:0px; left:0px; visibility:hidden;}
 			.memo-color-list { display:inline-block; width:16.5%; height:100%; text-align:center; float:left;}
 			.ui-resizable-se { background-image: url("");}
+			.write-date { margin:0 auto; padding:0px; height:55px; overflow:hidden;text-align:center; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; }
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
