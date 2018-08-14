@@ -1336,25 +1336,25 @@ function getMouseXLocation(e) {
 
     var tTip = document.getElementById("tooltip");
     if (navigator.userAgent.indexOf('Firefox') != -1) {
-        if (E.clientX > 1000) {
-            var locationX = E.clientX + document.documentElement.scrollLeft - tTip.clientWidth;
+        if (E.pageX > 1000) {
+            var locationX = E.pageX + document.documentElement.scrollLeft - tTip.clientWidth;
         } else {
-            if (E.clientX > 300) {
-                var locationX = E.clientX + document.documentElement.scrollLeft - tTip.clientWidth;
+            if (E.pageX > 300) {
+                var locationX = E.pageX + document.documentElement.scrollLeft - tTip.clientWidth;
             }
             else
-                var locationX = E.clientX + document.documentElement.scrollLeft;
+                var locationX = E.pageX + document.documentElement.scrollLeft;
         }
     }
     else {
-        if (E.clientX > 1000) {
-            var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
+        if (E.pageX > 1000) {
+            var locationX = E.pageX + document.body.scrollLeft - tTip.clientWidth;
         } else {
-            if (E.clientX > 300) {
-                var locationX = E.clientX + document.body.scrollLeft - tTip.clientWidth;
+            if (E.pageX > 300) {
+                var locationX = E.pageX + document.body.scrollLeft - tTip.clientWidth;
             }
             else
-                var locationX = E.clientX + document.body.scrollLeft;
+                var locationX = E.pageX + document.body.scrollLeft;
         }
     }
 
@@ -1369,8 +1369,8 @@ function getMouseYLocation(e) {
 
     var tTip = document.getElementById("tooltip");
     if (navigator.userAgent.indexOf('Firefox') != -1) {
-        if (E.clientY > 500) {
-            var locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
+        if (E.pageY > 500) {
+            var locationY = E.pageY + document.documentElement.scrollTop - tTip.clientHeight;
             locationY -= 12;
         }
         else {
@@ -1378,35 +1378,35 @@ function getMouseYLocation(e) {
                 
                 var locationY
                 
-                if (tTip.clientHeight > E.clientY) {
-                    locationY = E.clientY + document.documentElement.scrollTop;
+                if (tTip.clientHeight > E.pageY) {
+                    locationY = E.pageY + document.documentElement.scrollTop;
                 } else {
-                    locationY = E.clientY + document.documentElement.scrollTop - tTip.clientHeight;
+                    locationY = E.pageY + document.documentElement.scrollTop - tTip.clientHeight;
                 }
             }
             else {
-                var locationY = E.clientY + document.documentElement.scrollTop;
+                var locationY = E.pageY + document.documentElement.scrollTop;
             }
             locationY += 12;
         }
     }
     else {
-        if (E.clientY > 500) {
-            var locationY = E.clientY + document.body.scrollTop - tTip.clientHeight;
+        if (E.pageY > 500) {
+            var locationY = E.pageY + document.body.scrollTop - tTip.clientHeight;
             locationY -= 12;
         }
         else {
             if (document.body.scrollTop > 0) {
                 var locationY
                 
-                if (tTip.clientHeight > E.clientY) {
-                    locationY = E.clientY + document.body.scrollTop;
+                if (tTip.clientHeight > E.pageY) {
+                    locationY = E.pageY + document.body.scrollTop;
                 } else {
-                    locationY = E.clientY + document.body.scrollTop - tTip.clientHeight;
+                    locationY = E.pageY + document.body.scrollTop - tTip.clientHeight;
                 }
             }
             else {
-                var locationY = E.clientY + document.body.scrollTop;
+                var locationY = E.pageY + document.body.scrollTop;
             }
             locationY += 12;
         }
