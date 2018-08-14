@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil"                      %>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core"   %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css">
-		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezCabinet.css' />")%>" type="text/css">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezCabinet/cabinet.css")%>" type="text/css" />
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
 		<div id="left" style="overflow: auto">
@@ -25,8 +26,8 @@
 			<ul></ul>
 		</div>
 		
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
 		<script type="text/javascript">
 			(function() {
 				initToggleList(document.getElementById("left"), "h2", "ul", "li");

@@ -1,13 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil"                      %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html style="height:100%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css">
-		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css"        type="text/css">
-		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezCabinet.css' />")%>" type="text/css">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/jquery.lineProgressbar.css")%>" type="text/css" />
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezCabinet/cabinet.css")%>" type="text/css" />
 	</head>
 	<body class="mainbody notover">
 		<h1><spring:message code='ezCabinet.t10'/><span id="cabinetTtlInf"></span></h1>
@@ -100,12 +101,12 @@
 		
 		<div id="tblPageRayer"></div>
 		
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
-		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"                     ></script>
-		<script type="text/javascript" src="/js/ezCabinet/cabinetNavi.js"           ></script>
-		<script type="text/javascript" src="/js/ezCabinet/cabinetTable.js"          ></script>
-		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"   ></script>
-		<script type="text/javascript" src="/js/ezCabinet/cabinetUserCapacity.js"   ></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, request, "<spring:message code='ezCabinet.lang' />")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezCabinet/cabinetNavi.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezCabinet/cabinetTable.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezTask/jquery.lineProgressbar.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezCabinet/cabinetUserCapacity.js")%>"></script>
 	</body>
 </html>

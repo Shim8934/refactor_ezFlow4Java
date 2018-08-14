@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="egovframework.let.utl.fcc.service.CommonUtil"                      %>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core"   %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -6,8 +7,8 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCabinet.css'/>" type="text/css">
-		<link rel="stylesheet" href="/css/ezCabinet/cabinet.css"             type="text/css">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezCabinet.css' />")%>" type="text/css">
+		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezCabinet/cabinet.css")%>" type="text/css" />
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code='ezCabinet.t31'/></h1>
@@ -60,8 +61,8 @@
 			</div>
 		</div>
 		
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"        ></script>
-		<script type="text/javascript" src="<spring:message code='ezCabinet.lang'/>"></script>
-		<script type="text/javascript" src="/js/ezCabinet/cabinetModule.js"         ></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, request, "<spring:message code='ezCabinet.lang' />")%>"></script>
+		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezCabinet/cabinetModule.js")%>"></script>
 	</body>
 </html>
