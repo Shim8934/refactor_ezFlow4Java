@@ -183,8 +183,8 @@ DROP TABLE IF EXISTS `james_subscription`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `james_subscription` (
   `SUBSCRIPTION_ID` bigint(20) NOT NULL,
-  `MAILBOX_NAME` varchar(100) NOT NULL,
-  `USER_NAME` varchar(100) NOT NULL,
+  `MAILBOX_NAME` varchar(200) NOT NULL,
+  `USER_NAME` varchar(200) NOT NULL,
   PRIMARY KEY (`SUBSCRIPTION_ID`),
   UNIQUE KEY `U_JMS_PTN_USER_NAME` (`USER_NAME`,`MAILBOX_NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
