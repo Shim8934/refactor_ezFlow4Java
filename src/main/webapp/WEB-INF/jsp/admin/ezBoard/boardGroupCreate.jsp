@@ -6,11 +6,11 @@
 	<head>
 		<title><spring:message code="ezBoard.jjh04" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>	
-	    <script type="text/javascript" src="/js/ezBoard/common.js"></script>
-	    <script type="text/javascript" src="/js/Common.js"></script>	    
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>	
+	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>	    
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" language="javascript">
 			function hasSpecialCharacters(str){
 				for(var i=0; i<str.length; i++){

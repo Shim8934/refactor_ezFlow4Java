@@ -6,13 +6,13 @@
 	<head>
 		<title><spring:message code="ezBoard.t609" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
-	    <link rel="stylesheet" href='/css/email_tree.css' type="text/css" />
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>    
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezBoard/ListView_list_admin.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/email_tree.css')}" type="text/css" />
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>    
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list_admin.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	    
 		<script type="text/javascript" language="javascript">
 			var xmlhttp = createXMLHttpRequest();
 		    var selectedBoard = "";

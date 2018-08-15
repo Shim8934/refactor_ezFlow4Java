@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<section  class="body_bg1">
     		<article class="portlet_side">
         		<p class="title"><img src="/images/<spring:message code='main.t00025' />/main/side_title.gif" alt=""></p>
@@ -39,7 +39,7 @@
     		</article>
 		</section>
 		
-		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
+		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript">
 		   	document.onselectstart = function () { return false; };
 		   	

@@ -7,10 +7,10 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezLadder.t071" /></title>
-		<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-	    <link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css">
+		<link rel="stylesheet" href="${util.addVer('ezLadder.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/ezLadder/ladder_CSS.css')}">
 	    <style>
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;
@@ -36,14 +36,14 @@
 				color:#017BEC;
 			}	    	
 	    </style>
-	    <script type="text/javascript" src="<spring:message code='ezLadder.e1' />"></script>
-        <script type="text/javascript" src="/js/mouseeffect.js"></script>
-        <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-        <script type="text/javascript" src="/js/ezLadder/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezLadder/ListView_list.js"></script>
-        <script type="text/javascript" src="/js/Common.js"></script>        
-        <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-        <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
+	    <script type="text/javascript" src="${util.addVer('ezLadder.e1', 'msg')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/ezLadder/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezLadder/ListView_list.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>        
+        <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		
 		<script type="text/javascript">
 			var pStartTime = "<c:out value='${startTime}' />";

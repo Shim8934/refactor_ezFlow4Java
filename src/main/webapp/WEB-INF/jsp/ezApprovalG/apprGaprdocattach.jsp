@@ -6,13 +6,13 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t364'/></title>    
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	    <script type="text/javascript" src="/js/ezApprovalG/aprDocAttach_Cross.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/Pagenation_Cross.js"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprDocAttach_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Pagenation_Cross.js')}"></script>
 	    <script id="clientEventHandlersJS" type="text/javascript">
 	        var xmlhttp = createXMLHttpRequest();
 	        var xmldoc = createXmlDom();
