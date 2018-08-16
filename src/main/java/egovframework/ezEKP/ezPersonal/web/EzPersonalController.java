@@ -1022,6 +1022,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
+		model.addAttribute("locale", userInfo.getLocale());
 		
 		logger.debug("changePersonInfo ended");
 		return "/ezPersonal/persChangePersonInfo";

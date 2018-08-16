@@ -426,23 +426,19 @@
 			selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
 		</script>
 		
-		<div id="searchPanel" style="z-index: 2000; position: fixed; height: auto; width: 534px; border: 1px solid #666666; background-color: #fff; display: none; border-radius: 8px; -webkit-box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -o-box-shadow: 0 0 10px #000; -ms-box-shadow: 0 0 10px #000; box-shadow: 0 0 10px #000;">
-			<div style="margin: 20px;">
-				<table class="content" style="border-collapse: collapse; width: 100%;">
+		<div id="searchPanel" class="popup wfSearchPanel" style="display: none;">
+			<h1><spring:message code='ezWebFolder.t24'/></h1> 
+			<div class="wfClose" onclick="openSearchPanel();"><ul><li><span></span></li></ul></div>
+			<div style="margin: 10px 0px 15px;">
+				<table class="content wftable">
 					<tr>
-						<th class="layerHeader" colspan="2"><img src="/images/webfolder/left_webfolder.png" style="vertical-align: middle;padding-bottom:1px" width="16px">&nbsp;<spring:message code='ezWebFolder.t24'/></th>
-					</tr>
-					<tr>
-						<td class="wfSearchTh2" colspan="2"></td>
-					</tr>
-					<tr>
-						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t151'/></th>
-						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
+						<th class="wfSearchTh"><spring:message code='ezWebFolder.t151'/></th>
+						<td>
 							<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">&nbsp;~&nbsp;<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
 						</td>
 					</tr>
 					<tr>
-						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t152'/></th>
+						<th class="wfSearchTh"><spring:message code='ezWebFolder.t152'/></th>
 						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
 							<input id="fileExtVal" type="text" style="height: 23px; width: 200px;">
 							<select style="height: 25px; padding: 0px; width: 85px;" id="fileTypeVal">
@@ -456,20 +452,20 @@
 						</td>
 					</tr>
 					<tr>
-						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t153'/></th>
-						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
-							<input id="fileNameVal" type="text" style="height: 23px; width: 200px;">
+						<th class="wfSearchTh"><spring:message code='ezWebFolder.t153'/></th>
+						<td class="wfSearchTd">
+							<input id="fileNameVal" type="text" style="height: 23px;">
 						</td>
 					</tr>
 					<tr>
-						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t154'/></th>
-						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
-							<input id="fileCreatorVal" type="text" style="height: 23px; width: 200px;">
+						<th class="wfSearchTh"><spring:message code='ezWebFolder.t154'/></th>
+						<td class="wfSearchTd">
+							<input id="fileCreatorVal" type="text" style="height: 23px;">
 						</td>
 					</tr>
 					<tr>
-						<th style="width: 100px; min-width: 100px; text-align: center;"><spring:message code='ezWebFolder.t158'/></th>
-						<td style="border: 1px solid #b6b6b6; background-color: #fff; min-width: 367px; width: 367px;">
+						<th class="wfSearchTh"><spring:message code='ezWebFolder.t158'/></th>
+						<td>
 							<select style="height: 25px; padding: 0px; width: 85px;" id="actionType">
 								<option value="M" selected><spring:message code='ezWebFolder.t191'/></option>
 								<option value="C"         ><spring:message code='ezWebFolder.t160'/></option>
@@ -482,12 +478,11 @@
 						</td>
 					</tr>
 				</table>
-				<div style="margin: 12px 0px; text-align: center;">
-					<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
-					<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
-				</div>
 			</div>
-			<span class="wfCloseBttn" onclick="openSearchPanel();"></span>
+			<div class="wfdivBttn">
+				<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
+				<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
+			</div>
 		</div>
 		
 		<div id="mainSetting" style="margin: 10px 0px 10px 5px; height:500px; overflow: auto;">
