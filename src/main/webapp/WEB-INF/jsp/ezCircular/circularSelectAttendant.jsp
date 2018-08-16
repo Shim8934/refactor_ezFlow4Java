@@ -7,9 +7,9 @@
 	<head>
 		<title><spring:message code='ezCircular.t40' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="<spring:message code='ezCircular.c1' />" type="text/css" />
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 	    <style>
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;
@@ -29,14 +29,14 @@
 				color:#017BEC;
 			}	    	
 	    </style>
-	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
-	    <script type="text/javascript" src="<spring:message code='ezCircular.e1' />"></script>
-        <script type="text/javascript" src="/js/mouseeffect.js"></script>
-        <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-        <script type="text/javascript" src="/js/ezSchedule/TreeView.js"></script>
-	    <script type="text/javascript" src="/js/ezSchedule/ListView_list.js"></script>
-        <script type="text/javascript" src="/js/Common.js"></script>        
-        <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezCircular.e1', 'msg')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/ezSchedule/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/ListView_list.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>        
+        <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
         
 		<script type="text/javascript">
 	        var pStartTime = "<c:out value='${startTime}' />";

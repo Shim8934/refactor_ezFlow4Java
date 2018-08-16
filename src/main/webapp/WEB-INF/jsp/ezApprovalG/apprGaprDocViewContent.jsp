@@ -4,8 +4,8 @@
 <html>
 	<head>
 	    <title></title>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script language="javascript" type="text/javascript">
 // 	        var XmlBodyATT = createXmlDom();
 	        document.onselectstart = function () { return true; };

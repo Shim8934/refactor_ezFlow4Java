@@ -6,14 +6,14 @@
 	<head>
 		<title><c:out value = '${clubName}' /> <spring:message code = 'ezCommunity.t1080' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
 		<style type="text/css">
             .message {
                 height:70px;
             }
         </style>
-        <script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	
+        <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	
 		<script type="text/javascript">
 			if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 			    window.onblur = function () {

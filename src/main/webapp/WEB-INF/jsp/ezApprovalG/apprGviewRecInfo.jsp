@@ -6,14 +6,14 @@
 <head>
 <title><spring:message code='ezApprovalG.t858' /></title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel="stylesheet" href="<spring:message code='ezStatistics.e2' />" type="text/css" />
-<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
-<script type="text/javascript" src="/js/mouseeffect.js"></script>
-<script type="text/javascript" src="/js/ezApprovalG/MiscFunc_Cross.js"></script>
-<script type="text/javascript" src="/js/ezApprovalG/viewRecInfo_Cross.js"></script>
+<link rel="stylesheet" href="${util.addVer('ezStatistics.e2', 'msg')}" type="text/css" />
+<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/viewRecInfo_Cross.js')}"></script>
 <script type="text/javascript" ID="clientEventHandlersJS">
     var CompanyID = "${userInfo.companyID}";
     var strLang = "${userInfo.lang}";

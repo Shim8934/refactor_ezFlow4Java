@@ -6,8 +6,8 @@
 <html>
 	<head>
 	    <title><spring:message code='ezBoard.t1007'/></title>
-	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript">
 	        var ImageCount = "${imageCount}";
 	        var BoardID = "${boardID}";

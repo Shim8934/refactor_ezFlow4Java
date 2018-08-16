@@ -7,21 +7,21 @@
 	<head>
 		<title><spring:message code='ezStatistics.t1036'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jquery.jqplot.min.css")%>" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezStatistics.e2'/>" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/js/ezStatistics/js/jquery.jqplot.min.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezStatistics.e2', 'msg')}" type="text/css" />
 		<style>
 			.mainlist_free tr th { border-top:0px }
 		</style>
-		<script type="text/javascript" src="<spring:message code='ezStatistics.e1'/>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/control_Cross/ListView_list.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/excanvas.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jquery.min.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jquery.jqplot.min.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jqplot.categoryAxisRenderer.min.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezStatistics/js/jqplot.barRenderer.min.js")%>"></script>
+		<script type="text/javascript" src="${util.addVer('ezStatistics.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/control_Cross/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/excanvas.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jquery.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jquery.jqplot.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jqplot.categoryAxisRenderer.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezStatistics/js/jqplot.barRenderer.min.js')}"></script>
 	    <script type="text/javascript">
 	        var xmlHttp = createXMLHttpRequest();
 			

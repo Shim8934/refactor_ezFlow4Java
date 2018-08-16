@@ -6,8 +6,8 @@
 	<head>
 		<title>poll_etc_table</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	</head>
 	
 	<body style="background-image:none; margin:0" >

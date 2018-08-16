@@ -6,13 +6,13 @@
 	<head>
 		<title><spring:message code='ezBoard.t320'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<!-- 페이징 -->
-		<script type="text/javascript" src="/js/ezBoard/lang/ezBoardSTD.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/lang/ezBoardSTD.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list.js')}"></script>
 		<script type="text/javascript">
 		    var ReturnFunction;
 		    //2018-02-06 김보미 - 페이징

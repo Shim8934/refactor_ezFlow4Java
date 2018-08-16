@@ -8,12 +8,12 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezPersonal.t246' />${title}</title>
-		<link rel="stylesheet"  href="<spring:message code='ezPersonal.e3' />" type="text/css">
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+		<link rel="stylesheet"  href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<!-- 2018-07-25 김보미 - 투표모듈 css맞추기 위해 추가 -->
-		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezPoll/vote.css")%>" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezPoll/vote.css')}" type="text/css">
 		<style type="text/css">
         	.question {
 	            background: url(/images/kr/main/popup_pollimg.gif) no-repeat #f2f2f2 0px 0px;

@@ -7,23 +7,23 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>ChangePersonInfo</title>
-		<link rel="stylesheet"  href="<spring:message code='ezPersonal.e3'/>" type="text/css">
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPersonal/controls/datepicker.htc.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPersonal/controls/composeappt.js")%>"></script>
-		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.all.css")%>">
-		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/demos.css")%>">
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery-1.9.1.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.core.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/dateControls/jquery.ui.datepicker.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/jsbn.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/rsa.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/prng4.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/rng.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/pidcrypt.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/pidcrypt_util.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/rsa/asn1.js")%>"></script>
+		<link rel="stylesheet"  href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/datepicker.htc.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/composeappt.js')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/jsbn.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/pidcrypt_util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/asn1.js')}"></script>
 		<script type="text/javascript">
 			var rsa = new RSAKey();
 			

@@ -5,10 +5,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link href="/css/theme01.css" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/theme1/CalendarMini_Cross.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>  
+		<link href="${util.addVer('/css/theme01.css')}" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/theme1/CalendarMini_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>  
 		<script type="text/javascript">
 			 //달력 관련
 	        var strLang5 = "<spring:message code='main.t00052'/>;<spring:message code='main.t00053'/>;<spring:message code='main.t00054'/>;<spring:message code='main.t00055'/>;<spring:message code='main.t00056'/>;<spring:message code='main.t00057'/>;<spring:message code='main.t00058'/>"
