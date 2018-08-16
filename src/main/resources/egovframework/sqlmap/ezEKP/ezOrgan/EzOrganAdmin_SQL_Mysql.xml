@@ -1531,7 +1531,7 @@
 			('SA02', '015',		'공람',					'Display',				'回覧',		'传阅',		'0',	'회람',		#companyID#,	#tenantID#),
 			('SA02', '016',		'회람',					'Circular',				'回覧',		'传阅',		'0',	'회람',		#companyID#,	#tenantID#),
 			('SA02', '017',		'참조',					'Reference',			'参照',		'抄送',		'0',	'참조',		#companyID#,	#tenantID#),
-			('SA02', '018',		'사후감사',				'Public viewing(After-approval)',	'事後供覧',	'事后共览',	'사후공람',	#companyID#,	#tenantID#),
+			('SA02', '018',		'사후감사',				'Public viewing(After-approval)',	'事後供覧',	'事后共览', '1',	'사후공람',	#companyID#,	#tenantID#),
 			('SA02', '019',		'발송',					'Sending',				'送信',		'发送',		'1',	'발송',		#companyID#,	#tenantID#),
 			('SA02', '020',		'신청',					'Application',			'施行',		'执行',		'0',	'시행',		#companyID#,	#tenantID#),
 			('SA02', '022',		'대외문서접수',				'Receipt(outside)',		'対外受付',	'对外接收',	'0',	'대외접수',	#companyID#,	#tenantID#),
