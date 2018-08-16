@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -7,10 +6,10 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
-	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/previewmail.css")%>" type="text/css">
-	    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/Tab.css")%>" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/previewmail.css')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 	    <style>
 	    .mainlist_free tr td:first-child {
 	    		padding-left:10px;
@@ -20,12 +19,12 @@
 	    		padding-left:10px;
 	    }
 	    </style>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezOrgan/TreeView.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezOrgan/ListView_list.js")%>"></script>
-	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" language="javascript">
 			var pUse_Editor = "<c:out value='${use_editor}'/>";
 	    	

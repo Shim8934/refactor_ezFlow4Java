@@ -6,7 +6,7 @@
 	<head>
 		<title>admit_com</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
 		<style>
 		.mainlist tr th:first-child{
 			padding-left: 10px;
@@ -15,10 +15,10 @@
 			padding-left: 10px;
 		}
 		</style>
-		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="<spring:message code = 'ezCommunity.e1' />"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
 			var lang = "<c:out value = '${lang}' />";

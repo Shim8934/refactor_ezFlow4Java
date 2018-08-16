@@ -1,6 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
@@ -8,9 +6,9 @@
 	<head>
 		<title><spring:message code='ezEmail.t659' /></title>
 		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-		<link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezEmail.e1' />"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
+		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script>
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")

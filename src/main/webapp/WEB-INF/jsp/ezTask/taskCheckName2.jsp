@@ -4,11 +4,11 @@
 <html>
 	<head>
 		<title><spring:message code='ezTask.t11' /></title>
-		<link rel="stylesheet" href="<spring:message code='ezTask.e1' />" type="text/css">
-		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">		
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type = "text/javascript" src ="/js/ezTask/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezTask.e1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezTask.e2', 'msg')}" type="text/css">		
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type = "text/javascript" src="${util.addVer('/js/ezTask/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type ="text/javascript">
 		    var ReturnFunction;
 		    /* 2018-04-26 김민성 - RetValue, openerFlag 추가 */

@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -7,7 +6,7 @@
 	<head>
 		<title><spring:message code="ezAddress.t2" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="<spring:message code='ezAddress.e2' />" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezAddress.e2', 'msg')}" type="text/css">
 	    <style type="text/css">
 	        html { height:100%; }
 	        body { height:100%; margin:0; }
@@ -32,12 +31,12 @@
 	        .searchDesign{float:none; border:3px solid #414347; padding:7px; margin:0px 60px 0px 0px;} 
 	        .searchWrap input[type="text"] {width: 100%; height: 20px; padding:0px; margin:0px; border:0 none; font-size: 15px; font-weight: bold; vertical-align:top;}
 	    </style>
-	    <link rel="stylesheet" type="text/css" href="<%=CommonUtil.addVer(application, "/css/jquery.selectbox.ZipCode.css")%>" />
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.selectbox-0.2.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>	    
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezPersonal/controls/ListView_list.js")%>"></script>	    
+	    <link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery.selectbox.ZipCode.css')}" />
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.selectbox-0.2.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	    
+	    <script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>	    
 		<script type="text/javascript">
 			//TODO: 이거 문제있네!
 			$(function () {

@@ -1067,8 +1067,29 @@ function check_length(chkstr, maxlength, fieldname)
 
 function ListOwnerID_Change()
 {
-    var pListOwnerID = document.getElementById("ListOwnerID").value;
-	var pListOwnerID =  pListOwnerID.split(";;")[0];
+	//2018-08-16 구해안 checkauth
+	var pListOwnerValue = document.getElementById("ListOwnerID").value;
+	var pListOwnerID =  pListOwnerValue.split(";;")[0];
+	var ListOwnerID = pListOwnerValue.split(";;")[1];
+	
+	if (scheduleid == "") {
+    	if (useAnyoneEdit != "YES") {
+	        if (ListOwnerID == companyID) {
+	            if (pCompanyAdmin != "Y") {
+	                alert(strLang1000);
+	                $("#ListOwnerID option:eq(0)").prop("selected", true);
+	                return;
+	            }
+	        }
+	        else if (ListOwnerID == deptID) {
+	            if (pCompanyAdmin != "Y" && pDeptAdmin != "Y") {
+	                alert(strLang1001);
+	                $("#ListOwnerID option:eq(0)").prop("selected", true);
+	                return;
+	            }
+	        }
+    	}
+    }
 	
 	if (pListOwnerID != "1") {
 	    receiverlist.innerHTML = "";

@@ -6,8 +6,8 @@
 	<head>
 		<title><spring:message code="ezResource.t403" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
-		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
 		<style>
 			#resourceDataTable tr td {
 				border : 1px solid #ccc;				
@@ -21,14 +21,14 @@
 				font-weight: normal;
 			}
 		</style>
-		<script type="text/javascript" src="<spring:message code='ezResource.e1' />"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezResource/Calendar_Action_cross.js"></script>
-		<script type="text/javascript" src="/js/Holiday.js"></script>
-		<script type="text/javascript" src="/js/ezResource/CalendarView_Cross.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
+		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/Calendar_Action_cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/CalendarView_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<style type="text/css">
 			.warningbox01 { width:540px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;}
 			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}
@@ -161,6 +161,32 @@
 	            	alert(strLang263);
 	        	}
 	    	}
+	    	
+	        /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
+	        window.onunload = function () {
+	        	if (parent.frames["left"]) {
+	        		if (parent.frames["left"].document.getElementById("blockLeft")) {
+	        			$(parent.frames["left"].document.body).css("overflow", "");
+	        	    	$(parent.frames["left"].document.getElementById("blockLeft")).remove();
+	        		}
+	        	} else if (parent.frames["attitude_menu"]) {
+	        		if (parent.frames["attitude_menu"].document.getElementById("blockLeft")) {
+	        	    	$(parent.frames["attitude_menu"].document.getElementById("blockLeft")).remove();
+	        		}
+	        	}
+	        	      
+	        	if (parent.parent.frames["left"]) {
+	        		if (parent.parent.frames["board_menu"]) {  		  
+	        			$(parent.parent.frames["board_menu"].document.body).css("overflow", "");
+	        			$(parent.parent.frames["board_menu"].document.getElementById("blockLeft")).remove();
+	        			$(parent.parent.frames["board_main"].document.getElementById("blockTop")).remove();
+	        		} else if (parent.parent.frames["left"].document.getElementById("blockLeft")) {  		  
+	        			$(parent.parent.frames["left"].document.body).css("overflow", "");
+	        			$(parent.parent.frames["left"].document.getElementById("blockLeft")).remove();
+	        			$(parent.parent.frames["right"].document.getElementById("blockTop")).remove();
+	        		}
+	        	}
+	        }
 
 	    	function setweek_onload(type) {
 		        var date = new Date();

@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<section  class="body_bg1">
 			<article id="appr_article" class="appr_mail">
@@ -128,11 +128,11 @@
 			</article>
 		</section>
 		
-		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1' />"></script>
-		 <script src="/js/jquery/raphael.2.1.0.min.js"></script>
-		 <script src="/js/jquery/justgage.1.0.1.min.js"></script>
+		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+		 <script src="${util.addVer('/js/jquery/raphael.2.1.0.min.js')}"></script>
+		 <script src="${util.addVer('/js/jquery/justgage.1.0.1.min.js')}"></script>
 		<script type="text/javascript">
 		    var arr_userinfo = new Array();
 		    

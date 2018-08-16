@@ -8,22 +8,22 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezTask.t143' /></title>
-		<link rel="stylesheet" href="<spring:message code='ezTask.e2' />" type="text/css">
-		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
-		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
-		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
-		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-        <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezTask/AttachItem_CK.js"></script>
-		<script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezTask.e2', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezTask/circularProgressBar.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" >
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}" type="text/css" >
+		<script type="text/javascript" src="${util.addVer('ezTask.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezTask/AttachItem_CK.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezTask/AttachMain_CK.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezTask/circularProgressBar.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezTask/jquery.lineProgressbar.js')}"></script>
 		
 		<style type="text/css">
 			   .ui-datepicker { font-size:9.5pt !important}
@@ -1064,7 +1064,8 @@
 			            document.getElementById("taskstatus2").checked = true;
 			}
 			 
-			function beforeprint() {
+			//2018-08-16 김보미 - 인쇄시 미리보기 화면으로 이동하게 변경
+			function beforeprint2() {
 				$(".popup").css('background-image', 'none');
 				
 			    document.getElementById("printScreen").style.display = "block";
@@ -1378,6 +1379,14 @@
 			    
 			    //clean the place
 		    	$("#repTable").html("");
+			}
+			//2018-08-16 김보미 - 인쇄시 미리보기 화면으로 이동하게 변경
+			function beforeprint() {
+	            var url = "/ezTask/taskReadPrint.do";
+		        var feature = "";
+		        
+	        	feature = GetOpenPosition(790, 810);
+                window.open("/ezTask/taskReadPrint.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + date, "", "height = 820px, width = 790px, scrollbars=1, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 			}
 
 			window.onunload = function (e) {
@@ -1698,7 +1707,6 @@
 					dayOnMouseClick(dateText);
 				}				
 			}
-						
 		</script>
 	</head>
 	
@@ -1945,7 +1953,7 @@
 				<li style="padding-top: 10px; font-size:12px;"> ▒ <spring:message code='ezTask.t200910' /></li>				
 			</ul>
 		</div>
-		
+	<!-- 보미 - 인쇄미리보기 화면으로 이동.주석처리	
 		<div id="printScreen" style="display: none;">
 			<table id="printTable" class="layout" >
 				<tr>
@@ -2029,7 +2037,7 @@
 						</table>
 					</td>
 				</tr>				
-				<!-- 주석 -->
+				-- 주석 --
 				<tr>
 					<td>
 						<div style="padding-bottom: 10px;">
@@ -2072,7 +2080,7 @@
 					</td>
 				</tr>
 				
-				<!-- 진행사항 -->
+				-- 진행사항 --
 				<tr id="printTaskWork" style="display:none; height:20px;">
 					<td class="popup_title_txt" style="padding-top: 10px;"><img src="/images/popup_title_icon.gif" class="popup_title_img">
 						<spring:message code='ezTask.t2011' />
@@ -2091,7 +2099,7 @@
 						</table>
 					</td>
 				</tr>
-				<!-- 의견 -->
+				-- 의견 --
 				<tr id ="optiontr" style="height:20px">
 					<td class="popup_title_txt" style="padding-top: 10px;"><img src="/images/popup_title_icon.gif" class="popup_title_img">
 						<spring:message code='ezTask.t2013' />
@@ -2099,15 +2107,15 @@
 				</tr>
 				
 				<tr id="printCommentView" style="display:none">
-<!-- 					<td style="height:20px">
+-- 					<td style="height:20px">
 						<table class="file">
 							<tr>
 								<td colspan='2' style="width:90%;height:20px;vertical-align:top"><div id="printComment" style="overflow:visible; height: auto; background-color:white;text-align:left"></div></td>
 							</tr>
 						</table>
-					</td> -->
+					</td> --
 				</tr>				
-				<!-- 반복업무현황 -->
+				-- 반복업무현황 --
 				<tr id ="reptr" style="height:20px;padding-bottom:20px;display:none;">
 					<td class="popup_title_txt" style="padding-top: 10px;"><img src="/images/popup_title_icon.gif" class="popup_title_img">
 						<spring:message code='ezTask.t200904' />
@@ -2118,6 +2126,7 @@
 				</tr>			
 			</table>
 		</div>
+		-->
 
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>
 			

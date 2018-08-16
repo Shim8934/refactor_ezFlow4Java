@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<title><spring:message code='ezApprovalG.t1565'/></title>
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 			<script language="JScript">
 				function fileinfo_change(fileinfo)
 				{

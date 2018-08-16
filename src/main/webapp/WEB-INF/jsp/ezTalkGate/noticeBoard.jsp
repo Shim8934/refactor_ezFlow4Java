@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -8,9 +7,9 @@
 	<head>
 		<title><spring:message code="ezTalkGate.ldh001" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/ezTalkGate/ktb2b.css" type="text/css">
-		<link rel="stylesheet" href="/css/ezTalkGate/main.css" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezTalkGate.e1' />"></script>
+		<link rel="stylesheet" href="${util.addVer('/css/ezTalkGate/ktb2b.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezTalkGate/main.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezTalkGate.e1', 'msg')}"></script>
 		<script>
 		
 		window.onload = function() {
