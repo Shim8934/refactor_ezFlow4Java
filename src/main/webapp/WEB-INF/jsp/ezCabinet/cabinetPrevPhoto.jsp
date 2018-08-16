@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="egovframework.let.utl.fcc.service.CommonUtil"                      %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core"   %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -7,8 +6,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title></title>
-		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, request, "<spring:message code='ezCabinet.css' />")%>" type="text/css">
-		<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezCabinet/cabinet.css")%>" type="text/css" />
+		<link rel="stylesheet" href="${CommonUtil.addVer(application, request, "<spring:message code='ezCabinet.css' />")}" type="text/css">
+		<link rel="stylesheet" href="${CommonUtil.addVer(application, "/css/ezCabinet/cabinet.css")}" type="text/css" />
 	</head>
 	<body class="cabphotfull">
 		<div class="cabphotowrap">
@@ -33,8 +32,8 @@
 			</div>
 		</div>
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-		<script type="text/javascript" src="<%=CommonUtil.addVer(application, request, "<spring:message code='ezCabinet.lang' />")%>"></script>
+		<script type="text/javascript" src="${CommonUtil.addVer(application, "/js/XmlHttpRequest.js")}"></script>
+		<script type="text/javascript" src="${CommonUtil.addVer(application, request, "<spring:message code='ezCabinet.lang' />")"></script>
 		<script type="text/javascript">
 			(function() {
 				var imageList   = null;
