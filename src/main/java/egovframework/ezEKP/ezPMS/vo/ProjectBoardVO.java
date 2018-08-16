@@ -106,6 +106,9 @@ public class ProjectBoardVO {
 	//폴더 명
 	private String folderName;
 
+	// 상위게시글 docNo tree
+	private String upperDocNoTree;
+	
 	public int getRootItemId() {
 		return rootItemId;
 	}
@@ -376,5 +379,13 @@ public class ProjectBoardVO {
 
 	public void setFolderName(String folderName) {
 		this.folderName = folderName;
+	}
+
+	public String getUpperDocNoTree() {
+		return upperDocNoTree;
+	}
+
+	public void setUpperDocNoTree(String upperDocNoTree) {
+		this.upperDocNoTree = upperDocNoTree;
 	}
 }	

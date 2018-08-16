@@ -418,6 +418,7 @@
 		<result property="folderId"					column="FOLDER_ID"/>
 		<result property="folderName"				column="FOLDER_NAME"/>
 		<result property="projectId"				column="PROJECT_ID"/>
+		<result property="upperDocNoTree"			column="upper_doc_no_tree"/>
 	</resultMap>
 	
 	<resultMap class="ProjectBoardVO" id="projectBoardVOForList">
@@ -2322,16 +2323,16 @@
 	<insert id="EzPMSDAO.addBoard" parameterClass="ProjectBoardVO">
 		<![CDATA[
 			INSERT INTO tbl_pms_item_list (
-				tenant_id,			writer_id,			title,				write_overview,			write_type,
-				write_content,		write_date,			write_update_date,	read_count,				folder_id,
+				tenant_id,			writer_id,			title,					write_overview,			write_type,
+				write_content,		write_date,			write_update_date,		read_count,				folder_id,
 				writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
-				writer_position,	writer_position2,	doc_no,					ROOT_ITEM_ID
+				writer_position,	writer_position2,	doc_no,					ROOT_ITEM_ID,			upper_doc_no_tree
 			)
 			VALUES (
 				#tenantId#,			#writerId#,			#title#,				#writeOverview#,		#writeType#,
 				#writeContent#,		#writeDate#,		#writeUpdateDate#,		#readCount#,			#folderId#,
 				#writerName#,		#writerName2#,		#writerDeptName#,		#writerDeptName2#,
-				#writerPosition#,	#writerPosition2#,	#docNo#,				#rootItemId#
+				#writerPosition#,	#writerPosition2#,	#docNo#,				#rootItemId#,			#upperDocNoTree#
 			)
 		]]>
 		<selectKey keyProperty="itemId" resultClass="Integer">
@@ -2371,14 +2372,14 @@
 				write_content,		write_date,			write_update_date,	read_count,				folder_id,
 				writer_name,		writer_name2,		writer_deptname,		writer_deptname2,
 				writer_position,	writer_position2,	root_item_id,		item_level,				doc_no,
-				upper_item_id
+				upper_item_id,		upper_doc_no_tree
 			)
 			VALUES (
 				#tenantId#,			#writerId#,			#title#,			#writeOverview#,		#writeType#,
 				#writeContent#,		#writeDate#,		#writeUpdateDate#,	#readCount#,			#folderId#,
 				#writerName#,		#writerName2#,		#writerDeptName#,	#writerDeptName2#,
 				#writerPosition#,	#writerPosition2#,	#rootItemId#,		#itemLevel#,			#docNo#,
-				#upperItemId#
+				#upperItemId#,		#upperDocNoTree#
 			)
 		]]>
 		<selectKey keyProperty="itemId" resultClass="Integer">
@@ -2528,7 +2529,7 @@
 			$orderWhat$ $orderHow$,
 		</isNotEmpty>
 		B.root_item_id DESC, 
-		B.item_level ASC,
+		B.UPPER_DOC_NO_TREE ASC,
 		B.DOC_NO DESC
 		
 		LIMIT #startRow#, #listCnt#
@@ -2634,8 +2635,8 @@
 				B.write_content,		B.write_date,			B.write_update_date,	B.read_count,		
 				B.writer_name$lang$ AS writer_name,				B.writer_deptname$lang$ AS writer_deptname,		
 				B.writer_position$lang$ AS writer_position,		M.mobile,
-				B.folder_id,			B.root_item_id,
-				B.item_level,			F.FOLDER_NAME$lang$ AS FOLDER_NAME,	F.PROJECT_ID
+				B.folder_id,			B.root_item_id,			B.item_level,			F.FOLDER_NAME$lang$ AS FOLDER_NAME,				
+				F.PROJECT_ID,			B.upper_doc_no_tree
 			FROM 
 				tbl_pms_item_list B
 			JOIN 

@@ -1910,9 +1910,16 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 			vo.setUpperItemId(Integer.parseInt((String)jsonParam.get("itemId")));
 			// 답변을 쓰는 글의 level보다 1이 증가
 			vo.setItemLevel(Integer.parseInt((String) jsonParam.get("itemLevel")) + 1);
+			
+			map.put("itemId", jsonParam.get("itemId"));
+			ProjectBoardVO upperItem = ezPMSDAO.getBoardDetail(map);
+			//답변의 경우 최근에 답변 달은 것이 최상위로 와야함(by design)
+			vo.setUpperDocNoTree(upperItem.getUpperDocNoTree() + getReverseDateNow() + "{" + docNo + "}");
+			
 			lastInsertId = ezPMSDAO.addBoardReplay(vo);
 		} else {
 			vo.setRootItemId(docNo);
+			vo.setUpperDocNoTree("{" + docNo + "}");
 			// 게시물의 id가 rootId가 됨
 			lastInsertId = ezPMSDAO.addBoard(vo);
 			//ezPMSDAO.updateRootItemId(docNo);
@@ -3742,5 +3749,25 @@ public class EzPMSServiceImpl extends EgovAbstractServiceImpl implements EzPMSSe
 		
 		LOGGER.debug("[SERVICE] ezPMS getUserCompanyId ended");
 		return ezPMSDAO.getuserCompanyId(map);
+	}
+	
+	/**
+	 * 게시판 9999년도부터 뒤로 날짜계산 표출 Method
+	 */
+	public String getReverseDateNow() {
+		LOGGER.debug("[SERVICE] ezPMS getReverseDateNow started");
+
+		StringBuilder reverseDate = new StringBuilder();
+		Calendar cal = Calendar.getInstance();
+		
+		reverseDate.append(9999 - cal.get(Calendar.YEAR));
+		reverseDate.append(21 - cal.get(Calendar.MONTH));
+		reverseDate.append(41 - cal.get(Calendar.DATE));
+		reverseDate.append(33 - cal.get(Calendar.HOUR));
+		reverseDate.append(69 - cal.get(Calendar.MINUTE));
+		reverseDate.append(69 - cal.get(Calendar.SECOND));
+
+		LOGGER.debug("[SERVICE] ezPMS getReverseDateNow ended");
+		return reverseDate.toString();
 	}
 }
