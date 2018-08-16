@@ -56,7 +56,7 @@ public class BeanLogic {
 			ServletRequestAttributes attr = (ServletRequestAttributes)RequestContextHolder.currentRequestAttributes();		
 			Locale locale = localeResolver.resolveLocale(attr.getRequest());
 			
-			filePath = msg.getMessage(filePath, locale);	
+			filePath = msg.getMessage(filePath, locale).trim();	
 			
 			msgFilePath = addVer(filePath);
 		}

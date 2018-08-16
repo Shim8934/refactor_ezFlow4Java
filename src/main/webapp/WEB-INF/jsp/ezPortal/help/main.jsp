@@ -4,8 +4,8 @@
 <html style="height:97%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
-		<link href="/css/help.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
+		<link href="${util.addVer('/css/help.css')}" rel="stylesheet" type="text/css">
 		<style type="text/css">
 			.warningbox01 { width:490px; margin-top:200px; margin-left:220px; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
 			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
@@ -16,7 +16,7 @@
 			.warningdl dd { padding:0px 0px 0px 5px; margin:0px; height:50px; font-weight:bold; font-size:14px; color:#333333;}
 			.warnintxt02 { font-size:12px; color:#666666; line-height:18px; margin:10px 10px 10px 10px; padding:0px;}
 		</style>
-		<script type="text/javascript" src="/js/pdf_Check.js"></script>	
+		<script type="text/javascript" src="${util.addVer('/js/pdf_Check.js')}"></script>	
 		</head>
 		<script type="text/javascript">
 	        window.onload = function () {

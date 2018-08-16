@@ -6,8 +6,8 @@
 	<head></head>
 		<title>poll_add</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
-		<link rel="stylesheet" href="/css/community.css" type="text/css">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
+		<link rel="stylesheet" href="${util.addVer('/css/community.css')}" type="text/css">
 		<style>
 			.disableSelIE {
 				background: none;
@@ -27,19 +27,19 @@
 				cursor: pointer;
 			}
 		</style>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/datepicker.htc.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/datepicker.htc.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<!-- data picker -->
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
-        <script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-        <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-        <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-        <link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
+        <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+        <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
 		<!-- time picker -->
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css"/>
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>		
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}"/>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>		
 		<script type="text/javascript">
 			var code = "<c:out value = '${code}' />";
 	        var ExpireDays = "N";

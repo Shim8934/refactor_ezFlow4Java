@@ -6,9 +6,9 @@
 <html>
 <head>
 	<title><spring:message code='ezOrgan.t144' /></title>
-	<link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
-    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	<link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
+    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript">
 		
 		function Delete_Address()

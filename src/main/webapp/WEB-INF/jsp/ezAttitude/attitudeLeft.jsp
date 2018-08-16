@@ -7,16 +7,16 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<title>left_attitude</title>
-		<link rel="stylesheet" href="/css/email_tree.css" type="text/css"/>
-		<link rel="stylesheet" href="<spring:message code = 'main.e15' />" type="text/css"/>
-		<link rel="stylesheet" href="/css/main.css" type="text/css"/>	
-		<link rel="stylesheet" href="/css/ezAttitude/clockTemp1.css" type="text/css" />
-		<link rel="stylesheet" href="/css/ezAttitude/timecheck.css" type="text/css" />	
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/Holiday.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/ezAttitude/Calendar.js"></script>
+		<link rel="stylesheet" href="${util.addVer('/css/email_tree.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('/css/main.css')}" type="text/css"/>	
+		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/clockTemp1.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/timecheck.css')}" type="text/css" />	
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
 		<style>
 			.time {
 				float:left;

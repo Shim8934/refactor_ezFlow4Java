@@ -9,21 +9,21 @@
 	<head>
 		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />		
-		<link href="/css/login.css" rel="stylesheet" type="text/css" />
-		<link rel="stylesheet" href="<spring:message code='main.e15'/>" type="text/css">
-		<link href="/js/jquery/jquery.modal.css" rel="stylesheet" type="text/css" />
+		<link href="${util.addVer('/css/login.css')}" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">
+		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
 		<style>
 			.blocker {
 				text-align: center;
 			} 
 		</style>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>		
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery.modal.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/jsbn.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
 		<script type="text/javascript">		
 			function actionLogin() {
 			    if (document.loginForm.id.value =="") {

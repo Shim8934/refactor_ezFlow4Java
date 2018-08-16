@@ -6,40 +6,40 @@
 	<head>
 	    <title><spring:message code='ezApprovalG.t1742'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e3'/>" type="text/css">
-	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
-	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
-	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/conn_Cross.js"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
+	    <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
+	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TabMenu.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TreeView.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TreeViewCtrl_Cross.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/ListView_list.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/AprlineG.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/AprlineV.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TempLineinfo.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/LineinfoIni.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Lineinfo.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/SelectSubTitles.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Receptinfo.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TempReceptinfo.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TempCirculationInfo.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Cabinetinfo.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/CabCategoryInfo.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Docinfo.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Draftinfo.js" type="text/javascript')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+	    <script src="${util.addVer('/js/Common.js" type="text/javascript')}"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
-	    <script src="/js/ezApprovalG/MiscFunc_Cross.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/TabMenu.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/TreeView.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/TreeViewCtrl_Cross.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/ListView_list.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/AprlineG.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/AprlineV.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/TempLineinfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/LineinfoIni.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/Lineinfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/SelectSubTitles.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/Receptinfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/TempReceptinfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/TempCirculationInfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/Cabinetinfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/CabCategoryInfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/CabRoleInfo_Cross.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/Docinfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/Draftinfo.js" type="text/javascript"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-	    <script src="/js/Common.js" type="text/javascript"></script>
 	    <style type="text/css">
 	    	.h2_dot {
 	    		background: url(/images/kr/left/left_dot02.gif) no-repeat 0px 70%;
