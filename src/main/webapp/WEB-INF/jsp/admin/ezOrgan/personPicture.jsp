@@ -7,21 +7,21 @@
 	<head>
 		<title><spring:message code="ezOrgan.t238" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="<spring:message code='ezOrgan.e2' />" type="text/css">
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>    
-	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>	    
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-	    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery.form.js")%>"></script>
+	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>    
+	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>	    
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.form.js')}"></script>
 	    
 	    <c:if test="${!isCrossBrowser}">
-	      	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezBoard/AttachMain.js")%>"></script>
-		    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezBoard/AttachItem.js")%>"></script>
-		    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/Kaoni_ActiveX.js")%>"></script>
+	      	<script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain.js')}"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem.js')}"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
 	    </c:if>
 	    <c:if test="${isCrossBrowser}">
-		    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezBoard/AttachMain_CK.js")%>"></script>
-		    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezBoard/AttachItem_CK.js")%>"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachMain_CK.js')}"></script>
+		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem_CK.js')}"></script>
 	    </c:if>
 		<script type="text/javascript" language="javascript">
 		    var ReturnFunction;
