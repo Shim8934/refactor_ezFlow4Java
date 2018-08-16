@@ -303,12 +303,9 @@
 							var deleteChk = confirm("<spring:message code='ezResource.t61'/>");
 
 							if (deleteChk) {
-								var letterId = $(this).parent("li").attr(
-										"data-letterId");
-								var letterBoxNo = $(this).parents("li").attr(
-										"data-letterboxno"); // 편지지함 no
-								var letterNo = $(this).parent("li").attr(
-										"data-letterNo");
+								var letterId = $(this).parents("li").attr("data-letterId");
+								var letterBoxNo = $(this).parents("li").attr("data-letterboxno"); // 편지지함 no
+								var letterNo = $(this).parents("li").attr("data-letterNo");
 
 								letterDelete(letterId, letterBoxNo, letterNo);
 							}
