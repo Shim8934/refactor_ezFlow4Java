@@ -8,8 +8,8 @@
 	<head>
 		<title><spring:message code='ezCabinet.t138'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="${CommonUtil.addVer(application, request, "<spring:message code='ezCabinet.css' />")}" type="text/css">
-		<link rel="stylesheet" href="${CommonUtil.addVer(application, "/css/ezCabinet/cabinet.css")}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}" type="text/css">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
 	</head>
 	<body class="popup cabDetail">
 		<h1 id="fileFileH1"><spring:message code='ezCabinet.t108'/></h1>
@@ -50,9 +50,9 @@
 			<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
 		</div>
 		
-		<script type="text/javascript" src="${CommonUtil.addVer(application, request, "<spring:message code='ezCabinet.lang' />")}"></script>
-		<script type="text/javascript" src="${CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")}"></script>
-		<script type="text/javascript" src="${CommonUtil.addVer(application, "/js/ezCabinet/cabinetFileHelper.js")}"></script>
+		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetFileHelper.js')}"></script>
 		<script type="text/javascript">
 			var CabinetCommunityFile = function() {
 				var cabinetHelper = null;

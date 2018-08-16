@@ -6,8 +6,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title></title>
-		<link rel="stylesheet" href="${CommonUtil.addVer(application, request, "<spring:message code='ezCabinet.css' />")}" type="text/css">
-		<link rel="stylesheet" href="${CommonUtil.addVer(application, "/css/ezCabinet/cabinet.css")}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}" type="text/css">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
 	</head>
 	<body class="cabphotfull">
 		<div class="cabphotowrap">
@@ -32,8 +32,8 @@
 			</div>
 		</div>
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
-		<script type="text/javascript" src="${CommonUtil.addVer(application, "/js/XmlHttpRequest.js")}"></script>
-		<script type="text/javascript" src="${CommonUtil.addVer(application, request, "<spring:message code='ezCabinet.lang' />")"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')}"></script>
 		<script type="text/javascript">
 			(function() {
 				var imageList   = null;
