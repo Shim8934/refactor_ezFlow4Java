@@ -100,12 +100,12 @@
 		</div>
 		
 		<div id="tblPageRayer"></div>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')   }"></script>
-		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')             }"></script>
-		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')                }"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetNavi.js        }"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTable.js       }"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezTask/jquery.lineProgressbar.js}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetUserCapacity.js}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')     }"></script>
+		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')               }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')                  }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetNavi.js')        }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTable.js')       }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezTask/jquery.lineProgressbar.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetUserCapacity.js')}"></script>
 	</body>
 </html>
