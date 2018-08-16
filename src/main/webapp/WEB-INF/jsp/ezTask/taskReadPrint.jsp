@@ -12,21 +12,25 @@
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
 		<link rel="stylesheet" href="/css/ezTask/circularProgressBar.css" type="text/css">
 		<link rel="stylesheet" href="/css/jquery.lineProgressbar.css" type="text/css">
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
+<!-- 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" > -->
+<!-- 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" > -->
 		<script type="text/javascript" src="<spring:message code='ezTask.e1' />"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezTask/AttachItem_CK.js"></script>
 		<script type="text/javascript" src="/js/ezTask/AttachMain_CK.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/ezTask/circularProgressBar.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+<!-- 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script> -->
+<!-- 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script> -->
 		<script type="text/javascript" src="/js/ezTask/jquery.lineProgressbar.js"></script>
 		
 		<style type="text/css">
 			.ui-datepicker { font-size:9.5pt !important}
-			   
+			
+			.css-class-to-highlight a{
+			   		color: #3498db !important;
+			}
+			 
 			u {
 				text-decoration: underline;
 			}
@@ -64,6 +68,7 @@
 			    
 			body {
 				padding:10px;
+				overflow: auto;
 			}
 			    
 			.popup_title_img {
@@ -76,26 +81,19 @@
 		</style>
 		
 		<script type="text/javascript">
-// 			var userid = "${userInfo.id }";
 			var taskid = "${taskInfoVO.taskID }";
 			var contentpath = "${taskInfoVO.contentPath }";
 			var personContentpath = "${taskInfoVO.personContentPath }";
-// 			var creatorid = "${taskInfoVO.creatorID }";
 			var taskstatus = "${taskInfoVO.taskStatus }";
 			var completerate = "${taskInfoVO.completeRate }";
-// 			var duration = 500;
-			var duration = 1;
+			var duration = 0;
 			var delayColor = "${delayColor }";
 			var completeColor = "${completeColor }";
 		    var tasktype = "${taskInfoVO.taskType }";
 		    var content = "${contentPerson }";
 		    var date = "${date}";
+		    var selectedDate = "${selectedDate}";
 		    var type = "${type}";
-		    var personid = "${taskInfoVO.personID }";
-// 		    var taskCommentListSize = "${taskCommentListSize }";
-		    var tempbody = "";
-		    var pUse_Editor = "${useEditor}";
-		    var AttachLimit = 5;
 		    var hasTaskAttach = "${taskInfoVO.hasAttach}";
 		    var taskAttachList = "${taskAttachList }";
 		    var hasTaskWorkAttach = "${taskInfoVO.personAttach}";
@@ -147,24 +145,12 @@
 				
 				/* 반복일정 progressbar 설정 */
 				if(taskstatus == 0) {
-					dayOnMouseClick(date);
+					dayOnMouseClick(selectedDate);
 				}
 				
+				//프로그래스바 그리기
 				initProgressBar(taskstatus, completerate);
 		
-				//봄
-				document.getElementById("printScreen").style.display = "block";
-				//none은 어차피 되어있으니까!
-// 			    document.getElementById("taskInfo").style.display = "none";
-// 			    document.getElementById("taskDescription").style.display = "none";
-// 			    document.getElementById("normalScreen").style.display = "none";
-// 			    document.getElementById("menu").style.display = "none";
-// 			    document.getElementById("close").style.display = "none";
-// 			    document.getElementById("tabpart").style.display = "none";
-// 			    document.getElementById("tablework").style.display = "none";
-// 			    document.getElementById("tablecomment").style.display = "none";
-// 			    document.getElementById("taskRep").style.display = "none";
-			    
 			    if(tasktype == 4 || tasktype == 5 ||  tasktype == 6) {
 				    document.getElementById("reptr").style.display = "block";
 				    document.getElementById("taskRep").style.display = "";			   
@@ -213,9 +199,6 @@
 			
 			    if (tasktype != "1" && document.getElementById("printAttach2").innerHTML.trim() != "")
 			    	printattachViewProgress.style.display = "";
-			   
-			    window.print();
-			    
 		    });
 		    
 		    function preStepForRepeatTask() {
@@ -288,6 +271,8 @@
 			function scrollTop() {
 				try {
 					window.scroll(0, 1);
+					
+					window.print();
 				} catch (e) { }
 			}
 			
@@ -352,13 +337,6 @@
 			
 			/* progressBar 조회 */
 			function initProgressBar2(barID, taskstatus, completerate) {
-				if (completerate == '0') {
-					duration = 0;
-				} else {
-// 					duration = 500;
-					duration = 1;
-				}
-
 				if (taskstatus == '4') {
 					$(".bar[taskid='" + barID + "']").LineProgressbar({
 						percentage: completerate,
@@ -403,10 +381,9 @@
 					},
 					success: function(result){
 						var list = result.taskCommentList;
-						var taskCommentList = "";
+						var taskCommentList = "<table class='content2'>";
 						
 						if (list != null && list.length != 0) {
-							taskCommentList += "<table class='content2'>"
 							list.forEach(function(vo, index) {
 								taskCommentList += "<tr>";
 								taskCommentList += "<td style='min-width: 120px; width: 120px; text-align: center; white-space:nowrap; vertical-align: middle; padding: 0px 10px;'>&nbsp;<span>" + vo.commentorName + "</span></td>";	
@@ -414,8 +391,10 @@
 								taskCommentList += "<td style='min-width: 120px; width: 120px; text-align: center; white-space:nowrap; vertical-align: middle; padding: 0px 10px;'>" + vo.commentDate.substring(0, 16) + "</td>";
 								taskCommentList += "</tr>";
 							}); 	
-							taskCommentList += "</table>"	
+						} else {
+							taskCommentList += "<tr><td colspan='3' style='border: 1px solid #ddd;'></tr>";
 						}
+						taskCommentList += "</table>"	
 						
 						$("#printCommentView").append(taskCommentList);
 						printCommentView.style.display = "";
@@ -426,7 +405,6 @@
 				});
 			}
 			
-		    
 			function dayOnMouseClick(changeDate) {								
 				$.ajax({
 					type : "POST",
@@ -459,6 +437,8 @@
 				
 				document.getElementById("prog1").innerHTML = date;
 				document.getElementById("repCount").innerHTML = repeatCount;
+				
+				load_bodyhtml();
 			}
 			
 			/* progressBar 조회 */
@@ -467,36 +447,39 @@
 					$('.progress_graph').circleProgress({
 						value: ((completerate*1) / 100),
 						fill: {color: delayColor},
-						size: 135
-					}).on('circle-animation-progress', function(event, progress) {
-						$(this).find('strong').html(completerate + '%');
-						if (completerate == 0) {
-							$(this).find('strong').css("color", delayColor);
-						} else {
-							$(this).find('strong').css("color", "");
-						}
+						size: 135,
+						animation: false
 					});
 				} else if (taskstatus == '3' || completerate == '100') {	
 					$('.progress_graph').circleProgress({
 						value: ((completerate*1) / 100),
 						fill: {color: completeColor},
-						size: 135
-					}).on('circle-animation-progress', function(event, progress) {
-						$(this).find('strong').html(completerate + '%');
-						$(this).find('strong').css("color", "");
+						size: 135,
+						animation: false
 					});
 				} else {
 					$('.progress_graph').circleProgress({
 						value: ((completerate*1) / 100),
 						fill: {color: '#3498db'},
-						size: 135
-					}).on('circle-animation-progress', function(event, progress) {
-						$(this).find('strong').html(completerate + '%');
-						$(this).find('strong').css("color", "");
+						size: 135,
+						animation: false
 					});
 				}
+				
+				//프로그래스바 안의 퍼센트 글자
+				var canvas = $('.circle');
+				var strong = canvas.find("strong");
+				var color = "";
+				
+				if (taskstatus == '4') {
+					color = delayColor;
+				}
+				
+				strong.html(completerate + '%');
+				strong.css("color", "");
 			}
 			
+			/* datepicker
 		    $(function () {
 		    	$.datepicker.regional["<spring:message code='main.t0619' />"] = {
 					closeText: "<spring:message code='main.t3' />",
@@ -574,19 +557,16 @@
 			
 			function showResult(dateText) {
 		        var SDate;
-
 		        if (dateText != "") {
 		            SDate = new Date(dateText);
 		        } else {
 		            SDate = new Date();
 		        }
+		        
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', SDate);
 				
-				
-				
         		var test = 0;
-        		
 				for (var i = 0; i < dateArray.length; i++) {					
 					if (dateArray[i] ==  dateText) {
 						test = 1;
@@ -598,12 +578,9 @@
 					dateArray = dateList.split(",");
 					alert("<spring:message code='ezTask.t200912' />");
 					$("#Sdatepicker").datepicker("setDate", date);
-				}
-				else {
-					dayOnMouseClick(dateText);
 				}				
 			}
-						
+			*/
 		</script>
 	</head>
 	
@@ -638,27 +615,8 @@
 					<iframe id="message2" class="viewbox" name="message2" style="padding:0; height:100%; width:99.7%; overflow:auto; border: 1px solid #e2e2e2; margin-top: 3px;"></iframe>
 				</td>
 			</tr>
-			<!-- 필요없?
-			<tr style="vertical-align:top">
-				<td style="padding-top:0px">
-					<table class="file">
-						<tr>
-							<th><spring:message code='ezTask.t160' /></th>
-							<td class="pos1">
-								<div id="attachedfileDIV2" style="overflow: auto;height: 57px;background-color:white;text-align:left"></div>
-							</td>
-							<td class="pos2"><a class="imgbtn imgbck">
-								<span  onClick="attach_SelectAll('2')" style="width: 50px;"><spring:message code='ezTask.t161' /></span></a><br />
-								<a class="imgbtn imgbck"><span onClick="attach_Download('2')" style="width: 50px;"><spring:message code='ezTask.t96' /></span></a>
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-			 -->
 		</table>
-		
-		<div id="printScreen">
+		<div id="printScreen" style="display: block;">
 			<table id="printTable" class="layout" >
 				<tr>
 					<td class="popup_title_txt">
@@ -812,15 +770,6 @@
 				</tr>
 				
 				<tr id="printCommentView" style="display:none">
-					<!-- 
- 					<td style="height:20px">
-						<table class="file">
-							<tr>
-								<td colspan='2' style="width:90%;height:20px;vertical-align:top"><div id="printComment" style="overflow:visible; height: auto; background-color:white;text-align:left"></div></td>
-							</tr>
-						</table>
-					</td>
-					-->
 				</tr>				
 				<!-- 반복업무현황 -->
 				<tr id ="reptr" style="height:20px;padding-bottom:20px;display:none;">
@@ -854,7 +803,6 @@
 				</tr>			
 			</table>
 		</div>
-
 
 		<table id="tablecomment" class="layout" style="height:0%;width:100%;table-layout: fixed; overflow:auto;margin-top:6px;display:none;">
 		</table>
