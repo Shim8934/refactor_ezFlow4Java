@@ -931,7 +931,6 @@ function SaveDraftDocInfo_susin() {
 	createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", "002");
 	createNodeAndInsertText(xmlpara, objNode, "HREF", getNodeText(objNodes[6]));
 	createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", pDocTitle);
-alert(pDocNo);
 	createNodeAndInsertText(xmlpara, objNode, "DOCNO", pDocNo);
 
 	if (pHasAttachYN == "") {

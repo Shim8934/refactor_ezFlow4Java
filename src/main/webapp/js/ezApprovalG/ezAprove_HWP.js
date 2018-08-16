@@ -531,14 +531,28 @@ function SaveApproveInfo(pApproveFlag)
 	pDocTitle = HwpCtrl.GetFieldText("doctitle");
 	createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", pDocTitle);
 
-	if (HwpCtrl.CheckFieldExist("docnumber"))
-	    createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("docnumber"));
-	else if (HwpCtrl.CheckFieldExist("be_docnumber"))
-	    createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("be_docnumber"));
-	else if (HwpCtrl.CheckFieldExist("deptshortedname"))
-	    createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("deptshortedname"));
-	else
-	    createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+	if (approvalFlag == 'G' && pDraftFlag == "SUSIN" && useReceiveDocNo == 'NO') {
+		if (HwpCtrl.CheckFieldExist("receiptnumber")) {
+			createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("receiptnumber"));
+		} else if (HwpCtrl.CheckFieldExist("docnumber")) {
+			createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("docnumber"));
+		} else if (HwpCtrl.CheckFieldExist("be_docnumber")) {
+		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("be_docnumber"));
+		} else if (HwpCtrl.CheckFieldExist("deptshortedname")) {
+		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("deptshortedname"));
+		} else {
+		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+		}
+	} else {
+		if (HwpCtrl.CheckFieldExist("docnumber"))
+		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("docnumber"));
+		else if (HwpCtrl.CheckFieldExist("be_docnumber"))
+		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("be_docnumber"));
+		else if (HwpCtrl.CheckFieldExist("deptshortedname"))
+		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", HwpCtrl.GetFieldText("deptshortedname"));
+		else
+		    createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+	}
 
 	if (pHasAttachYN == "")
 	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[9]));
