@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
@@ -84,23 +83,28 @@
 			}
 
 			function OK_Click(){
-				if (CompanyID.value == ""){
+				if (CompanyID.value == "") {
 					OpenAlertUI("<spring:message code='ezOrgan.t113'/>");
 					return;
 				}
 				
-				if (CompanyID.value.length < 3){
+				if (CompanyID.value.length < 3) {
 					OpenAlertUI("<spring:message code='ezOrgan.t114'/>");
 					return;
 				}
 				
-				if (!Check_ID(CompanyID.value)){
+				if (!Check_ID(CompanyID.value)) {
 					OpenAlertUI("<spring:message code='ezOrgan.t115'/>");
 					return;
 				}
 							
-				if (CompanyName.value == ""){
+				if (CompanyName.value == "") {
 					OpenAlertUI("<spring:message code='ezOrgan.t116'/>");
+					return;
+				}
+
+				if (operatorID.value != "" && operatorID.value.indexOf("@") > -1) {
+					OpenAlertUI("<spring:message code='ezOrgan.t267'/>");
 					return;
 				}
 				
