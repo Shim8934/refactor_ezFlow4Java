@@ -1353,7 +1353,7 @@ public class EzTaskController extends EgovFileMngUtil {
     	String date = request.getParameter("currentDate");
     	String taskID = request.getParameter("taskID");
 		
-    	TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID, userInfo.getCompanyID());
+    	TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID, companyID);
     	taskInfoVO.setStartDate(date + " 00:00:00");
     	taskInfoVO.setEndDate(date + " 23:59:59");		
     	
@@ -1569,7 +1569,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		String userID = userInfo.getId();
 		String offset = userInfo.getOffset();
 		String primary = userInfo.getPrimary();
-		int tenantID = userInfo.getTenantId();	
+		int tenantID = userInfo.getTenantId();
+		String companyID = userInfo.getCompanyID();
 		
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
 		String folderPath = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + "uploadFile";
@@ -1585,7 +1586,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		Map<String, Integer> result = new LinkedHashMap<String, Integer>();
 
 		//업무정보 조회
-		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID);
+		TaskInfoVO taskInfoVO = ezTaskService.getTaskInfo(taskID, offset, primary, tenantID, userInfo.getCompanyID());
 
 		//의견목록 조회
 		List<TaskCommentVO> taskCommentList = null;
@@ -1632,11 +1633,11 @@ public class EzTaskController extends EgovFileMngUtil {
 		        calendar2.setTime(taskEndDate);         
 		        
 		        if (calendar1.compareTo(calendar2) >= 0) {
-		        	result = ezTaskService.getRepTaskInfo(endDate.substring(0, 10), taskID, offset, primary, tenantID, taskInfoVO);
+		        	result = ezTaskService.getRepTaskInfo(endDate.substring(0, 10), taskID, offset, primary, tenantID, taskInfoVO, companyID);
 		        	date = endDate.substring(0, 10);
 		        }
 		        else {		        	
-		        	result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
+		        	result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO, companyID);
 		        	
 		        	for (String d: result.keySet()) {	        			        		
 		        		Date dDate = sdf.parse(d + " 00:00:00"); 
@@ -1651,7 +1652,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		        }		        		        
 			}
 			else {				
-				result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO);
+				result = ezTaskService.getRepTaskInfo(utcTime, taskID, offset, primary, tenantID, taskInfoVO, companyID);
 				
 	        	for (String d: result.keySet()) {
 	        		Date dDate = sdf.parse(d + " 00:00:00"); 
