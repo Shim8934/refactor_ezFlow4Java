@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code="ezResource.t349"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="<spring:message code="ezResource.e2"/>" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
 	</head>
 	<style type="text/css">
     		.warningbox01 { width:540px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;}

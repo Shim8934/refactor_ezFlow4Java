@@ -5,10 +5,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link href="/css/theme01.css" rel="stylesheet" type="text/css">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/raphael.2.1.0.min.js"></script>
-		<script type="text/javascript" src="/js/jquery/justgage.1.0.1.min.js"></script>
+		<link href="${util.addVer('/css/theme01.css')}" rel="stylesheet" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/raphael.2.1.0.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/justgage.1.0.1.min.js')}"></script>
 		<script type="text/javascript">
 			//메일용량 관련
 	        var MailQuater;

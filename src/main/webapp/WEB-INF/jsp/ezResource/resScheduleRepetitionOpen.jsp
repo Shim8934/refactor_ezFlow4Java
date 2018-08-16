@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code="ezResource.t325" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
 		<script type="text/javascript">
 			var g_bFlag = true;
 

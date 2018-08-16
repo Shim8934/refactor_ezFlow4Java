@@ -8,18 +8,18 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>${vo.title}</title>
-	<link rel="stylesheet" href="<spring:message code='ezLadder.e2' />" type="text/css">
-	<link rel="stylesheet" href="/css/ezLadder/ladder_CSS.css" type="text/css">
-	<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
-	<link rel="stylesheet" href="/css/ezLadder/ladderPreList.css" type="text/css">
-	<link rel="stylesheet" href="/css/font-awesome-5.0.10/css/fontawesome-all.css" type="text/css">
-	<script type="text/javascript" src="<spring:message code='ezLadder.e1'/>"></script>
-	<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-	<script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
-	<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
-	<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
-	<script type="text/javascript" src="/js/ezLadder/ladder.min.js"></script>
-	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	<link rel="stylesheet" href="${util.addVer('ezLadder.e2', 'msg')}" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('/css/ezLadder/ladder_CSS.css')}" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('/css/ezPoll/vote.css')}" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('/css/ezLadder/ladderPreList.css')}" type="text/css">
+	<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}" type="text/css">
+	<script type="text/javascript" src="${util.addVer('ezLadder.e1', 'msg')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezPoll/stomp.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezPoll/sockjs.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezLadder/ladder.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript">
 	
 		var _ladderLine;

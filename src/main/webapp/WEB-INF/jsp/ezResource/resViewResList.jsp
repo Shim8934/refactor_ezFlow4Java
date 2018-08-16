@@ -6,10 +6,10 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code="ezResource.t343" /></title>
-		<link rel="stylesheet" href="<spring:message code="ezResource.e2"/>" type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezResource.e1' />"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
+		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<style type="text/css"> 
 			.pagetd{ padding-top:6px; }
 			.pcol{ padding-top:6px; }

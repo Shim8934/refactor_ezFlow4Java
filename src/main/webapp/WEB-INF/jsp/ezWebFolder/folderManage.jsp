@@ -7,14 +7,14 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title><spring:message code="ezWebFolder.t268"/></title>
-    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-	<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1'/>"></script>
-    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/mouseeffect.js")%>"></script>
-    <link rel="stylesheet" href="<spring:message code='ezWebFolder.i1'/>" type="text/css">
-    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/ezWebFolder/jsTree/dist/themes/default/style.css")%>" />
-    <link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezWebFolder/webfolder.css")%>" type="text/css">
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezWebFolder/jsTree/dist/jstree.js")%>"></script>
-    <script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+    <link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
+    <link rel="stylesheet" href="${util.addVer('/js/ezWebFolder/jsTree/dist/themes/default/style.css')}" />
+    <link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/jsTree/dist/jstree.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     <script>
 		var lang = "${userinfo.lang}";
 		var PostTreeView = null;

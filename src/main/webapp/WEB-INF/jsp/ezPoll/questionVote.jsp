@@ -7,21 +7,20 @@
 	<head>
 		<title><spring:message code='ezPoll.t232' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-		<link rel="stylesheet" href="<spring:message code='ezPoll.i1' />" type="text/css">
-		<link rel="stylesheet" href="/css/ezPoll/vote.css" type="text/css">
-		<link rel="stylesheet" href="/css/font-awesome-5.0.10/css/fontawesome-all.css">
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
-		<script type="text/javascript" src="/js/ezPoll/stomp.min.js"></script>
-		<script type="text/javascript" src="/js/ezPoll/sockjs.min.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
-		<script src="/js/jquery/jquery.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>	
-		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezPoll.i1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezPoll/vote.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
+		<script type="text/javascript" src="${util.addVer('/js/ezPoll/stomp.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPoll/sockjs.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script src="${util.addVer('/js/jquery/jquery.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>	
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		
 		<script type="text/javascript">	
 			var filesize 				= 0;

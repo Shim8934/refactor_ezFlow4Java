@@ -8,14 +8,14 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title></title>
-	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/js/dist/themes/default/style.min.css")%>" />
-	<link rel="stylesheet" href="<spring:message code = 'main.e15' />" type="text/css" />
-	<link rel="stylesheet" href="<%=CommonUtil.addVer(application, "/css/ezEmail/style.css")%>" />
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
-	<script src="<%=CommonUtil.addVer(application, "/js/dist/jstree.min.js")%>"></script>
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/letterBoxTree.js")%>"></script>
-	<script type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/letterList.js")%>"></script>
+	<link rel="stylesheet" href="${util.addVer('/js/dist/themes/default/style.min.css')}" />
+	<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css" />
+	<link rel="stylesheet" href="${util.addVer('/css/ezEmail/style.css')}" />
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	<script src="${util.addVer('/js/dist/jstree.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/letterBoxTree.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/letterList.js')}"></script>
 </head>
 <style>
 	.lmtitle {
@@ -213,7 +213,7 @@
 				url = "/admin/ezEmail/letterBoxMovePopUp.do?letterBox="
 						+ letterBox + "&letterNo=" + letterNo + "&letterId="
 						+ letterId;
-				var win = window.open(url, "_blank", "width=550, height=450");
+				var win = window.open(url, "_blank", GetOpenWindowfeature(550, 450));
 
 				// 팝업이 끝나면 실행되는 부분
 				var interval = window.setInterval(function() {
@@ -258,12 +258,11 @@
 				letterBoxNo = $(btn).parents("li").attr("data-letterboxno");
 				letterNo = $(btn).parents("li").attr("data-letterno");
 			}
-
+			
 			var url = "/admin/ezEmail/letterEditPopUp.do?" + "letterBoxNo="
 					+ letterBoxNo + "&popUpType=" + popUpType + "&letterNo="
 					+ letterNo;
-			var letterPopUp = window.open(url, "letterPopUp",
-					"width=890, height=660");
+			var letterPopUp = window.open(url, "letterPopUp", GetOpenWindowfeature(890, 660));
 		}
 
 		// 편지지 삭제
