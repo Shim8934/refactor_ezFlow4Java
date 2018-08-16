@@ -3,7 +3,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-<%@ page import="egovframework.let.utl.fcc.service.CommonUtil" %>
+
 <!DOCTYPE html>
 <html style="height: 99%;">
 <head>
