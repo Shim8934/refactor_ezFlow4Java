@@ -75,7 +75,7 @@
 		   	
 		    	P_CompanyID = $('#ListCompany').val();
 		    	getDocDeleteHist(1);
-		    	makePageSelPage();
+// 		    	makePageSelPage();
 		    	getTime();
 		    	
 		    	if (changeTab == "completedoclist") {
@@ -93,6 +93,9 @@
 		        $(document).bind("selectstart", function(event){event.preventDefault();});
 		        //드래그 방지
 		        $(document).bind("dragstart", function(event){event.preventDefault();});
+		        
+		        //페이징 위치 조정
+		        windowResize();
 		    }
 		    
 			// 검색값 입력 후 엔터키 입력 시 검색 호출
@@ -383,28 +386,28 @@
 					searchEndTime = $('#endDatepicker').datepicker({dateFormat : 'yyyymmdd'}).val();
 				}
 				
-					var pURL = "/admin/ezApprovalG/getDocListjson.do";
+				var pURL = "/admin/ezApprovalG/getDocListjson.do";
 
-					$.ajax({
-							url : pURL,
-							type : "POST",
-							async : false,
-							dataType : 'json',
-							data : {
-								contID     : ScontID,
-								pageNum    : pageNum,
-								companyID  : P_CompanyID,
-								docNO  	   : docnumber,//문서번호
-								docTitle   : doctitle,//문서제목
-								drafter    : drafter,//기안자
-								aprFrom    : searchStartTime,//완료일자
-								aprTo      : searchEndTime,//완료일자
-								deptName   : drafterdept,//기안부서
-								pSelectTab : pSelectTab//탭구분	
-							},
-							success : function(res) {
-								if (res.pSelectTab == "completedoclist") {
-									$("#doclist").empty().append(
+				$.ajax({
+						url : pURL,
+						type : "POST",
+						async : false,
+						dataType : 'json',
+						data : {
+							contID     : ScontID,
+							pageNum    : pageNum,
+							companyID  : P_CompanyID,
+							docNO  	   : docnumber,//문서번호
+							docTitle   : doctitle,//문서제목
+							drafter    : drafter,//기안자
+							aprFrom    : searchStartTime,//완료일자
+							aprTo      : searchEndTime,//완료일자
+							deptName   : drafterdept,//기안부서
+							pSelectTab : pSelectTab//탭구분	
+						},
+						success : function(res) {
+							if (res.pSelectTab == "completedoclist") {
+								$("#doclist").empty().append(
 											/* 2018-07-31 김보미 - style에 ellipsis 추가 */
 //												  '<th style="width:3%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
 //												+ '<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>'
@@ -417,18 +420,18 @@
 //												+ '<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>'
 //												+ '<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>'
 //												+ '<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
-											  '<th style="width:3%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
-											+ '<th style="width:15%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t434"></spring:message></th>'
-											+ '<th style="width:2%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><img src="/images/newAttach.gif"></th>'
-											+ '<th style="width:25%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
-											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t433"></spring:message></th>'
-											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t437"></spring:message></th>'
-											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
-											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
-											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezTask.t210"></spring:message></th>'
-											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t448"></spring:message></th>'
-											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
-											)
+										  '<th style="width:3%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
+										+ '<th style="width:15%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t434"></spring:message></th>'
+										+ '<th style="width:2%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><img src="/images/newAttach.gif"></th>'
+										+ '<th style="width:25%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
+										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t433"></spring:message></th>'
+										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t437"></spring:message></th>'
+										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
+										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
+										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezTask.t210"></spring:message></th>'
+										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t448"></spring:message></th>'
+										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
+										)
 								} else {
 									$("#doclist").empty().append(
 											/* 2018-07-31 김보미 - style에 ellipsis 추가 */
@@ -444,19 +447,19 @@
 //												+ '<th style="width:10%;"><spring:message code="ezApproval.t368"></spring:message></th>'
 //												+ '<th style="width:5%;"><spring:message code="ezApprovalG.kes03"></spring:message></th>'
 //												+ '<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
-											  '<th style="width:3%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
-											+ '<th style="width:15%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t434"></spring:message></th>'
-											+ '<th style="width:2%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><img src="/images/newAttach.gif"></th>'
-											+ '<th style="width:25%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
-											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t433"></spring:message></th>'
-											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t437"></spring:message></th>'
-											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
-											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
-											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezTask.t210"></spring:message></th>'
-											+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t368"></spring:message></th>'
-											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.kes03"></spring:message></th>'
-											+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
-											)
+										  '<th style="width:3%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
+										+ '<th style="width:15%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t434"></spring:message></th>'
+										+ '<th style="width:2%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><img src="/images/newAttach.gif"></th>'
+										+ '<th style="width:25%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
+										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t433"></spring:message></th>'
+										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t437"></spring:message></th>'
+										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
+										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
+										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezTask.t210"></spring:message></th>'
+										+ '<th style="width:10%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t368"></spring:message></th>'
+										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.kes03"></spring:message></th>'
+										+ '<th style="width:5%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
+										)
 								}
 								
 								var html = "";
@@ -527,7 +530,10 @@
 								alert(err);
 							}
 						});
-					makePageSelPage();
+				
+					if (totalCount > 0) {
+						makePageSelPage();
+					}
 			}
 			
 			function chk_onselect(obj) {
@@ -764,7 +770,7 @@
 				$("#drafterdept").val("");
 				
 				getDocDeleteHist(1);
-		    	makePageSelPage();
+// 		    	makePageSelPage();
 			}
 			
 			function openDoc(obj) {
@@ -893,6 +899,18 @@
 		            }
 		        }
 			    
+			    $(window).on("resize", function(){
+		            windowResize();
+		        });
+			    
+			    function windowResize() {
+		        	var height = document.documentElement.clientHeight - 243 - document.getElementById("mainmenu").clientHeight;
+		        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+		        		height = height - 30;
+		        	}
+		        	document.getElementById("contentlist").style.height = height + "px";
+		        	document.getElementById("contentlist").style.overflow = "auto";
+		        }
 		</script>
 	</head>
 	
@@ -1026,24 +1044,27 @@
 			</tr>
 		</table>
 		
-		<table class="mainlist" style="width:100%; height: 100%;">
-			<thead>
-				<tr id ="doclist">
-					<th style="width:1%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>
-					<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>
-					<th style="width:3%;"><spring:message code="ezApprovalG.t56"></spring:message></th>
-					<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>
-					<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>
-					<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>
-					<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>
-					<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>
-				</tr>
-			</thead>
-			<tbody id="DocCompleteListBody" style="overflow: auto;"></tbody> 
-		</table>
+		<div id="contentlist" style="width: 100%; overflow: auto;">
+			<table class="mainlist" style="width:100%;">
+				<thead>
+					<tr id ="doclist">
+						<th style="width:1%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>
+						<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>
+						<th style="width:3%;"><spring:message code="ezApprovalG.t56"></spring:message></th>
+						<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>
+						<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>
+						<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>
+						<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>
+						<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>
+						<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>
+						<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>
+						<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>
+					</tr>
+				</thead>
+				<tbody id="DocCompleteListBody" style="overflow: auto;"></tbody> 
+			</table>
+		</div>
+		
 		<div id="tblPageRayer" style="padding-top: 10px;"></div>
 	</body>
 	<script type="text/javascript">
