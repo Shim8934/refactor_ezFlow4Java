@@ -156,7 +156,7 @@
 		        <li><span onClick="window.print()"><spring:message code='ezAddress.t283' /></span></li>
 		        <li><span onClick="write_letter()"><spring:message code='ezAddress.t303' /></span></li>
 				<c:if test="${useCabinet == 'YES'}">
-					<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+					<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 				</c:if>
 		      </ul>
 		    </div>

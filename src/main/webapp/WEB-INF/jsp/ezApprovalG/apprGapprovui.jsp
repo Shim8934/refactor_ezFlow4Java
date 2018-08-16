@@ -1650,7 +1650,7 @@
 		                  <li id="btnConn" style="display:none"><span onClick="return btnConn_onclick()"><spring:message code='ezApprovalG.t63'/></span></li>
 		                  <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 						  <c:if test="${useCabinet == 'YES'}">
-								<li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+								<li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 						  </c:if>
 		              </ul>
 				</div>

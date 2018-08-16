@@ -25,7 +25,7 @@
 			<table class="cabTable2">
 				<tr>
 					<th><spring:message code="ezCabinet.t32"/></th>
-					<th><spring:message code="ezCabinet.t33"/></th>
+					<th><spring:message code="ezCabinet.t151"/></th>
 				</tr>
 				
 				<c:forEach items="${modules}" var="module">
@@ -46,16 +46,16 @@
 							</c:choose>
 						</td>
 						<td>
-							<input type="radio" role="on"  name="${module.moduleType}" ${module.activeStatus == 1 ? 'checked' : ''}><label><spring:message code="ezCabinet.t34"/></label>
-							<input type="radio" role="off" name="${module.moduleType}" ${module.activeStatus != 1 ? 'checked' : ''}><label><spring:message code="ezCabinet.t35"/></label>
+							<input type="radio" role="on"  name="${module.moduleType}" ${module.activeStatus == 1 ? 'checked' : ''}><label><spring:message code="ezCabinet.t147"/></label>
+							<input type="radio" role="off" name="${module.moduleType}" ${module.activeStatus != 1 ? 'checked' : ''}><label><spring:message code="ezCabinet.t148"/></label>
 						</td>
 					</tr>
 				</c:forEach>
 			</table>
 			<br>
 			<div class="cabBttnDiv">
-				<a class="imgbtn"><span><spring:message code='ezCabinet.t73'/></span></a>
-				<a class="imgbtn"><span><spring:message code='ezCabinet.t74'/></span></a>
+				<a class="imgbtn"><span><spring:message code='ezCabinet.t149'/></span></a>
+				<a class="imgbtn"><span><spring:message code='ezCabinet.t150'/></span></a>
 				<a class="imgbtn"><span><spring:message code='ezCabinet.t14'/></span></a>
 				<a class="imgbtn"><span><spring:message code='ezCabinet.t15'/></span></a>
 			</div>

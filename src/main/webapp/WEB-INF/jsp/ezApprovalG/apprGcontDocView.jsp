@@ -794,7 +794,7 @@
 		          <li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
 				  </c:if>
 				  <c:if test="${useCabinet == 'YES'}">
-						<li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+						<li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 		          </c:if>
 		        </ul>
 		      </div>

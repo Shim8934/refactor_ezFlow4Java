@@ -1604,7 +1604,7 @@
 		                <li id="btnHelper" style="display:none"><span  onClick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t158'/></span></li>
 		                <li id="btnSaveServer" <c:if test ="${approvalFlag == 'S'}">style="display:none"</c:if>><span onClick="return btnSaveServer_onclick()" ><spring:message code='ezApprovalG.t4000'/></span></li>
 						<c:if test="${useCabinet == 'YES'}">
-							<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+							<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 						</c:if>
 		            </ul>
 		        </div>        

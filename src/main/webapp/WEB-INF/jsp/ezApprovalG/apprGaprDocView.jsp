@@ -648,7 +648,7 @@
 		          <li id="tbtncallback" style="display: none;"><span id="btncallback" onclick="return btncallback_onclick()"><spring:message code='ezApprovalG.t66'/></span></li>
                   <li id="tbtnforcecallback" style="display: none;"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
 				  <c:if test="${useCabinet == 'YES'}">
-					<li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t01'/></span></li>
+					<li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
 				  </c:if>
 		        </ul>
 		      </div>
