@@ -209,6 +209,13 @@
 		  	return;
 		}
 		
+		// 대기에서 바로 지연으로 넘어가는 경우에도 realStartDate가 필요하기 때문에 status값을 바꾸기 전에 이 로직이 필요함
+		if (status === "P") {
+			if (!realStartDate) {
+				realStartDate = TimeToStr(new Date());
+			}
+		}
+		
 		//2. 종료일 < 현재일일 떄, 지연업무로 넘어갈 것이라는 confirm창 띄우기
 		if ((endDateComp < today) && nowStatus !== "L") {
 			var confCheck = confirm("<spring:message code='ezPMS.t93' />");
@@ -257,11 +264,6 @@
 			}
 		}
 		
-		if (status === "C" || status === "P") {
-			if (!realStartDate) {
-				realStartDate = TimeToStr(new Date());
-			}
-		}
 		//상태만 변경할 경우 처리.
 		if (nowStatus != "C" && status === "C") {
 			realEndDate = TimeToStr(new Date());			
