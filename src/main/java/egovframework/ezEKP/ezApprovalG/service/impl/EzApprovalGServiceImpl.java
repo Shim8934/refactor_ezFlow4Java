@@ -454,11 +454,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("</CELL>");
 			
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE><![CDATA[" + ezApprovalGAdminService.getEtcName("SA52", k.getKeepingPeriod(), primaryData, userInfo.getCompanyID(), userInfo.getTenantId()) + "]]></VALUE>");
+			resultXML.append("<VALUE><![CDATA[" + ezApprovalGAdminService.getEtcName("SA52", k.getKeepingPeriod(), primaryData, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId()) + "]]></VALUE>");
 			resultXML.append("</CELL>");
 			
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE><![CDATA[" + ezApprovalGAdminService.getEtcName("SA51", k.getItemSecurity(), primaryData, userInfo.getCompanyID(), userInfo.getTenantId()) + "]]></VALUE>");
+			resultXML.append("<VALUE><![CDATA[" + ezApprovalGAdminService.getEtcName("SA51", k.getItemSecurity(), primaryData, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId()) + "]]></VALUE>");
 			resultXML.append("</CELL>");
 			
 			resultXML.append("<CELL>");
@@ -2530,6 +2530,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_LANGTYPE", lang);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("approvalFlag", approvalFlag);
 		
 		List<ApprGLeftVO> apprGLeftVOlist = ezApprovalGDAO.getSecurityType(map); 
 		
@@ -16614,11 +16615,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				resultXML.append("</CELL>");
 				resultXML.append("<CELL>");
-				resultXML.append("<VALUE>" + ezApprovalGAdminService.getEtcName("SA52", makeListField(docXML.getElementsByTagName("KEEPINGPERIOD").item(k).getTextContent()), primaryData, companyID, tenantID) + "</VALUE>");
+				resultXML.append("<VALUE>" + ezApprovalGAdminService.getEtcName("SA52", makeListField(docXML.getElementsByTagName("KEEPINGPERIOD").item(k).getTextContent()), primaryData, strType, companyID, tenantID) + "</VALUE>");
 				resultXML.append("</CELL>");
 				
 				resultXML.append("<CELL>");
-				resultXML.append("<VALUE>" + ezApprovalGAdminService.getEtcName("SA51", makeListField(docXML.getElementsByTagName("ITEMSECURITY").item(k).getTextContent()), primaryData, companyID, tenantID) + "</VALUE>");
+				resultXML.append("<VALUE>" + ezApprovalGAdminService.getEtcName("SA51", makeListField(docXML.getElementsByTagName("ITEMSECURITY").item(k).getTextContent()), primaryData, strType, companyID, tenantID) + "</VALUE>");
 				resultXML.append("</CELL>");
 				
 				resultXML.append("<CELL>");
