@@ -2530,6 +2530,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_LANGTYPE", lang);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("approvalFlag", approvalFlag);
 		
 		List<ApprGLeftVO> apprGLeftVOlist = ezApprovalGDAO.getSecurityType(map); 
 		

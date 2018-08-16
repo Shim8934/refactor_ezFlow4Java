@@ -3407,7 +3407,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("tenantID", tenantID);
 		map.put("lang", lang);
 		
-		logger.debug("getEtcName started. code1=" + code1 + " primary=" + primary + "lang= " + lang + "companyID=" + companyID + "tenantID=" + tenantID);
+		logger.debug("getEtcName started. code1=" + code1 + " primary=" + primary + " lang=" + lang + "companyID=" + companyID + "tenantID=" + tenantID);
 		
 		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getCodeType(map);
 		
