@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code='ezResource.t9900013'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('ezResource.e2', 'msg')}" type="text/css" />
 		<style type="text/css">
 		
 		.content tr{
@@ -17,13 +17,13 @@
 		}
 
 		</style>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		  <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezResource/datepicker.htc_cross.js"></script>
-		<script type="text/javascript" src="/js/ezResource/composeappt_cross.js"></script>
-		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		  <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/datepicker.htc_cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/composeappt_cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezResource/Schedule_cross.js')}"></script>
 		<script type="text/javascript" >
 		 	var g_data = new Array();
 		 	//writerID trim

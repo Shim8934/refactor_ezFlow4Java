@@ -7,11 +7,11 @@
 <html>
 	<head>
 	    <title></title>
-	        <link href="<%=CommonUtil.addVer(application, "/css/previewmail.css")%>" rel="stylesheet" type="text/css">
-			<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
-	        <script language="JavaScript" src="<%=CommonUtil.addVer(application, "/js/ezEmail/js_cross/reademail.js")%>"></script>
-	        <script src="<%=CommonUtil.addVer(application, "/js/jquery/jquery-1.11.3.min.js")%>"></script>
-	    	<script language="javascript" type="text/javascript" src="<%=CommonUtil.addVer(application, "/js/XmlHttpRequest.js")%>"></script>
+	        <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
+			<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
+	        <script language="JavaScript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
+	        <script src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    	<script language="javascript" type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    	<script language="javascript" type="text/javascript">
 			    var g_rejectWord = "${rejectKeyWord}";
 			    var g_paramURL = "${url}";

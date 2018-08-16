@@ -4,7 +4,7 @@
 <html>
 	<head>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />	    
+	    <link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />	    
 		<style type="text/css">
 		  	.warningbox01 { width:500px; margin:0 auto; border:1px solid #dedede; background:#f8f8fa;}
 			.warningbox02 { width:430px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}

@@ -225,8 +225,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String extensionAttribute15 = request.getParameter("extensionAttribute15");
 		extensionAttribute15 = extensionAttribute15 != null ? extensionAttribute15 : "";		
 		String skipInitData = request.getParameter("skipInitData");
-		String operatorId = request.getParameter("operatorId") != null ? request.getParameter("operatorId") : "";
 		skipInitData = skipInitData != null ? skipInitData : "";
+		String operatorId = request.getParameter("operatorId");
+		operatorId = operatorId != null ? operatorId : "";
 		
 		logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",displayName=" + displayName
 				+ ",displayName2=" + displayName2 + ",mailId=" + mailId
@@ -245,12 +246,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		
 		logger.debug("domain=" + domain);
-		
-		String companyId = userInfo.getCompanyID();
-        
+		        
 		String result = "";
 		
-		String propertyName = "operatorMailId";
+		String operatorMailIdPropertyName = "operatorMailId";
 		
 		// 회사정보를 수정하는 경우
         if (parentCn == null || parentCn.isEmpty()) {
@@ -265,17 +264,17 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         	
         	ezOrganAdminService.updateDBData_company(cn, displayName, displayName2, mailAddr, tenantID);
         	
-        	if (operatorId != null && !operatorId.equals("")) {
-				String operatorMailId = ezCommonService.getCompanyConfig(tenantID, cn, propertyName);
-				if (!operatorMailId.equals("")) {
-					ezCommonService.updateCompanyConfig(tenantID, companyId, propertyName, operatorId);
+			String existingOperatorMailId = ezCommonService.getCompanyConfig(tenantID, cn, operatorMailIdPropertyName);
+        	
+        	if (!operatorId.equals("")) {				
+				if (!existingOperatorMailId.equals("")) {
+					ezCommonService.updateCompanyConfig(tenantID, cn, operatorMailIdPropertyName, operatorId);
 				} else {
-					ezCommonService.insertCompanyConfig(tenantID, companyId, propertyName, operatorId);
+					ezCommonService.insertCompanyConfig(tenantID, cn, operatorMailIdPropertyName, operatorId);
 				}
         	} else {
-        		String operatorMailId = ezCommonService.getCompanyConfig(tenantID, cn, propertyName);
-        		if (!operatorMailId.equals("")) {
-        			ezCommonService.deleteCompanyConfig(tenantID, companyId, propertyName);
+        		if (!existingOperatorMailId.equals("")) {
+        			ezCommonService.deleteCompanyConfig(tenantID, cn, operatorMailIdPropertyName);
         		}
         	}
         // 새로운 회사를 생성하는 경우	
@@ -328,9 +327,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						try {
 							ezOrganAdminService.insertDBData_company(cn, displayName, displayName2,
 									mailAddr, parentCn, ldapPath, extensionAttribute15, skipInitData, tenantID, userInfo);
+							
 							if (!operatorId.equals("")) {
-								ezCommonService.insertCompanyConfig(tenantID, companyId, propertyName, operatorId);
+								ezCommonService.insertCompanyConfig(tenantID, cn, operatorMailIdPropertyName, operatorId);
 							} 
+							
 							result = "OK";
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -339,10 +340,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 							ezEmailUserAdminService.removeGroup(mailAddr);
 							result = "EMAIL_ERROR";
-						}
-						
-						
-									
+						}									
 					} else {
 					    ezEmailUserAdminService.removeGroup(mailAddr);
 						result = "EMAIL_ERROR";

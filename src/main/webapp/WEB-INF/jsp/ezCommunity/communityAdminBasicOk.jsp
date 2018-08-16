@@ -7,7 +7,7 @@
 	<head>
 		<title>Insert title here</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 
 		<script type="text/javascript">
 			alert("<spring:message code = 'ezCommunity.t462' />");
