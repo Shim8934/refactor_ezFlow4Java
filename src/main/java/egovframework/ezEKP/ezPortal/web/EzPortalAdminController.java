@@ -1101,6 +1101,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		String PrimaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		String uID = "";
 		String menuIndex = "1";
 		String mode = "edit";
@@ -1148,7 +1149,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		//portletCategoryXML.replace("포틀릿", "portlet").replace("이미지", "Image").replace("게시판", "Board");
 		
 		if (mode.equals("new")) {
-			uID = ezPortalAdminService.createNewPortlet(userInfo.getCompanyID(), userInfo.getTenantId());
+			uID = ezPortalAdminService.createNewPortlet(userInfo.getCompanyID(), userInfo.getTenantId(), PrimaryLang);
 			
 			if (uID == null || uID.equals("")) {
 				resp.getWriter().write(egovMessageSource.getMessage("ezPortal.t175", locale));
