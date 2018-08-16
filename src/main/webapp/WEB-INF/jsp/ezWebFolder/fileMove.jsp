@@ -205,7 +205,6 @@
 					dataType: "JSON",
 					async: true,
 					success: function(data) {
-<<<<<<< HEAD
 						var code = data.code;
 						
 						switch(code) {
@@ -224,11 +223,6 @@
 								alert("<spring:message code='ezWebFolder.t300' />");
 								break;
 						}
-=======
-						var result = data.subTree;
-						displaySubTree(result, obj.parentElement, Number(level) + 1);
-						arrSubFolder.push(uniqueId);
->>>>>>> origin/master
 					},
 					error: function (xhr, status, e){
 						alert("<spring:message code='ezWebFolder.t134'/>");
@@ -378,7 +372,7 @@
 	</h1>
 	<div id="close">
         <ul>
-            <li><span id="btnClose" class="webfolderBttn" onClick="wClose();"></span></li>
+            <li><span id="btnClose" onClick="wClose();"></span></li>
         </ul>
     </div>
 	<div style="margin: 0px 10px; border: none; height: 30px; position: relative;">
