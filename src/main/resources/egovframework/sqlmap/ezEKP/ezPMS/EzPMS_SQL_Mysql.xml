@@ -2404,7 +2404,7 @@
 		<![CDATA[
 			UPDATE tbl_pms_item_list 
 			SET 
-				root_item_id = #rootItemId#,	upper_item_id = null,	item_level = 0
+				root_item_id = #rootItemId#,	upper_item_id = null,	item_level = 0, 	upper_doc_no_tree = null
 			WHERE 
 				item_id = #itemId#
 			AND

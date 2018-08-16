@@ -190,6 +190,8 @@
 			nowStatus : nowStatus
 		}
 		
+		console.log(overview);
+		
 		var response;
 		
 		if (status == "C" && nowStatus != "C") {

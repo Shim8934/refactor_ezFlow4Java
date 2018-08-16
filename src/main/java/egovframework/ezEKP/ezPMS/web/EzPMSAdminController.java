@@ -234,6 +234,7 @@ public class EzPMSAdminController {
 		jsonList.put("managerList", param.get("managerList"));
 		jsonList.put("participantList", param.get("participantList"));
 		jsonList.put("viewerList", param.get("viewerList"));
+		jsonList.put("overview", param.get("overview"));
 		
 		JSONObject result = commonUtil.getJsonFromRestApi(url, param, request, "put", jsonList);
 		String status = result.get("status").toString();
