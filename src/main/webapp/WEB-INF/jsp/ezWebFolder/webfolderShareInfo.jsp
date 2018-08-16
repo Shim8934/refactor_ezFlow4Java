@@ -113,7 +113,11 @@
 			}
 			
 			function show_personinfo(id) {
-				window.open("/ezCommon/showPersonInfo.do?id=" + id, "", "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+				var heigth = window.screen.availHeight;
+				var width  = window.screen.availWidth;
+				var left   = (width - 420) / 2;
+				var top    = (heigth - 500) / 2;
+				window.open("/ezCommon/showPersonInfo.do?id=" + id, "", "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 			}
 		</script>
 	</head>

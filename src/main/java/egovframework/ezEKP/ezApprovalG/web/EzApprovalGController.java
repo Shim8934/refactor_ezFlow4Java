@@ -4012,12 +4012,24 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 첨부파일정보 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/totalSaveFileInfo.do")
-	public String totalSaveFileInfo(HttpServletRequest request, Model model) throws Exception{
+	public String totalSaveFileInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("totalSaveFileInfo started.");
 		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String pass = "";
 		String docID = request.getParameter("docID");
 		String type = request.getParameter("type");
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
 		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		} else {
+			pass = "<RESULT>TRUE</RESULT>";
+		}
+		
+		model.addAttribute("pass", pass);
 		model.addAttribute("docID", docID);
 		model.addAttribute("type", type);
 		
