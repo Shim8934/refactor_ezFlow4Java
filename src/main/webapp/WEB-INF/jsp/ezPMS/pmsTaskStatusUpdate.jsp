@@ -379,9 +379,7 @@
 		if (projectStatus == "W" || projectStatus == "C" || projectStatus == "S" || projectStatus == "D" || nowStatus == "W" || nowStatus == "S") {
 			$("input[name='realProgress']").prop("readonly", true);
 		}
-		
-		debugger;
-		
+				
 		var planStartDate = taskDetails.planStartDate;
 		var planEndDate = taskDetails.planEndDate;
 		var realStartDate = taskDetails.realStartDate;
