@@ -30,6 +30,7 @@
 		getTime();
 		getMailLogList(1, searchStartTime, searchEndTime);
 		makePageSelPage();
+		windowResize();
 	}
 
 	//**/ 검색값 입력 후 엔터키 입력 시 검색 호출
@@ -408,6 +409,18 @@
     	getMailLogList(pageNo, searchStartTime, searchEndTime);
     }
 
+    $(window).on("resize", function(){
+        windowResize();
+    });
+    
+    function windowResize() {
+    	var height = document.documentElement.clientHeight - 175 - document.getElementById("mainmenu").clientHeight;
+    	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+    		height = height - 30;
+    	}
+    	document.getElementById("contentlist").style.height = height + "px";
+    	document.getElementById("contentlist").style.overflow = "auto";
+    }
 </script>
 </head>
 <body class="mainbody">
@@ -456,20 +469,23 @@
 			<td width="98%" style="font-weight: bold; color: gray;">▒ ${mailLogKeepPeriodMessage}</td>
 		</tr>
 	</table>
-	<table class="mainlist" style="width:100%;">
-		<thead>
-			<tr>
-				<th width='12%'><spring:message code='ezStatistics.kyj10'/></th>
-				<th width='8%'><spring:message code='ezStatistics.t83'/></th>
-				<th width='15%'><spring:message code='ezStatistics.t1054'/> (<spring:message code='ezStatistics.t1055'/>)</th>
-				<th width='15%'><spring:message code='ezStatistics.t1053'/> (<spring:message code='ezStatistics.t1055'/>)</th>
-				<th width='17%'><spring:message code='ezStatistics.t1056'/></th>
-				<th width='15%'><spring:message code='ezStatistics.t1057'/></th>
-				<th width='5%'><spring:message code='ezStatistics.t1058'/></th>
-			</tr>
-		</thead>
-		<tbody id="mailLogListBody"></tbody>
-	</table>
+	
+	<div id="contentlist" style="width: 100%; overflow: auto;">
+		<table class="mainlist" style="width:100%;">
+			<thead>
+				<tr>
+					<th width='12%'><spring:message code='ezStatistics.kyj10'/></th>
+					<th width='8%'><spring:message code='ezStatistics.t83'/></th>
+					<th width='15%'><spring:message code='ezStatistics.t1054'/> (<spring:message code='ezStatistics.t1055'/>)</th>
+					<th width='15%'><spring:message code='ezStatistics.t1053'/> (<spring:message code='ezStatistics.t1055'/>)</th>
+					<th width='17%'><spring:message code='ezStatistics.t1056'/></th>
+					<th width='15%'><spring:message code='ezStatistics.t1057'/></th>
+					<th width='5%'><spring:message code='ezStatistics.t1058'/></th>
+				</tr>
+			</thead>
+			<tbody id="mailLogListBody"></tbody>
+		</table>
+	</div>
 	<div id="tblPageRayer" style="padding-top: 20px;"></div>
 	<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
 </body>
