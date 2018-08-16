@@ -217,7 +217,7 @@
 		}
 		
 		//2. 종료일 < 현재일일 떄, 지연업무로 넘어갈 것이라는 confirm창 띄우기
-		if ((endDateComp < today) && nowStatus !== "L") {
+		if ((endDateComp < today) && nowStatus !== "L" && status === "P") {
 			var confCheck = confirm("<spring:message code='ezPMS.t93' />");
 			 
 			if (confCheck != true) {
