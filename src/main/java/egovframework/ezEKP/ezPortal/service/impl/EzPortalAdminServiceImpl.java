@@ -1891,7 +1891,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		return result;
 	}
 	
-	public String createNewPortlet (String pCompanyID, int tenantID) {
+	public String createNewPortlet (String pCompanyID, int tenantID, String primaryLang) {
 		logger.debug("createNewPortlet started");
 
 		String newUID = UUID.randomUUID().toString();
@@ -1901,6 +1901,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("v_pNEWID", newUID);
 		map.put("v_pCOMPANYID", pCompanyID);
 		map.put("tenantID", tenantID);
+		map.put("primaryLang", primaryLang);
 		
 		ezPortalAdminDAO.createNewPortlet(map);
 

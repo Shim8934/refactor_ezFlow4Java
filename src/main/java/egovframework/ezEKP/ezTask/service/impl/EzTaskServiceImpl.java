@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
+import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezTask.dao.EzTaskDAO;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
 import egovframework.ezEKP.ezTask.vo.TaskAttachVO;
@@ -644,7 +645,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 						break;
 						
 						case "1" : //매주
-							int weekcount = 6 - date_cal.get(Calendar.DAY_OF_WEEK) - 1;
+							/*int weekcount = 6 - date_cal.get(Calendar.DAY_OF_WEEK) - 1;
 							
 							while (true) {
 								if (date_cal.compareTo(eDate_cal) > 0) break;
@@ -678,7 +679,70 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 									date_cal.add(Calendar.DATE, 1);
 									weekcount--;
 								}
-							}						
+							}						*/
+							
+							//2018-08-16 구해안 주간반복일정 관련 오류 수정
+							List<Integer> wDay = new ArrayList<Integer>();
+							if(info[4] != null && !info[4].trim().equals("")){
+								char[] yoilArr = new char[info[4].length()]; // 스트링을 담을 배열
+
+								for (int j = 0; j < info[4].length(); j++) {
+									yoilArr[j] = info[4].charAt(j);					
+								}
+								int yoilNum;
+								for (char yoil : yoilArr) {
+									
+									yoilNum = yoil - 48;
+									wDay.add(yoilNum); 
+								}
+							}
+							count=1;
+							for (Integer iday : wDay) {
+								logger.debug(count+"wDay에 담긴 요일 : " + iday);								
+							}
+							maxCount += 1;
+							while (true) {
+								if (date_cal.compareTo(eDate_cal) > 0) break;
+								if (maxCount == count) break;
+								
+									String calcuDate = nsdf.format(date_cal.getTime());
+									
+									//if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {	
+									if(info[0].equals("0")){
+											for (Integer yoil : wDay) {
+												
+												date_cal.set(Calendar.DAY_OF_WEEK,yoil+1);
+												calcuDate = nsdf.format(date_cal.getTime());
+												if (!rList.contains(calcuDate)) {
+													logger.debug("vo.getStartDate() : " + vo.getStartDate());
+													logger.debug("endDate : " + endDate);
+													if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0 && date_cal.getTime().compareTo(sdf.parse(vo.getEndDate())) <= 0) {
+													TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
+													resultList.add(rVo);
+												}
+												
+											}
+											date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
+										}
+									}else{
+										//row 추가
+										for (Integer yoil : wDay) {
+											date_cal.set(Calendar.DAY_OF_WEEK,yoil+1);
+											calcuDate = nsdf.format(date_cal.getTime());
+											if (!rList.contains(calcuDate)) {
+												if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0){
+													TaskInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
+													resultList.add(rVo);
+												}
+											}
+											date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
+										}
+									}
+								//}								
+							
+								date_cal.add(Calendar.DATE, (Integer.parseInt(info[3])) * 7);
+								count++;
+							}
 						break;	
 						
 						case "2" : // 매월
@@ -1337,7 +1401,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			break;
 			
 			case "1" : //매주
-				int weekcount = 6 - date_cal.get(Calendar.DAY_OF_WEEK) - 1;
+				/*int weekcount = 6 - date_cal.get(Calendar.DAY_OF_WEEK) - 1;
 				
 				while (true) {
 					if (date_cal.compareTo(eDate_cal) > 0) break;
@@ -1372,7 +1436,58 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 					} else {
 						date_cal.add(Calendar.DATE, 1);
 						weekcount--;
+					}*/
+				
+				//2018-08-16 구해안 주간반복일정 관련 오류 수정
+				
+				List<Integer> wDay = new ArrayList<Integer>();
+				if(info[4] != null && !info[4].trim().equals("")){
+					char[] yoilArr = new char[info[4].length()]; // 스트링을 담을 배열
+
+					for (int j = 0; j < info[4].length(); j++) {
+						yoilArr[j] = info[4].charAt(j);					
 					}
+					int yoilNum;
+					for (char yoil : yoilArr) {
+						
+						yoilNum = yoil - 48;
+						wDay.add(yoilNum); 
+					}
+				}
+				count=1;
+				maxCount += 1;
+				while (true) {
+					if (date_cal.compareTo(eDate_cal) > 0) break;
+					if (maxCount == count) break;
+					
+					String calcuDate = nsdf.format(date_cal.getTime());
+					
+					if(info[0].equals("0")){
+						for (Integer yoil : wDay) {
+							date_cal.set(Calendar.DAY_OF_WEEK,yoil+1);
+							calcuDate = nsdf.format(date_cal.getTime());
+							if (!rList.contains(calcuDate)) {
+								if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0 && date_cal.getTime().compareTo(sdf.parse(vo.getEndDate())) <= 0) {
+									mapDateAndRepeatCount.put(calcuDate, count);
+								}
+							
+						}
+						date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
+						}
+					}else{								
+						for (Integer yoil : wDay) {
+							date_cal.set(Calendar.DAY_OF_WEEK,yoil+1);
+							calcuDate = nsdf.format(date_cal.getTime());
+								if (!rList.contains(calcuDate)) {
+									if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0 ){
+										mapDateAndRepeatCount.put(calcuDate, count);
+									}
+								}
+						date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
+						}
+					}
+					date_cal.add(Calendar.DATE, (Integer.parseInt(info[3])) * 7);
+					count++;
 				}						
 			break;	
 			

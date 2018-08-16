@@ -149,6 +149,7 @@ INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`D
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'containLow','NO','YES: 하위부서 포함하여 카운트표시 default NO');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useMailReceiveScreen','NO','수신확인 화면 설정 (YES:사용)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'useLadder','YES','사다리게임 모듈 사용여부(YES, NO)');
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0, 'useReceiveDocNo', 'YES', '접수 시 채번방식설정여부 (YES : 접수/편철/전결 시 채번. NO : 최종결재/편철/전결 시 채번)');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'viewCompany','0','전자결재 리스트에 회사명 표출 여부 1:보여줌 그외:안보여줌');
 
 INSERT INTO `tbl_deptmaster` (`TENANT_ID`,`CN`,`DISPLAYNAME`,`DISPLAYNAME2`,`USEFLAG`,`MAIL`,`COMPNM2`,`DEPTLEVEL`,`DEPT_CD_PATH`,`DEPT_NM_PATH`,`EXTENSIONATTRIBUTE1`,`EXTENSIONATTRIBUTE2`,`EXTENSIONATTRIBUTE3`,`EXTENSIONATTRIBUTE4`,`EXTENSIONATTRIBUTE5`,`EXTENSIONATTRIBUTE6`,`EXTENSIONATTRIBUTE7`,`EXTENSIONATTRIBUTE8`,`EXTENSIONATTRIBUTE9`,`EXTENSIONATTRIBUTE10`,`EXTENSIONATTRIBUTE11`,`EXTENSIONATTRIBUTE12`,`EXTENSIONATTRIBUTE13`,`EXTENSIONATTRIBUTE14`,`EXTENSIONATTRIBUTE15`,`ADFLAG`,`ADSPATH`,`UPDATEDT`) VALUES (0,'Top','조직도','OrganizationChart',NULL,'Top@jtest.kaoni.com','OrganizationChart','1','Top','조직도',NULL,'Top','조직도',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Y','CN=Top,OU=조직도,OU=TopGroup,DC=jtest,DC=kaoni,DC=com','2017-01-06 00:00:00');
@@ -159,7 +160,6 @@ INSERT INTO `tbl_usermaster` (`TENANT_ID`,`CN`,`DISPLAYNAME`,`DISPLAYNAME2`,`MAI
 INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, TreeviewNum, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, 0);
 --INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, TreeviewNum, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, 0);
 
-<<<<<<< HEAD
 --INSERT INTO TBL_Board_BoardInfo (BoardID, BoardName, BoardName2, TreeViewOrder, BoardLevel, ParentBoardID, BoardDescription, ItemExpires, AttachsizeLimit, ReplyNotify, BoardGroupID, AlertPostItem, Gubun, URL, DeleteAfter, BoardColor, BoardNo, Portlet, tenant_ID) VALUES ('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', 0);
 INSERT INTO TBL_Board_BoardInfo (BoardID, BoardName, BoardName2, TreeViewOrder, BoardLevel, ParentBoardID, BoardDescription, ItemExpires, AttachsizeLimit, ReplyNotify, BoardGroupID, AlertPostItem, Gubun, URL, DeleteAfter, BoardColor, BoardNo, Portlet, tenant_ID) VALUES ('{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '新着', 'New BoardItem', -1, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', 0);
 

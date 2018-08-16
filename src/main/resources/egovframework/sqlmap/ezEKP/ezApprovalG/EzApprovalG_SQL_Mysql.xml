@@ -3818,7 +3818,12 @@
 		   	FROM 
 		   		TBL_CODELIST 
 		   	WHERE 
-		   		CODE1 = 'A51' 
+		   	<isEqual property="approvalFlag" compareValue="G">
+   				CODE1 = 'A51' 
+			</isEqual>
+			<isEqual property="approvalFlag" compareValue="S">
+	   			CODE1 = 'SA51' 
+			</isEqual>
 		   	AND  
 		   		ISUSE = 1
 		   	AND

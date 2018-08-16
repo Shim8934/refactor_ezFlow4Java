@@ -415,59 +415,6 @@ public class CommonUtil {
 		}		
 	}
 	
-	public static String addVer(ServletContext application, String filePath) {		
-		File fileObj = new File(application.getRealPath(filePath));
-		
-		if (fileObj.exists()) {
-			Date lastDate = new Date(fileObj.lastModified());
-			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-			String version = sdf.format(lastDate);
-			
-			filePath += "?v=" + version;
-		}
-		
-		return filePath;
-	}
-	
-	public static String addVer(ServletContext application, HttpServletRequest request, String filePath) {
-		String springMessage = "<spring:message";
-		int startOfSpringMessage = filePath.indexOf(springMessage);
-		
-		if (startOfSpringMessage > -1) {
-			String code = "code='";
-			int startOfCode = filePath.indexOf(code, startOfSpringMessage + springMessage.length());
-			
-			if (startOfCode > -1) {
-				int endOfCode = filePath.indexOf("'", startOfCode + code.length());
-				
-				if (endOfCode > -1) {
-					String codeValue = filePath.substring(startOfCode + code.length(), endOfCode);					
-					String msg = commonUtilInstance.egovMessageSource.getMessage(codeValue, new CookieLocaleResolver().resolveLocale(request));					
-					int endOfSpringMessage = filePath.indexOf(">", endOfCode + 1); 
-					
-					if (endOfSpringMessage > -1) {
-						filePath = filePath.substring(0, startOfSpringMessage) + msg
-									+ filePath.substring(endOfSpringMessage + 1);
-					}
-				}
-			}
-		}
-		
-		File fileObj = new File(application.getRealPath(filePath));
-		
-		if (fileObj.exists()) {
-			Date lastDate = new Date(fileObj.lastModified());
-			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-			String version = sdf.format(lastDate);
-			
-			filePath += "?v=" + version;
-		}
-		
-		return filePath;
-	}
-	
 	public boolean isLoginCookieExists(HttpServletRequest request, HttpServletResponse response) {
         boolean isCookie = false;     
         Cookie[] cookies = request.getCookies();

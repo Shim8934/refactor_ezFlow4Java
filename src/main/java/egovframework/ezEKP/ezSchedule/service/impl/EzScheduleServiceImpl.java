@@ -323,10 +323,12 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 											for (Integer yoil : wDay) {
 												date_cal.set(Calendar.DAY_OF_WEEK,yoil+1);
 												calcuDate = nsdf.format(date_cal.getTime());
-													if (!rList.contains(calcuDate)) {
-													ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
-													resultList.add(rVo);
+												if (!rList.contains(calcuDate)) {
+													if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0){
+														ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
+														resultList.add(rVo);
 													}
+												}
 											date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
 											}
 									}
