@@ -32,7 +32,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.js')}"></script>
 		<!-- <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script> -->
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 		
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    window.onload = window_onload;

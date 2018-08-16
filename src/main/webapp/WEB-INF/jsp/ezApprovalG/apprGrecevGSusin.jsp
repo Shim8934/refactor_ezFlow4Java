@@ -26,7 +26,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var pWriterDeptID;
 		    var pDocID = '${docID}';

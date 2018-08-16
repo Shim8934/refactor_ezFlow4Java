@@ -19,7 +19,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrl_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/Lineinfo.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Lineinfo.js')}" type="text/javascript"></script>
 		
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();

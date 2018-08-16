@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getFormCont_Cross.js')}"></script>
-		<script type="text/javascript" src="/js/showModalDialogCallee.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/showModalDialogCallee.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var xmlhttp = createXMLHttpRequest();	
 		    var xmldoc = createXmlDom();

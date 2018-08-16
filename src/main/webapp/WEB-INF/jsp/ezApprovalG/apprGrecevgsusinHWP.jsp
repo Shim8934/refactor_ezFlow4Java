@@ -7,24 +7,24 @@
 	<head>
 		<title><spring:message code='ezApprovalG.t1308'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
-		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/conn_HWP.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/Recvdocnumber_HWP.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/recevG_Susin_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezRecevG_Susin_HWP.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/appandbody.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezRecevG_HWP.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
-		<script type="text/javascript" src="/js/escapenew.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/CheckLines_Cross.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/AutoAprLine_Cross.js"></script>
-		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
+		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_HWP.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Recvdocnumber_HWP.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/recevG_Susin_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezRecevG_Susin_HWP.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezRecevG_HWP.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/getDocAttach_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/AutoAprLine_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 		<script type="text/javascript">
 		    var pWriterDeptID;
 		    var pDocID = "${docID}";

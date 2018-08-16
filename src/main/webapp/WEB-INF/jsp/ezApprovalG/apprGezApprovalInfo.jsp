@@ -17,29 +17,29 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/TabMenu.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/TreeView.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/TreeViewCtrl_Cross.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/ListView_list.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/AprlineG.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/AprlineV.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/TempLineinfo.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/LineinfoIni.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/Lineinfo.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/SelectSubTitles.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/Receptinfo.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/TempReceptinfo.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/TempCirculationInfo.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/Cabinetinfo.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/CabCategoryInfo.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/Docinfo.js" type="text/javascript')}"></script>
-	    <script src="${util.addVer('/js/ezApprovalG/Draftinfo.js" type="text/javascript')}"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TabMenu.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TreeView.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TreeViewCtrl_Cross.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/ListView_list.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/AprlineG.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/AprlineV.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TempLineinfo.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/LineinfoIni.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Lineinfo.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/SelectSubTitles.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Receptinfo.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TempReceptinfo.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/TempCirculationInfo.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Cabinetinfo.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/CabCategoryInfo.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/CabRoleInfo_Cross.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Docinfo.js')}" type="text/javascript"></script>
+	    <script src="${util.addVer('/js/ezApprovalG/Draftinfo.js')}" type="text/javascript"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
-	    <script src="${util.addVer('/js/Common.js" type="text/javascript')}"></script>
-	    <script type="text/javascript" src="/js/ezApprovalG/nonElecRec.js"></script>
+	    <script src="${util.addVer('/js/Common.js')}" type="text/javascript"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 	    <style type="text/css">
 	    	.h2_dot {
 	    		background: url(/images/kr/left/left_dot02.gif) no-repeat 0px 70%;
