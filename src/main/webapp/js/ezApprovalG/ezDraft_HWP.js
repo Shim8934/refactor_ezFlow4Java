@@ -492,7 +492,7 @@ function SendDraftMappingSign(ret)
 			{
 				HwpCtrl.SetFieldText(psigncell, "");	
 				HwpCtrl.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
-				HwpCtrl.AppendFieldText(psigncell, strLang7 + OpinionText, true);
+				HwpCtrl.AppendFieldText(psigncell, strLang7 + "\15" + OpinionText, true);
 			  	
 			  	signInfo[signCnt] = psigncell;
 			  	
@@ -508,7 +508,7 @@ function SendDraftMappingSign(ret)
 			{
 				HwpCtrl.SetFieldText(psigncell, arr_userinfo[2]);	
 				
-				HwpCtrl.AppendFieldText(psigncell, strLang7 + OpinionText, true);
+				HwpCtrl.AppendFieldText(psigncell, strLang7 + "\15" + OpinionText, true);
 		  		
 		  		signInfo[signCnt] = psigncell;
 		  		
