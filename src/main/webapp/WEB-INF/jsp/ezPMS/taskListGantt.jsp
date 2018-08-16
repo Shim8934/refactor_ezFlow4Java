@@ -826,7 +826,7 @@
 	   			  row.find("[name=progress]").val(task.progress).prop("readonly",!canWrite || task.progressByWorklog==true).css({"text-align":"right"});
 	   			  row.find("[name=weight]").prop("readonly", task.type !== "t" || projectDetails.weightInput === 0).css({"text-align":"right"});
 	   			  row.find("[name=planProgress]").prop("readonly", true).css({"text-align":"right"});
-	   			  row.find("[name=realProgress]").prop("readonly", task.type !== "t" || task.statusPMS === "W").css({"text-align":"right"});
+	   			  row.find("[name=realProgress]").prop("readonly", task.type !== "t" || task.statusPMS === "W" || task.statusPMS === "S").css({"text-align":"right"});
 	   			  row.find("[name=startIsMilestone]").prop("checked", task.startIsMilestone);
 	   			  var startReadonly = !canWrite || !(task.canWrite  || this.master.permissions.canWrite) || task.type !== "t" || task.statusPMS === "C";
 	   			  row.find("[name=start]").val(new Date(task.start).format()).updateOldValue().prop("readonly", startReadonly); // called on dates only because for other field is called on focus event
