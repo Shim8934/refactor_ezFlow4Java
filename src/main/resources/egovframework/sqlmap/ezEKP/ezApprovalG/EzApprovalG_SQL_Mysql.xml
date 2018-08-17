@@ -9859,6 +9859,17 @@
 	    AND
             COMPANYID = #companyID#
 	</select>
+	
+   	<select id="EzApprovalG.getDeptSymbol" parameterClass="Map" resultClass="String">
+   		SELECT
+   			EXTENSIONATTRIBUTE6
+   		FROM
+   			TBL_DEPTMASTER
+   		WHERE
+   			CN = #deptID#
+   		AND
+   			TENANT_ID = #tenantID#
+   	</select>
 <!-- 	<procedure id="EzApprovalG.getLastOpinionContent" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_GETLASTOPINIONCONTENT(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
