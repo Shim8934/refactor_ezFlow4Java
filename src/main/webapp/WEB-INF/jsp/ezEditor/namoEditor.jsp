@@ -277,10 +277,55 @@
             return getNodeText(XmlBodyDATA);
         }
 		
+        function SetEditorTextContent(data) {
+            try {
+            	data = data.replace(/&/gi, "&amp;");
+            	data = data.replace(/</gi, "&lt;");
+            	data = data.replace(/>/gi, "&gt;");
+ 	            
+ 	    		var line = data.split("\n");
+ 	            var textData = "";
+ 	            var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
+ 	            
+ 	            for (var i = 0; i < line.length; i++) {
+ 	            	if (line[i].trim() === "") {
+ 	            		line[i] = "&nbsp;";
+ 	            	}
+ 	            	
+	            	textData += "<p " + defaultFontAndSize + ">" + line[i] + "</p>";
+ 	            }
+            	
+ 	           CrossEditor.SetBodyValue(textData);
+            } catch (e) { }
+        }
+        
         //메일(plain text)에서 사용
         function GetEditorTextContent() {
             try {
-                return CrossEditor.GetTextValue();
+        	    var resultStr = CrossEditor.GetBodyValue("XHTML");
+        	    
+        	    resultStr = resultStr.replace(/\r\n/gi, "");
+        	    resultStr = resultStr.replace(/\n/gi, "");
+        	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
+        	    resultStr = resultStr.replace(/<p><br \/>/gi, "\n");
+        	    resultStr = resultStr.replace(/<p>/gi, "\n");
+        	    resultStr = resultStr.replace(/<br\/>/gi, "\n");
+        	    resultStr = resultStr.replace(/<br \/>/gi, "\n");
+        	    resultStr = resultStr.replace(/<br>/gi, "\n");
+        	    resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
+        	    resultStr = resultStr.replace(/<hr>/gi, "\n----------------------------------------------------------------------------------------------------");
+        	    resultStr = resultStr.replace(/<.*?".*?".*?>/gi, "");
+        	    resultStr = resultStr.replace(/<.*?'.*?'.*?>/gi, "");
+        	    resultStr = resultStr.replace(/<.*?>/gi, "");
+        	    resultStr = resultStr.replace(/&nbsp;/gi, " ");
+        	    resultStr = resultStr.replace(/&lt;/gi, "<");
+        	    resultStr = resultStr.replace(/&gt;/gi, ">");
+        	    resultStr = resultStr.replace(/&quot;/gi, "\"");
+        	    resultStr = resultStr.replace(/&#39;/gi, "'");
+        	    resultStr = resultStr.replace(/&amp;/gi, "&");
+        	    resultStr = resultStr.replace(/P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}/gi, "");
+				
+        	    return  resultStr;
             } catch (e) { return ""; }
         }
 
