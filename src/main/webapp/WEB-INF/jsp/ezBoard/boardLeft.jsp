@@ -776,6 +776,11 @@
 		    		window.parent.frames["right"].location.href = "/ezBoard/boardSearchView.do";
 				}
 		    }
+		    
+		    function folder_Manage() {
+	        	var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
+	            try { OpenWin.focus(); } catch (e) { }
+	        }
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
@@ -883,8 +888,14 @@
 			</div>
 			</c:if>
 			
-			<ul id="iconul">
-				<li><span style="width:100%;display:inline-block;" id="APPROVAL1" onclick="setPresentValue('결재할문서');convMain('1','')"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon">전체메모<span id="count1">(0)</span></span></li>
+			<ul>
+				<div class="tree" style="width:auto;height:100%;padding-bottom:20px;padding-left:10px;overflow-x:auto;overflow-y:auto;"> 
+					<div>
+						<img  border="0" src="/images/OrganTree_cross/plus.gif" style="width:18px;height:18px;cursor:pointer;">
+						<img src="/images/ImgIcon/icon_approval.gif" style="width:18px;height:19px;">
+						<span style="width:100%;height:21px; line-height:21px; font-size:12px;" onclick="memo_Func(1)">전체메모<span id="count1">(0)</span></span>
+					</div>
+				</div>
 				<!-- 이쪽에 리스트 뿌려주기-->
 				<h3 style="margin-top:12px;border-top:1px solid #eaeaea;border-bottom:1px solid #eaeaea;"><span id="MNGUSERCONT" onclick="MngUserOnclick()" style="width: 100%; display: inline-block;">메모함관리</span></h3>
 			</ul>
