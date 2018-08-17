@@ -709,6 +709,10 @@
 	                    }
 	                    setCabInfoInit();
 	                    
+	                    if (pIniGubun == "1") {
+		                    bool3 = true;
+	                    }
+	                    
 	                    bool6 = true;
 	                    break;
 	            }
