@@ -1036,7 +1036,9 @@
 					dataType : "json",
 					async : true,
 					url : "/ezAttitude/getHolidayList.do",
-					data : {},
+					data : {
+						isRest : "rest"
+					},
 					success : function(result) {
 						for (var i = 0; i < result.holidayList.length; i++) {
 							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
