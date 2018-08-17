@@ -20054,7 +20054,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<DEPTCODE>" + makeListField(docXML.getElementsByTagName("RECDEPTCODE").item(0).getTextContent()) + "</DEPTCODE>");
 		resultXML.append("<DEPTNAME>" + makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()) + "</DEPTNAME>");
 		
-		resultXML.append("<REGNO>" + getRecRegSNToName(makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()), makeListField(docXML.getElementsByTagName("RECREGSN").item(0).getTextContent()), makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()), tenantID) + "</REGNO>");
+		resultXML.append("<REGNO>" + getRecRegSNToName(makeListField(docXML.getElementsByTagName("RECDEPTNAME").item(0).getTextContent()), makeListField(docXML.getElementsByTagName("RECREGSN").item(0).getTextContent()), makeListField(docXML.getElementsByTagName("RECDEPTCODE").item(0).getTextContent()), tenantID) + "</REGNO>");
 		
 		resultXML.append("<APRMEMBER>" + makeListField(docXML.getElementsByTagName("APRMEMBERTITLE").item(0).getTextContent()) + "</APRMEMBER>");
 		resultXML.append("<DRAFTER>" + makeListField(docXML.getElementsByTagName("DRAFTERNAME").item(0).getTextContent()) + "</DRAFTER>");
