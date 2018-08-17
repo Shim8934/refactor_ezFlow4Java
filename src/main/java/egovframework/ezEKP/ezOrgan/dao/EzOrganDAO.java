@@ -242,6 +242,10 @@ public class EzOrganDAO extends EgovAbstractDAO {
 		return (String) select("EzOrganDAO.getLastLogin", map);
 	}
 	
+	public String getLoginIP(Map<String, Object> map) throws Exception{
+		return (String) select("EzOrganDAO.getLoginIP", map);
+	}
+	
     private int deptSubDeptCntForLocal(String deptID, int tenantId) throws Exception {
         logger.debug("deptSubDeptCntForLocal started. deptID=" + deptID + ",tenantId=" + tenantId);
         

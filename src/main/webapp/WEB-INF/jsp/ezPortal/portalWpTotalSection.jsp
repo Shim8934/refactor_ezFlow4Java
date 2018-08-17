@@ -21,7 +21,7 @@
     				<dl class="info_txt">
         				<dt>${companyNm }<br></dt>
 			 			<dd>${department} ${title}</dd>
-						<dd class="gray"><spring:message code="main.t00016" />  ${lastLogin }</dd>
+						<dd class="gray" title="${loginIP}"><spring:message code="main.t00016" />  ${lastLogin }</dd>
     				</dl>
     				<div class="bottom"></div>
     			</div>

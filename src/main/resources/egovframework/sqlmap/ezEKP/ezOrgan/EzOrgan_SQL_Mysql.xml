@@ -1607,6 +1607,24 @@
 	     ]]> 
 	</select>
 	
+	<select id="EzOrganDAO.getLoginIP" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				CONNECTIP 
+	      	FROM 
+	      		TBL_CONNECTION_INFO 
+	      	WHERE  
+	      		USERID = #userID#
+	      	AND
+	      		TENANT_ID = #tenantID#
+	      	ORDER BY
+	      		CONNECTTIME
+	      		DESC
+	      	LIMIT
+	      		1, 1	
+	     ]]> 
+	</select>
+	
 	<select id="EzOrganDAO.getDeptReceipterIDs" parameterClass="Map" resultClass="OrganUserVO">
 		SELECT 
 			CN , TENANT_ID tenantId
