@@ -25531,6 +25531,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
  			fop.flush();
  			fop.close();
  		} catch (Exception e) {
+ 			e.printStackTrace();
  		} 
        
          return strDocID + ".xml::" + strRtnXML.replace("\n", "").replace("\t", "");
@@ -25578,6 +25579,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			result = "OK";
 		} catch (Exception e) {
+			e.printStackTrace();
 			result = "FALSE";
 		} 
 		return result;
