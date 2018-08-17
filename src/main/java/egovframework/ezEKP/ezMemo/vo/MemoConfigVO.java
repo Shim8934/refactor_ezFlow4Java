@@ -4,7 +4,7 @@ public class MemoConfigVO {
 	
 
 	/** 사용자 아이디 */
-	private String userId;
+	private String user_id;
 	/** 폰트 사이즈 */
 	private int font_size;
 	/** 날짜 표시 여부 */
@@ -34,11 +34,11 @@ public class MemoConfigVO {
 	/** 테넌트 아이디*/
 	private int tenant_id;
 
-	public String getUserId() {
-		return userId;
+	public String getUser_id() {
+		return user_id;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
 	}
 	public int getFont_size() {
 		return font_size;

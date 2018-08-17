@@ -7,7 +7,7 @@ public class MemoVO {
 	/** 메모 내용*/
 	private String contents;
 	/** 사용자 아이디*/
-	private String userId;
+	private String user_id;
 	/** 메모 hide&show 플래그*/
 	private int display_flag;
 	/** 메모 삭제 플래그*/
@@ -43,10 +43,10 @@ public class MemoVO {
 		this.contents = contents;
 	}
 	public String getUserId() {
-		return userId;
+		return user_id;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUserId(String user_id) {
+		this.user_id = user_id;
 	}
 	public int getDisplay_flag() {
 		return display_flag;

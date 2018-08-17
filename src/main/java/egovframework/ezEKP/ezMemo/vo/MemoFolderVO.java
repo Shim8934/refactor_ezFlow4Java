@@ -7,7 +7,7 @@ public class MemoFolderVO {
 	/** 메모함 이름*/
 	private String folder_name;
 	/** 사용자 아이디*/
-	private String userId;
+	private String user_id;
 	/** 메모함 생성 날짜*/
 	private String reg_date;
 	/** 메모함 삭제 날짜*/
@@ -34,11 +34,11 @@ public class MemoFolderVO {
 	public void setFolder_name(String folder_name) {
 		this.folder_name = folder_name;
 	}
-	public String getUserId() {
-		return userId;
+	public String getUser_id() {
+		return user_id;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUserId(String user_id) {
+		this.user_id = user_id;
 	}
 	public String getReg_date() {
 		return reg_date;
