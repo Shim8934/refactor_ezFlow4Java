@@ -11,10 +11,12 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezMemo.c1', 'msg')}" type="text/css">
 		<link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<!-- data picker-->
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
@@ -98,6 +100,12 @@
 	        	$(this).children("img").css("visibility", "hidden");
 	        });
 
+			$("#memoList").draggable({
+	        	 containment: "#bodyFrame",
+	        	 stop:function(){
+	        			defaultPointer();		
+	        	}
+	        });
 			/* // 체크 박스 모두 해제
 			$("#uncheckAll").click(function() {
 				$("input[name=box]:checkbox").each(function() {
@@ -175,7 +183,7 @@
 		        pheight = pheight - 200;
 		        pwidth = pwidth - 127;
 		        
-		    	window.open("/ezMemo/memoDetailView.do", "",  "height=500px, width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top="+pheight+", left="+pwidth);
+		    	window.open("/ezMemo/memoRead.do", "",  "height=500px, width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top="+pheight+", left="+pwidth);
 		    });
 	        
 	        $(".individual-memo").mouseleave(function(){
@@ -269,9 +277,14 @@
 	        $("#Edatepicker").datepicker('setDate', "");
 	    }
 	    
+		// 새로고침
 		function refresh_onclick() {
 	        window.location.href = "/ezMemo/memoMain.do";
 	    }
+		
+		function onSelect_Option() {
+			alert($("#memoType").val());
+		}
 	</script>
 	<body class="mainbody" style="overflow: hidden;" marginwidth="0" marginheight="0">
 		<h1><spring:message code='ezMemo.t001'/><span id="mailBoxInfo"></span></h1>
@@ -286,7 +299,7 @@
 		        <li><span onClick=""><spring:message code='ezMemo.t0024'/></span></li>
 		        <li><span onClick="refresh_onclick()"><spring:message code='ezMemo.t0018'/></span></li> 
 		        <li>
-		        	<select id="memoType" style="height: 20px;" onchange="">
+		        	<select id="memoType" style="height: 20px;" onchange="onSelect_Option(this);">
                            <option value="0"><spring:message code='ezMemo.t0019'/></option>
                            <option value="1"><spring:message code='ezMemo.t0020'/></option>
                            <option value="2"><spring:message code='ezMemo.t0021'/></option>

@@ -123,12 +123,12 @@ public class EzMemoController {
 
 	}
 	
-	@RequestMapping(value = "/ezMemo/memoDetailView.do")
+	@RequestMapping(value = "/ezMemo/memoRead.do")
 	public String memoDetailView(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("memoDetailView started.");
+		logger.debug("memoRead started.");
 		
-		logger.debug("memoDetailView ended.");
-		return "ezMemo/memoDetailView";
+		logger.debug("memoRead ended.");
+		return "ezMemo/memoRead";
 
 	}
 }
