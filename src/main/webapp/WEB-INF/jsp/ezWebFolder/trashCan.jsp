@@ -59,8 +59,9 @@
         var tableView = new TableView();
 		
 		window.onresize = function () {
-			var reheight = document.documentElement.clientHeight - 170;
+			var reheight = document.documentElement.clientHeight - 210;
 			document.getElementById("dragDropArea").style.height = reheight + "px";
+			scroll();
 		};
 		
 		document.onselectstart = function() {return false;};
@@ -73,6 +74,7 @@
 		window.onload = function() {
 			hiddenPanel();
 			tableView.setTableId("tblFileList");
+			tableView.setTabledHeader("tblFileList1");
 			tableView.setTableType("deletedfile");
 			tableView.setSelectedClass("bnkWebFolder2");
 			tableView.setUnselectClass("bnkWebFolder");
@@ -206,12 +208,12 @@
 // 					alert("<spring:message code='ezWebFolder.t134'/>" + error);
 				}
 			})
-			
 		};
 		
 		function renderFileListElement(result) {
 			tableView.setDataSource(result);
 			tableView.renderTable();
+			scroll();
 		}
 		
 		function setStyles(elements, excutor) {
@@ -466,7 +468,31 @@
 			var openWin = window.open("/ezWebFolder/moveTrashCanManage.do?folderType=C&fileList=" + filesList.toString() + "&folderList=" + folderList.toString(), "", GetOpenWindowfeature(460, 490));
 			try { openWin.focus(); } catch (e) {}
 			   
-		    refreshView();
+		}
+		function scroll() {
+			var BoardList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
+			var BoardListDivHeight = document.getElementById("tblFileList").clientHeight;
+			
+			 if (BoardList_BODYHeight > BoardListDivHeight) {
+				if ($("#tblFileList1 tr th#forScroll").length > 0) {
+					$("#tblFileList1 tr th#forScroll").remove();
+				}
+			} else {
+				if ($("#tblFileList1 tr th#forScroll").length < 1) {
+					$("#tblFileList1 tr th#forScroll").remove();
+					$("#tblFileList1 tr").append("<th></th>");
+					
+						var lastTh = $("#tblFileList1 tr th").last();
+						lastTh.attr("id", "forScroll");
+						lastTh.css("width", "15px");
+						
+				}
+			}
+			 
+			/*var lastTh = $("#BoardList_TH th").last();
+			if (lastTh.attr("id") == null) {
+				lastTh.css("display", "none");
+			}*/
 		}
     </script>
 </head>
@@ -532,19 +558,28 @@
  	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id=""></div>
     <div style="width: 8px; height: 100%; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
     <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
-	<div id="dragDropArea" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="margin: 10px 0px;overflow:auto;">
-		<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileList">
-			<tr>
-				<th width="20px" ><input type="checkbox"></th>
-				<th headers="ft" style="text-align: center; width: 20px;"><spring:message code='ezWebFolder.t188'/></th>
-				<th headers="fn" style="width: 30%;"><spring:message code='ezWebFolder.t156'/></th>
-				<th headers="fs" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap; text-align: center; word-wrap: normal; width :6%;" ><spring:message code='ezWebFolder.t157'/></th>
-				<th headers="un" style="width: 7%"><spring:message code='ezWebFolder.t189'/></th>
-				<th headers="cd" style="width: 10%"><spring:message code='ezWebFolder.t190'/></th>
-				<th headers="dd" style="width: 10%"><spring:message code='ezWebFolder.t288'/></th>
-				<th              style="width: 25%"><spring:message code='ezWebFolder.t199'/></th>
-			</tr>
-		</table>
+    <div style="width:100%;"id ="tblFileList1_div">
+		<div style="margin:0px 0px 0px !important;min-width: 700px;" >
+			<table class="mainlist" style="width:100%"  id="tblFileList1">
+				<thead id ="BoardList_THEAD">
+					<tr>
+						<th class = "wfFilecheck"><input type="checkbox"></th>
+						<th headers="ft" class = "wfFileType" style="text-align: center; "><spring:message code='ezWebFolder.t188'/></th>
+						<th headers="fn" class = "wfFileName" ><spring:message code='ezWebFolder.t156'/></th>
+						<th headers="fs" class = "wfFileSize" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap; text-align: center; word-wrap: normal;" ><spring:message code='ezWebFolder.t157'/></th>
+						<th headers="un" class = "wfFileCreator" ><spring:message code='ezWebFolder.t189'/></th>
+						<th headers="cd" class = "wfFileFavoriteDate" ><spring:message code='ezWebFolder.t190'/></th>
+						<th headers="dd" class = "wfFileFavoriteDate" ><spring:message code='ezWebFolder.t288'/></th>
+						<th              class = "wfFilePath"><spring:message code='ezWebFolder.t199'/></th>
+					</tr>
+				</thead>
+			</table>
+			<div id="dragDropArea"  style="overflow-y:auto;white-space:nowrap;" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+				<table class="mainlist" style="width: 100%;margin:0px 0px 0px !important; white-space:nowrap;" id="tblFileList">
+			
+				</table>
+			</div>
+		</div>
 	</div>
 	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
     <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

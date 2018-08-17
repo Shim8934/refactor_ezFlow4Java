@@ -208,21 +208,29 @@
 			<div class="progress-bar"></div ><div class="status">0%</div>
 		</div>
 		
-		<div id="dragDropArea" style="margin-left: 5px;">
-			<table class="mainlist wftablefile" id="tblFileList">
-				<tr>
-					<th width="20px" ><input type="checkbox"></th>
-					<th headers="ft" style="text-align: center; width: 20px;"><spring:message code='ezWebFolder.t188'/></th>
-					<th headers="fn" style="width: 30%;"><spring:message code='ezWebFolder.t156'/></th>
-					<th headers="fs" style="text-align: center; width: 6%;" ><spring:message code='ezWebFolder.t157'/></th>
-					<th headers="un" style="width: 7%;"><spring:message code='ezWebFolder.t189'/></th>
-					<th headers="cd" style="width: 10%;"><spring:message code='ezWebFolder.t190'/></th>
-					<th headers="ud" style="width: 10%;"><spring:message code='ezWebFolder.t198'/></th>
-					<th              style="width: 25%;"><spring:message code='ezWebFolder.t199'/></th>
-					<th headers="dt" width="70px" style="text-align: center;"><spring:message code='ezWebFolder.t200'/></th>
-				</tr>
+		<div style="width:100%;"id ="tblFileList1_div">
+			<div style="margin:0px 0px 0px !important;min-width: 700px;" >
+				<table class="mainlist" style="width:100%"  id="tblFileList1">
+					<thead id ="BoardList_THEAD">
+						<tr>
+							<th class="wfFilecheck" style="text-align: center; "><input type="checkbox"></th>
+							<th headers="ft" class="wfFileType" style="text-align: center; "><spring:message code='ezWebFolder.t188'/></th>
+							<th headers="fn" class="wfFileName" ><spring:message code='ezWebFolder.t156'/></th>
+							<th headers="fs" class="wfFileSize" style="text-align: center; " ><spring:message code='ezWebFolder.t157'/></th>
+							<th headers="un" class="wfFileCreator" ><spring:message code='ezWebFolder.t189'/></th>
+							<th headers="cd" class="wfFileAdminDate" ><spring:message code='ezWebFolder.t190'/></th>
+							<th headers="ud" class="wfFileAdminDate" ><spring:message code='ezWebFolder.t198'/></th>
+							<th              class="wfFilePath"><spring:message code='ezWebFolder.t199'/></th>
+							<th headers="dt" class="wfFileDownload" style="text-align: center;"><spring:message code='ezWebFolder.t200'/></th>
+						</tr>
+					</thead>
+				</table>
+				<div id="dragDropArea"  style="overflow-y:auto;white-space:nowrap;" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+					<table class="mainlist" style="width: 100%;margin:0px 0px 0px !important; white-space:nowrap;" id="tblFileList">
 				
-			</table>
+					</table>
+				</div>
+			</div>
 		</div>
 		
 		<input id="file" type="file" multiple="multiple"/>

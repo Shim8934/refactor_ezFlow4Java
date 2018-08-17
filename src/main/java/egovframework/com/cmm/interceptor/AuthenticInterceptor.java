@@ -14,7 +14,9 @@ import java.util.concurrent.Future;
 
 import javax.annotation.Resource;
 import javax.naming.ServiceUnavailableException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.ModelAndViewDefiningException;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 
 import com.microsoft.aad.adal4j.AuthenticationContext;
@@ -86,6 +87,33 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	 */
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException {
+		try {
+			String ChkOldBrowser = ezCommonService.getTenantConfig("ChkOldBrowser", loginService.getTenantId(request.getServerName().toString()));
+			//IE 계열이면서 IE10이나 IE11이 아닌 경우에 로그아웃 시키면서 경고창을 띄운다.
+			String agent = request.getHeader("User-Agent");
+			agent = agent != null ? agent : "";
+			if (ChkOldBrowser != null && ChkOldBrowser.equals("YES") && ((agent.indexOf("Trident") > 0 || agent.toLowerCase().indexOf("msie") > 0) && !(agent.indexOf("Trident/6.0") > 0 || agent.indexOf("Trident/7.0") > 0))){
+				Cookie[] cookies = request.getCookies();
+				
+				if (cookies != null) {
+					for (Cookie cookie : cookies) {
+						if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
+							cookie.setMaxAge(0);
+							cookie.setPath("/");
+							response.addCookie(cookie);
+						}
+					}
+				}
+				
+				request.setAttribute("message", "oldBrowser");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/user/login/login.do");
+				dispatcher.forward(request, response);
+			}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		if (commonUtil.isLoginCookieExists(request, response)) {
 			return true;
 		} else {

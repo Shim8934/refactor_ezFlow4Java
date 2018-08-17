@@ -74,6 +74,10 @@
 			.popup_title_txt {
 				padding-top: 15px;
 			}
+			
+			#repCount {
+			    width: 50px;
+			}
 		</style>
 		
 		<script type="text/javascript">
@@ -88,6 +92,7 @@
 		    var tasktype = "${taskInfoVO.taskType }";
 		    var content = "${contentPerson }";
 		    var date = "${date}";
+		    var selectedDate = "${selectedDate}";
 		    var type = "${type}";
 		    var hasTaskAttach = "${taskInfoVO.hasAttach}";
 		    var taskAttachList = "${taskAttachList }";
@@ -137,6 +142,11 @@
 
 				/* 의견카운트 */
 				getCommentList();			
+				
+				/* 반복일정 progressbar 설정 */
+				if(taskstatus == 0) {
+					dayOnMouseClick(selectedDate);
+				}
 				
 				//프로그래스바 그리기
 				initProgressBar(taskstatus, completerate);
@@ -393,6 +403,42 @@
 						
 					}
 				});
+			}
+			
+			function dayOnMouseClick(changeDate) {								
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezTask/taskRepGetList.do",
+					data : {
+						taskID	    : taskid,
+						currentDate : changeDate												
+					},
+					success : function(xml) {				
+						date = changeDate;
+						renderPage(xml);
+					},
+					error : function() {
+						alert("<spring:message code='ezTask.t992' />");
+					}
+				});
+				
+			}
+			
+			function renderPage(xml) {
+				listdom = loadXMLString(xml);
+				var node = GetChildNodesByNodeName(listdom.documentElement, "ROW")[0];
+				contentpath = SelectSingleNodeValue(node, "CONTENTPATH");
+				personContentpath = SelectSingleNodeValue(node, "PERSONALCONTENTPATH");
+				completerate = SelectSingleNodeValue(node, "COMPLETERATE");
+				taskstatus = SelectSingleNodeValue(node, "TASKSTATUS");	
+				repeatCount = SelectSingleNodeValue(node, "REPEATCOUNT");
+				
+				document.getElementById("prog1").innerHTML = date;
+				document.getElementById("repCount").innerHTML = repeatCount;
+				
+				load_bodyhtml();
 			}
 			
 			/* progressBar 조회 */
