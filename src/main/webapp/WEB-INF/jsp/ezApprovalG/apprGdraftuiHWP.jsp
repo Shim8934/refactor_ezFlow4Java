@@ -149,7 +149,7 @@
 	        var isUsed = "";
 	        var ext = "hwp";
 	        var nonElecRec = "${nonElecRec}";
-	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "";
+	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", sepAttachCheckYN = "";
 	        var useReceiveDocNo = "${useReceiveDocNo}";
 	        
 	        window.onload = function () {
@@ -1148,6 +1148,7 @@
 				        parameter[47] = "nonElecRecTempCabinet";
 				        parameter[48] = nonElecRecInfoXml;
 				        parameter[49] = nonSepAttachLVXml;
+				        parameter[51] = sepAttachCheckYN;
 			        }
 			        
 			        if (tempItemCode != "")
@@ -1224,7 +1225,7 @@
 			            if (nonElecRec == "Y") {
 			            	nonElecRecInfoXml = ret[23];
 			            	nonSepAttachLVXml = ret[24];
-			            	
+			            	sepAttachCheckYN = ret[26];
 			            	setNonElecRecInfo(nonElecRecInfoXml);
 			            }
 			        }

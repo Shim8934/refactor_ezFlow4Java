@@ -3,7 +3,6 @@
  * 비전자 문서 js 생성 
  */
 
-﻿var g_CabListXml;
 var bSpecialFlag = "0";
 var g_arrSCName = new Array();
 var g_CodeInfoXml;
@@ -645,23 +644,6 @@ function InitSCListXML() {
     }
 }
 
-// 일단 이쪽부턴 사용안하지만 필요할것 같아서 놔둠 ↓↓↓↓↓↓↓↓
-function InitCabinetInfo(g_CabListXml) {
-    var CabXml = createXmlDom();
-    CabXml = loadXMLString(g_CabListXml);
- 
-    g_CabID = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETID");
-    g_TaskCode = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "TASKCODE");
-    tdCabinetName.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETNAME");
-    tdCabinetSN.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETSN");
-    tdCabinetType.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "RECTYPE");
-    tdCabinetVolNo.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETVOLNO");
-    
-    InitCabClassInfo(GetCabinetClassInfo(g_CabID));
-    InitRegisterType();
-    InitSCInputBox();
-}
-
 function InitCabClassInfo2(objCabInfoXml) {
 	bSpecialFlag = objCabInfoXml.getElementsByTagName("SCFLAG")[0].textContent;
     if (bSpecialFlag == "1")
@@ -679,6 +661,35 @@ function InitCabClassInfo2(objCabInfoXml) {
     g_arrSCName[1] = objCabInfoXml.getElementsByTagName("LIST2")[0].textContent;
     g_arrSCName[2] = objCabInfoXml.getElementsByTagName("LIST3")[0].textContent;
   
+}
+
+function InitSCInputBox() {
+    if (bSpecialFlag == "1")
+    {
+        btnAddSC.style.display = "";
+        tdSpecialFlag.innerHTML = strLang652;
+    }
+    else {
+        btnAddSC.style.display = "none";
+        tdSpecialFlag.innerHTML = strLang622;
+    }
+}
+
+// 일단 이쪽부턴 사용안하지만 필요할것 같아서 놔둠 ↓↓↓↓↓↓↓↓
+/*function InitCabinetInfo(g_CabListXml) {
+    var CabXml = createXmlDom();
+    CabXml = loadXMLString(g_CabListXml);
+ 
+    g_CabID = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETID");
+    g_TaskCode = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "TASKCODE");
+    tdCabinetName.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETNAME");
+    tdCabinetSN.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETSN");
+    tdCabinetType.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "RECTYPE");
+    tdCabinetVolNo.innerHTML = SelectSingleNodeValue(CabXml.documentElement.childNodes[0], "CABINETVOLNO");
+    
+    InitCabClassInfo(GetCabinetClassInfo(g_CabID));
+    InitRegisterType();
+    InitSCInputBox();
 }
 
 function InitRegisterType() {
@@ -745,18 +756,6 @@ function InitRegisterType() {
     InitCodeSelectBox(RegTypeCodeXml.documentElement.childNodes, selRegisterType);
 
     selRegisterType_onchange();
-}
-
-function InitSCInputBox() {
-    if (bSpecialFlag == "1")
-    {
-        btnAddSC.style.display = "";
-        tdSpecialFlag.innerHTML = strLang652;
-    }
-    else {
-        btnAddSC.style.display = "none";
-        tdSpecialFlag.innerHTML = strLang622;
-    }
 }
 
 function RegisterRecord() {
@@ -899,7 +898,7 @@ function btnChangeCabinet_onclick_Complete(rtn) {
         g_CabListXml = rtn[1];
         InitCabinetInfo(g_CabListXml);
     }
-}
+}*/
 // 이쪽까지 사용 안함 ↑↑↑↑↑
 
 // 이쪽은 사용 함 ↓↓↓↓↓↓↓
