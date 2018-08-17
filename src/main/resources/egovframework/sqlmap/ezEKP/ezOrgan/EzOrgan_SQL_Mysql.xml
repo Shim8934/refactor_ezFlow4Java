@@ -1592,13 +1592,18 @@
 	<select id="EzOrganDAO.getLastLogin" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
-				lastLogin 
+				CONNECTTIME 
 	      	FROM 
-	      		TBL_USERMASTER 
+	      		TBL_CONNECTION_INFO 
 	      	WHERE  
-	      		cn = #userID#
+	      		USERID = #userID#
 	      	AND
-	      		tenant_ID = #tenantID#	
+	      		TENANT_ID = #tenantID#
+	      	ORDER BY
+	      		CONNECTTIME
+	      		DESC
+	      	LIMIT
+	      		1, 1	
 	     ]]> 
 	</select>
 	
