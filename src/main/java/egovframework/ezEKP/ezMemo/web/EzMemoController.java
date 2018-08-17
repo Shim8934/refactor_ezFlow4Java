@@ -93,6 +93,30 @@ public class EzMemoController {
 		return "ezMemo/memoMain";
 	}
 	
+	@RequestMapping(value = "/ezMemo/getMemoFoldersInfo.do")
+	public String memoFoldersInfo(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("memoFoldersInfo started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("company_id",userInfo.getCompanyID());
+		param.put("userId",userInfo.getId());
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/folders/users/" + userInfo.getId(), param, request, "get", null);
+		String status = resultBody.get("status").toString();
+		String memoCount = resultBody.get("memoCount").toString();
+		if (status.equals("ok")) {			
+			
+			/*	JSONArray list = (JSONArray) resultBody.get("data");
+				model.addAttribute("list", list);*/
+				model.addAttribute("memoCount", memoCount);
+			}
+			
+		logger.debug("memoFoldersInfo ended");
+		return "json";
+	}
+	
 	@RequestMapping(value = "/ezMemo/memoFolderManage.do")
 	public String memoFolderManage(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		return "ezMemo/memoFolderManage";

@@ -6,18 +6,18 @@
 	<typeAlias  alias="MemoConfigVO" type="egovframework.ezEKP.ezMemo.vo.MemoConfigVO"/>
 	<typeAlias  alias="MemoFolderVO" type="egovframework.ezEKP.ezMemo.vo.MemoFolderVO"/>
 	
-	<select id="EzMemoDAO.getMemoFolder" resultClass="MemoFolderVO">
+	<select id="EzMemoDAO.getMemoCount" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				*
+				COUNT(*)
 			FROM
-				MEMO_FOLDER
+				TBL_MEMO_FOLDER
 			WHERE 
 				TENANT_ID = #tenant_id# 
 			AND 
 				COMPANY_ID = #company_id# 
 			AND 
-				USERID = #userId#
+				USER_ID = #user_id#
 		]]>
 	</select>
 </sqlMap>

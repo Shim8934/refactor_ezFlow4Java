@@ -12,5 +12,7 @@ import egovframework.ezEKP.ezMemo.vo.MemoVO;
 
 @Repository("EzMemoDAO")
 public class EzMemoDAO extends EgovAbstractDAO {
-
+	public int getMemoCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzMemoDAO.getMemoCount", map);
+	}
 }

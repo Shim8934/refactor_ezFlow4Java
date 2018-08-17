@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezJournal.web.EzJournalGWController;
-import egovframework.ezEKP.ezLadder.service.EzLadderService;
+import egovframework.ezEKP.ezMemo.service.EzMemoService;
+import egovframework.ezEKP.ezMemo.vo.MemoFolderVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -43,8 +44,8 @@ public class EzMemoGWController {
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
-	@Resource(name="EzLadderService")
-	private EzLadderService ezLadderService;
+	@Resource(name="EzMemoService")
+	private EzMemoService ezMemoService;
 	
 	@Resource(name="MOptionService")
 	private MOptionService MOptionService;
@@ -72,6 +73,33 @@ public class EzMemoGWController {
 			result.put("data", "");
 		}
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-list/users/] ended.");
+		return result;
+	}
+	
+	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject gwMemoFoldersInfo(@PathVariable String userId, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
+		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/users/]" +userId + " started.");
+		
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = MOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			memoFolderVO.setTenant_id(info.getTenantId());
+			
+			int memoCount = ezMemoService.getMemoCount(memoFolderVO);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+			result.put("memoCount", memoCount);
+		} catch(Exception e) {
+			result.put("code", 1);
+			result.put("status", "error");
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/users/] ended.");
 		return result;
 	}
 }

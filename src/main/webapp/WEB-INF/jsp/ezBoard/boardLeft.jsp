@@ -655,6 +655,8 @@
 				$(".memo h2").attr("class", "on");
 				$(".memo").next().attr("class", "on");
 				
+				memoFoldersInfo();
+				
 				if (CrossYN()) {
 					window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8";
 		        } else {
@@ -781,6 +783,18 @@
 	        	var OpenWin = window.open("/ezMemo/memoFolderManage.do", "", GetOpenWindowfeature(500, 500));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
+		    
+		    function memoFoldersInfo() {
+		    	$.ajax({
+					type : "GET",
+					dataType : "json",
+					async : false,
+					url : "/ezMemo/getMemoFoldersInfo.do",
+					success: function(result){
+						alert(result["memoCount"]);
+					}     			
+				});
+		    }
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
@@ -889,11 +903,11 @@
 			</c:if>
 			
 			<ul>
-				<div class="tree" style="width:auto;height:100%;padding-bottom:20px;padding-left:10px;overflow-x:auto;overflow-y:auto;"> 
+				<div class="tree" style="width:auto;height:100%;padding-bottom:20px;padding-left:10px;overflow-x:auto;overflow-y:auto;cursor:pointer;"> 
 					<div>
-						<img  border="0" src="/images/OrganTree_cross/plus.gif" style="width:18px;height:18px;cursor:pointer;">
+						<img border="0" src="/images/OrganTree_cross/plus.gif" style="width:18px;height:18px;">
 						<img src="/images/ImgIcon/icon_approval.gif" style="width:18px;height:19px;">
-						<span style="width:100%;height:21px; line-height:21px; font-size:12px;" onclick="memo_Func(1)">전체메모<span id="count1">(0)</span></span>
+						<span style="width:100%;height:21px; line-height:21px; font-size:12px;" onclick="memo_Func(1)">전체메모<span id="count1"></span></span>
 					</div>
 				</div>
 				<!-- 이쪽에 리스트 뿌려주기-->
