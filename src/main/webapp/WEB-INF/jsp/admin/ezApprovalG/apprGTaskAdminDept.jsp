@@ -62,7 +62,7 @@
 		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2} '/>";
 		    var userLang = "<c:out value = '${userInfo.lang} '/>";
 		    var UserLang = "<c:out value = '${userInfo.lang} '/>";
-		    
+		    var ext = "";
 		    $(document).ready(function(){
 		        document.getElementById("SCompID").value = CompanyID;
 		        OrganID = CompanyID;

@@ -332,8 +332,7 @@ function InitAprlineTemplet()
 	FirstAprLineTempletDisplay();
 }
 
-function OpenInformationUI(pInformationContent)
-{
+function OpenInformationUI(pInformationContent) {
 	var parameter = pInformationContent;
 	var url = "/ezApprovalG/ezAprOpinion.do";
 	var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";

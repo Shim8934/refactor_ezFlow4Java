@@ -72,7 +72,8 @@
 	        var logoName = "";
 	        var pAprType = "";
 	        var tempAttachSN = 0;
-	
+			var ext = 'mht';
+			
 		    window.onload = function () {
 		
 		    }
@@ -244,6 +245,7 @@
 		    function FieldsAvailable() {
 		        setAttachInfo(pDocID, "END", lstAttachLink);
 		        GetExchInfo();
+		        
 		        if ((attachxml.length > 0) && (attachxsl.length > 0)) {
 		            btnXMLEdit.style.display = "";
 		            attachxmlPath = "/Upload_ApprovalG/" + companyID + "/sendXML/" + attachxml;
@@ -251,7 +253,9 @@
 		            attachxslPath = "/Upload_ApprovalG/" + companyID + "/sendXML/" + attachxsl;
 		            attachxslName = attachxsl.replace(PackDocID, "");
 		        }
+		        
 		        var Rtnval = CheckOpinionInfo();
+		        
 		        if (Rtnval) {
 		            var pInformationContent = "<spring:message code = 'ezApprovalG.t9' /><br> <spring:message code = 'ezApprovalG.t170' />";
 		            OpenInformationUI(pInformationContent, FieldsAvailable_Complete);

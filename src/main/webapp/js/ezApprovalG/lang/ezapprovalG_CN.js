@@ -61,6 +61,7 @@ var strLang107 = "분류"
 // DraftUI\draft.js
 var strLang124 = "批准状态"
 var strLang125 = "批准状态"
+var strLang126 = "일반"
 var strLang128 = "기"
 var strLang131 = "오류가 발생하였습니다. "
 var strLang132 = "문서를 다시 선택하여 주십시요!"
@@ -507,6 +508,7 @@ var strLang713 = "기록물 정보를 찾을 수 없습니다."
 var strLang714 = "부가정보 초기화"
 var strLang715 = "분류정보 초기화"
 var strLang716 = "기록물 분류정보를 가져오는데 실패하였습니다!"
+var strLang717 = "본문 내용에 대한 의견은 다음과 같습니다.]\15"
 // ezDocInfo\setLogData.js
 // ezStatistics\_vti_cnf\ezStatistics.js
 // ezStatistics\ezStatistics.js
@@ -1007,5 +1009,9 @@ var strLangSpjj32 =	"후결 승인시에 에러가 발생하였습니다."
 var strLangSpjj33 = "결재 문서 바로가기";
 var strLangSpjj34 = "님이 기안한 결재 문서가 도착했습니다. <br> 결재를 하시려면 아래 링크를 클릭하세요.";
 
+
+var strLang129 = "수신자"
+
 //2018-06-27 강민수92
 var strLanggarm01 = "관리부서를 추가하여 주십시오."
+

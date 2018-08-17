@@ -592,13 +592,23 @@
 		            pURL = tr.getAttribute("DATA2");
 		
 		            var formid = tr.getAttribute("DATA6");
-		            var docState =  tr.getAttribute("DATA12");
+		            if (approvalFlag == 'S' ) {
+			            var docState =  tr.getAttribute("DATA12");
+		            } else {
+			            var docState =  tr.getAttribute("DATA7");
+		            }
 		            var orgdocid = trim_Cross(tr.getAttribute("DATA5"));
 		            var openLocation;
 		            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
-		                openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
-		            }
-		            else {
+		            	if (isIE()) {
+			                openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+		                } else {
+		                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+		                	alert(pAlertContent);
+		                    
+		                    return;
+		                }
+		            } else {
 	                    openLocation = "/ezApprovalG/contDocView.do";
 		            }
 		            openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(formid) + "&orgDocID=" + encodeURI(orgdocid) + "&docState=" + docState;

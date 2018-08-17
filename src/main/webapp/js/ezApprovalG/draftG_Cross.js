@@ -266,12 +266,10 @@ function SendAckForExch(pType, pMode)
 }
 
 
-function btnReturn_onclick()
-{
+function btnReturn_onclick() {
 	var pInformationContent = strLang174;
     var Ans = OpenInformationUI(pInformationContent);
-	if (Ans)
-	{
+	if (Ans) {
 		SendAckForExch("return", "ING");
 		removeDocInfo(pDocID);
 		var pAlertContent = strLang175;
