@@ -533,8 +533,7 @@
     			
     			no++;
 	    	}
-	    	//신청갯수
-// 	    	leftCount();
+	    	
 	    	parent.frames["left"].leftCount();
 	    }
 	    
@@ -844,114 +843,6 @@
 		    }
 	    }
 	    
-		//승인
-	    function modApprove() {
-			if (authFlag != "M") {
-				alert("<spring:message code='ezAttitude.t100'/>");
-				return;
-			}
-	    	var attList = $(".checkAtt:checked");
-	    	var idList = "";
-	    	
-	    	for (var i = 0; i < attList.length; i++) {
-	    		if (attList[i].getAttribute("status") == "0") {
-	    			idList += attList[i].getAttribute("id").split("_")[1] 
-	    			+ "_" + attList[i].getAttribute("id").split("_")[2] + ",";	
-	    		}
-	    	}
-	    	
-	    	if (attList.length == 0) {
-				alert("<spring:message code='ezAttitude.t101'/>");
-				return;
-			}
-	    	
-	    	var obj = new Object();
-	    	
-		    obj.idList = idList.slice(0,-1);
-		    obj.changeStatus = "appr";
-			
-		    if (confirm("<spring:message code='ezAttitude.t84'/>")) {
-	 	    	if (idList == "") {
-	    			alert("<spring:message code='ezAttitude.t99'/>");
-		    		get_att_list(currentPage);
-		    		HiddenAttProgress();
-		    		return;
-		    	}
-	 	    	
-			    $.ajax({
-					type : 'post',
-				    url : '/ezAttitude/changeAttModApp.do',
-				    data : obj,
-				    dataType : "text",
-				    error: function(xhr, status, error){
-				    	ajaxRunning = false;
-				    	//alert("승인 중 오류 발생")
-				    },
-				    success : function(json){
-				    	get_att_list(currentPage);
-						//alert("승인되었습니다.");
-				    },
-					complete : function() {
-						HiddenAttProgress();
-					}
-			    });
-		    }
-	    }
-	    
-	  	//반려
-	    function modReturn() {
-	    	if (authFlag != "M") {
-				alert("<spring:message code='ezAttitude.t100'/>");
-				return;
-			}
-	  		
-	    	var attList = $(".checkAtt:checked");
-	    	var idList = "";
-	    	
-	    	for (var i = 0; i < attList.length; i++) {
-	    		if (attList[i].getAttribute("status") == "0") {
-	    			idList += attList[i].getAttribute("id").split("_")[1] + ",";	
-	    		}
-	    	}
-	    	
-	    	if (attList.length == 0) {
-				alert("<spring:message code='ezAttitude.t102'/>");
-				return;
-			}
-	    	
-	    	var obj = new Object();
-	    	
-		    obj.idList = idList.slice(0,-1);
-		    obj.changeStatus = "ret";
-			
-		    if (confirm("<spring:message code='ezAttitude.t87'/>")) {
-		    	if (idList == "") {
-	    			alert("<spring:message code='ezAttitude.t99'/>");
-		    		get_att_list(currentPage);
-		    		HiddenAttProgress();
-		    		return;
-		    	}
-		    	
-			    $.ajax({
-					type : 'post',
-				    url : '/ezAttitude/changeAttModApp.do',
-				    data : obj,
-				    dataType : "text",
-				    error: function(xhr, status, error){
-				    	ajaxRunning = false;
-				    	//alert("반려 중 오류 발생")
-				    },
-				    success : function(json){
-				    	get_att_list(currentPage);
-						//alert("반려되었습니다.");
-				    },
-					complete : function() {
-						HiddenAttProgress();
-					}
-			    });
-		    }
-	    }
-	    
 	    function ArrayDelete(TargetArray, DeleteNodeStr) {
 	        var TempArray = new Array();
 	        for (var i = 0; i < TargetArray.length; i++) {
@@ -1061,6 +952,8 @@
 			</li> 
         </ul>
         </div>
+        
+        <!-- 검색 레이어 팝업 -->
         <div id="popup2" class="popupwrap1" style="display:none;margin-bottom:50px;">
             <div class="popupJQLayer">
 				<div class="title"><spring:message code='ezAttitude.t121' /></div>
@@ -1078,7 +971,8 @@
 						<th><spring:message code='ezAttitude.t137' /></th>
 						<td>
 							<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()">
-							<label for="usepostdate"><spring:message code='ezAttitude.t105' /></label>
+							<label for="usepostdate"><spring:message code='ezAttitude.t105' /></label>&nbsp;
+							<div>
 							<input type="text" id="Sdatepicker"	style="width: 80px; text-align: center;" /> 
 							~ 
 							<input type="text" id="Edatepicker" style="width: 80px; text-align: center;" />
@@ -1091,6 +985,7 @@
 			    </div>
             </div>
         </div>
+        
 		<div id="contentlist" name="contentlist" style="border:0px solid blue;height:680px;width:100%;overflow-y:auto;" onblur>
 		<table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
 			<tr>
