@@ -1408,7 +1408,11 @@
 			                /*2018-04-05 김은석 수정 건설공사 공개여부*/
 // 			                setPublicFlag();
 			                if (isIE()){
-				                setPublicFlag2();
+			                	try {
+					                setPublicFlag2();
+			                	} catch (e) {
+			                		setPublicFlag();
+			                	}
 			                }
 			                
 			                if (nonElecRec == "Y") {

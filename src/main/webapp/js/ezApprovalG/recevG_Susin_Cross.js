@@ -1,4 +1,4 @@
-﻿var selectcabinet_cross_dialogArguments = new Array();
+﻿﻿var selectcabinet_cross_dialogArguments = new Array();
 function btnSetTaskCode_onclick() {
     try {
         var para = new Array();
@@ -27,29 +27,30 @@ function btnSetTaskCode_onclick_Complete(rtn) {
 }
 
 /*2018-04-05 김은석 수정 건설공사 공개여부*/
-//function setPublicFlag() {
-//  var fields = message.GetFieldsList();
-//  var field = message.GetListItem(fields, "publication");
-//  if (!field) return;
-//
-//  var PublicType = pPublicityCode.substring(0, 1);
-//  var PublicLevel = pPublicityCode.substring(1, 9);
-//  var PublicText = "";
-//
-//  if (pLimitRange != "")
-//      PublicText = " (" + pLimitRange + ")";
-//
-//  if (PublicType == "1")
-//      PublicText = strLang82;
-//  else if (PublicType == "2")
-//      PublicText = strLang83 + getPublicLevel(PublicLevel);
-//  else if (PublicType == "3")
-//      PublicText = strLang84 + getPublicLevel(PublicLevel);
-//  else
-//      PublicText = " ";
-//
-//  field.innerHTML = PublicText;
-//}
+// 마스터 머지후 setpublicflag2 만 타서 다시 살림 2018-08-17 강민수92
+function setPublicFlag() {
+  var fields = message.GetFieldsList();
+  var field = message.GetListItem(fields, "publication");
+  if (!field) return;
+
+  var PublicType = pPublicityCode.substring(0, 1);
+  var PublicLevel = pPublicityCode.substring(1, 9);
+  var PublicText = "";
+
+  if (pLimitRange != "")
+      PublicText = " (" + pLimitRange + ")";
+
+  if (PublicType == "1")
+      PublicText = strLang82;
+  else if (PublicType == "2")
+      PublicText = strLang83 + getPublicLevel(PublicLevel);
+  else if (PublicType == "3")
+      PublicText = strLang84 + getPublicLevel(PublicLevel);
+  else
+      PublicText = " ";
+
+  field.innerHTML = PublicText;
+}
 /*기존의 공개여부 함수 2018-04-04 김은석 수정*/
 function setPublicFlag2() {
     if (!HwpCtrl.CheckFieldExist("publication")) return;
