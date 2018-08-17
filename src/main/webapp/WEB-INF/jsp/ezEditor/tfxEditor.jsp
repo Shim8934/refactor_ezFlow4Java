@@ -58,6 +58,7 @@
             	    resultStr = resultStr.replace(/\r\n/gi, "");
             	    resultStr = resultStr.replace(/\n/gi, "");
             	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
+            	    resultStr = resultStr.replace(/<p><br>/gi, "\n");
             	    resultStr = resultStr.replace(/<p>/gi, "\n");
             	    resultStr = resultStr.replace(/<br .*?>/gi, "\n");
             	    resultStr = resultStr.replace(/<br>/gi, "\n");
