@@ -53,13 +53,16 @@
 		    function OpenAlertUI_Complete() {
 		        DivPopUpHidden();
 		    }
+		    
 		    function btn_CancelAprLineTempletName_onclick() {
-		        if (ReturnFunction != null)
+		        if (ReturnFunction != null) {
 		            ReturnFunction("cancel");
-		        else
+		        } else {
 		            window.returnValue = "cancel";
-		        window.close();
+			        window.close();
+		        }
 		    }
+		    
 		    var RetValue;
 		    var ReturnFunction;
 		    window.onload = function () {		

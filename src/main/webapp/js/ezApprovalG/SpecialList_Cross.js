@@ -68,11 +68,11 @@ function InsertRowToSpecialList(pSN, pList1, pList2, pList3) {
         var row = "<ROW>";
         row += "<CELL><VALUE>" + pSN + "</VALUE></CELL>";
         if (g_arrSCYN[0] == "Y")
-            row += "<CELL><VALUE>" + pList1 + "</VALUE></CELL>";
+            row += "<CELL><VALUE><![CDATA[" + pList1 + "]]></VALUE></CELL>";
         if (g_arrSCYN[1] == "Y")
-            row += "<CELL><VALUE>" + pList2 + "</VALUE></CELL>";
+            row += "<CELL><VALUE><![CDATA[" + pList2 + "]]></VALUE></CELL>";
         if (g_arrSCYN[2] == "Y")
-            row += "<CELL><VALUE>" + pList3 + "</VALUE></CELL>";
+            row += "<CELL><VALUE><![CDATA[" + pList3 + "]]></VALUE></CELL>";
         row += "</ROW>";
 
         var rowXml = loadXMLString(row);

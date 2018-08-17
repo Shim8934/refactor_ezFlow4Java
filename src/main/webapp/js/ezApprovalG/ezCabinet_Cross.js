@@ -1197,17 +1197,31 @@ function ViewDoc_onclick_Complete(Rtn) {
 
             var openLocation = "";
             
-            if (g_uFlag == "m03") {
-                openLocation = "/ezApprovalG/contDocView.do";
-                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=&uFlag=" + g_uFlag;
-            }
-            else {
-                openLocation = "/ezApprovalG/contDocView.do";
-                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocID=";
-            }
-            openwindow(openLocation, "", 880, 570);
-        }
-    }
+            if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+            	if (isIE()) {
+                	if (g_uFlag == "m03") {
+                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";
+                	} else {
+                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocID=";
+                	}
+                } else {
+                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+                	alert(pAlertContent);
+                    
+                    return;
+                }
+            } else {
+	            if (g_uFlag == "m03") {
+	                openLocation = "/ezApprovalG/contDocView.do";
+	                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=&uFlag=" + g_uFlag;
+	            } else {
+	                openLocation = "/ezApprovalG/contDocView.do";
+	                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocID=";
+	            }
+             }
+	            openwindow(openLocation, "", 880, 570);
+         }
+     }
 }
 //END
 function GetTodayDate() {
@@ -1225,11 +1239,15 @@ var ezchkpasswd_cross_dialogArguments = new Array();
 function chk_Passwd(pUserID, CompleteFunction) {
     var parameter = pUserID;
     ezchkpasswd_cross_dialogArguments[0] = parameter;
-    if (CompleteFunction != undefined)
-        ezchkpasswd_cross_dialogArguments[1] = CompleteFunction;
-    else
-        ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
+    
+    if (CompleteFunction != undefined) {
+    	ezchkpasswd_cross_dialogArguments[1] = CompleteFunction;
+    } else {
+    	ezchkpasswd_cross_dialogArguments[1] = chk_Passwd_Complete;
+    }
 
+    ezchkpasswd_cross_dialogArguments[2] = true;
+    
     var url = "/ezApprovalG/ezchkPasswd.do";
     var OpenWin = window.open(url, "ezchkPasswd_Cross", GetOpenWindowfeature(350, 225));
     try { OpenWin.focus(); } catch (e) { }
@@ -1376,6 +1394,7 @@ function btnSearchRec_onclick(opnOption,opentype) {
         searchrec_cross_dialogArguments[1] = btnSearchRec_onclick_Complete;
 
         if (opentype == "OPEN") {
+        	searchrec_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "SearchRec_Cross", GetOpenWindowfeature(800, 460));
             try { OpenWin.focus(); } catch (e) { }
         }
@@ -1563,12 +1582,12 @@ function td_Create1(strtext) {
 function makePageSelPage(pTotalCnt) {
     var strtext;
     var PagingHTML = "";
-    if ($("tblPageRayer").length == 0) {
-    	totalPage = Math.ceil(new Number(pTotalCnt / PageSize));
-    	document.getElementById("td_pTotalCount").innerHTML = totalPage;
-    	document.getElementById("txt_PageInputNum").value = 1; 
-    	return;
-    }
+//    if ($("tblPageRayer").length == 0) {
+//    	totalPage = Math.ceil(new Number(pTotalCnt / PageSize));
+//    	document.getElementById("td_pTotalCount").innerHTML = totalPage;
+//    	document.getElementById("txt_PageInputNum").value = 1; 
+//    	return;
+//    }
     document.getElementById("tblPageRayer").innerHTML = "";
     if (pTotalCnt != undefined) {
         if (GetSelectVal("rec_year") == "ALL" && GetSelectVal("cab_year") == "ALL" && GetSelectVal("del_year") == "ALL") {

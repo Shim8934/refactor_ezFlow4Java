@@ -50,24 +50,20 @@ function btnSetTaskCode_onclick_Complete(rtn) {
 //
 //  field.innerHTML = PublicText;
 //}
-/*2018-04-05 김은석 수정 건설공사 공개여부*/
+/*기존의 공개여부 함수 2018-04-04 김은석 수정*/
 function setPublicFlag2() {
-	var fields = message.GetFieldsList();
-	var field = message.GetListItem(fields, "publication");
-	if (!field) return;
-	
-	var PublicType = pPublicityYN.substring(0, 1);
-	var PublicText = "";
-	
-	
-	if (PublicType == "Y")
-		PublicText = strLang82;
-	else if (PublicType == "N")
-		PublicText = strLang84
-	else
-		PublicText = " ";
-	
-	field.innerHTML = PublicText;
+    if (!HwpCtrl.CheckFieldExist("publication")) return;
+    var PublicType = pPublicityYN.substring(0, 1);
+
+    var PublicText = "";
+    if (PublicType == "Y")
+        PublicText = strLang82;
+    else if (PublicType == "N")
+        PublicText = strLang84;
+    else
+        PublicText = " ";
+    
+    HwpCtrl.SetFieldText("publication", PublicText);
 }
 
 function GetDraftAprLineInfo(ret) {
@@ -100,80 +96,124 @@ function GetDraftAprLineInfo(ret) {
         if (ret[5] == undefined) {
             xmlKuljea = ret[0];
             xmlReDraft = ret[2];
-        }
-        else {
+        } else {
             xmlKuljea = ret[1];
             xmlReDraft = ret[5];
         }
+        
         setAprLinesXML(xmlKuljea);
 
         if (xmlReDraft == "C") {
             ApplyDocCellInfo();
-        }
-        else if (xmlReDraft == "R") {
+        } else if (xmlReDraft == "R") {
             ClearDocCellInfo();
         }
-
-        xmldom = loadXMLString(xmlKuljea);
-        objNodes = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
-        fields = message.GetFieldsList();
-        count = objNodes.length;
 
         var susinSN = "";
         if (pDraftFlag == "SUSIN" || pDocState == "011") {
             susinSN = pSusinSN;
         }
+        
+        xmldom = loadXMLString(xmlKuljea);
+        objNodes = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
+        count = objNodes.length;
 
-        for (i = 1; i < 20; i++) {
-            name = susinSN + "habyuisign" + i;
-            field = message.GetListItem(fields, name);
+        if (ext == "mht") {
+	        fields = message.GetFieldsList();
+	
+	        for (i = 1; i < 20; i++) {
+	            name = susinSN + "habyuisign" + i;
+	            field = message.GetListItem(fields, name);
+	
+	            if (field) {
+	                name = susinSN + "habyui" + i;
+	                field = message.GetListItem(fields, name);
+	
+	                if (field) {
+	                    field.textContent = " ";
+	                }
+	
+	                fieldname = susinSN + "habyuisign" + i;
+	                field = message.GetListItem(fields, fieldname);
+	
+	                if (field) {
+	                    field.textContent = " ";
+	                }
+	
+	                fieldname = susinSN + "habyuipositon" + i;
+	                field = message.GetListItem(fields, fieldname);
+	
+	                if (field) {
+	                    field.textContent = " ";
+	                }
+	
+	                fieldname = susinSN + "habyuidate" + i;
+	                field = message.GetListItem(fields, fieldname);
+	
+	                if (field) {
+	                    field.textContent = " ";
+	                }
+	            }
+	            else {
+	                break;
+	            }
+	        }
+	
+	
+	        field = message.GetListItem(fields, "refer");
+	        if (field) field.textContent = "";
+	
+	        field = message.GetListItem(fields, "hgamsa");
+	
+	        if (field) field.textContent = "";
+	        for (i = 1; i < fields.length; i++) {
+	            field = message.GetListItem(fields, "gongram" + i);
+	            if (field) field.textContent = "";
+	        }
+        } else if (ext == "hwp") {
+        	   for (i = 1; i < 20; i++) {
+                   name = susinSN + "habyuisign" + i;
+                   if (HwpCtrl.CheckFieldExist(name)) {
+                       name = susinSN + "habyui" + i;
+                       if (HwpCtrl.CheckFieldExist(name)) {
+                    	   HwpCtrl.SetFieldText(name, "");
+                       }
 
-            if (field) {
-                name = susinSN + "habyui" + i;
-                field = message.GetListItem(fields, name);
+                       name = susinSN + "habyuisign" + i;
+                       if (HwpCtrl.CheckFieldExist(name)) {
+                    	   HwpCtrl.SetFieldText(name, "");
+                       }
 
-                if (field) {
-                    field.textContent = " ";
-                }
+                       name = susinSN + "habyuipositon" + i;
+                       if (HwpCtrl.CheckFieldExist(name)) {
+                    	   HwpCtrl.SetFieldText(name, "");
+                       }
 
-                fieldname = susinSN + "habyuisign" + i;
-                field = message.GetListItem(fields, fieldname);
 
-                if (field) {
-                    field.textContent = " ";
-                }
+                       name = susinSN + "habyuidate" + i;
+                       if (HwpCtrl.CheckFieldExist(name)) {
+                    	   HwpCtrl.SetFieldText(name, "");
+                       }
+                   } else {
+                       break;
+                   }
+               }
 
-                fieldname = susinSN + "habyuipositon" + i;
-                field = message.GetListItem(fields, fieldname);
+               if (HwpCtrl.CheckFieldExist("refer")) {
+            	   HwpCtrl.SetFieldText("refer", "");
+               }
 
-                if (field) {
-                    field.textContent = " ";
-                }
 
-                fieldname = susinSN + "habyuidate" + i;
-                field = message.GetListItem(fields, fieldname);
+               if (HwpCtrl.CheckFieldExist("hgamsa")) {
+            	   HwpCtrl.SetFieldText("hgamsa", "");
+               }
 
-                if (field) {
-                    field.textContent = " ";
-                }
-            }
-            else {
-                break;
-            }
+               for (i = 1; i < 20; i++) {
+                   if (HwpCtrl.CheckFieldExist("gongram" + i)) {
+                	   HwpCtrl.SetFieldText("gongram" + i, "");
+                   }
+               }
         }
-
-
-        field = message.GetListItem(fields, "refer");
-        if (field) field.textContent = "";
-
-        field = message.GetListItem(fields, "hgamsa");
-
-        if (field) field.textContent = "";
-        for (i = 1; i < fields.length; i++) {
-            field = message.GetListItem(fields, "gongram" + i);
-            if (field) field.textContent = "";
-        }
-
 
         for (i = 0; i < count; i++) {
             var Cell = GetChildNodes(objNodes[i]);
@@ -201,35 +241,49 @@ function GetDraftAprLineInfo(ret) {
             OrderReporter[KyljeaOrder] = reporter;
         }
 
-        if (isSplit == "Y")
-            SplitSign(OrderType, OrderName, OrderDept, OrderStat, OrderJobtitle);
+        if (isSplit == "Y") {
+        	SplitSign(OrderType, OrderName, OrderDept, OrderStat, OrderJobtitle);
+        }
 
         LastSignSN = OrderType.length;
 
         CurAprType = OrderType[1];
-        if (OrderType.length > 2)
-            NextAprType = OrderType[2];
+        if (OrderType.length > 2) {
+        	NextAprType = OrderType[2];
+        }
 
         for (i = 1; i < OrderType.length; i++) {
             if (OrderType[i] == strAprType4 || OrderType[i] == strAprType16) {
                 LastSignSN = i;
                 i = OrderType.length;
+            } else if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 || OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3) {
+            	LastSignSN = i;
             }
-            else if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 || OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType3)
-                LastSignSN = i;
         }
-
 
         lastKyulName = OrderName[LastSignSN];
         lastKyuljiwee = OrderJobtitle[LastSignSN];
-        var field = message.GetListItem(fields, "lastKyuljikwee");
-        if (field)
-            field.textContent = lastKyuljiwee;
+        
+        if (ext == "mht") {
+	        var field = message.GetListItem(fields, "lastKyuljikwee");
+	        if (field) {
+	        	field.textContent = lastKyuljiwee;
+	        }
+	
+	        var field = message.GetListItem(fields, "lastKyulName");
+	        if (field) {
+	        	field.textContent = lastKyulName;
+	        }
+        } else if (ext == "hwp") {
+        	if (HwpCtrl.CheckFieldExist("lastKyuljikwee")) {
+        		HwpCtrl.SetFieldText("lastKyuljikwee", lastKyuljiwee);
+        	}
 
-        var field = message.GetListItem(fields, "lastKyulName");
-        if (field)
-            field.textContent = lastKyulName;
-
+            if (HwpCtrl.CheckFieldExist("lastKyulName")) {
+            	HwpCtrl.SetFieldText("lastKyulName", lastKyulName);
+            }
+        }
+        
         hapyuiCnt = 1;
         SignCnt = 1;
         referCnt = 1;
@@ -239,31 +293,35 @@ function GetDraftAprLineInfo(ret) {
         var field;
         var refer = "";
 
-
-        for (i = 1; i < 10; i++) {
-            fieldname = susinSN + "jikwe" + i;
-            field = message.GetListItem(fields, fieldname);
-
-            if (field) {
-                field.textContent = " ";
-                fieldname = susinSN + "sign" + i;
-                field = message.GetListItem(fields, fieldname);
-                if (field)
-                    field.textContent = " ";
-            } else {
-                break;
-            }
-        }
-
-        for (i = 1; i < 10; i++) {
-            fieldname = "hjkwe" + i;
-            field = message.GetListItem(fields, fieldname);
-
-            if (field) {
-                field.textContent = " ";
-            } else {
-                break;
-            }
+        if (ext == "mht") {
+	        for (i = 1; i < 10; i++) {
+	            fieldname = susinSN + "jikwe" + i;
+	            field = message.GetListItem(fields, fieldname);
+	
+	            if (field) {
+	                field.textContent = " ";
+	                fieldname = susinSN + "sign" + i;
+	                field = message.GetListItem(fields, fieldname);
+	                if (field) {
+	                	field.textContent = " ";
+	                }
+	            } else {
+	                break;
+	            }
+	        }
+	
+	        for (i = 1; i < 10; i++) {
+	            fieldname = "hjkwe" + i;
+	            field = message.GetListItem(fields, fieldname);
+	
+	            if (field) {
+	                field.textContent = " ";
+	            } else {
+	                break;
+	            }
+	        }
+        } else if (ext == "hwp") {
+        	
         }
 
         var idx = 1;
@@ -271,73 +329,117 @@ function GetDraftAprLineInfo(ret) {
         for (i = 1; i < OrderJobtitle.length; i++) {
             if (OrderType[i] == strAprType18 || OrderType[i] == strAprType19 || OrderType[i] == strAprType1 || OrderType[i] == strAprType1 || OrderType[i] == strAprType4 || OrderType[i] == strAprType16 || OrderType[i] == strAprType3) {
                 fieldname = susinSN + "jikwe" + idx;
-                field = message.GetListItem(fields, fieldname);
+                if (ext == "mht") {
+	                field = message.GetListItem(fields, fieldname);
+	
+	                if (field) {
+	                    var jikweName = trim(field.textContent);
+	                    if (jikweName.substring(0, 1) != strLang128) {
+	                    	field.textContent = OrderJobtitle[i];
+	                    }
+	
+	                    if (OrderSuggester[i] == "Y") {
+	                    	field.textContent = strLang75 + field.textContent;
+	                    }
+	
+	                    if (OrderReporter[i] == "Y") {
+	                    	field.textContent = strLang76 + field.textContent;
+	                    }
+	                }
+	
+	                fieldname = susinSN + "sign" + idx;
+	                field = message.GetListItem(fields, fieldname);
+	
+	                if (field) {
+	                }
+                } else if (ext == "hwp") {
+                	if (HwpCtrl.CheckFieldExist(fieldname)) {
+                        var jikweName = trim(HwpCtrl.GetFieldText(fieldname));
+                        if (jikweName.substring(0, 1) != "" + strLang128 + "") {
+                        	HwpCtrl.SetFieldText(fieldname, OrderJobtitle[i]);
+                        }
 
-                if (field) {
-                    var jikweName = trim(field.textContent);
-                    if (jikweName.substring(0, 1) != strLang128)
-                        field.textContent = OrderJobtitle[i];
+                        if (OrderSuggester[i] == "Y") {
+                        	HwpCtrl.SetFieldText(fieldname, strLang75 + HwpCtrl.GetFieldText(fieldname));
+                        }
 
-                    if (OrderSuggester[i] == "Y")
-                        field.textContent = strLang75 + field.textContent;
-
-                    if (OrderReporter[i] == "Y")
-                        field.textContent = strLang76 + field.textContent;
-                }
-
-                fieldname = susinSN + "sign" + idx;
-                field = message.GetListItem(fields, fieldname);
-
-                if (field) {
+                        if (OrderReporter[i] == "Y") {
+                        	HwpCtrl.SetFieldText(fieldname, strLang76 + HwpCtrl.GetFieldText(fieldname));
+                        }
+                    }
                 }
                 idx = idx + 1;
-            }
-            else if (OrderType[i] == strAprType8 || OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12) {
+            } else if (OrderType[i] == strAprType8 || OrderType[i] == strAprType9 || OrderType[i] == strAprType11 || OrderType[i] == strAprType12) {
                 fieldname = susinSN + "habyui" + hidx;
-                field = message.GetListItem(fields, fieldname);
-                if (field) {
-                    field.textContent = OrderDept[i];
-                }
+                if (ext == "mht") {
+	                field = message.GetListItem(fields, fieldname);
+	                if (field) {
+	                    field.textContent = OrderDept[i];
+	                }
+	
+	                fieldname = susinSN + "habyuipositon" + hidx;
+	                field = message.GetListItem(fields, fieldname);
+	                if (field) {
+	                    var jikweName = trim(field.textContent);
+	
+	                    if (OrderSuggester[i] == "Y")
+	                        field.textContent = strLang75 + field.textContent;
+	
+	                    if (OrderReporter[i] == "Y")
+	                        field.textContent = strLang76 + field.textContent;
+	                }
+                } else if (ext == "hwp") {
+                	if (HwpCtrl.CheckFieldExist(fieldname))
+                        HwpCtrl.SetFieldText(fieldname, OrderDept[i]);
 
-                fieldname = susinSN + "habyuipositon" + hidx;
-                field = message.GetListItem(fields, fieldname);
-                if (field) {
-                    var jikweName = trim(field.textContent);
+                    fieldname = susinSN + "habyuipositon" + hidx;
+                    if (HwpCtrl.CheckFieldExist(fieldname)) {
+                        var jikweName = trim(HwpCtrl.GetFieldText(fieldname));
+                        if (jikweName.substring(0, 1) != "" + strLang128 + "") {
+                        	HwpCtrl.SetFieldText(fieldname, OrderJobtitle[i]);
+                        }
 
-                    if (OrderSuggester[i] == "Y")
-                        field.textContent = strLang75 + field.textContent;
+                        if (OrderSuggester[i] == "Y") {
+                        	HwpCtrl.SetFieldText(fieldname, strLang75 + HwpCtrl.GetFieldText(fieldname));
+                        }
 
-                    if (OrderReporter[i] == "Y")
-                        field.textContent = strLang76 + field.textContent;
+                        if (OrderReporter[i] == "Y") {
+                        	HwpCtrl.SetFieldText(fieldname, strLang76 + HwpCtrl.GetFieldText(fieldname));
+                        }
+                    }
                 }
                 hidx = hidx + 1;
             }
         }
 
-        if (message.GetListItem(fields, "lineapr")) {
-            if (idx > 5) {
-                message.GetListItem(fields, "lineapr").style.display = "";
-                for (i = 0; i < message.GetListItem(fields, "lineapr").children.length; i++)
-                    message.GetListItem(fields, "lineapr").children[i].style.display = "";
-            }
-            else {
-                message.GetListItem(fields, "lineapr").style.display = "none";
-                for (i = 0; i < message.GetListItem(fields, "lineapr").children.length; i++)
-                    message.GetListItem(fields, "lineapr").children[i].style.display = "none";
-            }
-        }
-
-        if (message.GetListItem(fields, "linehab")) {
-            if (hidx > 5) {
-                message.GetListItem(fields, "linehab").style.display = "";
-                for (i = 0; i < message.GetListItem(fields, "linehab").children.length; i++)
-                    message.GetListItem(fields, "linehab").children[i].style.display = "";
-            }
-            else {
-                message.GetListItem(fields, "linehab").style.display = "none";
-                for (i = 0; i < message.GetListItem(fields, "linehab").children.length; i++)
-                    message.GetListItem(fields, "linehab").children[i].style.display = "none";
-            }
+        if (ext == "mht") {
+	        if (message.GetListItem(fields, "lineapr")) {
+	            if (idx > 5) {
+	                message.GetListItem(fields, "lineapr").style.display = "";
+	                for (i = 0; i < message.GetListItem(fields, "lineapr").children.length; i++) {
+	                	message.GetListItem(fields, "lineapr").children[i].style.display = "";
+	                }
+	            } else {
+	                message.GetListItem(fields, "lineapr").style.display = "none";
+	                for (i = 0; i < message.GetListItem(fields, "lineapr").children.length; i++) {
+	                	message.GetListItem(fields, "lineapr").children[i].style.display = "none";
+	                }
+	            }
+	        }
+	
+	        if (message.GetListItem(fields, "linehab")) {
+	            if (hidx > 5) {
+	                message.GetListItem(fields, "linehab").style.display = "";
+	                for (i = 0; i < message.GetListItem(fields, "linehab").children.length; i++) {
+	                	message.GetListItem(fields, "linehab").children[i].style.display = "";
+	                }
+	            } else {
+	                message.GetListItem(fields, "linehab").style.display = "none";
+	                for (i = 0; i < message.GetListItem(fields, "linehab").children.length; i++) {
+	                	message.GetListItem(fields, "linehab").children[i].style.display = "none";
+	                }
+	            }
+	        }
         }
     } catch (e) {
         alert("GetDraftAprLineInfo(ret)" + e.description);
@@ -798,53 +900,101 @@ function ClearDocCellInfo() {
         var k;
         var fieldname;
         var susunSN = "";
-        var fields = message.GetFieldsList();
-
-        if (pDraftFlag == "SUSIN" || pDocState == "011") susunSN = pSusinSN;
-
-        for (i = 1; i <= SignCount ; i++) {
-            fieldname = susunSN + "sign" + i;
-            field = message.GetListItem(fields, fieldname);
-            if (field)
-                field.textContent = " ";
-
-            fieldname = susunSN + "seumyung" + i;
-            field = message.GetListItem(fields, fieldname);
-            if (field)
-                field.textContent = " ";
-
-            fieldname = susunSN + "seumyungdate" + i;
-            field = message.GetListItem(fields, fieldname);
-            if (field)
-                field.textContent = " ";
-
-            fieldname = susunSN + "jikwe" + i;
-            field = message.GetListItem(fields, fieldname);
-
-            if (field)
-                field.textContent = " ";
+        if (pDraftFlag == "SUSIN" || pDocState == "011") {
+        	susunSN = pSusinSN;
         }
+        
+        if (ext == "mht") {
+	        var fields = message.GetFieldsList();
+	
+	        for (i = 1; i <= SignCount ; i++) {
+	            fieldname = susunSN + "sign" + i;
+	            field = message.GetListItem(fields, fieldname);
+	            if (field)
+	                field.textContent = " ";
+	
+	            fieldname = susunSN + "seumyung" + i;
+	            field = message.GetListItem(fields, fieldname);
+	            if (field)
+	                field.textContent = " ";
+	
+	            fieldname = susunSN + "seumyungdate" + i;
+	            field = message.GetListItem(fields, fieldname);
+	            if (field)
+	                field.textContent = " ";
+	
+	            fieldname = susunSN + "jikwe" + i;
+	            field = message.GetListItem(fields, fieldname);
+	
+	            if (field)
+	                field.textContent = " ";
+	        }
+	
+	        for (j = 1 ; j <= hapyuiCount ; j++) {
+	            fieldname = susunSN + "habyui" + j;
+	            field = message.GetListItem(fields, fieldname);
+	            if (field)
+	                field.textContent = " ";
+	
+	            fieldname = susunSN + "habyuipositon" + j;
+	            field = message.GetListItem(fields, fieldname);
+	            if (field)
+	                field.textContent = " ";
+	
+	            fieldname = susunSN + "habyuidate" + j;
+	            field = message.GetListItem(fields, fieldname);
+	            if (field)
+	                field.textContent = " ";
+	
+	            fieldname = susunSN + "habyuisign" + j;
+	            field = message.GetListItem(fields, fieldname);
+	            if (field)
+	                field.textContent = " ";
+	        }
+        } else if (ext == "hwp") {
+        	for(i = 1; i <= SignCount ; i++) {
+        		fieldname = susunSN + "sign" + i;
+        		if (HwpCtrl.CheckFieldExist(fieldname)) {
+        			HwpCtrl.SetFieldText(fieldname, "");
+        		}
+        				  		
+        		fieldname = susunSN + "seumyung" + i;
+        		if (HwpCtrl.CheckFieldExist(fieldname)) {
+        			HwpCtrl.SetFieldText(fieldname, "");
+        		}
+        				  		
+        		fieldname = susunSN + "seumyungdate" + i;
+        		if (HwpCtrl.CheckFieldExist(fieldname)) {
+        			HwpCtrl.SetFieldText(fieldname, "");
+        		}
+        			    
+        		fieldname = susunSN + "jikwe" + i;
+        		if (HwpCtrl.CheckFieldExist(fieldname)) {
+        			HwpCtrl.SetFieldText(fieldname, "");
+        		}
+        	}
 
-        for (j = 1 ; j <= hapyuiCount ; j++) {
-            fieldname = susunSN + "habyui" + j;
-            field = message.GetListItem(fields, fieldname);
-            if (field)
-                field.textContent = " ";
-
-            fieldname = susunSN + "habyuipositon" + j;
-            field = message.GetListItem(fields, fieldname);
-            if (field)
-                field.textContent = " ";
-
-            fieldname = susunSN + "habyuidate" + j;
-            field = message.GetListItem(fields, fieldname);
-            if (field)
-                field.textContent = " ";
-
-            fieldname = susunSN + "habyuisign" + j;
-            field = message.GetListItem(fields, fieldname);
-            if (field)
-                field.textContent = " ";
+            for(j = 1 ; j <= hapyuiCount ; j++) {
+        		fieldname = susunSN + "habyui" + j;
+        		if (HwpCtrl.CheckFieldExist(fieldname)) {
+        			HwpCtrl.SetFieldText(fieldname, "");
+        		}
+        		    
+        		fieldname = susunSN + "habyuipositon" + j;
+        		if (HwpCtrl.CheckFieldExist(fieldname)) {
+        			HwpCtrl.SetFieldText(fieldname, "");
+        		}
+        		
+        	  	fieldname =  susunSN + "habyuidate" + j;
+        		if (HwpCtrl.CheckFieldExist(fieldname)) {
+        			HwpCtrl.SetFieldText(fieldname, "");
+        		}
+              
+        		fieldname = susunSN + "habyuisign" + j;
+        		if (HwpCtrl.CheckFieldExist(fieldname)) {
+        			HwpCtrl.SetFieldText(fieldname, "");
+        		}
+            }
         }
     } catch (e) {
         alert("ClearDocCellInfo : " + e.description);
@@ -880,21 +1030,38 @@ function ApplyDocCellInfo() {
         var fieldname;
         var fieldvalue;
 
-        var fields = message.GetFieldsList();
-
-        for (j = 1 ; j <= hapyuiCount ; j++) {
-            fieldname = "habyuidate" + j;
-            field = message.GetListItem(fields, fieldname);
-            if (field) {
-                fieldvalue = field.textContent;
-                fieldvalue = trim_Cross(fieldvalue);
-                if (fieldvalue == "") {
-                    fieldname = "habyui" + j;
-                    field = message.GetListItem(fields, fieldname);
-                    if (field)
-                        field.textContent = "";
-                }
-            }
+        if (ext == "mht") {
+	        var fields = message.GetFieldsList();
+	
+	        for (j = 1 ; j <= hapyuiCount ; j++) {
+	            fieldname = "habyuidate" + j;
+	            field = message.GetListItem(fields, fieldname);
+	            if (field) {
+	                fieldvalue = field.textContent;
+	                fieldvalue = trim_Cross(fieldvalue);
+	                if (fieldvalue == "") {
+	                    fieldname = "habyui" + j;
+	                    field = message.GetListItem(fields, fieldname);
+	                    if (field)
+	                        field.textContent = "";
+	                }
+	            }
+	        }
+        } else if (ext == "hwp") {
+        	for(j = 1 ; j <= hapyuiCount ; j++) {
+        		fieldname = "habyuidate" + j;
+        		if (HwpCtrl.CheckFieldExist(fieldname)) {
+        			fieldvalue = HwpCtrl.GetFieldText(fieldname);
+        			fieldvalue = trim(fieldvalue);
+        		    
+        		  	if(fieldvalue == "") {
+        		  		fieldname = "habyui" + j;
+        				if (HwpCtrl.CheckFieldExist(fieldname)) {
+        					HwpCtrl.SetFieldText(fieldname, "");
+        				}
+        			}
+        		} 
+        	}
         }
     } catch (e) {
         alert("ApplyDocCellInfo : " + e.description);
@@ -1124,15 +1291,25 @@ function SendDraftMappingSign(ret) {
 function UndoSignInfo(signInfo) {
     try {
         var cnt;
-        var fields = message.GetFieldsList();
-        var field;
-
-        if (signInfo) {
-            for (cnt = 0; cnt < signInfo.length; cnt++) {
-                field = message.GetListItem(fields, signInfo[cnt]);
-                if (field)
-                	setNodeText(field, " ");
-            }
+        if (ext == "mht") {
+	        var fields = message.GetFieldsList();
+	        var field;
+	
+	        if (signInfo) {
+	            for (cnt = 0; cnt < signInfo.length; cnt++) {
+	                field = message.GetListItem(fields, signInfo[cnt]);
+	                if (field)
+	                	setNodeText(field, " ");
+	            }
+	        }
+        } else if (ext == "hwp"){
+        	if(signInfo) {
+        		for(cnt=0; cnt < signInfo.length; cnt++) {
+        			if (HwpCtrl.CheckFieldExist(signInfo[cnt])) {
+        				HwpCtrl.SetFieldText(signInfo[cnt], "");
+        			}
+        		}
+        	}
         }
     } catch (e) {
         alert("UndoSignInfo : " + e.description);
@@ -1585,7 +1762,7 @@ function openOpinionUI(pOpinionFlag) {
         parameter[1] = pOpinionFlag;
         parameter[2] = KuyjeType;
         parameter[3] = pDraftFlag;
-
+        parameter[99] = "mht";
         apropinion_cross_dialogArguments[0] = parameter;
         apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 
@@ -1666,9 +1843,11 @@ function SaveDraftDocInfo_susin() {
         createNodeAndInsertText(xmlpara, objNode, "FORMID", getNodeText(objNodes[1]));
         createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", getNodeText(objNodes[2]));
         createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", getNodeText(objNodes[3]));
+        
         createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", getNodeText(objNodes[4]));
         createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", strAprState2);
         createNodeAndInsertText(xmlpara, objNode, "HREF", getNodeText(objNodes[6]));        
+        
         createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", message.GetDocTitle());
         if (approvalFlag == 'G') {
         	createNodeAndInsertText(xmlpara, objNode, "DOCNO", pDocNo);
@@ -1686,6 +1865,7 @@ function SaveDraftDocInfo_susin() {
         createNodeAndInsertText(xmlpara, objNode, "WRITERJOBTITLE", getNodeText(objNodes[15]));
         createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTID", getNodeText(objNodes[16]));
         createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME", getNodeText(objNodes[17]));
+        
         createNodeAndInsertText(xmlpara, objNode, "HTML", message.Get_EditorBodyHTML());
         createNodeAndInsertText(xmlpara, objNode, "ORGHTML", pOrgHtml);
         createNodeAndInsertText(xmlpara, objNode, "PUSERID", arr_userinfo[1]);
@@ -1695,6 +1875,7 @@ function SaveDraftDocInfo_susin() {
         createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", tempKeep);
         createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", tempPublic);
         createNodeAndInsertText(xmlpara, objNode, "PUBLIC", "");
+
         createNodeAndInsertText(xmlpara, objNode, "ITEMCODE", tempItemCode);
         createNodeAndInsertText(xmlpara, objNode, "ITEMNAME", tempItemName);
         createNodeAndInsertText(xmlpara, objNode, "URGENTAPPROVAL", tempUrgent);
@@ -1710,8 +1891,10 @@ function SaveDraftDocInfo_susin() {
 
         createNodeAndInsertText(xmlpara, objNode, "DOCNUMCODE", pDocNumCode);
         createNodeAndInsertText(xmlpara, objNode, "ORGDOCNUMCODE", pOrgDocNumCode);
+        
         var g_SepAttachLVXml = "";
         g_SepAttachLVXml = message.DocumentBodyGetAttribute("SepAttachLVXml");
+
         if (!g_SepAttachLVXml)
             createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
         else
@@ -1730,11 +1913,93 @@ function SaveDraftDocInfo_susin() {
           } else {
           	 createNodeAndInsertText(xmlpara, objNode, "CURDOCNUM", curDocNum);
           }
+        
+        if (nonElecRec == "Y") {
+    		var NonElecXML = createXmlDom();
+    		NonElecXML = loadXMLString(nonElecRecInfoXml);
+    		
+    		createNodeAndInsertText(xmlpara, objNode, "NONELECREC", nonElecRec);
+    		createNodeAndInsertText(xmlpara, objNode, "REGISTERTYPE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERTYPE"));
+    		createNodeAndInsertText(xmlpara, objNode, "REGISTERDATE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERDATE"));
+    		createNodeAndInsertText(xmlpara, objNode, "REGISTERYEAR", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERYEAR"));
+    		createNodeAndInsertText(xmlpara, objNode, "EXECUTEDATE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "EXECUTEDATE"));
+    		createNodeAndInsertText(xmlpara, objNode, "TITLE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "TITLE"));
+    		createNodeAndInsertText(xmlpara, objNode, "APRMEMBERTITLE", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "APRMEMBERTITLE"));
+    		createNodeAndInsertText(xmlpara, objNode, "APRMEMBERTITLE2", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "APRMEMBERTITLE2"));
+    		createNodeAndInsertText(xmlpara, objNode, "DRAFTERNAME", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DRAFTERNAME"));
+    		createNodeAndInsertText(xmlpara, objNode, "DRAFTERNAME2", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DRAFTERNAME2"));
+    		createNodeAndInsertText(xmlpara, objNode, "RECEIPTMEMBER", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "RECEIPTMEMBER"));
+    		createNodeAndInsertText(xmlpara, objNode, "RECEIPTMEMBER2", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "RECEIPTMEMBER2"));
+    		createNodeAndInsertText(xmlpara, objNode, "SENDINGMEMBER", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "SENDINGMEMBER"));
+    		createNodeAndInsertText(xmlpara, objNode, "DELIVERYNO", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "DELIVERYNO"));
+    		createNodeAndInsertText(xmlpara, objNode, "ORIGINREGSN", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "ORIGINREGSN"));
+    		createNodeAndInsertText(xmlpara, objNode, "ELECTRONICRECFLAG", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "ELECTRONICRECFLAG"));
+    		createNodeAndInsertText(xmlpara, objNode, "NONELECREC_CABINETID", cabinetID);
+    		
+    		// 시청각 기록물일경우
+    		if (SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERTYPE") == "5" || SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "REGISTERTYPE") == "6") {
+    			createNodeAndInsertText(xmlpara, objNode, "AUDIOVISUALRECINFO", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "AUDIOVISUALRECINFO"));
+    			createNodeAndInsertText(xmlpara, objNode, "AUDIOVISUALRECSUMMARY", SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "SUMMARY"));
+    		}
+    		
+    		// 분리첨부가 존재할 경우
+    		if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW").length > 0) {
+    			var sepAtt, Data, i;
+    			var rtnXml = createXmlDom();
+    	        var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
+    			var sepLVXml = createXmlDom();
+                	sepLVXml = loadXMLString(nonElecRecInfoXml);
+                var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SEPERATEATTACH/LISTVIEWDATA/ROWS/ROW");
+                
+                for (i = 0; i < rows.length; i++) {
+                    sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(rows[i].childNodes[0],"DATA1"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", SelectSingleNodeValue(rows[i].childNodes[1], "VALUE"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(rows[i].childNodes[4], "VALUE"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA2"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", SelectSingleNodeValue(rows[i].childNodes[6], "VALUE"));
+                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", SelectSingleNodeValue(rows[i].childNodes[0], "DATA3"));
+                }
+                createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SEPERATEATTACH", getXmlString(rtnXml));
+    		}
+    		
+    		// 특수목록이 존재하는 기록물 철 일경우
+    		if (SelectSingleNodeValue(NonElecXML.documentElement.childNodes[0], "SPECIALCATALOGFLAG") == "1") {
+    			if (SelectNodes(NonElecXML, "NONELECRECINFO/NONELECREC/SPECIALCATALOGINFO/SCDATA").length > 0) {
+	    			var sepAtt, Data, i;
+	    			var rtnXml = createXmlDom();
+	    			var root = createNodeInsert(rtnXml, root, "SPECIALCATALOGINFO");
+	    			var sepLVXml = createXmlDom();
+	    				sepLVXml = loadXMLString(nonElecRecInfoXml);
+	    			var rows = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SPECIALCATALOGINFO/SCDATA");
+	    			var rows2 = SelectNodes(sepLVXml, "NONELECRECINFO/NONELECREC/SPECIALCATALOGINFO/SCNAME");
+	    			
+	    			sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SCNAME");
+	    			Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST1", SelectSingleNodeValue(rows2[0], "LIST1"));
+	                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST2", SelectSingleNodeValue(rows2[0], "LIST2"));
+	                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST3", SelectSingleNodeValue(rows2[0], "LIST3"));
+	    			
+	    			for (i = 0; i < rows.length; i++) {
+	    				sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SCDATA");
+	                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SN", SelectSingleNodeValue(rows[i], "SN"));
+	                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST1", SelectSingleNodeValue(rows[i], "LIST1"));
+	                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST2", SelectSingleNodeValue(rows[i], "LIST2"));
+	                    Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "LIST3", SelectSingleNodeValue(rows[i], "LIST3"));
+	    			}
+	    			
+	    			createNodeAndInsertText(xmlpara, objNode, "NONELECREC_SPECIALCATALOGINFO", getXmlString(rtnXml));
+    			}
+    		}
+    	}
+        
         xmlhttp.open("POST", "/ezApprovalG/doDraft.do", false);
         xmlhttp.send(xmlpara);
 
         if (xmlhttp != null && xmlhttp.readyState == 4) {
         	 if (xmlhttp.statusText == "OK") {
+        		 if (nonElecRec == "Y") {
+        			 nonElecRecTempCabSwitch(nonElecRecInfoXml);
+        		 }
         		  SetBtnStateFalse();
         	      var dataNodes = GetChildNodes(xmlhttp.responseXML);
         	      return getNodeText(dataNodes[0]);
@@ -1742,9 +2007,6 @@ function SaveDraftDocInfo_susin() {
         		return "FALSE";
         	 }
       }
-        
-      
-
     } catch (e) {
         alert("SaveDraftDocInfo_susin : " + e.description);
     }
@@ -1760,6 +2022,7 @@ function btnAddSepAttach_onclick() {
 
     var g_SepAttachLVXml = "";
     g_SepAttachLVXml = message.DocumentBodyGetAttribute("SepAttachLVXml");
+    
     if (!g_SepAttachLVXml)
         g_SepAttachLVXml = "";
     
@@ -1767,13 +2030,13 @@ function btnAddSepAttach_onclick() {
     para[0] = g_SepAttachLVXml;
     para[1] = cabinetID;
     para[2] = "1";
+    para[3] = ext;
 
     inssepattach_cross_dialogArguments[0] = para;
     inssepattach_cross_dialogArguments[1] = btnAddSepAttach_onclick_Complete;
 
     DivPopUpShow(920, 630, "/ezApprovalG/insSepAttach.do");
 }
-
 
 function btnAddSepAttach_onclick_Complete(rtn) {
     DivPopUpHidden();
@@ -2238,14 +2501,18 @@ function getReceiveDocInfo() {
 
         if (CrossYN()) {
             RECEIPTDEPTID.textContent = getNodeText(GetElementsByTagName(result, "RECEIPTDEPTID")[0]);
-        }
-        else {
+        } else {
             RECEIPTDEPTID.innerText = getNodeText(GetElementsByTagName(result, "RECEIPTDEPTID")[0]);
         }
         pOrgAttach = "";
 
-        pRelayURL = getNodeText(GetElementsByTagName(result, "RELAY")[0]);
-        pRelayURL2 = getNodeText(GetElementsByTagName(result, "RELAY2")[0]);
+        if (ext == "mht") {
+        	 pRelayURL = getNodeText(GetElementsByTagName(result, "RELAY")[0]);
+             pRelayURL2 = getNodeText(GetElementsByTagName(result, "RELAY2")[0]);
+        } else if (ext == "hwp") {
+        	 pRelayURL = getNodeText(GetElementsByTagName(result, "RELAY")[0]).replace("mht", "hwp");
+             pRelayURL2 = getNodeText(GetElementsByTagName(result, "RELAY2")[0]).replace("mht", "hwp");
+        }
     } catch (e) {
         alert("getReceiveDocInfo :: " + e.description);
     }
@@ -2622,79 +2889,123 @@ function putSignXML(SignXML) {
     var retVal = false;
     try {
         var NodeList;
-        var fields = message.GetFieldsList();
-        var field;
+        
+        if (ext == "mht") {
+        	 var fields = message.GetFieldsList();
+             var field;
 
-        NodeList = SelectNodes(SignXML, "SIGNINFOS/SIGNINFO");
-        if (NodeList.length > 0) {
-            for (i = 0; i < NodeList.length; i++) {
-                var SignType = getNodeText(GetChildNodes(NodeList[i])[2]);
-                var SignName = getNodeText(GetChildNodes(NodeList[i])[3]);
-                var SignCont = getNodeText(GetChildNodes(NodeList[i])[4]);
-                
-                var aprMemberName = getNodeText(SelectSingleNode(NodeList[i], "APRMEMBERNAME"));
+             NodeList = SelectNodes(SignXML, "SIGNINFOS/SIGNINFO");
+             if (NodeList.length > 0) {
+                 for (i = 0; i < NodeList.length; i++) {
+                     var SignType = getNodeText(GetChildNodes(NodeList[i])[2]);
+                     var SignName = getNodeText(GetChildNodes(NodeList[i])[3]);
+                     var SignCont = getNodeText(GetChildNodes(NodeList[i])[4]);
+                     
+                     var aprMemberName = getNodeText(SelectSingleNode(NodeList[i], "APRMEMBERNAME"));
 
-                var field = message.GetListItem(fields, SignName);
-                if (field) {
-                    retVal = true;
-                    if (SignType == "TEXT" || SignType == "HTML") {
-                        field.innerHTML = SignCont;
-                    } else {
-                    	var seumyung = message.GetListItem(fields, "seumyungdate" + (i + 1));
-                        var img = SignCont.split("::");
-                        var signWidth = parseInt(field.offsetWidth) - 4 - 15;
-                        var signHeight = parseInt(field.offsetHeight) - 4
-                        signWidth = 50;
-                        if (seumyung) {
-                        	if (img[1] != null) {
-	                        	if (img[1].indexOf(strLang7) > -1) {
-	                        		signHeight = 28;
-	                        	} else {
-	                        		signHeight = 50;
-	                        	}
-                        	} else {
-                        		signHeight = 50;
-                        	}
-                        } else {
-                        	signHeight = 28;
-                        }
+                     var field = message.GetListItem(fields, SignName);
+                     if (field) {
+                         retVal = true;
+                         if (SignType == "TEXT" || SignType == "HTML") {
+                             field.innerHTML = SignCont;
+                         } else {
+                         	var seumyung = message.GetListItem(fields, "seumyungdate" + (i + 1));
+                             var img = SignCont.split("::");
+                             var signWidth = parseInt(field.offsetWidth) - 4 - 15;
+                             var signHeight = parseInt(field.offsetHeight) - 4
+                             signWidth = 50;
+                             if (seumyung) {
+                             	if (img[1] != null) {
+     	                        	if (img[1].indexOf(strLang7) > -1) {
+     	                        		signHeight = 28;
+     	                        	} else {
+     	                        		signHeight = 50;
+     	                        	}
+                             	} else {
+                             		signHeight = 50;
+                             	}
+                             } else {
+                             	signHeight = 28;
+                             }
 
-                        var strimg;
-                        if (img.length >= 1) {
-                            strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
-                            strimg = strimg + " width=" + signWidth;
-                            
-                            if (signImage = "NAME") {
-                            	//2018-08-02 이효진 signImage Name 사용시 결재때만 정상동작하고 수신쪽은 처리되어있지 않아 추가 
-                            	//2018-08-02 이효진 signImage Name일때 반복문으로 앞쪽 이미지 서명까지 전부 새로 입력중이라 userInfo 말고 DB에서 꺼내쓰도록 수정
-//                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + arr_userinfo[2] ;
-                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + aprMemberName;
-                            } else {
-                            	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
-                            }
-                        }
-                        
-                        if (seumyung) {
-                        	if (img[1].indexOf(strLang7) > -1) {
-                        		if (img.length >= 2 && img[1] != "") {
-                                    field.innerHTML = img[1] + strimg;
-                                } else {
-                                    field.innerHTML = strimg;
-                                }
-                        	} else {
-                        		field.innerHTML = strimg;
-                        	}
-                        } else {
-                        	if (img.length >= 2 && img[1] != "") {
-                        		field.innerHTML = img[1] + "<br>" + strimg;
-                        	}
-                        	else {
-                        		field.innerHTML = strimg;
-                        	}
-                        }
-                    }
-                }
-            }
+                             var strimg;
+                             if (img.length >= 1) {
+                                 strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
+                                 strimg = strimg + " width=" + signWidth;
+                                 
+                                 if (signImage = "NAME") {
+                                 	//2018-08-02 이효진 signImage Name 사용시 결재때만 정상동작하고 수신쪽은 처리되어있지 않아 추가 
+                                 	//2018-08-02 이효진 signImage Name일때 반복문으로 앞쪽 이미지 서명까지 전부 새로 입력중이라 userInfo 말고 DB에서 꺼내쓰도록 수정
+//                                 	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + arr_userinfo[2] ;
+                                 	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>" + "<br>" + aprMemberName;
+                                 } else {
+                                 	strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
+                                 }
+                             }
+                             
+                             if (seumyung) {
+                             	if (img[1].indexOf(strLang7) > -1) {
+                             		if (img.length >= 2 && img[1] != "") {
+                                         field.innerHTML = img[1] + strimg;
+                                     } else {
+                                         field.innerHTML = strimg;
+                                     }
+                             	} else {
+                             		field.innerHTML = strimg;
+                             	}
+                             } else {
+                             	if (img.length >= 2 && img[1] != "") {
+                             		field.innerHTML = img[1] + "<br>" + strimg;
+                             	}
+                             	else {
+                             		field.innerHTML = strimg;
+                             	}
+                             }
+                         }
+                     }
+                 }
+             }
+        } else if (ext == "hwp") {
+        	NodeList = SignXML.selectNodes("SIGNINFOS/SIGNINFO");
+        	if (NodeList.length > 0) 
+        	{
+        		for (i=0; i<NodeList.length; i++)
+        		{
+        		    var SignType = getNodeText(NodeList.item(i).selectSingleNode("SIGNTYPE"));
+        		    var SignName = getNodeText(NodeList.item(i).selectSingleNode("SIGNNAME"));
+        		    var SignCont = getNodeText(NodeList.item(i).selectSingleNode("CONTENT"));
+        			
+        			if (HwpCtrl.CheckFieldExist(SignName))
+        			{	
+        			    retVal = true;		
+        				if (SignType == "TEXT")
+        				{
+        					HwpCtrl.SetFieldText(SignName, SignCont);
+        				}
+        				else if (SignType == "HTML")
+        				{
+        					
+        					HwpCtrl.AppendFieldText(SignName, SignCont, true, true, true);
+        				}
+        				else if (SignType == "PROXY")
+        				{
+        					HwpCtrl.SetFieldText(SignName, " ");
+        					HwpCtrl.SetFieldImage(SignName, document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(SignCont), 3, 0, 0, true, 2);
+        					HwpCtrl.AppendFieldText(SignName, strLang17, true);
+        				}
+        				else if (SignType == "IMAGE")
+        				{
+        				    var img = SignCont.split("::");  
+        					HwpCtrl.SetFieldText(SignName, "");
+        					if(img.length >= 1)
+        					    HwpCtrl.SetFieldImage(SignName, document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(img[0]), 3, 0, 0, true, 2);
+        					    
+        				    if(img.length >= 2)
+        				        HwpCtrl.AppendFieldText(SignName, img[1], true);
+        				}			
+        			}
+        		}
+        	}
         }
     } catch (e) {
         alert("putSignXML : " + e.description);

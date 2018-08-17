@@ -93,8 +93,7 @@ function setButtons(mode) {
 	searchBttns[0].firstElementChild.onclick = function() {startSearch();};
 	searchBttns[1].firstElementChild.onclick = function() {openSearchPanel();};
 	
-	var closeSearchBttn     = document.getElementsByClassName("wfCloseBttn")[0];
-	closeSearchBttn.onclick = function() {openSearchPanel();};
+	document.getElementById("wfSearchCloseBttn").onclick = function() {openSearchPanel();};
 	var fileUpElmt          = document.getElementById("file");
 	fileUpElmt.onchange     = function() {onDrop();};
 	fileUpElmt.onclick      = function() {this.value = null;};
@@ -133,7 +132,7 @@ function openSearchPanel() {
 	if (searchPanel.style.display == "none") {
 		openLeftPanel();
 		fogPanel.style.display    = "";
-		var position              = DivPopUpPosition(516, 247);
+		var position              = DivPopUpPosition(500, 247);
 		searchPanel.style.top     = position[0] + "px";
 		searchPanel.style.right   = position[1] + "px";
 		searchPanel.style.display = "";

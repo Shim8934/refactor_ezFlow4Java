@@ -671,7 +671,7 @@
 	    function selbeforeBlock(){
 	        var pageNum = parseInt(currentPage);
 	        pageNum = ((parseInt(pageNum / blockSize) - 1) * blockSize) + 1;
-	        get_att_list(pageNum);
+	        goToPageByNum(pageNum);
 	    }
 	    
 	    function selbeforeBlock_one(){

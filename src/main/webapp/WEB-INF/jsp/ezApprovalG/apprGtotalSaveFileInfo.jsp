@@ -16,6 +16,10 @@
 	        var ReturnFunction;
 	        window.onload = function ()
 	        {
+	        	if ("${pass}" != "<RESULT>TRUE</RESULT>") {
+		    		QuitWindow();
+			    }
+	        	
 	            try {
 	                ReturnFunction = parent.totalsavefileinfo_dialogArguments[1];
 	            } catch (e) {
@@ -207,6 +211,12 @@
 	                ReturnFunction();
 	            window.close();
 	        }
+	        
+	        function QuitWindow() {
+// 		        OpenAlertUI(strLang929);
+				alert(strLang1139);
+				window_close();
+		    }
 	    </script>
 	</head>
 	<body class="popup">
