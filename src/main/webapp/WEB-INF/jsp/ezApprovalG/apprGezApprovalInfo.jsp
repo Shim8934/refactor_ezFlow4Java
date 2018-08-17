@@ -989,6 +989,13 @@
 		                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
 			                if (approvalFlag == "G") {
 			                    ret[4] = GetSelCabInfoXml(totalRows); //기록물철 XML
+			                    var cabinetXml = loadXMLString(ret[4]);
+			                    var cabIdNode = SelectNodes(cabinetXml, "CABINETINFO/CABINET/CABINETID");
+			                    var cabIdValue = getNodeText((cabIdNode)[0]);
+			                    if (cabIdValue == "null" || cabIdValue == "") {
+			                    	OpenAlertUI("<spring:message code='ezApprovalG.t1117'/>");
+			                    	return;
+			                    }
 			                } else {
 			                	ret[4] = setCabInfoXML();
 			                }
