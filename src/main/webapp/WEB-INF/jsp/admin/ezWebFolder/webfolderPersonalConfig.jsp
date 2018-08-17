@@ -31,7 +31,8 @@
 			
 			window.onload = function() {
 				closeAllPopup();
-				tableView.setTableId("tblFileStorage");
+				tableView.setTableId("tblFileList");
+				tableView.setTabledHeader("tblFileList1");
 				tableView.setTableType("configTable");
 				tableView.setSelectedClass("bnkWebFolder2");
 				tableView.setUnselectClass("bnkWebFolder");
@@ -45,9 +46,10 @@
 			}
 			
 			function preProcessing() {
-				var divList          = document.getElementById("mainSetting");
-				var reheight         = document.documentElement.clientHeight - 190;
+				var divList          = document.getElementById("dragDropArea");
+				var reheight         = document.documentElement.clientHeight - 220;
 				divList.style.height = reheight + "px";
+				scroll();
 			}
 			
 			function keyPressPanel(e) {
@@ -132,6 +134,7 @@
 			function renderData(result) {
 				tableView.setDataSource(result);
 				tableView.renderTable();
+				scroll();
 			}
 			
 			function initProgressBar(barID, color, completerate) {
@@ -360,7 +363,31 @@
 				returnValue[1] = pleftpos / 2;
 				return returnValue;
 			}
-			
+			function scroll() {
+				var BoardList_BODYHeight = document.getElementById("dragDropArea").clientHeight;
+				var BoardListDivHeight = document.getElementById("tblFileList").clientHeight;
+				
+				 if (BoardList_BODYHeight > BoardListDivHeight) {
+					if ($("#tblFileList1 tr th#forScroll").length > 0) {
+						$("#tblFileList1 tr th#forScroll").remove();
+					}
+				} else {
+					if ($("#tblFileList1 tr th#forScroll").length < 1) {
+						$("#tblFileList1 tr th#forScroll").remove();
+						$("#tblFileList1 tr").append("<th></th>");
+						
+							var lastTh = $("#tblFileList1 tr th").last();
+							lastTh.attr("id", "forScroll");
+							lastTh.css("width", "15px");
+							
+					}
+				}
+				 
+				/*var lastTh = $("#BoardList_TH th").last();
+				if (lastTh.attr("id") == null) {
+					lastTh.css("display", "none");
+				}*/
+			}
 		</script>
 	</head>
 	<body class="mainbody" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
@@ -419,19 +446,28 @@
 				</div>
 			</div>
 			
-			<div id="mainSetting" style="margin: 10px 0px; height:500px; overflow: auto;">
-				<table class="mainlist" style="width: 100%; text-algin: center;" id="tblFileStorage">
-					<tr>
-						<th width="20px"><input type="checkbox"></th>
-						<th headers="cn" style="width: 20%;"><spring:message code='ezWebFolder.t146'/></th>
-						<th headers="dn" style="width: 20%;"><spring:message code='ezWebFolder.t142'/></th>
-						<th headers="un" style="width: 20%;"><spring:message code='ezWebFolder.t143'/></th>
-						<th headers="ut" style="width: 5%;" ><spring:message code='ezWebFolder.t147'/></th>
-						<th              style="text-align: center; width: 8%;"><spring:message code='ezWebFolder.t148'/></th>
-						<th headers="tc" style="text-align: center; width: 8%;"><spring:message code='ezWebFolder.t149'/></th>
-						<th              style="text-align: center; width: 15%;"><spring:message code='ezWebFolder.t150'/></th>
-					</tr>
-				</table>
+			<div style="width:100%;"id ="tblFileList1_div">
+			<div style="margin:0px 0px 0px !important;min-width: 700px;" >
+				<table class="mainlist" style="width:100%"  id="tblFileList1">
+					<thead id ="BoardList_THEAD">
+						<tr>
+							<th class="wfFilecheck" ><input type="checkbox"></th>
+							<th headers="cn" class="wfConfigCompany" ><spring:message code='ezWebFolder.t146'/></th>
+							<th headers="dn" class="wfConfigCompany"><spring:message code='ezWebFolder.t142'/></th>
+							<th headers="un" class="wfActive"><spring:message code='ezWebFolder.t143'/></th>
+							<th headers="ut" class="wfActive" ><spring:message code='ezWebFolder.t147'/></th>
+							<th              class="wfConfigCapacity" style="text-align: center;"><spring:message code='ezWebFolder.t148'/></th>
+							<th headers="tc" class="wfConfigCapacity" style="text-align: center; "><spring:message code='ezWebFolder.t149'/></th>
+							<th              class="wfConfigCompany" style="text-align: center;"><spring:message code='ezWebFolder.t150'/></th>
+						</tr>
+						</thead>
+					</table>
+					<div id="dragDropArea"  style="overflow-y:auto;white-space:nowrap;" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)">
+						<table class="mainlist" style="width: 100%;margin:0px 0px 0px !important; white-space:nowrap;" id="tblFileList">
+					
+						</table>
+					</div>
+				</div>
 			</div>
 			
 			<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">

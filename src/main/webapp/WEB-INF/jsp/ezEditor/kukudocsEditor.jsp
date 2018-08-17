@@ -27,9 +27,36 @@
 				return kukudocsEditor.GetEditorContent();
 			}
 			
+			function SetEditorTextContent(data) {
+	            try {
+	            	data = data.replace(/&/gi, "&amp;");
+	            	data = data.replace(/</gi, "&lt;");
+	            	data = data.replace(/>/gi, "&gt;");
+	 	            
+	 	    		var line = data.split("\n");
+	 	            var textData = "";
+	 	            var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
+	 	            
+	 	            for (var i = 0; i < line.length; i++) {
+	 	            	if (line[i].trim() === "") {
+	 	            		line[i] = "&nbsp;";
+	 	            	}
+	 	            	
+ 	            		textData += "<p " + defaultFontAndSize + ">" + line[i] + "</p>";
+	 	            }
+	            	
+	 	           kukudocsEditor.SetEditorContent(textData);
+	            } catch (e) { }
+	        }
+			
 			function GetEditorTextContent() {
-				return kukudocsEditor.GetEditorTextContent();
-			}
+	            try {
+            	    var resultStr = kukudocsEditor.GetEditorTextContent();
+            	    resultStr = resultStr.replace(/P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}/gi, "");
+					
+            	    return  resultStr;
+	            } catch (e) { return ""; }
+	        }
 			
 			function SetEditorContentURL(pURL) {
                 var tempStr = ConvertMHTtoHTML(pURL);
