@@ -13,23 +13,30 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
-			var pDocID;      
-		    var pDocHref;    
-		    var pFormID;     
+			var pDocID;
+		    var pDocHref;
+		    var pFormID;
 		    var pOpinionFlag;
 		    var pListTypeValue;
 		    var flag = false;
 		    var FormText;
 		    var g_toggleFlag = false;
 	
-		    $(document).ready(function() {
+		    /* $(document).ready(function() {
 		        HwpCtrl.SetImgReg();
 		        HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
 		        HwpCtrl.SetSaveMode(1);
-		    });
+		    }); */
+		    
+		    window.onload = function () {
+		    	HwpCtrl.SetImgReg();
+		        HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
+		        HwpCtrl.SetSaveMode(1);
+		    }
 	
 		    function HWP_LoadFile(formURL) {
-		        HwpCtrl.LoadFile(formURL, false);
+		    	var URL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(formURL);
+		        HwpCtrl.LoadFile(URL, false);
 		    }
 	
 		    function HWP_GetCloneData() {
@@ -37,7 +44,7 @@
 		    }
 	
 		    function HWP_GetDocumentElement() {
-		        return GetDocumentElement(HwpCtrl, "CONNROOT");
+		        return GetDocumentElement(HwpCtrl, "CONNROOT", true);
 		    }
 	
 		    function HWP_SetDocumentElement(ConnValue) {

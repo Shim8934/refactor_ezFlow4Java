@@ -20,7 +20,7 @@
 		    }
 		</script>
 	</head>
-	<body class="popup">
+	<body class="popup" >
 		<h1>&nbsp;<spring:message code='ezApprovalG.t1776'/></h1>
 		<div id="close">
             <ul>

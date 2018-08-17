@@ -38,6 +38,7 @@
 	<typeAlias  alias="ApprGContInfoVO" 			    type="egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO"/>
 	<typeAlias  alias="ApprGDeleteCabinetInfoVO" 		type="egovframework.ezEKP.ezApprovalG.vo.ApprGDeleteCabinetInfoVO"/>
 	<typeAlias  alias="ApprGRelayVO" 					type="egovframework.ezEKP.ezApprovalG.vo.ApprGRelayVO"/>
+	<typeAlias  alias="ApprGRecordTempVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGRecordTempVO"/>
 	
 <!-- 	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO"> -->
 <!-- 		{CALL EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -3434,7 +3435,7 @@
 		             APRMEMBERDEPTID ,
 		             MEMBERDEPTNAME APRMEMBERDEPTNAME  ,
 		             MEMBERDEPTNAME2 APRMEMBERDEPTNAME2  ,
-		             #v_COMPANYID# APRMEMBERLDAPPATH  ,
+		             #companyID# APRMEMBERLDAPPATH  ,
 		             NULL RECEIVEDDATE  ,
 		             NULL PROCESSDATE  ,
 		             NULL REASONDONOTAPPROV  ,
@@ -3802,7 +3803,7 @@
 		    TBL_CABINET.RECTYPECODE,
 		    TBL_CABINET.CLASSCREATEDATE,
 		    TBL_CABINET.OWNERID,
-		    TBL_CABINET.SPECIALCATALOGFLAG,
+		    NVL(TBL_CABINET.SPECIALCATALOGFLAG, VTASKCLASS.SPECIALCATALOGFLAG) SPECIALCATALOGFLAG,
 		    TBL_CABINET.TERMINATEFLAG,
 		    TBL_CABINET.OWNERDEPTID,
 		    TBL_CABINET.OWNERTASK,
@@ -3812,7 +3813,6 @@
 		    VTASKCLASS.KEEPINGPERIOD,
 		    VTASKCLASS.DISPLAYRECFLAG,
 		    VTASKCLASS.DISPLAYRECTRASTIME,
-		    VTASKCLASS.SPECIALCATALOGFLAG,
 		    VTASKCLASS.SC1,
 		    VTASKCLASS.SC2,
 		    VTASKCLASS.SC3,
@@ -19314,29 +19314,58 @@
    </insert>
    
    <insert id="EzApprovalG.insertRecord" parameterClass="Map">
-   		INSERT INTO 
-   			TBL_RECORD
-   		(RecordID,     DocID,     ProcessDeptName, ProcessDeptName2, ProcessDeptCode, RegisterYear,       RegisterDate,                             RegisterNo,     AprMemberTitle,    AprMemberTitle2,        DrafterName,     DrafterName2,           ExecuteDate,                              
-   		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID, COMPANYID, PUBLICITYYN) 
-   		VALUES 
-   		(#v_RECORDID#, #v_DOCID#,  #v_DEPTNAME#,     #v_DEPTNAME2#,   #v_DEPTCODE#,    #v_REGYEAR#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  #v_DRAFTERNAME#, #v_DRAFTERNAME2#, TO_DATE(#v_EXECUTEDATE#,'YYYY-MM-DD HH24:MI:SS'),  
-   		#v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      NULL,                 NULL,      #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, #v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#,    NULL,     #v_DELFLAG#,  #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REJECTFLAG#, #v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#, #v_PUBLICITYYN#)
+   		<isEqual property="v_NONELECRECYN" compareValue="Y">
+	   		INSERT INTO 
+	   			TBL_RECORD_TEMP
+	   		(RecordID,     DocID,     ProcessDeptName, ProcessDeptName2, ProcessDeptCode, RegisterYear,       RegisterDate,                             RegisterNo,     AprMemberTitle,    AprMemberTitle2,        DrafterName,     DrafterName2,           ExecuteDate,                              
+	   		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID, COMPANYID) 
+	   		VALUES 
+	   		(#v_RECORDID#, #v_DOCID#,  #v_DEPTNAME#,     #v_DEPTNAME2#,   #v_DEPTCODE#,    #v_REGYEAR#, TO_DATE(#v_REGISTERDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  #v_DRAFTERNAME#, #v_DRAFTERNAME2#, TO_DATE(#v_EXECUTEDATE#,'YYYY-MM-DD HH24:MI:SS'),  
+	   		#v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      NULL,                 NULL,      #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, #v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#,    NULL,     #v_DELFLAG#,  #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REJECTFLAG#, #v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#)
+   		</isEqual>
+   		<isNotEqual property="v_NONELECRECYN" compareValue="Y">
+   			INSERT INTO 
+	   			TBL_RECORD
+	   		(RecordID,     DocID,     ProcessDeptName, ProcessDeptName2, ProcessDeptCode, RegisterYear,       RegisterDate,                             RegisterNo,     AprMemberTitle,    AprMemberTitle2,        DrafterName,     DrafterName2,           ExecuteDate,                              
+	   		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID, COMPANYID, PUBLICITYYN) 
+	   		VALUES 
+	   		(#v_RECORDID#, #v_DOCID#,  #v_DEPTNAME#,     #v_DEPTNAME2#,   #v_DEPTCODE#,    #v_REGYEAR#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  #v_DRAFTERNAME#, #v_DRAFTERNAME2#, TO_DATE(#v_EXECUTEDATE#,'YYYY-MM-DD HH24:MI:SS'),  
+	   		#v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      NULL,                 NULL,      #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, #v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#,    NULL,     #v_DELFLAG#,  #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REJECTFLAG#, #v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#, #companyID#, #v_PUBLICITYYN#)
+   		</isNotEqual>
    </insert>
    
    <insert id="EzApprovalG.insertRegSeperateAttach" parameterClass="Map">
-   		INSERT INTO 
-   			TBL_SEPERATEATTACH 
-   		(RecordID, SeperateAttachNo, CabinetID,   RegisterType, Title,     NumOfPage, DelFlag, CreateDate,                               ModifyFlag, CatalogTransferFlag, DocTransferFlag, TENANT_ID, COMPANYID) 
-   		Values 
-   		(#v_RecordID#, #v_SepAttachNo#,#v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), '0',             '0',                 '0',    #v_TENANTID#, #companyID#)
+   		<isEqual property="v_NONELECRECYN" compareValue="Y">
+	   		INSERT INTO 
+	   			TBL_SEPERATEATTACH_TEMP
+	   		(DocID, RecordID, SeperateAttachNo, CabinetID,   RegisterType, Title,     NumOfPage, DelFlag, CreateDate,                               ModifyFlag, CatalogTransferFlag, DocTransferFlag, TENANT_ID, COMPANYID) 
+	   		Values 
+	   		(#v_DOCID#, #v_RecordID#, #v_SepAttachNo#,#v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), '0',             '0',                 '0',    #v_TENANTID#, #companyID#)
+   		</isEqual>
+   		<isNotEqual property="v_NONELECRECYN" compareValue="Y">
+	   		INSERT INTO 
+	   			TBL_SEPERATEATTACH 
+	   		(RecordID, SeperateAttachNo, CabinetID,   RegisterType, Title,     NumOfPage, DelFlag, CreateDate,                               ModifyFlag, CatalogTransferFlag, DocTransferFlag, TENANT_ID, COMPANYID) 
+	   		Values 
+	   		(#v_RecordID#, #v_SepAttachNo#,#v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), '0',             '0',                 '0',    #v_TENANTID#, #companyID#)
+   		</isNotEqual>
    </insert>
      
    <insert id="EzApprovalG.insertRegAudioVisualExInfo" parameterClass="Map">
-   		INSERT INTO 
-   			TBL_AUDIO_VISUALRECEXINFO 
-   		(RecordID, SeperateAttachNo, Summary, RecordType, TENANT_ID, COMPANYID) 
-   		VALUES 
-   		(#v_RECID#, #v_SEPATTSN#, #v_SUMMARY#, #v_RECTYPE#, #v_TENANTID#, #companyID#)
+	   <isEqual property="v_NONELECRECYN" compareValue="Y">
+			INSERT INTO 
+				TBL_AUDIO_VISUALRECEXINFO_TEMP
+					(DOCID, RecordID, SeperateAttachNo, Summary, RecordType, TENANT_ID, COMPANYID) 
+				VALUES 
+					(#v_DOCID#, #v_RECID#, #v_SEPATTSN#, #v_SUMMARY#, #v_RECTYPE#, #v_TENANTID#, #companyID#)
+	   </isEqual>
+	   <isNotEqual property="v_NONELECRECYN" compareValue="Y">
+			INSERT INTO 
+   				TBL_AUDIO_VISUALRECEXINFO 
+	   				(RecordID, SeperateAttachNo, Summary, RecordType, TENANT_ID, COMPANYID) 
+	   			VALUES 
+	  				(#v_RECID#, #v_SEPATTSN#, #v_SUMMARY#, #v_RECTYPE#, #v_TENANTID#, #companyID#)
+	   </isNotEqual>
    </insert>
 
    <update id="EzApprovalG.updateProxyExpAprLine" parameterClass="Map">
@@ -21463,11 +21492,20 @@
    	</delete>
    		
    	<insert id="EzApprovalG.insertRecRoleInfo" parameterClass="Map">
-   		INSERT INTO 
-   				TBL_RECROLEINFO 
-   		(RecordID, SeperateAttachNo, UserID, UserRight, UserName, UserName2, TENANT_ID, COMPANYID) 
-   		 VALUES 
-   		(#v_RecordID#, #v_SepAttachNo# , 'All_User', #v_UserRight#, '모든 이용자', 'All User', #v_TENANTID#, #companyID#)
+		<isEqual property="v_NONELECRECYN" compareValue="Y">
+	   		INSERT INTO 
+				TBL_RECROLEINFO_TEMP 
+	   		(DocID, RecordID, SeperateAttachNo, UserID, UserRight, UserName, UserName2, TENANT_ID, COMPANYID) 
+	   		 VALUES 
+	   		(#v_DOCID#, #v_RecordID#, #v_SepAttachNo# , 'All_User', #v_UserRight#, '모든 이용자', 'All User', #v_TENANTID#, #companyID#)
+		</isEqual>
+		<isNotEqual property="v_NONELECRECYN" compareValue="Y">
+	   		INSERT INTO 
+				TBL_RECROLEINFO 
+	   		(RecordID, SeperateAttachNo, UserID, UserRight, UserName, UserName2, TENANT_ID, COMPANYID) 
+	   		 VALUES 
+	   		(#v_RecordID#, #v_SepAttachNo# , 'All_User', #v_UserRight#, '모든 이용자', 'All User', #v_TENANTID#, #companyID#)
+		</isNotEqual>
    	</insert>
    
    	<insert id="EzApprovalG.insertRecRoleInfo2" parameterClass="Map">
@@ -23898,34 +23936,30 @@
 		   DELETE FROM 
 		  		TBL_APRDOCINFO
 		   WHERE 
-		  		DOCID IN (
-		  					SELECT 
-		  					* 
-		  					FROM
-			  					(SELECT 
-						  			A.DOCID
-								FROM 
-									TBL_RECRELAYINFO A 
-								INNER JOIN 
-									TBL_APRDOCINFO B
-								ON 
-									A.DOCID = B.DOCID
-								AND
-									A.TENANT_ID = B.TENANT_ID
-								AND
-									A.COMPANYID = B.COMPANYID
-								WHERE 
-									A.TENANT_ID = #v_TENANTID#
-								AND
-									A.COMPANYID = #companyID#
-								AND
-									A.XDOCID = #xDocID# 
-								AND 
-									XTOCODE = #xToCode#	
-								AND 
-									B.HREF IS NULL
-								OR 
-									B.HREF = '') A)
+	  			DOCID IN (	SELECT 
+					  			A.DOCID
+							FROM 
+								TBL_RECRELAYINFO A 
+							INNER JOIN 
+								TBL_APRDOCINFO B
+							ON 
+								A.DOCID = B.DOCID
+							AND
+								A.TENANT_ID = B.TENANT_ID
+							AND
+								A.COMPANYID = B.COMPANYID
+							WHERE 
+								A.TENANT_ID = #v_TENANTID#
+							AND
+								A.COMPANYID = #companyID#
+							AND
+								A.XDOCID = #xDocID# 
+							AND 
+								XTOCODE = #xToCode#	
+							AND 
+								B.HREF IS NULL
+							OR 
+								B.HREF = '')
 	  </delete>
 	  	  
       <insert id="EzApprovalG.insertRelayDB" parameterClass="Map">
@@ -24825,6 +24859,289 @@
 		</isEqual>
 	</select>
 	
+	<select id="EzApprovalG.getDocExt" parameterClass="Map" resultClass="String">
+		SELECT 
+			HREF
+		FROM
+			TBL_APRDOCINFO
+		WHERE 
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#
+		UNION
+		SELECT
+			HREF
+		FROM
+			TBL_ENDAPRDOCINFO
+		WHERE 
+			DOCID = #docID#
+		AND
+			TENANT_ID = #tenantID#
+		AND
+			COMPANYID = #companyID#	
+	</select>
+	
+	<delete id="EzApprovalG.deleteInitReceiptPonit" parameterClass="Map">
+        DELETE
+        	TBL_RECEIPTPOINTINFO
+        WHERE
+            DOCID = #docID#
+        AND
+            TENANT_ID = #tenantID#
+        AND
+            COMPANYID = #companyID#
+    </delete>
+    <insert id="EzApprovalG.setInitReceiptPonit" parameterClass="Map">
+        INSERT INTO
+            TBL_RECEIPTPOINTINFO
+            	(DOCID, RECEIPTPOINTID, RECEIPTPOINTNAME, EXTRECEPTYN, PROCESSYN, PROCESSSN, CANEDITYN, EXTRECEPTEMAIL, DEPTMEMBERSN, RECEIPTPOINTNAME2, TENANT_ID, COMPANYID)
+            VALUES
+                (#docID#, #deptID#,     #deptName1#,          'N',       'N',          1,       'N',    #companyID#,         1,        #deptName2#,    #tenantID#, #companyID#)
+    </insert>
+    <select id="EzApprovalG.checkNonElecRec" parameterClass="Map" resultClass="int" remapResults="true">
+    	SELECT
+    		COUNT(*)
+    	FROM
+    		TBL_RECORD_TEMP
+    	WHERE
+    		DOCID = #orgDocID#
+    	AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #tenantID#
+    </select>
+    <select id ="EzApprovalG.getNonElecInfoSusinInit" parameterClass="Map" resultClass="ApprGRecordTempVO">
+		SELECT
+			A.DOCID,
+		 	B.SEPERATEATTACHNO,
+			A.PROCESSDEPTCODE,
+		 	A.PROCESSDEPTNAME,
+		 	A.PROCESSDEPTNAME2,
+		 	B.REGISTERTYPE,
+		 	TO_CHAR(A.REGISTERDATE, 'YYYY-MM-DD HH24:MI') AS REGISTERDATE,
+		 	A.REGISTERYEAR,
+		 	B.TITLE,
+		 	A.APRMEMBERTITLE,
+		 	A.APRMEMBERTITLE2,
+		 	A.DRAFTERNAME,
+		 	A.DRAFTERNAME2,
+		 	TO_CHAR(A.EXECUTEDATE, 'YYYY-MM-DD') AS EXECUTEDATE,
+		 	A.RECEIPTMEMBERNAME,
+		 	A.RECEIPTMEMBERNAME2,
+		 	A.SENDINGMEMBERNAME,
+		 	A.DELIVERYNO,
+		 	A.PRODUCEDEPTREGNO,
+		 	A.ELECTRONICRECFLAG,
+		 	B.CABINETID,
+		 	B.NUMOFPAGE,
+		 	C.RECORDTYPE,
+		 	C.SUMMARY
+		FROM 
+			TBL_RECORD_TEMP A
+		JOIN 
+			TBL_SEPERATEATTACH_TEMP B
+		ON 
+			A.DOCID = B.DOCID 
+		AND 
+			A.COMPANYID = B.COMPANYID 
+		AND 
+			A.TENANT_ID = B.TENANT_ID
+		LEFT JOIN
+			TBL_AUDIO_VISUALRECEXINFO_TEMP C
+		ON
+			A.DOCID = C.DOCID
+		AND
+			A.COMPANYID = C.COMPANYID
+		AND
+			A.TENANT_ID = C.TENANT_ID
+		AND
+			B.SEPERATEATTACHNO = C.SEPERATEATTACHNO
+		WHERE 
+			A.DOCID = #orgDocID# 
+		AND 
+			A.COMPANYID = #companyID# 
+		AND 
+			A.TENANT_ID = #tenantID#
+		ORDER BY 
+			B.SEPERATEATTACHNO
+    </select>
+    <update id="EzApprovalG.setNonElecRecCabID" parameterClass="Map">
+    	UPDATE 
+    		TBL_SEPERATEATTACH_TEMP
+    	SET
+    		CABINETID = #cabinetID#
+    	WHERE
+    		DOCID = #orgDocID#
+    	AND
+    		SEPERATEATTACHNO = #sepAttachNO#
+    	AND 
+			COMPANYID = #companyID# 
+		AND 
+			TENANT_ID = #tenantID#
+    </update>
+    <update id="EzApprovalG.setEndNonElecRecDocDel" parameterClass="Map">
+    	UPDATE 
+    		TBL_EXPENDAPRDOCINFO 
+    	SET 
+    		DELFLAG = '1' 
+    	WHERE 
+    		DOCID = #docID#  
+    	AND 
+    		TENANT_ID = #tenantID# 
+    	AND 
+    		COMPANYID = #companyID#
+    </update>
+    <select id="EzApprovalG.getOrgDocID" parameterClass="Map" resultClass="String">
+    	SELECT 
+    		ORGDOCID
+    	FROM
+    		TBL_APRDOCINFO
+    	WHERE
+    		DOCID = #docID#
+    	AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #tenantID#
+    </select>
+    <select id="EzApprovalG.getRecordID" parameterClass="Map" resultClass="String">
+    	SELECT
+    		RECORDID
+    	FROM
+    		TBL_RECORD_TEMP
+    	WHERE
+    		DOCID = #orgDocID#
+   		AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #tenantID#
+    </select>
+    <update id="EzApprovalG.updateNonElecRecInfo" parameterClass="Map">
+    	UPDATE
+    		TBL_RECORD_TEMP
+    	SET
+    		APRMEMBERTITLE = #v_aprmemberTitle#, 
+    		APRMEMBERTITLE2 = #v_aprmemberTitle2#,
+    		DRAFTERNAME = #v_drafterName#, 
+    		DRAFTERNAME2 = #v_drafterName2#,
+    		RECEIPTMEMBERNAME = #v_receiptMember#, 
+    		RECEIPTMEMBERNAME2 = #v_receiptMember2#, 
+    		DELIVERYNO = #v_deliveryNO#, 
+    		PRODUCEDEPTREGNO = #v_originRegSN#
+    	WHERE
+    		DOCID = #orgDocID#
+    	AND
+    		RECORDID = #recordID#
+    	AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #tenantID#
+    </update>
+    <update id="EzApprovalG.updateNonElecRecInfo2" parameterClass="Map">
+    	UPDATE
+    		TBL_SEPERATEATTACH_TEMP
+    	SET
+    		TITLE = #v_title# 
+    	WHERE
+    		DOCID = #orgDocID#
+    	AND
+    		RECORDID = #recordID#
+    	AND
+    		SEPERATEATTACHNO = '00'
+    	AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #tenantID#
+    </update>
+    <update id="EzApprovalG.updateNonElecRecInfo3" parameterClass="Map">
+    	UPDATE
+    		TBL_AUDIO_VISUALRECEXINFO_TEMP
+    	SET
+    		SUMMARY = #v_audioVisualRecSummary#, 
+    		RECORDTYPE = #v_audioVisualRecInfo#
+    	WHERE
+    		DOCID = #orgDocID#
+    	AND
+    		RECORDID = #recordID#
+    	AND
+    		SEPERATEATTACHNO = '00'
+    	AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #tenantID#
+    </update>
+    
+	<delete id="EzApprovalG.deleteSpecialInfoNonElecRec" parameterClass="Map">
+		DELETE
+			TBL_SPECIALCATALOGINFO_TMP
+		WHERE
+			DOCID = #v_docID#
+		AND
+			RECORDID = #v_recordID#
+		AND
+			TENANT_ID = #v_tenantID#
+		AND
+			COMPANYID = #v_companyID#
+	</delete>
+    <insert id="EzApprovalG.insertSpecialInfoNonElecRec2" parameterClass="Map">
+    	INSERT INTO 
+    		TBL_SPECIALCATALOGINFO_TMP
+    			(DOCID, RECORDID, SERIALNO, SC1, SC2, SC3, TENANT_ID, COMPANYID)
+    		VALUES
+    			(#v_docID#, #v_recordID#, #v_serialNO#, #v_SC1#, #v_SC2#, #v_SC3#, #v_tenantID#, #v_companyID#)
+    </insert>
+    <insert id="EzApprovalG.insertSpecialInfoNonElecRec" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_SPECIALCATALOGINFO_TMP 
+   		(DOCID, RecordID, SerialNo, SC1, SC2, SC3, TENANT_ID, COMPANYID) 
+   		(SELECT 
+   			#v_docID#, #v_recordID#, SerialNo, SC1, SC2, SC3, TBL_SPECIALCATALOGINFO_CAB.TENANT_ID , TBL_SPECIALCATALOGINFO_CAB.COMPANYID
+   		 FROM 
+   		 	TBL_SPECIALCATALOGINFO_CAB 
+   		 INNER JOIN 
+   		 	(SELECT 
+   		 		TBL_CABINET.CabinetClassNo,
+   		 		TBL_CABINET.TENANT_ID,
+   		 		TBL_CABINET.COMPANYID
+   		 	 FROM 
+   		 	 	TBL_CABINET 
+   		 	 WHERE 
+   		 	 	TBL_CABINET.CabinetID = #v_cabID#
+   		 	 AND
+   		 	 	TBL_CABINET.TENANT_ID = #v_tenantID#
+   		 	 AND
+   		 	 	TBL_CABINET.COMPANYID = #v_companyID#) TBL_CABINET 
+   		  ON 
+   		  	TBL_SPECIALCATALOGINFO_CAB.CabinetClassNo = TBL_CABINET.CabinetClassNo 
+   		  AND 
+   		  	TBL_SPECIALCATALOGINFO_CAB.TENANT_ID = TBL_CABINET.TENANT_ID 
+   		  AND
+   		  	TBL_SPECIALCATALOGINFO_CAB.COMPANYID = TBL_CABINET.COMPANYID 
+          Where 
+          	SerialNo='000' 
+          AND 
+          	TBL_CABINET.TENANT_ID= #v_tenantID#
+          AND
+          	TBL_CABINET.COMPANYID= #v_companyID#)
+   </insert>
+   <select id="EzApprovalG.selectSpecialInfoNonElecRec" parameterClass="Map" resultClass="ApprGRecordTempVO" remapResults="true">
+		SELECT
+			DOCID, 
+			RECORDID, 
+			SERIALNO, 
+			SC1, 
+			SC2, 
+			SC3
+		FROM
+			TBL_SPECIALCATALOGINFO_TMP
+		WHERE
+			DOCID = #orgDocID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+   </select>
 	<select id="EzApprovalG.getLinkedAttachFileCount" parameterClass="Map" resultClass="int">
 		SELECT
 			COUNT(ATTACHFILEHREF)
@@ -24833,4 +25150,74 @@
 		WHERE
 			ATTACHFILEHREF = #href#
 	</select>
+   <delete id="EzApprovalG.susinNonElecRecDocDel1" parameterClass="Map">
+		DELETE
+			TBL_APRDOCINFO
+		WHERE
+			DOCID = #docID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+   </delete>
+   <delete id="EzApprovalG.susinNonElecRecDocDel2" parameterClass="Map">
+   		DELETE
+			TBL_APRLINEINFO
+		WHERE
+			DOCID = #docID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+   </delete>
+   <delete id="EzApprovalG.susinNonElecRecDocDel3" parameterClass="Map">
+   		DELETE
+			TBL_APROPINIONINFO
+		WHERE
+			DOCID = #docID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+   </delete>
+   <delete id="EzApprovalG.susinNonElecRecDocDel4" parameterClass="Map">
+   		DELETE
+			TBL_APRATTACHINFO
+		WHERE
+			DOCID = #docID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+   </delete>
+   <delete id="EzApprovalG.susinNonElecRecDocDel5" parameterClass="Map">
+   		DELETE
+			TBL_APRDOCATTACHINFO
+		WHERE
+			DOCID = #docID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+   </delete>
+   <delete id="EzApprovalG.susinNonElecRecDocDel6" parameterClass="Map">
+   		DELETE
+			TBL_EXPAPRDOCINFO
+		WHERE
+			DOCID = #docID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+   </delete>
+   <delete id="EzApprovalG.susinNonElecRecDocDel7" parameterClass="Map">
+   		DELETE
+			TBL_EXPAPRLINE
+		WHERE
+			DOCID = #docID#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+   </delete>
 </sqlMap>

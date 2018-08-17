@@ -763,6 +763,7 @@ public class EzAttitudeController {
 		String userId = userInfo.getId();
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/holidays";
+		String isRest = request.getParameter("isRest");
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -771,7 +772,8 @@ public class EzAttitudeController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userId);
+				.queryParam("userId", userId)
+				.queryParam("isRest", isRest);
 		
 		RestTemplate rest = new RestTemplate();
 		
@@ -3032,10 +3034,8 @@ public class EzAttitudeController {
 			row.getCell(3).setCellStyle(headerStyle);
 			row.createCell(4).setCellValue("날짜");
 			row.getCell(4).setCellStyle(headerStyle);
-			row.createCell(5).setCellValue("시간");
+			row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t134", locale));
 			row.getCell(5).setCellStyle(headerStyle);
-			row.createCell(6).setCellValue(egovMessageSource.getMessage("ezAttitude.t13", locale));
-			row.getCell(6).setCellStyle(headerStyle);
 			
 			//body
 			for (int i = 0 ; i < attitudeList.size(); i++) { 
@@ -3053,13 +3053,7 @@ public class EzAttitudeController {
 					row.createCell(4).setCellValue(vo.getStartDate());
 				}
 				
-				if (vo.getEndTime() != null && !vo.getEndTime().equals("")) {
-					row.createCell(5).setCellValue(vo.getStartTime() + " ~ " + vo.getEndTime());
-				} else {
-					row.createCell(5).setCellValue(vo.getStartTime());
-				}
-				
-				row.createCell(6).setCellValue(vo.getTypeName());
+				row.createCell(5).setCellValue(vo.getTypeName());
 				
 				row.getCell(0).setCellStyle(bodyStyle);
 				row.getCell(1).setCellStyle(bodyStyle);
@@ -3067,7 +3061,6 @@ public class EzAttitudeController {
 				row.getCell(3).setCellStyle(bodyStyle);
 				row.getCell(4).setCellStyle(bodyStyle);
 				row.getCell(5).setCellStyle(bodyStyle);
-				row.getCell(6).setCellStyle(bodyStyle);
 			}
 			
 			//width 조정

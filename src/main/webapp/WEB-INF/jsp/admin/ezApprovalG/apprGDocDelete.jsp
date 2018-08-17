@@ -136,6 +136,41 @@
 				
 			}
 		
+
+		    function lvSDoc_onSel_DBclick() {
+		        listview.LoadFromID("lvSDocForm");
+		        listview2.LoadFromID("lvTDocForm");
+		        var openLocation = "";
+		        var oArrRows = listview.GetSelectedRows();
+		        var length = listview.GetSelectedIndexes();
+		        var DocID = GetAttribute(oArrRows[0], "DATA1");
+		        var pURL = GetAttribute(oArrRows[0], "DATA2");
+		        var formID = GetAttribute(oArrRows[0], "DATA6");
+		        var orgDocid = GetAttribute(oArrRows[0], "DATA5");
+		        if (GetAttribute(oArrRows[0], "DATA5") == "" || escape(orgDocid.replace(/ /gi, "")) == "%0A")
+		            orgDocid = "";
+		        else
+		            orgDocid = GetAttribute(oArrRows[0], "DATA5");
+		
+		        if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
+		        	if (isIE()) {
+			        	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
+	                } else {
+	                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+	                	alert(pAlertContent);
+	                    return;
+	                }
+	            } else {
+	            	if (CrossYN()) {
+		                openLocation = "/ezApprovalG/contDocView.do";
+		            } else {
+	                    openLocation = "/ezApprovalG/contDocView.do";
+		            }
+		        }	
+		        openLocation = openLocation + "?docID=" + encodeURIComponent(DocID) + "&docHref=" + encodeURIComponent(pURL) + "&formID=" + encodeURIComponent(formID) + "&orgDocID=" + encodeURIComponent(orgDocid) + "&admin=Y";
+		        var result = GetOpenWindow(openLocation, "", 1000, 950, "YES");
+		    }
+
 		    $(function() {
 		    	$('#startDatepicker').datepicker({
 		    		changeMonth: true,

@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/showModalDialogCallee.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -39,8 +40,14 @@
 		    function btnOK_onclick() {
 		        Rtnval = "ok";
 		
-		        if (ReturnFunction != null)
+		        if (ReturnFunction != null) {
 		            ReturnFunction(Rtnval);
+		        } else {
+		        	setReturnValue(Rtnval);
+		        	 
+		        	parent.window.returnValue = Rtnval;
+		        }
+		        
 		        window.close();
 		    }
 		    function btncancel_onclick() {
