@@ -813,10 +813,10 @@ function InsertToRecListView(Resultxml) {
         DocList.DataBind("lvtDoclist");                          
         DocList = null;
         
-        if (typeof diffPaging == 'undefined') {
-        	makePageSelPage(NodeListLen);
-        } else if (diffPaging == "attachDoc"){
+        if (typeof diffPaging != 'undefined' && diffPaging == "attachDoc") {
         	orgmakePageSelPage(NodeListLen);
+        } else {
+        	makePageSelPage(NodeListLen);
         }
         
         DisplayLineCnt_ezCab(NodeListLen);
