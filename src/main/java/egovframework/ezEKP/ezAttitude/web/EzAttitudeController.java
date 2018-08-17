@@ -763,6 +763,7 @@ public class EzAttitudeController {
 		String userId = userInfo.getId();
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/holidays";
+		String isRest = request.getParameter("isRest");
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -771,7 +772,8 @@ public class EzAttitudeController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userId);
+				.queryParam("userId", userId)
+				.queryParam("isRest", isRest);
 		
 		RestTemplate rest = new RestTemplate();
 		
